@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.diff.merge;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diff.merge.service.MergeFactory;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
@@ -41,6 +42,9 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class DefaultMerger implements IMerger {
+	/** The scheme used for all of EMF Compare's internal proxies. */
+	private static final String PROXY_SCHEME = "emfCompareProxy"; //$NON-NLS-1$
+
 	/** Stores the differences which are merged or being merged during a merge operation. */
 	private static List<DiffElement> mergedDiffs;
 
@@ -65,6 +69,41 @@ public class DefaultMerger implements IMerger {
 	 */
 	protected static void resetMergedDiffs() {
 		mergedDiffs = null;
+	}
+
+	/**
+	 * Returns <code>true</code> if the given URI is an internal EMF Compare proxy.
+	 * 
+	 * @param uri
+	 *            The URI to check.
+	 * @return <code>true</code> if the given URI is an internal EMF Compare proxy.
+	 * @since 1.3
+	 */
+	public static boolean isEMFCompareProxy(URI uri) {
+		return uri.scheme() != null && uri.scheme().equals(PROXY_SCHEME);
+	}
+
+	/**
+	 * Checks whether the two given proxy URIs are equal, ignoring EMF Compare's internal
+	 * {@link #PROXY_PREFIX}.
+	 * 
+	 * @param uri1
+	 *            First of the two URIs to compare.
+	 * @param uri2
+	 *            Second of the two URIs to compare.
+	 * @return <code>true</code> if the two given URIs are equal.
+	 * @since 1.3
+	 */
+	public static boolean equalProxyURIs(URI uri1, URI uri2) {
+		String stringValue1 = uri1.toString();
+		String stringValue2 = uri2.toString();
+		if (isEMFCompareProxy(uri1)) {
+			stringValue1 = stringValue1.substring(PROXY_SCHEME.length() + 2);
+		}
+		if (isEMFCompareProxy(uri2)) {
+			stringValue2 = stringValue2.substring(PROXY_SCHEME.length() + 2);
+		}
+		return stringValue1.equals(stringValue2);
 	}
 
 	/**

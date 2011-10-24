@@ -36,11 +36,11 @@ public class DanglingReferenceOnTwoAdds extends MergeTestBase {
 		p.getEClassifiers().add(class0);
 
 		leftModel = EcoreUtil.copy(p);
-		URI leftURI = URI.createURI("leftmodel.ecore");
+		URI leftURI = URI.createURI("file:/leftmodel.ecore");
 		ModelUtils.attachResource(leftURI, leftModel);
 
 		expectedModel = EcoreUtil.copy(leftModel);
-		URI expectedURI = URI.createURI("expectedmodel.ecore");
+		URI expectedURI = URI.createURI("file:/expectedmodel.ecore");
 		ModelUtils.attachResource(expectedURI, expectedModel);
 
 		EClass class1 = factory.createEClass();
@@ -60,7 +60,7 @@ public class DanglingReferenceOnTwoAdds extends MergeTestBase {
 		class3SuperTypes.add(class2);
 
 		rightModel = EcoreUtil.copy(p);
-		URI rightURI = URI.createURI("rightmodel.ecore");
+		URI rightURI = URI.createURI("file:/rightmodel.ecore");
 		ModelUtils.attachResource(rightURI, rightModel);
 
 	}

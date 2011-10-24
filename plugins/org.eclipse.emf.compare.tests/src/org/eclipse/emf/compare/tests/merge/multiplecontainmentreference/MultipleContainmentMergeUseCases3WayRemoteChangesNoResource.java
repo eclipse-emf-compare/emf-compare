@@ -36,6 +36,8 @@ public class MultipleContainmentMergeUseCases3WayRemoteChangesNoResource extends
 	protected List<DiffElement> detectDifferences(EObject left, EObject right) throws InterruptedException {
 		leftRes = left.eResource();
 		rightRes = right.eResource();
+		EcoreUtil.resolveAll(left);
+		EcoreUtil.resolveAll(right);
 		left.eResource().getContents().clear();
 		right.eResource().getContents().clear();
 

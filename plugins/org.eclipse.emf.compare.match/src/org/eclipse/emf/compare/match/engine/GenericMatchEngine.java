@@ -1818,7 +1818,6 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @return The list of all the content of a given EObject, derived containmnent references included.
 	 * @since 1.1
 	 */
-	@SuppressWarnings("unchecked")
 	protected List<EObject> getScopeInternalContents(EObject eObject, IMatchScope scope) {
 		// filter out those contained objects belonging to a fragment resource
 		final List<EObject> result = new ArrayList<EObject>();

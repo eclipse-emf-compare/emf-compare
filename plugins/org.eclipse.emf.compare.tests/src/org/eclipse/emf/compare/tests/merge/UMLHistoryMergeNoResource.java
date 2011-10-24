@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 public class UMLHistoryMergeNoResource extends UMLHistoryMerge {
 	Resource leftRes;
@@ -37,7 +38,8 @@ public class UMLHistoryMergeNoResource extends UMLHistoryMerge {
 
 		leftRes = left.eResource();
 		rightRes = right.eResource();
-
+		EcoreUtil.resolveAll(left);
+		EcoreUtil.resolveAll(right);
 		leftRes.getContents().clear();
 		rightRes.getContents().clear();
 

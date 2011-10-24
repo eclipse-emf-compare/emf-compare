@@ -11,17 +11,20 @@
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.BasicEList;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.BasicEList.UnmodifiableEList;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -31,24 +34,27 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Model</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Model</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getOwnedElements <em>Owned Elements</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getLeftRoots <em>Left Roots</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getRightRoots <em>Right Roots</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getAncestorRoots <em>Ancestor Roots</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getOwnedElements <em>Owned Elements
+ * </em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getLeftRoots <em>Left Roots</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getRightRoots <em>Right Roots</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getAncestorRoots <em>Ancestor Roots
+ * </em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	/**
-	 * The cached value of the '{@link #getOwnedElements() <em>Owned Elements</em>}' containment reference list.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getOwnedElements() <em>Owned Elements</em>}' containment reference
+	 * list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getOwnedElements()
 	 * @generated
 	 * @ordered
@@ -56,9 +62,9 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	protected EList<DiffElement> ownedElements;
 
 	/**
-	 * The cached value of the '{@link #getLeftRoots() <em>Left Roots</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLeftRoots() <em>Left Roots</em>}' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLeftRoots()
 	 * @generated
 	 * @ordered
@@ -66,9 +72,9 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	protected EList<EObject> leftRoots;
 
 	/**
-	 * The cached value of the '{@link #getRightRoots() <em>Right Roots</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRightRoots() <em>Right Roots</em>}' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getRightRoots()
 	 * @generated
 	 * @ordered
@@ -76,9 +82,9 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	protected EList<EObject> rightRoots;
 
 	/**
-	 * The cached value of the '{@link #getAncestorRoots() <em>Ancestor Roots</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getAncestorRoots() <em>Ancestor Roots</em>}' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getAncestorRoots()
 	 * @generated
 	 * @ordered
@@ -87,6 +93,7 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected DiffModelImpl() {
@@ -95,6 +102,7 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -114,6 +122,7 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -127,6 +136,7 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -146,6 +156,7 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -174,6 +185,7 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -197,6 +209,7 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<DiffElement> getOwnedElements() {
@@ -208,8 +221,8 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<EObject> getLeftRoots() {
@@ -221,8 +234,8 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<EObject> getRightRoots() {
@@ -234,8 +247,8 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<EObject> getAncestorRoots() {
@@ -247,8 +260,8 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public int getSubchanges() {
@@ -265,8 +278,8 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public EList<DiffElement> getDifferences(EObject modelElement) {
@@ -283,12 +296,14 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 			}
 		}
 
-		return new UnmodifiableEList<DiffElement>(ownedDifferences.size(), ownedDifferences.toArray());
+		DiffElement[] differences = ownedDifferences.toArray(new DiffElement[ownedDifferences.size()]);
+		Arrays.sort(differences, new DiffElementComparator());
+		return new UnmodifiableEList<DiffElement>(ownedDifferences.size(), differences);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public EList<DiffElement> getDifferences() {
@@ -303,7 +318,9 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 			}
 		}
 
-		return new UnmodifiableEList<DiffElement>(ownedDifferences.size(), ownedDifferences.toArray());
+		DiffElement[] differences = ownedDifferences.toArray(new DiffElement[ownedDifferences.size()]);
+		Arrays.sort(differences, new DiffElementComparator());
+		return new UnmodifiableEList<DiffElement>(ownedDifferences.size(), differences);
 	}
 
 	/**
@@ -375,6 +392,7 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -382,4 +400,36 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 		return DiffPackage.Literals.DIFF_MODEL;
 	}
 
+	/**
+	 * We'll use this in order to sort the differences before returning them through {@link #getDifferences()}
+	 * . This is neeeded since "ReferenceOrderChange" must always come last, after all additions and removals
+	 * have been merged.
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
+	private class DiffElementComparator implements Comparator<DiffElement> {
+		/** Increases visibility of the default constructor. */
+		public DiffElementComparator() {
+			// Enhances visibility
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+		 */
+		public int compare(DiffElement o1, DiffElement o2) {
+			int result = -1;
+			if (o1 instanceof ReferenceOrderChange || o2 instanceof ReferenceOrderChange) {
+				if (o1 instanceof ReferenceOrderChange && o2 instanceof ReferenceOrderChange) {
+					result = 0;
+				} else if (o2 instanceof ReferenceOrderChange) {
+					result = -1;
+				} else {
+					result = 1;
+				}
+			}
+			return result;
+		}
+	}
 } // DiffModelImpl

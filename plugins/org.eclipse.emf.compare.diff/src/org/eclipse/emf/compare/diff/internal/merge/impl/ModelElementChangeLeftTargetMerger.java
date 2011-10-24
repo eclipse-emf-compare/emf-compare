@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.diff.internal.merge.impl;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
@@ -23,6 +24,7 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -71,8 +73,9 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 				int elementIndex = -1;
 				if (ref.isMany()) {
 					final Object containmentRefVal = element.eContainer().eGet(ref);
-					if (containmentRefVal instanceof List) {
-						final List listVal = (List)containmentRefVal;
+					if (containmentRefVal instanceof List<?>) {
+						@SuppressWarnings("unchecked")
+						final List<EObject> listVal = (List<EObject>)containmentRefVal;
 						elementIndex = listVal.indexOf(element);
 					}
 				}
@@ -95,14 +98,23 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 			if (op instanceof ReferenceChangeLeftTarget) {
 				final ReferenceChangeLeftTarget link = (ReferenceChangeLeftTarget)op;
 				// now if I'm in the target References I should put my copy in the origin
-				if (link.getRightTarget() != null && link.getRightTarget().equals(element)) {
+				if (link.getRightTarget() != null && link.getRightTarget() == element) {
 					link.setLeftTarget(newOne);
 				}
 			} else if (op instanceof ReferenceOrderChange) {
 				final ReferenceOrderChange link = (ReferenceOrderChange)op;
-				if (link.getReference().equals(ref)) {
-					// FIXME respect ordering!
-					link.getRightTarget().add(newOne);
+				if (link.getRightElement() == origin && link.getReference() == ref) {
+					final ListIterator<EObject> targetIterator = link.getRightTarget().listIterator();
+					boolean replaced = false;
+					while (!replaced && targetIterator.hasNext()) {
+						final EObject target = targetIterator.next();
+						if (target.eIsProxy()
+								&& equalProxyURIs(((InternalEObject)target).eProxyURI(),
+										EcoreUtil.getURI(element))) {
+							targetIterator.set(newOne);
+							replaced = true;
+						}
+					}
 				}
 			}
 		}

@@ -35,6 +35,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -44,6 +45,9 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @since 1.0
  */
 public class ReferencesCheck extends AbstractCheck {
+	/** We'll use this as a prefix for all of EMF Compare's internal proxies. */
+	private static final String PROXY_PREFIX = "emfCompareProxy:/"; //$NON-NLS-1$
+
 	/**
 	 * Simply delegates to the super constructor.
 	 * 
@@ -176,7 +180,7 @@ public class ReferencesCheck extends AbstractCheck {
 		for (int i = 0; i < leftElementReferences.size(); i++) {
 			final EObject matched = getMatchManager().getMatchedEObject(leftElementReferences.get(i));
 			for (final Integer removedIndex : new ArrayList<Integer>(removedIndices)) {
-				if (expectedIndex == removedIndex) {
+				if (expectedIndex == removedIndex.intValue()) {
 					expectedIndex += 1;
 					removedIndices.remove(removedIndex);
 				}
@@ -188,13 +192,24 @@ public class ReferencesCheck extends AbstractCheck {
 				refChange.setRightElement(mapping.getRightElement());
 
 				// The loop will be broken here. Initialize left and right "target" lists for the diff
-				for (int j = removedIndices.size() - 1; j >= 0; j--) {
-					rightElementReferences.remove(removedIndices.get(j).intValue());
+				final List<EObject> leftTarget = new ArrayList<EObject>();
+				for (int j = 0; j < rightElementReferences.size(); j++) {
+					final EObject right = rightElementReferences.get(j);
+					EObject target = getMatchManager().getMatchedEObject(right);
+					if (target == null) {
+						target = createProxyFor(right);
+					}
+					leftTarget.add(target);
 				}
-				final List<EObject> leftTarget = new ArrayList<EObject>(
-						getMatchedReferences(rightElementReferences));
-				final List<EObject> rightTarget = new ArrayList<EObject>(
-						getMatchedReferences(leftElementReferences));
+				final List<EObject> rightTarget = new ArrayList<EObject>();
+				for (int j = 0; j < leftElementReferences.size(); j++) {
+					final EObject left = leftElementReferences.get(j);
+					EObject target = getMatchManager().getMatchedEObject(left);
+					if (target == null) {
+						target = createProxyFor(left);
+					}
+					rightTarget.add(target);
+				}
 
 				refChange.getLeftTarget().addAll(leftTarget);
 				refChange.getRightTarget().addAll(rightTarget);
@@ -203,6 +218,26 @@ public class ReferencesCheck extends AbstractCheck {
 				break;
 			}
 		}
+	}
+
+	/**
+	 * This will create a proxy for the given EObject. If <code>original</code> is itself a proxy, it will
+	 * simply be returned as-is.
+	 * 
+	 * @param original
+	 *            The object we need a proxy for.
+	 * @return A new proxy for the given original object.
+	 */
+	private EObject createProxyFor(EObject original) {
+		if (original.eIsProxy()) {
+			return original;
+		}
+
+		final org.eclipse.emf.ecore.EFactory factory = original.eClass().getEPackage().getEFactoryInstance();
+		final EObject proxy = factory.create(original.eClass());
+		((InternalEObject)proxy).eSetProxyURI(URI.createURI(PROXY_PREFIX
+				+ EcoreUtil.getURI(original).toString()));
+		return proxy;
 	}
 
 	/**
@@ -235,23 +270,18 @@ public class ReferencesCheck extends AbstractCheck {
 				(List<EObject>)EFactory.eGetAsList(rightElement, reference.getName()));
 		final List<Integer> removedIndices = new ArrayList<Integer>(removedReferences.size());
 
-		final List<EObject> leftElementReferencesCopy = new ArrayList<EObject>(leftElementReferences);
-		final List<EObject> rightElementReferencesCopy = new ArrayList<EObject>(rightElementReferences);
-
-		removeAll(rightElementReferences, leftElementReferencesCopy);
-		removeAll(leftElementReferences, rightElementReferencesCopy);
-
+		final List<EObject> filteredLeft = new ArrayList<EObject>(leftElementReferences);
 		// Purge "left" list of all reference values that have been added to it
 		for (final ReferenceChangeLeftTarget added : addedReferences) {
-			leftElementReferences.remove(added.getLeftTarget());
+			filteredLeft.remove(added.getLeftTarget());
 		}
 		for (final ReferenceChangeRightTarget removed : removedReferences) {
 			removedIndices.add(Integer.valueOf(rightElementReferences.indexOf(removed.getRightTarget())));
 		}
 
 		int expectedIndex = 0;
-		for (int i = 0; i < leftElementReferences.size(); i++) {
-			final EObject matched = getMatchManager().getMatchedEObject(leftElementReferences.get(i));
+		for (int i = 0; i < filteredLeft.size(); i++) {
+			final EObject matched = getMatchManager().getMatchedEObject(filteredLeft.get(i));
 			for (final Integer removedIndex : new ArrayList<Integer>(removedIndices)) {
 				if (i == removedIndex.intValue()) {
 					expectedIndex += 1;
@@ -265,13 +295,24 @@ public class ReferencesCheck extends AbstractCheck {
 				refChange.setRightElement(rightElement);
 
 				// The loop will be broken here. Initialize left and right "target" lists for the diff
-				for (int j = removedIndices.size() - 1; j >= 0; j--) {
-					rightElementReferences.remove(removedIndices.get(j).intValue());
+				final List<EObject> leftTarget = new ArrayList<EObject>();
+				for (int j = 0; j < rightElementReferences.size(); j++) {
+					final EObject right = rightElementReferences.get(j);
+					EObject target = getMatchManager().getMatchedEObject(right);
+					if (target == null) {
+						target = createProxyFor(right);
+					}
+					leftTarget.add(target);
 				}
-				final List<EObject> leftTarget = new ArrayList<EObject>(
-						getMatchedReferences(rightElementReferences));
-				final List<EObject> rightTarget = new ArrayList<EObject>(
-						getMatchedReferences(leftElementReferences));
+				final List<EObject> rightTarget = new ArrayList<EObject>();
+				for (int j = 0; j < leftElementReferences.size(); j++) {
+					final EObject left = leftElementReferences.get(j);
+					EObject target = getMatchManager().getMatchedEObject(left);
+					if (target == null) {
+						target = createProxyFor(left);
+					}
+					rightTarget.add(target);
+				}
 
 				refChange.getLeftTarget().addAll(leftTarget);
 				refChange.getRightTarget().addAll(rightTarget);
@@ -472,12 +513,19 @@ public class ReferencesCheck extends AbstractCheck {
 	private List<EObject> computeAddedReferences(List<EObject> leftReferences, List<EObject> rightReferences) {
 		final List<EObject> deletedReferences = new ArrayList<EObject>();
 		final List<EObject> addedReferences = new ArrayList<EObject>();
+		final List<EObject> deletedProxies = new ArrayList<EObject>();
 
 		if (leftReferences != null) {
 			addedReferences.addAll(leftReferences);
 		}
 		if (rightReferences != null) {
-			deletedReferences.addAll(rightReferences);
+			for (EObject obj : rightReferences) {
+				if (obj.eIsProxy()) {
+					deletedProxies.add(obj);
+				} else {
+					deletedReferences.add(obj);
+				}
+			}
 		}
 		final List<EObject> matchedOldReferences = getMatchedReferences(deletedReferences);
 
@@ -486,7 +534,25 @@ public class ReferencesCheck extends AbstractCheck {
 		addedReferences.removeAll(matchedOldReferences);
 
 		// Double check for proxies
-		removeAll(addedReferences, deletedReferences);
+		final Iterator<EObject> addedCandidates = addedReferences.iterator();
+		while (addedCandidates.hasNext() && !deletedProxies.isEmpty()) {
+			final EObject added = addedCandidates.next();
+			if (added.eIsProxy()) {
+				final URI addedURI = ((InternalEObject)added).eProxyURI();
+				boolean hasMatch = false;
+				final Iterator<EObject> candidateMatches = deletedProxies.iterator();
+				while (!hasMatch && candidateMatches.hasNext()) {
+					final EObject candidate = candidateMatches.next();
+					if (addedURI.equals(((InternalEObject)candidate).eProxyURI())) {
+						hasMatch = true;
+						candidateMatches.remove();
+					}
+				}
+				if (hasMatch) {
+					addedCandidates.remove();
+				}
+			}
+		}
 
 		return addedReferences;
 	}
@@ -506,9 +572,16 @@ public class ReferencesCheck extends AbstractCheck {
 	private List<EObject> computeDeletedReferences(List<EObject> leftReferences, List<EObject> rightReferences) {
 		final List<EObject> deletedReferences = new ArrayList<EObject>();
 		final List<EObject> addedReferences = new ArrayList<EObject>();
+		final List<EObject> addedProxies = new ArrayList<EObject>();
 
 		if (leftReferences != null) {
-			addedReferences.addAll(leftReferences);
+			for (EObject obj : leftReferences) {
+				if (obj.eIsProxy()) {
+					addedProxies.add(obj);
+				} else {
+					addedReferences.add(obj);
+				}
+			}
 		}
 		if (rightReferences != null) {
 			deletedReferences.addAll(rightReferences);
@@ -520,7 +593,25 @@ public class ReferencesCheck extends AbstractCheck {
 		deletedReferences.removeAll(matchedNewReferences);
 
 		// Double check for proxies
-		removeAll(deletedReferences, addedReferences);
+		final Iterator<EObject> deletedCandidates = deletedReferences.iterator();
+		while (deletedCandidates.hasNext() && !addedProxies.isEmpty()) {
+			final EObject deleted = deletedCandidates.next();
+			if (deleted.eIsProxy()) {
+				final URI deletedURI = ((InternalEObject)deleted).eProxyURI();
+				boolean hasMatch = false;
+				final Iterator<EObject> candidateMatches = addedProxies.iterator();
+				while (!hasMatch && candidateMatches.hasNext()) {
+					final EObject candidate = candidateMatches.next();
+					if (deletedURI.equals(((InternalEObject)candidate).eProxyURI())) {
+						hasMatch = true;
+						candidateMatches.remove();
+					}
+				}
+				if (hasMatch) {
+					deletedCandidates.remove();
+				}
+			}
+		}
 
 		return deletedReferences;
 	}
@@ -1053,40 +1144,6 @@ public class ReferencesCheck extends AbstractCheck {
 			}
 			if (ancestorMatched != null) {
 				ancestorCopy.remove(ancestorMatched);
-			}
-		}
-	}
-
-	/**
-	 * This will remove from the <code>original</code> list all of the objects contained in the
-	 * <code>objectsToRemove</code> list.
-	 * 
-	 * @param original
-	 *            The list to purge from all elements contained in <code>objectsToRemove</code>.
-	 * @param objectsToRemove
-	 *            The list of objects to remove from <code>original</code>.
-	 */
-	private void removeAll(List<EObject> original, List<EObject> objectsToRemove) {
-		for (EObject toRemove : objectsToRemove) {
-			int index = original.indexOf(toRemove);
-			if (index != -1) {
-				original.remove(index);
-			} else if (toRemove.eIsProxy() || !getMatchManager().isInScope(toRemove)) {
-				final URI toRemoveURI = EcoreUtil.getURI(toRemove);
-
-				index = -1;
-				final Iterator<EObject> originalIterator = original.iterator();
-				while (index == -1 && originalIterator.hasNext()) {
-					final EObject originalValue = originalIterator.next();
-					if (originalValue.eIsProxy() || !getMatchManager().isInScope(originalValue)) {
-						if (toRemoveURI.equals(EcoreUtil.getURI(originalValue))) {
-							index = original.indexOf(originalValue);
-						}
-					}
-				}
-				if (index != -1) {
-					original.remove(index);
-				}
 			}
 		}
 	}

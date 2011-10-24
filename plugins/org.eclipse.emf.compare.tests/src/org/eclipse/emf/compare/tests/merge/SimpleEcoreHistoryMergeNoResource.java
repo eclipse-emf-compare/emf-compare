@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 public class SimpleEcoreHistoryMergeNoResource extends SimpleEcoreHistoryMerge {
 
@@ -38,6 +39,8 @@ public class SimpleEcoreHistoryMergeNoResource extends SimpleEcoreHistoryMerge {
 
 		leftRes = left.eResource();
 		rightRes = right.eResource();
+		EcoreUtil.resolveAll(left);
+		EcoreUtil.resolveAll(right);
 		left.eResource().getContents().clear();
 		right.eResource().getContents().clear();
 

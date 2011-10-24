@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.internal.merge.impl;
 
-import java.util.List;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+
+import java.util.Collection;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
@@ -18,6 +21,7 @@ import org.eclipse.emf.compare.diff.merge.DefaultMerger;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
 
 /**
  * Merger for a {@link ReferenceOrderChange} operation.
@@ -33,10 +37,18 @@ public class ReferenceOrderChangeMerger extends DefaultMerger {
 	@Override
 	public void doApplyInOrigin() {
 		final ReferenceOrderChange theDiff = (ReferenceOrderChange)this.diff;
-		final EObject element = theDiff.getLeftElement();
-		final List<EObject> leftTarget = theDiff.getLeftTarget();
+		final EObject leftElement = theDiff.getLeftElement();
+
+		final Collection<EObject> target = Collections2.filter(theDiff.getLeftTarget(),
+				new Predicate<EObject>() {
+					public boolean apply(EObject input) {
+						return !input.eIsProxy()
+								|| !DefaultMerger.isEMFCompareProxy(((InternalEObject)input).eProxyURI());
+					}
+				});
+
 		try {
-			EFactory.eSet(element, theDiff.getReference().getName(), leftTarget);
+			EFactory.eSet(leftElement, theDiff.getReference().getName(), target);
 		} catch (final FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
@@ -50,10 +62,18 @@ public class ReferenceOrderChangeMerger extends DefaultMerger {
 	@Override
 	public void doUndoInTarget() {
 		final ReferenceOrderChange theDiff = (ReferenceOrderChange)this.diff;
-		final EObject element = theDiff.getRightElement();
-		final List<EObject> rightTarget = theDiff.getRightTarget();
+		final EObject rightElement = theDiff.getRightElement();
+
+		final Collection<EObject> target = Collections2.filter(theDiff.getRightTarget(),
+				new Predicate<EObject>() {
+					public boolean apply(EObject input) {
+						return !input.eIsProxy()
+								|| !DefaultMerger.isEMFCompareProxy(((InternalEObject)input).eProxyURI());
+					}
+				});
+
 		try {
-			EFactory.eSet(element, theDiff.getReference().getName(), rightTarget);
+			EFactory.eSet(rightElement, theDiff.getReference().getName(), target);
 		} catch (final FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}

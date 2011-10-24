@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.diff.internal.merge.impl;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
@@ -24,6 +25,7 @@ import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -48,11 +50,10 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 	@Override
 	public void doApplyInOrigin() {
 		final ReferenceChangeRightTarget theDiff = (ReferenceChangeRightTarget)this.diff;
+		final EReference reference = theDiff.getReference();
 		final EObject element = theDiff.getLeftElement();
 		final EObject rightTarget = theDiff.getRightTarget();
 		final EObject leftTarget = theDiff.getLeftTarget();
-
-		final EReference reference = theDiff.getReference();
 
 		// ordering handling:
 		int index = -1;
@@ -80,9 +81,18 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 				}
 			} else if (op instanceof ReferenceOrderChange) {
 				final ReferenceOrderChange link = (ReferenceOrderChange)op;
-				if (link.getReference().equals(theDiff.getReference())) {
-					// FIXME respect ordering!
-					link.getLeftTarget().add(copiedValue);
+				if (link.getLeftElement() == element && link.getReference() == reference) {
+					final ListIterator<EObject> targetIterator = link.getLeftTarget().listIterator();
+					boolean replaced = false;
+					while (!replaced && targetIterator.hasNext()) {
+						final EObject target = targetIterator.next();
+						if (target.eIsProxy()
+								&& equalProxyURIs(((InternalEObject)target).eProxyURI(),
+										EcoreUtil.getURI(rightTarget))) {
+							targetIterator.set(copiedValue);
+							replaced = true;
+						}
+					}
 				}
 			}
 		}

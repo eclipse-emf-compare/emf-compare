@@ -12,17 +12,22 @@ package org.eclipse.emf.compare.tests.merge.data;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Collections;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
+import org.eclipse.emf.ecore.resource.Resource;
 
 public class AbstractInputData {
 	protected EObject loadFromClassloader(String string) throws IOException {
-		InputStream str = this.getClass().getResourceAsStream(string);
-		XMIResourceImpl res = new XMIResourceImpl(URI.createURI("http://" + string)); //$NON-NLS-1$
-		res.load(str, Collections.EMPTY_MAP);
+		final URL fileURL = FileLocator.toFileURL(getClass().getResource(string));
+		final InputStream str = fileURL.openStream();
+		final Resource res = ModelUtils.createResource(URI.createURI(fileURL.toString()));
+		res.load(str, Collections.emptyMap());
+		str.close();
 		return res.getContents().get(0);
 	}
 }

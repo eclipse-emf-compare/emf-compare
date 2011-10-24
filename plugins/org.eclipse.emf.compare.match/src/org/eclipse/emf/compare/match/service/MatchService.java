@@ -239,6 +239,9 @@ public final class MatchService {
 		final List<Resource> remainingRightResources = new ArrayList<Resource>(
 				rightResourceSet.getResources());
 
+		removeUnexistingResources(remainingLeftResources);
+		removeUnexistingResources(remainingRightResources);
+
 		applyScopeFilter(leftScope, remainingLeftResources);
 		applyScopeFilter(rightScope, remainingRightResources);
 
@@ -333,6 +336,9 @@ public final class MatchService {
 				rightResourceSet.getResources());
 		final List<Resource> remainingAncestorResources = new ArrayList<Resource>(
 				ancestorResourceSet.getResources());
+		removeUnexistingResources(remainingLeftResources);
+		removeUnexistingResources(remainingRightResources);
+		removeUnexistingResources(remainingAncestorResources);
 		applyScopeFilter(leftScope, remainingLeftResources);
 		applyScopeFilter(rightScope, remainingRightResources);
 		applyScopeFilter(ancestorScope, remainingAncestorResources);
@@ -533,6 +539,22 @@ public final class MatchService {
 		final Iterator<Resource> iterator = resources.iterator();
 		while (iterator.hasNext()) {
 			if (!scope.isInScope(iterator.next())) {
+				iterator.remove();
+			}
+		}
+	}
+
+	/**
+	 * This will remove from the given <code>list</code> those resources that were added by EMF even though
+	 * they could not be loaded (unresolved proxies).
+	 * 
+	 * @param resources
+	 *            The unfiltered list of resources.
+	 */
+	private static void removeUnexistingResources(List<Resource> resources) {
+		final Iterator<Resource> iterator = resources.iterator();
+		while (iterator.hasNext()) {
+			if (!iterator.next().getErrors().isEmpty()) {
 				iterator.remove();
 			}
 		}

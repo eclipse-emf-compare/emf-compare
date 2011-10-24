@@ -50,16 +50,16 @@ public class NonContainmentOrderTest extends MergeTestBase {
 		class3SuperTypes.add(class2);
 
 		leftModel = EcoreUtil.copy(p);
-		URI leftURI = URI.createURI("leftmodel.ecore");
+		URI leftURI = URI.createURI("file:/leftmodel.ecore");
 		ModelUtils.attachResource(leftURI, leftModel);
 
 		expectedModel = EcoreUtil.copy(leftModel);
-		URI expectedURI = URI.createURI("expectedmodel.ecore");
+		URI expectedURI = URI.createURI("file:/expectedmodel.ecore");
 		ModelUtils.attachResource(expectedURI, expectedModel);
 
 		class3SuperTypes.remove(class1);
 		rightModel = EcoreUtil.copy(p);
-		URI rightURI = URI.createURI("rightmodel.ecore");
+		URI rightURI = URI.createURI("file:/rightmodel.ecore");
 		ModelUtils.attachResource(rightURI, rightModel);
 	}
 
