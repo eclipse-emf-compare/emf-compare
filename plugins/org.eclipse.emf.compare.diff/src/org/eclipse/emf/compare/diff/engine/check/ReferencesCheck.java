@@ -281,7 +281,15 @@ public class ReferencesCheck extends AbstractCheck {
 
 		int expectedIndex = 0;
 		for (int i = 0; i < filteredLeft.size(); i++) {
-			final EObject matched = getMatchManager().getMatchedEObject(filteredLeft.get(i));
+			EObject matched = getMatchManager().getMatchedEObject(filteredLeft.get(i));
+			/*
+			 * There is a possibiliy that this object is located in another resource. If we are here, we know
+			 * it is neither added nor removed. We thus need to assume it is the case, and the object is in
+			 * both left and right, same instance in both.
+			 */
+			if (matched == null) {
+				matched = filteredLeft.get(i);
+			}
 			for (final Integer removedIndex : new ArrayList<Integer>(removedIndices)) {
 				if (i == removedIndex.intValue()) {
 					expectedIndex += 1;
@@ -529,6 +537,8 @@ public class ReferencesCheck extends AbstractCheck {
 		}
 		final List<EObject> matchedOldReferences = getMatchedReferences(deletedReferences);
 
+		// If the same object is both in left and right, it is neither added nor removed.
+		addedReferences.removeAll(deletedReferences);
 		// "Added" references are the references from the left element that
 		// have no matching "right" counterpart
 		addedReferences.removeAll(matchedOldReferences);
@@ -588,6 +598,8 @@ public class ReferencesCheck extends AbstractCheck {
 		}
 		final List<EObject> matchedNewReferences = getMatchedReferences(addedReferences);
 
+		// If the same object is both in left and right, it is neither added nor removed.
+		deletedReferences.removeAll(addedReferences);
 		// "deleted" references are the references from the right element that
 		// have no counterpart in the left element
 		deletedReferences.removeAll(matchedNewReferences);

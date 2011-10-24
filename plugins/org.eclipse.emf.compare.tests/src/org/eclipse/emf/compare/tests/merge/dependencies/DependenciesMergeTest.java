@@ -1,13 +1,18 @@
 package org.eclipse.emf.compare.tests.merge.dependencies;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.tests.merge.MergeTestBase;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.junit.Test;
 
 public class DependenciesMergeTest extends MergeTestBase {
@@ -82,6 +87,30 @@ public class DependenciesMergeTest extends MergeTestBase {
 		leftModel = input.getOriginalUpdateReferenceLeft();
 		rightModel = input.getModifiedUpdateReferenceLeft();
 		doPerformTest(false);
+	}
+
+	@Override
+	protected void assertResult(boolean isLeftToRight, EObject testLeftModel, EObject testRightModel)
+			throws IOException {
+		String leftModelString = serialize(testLeftModel);
+		String rightModelString = serialize(testRightModel);
+		String expected = leftModelString;
+		String actual = rightModelString;
+		if (!isLeftToRight) {
+			expected = rightModelString;
+			actual = leftModelString;
+		}
+
+		assertEquals(expected, actual);
+	}
+
+	public static String serialize(EObject root) throws IOException {
+		final StringWriter writer = new StringWriter();
+		final Map<String, String> options = new EMFCompareMap<String, String>();
+		((XMLResource)root.eResource()).save(writer, options);
+		final String result = writer.toString();
+		writer.flush();
+		return result;
 	}
 
 	@Override
