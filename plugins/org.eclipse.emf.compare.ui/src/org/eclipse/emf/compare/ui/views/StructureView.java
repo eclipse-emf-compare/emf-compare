@@ -15,9 +15,7 @@ import java.util.List;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.compare.ui.viewer.filter.IDifferenceFilter;
 import org.eclipse.emf.compare.ui.viewer.group.IDifferenceGroupingFacility;
-import org.eclipse.emf.compare.ui.viewer.structure.ModelStructureContentProvider;
-import org.eclipse.emf.compare.ui.viewer.structure.ParameterizedStructureContentProvider;
-import org.eclipse.emf.compare.ui.viewer.structure.ParameterizedStructureMergeViewer;
+import org.eclipse.emf.compare.ui.viewer.structure.StructureViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
@@ -32,16 +30,6 @@ public class StructureView extends ViewPart {
 	 * The ID of the view as specified by the extension.
 	 */
 	public static final String VIEW_ID = "org.eclipse.emf.compare.ui.views.StructureView"; //$NON-NLS-1$
-
-	/**
-	 * The filters to apply.
-	 */
-	protected List<IDifferenceFilter> differenceFilters;
-
-	/**
-	 * The groups to use.
-	 */
-	protected IDifferenceGroupingFacility differenceGroupingFacility;
 
 	/**
 	 * The compare structure viewer.
@@ -85,8 +73,6 @@ public class StructureView extends ViewPart {
 	public StructureView(Object pInput, List<IDifferenceFilter> filters,
 			IDifferenceGroupingFacility groupingFacility) {
 		input = pInput;
-		differenceFilters = filters;
-		differenceGroupingFacility = groupingFacility;
 	}
 
 	/**
@@ -122,72 +108,12 @@ public class StructureView extends ViewPart {
 	}
 
 	/**
-	 * The viewer to display the tree of differences.
-	 * 
-	 * @author Cedric Notot <a href="mailto:cedric.notot@obeo.fr">cedric.notot@obeo.fr</a>
-	 */
-	public class StructureViewer extends ParameterizedStructureMergeViewer {
-
-		/**
-		 * Constructor of the viewer.
-		 * 
-		 * @param parent
-		 *            The parent composite.
-		 * @param compareConfiguration
-		 *            The compare configuration.
-		 */
-		public StructureViewer(Composite parent, CompareConfiguration compareConfiguration) {
-			super(parent, compareConfiguration);
-
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.ui.viewer.structure.ParameterizedStructureMergeViewer#createToolItems()
-		 */
-		@Override
-		protected void createToolItems() {
-			// To do nothing.
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewer#updateToolItems()
-		 */
-		@Override
-		protected void updateToolItems() {
-			// To do nothing.
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.ui.viewer.structure.ParameterizedStructureMergeViewer#buildContentProvider(org.eclipse.compare.CompareConfiguration)
-		 */
-		@Override
-		protected ParameterizedStructureContentProvider buildContentProvider(
-				CompareConfiguration compareConfiguration) {
-			return new ParameterizedStructureContentProvider(compareConfiguration,
-					differenceGroupingFacility, differenceFilters);
-		}
-
-		@Override
-		protected ModelStructureContentProvider createContentProvider(
-				CompareConfiguration compareConfiguration) {
-			return buildContentProvider(compareConfiguration);
-		}
-
-	}
-
-	/**
 	 * Returns the filters.
 	 * 
 	 * @return The filters.
 	 */
 	public List<IDifferenceFilter> getDifferenceFilters() {
-		return differenceFilters;
+		return viewer.getDifferenceFilters();
 	}
 
 	/**
@@ -197,11 +123,7 @@ public class StructureView extends ViewPart {
 	 *            The filters to set.
 	 */
 	public void setDifferenceFilters(List<IDifferenceFilter> filters) {
-		if (differenceFilters == null || !differenceFilters.equals(filters)) {
-			differenceFilters = filters;
-			((ParameterizedStructureContentProvider)viewer.getContentProvider()).setSelectedFilters(filters);
-			viewer.refresh();
-		}
+		viewer.setDifferenceFilters(filters);
 	}
 
 	/**
@@ -210,7 +132,7 @@ public class StructureView extends ViewPart {
 	 * @return The groupingFacility.
 	 */
 	public IDifferenceGroupingFacility getDifferenceGroupingFacility() {
-		return differenceGroupingFacility;
+		return viewer.getDifferenceGroupingFacility();
 	}
 
 	/**
@@ -220,12 +142,7 @@ public class StructureView extends ViewPart {
 	 *            The groupingFacility to set.
 	 */
 	public void setDifferenceGroupingFacility(IDifferenceGroupingFacility groupingFacility) {
-		if (differenceGroupingFacility == null || !differenceGroupingFacility.equals(groupingFacility)) {
-			differenceGroupingFacility = groupingFacility;
-			((ParameterizedStructureContentProvider)viewer.getContentProvider())
-					.setSelectedGroup(groupingFacility);
-			viewer.refresh();
-		}
+		viewer.setDifferenceGroupingFacility(groupingFacility);
 	}
 
 }

@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.compare.CompareUI;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -28,6 +29,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.ui.viewer.filter.IDifferenceFilter;
 import org.eclipse.emf.compare.ui.viewer.group.IDifferenceGroupingFacility;
+import org.eclipse.emf.compare.ui.viewer.structure.StructureViewer;
 import org.eclipse.emf.compare.ui.views.StructureView;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -37,6 +39,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.IInputProvider;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
@@ -246,6 +249,43 @@ public final class CompareServices {
 				openView((ComparisonSnapshot)root, filters, group);
 			}
 		}
+	}
+
+	/**
+	 * Get a {@link StructureViewer} from the parent composite and a result of a model comparison.
+	 * 
+	 * @param parent
+	 *            The parent composite.
+	 * @param input
+	 *            The result of model comparison.
+	 * @return The {@link StructureViewer}
+	 */
+	public static StructureViewer getStructureViewer(Composite parent, ComparisonSnapshot input) {
+		final StructureViewer viewer = new StructureViewer(parent, new CompareConfiguration());
+		viewer.setInput(input);
+		return viewer;
+	}
+
+	/**
+	 * Get a {@link StructureViewer} from the parent composite, a result of a model comparison and a
+	 * configuration to filter and group the differences.
+	 * 
+	 * @param parent
+	 *            The parent composite.
+	 * @param input
+	 *            The result of model comparison.
+	 * @param filters
+	 *            The filters to apply.
+	 * @param groupingFacility
+	 *            The grouping to apply.
+	 * @return The {@link StructureViewer}
+	 */
+	public static StructureViewer getStructureViewer(Composite parent, ComparisonSnapshot input,
+			List<IDifferenceFilter> filters, IDifferenceGroupingFacility groupingFacility) {
+		final StructureViewer viewer = new StructureViewer(parent, new CompareConfiguration(), filters,
+				groupingFacility);
+		viewer.setInput(input);
+		return viewer;
 	}
 
 	/**
