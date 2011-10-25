@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.CompareViewerPane;
+import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
@@ -25,6 +26,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.ui.CompareTextDialog;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
+import org.eclipse.emf.compare.ui.ICompareInputDetailsProvider;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.export.ExportMenu;
 import org.eclipse.emf.compare.ui.internal.ModelComparator;
@@ -79,6 +81,13 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	 * @since 1.2
 	 */
 	protected CompareTextDialog textDialog;
+
+	/**
+	 * Keeps a reference to the EMF Compare specific input.
+	 * 
+	 * @since 1.3
+	 */
+	protected ComparisonSnapshot emfInput;
 
 	/**
 	 * Allows us to ignore a selection event in the content viewer if it is one caused by a selection event in
@@ -258,39 +267,53 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	 */
 	@Override
 	protected void inputChanged(Object input, Object oldInput) {
-		final TreePath[] expandedPaths = getExpandedTreePaths();
-
-		super.inputChanged(input, oldInput);
-		if (input != null) {
-			final ComparisonSnapshot snapshot;
-			if (input instanceof ModelCompareInput
-					&& ((ModelCompareInput)input).getComparisonSnapshot() != null) {
-				snapshot = ((ModelCompareInput)input).getComparisonSnapshot();
-			} else if (!(input instanceof ComparisonSnapshot) && input != oldInput) {
-				snapshot = ModelComparator.getComparator(configuration).getComparisonResult();
-			} else {
-				snapshot = null;
-			}
-			if (snapshot != null) {
-				Object match = null;
-				// check whether a resource or resource set comparison was performed
-				if (snapshot instanceof ComparisonResourceSnapshot) {
-					match = ((ComparisonResourceSnapshot)snapshot).getMatch();
-				} else {
-					match = ((ComparisonResourceSetSnapshot)snapshot).getMatchResourceSet();
-				}
-				if (match != null) {
-					setInput(snapshot);
-				} else {
-					setInput(null);
-				}
-			}
-			updateToolItems();
-
-			setExpandedTreePaths(expandedPaths);
+		final ModelComparator comparator;
+		if (input instanceof ICompareInput) {
+			comparator = ModelComparator.getComparator(configuration, (ICompareInput)input);
 		} else {
-			hideStructurePane();
+			comparator = ModelComparator.getComparator(configuration);
 		}
+
+		Object actualInput = input;
+		if (input instanceof ComparisonResourceSnapshot) {
+			final ComparisonResourceSnapshot snapshot = (ComparisonResourceSnapshot)input;
+			actualInput = createModelCompareInput(comparator, snapshot);
+		} else if (input instanceof ComparisonResourceSetSnapshot) {
+			final ComparisonResourceSetSnapshot snapshot = (ComparisonResourceSetSnapshot)input;
+			actualInput = createModelCompareInput(comparator, snapshot);
+		}
+
+		if (actualInput != input) {
+			setInput(actualInput);
+		} else {
+			final TreePath[] expandedPaths = getExpandedTreePaths();
+
+			super.inputChanged(actualInput, oldInput);
+
+			if (input != null) {
+				setExpandedTreePaths(expandedPaths);
+			}
+		}
+	}
+
+	/**
+	 * Creates the {@link ModelCompareInput} for this particular viewer.
+	 * 
+	 * @param provider
+	 *            The input provider instance that is in charge of this comparison.
+	 * @param snapshot
+	 *            Snapshot describing the current comparison.
+	 * @return The prepared {@link ModelCompareInput} for this particular viewer.
+	 * @since 1.3
+	 */
+	protected ModelCompareInput createModelCompareInput(ICompareInputDetailsProvider provider,
+			ComparisonSnapshot snapshot) {
+		if (snapshot instanceof ComparisonResourceSetSnapshot) {
+			return new ModelCompareInput(((ComparisonResourceSetSnapshot)snapshot).getMatchResourceSet(),
+					((ComparisonResourceSetSnapshot)snapshot).getDiffResourceSet(), provider);
+		}
+		return new ModelCompareInput(((ComparisonResourceSnapshot)snapshot).getMatch(),
+				((ComparisonResourceSnapshot)snapshot).getDiff(), provider);
 	}
 
 	/**
@@ -305,14 +328,6 @@ public class ModelStructureMergeViewer extends TreeViewer {
 			exportMenu.enableSave(false);
 		}
 		CompareViewerPane.getToolBarManager(getControl().getParent()).update(true);
-	}
-
-	/**
-	 * This will be called when the input of this viewer is set to <code>null</code> and hide the whole
-	 * viewer.
-	 */
-	private void hideStructurePane() {
-		getControl().getParent().getParent().setVisible(false);
 	}
 
 	/**
@@ -518,7 +533,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 					textDialog.getShell().setActive();
 				} else {
 					textDialog = new CompareTextDialog(getTree().getShell(), element,
-							ModelStructureMergeViewer.this, getInput());
+							ModelStructureMergeViewer.this, emfInput);
 					textDialog.create();
 					textDialog.getShell().addDisposeListener(new DisposeListener() {
 						public void widgetDisposed(DisposeEvent e) {

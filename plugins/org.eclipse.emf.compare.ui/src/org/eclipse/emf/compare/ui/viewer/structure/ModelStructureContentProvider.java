@@ -163,10 +163,18 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 		} else {
 			comparator = ModelComparator.getComparator(configuration);
 		}
-		if (newInput instanceof ComparisonResourceSnapshot) {
-			input = ((ComparisonResourceSnapshot)newInput).getDiff();
-		} else if (newInput instanceof ComparisonResourceSetSnapshot) {
-			input = ((ComparisonResourceSetSnapshot)newInput).getDiffResourceSet();
+
+		ComparisonSnapshot snapshot = null;
+		if (newInput instanceof ModelCompareInput) {
+			snapshot = ((ModelCompareInput)newInput).getComparisonSnapshot();
+		} else if (newInput instanceof ComparisonSnapshot) {
+			snapshot = (ComparisonSnapshot)newInput;
+		}
+
+		if (snapshot instanceof ComparisonResourceSnapshot) {
+			input = ((ComparisonResourceSnapshot)snapshot).getDiff();
+		} else if (snapshot instanceof ComparisonResourceSetSnapshot) {
+			input = ((ComparisonResourceSetSnapshot)snapshot).getDiffResourceSet();
 		} else if (comparator.getComparisonResult() != null) {
 			input = retrieveInputFromSnapshot(comparator.getComparisonResult());
 		} else if (newInput instanceof ModelCompareInput) {
