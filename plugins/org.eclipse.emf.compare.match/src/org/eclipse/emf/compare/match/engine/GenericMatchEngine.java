@@ -635,14 +635,15 @@ public class GenericMatchEngine implements IMatchEngine {
 			result = doMatch(leftResource, leftScope, rightResource, rightScope, ancestorResource,
 					ancestorScope, monitor);
 		}
-		Set<EObject> alreadyUnmatched = new LinkedHashSet<EObject>();
-		for (UnmatchElement unmatched : new LinkedHashSet<UnmatchElement>(result.getUnmatchedElements())) {
-			if (alreadyUnmatched.contains(unmatched.getElement())) {
-				EcoreUtil.remove(unmatched);
-			} else {
-				alreadyUnmatched.add(unmatched.getElement());
+		if (result != null) {
+			Set<EObject> alreadyUnmatched = new LinkedHashSet<EObject>();
+			for (UnmatchElement unmatched : new LinkedHashSet<UnmatchElement>(result.getUnmatchedElements())) {
+				if (alreadyUnmatched.contains(unmatched.getElement())) {
+					EcoreUtil.remove(unmatched);
+				} else {
+					alreadyUnmatched.add(unmatched.getElement());
+				}
 			}
-
 		}
 		return result;
 	}
