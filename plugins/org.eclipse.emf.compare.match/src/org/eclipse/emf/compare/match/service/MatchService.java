@@ -246,17 +246,24 @@ public final class MatchService {
 		applyScopeFilter(rightScope, remainingRightResources);
 
 		final MatchResourceSet match = MatchFactory.eINSTANCE.createMatchResourceSet();
+
+		// We'll have a softer pass for the first resource
+		boolean firstResource = true;
 		for (final Resource res : new ArrayList<Resource>(remainingLeftResources)) {
 			final Resource matchedResource = findMatchingResource(res, remainingRightResources);
-			if (matchedResource != null
-					&& findMatchingResource(matchedResource, remainingLeftResources) == res) {
-				remainingLeftResources.remove(res);
-				remainingRightResources.remove(matchedResource);
-				MatchModel comparisonResult = doResourceMatch(res, matchedResource, options);
-				if (comparisonResult != null) {
-					match.getMatchModels().add(comparisonResult);
+			if (matchedResource != null) {
+				boolean isMatch = firstResource && remainingRightResources.size() == 1
+						|| findMatchingResource(matchedResource, remainingLeftResources) == res;
+				if (isMatch) {
+					remainingLeftResources.remove(res);
+					remainingRightResources.remove(matchedResource);
+					MatchModel comparisonResult = doResourceMatch(res, matchedResource, options);
+					if (comparisonResult != null) {
+						match.getMatchModels().add(comparisonResult);
+					}
 				}
 			}
+			firstResource = false;
 		}
 		/*
 		 * Tries matching remaining resources with a second pass. All unmatched are considered to have no
