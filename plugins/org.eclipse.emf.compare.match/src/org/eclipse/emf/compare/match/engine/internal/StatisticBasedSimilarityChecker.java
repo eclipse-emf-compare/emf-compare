@@ -14,6 +14,7 @@ package org.eclipse.emf.compare.match.engine.internal;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -54,7 +55,7 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 * 
 	 * @since 1.3
 	 */
-	private Map<String, Double> valueSimilarityCache;
+	protected Map<String, Double> valueSimilarityCache;
 
 	/**
 	 * This map is used to cache the relation similarity.
@@ -62,14 +63,14 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 * 
 	 * @since 1.3
 	 */
-	private Map<String, Double> relationSimilarityCache;
+	protected Map<String, Double> relationSimilarityCache;
 
 	/**
 	 * This map is used to cache the type similarity. <code>Pair(Element1, Element2) => typeSimilarity</code>.
 	 * 
 	 * @since 1.3
 	 */
-	private Map<String, Double> typeSimilarityCache;
+	protected Map<String, Double> typeSimilarityCache;
 
 	/**
 	 * This map will allow us to cache the number of non-null features a given instance of EObject has.
@@ -88,14 +89,14 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	/**
 	 * Create a new checker.
 	 * 
-	 * @param filter
+	 * @param mmFilter
 	 *            a metamodel filter the checker can use to know whether a feature alwaas has the same value
 	 *            or not in the models.
 	 * @param bridge
 	 *            utility class to keep API compatibility.
 	 */
-	public StatisticBasedSimilarityChecker(MetamodelFilter filter, GenericMatchEngineToCheckerBridge bridge) {
-		super(filter);
+	public StatisticBasedSimilarityChecker(MetamodelFilter mmFilter, GenericMatchEngineToCheckerBridge bridge) {
+		super(mmFilter);
 		this.matchToCheckerBridge = bridge;
 		initMetricsCaches();
 	}
@@ -106,10 +107,10 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 * @since 1.3
 	 */
 	protected void initMetricsCaches() {
-		nameSimilarityCache = new HashMap<String, Double>();
-		valueSimilarityCache = new HashMap<String, Double>();
-		relationSimilarityCache = new HashMap<String, Double>();
-		typeSimilarityCache = new HashMap<String, Double>();
+		nameSimilarityCache = new LinkedHashMap<String, Double>();
+		valueSimilarityCache = new LinkedHashMap<String, Double>();
+		relationSimilarityCache = new LinkedHashMap<String, Double>();
+		typeSimilarityCache = new LinkedHashMap<String, Double>();
 	}
 
 	/**
@@ -414,14 +415,22 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 */
 	protected Map<String, Double> getCache(SimilarityKind kind) {
 		final Map<String, Double> cache;
-		if (kind == SimilarityKind.NAME) {
-			cache = nameSimilarityCache;
-		} else if (kind == SimilarityKind.RELATION) {
-			cache = relationSimilarityCache;
-		} else if (kind == SimilarityKind.TYPE) {
-			cache = typeSimilarityCache;
-		} else {
-			cache = valueSimilarityCache;
+		switch (kind) {
+			case NAME:
+				cache = nameSimilarityCache;
+				break;
+			case RELATION:
+				cache = relationSimilarityCache;
+				break;
+			case TYPE:
+				cache = typeSimilarityCache;
+				break;
+			case VALUE:
+				cache = valueSimilarityCache;
+				break;
+			default:
+				// Should never happen
+				cache = valueSimilarityCache;
 		}
 		return cache;
 	}
