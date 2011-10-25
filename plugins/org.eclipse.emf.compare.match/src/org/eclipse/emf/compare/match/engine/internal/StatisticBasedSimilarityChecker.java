@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2011 Obeo.
+ * Copyright (c) 2006, 2011 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Victor Roldan Betancort - bug 352727
+ *     Victor Roldan Betancort - bug 352727, bug 360939
  *******************************************************************************/
 package org.eclipse.emf.compare.match.engine.internal;
 
@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.match.EMFCompareMatchMessages;
 import org.eclipse.emf.compare.match.engine.AbstractSimilarityChecker;
 import org.eclipse.emf.compare.match.internal.statistic.NameSimilarity;
 import org.eclipse.emf.compare.match.internal.statistic.StructureSimilarity;
@@ -34,32 +33,43 @@ import org.eclipse.emf.ecore.resource.Resource;
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
-
 	/** Used while computing similarity, this defines the general threshold. */
 	private static final double GENERAL_THRESHOLD = 0.96d;
-
-	/** This constant is used as key for the buffering of type similarity. */
-	private static final char TYPE_SIMILARITY = 't';
 
 	/**
 	 * Minimal number of attributes an element must have for content comparison.
 	 */
 	private static final int MIN_ATTRIBUTES_COUNT = 5;
 
-	/** This constant is used as key for the buffering of name similarity. */
-	private static final char NAME_SIMILARITY = 'n';
-
-	/** This constant is used as key for the buffering of relations similarity. */
-	private static final char RELATION_SIMILARITY = 'r';
-
-	/** This constant is used as key for the buffering of value similarity. */
-	private static final char VALUE_SIMILARITY = 'v';
+	/**
+	 * This map is used to cache the name similarity. <code>Pair(Element1, Element2) => nameSimilarity</code>.
+	 * 
+	 * @since 1.3
+	 */
+	protected Map<String, Double> nameSimilarityCache;
 
 	/**
-	 * This map is used to cache the comparison results Pair(Element1, Element2) => [nameSimilarity,
-	 * valueSimilarity, relationSimilarity, TypeSimilarity].
+	 * This map is used to cache the value similarity.
+	 * <code>Pair(Element1, Element2) => valueSimilarity</code>.
+	 * 
+	 * @since 1.3
 	 */
-	private final Map<String, Double> metricsCache = new HashMap<String, Double>();
+	private Map<String, Double> valueSimilarityCache;
+
+	/**
+	 * This map is used to cache the relation similarity.
+	 * <code>Pair(Element1, Element2) => relationSimilarity</code>.
+	 * 
+	 * @since 1.3
+	 */
+	private Map<String, Double> relationSimilarityCache;
+
+	/**
+	 * This map is used to cache the type similarity. <code>Pair(Element1, Element2) => typeSimilarity</code>.
+	 * 
+	 * @since 1.3
+	 */
+	private Map<String, Double> typeSimilarityCache;
 
 	/**
 	 * This map will allow us to cache the number of non-null features a given instance of EObject has.
@@ -73,7 +83,7 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 * This field is needed to keep the same behavior for clients having subclassed the generic match engine.
 	 */
 	@Deprecated
-	private GenericMatchEngineToCheckerBridge bridge;
+	private GenericMatchEngineToCheckerBridge matchToCheckerBridge;
 
 	/**
 	 * Create a new checker.
@@ -86,7 +96,20 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 */
 	public StatisticBasedSimilarityChecker(MetamodelFilter filter, GenericMatchEngineToCheckerBridge bridge) {
 		super(filter);
-		this.bridge = bridge;
+		this.matchToCheckerBridge = bridge;
+		initMetricsCaches();
+	}
+
+	/**
+	 * Initializes the different metrics caches.
+	 * 
+	 * @since 1.3
+	 */
+	protected void initMetricsCaches() {
+		nameSimilarityCache = new HashMap<String, Double>();
+		valueSimilarityCache = new HashMap<String, Double>();
+		relationSimilarityCache = new HashMap<String, Double>();
+		typeSimilarityCache = new HashMap<String, Double>();
 	}
 
 	/**
@@ -161,12 +184,12 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 */
 	protected double nameSimilarity(EObject obj1, EObject obj2) {
 		double similarity = 0d;
-		final Double value = getSimilarityFromCache(obj1, obj2, NAME_SIMILARITY);
+		final Double value = getSimilarityFromCache(obj1, obj2, SimilarityKind.NAME);
 		if (value != null) {
 			similarity = value;
 		} else {
-			similarity = bridge.nameSimilarity(obj1, obj2);
-			setSimilarityInCache(obj1, obj2, NAME_SIMILARITY, similarity);
+			similarity = matchToCheckerBridge.nameSimilarity(obj1, obj2);
+			setSimilarityInCache(obj1, obj2, SimilarityKind.NAME, similarity);
 		}
 		// fails silently, will return a similarity of 0d
 		return similarity;
@@ -229,12 +252,12 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 */
 	private double typeSimilarity(EObject obj1, EObject obj2) throws FactoryException {
 		double similarity = 0d;
-		final Double value = getSimilarityFromCache(obj1, obj2, TYPE_SIMILARITY);
+		final Double value = getSimilarityFromCache(obj1, obj2, SimilarityKind.TYPE);
 		if (value != null) {
 			similarity = value;
 		} else {
 			similarity = StructureSimilarity.typeSimilarityMetric(obj1, obj2);
-			setSimilarityInCache(obj1, obj2, TYPE_SIMILARITY, similarity);
+			setSimilarityInCache(obj1, obj2, SimilarityKind.TYPE, similarity);
 		}
 		return similarity;
 	}
@@ -253,21 +276,21 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 */
 	protected double contentSimilarity(EObject obj1, EObject obj2) throws FactoryException {
 		double similarity = 0d;
-		Double value = getSimilarityFromCache(obj1, obj2, VALUE_SIMILARITY);
+		Double value = getSimilarityFromCache(obj1, obj2, SimilarityKind.VALUE);
 		// This might be the counter check, invert the two
 		if (value == null) {
-			value = getSimilarityFromCache(obj2, obj1, VALUE_SIMILARITY);
+			value = getSimilarityFromCache(obj2, obj1, SimilarityKind.VALUE);
 		}
 		if (value != null) {
 			similarity = value;
 		} else if (filter.getFilteredFeatures(obj1).size() < MIN_ATTRIBUTES_COUNT
 				|| filter.getFilteredFeatures(obj2).size() < MIN_ATTRIBUTES_COUNT) {
-			similarity = bridge.contentSimilarity(obj1, obj2);
-			setSimilarityInCache(obj1, obj2, VALUE_SIMILARITY, similarity);
+			similarity = matchToCheckerBridge.contentSimilarity(obj1, obj2);
+			setSimilarityInCache(obj1, obj2, SimilarityKind.VALUE, similarity);
 		} else {
 			similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.contentValue(obj1, filter),
 					NameSimilarity.contentValue(obj2, filter));
-			setSimilarityInCache(obj1, obj2, VALUE_SIMILARITY, similarity);
+			setSimilarityInCache(obj1, obj2, SimilarityKind.VALUE, similarity);
 		}
 		return similarity;
 	}
@@ -305,7 +328,7 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 			if (!feature.isDerived()) {
 				final Object value = eobj.eGet(feature);
 				if (feature.isMany()) {
-					if (((Collection)value).size() > 0) {
+					if (((Collection<?>)value).size() > 0) {
 						count++;
 					}
 				} else {
@@ -337,24 +360,20 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 * @param similarityKind
 	 *            Kind of similarity this key will represent in cache.
 	 * @return Unique key for the similarity cache.
+	 * @since 1.3
 	 */
-	private static String pairHashCode(EObject obj1, EObject obj2, char similarityKind) {
-		if (similarityKind == NAME_SIMILARITY || similarityKind == TYPE_SIMILARITY
-				|| similarityKind == VALUE_SIMILARITY || similarityKind == RELATION_SIMILARITY) {
-			final StringBuilder hash = new StringBuilder(String.valueOf(similarityKind));
+	protected static String pairHashCode(EObject obj1, EObject obj2) {
+		final StringBuilder hash = new StringBuilder();
 
-			final int obj1Hash = obj1.hashCode();
-			final int obj2Hash = obj2.hashCode();
-			if (obj1Hash < obj2Hash) {
-				hash.append(String.valueOf(obj1Hash)).append(String.valueOf(obj2Hash));
-			} else {
-				hash.append(String.valueOf(obj2Hash)).append(String.valueOf(obj1Hash));
-			}
-
-			return hash.toString();
+		final int obj1Hash = obj1.hashCode();
+		final int obj2Hash = obj2.hashCode();
+		if (obj1Hash < obj2Hash) {
+			hash.append(String.valueOf(obj1Hash)).append(String.valueOf(obj2Hash));
+		} else {
+			hash.append(String.valueOf(obj2Hash)).append(String.valueOf(obj1Hash));
 		}
-		throw new IllegalArgumentException(EMFCompareMatchMessages.getString(
-				"DifferencesServices.illegalSimilarityKind", similarityKind)); //$NON-NLS-1$
+
+		return hash.toString();
 	}
 
 	/**
@@ -377,9 +396,34 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 *            Kind of similarity to get.
 	 * @return The similarity as described by <code>similarityKind</code> as it is stored in cache for the two
 	 *         given {@link EObject}s.
+	 * @since 1.3
 	 */
-	private Double getSimilarityFromCache(EObject obj1, EObject obj2, char similarityKind) {
-		return metricsCache.get(pairHashCode(obj1, obj2, similarityKind));
+	protected Double getSimilarityFromCache(EObject obj1, EObject obj2, SimilarityKind similarityKind) {
+		final Map<String, Double> cache = getCache(similarityKind);
+
+		return cache.get(pairHashCode(obj1, obj2));
+	}
+
+	/**
+	 * Returns the cache for the given similarity kind.
+	 * 
+	 * @param kind
+	 *            The kind of similarity for which we need the cache.
+	 * @return The cache for the given similarity kind.
+	 * @since 1.3
+	 */
+	protected Map<String, Double> getCache(SimilarityKind kind) {
+		final Map<String, Double> cache;
+		if (kind == SimilarityKind.NAME) {
+			cache = nameSimilarityCache;
+		} else if (kind == SimilarityKind.RELATION) {
+			cache = relationSimilarityCache;
+		} else if (kind == SimilarityKind.TYPE) {
+			cache = typeSimilarityCache;
+		} else {
+			cache = valueSimilarityCache;
+		}
+		return cache;
 	}
 
 	/**
@@ -423,12 +467,12 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 */
 	private double relationsSimilarity(EObject obj1, EObject obj2) throws FactoryException {
 		double similarity = 0d;
-		final Double value = getSimilarityFromCache(obj1, obj2, RELATION_SIMILARITY);
+		final Double value = getSimilarityFromCache(obj1, obj2, SimilarityKind.RELATION);
 		if (value != null) {
 			similarity = value;
 		} else {
 			similarity = StructureSimilarity.relationsSimilarityMetric(obj1, obj2, filter);
-			setSimilarityInCache(obj1, obj2, RELATION_SIMILARITY, similarity);
+			setSimilarityInCache(obj1, obj2, SimilarityKind.RELATION, similarity);
 		}
 		return similarity;
 	}
@@ -453,9 +497,13 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 *            Kind of similarity to set.
 	 * @param similarity
 	 *            Value of the similarity between the two {@link EObject}s.
+	 * @since 1.3
 	 */
-	private void setSimilarityInCache(EObject obj1, EObject obj2, char similarityKind, double similarity) {
-		metricsCache.put(pairHashCode(obj1, obj2, similarityKind), new Double(similarity));
+	protected void setSimilarityInCache(EObject obj1, EObject obj2, SimilarityKind similarityKind,
+			double similarity) {
+		final Map<String, Double> cache = getCache(similarityKind);
+
+		cache.put(pairHashCode(obj1, obj2), Double.valueOf(similarity));
 	}
 
 	/**
@@ -473,5 +521,25 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	@Override
 	public void init(Resource leftResource, Resource rightResource) throws FactoryException {
 		// this similarity checker needs no initialization.
+	}
+
+	/**
+	 * Converts the legacy strings into a regular enumeration.
+	 * 
+	 * @author Victor Roldan Betancort
+	 * @since 1.3
+	 */
+	protected static enum SimilarityKind {
+		/** This constant is used as key for the buffering of type similarity. */
+		TYPE,
+
+		/** This constant is used as key for the buffering of name similarity. */
+		NAME,
+
+		/** This constant is used as key for the buffering of relations similarity. */
+		RELATION,
+
+		/** This constant is used as key for the buffering of value similarity. */
+		VALUE
 	}
 }
