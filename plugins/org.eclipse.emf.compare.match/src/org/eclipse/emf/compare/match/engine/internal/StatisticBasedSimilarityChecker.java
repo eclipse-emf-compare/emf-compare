@@ -14,7 +14,6 @@ package org.eclipse.emf.compare.match.engine.internal;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -107,10 +106,11 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 * @since 1.3
 	 */
 	protected void initMetricsCaches() {
-		nameSimilarityCache = new LinkedHashMap<String, Double>();
-		valueSimilarityCache = new LinkedHashMap<String, Double>();
-		relationSimilarityCache = new LinkedHashMap<String, Double>();
-		typeSimilarityCache = new LinkedHashMap<String, Double>();
+		final int initialCapacity = 256;
+		nameSimilarityCache = new HashMap<String, Double>(initialCapacity);
+		valueSimilarityCache = new HashMap<String, Double>(initialCapacity);
+		relationSimilarityCache = new HashMap<String, Double>(initialCapacity);
+		typeSimilarityCache = new HashMap<String, Double>(initialCapacity);
 	}
 
 	/**
