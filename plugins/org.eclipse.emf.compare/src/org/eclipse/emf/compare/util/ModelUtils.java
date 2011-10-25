@@ -421,11 +421,10 @@ public final class ModelUtils {
 
 		// Copies the root to avoid modifying it
 		final EObject copyRoot = EcoreUtil.copy(root);
-		final String extension;
-		if (root.eResource() != null) {
+		String extension = ".xml"; //$NON-NLS-1$
+		if (root.eResource() != null && root.eResource().getURI() != null
+				&& root.eResource().getURI().fileExtension() != null) {
 			extension = '.' + root.eResource().getURI().fileExtension();
-		} else {
-			extension = ".xml"; //$NON-NLS-1$
 		}
 		attachResource(URI.createFileURI("resource" + extension), copyRoot); //$NON-NLS-1$
 
