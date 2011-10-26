@@ -19,6 +19,7 @@ import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensio
 import org.eclipse.emf.compare.uml2diff.UML2DiffFactory;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeUpdateReference;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.uml2.uml.util.UMLUtil;
 
@@ -77,8 +78,8 @@ public class UMLStereotypeUpdateReferenceFactory extends AbstractDiffExtensionFa
 		ret.setReference(updateReference.getReference());
 		ret.setLeftElement(leftBase);
 		ret.setRightElement(rightBase);
-		ret.setRightTarget(updateReference.getRightTarget());
-		ret.setLeftTarget(updateReference.getLeftTarget());
+
+		setTargets(updateReference, ret);
 
 		ret.getHideElements().add(input);
 		ret.getRequires().add(input);
@@ -94,5 +95,31 @@ public class UMLStereotypeUpdateReferenceFactory extends AbstractDiffExtensionFa
 		final DiffModel rootDiffGroup = (DiffModel)EcoreUtil.getRootContainer(input);
 
 		return findOrCreateDiffGroup(rootDiffGroup, rightBase, crossReferencer);
+	}
+
+	/**
+	 * Sets the target of the given reference (The generic diff engine finds a target in the model, but
+	 * stereotype values and features should apply to the "base" element of a diff).
+	 * 
+	 * @param updateReference
+	 *            {@link UpdateReference} from DiffModel.
+	 * @param ret
+	 *            {@link UpdateReference} which will be modified and return.
+	 * @see UMLUtil#getBaseElement(EObject)
+	 */
+	protected void setTargets(final UpdateReference updateReference, final UpdateReference ret) {
+		final EStructuralFeature reference = updateReference.getReference();
+		final EObject diffRightTarget = updateReference.getRightTarget();
+
+		final EObject rightTargetBase = UMLUtil.getBaseElement(diffRightTarget);
+		if (rightTargetBase != null && rightTargetBase.eGet(reference) != null) {
+			ret.setRightTarget(rightTargetBase);
+		}
+
+		final EObject diffLeftTarget = updateReference.getLeftTarget();
+		final EObject leftTargetBase = UMLUtil.getBaseElement(diffLeftTarget);
+		if (leftTargetBase != null && leftTargetBase.eGet(reference) != null) {
+			ret.setLeftTarget(leftTargetBase);
+		}
 	}
 }
