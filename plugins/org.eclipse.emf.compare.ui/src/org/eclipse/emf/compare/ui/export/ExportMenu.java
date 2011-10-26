@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.ui.AbstractCompareAction;
+import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.internal.wizard.SaveDeltaWizard;
 import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer;
 import org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewer;
@@ -90,12 +91,21 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 		saveAction = new AbstractCompareAction(bundle, "action.export.emfdiff.") { //$NON-NLS-1$
 			@Override
 			public void run() {
-				final SaveDeltaWizard wizard = new SaveDeltaWizard(bundle
-						.getString("UI_SaveDeltaWizard_FileExtension")); //$NON-NLS-1$
-				wizard.init(PlatformUI.getWorkbench(), (ComparisonSnapshot)parentViewer.getInput());
-				final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getShell(), wizard);
-				dialog.open();
+				final SaveDeltaWizard wizard = new SaveDeltaWizard(
+						bundle.getString("UI_SaveDeltaWizard_FileExtension")); //$NON-NLS-1$
+				final Object input = parentViewer.getInput();
+				ComparisonSnapshot snapshot = null;
+				if (input instanceof ComparisonSnapshot) {
+					snapshot = (ComparisonSnapshot)input;
+				} else if (input instanceof ModelCompareInput) {
+					snapshot = ((ModelCompareInput)input).getComparisonSnapshot();
+				}
+				if (snapshot != null) {
+					wizard.init(PlatformUI.getWorkbench(), snapshot);
+					final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench()
+							.getActiveWorkbenchWindow().getShell(), wizard);
+					dialog.open();
+				}
 			}
 		};
 	}
@@ -104,8 +114,8 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	 * This will parse {@link #EXPORT_ACTIONS_EXTENSION_POINT} for actions to display.
 	 */
 	private static void parseExtensionMetaData() {
-		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
-				EXPORT_ACTIONS_EXTENSION_POINT).getExtensions();
+		final IExtension[] extensions = Platform.getExtensionRegistry()
+				.getExtensionPoint(EXPORT_ACTIONS_EXTENSION_POINT).getExtensions();
 		for (final IExtension extension : extensions) {
 			for (final IConfigurationElement configElement : extension.getConfigurationElements()) {
 				final ExportActionDescriptor descriptor = new ExportActionDescriptor(configElement);

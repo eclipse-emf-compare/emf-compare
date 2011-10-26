@@ -26,6 +26,7 @@ import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
@@ -281,6 +282,19 @@ public class ModelCompareInput implements ICompareInput {
 	 * @since 1.3
 	 */
 	public ComparisonSnapshot getComparisonSnapshot() {
+		if (comparisonSnapshot == null) {
+			if (diff instanceof DiffModel) {
+				comparisonSnapshot = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
+				((ComparisonResourceSnapshot)comparisonSnapshot).setDiff((DiffModel)diff);
+				((ComparisonResourceSnapshot)comparisonSnapshot).setMatch((MatchModel)match);
+			} else {
+				comparisonSnapshot = DiffFactory.eINSTANCE.createComparisonResourceSetSnapshot();
+				((ComparisonResourceSetSnapshot)comparisonSnapshot).setDiffResourceSet((DiffResourceSet)diff);
+				((ComparisonResourceSetSnapshot)comparisonSnapshot)
+						.setMatchResourceSet((MatchResourceSet)match);
+
+			}
+		}
 		return comparisonSnapshot;
 	}
 
