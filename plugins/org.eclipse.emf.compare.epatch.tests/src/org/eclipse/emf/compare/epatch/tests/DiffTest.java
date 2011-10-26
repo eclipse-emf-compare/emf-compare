@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -85,6 +86,7 @@ public class DiffTest {
 			return uri.substring(0, p) + "1" + uri.substring(p);
 	}
 
+	@Ignore
 	@Test
 	public void testCreateDiff() {
 
@@ -100,6 +102,7 @@ public class DiffTest {
 		EmfAssert.assertEObjectsEqual(expected, epatch);
 	}
 
+	@Ignore
 	@Test
 	public void testForOrphanedObjects() throws InterruptedException {
 		Epatch epatch = DiffEpatchService.createEpatch(match, diff, name);
