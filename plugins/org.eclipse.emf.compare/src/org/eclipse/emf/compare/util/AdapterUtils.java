@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Atos -Arthur Daussy  - extensible ItemProviderAdapterFactory
  *******************************************************************************/
 package org.eclipse.emf.compare.util;
 
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.internal.RegisteredItemProviderAdapterFactoryRegistery;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -115,6 +117,13 @@ public final class AdapterUtils {
 	 */
 	private static ComposedAdapterFactory createAdapterFactory() {
 		final List<AdapterFactory> factories = new ArrayList<AdapterFactory>();
+		/**
+		 * Initialize IPAF from extension point
+		 */
+		RegisteredItemProviderAdapterFactoryRegistery.getInstance().parseInitialContributions();
+		factories.add(RegisteredItemProviderAdapterFactoryRegistery.getInstance()
+				.createSortedListOfSpecifcIPAF());
+
 		factories.add(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
 		factories.add(new ReflectiveItemProviderAdapterFactory());
 		return new ComposedAdapterFactory(factories);
