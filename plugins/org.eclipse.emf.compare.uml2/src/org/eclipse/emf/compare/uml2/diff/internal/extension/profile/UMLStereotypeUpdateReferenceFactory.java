@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Obeo.
+ * Copyright (c) 2011 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Arthur Daussy (Atos) - [361666] Fixing target of stereotype application differences
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.diff.internal.extension.profile;
 
@@ -109,17 +110,21 @@ public class UMLStereotypeUpdateReferenceFactory extends AbstractDiffExtensionFa
 	 */
 	protected void setTargets(final UpdateReference updateReference, final UpdateReference ret) {
 		final EStructuralFeature reference = updateReference.getReference();
-		final EObject diffRightTarget = updateReference.getRightTarget();
+		final EObject rightTarget = updateReference.getRightTarget();
 
-		final EObject rightTargetBase = UMLUtil.getBaseElement(diffRightTarget);
+		final EObject rightTargetBase = UMLUtil.getBaseElement(rightTarget);
 		if (rightTargetBase != null && rightTargetBase.eGet(reference) != null) {
 			ret.setRightTarget(rightTargetBase);
+		} else {
+			ret.setRightTarget(rightTarget);
 		}
 
-		final EObject diffLeftTarget = updateReference.getLeftTarget();
-		final EObject leftTargetBase = UMLUtil.getBaseElement(diffLeftTarget);
+		final EObject leftTarget = updateReference.getLeftTarget();
+		final EObject leftTargetBase = UMLUtil.getBaseElement(leftTarget);
 		if (leftTargetBase != null && leftTargetBase.eGet(reference) != null) {
 			ret.setLeftTarget(leftTargetBase);
+		} else {
+			ret.setLeftTarget(leftTarget);
 		}
 	}
 }
