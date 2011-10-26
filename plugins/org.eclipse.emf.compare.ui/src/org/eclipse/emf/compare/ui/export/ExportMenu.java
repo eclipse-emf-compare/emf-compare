@@ -192,8 +192,14 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	 */
 	public String getComparedModelsExtension() {
 		String extension = ALL_EXTENSIONS;
-		if (parentViewer.getInput() instanceof ComparisonResourceSnapshot) {
-			final DiffModel diffModel = ((ComparisonResourceSnapshot)parentViewer.getInput()).getDiff();
+		ComparisonSnapshot snapshot = null;
+		if (parentViewer.getInput() instanceof ComparisonSnapshot) {
+			snapshot = (ComparisonSnapshot)parentViewer.getInput();
+		} else if (parentViewer.getInput() instanceof ModelCompareInput) {
+			snapshot = ((ModelCompareInput)parentViewer.getInput()).getComparisonSnapshot();
+		}
+		if (snapshot instanceof ComparisonResourceSnapshot) {
+			final DiffModel diffModel = ((ComparisonResourceSnapshot)snapshot).getDiff();
 			String leftExtension = ALL_EXTENSIONS;
 			String rightExtension = ALL_EXTENSIONS;
 			String ancestorExtension = null;
@@ -212,10 +218,10 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 					&& (ancestorExtension == null || leftExtension.equals(ancestorExtension))) {
 				extension = leftExtension;
 			}
-		} else {
+		} else if (snapshot != null) {
 			String lastExtension = null;
-			for (final DiffModel diff : ((ComparisonResourceSetSnapshot)parentViewer.getInput())
-					.getDiffResourceSet().getDiffModels()) {
+			for (final DiffModel diff : ((ComparisonResourceSetSnapshot)snapshot).getDiffResourceSet()
+					.getDiffModels()) {
 				String leftExtension = ALL_EXTENSIONS;
 				String rightExtension = ALL_EXTENSIONS;
 				String ancestorExtension = null;

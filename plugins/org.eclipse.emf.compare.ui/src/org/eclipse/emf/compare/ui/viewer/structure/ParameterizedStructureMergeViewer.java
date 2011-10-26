@@ -144,6 +144,7 @@ public class ParameterizedStructureMergeViewer extends ModelStructureMergeViewer
 			groupsMenu.setImageDescriptor(imgDesc);
 			tbm.appendToGroup(orderingGroupName, groupsMenu);
 		}
+		tbm.update(true);
 	}
 
 	/**

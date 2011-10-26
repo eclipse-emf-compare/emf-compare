@@ -278,9 +278,11 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		if (input instanceof ComparisonResourceSnapshot) {
 			final ComparisonResourceSnapshot snapshot = (ComparisonResourceSnapshot)input;
 			actualInput = createModelCompareInput(comparator, snapshot);
+			emfInput = snapshot;
 		} else if (input instanceof ComparisonResourceSetSnapshot) {
 			final ComparisonResourceSetSnapshot snapshot = (ComparisonResourceSetSnapshot)input;
 			actualInput = createModelCompareInput(comparator, snapshot);
+			emfInput = snapshot;
 		}
 
 		if (actualInput != input) {
