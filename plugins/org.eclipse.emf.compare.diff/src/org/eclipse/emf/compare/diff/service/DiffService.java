@@ -314,8 +314,10 @@ public final class DiffService {
 				final EObject changedElement;
 				if (mec instanceof ModelElementChangeLeftTarget) {
 					changedElement = ((ModelElementChangeLeftTarget)mec).getLeftElement();
-				} else {
+				} else if (mec instanceof ModelElementChangeRightTarget) {
 					changedElement = ((ModelElementChangeRightTarget)mec).getRightElement();
+				} else {
+					changedElement = null;
 				}
 				if (updateDiff.getLeftTarget() == changedElement) {
 					updateDiff.setLeftTarget(null);
