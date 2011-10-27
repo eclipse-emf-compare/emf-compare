@@ -119,12 +119,10 @@ public final class EFactory {
 				if (elementIndex > -1 && elementIndex < listSize) {
 					internalEList.addUnique(elementIndex, arg);
 				} else {
-					if (reorder) {
-						attachRealPositionEAdapter(arg, elementIndex);
-					}
 					internalEList.addUnique(arg);
 				}
 				if (reorder) {
+					attachRealPositionEAdapter(arg, elementIndex);
 					reorderList(internalEList);
 				}
 			} else if (manyValue instanceof List<?>) {
@@ -133,12 +131,10 @@ public final class EFactory {
 				if (elementIndex > -1 && elementIndex < listSize) {
 					list.add(elementIndex, arg);
 				} else {
-					if (reorder) {
-						attachRealPositionEAdapter(arg, elementIndex);
-					}
 					list.add(arg);
 				}
 				if (reorder) {
+					attachRealPositionEAdapter(arg, elementIndex);
 					reorderList(list);
 				}
 			} else if (manyValue instanceof Collection<?>) {

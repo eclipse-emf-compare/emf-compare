@@ -128,9 +128,9 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 			if (index > -1 && index < listSize) {
 				internalEList.addUnique(index, newValue);
 			} else {
-				attachRealPositionEAdapter(newValue, index);
 				internalEList.addUnique(newValue);
 			}
+			attachRealPositionEAdapter(newValue, index);
 			reorderList(internalEList);
 		} else if (collection instanceof List<?>) {
 			final List<? super EObject> list = (List<? super EObject>)collection;
@@ -138,9 +138,9 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 			if (index > -1 && index < listSize) {
 				list.add(index, newValue);
 			} else {
-				attachRealPositionEAdapter(newValue, index);
 				list.add(newValue);
 			}
+			attachRealPositionEAdapter(newValue, index);
 			reorderList(list);
 		} else {
 			collection.add(newValue);
