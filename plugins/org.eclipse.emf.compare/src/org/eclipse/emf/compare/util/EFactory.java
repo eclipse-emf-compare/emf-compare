@@ -15,8 +15,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.FactoryException;
@@ -78,34 +81,87 @@ public final class EFactory {
 	 * @throws FactoryException
 	 *             Thrown if the affectation fails.
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> void eAdd(EObject object, String name, T arg, int elementIndex) throws FactoryException {
+		eAdd(object, name, arg, elementIndex, false);
+	}
+
+	/**
+	 * Adds the new value of the given feature of the object. If the structural feature isn't a list, it
+	 * behaves like eSet. The list will be reordered afterwards in case some objects were not at their
+	 * "expected" position.
+	 * 
+	 * @param object
+	 *            Object on which we want to add to the feature values list.
+	 * @param name
+	 *            The name of the feature to add to.
+	 * @param arg
+	 *            New value to add to the feature values.
+	 * @param <T>
+	 *            Type of the new value to be added to the list.
+	 * @param elementIndex
+	 *            in case the feature is multiplicity-many, specify the index where the new value has to be
+	 *            added. If the index is -1, the value will be appended to the feature list.
+	 * @param reorder
+	 *            Reorder the list if needed.
+	 * @throws FactoryException
+	 *             Thrown if the affectation fails.
+	 * @since 1.3
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> void eAdd(EObject object, String name, T arg, int elementIndex, boolean reorder)
+			throws FactoryException {
 		final EStructuralFeature feature = eStructuralFeature(object, name);
-		if (feature.isMany()) {
-			if (arg != null) {
-				final Object manyValue = object.eGet(feature);
-				if (manyValue instanceof InternalEList<?>) {
-					final InternalEList<? super T> basicEList = (InternalEList<? super T>)manyValue;
-					final int listSize = basicEList.size();
-					if (elementIndex > -1 && elementIndex < listSize) {
-						basicEList.addUnique(elementIndex, arg);
-					} else {
-						basicEList.addUnique(arg);
+		if (feature.isMany() && arg != null) {
+			final Object manyValue = object.eGet(feature);
+			if (manyValue instanceof InternalEList<?>) {
+				final InternalEList<? super T> internalEList = (InternalEList<? super T>)manyValue;
+				final int listSize = internalEList.size();
+				if (elementIndex > -1 && elementIndex < listSize) {
+					internalEList.addUnique(elementIndex, arg);
+				} else {
+					if (reorder) {
+						attachRealPositionEAdapter(arg, elementIndex);
 					}
-				} else if (manyValue instanceof List<?>) {
-					final List<? super T> list = (List<? super T>)manyValue;
-					final int listSize = list.size();
-					if (elementIndex > -1 && elementIndex < listSize) {
-						list.add(elementIndex, arg);
-					} else {
-						list.add(arg);
-					}
-				} else if (manyValue instanceof Collection<?>) {
-					((Collection<? super T>)manyValue).add(arg);
+					internalEList.addUnique(arg);
 				}
+				if (reorder) {
+					reorderList(internalEList);
+				}
+			} else if (manyValue instanceof List<?>) {
+				final List<? super T> list = (List<? super T>)manyValue;
+				final int listSize = list.size();
+				if (elementIndex > -1 && elementIndex < listSize) {
+					list.add(elementIndex, arg);
+				} else {
+					if (reorder) {
+						attachRealPositionEAdapter(arg, elementIndex);
+					}
+					list.add(arg);
+				}
+				if (reorder) {
+					reorderList(list);
+				}
+			} else if (manyValue instanceof Collection<?>) {
+				((Collection<? super T>)manyValue).add(arg);
 			}
-		} else {
+		} else if (!feature.isMany()) {
 			eSet(object, name, arg);
+		}
+	}
+
+	/**
+	 * If we could not merge a given object at its expected position in a list, we'll attach an Adapter to it
+	 * in order to "remember" that "expected" position. That will allow us to reorder the list later on if
+	 * need be.
+	 * 
+	 * @param object
+	 *            The object on which to attach an Adapter.
+	 * @param expectedPosition
+	 *            The expected position of <code>object</code> in its list.
+	 */
+	private static void attachRealPositionEAdapter(Object object, int expectedPosition) {
+		if (object instanceof EObject) {
+			((EObject)object).eAdapters().add(new PostionAdapter(expectedPosition));
 		}
 	}
 
@@ -126,8 +182,10 @@ public final class EFactory {
 	 * @throws FactoryException
 	 *             Thrown if the affectation fails.
 	 * @since 1.0
+	 * @deprecated This is no longer used and will be removed in a future version.
 	 */
 	@SuppressWarnings("unchecked")
+	@Deprecated
 	public static <T> void eInsertAt(EObject object, String name, T arg, int insertionIndex)
 			throws FactoryException {
 		final EStructuralFeature feature = eStructuralFeature(object, name);
@@ -333,6 +391,73 @@ public final class EFactory {
 			throw new FactoryException(e.getMessage());
 		} catch (InvocationTargetException e) {
 			throw new FactoryException(e.getMessage());
+		}
+	}
+
+	/**
+	 * Reorders the given list if it contains EObjects associated with a PositionAdapter which are not located
+	 * at their expected positions.
+	 * 
+	 * @param list
+	 *            The list that is to be reordered.
+	 * @param <T>
+	 *            type of the list's elements.
+	 */
+	private static <T> void reorderList(List<T> list) {
+		final int size = list.size();
+		if (size <= 1) {
+			return;
+		}
+
+		final List<?> copy = Collections.unmodifiableList(list);
+		for (int i = 0; i < size; i++) {
+			final Object current = copy.get(i);
+			if (current instanceof EObject) {
+				int expectedIndex = -1;
+				final Iterator<Adapter> adapters = ((EObject)current).eAdapters().iterator();
+				while (expectedIndex == -1 && adapters.hasNext()) {
+					final Adapter adapter = adapters.next();
+					if (adapter instanceof PostionAdapter) {
+						expectedIndex = ((PostionAdapter)adapter).getExpectedIndex();
+					}
+				}
+				if (expectedIndex != -1 && expectedIndex != i && expectedIndex <= size - 1) {
+					if (list instanceof InternalEList<?>) {
+						((InternalEList<T>)list).move(expectedIndex, i);
+					} else {
+						list.add(expectedIndex, list.remove(i));
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * This adapter will be used to remember the accurate position of an EObject in its target list.
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
+	private static class PostionAdapter extends AdapterImpl {
+		/** The index at which we expect to find this object. */
+		private int expectedIndex;
+
+		/**
+		 * Creates our adapter.
+		 * 
+		 * @param index
+		 *            The index at which we expect to find this object.
+		 */
+		public PostionAdapter(int index) {
+			this.expectedIndex = index;
+		}
+
+		/**
+		 * Returns the index at which we expect to find this object.
+		 * 
+		 * @return The index at which we expect to find this object.
+		 */
+		public int getExpectedIndex() {
+			return expectedIndex;
 		}
 	}
 }

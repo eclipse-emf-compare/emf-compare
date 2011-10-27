@@ -54,16 +54,16 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 		final EReference ref = element.eContainmentFeature();
 		if (ref != null) {
 			try {
-				int elementIndex = -1;
+				int expectedIndex = -1;
 				if (ref.isMany()) {
 					final Object containmentRefVal = element.eContainer().eGet(ref);
 					if (containmentRefVal instanceof List<?>) {
 						@SuppressWarnings("unchecked")
 						final List<EObject> listVal = (List<EObject>)containmentRefVal;
-						elementIndex = listVal.indexOf(element);
+						expectedIndex = listVal.indexOf(element);
 					}
 				}
-				EFactory.eAdd(origin, ref.getName(), newOne, elementIndex);
+				EFactory.eAdd(origin, ref.getName(), newOne, expectedIndex, true);
 				setXMIID(newOne, getXMIID(element));
 			} catch (final FactoryException e) {
 				EMFComparePlugin.log(e, true);

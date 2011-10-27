@@ -79,7 +79,7 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 						elementIndex = listVal.indexOf(element);
 					}
 				}
-				EFactory.eAdd(origin, ref.getName(), newOne, elementIndex);
+				EFactory.eAdd(origin, ref.getName(), newOne, elementIndex, true);
 				setXMIID(newOne, getXMIID(element));
 			} catch (final FactoryException e) {
 				EMFComparePlugin.log(e, true);

@@ -53,7 +53,7 @@ public class MoveModelElementMerger extends DefaultMerger {
 				// We'll store the element's ID because moving an element deletes its XMI ID
 				final String elementID = getXMIID(leftElement);
 				EcoreUtil.remove(leftElement);
-				EFactory.eAdd(leftTarget, ref.getName(), leftElement, index);
+				EFactory.eAdd(leftTarget, ref.getName(), leftElement, index, true);
 				// Sets anew the element's ID
 				setXMIID(leftElement, elementID);
 			} catch (FactoryException e) {
@@ -90,7 +90,7 @@ public class MoveModelElementMerger extends DefaultMerger {
 			try {
 				final String elementID = getXMIID(rightElement);
 				EcoreUtil.remove(rightElement);
-				EFactory.eAdd(rightTarget, ref.getName(), rightElement, index);
+				EFactory.eAdd(rightTarget, ref.getName(), rightElement, index, true);
 				setXMIID(rightElement, elementID);
 			} catch (FactoryException e) {
 				EMFComparePlugin.log(e, true);
