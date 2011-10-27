@@ -19,7 +19,6 @@ import org.osgi.framework.BundleContext;
  * The activator class controls the plug-in life cycle.
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public class Activator extends Plugin {
 
@@ -28,11 +27,12 @@ public class Activator extends Plugin {
 
 	// The shared instance
 	private static Activator plugin;
-	
+
 	/**
 	 * The constructor
 	 */
 	public Activator() {
+		// Nothing to do
 	}
 
 	/*
@@ -57,15 +57,15 @@ public class Activator extends Plugin {
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static Activator getDefault() {
 		return plugin;
 	}
 
-	////////////// SOME LOGGING
-	
+	// //////////// SOME LOGGING
+
 	public void logError(String error) {
 		logError(error, null);
 	}
@@ -74,9 +74,7 @@ public class Activator extends Plugin {
 		if (error == null && throwable != null) {
 			error = throwable.getMessage();
 		}
-		getLog().log(
-				new Status(IStatus.ERROR, PLUGIN_ID,
-						IStatus.OK, error, throwable));
+		getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, error, throwable));
 		debug(error, throwable);
 	}
 
@@ -88,12 +86,10 @@ public class Activator extends Plugin {
 		if (message == null && throwable != null) {
 			message = throwable.getMessage();
 		}
-		getLog().log(
-				new Status(IStatus.INFO, PLUGIN_ID,
-						IStatus.OK, message, throwable));
+		getLog().log(new Status(IStatus.INFO, PLUGIN_ID, IStatus.OK, message, throwable));
 		debug(message, throwable);
 	}
-	
+
 	private void debug(String message, Throwable throwable) {
 		if (!isDebugging()) {
 			return;

@@ -32,11 +32,11 @@ public class ApplyActivator extends AbstractUIPlugin {
 	 * The constructor
 	 */
 	public ApplyActivator() {
+		// Nothing to do
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
 	@Override
@@ -47,7 +47,6 @@ public class ApplyActivator extends AbstractUIPlugin {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	@Override
