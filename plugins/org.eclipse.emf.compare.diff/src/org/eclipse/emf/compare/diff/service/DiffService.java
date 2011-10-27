@@ -278,11 +278,13 @@ public final class DiffService {
 			}
 		} else if (diff instanceof UpdateReference) {
 			final UpdateReference ur = (UpdateReference)diff;
-			if (ur.getLeftTarget() != null && ur.getLeftTarget() != ur.getLeftElement()) {
-				referencedEObjects.add(ur.getLeftTarget());
+			final EObject leftTarget = ur.getLeftTarget();
+			final EObject rightTarget = ur.getRightTarget();
+			if (leftTarget != null && leftTarget != ur.getLeftElement()) {
+				referencedEObjects.add(leftTarget);
 			}
-			if (ur.getRightTarget() != null && ur.getRightTarget() != ur.getRightElement()) {
-				referencedEObjects.add(ur.getRightTarget());
+			if (rightTarget != null && rightTarget != ur.getRightElement()) {
+				referencedEObjects.add(rightTarget);
 			}
 		}
 		return referencedEObjects;
@@ -302,6 +304,25 @@ public final class DiffService {
 		if (dest instanceof ModelElementChange && !(dest instanceof AbstractDiffExtension)) {
 			final ModelElementChange mec = (ModelElementChange)dest;
 			origin.getRequires().add(mec);
+			/*
+			 * In the case of UpdateReference differences, we've set the left and/or right target to an
+			 * unmatched value. We need to null out that value now in order not to merge it and use the result
+			 * of the ModelElementChange merging.
+			 */
+			if (origin instanceof UpdateReference) {
+				final UpdateReference updateDiff = (UpdateReference)origin;
+				final EObject changedElement;
+				if (mec instanceof ModelElementChangeLeftTarget) {
+					changedElement = ((ModelElementChangeLeftTarget)mec).getLeftElement();
+				} else {
+					changedElement = ((ModelElementChangeRightTarget)mec).getRightElement();
+				}
+				if (updateDiff.getLeftTarget() == changedElement) {
+					updateDiff.setLeftTarget(null);
+				} else if (updateDiff.getRightTarget() == changedElement) {
+					updateDiff.setRightTarget(null);
+				}
+			}
 		}
 	}
 

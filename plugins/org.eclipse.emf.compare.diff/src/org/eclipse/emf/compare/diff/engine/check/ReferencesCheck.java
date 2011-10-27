@@ -753,7 +753,8 @@ public class ReferencesCheck extends AbstractCheck {
 				deletedValue = deletedReferences.get(0);
 			}
 
-			if (areDistinct(addedValue, deletedValue)) {
+			if (getMatchManager().isUnmatched(addedValue) || getMatchManager().isUnmatched(deletedValue)
+					|| areDistinct(addedValue, deletedValue)) {
 				root.getSubDiffElements().add(
 						createUpdatedReferenceOperation(leftElement, rightElement, reference, addedValue,
 								deletedValue));
