@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.compare.mpatch.ChangeGroup;
+import org.eclipse.emf.compare.mpatch.ChangeKind;
 import org.eclipse.emf.compare.mpatch.MPatchFactory;
 import org.eclipse.emf.compare.mpatch.MPatchPackage;
 import org.eclipse.emf.compare.mpatch.util.MPatchUtil;
@@ -116,7 +117,7 @@ public class ChangeGroupItemProvider
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ChangeGroup"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ChangeGroup")); //$NON-NLS-1$
 	}
 
 	/**

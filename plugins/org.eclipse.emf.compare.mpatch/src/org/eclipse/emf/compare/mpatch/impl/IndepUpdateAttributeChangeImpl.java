@@ -220,9 +220,9 @@ public class IndepUpdateAttributeChangeImpl extends IndepAttributeChangeImpl imp
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (oldValue: ");
+		result.append(" (oldValue: "); //$NON-NLS-1$
 		result.append(oldValue);
-		result.append(", newValue: ");
+		result.append(", newValue: "); //$NON-NLS-1$
 		result.append(newValue);
 		result.append(')');
 		return result.toString();

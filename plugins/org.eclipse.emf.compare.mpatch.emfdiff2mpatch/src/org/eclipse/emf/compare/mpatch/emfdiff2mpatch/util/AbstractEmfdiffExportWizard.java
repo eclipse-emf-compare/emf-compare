@@ -31,16 +31,12 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
 /**
- * An abstraction of the wizard that transforms an emfdiff to an {@link MPatchModel}.
- * 
- * The reason for having such an abstract wizard is that the most common functionality can be reused in other, maybe
- * more specialized scenarios, too.
- * 
- * The default wizard contains a page for selecting the default symbolic reference and model descriptor creators and for
- * selecting the order of additional transformations.
+ * An abstraction of the wizard that transforms an emfdiff to an {@link MPatchModel}. The reason for having
+ * such an abstract wizard is that the most common functionality can be reused in other, maybe more
+ * specialized scenarios, too. The default wizard contains a page for selecting the default symbolic reference
+ * and model descriptor creators and for selecting the order of additional transformations.
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public abstract class AbstractEmfdiffExportWizard extends Wizard implements INewWizard {
 
@@ -67,7 +63,7 @@ public abstract class AbstractEmfdiffExportWizard extends Wizard implements INew
 
 		for (Object obj : selection.toArray()) {
 			if (obj instanceof ComparisonSnapshot) {
-				ComparisonSnapshot inputSnapshot = (ComparisonSnapshot) obj;
+				ComparisonSnapshot inputSnapshot = (ComparisonSnapshot)obj;
 
 				// ensures no modification will be made to the input
 				// input.add((ComparisonSnapshot)EcoreUtil.copy(inputSnapshot));
@@ -95,12 +91,12 @@ public abstract class AbstractEmfdiffExportWizard extends Wizard implements INew
 	/**
 	 * This performs the transformation and validates the result afterwards.
 	 * 
-	 * @return In case the transformation was successful (performFinish returns <code>true</code>), the differences are
-	 *         accessible via getDiff().
+	 * @return In case the transformation was successful (performFinish returns <code>true</code>), the
+	 *         differences are accessible via getDiff().
 	 */
 	@Override
 	public boolean performFinish() {
-		final boolean[] returnValue = new boolean[] { true }; // easy way to store return value
+		final boolean[] returnValue = new boolean[] {true}; // easy way to store return value
 		mPatch = null;
 		final StringBuffer details = new StringBuffer();
 		final List<IMPatchTransformation> transformations = transformationPage.getTransformations();
@@ -109,21 +105,21 @@ public abstract class AbstractEmfdiffExportWizard extends Wizard implements INew
 		try {
 			getContainer().run(false, false, new IRunnableWithProgress() {
 
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException,
+						InterruptedException {
 
 					monitor.beginTask("Creating...", 2 + 4 + (transformations.size() * 2) + 2 + 2);
 					monitor.worked(2); // PROGRESS MONITOR
 
 					try {
-						mPatch = (MPatchModel) TransformationLauncher.transform(input, details,
+						mPatch = TransformationLauncher.transform(input, details,
 								transformationPage.getSymbolicReferenceCreator(),
 								transformationPage.getModelDescriptorCreator());
 					} catch (final Exception e) {
 						Emfdiff2mpatchActivator.getDefault().logError(
-								"Could not export " + MPatchConstants.MPATCH_LONG_NAME + "!\n" + details.toString(), e);
-						MessageDialog.openError(
-								getShell(),
-								"Transformation failed",
+								"Could not export " + MPatchConstants.MPATCH_LONG_NAME + "!\n"
+										+ details.toString(), e);
+						MessageDialog.openError(getShell(), "Transformation failed",
 								"The Transformation failed! Please see the error log for details.\nError message: "
 										+ e.getMessage());
 						returnValue[0] = false;
@@ -151,16 +147,18 @@ public abstract class AbstractEmfdiffExportWizard extends Wizard implements INew
 						}
 
 						if (!validateMPatchWithMessage(mPatch, MPatchConstants.MPATCH_SHORT_NAME
-								+ " cannot be validated successfully"))
+								+ " cannot be validated successfully")) {
 							result.append("\nWarning: Validation of " + MPatchConstants.MPATCH_SHORT_NAME
 									+ " failed!\n");
+						}
 						monitor.worked(2); // PROGRESS MONITOR
 
 						// ask user if the results are ok, otherwise abort
 						if (result.length() > 0) {
 							result.insert(0, "Transformation results:\n\n");
-							result.append("\nContinue saving the resulting " + MPatchConstants.MPATCH_SHORT_NAME
-									+ "?\n" + "('No' returns to the wizard)");
+							result.append("\nContinue saving the resulting "
+									+ MPatchConstants.MPATCH_SHORT_NAME + "?\n"
+									+ "('No' returns to the wizard)");
 							if (!MessageDialog.openQuestion(getShell(), MPatchConstants.MPATCH_SHORT_NAME
 									+ " creation results", result.toString())) {
 								returnValue[0] = false;
@@ -171,7 +169,9 @@ public abstract class AbstractEmfdiffExportWizard extends Wizard implements INew
 				}
 			});
 		} catch (InvocationTargetException e) {
+			// Ignore
 		} catch (InterruptedException e) {
+			// Ignore
 		}
 
 		return returnValue[0];

@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -35,12 +36,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-
 /**
  * Wizard page for selecting a {@link MPatchModel} from the workspace.
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public class ApplyWizardSelectMPatchPage extends WizardPage {
 
@@ -55,7 +54,7 @@ public class ApplyWizardSelectMPatchPage extends WizardPage {
 
 	/** Adapter factory for emf model. */
 	private final AdapterFactory adapterFactory;
-	
+
 	/**
 	 * Constructor for this wizard page.
 	 * 
@@ -137,9 +136,9 @@ public class ApplyWizardSelectMPatchPage extends WizardPage {
 	 * Ask user to select an mpatch from the workspace.
 	 */
 	private void handleBrowse() {
-		final ResourceDialog dialog = new ResourceDialog(getShell(), "Select " + MPatchConstants.MPATCH_LONG_NAME, SWT.OPEN
-				| SWT.SINGLE);
-		if (dialog.open() == ResourceDialog.OK) {
+		final ResourceDialog dialog = new ResourceDialog(getShell(), "Select "
+				+ MPatchConstants.MPATCH_LONG_NAME, SWT.OPEN | SWT.SINGLE);
+		if (dialog.open() == Window.OK) {
 			if (dialog.getURIs().size() >= 1) {
 				uri = dialog.getURIs().get(0);
 				uriText.setText(uri.toString());
@@ -156,8 +155,8 @@ public class ApplyWizardSelectMPatchPage extends WizardPage {
 	}
 
 	/**
-	 * Get the selected file, check whether it is ok and present its content to the user via the tree viewer. Print an
-	 * appropriate error message if the input is incorrect.
+	 * Get the selected file, check whether it is ok and present its content to the user via the tree viewer.
+	 * Print an appropriate error message if the input is incorrect.
 	 */
 	private void dialogChanged() {
 		final String fileUri = uriText.getText().trim();
@@ -169,16 +168,18 @@ public class ApplyWizardSelectMPatchPage extends WizardPage {
 				final ResourceSet resourceSet = new ResourceSetImpl();
 				final Resource diffResource = resourceSet.getResource(uri, true);
 				if (diffResource.getContents().get(0) instanceof MPatchModel) {
-					final MPatchModel mpatch = (MPatchModel) diffResource.getContents().get(0);
-					((ApplyWizard) getWizard()).setMPatch(mpatch);
+					final MPatchModel mpatch = (MPatchModel)diffResource.getContents().get(0);
+					((ApplyWizard)getWizard()).setMPatch(mpatch);
 					viewer.setInput(diffResource);
 					updateStatus(null);
 				} else {
-					updateStatus("The selected resource does not contain valid " + MPatchConstants.MPATCH_LONG_NAME + "!");
+					updateStatus("The selected resource does not contain valid "
+							+ MPatchConstants.MPATCH_LONG_NAME + "!");
 					uri = null;
 				}
 			} catch (final RuntimeException e) {
-				updateStatus("Exception loading resource: " + e.getMessage() + " " + e.getStackTrace()[0] + "...");
+				updateStatus("Exception loading resource: " + e.getMessage() + " " + e.getStackTrace()[0]
+						+ "...");
 			}
 		} else {
 			updateStatus("Please select an input file.");

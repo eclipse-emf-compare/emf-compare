@@ -168,7 +168,7 @@ public class UnknownChangeImpl extends IndepChangeImpl implements UnknownChange 
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (info: ");
+		result.append(" (info: "); //$NON-NLS-1$
 		result.append(info);
 		result.append(')');
 		return result.toString();

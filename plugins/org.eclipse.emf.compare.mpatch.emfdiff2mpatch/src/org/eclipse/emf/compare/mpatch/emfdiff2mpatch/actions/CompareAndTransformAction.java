@@ -37,11 +37,9 @@ import org.eclipse.ui.IWorkbenchPart;
  * Action for automatically compare two models with EMF Compare, and open the wizard for the creation of an
  * {@link MPatchModel}.<br>
  * <br>
- * 
  * <b>Note: currently deactivated in plugin.xml because it is too intrusive.</b>
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public class CompareAndTransformAction implements IObjectActionDelegate {
 
@@ -87,39 +85,45 @@ public class CompareAndTransformAction implements IObjectActionDelegate {
 	 *            The shell for showing dialogs.
 	 * @return The emfdiff in case of successful differencing or <code>null</code> otherwise.
 	 */
-	private static ComparisonSnapshot createComparisonSnapshot(final IFile oldFile, final IFile newFile, Shell shell) {
+	private static ComparisonSnapshot createComparisonSnapshot(final IFile oldFile, final IFile newFile,
+			Shell shell) {
 		ComparisonResourceSnapshot emfdiff = null;
 		try {
 			// get resources
 			final ResourceSet resourceSet = new ResourceSetImpl();
-			final Resource oldResource = resourceSet.getResource(URI.createFileURI(oldFile.getFullPath().toString()),
-					true);
-			final Resource newResource = resourceSet.getResource(URI.createFileURI(newFile.getFullPath().toString()),
-					true);
-			if (oldResource.getContents().size() != 1)
+			final Resource oldResource = resourceSet.getResource(
+					URI.createFileURI(oldFile.getFullPath().toString()), true);
+			final Resource newResource = resourceSet.getResource(
+					URI.createFileURI(newFile.getFullPath().toString()), true);
+			if (oldResource.getContents().size() != 1) {
 				throw new IllegalArgumentException(oldFile.getFullPath()
 						+ " is expected to contain exactly one root model element, but "
 						+ oldResource.getContents().size() + " elements found!");
-			if (newResource.getContents().size() != 1)
+			}
+			if (newResource.getContents().size() != 1) {
 				throw new IllegalArgumentException(newFile.getFullPath()
 						+ " is expected to contain exactly one root model element, but "
 						+ newResource.getContents().size() + " elements found!");
+			}
 
 			// ask user which is the modified version of the model
 			@SuppressWarnings("deprecation")
-			final MessageDialog dialog = new MessageDialog(shell, "Please select the modified model", MessageDialog
-					.getImage(Dialog.DLG_IMG_QUESTION), "Please select the file which contains the MODIFIED version:",
-					MessageDialog.QUESTION, new String[] { newFile.getName(), oldFile.getName() }, 0);
+			final MessageDialog dialog = new MessageDialog(shell, "Please select the modified model",
+					Dialog.getImage(Dialog.DLG_IMG_QUESTION),
+					"Please select the file which contains the MODIFIED version:", MessageDialog.QUESTION,
+					new String[] {newFile.getName(), oldFile.getName()}, 0);
 			final int dialogResult = dialog.open();
-			if (dialogResult == SWT.DEFAULT)
+			if (dialogResult == SWT.DEFAULT) {
 				return null;
+			}
 
 			// use emf compare to compute differences
 			final EObject oldModel = (dialogResult == 0 ? oldResource : newResource).getContents().get(0);
 			final EObject newModel = (dialogResult == 0 ? newResource : oldResource).getContents().get(0);
 			emfdiff = CommonUtils.createEmfdiff(newModel, oldModel);
-			if (emfdiff != null)
+			if (emfdiff != null) {
 				return emfdiff;
+			}
 			throw new IllegalArgumentException("EMF Compare failed to compute differences.");
 
 		} catch (Exception e) {
@@ -138,12 +142,12 @@ public class CompareAndTransformAction implements IObjectActionDelegate {
 		oldFile = null;
 		newFile = null;
 		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+			IStructuredSelection structuredSelection = (IStructuredSelection)selection;
 			if (structuredSelection.size() == 2) {
 				final Object[] files = structuredSelection.toArray();
 				if (files[0] instanceof IFile && files[1] instanceof IFile) {
-					newFile = (IFile) files[0];
-					oldFile = (IFile) files[1];
+					newFile = (IFile)files[0];
+					oldFile = (IFile)files[1];
 				}
 			}
 		}

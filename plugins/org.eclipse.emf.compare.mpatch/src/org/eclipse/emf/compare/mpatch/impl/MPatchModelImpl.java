@@ -330,11 +330,11 @@ public class MPatchModelImpl extends EObjectImpl implements MPatchModel {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (oldModel: ");
+		result.append(" (oldModel: "); //$NON-NLS-1$
 		result.append(oldModel);
-		result.append(", newModel: ");
+		result.append(", newModel: "); //$NON-NLS-1$
 		result.append(newModel);
-		result.append(", emfdiff: ");
+		result.append(", emfdiff: "); //$NON-NLS-1$
 		result.append(emfdiff);
 		result.append(')');
 		return result.toString();

@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -50,7 +51,6 @@ import org.eclipse.swt.widgets.Text;
  * A wizard page for selecting an arbitrary emf model file to which the {@link MPatchModel} should be applied.
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public class ApplyWizardSelectModelPage extends WizardPage implements ISelectionChangedListener {
 
@@ -76,7 +76,8 @@ public class ApplyWizardSelectModelPage extends WizardPage implements ISelection
 		super(pageName);
 		uri = modelURI;
 		setTitle(pageName);
-		setDescription("Select a model to which the " + MPatchConstants.MPATCH_SHORT_NAME + " should be applied.");
+		setDescription("Select a model to which the " + MPatchConstants.MPATCH_SHORT_NAME
+				+ " should be applied.");
 		this.adapterFactory = adapterFactory;
 	}
 
@@ -143,7 +144,7 @@ public class ApplyWizardSelectModelPage extends WizardPage implements ISelection
 		if (uri != null && uriText.getText().length() == 0) {
 			uriText.setText(uri.toString());
 		} else {
-			final URI diffURI = ((ApplyWizard) getWizard()).getMPatch().eResource().getURI();
+			final URI diffURI = ((ApplyWizard)getWizard()).getMPatch().eResource().getURI();
 			uriText.setText(diffURI.toString().substring(0,
 					diffURI.toString().length() - diffURI.lastSegment().length()));
 		}
@@ -153,8 +154,9 @@ public class ApplyWizardSelectModelPage extends WizardPage implements ISelection
 	 * Ask user to select an emf model file from the workspace.
 	 */
 	private void handleBrowse() {
-		final ResourceDialog dialog = new ApplyToResourceDialog(getShell(), "Select model", SWT.OPEN | SWT.SINGLE);
-		if (dialog.open() == ResourceDialog.OK) {
+		final ResourceDialog dialog = new ApplyToResourceDialog(getShell(), "Select model", SWT.OPEN
+				| SWT.SINGLE);
+		if (dialog.open() == Window.OK) {
 			if (dialog.getURIs().size() >= 1) {
 				uri = dialog.getURIs().get(0);
 				uriText.setText(uri.toString());
@@ -171,8 +173,8 @@ public class ApplyWizardSelectModelPage extends WizardPage implements ISelection
 	}
 
 	/**
-	 * Get the selected file, check whether it is ok and present its content to the user via the tree viewer. Print an
-	 * appropriate error message if the input is not an emf model.
+	 * Get the selected file, check whether it is ok and present its content to the user via the tree viewer.
+	 * Print an appropriate error message if the input is not an emf model.
 	 */
 	private void dialogChanged() {
 		final String fileUri = uriText.getText().trim();
@@ -186,14 +188,16 @@ public class ApplyWizardSelectModelPage extends WizardPage implements ISelection
 				if (modelResource.getContents().size() != 1) {
 
 					/*
-					 * Special case in RSA: instances of DynamicEObject are further root objects which 
-					 * store some documentation on the model. Assuming that a model conforms to a specific
-					 * meta model, we can generalize this setting and ignore all dynamic EObjects here.
+					 * Special case in RSA: instances of DynamicEObject are further root objects which store
+					 * some documentation on the model. Assuming that a model conforms to a specific meta
+					 * model, we can generalize this setting and ignore all dynamic EObjects here.
 					 */
 					int counter = 0;
-					for (EObject obj : modelResource.getContents())
-						if (!(obj instanceof DynamicEObjectImpl)) 
+					for (EObject obj : modelResource.getContents()) {
+						if (!(obj instanceof DynamicEObjectImpl)) {
 							counter++;
+						}
+					}
 					viewer.setInput(modelResource);
 					if (counter > 1) {
 						updateStatus("At the moment, only one root object is allowed!");
@@ -206,10 +210,10 @@ public class ApplyWizardSelectModelPage extends WizardPage implements ISelection
 						uri = null;
 						return;
 					}
-				} 
-				
+				}
+
 				if (modelResource.getContents().get(0) instanceof EObject) {
-					((ApplyWizard) getWizard()).setModelResource(modelResource);
+					((ApplyWizard)getWizard()).setModelResource(modelResource);
 					viewer.setInput(modelResource);
 				} else {
 					updateStatus("The selected resource does not contain a valid model!");
@@ -217,7 +221,8 @@ public class ApplyWizardSelectModelPage extends WizardPage implements ISelection
 					return;
 				}
 			} catch (final RuntimeException e) {
-				updateStatus("Exception loading resource: " + e.getMessage() + " " + e.getStackTrace()[0] + "...");
+				updateStatus("Exception loading resource: " + e.getMessage() + " " + e.getStackTrace()[0]
+						+ "...");
 				return;
 			}
 
@@ -230,11 +235,12 @@ public class ApplyWizardSelectModelPage extends WizardPage implements ISelection
 	public void selectionChanged(SelectionChangedEvent event) {
 		final ISelection selection = event.getSelection();
 		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+			IStructuredSelection structuredSelection = (IStructuredSelection)selection;
 			if (structuredSelection.size() == 1) {
 				final Object obj = structuredSelection.getFirstElement();
-				if (obj instanceof EObject)
-					((ApplyWizard) getWizard()).setModelTarget((EObject) obj);
+				if (obj instanceof EObject) {
+					((ApplyWizard)getWizard()).setModelTarget((EObject)obj);
+				}
 			}
 		}
 	}
@@ -243,7 +249,6 @@ public class ApplyWizardSelectModelPage extends WizardPage implements ISelection
 	 * Resource dialog with suggested path.
 	 * 
 	 * @author Patrick Koenemann (pk@imm.dtu.dk)
-	 *
 	 */
 	private final class ApplyToResourceDialog extends ResourceDialog {
 		private ApplyToResourceDialog(Shell parent, String title, int style) {
@@ -252,7 +257,7 @@ public class ApplyWizardSelectModelPage extends WizardPage implements ISelection
 
 		@Override
 		protected Control createDialogArea(Composite parent) {
-			final Composite composite = (Composite) super.createDialogArea(parent);
+			final Composite composite = (Composite)super.createDialogArea(parent);
 			uriField.setText(ApplyWizardSelectModelPage.this.uriText.getText());
 			return composite;
 		}
@@ -265,16 +270,18 @@ public class ApplyWizardSelectModelPage extends WizardPage implements ISelection
 					// FIXME: Unfortunately the dialog does not recognize our default selection :-(
 					IFile[] iFiles = new IFile[0];
 					try {
-						iFiles = new IFile[] { ResourcesPlugin.getWorkspace().getRoot().getFile(
-								new Path(uriField.getText())), };
-					} catch (Exception e) { }
+						iFiles = new IFile[] {ResourcesPlugin.getWorkspace().getRoot()
+								.getFile(new Path(uriField.getText())),};
+					} catch (Exception e) {
+						// Ignore
+					}
 					final IFile[] files = WorkspaceResourceDialog.openFileSelection(getShell(),
 							"Apply differences to...", null, false, iFiles, null);
 					if (files.length != 0) {
 						final IFile file = files[0];
 						if (file != null) {
-							uriField.setText(URI.createPlatformResourceURI(file.getFullPath().toString(), true)
-									.toString());
+							uriField.setText(URI.createPlatformResourceURI(file.getFullPath().toString(),
+									true).toString());
 						}
 					}
 				}

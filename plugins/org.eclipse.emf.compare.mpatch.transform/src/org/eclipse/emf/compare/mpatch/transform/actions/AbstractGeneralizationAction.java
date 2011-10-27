@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.mpatch.transform.actions;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.mpatch.MPatchModel;
 import org.eclipse.emf.compare.mpatch.common.actions.AbstractCompareAction;
@@ -23,18 +24,19 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
 /**
- * An abstract action on {@link MPatchModel} files (extension: {@link MPatchConstants#FILE_EXTENSION_MPATCH}) for
- * Generalization of {@link MPatchModel}s.
+ * An abstract action on {@link MPatchModel} files (extension: {@link MPatchConstants#FILE_EXTENSION_MPATCH})
+ * for Generalization of {@link MPatchModel}s.
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public abstract class AbstractGeneralizationAction extends AbstractCompareAction {
 
 	private static final String ACTION_NAME = "Generalization";
 
 	private static final String inputFileExtension = MPatchConstants.FILE_EXTENSION_MPATCH;
+
 	private static final String outputFileExtension = MPatchConstants.FILE_EXTENSION_MPATCH;
+
 	private static final String jobTitle = ACTION_NAME + " of " + MPatchConstants.MPATCH_SHORT_NAME + "...";
 
 	public AbstractGeneralizationAction() {
@@ -56,13 +58,13 @@ public abstract class AbstractGeneralizationAction extends AbstractCompareAction
 	@Override
 	protected final Status runAction(Resource input, Resource output, IProgressMonitor monitor) {
 		String message = "";
-		int code = Status.OK;
+		int code = IStatus.OK;
 		Exception exception = null;
 
 		// get the mpatch
 		final EObject content = input.getContents().get(0);
 		if (content instanceof MPatchModel) {
-			final MPatchModel mpatch = (MPatchModel) content;
+			final MPatchModel mpatch = (MPatchModel)content;
 
 			try {
 				// perform the transformation
@@ -75,9 +77,10 @@ public abstract class AbstractGeneralizationAction extends AbstractCompareAction
 						output.save(null);
 
 						// return some information
-						message = ACTION_NAME + " successfully finished: " + modifications + " modifications.";
+						message = ACTION_NAME + " successfully finished: " + modifications
+								+ " modifications.";
 					} catch (final IOException e) {
-						code = Status.ERROR;
+						code = IStatus.ERROR;
 						message = "Could not save generalized " + MPatchConstants.MPATCH_SHORT_NAME + "!";
 						exception = e;
 					}
@@ -87,12 +90,12 @@ public abstract class AbstractGeneralizationAction extends AbstractCompareAction
 				}
 			} catch (final Exception e) {
 				message = "An exception occured during transformation: " + ACTION_NAME;
-				code = Status.ERROR;
+				code = IStatus.ERROR;
 				exception = e;
 			}
 
 		} else {
-			code = Status.ERROR;
+			code = IStatus.ERROR;
 			message = "Could not find " + MPatchConstants.MPATCH_LONG_NAME + " in:\n\n" + content;
 		}
 

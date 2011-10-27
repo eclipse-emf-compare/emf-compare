@@ -41,15 +41,13 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
- * Action for folders: go through entire container structure (folder or project) and whenever there are two files
- * 'unchanged.*' and 'changed.*' exist, create an MPatch for them. The resulting file is simply called
+ * Action for folders: go through entire container structure (folder or project) and whenever there are two
+ * files 'unchanged.*' and 'changed.*' exist, create an MPatch for them. The resulting file is simply called
  * <code>result.mpatch</code> (it will be overwritten, if it already exists).<br>
  * <br>
- * 
  * <b>Note: usually deactivated because it's just for convenience of testing.</b>
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public class BatchCreateMPatchAction implements IObjectActionDelegate {
 
@@ -80,16 +78,18 @@ public class BatchCreateMPatchAction implements IObjectActionDelegate {
 		successes = 0;
 		for (IContainer container : containers) {
 			try {
-				container.refreshLocal(IContainer.DEPTH_INFINITE, null);
+				container.refreshLocal(IResource.DEPTH_INFINITE, null);
 				processContainer(container);
 			} catch (CoreException e) {
-				Emfdiff2mpatchActivator.getDefault().logError("Error processing container " + container.getName(), e);
+				Emfdiff2mpatchActivator.getDefault().logError(
+						"Error processing container " + container.getName(), e);
 				failures++;
 			}
 		}
 		String msg = successes + " files successfully created.";
-		if (failures > 0)
+		if (failures > 0) {
 			msg += "\n" + failures + " errors occured. Please check error log.";
+		}
 		MessageDialog.openInformation(shell, MPatchConstants.MPATCH_SHORT_NAME + " Creation results", msg);
 	}
 
@@ -98,12 +98,13 @@ public class BatchCreateMPatchAction implements IObjectActionDelegate {
 		IResource changed = null;
 		for (IResource child : container.members()) {
 			if (child instanceof IContainer) {
-				processContainer((IContainer) child);
+				processContainer((IContainer)child);
 			} else if (!child.getName().endsWith("_diagram") && !child.getName().endsWith(".umlclass")) {
-				if (child.getName().startsWith("unchanged."))
+				if (child.getName().startsWith("unchanged.")) {
 					unchanged = child;
-				else if (child.getName().startsWith("changed."))
+				} else if (child.getName().startsWith("changed.")) {
 					changed = child;
+				}
 			}
 		}
 		if (changed != null && unchanged != null) {
@@ -116,21 +117,23 @@ public class BatchCreateMPatchAction implements IObjectActionDelegate {
 	private void createMPatch(IContainer container, IResource unchanged, IResource changed) {
 		try {
 			final ResourceSet resourceSet = new ResourceSetImpl();
-			final Resource oldResource = resourceSet.getResource(URI.createFileURI(unchanged.getFullPath().toString()),
-					true);
-			final Resource newResource = resourceSet.getResource(URI.createFileURI(changed.getFullPath().toString()),
-					true);
+			final Resource oldResource = resourceSet.getResource(
+					URI.createFileURI(unchanged.getFullPath().toString()), true);
+			final Resource newResource = resourceSet.getResource(
+					URI.createFileURI(changed.getFullPath().toString()), true);
 
 			final EObject oldModel = oldResource.getContents().get(0);
 			final EObject newModel = newResource.getContents().get(0);
 
 			final ComparisonResourceSnapshot emfdiff = CommonUtils.createEmfdiff(newModel, oldModel, false);
 
-			final ISymbolicReferenceCreator symrefCreator = ExtensionManager.getSelectedSymbolicReferenceCreator();
-			final IModelDescriptorCreator descriptorCreator = ExtensionManager.getSelectedModelDescriptorCreator();
+			final ISymbolicReferenceCreator symrefCreator = ExtensionManager
+					.getSelectedSymbolicReferenceCreator();
+			final IModelDescriptorCreator descriptorCreator = ExtensionManager
+					.getSelectedModelDescriptorCreator();
 
-			final MPatchModel mpatch = TransformationLauncher
-					.transform(emfdiff, null, symrefCreator, descriptorCreator);
+			final MPatchModel mpatch = TransformationLauncher.transform(emfdiff, null, symrefCreator,
+					descriptorCreator);
 
 			for (String label : ExtensionManager.getMandatoryTransformations()) {
 				final IMPatchTransformation trans = ExtensionManager.getAllTransformations().get(label);
@@ -162,10 +165,10 @@ public class BatchCreateMPatchAction implements IObjectActionDelegate {
 	public void selectionChanged(IAction action, ISelection selection) {
 		containers.clear();
 		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+			IStructuredSelection structuredSelection = (IStructuredSelection)selection;
 			for (Object obj : structuredSelection.toArray()) {
 				if (obj instanceof IContainer) {
-					containers.add((IContainer) obj);
+					containers.add((IContainer)obj);
 				}
 			}
 		}
@@ -174,5 +177,6 @@ public class BatchCreateMPatchAction implements IObjectActionDelegate {
 
 	/** Get the Shell. */
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+		// Nothing to do
 	}
 }

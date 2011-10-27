@@ -85,8 +85,8 @@ public class IndepElementChangeItemProvider
 		ChangeKind labelValue = ((IndepElementChange)object).getChangeKind();
 		String label = labelValue == null ? null : labelValue.toString();
 		return label == null || label.length() == 0 ?
-			getString("_UI_IndepElementChange_type") :
-			getString("_UI_IndepElementChange_type") + " " + label;
+			getString("_UI_IndepElementChange_type") : //$NON-NLS-1$
+			getString("_UI_IndepElementChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

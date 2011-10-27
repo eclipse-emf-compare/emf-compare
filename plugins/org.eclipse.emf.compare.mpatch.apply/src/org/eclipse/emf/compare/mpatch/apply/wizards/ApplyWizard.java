@@ -360,7 +360,9 @@ public class ApplyWizard extends Wizard implements INewWizard {
 			});
 
 		} catch (InvocationTargetException e) {
+			// Ignore
 		} catch (InterruptedException e) {
+			// Ignore
 		}
 
 		return result[0];

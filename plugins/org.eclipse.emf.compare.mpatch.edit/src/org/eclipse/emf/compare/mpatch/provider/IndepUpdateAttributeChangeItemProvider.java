@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.compare.mpatch.ChangeKind;
 import org.eclipse.emf.compare.mpatch.IndepUpdateAttributeChange;
 import org.eclipse.emf.compare.mpatch.MPatchPackage;
 import org.eclipse.emf.compare.mpatch.util.MPatchUtil;
@@ -93,8 +94,8 @@ public class IndepUpdateAttributeChangeItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IndepUpdateAttributeChange_oldValue_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IndepUpdateAttributeChange_oldValue_feature", "_UI_IndepUpdateAttributeChange_type"),
+				 getString("_UI_IndepUpdateAttributeChange_oldValue_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_IndepUpdateAttributeChange_oldValue_feature", "_UI_IndepUpdateAttributeChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.INDEP_UPDATE_ATTRIBUTE_CHANGE__OLD_VALUE,
 				 true,
 				 false,
@@ -115,8 +116,8 @@ public class IndepUpdateAttributeChangeItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IndepUpdateAttributeChange_newValue_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IndepUpdateAttributeChange_newValue_feature", "_UI_IndepUpdateAttributeChange_type"),
+				 getString("_UI_IndepUpdateAttributeChange_newValue_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_IndepUpdateAttributeChange_newValue_feature", "_UI_IndepUpdateAttributeChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.INDEP_UPDATE_ATTRIBUTE_CHANGE__NEW_VALUE,
 				 true,
 				 false,

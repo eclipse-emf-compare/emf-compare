@@ -94,8 +94,8 @@ public class MPatchModelItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_MPatchModel_oldModel_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_MPatchModel_oldModel_feature", "_UI_MPatchModel_type"),
+				 getString("_UI_MPatchModel_oldModel_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_MPatchModel_oldModel_feature", "_UI_MPatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.MPATCH_MODEL__OLD_MODEL,
 				 true,
 				 false,
@@ -116,8 +116,8 @@ public class MPatchModelItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_MPatchModel_newModel_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_MPatchModel_newModel_feature", "_UI_MPatchModel_type"),
+				 getString("_UI_MPatchModel_newModel_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_MPatchModel_newModel_feature", "_UI_MPatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.MPATCH_MODEL__NEW_MODEL,
 				 true,
 				 false,
@@ -138,8 +138,8 @@ public class MPatchModelItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_MPatchModel_emfdiff_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_MPatchModel_emfdiff_feature", "_UI_MPatchModel_type"),
+				 getString("_UI_MPatchModel_emfdiff_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_MPatchModel_emfdiff_feature", "_UI_MPatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.MPATCH_MODEL__EMFDIFF,
 				 true,
 				 false,
@@ -187,7 +187,7 @@ public class MPatchModelItemProvider
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/MPatchModel"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/MPatchModel")); //$NON-NLS-1$
 	}
 
 	/**

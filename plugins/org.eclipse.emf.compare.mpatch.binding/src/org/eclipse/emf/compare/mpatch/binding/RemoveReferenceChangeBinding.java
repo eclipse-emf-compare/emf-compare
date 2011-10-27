@@ -24,4 +24,5 @@ package org.eclipse.emf.compare.mpatch.binding;
  * @generated
  */
 public interface RemoveReferenceChangeBinding extends ChangeBinding {
-} // RemoveReferenceChangeBinding
+	// RemoveReferenceChangeBinding
+} 

@@ -15,6 +15,7 @@ package org.eclipse.emf.compare.mpatch.impl;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.mpatch.*;
 import org.eclipse.emf.compare.mpatch.ChangeGroup;
 import org.eclipse.emf.compare.mpatch.ChangeKind;
 import org.eclipse.emf.compare.mpatch.ChangeType;
@@ -64,7 +65,7 @@ public class MPatchFactoryImpl extends EFactoryImpl implements MPatchFactory {
 	 */
 	public static MPatchFactory init() {
 		try {
-			MPatchFactory theMPatchFactory = (MPatchFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/emf/compare/mpatch/1.0"); 
+			MPatchFactory theMPatchFactory = (MPatchFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/emf/compare/mpatch/1.0"); //$NON-NLS-1$ 
 			if (theMPatchFactory != null) {
 				return theMPatchFactory;
 			}
@@ -109,7 +110,7 @@ public class MPatchFactoryImpl extends EFactoryImpl implements MPatchFactory {
 			case MPatchPackage.UNKNOWN_CHANGE: return createUnknownChange();
 			case MPatchPackage.MODEL_DESCRIPTOR_REFERENCE: return createModelDescriptorReference();
 			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -126,7 +127,7 @@ public class MPatchFactoryImpl extends EFactoryImpl implements MPatchFactory {
 			case MPatchPackage.CHANGE_KIND:
 				return createChangeKindFromString(eDataType, initialValue);
 			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -143,7 +144,7 @@ public class MPatchFactoryImpl extends EFactoryImpl implements MPatchFactory {
 			case MPatchPackage.CHANGE_KIND:
 				return convertChangeKindToString(eDataType, instanceValue);
 			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -304,7 +305,7 @@ public class MPatchFactoryImpl extends EFactoryImpl implements MPatchFactory {
 	 */
 	public ChangeType createChangeTypeFromString(EDataType eDataType, String initialValue) {
 		ChangeType result = ChangeType.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return result;
 	}
 
@@ -324,7 +325,7 @@ public class MPatchFactoryImpl extends EFactoryImpl implements MPatchFactory {
 	 */
 	public ChangeKind createChangeKindFromString(EDataType eDataType, String initialValue) {
 		ChangeKind result = ChangeKind.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return result;
 	}
 

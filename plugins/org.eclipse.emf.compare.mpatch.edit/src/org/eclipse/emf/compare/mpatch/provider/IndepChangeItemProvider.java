@@ -97,8 +97,8 @@ public class IndepChangeItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IndepChange_changeKind_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IndepChange_changeKind_feature", "_UI_IndepChange_type"),
+				 getString("_UI_IndepChange_changeKind_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_IndepChange_changeKind_feature", "_UI_IndepChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.INDEP_CHANGE__CHANGE_KIND,
 				 false,
 				 false,
@@ -119,8 +119,8 @@ public class IndepChangeItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IndepChange_changeType_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IndepChange_changeType_feature", "_UI_IndepChange_type"),
+				 getString("_UI_IndepChange_changeType_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_IndepChange_changeType_feature", "_UI_IndepChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.INDEP_CHANGE__CHANGE_TYPE,
 				 false,
 				 false,
@@ -141,8 +141,8 @@ public class IndepChangeItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IndepChange_dependsOn_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IndepChange_dependsOn_feature", "_UI_IndepChange_type"),
+				 getString("_UI_IndepChange_dependsOn_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_IndepChange_dependsOn_feature", "_UI_IndepChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.INDEP_CHANGE__DEPENDS_ON,
 				 true,
 				 false,
@@ -163,8 +163,8 @@ public class IndepChangeItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IndepChange_dependants_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IndepChange_dependants_feature", "_UI_IndepChange_type"),
+				 getString("_UI_IndepChange_dependants_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_IndepChange_dependants_feature", "_UI_IndepChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.INDEP_CHANGE__DEPENDANTS,
 				 true,
 				 false,
@@ -215,8 +215,8 @@ public class IndepChangeItemProvider
 		ChangeKind labelValue = ((IndepChange)object).getChangeKind();
 		String label = labelValue == null ? null : labelValue.toString();
 		return label == null || label.length() == 0 ?
-			getString("_UI_IndepChange_type") :
-			getString("_UI_IndepChange_type") + " " + label;
+			getString("_UI_IndepChange_type") : //$NON-NLS-1$
+			getString("_UI_IndepChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

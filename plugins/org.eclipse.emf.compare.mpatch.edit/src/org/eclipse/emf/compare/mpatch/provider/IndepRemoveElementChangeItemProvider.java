@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.compare.mpatch.ChangeKind;
 import org.eclipse.emf.compare.mpatch.IndepRemoveElementChange;
 import org.eclipse.emf.compare.mpatch.util.MPatchUtil;
 import org.eclipse.emf.edit.provider.ComposedImage;

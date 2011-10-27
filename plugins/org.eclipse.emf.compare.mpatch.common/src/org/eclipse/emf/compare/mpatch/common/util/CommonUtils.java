@@ -58,7 +58,6 @@ import org.eclipse.ui.part.FileEditorInput;
  * Helper class for miscellanous functions.
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public class CommonUtils {
 
@@ -106,23 +105,23 @@ public class CommonUtils {
 	}
 
 	/**
-	 * This extracts the referenced model from an emfdiff {@link ComparisonSnapshot} - to be more precise from the
-	 * (single) {@link DiffModel}. If <code>leftModel</code> is <code>true</code>, then the left (modified) version of
-	 * the model is returned; if <code>false</code>, then the right (unmodified) version is returned.
-	 * 
-	 * Note: This extraction fails if the comparison contains more than just one original model.
+	 * This extracts the referenced model from an emfdiff {@link ComparisonSnapshot} - to be more precise from
+	 * the (single) {@link DiffModel}. If <code>leftModel</code> is <code>true</code>, then the left
+	 * (modified) version of the model is returned; if <code>false</code>, then the right (unmodified) version
+	 * is returned. Note: This extraction fails if the comparison contains more than just one original model.
 	 * 
 	 * @param emfdiff
 	 *            An emfdiff {@link ComparisonSnapshot}.
 	 * @param leftModel
-	 *            Indicates whether the left (changed) or right (unchanged) version of the model should be returned.
+	 *            Indicates whether the left (changed) or right (unchanged) version of the model should be
+	 *            returned.
 	 * @return A reference to the original model.
 	 */
 	public static EObject getModelFromEmfdiff(ComparisonSnapshot emfdiff, boolean leftModel) {
 		if (emfdiff instanceof ComparisonResourceSnapshot) {
-			final ComparisonResourceSnapshot resourceSnapshot = (ComparisonResourceSnapshot) emfdiff;
-			final EList<EObject> roots = leftModel ? resourceSnapshot.getMatch().getLeftRoots() : resourceSnapshot
-					.getMatch().getRightRoots();
+			final ComparisonResourceSnapshot resourceSnapshot = (ComparisonResourceSnapshot)emfdiff;
+			final EList<EObject> roots = leftModel ? resourceSnapshot.getMatch().getLeftRoots()
+					: resourceSnapshot.getMatch().getRightRoots();
 			if (roots.size() > 1) {
 				throw new UnsupportedOperationException("This is not supported yet. Please implement it!");
 			} else if (roots.size() == 0) {
@@ -131,13 +130,13 @@ public class CommonUtils {
 				return roots.get(0);
 			}
 		} else if (emfdiff instanceof ComparisonResourceSetSnapshot) {
-			final ComparisonResourceSetSnapshot resourceSetSnapshot = (ComparisonResourceSetSnapshot) emfdiff;
+			final ComparisonResourceSetSnapshot resourceSetSnapshot = (ComparisonResourceSetSnapshot)emfdiff;
 			if (resourceSetSnapshot.getMatchResourceSet().getMatchModels().size() > 1) {
 				throw new UnsupportedOperationException("This is not supported yet. Please implement it!");
 			} else {
-				final EList<EObject> roots = leftModel ? resourceSetSnapshot.getMatchResourceSet().getMatchModels()
-						.get(0).getLeftRoots() : resourceSetSnapshot.getMatchResourceSet().getMatchModels().get(0)
-						.getRightRoots();
+				final EList<EObject> roots = leftModel ? resourceSetSnapshot.getMatchResourceSet()
+						.getMatchModels().get(0).getLeftRoots() : resourceSetSnapshot.getMatchResourceSet()
+						.getMatchModels().get(0).getRightRoots();
 				if (roots.size() > 1) {
 					throw new UnsupportedOperationException("This is not supported yet. Please implement it!");
 				} else if (roots.size() == 0) {
@@ -152,8 +151,8 @@ public class CommonUtils {
 	}
 
 	/**
-	 * Create an emfdiff ({@link ComparisonResourceSnapshot}) from two {@link EObject}s. This is done by first creating
-	 * a {@link MatchModel} and then a {@link DiffModel}.
+	 * Create an emfdiff ({@link ComparisonResourceSnapshot}) from two {@link EObject}s. This is done by first
+	 * creating a {@link MatchModel} and then a {@link DiffModel}.
 	 * 
 	 * @param leftModel
 	 *            The left model.
@@ -178,6 +177,7 @@ public class CommonUtils {
 
 			matchModel = MatchService.doMatch(leftModel, rightModel, options);
 		} catch (final InterruptedException e) {
+			// Ignore
 		}
 
 		final DiffModel diffModel = DiffService.doDiff(matchModel, false);
@@ -185,8 +185,8 @@ public class CommonUtils {
 	}
 
 	/**
-	 * Create an emfdiff ({@link ComparisonResourceSnapshot}) from two {@link EObject}s. This is done by first creating
-	 * a {@link MatchModel} and then a {@link DiffModel}.
+	 * Create an emfdiff ({@link ComparisonResourceSnapshot}) from two {@link EObject}s. This is done by first
+	 * creating a {@link MatchModel} and then a {@link DiffModel}.
 	 * 
 	 * @param leftModel
 	 *            The left model.
@@ -199,14 +199,17 @@ public class CommonUtils {
 		try {
 			matchModel = MatchService.doMatch(leftModel, rightModel, Collections.<String, Object> emptyMap());
 		} catch (final InterruptedException e) {
+			// Ignore
 		}
 
 		final DiffModel diffModel = DiffService.doDiff(matchModel, false);
 		return wrapInComparisonSnapshot(matchModel, diffModel);
 	}
 
-	private static ComparisonResourceSnapshot wrapInComparisonSnapshot(MatchModel matchModel, DiffModel diffModel) {
-		final ComparisonResourceSnapshot comparison = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
+	private static ComparisonResourceSnapshot wrapInComparisonSnapshot(MatchModel matchModel,
+			DiffModel diffModel) {
+		final ComparisonResourceSnapshot comparison = DiffFactory.eINSTANCE
+				.createComparisonResourceSnapshot();
 		comparison.setDiff(diffModel);
 		comparison.setMatch(matchModel);
 		comparison.setDate(new Date());
@@ -218,16 +221,16 @@ public class CommonUtils {
 	 * <ol>
 	 * <li>{@link CommonUtils#DIFF_EMPTY}: The given diff does not contain any {@link DiffElement} except for
 	 * {@link DiffGroup}s.
-	 * <li>{@link CommonUtils#DIFF_ORDERINGS}: The given diff does only contain ordering changes multi-valued references
-	 * (not yet implemented for attributes in EMF Compare).
+	 * <li>{@link CommonUtils#DIFF_ORDERINGS}: The given diff does only contain ordering changes multi-valued
+	 * references (not yet implemented for attributes in EMF Compare).
 	 * </ol>
 	 * 
 	 * @param snapshot
 	 *            An EMF Compare snapshot.
 	 * @param criteria
 	 *            The criteria which should be checked.
-	 * @return A collection of {@link DiffElement}s which <b>do not</b> satisfy the given criteria, an empty collection
-	 *         otherwise.
+	 * @return A collection of {@link DiffElement}s which <b>do not</b> satisfy the given criteria, an empty
+	 *         collection otherwise.
 	 */
 	public static Collection<DiffElement> analyzeDiff(ComparisonSnapshot snapshot, int criteria) {
 		final Collection<DiffElement> violations = new ArrayList<DiffElement>();
@@ -239,17 +242,18 @@ public class CommonUtils {
 
 				// we break if our criteria is violated!
 				switch (criteria) {
-				case DIFF_EMPTY:
-					if (!(obj instanceof DiffGroup)) {
-						violations.add((DiffElement) obj);
-					}
-					break;
-				case DIFF_ORDERINGS:
-					if (!(obj instanceof DiffGroup) && !(obj instanceof ReferenceOrderChange) && !(obj instanceof AttributeOrderChange)) {
-						violations.add((DiffElement) obj);
-					}
-					break;
-				default:
+					case DIFF_EMPTY:
+						if (!(obj instanceof DiffGroup)) {
+							violations.add((DiffElement)obj);
+						}
+						break;
+					case DIFF_ORDERINGS:
+						if (!(obj instanceof DiffGroup) && !(obj instanceof ReferenceOrderChange)
+								&& !(obj instanceof AttributeOrderChange)) {
+							violations.add((DiffElement)obj);
+						}
+						break;
+					default:
 				}
 			}
 		}
@@ -258,10 +262,12 @@ public class CommonUtils {
 		// probably more efficient but more implementation effort
 
 		// if (snapshot instanceof ComparisonResourceSetSnapshot) {
-		// throw new UnsupportedOperationException("Support for ComparisonResourceSetSnapshot not yet implemented!");
+		// throw new
+		// UnsupportedOperationException("Support for ComparisonResourceSetSnapshot not yet implemented!");
 		// } else if (snapshot instanceof ComparisonResourceSnapshot) {
 		// final ComparisonResourceSnapshot resourceSnapshop = (ComparisonResourceSnapshot) snapshot;
-		// if (resourceSnapshop.getDiff() != null && resourceSnapshop.getDiff().getOwnedElements().size() > 0) {
+		// if (resourceSnapshop.getDiff() != null && resourceSnapshop.getDiff().getOwnedElements().size() > 0)
+		// {
 		//
 		// // check if there exist any changes at all
 		// if (criteria == DIFF_EMPTY) {
@@ -307,7 +313,7 @@ public class CommonUtils {
 			try {
 				final IEditorInput editorInput = editor.getEditorInput();
 				if (editorInput instanceof FileEditorInput) {
-					final IFile file = ((FileEditorInput) editorInput).getFile();
+					final IFile file = ((FileEditorInput)editorInput).getFile();
 					if (file != null) {
 						final URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), true);
 
@@ -318,7 +324,8 @@ public class CommonUtils {
 							final EObject root = resource.getContents().get(0);
 
 							// maybe we got a GMF diagram here?
-							// since we don't want a dependency to GMF, use reflection to check if root is a diagram.
+							// since we don't want a dependency to GMF, use reflection to check if root is a
+							// diagram.
 
 							final EObject element = getDiagramElement(root);
 							if (element != null && element.eResource() != null) {
@@ -334,8 +341,9 @@ public class CommonUtils {
 					// maybe GMF is loaded and it is a gmf diagram input?
 					try {
 						final URI uri = CommonGmfUtils.getUriFromEditorInput(editorInput);
-						if (uri != null)
+						if (uri != null) {
 							return uri;
+						}
 					} catch (NoClassDefFoundError e) {
 						// do nothing..
 					}
@@ -348,9 +356,8 @@ public class CommonUtils {
 	}
 
 	/**
-	 * Match all elements in the contents of the two given EObjects.
-	 * 
-	 * This method makes use of EMF Compare's {@link MatchService} to find matches.
+	 * Match all elements in the contents of the two given EObjects. This method makes use of EMF Compare's
+	 * {@link MatchService} to find matches.
 	 * 
 	 * @param obj1
 	 *            One EObject.
@@ -359,8 +366,9 @@ public class CommonUtils {
 	 * @return A map containing all matched objects in both content trees.
 	 */
 	public static Map<EObject, EObject> getMatchingObjects(EObject obj1, EObject obj2) {
-		if (obj1 == null || obj2 == null)
+		if (obj1 == null || obj2 == null) {
 			throw new IllegalArgumentException("Parameters must not be null!");
+		}
 
 		// ignore ids; we operate on the same meta model
 		final Map<String, Object> options = new HashMap<String, Object>();
@@ -380,7 +388,7 @@ public class CommonUtils {
 		queue.addAll(match.getMatchedElements());
 		while (!queue.isEmpty()) {
 			final MatchElement matchElement = queue.poll();
-			final Match2Elements match2Elements = (Match2Elements) matchElement;
+			final Match2Elements match2Elements = (Match2Elements)matchElement;
 			result.put(match2Elements.getLeftElement(), match2Elements.getRightElement());
 			result.put(match2Elements.getRightElement(), match2Elements.getLeftElement());
 			queue.addAll(matchElement.getSubMatchElements());
@@ -397,14 +405,15 @@ public class CommonUtils {
 	 */
 	private static EObject getDiagramElement(EObject diagram) {
 		final EClass eClass = diagram.eClass();
-		if (eClass == null)
+		if (eClass == null) {
 			return null;
+		}
 		if ("org.eclipse.gmf.runtime.notation.Diagram".equals(eClass.getInstanceClassName())) {
 			final EStructuralFeature feature = eClass.getEStructuralFeature("element");
 			if (feature != null) {
 				final Object object = diagram.eGet(feature);
 				if (object instanceof EObject) {
-					return (EObject) object;
+					return (EObject)object;
 				}
 			}
 		}
@@ -416,8 +425,9 @@ public class CommonUtils {
 	 */
 	public static <T extends Appendable> T join(String[] src, CharSequence pattern, T dst) throws IOException {
 		for (int i = 0; i < src.length; i++) {
-			if (i > 0)
+			if (i > 0) {
 				dst.append(pattern);
+			}
 			dst.append(src[i]);
 		}
 		return dst;
@@ -439,7 +449,7 @@ public class CommonUtils {
 	 */
 	public static String join(List<? extends String> src, CharSequence pattern) {
 		try {
-			return join((String[]) src.toArray(new String[src.size()]), pattern, new StringBuilder()).toString();
+			return join(src.toArray(new String[src.size()]), pattern, new StringBuilder()).toString();
 		} catch (IOException e) {
 			throw new Error("StringBuilder should not throw IOExceptions!");
 		}
@@ -452,14 +462,16 @@ public class CommonUtils {
 	 *            A map.
 	 * @param value
 	 *            The value to filter.
-	 * @return A list of elements (subset of keys of <code>map</code>) which have the given <code>value</code>.
+	 * @return A list of elements (subset of keys of <code>map</code>) which have the given <code>value</code>
+	 *         .
 	 */
 	public static <K, V> List<K> filterByValue(Map<K, V> map, V value) {
 		final ArrayList<K> result = new ArrayList<K>();
 		if (value != null) {
 			for (K key : map.keySet()) {
-				if (value.equals(map.get(key)))
+				if (value.equals(map.get(key))) {
 					result.add(key);
+				}
 			}
 		}
 		return result;

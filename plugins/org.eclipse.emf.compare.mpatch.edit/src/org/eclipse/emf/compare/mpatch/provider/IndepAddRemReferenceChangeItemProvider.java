@@ -119,8 +119,8 @@ public class IndepAddRemReferenceChangeItemProvider
 		ChangeKind labelValue = ((IndepAddRemReferenceChange)object).getChangeKind();
 		String label = labelValue == null ? null : labelValue.toString();
 		return label == null || label.length() == 0 ?
-			getString("_UI_IndepAddRemReferenceChange_type") :
-			getString("_UI_IndepAddRemReferenceChange_type") + " " + label;
+			getString("_UI_IndepAddRemReferenceChange_type") : //$NON-NLS-1$
+			getString("_UI_IndepAddRemReferenceChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -176,7 +176,7 @@ public class IndepAddRemReferenceChangeItemProvider
 
 		if (qualify) {
 			return getString
-				("_UI_CreateChild_text2",
+				("_UI_CreateChild_text2", //$NON-NLS-1$
 				 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
 		}
 		return super.getCreateChildText(owner, feature, child, selection);

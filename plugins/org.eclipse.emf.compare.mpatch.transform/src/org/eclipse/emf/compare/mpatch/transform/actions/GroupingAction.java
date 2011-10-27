@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.mpatch.transform.actions;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.mpatch.ChangeGroup;
 import org.eclipse.emf.compare.mpatch.MPatchModel;
@@ -24,20 +25,20 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
 /**
- * This implementation introduces {@link ChangeGroup} in an unstructured {@link MPatchModel}, that is, it must not
- * already contain {@link ChangeGroup}s.
- * 
- * It calls the grouping algorithm defined in {@link DefaultMPatchGrouping}.
+ * This implementation introduces {@link ChangeGroup} in an unstructured {@link MPatchModel}, that is, it must
+ * not already contain {@link ChangeGroup}s. It calls the grouping algorithm defined in
+ * {@link DefaultMPatchGrouping}.
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public class GroupingAction extends AbstractCompareAction {
 
 	private static final String ACTION_NAME = "Grouping";
 
 	private static final String INPUT_FILE_EXTENSION = MPatchConstants.FILE_EXTENSION_MPATCH;
+
 	private static final String OUTPUT_FILE_EXTENSION = MPatchConstants.FILE_EXTENSION_MPATCH;
+
 	private static final String JOB_TITLE = ACTION_NAME + " " + MPatchConstants.MPATCH_SHORT_NAME + "...";
 
 	/**
@@ -55,7 +56,7 @@ public class GroupingAction extends AbstractCompareAction {
 	@Override
 	protected Status runAction(Resource input, Resource output, IProgressMonitor monitor) {
 		String message = "";
-		int code = Status.OK;
+		int code = IStatus.OK;
 		Exception exception = null;
 
 		// get the mpatch
@@ -67,35 +68,35 @@ public class GroupingAction extends AbstractCompareAction {
 			int groups = 0;
 			try {
 				groups = DefaultMPatchGrouping.group(mpatch);
-				
+
 				// save the output
 				if (groups > 0) {
 					output.getContents().add(mpatch);
 					try {
 						output.save(null);
-						
+
 						// successful!
 						message = "Grouping successfully finished: " + groups + " groups created.";
 					} catch (final IOException e) {
-						code = Status.ERROR;
+						code = IStatus.ERROR;
 						message = "Could not save grouped " + MPatchConstants.MPATCH_SHORT_NAME + "!";
 						exception = e;
 					}
 				} else {
 					message = ACTION_NAME + " finished: nothing was changed.";
 				}
-				
+
 			} catch (final Exception e) {
 				message = "An exception occured during " + ACTION_NAME;
 				exception = e;
-				code = Status.ERROR;
+				code = IStatus.ERROR;
 			}
 
 		} else {
-			code = Status.ERROR;
+			code = IStatus.ERROR;
 			message = "Could not find " + MPatchConstants.MPATCH_LONG_NAME + " in:\n\n" + content;
 		}
-		
+
 		return new Status(code, TransformActivator.PLUGIN_ID, message, exception);
 	}
 }

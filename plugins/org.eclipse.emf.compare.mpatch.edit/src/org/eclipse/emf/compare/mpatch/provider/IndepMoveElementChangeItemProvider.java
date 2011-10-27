@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.compare.mpatch.ChangeKind;
 import org.eclipse.emf.compare.mpatch.IndepMoveElementChange;
 import org.eclipse.emf.compare.mpatch.MPatchFactory;
 import org.eclipse.emf.compare.mpatch.MPatchPackage;
@@ -94,8 +95,8 @@ public class IndepMoveElementChangeItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IndepMoveElementChange_oldContainment_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IndepMoveElementChange_oldContainment_feature", "_UI_IndepMoveElementChange_type"),
+				 getString("_UI_IndepMoveElementChange_oldContainment_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_IndepMoveElementChange_oldContainment_feature", "_UI_IndepMoveElementChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.INDEP_MOVE_ELEMENT_CHANGE__OLD_CONTAINMENT,
 				 true,
 				 false,
@@ -116,8 +117,8 @@ public class IndepMoveElementChangeItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IndepMoveElementChange_newContainment_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IndepMoveElementChange_newContainment_feature", "_UI_IndepMoveElementChange_type"),
+				 getString("_UI_IndepMoveElementChange_newContainment_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_IndepMoveElementChange_newContainment_feature", "_UI_IndepMoveElementChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.INDEP_MOVE_ELEMENT_CHANGE__NEW_CONTAINMENT,
 				 true,
 				 false,
@@ -249,7 +250,7 @@ public class IndepMoveElementChangeItemProvider
 
 		if (qualify) {
 			return getString
-				("_UI_CreateChild_text2",
+				("_UI_CreateChild_text2", //$NON-NLS-1$
 				 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
 		}
 		return super.getCreateChildText(owner, feature, child, selection);

@@ -92,8 +92,8 @@ public class EObjectToIModelDescriptorMapItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_EObjectToIModelDescriptorMap_value_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_EObjectToIModelDescriptorMap_value_feature", "_UI_EObjectToIModelDescriptorMap_type"),
+				 getString("_UI_EObjectToIModelDescriptorMap_value_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_EObjectToIModelDescriptorMap_value_feature", "_UI_EObjectToIModelDescriptorMap_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.EOBJECT_TO_IMODEL_DESCRIPTOR_MAP__VALUE,
 				 true,
 				 false,
@@ -142,7 +142,7 @@ public class EObjectToIModelDescriptorMapItemProvider
 	@Override
 	public String getText(Object object) {
 		Map.Entry<?, ?> eObjectToIModelDescriptorMap = (Map.Entry<?, ?>)object;
-		return "" + eObjectToIModelDescriptorMap.getKey() + " -> " + eObjectToIModelDescriptorMap.getValue();
+		return "" + eObjectToIModelDescriptorMap.getKey() + " -> " + eObjectToIModelDescriptorMap.getValue(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

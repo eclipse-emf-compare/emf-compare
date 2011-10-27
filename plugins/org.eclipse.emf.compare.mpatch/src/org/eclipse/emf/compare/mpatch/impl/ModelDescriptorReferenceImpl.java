@@ -465,13 +465,13 @@ public class ModelDescriptorReferenceImpl extends EObjectImpl implements ModelDe
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (uriReference: ");
+		result.append(" (uriReference: "); //$NON-NLS-1$
 		result.append(uriReference);
-		result.append(", upperBound: ");
+		result.append(", upperBound: "); //$NON-NLS-1$
 		result.append(upperBound);
-		result.append(", lowerBound: ");
+		result.append(", lowerBound: "); //$NON-NLS-1$
 		result.append(lowerBound);
-		result.append(", label: ");
+		result.append(", label: "); //$NON-NLS-1$
 		result.append(label);
 		result.append(')');
 		return result.toString();

@@ -37,6 +37,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -51,9 +52,7 @@ import org.eclipse.ui.dialogs.ListDialog;
 import org.osgi.service.prefs.BackingStoreException;
 
 /**
- * The MPatch preferences page.
- * 
- * It stores the default choices for:
+ * The MPatch preferences page. It stores the default choices for:
  * <ul>
  * <li>The default symbolic reference creator ({@link ISymbolicReferenceCreator}).
  * <li>The default model descriptor creator ({@link IModelDescriptorCreator}).
@@ -64,33 +63,48 @@ import org.osgi.service.prefs.BackingStoreException;
  * </ul>
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public class MPatchPreferencesPage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
 	/* Keys for storing preferences. */
 	public static final String PREFERENCES_KEY_TRANSFORMATION_ORDER = "transformation.order";
+
 	public static final String PREFERENCES_KEY_SHOW_TRANSFORMATIONS = "transformations.hide";
+
 	public static final String PREFERENCES_KEY_RESOLUTION = "resolution";
+
 	public static final String PREFERENCES_KEY_APPLICATION = "application";
+
 	public static final String PREFERENCES_KEY_SYMBOLIC_REFERENCE = "symbolic.reference";
+
 	public static final String PREFERENCES_KEY_MODEL_DESCRIPTOR = "model.descriptor";
 
 	/* Description for preference settings. */
 	public static final String PREFERENCES_DESCRIPTION_TRANSFORMATION_ORDER = "Default selection and order of optional transformations";
+
 	public static final String PREFERENCES_DESCRIPTION_SHOW_TRANSFORMATIONS = "Show mandatory transformations in "
 			+ MPatchConstants.MPATCH_LONG_NAME + " creation wizard";
+
 	public static final String PREFERENCES_DESCRIPTION_RESOLUTION = "Default symbolic reference resolution";
+
 	public static final String PREFERENCES_DESCRIPTION_APPLICATION = "Default difference applier";
+
 	public static final String PREFERENCES_DESCRIPTION_SYMBOLIC_REFERENCE = "Default symbolic reference creator";
+
 	public static final String PREFERENCES_DESCRIPTION_MODEL_DESCRIPTOR = "Default model description creator";
 
 	/* Additional constants used in the preference page. */
 	public static final String PREFERENCES_LABEL = "Settings for " + MPatchConstants.MPATCH_LONG_NAME
 			+ ", a model patching technology based on EMF Compare.";
-	public static final String PREFERENCES_LABEL_DIFFAPPLYGROUP = MPatchConstants.MPATCH_LONG_NAME + " Application";
-	public static final String PREFERENCES_LABEL_DIFFCREATEGROUP = MPatchConstants.MPATCH_LONG_NAME + " Creation";
+
+	public static final String PREFERENCES_LABEL_DIFFAPPLYGROUP = MPatchConstants.MPATCH_LONG_NAME
+			+ " Application";
+
+	public static final String PREFERENCES_LABEL_DIFFCREATEGROUP = MPatchConstants.MPATCH_LONG_NAME
+			+ " Creation";
+
 	public static final String PREFERENCES_LABEL_TRANSFORMATIONS = "Transformation Details";
+
 	public static final String PREFERENCES_LABEL_TRANSFLIST = "Select Transformation";
 
 	/* Separator for storing transformation selections in a string. */
@@ -120,14 +134,14 @@ public class MPatchPreferencesPage extends FieldEditorPreferencePage implements 
 
 		final List<String[]> comboboxValues = new ArrayList<String[]>();
 		for (String res : ExtensionManager.getAllResolutions().keySet()) {
-			comboboxValues.add(new String[] { res, res });
+			comboboxValues.add(new String[] {res, res});
 		}
 		addField(new ComboFieldEditor(PREFERENCES_KEY_RESOLUTION, PREFERENCES_DESCRIPTION_RESOLUTION,
 				comboboxValues.toArray(new String[0][0]), diffApplicationGroup));
 
 		comboboxValues.clear();
 		for (String app : ExtensionManager.getAllApplications().keySet()) {
-			comboboxValues.add(new String[] { app, app });
+			comboboxValues.add(new String[] {app, app});
 		}
 		addField(new ComboFieldEditor(PREFERENCES_KEY_APPLICATION, PREFERENCES_DESCRIPTION_APPLICATION,
 				comboboxValues.toArray(new String[0][0]), diffApplicationGroup));
@@ -151,17 +165,19 @@ public class MPatchPreferencesPage extends FieldEditorPreferencePage implements 
 
 		final List<String[]> comboboxValues = new ArrayList<String[]>();
 		for (String symrefs : ExtensionManager.getAllSymbolicReferenceCreators().keySet()) {
-			comboboxValues.add(new String[] { symrefs, symrefs });
+			comboboxValues.add(new String[] {symrefs, symrefs});
 		}
-		addField(new ComboFieldEditor(PREFERENCES_KEY_SYMBOLIC_REFERENCE, PREFERENCES_DESCRIPTION_SYMBOLIC_REFERENCE,
-				comboboxValues.toArray(new String[0][0]), diffCreationGroup));
+		addField(new ComboFieldEditor(PREFERENCES_KEY_SYMBOLIC_REFERENCE,
+				PREFERENCES_DESCRIPTION_SYMBOLIC_REFERENCE, comboboxValues.toArray(new String[0][0]),
+				diffCreationGroup));
 
 		comboboxValues.clear();
 		for (String modeldescr : ExtensionManager.getAllModelDescriptorCreators().keySet()) {
-			comboboxValues.add(new String[] { modeldescr, modeldescr });
+			comboboxValues.add(new String[] {modeldescr, modeldescr});
 		}
-		addField(new ComboFieldEditor(PREFERENCES_KEY_MODEL_DESCRIPTOR, PREFERENCES_DESCRIPTION_MODEL_DESCRIPTOR,
-				comboboxValues.toArray(new String[0][0]), diffCreationGroup));
+		addField(new ComboFieldEditor(PREFERENCES_KEY_MODEL_DESCRIPTOR,
+				PREFERENCES_DESCRIPTION_MODEL_DESCRIPTOR, comboboxValues.toArray(new String[0][0]),
+				diffCreationGroup));
 	}
 
 	public void init(IWorkbench workbench) {
@@ -185,8 +201,10 @@ public class MPatchPreferencesPage extends FieldEditorPreferencePage implements 
 				getPreferenceStore().getString(PREFERENCES_KEY_TRANSFORMATION_ORDER));
 		corePreferences.putBoolean(PREFERENCES_KEY_SHOW_TRANSFORMATIONS,
 				getPreferenceStore().getBoolean(PREFERENCES_KEY_SHOW_TRANSFORMATIONS));
-		corePreferences.put(PREFERENCES_KEY_RESOLUTION, getPreferenceStore().getString(PREFERENCES_KEY_RESOLUTION));
-		corePreferences.put(PREFERENCES_KEY_APPLICATION, getPreferenceStore().getString(PREFERENCES_KEY_APPLICATION));
+		corePreferences.put(PREFERENCES_KEY_RESOLUTION,
+				getPreferenceStore().getString(PREFERENCES_KEY_RESOLUTION));
+		corePreferences.put(PREFERENCES_KEY_APPLICATION,
+				getPreferenceStore().getString(PREFERENCES_KEY_APPLICATION));
 		corePreferences.put(PREFERENCES_KEY_SYMBOLIC_REFERENCE,
 				getPreferenceStore().getString(PREFERENCES_KEY_SYMBOLIC_REFERENCE));
 		corePreferences.put(PREFERENCES_KEY_MODEL_DESCRIPTOR,
@@ -199,11 +217,10 @@ public class MPatchPreferencesPage extends FieldEditorPreferencePage implements 
 	}
 
 	/**
-	 * List Editor for selecting and ordering transformations. An additional text field shows the description of the
-	 * currently selected transformation.
+	 * List Editor for selecting and ordering transformations. An additional text field shows the description
+	 * of the currently selected transformation.
 	 * 
 	 * @author Patrick Koenemann (pk@imm.dtu.dk)
-	 * 
 	 */
 	private final class TransformationListEditor extends ListEditor {
 
@@ -231,15 +248,17 @@ public class MPatchPreferencesPage extends FieldEditorPreferencePage implements 
 					String info = "";
 					if (getList().getSelectionCount() == 1) {
 						final String selection = getList().getSelection()[0];
-						final IMPatchTransformation transformation = ExtensionManager.getAllTransformations().get(
-								selection);
-						if (transformation != null)
+						final IMPatchTransformation transformation = ExtensionManager.getAllTransformations()
+								.get(selection);
+						if (transformation != null) {
 							info = transformation.getDescription();
+						}
 					}
 					infoText.setText(info);
 				}
 
 				public void widgetDefaultSelected(SelectionEvent e) {
+					// Nothing to do
 				}
 			});
 		}
@@ -252,14 +271,17 @@ public class MPatchPreferencesPage extends FieldEditorPreferencePage implements 
 			final List<String> list = new ArrayList<String>(Arrays.asList(stringList
 					.split(PREFERENCES_TRANSFORMATION_SEPERATOR)));
 
-			// maybe some old plugins are still stored in the preferences but are not any more available as plugins
-			final Map<String, IMPatchTransformation> allTransformations = ExtensionManager.getAllTransformations();
+			// maybe some old plugins are still stored in the preferences but are not any more available as
+			// plugins
+			final Map<String, IMPatchTransformation> allTransformations = ExtensionManager
+					.getAllTransformations();
 			list.retainAll(allTransformations.keySet());
 
 			// remove all mandatory transformations
 			for (int i = list.size() - 1; i >= 0; i--) {
-				if (!allTransformations.get(list.get(i)).isOptional())
+				if (!allTransformations.get(list.get(i)).isOptional()) {
 					list.remove(i);
+				}
 			}
 
 			return list.toArray(new String[list.size()]);
@@ -268,11 +290,13 @@ public class MPatchPreferencesPage extends FieldEditorPreferencePage implements 
 		@Override
 		protected String getNewInputObject() {
 			// all available plugins
-			final Map<String, IMPatchTransformation> allTransformations = ExtensionManager.getAllTransformations();
+			final Map<String, IMPatchTransformation> allTransformations = ExtensionManager
+					.getAllTransformations();
 			final Collection<String> optionalTransformations = new ArrayList<String>();
 			for (IMPatchTransformation transformation : allTransformations.values()) {
-				if (transformation.isOptional())
+				if (transformation.isOptional()) {
 					optionalTransformations.add(transformation.getLabel());
+				}
 			}
 
 			// currently selected plugins
@@ -295,8 +319,8 @@ public class MPatchPreferencesPage extends FieldEditorPreferencePage implements 
 				dialog.setContentProvider(new ArrayContentProvider());
 				dialog.setLabelProvider(new LabelProvider());
 				dialog.setInput(optionalTransformations.toArray());
-				if (dialog.open() == ListDialog.OK && dialog.getResult().length > 0) {
-					return (String) dialog.getResult()[0];
+				if (dialog.open() == Window.OK && dialog.getResult().length > 0) {
+					return (String)dialog.getResult()[0];
 				} else {
 					return null;
 				}

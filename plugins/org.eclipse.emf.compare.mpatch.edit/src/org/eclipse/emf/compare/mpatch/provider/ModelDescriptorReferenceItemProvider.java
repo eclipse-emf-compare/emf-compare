@@ -98,8 +98,8 @@ public class ModelDescriptorReferenceItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IElementReference_type_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IElementReference_type_feature", "_UI_IElementReference_type"),
+				 getString("_UI_IElementReference_type_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_IElementReference_type_feature", "_UI_IElementReference_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.IELEMENT_REFERENCE__TYPE,
 				 true,
 				 false,
@@ -120,8 +120,8 @@ public class ModelDescriptorReferenceItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IElementReference_uriReference_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IElementReference_uriReference_feature", "_UI_IElementReference_type"),
+				 getString("_UI_IElementReference_uriReference_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_IElementReference_uriReference_feature", "_UI_IElementReference_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.IELEMENT_REFERENCE__URI_REFERENCE,
 				 true,
 				 false,
@@ -142,8 +142,8 @@ public class ModelDescriptorReferenceItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IElementReference_upperBound_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IElementReference_upperBound_feature", "_UI_IElementReference_type"),
+				 getString("_UI_IElementReference_upperBound_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_IElementReference_upperBound_feature", "_UI_IElementReference_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.IELEMENT_REFERENCE__UPPER_BOUND,
 				 true,
 				 false,
@@ -164,8 +164,8 @@ public class ModelDescriptorReferenceItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IElementReference_lowerBound_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IElementReference_lowerBound_feature", "_UI_IElementReference_type"),
+				 getString("_UI_IElementReference_lowerBound_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_IElementReference_lowerBound_feature", "_UI_IElementReference_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.IELEMENT_REFERENCE__LOWER_BOUND,
 				 false,
 				 false,
@@ -186,8 +186,8 @@ public class ModelDescriptorReferenceItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IElementReference_label_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IElementReference_label_feature", "_UI_IElementReference_type"),
+				 getString("_UI_IElementReference_label_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_IElementReference_label_feature", "_UI_IElementReference_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.IELEMENT_REFERENCE__LABEL,
 				 true,
 				 false,
@@ -208,8 +208,8 @@ public class ModelDescriptorReferenceItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_ModelDescriptorReference_resolvesTo_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ModelDescriptorReference_resolvesTo_feature", "_UI_ModelDescriptorReference_type"),
+				 getString("_UI_ModelDescriptorReference_resolvesTo_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_ModelDescriptorReference_resolvesTo_feature", "_UI_ModelDescriptorReference_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.MODEL_DESCRIPTOR_REFERENCE__RESOLVES_TO,
 				 true,
 				 false,

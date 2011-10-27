@@ -5,8 +5,8 @@
     modelDirectory="/org.eclipse.emf.compare.mpatch/src" modelPluginID="org.eclipse.emf.compare.mpatch"
     templateDirectory="" modelName="MPatch" editPluginClass="org.eclipse.emf.compare.mpatch.provider.MPatchEditPlugin"
     editorPluginClass="org.eclipse.emf.compare.mpatch.presentation.MPatchEditorPlugin"
-    testSuiteClass="org.eclipse.emf.compare.mpatch.tests.MPatchAllTests" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="6.0" usedGenPackages="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
+    nonNLSMarkers="true" testSuiteClass="org.eclipse.emf.compare.mpatch.tests.MPatchAllTests"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0" usedGenPackages="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
   <foreignModel>mpatch.ecore</foreignModel>
   <genPackages prefix="MPatch" basePackage="org.eclipse.emf.compare" disposableProviderFactory="true"
       ecorePackage="mpatch.ecore#/">

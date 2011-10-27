@@ -1116,128 +1116,128 @@ public class MPatchPackageImpl extends EPackageImpl implements MPatchPackage {
 		modelDescriptorReferenceEClass.getESuperTypes().add(this.getIElementReference());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(mPatchModelEClass, MPatchModel.class, "MPatchModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getMPatchModel_Changes(), this.getIndepChange(), null, "changes", null, 0, -1, MPatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getMPatchModel_OldModel(), ecorePackage.getEString(), "oldModel", null, 0, 1, MPatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getMPatchModel_NewModel(), ecorePackage.getEString(), "newModel", null, 0, 1, MPatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getMPatchModel_Emfdiff(), ecorePackage.getEString(), "emfdiff", null, 0, 1, MPatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(mPatchModelEClass, MPatchModel.class, "MPatchModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getMPatchModel_Changes(), this.getIndepChange(), null, "changes", null, 0, -1, MPatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getMPatchModel_OldModel(), ecorePackage.getEString(), "oldModel", null, 0, 1, MPatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getMPatchModel_NewModel(), ecorePackage.getEString(), "newModel", null, 0, 1, MPatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getMPatchModel_Emfdiff(), ecorePackage.getEString(), "emfdiff", null, 0, 1, MPatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(indepChangeEClass, IndepChange.class, "IndepChange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIndepChange_CorrespondingElement(), this.getIElementReference(), null, "correspondingElement", null, 0, 1, IndepChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIndepChange_ChangeKind(), this.getChangeKind(), "changeKind", null, 0, 1, IndepChange.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIndepChange_ChangeType(), this.getChangeType(), "changeType", "", 0, 1, IndepChange.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEReference(getIndepChange_DependsOn(), this.getIndepChange(), this.getIndepChange_Dependants(), "dependsOn", null, 0, -1, IndepChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIndepChange_Dependants(), this.getIndepChange(), this.getIndepChange_DependsOn(), "dependants", null, 0, -1, IndepChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIndepChange_ResultingElement(), this.getIElementReference(), null, "resultingElement", null, 0, 1, IndepChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(indepChangeEClass, IndepChange.class, "IndepChange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getIndepChange_CorrespondingElement(), this.getIElementReference(), null, "correspondingElement", null, 0, 1, IndepChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getIndepChange_ChangeKind(), this.getChangeKind(), "changeKind", null, 0, 1, IndepChange.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getIndepChange_ChangeType(), this.getChangeType(), "changeType", "", 0, 1, IndepChange.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+		initEReference(getIndepChange_DependsOn(), this.getIndepChange(), this.getIndepChange_Dependants(), "dependsOn", null, 0, -1, IndepChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getIndepChange_Dependants(), this.getIndepChange(), this.getIndepChange_DependsOn(), "dependants", null, 0, -1, IndepChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getIndepChange_ResultingElement(), this.getIElementReference(), null, "resultingElement", null, 0, 1, IndepChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(changeGroupEClass, ChangeGroup.class, "ChangeGroup", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getChangeGroup_SubChanges(), this.getIndepChange(), null, "subChanges", null, 0, -1, ChangeGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(changeGroupEClass, ChangeGroup.class, "ChangeGroup", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getChangeGroup_SubChanges(), this.getIndepChange(), null, "subChanges", null, 0, -1, ChangeGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(indepElementChangeEClass, IndepElementChange.class, "IndepElementChange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(indepElementChangeEClass, IndepElementChange.class, "IndepElementChange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(indepAddRemElementChangeEClass, IndepAddRemElementChange.class, "IndepAddRemElementChange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIndepAddRemElementChange_SubModel(), this.getIModelDescriptor(), null, "subModel", null, 1, 1, IndepAddRemElementChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIndepAddRemElementChange_Containment(), theEcorePackage.getEReference(), null, "containment", null, 1, 1, IndepAddRemElementChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIndepAddRemElementChange_SubModelReference(), this.getIElementReference(), null, "subModelReference", null, 1, 1, IndepAddRemElementChange.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEClass(indepAddRemElementChangeEClass, IndepAddRemElementChange.class, "IndepAddRemElementChange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getIndepAddRemElementChange_SubModel(), this.getIModelDescriptor(), null, "subModel", null, 1, 1, IndepAddRemElementChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getIndepAddRemElementChange_Containment(), theEcorePackage.getEReference(), null, "containment", null, 1, 1, IndepAddRemElementChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getIndepAddRemElementChange_SubModelReference(), this.getIElementReference(), null, "subModelReference", null, 1, 1, IndepAddRemElementChange.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(indepAddElementChangeEClass, IndepAddElementChange.class, "IndepAddElementChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(indepAddElementChangeEClass, IndepAddElementChange.class, "IndepAddElementChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(indepRemoveElementChangeEClass, IndepRemoveElementChange.class, "IndepRemoveElementChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(indepRemoveElementChangeEClass, IndepRemoveElementChange.class, "IndepRemoveElementChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(indepAttributeChangeEClass, IndepAttributeChange.class, "IndepAttributeChange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIndepAttributeChange_ChangedAttribute(), theEcorePackage.getEAttribute(), null, "changedAttribute", null, 1, 1, IndepAttributeChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(indepAttributeChangeEClass, IndepAttributeChange.class, "IndepAttributeChange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getIndepAttributeChange_ChangedAttribute(), theEcorePackage.getEAttribute(), null, "changedAttribute", null, 1, 1, IndepAttributeChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(indepAddRemAttributeChangeEClass, IndepAddRemAttributeChange.class, "IndepAddRemAttributeChange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIndepAddRemAttributeChange_Value(), ecorePackage.getEJavaObject(), "value", null, 0, 1, IndepAddRemAttributeChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(indepAddRemAttributeChangeEClass, IndepAddRemAttributeChange.class, "IndepAddRemAttributeChange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getIndepAddRemAttributeChange_Value(), ecorePackage.getEJavaObject(), "value", null, 0, 1, IndepAddRemAttributeChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(indepMoveElementChangeEClass, IndepMoveElementChange.class, "IndepMoveElementChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIndepMoveElementChange_OldContainment(), theEcorePackage.getEReference(), null, "oldContainment", null, 1, 1, IndepMoveElementChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIndepMoveElementChange_NewContainment(), theEcorePackage.getEReference(), null, "newContainment", null, 1, 1, IndepMoveElementChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIndepMoveElementChange_OldParent(), this.getIElementReference(), null, "oldParent", null, 1, 1, IndepMoveElementChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIndepMoveElementChange_NewParent(), this.getIElementReference(), null, "newParent", null, 1, 1, IndepMoveElementChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(indepMoveElementChangeEClass, IndepMoveElementChange.class, "IndepMoveElementChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getIndepMoveElementChange_OldContainment(), theEcorePackage.getEReference(), null, "oldContainment", null, 1, 1, IndepMoveElementChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getIndepMoveElementChange_NewContainment(), theEcorePackage.getEReference(), null, "newContainment", null, 1, 1, IndepMoveElementChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getIndepMoveElementChange_OldParent(), this.getIElementReference(), null, "oldParent", null, 1, 1, IndepMoveElementChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getIndepMoveElementChange_NewParent(), this.getIElementReference(), null, "newParent", null, 1, 1, IndepMoveElementChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(indepAddAttributeChangeEClass, IndepAddAttributeChange.class, "IndepAddAttributeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(indepAddAttributeChangeEClass, IndepAddAttributeChange.class, "IndepAddAttributeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(indepRemoveAttributeChangeEClass, IndepRemoveAttributeChange.class, "IndepRemoveAttributeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(indepRemoveAttributeChangeEClass, IndepRemoveAttributeChange.class, "IndepRemoveAttributeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(indepUpdateAttributeChangeEClass, IndepUpdateAttributeChange.class, "IndepUpdateAttributeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIndepUpdateAttributeChange_OldValue(), theEcorePackage.getEJavaObject(), "oldValue", null, 0, 1, IndepUpdateAttributeChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIndepUpdateAttributeChange_NewValue(), theEcorePackage.getEJavaObject(), "newValue", null, 0, 1, IndepUpdateAttributeChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(indepUpdateAttributeChangeEClass, IndepUpdateAttributeChange.class, "IndepUpdateAttributeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getIndepUpdateAttributeChange_OldValue(), theEcorePackage.getEJavaObject(), "oldValue", null, 0, 1, IndepUpdateAttributeChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getIndepUpdateAttributeChange_NewValue(), theEcorePackage.getEJavaObject(), "newValue", null, 0, 1, IndepUpdateAttributeChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(indepReferenceChangeEClass, IndepReferenceChange.class, "IndepReferenceChange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIndepReferenceChange_Reference(), theEcorePackage.getEReference(), null, "reference", null, 1, 1, IndepReferenceChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(indepReferenceChangeEClass, IndepReferenceChange.class, "IndepReferenceChange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getIndepReferenceChange_Reference(), theEcorePackage.getEReference(), null, "reference", null, 1, 1, IndepReferenceChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(indepAddRemReferenceChangeEClass, IndepAddRemReferenceChange.class, "IndepAddRemReferenceChange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIndepAddRemReferenceChange_ChangedReference(), this.getIElementReference(), null, "changedReference", null, 1, 1, IndepAddRemReferenceChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(indepAddRemReferenceChangeEClass, IndepAddRemReferenceChange.class, "IndepAddRemReferenceChange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getIndepAddRemReferenceChange_ChangedReference(), this.getIElementReference(), null, "changedReference", null, 1, 1, IndepAddRemReferenceChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(indepAddReferenceChangeEClass, IndepAddReferenceChange.class, "IndepAddReferenceChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(indepAddReferenceChangeEClass, IndepAddReferenceChange.class, "IndepAddReferenceChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(indepRemoveReferenceChangeEClass, IndepRemoveReferenceChange.class, "IndepRemoveReferenceChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(indepRemoveReferenceChangeEClass, IndepRemoveReferenceChange.class, "IndepRemoveReferenceChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(indepUpdateReferenceChangeEClass, IndepUpdateReferenceChange.class, "IndepUpdateReferenceChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIndepUpdateReferenceChange_OldReference(), this.getIElementReference(), null, "oldReference", null, 0, 1, IndepUpdateReferenceChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIndepUpdateReferenceChange_NewReference(), this.getIElementReference(), null, "newReference", null, 0, 1, IndepUpdateReferenceChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(indepUpdateReferenceChangeEClass, IndepUpdateReferenceChange.class, "IndepUpdateReferenceChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getIndepUpdateReferenceChange_OldReference(), this.getIElementReference(), null, "oldReference", null, 0, 1, IndepUpdateReferenceChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getIndepUpdateReferenceChange_NewReference(), this.getIElementReference(), null, "newReference", null, 0, 1, IndepUpdateReferenceChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(iElementReferenceEClass, IElementReference.class, "IElementReference", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIElementReference_Type(), theEcorePackage.getEClass(), null, "type", null, 1, 1, IElementReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIElementReference_UriReference(), ecorePackage.getEString(), "uriReference", null, 0, 1, IElementReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIElementReference_UpperBound(), ecorePackage.getEInt(), "upperBound", "1", 0, 1, IElementReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIElementReference_LowerBound(), theEcorePackage.getEInt(), "lowerBound", "1", 0, 1, IElementReference.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIElementReference_Label(), theEcorePackage.getEString(), "label", null, 0, 1, IElementReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(iElementReferenceEClass, IElementReference.class, "IElementReference", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getIElementReference_Type(), theEcorePackage.getEClass(), null, "type", null, 1, 1, IElementReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getIElementReference_UriReference(), ecorePackage.getEString(), "uriReference", null, 0, 1, IElementReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getIElementReference_UpperBound(), ecorePackage.getEInt(), "upperBound", "1", 0, 1, IElementReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+		initEAttribute(getIElementReference_LowerBound(), theEcorePackage.getEInt(), "lowerBound", "1", 0, 1, IElementReference.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+		initEAttribute(getIElementReference_Label(), theEcorePackage.getEString(), "label", null, 0, 1, IElementReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		EOperation op = addEOperation(iElementReferenceEClass, theEcorePackage.getEObject(), "resolve", 0, -1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, ecorePackage.getEObject(), "model", 0, 1, IS_UNIQUE, IS_ORDERED);
+		EOperation op = addEOperation(iElementReferenceEClass, theEcorePackage.getEObject(), "resolve", 0, -1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		addEParameter(op, ecorePackage.getEObject(), "model", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
-		op = addEOperation(iElementReferenceEClass, ecorePackage.getEBoolean(), "resolvesEqual", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getIElementReference(), "other", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = addEOperation(iElementReferenceEClass, ecorePackage.getEBoolean(), "resolvesEqual", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		addEParameter(op, this.getIElementReference(), "other", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(iModelDescriptorEClass, IModelDescriptor.class, "IModelDescriptor", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIModelDescriptor_CrossReferences(), this.getIElementReference(), null, "crossReferences", null, 0, -1, IModelDescriptor.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEReference(getIModelDescriptor_AllCrossReferences(), this.getIElementReference(), null, "allCrossReferences", null, 0, -1, IModelDescriptor.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEReference(getIModelDescriptor_SelfReference(), this.getIElementReference(), null, "selfReference", null, 1, 1, IModelDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIModelDescriptor_AllSelfReferences(), this.getIElementReference(), null, "allSelfReferences", null, 1, -1, IModelDescriptor.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEReference(getIModelDescriptor_SubModelDescriptors(), this.getIModelDescriptor(), null, "subModelDescriptors", null, 0, -1, IModelDescriptor.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIModelDescriptor_DescriptorUris(), ecorePackage.getEString(), "descriptorUris", null, 0, -1, IModelDescriptor.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEReference(getIModelDescriptor_Type(), theEcorePackage.getEClass(), null, "type", null, 1, 1, IModelDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(iModelDescriptorEClass, IModelDescriptor.class, "IModelDescriptor", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getIModelDescriptor_CrossReferences(), this.getIElementReference(), null, "crossReferences", null, 0, -1, IModelDescriptor.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getIModelDescriptor_AllCrossReferences(), this.getIElementReference(), null, "allCrossReferences", null, 0, -1, IModelDescriptor.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getIModelDescriptor_SelfReference(), this.getIElementReference(), null, "selfReference", null, 1, 1, IModelDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getIModelDescriptor_AllSelfReferences(), this.getIElementReference(), null, "allSelfReferences", null, 1, -1, IModelDescriptor.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getIModelDescriptor_SubModelDescriptors(), this.getIModelDescriptor(), null, "subModelDescriptors", null, 0, -1, IModelDescriptor.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getIModelDescriptor_DescriptorUris(), ecorePackage.getEString(), "descriptorUris", null, 0, -1, IModelDescriptor.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getIModelDescriptor_Type(), theEcorePackage.getEClass(), null, "type", null, 1, 1, IModelDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		op = addEOperation(iModelDescriptorEClass, this.getIElementReference(), "applyCrossReferences", 0, -1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, theEcorePackage.getEObject(), "createdObject", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getElementReferenceToEObjectMap(), "resolvedCrossReferences", 0, -1, IS_UNIQUE, IS_ORDERED);
+		op = addEOperation(iModelDescriptorEClass, this.getIElementReference(), "applyCrossReferences", 0, -1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		addEParameter(op, theEcorePackage.getEObject(), "createdObject", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		addEParameter(op, this.getElementReferenceToEObjectMap(), "resolvedCrossReferences", 0, -1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
-		op = addEOperation(iModelDescriptorEClass, this.getEObjectToIModelDescriptorMap(), "applyStructure", 0, -1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, theEcorePackage.getEObject(), "modelElement", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, theEcorePackage.getEReference(), "containment", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = addEOperation(iModelDescriptorEClass, this.getEObjectToIModelDescriptorMap(), "applyStructure", 0, -1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		addEParameter(op, theEcorePackage.getEObject(), "modelElement", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		addEParameter(op, theEcorePackage.getEReference(), "containment", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
-		op = addEOperation(iModelDescriptorEClass, ecorePackage.getEBoolean(), "describesEqual", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getIModelDescriptor(), "other", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = addEOperation(iModelDescriptorEClass, ecorePackage.getEBoolean(), "describesEqual", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		addEParameter(op, this.getIModelDescriptor(), "other", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
-		op = addEOperation(iModelDescriptorEClass, this.getEObjectToIModelDescriptorMap(), "isDescriptorFor", 0, -1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, theEcorePackage.getEObject(), "element", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, ecorePackage.getEBoolean(), "checkAttributes", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = addEOperation(iModelDescriptorEClass, this.getEObjectToIModelDescriptorMap(), "isDescriptorFor", 0, -1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		addEParameter(op, theEcorePackage.getEObject(), "element", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		addEParameter(op, ecorePackage.getEBoolean(), "checkAttributes", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(elementReferenceToEObjectMapEClass, Map.Entry.class, "ElementReferenceToEObjectMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getElementReferenceToEObjectMap_Key(), this.getIElementReference(), null, "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getElementReferenceToEObjectMap_Value(), theEcorePackage.getEObject(), null, "value", null, 0, -1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(elementReferenceToEObjectMapEClass, Map.Entry.class, "ElementReferenceToEObjectMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getElementReferenceToEObjectMap_Key(), this.getIElementReference(), null, "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getElementReferenceToEObjectMap_Value(), theEcorePackage.getEObject(), null, "value", null, 0, -1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(eObjectToIModelDescriptorMapEClass, Map.Entry.class, "EObjectToIModelDescriptorMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getEObjectToIModelDescriptorMap_Value(), this.getIModelDescriptor(), null, "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getEObjectToIModelDescriptorMap_Key(), theEcorePackage.getEObject(), null, "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(eObjectToIModelDescriptorMapEClass, Map.Entry.class, "EObjectToIModelDescriptorMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getEObjectToIModelDescriptorMap_Value(), this.getIModelDescriptor(), null, "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getEObjectToIModelDescriptorMap_Key(), theEcorePackage.getEObject(), null, "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(unknownChangeEClass, UnknownChange.class, "UnknownChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getUnknownChange_Info(), theEcorePackage.getEString(), "info", null, 0, 1, UnknownChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(unknownChangeEClass, UnknownChange.class, "UnknownChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getUnknownChange_Info(), theEcorePackage.getEString(), "info", null, 0, 1, UnknownChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(modelDescriptorReferenceEClass, ModelDescriptorReference.class, "ModelDescriptorReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getModelDescriptorReference_ResolvesTo(), this.getIModelDescriptor(), null, "resolvesTo", null, 1, 1, ModelDescriptorReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(modelDescriptorReferenceEClass, ModelDescriptorReference.class, "ModelDescriptorReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getModelDescriptorReference_ResolvesTo(), this.getIModelDescriptor(), null, "resolvesTo", null, 1, 1, ModelDescriptorReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Initialize enums and add enum literals
-		initEEnum(changeTypeEEnum, ChangeType.class, "ChangeType");
+		initEEnum(changeTypeEEnum, ChangeType.class, "ChangeType"); //$NON-NLS-1$
 		addEEnumLiteral(changeTypeEEnum, ChangeType.ELEMENT);
 		addEEnumLiteral(changeTypeEEnum, ChangeType.ATTRIBUTE);
 		addEEnumLiteral(changeTypeEEnum, ChangeType.REFERENCE);
 		addEEnumLiteral(changeTypeEEnum, ChangeType.GROUP);
 		addEEnumLiteral(changeTypeEEnum, ChangeType.UNKNOWN);
 
-		initEEnum(changeKindEEnum, ChangeKind.class, "ChangeKind");
+		initEEnum(changeKindEEnum, ChangeKind.class, "ChangeKind"); //$NON-NLS-1$
 		addEEnumLiteral(changeKindEEnum, ChangeKind.ADDITION);
 		addEEnumLiteral(changeKindEEnum, ChangeKind.DELETION);
 		addEEnumLiteral(changeKindEEnum, ChangeKind.CHANGE);

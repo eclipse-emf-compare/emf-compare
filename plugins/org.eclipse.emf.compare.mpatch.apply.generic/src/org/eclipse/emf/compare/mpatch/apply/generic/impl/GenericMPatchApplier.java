@@ -144,8 +144,7 @@ public class GenericMPatchApplier implements IMPatchApplication {
 	protected final Map<EObject, SubModelBinding> addedElementToSubModelBindingMap = new LinkedHashMap<EObject, SubModelBinding>();
 
 	/**
-	 * The options for the current mpatch application.
-	 * See {@link IMPatchApplication} for details. 
+	 * The options for the current mpatch application. See {@link IMPatchApplication} for details.
 	 */
 	protected Map<Integer, Boolean> options;
 
@@ -171,8 +170,8 @@ public class GenericMPatchApplier implements IMPatchApplication {
 	 * 
 	 * @return The application result.
 	 */
-	public MPatchApplicationResult applyMPatch(final ResolvedSymbolicReferences mapping,
-			final Map<Integer, Boolean> options) {
+	public MPatchApplicationResult applyMPatch(ResolvedSymbolicReferences mapping,
+			Map<Integer, Boolean> options) {
 
 		// 0. set up collections for return value
 		final Collection<IndepChange> successfulChanges = new LinkedList<IndepChange>();
@@ -186,7 +185,8 @@ public class GenericMPatchApplier implements IMPatchApplication {
 		mapping.getMPatchModelBinding().getChangeBindings().clear();
 		addedElementToSubModelBindingMap.clear();
 		this.options = options;
-		respectApplied = options.get(OPTION_MATCH_APPLIED_CHANGES) == null ? false : options.get(OPTION_MATCH_APPLIED_CHANGES);
+		respectApplied = options.get(OPTION_MATCH_APPLIED_CHANGES) == null ? false : options
+				.get(OPTION_MATCH_APPLIED_CHANGES);
 
 		// for the time being, only forward application is supported!
 		final boolean forward = mapping.getDirection() == ResolvedSymbolicReferences.RESOLVE_UNCHANGED;
@@ -202,10 +202,8 @@ public class GenericMPatchApplier implements IMPatchApplication {
 			 */
 		}
 
-
 		// 1. set up ordering of the differences!
-		orderedChanges = MPatchValidator.orderChanges(mapping.getResolutionByChange().keySet(), 
-				forward);
+		orderedChanges = MPatchValidator.orderChanges(mapping.getResolutionByChange().keySet(), forward);
 
 		// 2. apply the changes!
 		for (final IndepChange indepChange : orderedChanges) {
@@ -369,7 +367,7 @@ public class GenericMPatchApplier implements IMPatchApplication {
 
 		// 0. store elements for which not all symrefs could be restored
 		final List<EObject> failedSymrefRestoredElements = new ArrayList<EObject>();
-//		int counter = 0;
+		// int counter = 0;
 
 		// 1. restore references for all added elements
 		for (EObject addedElement : addedElementToModelDescriptorMap.keySet()) {
@@ -395,7 +393,7 @@ public class GenericMPatchApplier implements IMPatchApplication {
 			if (failedReferences.size() > 0) {
 				failedSymrefRestoredElements.add(addedElement);
 			}
-//			counter += descriptor.getCrossReferences().size() - failedReferences.size();
+			// counter += descriptor.getCrossReferences().size() - failedReferences.size();
 
 			// store mapping for all cross references
 			final SubModelBinding subModelBinding = addedElementToSubModelBindingMap.get(addedElement);
@@ -438,7 +436,8 @@ public class GenericMPatchApplier implements IMPatchApplication {
 	 * @throws IllegalArgumentException
 	 *             If the binding did not resolve correctly or is wrong in some sense.
 	 */
-	protected ApplicationResult applyChange(IndepChange indepChange, ResolvedSymbolicReferences binding) throws IllegalArgumentException {
+	protected ApplicationResult applyChange(IndepChange indepChange, ResolvedSymbolicReferences binding)
+			throws IllegalArgumentException {
 
 		// unknown changes cannot be applied!
 		if (indepChange instanceof UnknownChange) {
@@ -868,7 +867,8 @@ public class GenericMPatchApplier implements IMPatchApplication {
 							// already moved?
 							if (list.contains(moveElement)) {
 								if (!ApplicationResult.SUCCESSFUL.equals(result)) {
-									result = respectApplied ? ApplicationResult.BOUND : ApplicationResult.SUCCESSFUL;
+									result = respectApplied ? ApplicationResult.BOUND
+											: ApplicationResult.SUCCESSFUL;
 								}
 							} else if (list.add(moveElement)) {
 								result = ApplicationResult.SUCCESSFUL;
@@ -894,7 +894,8 @@ public class GenericMPatchApplier implements IMPatchApplication {
 						// is it already moved?
 						if (moveElement.equals(newParent.eGet(containment))) {
 							if (!ApplicationResult.SUCCESSFUL.equals(result)) {
-								result = respectApplied ? ApplicationResult.BOUND : ApplicationResult.SUCCESSFUL;
+								result = respectApplied ? ApplicationResult.BOUND
+										: ApplicationResult.SUCCESSFUL;
 							}
 
 							// add element binding, if not null
@@ -991,14 +992,14 @@ public class GenericMPatchApplier implements IMPatchApplication {
 			// final Collection<EObject> maybeAddedElements = resolveSymbolicReference(binding, flatDeletions,
 			// elementChange.getSubModelReference());
 			/*
-			 * Fix: resolveSymbolicReferences includes raw resolutions, but this is exactly what we do not want
-			 * here! So we get the set of resolved references directly from the binding.
+			 * Fix: resolveSymbolicReferences includes raw resolutions, but this is exactly what we do not
+			 * want here! So we get the set of resolved references directly from the binding.
 			 */
 			final Collection<EObject> maybeAddedElements = binding.getResolutionByChange().get(elementChange)
 					.get(elementChange.getSubModelReference());
 			for (EObject added : maybeAddedElements) {
-				final EMap<EObject, IModelDescriptor> descriptors = elementChange.getSubModel().isDescriptorFor(
-						added, false);
+				final EMap<EObject, IModelDescriptor> descriptors = elementChange.getSubModel()
+						.isDescriptorFor(added, false);
 				if (descriptors != null) {
 					addedElements.put(added, descriptors);
 				}

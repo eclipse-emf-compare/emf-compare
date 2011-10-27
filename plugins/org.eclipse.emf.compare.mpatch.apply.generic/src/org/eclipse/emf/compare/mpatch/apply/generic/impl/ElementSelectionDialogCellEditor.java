@@ -43,6 +43,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -134,7 +135,7 @@ class ElementSelectionDialogCellEditor extends DialogCellEditor {
 		// create dialog
 		final BindAddedElementDialog dialog = new BindAddedElementDialog(shell, mapping.getModel(),
 				change.getSubModel(), bound);
-		if (dialog.open() == Dialog.OK) {
+		if (dialog.open() == Window.OK) {
 			final List<EObject> result = dialog.getResult();
 			return result;
 		} else {
@@ -166,7 +167,7 @@ class ElementSelectionDialogCellEditor extends DialogCellEditor {
 		final SymrefResolutionDialog dialog = new SymrefResolutionDialog(shell, labelProvider, bounds, null,
 				currentList, MPatchConstants.SYMBOLIC_REFERENCES_NAME + " resolution", selectionList,
 				currentList, bounds, change);
-		if (dialog.open() == Dialog.OK) {
+		if (dialog.open() == Window.OK) {
 			@SuppressWarnings("unchecked")
 			final EList<EObject> result = (EList<EObject>)dialog.getResult();
 			final List<IElementReference> refs = dialog.getReferences();

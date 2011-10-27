@@ -90,8 +90,8 @@ public class IndepAddRemAttributeChangeItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IndepAddRemAttributeChange_value_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IndepAddRemAttributeChange_value_feature", "_UI_IndepAddRemAttributeChange_type"),
+				 getString("_UI_IndepAddRemAttributeChange_value_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_IndepAddRemAttributeChange_value_feature", "_UI_IndepAddRemAttributeChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.INDEP_ADD_REM_ATTRIBUTE_CHANGE__VALUE,
 				 true,
 				 false,
@@ -112,8 +112,8 @@ public class IndepAddRemAttributeChangeItemProvider
 		ChangeKind labelValue = ((IndepAddRemAttributeChange)object).getChangeKind();
 		String label = labelValue == null ? null : labelValue.toString();
 		return label == null || label.length() == 0 ?
-			getString("_UI_IndepAddRemAttributeChange_type") :
-			getString("_UI_IndepAddRemAttributeChange_type") + " " + label;
+			getString("_UI_IndepAddRemAttributeChange_type") : //$NON-NLS-1$
+			getString("_UI_IndepAddRemAttributeChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

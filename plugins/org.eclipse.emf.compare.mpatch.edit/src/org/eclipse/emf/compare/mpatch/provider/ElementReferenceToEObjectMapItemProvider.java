@@ -92,8 +92,8 @@ public class ElementReferenceToEObjectMapItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_ElementReferenceToEObjectMap_key_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ElementReferenceToEObjectMap_key_feature", "_UI_ElementReferenceToEObjectMap_type"),
+				 getString("_UI_ElementReferenceToEObjectMap_key_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_ElementReferenceToEObjectMap_key_feature", "_UI_ElementReferenceToEObjectMap_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.ELEMENT_REFERENCE_TO_EOBJECT_MAP__KEY,
 				 true,
 				 false,
@@ -142,7 +142,7 @@ public class ElementReferenceToEObjectMapItemProvider
 	@Override
 	public String getText(Object object) {
 		Map.Entry<?, ?> elementReferenceToEObjectMap = (Map.Entry<?, ?>)object;
-		return "" + elementReferenceToEObjectMap.getKey() + " -> " + elementReferenceToEObjectMap.getValue();
+		return "" + elementReferenceToEObjectMap.getKey() + " -> " + elementReferenceToEObjectMap.getValue(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

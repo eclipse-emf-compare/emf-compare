@@ -25,4 +25,5 @@ import org.eclipse.emf.compare.mpatch.IElementReference;
  * @generated
  */
 public interface ExternalElementReference extends IElementReference {
-} // ExternalElementReference
+	// ExternalElementReference
+} 

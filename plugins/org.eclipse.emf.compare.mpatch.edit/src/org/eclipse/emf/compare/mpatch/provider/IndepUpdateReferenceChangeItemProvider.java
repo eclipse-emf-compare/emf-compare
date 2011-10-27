@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.compare.mpatch.ChangeKind;
 import org.eclipse.emf.compare.mpatch.IndepUpdateReferenceChange;
 import org.eclipse.emf.compare.mpatch.MPatchFactory;
 import org.eclipse.emf.compare.mpatch.MPatchPackage;
@@ -203,7 +204,7 @@ public class IndepUpdateReferenceChangeItemProvider
 
 		if (qualify) {
 			return getString
-				("_UI_CreateChild_text2",
+				("_UI_CreateChild_text2", //$NON-NLS-1$
 				 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
 		}
 		return super.getCreateChildText(owner, feature, child, selection);

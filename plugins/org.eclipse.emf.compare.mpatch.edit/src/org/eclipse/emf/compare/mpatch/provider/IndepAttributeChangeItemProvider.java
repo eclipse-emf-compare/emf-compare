@@ -88,8 +88,8 @@ public class IndepAttributeChangeItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IndepAttributeChange_changedAttribute_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IndepAttributeChange_changedAttribute_feature", "_UI_IndepAttributeChange_type"),
+				 getString("_UI_IndepAttributeChange_changedAttribute_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_IndepAttributeChange_changedAttribute_feature", "_UI_IndepAttributeChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 MPatchPackage.Literals.INDEP_ATTRIBUTE_CHANGE__CHANGED_ATTRIBUTE,
 				 true,
 				 false,
@@ -110,8 +110,8 @@ public class IndepAttributeChangeItemProvider
 		ChangeKind labelValue = ((IndepAttributeChange)object).getChangeKind();
 		String label = labelValue == null ? null : labelValue.toString();
 		return label == null || label.length() == 0 ?
-			getString("_UI_IndepAttributeChange_type") :
-			getString("_UI_IndepAttributeChange_type") + " " + label;
+			getString("_UI_IndepAttributeChange_type") : //$NON-NLS-1$
+			getString("_UI_IndepAttributeChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
