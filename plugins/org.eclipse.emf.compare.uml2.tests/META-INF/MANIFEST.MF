@@ -18,5 +18,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare.diff,
  org.eclipse.emf.compare,
  org.eclipse.emf.compare.match,
- org.eclipse.emf.compare.uml2
+ org.eclipse.emf.compare.uml2,
+ org.eclipse.papyrus.sysml
 Bundle-ActivationPolicy: lazy
