@@ -68,7 +68,6 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 	 */
 	public void dispose() {
-		ModelComparator.removeComparator(configuration);
 		input = null;
 	}
 

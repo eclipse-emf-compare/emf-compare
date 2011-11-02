@@ -688,7 +688,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			canvas = null;
 		}
 		currentSelection.clear();
-		ModelComparator.removeComparator(configuration);
 	}
 
 	/**
@@ -1133,6 +1132,5 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			}
 			return false;
 		}
-
 	}
 }

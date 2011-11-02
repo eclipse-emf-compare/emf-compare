@@ -77,6 +77,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.team.core.mapping.ISynchronizationContext;
 import org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -91,13 +95,13 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 	 */
 	protected static final boolean IS_LESS_GANYMEDE;
 
-	/** Keeps track of the team handlers declared for the extension point. */
-	private static final Set<TeamHandlerDescriptor> CACHED_HANDLERS = new LinkedHashSet<TeamHandlerDescriptor>();
-
 	/**
 	 * This will contain instances of comparators associated to given CompareConfiguration.
 	 */
-	private static final Map<CompareConfiguration, ModelComparator> INSTANCES = new HashMap<CompareConfiguration, ModelComparator>();
+	protected static final Map<CompareConfiguration, ModelComparator> INSTANCES = new HashMap<CompareConfiguration, ModelComparator>();
+
+	/** Keeps track of the team handlers declared for the extension point. */
+	private static final Set<TeamHandlerDescriptor> CACHED_HANDLERS = new LinkedHashSet<TeamHandlerDescriptor>();
 
 	/** Name of the extension point to parse for team handlers. */
 	private static final String TEAM_HANDLERS_EXTENSION_POINT = "org.eclipse.emf.compare.ui.team.handler"; //$NON-NLS-1$
@@ -159,6 +163,12 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 			// Will be thrown in Eclipse 3.5M6 or above
 		}
 		IS_LESS_GANYMEDE = temp;
+		if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+			final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			if (page != null) {
+				page.addPartListener(new CompareEditorlistener());
+			}
+		}
 	}
 
 	/**
@@ -292,6 +302,44 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 			}
 		}
 		return comparisonResult;
+	}
+
+	/**
+	 * Disposes of this comparator and the resources it loaded.
+	 */
+	public void dispose() {
+		final Thread longRunningDispose = new Thread() {
+			@Override
+			public void run() {
+				final ComparisonSnapshot snapshot = getComparisonResult();
+				if (snapshot.eResource() != null) {
+					disposeOfResource(snapshot.eResource());
+				}
+				disposeOfResource(getAncestorResource());
+				disposeOfResource(getLeftResource());
+				disposeOfResource(getRightResource());
+			}
+		};
+		longRunningDispose.start();
+	}
+
+	/**
+	 * Disposes of the given resource.
+	 * 
+	 * @param res
+	 *            The resource to dispose.
+	 */
+	protected void disposeOfResource(Resource res) {
+		if (res != null) {
+			if (res.getResourceSet() != null) {
+				for (Resource sibling : res.getResourceSet().getResources()) {
+					sibling.unload();
+				}
+				res.getResourceSet().getResources().clear();
+			} else {
+				res.unload();
+			}
+		}
 	}
 
 	/**
@@ -759,6 +807,69 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * This will be used to listen to the changes on compare editors in the workspace : we need to know when
+	 * they are closed in order to dispose of our comparators.
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
+	public static final class CompareEditorlistener implements IPartListener {
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
+		 */
+		public void partClosed(IWorkbenchPart part) {
+			if (part instanceof IEditorPart
+					&& ((IEditorPart)part).getEditorInput() instanceof CompareEditorInput) {
+				final CompareEditorInput editorInput = (CompareEditorInput)((IEditorPart)part)
+						.getEditorInput();
+				final CompareConfiguration configuration = editorInput.getCompareConfiguration();
+				final ModelComparator comparator = getComparator(configuration);
+				if (comparator != null) {
+					comparator.dispose();
+					INSTANCES.remove(configuration);
+				}
+			}
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
+		 */
+		public void partActivated(IWorkbenchPart part) {
+			// Do nothing
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
+		 */
+		public void partBroughtToTop(IWorkbenchPart part) {
+			// Do nothing
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
+		 */
+		public void partDeactivated(IWorkbenchPart part) {
+			// Do nothing
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
+		 */
+		public void partOpened(IWorkbenchPart part) {
+			// Do nothing
+		}
 	}
 
 	/**
