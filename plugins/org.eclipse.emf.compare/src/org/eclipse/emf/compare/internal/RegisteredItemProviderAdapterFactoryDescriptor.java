@@ -97,7 +97,7 @@ public class RegisteredItemProviderAdapterFactoryDescriptor {
 			result = value;
 		} else {
 			throw new RuntimeException("Enable to find a correct id for AdapterFactory registered on " //$NON-NLS-1$
-					+ RegisteredItemProviderAdapterFactoryRegistery.EXT_POINT_ID_ADAPTER_FACTORY);
+					+ RegisteredItemProviderAdapterFactoryRegistry.EXT_POINT_ID_ADAPTER_FACTORY);
 		}
 		return result;
 	}
@@ -137,7 +137,7 @@ public class RegisteredItemProviderAdapterFactoryDescriptor {
 			result = value;
 		} else {
 			throw new RuntimeException("Enable to find a correct name for AdapterFactory registered on " //$NON-NLS-1$
-					+ RegisteredItemProviderAdapterFactoryRegistery.EXT_POINT_ID_ADAPTER_FACTORY);
+					+ RegisteredItemProviderAdapterFactoryRegistry.EXT_POINT_ID_ADAPTER_FACTORY);
 		}
 		return result;
 	}
@@ -155,16 +155,16 @@ public class RegisteredItemProviderAdapterFactoryDescriptor {
 			result = null;
 			throw new RuntimeException(
 					"Enable to construct an AdapterFactory from the extension registered on " //$NON-NLS-1$
-							+ RegisteredItemProviderAdapterFactoryRegistery.EXT_POINT_ID_ADAPTER_FACTORY);
+							+ RegisteredItemProviderAdapterFactoryRegistry.EXT_POINT_ID_ADAPTER_FACTORY);
 		} catch (InvalidRegistryObjectException e) {
 			result = null;
 			throw new RuntimeException(
 					"Enable to construct an AdapterFactory from the extension registered on " //$NON-NLS-1$
-							+ RegisteredItemProviderAdapterFactoryRegistery.EXT_POINT_ID_ADAPTER_FACTORY);
+							+ RegisteredItemProviderAdapterFactoryRegistry.EXT_POINT_ID_ADAPTER_FACTORY);
 		}
 		if (!(result instanceof AdapterFactory)) {
 			throw new RuntimeException(
-					"The registered class on " + RegisteredItemProviderAdapterFactoryRegistery.EXT_POINT_ID_ADAPTER_FACTORY //$NON-NLS-1$
+					"The registered class on " + RegisteredItemProviderAdapterFactoryRegistry.EXT_POINT_ID_ADAPTER_FACTORY //$NON-NLS-1$
 							+ " do not implement AdapterFactory Interface"); //$NON-NLS-1$
 		}
 		return (AdapterFactory)result;

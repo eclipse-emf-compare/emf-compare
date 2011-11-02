@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.internal.RegisteredItemProviderAdapterFactoryRegistery;
+import org.eclipse.emf.compare.internal.RegisteredItemProviderAdapterFactoryRegistry;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -27,11 +27,6 @@ import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public final class AdapterUtils {
-	/**
-	 * Adapter factory instance. This contains all factories registered in the global registry.
-	 */
-	private static final ComposedAdapterFactory FACTORY = createAdapterFactory();
-
 	/**
 	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
@@ -63,7 +58,7 @@ public final class AdapterUtils {
 	 * @return A factory built with all the {@link AdapterFactory} instances available in the global registry.
 	 */
 	public static AdapterFactory getAdapterFactory() {
-		return FACTORY;
+		return createAdapterFactory();
 	}
 
 	/**
@@ -117,12 +112,7 @@ public final class AdapterUtils {
 	 */
 	private static ComposedAdapterFactory createAdapterFactory() {
 		final List<AdapterFactory> factories = new ArrayList<AdapterFactory>();
-		/**
-		 * Initialize IPAF from extension point
-		 */
-		RegisteredItemProviderAdapterFactoryRegistery.getInstance().parseInitialContributions();
-		factories.add(RegisteredItemProviderAdapterFactoryRegistery.getInstance()
-				.createSortedListOfSpecifcIPAF());
+		factories.add(RegisteredItemProviderAdapterFactoryRegistry.createSortedListOfSpecifcIPAF());
 
 		factories.add(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
 		factories.add(new ReflectiveItemProviderAdapterFactory());

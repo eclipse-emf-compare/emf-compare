@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.compare.internal.RegisteredItemProviderAdapterFactoryListener;
-import org.eclipse.emf.compare.internal.RegisteredItemProviderAdapterFactoryRegistery;
+import org.eclipse.emf.compare.internal.RegisteredItemProviderAdapterFactoryRegistry;
 import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
 import org.osgi.framework.BundleContext;
 
@@ -34,9 +34,9 @@ public class EMFComparePlugin extends Plugin {
 	public static final String PLUGIN_ID = "org.eclipse.emf.compare"; //$NON-NLS-1$
 
 	/**
-	 * Listener for {@link RegisteredItemProviderAdapterFactoryRegistery}.
+	 * Listener for {@link RegisteredItemProviderAdapterFactoryRegistry}.
 	 */
-	private static RegisteredItemProviderAdapterFactoryListener registeredItemProviderAdapterListenner = new RegisteredItemProviderAdapterFactoryListener();
+	private static RegisteredItemProviderAdapterFactoryListener registeredItemProviderAdapterListener = new RegisteredItemProviderAdapterFactoryListener();
 
 	/** Plug-in's shared instance. */
 	private static EMFComparePlugin plugin;
@@ -174,8 +174,11 @@ public class EMFComparePlugin extends Plugin {
 		super.start(context);
 
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
-		registry.addListener(registeredItemProviderAdapterListenner,
-				RegisteredItemProviderAdapterFactoryRegistery.EXT_POINT_ID_ADAPTER_FACTORY);
+		registry.addListener(registeredItemProviderAdapterListener,
+				RegisteredItemProviderAdapterFactoryRegistry.EXT_POINT_ID_ADAPTER_FACTORY);
+
+		RegisteredItemProviderAdapterFactoryRegistry.parseInitialContributions();
+
 		initializeDefaultPreferences();
 	}
 
@@ -187,6 +190,12 @@ public class EMFComparePlugin extends Plugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+
+		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+		registry.removeListener(registeredItemProviderAdapterListener);
+
+		RegisteredItemProviderAdapterFactoryRegistry.clearRegistry();
+
 		super.stop(context);
 	}
 

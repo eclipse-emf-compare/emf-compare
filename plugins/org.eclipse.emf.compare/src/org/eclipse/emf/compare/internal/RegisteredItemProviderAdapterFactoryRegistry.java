@@ -32,54 +32,24 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
  * 
  * @author "Arthur Daussy <a href="mailto:arthur.daussy@atos.net">arthur.daussy@atos.net</a>"
  */
-public final class RegisteredItemProviderAdapterFactoryRegistery {
+public final class RegisteredItemProviderAdapterFactoryRegistry {
 	/**
 	 * ID of the extension point used to register specific adapter factory.
 	 */
 	public static final String EXT_POINT_ID_ADAPTER_FACTORY = "org.eclipse.emf.compare.itemprovideradapterFactory"; //$NON-NLS-1$
 
-	/**
-	 * Composed adapter factory of all registered.
-	 */
-	private ComposedAdapterFactoryOrdered composedAdapterFactory;
+	/** Store the IPAFs. */
+	private static final Map<String, RegisteredItemProviderAdapterFactoryDescriptor> STORAGE = new HashMap<String, RegisteredItemProviderAdapterFactoryDescriptor>();
 
-	/**
-	 * Store the IPAFs.
-	 */
-	private final Map<String, RegisteredItemProviderAdapterFactoryDescriptor> storage = new HashMap<String, RegisteredItemProviderAdapterFactoryDescriptor>();
+	/** Composed adapter factory of all registered. */
+	private static ComposedAdapterFactoryOrdered composedAdapterFactory;
 
-	/**
-	 * Count the number of {@link AdapterFactory} for each priority.
-	 */
-	private int[] priorityCounter = new int[] {0, 0, 0, 0, 0 };
+	/** Count the number of {@link AdapterFactory} for each priority. */
+	private static int[] priorityCounter = new int[] {0, 0, 0, 0, 0 };
 
-	/**
-	 * Hide constructor Constructor.
-	 */
-	RegisteredItemProviderAdapterFactoryRegistery() {
+	/** Hide constructor Constructor. */
+	private RegisteredItemProviderAdapterFactoryRegistry() {
 		// Hides default constructor.
-	}
-
-	/**
-	 * Singleton holder.
-	 */
-	private static class SingletonHolder {
-		/**
-		 * Instance.
-		 */
-		protected static RegisteredItemProviderAdapterFactoryRegistery instance;
-		static {
-			instance = new RegisteredItemProviderAdapterFactoryRegistery();
-		}
-	}
-
-	/**
-	 * get the instance of the registry.
-	 * 
-	 * @return RegisteredItemProviderAdapterFactoryRegistery
-	 */
-	public static RegisteredItemProviderAdapterFactoryRegistery getInstance() {
-		return SingletonHolder.instance;
 	}
 
 	/**
@@ -89,11 +59,11 @@ public final class RegisteredItemProviderAdapterFactoryRegistery {
 	 *            The element for which we are to add a descriptor for.
 	 * @return RegisteredItemProviderAdapterFactoryDescriptor newly created
 	 */
-	public synchronized RegisteredItemProviderAdapterFactoryDescriptor addExtension(
+	public static synchronized RegisteredItemProviderAdapterFactoryDescriptor addExtension(
 			IConfigurationElement element) {
 		final RegisteredItemProviderAdapterFactoryDescriptor desc = new RegisteredItemProviderAdapterFactoryDescriptor(
 				element);
-		storage.put(desc.getId(), desc);
+		STORAGE.put(desc.getId(), desc);
 
 		addElementToPriorityCounter(desc);
 		return desc;
@@ -105,7 +75,7 @@ public final class RegisteredItemProviderAdapterFactoryRegistery {
 	 * @param desc
 	 *            {@link RegisteredItemProviderAdapterFactoryDescriptor} of the new element
 	 */
-	public synchronized void updateAddedElementInComposedAdapterFactory(
+	public static synchronized void updateAddedElementInComposedAdapterFactory(
 			RegisteredItemProviderAdapterFactoryDescriptor desc) {
 		if (composedAdapterFactory != null) {
 			int index = 0;
@@ -122,7 +92,7 @@ public final class RegisteredItemProviderAdapterFactoryRegistery {
 	 * @param desc
 	 *            New {@link RegisteredItemProviderAdapterFactoryDescriptor} to be added
 	 */
-	private void addElementToPriorityCounter(RegisteredItemProviderAdapterFactoryDescriptor desc) {
+	private static void addElementToPriorityCounter(RegisteredItemProviderAdapterFactoryDescriptor desc) {
 		priorityCounter[desc.getPriority() - 1]++;
 	}
 
@@ -132,7 +102,7 @@ public final class RegisteredItemProviderAdapterFactoryRegistery {
 	 * @param desc
 	 *            New {@link RegisteredItemProviderAdapterFactoryDescriptor} to be added
 	 */
-	private void removeElementToPriorityCounter(RegisteredItemProviderAdapterFactoryDescriptor desc) {
+	private static void removeElementToPriorityCounter(RegisteredItemProviderAdapterFactoryDescriptor desc) {
 		priorityCounter[desc.getPriority() - 1]--;
 	}
 
@@ -141,7 +111,7 @@ public final class RegisteredItemProviderAdapterFactoryRegistery {
 	 * 
 	 * @return A list of all specific IPAF sorted by priorityOrder
 	 */
-	public ComposedAdapterFactory createSortedListOfSpecifcIPAF() {
+	public static ComposedAdapterFactory createSortedListOfSpecifcIPAF() {
 		if (composedAdapterFactory == null) {
 			composedAdapterFactory = new ComposedAdapterFactoryOrdered();
 			final TreeMap<Integer, List<AdapterFactory>> specificAdapterFactory = new TreeMap<Integer, List<AdapterFactory>>();
@@ -170,15 +140,15 @@ public final class RegisteredItemProviderAdapterFactoryRegistery {
 	 * 
 	 * @return all registered descriptors.
 	 */
-	public synchronized List<RegisteredItemProviderAdapterFactoryDescriptor> getDescriptors() {
-		return new ArrayList<RegisteredItemProviderAdapterFactoryDescriptor>(storage.values());
+	public static synchronized List<RegisteredItemProviderAdapterFactoryDescriptor> getDescriptors() {
+		return new ArrayList<RegisteredItemProviderAdapterFactoryDescriptor>(STORAGE.values());
 	}
 
 	/**
 	 * This will parse the currently running platform for extensions and store all the difference filters that
 	 * can be found.
 	 */
-	public void parseInitialContributions() {
+	public static void parseInitialContributions() {
 		final IExtension[] extensions = Platform.getExtensionRegistry()
 				.getExtensionPoint(EXT_POINT_ID_ADAPTER_FACTORY).getExtensions();
 		for (int i = 0; i < extensions.length; i++) {
@@ -192,20 +162,10 @@ public final class RegisteredItemProviderAdapterFactoryRegistery {
 	/**
 	 * Clears this registry from any contributed descriptors.
 	 */
-	public synchronized void clearRegistry() {
-		storage.clear();
-	}
-
-	/**
-	 * Returns the {@link RegisteredItemProviderAdapterFactoryDescriptor} in relation to its id.
-	 * 
-	 * @param id
-	 *            The id.
-	 * @return The descriptor.
-	 */
-	public RegisteredItemProviderAdapterFactoryDescriptor getDescriptor(int id) {
-		return storage.get(id);
-
+	public static synchronized void clearRegistry() {
+		STORAGE.clear();
+		composedAdapterFactory.dispose();
+		composedAdapterFactory = null;
 	}
 
 	/**
@@ -215,10 +175,10 @@ public final class RegisteredItemProviderAdapterFactoryRegistery {
 	 * @param element
 	 *            The element for which we are to remove a descriptor for.
 	 */
-	public synchronized void removeExtension(IConfigurationElement element) {
+	public static synchronized void removeExtension(IConfigurationElement element) {
 		final RegisteredItemProviderAdapterFactoryDescriptor desc = new RegisteredItemProviderAdapterFactoryDescriptor(
 				element);
-		storage.remove(desc.getId());
+		STORAGE.remove(desc.getId());
 		removeElementToPriorityCounter(desc);
 	}
 
@@ -228,7 +188,7 @@ public final class RegisteredItemProviderAdapterFactoryRegistery {
 	 * @param element
 	 *            {@link IConfigurationElement}
 	 */
-	public synchronized void removeFromComposedAdapterFactory(IConfigurationElement element) {
+	public static synchronized void removeFromComposedAdapterFactory(IConfigurationElement element) {
 		final RegisteredItemProviderAdapterFactoryDescriptor desc = new RegisteredItemProviderAdapterFactoryDescriptor(
 				element);
 		if (composedAdapterFactory != null) {

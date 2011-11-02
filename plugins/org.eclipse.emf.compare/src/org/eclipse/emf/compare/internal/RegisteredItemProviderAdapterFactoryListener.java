@@ -34,7 +34,7 @@ public class RegisteredItemProviderAdapterFactoryListener implements IRegistryEv
 		for (IExtension extension : extensions) {
 			final IConfigurationElement[] configElements = extension.getConfigurationElements();
 			for (IConfigurationElement elem : configElements) {
-				RegisteredItemProviderAdapterFactoryRegistery.getInstance().addExtension(elem);
+				RegisteredItemProviderAdapterFactoryRegistry.addExtension(elem);
 			}
 		}
 	}
@@ -50,9 +50,8 @@ public class RegisteredItemProviderAdapterFactoryListener implements IRegistryEv
 		for (IExtension extension : extensions) {
 			final IConfigurationElement[] configElements = extension.getConfigurationElements();
 			for (IConfigurationElement elem : configElements) {
-				RegisteredItemProviderAdapterFactoryRegistery.getInstance().removeExtension(elem);
-				RegisteredItemProviderAdapterFactoryRegistery.getInstance().removeFromComposedAdapterFactory(
-						elem);
+				RegisteredItemProviderAdapterFactoryRegistry.removeExtension(elem);
+				RegisteredItemProviderAdapterFactoryRegistry.removeFromComposedAdapterFactory(elem);
 			}
 		}
 	}
