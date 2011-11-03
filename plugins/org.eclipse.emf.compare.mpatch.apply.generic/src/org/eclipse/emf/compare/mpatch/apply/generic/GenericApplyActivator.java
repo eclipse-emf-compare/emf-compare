@@ -32,6 +32,7 @@ public class GenericApplyActivator extends Plugin {
 	 * The constructor
 	 */
 	public GenericApplyActivator() {
+		// Nothing to do
 	}
 
 	/*

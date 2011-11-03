@@ -27,11 +27,12 @@ public class TransformActivator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static TransformActivator plugin;
-	
+
 	/**
 	 * The constructor
 	 */
 	public TransformActivator() {
+		// Nothing to do
 	}
 
 	/*
@@ -56,14 +57,15 @@ public class TransformActivator extends AbstractUIPlugin {
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static TransformActivator getDefault() {
 		return plugin;
 	}
-	////////////// SOME LOGGING
-	
+
+	// //////////// SOME LOGGING
+
 	public void logError(String error) {
 		logError(error, null);
 	}
@@ -72,9 +74,7 @@ public class TransformActivator extends AbstractUIPlugin {
 		if (error == null && throwable != null) {
 			error = throwable.getMessage();
 		}
-		getLog().log(
-				new Status(IStatus.ERROR, PLUGIN_ID,
-						IStatus.OK, error, throwable));
+		getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, error, throwable));
 		debug(error, throwable);
 	}
 
@@ -86,12 +86,10 @@ public class TransformActivator extends AbstractUIPlugin {
 		if (message == null && throwable != null) {
 			message = throwable.getMessage();
 		}
-		getLog().log(
-				new Status(IStatus.INFO, PLUGIN_ID,
-						IStatus.OK, message, throwable));
+		getLog().log(new Status(IStatus.INFO, PLUGIN_ID, IStatus.OK, message, throwable));
 		debug(message, throwable);
 	}
-	
+
 	private void debug(String message, Throwable throwable) {
 		if (!isDebugging()) {
 			return;

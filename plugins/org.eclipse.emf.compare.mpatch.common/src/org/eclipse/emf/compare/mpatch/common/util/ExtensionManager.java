@@ -30,7 +30,6 @@ import org.eclipse.emf.compare.mpatch.extension.ISymbolicReferenceCreator;
 
 /**
  * The {@link ExtensionManager} loads and maintains all extensions of this framework.
- * 
  * <ul>
  * <li>The transformations after the creation of {@link MPatchModel}s: {@link IMPatchTransformation}
  * <li>The symbolic reference resolvers: {@link IMPatchResolution}
@@ -40,21 +39,29 @@ import org.eclipse.emf.compare.mpatch.extension.ISymbolicReferenceCreator;
  * </ul>
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public final class ExtensionManager {
 
 	private static final String EXTENSION_NAME_DESCRIPTOR_CREATOR = "model_descriptor_creator";
+
 	private static final String EXTENSION_NAME_SYMREF_CREATOR = "symbolic_reference_creator";
+
 	private static final String EXTENSION_NAME_APPLIER = "diff_applier";
+
 	private static final String EXTENSION_NAME_TRANSFORMATION = "diff_transformation";
+
 	private static final String EXTENSION_NAME_RESOLUTION = "diff_resolver";
 
 	private final Map<String, IMPatchResolution> allResultions = new TreeMap<String, IMPatchResolution>();
+
 	private final Map<String, IMPatchApplication> allApplications = new TreeMap<String, IMPatchApplication>();
+
 	private final Map<String, ISymbolicReferenceCreator> allSymrefCreators = new TreeMap<String, ISymbolicReferenceCreator>();
+
 	private final Map<String, IModelDescriptorCreator> allModelDescrCreators = new TreeMap<String, IModelDescriptorCreator>();
+
 	private final Map<String, IMPatchTransformation> allTransformations = new TreeMap<String, IMPatchTransformation>();
+
 	private final List<String> mandatoryTransformations = new ArrayList<String>();
 
 	/** Make sure to show warnings about no default selected in preferences only once. */
@@ -65,6 +72,7 @@ public final class ExtensionManager {
 
 	/** Don't allow external instantiations. */
 	private ExtensionManager() {
+		// Nothing to do
 	}
 
 	/**
@@ -73,8 +81,9 @@ public final class ExtensionManager {
 	public static Map<String, IMPatchResolution> getAllResolutions() {
 		// check if we already did that
 		if (_INSTANCE.allResultions.isEmpty()) {
-			final Collection<IMPatchResolution> allExtensions = ExtensionLoader.<IMPatchResolution> getAllExtensions(
-					IMPatchResolution.EXTENSION_ID, EXTENSION_NAME_RESOLUTION);
+			final Collection<IMPatchResolution> allExtensions = ExtensionLoader
+					.<IMPatchResolution> getAllExtensions(IMPatchResolution.EXTENSION_ID,
+							EXTENSION_NAME_RESOLUTION);
 			for (IMPatchResolution mPatchResolution : allExtensions) {
 				_INSTANCE.allResultions.put(mPatchResolution.getLabel(), mPatchResolution);
 			}
@@ -107,10 +116,12 @@ public final class ExtensionManager {
 					int index = 0;
 					while (_INSTANCE.mandatoryTransformations.size() > index) {
 						final String other = _INSTANCE.mandatoryTransformations.get(index);
-						if (_INSTANCE.allTransformations.get(other).getPriority() <= mPatchTransformation.getPriority())
+						if (_INSTANCE.allTransformations.get(other).getPriority() <= mPatchTransformation
+								.getPriority()) {
 							break;
-						else
+						} else {
 							index++;
+						}
 					}
 					_INSTANCE.mandatoryTransformations.add(index, mPatchTransformation.getLabel());
 				}
@@ -125,8 +136,9 @@ public final class ExtensionManager {
 	public static Map<String, IMPatchApplication> getAllApplications() {
 		// check if we already did that
 		if (_INSTANCE.allApplications.isEmpty()) {
-			final Collection<IMPatchApplication> allExtensions = ExtensionLoader.<IMPatchApplication> getAllExtensions(
-					IMPatchApplication.EXTENSION_ID, EXTENSION_NAME_APPLIER);
+			final Collection<IMPatchApplication> allExtensions = ExtensionLoader
+					.<IMPatchApplication> getAllExtensions(IMPatchApplication.EXTENSION_ID,
+							EXTENSION_NAME_APPLIER);
 			for (IMPatchApplication mPatchApplication : allExtensions) {
 				_INSTANCE.allApplications.put(mPatchApplication.getLabel(), mPatchApplication);
 			}
@@ -160,7 +172,8 @@ public final class ExtensionManager {
 					.<IModelDescriptorCreator> getAllExtensions(IModelDescriptorCreator.EXTENSION_ID,
 							EXTENSION_NAME_DESCRIPTOR_CREATOR);
 			for (IModelDescriptorCreator iModelDescriptorCreator : allExtensions) {
-				_INSTANCE.allModelDescrCreators.put(iModelDescriptorCreator.getLabel(), iModelDescriptorCreator);
+				_INSTANCE.allModelDescrCreators.put(iModelDescriptorCreator.getLabel(),
+						iModelDescriptorCreator);
 			}
 		}
 		return _INSTANCE.allModelDescrCreators;
@@ -243,11 +256,15 @@ public final class ExtensionManager {
 			return null;
 		} else {
 			final ISymbolicReferenceCreator creator = allSymrefCreators.values().iterator().next();
-			if (NO_DEFAULT_SELECTED_WARNING_SHOWN.add(MPatchPreferencesPage.PREFERENCES_KEY_SYMBOLIC_REFERENCE)) {
-				CommonMPatchPlugin.getDefault().logWarning(
-						"No " + MPatchConstants.MPATCH_SHORT_NAME
-								+ " Symbolic Reference Creator was selected! So we just take the first we find: "
-								+ creator.getLabel());
+			if (NO_DEFAULT_SELECTED_WARNING_SHOWN
+					.add(MPatchPreferencesPage.PREFERENCES_KEY_SYMBOLIC_REFERENCE)) {
+				CommonMPatchPlugin
+						.getDefault()
+						.logWarning(
+								"No "
+										+ MPatchConstants.MPATCH_SHORT_NAME
+										+ " Symbolic Reference Creator was selected! So we just take the first we find: "
+										+ creator.getLabel());
 			}
 			return creator;
 		}
@@ -273,10 +290,13 @@ public final class ExtensionManager {
 		} else {
 			final IModelDescriptorCreator creator = allModelDescriptorCreators.values().iterator().next();
 			if (NO_DEFAULT_SELECTED_WARNING_SHOWN.add(MPatchPreferencesPage.PREFERENCES_KEY_MODEL_DESCRIPTOR)) {
-				CommonMPatchPlugin.getDefault().logWarning(
-						"No " + MPatchConstants.MPATCH_SHORT_NAME
-								+ " Model Descriptor Creator was selected! So we just take the first we find: "
-								+ creator.getLabel());
+				CommonMPatchPlugin
+						.getDefault()
+						.logWarning(
+								"No "
+										+ MPatchConstants.MPATCH_SHORT_NAME
+										+ " Model Descriptor Creator was selected! So we just take the first we find: "
+										+ creator.getLabel());
 			}
 			return creator;
 		}
@@ -289,8 +309,8 @@ public final class ExtensionManager {
 		final List<String> result = new ArrayList<String>();
 
 		// get ordered list from preferences
-		final List<String> preferencesList = Arrays.asList(CommonMPatchPlugin.getDefault().getPreferenceStore()
-				.getString(MPatchPreferencesPage.PREFERENCES_KEY_TRANSFORMATION_ORDER)
+		final List<String> preferencesList = Arrays.asList(CommonMPatchPlugin.getDefault()
+				.getPreferenceStore().getString(MPatchPreferencesPage.PREFERENCES_KEY_TRANSFORMATION_ORDER)
 				.split(MPatchPreferencesPage.PREFERENCES_TRANSFORMATION_SEPERATOR));
 
 		// filter only the selected optional transformations
@@ -311,8 +331,8 @@ public final class ExtensionManager {
 		final List<String> result = new ArrayList<String>();
 
 		// get list from preferences
-		final List<String> preferencesList = Arrays.asList(CommonMPatchPlugin.getDefault().getPreferenceStore()
-				.getString(MPatchPreferencesPage.PREFERENCES_KEY_TRANSFORMATION_ORDER)
+		final List<String> preferencesList = Arrays.asList(CommonMPatchPlugin.getDefault()
+				.getPreferenceStore().getString(MPatchPreferencesPage.PREFERENCES_KEY_TRANSFORMATION_ORDER)
 				.split(MPatchPreferencesPage.PREFERENCES_TRANSFORMATION_SEPERATOR));
 
 		// filter only the unselected optional transformations
@@ -334,8 +354,8 @@ public final class ExtensionManager {
 	}
 
 	/**
-	 * @return Whether or not the user selected to show mandatory transformations in the transformation page of the
-	 *         MPatch creation Wizard.
+	 * @return Whether or not the user selected to show mandatory transformations in the transformation page
+	 *         of the MPatch creation Wizard.
 	 */
 	public static boolean isShowMandatoryTransformationsSet() {
 		return CommonMPatchPlugin.getDefault().getPreferenceStore()
