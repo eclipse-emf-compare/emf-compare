@@ -244,6 +244,32 @@ public class TestProfile extends AbstractUMLCompareTest {
 	}
 
 	// END - Tests for Bug 351593
+	
+	// BEGIN - Tests for Bug 361514
+	
+	@Test
+	public void addModelWithStereotype() throws IOException, InterruptedException {
+		testCompare("changeModelElement/addition/stereotyped"); //$NON-NLS-1$
+	}
+
+	@Test
+	public void addModelWithStereotype_merge() throws IOException, InterruptedException {
+		testMerge("changeModelElement/addition/stereotyped", true, UMLElementChangeLeftTarget.class, 0); //$NON-NLS-1$
+		testMerge("changeModelElement/addition/stereotyped", false, UMLElementChangeLeftTarget.class, 0); //$NON-NLS-1$
+	}
+	
+	@Test
+	public void removeModelWithStereotype() throws IOException, InterruptedException {
+		testCompare("changeModelElement/remove/stereotyped"); //$NON-NLS-1$
+	}
+
+	@Test
+	public void removeModelWithStereotype_merge() throws IOException, InterruptedException {
+		testMerge("changeModelElement/remove/stereotyped", true, UMLElementChangeRightTarget.class, 0); //$NON-NLS-1$
+		testMerge("changeModelElement/remove/stereotyped", false, UMLElementChangeRightTarget.class, 0); //$NON-NLS-1$
+	}
+	
+	// END - Tests for Bug 361514
 
 	@Override
 	protected String getDiagramKindPath() {

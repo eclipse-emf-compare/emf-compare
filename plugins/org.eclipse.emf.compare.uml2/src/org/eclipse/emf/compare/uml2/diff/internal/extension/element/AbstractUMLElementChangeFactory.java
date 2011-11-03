@@ -63,19 +63,43 @@ public abstract class AbstractUMLElementChangeFactory extends AbstractDiffExtens
 	protected List<DiffElement> getEmbeddedStereotypeApplicationDiffs(EObject obj,
 			EcoreUtil.CrossReferencer crossReferencer, EReference diffSide, EClass expectedDiff) {
 		final List<DiffElement> result = new ArrayList<DiffElement>();
+		result.addAll(getStereotypeDifferences(crossReferencer, diffSide, expectedDiff, obj));
 		final Iterator<EObject> it = obj.eAllContents();
 		while (it.hasNext()) {
 			final EObject next = it.next();
-			if (next instanceof Element) {
-				if (((Element)next).getStereotypeApplications().size() > 0) {
-					// Look for the UMLStereotypeApplication Difference
-					final List<DiffElement> findCrossReferences = findCrossReferences(next, diffSide,
-							crossReferencer);
-					for (DiffElement diffElement : findCrossReferences) {
-						if (expectedDiff.isInstance(diffElement)) {
-							result.add(diffElement);
-						}
-					}
+			result.addAll(getStereotypeDifferences(crossReferencer, diffSide, expectedDiff, next));
+		}
+		return result;
+	}
+
+	/**
+	 * Looks for all the stereotype applications on the given {@link EObject} of the model from the specified
+	 * side. When stereotype applications are found, this returns the potential differences, related to this
+	 * model object, from a given difference type.
+	 * 
+	 * @param crossReferencer
+	 *            A cross referencer to look for difference from model objects.
+	 * @param diffSide
+	 *            The side from which it is required to look for:
+	 *            DiffPackage.Literals.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT or
+	 *            DiffPackage.Literals.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT
+	 * @param expectedDiff
+	 *            The type of difference to look for:
+	 *            UML2DiffPackage.Literals.UML_STEREOTYPE_APPLICATION_ADDITION or
+	 *            UML2DiffPackage.Literals.UML_STEREOTYPE_APPLICATION_REMOVAL
+	 * @param next
+	 *            model object on which stereotypes are applied.
+	 * @return The list of matching differences.
+	 */
+	private List<DiffElement> getStereotypeDifferences(EcoreUtil.CrossReferencer crossReferencer,
+			EReference diffSide, EClass expectedDiff, final EObject next) {
+		final List<DiffElement> result = new ArrayList<DiffElement>();
+		if (next instanceof Element && ((Element)next).getStereotypeApplications().size() > 0) {
+			// Look for the UMLStereotypeApplication Difference
+			final List<DiffElement> findCrossReferences = findCrossReferences(next, diffSide, crossReferencer);
+			for (DiffElement diffElement : findCrossReferences) {
+				if (expectedDiff.isInstance(diffElement)) {
+					result.add(diffElement);
 				}
 			}
 		}

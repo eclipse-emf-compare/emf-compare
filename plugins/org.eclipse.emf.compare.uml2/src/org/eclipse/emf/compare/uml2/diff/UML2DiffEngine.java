@@ -212,6 +212,20 @@ public class UML2DiffEngine extends GenericDiffEngine {
 		return getMatchManager().getMatchedEObject(from, side);
 	}
 
+	/**
+	 * Return the left or right matched EObject from the one given. More specifically, this will return the
+	 * left matched element if the given {@link EObject} is the right one, or the right matched element if the
+	 * given {@link EObject} is either the left or the origin one.
+	 * 
+	 * @see org.eclipse.emf.compare.diff.engine.IMatchManager#getMatchedEObject(EObject).
+	 * @param from
+	 *            The original {@link EObject}.
+	 * @return The matched EObject.
+	 */
+	public EObject getMatched(EObject from) {
+		return getMatchManager().getMatchedEObject(from);
+	}
+
 	@Deprecated
 	public static int getRightSide() {
 		return RIGHT_OBJECT;

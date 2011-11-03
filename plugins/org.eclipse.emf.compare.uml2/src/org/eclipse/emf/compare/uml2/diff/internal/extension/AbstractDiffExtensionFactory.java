@@ -25,6 +25,7 @@ import org.eclipse.emf.compare.uml2.diff.UML2DiffEngine;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.uml2.common.util.UML2Util;
 
@@ -83,41 +84,53 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 	 * 
 	 * @param diffModel
 	 *            The difference model.
-	 * @param right
+	 * @param elt
 	 *            The model object.
 	 * @param crossReferencer
 	 *            The cross referencer.
 	 * @return The difference group.
 	 */
-	protected final DiffGroup findOrCreateDiffGroup(DiffModel diffModel, EObject right,
+	protected final DiffGroup findOrCreateDiffGroup(DiffModel diffModel, EObject elt,
 			EcoreUtil.CrossReferencer crossReferencer) {
-		DiffGroup referencingDiffGroup = firstReferencingDiffGroup(crossReferencer.get(right));
-		if (referencingDiffGroup == null) {
-			final List<EObject> ancestors = ancestors(right);
-			for (EObject ancestor : ancestors) {
-				referencingDiffGroup = firstReferencingDiffGroup(crossReferencer.get(ancestor));
-				if (referencingDiffGroup != null) {
-					final List<EObject> ancestorsAndSelf = new ArrayList<EObject>(ancestors);
-					ancestorsAndSelf.add(0, right);
-					referencingDiffGroup = createSubTreeOfDiffGroup(referencingDiffGroup, ancestorsAndSelf);
-					break;
-				}
-			}
 
+		DiffGroup referencingDiffGroup = null;
+
+		final List<EObject> ancestors = ancestors(elt);
+		for (EObject ancestor : ancestors) {
+			EObject parent = ancestor;
 			if (referencingDiffGroup == null) {
-				// check if it is in the roots
-				if (diffModel.getRightRoots().contains(ancestors.get(ancestors.size() - 1))
-						&& !diffModel.getOwnedElements().isEmpty()) {
-					referencingDiffGroup = (DiffGroup)diffModel.getOwnedElements().get(0);
-				} else {
-					// their is no DiffGroup in the DiffModel that can contains sub diff group tree of the
-					// given
-					// right element. We add a diff group, directly to diffmodel
-					referencingDiffGroup = DiffFactory.eINSTANCE.createDiffGroup();
-					diffModel.getOwnedElements().add(referencingDiffGroup);
-				}
+				parent = getEngine().getMatched(ancestor);
+			}
+			referencingDiffGroup = firstReferencingDiffGroup(crossReferencer.get(parent));
+			if (referencingDiffGroup != null) {
+				break;
 			}
 		}
+
+		if (referencingDiffGroup == null) {
+			if (diffModel.getRightRoots().contains(elt) || diffModel.getLeftRoots().contains(elt)) {
+				if (diffModel.getOwnedElements().isEmpty()) {
+					referencingDiffGroup = DiffFactory.eINSTANCE.createDiffGroup();
+					diffModel.getOwnedElements().add(referencingDiffGroup);
+					referencingDiffGroup.setRightParent(elt);
+					// register this new group for the current object
+					final Setting set = ((InternalEObject)referencingDiffGroup)
+							.eSetting(DiffPackage.Literals.DIFF_GROUP__RIGHT_PARENT);
+					final Collection<Setting> values = new ArrayList<Setting>();
+					values.add(set);
+					crossReferencer.put(((DiffModel)elt).getRightRoots().get(0), values);
+				} else {
+					referencingDiffGroup = (DiffGroup)diffModel.getOwnedElements().get(0);
+				}
+			} else {
+				referencingDiffGroup = (DiffGroup)diffModel.getOwnedElements().get(0);
+			}
+		}
+
+		final List<EObject> ancestorsAndSelf = new ArrayList<EObject>(ancestors);
+		ancestorsAndSelf.add(0, elt);
+		referencingDiffGroup = createSubTreeOfDiffGroup(referencingDiffGroup, ancestorsAndSelf,
+				crossReferencer);
 
 		return referencingDiffGroup;
 	}
@@ -129,26 +142,53 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 	 *            The referencing DiffGroup.
 	 * @param ancestors
 	 *            The ancestors of the model object.
+	 * @param crossReferencer
+	 *            The cross referencer.
 	 * @return The DiffGroup.
 	 */
-	private DiffGroup createSubTreeOfDiffGroup(DiffGroup referencingDiffGroup, List<EObject> ancestors) {
+	private DiffGroup createSubTreeOfDiffGroup(DiffGroup referencingDiffGroup, List<EObject> ancestors,
+			EcoreUtil.CrossReferencer crossReferencer) {
 		DiffGroup ret = referencingDiffGroup;
 
-		// one diff group per ancestor with no referencing diff group
-		final List<EObject> subList = ancestors.subList(0,
-				ancestors.indexOf(referencingDiffGroup.getRightParent()));
+		List<EObject> subList = null;
+		if (referencingDiffGroup.getRightParent() != null) {
+			// one diff group per ancestor with no referencing diff group
+			EObject parent = null;
+			final int indexParent = ancestors.indexOf(referencingDiffGroup.getRightParent());
+			if (indexParent == -1) {
+				parent = getEngine().getMatched(referencingDiffGroup.getRightParent());
+			} else {
+				parent = referencingDiffGroup.getRightParent();
+			}
+			subList = ancestors.subList(0, ancestors.indexOf(parent));
+		} else {
+			subList = ancestors;
+		}
 
 		// iterating on reverse order to create the deepest one (index = 0) as the last one.
 		final ListIterator<EObject> it = subList.listIterator(subList.size());
 		while (it.hasPrevious()) {
 			final EObject previous = it.previous();
-			final DiffGroup newGroup = DiffFactory.eINSTANCE.createDiffGroup();
-			referencingDiffGroup.getSubDiffElements().add(newGroup);
-			newGroup.setRightParent(previous);
-			newGroup.setRemote(referencingDiffGroup.isRemote());
-			ret = newGroup;
-		}
+			final DiffGroup existingDiffGroup = firstReferencingDiffGroup(crossReferencer.get(previous));
+			if (existingDiffGroup == null) {
+				final DiffGroup newGroup = DiffFactory.eINSTANCE.createDiffGroup();
+				ret.getSubDiffElements().add(newGroup);
+				newGroup.setRightParent(previous);
+				newGroup.setRemote(referencingDiffGroup.isRemote());
+				ret = newGroup;
 
+				// register this new group for the current object
+				final Setting setting = ((InternalEObject)newGroup)
+						.eSetting(DiffPackage.Literals.DIFF_GROUP__RIGHT_PARENT);
+				final Collection<Setting> values = new ArrayList<Setting>();
+				values.add(setting);
+				crossReferencer.put(previous, values);
+
+			} else {
+				ret = existingDiffGroup;
+			}
+
+		}
 		return ret;
 	}
 
@@ -178,17 +218,18 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 	 * @return The found DiffGroup or null.
 	 */
 	private DiffGroup firstReferencingDiffGroup(Collection<Setting> settings) {
+		DiffGroup result = null;
 		if (settings != null) {
 			for (Setting setting : settings) {
 				final EObject eObject = setting.getEObject();
 				if (setting.getEStructuralFeature() == DiffPackage.Literals.DIFF_GROUP__RIGHT_PARENT
 						&& eObject instanceof DiffGroup) {
-					return (DiffGroup)eObject;
+					result = (DiffGroup)eObject;
+					break;
 				}
 			}
 		}
-		return null;
-
+		return result;
 	}
 
 	/**
