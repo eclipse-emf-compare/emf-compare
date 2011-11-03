@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Composite;
 public class GMFContentMergeViewer extends ParameterizedContentMergeViewer {
 
 	/** the modelcreator used to annotate models. */
-	private final NotationDiffCreator gmfModelCreator = new NotationDiffCreator();
+	protected final NotationDiffCreator gmfModelCreator = new NotationDiffCreator();
 
 	/** The transactionnal Editing Domain used to annotate/deannotate left diagrams. */
 	private TransactionalEditingDomain leftTED;
@@ -159,7 +159,7 @@ public class GMFContentMergeViewer extends ParameterizedContentMergeViewer {
 	 * @param side
 	 *            The side to annotate.
 	 */
-	private void unnannotateSide(final MatchSide side) {
+	protected void unnannotateSide(final MatchSide side) {
 		TransactionalEditingDomain ted = null;
 		if (side == MatchSide.LEFT) {
 			ted = leftTED;
@@ -167,7 +167,7 @@ public class GMFContentMergeViewer extends ParameterizedContentMergeViewer {
 			ted = rightTED;
 		}
 
-		// annotate models
+		// de-annotate models
 		final RecordingCommand command = new RecordingCommand(ted) {
 			@Override
 			protected void doExecute() {
@@ -198,7 +198,20 @@ public class GMFContentMergeViewer extends ParameterizedContentMergeViewer {
 	protected void copy(final List<DiffElement> diffs, final boolean leftToRight) {
 		unnannotateSide(MatchSide.LEFT);
 		unnannotateSide(MatchSide.RIGHT);
-		super.copy(diffs, leftToRight);
+		TransactionalEditingDomain ted;
+		// copy will change resources
+		if (leftToRight) {
+			ted = rightTED;
+		} else {
+			ted = leftTED;
+		}
+		final RecordingCommand command = new RecordingCommand(ted) {
+			@Override
+			protected void doExecute() {
+				GMFContentMergeViewer.super.copy(diffs, leftToRight);
+			}
+		};
+		ted.getCommandStack().execute(command);
 	}
 
 	/**
@@ -210,7 +223,21 @@ public class GMFContentMergeViewer extends ParameterizedContentMergeViewer {
 	protected void copy(final boolean leftToRight) {
 		unnannotateSide(MatchSide.LEFT);
 		unnannotateSide(MatchSide.RIGHT);
-		super.copy(leftToRight);
+		TransactionalEditingDomain ted;
+		// copy will change resources
+		if (leftToRight) {
+			ted = rightTED;
+		} else {
+			ted = leftTED;
+		}
+		// copy will change resources
+		final RecordingCommand command = new RecordingCommand(ted) {
+			@Override
+			protected void doExecute() {
+				GMFContentMergeViewer.super.copy(leftToRight);
+			}
+		};
+		ted.getCommandStack().execute(command);
 	}
 
 	/**
@@ -241,7 +268,7 @@ public class GMFContentMergeViewer extends ParameterizedContentMergeViewer {
 	 */
 	@Override
 	protected IMergeViewerContentProvider createMergeViewerContentProvider() {
-		return new ModelContentMergeContentProvider(configuration);
+		return new GMFModelContentMergeContentProvider(configuration);
 	}
 
 	/**
@@ -253,11 +280,11 @@ public class GMFContentMergeViewer extends ParameterizedContentMergeViewer {
 		/**
 		 * Delegates to the super constructor.
 		 * 
-		 * @param configuration
+		 * @param config
 		 *            The compare configuration that is to be used.
 		 */
-		public GMFModelContentMergeContentProvider(CompareConfiguration configuration) {
-			super(configuration);
+		public GMFModelContentMergeContentProvider(CompareConfiguration config) {
+			super(config);
 		}
 
 		/**
