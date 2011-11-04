@@ -80,12 +80,12 @@ public class FilteringAction extends AbstractOrderingAction {
 	@Override
 	protected void doRun(ParameterizedStructureContentProvider provider) {
 		final List<IDifferenceFilter> filters = new ArrayList<IDifferenceFilter>();
-		filters.addAll(menu.getSelectedFilters());
 		if (isChecked()) {
-			filters.add(relatedFilter);
+			menu.getSelectedFilters().add(relatedFilter);
 		} else {
-			filters.remove(relatedFilter);
+			menu.getSelectedFilters().remove(relatedFilter);
 		}
+		filters.addAll(menu.getSelectedFilters());
 		mViewer.getCompareConfiguration()
 				.setProperty(EMFCompareConstants.PROPERTY_STRUCTURE_FILTERS, filters);
 	}
