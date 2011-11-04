@@ -55,6 +55,14 @@ public final class NotationDiffCreator {
 	}
 
 	/**
+	 * Disposes of this creator, nulling out the input reference.
+	 */
+	public void dispose() {
+		visitor = null;
+		compareInput = null;
+	}
+
+	/**
 	 * Annotate models.
 	 * 
 	 * @param side

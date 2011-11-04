@@ -27,6 +27,7 @@ import org.eclipse.emf.compare.ui.viewer.filter.IDifferenceFilter;
 import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -147,6 +148,18 @@ public class ParameterizedContentMergeViewer extends ModelContentMergeViewer {
 	@Deprecated
 	public static ParameterizedContentMergeViewer getInstance() {
 		return instance;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
+	 */
+	@Override
+	protected void handleDispose(DisposeEvent event) {
+		configuration.removePropertyChangeListener(orderingSelectionListener);
+
+		super.handleDispose(event);
 	}
 
 	/**

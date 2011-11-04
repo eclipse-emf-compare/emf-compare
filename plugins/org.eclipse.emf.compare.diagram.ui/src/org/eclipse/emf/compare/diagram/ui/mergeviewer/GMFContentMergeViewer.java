@@ -258,6 +258,7 @@ public class GMFContentMergeViewer extends ParameterizedContentMergeViewer {
 		if (ancestorTED != null) {
 			ancestorTED.dispose();
 		}
+		gmfModelCreator.dispose();
 		super.handleDispose(event);
 	}
 
