@@ -18,6 +18,7 @@ import org.eclipse.emf.compare.uml2.diff.test.TestClassDiagram;
 import org.eclipse.emf.compare.uml2.diff.test.TestCommunicationDiagram;
 import org.eclipse.emf.compare.uml2.diff.test.TestProfile;
 import org.eclipse.emf.compare.uml2.diff.test.TestSequenceDiagram;
+import org.eclipse.emf.compare.uml2.diff.test.TestUMLEcore;
 import org.eclipse.emf.compare.uml2.diff.test.TestUseCaseDiagram;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -30,7 +31,7 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({TestClassDiagram.class, TestCommunicationDiagram.class, TestProfile.class,
-		TestSequenceDiagram.class, TestUseCaseDiagram.class,})
+		TestSequenceDiagram.class, TestUseCaseDiagram.class,TestUMLEcore.class})
 public class AllUML2Tests {
 
 	/**

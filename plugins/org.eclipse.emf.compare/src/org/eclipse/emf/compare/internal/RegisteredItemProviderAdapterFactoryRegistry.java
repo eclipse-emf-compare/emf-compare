@@ -164,7 +164,9 @@ public final class RegisteredItemProviderAdapterFactoryRegistry {
 	 */
 	public static synchronized void clearRegistry() {
 		STORAGE.clear();
-		composedAdapterFactory.dispose();
+		if (composedAdapterFactory != null) {
+			composedAdapterFactory.dispose();
+		}
 		composedAdapterFactory = null;
 	}
 
