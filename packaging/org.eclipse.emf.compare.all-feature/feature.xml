@@ -37,6 +37,10 @@
    <includes
          id="org.eclipse.emf.compare.uml2"
          version="0.0.0"/>
+         
+   <includes
+         id="org.eclipse.emf.compare.sysml"
+         version="0.0.0"/>         
 
    <includes
          id="org.eclipse.emf.compare.diagram.ecoretools"

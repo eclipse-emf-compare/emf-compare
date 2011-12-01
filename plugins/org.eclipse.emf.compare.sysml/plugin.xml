@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+  Copyright (c) 2011 Atos Origin.
+  
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+  
+  Contributors:
+  Atos Origin - Initial API and implementation
+ 
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.eclipse.org/emf/compare/diff/SysML/1.0"
+            class="org.eclipse.emf.compare.sysml.sysmldiff.SysMLdiffPackage"
+            genModel="model/SysMLdiff.genmodel"/>
+   </extension>
+   <extension
+         id="org.eclipse.emf.compare.sysml.diffEngine"
+         point="org.eclipse.emf.compare.diff.engine">
+      <diffengine
+            engineClass="org.eclipse.emf.compare.sysml.diff.SysMLDiffEngine"
+            fileExtension="uml"
+            label="SysMLDiffEngine"
+            priority="highest">
+      </diffengine>
+   </extension>
+
+</plugin>
