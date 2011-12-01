@@ -433,7 +433,7 @@ public abstract class AbstractUMLCompareTest {
 		final ResourceSet resourceSet = createResourceSet();
 		final Resource original = resourceSet.createResource(URI.createURI(BACK_PATH + model));
 		original.load(
-				AbstractUMLCompareTest.class.getResourceAsStream(getDiagramKindPath() + testFolderPath
+				this.getClass().getResourceAsStream(getDiagramKindPath() + testFolderPath
 						+ model), Collections.emptyMap());
 		return resourceSet;
 	}
