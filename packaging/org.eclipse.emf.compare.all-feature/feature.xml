@@ -40,6 +40,10 @@
          
    <includes
          id="org.eclipse.emf.compare.sysml"
+         version="0.0.0"/>
+                  
+   <includes
+         id="org.eclipse.emf.compare.logical"
          version="0.0.0"/>         
 
    <includes
