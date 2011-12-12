@@ -1,5 +1,7 @@
 package org.eclipse.emf.compare.uml2.diff.test;
 
+import com.google.common.collect.Iterators;
+
 import java.io.IOException;
 import java.util.Map;
 
@@ -19,11 +21,8 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.google.common.collect.Iterators;
-
 /**
- * Test for cases for Ecore having proxies (which might be resolvables or not).
- * see #362997
+ * Test for cases for Ecore having proxies (which might be resolvables or not). see #362997
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
@@ -31,12 +30,12 @@ public class TestUMLEcore {
 	@Test
 	public void identicEcoresWithProxiesAndScope() throws IOException, InterruptedException {
 		ResourceSet s1 = new ResourceSetImpl();
-		Resource v1 = s1.getResource(URI.createURI("platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"),
+		Resource v1 = s1.getResource(URI.createURI("platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"), //$NON-NLS-1$
 				true);
 
 		ResourceSet s2 = new ResourceSetImpl();
 
-		Resource v2 = s2.getResource(URI.createURI("platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"),
+		Resource v2 = s2.getResource(URI.createURI("platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"), //$NON-NLS-1$
 				true);
 
 		EcoreUtil.resolveAll(s1);
@@ -48,11 +47,11 @@ public class TestUMLEcore {
 		DiffModel diff = DiffService.doDiff(match, false);
 
 		Assert.assertFalse(
-				"Even if references are not in scope we should have no difference, especially not references, both models are identicals.",
+				"Even if references are not in scope we should have no difference, especially not references, both models are identicals.", //$NON-NLS-1$
 				Iterators.filter(diff.eAllContents(), ReferenceChange.class).hasNext());
 
 		Assert.assertEquals(
-				"Even if references are not in scope we should have no difference, especially not references, both models are identicals.",
+				"Even if references are not in scope we should have no difference, especially not references, both models are identicals.", //$NON-NLS-1$
 				0, diff.getDifferences().size());
 
 	}
@@ -60,12 +59,12 @@ public class TestUMLEcore {
 	@Test
 	public void identicEcoresWithProxies() throws IOException, InterruptedException {
 		ResourceSet s1 = new ResourceSetImpl();
-		Resource v1 = s1.getResource(URI.createURI("platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"),
+		Resource v1 = s1.getResource(URI.createURI("platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"), //$NON-NLS-1$
 				true);
 
 		ResourceSet s2 = new ResourceSetImpl();
 
-		Resource v2 = s2.getResource(URI.createURI("platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"),
+		Resource v2 = s2.getResource(URI.createURI("platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"), //$NON-NLS-1$
 				true);
 
 		EcoreUtil.resolveAll(s1);
@@ -76,11 +75,11 @@ public class TestUMLEcore {
 		DiffModel diff = DiffService.doDiff(match, false);
 
 		Assert.assertFalse(
-				"Even if references are not in scope we should have no difference, especially not references, both models are identicals.",
+				"Even if references are not in scope we should have no difference, especially not references, both models are identicals.", //$NON-NLS-1$
 				Iterators.filter(diff.eAllContents(), ReferenceChange.class).hasNext());
 
 		Assert.assertEquals(
-				"Even if references are not in scope we should have no difference, especially not references, both models are identicals.",
+				"Even if references are not in scope we should have no difference, especially not references, both models are identicals.", //$NON-NLS-1$
 				0, diff.getDifferences().size());
 
 	}
