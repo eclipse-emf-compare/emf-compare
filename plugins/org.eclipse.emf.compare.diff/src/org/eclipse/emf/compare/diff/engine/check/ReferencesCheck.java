@@ -296,7 +296,16 @@ public class ReferencesCheck extends AbstractCheck {
 					removedIndices.remove(removedIndex);
 				}
 			}
-			if (rightElementReferences.indexOf(matched) != expectedIndex++) {
+			int actualIndex = rightElementReferences.indexOf(matched);
+			if (actualIndex == -1) {
+				for (int j = 0; j < rightElementReferences.size() && actualIndex == -1; j++) {
+					if (!areDistinct(matched, rightElementReferences.get(j))) {
+						actualIndex = j;
+					}
+				}
+			}
+
+			if (actualIndex != expectedIndex++) {
 				final ReferenceOrderChange refChange = DiffFactory.eINSTANCE.createReferenceOrderChange();
 				refChange.setReference(reference);
 				refChange.setLeftElement(leftElement);
@@ -450,7 +459,11 @@ public class ReferencesCheck extends AbstractCheck {
 		boolean createDiff = false;
 
 		// One of the two value is null, reference has been unset
-		if ((addedValue == null || deletedValue == null) && addedValue != deletedValue) {
+		if (addedValue == deletedValue) {
+			createDiff = false;
+		} else if ((addedValue == null || deletedValue == null) && addedValue != deletedValue) {
+			createDiff = true;
+		} else if (getMatchManager().isUnmatched(addedValue) && getMatchManager().isUnmatched(deletedValue)) {
 			createDiff = true;
 		} else if (addedValue != null && deletedValue != null) {
 			final EObject matchAdded = getMatchManager().getMatchedEObject(addedValue);
@@ -760,10 +773,19 @@ public class ReferencesCheck extends AbstractCheck {
 								deletedValue));
 			}
 		} else {
-			// check that added references are not in deleted references (FIXME: may be necessary to add non
-			// resolved proxy handling)
-			deletedReferences.removeAll(addedReferences);
-			addedReferences.removeAll(deletedReferences);
+			// check that added references are not in deleted reference
+			final Iterator<EObject> addedIterator = addedReferences.iterator();
+			while (addedIterator.hasNext()) {
+				final EObject added = addedIterator.next();
+				final Iterator<EObject> deletedIterator = deletedReferences.iterator();
+				while (deletedIterator.hasNext()) {
+					final EObject deleted = deletedIterator.next();
+					if (!areDistinct(added, deleted)) {
+						addedIterator.remove();
+						deletedIterator.remove();
+					}
+				}
+			}
 
 			final List<ReferenceChangeLeftTarget> addedReferencesDiffs = new ArrayList<ReferenceChangeLeftTarget>(
 					addedReferences.size());
