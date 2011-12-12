@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.diff.internal.merge.impl;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 
 import java.util.Collection;
 
@@ -39,13 +40,13 @@ public class ReferenceOrderChangeMerger extends DefaultMerger {
 		final ReferenceOrderChange theDiff = (ReferenceOrderChange)this.diff;
 		final EObject leftElement = theDiff.getLeftElement();
 
-		final Collection<EObject> target = Collections2.filter(theDiff.getLeftTarget(),
+		final Collection<EObject> target = Lists.newArrayList(Collections2.filter(theDiff.getLeftTarget(),
 				new Predicate<EObject>() {
 					public boolean apply(EObject input) {
 						return !input.eIsProxy()
 								|| !DefaultMerger.isEMFCompareProxy(((InternalEObject)input).eProxyURI());
 					}
-				});
+				}));
 
 		try {
 			EFactory.eSet(leftElement, theDiff.getReference().getName(), target);
@@ -64,13 +65,13 @@ public class ReferenceOrderChangeMerger extends DefaultMerger {
 		final ReferenceOrderChange theDiff = (ReferenceOrderChange)this.diff;
 		final EObject rightElement = theDiff.getRightElement();
 
-		final Collection<EObject> target = Collections2.filter(theDiff.getRightTarget(),
+		final Collection<EObject> target = Lists.newArrayList(Collections2.filter(theDiff.getRightTarget(),
 				new Predicate<EObject>() {
 					public boolean apply(EObject input) {
 						return !input.eIsProxy()
 								|| !DefaultMerger.isEMFCompareProxy(((InternalEObject)input).eProxyURI());
 					}
-				});
+				}));
 
 		try {
 			EFactory.eSet(rightElement, theDiff.getReference().getName(), target);
