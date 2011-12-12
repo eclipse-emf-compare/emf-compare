@@ -591,7 +591,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 					// each iteration
 					// For this, we will assume items cannot be more than eight
 					// time smaller than the "top"
-					for (int xCoord = topItem.getBounds().x; xCoord < treeWidth; xCoord += itemWidth >> 3) {
+					for (int xCoord = topItem.getBounds().x; xCoord < treeWidth; xCoord += Math.max(
+							itemWidth >> 3, 1)) {
 						next = getTree().getItem(new Point(xCoord, i));
 						// We found the item, it is unnecessary to probe any
 						// further on the line
