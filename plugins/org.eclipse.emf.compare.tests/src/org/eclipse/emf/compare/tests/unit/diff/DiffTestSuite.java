@@ -47,8 +47,6 @@ public class DiffTestSuite extends TestCase {
 			suite.addTestSuite(TwoWayDiffTest.class);
 		}
 		suite.addTestSuite(MessagesTest.class);
-		suite.addTestSuite(UMLHistoryDiff.class);
-		suite.addTestSuite(UMLHistoryDiffWithResource.class);
 		return suite;
 	}
 }
