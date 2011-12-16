@@ -20,6 +20,8 @@ import junit.textui.TestRunner;
 import org.eclipse.emf.compare.tests.merge.AllMergeTests;
 import org.eclipse.emf.compare.tests.unit.core.CoreTestSuite;
 import org.eclipse.emf.compare.tests.unit.diff.DiffTestSuite;
+import org.eclipse.emf.compare.tests.unit.diff.UMLHistoryDiff;
+import org.eclipse.emf.compare.tests.unit.diff.UMLHistoryDiffWithResource;
 import org.eclipse.emf.compare.tests.unit.match.MatchTestSuite;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
@@ -51,6 +53,8 @@ public class AllTests extends TestCase implements IApplication {
 		suite.addTest(CoreTestSuite.suite());
 		suite.addTest(MatchTestSuite.suite());
 		suite.addTest(AllMergeTests.suite());
+		suite.addTestSuite(UMLHistoryDiff.class);
+		suite.addTestSuite(UMLHistoryDiffWithResource.class);
 		// This will be null if memory setting is too low
 		final Test diffSuite = DiffTestSuite.suite();
 		if (diffSuite != null)
