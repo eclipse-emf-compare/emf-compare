@@ -260,7 +260,7 @@ public class AttributesCheck extends AbstractCheck {
 		} else if (rightDistinctFromOrigin && !leftDistinctFromOrigin) {
 			createRemoteAttributeChange(root, attribute, mapping);
 			// conflicting
-		} else if (rightDistinctFromOrigin && leftDistinctFromOrigin || rightDistinctFromLeft) {
+		} else if (rightDistinctFromOrigin && leftDistinctFromOrigin && rightDistinctFromLeft) {
 			checkConflictingAttributesUpdate(root, attribute, mapping);
 		}
 	}

@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.tests.unit.diff;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
@@ -32,8 +34,10 @@ import org.eclipse.emf.compare.tests.util.EcoreModelUtils;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 
 // TODO testing : these tests are not covering conflicting changes
 /**
@@ -317,5 +321,36 @@ public class ThreeWayDiffTest extends TestCase {
 		// We're expecting two changes, one of which being an addition
 		assertEquals("Unexpected count of differences.", 2, diffs.size());
 		// assertEquals("Unexpected count of additions in the DiffModel.", 1, additionCount);
+	}
+
+	/**
+	 * Test the conflict detection when left and right both did the same change
+	 * 
+	 * @throws Exception
+	 */
+	public void testNoConflictIfBothAreDoingTheSameThing() throws Exception {
+		Resource ancestor = new XMIResourceImpl(
+				URI.createURI("platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore"));
+		ancestor.load(Collections.EMPTY_MAP);
+		Resource left = new XMIResourceImpl(
+				URI.createURI("platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore"));
+		left.load(Collections.EMPTY_MAP);
+		Resource right = new XMIResourceImpl(
+
+		URI.createURI("platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore"));
+		right.load(Collections.EMPTY_MAP);
+
+		((EPackage)right.getContents().get(0)).setName("EcoreRenamed");
+		((EPackage)left.getContents().get(0)).setName("EcoreRenamed");
+
+		MatchModel match = MatchService.doResourceMatch(left, right, ancestor, Collections.EMPTY_MAP);
+		DiffModel diff = DiffService.doDiff(match, true);
+
+		List<DiffElement> deltas = diff.getDifferences();
+		for (DiffElement delta : deltas) {
+			assertFalse("There should be no conflict as left and right did the same change",
+					delta.isConflicting());
+		}
+
 	}
 }
