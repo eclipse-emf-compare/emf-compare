@@ -140,7 +140,7 @@
                 <groupId>org.eclipse.emf.compare</groupId>
                 <artifactId>org.eclipse.emf.compare</artifactId>
                 <version>1.3.0-SNAPSHOT</version>
-                <classifier>target_platforms/indigo-sdk-mirror</classifier>
+                <classifier>target_platforms/indigo-sdk</classifier>
             </artifact>
         </target>
        <environments>
