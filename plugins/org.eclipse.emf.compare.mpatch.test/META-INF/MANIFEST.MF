@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.test
-Bundle-Version: 1.2.1.qualifier
+Bundle-Version: 1.2.2.qualifier
 Require-Bundle: org.eclipse.emf.compare.mpatch.emfdiff2mpatch,
  org.eclipse.emf.compare.mpatch.transform,
  org.junit;bundle-version="4.0.0",

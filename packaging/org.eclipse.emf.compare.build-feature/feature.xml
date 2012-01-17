@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.emf.compare.build"
       label="EMF Compare Build Site"
-      version="1.2.1.qualifier"
+      version="1.2.2.qualifier"
       provider-name="%providerName"
       image="eclipse_update_120.jpg">
 
