@@ -27,6 +27,7 @@ import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.viewer.filter.IDifferenceFilter;
 import org.eclipse.emf.compare.ui.viewer.group.IDifferenceGroupingFacility;
 import org.eclipse.emf.compare.ui.viewer.structure.StructureViewer;
@@ -218,6 +219,8 @@ public final class CompareServices {
 			final Object root = ((IInputProvider)provider).getInput();
 			if (root instanceof ComparisonSnapshot) {
 				openView((ComparisonSnapshot)root);
+			} else if (root instanceof ModelCompareInput) {
+				openView(((ModelCompareInput)root).getComparisonSnapshot());
 			}
 		}
 	}
@@ -247,6 +250,8 @@ public final class CompareServices {
 			final Object root = ((IInputProvider)provider).getInput();
 			if (root instanceof ComparisonSnapshot) {
 				openView((ComparisonSnapshot)root, filters, group);
+			} else if (root instanceof ModelCompareInput) {
+				openView(((ModelCompareInput)root).getComparisonSnapshot(), filters, group);
 			}
 		}
 	}
