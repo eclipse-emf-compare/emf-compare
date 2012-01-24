@@ -268,3 +268,22 @@ h2. Reference changes
 				* Removing 6, adding '7' after 5, moving 1 to after 7, moving 5 to before 2 (useCase173)
 				* Removing 6, adding '7' before 1, moving 1 to after 5, moving 5 to before 7 (useCase174)
 				* Removing 6, adding '7' before 4, moving 1 to after 5, moving 5 to before 2 (useCase175)
+				
+	h3. Complex use-case : referencing an element B located in the content tree of an unmatched element A
+		Element B is unmatched (added or removed) and holds two containment references ref1 and ref2. A new element C is added in the specified one of these references.
+		A third element A, present in both versions of the model, will reference C through either a multi-valued or single-valued reference.
+		
+		h4. Single-valued reference
+			* B added to the model, C added to ref1 of B, setting a reference from A to C (useCase176_base -> useCase176_modified)
+			* B added to the model, C added to ref2 of B, setting a reference from A to C (useCase176_base -> useCase177_modified)
+			* C added to ref1 of B, B removed from the model, unsetting a reference from A to C (useCase178_base -> useCase178_modified)
+			* C added to ref2 of B, B removed from the model, unsetting a reference from A to C (useCase179_base -> useCase179_modified)
+			
+		h4. Multi-valued reference
+			Since we run all of these in both directions, we do not need the "removed reference to a removed element" cases which are the exact opposites of these
+			* B added to the model, C added to ref1 of B, adding a reference from A to C as first (useCase180_base -> useCase180_modified)
+			* B added to the model, C added to ref2 of B, adding a reference from A to C as first (useCase180_base -> useCase181_modified)
+			* B added to the model, C added to ref1 of B, adding a reference from A to C in the middle (useCase180_base -> useCase182_modified)
+			* B added to the model, C added to ref2 of B, adding a reference from A to C in the middle (useCase180_base -> useCase183_modified)
+			* B added to the model, C added to ref1 of B, adding a reference from A to C as last (useCase180_base -> useCase184_modified)
+			* B added to the model, C added to ref2 of B, adding a reference from A to C as last (useCase180_base -> useCase185_modified)
