@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.uml2.uml.util.UMLUtil;
+import org.eclipse.uml2.common.util.UML2Util;
 
 public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFactory {
 
@@ -95,17 +95,18 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 		List<EObject> subList = ancestors
 				.subList(0, ancestors.indexOf(referencingDiffGroup.getRightParent()));
 
+		DiffGroup createdGroup = referencingDiffGroup;
 		// iterating on reverse order to create the deepest one (index = 0) as the last one.
 		for (ListIterator<EObject> it = subList.listIterator(subList.size()); it.hasPrevious();) {
 			EObject previous = it.previous();
 			DiffGroup newGroup = DiffFactory.eINSTANCE.createDiffGroup();
-			referencingDiffGroup.getSubDiffElements().add(newGroup);
+			createdGroup.getSubDiffElements().add(newGroup);
 			newGroup.setRightParent(previous);
-			newGroup.setRemote(referencingDiffGroup.isRemote());
-			referencingDiffGroup = newGroup;
+			newGroup.setRemote(createdGroup.isRemote());
+			createdGroup = newGroup;
 		}
 
-		return referencingDiffGroup;
+		return createdGroup;
 	}
 
 	private List<EObject> ancestors(EObject eObject) {
@@ -140,7 +141,7 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 	protected static final List<EObject> getInverseReferences(EObject lookup, EStructuralFeature inFeature,
 			UMLPredicate<Setting> alwaysTrue) {
 		List<EObject> ret = new ArrayList<EObject>();
-		for (Setting setting : UMLUtil.getInverseReferences(lookup)) {
+		for (Setting setting : UML2Util.getInverseReferences(lookup)) {
 			if (setting.getEStructuralFeature() == inFeature) {
 				ret.add(setting.getEObject());
 			}
@@ -156,7 +157,7 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 	protected static final List<EObject> getNonNavigableInverseReferences(EObject lookup,
 			EStructuralFeature inFeature, UMLPredicate<Setting> alwaysTrue) {
 		List<EObject> ret = new ArrayList<EObject>();
-		for (Setting setting : UMLUtil.getNonNavigableInverseReferences(lookup)) {
+		for (Setting setting : UML2Util.getNonNavigableInverseReferences(lookup)) {
 			if (setting.getEStructuralFeature() == inFeature) {
 				ret.add(setting.getEObject());
 			}

@@ -130,6 +130,7 @@ public class UML2DiffEngine extends GenericDiffEngine {
 				subsetsOfContainment.load(UML2DiffEngine.class
 						.getResourceAsStream(SUBSETS_OF_CONTAINMENT_PROPERTIES));
 			} catch (IOException e) {
+				// Swallow
 			}
 		}
 

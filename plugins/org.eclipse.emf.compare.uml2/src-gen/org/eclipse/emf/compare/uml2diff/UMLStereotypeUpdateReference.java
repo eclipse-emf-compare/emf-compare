@@ -23,4 +23,5 @@ import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
  * @generated
  */
 public interface UMLStereotypeUpdateReference extends UpdateReference, UMLStereotypePropertyChange {
-} // UMLStereotypeUpdateReference
+	 // UMLStereotypeUpdateReference
+}

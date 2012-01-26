@@ -23,4 +23,5 @@ import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
  * @generated
  */
 public interface UMLAssociationChangeRightTarget extends ModelElementChangeRightTarget, UMLAssociationChange {
-} // UMLAssociationChangeRightTarget
+	 // UMLAssociationChangeRightTarget
+}

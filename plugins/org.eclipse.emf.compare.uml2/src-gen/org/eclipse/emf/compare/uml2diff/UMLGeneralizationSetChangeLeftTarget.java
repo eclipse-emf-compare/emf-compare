@@ -23,4 +23,5 @@ import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
  * @generated
  */
 public interface UMLGeneralizationSetChangeLeftTarget extends ModelElementChangeLeftTarget, UMLGeneralizationSetChange {
-} // UMLGeneralizationSetChangeLeftTarget
+	 // UMLGeneralizationSetChangeLeftTarget
+}

@@ -31,12 +31,15 @@ public class UML2DiffExtensionMerger extends DefaultMerger {
 	public UML2DiffExtensionMerger() {
 		MergeService.addMergeListener(new IMergeListener() {
 			public void mergeOperationStart(MergeEvent event) {
+				// empty implementation
 			}
 
 			public void mergeOperationEnd(MergeEvent event) {
+				// empty implementation
 			}
 
 			public void mergeDiffStart(MergeEvent event) {
+				// empty implementation
 			}
 
 			public void mergeDiffEnd(MergeEvent event) {

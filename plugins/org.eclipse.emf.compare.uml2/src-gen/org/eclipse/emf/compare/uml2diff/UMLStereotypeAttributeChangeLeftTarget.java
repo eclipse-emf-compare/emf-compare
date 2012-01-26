@@ -23,4 +23,5 @@ import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
  * @generated
  */
 public interface UMLStereotypeAttributeChangeLeftTarget extends AttributeChangeLeftTarget, UMLStereotypePropertyChange {
-} // UMLStereotypeAttributeChangeLeftTarget
+	 // UMLStereotypeAttributeChangeLeftTarget
+}
