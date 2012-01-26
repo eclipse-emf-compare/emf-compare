@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.ui.export;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -92,8 +93,8 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 		saveAction = new AbstractCompareAction(bundle, "action.export.emfdiff.") { //$NON-NLS-1$
 			@Override
 			public void run() {
-				final SaveDeltaWizard wizard = new SaveDeltaWizard(bundle
-						.getString("UI_SaveDeltaWizard_FileExtension")); //$NON-NLS-1$
+				final SaveDeltaWizard wizard = new SaveDeltaWizard(
+						bundle.getString("UI_SaveDeltaWizard_FileExtension")); //$NON-NLS-1$
 				wizard.init(PlatformUI.getWorkbench(), (ComparisonSnapshot)parentViewer.getInput());
 				final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow().getShell(), wizard);
@@ -106,8 +107,8 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	 * This will parse {@link #EXPORT_ACTIONS_EXTENSION_POINT} for actions to display.
 	 */
 	private static void parseExtensionMetaData() {
-		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
-				EXPORT_ACTIONS_EXTENSION_POINT).getExtensions();
+		final IExtension[] extensions = Platform.getExtensionRegistry()
+				.getExtensionPoint(EXPORT_ACTIONS_EXTENSION_POINT).getExtensions();
 		for (final IExtension extension : extensions) {
 			for (final IConfigurationElement configElement : extension.getConfigurationElements()) {
 				final ExportActionDescriptor descriptor = new ExportActionDescriptor(configElement);
@@ -177,11 +178,50 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	}
 
 	/**
+	 * Returns the set of all extensions from the compared models.
+	 * 
+	 * @return The set of all extensions from the compared models.
+	 * @since 1.2
+	 */
+	public Set<String> getComparedModelsExtensions() {
+		final Set<String> extensions = new LinkedHashSet<String>();
+		if (parentViewer.getInput() instanceof ComparisonResourceSnapshot) {
+			final DiffModel diffModel = ((ComparisonResourceSnapshot)parentViewer.getInput()).getDiff();
+			if (diffModel.getLeftRoots().get(0).eResource() != null) {
+				extensions.add(getFileExtension(diffModel.getLeftRoots().get(0).eResource()));
+			}
+			if (diffModel.getRightRoots().get(0).eResource() != null) {
+				extensions.add(getFileExtension(diffModel.getRightRoots().get(0).eResource()));
+			}
+			if (!diffModel.getAncestorRoots().isEmpty()
+					&& diffModel.getAncestorRoots().get(0).eResource() != null) {
+				extensions.add(getFileExtension(diffModel.getAncestorRoots().get(0).eResource()));
+			}
+		} else {
+			for (final DiffModel diff : ((ComparisonResourceSetSnapshot)parentViewer.getInput())
+					.getDiffResourceSet().getDiffModels()) {
+				if (diff.getLeftRoots().get(0).eResource() != null) {
+					extensions.add(getFileExtension(diff.getLeftRoots().get(0).eResource()));
+				}
+				if (diff.getRightRoots().get(0).eResource() != null) {
+					extensions.add(getFileExtension(diff.getRightRoots().get(0).eResource()));
+				}
+				if (!diff.getAncestorRoots().isEmpty() && diff.getAncestorRoots().get(0).eResource() != null) {
+					extensions.add(getFileExtension(diff.getAncestorRoots().get(0).eResource()));
+				}
+			}
+		}
+		return extensions;
+	}
+
+	/**
 	 * Returns the file extension of the compared models. If the extensions aren't the same, returns
 	 * {@value #ALL_EXTENSIONS}.
 	 * 
 	 * @return The file extension of the compared models.
+	 * @deprecated use {@link #getComparedModelsExtensions()} instead.
 	 */
+	@Deprecated
 	public String getComparedModelsExtension() {
 		String extension = ALL_EXTENSIONS;
 		if (parentViewer.getInput() instanceof ComparisonResourceSnapshot) {
@@ -265,7 +305,11 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 			menuManager.removeAll();
 		}
 		menuManager.add(saveAction);
-		for (final ExportActionDescriptor descriptor : getActions(getComparedModelsExtension())) {
+		final Set<ExportActionDescriptor> descriptors = new LinkedHashSet<ExportActionDescriptor>();
+		for (String extension : getComparedModelsExtensions()) {
+			descriptors.addAll(getActions(extension));
+		}
+		for (final ExportActionDescriptor descriptor : descriptors) {
 			final IExportAction actionDescriptor = descriptor.getActionDescriptorInstance();
 			final Action action = new AbstractCompareAction(actionDescriptor) {
 				@Override
