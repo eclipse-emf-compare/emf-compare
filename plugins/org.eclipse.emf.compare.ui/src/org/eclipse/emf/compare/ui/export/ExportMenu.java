@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
@@ -28,6 +29,7 @@ import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.internal.wizard.SaveDeltaWizard;
 import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer;
 import org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewer;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
@@ -204,14 +206,14 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 			String rightExtension = ALL_EXTENSIONS;
 			String ancestorExtension = null;
 			if (diffModel.getLeftRoots().get(0).eResource() != null) {
-				leftExtension = diffModel.getLeftRoots().get(0).eResource().getURI().fileExtension();
+				leftExtension = getFileExtension(diffModel.getLeftRoots().get(0).eResource());
 			}
 			if (diffModel.getRightRoots().get(0).eResource() != null) {
-				rightExtension = diffModel.getRightRoots().get(0).eResource().getURI().fileExtension();
+				rightExtension = getFileExtension(diffModel.getRightRoots().get(0).eResource());
 			}
 			if (!diffModel.getAncestorRoots().isEmpty()
 					&& diffModel.getAncestorRoots().get(0).eResource() != null) {
-				ancestorExtension = diffModel.getAncestorRoots().get(0).eResource().getURI().fileExtension();
+				ancestorExtension = getFileExtension(diffModel.getAncestorRoots().get(0).eResource());
 			}
 
 			if (leftExtension.equals(rightExtension)
@@ -226,13 +228,13 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 				String rightExtension = ALL_EXTENSIONS;
 				String ancestorExtension = null;
 				if (diff.getLeftRoots().get(0).eResource() != null) {
-					leftExtension = diff.getLeftRoots().get(0).eResource().getURI().fileExtension();
+					leftExtension = getFileExtension(diff.getLeftRoots().get(0).eResource());
 				}
 				if (diff.getRightRoots().get(0).eResource() != null) {
-					rightExtension = diff.getRightRoots().get(0).eResource().getURI().fileExtension();
+					rightExtension = getFileExtension(diff.getRightRoots().get(0).eResource());
 				}
 				if (!diff.getAncestorRoots().isEmpty() && diff.getAncestorRoots().get(0).eResource() != null) {
-					ancestorExtension = diff.getAncestorRoots().get(0).eResource().getURI().fileExtension();
+					ancestorExtension = getFileExtension(diff.getAncestorRoots().get(0).eResource());
 				}
 
 				if (leftExtension.equals(rightExtension)
@@ -246,6 +248,22 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 				}
 			}
 			extension = lastExtension;
+		}
+		return extension;
+	}
+
+	/**
+	 * Retrieves the file extension of the given EMF resource if any.
+	 * 
+	 * @param resource
+	 *            The resource from which URI we need the file extension.
+	 * @return The resource extension if any, {@value #ALL_EXTENSIONS} otherwise.
+	 */
+	private static String getFileExtension(Resource resource) {
+		String extension = ALL_EXTENSIONS;
+		final URI uri = resource.getURI();
+		if (uri.fileExtension() != null) {
+			extension = uri.fileExtension();
 		}
 		return extension;
 	}
