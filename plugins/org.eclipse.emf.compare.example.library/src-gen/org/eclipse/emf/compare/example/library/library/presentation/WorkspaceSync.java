@@ -53,28 +53,29 @@ public class WorkspaceSync {
 
 	protected void importChangesFromWorkspace(Collection<Resource> changedResources)
 			throws InterruptedException, PartInitException, InvocationTargetException {
-		
+
 		/*
 		 * Let's retrieve the model elements delta from the workspace versions
 		 */
-		
+
 		ComparisonResourceSetSnapshot snap = compareModels();
 
 		List<DiffElement> deltas = getAllDiffs(snap);
 
 		if (hasConflicts(deltas)) {
 			if (MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					"Conflict with workspace",
-					"Your changes are conflicting with others from the workspace, do you want to see them ?")) {
+					"Conflict with workspace", //$NON-NLS-1$
+					"Your changes are conflicting with others from the workspace, do you want to see them ?")) { //$NON-NLS-1$
 				openComparisonEditor(snap);
 			}
 
 		} else {
 			for (DiffElement delta : deltas) {
-				if (delta.isRemote())
+				if (delta.isRemote()) {
 					MergeService.merge(delta, false);
-				else
+				} else {
 					MergeService.merge(delta, true);
+				}
 			}
 		}
 
@@ -85,7 +86,7 @@ public class WorkspaceSync {
 		for (Resource futureRes : editor.getResources()) {
 			workspaceVersions.getResource(futureRes.getURI(), true);
 		}
-		
+
 		MatchResourceSet match = MatchService.doResourceSetMatch(workspaceVersions, editor, ancestor,
 				Collections.EMPTY_MAP);
 		DiffResourceSet diff = DiffService.doDiff(match, true);
@@ -94,8 +95,7 @@ public class WorkspaceSync {
 		snap.setMatchResourceSet(match);
 		return snap;
 	}
-	
-	
+
 	private List<DiffElement> getAllDiffs(ComparisonResourceSetSnapshot snap) {
 		List<DiffElement> result = new ArrayList<DiffElement>();
 		for (DiffModel diff : snap.getDiffResourceSet().getDiffModels()) {
@@ -104,18 +104,17 @@ public class WorkspaceSync {
 		return result;
 	}
 
-
-	
 	protected void openComparisonEditor(ComparisonResourceSetSnapshot snap) throws InterruptedException,
-	PartInitException, InvocationTargetException {
+			PartInitException, InvocationTargetException {
 		ModelCompareEditorInput input = new ModelCompareEditorInput(snap);
 		CompareServices.openEditor(input, Collections.EMPTY_LIST);
 	}
 
 	private boolean hasConflicts(List<DiffElement> deltas) {
 		for (DiffElement diffElement : deltas) {
-			if (diffElement.isConflicting())
+			if (diffElement.isConflicting()) {
 				return true;
+			}
 		}
 		return false;
 
