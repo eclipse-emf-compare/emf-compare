@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.merge;
 
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
-import junit.framework.TestSuite;
 
 import org.eclipse.emf.compare.tests.merge.dependencies.DependenciesMergeTest;
 import org.eclipse.emf.compare.tests.merge.multiplecontainmentreference.suite.MultipleContainmentMergeTestSuite;
@@ -21,54 +21,30 @@ import org.eclipse.emf.compare.tests.merge.onemultivaluedcontainmentreference.su
 import org.eclipse.emf.compare.tests.merge.singlevaluedattribute.suite.SingleValuedAttributeMergeTestSuite;
 import org.eclipse.emf.compare.tests.merge.singlevaluedcontainmentreference.suite.SingleValuedContainmentMergeTestSuite;
 import org.eclipse.emf.compare.tests.merge.singlevaluedreference.suite.SingleValuedReferenceMergeTestSuite;
+import org.eclipse.emf.compare.tests.nonregression.NonRegressionTest;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-@SuppressWarnings("nls")
+@RunWith(Suite.class)
+@SuiteClasses({TestContainmentRemoveMany.class, TestContainmentOrderAddMany.class,
+		DanglingReferenceOnTwoAdds.class, NonUniqueAttributeOrderTest.class, NonContainmentOrderTest.class,
+		ContainmentOrderTest.class, AttributeOrderTest.class, TestContainmentRemove.class,
+		SimpleMergeTestSuite.class, SingleValuedContainmentMergeTestSuite.class,
+		MultipleContainmentMergeTestSuite.class, SingleValuedAttributeMergeTestSuite.class,
+		MultiValuedAttributeMergeTestSuite.class, SingleValuedReferenceMergeTestSuite.class,
+		MultiValuedReferenceMergeTestSuite.class,/* bug 369507 ComplexUnmatchedMergeTestSuite.class, */
+		SimpleEcoreHistoryMerge.class, SimpleEcoreHistoryMergeNoResource.class,
+		SimpleEcoreHistoryMergeWithResource.class, SimpleEcoreHistoryMergeWithResourceSet.class,
+		UMLHistoryMerge.class, UMLHistoryMergeNoResource.class, UMLHistoryMergeWithResource.class,
+		UMLHistoryMergeWithResourceSet.class, DependenciesMergeTest.class, NonRegressionTest.class, })
 public class AllMergeTests {
-
+	/**
+	 * Creates the {@link junit.framework.TestSuite TestSuite} for all the test.
+	 * 
+	 * @return The test suite containing all the tests
+	 */
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Tests the merge use cases");
-		// $JUnit-BEGIN$
-		suite.addTestSuite(TestContainmentRemoveMany.class);
-		suite.addTestSuite(TestContainmentOrderAddMany.class);
-		suite.addTestSuite(DanglingReferenceOnTwoAdds.class);
-		suite.addTestSuite(NonUniqueAttributeOrderTest.class);
-		suite.addTestSuite(NonContainmentOrderTest.class);
-		suite.addTestSuite(ContainmentOrderTest.class);
-		suite.addTestSuite(AttributeOrderTest.class);
-		suite.addTestSuite(TestContainmentRemove.class);
-
-		/*
-		 * Merge test metamodel use cases *
-		 */
-		suite.addTest(SimpleMergeTestSuite.suite());
-		suite.addTest(SingleValuedContainmentMergeTestSuite.suite());
-		suite.addTest(MultipleContainmentMergeTestSuite.suite());
-		suite.addTest(SingleValuedAttributeMergeTestSuite.suite());
-		suite.addTest(MultiValuedAttributeMergeTestSuite.suite());
-		suite.addTest(SingleValuedReferenceMergeTestSuite.suite());
-		suite.addTest(MultiValuedReferenceMergeTestSuite.suite());
-		// fix bug 369507 before uncommenting this
-		// suite.addTest(ComplexUnmatchedMergeTestSuite.suite());
-
-		/*
-		 * End of merge test metamodel use cases *
-		 */
-
-		suite.addTestSuite(SimpleEcoreHistoryMerge.class);
-		suite.addTestSuite(SimpleEcoreHistoryMergeNoResource.class);
-		suite.addTestSuite(SimpleEcoreHistoryMergeWithResource.class);
-		suite.addTestSuite(SimpleEcoreHistoryMergeWithResourceSet.class);
-
-		suite.addTestSuite(UMLHistoryMerge.class);
-		suite.addTestSuite(UMLHistoryMergeNoResource.class);
-		suite.addTestSuite(UMLHistoryMergeWithResource.class);
-		suite.addTestSuite(UMLHistoryMergeWithResourceSet.class);
-
-		// Dependencies tests
-		suite.addTestSuite(DependenciesMergeTest.class);
-
-		// $JUnit-END$
-		return suite;
+		return new JUnit4TestAdapter(AllMergeTests.class);
 	}
-
 }
