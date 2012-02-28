@@ -38,6 +38,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
@@ -305,6 +306,51 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 	}
 
 	/**
+	 * This will run the comparison process and return the resulting {@link ComparisonSnapshot snapshot},
+	 * silently, in a thread UI.
+	 * 
+	 * @param configuration
+	 *            Compared configuration of this comparison. Properties will be set on this to hold comparison
+	 *            data.
+	 * @return Result of the comparison of the loaded resources.
+	 */
+	public ComparisonSnapshot compareSilentlyInThreadUI(CompareConfiguration configuration) {
+		if (!loadingSucceeded) {
+			// We couldn't load the resource. It's useless to carry on.
+			comparisonResult = DiffFactory.eINSTANCE.createComparisonResourceSetSnapshot();
+		}
+
+		if (comparisonResult == null) {
+			final Date start = Calendar.getInstance().getTime();
+
+			MatchService.setMatchEngineSelector(new VisualEngineSelector());
+			DiffService.setDiffEngineSelector(new VisualEngineSelector());
+
+			try {
+				comparisonResult = doResourceSetCompareInThreadUI(new NullProgressMonitor());
+			} catch (InterruptedException e) {
+				EMFComparePlugin.log(e, false);
+			}
+
+			// set date of comparison
+			final Date end = Calendar.getInstance().getTime();
+			comparisonResult.setDate(end);
+
+			configuration.setLeftEditable(configuration.isLeftEditable() && !isLeftRemote());
+			configuration.setRightEditable(configuration.isRightEditable() && !isRightRemote());
+			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME,
+					end.getTime() - start.getTime());
+			if (isLeftRemote()) {
+				configuration.setLeftLabel(EMFCompareUIMessages.getString(EMFCompareUIMessages
+						.getString("ModelComparator.remoteResourceSetCompareLabel"))); //$NON-NLS-1$
+				configuration.setRightLabel(EMFCompareUIMessages.getString(EMFCompareUIMessages
+						.getString("ModelComparator.localResourceSetCompareLabel"))); //$NON-NLS-1$
+			}
+		}
+		return comparisonResult;
+	}
+
+	/**
 	 * Disposes of this comparator and the resources it loaded.
 	 */
 	public void dispose() {
@@ -348,35 +394,9 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 	 * @return the {@link ComparisonResourceSnapshot} that contains the comparison result.
 	 */
 	protected ComparisonResourceSnapshot doResourceCompare() {
-		// create snapshot
-		final ComparisonResourceSnapshot snapshot = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
-		snapshot.setDiff(DiffFactory.eINSTANCE.createDiffModel());
-		snapshot.setMatch(MatchFactory.eINSTANCE.createMatchModel());
-
+		final RunnableResourceCompare runnable = new RunnableResourceCompare();
 		try {
-			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InterruptedException {
-					final Map<String, Object> options = new EMFCompareMap<String, Object>();
-					options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
-
-					// do comparison
-					final MatchModel match;
-					if (getAncestorResource() == null) {
-						options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new DefaultMatchScopeProvider(
-								getLeftResource(), getRightResource()));
-						match = MatchService.doResourceMatch(getLeftResource(), getRightResource(), options);
-					} else {
-						options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new DefaultMatchScopeProvider(
-								getLeftResource(), getRightResource(), getAncestorResource()));
-						match = MatchService.doResourceMatch(getLeftResource(), getRightResource(),
-								getAncestorResource(), options);
-					}
-					final DiffModel diff = DiffService.doDiff(match, getAncestorResource() != null);
-					snapshot.setDiff(diff);
-					snapshot.setMatch(match);
-
-				}
-			});
+			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(runnable);
 		} catch (final InterruptedException e) {
 			EMFComparePlugin.log(e, false);
 		} catch (final EMFCompareException e) {
@@ -384,6 +404,78 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 		} catch (final InvocationTargetException e) {
 			EMFComparePlugin.log(e, true);
 		}
+		return runnable.getComparisonResourceSnapshot();
+
+	}
+
+	/**
+	 * Runnable to execute the resource comparison.
+	 * 
+	 * @author cnotot
+	 */
+	public class RunnableResourceCompare implements IRunnableWithProgress {
+
+		/**
+		 * The result of the resource comparison.
+		 */
+		private ComparisonResourceSnapshot snapshot;
+
+		/**
+		 * {@inheritDoc}.
+		 * 
+		 * @param monitor
+		 * @throws InvocationTargetException
+		 * @throws InterruptedException
+		 */
+		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+			snapshot = doResourceCompareInThreadUI(monitor);
+		}
+
+		/**
+		 * Get the result of the resource set comparison.
+		 * 
+		 * @return ComparisonResourceSetSnapshot
+		 */
+		public ComparisonResourceSnapshot getComparisonResourceSnapshot() {
+			return snapshot;
+		}
+
+	}
+
+	/**
+	 * Perform a comparison of the left and right (and if specified ancestor resource), in a thread UI.
+	 * 
+	 * @param monitor
+	 *            IProgressMonitor
+	 * @return the {@link ComparisonResourceSnapshot} that contains the comparison result.
+	 * @throws InterruptedException
+	 *             exception
+	 */
+	protected ComparisonResourceSnapshot doResourceCompareInThreadUI(IProgressMonitor monitor)
+			throws InterruptedException {
+		// create snapshot
+		final ComparisonResourceSnapshot snapshot = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
+		snapshot.setDiff(DiffFactory.eINSTANCE.createDiffModel());
+		snapshot.setMatch(MatchFactory.eINSTANCE.createMatchModel());
+
+		final Map<String, Object> options = new EMFCompareMap<String, Object>();
+		options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
+
+		// do comparison
+		final MatchModel match;
+		if (getAncestorResource() == null) {
+			options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new DefaultMatchScopeProvider(
+					getLeftResource(), getRightResource()));
+			match = MatchService.doResourceMatch(getLeftResource(), getRightResource(), options);
+		} else {
+			options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new DefaultMatchScopeProvider(
+					getLeftResource(), getRightResource(), getAncestorResource()));
+			match = MatchService.doResourceMatch(getLeftResource(), getRightResource(),
+					getAncestorResource(), options);
+		}
+		final DiffModel diff = DiffService.doDiff(match, getAncestorResource() != null);
+		snapshot.setDiff(diff);
+		snapshot.setMatch(match);
 
 		return snapshot;
 	}
@@ -395,37 +487,9 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 	 * @return the {@link ComparisonResourceSetSnapshot} that contains the comparison result.
 	 */
 	protected ComparisonResourceSetSnapshot doResourceSetCompare() {
-		final ComparisonResourceSetSnapshot snapshot = DiffFactory.eINSTANCE
-				.createComparisonResourceSetSnapshot();
-		snapshot.setDiffResourceSet(DiffFactory.eINSTANCE.createDiffResourceSet());
-		snapshot.setMatchResourceSet(MatchFactory.eINSTANCE.createMatchResourceSet());
-
+		final RunnableResourceSetCompare runnable = new RunnableResourceSetCompare();
 		try {
-			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InterruptedException {
-					final Map<String, Object> options = new EMFCompareMap<String, Object>();
-					options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
-
-					// do comparison
-					final MatchResourceSet match;
-					if (getAncestorResource() == null) {
-						options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new DefaultMatchScopeProvider(
-								getLeftResource().getResourceSet(), getRightResource().getResourceSet()));
-						match = MatchService.doResourceSetMatch(getLeftResource().getResourceSet(),
-								getRightResource().getResourceSet(), options);
-					} else {
-						options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new DefaultMatchScopeProvider(
-								getLeftResource().getResourceSet(), getRightResource().getResourceSet(),
-								getAncestorResource().getResourceSet()));
-						match = MatchService.doResourceSetMatch(getLeftResource().getResourceSet(),
-								getRightResource().getResourceSet(), getAncestorResource().getResourceSet(),
-								options);
-					}
-					final DiffResourceSet diff = DiffService.doDiff(match, getAncestorResource() != null);
-					snapshot.setDiffResourceSet(diff);
-					snapshot.setMatchResourceSet(match);
-				}
-			});
+			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(runnable);
 		} catch (final InterruptedException e) {
 			EMFComparePlugin.log(e, false);
 		} catch (final EMFCompareException e) {
@@ -433,7 +497,80 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 		} catch (final InvocationTargetException e) {
 			EMFComparePlugin.log(e, true);
 		}
+		return runnable.getComparisonResourceSetSnapshot();
+	}
 
+	/**
+	 * Runnable to execute the resource set comparison.
+	 * 
+	 * @author cnotot
+	 */
+	public class RunnableResourceSetCompare implements IRunnableWithProgress {
+
+		/**
+		 * The result of the resource set comparison.
+		 */
+		private ComparisonResourceSetSnapshot snapshot;
+
+		/**
+		 * {@inheritDoc}.
+		 * 
+		 * @param monitor
+		 * @throws InvocationTargetException
+		 * @throws InterruptedException
+		 */
+		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+			snapshot = doResourceSetCompareInThreadUI(monitor);
+		}
+
+		/**
+		 * Get the result of the resource set comparison.
+		 * 
+		 * @return ComparisonResourceSetSnapshot
+		 */
+		public ComparisonResourceSetSnapshot getComparisonResourceSetSnapshot() {
+			return snapshot;
+		}
+
+	}
+
+	/**
+	 * /** Perform a comparison of the left and right (and if specified ancestor resource), as well as all
+	 * other resources, included in their respective resource sets, in a thread UI.
+	 * 
+	 * @param monitor
+	 *            IProgressMonitor
+	 * @return the {@link ComparisonResourceSetSnapshot} that contains the comparison result.
+	 * @throws InterruptedException
+	 *             exception
+	 */
+	protected ComparisonResourceSetSnapshot doResourceSetCompareInThreadUI(IProgressMonitor monitor)
+			throws InterruptedException {
+		final ComparisonResourceSetSnapshot snapshot = DiffFactory.eINSTANCE
+				.createComparisonResourceSetSnapshot();
+		snapshot.setDiffResourceSet(DiffFactory.eINSTANCE.createDiffResourceSet());
+		snapshot.setMatchResourceSet(MatchFactory.eINSTANCE.createMatchResourceSet());
+
+		final Map<String, Object> options = new EMFCompareMap<String, Object>();
+		options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
+
+		// do comparison
+		final MatchResourceSet match;
+		if (getAncestorResource() == null) {
+			options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new DefaultMatchScopeProvider(
+					getLeftResource().getResourceSet(), getRightResource().getResourceSet()));
+			match = MatchService.doResourceSetMatch(getLeftResource().getResourceSet(), getRightResource()
+					.getResourceSet(), options);
+		} else {
+			options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new DefaultMatchScopeProvider(
+					getLeftResource().getResourceSet(), getRightResource().getResourceSet(),
+					getAncestorResource().getResourceSet()));
+			match = MatchService.doResourceSetMatch(getLeftResource().getResourceSet(), getRightResource()
+					.getResourceSet(), getAncestorResource().getResourceSet(), options);
+		}
+		final DiffResourceSet diff = DiffService.doDiff(match, getAncestorResource() != null);
+		snapshot.setDiffResourceSet(diff);
+		snapshot.setMatchResourceSet(match);
 		return snapshot;
 	}
 
