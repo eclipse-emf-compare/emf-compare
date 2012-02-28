@@ -42,6 +42,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -369,6 +370,17 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		if (part != null) {
 			part.getSite().setSelectionProvider(this);
 		}
+
+		// Used to synchronize external selections on the structure viewer to the content viewer.
+		addPostSelectionChangedListener(new ISelectionChangedListener() {
+
+			public void selectionChanged(SelectionChangedEvent event) {
+				// tree.notifyListeners(eventType, event);
+				configuration.setProperty(EMFCompareConstants.PROPERTY_STRUCTURE_SELECTION,
+						event.getSelection());
+			}
+
+		});
 	}
 
 	/**

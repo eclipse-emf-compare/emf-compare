@@ -58,6 +58,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -193,7 +194,13 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		structureSelectionListener = new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equals(EMFCompareConstants.PROPERTY_STRUCTURE_SELECTION)) {
-					final List<?> elements = (List<?>)event.getNewValue();
+					final Object newValues = event.getNewValue();
+					List<?> elements;
+					if (newValues instanceof IStructuredSelection) {
+						elements = ((IStructuredSelection)newValues).toList();
+					} else {
+						elements = (List<?>)event.getNewValue();
+					}
 					// We'll remove all diffgroups without subDiffs from the selection
 					final List<DiffElement> selectedDiffs = new ArrayList<DiffElement>();
 					for (int i = 0; i < elements.size(); i++) {

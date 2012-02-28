@@ -76,7 +76,10 @@ public final class CompareServices {
 		final ISelectionProvider provider = editor.getEditorSite().getSelectionProvider();
 		if (provider instanceof IInputProvider) {
 			final List<EObject> objsToReference = new ArrayList<EObject>();
-			final Object root = ((IInputProvider)provider).getInput();
+			Object root = ((IInputProvider)provider).getInput();
+			if (root instanceof ModelCompareInput) {
+				root = ((ModelCompareInput)root).getComparisonSnapshot();
+			}
 			if (root instanceof EObject) {
 				for (String id : objectIds) {
 					final EObject leftRoot = getElement((EObject)root, MatchSide.LEFT);
