@@ -743,48 +743,50 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 	private boolean handleResourceMapping(ICompareInput input) {
 		final IResourceProvider resourceProvider = (IResourceProvider)Platform.getAdapterManager()
 				.getAdapter(leftElement, IResourceProvider.class);
-		if (resourceProvider != null) {
-			final IResource localResource = resourceProvider.getResource();
-			final IModelProviderDescriptor[] descriptors = ModelProvider.getModelProviderDescriptors();
-			for (int i = 0; i < descriptors.length; i++) {
-				final IModelProviderDescriptor descriptor = descriptors[i];
-				try {
-					final IResource[] resources = descriptor
-							.getMatchingResources(new IResource[] {localResource, });
-					if (resources.length > 0) {
-						final ModelProvider modelProvider = descriptor.getModelProvider();
-						final ISynchronizationCompareAdapter compareAdapter = (ISynchronizationCompareAdapter)Platform
-								.getAdapterManager().getAdapter(modelProvider,
-										ISynchronizationCompareAdapter.class);
-						// FIXME until 345415 is fixed, we need to find the proper model provider from here...
-						// ... which requires access to non-API things.
-						final Field contextField = input.getClass().getDeclaredField("context"); //$NON-NLS-1$
-						contextField.setAccessible(true);
-						final ISynchronizationContext context = (ISynchronizationContext)contextField
-								.get(input);
-						final ICompareInput actualInput = compareAdapter.asCompareInput(context,
-								localResource);
+		if (resourceProvider == null) {
+			// Can't do a thing
+			return false;
+		}
 
-						if (actualInput instanceof ModelCompareInput) {
-							comparisonResult = ((ModelCompareInput)actualInput).getComparisonSnapshot();
-							return true;
-						}
+		final IResource localResource = resourceProvider.getResource();
+		final IModelProviderDescriptor[] descriptors = ModelProvider.getModelProviderDescriptors();
+		boolean providerFound = false;
+		for (int i = 0; i < descriptors.length && !providerFound; i++) {
+			final IModelProviderDescriptor descriptor = descriptors[i];
+			try {
+				final IResource[] resources = descriptor
+						.getMatchingResources(new IResource[] {localResource, });
+				if (resources.length > 0) {
+					final ModelProvider modelProvider = descriptor.getModelProvider();
+					final ISynchronizationCompareAdapter compareAdapter = (ISynchronizationCompareAdapter)Platform
+							.getAdapterManager().loadAdapter(modelProvider,
+									ISynchronizationCompareAdapter.class.getName());
+					// FIXME until 345415 is fixed, we need to find the proper model provider from here...
+					// ... which requires access to non-API things.
+					final Field contextField = input.getClass().getDeclaredField("context"); //$NON-NLS-1$
+					contextField.setAccessible(true);
+					final ISynchronizationContext context = (ISynchronizationContext)contextField.get(input);
+					final ICompareInput actualInput = compareAdapter.asCompareInput(context, localResource);
+
+					if (actualInput instanceof ModelCompareInput) {
+						comparisonResult = ((ModelCompareInput)actualInput).getComparisonSnapshot();
+						providerFound = true;
 					}
-				} catch (CoreException e) {
-					// FIXME log
-				} catch (SecurityException e) {
-					// FIXME remove when 345415 is fixed
-				} catch (NoSuchFieldException e) {
-					// FIXME remove when 345415 is fixed
-				} catch (IllegalArgumentException e) {
-					// FIXME remove when 345415 is fixed
-				} catch (IllegalAccessException e) {
-					// FIXME remove when 345415 is fixed
 				}
+			} catch (CoreException e) {
+				// FIXME log
+			} catch (SecurityException e) {
+				// FIXME remove when 345415 is fixed
+			} catch (NoSuchFieldException e) {
+				// FIXME remove when 345415 is fixed
+			} catch (IllegalArgumentException e) {
+				// FIXME remove when 345415 is fixed
+			} catch (IllegalAccessException e) {
+				// FIXME remove when 345415 is fixed
 			}
 		}
 
-		return false;
+		return providerFound;
 	}
 
 	/**
