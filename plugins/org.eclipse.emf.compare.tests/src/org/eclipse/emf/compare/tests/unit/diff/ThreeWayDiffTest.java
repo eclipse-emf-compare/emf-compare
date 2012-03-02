@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.eclipse.emf.common.util.TreeIterator;
@@ -26,6 +27,8 @@ import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -33,10 +36,13 @@ import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.tests.util.EcoreModelUtils;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.ModelUtils;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 
 // TODO testing : these tests are not covering conflicting changes
@@ -189,6 +195,73 @@ public class ThreeWayDiffTest extends TestCase {
 		} catch (final NullPointerException e) {
 			// This was expected behavior
 		}
+	}
+
+	public void testRemotelyDeletedReference() throws Exception {
+		final int writerCount = 1;
+		final int bookPerWriterCount = 5;
+		final long seed = System.nanoTime();
+
+		// generate ancestor
+		final Resource ancestorResource = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed,
+				true).eResource();
+
+		// generate identical local model
+		final Resource leftResource = EcoreModelUtils
+				.createModel(writerCount, bookPerWriterCount, seed, true).eResource();
+
+		// generate identical remote model and remove first Book in it
+		Resource rightResource = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed, true)
+				.eResource();
+		final EObject rightLibrary = rightResource.getContents().get(0);
+		final List<?> rightBooks = EFactory.eGetAsList(rightLibrary, "books");
+		final EObject rightBook1 = (EObject)rightBooks.get(0);
+		final String deletedBookID = ((XMIResourceImpl)rightBook1.eResource()).getID(rightBook1);
+		Assert.assertNotNull("Book ID should not be null", deletedBookID);
+		EcoreUtil.delete(rightBook1);
+
+		final MatchModel match = MatchService.doResourceMatch(leftResource, rightResource, ancestorResource,
+				getOptions());
+		assertNotNull("Failed to match the three models.", match);
+
+		final DiffModel diff = DiffService.doDiff(match, true);
+		assertNotNull("Failed to compute the three models' diff.", diff);
+
+		final Collection<DiffElement> diffs = diff.getDifferences();
+		Assert.assertEquals(2, diffs.size());
+		// there should be two remote differences
+		List<DiffElement> diffsList = new ArrayList<DiffElement>(diffs);
+		final DiffElement remoteDiff1 = diffsList.get(0);
+		final DiffElement remoteDiff2 = diffsList.get(1);
+		Assert.assertTrue("Both diffs should be remote", remoteDiff1.isRemote() && remoteDiff2.isRemote());
+
+		// one of remote changes should be element (Book) removal from its container (Library) and the other
+		// should be element removal from many-value reference list (Wirter#writtenBooks)
+		Assert.assertTrue(
+				"One diff should be remove from container diff and the other diff should be remove from reference diff",
+				remoteDiff1 instanceof ModelElementChangeLeftTarget
+						&& remoteDiff2 instanceof ReferenceChangeLeftTarget
+						|| remoteDiff2 instanceof ModelElementChangeLeftTarget
+						&& remoteDiff1 instanceof ReferenceChangeLeftTarget);
+
+		final ModelElementChangeLeftTarget removeFromContainer = (ModelElementChangeLeftTarget)(remoteDiff1 instanceof ModelElementChangeLeftTarget ? remoteDiff1
+				: remoteDiff2);
+		final ReferenceChangeLeftTarget removeFromReference = (ReferenceChangeLeftTarget)(remoteDiff1 instanceof ModelElementChangeLeftTarget ? remoteDiff2
+				: remoteDiff1);
+
+		final EObject leftElement = removeFromContainer.getLeftElement();
+		Assert.assertNotNull("Local element should not be null", leftElement);
+		Assert.assertEquals(deletedBookID, ((XMIResource)leftElement.eResource()).getID(leftElement));
+
+		final EReference writtenBooksReference = removeFromReference.getReference();
+		Assert.assertEquals("writtenBooks", writtenBooksReference.getName());
+		EClass writerClass = writtenBooksReference.getEContainingClass();
+		Assert.assertEquals("Writer", writerClass.getName());
+		final EObject rightTarget = removeFromReference.getRightTarget();
+		Assert.assertNull("Remote target should be null", rightTarget);
+		final EObject leftTarget = removeFromReference.getLeftTarget();
+		Assert.assertNotNull("Local target should not be null", leftTarget);
+		Assert.assertEquals(deletedBookID, ((XMIResource)leftTarget.eResource()).getID(leftTarget));
 	}
 
 	/**
@@ -351,6 +424,5 @@ public class ThreeWayDiffTest extends TestCase {
 			assertFalse("There should be no conflict as left and right did the same change",
 					delta.isConflicting());
 		}
-
 	}
 }

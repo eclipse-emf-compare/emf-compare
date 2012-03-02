@@ -12,13 +12,16 @@
 package org.eclipse.emf.compare.diff.engine.check;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.engine.IMatchManager;
 import org.eclipse.emf.compare.diff.engine.IMatchManager.MatchSide;
+import org.eclipse.emf.compare.diff.engine.IMatchManager2;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
@@ -253,30 +256,31 @@ public class ReferencesCheck extends AbstractCheck {
 	 *            Element corresponding to the final holder of the given reference.
 	 * @param rightElement
 	 *            Element corresponding to the initial holder of the given reference.
-	 * @param addedReferences
-	 *            Contains the created differences for added reference values.
-	 * @param removedReferences
-	 *            Contains the created differences for removed reference values.
+	 * @param addedValues
+	 *            References the values of the left EObject that have been removed in the right one.
+	 * @param removedValues
+	 *            References the values of the right EObject that have been removed in the left one.
 	 * @throws FactoryException
 	 *             Thrown if we cannot fetch the references' values.
+	 * @since 1.3
 	 */
 	@SuppressWarnings("unchecked")
 	protected void checkReferenceOrderChange(DiffGroup root, EReference reference, EObject leftElement,
-			EObject rightElement, List<ReferenceChangeLeftTarget> addedReferences,
-			List<ReferenceChangeRightTarget> removedReferences) throws FactoryException {
+			EObject rightElement, Set<EObject> addedValues, Set<EObject> removedValues)
+			throws FactoryException {
 		final List<EObject> leftElementReferences = new ArrayList<EObject>(
 				(List<EObject>)EFactory.eGetAsList(leftElement, reference.getName()));
 		final List<EObject> rightElementReferences = new ArrayList<EObject>(
 				(List<EObject>)EFactory.eGetAsList(rightElement, reference.getName()));
-		final List<Integer> removedIndices = new ArrayList<Integer>(removedReferences.size());
+		final List<Integer> removedIndices = new ArrayList<Integer>(removedValues.size());
 
 		final List<EObject> filteredLeft = new ArrayList<EObject>(leftElementReferences);
 		// Purge "left" list of all reference values that have been added to it
-		for (final ReferenceChangeLeftTarget added : addedReferences) {
-			filteredLeft.remove(added.getLeftTarget());
+		for (final EObject added : addedValues) {
+			filteredLeft.remove(added);
 		}
-		for (final ReferenceChangeRightTarget removed : removedReferences) {
-			removedIndices.add(Integer.valueOf(rightElementReferences.indexOf(removed.getRightTarget())));
+		for (final EObject removed : removedValues) {
+			removedIndices.add(Integer.valueOf(rightElementReferences.indexOf(removed)));
 		}
 
 		int expectedIndex = 0;
@@ -338,6 +342,44 @@ public class ReferencesCheck extends AbstractCheck {
 				break;
 			}
 		}
+	}
+
+	/**
+	 * This will be called to check for changes on a given reference values. Note that we know
+	 * <code>reference.isMany()</code> and <code>reference.isOrdered()</code> always return true here for the
+	 * generic diff engine and the tests won't be made.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup Root} of the {@link DiffElement}s to create.
+	 * @param reference
+	 *            {@link EReference} to check for modifications.
+	 * @param leftElement
+	 *            Element corresponding to the final holder of the given reference.
+	 * @param rightElement
+	 *            Element corresponding to the initial holder of the given reference.
+	 * @param addedReferences
+	 *            Contains the created differences for added reference values.
+	 * @param removedReferences
+	 *            Contains the created differences for removed reference values.
+	 * @throws FactoryException
+	 *             Thrown if we cannot fetch the references' values.
+	 * @deprecated Use {@link #checkReferenceOrderChange(DiffGroup, EReference, EObject, EObject, Set, Set)}
+	 */
+	@Deprecated
+	protected void checkReferenceOrderChange(DiffGroup root, EReference reference, EObject leftElement,
+			EObject rightElement, List<ReferenceChangeLeftTarget> addedReferences,
+			List<ReferenceChangeRightTarget> removedReferences) throws FactoryException {
+		final Set<EObject> addedValues = new HashSet<EObject>();
+		final Set<EObject> removedValues = new HashSet<EObject>();
+
+		for (ReferenceChangeLeftTarget added : addedReferences) {
+			addedValues.add(added.getLeftTarget());
+		}
+		for (ReferenceChangeRightTarget removed : removedReferences) {
+			removedValues.add(removed.getRightTarget());
+		}
+
+		checkReferenceOrderChange(root, reference, leftElement, rightElement, addedValues, removedValues);
 	}
 
 	/**
@@ -439,8 +481,19 @@ public class ReferencesCheck extends AbstractCheck {
 			}
 			// Check for references order changes
 			if (reference.isOrdered()) {
+				// Consider both "added" and "remotelyDeleted" here
+				final Set<EObject> addedValues = new HashSet<EObject>(remoteDeletedReferences);
+				for (final ReferenceChangeLeftTarget added : addedReferencesDiffs) {
+					addedValues.add(added);
+				}
+				// Similarly, consider both "deleted" and "remoteAdded"
+				final Set<EObject> removedValues = new HashSet<EObject>(remoteAddedReferences);
+				for (final ReferenceChangeRightTarget removed : removedReferencesDiffs) {
+					removedValues.add(removed);
+				}
+
 				checkReferenceOrderChange(root, reference, mapping.getLeftElement(),
-						mapping.getRightElement(), addedReferencesDiffs, removedReferencesDiffs);
+						mapping.getRightElement(), addedValues, removedValues);
 			}
 		}
 	}
@@ -1125,6 +1178,10 @@ public class ReferencesCheck extends AbstractCheck {
 				hasLeftMatch = leftMatched != null;
 				hasAncestorMatch = ancestorMatched != null;
 			}
+			// Take remote unmatched into account
+			if (!hasAncestorMatch && getMatchManager() instanceof IMatchManager2) {
+				hasAncestorMatch = ((IMatchManager2)getMatchManager()).isRemoteUnmatched((EObject)right);
+			}
 			if (!hasLeftMatch && !hasAncestorMatch) {
 				remoteAddedReferences.add((EObject)right);
 			} else if (!hasLeftMatch) {
@@ -1168,6 +1225,10 @@ public class ReferencesCheck extends AbstractCheck {
 				}
 				hasRightMatch = rightMatched != null;
 				hasAncestorMatch = ancestorMatched != null;
+			}
+			// Take remote unmatched into account
+			if (!hasAncestorMatch && getMatchManager() instanceof IMatchManager2) {
+				hasAncestorMatch = ((IMatchManager2)getMatchManager()).isRemoteUnmatched((EObject)left);
 			}
 			if (!hasRightMatch && !hasAncestorMatch) {
 				addedReferences.add((EObject)left);

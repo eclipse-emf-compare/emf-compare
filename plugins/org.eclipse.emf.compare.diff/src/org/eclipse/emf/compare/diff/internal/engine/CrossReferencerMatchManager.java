@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.diff.engine.IMatchManager;
+import org.eclipse.emf.compare.diff.engine.IMatchManager2;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
@@ -29,7 +30,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @author Victor Roldan Betancort
  * @see IMatchManager
  */
-public class CrossReferencerMatchManager implements IMatchManager {
+public class CrossReferencerMatchManager implements IMatchManager, IMatchManager2 {
 	/**
 	 * If we're currently doing a resourceSet differencing, this will have been initialized with the whole
 	 * MatchResourceSet.
@@ -109,6 +110,24 @@ public class CrossReferencerMatchManager implements IMatchManager {
 			for (final org.eclipse.emf.ecore.EStructuralFeature.Setting setting : crossReferencer.get(eObj)) {
 				if (setting.getEObject() instanceof Match2Elements
 						|| setting.getEObject() instanceof UnmatchElement) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diff.engine.IMatchManager2#isRemoteUnmatched(org.eclipse.emf.ecore.EObject)
+	 */
+	public boolean isRemoteUnmatched(EObject element) {
+		if (crossReferencer != null && crossReferencer.get(element) != null) {
+			final Iterator<EStructuralFeature.Setting> it = crossReferencer.get(element).iterator();
+			if (it.hasNext()) {
+				final EObject next = it.next().getEObject();
+				if (next instanceof UnmatchElement && ((UnmatchElement)next).isRemote()) {
 					return true;
 				}
 			}
