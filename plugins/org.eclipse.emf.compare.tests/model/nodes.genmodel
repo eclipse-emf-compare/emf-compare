@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2009, 2012 IBM Corporation and others.&#xD;&#xA;All rights reserved. This program and the accompanying materials&#xD;&#xA;are made available under the terms of the Eclipse Public License v1.0&#xD;&#xA;which accompanies this distribution, and is available at&#xD;&#xA;http://www.eclipse.org/legal/epl-v10.html&#xD;&#xA; &#xD;&#xA;Contributors:&#xD;&#xA;    Stephen McCants - Initial API and implementation"
+    modelDirectory="/org.eclipse.emf.compare.tests/src-gen" modelPluginID="org.eclipse.emf.compare.tests"
+    modelName="Nodes" nonNLSMarkers="true" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="5.0" runtimeVersion="2.4" usedGenPackages="external.genmodel#//external">
+  <foreignModel>nodes.ecore</foreignModel>
+  <genPackages prefix="Nodes" basePackage="org.eclipse.emf.compare.tests" disposableProviderFactory="true"
+      ecorePackage="nodes.ecore#/">
+    <genDataTypes ecoreDataType="nodes.ecore#//UUID"/>
+    <genDataTypes ecoreDataType="nodes.ecore#//NonEMFStringHolder"/>
+    <genClasses ecoreClass="nodes.ecore#//Group">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//Group/children"/>
+    </genClasses>
+    <genClasses ecoreClass="nodes.ecore#//Leaf">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//Leaf/noncontainmentHolder"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference nodes.ecore#//Leaf/containmentHolder"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nodes.ecore#//Leaf/number"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//Leaf/holder"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nodes.ecore#//Leaf/nonEMF"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//Leaf/noncontainmentNoncontainmentHolder"/>
+    </genClasses>
+    <genClasses ecoreClass="nodes.ecore#//Node">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nodes.ecore#//Node/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nodes.ecore#//Node/uuid"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
