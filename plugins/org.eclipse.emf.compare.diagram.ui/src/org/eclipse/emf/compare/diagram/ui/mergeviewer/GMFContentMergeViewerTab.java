@@ -44,6 +44,7 @@ import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -456,6 +457,15 @@ public class GMFContentMergeViewerTab implements IModelContentMergeViewerTab {
 				disableEditMode((IGraphicalEditPart)child);
 			}
 		}
+	}
+	
+	/**
+	 * Get the viewer.
+	 * @return the viewer.
+	 * @since 1.3
+	 */
+	public ISelectionProvider getViewer() {
+		return viewer;
 	}
 
 }

@@ -15,6 +15,7 @@ Contributors:
    <extension-point id="org.eclipse.emf.compare.ui.team.handler" name="org.eclipse.emf.compare.ui.team.handler" schema="schema/org.eclipse.emf.compare.team.handler.exsd"/>
    <extension-point id="org.eclipse.emf.compare.ui.diff.filter" name="org.eclipse.emf.compare.ui.diff.filter" schema="schema/org.eclipse.emf.compare.ui.diff.filter.exsd"/>
    <extension-point id="org.eclipse.emf.compare.ui.diff.group" name="org.eclipse.emf.compare.ui.diff.group" schema="schema/org.eclipse.emf.compare.ui.diff.group.exsd"/>
+   <extension-point id="org.eclipse.emf.compare.ui.contextual.menus" name="org.eclipse.emf.compare.ui.contextual.menus" schema="schema/org.eclipse.emf.compare.ui.contextual.menus.exsd"/>
    <extension
          point="org.eclipse.compare.contentMergeViewers">
       <viewer

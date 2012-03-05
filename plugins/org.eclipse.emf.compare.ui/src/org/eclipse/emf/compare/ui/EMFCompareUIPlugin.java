@@ -16,6 +16,8 @@ import org.eclipse.emf.compare.ui.viewer.filter.DifferenceFilterExtensionRegistr
 import org.eclipse.emf.compare.ui.viewer.filter.DifferenceFilterRegistry;
 import org.eclipse.emf.compare.ui.viewer.group.DifferenceGroupExtensionRegistryListener;
 import org.eclipse.emf.compare.ui.viewer.group.DifferenceGroupingFacilityRegistry;
+import org.eclipse.emf.compare.ui.viewer.menus.ContextualMenuRegistry;
+import org.eclipse.emf.compare.ui.viewer.menus.ContextualMenuRegistryListener;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -37,6 +39,9 @@ public class EMFCompareUIPlugin extends AbstractUIPlugin {
 
 	/** The listener for the groups extension management. */
 	private static DifferenceGroupExtensionRegistryListener groupExtensionRegistryListener = new DifferenceGroupExtensionRegistryListener();
+
+	/** The listener for the contextual menus management. */
+	private static ContextualMenuRegistryListener contextualMenuRegistryListener = new ContextualMenuRegistryListener();
 
 	/** Default Constructor. */
 	public EMFCompareUIPlugin() {
@@ -71,6 +76,10 @@ public class EMFCompareUIPlugin extends AbstractUIPlugin {
 		registry.addListener(groupExtensionRegistryListener,
 				DifferenceGroupingFacilityRegistry.DIFF_GROUPING_EXTENSION_POINT);
 		DifferenceGroupingFacilityRegistry.INSTANCE.parseInitialContributions();
+
+		registry.addListener(contextualMenuRegistryListener,
+				ContextualMenuRegistry.CONTEXTUAL_MENU_EXTENSION_POINT);
+		ContextualMenuRegistry.INSTANCE.parseInitialContributions();
 	}
 
 	/**
@@ -88,6 +97,9 @@ public class EMFCompareUIPlugin extends AbstractUIPlugin {
 
 		registry.removeListener(groupExtensionRegistryListener);
 		DifferenceGroupingFacilityRegistry.INSTANCE.clearRegistry();
+
+		registry.removeListener(contextualMenuRegistryListener);
+		ContextualMenuRegistry.INSTANCE.clearRegistry();
 
 		super.stop(context);
 	}

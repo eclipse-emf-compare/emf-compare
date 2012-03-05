@@ -14,6 +14,7 @@ package org.eclipse.emf.compare.diagram.ui.mergeviewer;
 import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer;
 import org.eclipse.emf.compare.ui.viewer.content.part.IModelContentMergeViewerTab;
 import org.eclipse.emf.compare.ui.viewer.content.part.ParameterizedContentMergeTabFolder;
+import org.eclipse.emf.compare.ui.viewer.menus.IContextualMenu;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -83,6 +84,20 @@ public class GMFContentMergeTabFolder extends ParameterizedContentMergeTabFolder
 		super.createContents(composite);
 		// select the graphical viewer by default
 		tabFolder.setSelection(gmfTab);
+	}
+		
+	/** 
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ui.viewer.content.part.ModelContentMergeTabFolder#createContextualMenu(org.eclipse.emf.compare.ui.viewer.content.part.IModelContentMergeViewerTab, org.eclipse.emf.compare.ui.viewer.menus.IContextualMenu)
+	 */
+	@Override
+	protected void createContextualMenu(final IModelContentMergeViewerTab tab, final IContextualMenu menu) {
+		if (tab instanceof GMFContentMergeViewerTab) {
+			menu.create(parentViewer.getConfiguration(), ((GMFContentMergeViewerTab)tab).getViewer(), tab.getControl());
+		} else {
+			super.createContextualMenu(tab, menu);
+		}
 	}
 
 	/**

@@ -21,13 +21,13 @@ Require-Bundle: org.eclipse.compare,
  org.eclipse.core.filesystem,
  org.eclipse.jface.text
 Bundle-Vendor: %providerName
-Export-Package: org.eclipse.emf.compare.ui.services,
- org.eclipse.emf.compare.ui,
+Export-Package: org.eclipse.emf.compare.ui,
  org.eclipse.emf.compare.ui.editor,
  org.eclipse.emf.compare.ui.export,
  org.eclipse.emf.compare.ui.internal;x-internal:=true,
  org.eclipse.emf.compare.ui.internal.preferences;x-internal:=true,
  org.eclipse.emf.compare.ui.internal.wizard;x-internal:=true,
+ org.eclipse.emf.compare.ui.services,
  org.eclipse.emf.compare.ui.team,
  org.eclipse.emf.compare.ui.util,
  org.eclipse.emf.compare.ui.viewer,
@@ -37,6 +37,7 @@ Export-Package: org.eclipse.emf.compare.ui.services,
  org.eclipse.emf.compare.ui.viewer.content.part.property,
  org.eclipse.emf.compare.ui.viewer.filter,
  org.eclipse.emf.compare.ui.viewer.group,
+ org.eclipse.emf.compare.ui.viewer.menus,
  org.eclipse.emf.compare.ui.viewer.structure
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy

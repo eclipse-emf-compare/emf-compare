@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.ui.viewer.structure;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
@@ -31,6 +32,9 @@ import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.export.ExportMenu;
 import org.eclipse.emf.compare.ui.internal.ModelComparator;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
+import org.eclipse.emf.compare.ui.viewer.menus.ContextualMenuDescriptor;
+import org.eclipse.emf.compare.ui.viewer.menus.ContextualMenuRegistry;
+import org.eclipse.emf.compare.ui.viewer.menus.IContextualMenu;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -202,6 +206,25 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		final IWorkbenchPart part = getCompareConfiguration().getContainer().getWorkbenchPart();
 		if (part != null) {
 			part.getSite().registerContextMenu(menuMgr, this);
+		}
+
+		createContextualMenus();
+	}
+
+	/**
+	 * It looks for available matching contextual menus to create on this viewer.
+	 * 
+	 * @since 1.3
+	 */
+	protected void createContextualMenus() {
+		final Iterator<ContextualMenuDescriptor> descriptors = ContextualMenuRegistry.INSTANCE
+				.getDescriptors().iterator();
+		while (descriptors.hasNext()) {
+			final ContextualMenuDescriptor desc = descriptors.next();
+			if (desc.getTargetClass().isAssignableFrom(getClass())) {
+				final IContextualMenu menu = desc.getExtension();
+				menu.create(getCompareConfiguration(), this, getControl());
+			}
 		}
 	}
 

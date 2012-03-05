@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.ui.viewer.content.part;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.TreeIterator;
@@ -30,9 +31,13 @@ import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer;
 import org.eclipse.emf.compare.ui.viewer.content.part.diff.ModelContentMergeDiffTab;
 import org.eclipse.emf.compare.ui.viewer.content.part.property.ModelContentMergePropertyTab;
+import org.eclipse.emf.compare.ui.viewer.menus.ContextualMenuDescriptor;
+import org.eclipse.emf.compare.ui.viewer.menus.ContextualMenuRegistry;
+import org.eclipse.emf.compare.ui.viewer.menus.IContextualMenu;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -365,6 +370,68 @@ public class ModelContentMergeTabFolder {
 			}
 		});
 		tabFolder.setSelection(treeTab);
+
+		createContextualMenus();
+	}
+
+	/**
+	 * For each tabular viewer, it looks for available matching contextual menus to create them.
+	 */
+	private void createContextualMenus() {
+		final Iterator<IModelContentMergeViewerTab> itTabs = tabs.iterator();
+		while (itTabs.hasNext()) {
+			final IModelContentMergeViewerTab tab = itTabs.next();
+			createContextualMenus(tab);
+		}
+	}
+
+	/**
+	 * It looks for available matching contextual menus to create on the specified tab.
+	 * 
+	 * @param tab
+	 *            The tabular viewer.
+	 */
+	private void createContextualMenus(final IModelContentMergeViewerTab tab) {
+		final Iterator<IContextualMenu> menus = getAvailableContextualMenus(tab).iterator();
+		while (menus.hasNext()) {
+			final IContextualMenu menu = menus.next();
+			createContextualMenu(tab, menu);
+		}
+	}
+
+	/**
+	 * It builds the menu on the specified tab, from the specified contextual menu builder.
+	 * 
+	 * @param tab
+	 *            The tabular viewer.
+	 * @param menu
+	 *            The contextual menu builder.
+	 * @since 1.3
+	 */
+	protected void createContextualMenu(final IModelContentMergeViewerTab tab, final IContextualMenu menu) {
+		menu.create(parentViewer.getConfiguration(), (Viewer)tab, tab.getControl());
+	}
+
+	/**
+	 * Get the available contextual menu builders defined on the specified tab, from the extension point:
+	 * org.eclispe.emf.compare.ui.contextual.menus.
+	 * 
+	 * @param tab
+	 *            The tabular viewer.
+	 * @return The list of the contextual menu builders.
+	 */
+	private List<IContextualMenu> getAvailableContextualMenus(IModelContentMergeViewerTab tab) {
+		final List<IContextualMenu> menus = new ArrayList<IContextualMenu>();
+		final Iterator<ContextualMenuDescriptor> descriptors = ContextualMenuRegistry.INSTANCE
+				.getDescriptors().iterator();
+		while (descriptors.hasNext()) {
+			final ContextualMenuDescriptor desc = descriptors.next();
+			if (desc.getTargetClass().isInstance(tab)) {
+				final IContextualMenu menu = desc.getExtension();
+				menus.add(menu);
+			}
+		}
+		return menus;
 	}
 
 	/**
