@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2011 Obeo.
+ * Copyright (c) 2006, 2011 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Vygantas Gedgaudas - [368841] Introduce new test for three-way cases
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.unit.diff;
 
