@@ -3,7 +3,7 @@ h1. Comparison use cases
 @Author@ Laurent Goubet
 @Contact@ laurent.goubet@obeo.fr
 
-Copyright (c) 2011 Obeo.
+Copyright (c) 2011, 2012 Obeo.
 
 {toc}
 
