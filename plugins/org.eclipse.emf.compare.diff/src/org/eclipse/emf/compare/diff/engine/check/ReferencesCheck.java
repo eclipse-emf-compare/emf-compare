@@ -1138,15 +1138,12 @@ public class ReferencesCheck extends AbstractCheck {
 			List<EObject> addedReferences, List<EObject> deletedReferences,
 			List<EObject> remoteAddedReferences, List<EObject> remoteDeletedReferences)
 			throws FactoryException {
-		final String referenceName = reference.getName();
-
 		final List<Object> leftReferences = convertFeatureMapList(EFactory.eGetAsList(
-				mapping.getLeftElement(), referenceName));
+				mapping.getLeftElement(), reference.getName()));
 		final List<Object> rightReferences = convertFeatureMapList(EFactory.eGetAsList(
-				mapping.getRightElement(), referenceName));
+				mapping.getRightElement(), reference.getName()));
 		final List<Object> ancestorReferences = convertFeatureMapList(EFactory.eGetAsList(
-				mapping.getOriginElement(), referenceName));
-
+				mapping.getOriginElement(), reference.getName()));
 		// populates remotely added and locally deleted lists
 		final List<Object> leftCopy = new ArrayList<Object>(leftReferences);
 		List<Object> ancestorCopy = new ArrayList<Object>(ancestorReferences);
@@ -1179,9 +1176,8 @@ public class ReferencesCheck extends AbstractCheck {
 				hasAncestorMatch = ancestorMatched != null;
 			}
 			// Take remote unmatched into account
-			if (!hasAncestorMatch && getMatchManager() instanceof IMatchManager2) {
-				hasAncestorMatch = ((IMatchManager2)getMatchManager()).isRemoteUnmatched((EObject)right);
-			}
+			hasAncestorMatch = hasAncestorMatch || getMatchManager() instanceof IMatchManager2
+					&& ((IMatchManager2)getMatchManager()).isRemoteUnmatched((EObject)right);
 			if (!hasLeftMatch && !hasAncestorMatch) {
 				remoteAddedReferences.add((EObject)right);
 			} else if (!hasLeftMatch) {
@@ -1194,7 +1190,6 @@ public class ReferencesCheck extends AbstractCheck {
 				ancestorCopy.remove(ancestorMatched);
 			}
 		}
-
 		// populates remotely deleted and locally added lists
 		final List<Object> rightCopy = new ArrayList<Object>(rightReferences);
 		ancestorCopy = new ArrayList<Object>(ancestorReferences);
@@ -1227,9 +1222,8 @@ public class ReferencesCheck extends AbstractCheck {
 				hasAncestorMatch = ancestorMatched != null;
 			}
 			// Take remote unmatched into account
-			if (!hasAncestorMatch && getMatchManager() instanceof IMatchManager2) {
-				hasAncestorMatch = ((IMatchManager2)getMatchManager()).isRemoteUnmatched((EObject)left);
-			}
+			hasAncestorMatch = hasAncestorMatch || getMatchManager() instanceof IMatchManager2
+					&& ((IMatchManager2)getMatchManager()).isRemoteUnmatched((EObject)left);
 			if (!hasRightMatch && !hasAncestorMatch) {
 				addedReferences.add((EObject)left);
 			} else if (!hasRightMatch) {
