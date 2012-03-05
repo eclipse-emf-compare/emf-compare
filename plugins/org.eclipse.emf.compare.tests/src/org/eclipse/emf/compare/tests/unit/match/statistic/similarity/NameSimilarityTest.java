@@ -42,7 +42,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 @SuppressWarnings("nls")
 public class NameSimilarityTest extends TestCase {
 	/** Full path to the model containing this test's input. */
-	private static final String INPUT_MODEL_PATH = "/data/testInput.ecore";
+	private static final String INPUT_MODEL_PATH = "/inputs/testInput.ecore";
 
 	/** String displayed for a <code>null</code> result where it shouldn't be. */
 	private static final String MESSAGE_NULL_RESULT = "returned a null result.";
@@ -59,7 +59,7 @@ public class NameSimilarityTest extends TestCase {
 	/**
 	 * Tests {@link NameSimilarity#contentValue(EObject, MetamodelFilter)}.
 	 * <p>
-	 * Expected (assumed from the model data/testInput) :
+	 * Expected (assumed from the model inputs/testInput) :
 	 * <ul>
 	 * <li>Class1 =&gt; "false "</li>
 	 * <li>Class1 and Class1Clone =&gt; equal result</li>
@@ -105,7 +105,7 @@ public class NameSimilarityTest extends TestCase {
 	/**
 	 * Tests {@link NameSimilarity#findName(EObject)}.
 	 * <p>
-	 * Expected results (assumed from the model data/testInput) :
+	 * Expected results (assumed from the model inputs/testInput) :
 	 * <ul>
 	 * <li>Class1 (EClass) =&gt; same result as {@link EClass#getName()}</li>
 	 * <li>EString (EDataType) =&gt; same result as {@link EDataType#getName()}</li>
@@ -293,7 +293,7 @@ public class NameSimilarityTest extends TestCase {
 	/**
 	 * Tests {@link NameSimilarity#contentValue(EObject, MetamodelFilter)}.
 	 * <p>
-	 * Expected results (assumed from the model data/testInput) :
+	 * Expected results (assumed from the model inputs/testInput) :
 	 * <ul>
 	 * <li>Class1 =&gt; concatenation of all attributes</li>
 	 * <li>Class1 and Class1Clone =&gt; equal result</li>

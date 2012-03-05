@@ -36,7 +36,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 @SuppressWarnings("nls")
 public class RelationsSimilarityBehaviorTest extends TestCase {
 	/** Full path to the model containing this test's input. */
-	private static final String INPUT_MODEL_PATH = "/data/testInput.ecore";
+	private static final String INPUT_MODEL_PATH = "/inputs/testInput.ecore";
 
 	/** Message displayed when an unexpected {@link FactoryException} is raised. */
 	private static final String MESSAGE_FACTORY_UNEXPECTED = "Unexpected FactoryException has been thrown by relationsSimilarityMetrics.";
@@ -126,8 +126,8 @@ public class RelationsSimilarityBehaviorTest extends TestCase {
 	/**
 	 * Tests behavior of
 	 * {@link StructureSimilarity#relationsSimilarityMetric(EObject, EObject, MetamodelFilter)} without
-	 * filtering on non-<code>null</code> objects. Expects the result to be comprised between
-	 * <code>0</code> and <code>1</code>.
+	 * filtering on non-<code>null</code> objects. Expects the result to be comprised between <code>0</code>
+	 * and <code>1</code>.
 	 */
 	public void testUnfilteredRelationsSimilarityValidObjects() {
 		for (int i = 0; i < inputList.size(); i++) {

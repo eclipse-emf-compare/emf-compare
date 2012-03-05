@@ -43,7 +43,7 @@ public class RelationsSimilarityDistinctTest extends TestCase {
 	private static final double HIGH_UNFILTERED_SIMILARITY_THRESHOLD = 0.6d;
 
 	/** Full path to the model containing this test's input. */
-	private static final String INPUT_MODEL_PATH = "/data/testInput.ecore";
+	private static final String INPUT_MODEL_PATH = "/inputs/testInput.ecore";
 
 	/** Message displayed when an unexpected {@link FactoryException} is raised. */
 	private static final String MESSAGE_FACTORY_UNEXPECTED = "Unexpected FactoryException has been thrown by relationsSimilarityMetrics.";

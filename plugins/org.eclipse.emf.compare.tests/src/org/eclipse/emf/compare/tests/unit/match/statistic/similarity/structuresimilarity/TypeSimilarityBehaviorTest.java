@@ -35,7 +35,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 @SuppressWarnings("nls")
 public class TypeSimilarityBehaviorTest extends TestCase {
 	/** Full path to the model containing this test's input. */
-	private static final String INPUT_MODEL_PATH = "/data/testInput.ecore";
+	private static final String INPUT_MODEL_PATH = "/inputs/testInput.ecore";
 
 	/** Message displayed when an unexpected {@link FactoryException} is raised. */
 	private static final String MESSAGE_FACTORY_UNEXPECTED = "Unexpected FactoryException has been thrown by typeSimilarityMetrics.";
@@ -75,8 +75,9 @@ public class TypeSimilarityBehaviorTest extends TestCase {
 	}
 
 	/**
-	 * Tests behavior of {@link StructureSimilarity#typeSimilarityMetric(EObject, EObject)} on non-<code>null</code>
-	 * objects. Expects the result to be comprised between <code>0</code> and <code>1</code>.
+	 * Tests behavior of {@link StructureSimilarity#typeSimilarityMetric(EObject, EObject)} on non-
+	 * <code>null</code> objects. Expects the result to be comprised between <code>0</code> and <code>1</code>
+	 * .
 	 */
 	public void testTypeSimilarityValidObjects() {
 		for (int i = 0; i < inputList.size(); i++) {
@@ -106,7 +107,7 @@ public class TypeSimilarityBehaviorTest extends TestCase {
 			// input data for these tests. See model at location INPUT_MODEL_PATH.
 			final int packageIndex = 7;
 			final EObject inputPackage = model.eContents().get(packageIndex);
-			
+
 			final Iterator<EObject> it = inputPackage.eAllContents();
 			while (it.hasNext())
 				inputList.add(it.next());
