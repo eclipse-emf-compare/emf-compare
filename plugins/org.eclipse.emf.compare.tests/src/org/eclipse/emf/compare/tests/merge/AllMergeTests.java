@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.tests.merge;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 
+import org.eclipse.emf.compare.tests.merge.complexunmatch.suite.ComplexUnmatchedMergeTestSuite;
 import org.eclipse.emf.compare.tests.merge.dependencies.DependenciesMergeTest;
 import org.eclipse.emf.compare.tests.merge.multiplecontainmentreference.suite.MultipleContainmentMergeTestSuite;
 import org.eclipse.emf.compare.tests.merge.multivaluedattribute.suite.MultiValuedAttributeMergeTestSuite;
@@ -33,7 +34,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		SimpleMergeTestSuite.class, SingleValuedContainmentMergeTestSuite.class,
 		MultipleContainmentMergeTestSuite.class, SingleValuedAttributeMergeTestSuite.class,
 		MultiValuedAttributeMergeTestSuite.class, SingleValuedReferenceMergeTestSuite.class,
-		MultiValuedReferenceMergeTestSuite.class,/* bug 369507 ComplexUnmatchedMergeTestSuite.class, */
+		MultiValuedReferenceMergeTestSuite.class, ComplexUnmatchedMergeTestSuite.class,
 		SimpleEcoreHistoryMerge.class, SimpleEcoreHistoryMergeNoResource.class,
 		SimpleEcoreHistoryMergeWithResource.class, SimpleEcoreHistoryMergeWithResourceSet.class,
 		UMLHistoryMerge.class, UMLHistoryMergeNoResource.class, UMLHistoryMergeWithResource.class,
