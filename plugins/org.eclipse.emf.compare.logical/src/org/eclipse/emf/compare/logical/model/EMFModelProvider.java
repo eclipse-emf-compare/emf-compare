@@ -23,6 +23,7 @@ import org.eclipse.core.resources.mapping.ResourceMappingContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.compare.util.EclipseModelUtils;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -124,6 +125,8 @@ public class EMFModelProvider extends ModelProvider {
 				mappings.add(new EMFResourceMapping(file, resource, PROVIDER_ID));
 			}
 		} catch (IOException e) {
+			// return an empty array
+		} catch (WrappedException e) {
 			// return an empty array
 		}
 		return mappings.toArray(new ResourceMapping[mappings.size()]);
