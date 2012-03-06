@@ -376,8 +376,7 @@ public final class MatchService {
 			if (matchedRight != null && findMatchingResource(matchedRight, remainingLeftResources) == res) {
 				remainingLeftResources.remove(res);
 				remainingRightResources.remove(matchedRight);
-				if (matchedAncestor != null
-						&& findMatchingResource(matchedAncestor, remainingLeftResources) == res) {
+				if (matchedAncestor != null) {
 					remainingAncestorResources.remove(matchedAncestor);
 					MatchModel comparisonResult = doResourceMatch(res, matchedRight, matchedAncestor, options);
 					if (comparisonResult != null) {
@@ -391,8 +390,7 @@ public final class MatchService {
 				}
 			} else {
 				remainingLeftResources.remove(res);
-				if (matchedAncestor != null
-						&& findMatchingResource(matchedAncestor, remainingLeftResources) == res) {
+				if (matchedAncestor != null) {
 					final UnmatchModel unmatched = MatchFactory.eINSTANCE.createUnmatchModel();
 					unmatched.setSide(Side.LEFT);
 					unmatched.getRoots().addAll(getResourceRoots(res));
@@ -413,8 +411,7 @@ public final class MatchService {
 			if (matchedLeft != null && findMatchingResource(matchedLeft, remainingRightResources) == res) {
 				remainingLeftResources.remove(matchedLeft);
 				remainingRightResources.remove(res);
-				if (matchedAncestor != null
-						&& findMatchingResource(matchedAncestor, remainingLeftResources) == res) {
+				if (matchedAncestor != null) {
 					remainingAncestorResources.remove(matchedAncestor);
 					MatchModel comparisonResult = doResourceMatch(matchedLeft, res, matchedAncestor, options);
 					if (comparisonResult != null) {
@@ -428,8 +425,7 @@ public final class MatchService {
 				}
 			} else {
 				remainingRightResources.remove(res);
-				if (matchedAncestor != null
-						&& findMatchingResource(matchedAncestor, remainingLeftResources) == res) {
+				if (matchedAncestor != null) {
 					final UnmatchModel unmatched = MatchFactory.eINSTANCE.createUnmatchModel();
 					unmatched.setSide(Side.RIGHT);
 					unmatched.getRoots().addAll(getResourceRoots(res));
