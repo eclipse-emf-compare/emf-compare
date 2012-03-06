@@ -52,8 +52,7 @@ public class SaveSerializeTest extends TestCase {
 		try {
 			inputDir = new File(FileLocator.toFileURL(
 					EMFCompareTestPlugin.getDefault().getBundle().getEntry(INPUT_DIRECTORY)).getFile());
-			outputDirectory = FileLocator.toFileURL(
-					EMFCompareTestPlugin.getDefault().getBundle().getEntry("/data")).getFile();
+			outputDirectory = System.getProperty("java.io.tmpdir");
 		} catch (IOException e) {
 			// shouldn't happen
 			assert false;
@@ -68,8 +67,8 @@ public class SaveSerializeTest extends TestCase {
 	}
 
 	/**
-	 * Tests {@link ModelUtils#save(EObject, String)} with <code>null</code> as the object to save. Expects
-	 * a {@link NullPointerException} to be thrown.
+	 * Tests {@link ModelUtils#save(EObject, String)} with <code>null</code> as the object to save. Expects a
+	 * {@link NullPointerException} to be thrown.
 	 */
 	public void testSaveNullRoot() {
 		try {
@@ -126,8 +125,8 @@ public class SaveSerializeTest extends TestCase {
 	}
 
 	/**
-	 * Tests {@link ModelUtils#serialize(EObject)} with <code>null</code> as the object to serialize.
-	 * Expects a {@link NullPointerException} to be thrown.
+	 * Tests {@link ModelUtils#serialize(EObject)} with <code>null</code> as the object to serialize. Expects
+	 * a {@link NullPointerException} to be thrown.
 	 */
 	public void testSerializeNullRoot() {
 		try {

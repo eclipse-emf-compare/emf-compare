@@ -19,7 +19,6 @@ import java.util.UUID;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -49,9 +48,6 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
  * @author smccants
  */
 public class MergeTests extends TestCase {
-	/** We'll use the test plugin's "data" folder in order to save temporary resources created by the tests. */
-	private static final String TEMPORARY_DATA_FOLDER = "/data"; //$NON-NLS-1$
-
 	/**
 	 * Can we find a changed reference correctly? This is the reference changing, not just the contents of the
 	 * reference.
@@ -61,14 +57,10 @@ public class MergeTests extends TestCase {
 	public void testNonContainmentReferenceChange() throws InterruptedException {
 		// Build the left holder
 		ResourceSet holderResourceSet = new ResourceSetImpl();
+
+		// Makes the URI Similarity not cause problems
 		Resource holder1Resource = holderResourceSet.createResource(URI
-				.createFileURI("/tmp/holder1asdfasdfasdfasdfasdfasdfadsfasdfasdfasdfasdfasdfasdfasdf")); // Makes
-																											// the
-																											// URI
-																											// Similarity
-																											// not
-																											// cause
-																											// problems
+				.createFileURI("/tmp/holder1asdfasdfasdfasdfasdfasdfadsfasdfasdfasdfasdfasdfasdfasdf"));
 		StringHolder holder1 = ExternalFactory.eINSTANCE.createStringHolder();
 		holder1.setName("holder1");
 		holder1Resource.getContents().add(holder1);
@@ -182,14 +174,9 @@ public class MergeTests extends TestCase {
 	public void testAddNewLeaf() throws InterruptedException {
 		// Build the non-containment holders
 		ResourceSet holderResourceSet = new ResourceSetImpl();
+		// Makes the URI Similarity not cause problems
 		Resource holder1Resource = holderResourceSet.createResource(URI
-				.createFileURI("/tmp/holder1asdfasdfasdfasdfasdfasdfadsfasdfasdfasdfasdfasdfasdfasdf")); // Makes
-																											// the
-																											// URI
-																											// Similarity
-																											// not
-																											// cause
-																											// problems
+				.createFileURI("/tmp/holder1asdfasdfasdfasdfasdfasdfadsfasdfasdfasdfasdfasdfasdfasdf"));
 		StringHolder noncontainmentHolder1 = ExternalFactory.eINSTANCE.createStringHolder();
 		noncontainmentHolder1.setName("non-containment holder1111111111111111111"); // Extra ones to make sure
 																					// name comparison fails
@@ -997,14 +984,9 @@ public class MergeTests extends TestCase {
 
 		// Build the left holder
 		ResourceSet nonHolderResourceSet = new ResourceSetImpl();
+		// Makes the URI Similarity not cause problems
 		Resource nonHolder1Resource = nonHolderResourceSet.createResource(URI
-				.createFileURI("/tmp/holder1asdfasdfasdfasdfasdfasdfadsfasdfasdfasdfasdfasdfasdfasdf")); // Makes
-																											// the
-																											// URI
-																											// Similarity
-																											// not
-																											// cause
-																											// problems
+				.createFileURI("/tmp/holder1asdfasdfasdfasdfasdfasdfadsfasdfasdfasdfasdfasdfasdfasdf"));
 		StringHolder nonHolder1 = ExternalFactory.eINSTANCE.createStringHolder();
 		String nonHolderName = "non-holder1";
 		nonHolder1.setName(nonHolderName);
@@ -1091,8 +1073,7 @@ public class MergeTests extends TestCase {
 	}
 
 	private String getTemporaryDataAbsolutePath() throws IOException {
-		return FileLocator.toFileURL(
-				EMFCompareTestPlugin.getDefault().getBundle().getEntry(TEMPORARY_DATA_FOLDER)).getFile();
+		return System.getProperty("java.io.tmpdir");
 
 	}
 }

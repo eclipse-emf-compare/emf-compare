@@ -17,7 +17,6 @@ import java.io.PrintStream;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -74,10 +73,10 @@ public class EMFComparePluginTest extends TestCase {
 				expectedSeverity = IStatus.WARNING;
 			blocker = !blocker;
 
-			assertEquals("Unexpected message of the logged exception.", expectedMessage, loggedStatus
-					.getMessage());
-			assertEquals("Unexpected severity of the logged exception.", expectedSeverity, loggedStatus
-					.getSeverity());
+			assertEquals("Unexpected message of the logged exception.", expectedMessage,
+					loggedStatus.getMessage());
+			assertEquals("Unexpected severity of the logged exception.", expectedSeverity,
+					loggedStatus.getSeverity());
 			assertEquals("Exception logged with unexpected plug-in ID.", EMFComparePlugin.PLUGIN_ID,
 					loggedStatus.getPlugin());
 		}
@@ -98,10 +97,10 @@ public class EMFComparePluginTest extends TestCase {
 				EMFComparePlugin.log(new CoreException(coreExceptionStatus), true);
 				System.setErr(systemErr);
 
-				assertEquals("Unexpected message of the logged core exception.", message, loggedStatus
-						.getMessage());
-				assertEquals("Unexpected severity of the logged core exception.", severity, loggedStatus
-						.getSeverity());
+				assertEquals("Unexpected message of the logged core exception.", message,
+						loggedStatus.getMessage());
+				assertEquals("Unexpected severity of the logged core exception.", severity,
+						loggedStatus.getSeverity());
 				assertEquals("Core exception logged with unexpected plug-in ID.",
 						EMFCompareTestPlugin.PLUGIN_ID, loggedStatus.getPlugin());
 			}
@@ -178,10 +177,10 @@ public class EMFComparePluginTest extends TestCase {
 				expectedSeverity = IStatus.WARNING;
 			blocker = !blocker;
 
-			assertEquals("Unexpected message of the logged message.", expectedMessage, loggedStatus
-					.getMessage());
-			assertEquals("Unexpected severity of the logged message.", expectedSeverity, loggedStatus
-					.getSeverity());
+			assertEquals("Unexpected message of the logged message.", expectedMessage,
+					loggedStatus.getMessage());
+			assertEquals("Unexpected severity of the logged message.", expectedSeverity,
+					loggedStatus.getSeverity());
 			assertEquals("Message logged with unexpected plug-in ID.", EMFComparePlugin.PLUGIN_ID,
 					loggedStatus.getPlugin());
 		}
@@ -208,16 +207,16 @@ public class EMFComparePluginTest extends TestCase {
 			blocker = !blocker;
 
 			assertEquals("Unexpected message logged.", message, loggedStatus.getMessage());
-			assertEquals("Unexpected severity of the logged message.", expectedSeverity, loggedStatus
-					.getSeverity());
+			assertEquals("Unexpected severity of the logged message.", expectedSeverity,
+					loggedStatus.getSeverity());
 			assertEquals("Message logged with unexpected plug-in ID.", EMFComparePlugin.PLUGIN_ID,
 					loggedStatus.getPlugin());
 		}
 	}
 
 	/**
-	 * Tests the behavior of {@link EMFComparePlugin#log(IStatus)} with <code>null</code> as the status to
-	 * be logged. Expects a {@link NullPointerException} to be thrown with the given status' error message.
+	 * Tests the behavior of {@link EMFComparePlugin#log(IStatus)} with <code>null</code> as the status to be
+	 * logged. Expects a {@link NullPointerException} to be thrown with the given status' error message.
 	 */
 	public void testLogStatusNullStatus() {
 		try {
@@ -242,10 +241,10 @@ public class EMFComparePluginTest extends TestCase {
 				EMFComparePlugin.log(status);
 				System.setErr(systemErr);
 
-				assertEquals("Unexpected message of the logged exception.", message, loggedStatus
-						.getMessage());
-				assertEquals("Unexpected severity of the logged exception.", severity, loggedStatus
-						.getSeverity());
+				assertEquals("Unexpected message of the logged exception.", message,
+						loggedStatus.getMessage());
+				assertEquals("Unexpected severity of the logged exception.", severity,
+						loggedStatus.getSeverity());
 				assertEquals("Exception logged with unexpected plug-in ID.", EMFCompareTestPlugin.PLUGIN_ID,
 						loggedStatus.getPlugin());
 			}
@@ -270,8 +269,7 @@ public class EMFComparePluginTest extends TestCase {
 
 		try {
 			// Creates temporary error log
-			final File dataDir = new File(FileLocator.toFileURL(
-					EMFCompareTestPlugin.getDefault().getBundle().getEntry("/data")).getFile());
+			final File dataDir = new File(System.getProperty("java.io.tmpdir"));
 			temporaryLog = new File(dataDir.getAbsolutePath() + "/testLogErrorLog");
 			temporaryErr = new PrintStream(temporaryLog);
 		} catch (IOException e) {
