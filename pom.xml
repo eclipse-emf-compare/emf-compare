@@ -37,7 +37,7 @@
   </licenses>
 
   <properties>
-    <tycho-version>0.12.0</tycho-version>
+    <tycho-version>0.13.0</tycho-version>
   </properties>
 
 
@@ -69,6 +69,10 @@
     <module>plugins/org.eclipse.emf.compare.diagram.ui</module>
     <module>plugins/org.eclipse.emf.compare.diagram.ecoretools</module>
     
+    <module>plugins/org.eclipse.emf.compare.sysml</module>
+    <module>plugins/org.eclipse.emf.compare.sysml.edit</module>
+    <module>plugins/org.eclipse.emf.compare.sysml.tests</module>
+    <module>packaging/org.eclipse.emf.compare.sysml-feature</module>
     
     
     <module>plugins/org.eclipse.emf.compare.diff</module>
@@ -233,7 +237,7 @@
     <profile>
       <id>juno</id>
       <activation>
-          <activeByDefault>true</activeByDefault>
+          <activeByDefault>false</activeByDefault>
       </activation>
       <repositories>
         <repository><id>emf</id><layout>p2</layout>
@@ -285,9 +289,6 @@
 	   <url>http://download.eclipse.org/releases/indigo</url>          
         </repository>        
       </repositories>
-      <modules>
-	  <module>plugins/org.eclipse.emf.compare.mpatch.binding</module>    
-      </modules>
     </profile>
     
     

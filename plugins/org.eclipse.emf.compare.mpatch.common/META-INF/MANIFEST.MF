@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.core.resources;visibility:=reexport,
  org.eclipse.emf.compare.mpatch;visibility:=reexport,
  org.eclipse.emf.compare.mpatch.binding;visibility:=reexport,
  org.eclipse.ui.ide,
- org.eclipse.gmf.runtime.diagram.ui;resolution:=optional
+ org.eclipse.gmf.runtime.diagram.ui
 Export-Package: org.eclipse.emf.compare.mpatch.common.actions,
  org.eclipse.emf.compare.mpatch.common.util,
  org.eclipse.emf.compare.mpatch.extension

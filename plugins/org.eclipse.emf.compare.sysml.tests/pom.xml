@@ -9,10 +9,10 @@
     <relativePath>../..</relativePath>
   </parent>
   <groupId>org.eclipse.emf.compare</groupId>
-  <artifactId>org.eclipse.emf.compare.uml2.tests</artifactId>
+  <artifactId>org.eclipse.emf.compare.sysml.tests</artifactId>
   <version>1.3.0-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
- 
+  
   <build>
     <plugins>
         <plugin>
@@ -21,7 +21,7 @@
                 <version>${tycho-version}</version>
                 <configuration>
                         <includes>
-				<include>org/eclipse/emf/compare/uml2/diff/test/suite/AllUML2Tests.class</include>
+				<include>org/eclipse/emf/compare/sysml/tests/TestSysMLProfile.class</include>
                         </includes>     
                         <useUIHarness>false</useUIHarness>
                         <useUIThread>false</useUIThread>

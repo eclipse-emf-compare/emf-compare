@@ -1,0 +1,10 @@
+h1. Building
+
+producing binaries
+
+mvn clean package -Pindigo
+
+checking the tests
+
+mvn verify -Pindigo   --fail-at-end
+

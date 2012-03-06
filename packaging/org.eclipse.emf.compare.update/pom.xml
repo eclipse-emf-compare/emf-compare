@@ -50,6 +50,7 @@
           </execution>
         </executions>
       </plugin>
+		<!--
       	<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
@@ -61,14 +62,12 @@
 						</goals>
 						<configuration>
 							<tasks>
-								<!-- create a properties file for promotion process -->
 								<mkdir dir="${project.build.directory}/promotion"/>
 								<echo file="${project.build.directory}/promotion/promote.properties"
 									message="#Intent promotion process.${line.separator}
 build.alias=${BUILD_ALIAS}${line.separator}
 build.qualifier=${env.BUILD_TYPE}${buildQualifier}${line.separator}
 version=${unqualifiedVersion}"/>
-								<!-- copy necessary scripts to archive location -->
 								<copy file="addDownloadStats.xsl" todir="${project.build.directory}/promotion"/>
 								<copy file="promoter.xml" todir="${project.build.directory}/promotion" />
 							</tasks>
@@ -76,6 +75,7 @@ version=${unqualifiedVersion}"/>
 					</execution>
 				</executions>
 			</plugin>
+			-->
 		</plugins>
 	</build>
 
