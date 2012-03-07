@@ -112,8 +112,6 @@ public class UMLExecutionSpecificationChangeRightTargetFactory extends AbstractD
 			UMLExecutionSpecificationChangeRightTarget ret, EcoreUtil.CrossReferencer crossReferencer) {
 		hideCrossReferences(occurrenceSpecification,
 				DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT, ret, crossReferencer);
-		hideCrossReferences(occurrenceSpecification.getEvent(),
-				DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT, ret, crossReferencer);
 	}
 
 }

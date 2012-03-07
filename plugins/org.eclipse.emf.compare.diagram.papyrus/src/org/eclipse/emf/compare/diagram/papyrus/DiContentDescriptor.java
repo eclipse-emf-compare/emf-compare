@@ -17,7 +17,7 @@ import java.io.Reader;
 
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.XMLContentDescriber;
-import org.eclipse.papyrus.sashwindows.di.DiPackage;
+import org.eclipse.papyrus.infra.core.sashwindows.di.DiPackage;
 
 /**
  * Content XML for Papyrus diagrams.

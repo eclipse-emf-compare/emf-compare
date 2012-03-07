@@ -20,7 +20,7 @@ import org.eclipse.emf.compare.diagram.ui.mergeviewer.GMFContentMergeViewerTab;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.notation.Diagram;
-import org.eclipse.papyrus.sashwindows.di.PageRef;
+import org.eclipse.papyrus.infra.core.sashwindows.di.PageRef;
 import org.eclipse.swt.widgets.Composite;
 
 /**

@@ -112,7 +112,5 @@ public class UMLExecutionSpecificationChangeLeftTargetFactory extends AbstractDi
 			UMLExecutionSpecificationChangeLeftTarget ret, EcoreUtil.CrossReferencer crossReferencer) {
 		hideCrossReferences(occurrenceSpecification,
 				DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT, ret, crossReferencer);
-		hideCrossReferences(occurrenceSpecification.getEvent(),
-				DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT, ret, crossReferencer);
 	}
 }

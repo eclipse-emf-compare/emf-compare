@@ -9,7 +9,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.compare,
  org.eclipse.emf.compare.ui,
  org.eclipse.emf.compare.diff,
- org.eclipse.papyrus.sasheditor.di,
+ org.eclipse.papyrus.infra.core.sasheditor.di,
  org.eclipse.gmf.runtime.notation,
  org.eclipse.gmf.runtime.diagram.core,
  org.eclipse.gmf.runtime.diagram.ui
