@@ -63,6 +63,7 @@
     
     <module>plugins/org.eclipse.emf.compare.logical</module>
     <module>plugins/org.eclipse.emf.compare.logical.ui</module>
+    <module>plugins/org.eclipse.emf.compare.logical.tests</module>
     <module>plugins/org.eclipse.emf.compare.diagram</module>
     <module>plugins/org.eclipse.emf.compare.diagram.edit</module>
     
