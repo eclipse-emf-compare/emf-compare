@@ -6,5 +6,5 @@ mvn clean package -Pindigo
 
 checking the tests
 
-mvn verify -Pindigo   --fail-at-end
+mvn verify -Pindigo --fail-at-end -Dmaven.test.failure.ignore=true 
 
