@@ -41,7 +41,6 @@
 			<useUIThread>false</useUIThread>
 			<argLine>-Xmx1024m</argLine>
 			<argLine>-XX:MaxPermSize=256m</argLine>			
-            <testFailureIgnore>true</testFailureIgnore>							
 		</configuration>
 	</plugin>
     </plugins>
