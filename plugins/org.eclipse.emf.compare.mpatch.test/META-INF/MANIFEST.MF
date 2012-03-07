@@ -11,6 +11,7 @@ Require-Bundle: org.eclipse.emf.compare.mpatch.emfdiff2mpatch,
  org.eclipse.emf.query,
  org.eclipse.uml2.uml,
  org.eclipse.emf.compare.mpatch.emfdiff2mpatch.generic,
+ org.eclipse.emf.compare.mpatch.example,
  org.eclipse.uml2.uml.resources,
  org.eclipse.emf.compare.mpatch.test.eachonce
 Bundle-ActivationPolicy: lazy
