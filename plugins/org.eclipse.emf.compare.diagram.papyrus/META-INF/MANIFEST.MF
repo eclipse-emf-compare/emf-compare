@@ -7,17 +7,17 @@ Bundle-Activator: org.eclipse.emf.compare.diagram.papyrus.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare.diagram,
  org.eclipse.gmf.runtime.notation,
- org.eclipse.papyrus.diagram.activity,
- org.eclipse.papyrus.diagram.clazz,
- org.eclipse.papyrus.diagram.communication,
- org.eclipse.papyrus.diagram.component,
- org.eclipse.papyrus.diagram.composite,
- org.eclipse.papyrus.diagram.deployment,
- org.eclipse.papyrus.diagram.profile,
- org.eclipse.papyrus.diagram.sequence,
- org.eclipse.papyrus.diagram.statemachine,
- org.eclipse.papyrus.diagram.usecase,
+ org.eclipse.papyrus.uml.diagram.activity,
+ org.eclipse.papyrus.uml.diagram.clazz,
+ org.eclipse.papyrus.uml.diagram.communication,
+ org.eclipse.papyrus.uml.diagram.component,
+ org.eclipse.papyrus.uml.diagram.composite,
+ org.eclipse.papyrus.uml.diagram.deployment,
+ org.eclipse.papyrus.uml.diagram.profile,
+ org.eclipse.papyrus.uml.diagram.sequence,
+ org.eclipse.papyrus.uml.diagram.statemachine,
+ org.eclipse.papyrus.uml.diagram.usecase,
  org.eclipse.gmf.runtime.diagram.ui,
- org.eclipse.papyrus.diagram.common
+ org.eclipse.papyrus.uml.diagram.common
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Eclipse Modeling Project

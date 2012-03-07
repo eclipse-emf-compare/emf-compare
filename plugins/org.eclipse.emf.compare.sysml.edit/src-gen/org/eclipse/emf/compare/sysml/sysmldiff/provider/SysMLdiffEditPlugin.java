@@ -18,8 +18,6 @@ import org.eclipse.emf.compare.diff.provider.DiffEditPlugin;
 import org.eclipse.emf.compare.match.metamodel.provider.MatchEditPlugin;
 import org.eclipse.emf.compare.uml2diff.provider.UML2DiffEditPlugin;
 import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
-import org.eclipse.papyrus.sysml.provider.SysmlEditPlugin;
-import org.eclipse.papyrus.uml.standard.provider.standardEditPlugin;
 import org.eclipse.uml2.uml.edit.UMLEditPlugin;
 
 /**
@@ -49,8 +47,7 @@ public final class SysMLdiffEditPlugin extends EMFPlugin {
 	 */
 	public SysMLdiffEditPlugin() {
 		super(new ResourceLocator[] {DiffEditPlugin.INSTANCE, EcoreEditPlugin.INSTANCE,
-				MatchEditPlugin.INSTANCE, standardEditPlugin.INSTANCE, SysmlEditPlugin.INSTANCE,
-				UMLEditPlugin.INSTANCE, UML2DiffEditPlugin.INSTANCE,});
+				MatchEditPlugin.INSTANCE, UMLEditPlugin.INSTANCE, UML2DiffEditPlugin.INSTANCE,});
 	}
 
 	/**

@@ -13,10 +13,10 @@ package org.eclipse.emf.compare.diagram.papyrus;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.papyrus.diagram.clazz.edit.parts.UMLEditPartFactory;
-import org.eclipse.papyrus.diagram.common.editpolicies.IMaskManagedLabelEditPolicy;
-import org.eclipse.papyrus.umlutils.ICustomAppearence;
-import org.eclipse.papyrus.umlutils.PropertyUtil;
+import org.eclipse.papyrus.uml.diagram.clazz.edit.parts.UMLEditPartFactory;
+import org.eclipse.papyrus.uml.diagram.common.editpolicies.IMaskManagedLabelEditPolicy;
+import org.eclipse.papyrus.uml.tools.utils.ICustomAppearence;
+import org.eclipse.papyrus.uml.tools.utils.PropertyUtil;
 import org.eclipse.uml2.uml.Property;
 
 /**

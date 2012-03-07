@@ -21,10 +21,8 @@ import org.eclipse.emf.compare.uml2diff.UML2DiffFactory;
 import org.eclipse.emf.compare.uml2diff.UMLMessageChangeLeftTarget;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.uml2.uml.Event;
 import org.eclipse.uml2.uml.Message;
 import org.eclipse.uml2.uml.MessageEnd;
-import org.eclipse.uml2.uml.OccurrenceSpecification;
 import org.eclipse.uml2.uml.UMLPackage;
 
 /**
@@ -111,11 +109,6 @@ public class UMLMessageChangeLeftTargetFactory extends AbstractDiffExtensionFact
 				hiddingExtension, crossReferencer);
 		hideCrossReferences(messageEnd, DiffPackage.Literals.REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET,
 				hiddingExtension, COVERED_BY_PREDICATE, crossReferencer);
-		if (messageEnd instanceof OccurrenceSpecification) {
-			final Event event = ((OccurrenceSpecification)messageEnd).getEvent();
-			hideCrossReferences(event, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT,
-					hiddingExtension, crossReferencer);
-		}
 	}
 
 }

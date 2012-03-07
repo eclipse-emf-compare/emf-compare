@@ -39,8 +39,6 @@ import org.eclipse.emf.compare.uml2.diff.internal.extension.profile.UMLStereotyp
 import org.eclipse.emf.compare.uml2.diff.internal.extension.profile.UMLStereotypeReferenceOrderChangeFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.profile.UMLStereotypeUpdateAttributeFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.profile.UMLStereotypeUpdateReferenceFactory;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.sequence.UMLDestructionEventChangeLeftTargetFactory;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.sequence.UMLDestructionEventChangeRightTargetFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.sequence.UMLExecutionSpecificationChangeLeftTargetFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.sequence.UMLExecutionSpecificationChangeRightTargetFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.sequence.UMLIntervalConstraintChangeLeftTargetFactory;
@@ -57,8 +55,6 @@ import org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChangeLeftTarget;
 import org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLDependencyChangeLeftTarget;
 import org.eclipse.emf.compare.uml2diff.UMLDependencyChangeRightTarget;
-import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeLeftTarget;
-import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLElementChangeLeftTarget;
 import org.eclipse.emf.compare.uml2diff.UMLElementChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChangeLeftTarget;
@@ -142,10 +138,6 @@ public final class DiffExtensionFactoryRegistry {
 				new UMLIntervalConstraintChangeLeftTargetFactory(engine));
 		dataset.put(UMLIntervalConstraintChangeRightTarget.class,
 				new UMLIntervalConstraintChangeRightTargetFactory(engine));
-		dataset.put(UMLDestructionEventChangeLeftTarget.class,
-				new UMLDestructionEventChangeLeftTargetFactory(engine));
-		dataset.put(UMLDestructionEventChangeRightTarget.class,
-				new UMLDestructionEventChangeRightTargetFactory(engine));
 		dataset.put(UMLMessageChangeLeftTarget.class, new UMLMessageChangeLeftTargetFactory(engine));
 		dataset.put(UMLMessageChangeRightTarget.class, new UMLMessageChangeRightTargetFactory(engine));
 

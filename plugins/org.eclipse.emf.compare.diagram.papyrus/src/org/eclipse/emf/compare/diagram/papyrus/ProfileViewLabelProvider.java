@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.diagram.papyrus;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.papyrus.diagram.profile.edit.parts.UMLEditPartFactory;
+import org.eclipse.papyrus.uml.diagram.profile.edit.parts.UMLEditPartFactory;
 
 /**
  * View label provider for Profile.
