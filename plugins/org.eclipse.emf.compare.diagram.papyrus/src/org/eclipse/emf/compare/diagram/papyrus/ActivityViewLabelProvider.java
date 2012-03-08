@@ -12,8 +12,8 @@ package org.eclipse.emf.compare.diagram.papyrus;
 
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.papyrus.infra.gmfdiag.common.editpolicies.IMaskManagedLabelEditPolicy;
 import org.eclipse.papyrus.uml.diagram.activity.edit.parts.UMLEditPartFactory;
-import org.eclipse.papyrus.uml.diagram.common.editpolicies.IMaskManagedLabelEditPolicy;
 import org.eclipse.papyrus.uml.tools.utils.ICustomAppearence;
 import org.eclipse.papyrus.uml.tools.utils.PropertyUtil;
 import org.eclipse.uml2.uml.Property;
@@ -43,7 +43,6 @@ public class ActivityViewLabelProvider extends AbstractUMLViewLabelProvider {
 	 *
 	 * @see org.eclipse.emf.compare.diagram.papyrus.AbstractUMLViewLabelProvider#getLabelSwitch(org.eclipse.papyrus.diagram.common.editpolicies.IMaskManagedLabelEditPolicy)
 	 */
-	@Override
 	protected LabelSwitch getLabelSwitch(IMaskManagedLabelEditPolicy labelEditPolicy) {
 		return new ActivityLabelSwitch(labelEditPolicy);
 	}
