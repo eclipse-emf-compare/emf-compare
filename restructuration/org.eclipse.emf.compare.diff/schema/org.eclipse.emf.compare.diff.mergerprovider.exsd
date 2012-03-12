@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.emf.compare.diff">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.emf.compare.diff" id="org.eclipse.emf.compare.diff.MergerProvider" name="org.eclipse.emf.compare.diff.MergerProvider"/>
+      </appInfo>
+      <documentation>
+         This extension point allows a plug-in to register a merger provider to redefine the default mergers or provide mergers for its own DiffElements.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="mergerprovider"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="mergerprovider">
+      <complexType>
+         <attribute name="fileExtension" type="string">
+            <annotation>
+               <documentation>
+                  Comma separated list of the extensions this merger provider targets. * for any file extension.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="mergerProviderClass" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a Java class implementing &lt;code&gt;org.eclipse.emf.compare.diff.merge.api.IMergerProvider&lt;/code&gt;.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.diff.merge.api.IMergerProvider"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="priority" use="default" value="low">
+            <annotation>
+               <documentation>
+                  The priority of this engine. Values can be &lt;code&gt;lowest&lt;/code&gt;, &lt;code&gt;low&lt;/code&gt;, &lt;code&gt;normal&lt;/code&gt;, &lt;code&gt;high&lt;/code&gt;, &lt;code&gt;highest&lt;/code&gt;.
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="lowest">
+                  </enumeration>
+                  <enumeration value="low">
+                  </enumeration>
+                  <enumeration value="normal">
+                  </enumeration>
+                  <enumeration value="high">
+                  </enumeration>
+                  <enumeration value="highest">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         0.8
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+</schema>

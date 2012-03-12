@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--
+ Copyright (c) 2010, 2011 Technical University of Denmark.
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ http://www.eclipse.org/legal/epl-v10.html 
+
+ Contributors:
+    Patrick Koenemann, DTU Informatics - initial API and implementation
+   
+ $Id: preferences.html,v 1.1 2010/09/30 20:31:24 pkonemann Exp $
+-->
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>MPatch Preferences</title>
+</head>
+
+<body>
+<h1>MPatch Preferences page</h1>
+
+<p>The framework for MPatches is modular and can be extended with several extensions. Since most extensions are required, default implementations for them are already shipped. The preferences dialog defines the default choice for each extension point (in fact, the framework throws warnings if for some extension points there is no default extension selected).</p>
+<p>Please open <em>Window</em> -> <em>Preferences</em> -> <em>EMF Compare</em> -> <em>MPatch</em>:</p>
+<p style="text-align: center;"><img src="images/preferences.png" border="0" alt="Preferences page" /></p>
+<ul>
+<li>Several <em>transformations</em> in the MPatchcreation process can be performed. The default selection and order is defined here.</li>
+<li><em>Symbolic references</em> are used to replace the direct model references.</li>
+<li><em>Model descriptors</em> are used to store sub-models in the differences, for example added or removed model elements.</li>
+<li>The strategy for <em>symbolic reference resolution</em> during the application of differences can be chosen here.</li>
+<li>The <em>difference application engine</em> can be chosen here.</li>
+</ul>
+<p>The important selections for normal use are the first two options. Please see the <a href="http://modeldiff.imm.dtu.dk/modeldiff/index.php?option=com_content&view=article&id=61&Itemid=66">transformation page</a> for details. The (outdated) <a href="http://modeldiff.imm.dtu.dk/modeldiff/images/docs/design_1.0.pdf" target='_blank'>design document</a> contains further technical details about the design and how to add extensions.</p>
+
+</body>
+</html>

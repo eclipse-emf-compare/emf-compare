@@ -1,0 +1,21 @@
+This class will need a set of libraries to both compile and run 
+successfully.
+
+1) Compilation
+  The following list of libraries will need to be in the classpath in 
+  order to compile this class:
+    - org.eclipse.emf.common 2.3 or higher
+    - org.eclipse.emf.ecore 2.3 or higher
+    - org.eclipse.emf.compare 0.8 or higher
+    - org.eclipse.emf.compare.diff 0.8 or higher
+    - org.eclipse.emf.compare.match 0.8 or higher
+  
+2) Launch
+  All six aforementionned libraries will be required to be in the 
+  classpath for this class to run. Additionally, the following libraries 
+  are required:
+    - org.eclipse.emf.ecore.xmi 2.3 or higher
+  
+3) Export
+  META-INF/MANIFEST.MF will need to be updated with the accurate name of 
+  the required jars if this project is to be exported as a jar file.

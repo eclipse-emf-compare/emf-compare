@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<!--
+Copyright (c) 2006, 2012 Obeo.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+    Obeo - initial API and implementation
+-->
+<plugin>
+   <extension-point id="org.eclipse.emf.compare.match.engine" name="org.eclipse.emf.compare.match.engine" schema="schema/org.eclipse.emf.compare.match.engine.exsd"/>
+   <extension-point id="org.eclipse.emf.compare.match.resourcefilters" name="org.eclipse.emf.compare.match.resourcefilters" schema="schema/resourcefilters.exsd"/>
+
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http://www.eclipse.org/emf/compare/match/1.1" 
+       class = "org.eclipse.emf.compare.match.metamodel.MatchPackage"
+       genModel = "model/match.genmodel" /> 
+  </extension>
+  
+  <extension
+         point="org.eclipse.emf.compare.match.engine">
+      <matchengine
+            engineClass="org.eclipse.emf.compare.match.engine.GenericMatchEngine"
+            fileExtension="*"
+            icon="icons/full/obj16/MatchModel.gif"
+            label="Generic Matching Engine"/>
+   </extension>
+
+ 
+  <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
+    <factory 
+       uri = "http://www.eclipse.org/emf/compare/match/1.1" 
+       class = "org.eclipse.emf.compare.match.metamodel.provider.MatchItemProviderAdapterFactory" 
+       supportedTypes = 
+         "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
+          org.eclipse.emf.edit.provider.IStructuredItemContentProvider
+          org.eclipse.emf.edit.provider.ITreeItemContentProvider
+          org.eclipse.emf.edit.provider.IItemLabelProvider
+          org.eclipse.emf.edit.provider.IItemPropertySource" />
+  </extension> 
+  
+ 
+</plugin>
+

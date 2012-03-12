@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diff:ModelInputSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.0" xmlns:match="http://www.eclipse.org/emf/compare/match/1.0" date="2007-06-06T11:10:04.232+0200">
+  <diff>
+    <ownedElements xsi:type="diff:DiffGroup">
+      <subDiffElements xsi:type="diff:UpdateAttribute">
+        <attribute href="http://www.eclipse.org/emf/compare/diff/1.0#//ModelInputSnapshot/date"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#/"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#/"/>
+      </subDiffElements>
+      <subDiffElements xsi:type="diff:DiffGroup">
+        <subDiffElements xsi:type="diff:RemoveModelElement">
+          <rightParent href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@diff"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@diff/@ownedElements.0"/>
+        </subDiffElements>
+        <subDiffElements xsi:type="diff:AddModelElement">
+          <leftParent href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@diff"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@diff/@ownedElements.0"/>
+        </subDiffElements>
+        <leftParent href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@diff"/>
+      </subDiffElements>
+      <subDiffElements xsi:type="diff:DiffGroup">
+        <subDiffElements xsi:type="diff:DiffGroup">
+          <subDiffElements xsi:type="diff:DiffGroup">
+            <subDiffElements xsi:type="diff:DiffGroup">
+              <subDiffElements xsi:type="diff:RemoveModelElement">
+                <rightParent href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.2"/>
+              </subDiffElements>
+              <subDiffElements xsi:type="diff:AddModelElement">
+                <leftParent href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.2"/>
+              </subDiffElements>
+              <leftParent href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0"/>
+            </subDiffElements>
+            <leftParent href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0"/>
+          </subDiffElements>
+          <leftParent href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0"/>
+        </subDiffElements>
+        <leftParent href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match"/>
+      </subDiffElements>
+      <leftParent href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#/"/>
+    </ownedElements>
+  </diff>
+  <match>
+    <matchedElements xsi:type="match:Match2Elements" similarity="0.896551724137931">
+      <subMatchElements xsi:type="match:Match2Elements" similarity="0.5548387096774194">
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@diff"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@diff"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="0.9829787234042554">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <subMatchElements xsi:type="match:Match2Elements" similarity="0.9757575757575758">
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.0"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.0"/>
+              </subMatchElements>
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.1"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.1"/>
+              </subMatchElements>
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.3"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.3"/>
+              </subMatchElements>
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.4"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.4"/>
+              </subMatchElements>
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.5"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.5"/>
+              </subMatchElements>
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.6"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.6"/>
+              </subMatchElements>
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.7"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.7"/>
+              </subMatchElements>
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.8"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.8"/>
+              </subMatchElements>
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.9"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.9"/>
+              </subMatchElements>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0"/>
+            </subMatchElements>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0"/>
+          </subMatchElements>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0"/>
+        </subMatchElements>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@match"/>
+      </subMatchElements>
+      <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#/"/>
+      <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#/"/>
+    </matchedElements>
+    <unMatchedElements>
+      <element href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@diff/@ownedElements.0"/>
+    </unMatchedElements>
+    <unMatchedElements>
+      <element href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.2"/>
+    </unMatchedElements>
+    <unMatchedElements>
+      <element href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@diff/@ownedElements.0"/>
+    </unMatchedElements>
+    <unMatchedElements>
+      <element href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.2"/>
+    </unMatchedElements>
+  </match>
+</diff:ModelInputSnapshot>

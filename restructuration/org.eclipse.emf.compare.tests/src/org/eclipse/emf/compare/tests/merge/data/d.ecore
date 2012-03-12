@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="merge"
+    nsURI="http://www.eclipse.org/emf/compare/tests" nsPrefix="merge">
+  <eAnnotations source="MySource">
+    <details key="enEntry" value="This is a new value&#xA;"/>
+  </eAnnotations>
+  <eClassifiers xsi:type="ecore:EClass" name="A Class" interface="true" eSuperTypes="#//Another%20Class"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Another Class">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="my" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ThirdClass">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="refToAClass" eType="#//A%20Class"/>
+  </eClassifiers>
+</ecore:EPackage>

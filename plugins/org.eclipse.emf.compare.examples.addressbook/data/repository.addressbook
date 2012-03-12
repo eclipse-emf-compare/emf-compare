@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="ASCII"?>
-<addressbook:Repository xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:addressbook="http://www.eclipse.org/emf/compare/examples/addressbook">
-  <head>
-    <peoples name="Jack The Ripper"/>
-  </head>
-</addressbook:Repository>

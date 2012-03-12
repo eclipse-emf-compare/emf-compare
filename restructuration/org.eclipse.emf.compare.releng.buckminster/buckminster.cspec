@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cs:cspec xmlns:cs="http://www.eclipse.org/buckminster/CSpec-1.0" name="org.eclipse.emf.compare.releng.buckminster" componentType="buckminster" version="1.3.0.qualifier">
+    <cs:dependencies>
+    	<cs:dependency name="com.google.collect" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.emf.ecore.editor" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.papyrus.sasheditor.di" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.papyrus.sysml" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.papyrus.sysml.edit" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.papyrus.diagram.activity" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.papyrus.diagram.clazz" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.papyrus.diagram.communication" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.papyrus.diagram.composite" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.papyrus.diagram.component" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.papyrus.diagram.deployment" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.papyrus.diagram.profile" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.papyrus.diagram.sequence" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.papyrus.diagram.statemachine" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.papyrus.diagram.usecase" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.papyrus.diagram.common" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.papyrus.uml.standard" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.papyrus.uml.standard.edit" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.emf.ecoretools.diagram" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.emf.query" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.gmf" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.emf.query.ocl" componentType="osgi.bundle"/>        
+        <cs:dependency name="org.eclipse.emf.codegen.ecore" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.emf.codegen.ecore.ui" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.emf.validation" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.jdt.junit4.runtime" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.ocl" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.pde.core" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.uml2.uml" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.uml2.uml.edit" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.uml2.uml.resources" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.pde.junit.runtime" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.platform" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.team.svn.ui" componentType="osgi.bundle"/>
+        <cs:dependency name="org.junit" componentType="osgi.bundle"/>
+        <cs:dependency name="org.junit4" componentType="osgi.bundle"/>
+    </cs:dependencies>
+    <cs:actions>
+        <cs:public name="setup.promoter" actor="ant">
+            <cs:actorProperties>
+                <cs:property key="buildFile" value="promoter.ant"/>
+                <cs:property key="targets" value="-setup.promoter"/>
+            </cs:actorProperties>
+            <cs:products alias="output" base="${buckminster.output}/promoter/"/>
+        </cs:public>
+    </cs:actions>
+</cs:cspec>

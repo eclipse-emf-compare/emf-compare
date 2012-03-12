@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.emf.compare.diff" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.emf.compare.diff" id="org.eclipse.emf.compare.diff.engine" name="org.eclipse.emf.compare.diff.engine"/>
+      </appInfo>
+      <documentation>
+         This extension point allows a plug-in to register a distinct match engine to adress specific comparison needs.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
+      <complexType>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="diffengine"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="diffengine">
+      <complexType>
+         <attribute name="fileExtension" type="string">
+            <annotation>
+               <documentation>
+                  Comma separated list of the extensions this engine targets. * for any file extension.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="contentType" type="string">
+            <annotation>
+               <documentation>
+                  Comma separated list of the content type this engine targets. * for any content type.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="namespace" type="string">
+            <annotation>
+               <documentation>
+                  Comma separated list of the namespaces this engine targets. * for any namespace.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="namespacePattern" type="string">
+            <annotation>
+               <documentation>
+                  A pattern representing the namespaces targetted by this engine.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="engineClass" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a Java class implementing &lt;code&gt;org.eclipse.emf.compare.diff.api.IDiffEngine&lt;/code&gt;.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.diff.api.IDiffEngine"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="priority" use="default" value="low">
+            <annotation>
+               <documentation>
+                  The priority of this engine. Values can be &lt;code&gt;lowest&lt;/code&gt;, &lt;code&gt;low&lt;/code&gt;, &lt;code&gt;normal&lt;/code&gt;, &lt;code&gt;high&lt;/code&gt;, &lt;code&gt;highest&lt;/code&gt;.
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="lowest">
+                  </enumeration>
+                  <enumeration value="low">
+                  </enumeration>
+                  <enumeration value="normal">
+                  </enumeration>
+                  <enumeration value="high">
+                  </enumeration>
+                  <enumeration value="highest">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+         <attribute name="label" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Human friendly name for this Diff Engine
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="icon" type="string">
+            <annotation>
+               <documentation>
+                  Icon that will be presented along with the label to the user when selecting the engine
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="resource"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         0.8
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+
+</schema>

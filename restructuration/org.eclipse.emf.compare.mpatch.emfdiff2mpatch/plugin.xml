@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+ Copyright (c) 2010, 2011 Technical University of Denmark.
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ http://www.eclipse.org/legal/epl-v10.html 
+ 
+ Contributors:
+    Patrick Koenemann, DTU Informatics - initial API and implementation
+-->
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.starttransformation"
+            nameFilter="*emfdiff"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.actions.StartTransformationAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.starttransformationaction"
+               label="Transform emfdiff to MPatch"
+               menubarPath="org.eclipse.emf.compare.mpatch.mpatchmenu/emfdiff2mpatch">
+         </action>
+         <menu
+               icon="icons/diff_16.gif"
+               id="org.eclipse.emf.compare.mpatch.mpatchmenu"
+               label="MPatch"
+               path="additions">
+         </menu>
+      </objectContribution>
+   </extension>
+   <!-- PK: deactivated for contribution because it is too intrusive.
+            discussion at: https://bugs.eclipse.org/bugs/show_bug.cgi?id=297812 - ->   
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.compareandtransform"
+            nameFilter="*"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.actions.CompareAndTransformAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.comapreandtransformaction"
+               label="Compare and create MPatch"
+               menubarPath="org.eclipse.emf.compare.mpatch.mpatchmenu/emfdiff2mpatch">
+         </action>
+         <menu
+               icon="icons/diff_16.gif"
+               id="org.eclipse.emf.compare.mpatch.mpatchmenu"
+               label="MPatch"
+               path="additions">
+         </menu>
+      </objectContribution>
+   </extension>
+   <!- - -->
+   <!-- PK: only for creating mpatches as a batch operation from all unchanged.* changed.* in a directory - ->   
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.batchmpatchcreation"
+            nameFilter="*"
+            objectClass="org.eclipse.core.resources.IContainer">
+         <action
+               class="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.actions.BatchCreateMPatchAction"
+               enablesFor="+"
+               id="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.batchmpatchcreationaction"
+               label="Create MPatches recursively for unchanged/changed.*"
+               menubarPath="org.eclipse.emf.compare.mpatch.mpatchmenu/emfdiff2mpatch">
+         </action>
+         <menu
+               icon="icons/diff_16.gif"
+               id="org.eclipse.emf.compare.mpatch.mpatchmenu"
+               label="MPatch"
+               path="additions">
+         </menu>
+      </objectContribution>
+   </extension>
+   <!- - -->
+   <extension
+         point="org.eclipse.emf.compare.ui.export">
+      <action
+            class="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.actions.EmfdiffExportAction"
+            fileExtension="*"
+            id="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.emfdiffexportaction">
+      </action>
+   </extension>
+
+<extension
+      point = "org.eclipse.ui.newWizards">
+ 	<wizard
+	   category="org.eclipse.emf.compare.mpatch.Wizard.ID"
+       id="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.wizard"
+       name="Transform emfdiff to MPatch"
+       class="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.wizards.EmfdiffExportWizard"
+       icon="icons/diff_16.gif">
+     <description>Transform emfdiff to MPatch</description>
+     <selection class="org.eclipse.core.resources.IResource" /> 
+   </wizard>
+</extension>
+
+<!-- PK: qvto transformation was replaced by Java transformation - ->
+   <extension
+         point="org.eclipse.m2m.qvt.oml.javaBlackboxUnits">
+      <library
+            class="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.lib.MPatchLibrary"
+            name="mpatchlibrary">
+         <metamodel
+               nsURI="http://www.eclipse.org/emf/compare/mpatch/1.0">
+         </metamodel>
+         <metamodel
+               nsURI="http://www.eclipse.org/emf/2002/Ecore">
+         </metamodel>
+      </library>
+   </extension>
+<!- - -->
+   <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            id="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.compareeditor"
+            targetID="org.eclipse.compare.CompareEditor">
+         <action
+               class="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.actions.DiffElementTransformAction"
+               icon="icons/diff_16.gif"
+               id="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.actions.CompareAction"
+               label="Create MPatch"
+               style="push"
+               toolbarPath="additions"
+               tooltip="Create an MPatch for the selected changes">
+         </action>
+      </editorContribution>
+   </extension>
+</plugin>

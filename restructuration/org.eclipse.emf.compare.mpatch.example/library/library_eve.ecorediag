@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" type="EcoreTools" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" type="1001">
+    <children xmi:type="notation:Node" type="4001"/>
+    <children xmi:type="notation:Node" type="5001">
+      <children xmi:type="notation:Node" type="2001">
+        <element xmi:type="ecore:EAttribute" href="library_eve.ecore#//CityLibrary/address"/>
+        <layoutConstraint xmi:type="notation:Location"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle"/>
+      <styles xmi:type="notation:SortingStyle"/>
+      <styles xmi:type="notation:FilteringStyle"/>
+    </children>
+    <children xmi:type="notation:Node" type="5002">
+      <styles xmi:type="notation:DrawerStyle"/>
+      <styles xmi:type="notation:SortingStyle"/>
+      <styles xmi:type="notation:FilteringStyle"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="library_eve.ecore#//CityLibrary"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="20" y="15"/>
+  </children>
+  <children xmi:type="notation:Node" type="1001">
+    <children xmi:type="notation:Node" type="4001"/>
+    <children xmi:type="notation:Node" type="5001">
+      <children xmi:type="notation:Node" type="2001">
+        <element xmi:type="ecore:EAttribute" href="library_eve.ecore#//Customer/name"/>
+        <layoutConstraint xmi:type="notation:Location"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle"/>
+      <styles xmi:type="notation:SortingStyle"/>
+      <styles xmi:type="notation:FilteringStyle"/>
+    </children>
+    <children xmi:type="notation:Node" type="5002">
+      <styles xmi:type="notation:DrawerStyle"/>
+      <styles xmi:type="notation:SortingStyle"/>
+      <styles xmi:type="notation:FilteringStyle"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="library_eve.ecore#//Customer"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="20" y="110"/>
+  </children>
+  <children xmi:type="notation:Node" type="1001">
+    <children xmi:type="notation:Node" type="4001"/>
+    <children xmi:type="notation:Node" type="5001">
+      <children xmi:type="notation:Node" type="2001">
+        <element xmi:type="ecore:EAttribute" href="library_eve.ecore#//Borrowable/title"/>
+        <layoutConstraint xmi:type="notation:Location"/>
+      </children>
+      <children xmi:type="notation:Node" type="2001">
+        <element xmi:type="ecore:EAttribute" href="library_eve.ecore#//Borrowable/copiesAvailable"/>
+        <layoutConstraint xmi:type="notation:Location"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle"/>
+      <styles xmi:type="notation:SortingStyle"/>
+      <styles xmi:type="notation:FilteringStyle"/>
+    </children>
+    <children xmi:type="notation:Node" type="5002">
+      <styles xmi:type="notation:DrawerStyle"/>
+      <styles xmi:type="notation:SortingStyle"/>
+      <styles xmi:type="notation:FilteringStyle"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="library_eve.ecore#//Borrowable"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="275" y="15"/>
+  </children>
+  <children xmi:type="notation:Node" type="1002">
+    <children xmi:type="notation:Node" type="4006"/>
+    <children xmi:type="notation:Node" type="5003">
+      <children xmi:type="notation:Node" type="2003">
+        <children xmi:type="notation:Node" type="4002"/>
+        <children xmi:type="notation:Node" type="5004">
+          <styles xmi:type="notation:DrawerStyle"/>
+          <styles xmi:type="notation:SortingStyle"/>
+          <styles xmi:type="notation:FilteringStyle"/>
+        </children>
+        <children xmi:type="notation:Node" type="5005">
+          <styles xmi:type="notation:DrawerStyle"/>
+          <styles xmi:type="notation:SortingStyle"/>
+          <styles xmi:type="notation:FilteringStyle"/>
+        </children>
+        <styles xmi:type="notation:ShapeStyle" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+        <element xmi:type="ecore:EClass" href="library_eve.ecore#//borrowables/CD"/>
+        <layoutConstraint xmi:type="notation:Bounds" x="30" y="3"/>
+      </children>
+      <children xmi:type="notation:Node" type="2003">
+        <children xmi:type="notation:Node" type="4002"/>
+        <children xmi:type="notation:Node" type="5004">
+          <styles xmi:type="notation:DrawerStyle"/>
+          <styles xmi:type="notation:SortingStyle"/>
+          <styles xmi:type="notation:FilteringStyle"/>
+        </children>
+        <children xmi:type="notation:Node" type="5005">
+          <styles xmi:type="notation:DrawerStyle"/>
+          <styles xmi:type="notation:SortingStyle"/>
+          <styles xmi:type="notation:FilteringStyle"/>
+        </children>
+        <styles xmi:type="notation:ShapeStyle" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+        <element xmi:type="ecore:EClass" href="library_eve.ecore#//borrowables/Magazine"/>
+        <layoutConstraint xmi:type="notation:Bounds" x="165" y="3"/>
+      </children>
+      <children xmi:type="notation:Node" type="2003">
+        <children xmi:type="notation:Node" type="4002"/>
+        <children xmi:type="notation:Node" type="5004">
+          <children xmi:type="notation:Node" type="2001">
+            <element xmi:type="ecore:EAttribute" href="library_eve.ecore#//borrowables/Book/authors"/>
+            <layoutConstraint xmi:type="notation:Location"/>
+          </children>
+          <styles xmi:type="notation:DrawerStyle"/>
+          <styles xmi:type="notation:SortingStyle"/>
+          <styles xmi:type="notation:FilteringStyle"/>
+          <layoutConstraint xmi:type="notation:Ratio" value="0.37777777777777777"/>
+        </children>
+        <children xmi:type="notation:Node" type="5005">
+          <styles xmi:type="notation:DrawerStyle"/>
+          <styles xmi:type="notation:SortingStyle"/>
+          <styles xmi:type="notation:FilteringStyle"/>
+          <layoutConstraint xmi:type="notation:Ratio" value="0.26666666666666666"/>
+        </children>
+        <styles xmi:type="notation:ShapeStyle" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+        <element xmi:type="ecore:EClass" href="library_eve.ecore#//borrowables/Book"/>
+        <layoutConstraint xmi:type="notation:Bounds" x="65" y="68" width="143" height="53"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle"/>
+      <styles xmi:type="notation:SortingStyle"/>
+      <styles xmi:type="notation:FilteringStyle"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" fontHeight="10" fillColor="12632256" lineColor="4210752"/>
+    <styles xmi:type="notation:MultiDiagramLinkStyle"/>
+    <element xmi:type="ecore:EPackage" href="library_eve.ecore#//borrowables"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="145" y="100" width="313" height="163"/>
+  </children>
+  <children xmi:type="notation:Shape" type="Note" description="Classes moved to sub-package" fillColor="14270350" transparency="0" lineColor="0" lineWidth="1">
+    <children xmi:type="notation:BasicDecorationNode" type="DiagramName">
+      <element xsi:nil="true"/>
+    </children>
+    <children xmi:type="notation:BasicDecorationNode" type="Description">
+      <element xsi:nil="true"/>
+    </children>
+    <styles xmi:type="notation:TextStyle"/>
+    <styles xmi:type="notation:LineTypeStyle"/>
+    <element xsi:nil="true"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="20" y="215" width="112" height="56"/>
+  </children>
+  <children xmi:type="notation:Shape" type="Note" description="Library renamed" fillColor="14270350" transparency="0" lineColor="0" lineWidth="1">
+    <children xmi:type="notation:BasicDecorationNode" type="DiagramName">
+      <element xsi:nil="true"/>
+    </children>
+    <children xmi:type="notation:BasicDecorationNode" type="Description">
+      <element xsi:nil="true"/>
+    </children>
+    <styles xmi:type="notation:TextStyle"/>
+    <styles xmi:type="notation:LineTypeStyle"/>
+    <element xsi:nil="true"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="20" y="165" height="46"/>
+  </children>
+  <children xmi:type="notation:Shape" type="Note" description="author renamed" fillColor="14270350" transparency="0" lineColor="0" lineWidth="1">
+    <children xmi:type="notation:BasicDecorationNode" type="DiagramName">
+      <element xsi:nil="true"/>
+    </children>
+    <children xmi:type="notation:BasicDecorationNode" type="Description">
+      <element xsi:nil="true"/>
+    </children>
+    <styles xmi:type="notation:TextStyle"/>
+    <styles xmi:type="notation:LineTypeStyle"/>
+    <element xsi:nil="true"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="370" y="200" width="81" height="56"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle"/>
+  <element xmi:type="ecore:EPackage" href="library_eve.ecore#/"/>
+  <edges xmi:type="notation:Edge" type="3002" source="//@children.0" target="//@children.2">
+    <children xmi:type="notation:Node" type="4011">
+      <layoutConstraint xmi:type="notation:Location" x="-25" y="-12"/>
+    </children>
+    <children xmi:type="notation:Node" type="4012">
+      <layoutConstraint xmi:type="notation:Location" y="13"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" routing="Rectilinear" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="library_eve.ecore#//CityLibrary/borrowables"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[64, 15, -207, -48]$[196, 15, -75, -48]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" id="(0.5,0.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" id="(0.49673202614379086,1.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" type="3002" source="//@children.0" target="//@children.1">
+    <children xmi:type="notation:Node" type="4011">
+      <layoutConstraint xmi:type="notation:Location" x="-5" y="-34"/>
+    </children>
+    <children xmi:type="notation:Node" type="4012">
+      <layoutConstraint xmi:type="notation:Location" x="-5" y="14"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" routing="Rectilinear" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="library_eve.ecore#//CityLibrary/customers"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[-1, 47, -27, -105]$[-1, 105, -27, -47]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" id="(0.24615384615384617,0.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" id="(0.49572649572649574,1.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" type="3002" source="//@children.1" target="//@children.2">
+    <children xmi:type="notation:Node" type="4011">
+      <layoutConstraint xmi:type="notation:Location" x="-10" y="-10"/>
+    </children>
+    <children xmi:type="notation:Node" type="4012">
+      <layoutConstraint xmi:type="notation:Location" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" routing="Rectilinear" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="library_eve.ecore#//Customer/borrowed"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[45, 0, -190, 32]$[45, -35, -190, -3]$[198, -35, -37, -3]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" id="(0.49572649572649574,0.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" id="(0.24836601307189543,1.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" type="3002" source="//@children.2" target="//@children.0">
+    <children xmi:type="notation:Node" type="4011">
+      <layoutConstraint xmi:type="notation:Location" x="-10" y="-10"/>
+    </children>
+    <children xmi:type="notation:Node" type="4012">
+      <layoutConstraint xmi:type="notation:Location" x="2" y="12"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" routing="Rectilinear" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="library_eve.ecore#//Borrowable/library"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[-75, -48, 196, 15]$[-207, -48, 64, 15]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" id="(0.49673202614379086,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" id="(0.5,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" type="3003" source="//@children.3/@children.1/@children.0" target="//@children.2">
+    <styles xmi:type="notation:ConnectorStyle" routing="Rectilinear" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle"/>
+    <element xsi:nil="true"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[35, -20, -85, 89]$[35, -45, -85, 64]$[70, -45, -50, 64]$[70, -77, -50, 32]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" type="3003" source="//@children.3/@children.1/@children.1" target="//@children.2">
+    <styles xmi:type="notation:ConnectorStyle" routing="Rectilinear" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle"/>
+    <element xsi:nil="true"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[1, -20, 16, 89]$[1, -45, 16, 64]$[-65, -45, -50, 64]$[-65, -77, -50, 32]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" type="3003" source="//@children.3/@children.1/@children.2" target="//@children.2">
+    <styles xmi:type="notation:ConnectorStyle" routing="Rectilinear" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle"/>
+    <element xsi:nil="true"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[15, -25, -51, 154]$[15, -147, -51, 32]"/>
+  </edges>
+  <edges xmi:type="notation:Connector" type="NoteAttachment" source="//@children.4" target="//@children.3/@children.1/@children.0" routing="Rectilinear" lineColor="10451812" lineWidth="1">
+    <styles xmi:type="notation:ArrowStyle"/>
+    <styles xmi:type="notation:LineTypeStyle"/>
+    <element xsi:nil="true"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[20, -8, -99, 80]$[89, -8, -30, 80]$[89, -68, -30, 20]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" id="(0.8125,0.5116279069767442)"/>
+  </edges>
+  <edges xmi:type="notation:Connector" type="NoteAttachment" source="//@children.4" target="//@children.3/@children.1/@children.1" routing="Rectilinear" lineColor="10451812" lineWidth="1">
+    <styles xmi:type="notation:ArrowStyle"/>
+    <styles xmi:type="notation:LineTypeStyle"/>
+    <element xsi:nil="true"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[55, -8, -234, 80]$[124, -8, -165, 80]$[124, -54, -165, 34]$[259, -54, -30, 34]$[259, -68, -30, 20]"/>
+  </edges>
+  <edges xmi:type="notation:Connector" type="NoteAttachment" source="//@children.4" target="//@children.3/@children.1/@children.2" routing="Rectilinear" lineColor="10451812" lineWidth="1">
+    <styles xmi:type="notation:ArrowStyle"/>
+    <styles xmi:type="notation:LineTypeStyle"/>
+    <element xsi:nil="true"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[19, -7, -154, 10]$[103, -7, -70, 10]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" id="(0.8214285714285714,0.4883720930232558)"/>
+  </edges>
+  <edges xmi:type="notation:Connector" type="NoteAttachment" source="//@children.5" target="//@children.0" routing="Rectilinear" lineColor="10451812" lineWidth="1">
+    <styles xmi:type="notation:ArrowStyle"/>
+    <styles xmi:type="notation:LineTypeStyle"/>
+    <element xsi:nil="true"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[-54, 3, -64, 148]$[-59, 3, -69, 148]$[-59, -147, -69, -2]$[-54, -147, -64, -2]"/>
+  </edges>
+  <edges xmi:type="notation:Connector" type="NoteAttachment" source="//@children.6" target="//@children.3/@children.1/@children.2" routing="Rectilinear" lineColor="10451812" lineWidth="1">
+    <styles xmi:type="notation:ArrowStyle"/>
+    <styles xmi:type="notation:LineTypeStyle"/>
+    <element xsi:nil="true"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[-61, 8, 39, -3]$[-75, 8, 25, -3]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" id="(0.7614678899082569,0.37037037037037035)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" id="(0.828125,0.6122448979591837)"/>
+  </edges>
+</notation:Diagram>

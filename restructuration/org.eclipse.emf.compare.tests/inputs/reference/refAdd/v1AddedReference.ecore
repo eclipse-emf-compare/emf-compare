@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="src">
+  <eClassifiers xsi:type="ecore:EClass" name="OPCAdminFacade" interface="true">
+    <eOperations name="getOrdersByStatus" eType="#//OrdersTO">
+      <eParameters name="status"/>
+    </eOperations>
+    <eOperations name="getChartInfo">
+      <eParameters name="request"/>
+      <eParameters name="start"/>
+      <eParameters name="end"/>
+      <eParameters name="requestedCategory"/>
+    </eOperations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OPCAdminFacadeEJB">
+    <eOperations name="ejbCreate"/>
+    <eOperations name="ejbPostCreate"/>
+    <eOperations name="ejbRemove"/>
+    <eOperations name="ejbActivate"/>
+    <eOperations name="ejbPassivate"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="PURCHASE_ORDER_EJB"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="PROCMGR_ORDER_EJB"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sc"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="poLocalHome"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="processManagerLocal"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OPCAdminFacadeException"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OPCAdminFacadeHome" interface="true">
+    <eOperations name="create" eType="#//OPCAdminFacade"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OrderDetails">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="orderId"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="userId"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="orderDate"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="orderValue"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="orderStatus"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OrdersTO" interface="true">
+    <eOperations name="iterator"/>
+    <eOperations name="size"/>
+    <eOperations name="contains">
+      <eParameters name="o"/>
+    </eOperations>
+    <eOperations name="containsAll">
+      <eParameters name="c"/>
+    </eOperations>
+    <eOperations name="equals">
+      <eParameters name="o"/>
+    </eOperations>
+    <eOperations name="hashCode"/>
+    <eOperations name="isEmpty"/>
+    <eOperations name="toArray"/>
+    <eOperations name="toArray">
+      <eParameters name="a"/>
+    </eOperations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JNDINames">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="PURCHASE_ORDER_EJB"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="SEND_CONFIRMATION_MAIL"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="SEND_APPROVAL_MAIL"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="SEND_COMPLETED_ORDER_MAIL"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="XML_VALIDATION_INVOICE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="XML_VALIDATION_ORDER_APPROVAL"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="XML_XSD_VALIDATION"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="XML_ENTITY_CATALOG_URL"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LocaleUtil"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MailCompletedOrderMDB" eSuperTypes="#//MailContentXDE">
+    <eOperations name="ejbCreate"/>
+    <eOperations name="onMessage">
+      <eParameters name="recvMsg"/>
+    </eOperations>
+    <eOperations name="ejbRemove"/>
+    <eOperations name="doWork">
+      <eParameters name="orderId"/>
+    </eOperations>
+    <eOperations name="doTransition">
+      <eParameters name="orderMail"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MAIL_SUBJECT"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="COMPLETED_ORDER_STYLE_SHEET"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="context"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mdc"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sendConfirmationMail"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mailContentXDE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transitionDelegate"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="poHome"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MailContentXDE">
+    <eOperations name="format">
+      <eParameters name="source"/>
+      <eParameters name="locale"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transformerFactory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transformers"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="styleSheetPath"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="result"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="locale"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MailInvoiceMDB">
+    <eOperations name="ejbCreate"/>
+    <eOperations name="onMessage">
+      <eParameters name="recvMsg"/>
+    </eOperations>
+    <eOperations name="ejbRemove"/>
+    <eOperations name="doWork">
+      <eParameters name="xmlMessage"/>
+    </eOperations>
+    <eOperations name="doTransition">
+      <eParameters name="xmlMail"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MAIL_SUBJECT"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="INVOICE_STYLE_SHEET"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="context"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mdc"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sendConfirmationMail"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mailContentXDE" eType="#//MailContentXDE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transitionDelegate" eType="#//MailInvoiceTransitionDelegate"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="invoiceXDE" eType="#//TPAInvoiceXDE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="poHome"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MailOrderApprovalMDB">
+    <eOperations name="ejbCreate"/>
+    <eOperations name="onMessage">
+      <eParameters name="recvMsg"/>
+    </eOperations>
+    <eOperations name="ejbRemove"/>
+    <eOperations name="doWork">
+      <eParameters name="xmlMessage"/>
+    </eOperations>
+    <eOperations name="doTransition">
+      <eParameters name="mailingList"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MAIL_SUBJECT"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ORDER_APPROVAL_STYLE_SHEET"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="context"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mdc"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sendConfirmationMail"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mailContentXDE" eType="#//MailContentXDE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transitionDelegate" eType="#//MailOrderApprovalTransitionDelegate"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="poHome"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entityCatalogURL"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="validateXmlOrderApproval"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InvoiceMDB">
+    <eOperations name="ejbCreate"/>
+    <eOperations name="onMessage">
+      <eParameters name="recvMsg"/>
+    </eOperations>
+    <eOperations name="ejbRemove"/>
+    <eOperations name="doWork">
+      <eParameters name="xmlInvoice"/>
+    </eOperations>
+    <eOperations name="doTransition">
+      <eParameters name="completedOrder"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="context"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mdc"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="processManager"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="poHome"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="invoiceXDE" eType="#//TPAInvoiceXDE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transitionDelegate"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JNDINames">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="PROCESS_MANAGER_EJB"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="PURCHASE_ORDER_EJB"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="XML_VALIDATION_PURCHASE_ORDER"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="XML_VALIDATION_INVOICE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="XML_VALIDATION_ORDER_APPROVAL"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="XML_XSD_VALIDATION"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="XML_ENTITY_CATALOG_URL"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TRANSITION_DELEGATE_ORDER_APPROVAL"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OrderApprovalMDB">
+    <eOperations name="ejbCreate"/>
+    <eOperations name="onMessage">
+      <eParameters name="recvMsg"/>
+    </eOperations>
+    <eOperations name="ejbRemove"/>
+    <eOperations name="doWork">
+      <eParameters name="xmlMessage"/>
+    </eOperations>
+    <eOperations name="doTransition">
+      <eParameters name="supplierPoList"/>
+      <eParameters name="xmlMailOrderApprovals"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="context"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mdc"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transitionDelegate"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="processManager"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="supplierOrderXDE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="poHome"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entityCatalogURL"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="validateXmlOrderApproval"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PurchaseOrderMDB">
+    <eOperations name="ejbCreate"/>
+    <eOperations name="onMessage">
+      <eParameters name="recvMsg"/>
+    </eOperations>
+    <eOperations name="ejbRemove"/>
+    <eOperations name="doWork">
+      <eParameters name="xmlMessage"/>
+    </eOperations>
+    <eOperations name="doTransition">
+      <eParameters name="xmlOrderApproval"/>
+    </eOperations>
+    <eOperations name="canIApprove">
+      <eParameters name="purchaseOrder"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="context"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mdc"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transitionDelegate"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="processManager"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="poHome"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entityCatalogURL"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="validateXmlPurchaseOrder"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TPAInvoiceXDE">
+    <eOperations name="extractData"/>
+    <eOperations name="main">
+      <eParameters name="args"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="DTD_PUBLIC_ID"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="XSD_PUBLIC_ID"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="INVOICE_NS"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="LINEITEM_NS"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="DTD_SYSTEM_ID"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="XSD_SYSTEM_ID"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="XML_INVOICE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="XML_ORDERID"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="XML_LINEITEMS"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="XML_LINEITEM"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="XML_ITEMID"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="XML_QUANTITY"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transformer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="orderId"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lineItemIds"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="invoiceDocument"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InvoiceTD">
+    <eOperations name="doTransition">
+      <eParameters name="info"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="q"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="qFactory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="queueHelper" eType="#//QueueHelper"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JNDINames">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="QUEUE_CONNECTION_FACTORY"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ORDER_APPROVAL_MDB_QUEUE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CR_MAIL_ORDER_APPROVAL_MDB_QUEUE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CR_MAIL_COMPLETED_ORDER_MDB_QUEUE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="SUPPLIER_PURCHASE_ORDER_QUEUE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MAIL_SENDER_QUEUE"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MailCompletedOrderTD">
+    <eOperations name="doTransition">
+      <eParameters name="info"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mailHelper" eType="#//QueueHelper"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="q"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="qFactory"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MailInvoiceTransitionDelegate">
+    <eOperations name="doTransition">
+      <eParameters name="info"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mailHelper" eType="#//QueueHelper"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="q"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="qFactory"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MailOrderApprovalTransitionDelegate">
+    <eOperations name="doTransition">
+      <eParameters name="info"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="q"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="qFactory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mailHelper" eType="#//QueueHelper"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OrderApprovalTD">
+    <eOperations name="doTransition">
+      <eParameters name="info"/>
+    </eOperations>
+    <eOperations name="sendMail">
+      <eParameters name="xmlOrderApproval"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="qFactory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mailQueue"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="supplierPoQueue"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="supplierQueueHelper" eType="#//QueueHelper"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mailQueueHelper" eType="#//QueueHelper"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PurchaseOrderTD">
+    <eOperations name="doTransition">
+      <eParameters name="info"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="q"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="qFactory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="queueHelper" eType="#//QueueHelper"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QueueHelper">
+    <eOperations name="sendMessage">
+      <eParameters name="xmlMessage"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="q"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="qFactory"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NewClass">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name"/>
+  </eClassifiers>
+</ecore:EPackage>

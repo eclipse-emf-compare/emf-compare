@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+ Copyright (c) 2010, 2011 Technical University of Denmark.
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ http://www.eclipse.org/legal/epl-v10.html 
+ 
+ Contributors:
+    Patrick Koenemann, DTU Informatics - initial API and implementation
+-->
+<plugin>
+   <extension-point id="org.eclipse.emf.compare.mpatch.symbolicreference" name="org.eclipse.emf.compare.mpatch.symbolicreference" schema="schema/org.eclipse.emf.compare.mpatch.symbolicreference.exsd"/>
+   <extension-point id="org.eclipse.emf.compare.mpatch.modeldescriptor" name="org.eclipse.emf.compare.mpatch.modeldescriptor" schema="schema/org.eclipse.emf.compare.mpatch.modeldescriptor.exsd"/>
+   <extension-point id="org.eclipse.emf.compare.mpatch.apply" name="org.eclipse.emf.compare.mpatch.apply" schema="schema/org.eclipse.emf.compare.mpatch.apply.exsd"/>
+   <extension-point id="org.eclipse.emf.compare.mpatch.resolve" name="org.eclipse.emf.compare.mpatch.resolve" schema="schema/org.eclipse.emf.compare.mpatch.resolve.exsd"/>
+   <extension-point id="org.eclipse.emf.compare.mpatch.transform" name="org.eclipse.emf.compare.mpatch.transform" schema="schema/org.eclipse.emf.compare.mpatch.transform.exsd"/>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.eclipse.emf.compare.mpatch.common.preferences.MPatchPreferencesPage"
+            id="org.eclipse.emf.compare.mpatch.common.preferences.MPatchPreferencesPage"
+            category="org.eclipse.emf.compare.ui.preferences.EMFComparePreferencesPage"
+            name="MPatch">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.emf.compare.mpatch.common.diff"
+            nameFilter="*mpatch"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               id="org.eclipse.emf.compare.mpatch.common.diffmenu"
+               label="MPatch"
+               path="additions">
+         </menu>
+      </objectContribution>
+   </extension>
+
+</plugin>
