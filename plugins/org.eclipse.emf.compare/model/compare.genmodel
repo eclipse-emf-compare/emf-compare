@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2012 Obeo.&#xD;&#xA;All rights reserved. This program and the accompanying materials&#xD;&#xA;are made available under the terms of the Eclipse Public License v1.0&#xD;&#xA;which accompanies this distribution, and is available at&#xD;&#xA;http://www.eclipse.org/legal/epl-v10.html&#xD;&#xA;&#xD;&#xA;Contributors:&#xD;&#xA;    Obeo - initial API and implementation"
+    modelDirectory="/org.eclipse.emf.compare/src-gen" editDirectory="/org.eclipse.emf.compare.edit/src-gen"
+    editorDirectory="/org.eclipse.emf.compare.editor/src-gen" modelPluginID="org.eclipse.emf.compare"
+    modelName="Compare" editPluginClass="org.eclipse.emf.compare.provider.EMFCompareEditPlugin"
+    editorPluginClass="org.eclipse.emf.compare.presentation.EMFCompareEditorPlugin"
+    nonNLSMarkers="true" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl"
+    codeFormatting="true" testsDirectory="/org.eclipse.emf.compare.tests/src-gen"
+    testSuiteClass="org.eclipse.emf.compare.tests.CompareAllTests" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="5.0" runtimeVersion="2.5" usedGenPackages="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
+  <foreignModel>compare.ecore</foreignModel>
+  <genPackages prefix="Compare" basePackage="org.eclipse.emf" disposableProviderFactory="true"
+      ecorePackage="compare.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="compare.ecore#//DifferenceKind">
+      <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceKind/ADD"/>
+      <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceKind/DELETE"/>
+      <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceKind/CHANGE"/>
+      <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceKind/MOVE"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="compare.ecore#//DifferenceSource">
+      <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceSource/LEFT"/>
+      <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceSource/RIGHT"/>
+    </genEnums>
+    <genClasses ecoreClass="compare.ecore#//Comparison">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/matchedResources"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/matches"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/conflicts"/>
+      <genOperations ecoreOperation="compare.ecore#//Comparison/getDifferences"/>
+      <genOperations ecoreOperation="compare.ecore#//Comparison/getDifferences.1">
+        <genParameters ecoreParameter="compare.ecore#//Comparison/getDifferences.1/element"/>
+      </genOperations>
+      <genOperations ecoreOperation="compare.ecore#//Comparison/getMatch">
+        <genParameters ecoreParameter="compare.ecore#//Comparison/getMatch/element"/>
+      </genOperations>
+      <genOperations ecoreOperation="compare.ecore#//Comparison/addDiff">
+        <genParameters ecoreParameter="compare.ecore#//Comparison/addDiff/element"/>
+        <genParameters ecoreParameter="compare.ecore#//Comparison/addDiff/newDiff"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="compare.ecore#//MatchResource">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/leftURI"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/rightURI"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/originURI"/>
+    </genClasses>
+    <genClasses ecoreClass="compare.ecore#//Match">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Match/subMatches"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Match/differences"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Match/left"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Match/right"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Match/origin"/>
+    </genClasses>
+    <genClasses ecoreClass="compare.ecore#//Diff">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference compare.ecore#//Diff/match"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Diff/requires"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Diff/requiredBy"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Diff/refines"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Diff/refinedBy"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//Diff/kind"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Diff/equivalentDiffs"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Diff/conflict"/>
+      <genOperations ecoreOperation="compare.ecore#//Diff/getSource"/>
+      <genOperations ecoreOperation="compare.ecore#//Diff/apply"/>
+      <genOperations ecoreOperation="compare.ecore#//Diff/reverse"/>
+      <genOperations ecoreOperation="compare.ecore#//Diff/discard"/>
+    </genClasses>
+    <genClasses ecoreClass="compare.ecore#//ResourceAttachmentChange">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//ResourceAttachmentChange/resourceURI"/>
+    </genClasses>
+    <genClasses ecoreClass="compare.ecore#//ReferenceChange">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//ReferenceChange/reference"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//ReferenceChange/value"/>
+    </genClasses>
+    <genClasses ecoreClass="compare.ecore#//AttributeChange">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//AttributeChange/attribute"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//AttributeChange/value"/>
+    </genClasses>
+    <genClasses ecoreClass="compare.ecore#//Conflict">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Conflict/differences"/>
+      <genOperations ecoreOperation="compare.ecore#//Conflict/getLeftDifferences"/>
+      <genOperations ecoreOperation="compare.ecore#//Conflict/getRightDifferences"/>
+    </genClasses>
+    <genClasses ecoreClass="compare.ecore#//Equivalence">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Equivalence/differences"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
