@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.emf.compare.ide.ui;singleton:=true
+Bundle-Version: 1.3.0.qualifier
+Bundle-Activator: org.eclipse.emf.compare.ide.ui.EMFCompareIDEUIPlugin
+Bundle-Vendor: %providerName
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.team.ui
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
+Bundle-Localization: plugin
