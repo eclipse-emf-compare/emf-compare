@@ -18,10 +18,9 @@
       %license
    </license>
 
-   <url>
-      <update label="%ModelingUpdateSiteName" url="http://www.eclipse.org/modeling/updates/"/>
-      <discovery label="%ModelingUpdateSiteName" url="http://www.eclipse.org/modeling/updates/"/>
-   </url>
+   <includes
+         id="org.eclipse.emf.compare.runtime"
+         version="0.0.0"/>
 
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
@@ -31,34 +30,6 @@
    </requires>
 
    <plugin
-         id="org.eclipse.emf.compare"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.emf.compare.diff"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.emf.compare.diff.edit"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.emf.compare.match"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.emf.compare.ui"
          download-size="0"
          install-size="0"
@@ -66,12 +37,24 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.emf.compare.epatch"
+         id="org.eclipse.emf.compare.edit"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="org.eclipse.emf.compare.ide"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
+   <plugin
+         id="org.eclipse.emf.compare.ide.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

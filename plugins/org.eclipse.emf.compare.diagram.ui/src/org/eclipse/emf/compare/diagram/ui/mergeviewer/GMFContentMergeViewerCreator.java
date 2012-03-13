@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 Tobias Jaehnel and Others.
+ * Copyright (c) 2009, 2012 Tobias Jaehnel and Others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,8 +25,9 @@ import org.eclipse.swt.widgets.Composite;
 public class GMFContentMergeViewerCreator implements IViewerCreator {
 	/**
 	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.compare.IViewerCreator#createViewer(org.eclipse.swt.widgets.Composite, org.eclipse.compare.CompareConfiguration)
+	 * 
+	 * @see org.eclipse.compare.IViewerCreator#createViewer(org.eclipse.swt.widgets.Composite,
+	 *      org.eclipse.compare.CompareConfiguration)
 	 */
 	public Viewer createViewer(Composite parent, CompareConfiguration config) {
 		return new GMFContentMergeViewer(parent, config);

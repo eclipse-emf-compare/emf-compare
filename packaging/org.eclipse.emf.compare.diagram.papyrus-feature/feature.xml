@@ -18,11 +18,6 @@
       %license
    </license>
 
-   <url>
-      <update label="%ModelingUpdateSiteName" url="http://www.eclipse.org/modeling/updates/"/>
-      <discovery label="%ModelingUpdateSiteName" url="http://www.eclipse.org/modeling/updates/"/>
-   </url>
-
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.emf.ecore"/>

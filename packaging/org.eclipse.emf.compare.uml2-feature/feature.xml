@@ -17,20 +17,12 @@
       %license
    </license>
    
-   <url>
-      <update label="%ModelingUpdateSiteName" url="http://www.eclipse.org/modeling/updates/"/>
-      <discovery label="%ModelingUpdateSiteName" url="http://www.eclipse.org/modeling/updates/"/>
-   </url>
-
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.emf.compare.diff"/>
-      <import plugin="org.eclipse.emf.compare.match"/>
       <import plugin="org.eclipse.uml2.uml" version="3.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.compare" version="1.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.edit"/>
-      <import plugin="org.eclipse.emf.compare.diff.edit"/>
       <import plugin="org.eclipse.emf.ecore.edit"/>
    </requires>
 

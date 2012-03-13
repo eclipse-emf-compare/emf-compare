@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
+   <!-- Not compiling yet
    <feature id="org.eclipse.emf.compare" version="0.0.0">
+      <category name="compare"/>
+   </feature>
+   -->
+   <feature id="org.eclipse.emf.compare.runtime" version="0.0.0">
       <category name="compare"/>
    </feature>
    <feature id="org.eclipse.emf.compare.doc" version="0.0.0">
       <category name="compare"/>
    </feature>
+   <!-- Not compiling yet
    <feature id="org.eclipse.emf.compare.sdk" version="0.0.0">
-      <category name="compare"/>
-   </feature>
-   <feature id="org.eclipse.emf.compare.team.subversive" version="0.0.0">
-      <category name="compare_integration"/>
-   </feature>
-   <feature id="org.eclipse.emf.compare.mpatch" version="0.0.0">
-      <category name="compare"/>
-   </feature>
-   <feature id="org.eclipse.emf.compare.ui.capabilities" version="0.0.0">
       <category name="compare"/>
    </feature>
    <feature id="org.eclipse.emf.compare.uml2" version="0.0.0">
@@ -33,6 +30,7 @@
    <feature url="features/org.eclipse.emf.compare.diagram.papyrus_1.3.0.qualifier.jar" id="org.eclipse.emf.compare.diagram.papyrus" version="1.3.0.qualifier">
       <category name="compare_integration"/>
    </feature>
+   -->
    <category-def name="compare" label="EMF Compare">
       <description>
          EMF Compare features.

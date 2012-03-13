@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 Tobias Jaehnel and Others.
+ * Copyright (c) 2009, 2012 Tobias Jaehnel and Others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,9 +15,8 @@ import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
+import org.eclipse.compare.structuremergeviewer.DiffElement;
 import org.eclipse.emf.compare.diagram.ui.viewmodel.NotationDiffCreator;
-import org.eclipse.emf.compare.diff.engine.IMatchManager.MatchSide;
-import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.ui.TypedElementWrapper;
 import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeContentProvider;
 import org.eclipse.emf.compare.ui.viewer.content.ParameterizedContentMergeViewer;

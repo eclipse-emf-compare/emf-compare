@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Obeo.
+ * Copyright (c) 2012 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,8 +31,6 @@ import org.eclipse.core.resources.mapping.ResourceTraversal;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
-import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.logical.model.EMFModelProvider;
 import org.eclipse.emf.compare.logical.model.EMFResourceMapping;
 import org.eclipse.emf.compare.logical.synchronization.EMFModelDelta;
@@ -40,7 +38,6 @@ import org.eclipse.emf.compare.logical.tests.mock.MockRemoteResourceMappingConte
 import org.eclipse.emf.compare.logical.tests.mock.MockSynchronizationContext;
 import org.eclipse.emf.compare.logical.ui.EObjectTypedElement;
 import org.eclipse.emf.compare.logical.ui.synchronize.EMFCompareSynchronizationAdapter;
-import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -50,7 +47,7 @@ import org.junit.Test;
 
 public class ResourceMappingTest extends AbstractLogicalModelTest {
 	private final String[] ecoreModelPaths = new String[] {"ecore/library.ecore", "ecore/books.ecore", //$NON-NLS-1$ //$NON-NLS-2$
-			"ecore/writers.ecore",}; //$NON-NLS-1$
+			"ecore/writers.ecore", }; //$NON-NLS-1$
 
 	/**
 	 * Make sure that we can find a model provider for each of the models, and that this model provider is
@@ -147,7 +144,7 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 			ModelProvider modelProvider = getModelProvider(iResource);
 
 			ResourceMappingContext[] contexts = new ResourceMappingContext[] {
-					new MockRemoteResourceMappingContext(), new MockRemoteResourceMappingContext(true),};
+					new MockRemoteResourceMappingContext(), new MockRemoteResourceMappingContext(true), };
 			for (ResourceMappingContext context : contexts) {
 				try {
 					ResourceMapping[] mappings = modelProvider.getMappings(iResource, context,
@@ -165,8 +162,8 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 					ISynchronizationContext synchronizationContext = new MockSynchronizationContext(mappings,
 							context, syncType);
 
-					EMFModelDelta delta = EMFModelDelta.createDelta(synchronizationContext,
-							modelProvider.getId(), new NullProgressMonitor());
+					EMFModelDelta delta = EMFModelDelta.createDelta(synchronizationContext, modelProvider
+							.getId(), new NullProgressMonitor());
 					assertNotNull(delta);
 
 					ComparisonSnapshot snapshot = delta.getComparisonSnapshot();
@@ -236,7 +233,7 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 			ISynchronizationCompareAdapter compareAdapter = getCompareAdapter(modelProvider);
 
 			ResourceMappingContext[] contexts = new ResourceMappingContext[] {
-					new MockRemoteResourceMappingContext(), new MockRemoteResourceMappingContext(true),};
+					new MockRemoteResourceMappingContext(), new MockRemoteResourceMappingContext(true), };
 			for (ResourceMappingContext context : contexts) {
 				try {
 					ResourceMapping[] mappings = modelProvider.getMappings(iResource, context,
@@ -289,7 +286,7 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 		ModelProvider modelProvider = getModelProvider(base);
 		ResourceMappingContext[] contexts = new ResourceMappingContext[] {
 				ResourceMappingContext.LOCAL_CONTEXT, new MockRemoteResourceMappingContext(),
-				new MockRemoteResourceMappingContext(true)};
+				new MockRemoteResourceMappingContext(true) };
 
 		for (ResourceMappingContext context : contexts) {
 			try {
@@ -337,7 +334,7 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 		ModelProvider modelProvider = getModelProvider(base);
 		ResourceMappingContext[] contexts = new ResourceMappingContext[] {
 				ResourceMappingContext.LOCAL_CONTEXT, new MockRemoteResourceMappingContext(),
-				new MockRemoteResourceMappingContext(true)};
+				new MockRemoteResourceMappingContext(true) };
 
 		for (ResourceMappingContext context : contexts) {
 			try {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 Tobias Jaehnel and Others.
+ * Copyright (c) 2009, 2012 Tobias Jaehnel and Others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -88,12 +88,12 @@ public class GMFComparePlugin extends AbstractUIPlugin {
 	 */
 	@Override
 	protected void initializeImageRegistry(ImageRegistry registry) {
-		registry.put(ICON_ADDED,
-				PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ADD));
-		registry.put(ICON_DELETED,
-				PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_ETOOL_DELETE));
-		registry.put(ICON_MOVED,
-				PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_ELCL_SYNCED));
+		registry.put(ICON_ADDED, PlatformUI.getWorkbench().getSharedImages().getImage(
+				ISharedImages.IMG_OBJ_ADD));
+		registry.put(ICON_DELETED, PlatformUI.getWorkbench().getSharedImages().getImage(
+				ISharedImages.IMG_ETOOL_DELETE));
+		registry.put(ICON_MOVED, PlatformUI.getWorkbench().getSharedImages().getImage(
+				ISharedImages.IMG_ELCL_SYNCED));
 	}
 
 	/**

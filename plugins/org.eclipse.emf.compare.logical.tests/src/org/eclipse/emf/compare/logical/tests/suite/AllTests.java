@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Obeo.
+ * Copyright (c) 2012 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import org.osgi.framework.Bundle;
 
 @RunWith(Suite.class)
-@SuiteClasses({ResourceMappingTest.class,})
+@SuiteClasses({ResourceMappingTest.class, })
 public class AllTests {
 	private static final String TEST_PROJECT_NAME = "testProject"; //$NON-NLS-1$
 
@@ -80,7 +80,7 @@ public class AllTests {
 
 	private static void createEcoreFolder(IFolder inputFolder) throws CoreException {
 		final String folderName = "ecore"; //$NON-NLS-1$
-		final String[] models = new String[] {"books.ecore", "library.ecore", "writers.ecore",}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		final String[] models = new String[] {"books.ecore", "library.ecore", "writers.ecore", }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		IFolder ecoreFolder = inputFolder.getFolder(folderName);
 		ecoreFolder.create(true, true, MONITOR);

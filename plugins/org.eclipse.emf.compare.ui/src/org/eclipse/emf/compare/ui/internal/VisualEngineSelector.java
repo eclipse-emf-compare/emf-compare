@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2011 Dimitrios Kolovos and other.
+ * Copyright (c) 2008, 2012 Dimitrios Kolovos and other.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,11 +13,6 @@ package org.eclipse.emf.compare.ui.internal;
 
 import java.util.List;
 
-import org.eclipse.emf.compare.EMFCompareException;
-import org.eclipse.emf.compare.diff.service.DiffEngineDescriptor;
-import org.eclipse.emf.compare.diff.service.IDiffEngineSelector;
-import org.eclipse.emf.compare.match.service.IMatchEngineSelector;
-import org.eclipse.emf.compare.match.service.MatchEngineDescriptor;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -59,8 +54,8 @@ public class VisualEngineSelector implements IMatchEngineSelector, IDiffEngineSe
 						result = dialog.getResult()[0];
 					}
 				} else {
-					throw new EMFCompareException(
-							EMFCompareUIMessages.getString("VisualEngineSelector.Dialog.Cancel")); //$NON-NLS-1$
+					throw new EMFCompareException(EMFCompareUIMessages
+							.getString("VisualEngineSelector.Dialog.Cancel")); //$NON-NLS-1$
 				}
 
 				return result;
@@ -95,8 +90,8 @@ public class VisualEngineSelector implements IMatchEngineSelector, IDiffEngineSe
 						result = dialog.getResult()[0];
 					}
 				} else {
-					throw new EMFCompareException(
-							EMFCompareUIMessages.getString("VisualEngineSelector.Dialog.Cancel")); //$NON-NLS-1$
+					throw new EMFCompareException(EMFCompareUIMessages
+							.getString("VisualEngineSelector.Dialog.Cancel")); //$NON-NLS-1$
 				}
 
 				return result;
