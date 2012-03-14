@@ -7,10 +7,10 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Cedric Notot - [374185] Performance issue
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus;
 
-import org.eclipse.emf.compare.diagram.diff.util.DiffUtil;
 import org.eclipse.emf.compare.diagram.provider.AbstractLabelProvider;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
@@ -35,21 +35,17 @@ import org.eclipse.uml2.uml.util.UMLSwitch;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public abstract class AbstractUMLViewLabelProvider extends AbstractLabelProvider {
-
+	
 	/**
 	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.diagram.provider.AbstractLabelProvider#elementLabel(org.eclipse.gmf.runtime.notation.View)
+	 *
+	 * @see org.eclipse.emf.compare.diagram.provider.AbstractLabelProvider#elementLabel(org.eclipse.gmf.runtime.notation.View, org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart)
 	 */
 	@Override
-	public String elementLabel(View view) {
-		if (view == null) {
-			throw new IllegalArgumentException("view"); //$NON-NLS-1$
-		}
-		final ITextAwareEditPart editPart = DiffUtil.getTextEditPart(view);
-		final EObject semanticElement = getSemanticElement(editPart);
+	protected String elementLabel(View view, final ITextAwareEditPart ep) {
+		final EObject semanticElement = getSemanticElement(ep);
 
-		final IMaskManagedLabelEditPolicy policy = (IMaskManagedLabelEditPolicy)editPart
+		final IMaskManagedLabelEditPolicy policy = (IMaskManagedLabelEditPolicy)ep
 				.getEditPolicy(IMaskManagedLabelEditPolicy.MASK_MANAGED_LABEL_EDIT_POLICY);
 		final String label = getLabelSwitch(policy).doSwitch(semanticElement);
 

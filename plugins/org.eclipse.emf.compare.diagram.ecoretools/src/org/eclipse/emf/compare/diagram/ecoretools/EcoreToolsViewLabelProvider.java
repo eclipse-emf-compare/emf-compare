@@ -11,8 +11,13 @@
 package org.eclipse.emf.compare.diagram.ecoretools;
 
 import org.eclipse.emf.compare.diagram.provider.AbstractLabelProvider;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecoretools.diagram.edit.parts.EcoreEditPartFactory;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
+import org.eclipse.gmf.runtime.common.ui.services.parser.ParserOptions;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
+import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -30,9 +35,28 @@ public class EcoreToolsViewLabelProvider extends AbstractLabelProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.provider.IViewLabelProvider#isManaged(org.eclipse.gmf.runtime.notation.View)
+	 * @see org.eclipse.emf.compare.diagram.provider.AbstractLabelProvider#createEditPart(org.eclipse.gmf.runtime.notation.View)
 	 */
-	public boolean isManaged(View view) {
-		return EDIT_PART_FACTORY.createEditPart(null, view) instanceof ITextAwareEditPart;
+	@Override
+	protected EditPart createEditPart(View view) {
+		return EDIT_PART_FACTORY.createEditPart(null, view);
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.provider.AbstractLabelProvider#elementLabel(org.eclipse.gmf.runtime.notation.View,
+	 *      org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart)
+	 */
+	@Override
+	protected String elementLabel(View view, final ITextAwareEditPart ep) {
+		final EObject semanticElement = view.getElement();
+		final EObjectAdapter semanticAdapter = new EObjectAdapter(semanticElement);
+
+		final IParser parser = ep.getParser();
+		final ParserOptions parserOptions = ep.getParserOptions();
+
+		return parser.getPrintString(semanticAdapter, parserOptions.intValue());
+	}
+
 }

@@ -7,10 +7,11 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Cedric Notot - [374185] Performance issue
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus;
 
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.papyrus.diagram.clazz.edit.parts.UMLEditPartFactory;
 import org.eclipse.papyrus.diagram.common.editpolicies.IMaskManagedLabelEditPolicy;
@@ -32,10 +33,11 @@ public class ClazzViewLabelProvider extends AbstractUMLViewLabelProvider {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emf.compare.diagram.provider.IViewLabelProvider#isManaged(org.eclipse.gmf.runtime.notation.View)
+	 * @see org.eclipse.emf.compare.diagram.provider.AbstractLabelProvider#createEditPart(org.eclipse.gmf.runtime.notation.View)
 	 */
-	public boolean isManaged(View view) {
-		return EDIT_PART_FACTORY.createEditPart(null, view) instanceof ITextAwareEditPart;
+	@Override
+	protected EditPart createEditPart(View view) {
+		return EDIT_PART_FACTORY.createEditPart(null, view);
 	}
 
 	/**

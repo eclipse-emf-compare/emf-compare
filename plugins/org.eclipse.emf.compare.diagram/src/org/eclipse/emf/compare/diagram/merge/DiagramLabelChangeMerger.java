@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.diagram.merge;
 
 import org.eclipse.emf.compare.diagram.diagramdiff.BusinessDiagramLabelChange;
 import org.eclipse.emf.compare.diagram.diff.util.DiffUtil;
+import org.eclipse.emf.compare.diagram.provider.IViewLabelProvider;
 import org.eclipse.emf.compare.diff.merge.DefaultMerger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.notation.View;
@@ -50,9 +51,27 @@ public class DiagramLabelChangeMerger extends DefaultMerger {
 			final View vElement = (View)element;
 			final View vOrigin = (View)origin;
 			if (inOrigin)
-				DiffUtil.setLabel(vOrigin, pDiff.getRightLabel());
+				// DiffUtil.setLabel(vOrigin, pDiff.getRightLabel());
+				setLabel(vOrigin, pDiff.getRightLabel());
 			else
-				DiffUtil.setLabel(vElement, pDiff.getLeftLabel());
+				// DiffUtil.setLabel(vElement, pDiff.getLeftLabel());
+				setLabel(vElement, pDiff.getLeftLabel());
+			DiffUtil.clearLabelExtensions();
+		}
+	}
+
+	/**
+	 * Set the label of the view.
+	 * 
+	 * @param view
+	 *            the view.
+	 * @param label
+	 *            the label.
+	 */
+	private void setLabel(View view, String label) {
+		final IViewLabelProvider extensionForType = DiffUtil.getExtension(view);
+		if (DiffUtil.isLabelAvailable(extensionForType, view)) {
+			extensionForType.setLabel(view, label);
 		}
 	}
 

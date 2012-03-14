@@ -15,7 +15,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.compare.diagram.GMFCompare;
 import org.eclipse.emf.compare.diagram.diagramdiff.DiagramModelElementChange;
+import org.eclipse.emf.compare.diagram.provider.AbstractLabelProvider;
+import org.eclipse.emf.compare.diagram.provider.IViewLabelProvider;
+import org.eclipse.emf.compare.diagram.provider.internal.ViewLabelProviderExtensionRegistry;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
@@ -133,10 +139,14 @@ public final class DiffUtil {
 	/**
 	 * Retrieve the {@link ITextAwareEditPart} related to a view.
 	 * 
+	 * @deprecated Use {@link IViewLabelProvider} instead of it. This method is a GMF generic solution to
+	 *             retrieve the edit part but it involves big performance troubles. {@link IViewLabelProvider}
+	 *             provides you specific mechanism from the current modeler.
 	 * @param view
 	 *            The view.
 	 * @return The text editpart.
 	 */
+	@Deprecated
 	public static ITextAwareEditPart getTextEditPart(View view) {
 		final LabelRequestor labelRequestor = new LabelRequestor(view);
 		Display.getDefault().syncExec(labelRequestor);
@@ -146,10 +156,14 @@ public final class DiffUtil {
 	/**
 	 * Retrieve the GMF label of the specified view.
 	 * 
+	 * @deprecated Use {@link IViewLabelProvider} instead of it. This method is a GMF generic solution to
+	 *             retrieve the label of a view but it involves big performance troubles.
+	 *             {@link IViewLabelProvider} provides you specific mechanism from the current modeler.
 	 * @param view
 	 *            The view.
 	 * @return The label.
 	 */
+	@Deprecated
 	public static String getLabel(View view) {
 		final LabelRequestor labelRequestor = new LabelRequestor(view);
 		Display.getDefault().syncExec(labelRequestor);
@@ -159,10 +173,14 @@ public final class DiffUtil {
 	/**
 	 * Retrieve the GMF parser from the specified view.
 	 * 
+	 * @deprecated Use {@link IViewLabelProvider} instead of it. This method is a GMF generic solution to
+	 *             retrieve the label of a view but it involves big performance troubles.
+	 *             {@link IViewLabelProvider} provides you specific mechanism from the current modeler.
 	 * @param view
 	 *            The view.
 	 * @return The parser.
 	 */
+	@Deprecated
 	public static IParser getParser(View view) {
 		final ParserRequestor parserRequestor = new ParserRequestor(view);
 		Display.getDefault().syncExec(parserRequestor);
@@ -172,11 +190,15 @@ public final class DiffUtil {
 	/**
 	 * Set the GMF label of the specified view with the specified label.
 	 * 
+	 * @deprecated Use {@link IViewLabelProvider} instead of it. This method is a GMF generic solution to set
+	 *             the label of a view but it involves big performance troubles. {@link IViewLabelProvider}
+	 *             provides you specific mechanism from the current modeler.
 	 * @param view
 	 *            The view.
 	 * @param label
 	 *            The label.
 	 */
+	@Deprecated
 	public static void setLabel(View view, String label) {
 		final LabelSetter labelSetter = new LabelSetter(view, label);
 		Display.getDefault().syncExec(labelSetter);
@@ -185,10 +207,15 @@ public final class DiffUtil {
 	/**
 	 * Retrieve the {@link ITextAwareEditPart} related to the specified {@link IGraphicalEditPart}.
 	 * 
+	 * @deprecated Use {@link IViewLabelProvider} instead of it. This method is a GMF generic solution to
+	 *             retrieve the text aware edit part from a graphical edit part but it involves big
+	 *             performance troubles. {@link IViewLabelProvider} provides you specific mechanism from the
+	 *             current modeler.
 	 * @param parent
 	 *            The {@link IGraphicalEditPart}
 	 * @return The {@link ITextAwareEditPart}
 	 */
+	@Deprecated
 	private static ITextAwareEditPart findTextAwareEditPart(IGraphicalEditPart parent) {
 		ITextAwareEditPart result = null;
 		if (parent instanceof ITextAwareEditPart) {
@@ -613,8 +640,12 @@ public final class DiffUtil {
 	/**
 	 * Utility Class to handle labels on GMF views.
 	 * 
+	 * @deprecated Use {@link IViewLabelProvider} instead of it. This handling is a GMF generic solution to
+	 *             manage labels but it involves big performance troubles. {@link IViewLabelProvider} provides
+	 *             you specific mechanism from the current modeler.
 	 * @author Cedric Notot <a href="mailto:cedric.notot@obeo.fr">cedric.notot@obeo.fr</a>
 	 */
+	@Deprecated
 	public abstract static class AbstractLabelHandling implements Runnable {
 
 		/**
@@ -658,8 +689,10 @@ public final class DiffUtil {
 		/**
 		 * {@inheritDoc}
 		 * 
+		 * @deprecated
 		 * @see java.lang.Runnable#run()
 		 */
+		@Deprecated
 		public void run() {
 			final Diagram diagram = view.getDiagram();
 
@@ -698,6 +731,7 @@ public final class DiffUtil {
 		 * @param editPart
 		 *            The editpart.
 		 */
+		@Deprecated
 		abstract void handle(ITextAwareEditPart editPart);
 
 		public ITextAwareEditPart getTextEditPart() {
@@ -709,8 +743,12 @@ public final class DiffUtil {
 	/**
 	 * Utility Class to retrieve the label from a GMF view.
 	 * 
+	 * @deprecated Use {@link IViewLabelProvider} instead of it. This handling is a GMF generic solution to
+	 *             manage labels but it involves big performance troubles. {@link IViewLabelProvider} provides
+	 *             you specific mechanism from the current modeler.
 	 * @author Cedric Notot <a href="mailto:cedric.notot@obeo.fr">cedric.notot@obeo.fr</a>
 	 */
+	@Deprecated
 	public static final class LabelRequestor extends AbstractLabelHandling {
 
 		/**
@@ -735,8 +773,10 @@ public final class DiffUtil {
 		/**
 		 * {@inheritDoc}
 		 * 
+		 * @deprecated
 		 * @see org.eclipse.emf.compare.diagram.diff.util.DiffUtil.LabelHandling#handle(org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart)
 		 */
+		@Deprecated
 		@Override
 		void handle(ITextAwareEditPart editPart) {
 			label = editPart.getEditText();
@@ -747,8 +787,12 @@ public final class DiffUtil {
 	/**
 	 * Utility Class to retrieve the parser from a GMF view.
 	 * 
+	 * @deprecated Use {@link IViewLabelProvider} instead of it. This handling is a GMF generic solution to
+	 *             manage labels but it involves big performance troubles. {@link IViewLabelProvider} provides
+	 *             you specific mechanism from the current modeler.
 	 * @author Cedric Notot <a href="mailto:cedric.notot@obeo.fr">cedric.notot@obeo.fr</a>
 	 */
+	@Deprecated
 	public static final class ParserRequestor extends AbstractLabelHandling {
 
 		/**
@@ -777,7 +821,10 @@ public final class DiffUtil {
 
 		/**
 		 * {@inheritDoc}
+		 * 
+		 * @deprecated
 		 */
+		@Deprecated
 		@Override
 		void handle(ITextAwareEditPart editPart) {
 			parser = editPart.getParser();
@@ -788,8 +835,12 @@ public final class DiffUtil {
 	/**
 	 * Utility Class to set the label from a GMF view (and to impact on the semantic objects).
 	 * 
+	 * @deprecated Use {@link IViewLabelProvider} instead of it. This handling is a GMF generic solution to
+	 *             manage labels but it involves big performance troubles. {@link IViewLabelProvider} provides
+	 *             you specific mechanism from the current modeler.
 	 * @author Cedric Notot <a href="mailto:cedric.notot@obeo.fr">cedric.notot@obeo.fr</a>
 	 */
+	@Deprecated
 	public static final class LabelSetter extends AbstractLabelHandling {
 
 		/**
@@ -804,6 +855,13 @@ public final class DiffUtil {
 			super(pView, pLabel);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @deprecated
+		 * @see org.eclipse.emf.compare.diagram.diff.util.DiffUtil.AbstractLabelHandling#handle(org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart)
+		 */
+		@Deprecated
 		@Override
 		void handle(ITextAwareEditPart editPart) {
 			final ICommand iCommand = getDirectEditCommand(editPart);
@@ -875,6 +933,69 @@ public final class DiffUtil {
 			}
 		}
 
+	}
+
+	/**
+	 * Checks if the label can be retrieved from the specified graphical element thanks to the given label
+	 * provider.
+	 * 
+	 * @param provider
+	 *            The label provider.
+	 * @param element
+	 *            The graphical element.
+	 * @return True if the label can be found.
+	 * @since 1.3
+	 */
+	public static boolean isLabelAvailable(IViewLabelProvider provider, View element) {
+		return provider.isManaged(element) && DiffUtil.isVisible(element);
+	}
+
+	/**
+	 * Get the GMF label provider for the given graphical element.
+	 * 
+	 * @param view
+	 *            The graphical element.
+	 * @return the label provider.
+	 * @since 1.3
+	 */
+	public static IViewLabelProvider getExtension(View view) {
+
+		IViewLabelProvider extensionForType = IViewLabelProvider.DEFAULT_INSTANCE;
+		final Diagram diagram = view.getDiagram();
+
+		if (diagram != null) {
+			final String diagramType = diagram.getType();
+
+			extensionForType = ViewLabelProviderExtensionRegistry.INSTANCE.getExtensionForType(diagramType);
+
+			if (extensionForType == null) { // no extension registered for handling label in this
+											// diagram,
+				// use the default one
+				GMFCompare
+						.getDefault()
+						.getLog()
+						.log(new Status(IStatus.INFO, GMFCompare.PLUGIN_ID,
+								"No IViewLabelProvider registered for diagram " + diagramType)); //$NON-NLS-1$
+			}
+		}
+
+		return extensionForType;
+	}
+
+	/**
+	 * Clear cash of the GMF label providers.
+	 * 
+	 * @since 1.3
+	 */
+	public static void clearLabelExtensions() {
+		final Iterator<IViewLabelProvider> it = ViewLabelProviderExtensionRegistry.INSTANCE
+				.getLabelProviderExtensions().iterator();
+		while (it.hasNext()) {
+			final IViewLabelProvider provider = it.next();
+			if (provider instanceof AbstractLabelProvider) {
+				((AbstractLabelProvider)provider).clear();
+			}
+		}
 	}
 
 }

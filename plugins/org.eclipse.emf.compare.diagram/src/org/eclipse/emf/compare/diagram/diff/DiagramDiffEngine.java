@@ -13,11 +13,8 @@ package org.eclipse.emf.compare.diagram.diff;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.diagram.GMFCompare;
 import org.eclipse.emf.compare.diagram.diagramdiff.BusinessDiagramLabelChange;
 import org.eclipse.emf.compare.diagram.diagramdiff.BusinessDiffExtension;
 import org.eclipse.emf.compare.diagram.diagramdiff.DiagramDiffExtension;
@@ -27,7 +24,6 @@ import org.eclipse.emf.compare.diagram.diff.internal.DiffExtensionFactoryRegistr
 import org.eclipse.emf.compare.diagram.diff.internal.IDiffExtensionFactory;
 import org.eclipse.emf.compare.diagram.diff.util.DiffUtil;
 import org.eclipse.emf.compare.diagram.provider.IViewLabelProvider;
-import org.eclipse.emf.compare.diagram.provider.internal.ViewLabelProviderExtensionRegistry;
 import org.eclipse.emf.compare.diff.engine.GenericDiffEngine;
 import org.eclipse.emf.compare.diff.engine.IMatchManager;
 import org.eclipse.emf.compare.diff.engine.IMatchManager.MatchSide;
@@ -42,8 +38,6 @@ import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
-import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
@@ -66,6 +60,7 @@ public class DiagramDiffEngine extends GenericDiffEngine {
 	@Override
 	protected DiffGroup doDiffThreeWay(MatchModel match) {
 		final DiffGroup ret = super.doDiffThreeWay(match);
+		DiffUtil.clearLabelExtensions();
 		postProcess(ret, match);
 		return ret;
 	}
@@ -78,6 +73,7 @@ public class DiagramDiffEngine extends GenericDiffEngine {
 	@Override
 	protected DiffGroup doDiffTwoWay(MatchModel match) {
 		final DiffGroup ret = super.doDiffTwoWay(match);
+		DiffUtil.clearLabelExtensions();
 		postProcess(ret, match);
 		return ret;
 	}
@@ -237,9 +233,9 @@ public class DiagramDiffEngine extends GenericDiffEngine {
 
 				final EObject ancestor = mapping.getOriginElement();
 				if (ancestor instanceof View) {
-					final ITextAwareEditPart ancestorEp = DiffUtil.getTextEditPart((View)ancestor);
-					if (ancestorEp != null) {
-						final String ancestorLabel = ancestorEp.getEditText();
+					final IViewLabelProvider extensionForType = DiffUtil.getExtension((View)ancestor);
+					if (DiffUtil.isLabelAvailable(extensionForType, (View)ancestor)) {
+						final String ancestorLabel = extensionForType.elementLabel((View)ancestor);
 						final String leftLabel = ((BusinessDiagramLabelChange)diagramLabelChange)
 								.getLeftLabel();
 						final String rightLabel = ((BusinessDiagramLabelChange)diagramLabelChange)
@@ -284,31 +280,13 @@ public class DiagramDiffEngine extends GenericDiffEngine {
 			DiagramLabelChange diff = null;
 			if (leftElement instanceof View) {
 				final View view = (View)leftElement;
-				final Diagram diagram = view.getDiagram();
-
-				if (diagram != null) {
-					final String diagramType = diagram.getType();
-
-					IViewLabelProvider extensionForType = ViewLabelProviderExtensionRegistry.INSTANCE
-							.getExtensionForType(diagramType);
-
-					if (extensionForType == null) { // no extension registered for handling label in this
-													// diagram,
-						// use the default one
-						GMFCompare
-								.getDefault()
-								.getLog()
-								.log(new Status(IStatus.INFO, GMFCompare.PLUGIN_ID,
-										"No IViewLabelProvider registered for diagram " + diagramType)); //$NON-NLS-1$
-						extensionForType = IViewLabelProvider.DEFAULT_INSTANCE;
-					}
-					if (extensionForType.isManaged(view) && DiffUtil.isVisible(view)
-							&& DiffUtil.isVisible((View)rightElement)) {
-						final String leftLabel = extensionForType.elementLabel(view);
-						final String rightLabel = extensionForType.elementLabel((View)rightElement);
-						if (!leftLabel.equals(rightLabel)) {
-							diff = createLabelChange(root, leftElement, rightElement, leftLabel, rightLabel);
-						}
+				final IViewLabelProvider extensionForType = DiffUtil.getExtension(view);
+				if (DiffUtil.isLabelAvailable(extensionForType, view)
+						&& DiffUtil.isLabelAvailable(extensionForType, (View)rightElement)) {
+					final String leftLabel = extensionForType.elementLabel(view);
+					final String rightLabel = extensionForType.elementLabel((View)rightElement);
+					if (!leftLabel.equals(rightLabel)) {
+						diff = createLabelChange(root, leftElement, rightElement, leftLabel, rightLabel);
 					}
 				}
 			}

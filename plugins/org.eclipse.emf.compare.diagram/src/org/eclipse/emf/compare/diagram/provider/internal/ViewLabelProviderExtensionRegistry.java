@@ -96,4 +96,18 @@ public final class ViewLabelProviderExtensionRegistry {
 		}
 		return null;
 	}
+
+	/**
+	 * Return all the {@link IViewLabelProvider}.
+	 * 
+	 * @return List of {@link IViewLabelProvider}
+	 */
+	public List<IViewLabelProvider> getLabelProviderExtensions() {
+		final List<IViewLabelProvider> result = new ArrayList<IViewLabelProvider>();
+		final List<ViewLabelProviderExtensionDescriptor> registeredExtensions = getRegisteredExtensionsDescriptors();
+		for (ViewLabelProviderExtensionDescriptor viewLabelTypeProviderExtensionDescriptor : registeredExtensions) {
+			result.add(viewLabelTypeProviderExtensionDescriptor.getViewLabelTypeProviderExtension());
+		}
+		return result;
+	}
 }
