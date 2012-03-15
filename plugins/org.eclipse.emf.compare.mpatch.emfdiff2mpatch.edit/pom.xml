@@ -5,12 +5,12 @@
   <parent>
     <artifactId>emf.compare-parent</artifactId>
     <groupId>org.eclipse.emf.compare</groupId>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.3.1-SNAPSHOT</version>
      <relativePath>../..</relativePath>
   </parent>
   <groupId>org.eclipse.emf.compare</groupId>
   <artifactId>org.eclipse.emf.compare.mpatch.emfdiff2mpatch.edit</artifactId>
-  <version>1.3.0-SNAPSHOT</version>
+  <version>1.3.1-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
   
   <build>
