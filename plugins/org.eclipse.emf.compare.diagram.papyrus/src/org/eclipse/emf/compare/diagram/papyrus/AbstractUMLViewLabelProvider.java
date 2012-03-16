@@ -43,6 +43,7 @@ public abstract class AbstractUMLViewLabelProvider extends AbstractLabelProvider
 	 */
 	@Override
 	protected String elementLabel(View view, final ITextAwareEditPart ep) {
+		
 		final EObject semanticElement = getSemanticElement(ep);
 
 		final IMaskManagedLabelEditPolicy policy = (IMaskManagedLabelEditPolicy)ep
@@ -52,9 +53,9 @@ public abstract class AbstractUMLViewLabelProvider extends AbstractLabelProvider
 		if (label != null && label.length() > 0) {
 			return label;
 		}
-
+		
 		// fall-through super implementation
-		return super.elementLabel(view);
+		return super.elementLabel(view, ep);
 	}
 
 	/**
@@ -143,5 +144,6 @@ public abstract class AbstractUMLViewLabelProvider extends AbstractLabelProvider
 			}
 			return ParameterUtil.getCustomLabel(object, displayValue);
 		}
+	
 	}
 }
