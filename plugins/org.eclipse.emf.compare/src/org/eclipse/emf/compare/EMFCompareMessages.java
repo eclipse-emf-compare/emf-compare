@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class EMFCompareMessages {
-	/** Full qualified path to the properties file in which to seek the keys. */
+	/** Fully qualified path to the properties file in which to seek the keys. */
 	private static final String BUNDLE_NAME = "org.eclipse.emf.compare.emfcomparemessages"; //$NON-NLS-1$
 
 	/** Contains the locale specific {@link String}s needed by this plug-in. */
@@ -41,11 +41,8 @@ public final class EMFCompareMessages {
 	 * @return The String from the resource bundle associated with <code>key</code>.
 	 */
 	public static String getString(String key) {
-		try {
-			return RESOURCE_BUNDLE.getString(key);
-		} catch (MissingResourceException e) {
-			return '!' + key + '!';
-		}
+		// Pass through MessageFormat to be consistent in the handling of special chars such as the apostrophe
+		return MessageFormat.format(internalGetString(key), new Object[] {});
 	}
 
 	/**
@@ -59,8 +56,24 @@ public final class EMFCompareMessages {
 	 * @see MessageFormat#format(String, Object[])
 	 */
 	public static String getString(String key, Object... arguments) {
-		if (arguments == null)
+		if (arguments == null) {
 			return getString(key);
-		return MessageFormat.format(getString(key), arguments);
+		}
+		return MessageFormat.format(internalGetString(key), arguments);
+	}
+
+	/**
+	 * This will return an unformatted String from the resource bundle.
+	 * 
+	 * @param key
+	 *            Key of the String we seek.
+	 * @return An unformatted String from the bundle.
+	 */
+	private static String internalGetString(String key) {
+		try {
+			return RESOURCE_BUNDLE.getString(key);
+		} catch (MissingResourceException e) {
+			return '!' + key + '!';
+		}
 	}
 }

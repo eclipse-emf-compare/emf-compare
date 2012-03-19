@@ -1,0 +1,83 @@
+Origin == extended library example from emf.
+
+Left
+	Added
+		BookCategory.Encyclopedia - enum literal of value "3"
+		BookCategory.Dictionary - enum literal of value "4"
+		
+		Magazine, subclass of CirculatingItem
+		
+		Person.fullName
+
+	Removed
+		Periodical
+		
+		BookOnTape.reader
+		
+		Person.firstName
+		Person.lastName
+
+	Renamed
+		Lendable -> Borrowable
+		
+		AudioVisualItem.minutesLength -> AudioVisualItem.length
+
+Right
+	Added
+		BookCategory.Manga - enum literal of value "3"
+		BookCategory.Manhwa - enum literal of value "5"
+		
+		Book.subtitle - attribute of type EString
+		
+		Magazine, subclass of Periodical
+		
+		TitledItem	- EClassifier
+					- superclass of Book
+					- superclass of Periodical
+					- superclass of AudioVisualItem
+
+	Removed
+		Book.title
+		Periodical.title
+		AudioVisualItem.title
+		
+		BookOnTape.reader
+
+	Renamed
+		Person.lastName -> Person.familyName
+		
+		AudioVisualItem.minutesLength -> AudioVisualItem.minutes
+
+Expected Differences
+	1 - Added Encyclopedia to BookCategory
+	2 - Added Dictionary to BookCategory
+	3 - Added Magazine to extlibrary
+	4 - Added fullName to Person
+	5 - Removed Periodical
+	6 - Removed firstName from Person
+	7 - Removed lastName from Person
+	8 - Attribute name of Lendable has been changed from Lendable to Borrowable
+	9 - Attribute name of minutesLength has been changed from minutesLength to length
+	10 - Remotely added Manga to BookCategory
+	11 - Remotely added Manhwa to BookCategory
+	12 - Remotely added subtitle to Book
+	13 - Remotely added Magazine
+	14 - Remotely added TitledItem
+	15 - Remotely added TitledItem to reference eSuperTypes of Book
+	16 - Remotely added TitledItem to reference eSuperTypes of Periodical
+	17 - Remotely added TitledItem to reference eSuperTypes of AudioVisualItem
+	18 - Remotely removed title from Book
+	19 - Remotely removed title from Periodical
+	20 - Remotely removed title from AudioVisualItem
+	21 - Attribute name of lastName has been remotely changed from lastName to familyName
+	22 - Attribute name of minutesLength has been remotely changed from minutesLength to minutes
+	
+	No diff on BookOnTape.reader : has been removed from both local and remote copies.
+	
+	No equivalences.
+	
+	Conflicts on :
+	1 and 10 : enum literals of the same enum with the same 'value'
+	5 and 13 : the remote Magazine is a subclas of the locally deleted Periodical
+	7 and 21 : remote renaming of a locally deleted attribute
+	9 and 22 : renaming to different values
