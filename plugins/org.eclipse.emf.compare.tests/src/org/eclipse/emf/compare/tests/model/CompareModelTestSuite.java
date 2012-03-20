@@ -14,7 +14,6 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.textui.TestRunner;
 
-import org.eclipse.emf.compare.tests.model.unit.ComparisonTest;
 import org.eclipse.emf.compare.tests.suite.CompareTestSuite;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -26,7 +25,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({CompareTestSuite.class, ComparisonTest.class, })
+@SuiteClasses({CompareTestSuite.class })
 public class CompareModelTestSuite {
 	/**
 	 * Standalone launcher for all of compare's tests.
