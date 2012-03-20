@@ -68,7 +68,7 @@
 build.alias=${BUILD_ALIAS}${line.separator}
 build.qualifier=${env.BUILD_TYPE}${buildQualifier}${line.separator}
 version=${unqualifiedVersion}"/>
-								<copy file="addDownloadStats.xsl" todir="${project.build.directory}/promotion"/>
+								<copy file="p2.xsl" todir="${project.build.directory}/promotion"/>
 								<copy file="promoter.xml" todir="${project.build.directory}/promotion" />
 							</tasks>
 						</configuration>
