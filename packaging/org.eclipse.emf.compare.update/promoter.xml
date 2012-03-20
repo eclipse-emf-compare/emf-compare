@@ -28,6 +28,7 @@
 	<property name="final.updatesite.name" value="emf-compare-update" />
 	<property name="build.root.updatesite.name" value="org.eclipse.emf.compare.update.zip" />
 	<property name="group.owner" value="modeling.emf.compare" />
+	<property name="thirdPartyJarsDir" value="/shared/modeling/emf/eef/3rdPartyJars" />
 
 	<!--# To permit automatic downloads of non-EPL compatible code, override this to property to "Y" -->
 	<property name="thirdPartyDownloadLicenseAcceptance" value="Y" />
