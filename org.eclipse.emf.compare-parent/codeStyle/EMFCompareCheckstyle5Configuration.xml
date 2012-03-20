@@ -5,9 +5,8 @@
     This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-    Checkstyle-Configuration: Acceleo Checkstyle 5
-    Description: 
-Acceleo Checkstyle 5 Configuration
+    Checkstyle-Configuration: EMF Compare
+    Description: none
 -->
 <module name="Checker">
   <property name="severity" value="warning"/>
@@ -69,6 +68,7 @@ Acceleo Checkstyle 5 Configuration
     </module>
     <module name="ImportOrder">
       <property name="severity" value="error"/>
+      <property name="option" value="top"/>
     </module>
     <module name="RedundantImport">
       <property name="severity" value="error"/>

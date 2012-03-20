@@ -35,8 +35,8 @@ public class RootIDMatchingStrategy implements IResourceMatchingStrategy {
 	 * @see org.eclipse.emf.compare.match.resource.IResourceMatchingStrategy#matchResources(java.lang.Iterable,
 	 *      java.lang.Iterable, java.lang.Iterable)
 	 */
-	public List<ResourceMapping> matchResources(Iterable<Resource> left, Iterable<Resource> right,
-			Iterable<Resource> origin) {
+	public List<ResourceMapping> matchResources(Iterable<? extends Resource> left,
+			Iterable<? extends Resource> right, Iterable<? extends Resource> origin) {
 		final List<ResourceMapping> mappings = Lists.newArrayList();
 
 		final List<Resource> rightCopy = Lists.newArrayList(right);

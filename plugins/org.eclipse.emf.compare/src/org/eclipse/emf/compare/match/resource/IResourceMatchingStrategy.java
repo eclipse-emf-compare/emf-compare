@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.resource.Resource;
 
 /**
- * A {@link ResourceMatcher} will be used to match two or three {@link Resource}s together; depending on
+ * A {@link StrategyResourceMatcher} will be used to match two or three {@link Resource}s together; depending on
  * whether we are doing a two or three way comparison.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
@@ -33,6 +33,6 @@ public interface IResourceMatchingStrategy {
 	 *            Resources we are to match in the origin.
 	 * @return The list of mappings this strategy managed to determine.
 	 */
-	List<ResourceMapping> matchResources(Iterable<Resource> left, Iterable<Resource> right,
-			Iterable<Resource> origin);
+	List<ResourceMapping> matchResources(Iterable<? extends Resource> left,
+			Iterable<? extends Resource> right, Iterable<? extends Resource> origin);
 }

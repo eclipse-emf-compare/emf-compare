@@ -40,8 +40,8 @@ public class NameSimilarityMatchingStrategy implements IResourceMatchingStrategy
 	 * @see org.eclipse.emf.compare.match.resource.IResourceMatchingStrategy#matchResources(java.lang.Iterable,
 	 *      java.lang.Iterable, java.lang.Iterable)
 	 */
-	public List<ResourceMapping> matchResources(Iterable<Resource> left, Iterable<Resource> right,
-			Iterable<Resource> origin) {
+	public List<ResourceMapping> matchResources(Iterable<? extends Resource> left,
+			Iterable<? extends Resource> right, Iterable<? extends Resource> origin) {
 		final List<ResourceMapping> mappings = Lists.newArrayList();
 
 		final Set<List<Resource>> productLR = cartesianProductOf(left, right);
@@ -94,14 +94,16 @@ public class NameSimilarityMatchingStrategy implements IResourceMatchingStrategy
 	 *            First of the two iterables of which we need the cartesian product.
 	 * @param iterable2
 	 *            Second of the two iterables of which we need the cartesian product.
+	 * @param <T>
+	 *            Type of iterables' content.
 	 * @return The cartesian product of the two given iterables.
 	 * @see Sets#cartesianProduct(List)
 	 */
-	private static Set<List<Resource>> cartesianProductOf(Iterable<Resource> iterable1,
-			Iterable<Resource> iterable2) {
-		Set<Resource> set1 = Sets.newLinkedHashSet(iterable1);
-		Set<Resource> set2 = Sets.newLinkedHashSet(iterable2);
-		List<Set<Resource>> input = ImmutableList.of(set1, set2);
+	private static <T> Set<List<T>> cartesianProductOf(Iterable<? extends T> iterable1,
+			Iterable<? extends T> iterable2) {
+		Set<T> set1 = Sets.newLinkedHashSet(iterable1);
+		Set<T> set2 = Sets.newLinkedHashSet(iterable2);
+		List<Set<T>> input = ImmutableList.of(set1, set2);
 		return Sets.cartesianProduct(input);
 	}
 

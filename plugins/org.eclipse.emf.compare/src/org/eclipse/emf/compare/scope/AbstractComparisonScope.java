@@ -10,7 +10,12 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.scope;
 
+import java.util.Iterator;
+
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 
 /**
  * This class defines the expected contract of EMF Compare scopes.
@@ -80,13 +85,31 @@ public abstract class AbstractComparisonScope {
 	}
 
 	/**
-	 * This will be used by EMF Compare in order to retrieve the children of the given {@link Notifier}. Only
-	 * the children returned by this method will be matched with their other versions' counterparts.
+	 * This will be used by EMF Compare in order to know which Resources are under the given ResourceSet.
 	 * 
-	 * @param notifier
-	 *            The notifier which children should be returned.
-	 * @return The children of the given {@link Notifier} that should be matched. Should never be
-	 *         <code>null</code>.
+	 * @param resourceSet
+	 *            The resource set for which we need all Resources.
+	 * @return An iterator over the {@link Resource}s within the given {@link ResourceSet} which are part of
+	 *         this scope.
 	 */
-	public abstract Iterable<Notifier> getChildren(Notifier notifier);
+	public abstract Iterator<? extends Resource> getChildren(ResourceSet resourceSet);
+
+	/**
+	 * This will be used by EMF Compare in order to determine the EObjects that it should iterate over.
+	 * 
+	 * @param resource
+	 *            The resource for which we need to determine the content.
+	 * @return An iterator over the {@link EObject}s within the given {@link Resource} which are part of this
+	 *         scope.
+	 */
+	public abstract Iterator<? extends EObject> getChildren(Resource resource);
+
+	/**
+	 * This will be used by EMF Compare in order to know which EObjects are located under the given EObject.
+	 * 
+	 * @param eObject
+	 *            The EObject for which we need to determine the content.
+	 * @return An iterator over the Resources within the given {@link EObject} which are part of this scope.
+	 */
+	public abstract Iterator<? extends EObject> getChildren(EObject eObject);
 }

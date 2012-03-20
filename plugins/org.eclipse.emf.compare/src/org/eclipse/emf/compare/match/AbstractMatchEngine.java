@@ -10,21 +10,31 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Iterators;
+
+import java.util.Iterator;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
+import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
+import org.eclipse.emf.compare.match.eobject.IdentifierEObjectMatcher;
+import org.eclipse.emf.compare.match.resource.IResourceMatcher;
 import org.eclipse.emf.compare.match.resource.ResourceMapping;
-import org.eclipse.emf.compare.match.resource.ResourceMatcher;
+import org.eclipse.emf.compare.match.resource.StrategyResourceMatcher;
 import org.eclipse.emf.compare.scope.AbstractComparisonScope;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
 /**
- * This class defines the general contract of a match engine.
+ * The Match engine orchestrates the matching process : it takes a {@link AbstractComparisonScope scope} as
+ * input, iterates over its {@link AbstractComparisonScope#getLeft() left},
+ * {@link AbstractComparisonScope#getRight() right} and {@link AbstractComparisonScope#getOrigin() origin}
+ * root and delegates to {@link IResourceMatcher}s and {@link IEObjectMatcher}s in order to create the result
+ * {@link Comparison} model for this scope.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -80,9 +90,8 @@ public abstract class AbstractMatchEngine {
 
 	/**
 	 * This will be used to match the given {@link ResourceSet}s. This default implementation will query the
-	 * comparison scope for these resource sets children, then delegate to a
-	 * {@link #createResourceMatcher(Iterable, Iterable, Iterable) ResourceMatcher} to determine the resource
-	 * mappings.
+	 * comparison scope for these resource sets children, then delegate to an {@link IResourceMatcher} to
+	 * determine the resource mappings.
 	 * 
 	 * @param left
 	 *            The left {@link ResourceSet}.
@@ -92,28 +101,25 @@ public abstract class AbstractMatchEngine {
 	 *            The common ancestor of <code>left</code> and <code>right</code>. Can be <code>null</code>.
 	 */
 	protected void match(ResourceSet left, ResourceSet right, ResourceSet origin) {
-		final Iterable<Notifier> leftChildren = getScope().getChildren(left);
-		final Iterable<Notifier> rightChildren = getScope().getChildren(right);
-		final Iterable<Notifier> originChildren;
+		final Iterator<? extends Resource> leftChildren = getScope().getChildren(left);
+		final Iterator<? extends Resource> rightChildren = getScope().getChildren(right);
+		final Iterator<? extends Resource> originChildren;
 		if (origin != null) {
 			originChildren = getScope().getChildren(origin);
 		} else {
-			originChildren = Lists.newArrayList();
+			originChildren = Iterators.emptyIterator();
 		}
 
-		final Iterable<Resource> leftResources = Iterables.filter(leftChildren, Resource.class);
-		final Iterable<Resource> rightResources = Iterables.filter(rightChildren, Resource.class);
-		final Iterable<Resource> originResources = Iterables.filter(originChildren, Resource.class);
-
-		final ResourceMatcher matcher = createResourceMatcher(leftResources, rightResources, originResources);
-		final Iterable<ResourceMapping> mappings = matcher.createMappings();
+		final IResourceMatcher matcher = getResourceMatcher();
+		final Iterable<ResourceMapping> mappings = matcher.createMappings(leftChildren, rightChildren,
+				originChildren);
 
 		for (ResourceMapping mapping : mappings) {
 			final MatchResource matchResource = CompareFactory.eINSTANCE.createMatchResource();
-			if (mapping.getLeft().getURI() != null) {
+			if (mapping.getLeft() != null && mapping.getLeft().getURI() != null) {
 				matchResource.setLeftURI(mapping.getLeft().getURI().toString());
 			}
-			if (mapping.getRight().getURI() != null) {
+			if (mapping.getRight() != null && mapping.getRight().getURI() != null) {
 				matchResource.setRightURI(mapping.getRight().getURI().toString());
 			}
 			if (mapping.getOrigin() != null && mapping.getOrigin().getURI() != null) {
@@ -126,35 +132,111 @@ public abstract class AbstractMatchEngine {
 	}
 
 	/**
-	 * This will only query the scope for the given Resources' children, then iterate over these children to
-	 * match them together.
+	 * This will only query the scope for the given Resources' children, then delegate to an
+	 * {@link IEObjectMatcher} to determine the EObject matches.
+	 * <p>
+	 * We expect at least two of the given resources not to be <code>null</code>.
+	 * </p>
 	 * 
 	 * @param left
-	 *            The left {@link Resource}.
+	 *            The left {@link Resource}. Can be <code>null</code>.
 	 * @param right
-	 *            The right {@link Resource}.
+	 *            The right {@link Resource}. Can be <code>null</code>.
 	 * @param origin
-	 *            The common ancestor of <code>left</code> and <code>right</code>. can be <code>null</code>.
+	 *            The common ancestor of <code>left</code> and <code>right</code>. Can be <code>null</code>.
 	 */
 	protected void match(Resource left, Resource right, Resource origin) {
+		// We need at least two resources to match them
+		if (atLeastTwo(left == null, right == null, origin == null)) {
+			/*
+			 * TODO But if we have only one resource, which is then unmatched, should we not still do
+			 * something with it?
+			 */
+			return;
+		}
+
+		final Iterator<? extends EObject> leftEObjects;
+		if (left != null) {
+			leftEObjects = getScope().getChildren(left);
+		} else {
+			leftEObjects = Iterators.emptyIterator();
+		}
+		final Iterator<? extends EObject> rightEObjects;
+		if (right != null) {
+			rightEObjects = getScope().getChildren(right);
+		} else {
+			rightEObjects = Iterators.emptyIterator();
+		}
+		final Iterator<? extends EObject> originEObjects;
+		if (origin != null) {
+			originEObjects = getScope().getChildren(origin);
+		} else {
+			originEObjects = Iterators.emptyIterator();
+		}
+
+		final IEObjectMatcher matcher = createEObjectMatcher();
+		final Iterable<Match> matches = matcher.createMatches(leftEObjects, rightEObjects, originEObjects);
+
+		// CODEME
+	}
+
+	/**
+	 * This will query the scope for the given {@link EObject}s' children, then delegate to an
+	 * {@link IEObjectMatcher} to compute the {@link Match}es.
+	 * <p>
+	 * We expect at least the <code>left</code> and <code>right</code> EObjects not to be <code>null</code>.
+	 * </p>
+	 * 
+	 * @param left
+	 *            The left {@link EObject}.
+	 * @param right
+	 *            The right {@link EObject}.
+	 * @param origin
+	 *            The common ancestor of <code>left</code> and <code>right</code>.
+	 */
+	protected void match(EObject left, EObject right, EObject origin) {
+		if (left == null || right == null) {
+			// FIXME IAE or NPE?
+			throw new IllegalArgumentException();
+		}
+
+		final Iterator<? extends EObject> leftEObjects = getScope().getChildren(left);
+		final Iterator<? extends EObject> rightEObjects = getScope().getChildren(right);
+		final Iterator<? extends EObject> originEObjects;
+		if (origin != null) {
+			originEObjects = getScope().getChildren(origin);
+		} else {
+			originEObjects = Iterators.emptyIterator();
+		}
+
+		final IEObjectMatcher matcher = createEObjectMatcher();
+		final Iterable<Match> matches = matcher.createMatches(leftEObjects, rightEObjects, originEObjects);
+
 		// CODEME
 	}
 
 	/**
 	 * This will be used to create the resource matcher that will be used by this match engine.
 	 * 
-	 * @param leftResources
-	 *            The list of all resources from the left side.
-	 * @param rightResources
-	 *            The list of all resources from the right side.
-	 * @param originResources
-	 *            The list of all resources from the origin side.
-	 * @return A {@link ResourceMatcher} that can be used to retrieve the {@link MatchResource} corresponding
-	 *         to the given input.
+	 * @return An {@link IResourceMatcher} that can be used to retrieve the {@link MatchResource}s for this
+	 *         comparison.
 	 */
-	protected ResourceMatcher createResourceMatcher(Iterable<Resource> leftResources,
-			Iterable<Resource> rightResources, Iterable<Resource> originResources) {
-		return new ResourceMatcher(leftResources, rightResources, originResources);
+	protected IResourceMatcher getResourceMatcher() {
+		return new StrategyResourceMatcher();
+	}
+
+	/**
+	 * This will be used to create the EObject matcher that will be used by this match engine.
+	 * <p>
+	 * This default implementation uses an {@link IdentifierEObjectMatcher} to match EObjects through their ID
+	 * only.
+	 * </p>
+	 * 
+	 * @return An {@link IEObjectMatcher} that can be used to retrieve the {@link Match}es for this
+	 *         comparison.
+	 */
+	protected IEObjectMatcher createEObjectMatcher() {
+		return new IdentifierEObjectMatcher();
 	}
 
 	/**
@@ -177,5 +259,23 @@ public abstract class AbstractMatchEngine {
 	 */
 	protected AbstractComparisonScope getScope() {
 		return scope;
+	}
+
+	/**
+	 * This will check that at least two of the three given booleans are <code>true</code>.
+	 * 
+	 * @param condition1
+	 *            First of the three booleans.
+	 * @param condition2
+	 *            Second of the three booleans.
+	 * @param condition3
+	 *            Third of the three booleans.
+	 * @return <code>true</code> if at least two of the three given booleans are <code>true</code>,
+	 *         <code>false</code> otherwise.
+	 */
+	protected static boolean atLeastTwo(boolean condition1, boolean condition2, boolean condition3) {
+		// CHECKSTYLE:OFF This expression is alone in its method, and documented.
+		return condition1 && (condition2 || condition3) || (condition2 && condition3);
+		// CHECKSTYLE:ON
 	}
 }

@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.match.resource;
 import org.eclipse.emf.ecore.resource.Resource;
 
 /**
- * Simple structure that the {@link ResourceMatcher}s will use to map Resources together.
+ * Simple structure that the {@link StrategyResourceMatcher}s will use to map Resources together.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */

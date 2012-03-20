@@ -10,14 +10,15 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.scope;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Iterators;
 
-import java.util.List;
+import java.util.Iterator;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * This implementation of an {@link AbstractComparisonScope} will return all of its Notifiers' contents
@@ -43,18 +44,34 @@ public class DefaultComparisonScope extends AbstractComparisonScope {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.scope.AbstractComparisonScope#getChildren(org.eclipse.emf.common.notify.Notifier)
+	 * @see org.eclipse.emf.compare.scope.AbstractComparisonScope#getChildren(org.eclipse.emf.ecore.EObject)
 	 */
 	@Override
-	public Iterable<Notifier> getChildren(Notifier notifier) {
-		final List<Notifier> children = Lists.newArrayList();
-		if (notifier instanceof ResourceSet) {
-			children.addAll(((ResourceSet)notifier).getResources());
-		} else if (notifier instanceof Resource) {
-			children.addAll(((Resource)notifier).getContents());
-		} else if (notifier instanceof EObject) {
-			children.addAll(((EObject)notifier).eContents());
-		}
-		return children;
+	public Iterator<? extends EObject> getChildren(EObject eObject) {
+		final Iterator<EObject> properContent = Iterators.filter(EcoreUtil.getAllProperContents(eObject,
+				false), EObject.class);
+		return Iterators.unmodifiableIterator(properContent);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.scope.AbstractComparisonScope#getChildren(org.eclipse.emf.ecore.resource.Resource)
+	 */
+	@Override
+	public Iterator<? extends EObject> getChildren(Resource resource) {
+		final Iterator<EObject> properContent = Iterators.filter(EcoreUtil.getAllProperContents(resource,
+				false), EObject.class);
+		return Iterators.unmodifiableIterator(properContent);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.scope.AbstractComparisonScope#getChildren(org.eclipse.emf.ecore.resource.ResourceSet)
+	 */
+	@Override
+	public Iterator<? extends Resource> getChildren(ResourceSet resourceSet) {
+		return Iterators.unmodifiableIterator(resourceSet.getResources().iterator());
 	}
 }
