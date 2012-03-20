@@ -50,7 +50,6 @@
           </execution>
         </executions>
       </plugin>
-		<!--
       	<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
@@ -75,7 +74,6 @@ version=${unqualifiedVersion}"/>
 					</execution>
 				</executions>
 			</plugin>
-			-->
 		</plugins>
 	</build>
 
