@@ -2,13 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.tests
-Bundle-Version: 1.3.0.qualifier
+Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: org.eclipse.emf.compare.tests.EMFCompareTestsPlugin
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.common,
  org.eclipse.emf.ecore,
- org.eclipse.emf.compare;bundle-version="1.3.0",
+ org.eclipse.emf.compare;bundle-version="2.0.0",
  org.junit;bundle-version="4.8.2",
  org.eclipse.emf.ecore.xmi;bundle-version="2.8.0",
  org.eclipse.compare;bundle-version="3.5.300"
