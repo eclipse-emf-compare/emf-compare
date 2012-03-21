@@ -10,6 +10,10 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.emf.compare,
  org.eclipse.emf.compare.impl,
  org.eclipse.emf.compare.internal.spec;x-internal:=true,
+ org.eclipse.emf.compare.match,
+ org.eclipse.emf.compare.match.eobject,
+ org.eclipse.emf.compare.match.resource,
+ org.eclipse.emf.compare.scope,
  org.eclipse.emf.compare.util,
  org.eclipse.emf.compare.utils
 Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,

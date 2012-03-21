@@ -15,13 +15,15 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collections;
 
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.match.DefaultMatchEngine;
+import org.eclipse.emf.compare.scope.AbstractComparisonScope;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 /**
  * This class will be used to create a testing instance of a comparison model.
@@ -42,10 +44,12 @@ public class MockCompareModel {
 		return loadFromClassloader("extlibraryOrigin.ecore");
 	}
 
-	public Comparison createComparisonModel() {
-		final Comparison comparison = CompareFactory.eINSTANCE.createComparison();
-		// CODEME
-		return comparison;
+	public Comparison createComparisonModel() throws IOException {
+		final AbstractComparisonScope scope = new DefaultComparisonScope(getLeftModel(), getRightModel(),
+				getOriginModel());
+		final DefaultMatchEngine engine = new DefaultMatchEngine();
+
+		return engine.match(scope);
 	}
 
 	/**
@@ -59,10 +63,17 @@ public class MockCompareModel {
 	 *             <code>string</code> points.
 	 */
 	private Resource loadFromClassloader(String string) throws IOException {
-		final URL fileURL = FileLocator.toFileURL(getClass().getResource(string));
+		final URL fileURL = getClass().getResource(string);
 		final InputStream str = fileURL.openStream();
 		final ResourceSet resourceSet = new ResourceSetImpl();
-		final Resource res = resourceSet.createResource(URI.createURI(fileURL.toString()));
+		final URI uri = URI.createURI(fileURL.toString());
+		Resource res = resourceSet.createResource(uri);
+		if (res == null) {
+			// standalone run
+			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(uri.fileExtension(),
+					new XMIResourceFactoryImpl());
+			res = resourceSet.createResource(uri);
+		}
 		res.load(str, Collections.emptyMap());
 		str.close();
 		return res;

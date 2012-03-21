@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
 import java.util.Iterator;
@@ -38,54 +39,37 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public abstract class AbstractMatchEngine {
+public class DefaultMatchEngine implements IMatchEngine {
 	/** Root of this comparison, should only be accessed or instantiated through {@link #getComparison()}. */
-	private Comparison comparison;
+	protected Comparison comparison;
 
 	/** The comparison scope that will be used by this engine. Should be accessed through {@link #getScope()}. */
-	private final AbstractComparisonScope scope;
+	protected AbstractComparisonScope comparisonScope;
 
 	/**
-	 * Initializes a match engine given the comparison scope it should use.
+	 * {@inheritDoc}
 	 * 
-	 * @param scope
-	 *            The comparison scope that should be used by this engine.
+	 * @see org.eclipse.emf.compare.match.IMatchEngine#match(org.eclipse.emf.compare.scope.AbstractComparisonScope)
 	 */
-	public AbstractMatchEngine(AbstractComparisonScope scope) {
-		this.scope = scope;
-	}
+	public Comparison match(AbstractComparisonScope scope) {
+		this.comparisonScope = scope;
 
-	/**
-	 * This is the entry point of a Comparison (Match-Diff process). It will use the given scope in order to
-	 * determine which objects it should iterate over.
-	 * 
-	 * @return An initialized {@link Comparison} model with all matches determined.
-	 */
-	public Comparison match() {
 		final Notifier left = getScope().getLeft();
 		final Notifier right = getScope().getRight();
 		final Notifier origin = getScope().getOrigin();
 
 		// FIXME side-effect coding
-		match(left, right, origin);
+		if (left instanceof ResourceSet || right instanceof ResourceSet) {
+			match((ResourceSet)left, (ResourceSet)right, (ResourceSet)origin);
+		} else if (left instanceof Resource || right instanceof Resource) {
+			match((Resource)left, (Resource)right, (Resource)origin);
+		} else if (left instanceof EObject || right instanceof Resource) {
+			match((EObject)left, (EObject)right, (EObject)origin);
+		} else {
+			// FIXME
+		}
 
 		return getComparison();
-	}
-
-	/**
-	 * This will only be called on unknown Notifier types; and will throw an
-	 * {@link UnsupportedOperationException}. Subclasses should handle the necessary dispatching.
-	 * 
-	 * @param left
-	 *            The left Notifier.
-	 * @param right
-	 *            The right Notifier.
-	 * @param origin
-	 *            The common ancestor of <code>left</code> and <code>right</code>. Can be <code>null</code>.
-	 */
-	protected void match(Notifier left, Notifier right, Notifier origin) {
-		// Unknown notifier type
-		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -177,7 +161,7 @@ public abstract class AbstractMatchEngine {
 		final IEObjectMatcher matcher = createEObjectMatcher();
 		final Iterable<Match> matches = matcher.createMatches(leftEObjects, rightEObjects, originEObjects);
 
-		// CODEME
+		Iterables.addAll(getComparison().getMatches(), matches);
 	}
 
 	/**
@@ -212,7 +196,7 @@ public abstract class AbstractMatchEngine {
 		final IEObjectMatcher matcher = createEObjectMatcher();
 		final Iterable<Match> matches = matcher.createMatches(leftEObjects, rightEObjects, originEObjects);
 
-		// CODEME
+		Iterables.addAll(getComparison().getMatches(), matches);
 	}
 
 	/**
@@ -258,7 +242,7 @@ public abstract class AbstractMatchEngine {
 	 * @return The comparison scope associated with this engine.
 	 */
 	protected AbstractComparisonScope getScope() {
-		return scope;
+		return comparisonScope;
 	}
 
 	/**

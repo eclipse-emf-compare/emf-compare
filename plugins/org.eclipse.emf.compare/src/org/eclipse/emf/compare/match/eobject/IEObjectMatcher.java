@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * An {@link IEObjectMatcher} will be used by the default implementation of the
- * {@link org.eclipse.emf.compare.match.AbstractMatchEngine} in order to determine the mappings between three
+ * {@link org.eclipse.emf.compare.match.DefaultMatchEngine} in order to determine the mappings between three
  * lists of EObjects coming from the left, right and origin sides.
  * <p>
  * Do take note that the match engine expects {@link IEObjectMatcher}s to return both matching and unmatching
