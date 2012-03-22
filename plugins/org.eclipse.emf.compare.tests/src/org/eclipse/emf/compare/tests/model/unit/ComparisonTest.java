@@ -13,8 +13,12 @@ package org.eclipse.emf.compare.tests.model.unit;
 import java.io.IOException;
 
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.tests.model.mock.MockCompareModel;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
@@ -45,6 +49,45 @@ public class ComparisonTest {
 				.println("|----------------------------------------|----------------------------------------|----------------------------------------|");
 		for (Match match : comparison.getMatches()) {
 			printMatch(match);
+		}
+		System.out
+				.println("|----------------------------------------|----------------------------------------|----------------------------------------|");
+
+		for (Diff diff : comparison.getDifferences()) {
+			printDiff(diff);
+		}
+	}
+
+	private static void printDiff(Diff diff) {
+		if (diff instanceof ReferenceChange) {
+			final ReferenceChange refChange = (ReferenceChange)diff;
+			final String valueName;
+			if (refChange.getValue() instanceof ENamedElement) {
+				valueName = ((ENamedElement)refChange.getValue()).getName();
+			} else {
+				valueName = refChange.getValue().toString();
+			}
+			String change = "";
+			if (diff.getSource() == DifferenceSource.RIGHT) {
+				change = "remotely ";
+			}
+			if (diff.getKind() == DifferenceKind.ADD) {
+				change += "added to";
+			} else {
+				change += "deleted from";
+			}
+			final String objectName;
+			if (refChange.getMatch().getLeft() instanceof ENamedElement) {
+				objectName = ((ENamedElement)refChange.getMatch().getLeft()).getName();
+			} else if (refChange.getMatch().getRight() instanceof ENamedElement) {
+				objectName = ((ENamedElement)refChange.getMatch().getRight()).getName();
+			} else if (refChange.getMatch().getOrigin() instanceof ENamedElement) {
+				objectName = ((ENamedElement)refChange.getMatch().getOrigin()).getName();
+			} else {
+				objectName = "";
+			}
+			System.out.println("value " + valueName + " has been " + change + " reference "
+					+ refChange.getReference().getName() + " of object " + objectName);
 		}
 	}
 
@@ -113,7 +156,7 @@ public class ComparisonTest {
 			System.out.println('|' + leftName + '|' + rightName + '|' + originName + '|');
 		}
 
-		for (Match submatch : match.getSubMatches()) {
+		for (Match submatch : match.getSubmatches()) {
 			printMatch(submatch);
 		}
 	}

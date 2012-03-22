@@ -10,11 +10,15 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.scope;
 
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.base.Predicates.not;
+
 import com.google.common.collect.Iterators;
 
 import java.util.Iterator;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -50,7 +54,13 @@ public class DefaultComparisonScope extends AbstractComparisonScope {
 	public Iterator<? extends EObject> getChildren(EObject eObject) {
 		final Iterator<EObject> properContent = Iterators.filter(EcoreUtil.getAllProperContents(eObject,
 				false), EObject.class);
-		return Iterators.unmodifiableIterator(properContent);
+		/*
+		 * EGenericTypes are usually "mutually derived" references that are handled through specific means in
+		 * ecore (eGenericSuperTypes and eSuperTypes, EGenericType and eType...). As these aren't even shown
+		 * to the user, we wish to avoid detection of changes on them.
+		 */
+		final Iterator<EObject> filter = Iterators.filter(properContent, not(instanceOf(EGenericType.class)));
+		return Iterators.unmodifiableIterator(filter);
 	}
 
 	/**
@@ -62,7 +72,13 @@ public class DefaultComparisonScope extends AbstractComparisonScope {
 	public Iterator<? extends EObject> getChildren(Resource resource) {
 		final Iterator<EObject> properContent = Iterators.filter(EcoreUtil.getAllProperContents(resource,
 				false), EObject.class);
-		return Iterators.unmodifiableIterator(properContent);
+		/*
+		 * EGenericTypes are usually "mutually derived" references that are handled through specific means in
+		 * ecore (eGenericSuperTypes and eSuperTypes, EGenericType and eType...). As these aren't even shown
+		 * to the user, we wish to avoid detection of changes on them.
+		 */
+		final Iterator<EObject> filter = Iterators.filter(properContent, not(instanceOf(EGenericType.class)));
+		return Iterators.unmodifiableIterator(filter);
 	}
 
 	/**

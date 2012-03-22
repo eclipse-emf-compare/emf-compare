@@ -32,6 +32,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.emf.compare.Diff#getRefines <em>Refines</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getRefinedBy <em>Refined By</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getKind <em>Kind</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getSource <em>Source</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getEquivalentDiffs <em>Equivalent Diffs</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getConflict <em>Conflict</em>}</li>
  * </ul>
@@ -227,15 +228,32 @@ public interface Diff extends EObject {
 	void setConflict(Conflict value);
 
 	/**
+	 * Returns the value of the '<em><b>Source</b></em>' attribute.
+	 * The literals are from the enumeration {@link org.eclipse.emf.compare.DifferenceSource}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * Returns the source of this diff, either one of DifferenceSource.LEFT (for two-way comparisons or differences detected between the left and origin elements) or DifferenceSource.RIGHT (for differences between the right and origin elements).
 	 * <!-- end-model-doc -->
-	 * @model kind="operation"
+	 * @return the value of the '<em>Source</em>' attribute.
+	 * @see org.eclipse.emf.compare.DifferenceSource
+	 * @see #setSource(DifferenceSource)
+	 * @see org.eclipse.emf.compare.ComparePackage#getDiff_Source()
+	 * @model required="true"
 	 * @generated
 	 */
 	DifferenceSource getSource();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.Diff#getSource <em>Source</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Source</em>' attribute.
+	 * @see org.eclipse.emf.compare.DifferenceSource
+	 * @see #getSource()
+	 * @generated
+	 */
+	void setSource(DifferenceSource value);
 
 	/**
 	 * <!-- begin-user-doc -->

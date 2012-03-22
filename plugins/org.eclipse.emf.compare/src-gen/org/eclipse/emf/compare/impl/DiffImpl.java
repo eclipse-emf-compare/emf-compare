@@ -48,6 +48,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getRefines <em>Refines</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getRefinedBy <em>Refined By</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getKind <em>Kind</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getSource <em>Source</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getEquivalentDiffs <em>Equivalent Diffs</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getConflict <em>Conflict</em>}</li>
  * </ul>
@@ -122,6 +123,26 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	 * @ordered
 	 */
 	protected DifferenceKind kind = KIND_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getSource() <em>Source</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSource()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final DifferenceSource SOURCE_EDEFAULT = DifferenceSource.LEFT;
+
+	/**
+	 * The cached value of the '{@link #getSource() <em>Source</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSource()
+	 * @generated
+	 * @ordered
+	 */
+	protected DifferenceSource source = SOURCE_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getEquivalentDiffs() <em>Equivalent Diffs</em>}' reference.
@@ -426,9 +447,20 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	 * @generated
 	 */
 	public DifferenceSource getSource() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		return source;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setSource(DifferenceSource newSource) {
+		DifferenceSource oldSource = source;
+		source = newSource == null ? SOURCE_EDEFAULT : newSource;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ComparePackage.DIFF__SOURCE, oldSource,
+					source));
 	}
 
 	/**
@@ -566,6 +598,8 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 				return getRefinedBy();
 			case ComparePackage.DIFF__KIND:
 				return getKind();
+			case ComparePackage.DIFF__SOURCE:
+				return getSource();
 			case ComparePackage.DIFF__EQUIVALENT_DIFFS:
 				if (resolve)
 					return getEquivalentDiffs();
@@ -609,6 +643,9 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 			case ComparePackage.DIFF__KIND:
 				setKind((DifferenceKind)newValue);
 				return;
+			case ComparePackage.DIFF__SOURCE:
+				setSource((DifferenceSource)newValue);
+				return;
 			case ComparePackage.DIFF__EQUIVALENT_DIFFS:
 				setEquivalentDiffs((Equivalence)newValue);
 				return;
@@ -645,6 +682,9 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 			case ComparePackage.DIFF__KIND:
 				setKind(KIND_EDEFAULT);
 				return;
+			case ComparePackage.DIFF__SOURCE:
+				setSource(SOURCE_EDEFAULT);
+				return;
 			case ComparePackage.DIFF__EQUIVALENT_DIFFS:
 				setEquivalentDiffs((Equivalence)null);
 				return;
@@ -675,6 +715,8 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 				return refinedBy != null && !refinedBy.isEmpty();
 			case ComparePackage.DIFF__KIND:
 				return kind != KIND_EDEFAULT;
+			case ComparePackage.DIFF__SOURCE:
+				return source != SOURCE_EDEFAULT;
 			case ComparePackage.DIFF__EQUIVALENT_DIFFS:
 				return equivalentDiffs != null;
 			case ComparePackage.DIFF__CONFLICT:
@@ -696,6 +738,8 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (kind: "); //$NON-NLS-1$
 		result.append(kind);
+		result.append(", source: "); //$NON-NLS-1$
+		result.append(source);
 		result.append(')');
 		return result.toString();
 	}

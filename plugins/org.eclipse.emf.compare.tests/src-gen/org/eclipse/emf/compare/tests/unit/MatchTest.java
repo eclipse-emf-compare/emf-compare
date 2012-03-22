@@ -26,7 +26,7 @@ public class MatchTest extends AbstractCompareTest {
 	 */
 	@Test
 	public void testSubMatches() {
-		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE.getMatch_SubMatches();
+		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE.getMatch_Submatches();
 		Match match = CompareFactory.eINSTANCE.createMatch();
 		match.eAdapters().add(new MockEAdapter());
 		org.eclipse.emf.compare.Match subMatchesValue = org.eclipse.emf.compare.CompareFactory.eINSTANCE
@@ -35,30 +35,30 @@ public class MatchTest extends AbstractCompareTest {
 		listSubMatches.add(subMatchesValue);
 
 		assertFalse(match.eIsSet(feature));
-		assertTrue(match.getSubMatches().isEmpty());
+		assertTrue(match.getSubmatches().isEmpty());
 
-		match.getSubMatches().add(subMatchesValue);
+		match.getSubmatches().add(subMatchesValue);
 		assertTrue(notified);
 		notified = false;
-		assertTrue(match.getSubMatches().contains(subMatchesValue));
-		assertSame(match.getSubMatches(), match.eGet(feature));
-		assertSame(match.getSubMatches(), match.eGet(feature, false));
+		assertTrue(match.getSubmatches().contains(subMatchesValue));
+		assertSame(match.getSubmatches(), match.eGet(feature));
+		assertSame(match.getSubmatches(), match.eGet(feature, false));
 		assertTrue(match.eIsSet(feature));
 
 		match.eUnset(feature);
 		assertTrue(notified);
 		notified = false;
-		assertTrue(match.getSubMatches().isEmpty());
-		assertSame(match.getSubMatches(), match.eGet(feature));
-		assertSame(match.getSubMatches(), match.eGet(feature, false));
+		assertTrue(match.getSubmatches().isEmpty());
+		assertSame(match.getSubmatches(), match.eGet(feature));
+		assertSame(match.getSubmatches(), match.eGet(feature, false));
 		assertFalse(match.eIsSet(feature));
 
 		match.eSet(feature, listSubMatches);
 		assertTrue(notified);
 		notified = false;
-		assertTrue(match.getSubMatches().contains(subMatchesValue));
-		assertSame(match.getSubMatches(), match.eGet(feature));
-		assertSame(match.getSubMatches(), match.eGet(feature, false));
+		assertTrue(match.getSubmatches().contains(subMatchesValue));
+		assertSame(match.getSubmatches(), match.eGet(feature));
+		assertSame(match.getSubmatches(), match.eGet(feature, false));
 		assertTrue(match.eIsSet(feature));
 	}
 

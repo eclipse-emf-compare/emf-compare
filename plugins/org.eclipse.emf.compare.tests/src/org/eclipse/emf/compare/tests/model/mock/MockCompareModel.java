@@ -17,6 +17,7 @@ import java.util.Collections;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.diff.DefaultDiffEngine;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.scope.AbstractComparisonScope;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
@@ -47,9 +48,11 @@ public class MockCompareModel {
 	public Comparison createComparisonModel() throws IOException {
 		final AbstractComparisonScope scope = new DefaultComparisonScope(getLeftModel(), getRightModel(),
 				getOriginModel());
-		final DefaultMatchEngine engine = new DefaultMatchEngine();
-
-		return engine.match(scope);
+		final DefaultMatchEngine matchEngine = new DefaultMatchEngine();
+		Comparison comparison = matchEngine.match(scope);
+		final DefaultDiffEngine diffEngine = new DefaultDiffEngine();
+		diffEngine.diff(comparison, scope);
+		return comparison;
 	}
 
 	/**

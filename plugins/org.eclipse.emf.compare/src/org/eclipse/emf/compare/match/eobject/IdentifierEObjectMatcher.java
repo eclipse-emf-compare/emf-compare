@@ -20,6 +20,7 @@ import java.util.Set;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
@@ -62,7 +63,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 			final EObject parentEObject = left.eContainer();
 			final Match parent = leftEObjectsToMatch.get(parentEObject);
 			if (parent != null) {
-				parent.getSubMatches().add(match);
+				parent.getSubmatches().add(match);
 			} else {
 				matches.add(match);
 			}
@@ -93,7 +94,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 				final EObject parentEObject = right.eContainer();
 				final Match parent = rightEObjectsToMatch.get(parentEObject);
 				if (parent != null) {
-					parent.getSubMatches().add(match);
+					parent.getSubmatches().add(match);
 				} else {
 					matches.add(match);
 				}
@@ -124,7 +125,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 				final EObject parentEObject = origin.eContainer();
 				final Match parent = originEObjectsToMatch.get(parentEObject);
 				if (parent != null) {
-					parent.getSubMatches().add(match);
+					parent.getSubmatches().add(match);
 				} else {
 					matches.add(match);
 				}
@@ -140,18 +141,23 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 	}
 
 	/**
-	 * This will be used to retrieve either the eIdAttribute's value for the given EObject or its XMI:ID. If
-	 * none are set, we'll return <code>null</code>.
-	 * <p>
-	 * Note that if the eIdAttribute of this EObject is set, we will not try and find an XMI:ID.
-	 * </p>
+	 * This will be used to determine what represents the "identifier" of an EObject. By default, we will use
+	 * the following logic, in order (i.e. if condition 1 is fulfilled, we will not try conditions 2 and 3) :
+	 * <ol>
+	 * <li>If the given eObject is a proxy, it is uniquely identified by its URI fragment.</li>
+	 * <li>If the eObject's EClass has an eIdAttribute set, use this attribute's value.</li>
+	 * <li>If the eObject is located in an XMI resource and has an XMI ID, use this as its unique identifier.</li>
+	 * </ol>
 	 * 
 	 * @param eObject
 	 *            The EObject for which we need an identifier.
-	 * @return The identifier for that EObject, be it the value of this EObject's eIdAttribute (if it is set)
-	 *         or an XMI:ID. Could be <code>null</code> if none are set.
+	 * @return The identifier for that EObject if we could determine one. <code>null</code> if no condition
+	 *         (see description above) is fulfilled for the given eObject.
 	 */
 	protected String getID(EObject eObject) {
+		if (eObject.eIsProxy()) {
+			return ((InternalEObject)eObject).eProxyURI().fragment();
+		}
 		String identifier = EcoreUtil.getID(eObject);
 		if (identifier == null) {
 			final Resource eObjectResource = eObject.eResource();

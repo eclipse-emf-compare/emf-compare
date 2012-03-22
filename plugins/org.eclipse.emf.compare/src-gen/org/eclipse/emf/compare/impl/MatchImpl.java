@@ -39,7 +39,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.impl.MatchImpl#getSubMatches <em>Sub Matches</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.MatchImpl#getSubmatches <em>Submatches</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.MatchImpl#getDifferences <em>Differences</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.MatchImpl#getLeft <em>Left</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.MatchImpl#getRight <em>Right</em>}</li>
@@ -58,14 +58,14 @@ public class MatchImpl extends MinimalEObjectImpl implements Match {
 	public static final String copyright = "Copyright (c) 2012 Obeo.\r\nAll rights reserved. This program and the accompanying materials\r\nare made available under the terms of the Eclipse Public License v1.0\r\nwhich accompanies this distribution, and is available at\r\nhttp://www.eclipse.org/legal/epl-v10.html\r\n\r\nContributors:\r\n    Obeo - initial API and implementation"; //$NON-NLS-1$
 
 	/**
-	 * The cached value of the '{@link #getSubMatches() <em>Sub Matches</em>}' containment reference list.
+	 * The cached value of the '{@link #getSubmatches() <em>Submatches</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getSubMatches()
+	 * @see #getSubmatches()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Match> subMatches;
+	protected EList<Match> submatches;
 
 	/**
 	 * The cached value of the '{@link #getDifferences() <em>Differences</em>}' containment reference list.
@@ -131,12 +131,12 @@ public class MatchImpl extends MinimalEObjectImpl implements Match {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Match> getSubMatches() {
-		if (subMatches == null) {
-			subMatches = new EObjectContainmentEList<Match>(Match.class, this,
-					ComparePackage.MATCH__SUB_MATCHES);
+	public EList<Match> getSubmatches() {
+		if (submatches == null) {
+			submatches = new EObjectContainmentEList<Match>(Match.class, this,
+					ComparePackage.MATCH__SUBMATCHES);
 		}
-		return subMatches;
+		return submatches;
 	}
 
 	/**
@@ -295,8 +295,8 @@ public class MatchImpl extends MinimalEObjectImpl implements Match {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case ComparePackage.MATCH__SUB_MATCHES:
-				return ((InternalEList<?>)getSubMatches()).basicRemove(otherEnd, msgs);
+			case ComparePackage.MATCH__SUBMATCHES:
+				return ((InternalEList<?>)getSubmatches()).basicRemove(otherEnd, msgs);
 			case ComparePackage.MATCH__DIFFERENCES:
 				return ((InternalEList<?>)getDifferences()).basicRemove(otherEnd, msgs);
 		}
@@ -311,8 +311,8 @@ public class MatchImpl extends MinimalEObjectImpl implements Match {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ComparePackage.MATCH__SUB_MATCHES:
-				return getSubMatches();
+			case ComparePackage.MATCH__SUBMATCHES:
+				return getSubmatches();
 			case ComparePackage.MATCH__DIFFERENCES:
 				return getDifferences();
 			case ComparePackage.MATCH__LEFT:
@@ -340,9 +340,9 @@ public class MatchImpl extends MinimalEObjectImpl implements Match {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ComparePackage.MATCH__SUB_MATCHES:
-				getSubMatches().clear();
-				getSubMatches().addAll((Collection<? extends Match>)newValue);
+			case ComparePackage.MATCH__SUBMATCHES:
+				getSubmatches().clear();
+				getSubmatches().addAll((Collection<? extends Match>)newValue);
 				return;
 			case ComparePackage.MATCH__DIFFERENCES:
 				getDifferences().clear();
@@ -369,8 +369,8 @@ public class MatchImpl extends MinimalEObjectImpl implements Match {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ComparePackage.MATCH__SUB_MATCHES:
-				getSubMatches().clear();
+			case ComparePackage.MATCH__SUBMATCHES:
+				getSubmatches().clear();
 				return;
 			case ComparePackage.MATCH__DIFFERENCES:
 				getDifferences().clear();
@@ -396,8 +396,8 @@ public class MatchImpl extends MinimalEObjectImpl implements Match {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ComparePackage.MATCH__SUB_MATCHES:
-				return subMatches != null && !subMatches.isEmpty();
+			case ComparePackage.MATCH__SUBMATCHES:
+				return submatches != null && !submatches.isEmpty();
 			case ComparePackage.MATCH__DIFFERENCES:
 				return differences != null && !differences.isEmpty();
 			case ComparePackage.MATCH__LEFT:

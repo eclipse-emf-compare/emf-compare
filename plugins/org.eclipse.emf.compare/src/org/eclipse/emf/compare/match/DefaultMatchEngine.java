@@ -34,7 +34,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  * The Match engine orchestrates the matching process : it takes a {@link AbstractComparisonScope scope} as
  * input, iterates over its {@link AbstractComparisonScope#getLeft() left},
  * {@link AbstractComparisonScope#getRight() right} and {@link AbstractComparisonScope#getOrigin() origin}
- * root and delegates to {@link IResourceMatcher}s and {@link IEObjectMatcher}s in order to create the result
+ * roots and delegates to {@link IResourceMatcher}s and {@link IEObjectMatcher}s in order to create the result
  * {@link Comparison} model for this scope.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
@@ -63,7 +63,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 			match((ResourceSet)left, (ResourceSet)right, (ResourceSet)origin);
 		} else if (left instanceof Resource || right instanceof Resource) {
 			match((Resource)left, (Resource)right, (Resource)origin);
-		} else if (left instanceof EObject || right instanceof Resource) {
+		} else if (left instanceof EObject || right instanceof EObject) {
 			match((EObject)left, (EObject)right, (EObject)origin);
 		} else {
 			// FIXME

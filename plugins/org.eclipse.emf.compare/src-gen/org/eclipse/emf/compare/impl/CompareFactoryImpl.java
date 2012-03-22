@@ -10,6 +10,7 @@
  */
 package org.eclipse.emf.compare.impl;
 
+import org.eclipse.emf.compare.*;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.ComparePackage;
@@ -33,7 +34,6 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
- * 
  * @generated
  */
 @SuppressWarnings("unused")
@@ -41,14 +41,13 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public static final String copyright = "Copyright (c) 2012 Obeo.\r\nAll rights reserved. This program and the accompanying materials\r\nare made available under the terms of the Eclipse Public License v1.0\r\nwhich accompanies this distribution, and is available at\r\nhttp://www.eclipse.org/legal/epl-v10.html\r\n\r\nContributors:\r\n    Obeo - initial API and implementation"; //$NON-NLS-1$
 
 	/**
-	 * Creates the default factory implementation. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public static CompareFactory init() {
@@ -65,8 +64,8 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 	}
 
 	/**
-	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public CompareFactoryImpl() {
@@ -75,7 +74,6 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -107,7 +105,6 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -125,7 +122,6 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -153,7 +149,6 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public MatchResource createMatchResource() {
@@ -163,7 +158,6 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Match createMatch() {
@@ -173,7 +167,6 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Diff createDiff() {
@@ -183,7 +176,6 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ResourceAttachmentChange createResourceAttachmentChange() {
@@ -193,7 +185,6 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ReferenceChange createReferenceChange() {
@@ -203,7 +194,6 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public AttributeChange createAttributeChange() {
@@ -213,7 +203,6 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Conflict createConflict() {
@@ -223,7 +212,6 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Equivalence createEquivalence() {
@@ -233,21 +221,18 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DifferenceKind createDifferenceKindFromString(EDataType eDataType, String initialValue) {
 		DifferenceKind result = DifferenceKind.get(initialValue);
-		if (result == null) {
+		if (result == null)
 			throw new IllegalArgumentException(
 					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		}
 		return result;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String convertDifferenceKindToString(EDataType eDataType, Object instanceValue) {
@@ -256,21 +241,18 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DifferenceSource createDifferenceSourceFromString(EDataType eDataType, String initialValue) {
 		DifferenceSource result = DifferenceSource.get(initialValue);
-		if (result == null) {
+		if (result == null)
 			throw new IllegalArgumentException(
 					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		}
 		return result;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String convertDifferenceSourceToString(EDataType eDataType, Object instanceValue) {
@@ -279,7 +261,6 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ComparePackage getComparePackage() {
@@ -288,7 +269,6 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @deprecated
 	 * @generated
 	 */

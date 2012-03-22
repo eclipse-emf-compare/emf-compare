@@ -174,13 +174,13 @@ public interface ComparePackage extends EPackage {
 	int MATCH = 2;
 
 	/**
-	 * The feature id for the '<em><b>Sub Matches</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Submatches</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MATCH__SUB_MATCHES = 0;
+	int MATCH__SUBMATCHES = 0;
 
 	/**
 	 * The feature id for the '<em><b>Differences</b></em>' containment reference list.
@@ -292,13 +292,22 @@ public interface ComparePackage extends EPackage {
 	int DIFF__KIND = 5;
 
 	/**
+	 * The feature id for the '<em><b>Source</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF__SOURCE = 6;
+
+	/**
 	 * The feature id for the '<em><b>Equivalent Diffs</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF__EQUIVALENT_DIFFS = 6;
+	int DIFF__EQUIVALENT_DIFFS = 7;
 
 	/**
 	 * The feature id for the '<em><b>Conflict</b></em>' reference.
@@ -307,7 +316,7 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF__CONFLICT = 7;
+	int DIFF__CONFLICT = 8;
 
 	/**
 	 * The number of structural features of the '<em>Diff</em>' class.
@@ -316,7 +325,7 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF_FEATURE_COUNT = 8;
+	int DIFF_FEATURE_COUNT = 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.impl.ResourceAttachmentChangeImpl <em>Resource Attachment Change</em>}' class.
@@ -381,6 +390,15 @@ public interface ComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int RESOURCE_ATTACHMENT_CHANGE__KIND = DIFF__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESOURCE_ATTACHMENT_CHANGE__SOURCE = DIFF__SOURCE;
 
 	/**
 	 * The feature id for the '<em><b>Equivalent Diffs</b></em>' reference.
@@ -481,6 +499,15 @@ public interface ComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int REFERENCE_CHANGE__KIND = DIFF__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE__SOURCE = DIFF__SOURCE;
 
 	/**
 	 * The feature id for the '<em><b>Equivalent Diffs</b></em>' reference.
@@ -590,6 +617,15 @@ public interface ComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int ATTRIBUTE_CHANGE__KIND = DIFF__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE__SOURCE = DIFF__SOURCE;
 
 	/**
 	 * The feature id for the '<em><b>Equivalent Diffs</b></em>' reference.
@@ -809,15 +845,15 @@ public interface ComparePackage extends EPackage {
 	EClass getMatch();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.compare.Match#getSubMatches <em>Sub Matches</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.compare.Match#getSubmatches <em>Submatches</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Sub Matches</em>'.
-	 * @see org.eclipse.emf.compare.Match#getSubMatches()
+	 * @return the meta object for the containment reference list '<em>Submatches</em>'.
+	 * @see org.eclipse.emf.compare.Match#getSubmatches()
 	 * @see #getMatch()
 	 * @generated
 	 */
-	EReference getMatch_SubMatches();
+	EReference getMatch_Submatches();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.compare.Match#getDifferences <em>Differences</em>}'.
@@ -938,6 +974,17 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getDiff_Kind();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.Diff#getSource <em>Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Source</em>'.
+	 * @see org.eclipse.emf.compare.Diff#getSource()
+	 * @see #getDiff()
+	 * @generated
+	 */
+	EAttribute getDiff_Source();
 
 	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.Diff#getEquivalentDiffs <em>Equivalent Diffs</em>}'.
@@ -1129,7 +1176,8 @@ public interface ComparePackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("hiding") // generated code, removing warnings
+	@SuppressWarnings("hiding")
+	// generated code, removing warnings
 	interface Literals {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.impl.ComparisonImpl <em>Comparison</em>}' class.
@@ -1210,12 +1258,12 @@ public interface ComparePackage extends EPackage {
 		EClass MATCH = eINSTANCE.getMatch();
 
 		/**
-		 * The meta object literal for the '<em><b>Sub Matches</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Submatches</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference MATCH__SUB_MATCHES = eINSTANCE.getMatch_SubMatches();
+		EReference MATCH__SUBMATCHES = eINSTANCE.getMatch_Submatches();
 
 		/**
 		 * The meta object literal for the '<em><b>Differences</b></em>' containment reference list feature.
@@ -1306,6 +1354,14 @@ public interface ComparePackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute DIFF__KIND = eINSTANCE.getDiff_Kind();
+
+		/**
+		 * The meta object literal for the '<em><b>Source</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DIFF__SOURCE = eINSTANCE.getDiff_Source();
 
 		/**
 		 * The meta object literal for the '<em><b>Equivalent Diffs</b></em>' reference feature.

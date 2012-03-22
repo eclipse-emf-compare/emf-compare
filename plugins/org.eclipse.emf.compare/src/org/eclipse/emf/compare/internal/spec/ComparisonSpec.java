@@ -129,8 +129,8 @@ public class ComparisonSpec extends ComparisonImpl {
 	 */
 	private static Match getMatch(Match parent, EObject element) {
 		Match submatch = null;
-		for (int i = 0; i < parent.getSubMatches().size() && submatch == null; i++) {
-			final Match child = parent.getSubMatches().get(i);
+		for (int i = 0; i < parent.getSubmatches().size() && submatch == null; i++) {
+			final Match child = parent.getSubmatches().get(i);
 			if (child.getLeft() == element || child.getRight() == element || child.getOrigin() == element) {
 				submatch = child;
 			}
@@ -148,7 +148,7 @@ public class ComparisonSpec extends ComparisonImpl {
 	private static Iterable<Diff> getDifferences(Match match) {
 		Iterable<Diff> differences = Lists.newArrayList(match.getDifferences());
 
-		final List<Match> submappings = match.getSubMatches();
+		final List<Match> submappings = match.getSubmatches();
 		for (int i = 0; i < submappings.size(); i++) {
 			differences = Iterables.concat(differences, getDifferences(submappings.get(i)));
 		}

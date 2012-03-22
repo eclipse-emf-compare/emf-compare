@@ -277,7 +277,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getMatch_SubMatches() {
+	public EReference getMatch_Submatches() {
 		return (EReference)matchEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -385,8 +385,17 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getDiff_Source() {
+		return (EAttribute)diffEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getDiff_EquivalentDiffs() {
-		return (EReference)diffEClass.getEStructuralFeatures().get(6);
+		return (EReference)diffEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -395,7 +404,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * @generated
 	 */
 	public EReference getDiff_Conflict() {
-		return (EReference)diffEClass.getEStructuralFeatures().get(7);
+		return (EReference)diffEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -564,7 +573,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		createEAttribute(matchResourceEClass, MATCH_RESOURCE__ORIGIN_URI);
 
 		matchEClass = createEClass(MATCH);
-		createEReference(matchEClass, MATCH__SUB_MATCHES);
+		createEReference(matchEClass, MATCH__SUBMATCHES);
 		createEReference(matchEClass, MATCH__DIFFERENCES);
 		createEReference(matchEClass, MATCH__LEFT);
 		createEReference(matchEClass, MATCH__RIGHT);
@@ -577,6 +586,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		createEReference(diffEClass, DIFF__REFINES);
 		createEReference(diffEClass, DIFF__REFINED_BY);
 		createEAttribute(diffEClass, DIFF__KIND);
+		createEAttribute(diffEClass, DIFF__SOURCE);
 		createEReference(diffEClass, DIFF__EQUIVALENT_DIFFS);
 		createEReference(diffEClass, DIFF__CONFLICT);
 
@@ -689,10 +699,10 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		initEClass(matchEClass, Match.class,
 				"Match", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(
-				getMatch_SubMatches(),
+				getMatch_Submatches(),
 				this.getMatch(),
 				null,
-				"subMatches", null, 0, -1, Match.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"submatches", null, 0, -1, Match.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getMatch_Differences(),
 				this.getDiff(),
@@ -744,6 +754,10 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 				getDiff_Kind(),
 				this.getDifferenceKind(),
 				"kind", null, 1, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getDiff_Source(),
+				this.getDifferenceSource(),
+				"source", null, 1, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getDiff_EquivalentDiffs(),
 				this.getEquivalence(),
@@ -754,8 +768,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 				this.getConflict(),
 				this.getConflict_Differences(),
 				"conflict", null, 0, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-
-		addEOperation(diffEClass, this.getDifferenceSource(), "getSource", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
 		addEOperation(diffEClass, null, "apply", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 

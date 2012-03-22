@@ -90,7 +90,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A MatchElement describes the mapping between the EObjects of two or three resources. This will reference all three of left, right and origin resources. However, note that instances of this class will also represent unmatched elements, in which case only one of either &quot;left&quot; or &quot;right&quot; will be assigned."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="subMatches" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="submatches" upperBound="-1"
         eType="#//Match" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The MatchElements will &quot;mimic&quot; the hierarchy of the input model(s). This containment feature will serve that purpose."/>
@@ -122,11 +122,6 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A DiffElement describes a difference related to the EObjects mapped by its parent MatchElement."/>
     </eAnnotations>
-    <eOperations name="getSource" eType="#//DifferenceSource">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Returns the source of this diff, either one of DifferenceSource.LEFT (for two-way comparisons or differences detected between the left and origin elements) or DifferenceSource.RIGHT (for differences between the right and origin elements)."/>
-      </eAnnotations>
-    </eOperations>
     <eOperations name="apply">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="This will merge the diff from left to right."/>
@@ -175,6 +170,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" lowerBound="1" eType="#//DifferenceKind">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Describes the kind of this difference, whether it is an addition, deletion, change, or move."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="source" lowerBound="1"
+        eType="#//DifferenceSource">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Returns the source of this diff, either one of DifferenceSource.LEFT (for two-way comparisons or differences detected between the left and origin elements) or DifferenceSource.RIGHT (for differences between the right and origin elements)."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="equivalentDiffs" eType="#//Equivalence"
