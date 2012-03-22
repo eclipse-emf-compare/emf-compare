@@ -102,11 +102,15 @@ public class FeatureFilter {
 	 * changes.
 	 * 
 	 * @param feature
-	 *            The feature we are currtently checking.
+	 *            The feature we are currently checking.
 	 * @return <code>true</code> if the diff engine should consider the ordering of this feature,
 	 *         <code>false</code> otherwise.
 	 */
 	public boolean checkForOrderingChanges(EStructuralFeature feature) {
-		return feature.isOrdered() || feature instanceof EReference && ((EReference)feature).isContainment();
+		if (feature.isMany()) {
+			return feature.isOrdered() || feature instanceof EReference
+					&& ((EReference)feature).isContainment();
+		}
+		return false;
 	}
 }

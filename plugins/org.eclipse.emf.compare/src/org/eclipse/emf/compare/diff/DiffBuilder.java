@@ -10,11 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff;
 
+import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 
@@ -40,5 +42,22 @@ public class DiffBuilder implements IDiffProcessor {
 		referenceChange.setValue(value);
 		referenceChange.setKind(kind);
 		referenceChange.setSource(source);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diff.IDiffProcessor#attributeChange(org.eclipse.emf.compare.Match,
+	 *      org.eclipse.emf.ecore.EAttribute, java.lang.Object, org.eclipse.emf.compare.DifferenceKind,
+	 *      org.eclipse.emf.compare.DifferenceSource)
+	 */
+	public void attributeChange(Match match, EAttribute attribute, Object value, DifferenceKind kind,
+			DifferenceSource source) {
+		final AttributeChange attributeChange = CompareFactory.eINSTANCE.createAttributeChange();
+		attributeChange.setMatch(match);
+		attributeChange.setAttribute(attribute);
+		attributeChange.setValue(value);
+		attributeChange.setKind(kind);
+		attributeChange.setSource(source);
 	}
 }

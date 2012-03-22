@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 
@@ -50,5 +51,24 @@ public interface IDiffProcessor {
 	 *            difference has been detected.
 	 */
 	void referenceChange(Match match, EReference reference, EObject value, DifferenceKind kind,
+			DifferenceSource source);
+
+	/**
+	 * This will be called whenever the diff engine detected a difference for a given attribute value.
+	 * 
+	 * @param match
+	 *            The match to which this difference should be attached.
+	 * @param attribute
+	 *            The attribute on which we detected a difference.
+	 * @param value
+	 *            The actual value for which we detected a difference.
+	 * @param kind
+	 *            Kind of the difference.
+	 * @param source
+	 *            Source of the difference. For two way comparisons, this will always be
+	 *            {@link DifferenceSource#LEFT}. Otherwise, this will indicate the side on which this
+	 *            difference has been detected.
+	 */
+	void attributeChange(Match match, EAttribute attribute, Object value, DifferenceKind kind,
 			DifferenceSource source);
 }

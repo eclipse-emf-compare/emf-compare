@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.tests.model.unit;
 
 import java.io.IOException;
 
+import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -25,7 +26,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.junit.Test;
 
 /**
- * Tests the behavior of the methods from the {@link Comparison} class that were not generated.
+ * Tests the behavior of the methods from the {@link Comparison} class that were
+ * not generated.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -60,10 +62,10 @@ public class ComparisonTest {
 
 	private static void printDiff(Diff diff) {
 		if (diff instanceof ReferenceChange) {
-			final ReferenceChange refChange = (ReferenceChange)diff;
+			final ReferenceChange refChange = (ReferenceChange) diff;
 			final String valueName;
 			if (refChange.getValue() instanceof ENamedElement) {
-				valueName = ((ENamedElement)refChange.getValue()).getName();
+				valueName = ((ENamedElement) refChange.getValue()).getName();
 			} else {
 				valueName = refChange.getValue().toString();
 			}
@@ -73,21 +75,64 @@ public class ComparisonTest {
 			}
 			if (diff.getKind() == DifferenceKind.ADD) {
 				change += "added to";
-			} else {
+			} else if (diff.getKind() == DifferenceKind.DELETE) {
 				change += "deleted from";
+			} else if (diff.getKind() == DifferenceKind.CHANGE) {
+				change += "changed from";
+			} else {
+				change += "moved from";
 			}
 			final String objectName;
 			if (refChange.getMatch().getLeft() instanceof ENamedElement) {
-				objectName = ((ENamedElement)refChange.getMatch().getLeft()).getName();
+				objectName = ((ENamedElement) refChange.getMatch().getLeft())
+						.getName();
 			} else if (refChange.getMatch().getRight() instanceof ENamedElement) {
-				objectName = ((ENamedElement)refChange.getMatch().getRight()).getName();
+				objectName = ((ENamedElement) refChange.getMatch().getRight())
+						.getName();
 			} else if (refChange.getMatch().getOrigin() instanceof ENamedElement) {
-				objectName = ((ENamedElement)refChange.getMatch().getOrigin()).getName();
+				objectName = ((ENamedElement) refChange.getMatch().getOrigin())
+						.getName();
 			} else {
 				objectName = "";
 			}
-			System.out.println("value " + valueName + " has been " + change + " reference "
-					+ refChange.getReference().getName() + " of object " + objectName);
+			System.out.println("value " + valueName + " has been " + change
+					+ " reference " + refChange.getReference().getName()
+					+ " of object " + objectName);
+		} else if (diff instanceof AttributeChange) {
+			final AttributeChange attChange = (AttributeChange) diff;
+			String valueName = "null";
+			if (attChange.getValue() != null) {
+				valueName = attChange.getValue().toString();
+			}
+			String change = "";
+			if (diff.getSource() == DifferenceSource.RIGHT) {
+				change = "remotely ";
+			}
+			if (diff.getKind() == DifferenceKind.ADD) {
+				change += "added to";
+			} else if (diff.getKind() == DifferenceKind.DELETE) {
+				change += "deleted from";
+			} else if (diff.getKind() == DifferenceKind.CHANGE) {
+				change += "changed from";
+			} else {
+				change += "moved from";
+			}
+			final String objectName;
+			if (attChange.getMatch().getLeft() instanceof ENamedElement) {
+				objectName = ((ENamedElement) attChange.getMatch().getLeft())
+						.getName();
+			} else if (attChange.getMatch().getRight() instanceof ENamedElement) {
+				objectName = ((ENamedElement) attChange.getMatch().getRight())
+						.getName();
+			} else if (attChange.getMatch().getOrigin() instanceof ENamedElement) {
+				objectName = ((ENamedElement) attChange.getMatch().getOrigin())
+						.getName();
+			} else {
+				objectName = "";
+			}
+			System.out.println("value " + valueName + " has been " + change
+					+ " attribute " + attChange.getAttribute().getName()
+					+ " of object " + objectName);
 		}
 	}
 
@@ -105,24 +150,26 @@ public class ComparisonTest {
 				&& (right == null || right instanceof ENamedElement)
 				&& (origin == null || origin instanceof ENamedElement)) {
 			if (left != null) {
-				leftName = formatName((ENamedElement)left);
+				leftName = formatName((ENamedElement) left);
 			}
 
 			if (right != null) {
-				rightName = formatName((ENamedElement)right);
+				rightName = formatName((ENamedElement) right);
 			}
 
 			if (origin != null) {
-				originName = formatName((ENamedElement)origin);
+				originName = formatName((ENamedElement) origin);
 			}
 
 			if (leftName == null) {
 				int level = 0;
 				EObject currentMatch = match;
-				while (currentMatch instanceof Match && ((Match)currentMatch).getLeft() == null) {
+				while (currentMatch instanceof Match
+						&& ((Match) currentMatch).getLeft() == null) {
 					currentMatch = currentMatch.eContainer();
 				}
-				while (currentMatch instanceof Match && ((Match)currentMatch).getLeft() != null) {
+				while (currentMatch instanceof Match
+						&& ((Match) currentMatch).getLeft() != null) {
 					level++;
 					currentMatch = currentMatch.eContainer();
 				}
@@ -131,10 +178,12 @@ public class ComparisonTest {
 			if (rightName == null) {
 				int level = 0;
 				EObject currentMatch = match;
-				while (currentMatch instanceof Match && ((Match)currentMatch).getRight() == null) {
+				while (currentMatch instanceof Match
+						&& ((Match) currentMatch).getRight() == null) {
 					currentMatch = currentMatch.eContainer();
 				}
-				while (currentMatch instanceof Match && ((Match)currentMatch).getRight() != null) {
+				while (currentMatch instanceof Match
+						&& ((Match) currentMatch).getRight() != null) {
 					level++;
 					currentMatch = currentMatch.eContainer();
 				}
@@ -143,17 +192,20 @@ public class ComparisonTest {
 			if (originName == null) {
 				int level = 0;
 				EObject currentMatch = match;
-				while (currentMatch instanceof Match && ((Match)currentMatch).getOrigin() == null) {
+				while (currentMatch instanceof Match
+						&& ((Match) currentMatch).getOrigin() == null) {
 					currentMatch = currentMatch.eContainer();
 				}
-				while (currentMatch instanceof Match && ((Match)currentMatch).getOrigin() != null) {
+				while (currentMatch instanceof Match
+						&& ((Match) currentMatch).getOrigin() != null) {
 					level++;
 					currentMatch = currentMatch.eContainer();
 				}
 				originName = getEmptyLine(level);
 			}
 
-			System.out.println('|' + leftName + '|' + rightName + '|' + originName + '|');
+			System.out.println('|' + leftName + '|' + rightName + '|'
+					+ originName + '|');
 		}
 
 		for (Match submatch : match.getSubmatches()) {
@@ -162,8 +214,8 @@ public class ComparisonTest {
 	}
 
 	/**
-	 * Formats the named of the given element by adding spaces before and after it so that it spans 40
-	 * characters at most.
+	 * Formats the named of the given element by adding spaces before and after
+	 * it so that it spans 40 characters at most.
 	 */
 	private static String formatName(ENamedElement element) {
 		final int lineLength = 40;

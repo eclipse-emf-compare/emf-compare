@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.diff;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
+import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
@@ -21,6 +22,8 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -75,6 +78,7 @@ public class DefaultDiffEngine {
 	 */
 	protected void checkForDifferences(Match match) {
 		final FeatureFilter featureFilter = createFeatureFilter();
+
 		final Iterator<EReference> references = featureFilter.getReferencesToCheck(match);
 		while (references.hasNext()) {
 			final EReference reference = references.next();
@@ -85,13 +89,92 @@ public class DefaultDiffEngine {
 				computeDifferences(match, reference, considerOrdering);
 			}
 		}
+
+		final Iterator<EAttribute> attributes = featureFilter.getAttributesToCheck(match);
+		while (attributes.hasNext()) {
+			final EAttribute attribute = attributes.next();
+			final boolean considerOrdering = featureFilter.checkForOrderingChanges(attribute);
+			computeDifferences(match, attribute, considerOrdering);
+		}
+
 		for (Match submatch : match.getSubmatches()) {
 			checkForDifferences(submatch);
 		}
 	}
 
 	/**
-	 * Computes the differences between the sides of the given match for the given <code>reference</code>.
+	 * Computes the difference between the sides of the given <code>match</code> for the given
+	 * <code>attribute</code>.
+	 * 
+	 * @param match
+	 *            The match which sides we need to check for potential differences.
+	 * @param attribute
+	 *            The attribute which values are to be checked.
+	 * @param checkOrdering
+	 *            <code>true</code> if we should consider ordering changes on this attribute,
+	 *            <code>false</code> otherwise.
+	 */
+	protected void computeDifferences(Match match, EAttribute attribute, boolean checkOrdering) {
+		// This will only be used for iteration, once. Use the original list
+		final Iterable<Object> leftValues = getValue(match.getLeft(), attribute);
+
+		/*
+		 * We might iterate a lot over these two. Since we'll remove objects from them in order to keep the
+		 * length of iterations as short as possible, we'll use two linked sets.
+		 */
+		final Set<Object> rightValues = Sets.newLinkedHashSet(getValue(match.getRight(), attribute));
+		final Set<Object> originValues = Sets.newLinkedHashSet(getValue(match.getOrigin(), attribute));
+
+		for (Object left : leftValues) {
+			final Object rightMatch = findMatch(left, rightValues);
+
+			if (rightMatch == null && left != null) {
+				final Object originMatch = findMatch(left, originValues);
+				final DifferenceKind kind;
+				if (!attribute.isMany()) {
+					kind = DifferenceKind.CHANGE;
+				} else if (originMatch != null) {
+					kind = DifferenceKind.DELETE;
+				} else {
+					kind = DifferenceKind.ADD;
+				}
+				if (originMatch != null) {
+					getDiffProcessor().attributeChange(match, attribute, originMatch, kind,
+							DifferenceSource.RIGHT);
+				} else {
+					getDiffProcessor().attributeChange(match, attribute, left, kind, DifferenceSource.LEFT);
+				}
+			} else {
+				// Value is present in both left and right sides. We can only have a diff on ordering
+				rightValues.remove(rightMatch);
+				originValues.remove(findMatch(left, originValues));
+				// FIXME check ordering
+			}
+		}
+
+		// We've updated the right list as we matched objects. The remaining are diffs.
+		for (Object right : rightValues) {
+			final Object originMatch = findMatch(right, originValues);
+			final DifferenceKind kind;
+			if (!attribute.isMany()) {
+				kind = DifferenceKind.CHANGE;
+			} else if (originMatch != null && right != null) {
+				kind = DifferenceKind.DELETE;
+			} else {
+				kind = DifferenceKind.ADD;
+			}
+			if (originMatch != null) {
+				getDiffProcessor()
+						.attributeChange(match, attribute, originMatch, kind, DifferenceSource.LEFT);
+			} else {
+				getDiffProcessor().attributeChange(match, attribute, right, kind, DifferenceSource.RIGHT);
+			}
+		}
+	}
+
+	/**
+	 * Computes the differences between the sides of the given <code>match</code> for the given
+	 * <code>reference</code>.
 	 * <p>
 	 * Note that once here, we know that <code>reference</code> is not a containment reference.
 	 * </p>
@@ -105,21 +188,19 @@ public class DefaultDiffEngine {
 	 *            <code>false</code> otherwise.
 	 */
 	protected void computeDifferences(Match match, EReference reference, boolean checkOrdering) {
-		final EObject left = match.getLeft();
-		final EObject right = match.getRight();
-		final EObject origin = match.getOrigin();
-
 		// This will only be used for iteration, once. use the original list
-		final Iterable<EObject> leftValues = Iterables.filter(getValue(left, reference), EObject.class);
+		final Iterable<EObject> leftValues = Iterables.filter(getValue(match.getLeft(), reference),
+				EObject.class);
 		/*
 		 * These two will be used mainly for lookup, we'll transform them to Sets here. Linked set for the
 		 * rightValues since we'll iterate over its values once, a plain hash set for the origin as it will
-		 * only be used for lookup purposes
+		 * only be used for lookup purposes.
 		 */
-		final Set<EObject> rightValues = Sets.newLinkedHashSet(Iterables.filter(getValue(right, reference),
-				EObject.class));
-		final Set<EObject> originValues = Sets.newHashSet(Iterables.filter(getValue(origin, reference),
-				EObject.class));
+		// NOTE : Do not use the original list for rightValues : we will remove objects from it.
+		final Set<EObject> rightValues = Sets.newLinkedHashSet(Iterables.filter(getValue(match.getRight(),
+				reference), EObject.class));
+		final Set<EObject> originValues = Sets.newHashSet(Iterables.filter(getValue(match.getOrigin(),
+				reference), EObject.class));
 
 		for (EObject value : leftValues) {
 			final Match valueMatch = getComparison().getMatch(value);
@@ -129,18 +210,23 @@ public class DefaultDiffEngine {
 				final EObject rightMatch = valueMatch.getRight();
 
 				if (rightMatch == null || !rightValues.contains(rightMatch)) {
-					// No need to go any further
+					final boolean originHasMatch = originValues.contains(valueMatch.getOrigin());
 					final DifferenceKind kind;
-					final DifferenceSource source;
-					if (originValues.contains(valueMatch.getOrigin())) {
-						source = DifferenceSource.RIGHT;
+					if (!reference.isMany()) {
+						kind = DifferenceKind.CHANGE;
+					} else if (originHasMatch) {
 						kind = DifferenceKind.DELETE;
 					} else {
-						source = DifferenceSource.LEFT;
 						kind = DifferenceKind.ADD;
 					}
-					getDiffProcessor().referenceChange(match, reference, value, kind, source);
-				} else if (checkOrdering) {
+					if (originHasMatch) {
+						getDiffProcessor().referenceChange(match, reference, valueMatch.getOrigin(), kind,
+								DifferenceSource.RIGHT);
+					} else {
+						getDiffProcessor().referenceChange(match, reference, value, kind,
+								DifferenceSource.LEFT);
+					}
+				} else {
 					// Value is present in both left and right lists. We can only have a diff on ordering.
 					rightValues.remove(rightMatch);
 					// FIXME ordering check
@@ -150,21 +236,26 @@ public class DefaultDiffEngine {
 			}
 		}
 
+		// We've update the right list as we matched objects. The remaining are diffs.
 		for (EObject value : rightValues) {
 			final Match valueMatch = getComparison().getMatch(value);
 
 			if (valueMatch != null) {
-				// This value was not in the left list, so it can only be a diff.
+				final boolean originHasMatch = originValues.contains(valueMatch.getOrigin());
 				final DifferenceKind kind;
-				final DifferenceSource source;
-				if (originValues.contains(valueMatch.getOrigin())) {
-					source = DifferenceSource.LEFT;
+				if (!reference.isMany()) {
+					kind = DifferenceKind.CHANGE;
+				} else if (originHasMatch) {
 					kind = DifferenceKind.DELETE;
 				} else {
-					source = DifferenceSource.RIGHT;
 					kind = DifferenceKind.ADD;
 				}
-				getDiffProcessor().referenceChange(match, reference, value, kind, source);
+				if (originHasMatch) {
+					getDiffProcessor().referenceChange(match, reference, valueMatch.getOrigin(), kind,
+							DifferenceSource.LEFT);
+				} else {
+					getDiffProcessor().referenceChange(match, reference, value, kind, DifferenceSource.RIGHT);
+				}
 			} else {
 				// this value is out of the comparison scope
 			}
@@ -185,10 +276,9 @@ public class DefaultDiffEngine {
 	 *            <code>false</code> otherwise.
 	 */
 	protected void computeContainmentDifference(Match match, EReference reference, boolean checkOrdering) {
-		final EObject left = match.getLeft();
-
 		// This will only be used for iteration, once. use the original list
-		final Iterable<EObject> leftValues = Iterables.filter(getValue(left, reference), EObject.class);
+		final Iterable<EObject> leftValues = Iterables.filter(getValue(match.getLeft(), reference),
+				EObject.class);
 
 		for (EObject leftValue : leftValues) {
 			final Match valueMatch = getComparison().getMatch(leftValue);
@@ -200,9 +290,9 @@ public class DefaultDiffEngine {
 			}
 		}
 
-		final EObject right = match.getRight();
 		// This will only be used for iteration, once. use the original list
-		final Iterable<EObject> rightValues = Iterables.filter(getValue(right, reference), EObject.class);
+		final Iterable<EObject> rightValues = Iterables.filter(getValue(match.getRight(), reference),
+				EObject.class);
 
 		for (EObject rightValue : rightValues) {
 			final Match valueMatch = getComparison().getMatch(rightValue);
@@ -449,5 +539,77 @@ public class DefaultDiffEngine {
 	 */
 	protected Comparison getComparison() {
 		return currentComparison;
+	}
+
+/** This will try and find a match to <code>reference</code> in the given list of <code>candidates</code> by using the
+	 * semantics of {@link #matchingValues(Object, Object)].
+	 * @param reference The object we need to find in <code>candidates</code>.
+	 * @param candidates Potential matches for <code>reference</code>.
+	 * @return The match if we found any, <code>null</code> otherwise.
+	 */
+	protected Object findMatch(Object reference, Iterable<Object> candidates) {
+		for (Object candidate : candidates) {
+			if (matchingValues(reference, candidate)) {
+				return candidate;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Check that the two given values are "equal", considering the specifics of EMF.
+	 * 
+	 * @param object1
+	 *            First of the two objects to compare here.
+	 * @param object2
+	 *            Second of the two objects to compare here.
+	 * @return <code>true</code> if both objects are to be considered equal, <code>false</code> otherwise.
+	 */
+	protected boolean matchingValues(Object object1, Object object2) {
+		final boolean equal;
+		if (object1 == object2) {
+			equal = true;
+		} else if (object1 instanceof EEnumLiteral && object2 instanceof EEnumLiteral) {
+			final EEnumLiteral literal1 = (EEnumLiteral)object1;
+			final EEnumLiteral literal2 = (EEnumLiteral)object2;
+			final String value1 = literal1.getLiteral() + literal1.getValue();
+			final String value2 = literal2.getLiteral() + literal2.getValue();
+			equal = value1.equals(value2);
+		} else if (object1 instanceof EObject && object2 instanceof EObject) {
+			// [248442] This will handle FeatureMapEntries detection
+			final Match match = getComparison().getMatch((EObject)object1);
+			equal = match.getLeft() == object2 || match.getRight() == object2 || match.getOrigin() == object2;
+		} else if (object1 != null && object1.getClass().isArray() && object2 != null
+				&& object2.getClass().isArray()) {
+			// [299641] compare arrays by their content instead of instance equality
+			equal = matchingArrays(object1, object2);
+		} else {
+			equal = object1 != null && object1.equals(object2);
+		}
+		return equal;
+	}
+
+	/**
+	 * Compares two values as arrays, checking that their length and content match each other.
+	 * 
+	 * @param object1
+	 *            First of the two objects to compare here.
+	 * @param object2
+	 *            Second of the two objects to compare here.
+	 * @return <code>true</code> if these two arrays are to be considered equal, <code>false</code> otherwise.
+	 */
+	private boolean matchingArrays(Object object1, Object object2) {
+		boolean equal = true;
+		final int length1 = Array.getLength(object1);
+		if (length1 != Array.getLength(object2)) {
+			equal = true;
+		} else {
+			for (int i = 0; i < length1 && equal; i++) {
+				final Object element1 = Array.get(object1, i);
+				final Object element2 = Array.get(object2, i);
+				equal = matchingValues(element1, element2);
+			}
+		}
+		return equal;
 	}
 }
