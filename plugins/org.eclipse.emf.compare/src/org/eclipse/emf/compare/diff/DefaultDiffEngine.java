@@ -21,7 +21,6 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.scope.AbstractComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -53,16 +52,12 @@ public class DefaultDiffEngine {
 
 	/**
 	 * This will complete the input <code>comparison</code> by iterating over the {@link Match matches} it
-	 * contain, filling in the differences it can detect for each distinct Match. This default implementation
-	 * does not make use of the given {@link AbstractComparisonScope comparison scope} since we expect the
-	 * match engine to have mapped all objects from all three sides.
+	 * contain, filling in the differences it can detect for each distinct Match.
 	 * 
 	 * @param comparison
 	 *            The comparison this engine is expected to complete.
-	 * @param scope
-	 *            The input scope of this comparison.
 	 */
-	public void diff(Comparison comparison, AbstractComparisonScope scope) {
+	public void diff(Comparison comparison) {
 		this.currentComparison = comparison;
 		diffProcessor = createDiffProcessor();
 
@@ -133,7 +128,7 @@ public class DefaultDiffEngine {
 				// Is this value present in the right side?
 				final EObject rightMatch = valueMatch.getRight();
 
-				if (rightMatch == null || rightValues.contains(rightMatch)) {
+				if (rightMatch == null || !rightValues.contains(rightMatch)) {
 					// No need to go any further
 					final DifferenceKind kind;
 					final DifferenceSource source;
@@ -148,7 +143,7 @@ public class DefaultDiffEngine {
 				} else if (checkOrdering) {
 					// Value is present in both left and right lists. We can only have a diff on ordering.
 					rightValues.remove(rightMatch);
-					// FIXME CODEME
+					// FIXME ordering check
 				}
 			} else {
 				// this value is out of the comparison scope
@@ -199,7 +194,7 @@ public class DefaultDiffEngine {
 			final Match valueMatch = getComparison().getMatch(leftValue);
 
 			if (valueMatch != null) {
-				computContainmentDiffForLeftValue(match, reference, valueMatch, checkOrdering);
+				computeContainmentDiffForLeftValue(match, reference, valueMatch, checkOrdering);
 			} else {
 				// this value is out of the comparison scope
 			}
@@ -213,11 +208,10 @@ public class DefaultDiffEngine {
 			final Match valueMatch = getComparison().getMatch(rightValue);
 
 			if (valueMatch == null || valueMatch.getLeft() != null
-					&& match.getLeft() == valueMatch.getLeft().eContainer()
-					&& reference == valueMatch.getLeft().eContainmentFeature()) {
+					&& isContainedBy(match.getLeft(), reference, valueMatch.getLeft())) {
 				// Either out of scope or handled by the iteration on the left side
 			} else {
-				computContainmentDiffForRightValue(match, reference, valueMatch, checkOrdering);
+				computeContainmentDiffForRightValue(match, reference, valueMatch, checkOrdering);
 			}
 		}
 	}
@@ -242,7 +236,7 @@ public class DefaultDiffEngine {
 	 *            <code>true</code> if we should consider ordering changes on this reference,
 	 *            <code>false</code> otherwise.
 	 */
-	protected void computContainmentDiffForLeftValue(Match parent, EReference reference, Match value,
+	protected void computeContainmentDiffForLeftValue(Match parent, EReference reference, Match value,
 			boolean checkOrdering) {
 		final EObject leftValue = value.getLeft();
 		final EObject rightValue = value.getRight();
@@ -253,8 +247,7 @@ public class DefaultDiffEngine {
 				// This value has been added in the left side
 				getDiffProcessor().referenceChange(parent, reference, leftValue, DifferenceKind.ADD,
 						DifferenceSource.LEFT);
-			} else if (parent.getOrigin() == originValue.eContainer()
-					&& reference == originValue.eContainmentFeature()) {
+			} else if (isContainedBy(parent.getOrigin(), reference, originValue)) {
 				// This value is also in the origin, in the same container. It has thus been removed
 				// from the right side
 				getDiffProcessor().referenceChange(parent, reference, originValue, DifferenceKind.DELETE,
@@ -271,7 +264,7 @@ public class DefaultDiffEngine {
 			}
 		} else if (originValue == null) {
 			// This value is in both left and right sides, but not in the origin
-			if (parent.getRight() == rightValue.eContainer() && reference == rightValue.eContainmentFeature()) {
+			if (isContainedBy(parent.getRight(), reference, rightValue)) {
 				// they are in the same container; so there's actually no diff here : the same
 				// modification has been made in both sides
 				// FIXME there could be an ordering diff though
@@ -285,15 +278,14 @@ public class DefaultDiffEngine {
 			}
 		} else {
 			// This value is on all three sides
-			if (parent.getRight() == rightValue.eContainer() && reference == rightValue.eContainmentFeature()) {
+			if (isContainedBy(parent.getRight(), reference, rightValue)) {
 				/*
-				 * Even if the value is in another container in in the origin, it is in the same container on
+				 * Even if the value is in another container in the origin, it is in the same container on
 				 * both left and right sides. No diff here as the same modification has been made on both
 				 * sides.
 				 */
 				// FIXME there could be an ordering diff though
-			} else if (parent.getOrigin() != originValue.eContainer()
-					|| reference != originValue.eContainmentFeature()) {
+			} else if (!isContainedBy(parent.getOrigin(), reference, originValue)) {
 				// value present on all sides, but its container has changed in the left side as
 				// compared to the origin
 				getDiffProcessor().referenceChange(parent, reference, leftValue, DifferenceKind.MOVE,
@@ -314,7 +306,7 @@ public class DefaultDiffEngine {
 	 * <code>null</code> and part of <code>parent.getRight().eGet(reference)</code>. We also know that
 	 * <code>value.getLeft()</code> is <b>not</b> a part of <code>parent.getLeft().eGet(reference)</code>
 	 * since these have already been taken care of by
-	 * {@link #computContainmentDiffForLeftValue(Match, EReference, Match, boolean)}.
+	 * {@link #computeContainmentDiffForLeftValue(Match, EReference, Match, boolean)}.
 	 * </p>
 	 * 
 	 * @param parent
@@ -327,7 +319,7 @@ public class DefaultDiffEngine {
 	 *            <code>true</code> if we should consider ordering changes on this reference,
 	 *            <code>false</code> otherwise.
 	 */
-	protected void computContainmentDiffForRightValue(Match parent, EReference reference, Match value,
+	protected void computeContainmentDiffForRightValue(Match parent, EReference reference, Match value,
 			boolean checkOrdering) {
 		final EObject leftValue = value.getLeft();
 		final EObject rightValue = value.getRight();
@@ -338,8 +330,7 @@ public class DefaultDiffEngine {
 				// This value has been added in the right side
 				getDiffProcessor().referenceChange(parent, reference, rightValue, DifferenceKind.ADD,
 						DifferenceSource.RIGHT);
-			} else if (parent.getOrigin() == originValue.eContainer()
-					&& reference == originValue.eContainmentFeature()) {
+			} else if (isContainedBy(parent.getOrigin(), reference, originValue)) {
 				// This value is also in the origin, in the same container. It has thus been removed
 				// from the left side
 				getDiffProcessor().referenceChange(parent, reference, originValue, DifferenceKind.DELETE,
@@ -356,7 +347,7 @@ public class DefaultDiffEngine {
 			}
 		} else if (originValue == null) {
 			// This value is in both left and right sides, but not in the origin
-			// We also know that they are not in the same container (handled by the loop on the left side)
+			// We also know that they are not in the same container
 			/*
 			 * This is actually a conflict : same object added in two distinct containers. The addition in the
 			 * left side, however, is in another match element and will be detected later on.
@@ -365,9 +356,8 @@ public class DefaultDiffEngine {
 					DifferenceSource.RIGHT);
 		} else {
 			// This value is on all three sides
-			// We also know that they are not in the same container (handled by the loop on the left side)
-			if (parent.getOrigin() != originValue.eContainer()
-					|| reference != originValue.eContainmentFeature()) {
+			// We also know that they are not in the same container
+			if (!isContainedBy(parent.getOrigin(), reference, originValue)) {
 				// value present on all sides, but its container has changed in the right side as
 				// compared to the origin
 				getDiffProcessor().referenceChange(parent, reference, rightValue, DifferenceKind.MOVE,
@@ -426,7 +416,7 @@ public class DefaultDiffEngine {
 	 * This will be used in order to create the diff processor that is to be used by this diff engine.
 	 * 
 	 * @return The diff processor of this diff engine. Will only be called once per call to
-	 *         {@link #diff(Comparison, AbstractComparisonScope)}.
+	 *         {@link #diff(Comparison)}.
 	 */
 	protected IDiffProcessor createDiffProcessor() {
 		return new DiffBuilder();

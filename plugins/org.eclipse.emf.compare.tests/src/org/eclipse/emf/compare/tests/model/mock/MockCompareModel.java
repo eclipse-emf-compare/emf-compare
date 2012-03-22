@@ -51,7 +51,7 @@ public class MockCompareModel {
 		final DefaultMatchEngine matchEngine = new DefaultMatchEngine();
 		Comparison comparison = matchEngine.match(scope);
 		final DefaultDiffEngine diffEngine = new DefaultDiffEngine();
-		diffEngine.diff(comparison, scope);
+		diffEngine.diff(comparison);
 		return comparison;
 	}
 
