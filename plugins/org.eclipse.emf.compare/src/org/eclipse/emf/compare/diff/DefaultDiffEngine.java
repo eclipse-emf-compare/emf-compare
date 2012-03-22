@@ -97,6 +97,9 @@ public class DefaultDiffEngine {
 
 	/**
 	 * Computes the differences between the sides of the given match for the given <code>reference</code>.
+	 * <p>
+	 * Note that once here, we know that <code>reference</code> is not a containment reference.
+	 * </p>
 	 * 
 	 * @param match
 	 *            The match which sides we need to check for potential differences.
@@ -374,6 +377,23 @@ public class DefaultDiffEngine {
 				// FIXME there could also be a diff on the ordering
 			}
 		}
+	}
+
+	/**
+	 * Checks whether the given <code>value</code> is contained within the given <code>container</code>,
+	 * through the given <code>containmentReference</code>.
+	 * 
+	 * @param container
+	 *            The expected container of <code>value</code>.
+	 * @param containmentReference
+	 *            The reference of <code>container</code> within which we expect to find <code>value</code>.
+	 * @param value
+	 *            The value which container we are checking.
+	 * @return <code>true</code> if the given value is contained within the expected reference of the expected
+	 *         container, <code>false</code> otherwise.
+	 */
+	protected static boolean isContainedBy(EObject container, EReference containmentReference, EObject value) {
+		return container == value.eContainer() && containmentReference == value.eContainmentFeature();
 	}
 
 	/**
