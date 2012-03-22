@@ -22,7 +22,6 @@ import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 
-
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -40,7 +39,8 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  * <!-- end-user-doc -->
  * @generated
  */
-@SuppressWarnings("all") // generated code : suppressing warnings
+@SuppressWarnings("all")
+// generated code : suppressing warnings
 public class DiffItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * <!-- begin-user-doc -->
@@ -75,6 +75,7 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 			addRefinesPropertyDescriptor(object);
 			addRefinedByPropertyDescriptor(object);
 			addKindPropertyDescriptor(object);
+			addSourcePropertyDescriptor(object);
 			addEquivalentDiffsPropertyDescriptor(object);
 			addConflictPropertyDescriptor(object);
 		}
@@ -161,6 +162,21 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
+	 * This adds a property descriptor for the Source feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addSourcePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_Diff_source_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_Diff_source_feature", "_UI_Diff_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ComparePackage.Literals.DIFF__SOURCE, true, false, false,
+				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
 	 * This adds a property descriptor for the Equivalent Diffs feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -232,6 +248,7 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 
 		switch (notification.getFeatureID(Diff.class)) {
 			case ComparePackage.DIFF__KIND:
+			case ComparePackage.DIFF__SOURCE:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false,
 						true));
 				return;

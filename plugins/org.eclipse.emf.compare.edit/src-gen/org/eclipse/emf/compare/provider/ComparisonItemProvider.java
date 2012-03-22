@@ -22,7 +22,6 @@ import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Comparison;
 
-
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -40,7 +39,8 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  * <!-- end-user-doc -->
  * @generated
  */
-@SuppressWarnings("all") // generated code : suppressing warnings
+@SuppressWarnings("all")
+// generated code : suppressing warnings
 public class ComparisonItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * <!-- begin-user-doc -->

@@ -34,7 +34,8 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- end-user-doc -->
  * @generated
  */
-@SuppressWarnings("all") // generated code : suppressing warnings
+@SuppressWarnings("all")
+// generated code : suppressing warnings
 public class ReferenceChangeItemProvider extends DiffItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * <!-- begin-user-doc -->

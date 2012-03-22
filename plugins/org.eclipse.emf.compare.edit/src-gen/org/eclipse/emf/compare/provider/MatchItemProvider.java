@@ -22,7 +22,6 @@ import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Match;
 
-
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
@@ -41,7 +40,8 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  * <!-- end-user-doc -->
  * @generated
  */
-@SuppressWarnings("all") // generated code : suppressing warnings
+@SuppressWarnings("all")
+// generated code : suppressing warnings
 public class MatchItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * <!-- begin-user-doc -->
@@ -133,7 +133,7 @@ public class MatchItemProvider extends ItemProviderAdapter implements IEditingDo
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(ComparePackage.Literals.MATCH__SUB_MATCHES);
+			childrenFeatures.add(ComparePackage.Literals.MATCH__SUBMATCHES);
 			childrenFeatures.add(ComparePackage.Literals.MATCH__DIFFERENCES);
 		}
 		return childrenFeatures;
@@ -186,7 +186,7 @@ public class MatchItemProvider extends ItemProviderAdapter implements IEditingDo
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(Match.class)) {
-			case ComparePackage.MATCH__SUB_MATCHES:
+			case ComparePackage.MATCH__SUBMATCHES:
 			case ComparePackage.MATCH__DIFFERENCES:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true,
 						false));
@@ -206,7 +206,7 @@ public class MatchItemProvider extends ItemProviderAdapter implements IEditingDo
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 
-		newChildDescriptors.add(createChildParameter(ComparePackage.Literals.MATCH__SUB_MATCHES,
+		newChildDescriptors.add(createChildParameter(ComparePackage.Literals.MATCH__SUBMATCHES,
 				CompareFactory.eINSTANCE.createMatch()));
 
 		newChildDescriptors.add(createChildParameter(ComparePackage.Literals.MATCH__DIFFERENCES,

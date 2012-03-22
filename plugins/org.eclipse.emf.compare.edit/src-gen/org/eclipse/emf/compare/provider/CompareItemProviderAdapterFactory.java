@@ -46,7 +46,8 @@ public class CompareItemProviderAdapterFactory extends CompareAdapterFactory imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("hiding") // generated code : suppressing warnings
+	@SuppressWarnings("hiding")
+	// generated code : suppressing warnings
 	public static final String copyright = "Copyright (c) 2012 Obeo.\r\nAll rights reserved. This program and the accompanying materials\r\nare made available under the terms of the Eclipse Public License v1.0\r\nwhich accompanies this distribution, and is available at\r\nhttp://www.eclipse.org/legal/epl-v10.html\r\n\r\nContributors:\r\n    Obeo - initial API and implementation"; //$NON-NLS-1$
 
 	/**
