@@ -21,6 +21,7 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.impl.ComparisonImpl;
 import org.eclipse.emf.ecore.EObject;
 
@@ -114,6 +115,21 @@ public class ComparisonSpec extends ComparisonImpl {
 		}
 
 		return currentMatch;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.impl.ComparisonImpl#isThreeWay()
+	 */
+	@Override
+	public boolean isThreeWay() {
+		for (MatchResource matchResource : getMatchedResources()) {
+			if (matchResource.getOriginURI() != null && matchResource.getOriginURI().length() > 0) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

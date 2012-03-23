@@ -37,6 +37,7 @@
         <genParameters ecoreParameter="compare.ecore#//Comparison/addDiff/element"/>
         <genParameters ecoreParameter="compare.ecore#//Comparison/addDiff/newDiff"/>
       </genOperations>
+      <genOperations ecoreOperation="compare.ecore#//Comparison/isThreeWay"/>
     </genClasses>
     <genClasses ecoreClass="compare.ecore#//MatchResource">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/leftURI"/>

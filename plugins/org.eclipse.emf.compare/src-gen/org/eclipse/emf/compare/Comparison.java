@@ -137,4 +137,15 @@ public interface Comparison extends EObject {
 	 */
 	void addDiff(EObject element, Diff newDiff);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Checks whether this comparison has been launched for three way comparison or if it only has two sides to compare.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	boolean isThreeWay();
+
 } // Comparison

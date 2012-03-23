@@ -681,6 +681,9 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		addEParameter(op, theEcorePackage.getEObject(), "element", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 		addEParameter(op, this.getDiff(), "newDiff", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
+		addEOperation(comparisonEClass, theEcorePackage.getEBoolean(),
+				"isThreeWay", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+
 		initEClass(matchResourceEClass, MatchResource.class,
 				"MatchResource", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(

@@ -42,6 +42,12 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  */
 public class DefaultDiffEngine {
 	/**
+	 * We'll use this "placeholder" to differentiate the unmatched elements from the "null" values that
+	 * attributes can legitimately use.
+	 */
+	protected static final Object UNMATCHED_VALUE = new Object();
+
+	/**
 	 * The comparison for which we are detecting differences. Should only be accessed through
 	 * {@link #getComparison()}.
 	 */
@@ -115,6 +121,97 @@ public class DefaultDiffEngine {
 	 *            <code>false</code> otherwise.
 	 */
 	protected void computeDifferences(Match match, EAttribute attribute, boolean checkOrdering) {
+		// This default implementation does not care about "attribute" changes on unmatched elements
+		if (match.getOrigin() == null && (match.getLeft() == null || match.getRight() == null)) {
+			return;
+		}
+
+		if (!attribute.isMany()) {
+			computeSingleValuedAttributeDifference(match, attribute);
+		} else {
+			computeMultiValuedAttributeDifferences(match, attribute, checkOrdering);
+		}
+	}
+
+	/**
+	 * Computes the difference between the sides of the given <code>match</code> for the given single-valued
+	 * <code>attribute</code>.
+	 * 
+	 * @param match
+	 *            The match which sides we need to check for potential differences.
+	 * @param attribute
+	 *            The attribute which values are to be checked.
+	 */
+	protected void computeSingleValuedAttributeDifference(Match match, EAttribute attribute) {
+		Object leftValue = UNMATCHED_VALUE;
+		if (match.getLeft() != null) {
+			leftValue = match.getLeft().eGet(attribute);
+		}
+		Object rightValue = UNMATCHED_VALUE;
+		if (match.getRight() != null) {
+			rightValue = match.getRight().eGet(attribute);
+		}
+
+		if (matchingValues(leftValue, rightValue)) {
+			return;
+		}
+
+		if (match.getOrigin() != null) {
+			final Object originValue = match.getOrigin().eGet(attribute);
+
+			if (matchingValues(leftValue, originValue)) {
+				if (rightValue != UNMATCHED_VALUE) {
+					// Value is in left and origin, but not in the right
+					getDiffProcessor().attributeChange(match, attribute, rightValue, DifferenceKind.CHANGE,
+							DifferenceSource.RIGHT);
+				} else {
+					// Right is unmatched, left is the same as in the origin. No diff here : the diff is on
+					// the match itself, not on one of its attributes.
+				}
+			} else if (matchingValues(rightValue, originValue)) {
+				if (leftValue != UNMATCHED_VALUE) {
+					// Value is in right and origin, but not in left
+					getDiffProcessor().attributeChange(match, attribute, leftValue, DifferenceKind.CHANGE,
+							DifferenceSource.LEFT);
+				} else {
+					// Left is unmatched, right is the same as in the origin. No diff here : the diff is on
+					// the match itself, not on one of its attributes.
+				}
+			} else {
+				/*
+				 * Left and right are different. None match what's in the origin. Those of the two that are
+				 * not unmatched are thus a "change" difference, with a possible conflict.
+				 */
+				if (leftValue != UNMATCHED_VALUE) {
+					getDiffProcessor().attributeChange(match, attribute, leftValue, DifferenceKind.CHANGE,
+							DifferenceSource.LEFT);
+				}
+				if (rightValue != UNMATCHED_VALUE) {
+					getDiffProcessor().attributeChange(match, attribute, rightValue, DifferenceKind.CHANGE,
+							DifferenceSource.RIGHT);
+				}
+			}
+		} else {
+			// None of left and right are unmatched; they are different, and we have no origin
+			getDiffProcessor().attributeChange(match, attribute, leftValue, DifferenceKind.CHANGE,
+					DifferenceSource.LEFT);
+		}
+	}
+
+	/**
+	 * Computes the difference between the sides of the given <code>match</code> for the given multi-valued
+	 * <code>attribute</code>.
+	 * 
+	 * @param match
+	 *            The match which sides we need to check for potential differences.
+	 * @param attribute
+	 *            The attribute which values are to be checked.
+	 * @param checkOrdering
+	 *            <code>true</code> if we should consider ordering changes on this reference,
+	 *            <code>false</code> otherwise.
+	 */
+	protected void computeMultiValuedAttributeDifferences(Match match, EAttribute attribute,
+			boolean checkOrdering) {
 		// This will only be used for iteration, once. Use the original list
 		final Iterable<Object> leftValues = getValue(match.getLeft(), attribute);
 
@@ -128,46 +225,40 @@ public class DefaultDiffEngine {
 		for (Object left : leftValues) {
 			final Object rightMatch = findMatch(left, rightValues);
 
-			if (rightMatch == null && left != null) {
+			if (rightMatch == UNMATCHED_VALUE) {
 				final Object originMatch = findMatch(left, originValues);
-				final DifferenceKind kind;
-				if (!attribute.isMany()) {
-					kind = DifferenceKind.CHANGE;
-				} else if (originMatch != null) {
-					kind = DifferenceKind.DELETE;
-				} else {
-					kind = DifferenceKind.ADD;
-				}
-				if (originMatch != null) {
-					getDiffProcessor().attributeChange(match, attribute, originMatch, kind,
+				// no need to check if three way for these
+				if (originMatch != UNMATCHED_VALUE) {
+					// The value is in the left and origin, but not in the right.
+					getDiffProcessor().attributeChange(match, attribute, left, DifferenceKind.DELETE,
 							DifferenceSource.RIGHT);
+					// FIXME There could also be an ordering change between left and origin
+					originValues.remove(originMatch);
 				} else {
-					getDiffProcessor().attributeChange(match, attribute, left, kind, DifferenceSource.LEFT);
+					// Value is in left, but not in either right or origin
+					getDiffProcessor().attributeChange(match, attribute, left, DifferenceKind.ADD,
+							DifferenceSource.LEFT);
 				}
 			} else {
 				// Value is present in both left and right sides. We can only have a diff on ordering
+				// FIXME check ordering
 				rightValues.remove(rightMatch);
 				originValues.remove(findMatch(left, originValues));
-				// FIXME check ordering
 			}
 		}
 
 		// We've updated the right list as we matched objects. The remaining are diffs.
 		for (Object right : rightValues) {
 			final Object originMatch = findMatch(right, originValues);
-			final DifferenceKind kind;
-			if (!attribute.isMany()) {
-				kind = DifferenceKind.CHANGE;
-			} else if (originMatch != null && right != null) {
-				kind = DifferenceKind.DELETE;
+			// Even with no match in the origin, source is the left side if this is not a three way
+			// comparison
+			if (originMatch != UNMATCHED_VALUE || !getComparison().isThreeWay()) {
+				getDiffProcessor().attributeChange(match, attribute, right, DifferenceKind.DELETE,
+						DifferenceSource.LEFT);
+				// FIXME if originMatch != UNMATCHED_VALUE then check ordering between right and origin
 			} else {
-				kind = DifferenceKind.ADD;
-			}
-			if (originMatch != null) {
-				getDiffProcessor()
-						.attributeChange(match, attribute, originMatch, kind, DifferenceSource.LEFT);
-			} else {
-				getDiffProcessor().attributeChange(match, attribute, right, kind, DifferenceSource.RIGHT);
+				getDiffProcessor().attributeChange(match, attribute, right, DifferenceKind.ADD,
+						DifferenceSource.RIGHT);
 			}
 		}
 	}
@@ -219,9 +310,12 @@ public class DefaultDiffEngine {
 					} else {
 						kind = DifferenceKind.ADD;
 					}
+					// no need to check if three way for these
 					if (originHasMatch) {
-						getDiffProcessor().referenceChange(match, reference, valueMatch.getOrigin(), kind,
+						// Value is in left and origin, though not in right.
+						getDiffProcessor().referenceChange(match, reference, value, kind,
 								DifferenceSource.RIGHT);
+						// FIXME if reference.isMany() then check ordering between left and origin
 					} else {
 						getDiffProcessor().referenceChange(match, reference, value, kind,
 								DifferenceSource.LEFT);
@@ -229,14 +323,14 @@ public class DefaultDiffEngine {
 				} else {
 					// Value is present in both left and right lists. We can only have a diff on ordering.
 					rightValues.remove(rightMatch);
-					// FIXME ordering check
+					// FIXME if reference.isMany() then check ordering between left and right
 				}
 			} else {
 				// this value is out of the comparison scope
 			}
 		}
 
-		// We've update the right list as we matched objects. The remaining are diffs.
+		// We've updated the right list as we matched objects. The remaining are diffs.
 		for (EObject value : rightValues) {
 			final Match valueMatch = getComparison().getMatch(value);
 
@@ -250,9 +344,10 @@ public class DefaultDiffEngine {
 				} else {
 					kind = DifferenceKind.ADD;
 				}
-				if (originHasMatch) {
-					getDiffProcessor().referenceChange(match, reference, valueMatch.getOrigin(), kind,
-							DifferenceSource.LEFT);
+				// Even with no match in the origin, source is left side if not in a three way comparison
+				if (originHasMatch || !getComparison().isThreeWay()) {
+					getDiffProcessor().referenceChange(match, reference, value, kind, DifferenceSource.LEFT);
+					// FIXME if originHasMatch then check ordering between right and origin
 				} else {
 					getDiffProcessor().referenceChange(match, reference, value, kind, DifferenceSource.RIGHT);
 				}
@@ -339,10 +434,10 @@ public class DefaultDiffEngine {
 						DifferenceSource.LEFT);
 			} else if (isContainedBy(parent.getOrigin(), reference, originValue)) {
 				// This value is also in the origin, in the same container. It has thus been removed
-				// from the right side
-				getDiffProcessor().referenceChange(parent, reference, originValue, DifferenceKind.DELETE,
+				// from the right side.
+				getDiffProcessor().referenceChange(parent, reference, leftValue, DifferenceKind.DELETE,
 						DifferenceSource.RIGHT);
-				// FIXME check ordering if needed
+				// FIXME check ordering between left and origin
 			} else {
 				/*
 				 * This value is also in the origin, it has thus been deleted from the right side. But it was
@@ -357,11 +452,12 @@ public class DefaultDiffEngine {
 			if (isContainedBy(parent.getRight(), reference, rightValue)) {
 				// they are in the same container; so there's actually no diff here : the same
 				// modification has been made in both sides
-				// FIXME there could be an ordering diff though
+				// FIXME check ordering between right and left
 			} else {
 				/*
-				 * This is actually a conflict : same object added in two distinct containers. The addition in
-				 * the right side, however, is in another match element and will be detected later on.
+				 * This is a conflict if a three way comparison : same object added in two distinct
+				 * containers. The addition in the right side, however, is in another match element and will
+				 * be detected later on.
 				 */
 				getDiffProcessor().referenceChange(parent, reference, leftValue, DifferenceKind.ADD,
 						DifferenceSource.LEFT);
@@ -370,19 +466,23 @@ public class DefaultDiffEngine {
 			// This value is on all three sides
 			if (isContainedBy(parent.getRight(), reference, rightValue)) {
 				/*
-				 * Even if the value is in another container in the origin, it is in the same container on
-				 * both left and right sides. No diff here as the same modification has been made on both
-				 * sides.
+				 * Value is in the same container on the right and left side. The container in the origin does
+				 * not matter in this case : the only diff possible is the ordering between left and right.
 				 */
-				// FIXME there could be an ordering diff though
+				// FIXME check ordering between left and right
 			} else if (!isContainedBy(parent.getOrigin(), reference, originValue)) {
-				// value present on all sides, but its container has changed in the left side as
-				// compared to the origin
+				/*
+				 * Value has changed container in left _and_ in right. The move on the right side will be
+				 * detected for another match.
+				 */
 				getDiffProcessor().referenceChange(parent, reference, leftValue, DifferenceKind.MOVE,
 						DifferenceSource.LEFT);
 			} else {
-				// The value has been moved in the right side ... but that's in another Match element
-				// FIXME there could also be a diff on the ordering
+				/*
+				 * Value is in the same container on left and origin. It has moved on the right side, but that
+				 * will be detected for another match.
+				 */
+				// FIXME check ordering between left and origin
 			}
 		}
 	}
@@ -416,16 +516,16 @@ public class DefaultDiffEngine {
 		final EObject originValue = value.getOrigin();
 
 		if (leftValue == null) {
-			if (originValue == null) {
+			if (originValue == null && getComparison().isThreeWay()) {
 				// This value has been added in the right side
 				getDiffProcessor().referenceChange(parent, reference, rightValue, DifferenceKind.ADD,
 						DifferenceSource.RIGHT);
-			} else if (isContainedBy(parent.getOrigin(), reference, originValue)) {
-				// This value is also in the origin, in the same container. It has thus been removed
-				// from the left side
-				getDiffProcessor().referenceChange(parent, reference, originValue, DifferenceKind.DELETE,
+			} else if (originValue == null || isContainedBy(parent.getOrigin(), reference, originValue)) {
+				// Either we are doing a two way comparison or this value is also in the origin, in the same
+				// container. It has thus been removed from the left side.
+				getDiffProcessor().referenceChange(parent, reference, rightValue, DifferenceKind.DELETE,
 						DifferenceSource.LEFT);
-				// FIXME check ordering if needed
+				// FIXME check ordering between right and origin
 			} else {
 				/*
 				 * This value is also in the origin, it has thus been deleted from the left side. But it was
@@ -435,26 +535,27 @@ public class DefaultDiffEngine {
 				getDiffProcessor().referenceChange(parent, reference, rightValue, DifferenceKind.MOVE,
 						DifferenceSource.RIGHT);
 			}
-		} else if (originValue == null) {
-			// This value is in both left and right sides, but not in the origin
-			// We also know that they are not in the same container
+		} else if (originValue == null && getComparison().isThreeWay()) {
+			// This value is in both left and right sides, but not in the origin. We also know that they are
+			// not in the same container since we are on the path for the "right" match, which will only be
+			// called if right and left are in distinct containers.
 			/*
 			 * This is actually a conflict : same object added in two distinct containers. The addition in the
-			 * left side, however, is in another match element and will be detected later on.
+			 * left side, however, will be detected for another match element.
 			 */
 			getDiffProcessor().referenceChange(parent, reference, rightValue, DifferenceKind.ADD,
 					DifferenceSource.RIGHT);
 		} else {
-			// This value is on all three sides
-			// We also know that they are not in the same container
-			if (!isContainedBy(parent.getOrigin(), reference, originValue)) {
+			// This value is on all three sides, or we are doing a two way comparison
+			// Either way, the value is in distinct containers on left and right
+			if (getComparison().isThreeWay() && !isContainedBy(parent.getOrigin(), reference, originValue)) {
 				// value present on all sides, but its container has changed in the right side as
 				// compared to the origin
 				getDiffProcessor().referenceChange(parent, reference, rightValue, DifferenceKind.MOVE,
 						DifferenceSource.RIGHT);
 			} else {
 				// The value has been moved in the left side ... but that's in another Match element
-				// FIXME there could also be a diff on the ordering
+				// FIXME check ordering between right and origin
 			}
 		}
 	}
@@ -541,11 +642,15 @@ public class DefaultDiffEngine {
 		return currentComparison;
 	}
 
-/** This will try and find a match to <code>reference</code> in the given list of <code>candidates</code> by using the
-	 * semantics of {@link #matchingValues(Object, Object)].
-	 * @param reference The object we need to find in <code>candidates</code>.
-	 * @param candidates Potential matches for <code>reference</code>.
-	 * @return The match if we found any, <code>null</code> otherwise.
+	/**
+	 * This will try and find a match to <code>reference</code> in the given list of <code>candidates</code>
+	 * by using the semantics of {@link #matchingValues(Object, Object)}.
+	 * 
+	 * @param reference
+	 *            The object we need to find in <code>candidates</code>.
+	 * @param candidates
+	 *            Potential matches for <code>reference</code>.
+	 * @return The match if we found any, {@link #UNMATCHED_VALUE} otherwise.
 	 */
 	protected Object findMatch(Object reference, Iterable<Object> candidates) {
 		for (Object candidate : candidates) {
@@ -553,7 +658,7 @@ public class DefaultDiffEngine {
 				return candidate;
 			}
 		}
-		return null;
+		return UNMATCHED_VALUE;
 	}
 
 	/**

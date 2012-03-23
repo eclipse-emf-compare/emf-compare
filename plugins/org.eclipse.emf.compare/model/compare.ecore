@@ -45,6 +45,11 @@
         </eAnnotations>
       </eParameters>
     </eOperations>
+    <eOperations name="isThreeWay" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Checks whether this comparison has been launched for three way comparison or if it only has two sides to compare."/>
+      </eAnnotations>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="matchedResources" upperBound="-1"
         eType="#//MatchResource" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
