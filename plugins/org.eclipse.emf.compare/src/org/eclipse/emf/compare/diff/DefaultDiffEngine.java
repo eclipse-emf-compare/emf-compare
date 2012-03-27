@@ -28,6 +28,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
+// TODO this probably doesn't handle feature maps. Test with an XSD-based metamodel
+// TODO does not handle proxies yet (see fixmes)
+// TODO does not handle ordering yet (fixme placed at every needed location)
 /**
  * The diff engine is in charge of actually computing the differences between the objects mapped by a
  * {@link Match} object.
@@ -327,6 +330,7 @@ public class DefaultDiffEngine {
 				}
 			} else {
 				// this value is out of the comparison scope
+				// FIXME or could be a proxy : compare through URI
 			}
 		}
 
@@ -353,6 +357,7 @@ public class DefaultDiffEngine {
 				}
 			} else {
 				// this value is out of the comparison scope
+				// FIXME or could be a proxy : compare through URI
 			}
 		}
 	}
@@ -382,6 +387,7 @@ public class DefaultDiffEngine {
 				computeContainmentDiffForLeftValue(match, reference, valueMatch, checkOrdering);
 			} else {
 				// this value is out of the comparison scope
+				// FIXME or could be a proxy : compare through URI
 			}
 		}
 
@@ -395,6 +401,7 @@ public class DefaultDiffEngine {
 			if (valueMatch == null || valueMatch.getLeft() != null
 					&& isContainedBy(match.getLeft(), reference, valueMatch.getLeft())) {
 				// Either out of scope or handled by the iteration on the left side
+				// FIXME or could be a proxy : compare through URI
 			} else {
 				computeContainmentDiffForRightValue(match, reference, valueMatch, checkOrdering);
 			}

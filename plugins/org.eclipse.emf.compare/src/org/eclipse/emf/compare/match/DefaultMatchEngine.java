@@ -25,17 +25,16 @@ import org.eclipse.emf.compare.match.eobject.IdentifierEObjectMatcher;
 import org.eclipse.emf.compare.match.resource.IResourceMatcher;
 import org.eclipse.emf.compare.match.resource.ResourceMapping;
 import org.eclipse.emf.compare.match.resource.StrategyResourceMatcher;
-import org.eclipse.emf.compare.scope.AbstractComparisonScope;
+import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
 /**
- * The Match engine orchestrates the matching process : it takes a {@link AbstractComparisonScope scope} as
- * input, iterates over its {@link AbstractComparisonScope#getLeft() left},
- * {@link AbstractComparisonScope#getRight() right} and {@link AbstractComparisonScope#getOrigin() origin}
- * roots and delegates to {@link IResourceMatcher}s and {@link IEObjectMatcher}s in order to create the result
- * {@link Comparison} model for this scope.
+ * The Match engine orchestrates the matching process : it takes an {@link IComparisonScope scope} as input,
+ * iterates over its {@link IComparisonScope#getLeft() left}, {@link IComparisonScope#getRight() right} and
+ * {@link IComparisonScope#getOrigin() origin} roots and delegates to {@link IResourceMatcher}s and
+ * {@link IEObjectMatcher}s in order to create the result {@link Comparison} model for this scope.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -44,14 +43,14 @@ public class DefaultMatchEngine implements IMatchEngine {
 	protected Comparison comparison;
 
 	/** The comparison scope that will be used by this engine. Should be accessed through {@link #getScope()}. */
-	protected AbstractComparisonScope comparisonScope;
+	protected IComparisonScope comparisonScope;
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.IMatchEngine#match(org.eclipse.emf.compare.scope.AbstractComparisonScope)
+	 * @see org.eclipse.emf.compare.match.IMatchEngine#match(org.eclipse.emf.compare.scope.IComparisonScope)
 	 */
-	public Comparison match(AbstractComparisonScope scope) {
+	public Comparison match(IComparisonScope scope) {
 		this.comparisonScope = scope;
 
 		final Notifier left = getScope().getLeft();
@@ -241,7 +240,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * 
 	 * @return The comparison scope associated with this engine.
 	 */
-	protected AbstractComparisonScope getScope() {
+	protected IComparisonScope getScope() {
 		return comparisonScope;
 	}
 

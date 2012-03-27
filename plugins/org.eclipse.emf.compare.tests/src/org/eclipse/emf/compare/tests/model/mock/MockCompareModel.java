@@ -17,13 +17,8 @@ import java.util.Collections;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.diff.DefaultDiffEngine;
-import org.eclipse.emf.compare.match.DefaultMatchEngine;
-import org.eclipse.emf.compare.scope.AbstractComparisonScope;
-import org.eclipse.emf.compare.scope.DefaultComparisonScope;
+import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 /**
@@ -46,13 +41,8 @@ public class MockCompareModel {
 	}
 
 	public Comparison createComparisonModel() throws IOException {
-		final AbstractComparisonScope scope = new DefaultComparisonScope(getLeftModel(), getRightModel(),
+		return EMFCompare.compare(getLeftModel(), getRightModel(),
 				getOriginModel());
-		final DefaultMatchEngine matchEngine = new DefaultMatchEngine();
-		Comparison comparison = matchEngine.match(scope);
-		final DefaultDiffEngine diffEngine = new DefaultDiffEngine();
-		diffEngine.diff(comparison);
-		return comparison;
 	}
 
 	/**
@@ -62,21 +52,23 @@ public class MockCompareModel {
 	 *            Relative path to the model we seek (relative to this class).
 	 * @return The loaded resource.
 	 * @throws IOException
-	 *             Thrown if we could not access either this class' resource, or the file towards which
-	 *             <code>string</code> points.
+	 *             Thrown if we could not access either this class' resource, or
+	 *             the file towards which <code>string</code> points.
 	 */
 	private Resource loadFromClassloader(String string) throws IOException {
 		final URL fileURL = getClass().getResource(string);
 		final InputStream str = fileURL.openStream();
-		final ResourceSet resourceSet = new ResourceSetImpl();
 		final URI uri = URI.createURI(fileURL.toString());
-		Resource res = resourceSet.createResource(uri);
-		if (res == null) {
-			// standalone run
-			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(uri.fileExtension(),
-					new XMIResourceFactoryImpl());
-			res = resourceSet.createResource(uri);
+
+		Resource.Factory resourceFactory = Resource.Factory.Registry.INSTANCE
+				.getFactory(uri);
+		if (resourceFactory == null) {
+			// Most likely a standalone run. Try with a plain XMI resource
+			resourceFactory = new XMIResourceFactoryImpl();
 		}
+
+		// resourceFactory cannot be null
+		Resource res = resourceFactory.createResource(uri);
 		res.load(str, Collections.emptyMap());
 		str.close();
 		return res;

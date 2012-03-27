@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.tests.model.CompareModelTestSuite;
+import org.eclipse.emf.compare.tests.scope.DefaultComparisonScopeTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -25,7 +26,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({CompareModelTestSuite.class, })
+@SuiteClasses({ CompareModelTestSuite.class, DefaultComparisonScopeTest.class, })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.
@@ -37,7 +38,8 @@ public class AllTests {
 	}
 
 	/**
-	 * This will return a suite populated with all tests available through this class.
+	 * This will return a suite populated with all tests available through this
+	 * class.
 	 * 
 	 * @generated
 	 */

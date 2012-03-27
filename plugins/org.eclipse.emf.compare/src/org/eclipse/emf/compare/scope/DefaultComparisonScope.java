@@ -13,26 +13,24 @@ package org.eclipse.emf.compare.scope;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
 
-import com.google.common.collect.Iterators;
-
-import java.util.Iterator;
+import com.google.common.base.Predicate;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * This implementation of an {@link AbstractComparisonScope} will return all of its Notifiers' contents
- * without any filtering.
+ * This is the default implementation of an {@link IComparisonScope}. When matching EObjects through their
+ * identifier, we simply retrieve all content under a {@link org.eclipse.emf.ecore.resource.Resource}, filter
+ * out the {@link EGenericType}s since they are handled through special means by EMF (mutually derived
+ * references such as eSuperTypes&lt;->eGenericSuperTypes, eType&lt;->eGenericType...) and iterate over this
+ * list as a whole.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class DefaultComparisonScope extends AbstractComparisonScope {
+public class DefaultComparisonScope extends FilterComparisonScope {
 	/**
-	 * Simmply delegates to the super constructor.
+	 * Simply delegates to the super constructor.
 	 * 
 	 * @param left
 	 *            Left root of this comparison.
@@ -48,46 +46,20 @@ public class DefaultComparisonScope extends AbstractComparisonScope {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.scope.AbstractComparisonScope#getChildren(org.eclipse.emf.ecore.EObject)
+	 * @see org.eclipse.emf.compare.scope.FilterComparisonScope#getEObjectChildrenFilter()
 	 */
 	@Override
-	public Iterator<? extends EObject> getChildren(EObject eObject) {
-		final Iterator<EObject> properContent = Iterators.filter(EcoreUtil.getAllProperContents(eObject,
-				false), EObject.class);
-		/*
-		 * EGenericTypes are usually "mutually derived" references that are handled through specific means in
-		 * ecore (eGenericSuperTypes and eSuperTypes, EGenericType and eType...). As these aren't even shown
-		 * to the user, we wish to avoid detection of changes on them.
-		 */
-		final Iterator<EObject> filter = Iterators.filter(properContent, not(instanceOf(EGenericType.class)));
-		return Iterators.unmodifiableIterator(filter);
+	protected Predicate<? super EObject> getEObjectChildrenFilter() {
+		return not(instanceOf(EGenericType.class));
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.scope.AbstractComparisonScope#getChildren(org.eclipse.emf.ecore.resource.Resource)
+	 * @see org.eclipse.emf.compare.scope.FilterComparisonScope#getResourceChildrenFilter()
 	 */
 	@Override
-	public Iterator<? extends EObject> getChildren(Resource resource) {
-		final Iterator<EObject> properContent = Iterators.filter(EcoreUtil.getAllProperContents(resource,
-				false), EObject.class);
-		/*
-		 * EGenericTypes are usually "mutually derived" references that are handled through specific means in
-		 * ecore (eGenericSuperTypes and eSuperTypes, EGenericType and eType...). As these aren't even shown
-		 * to the user, we wish to avoid detection of changes on them.
-		 */
-		final Iterator<EObject> filter = Iterators.filter(properContent, not(instanceOf(EGenericType.class)));
-		return Iterators.unmodifiableIterator(filter);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.scope.AbstractComparisonScope#getChildren(org.eclipse.emf.ecore.resource.ResourceSet)
-	 */
-	@Override
-	public Iterator<? extends Resource> getChildren(ResourceSet resourceSet) {
-		return Iterators.unmodifiableIterator(resourceSet.getResources().iterator());
+	protected Predicate<? super EObject> getResourceChildrenFilter() {
+		return not(instanceOf(EGenericType.class));
 	}
 }
