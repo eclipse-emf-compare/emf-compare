@@ -61,6 +61,9 @@ public class DefaultMatchEngine implements IMatchEngine {
 		if (left instanceof ResourceSet || right instanceof ResourceSet) {
 			match((ResourceSet)left, (ResourceSet)right, (ResourceSet)origin);
 		} else if (left instanceof Resource || right instanceof Resource) {
+			// Our "roots" are Resources. Consider them matched
+			final MatchResource match = createMatchResource((Resource)left, (Resource)right, (Resource)origin);
+			getComparison().getMatchedResources().add(match);
 			match((Resource)left, (Resource)right, (Resource)origin);
 		} else if (left instanceof EObject || right instanceof EObject) {
 			match((EObject)left, (EObject)right, (EObject)origin);
@@ -98,16 +101,8 @@ public class DefaultMatchEngine implements IMatchEngine {
 				originChildren);
 
 		for (ResourceMapping mapping : mappings) {
-			final MatchResource matchResource = CompareFactory.eINSTANCE.createMatchResource();
-			if (mapping.getLeft() != null && mapping.getLeft().getURI() != null) {
-				matchResource.setLeftURI(mapping.getLeft().getURI().toString());
-			}
-			if (mapping.getRight() != null && mapping.getRight().getURI() != null) {
-				matchResource.setRightURI(mapping.getRight().getURI().toString());
-			}
-			if (mapping.getOrigin() != null && mapping.getOrigin().getURI() != null) {
-				matchResource.setOriginURI(mapping.getOrigin().getURI().toString());
-			}
+			final MatchResource matchResource = createMatchResource(mapping.getLeft(), mapping.getRight(),
+					mapping.getOrigin());
 			getComparison().getMatchedResources().add(matchResource);
 
 			match(mapping.getLeft(), mapping.getRight(), mapping.getOrigin());
@@ -260,5 +255,31 @@ public class DefaultMatchEngine implements IMatchEngine {
 		// CHECKSTYLE:OFF This expression is alone in its method, and documented.
 		return condition1 && (condition2 || condition3) || (condition2 && condition3);
 		// CHECKSTYLE:ON
+	}
+
+	/**
+	 * This can be called to create a {@link MatchResource} for the given three resources. <b>Note </b> that
+	 * any of the arguments can be <code>null</code>.
+	 * 
+	 * @param left
+	 *            The left resource of this mapping. Can be <code>null</code>.
+	 * @param right
+	 *            The right resource of this mapping. Can be <code>null</code>.
+	 * @param origin
+	 *            The origin resource of this mapping. Can be <code>null</code>.
+	 * @return The newly created mapping.
+	 */
+	protected static MatchResource createMatchResource(Resource left, Resource right, Resource origin) {
+		final MatchResource matchResource = CompareFactory.eINSTANCE.createMatchResource();
+		if (left != null && left.getURI() != null) {
+			matchResource.setLeftURI(left.getURI().toString());
+		}
+		if (right != null && right.getURI() != null) {
+			matchResource.setRightURI(right.getURI().toString());
+		}
+		if (origin != null && origin.getURI() != null) {
+			matchResource.setOriginURI(origin.getURI().toString());
+		}
+		return matchResource;
 	}
 }

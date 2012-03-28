@@ -14,6 +14,7 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.textui.TestRunner;
 
+import org.eclipse.emf.compare.tests.match.IdentifierMatchTest;
 import org.eclipse.emf.compare.tests.model.CompareModelTestSuite;
 import org.eclipse.emf.compare.tests.scope.DefaultComparisonScopeTest;
 import org.junit.runner.RunWith;
@@ -26,7 +27,8 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({ CompareModelTestSuite.class, DefaultComparisonScopeTest.class, })
+@SuiteClasses({ CompareModelTestSuite.class, DefaultComparisonScopeTest.class,
+		IdentifierMatchTest.class, })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.
