@@ -18,6 +18,8 @@ import java.lang.annotation.Target;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.diff.DefaultDiffEngine;
+import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
@@ -26,14 +28,15 @@ import org.eclipse.emf.compare.tests.framework.junit.EMFCompareTestRunner;
 
 /**
  * This annotation can be used to tell the {@link EMFCompareTestRunner} that a particular method has to be
- * called after executing the matching process on a given NotifierTuple.
+ * called after executing the differencing process on a given NotifierTuple.
  * <p>
- * Methods annotated with {@link MatchTest} should declare two arguments of type {@link IComparisonScope} and
+ * Methods annotated with {@link DiffTest} should declare two arguments of type {@link IComparisonScope} and
  * {@link Comparison}.
  * </p>
  * <p>
- * This annotation accepts two additional parameters, engine and scope, which allow users to specify the
- * {@link IMatchEngine} and {@link IComparisonScope} classes that are to be used by the framework.
+ * This annotation accepts three additional parameters, matchEngine, diffEngine and scope, which allow users
+ * to specify the {@link IMatchEngine}, {@link IDiffEngine} and {@link IComparisonScope} classes that are to
+ * be used by the framework.
  * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
@@ -41,12 +44,18 @@ import org.eclipse.emf.compare.tests.framework.junit.EMFCompareTestRunner;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Inherited
-public @interface MatchTest {
+public @interface DiffTest {
 	/**
 	 * Optionally specifies the match engine we are to use for this test. We're expecting the given class to
 	 * have a public no-arg constructor.
 	 */
 	Class<? extends IMatchEngine> matchEngine() default DefaultMatchEngine.class;
+
+	/**
+	 * Optionally specifies the diff engine we are to use for this test. We're expecting the given class to
+	 * have a public no-arg constructor.
+	 */
+	Class<? extends IDiffEngine> diffEngine() default DefaultDiffEngine.class;
 
 	/**
 	 * Optionally specifies the scope we are to use for this test. We're expecting the given class to have a

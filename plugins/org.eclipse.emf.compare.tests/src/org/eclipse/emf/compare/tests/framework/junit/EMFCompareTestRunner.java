@@ -43,11 +43,9 @@ public final class EMFCompareTestRunner extends ParentRunner<Runner> {
 	@Override
 	protected List<Runner> getChildren() {
 		final List<Runner> runners = new ArrayList<Runner>();
-		for (FrameworkMethod child : getTestClass().getAnnotatedMethods(
-				UseCase.class)) {
+		for (FrameworkMethod child : getTestClass().getAnnotatedMethods(UseCase.class)) {
 			try {
-				runners.add(new UseCaseRunner(getTestClass().getJavaClass(),
-						child));
+				runners.add(new UseCaseRunner(getTestClass().getJavaClass(), child));
 			} catch (InitializationError e) {
 				e.printStackTrace();
 				Assert.fail(e.getMessage());

@@ -43,7 +43,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class DefaultDiffEngine {
+public class DefaultDiffEngine implements IDiffEngine {
 	/**
 	 * We'll use this "placeholder" to differentiate the unmatched elements from the "null" values that
 	 * attributes can legitimately use.
@@ -63,11 +63,9 @@ public class DefaultDiffEngine {
 	private IDiffProcessor diffProcessor;
 
 	/**
-	 * This will complete the input <code>comparison</code> by iterating over the {@link Match matches} it
-	 * contain, filling in the differences it can detect for each distinct Match.
+	 * {@inheritDoc}
 	 * 
-	 * @param comparison
-	 *            The comparison this engine is expected to complete.
+	 * @see org.eclipse.emf.compare.diff.IDiffEngine#diff(org.eclipse.emf.compare.Comparison)
 	 */
 	public void diff(Comparison comparison) {
 		this.currentComparison = comparison;

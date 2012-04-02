@@ -20,16 +20,14 @@ import org.eclipse.emf.compare.tests.framework.NotifierTuple;
 import org.eclipse.emf.compare.tests.framework.junit.EMFCompareTestRunner;
 
 /**
- * This annotation can be used to tell the {@link EMFCompareTestRunner} that a
- * particular method has to be called before executing the matching process on a
- * given NotifierTuple.
+ * This annotation can be used to tell the {@link EMFCompareTestRunner} that a particular method has to be
+ * called before executing the matching process on a given NotifierTuple.
  * <p>
- * Methods annotated with {@link BeforeMatch} should declare a single argument
- * of type {@link NotifierTuple}.
+ * Methods annotated with {@link BeforeMatch} should declare a single argument of type {@link NotifierTuple}.
  * </p>
  * <p>
- * Methods annotated as {@link BeforeMatch} will never be called if there are no
- * methods annotated {@link MatchTest} in the same test class.
+ * Methods annotated as {@link BeforeMatch} will never be called if there are no methods annotated
+ * {@link MatchTest} in the same test class.
  * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>

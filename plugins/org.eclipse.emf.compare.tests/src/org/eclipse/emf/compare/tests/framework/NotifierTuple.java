@@ -13,16 +13,18 @@ package org.eclipse.emf.compare.tests.framework;
 import org.eclipse.emf.common.notify.Notifier;
 
 /**
- * This represents a "use case" as EMF Compare understands it, i.e : two or
- * three notifiers which are to be compared and merged.
+ * This represents a "use case" as EMF Compare understands it, i.e : two or three notifiers which are to be
+ * compared and merged.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class NotifierTuple {
 	/** "Left" notifier of this comparison. */
 	private Notifier left;
+
 	/** "Right" notifier of this comparison. */
 	private Notifier right;
+
 	/** common ancestor of {@link #left} and {@link #right}. */
 	private Notifier origin;
 
@@ -34,8 +36,8 @@ public class NotifierTuple {
 	 * @param right
 	 *            The right Notifier.
 	 * @param origin
-	 *            The Notifier that is to be considered as the common ancestor
-	 *            of <code>left</code> and <code>right</code>.
+	 *            The Notifier that is to be considered as the common ancestor of <code>left</code> and
+	 *            <code>right</code>.
 	 */
 	public NotifierTuple(Notifier left, Notifier right, Notifier origin) {
 		this.left = left;

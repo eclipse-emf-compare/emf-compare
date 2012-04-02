@@ -20,8 +20,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 /**
- * Implementations of this class can be used to load models from the class'
- * class loader.
+ * Implementations of this class can be used to load models from the class' class loader.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -33,16 +32,15 @@ public abstract class AbstractInputData {
 	 *            Relative path to the model we seek (relative to this class).
 	 * @return The loaded resource.
 	 * @throws IOException
-	 *             Thrown if we could not access either this class' resource, or
-	 *             the file towards which <code>string</code> points.
+	 *             Thrown if we could not access either this class' resource, or the file towards which
+	 *             <code>string</code> points.
 	 */
 	protected Resource loadFromClassloader(String string) throws IOException {
 		final URL fileURL = getClass().getResource(string);
 		final InputStream str = fileURL.openStream();
 		final URI uri = URI.createURI(fileURL.toString());
 
-		Resource.Factory resourceFactory = Resource.Factory.Registry.INSTANCE
-				.getFactory(uri);
+		Resource.Factory resourceFactory = Resource.Factory.Registry.INSTANCE.getFactory(uri);
 		if (resourceFactory == null) {
 			// Most likely a standalone run. Try with a plain XMI resource
 			resourceFactory = new XMIResourceFactoryImpl();

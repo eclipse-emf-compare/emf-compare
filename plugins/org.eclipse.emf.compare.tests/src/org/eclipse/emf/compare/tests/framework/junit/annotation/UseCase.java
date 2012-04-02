@@ -19,8 +19,7 @@ import java.lang.annotation.Target;
 import org.eclipse.emf.compare.tests.framework.NotifierTuple;
 
 /**
- * This can be used to annotate {@link NotifierTuple}-returning methods so that
- * they can be run as unit test.
+ * This can be used to annotate {@link NotifierTuple}-returning methods so that they can be run as unit test.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */

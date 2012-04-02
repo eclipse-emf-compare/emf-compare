@@ -37,7 +37,6 @@ public class MockCompareModel extends AbstractInputData {
 	}
 
 	public Comparison createComparisonModel() throws IOException {
-		return EMFCompare.compare(getLeftModel(), getRightModel(),
-				getOriginModel());
+		return EMFCompare.compare(getLeftModel(), getRightModel(), getOriginModel());
 	}
 }

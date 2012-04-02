@@ -11,26 +11,27 @@
 package org.eclipse.emf.compare.tests.framework.junit.internal;
 
 import java.lang.reflect.Constructor;
-import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.diff.DefaultDiffEngine;
+import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.NotifierTuple;
-import org.eclipse.emf.compare.tests.framework.junit.annotation.MatchTest;
+import org.eclipse.emf.compare.tests.framework.junit.annotation.DiffTest;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 
 /**
- * This implementation of a {@link Statement} allows us to call methods annotated with {@link MatchTest} on
- * the result of a Matching process.
+ * This implementation of a {@link Statement} allows us to call methods annotated with {@link DiffTest} on the
+ * result of a Differencing process.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class MatchStatement extends Statement {
+public class DiffStatement extends Statement {
 	/** Target of the test. */
 	private final Object testObject;
 
@@ -39,29 +40,24 @@ public class MatchStatement extends Statement {
 	 */
 	private final ResultStatement<NotifierTuple> tupleStatement;
 
-	/** The methods to call before the match, if any. */
-	private final List<FrameworkMethod> beforeTest;
-
 	/** The actual test method. */
 	private final FrameworkMethod test;
 
 	/**
-	 * Instantiates our statement given its target object and tuple as well as the befores and test methods.
+	 * Instantiates our statement given its target object and tuple as well as the test methods.
 	 * 
 	 * @param testObject
 	 *            Target of the test.
 	 * @param tupleStatement
-	 *            The statement that should be executed to retrieve the {@link NotifierTuple} we are to match.
-	 * @param beforeTest
-	 *            If there were any method to call before launching the match, this will contain them.
+	 *            The statement that should be executed to retrieve the {@link NotifierTuple} we are to match
+	 *            and diff.
 	 * @param test
 	 *            The actual test method.
 	 */
-	public MatchStatement(Object testObject, ResultStatement<NotifierTuple> tupleStatement,
-			List<FrameworkMethod> beforeTest, FrameworkMethod test) {
+	public DiffStatement(Object testObject, ResultStatement<NotifierTuple> tupleStatement,
+			FrameworkMethod test) {
 		this.testObject = testObject;
 		this.tupleStatement = tupleStatement;
-		this.beforeTest = beforeTest;
 		this.test = test;
 	}
 
@@ -75,14 +71,12 @@ public class MatchStatement extends Statement {
 		tupleStatement.evaluate();
 		final NotifierTuple tuple = tupleStatement.getResult();
 
-		for (FrameworkMethod before : beforeTest) {
-			before.invokeExplosively(testObject, tuple);
-		}
-
-		final MatchTest annotation = test.getAnnotation(MatchTest.class);
-		final IMatchEngine engine = createMatchEngine(annotation);
+		final DiffTest annotation = test.getAnnotation(DiffTest.class);
 		final IComparisonScope scope = createComparisonScope(tuple, annotation);
-		final Comparison comparison = engine.match(scope);
+		final IMatchEngine matchEngine = createMatchEngine(annotation);
+		final IDiffEngine diffEngine = createDiffEngine(annotation);
+		final Comparison comparison = matchEngine.match(scope);
+		diffEngine.diff(comparison);
 
 		test.invokeExplosively(testObject, scope, comparison);
 	}
@@ -96,7 +90,7 @@ public class MatchStatement extends Statement {
 	 * @return An instance of the specified match engine if it has a public no-arg constructor; an instance of
 	 *         the {@link DefaultMatchEngine} otherwise.
 	 */
-	private static IMatchEngine createMatchEngine(MatchTest annotation) {
+	private static IMatchEngine createMatchEngine(DiffTest annotation) {
 		final Class<? extends IMatchEngine> engineClass = annotation.matchEngine();
 
 		IMatchEngine engine = null;
@@ -114,6 +108,32 @@ public class MatchStatement extends Statement {
 	}
 
 	/**
+	 * Creates the diff engine specified by the given annotation if it has a public no-arg constructor, use
+	 * the {@link DefaultDiffEngine default} otherwise.
+	 * 
+	 * @param annotation
+	 *            The annotation on which is defined the diff engine we are to use.
+	 * @return An instance of the specified diff engine if it has a public no-arg constructor; an instance of
+	 *         the {@link DefaultDiffEngine} otherwise.
+	 */
+	private static IDiffEngine createDiffEngine(DiffTest annotation) {
+		final Class<? extends IDiffEngine> engineClass = annotation.diffEngine();
+
+		IDiffEngine engine = null;
+		try {
+			engine = engineClass.newInstance();
+		} catch (InstantiationException e) {
+			// Swallow : we'll create a default engine instead.
+		} catch (IllegalAccessException e) {
+			// Swallow : we'll create a default engine instead.
+		}
+		if (engine == null) {
+			engine = new DefaultDiffEngine();
+		}
+		return engine;
+	}
+
+	/**
 	 * Creates the comparison scope specified by the given annotation if it has a public constructor taking
 	 * three {@link Notifier}s as parameters. We'll return an instance of the {@link DefaultComparisonScope}
 	 * otherwise.
@@ -125,7 +145,7 @@ public class MatchStatement extends Statement {
 	 * @return An instance of the specified comparison scope it it has the expected constructor, an instance
 	 *         of the {@link DefaultComparisonScope} otherwise.
 	 */
-	private static IComparisonScope createComparisonScope(NotifierTuple tuple, MatchTest annotation) {
+	private static IComparisonScope createComparisonScope(NotifierTuple tuple, DiffTest annotation) {
 		final Class<? extends IComparisonScope> scopeClass = annotation.scope();
 
 		IComparisonScope scope = null;

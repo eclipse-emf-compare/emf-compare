@@ -17,8 +17,8 @@ import org.eclipse.emf.compare.tests.framework.junit.annotation.UseCase;
 import org.junit.runners.model.FrameworkMethod;
 
 /**
- * This will be used to invoke a method annotated with the {@link UseCase}
- * annotation. These are expected to return a {@link NotifierTuple} instance.
+ * This will be used to invoke a method annotated with the {@link UseCase} annotation. These are expected to
+ * return a {@link NotifierTuple} instance.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -33,8 +33,8 @@ public class UseCaseStatement extends ResultStatement<NotifierTuple> {
 	private NotifierTuple result;
 
 	/**
-	 * Instantiates our statement given the method we are to invoke in order to
-	 * retrieve the use case, and the target of the test.
+	 * Instantiates our statement given the method we are to invoke in order to retrieve the use case, and the
+	 * target of the test.
 	 * 
 	 * @param useCaseMethod
 	 *            The method we are to invoke in order to retrieve the use case.
@@ -55,10 +55,9 @@ public class UseCaseStatement extends ResultStatement<NotifierTuple> {
 	public void evaluate() throws Throwable {
 		if (result == null) {
 			final Object tuple = useCase.invokeExplosively(test);
-			Assert.assertTrue(useCase.getName()
-					+ " did not return a NotifierTuple.",
+			Assert.assertTrue(useCase.getName() + " did not return a NotifierTuple.",
 					tuple instanceof NotifierTuple);
-			result = (NotifierTuple) tuple;
+			result = (NotifierTuple)tuple;
 		}
 	}
 

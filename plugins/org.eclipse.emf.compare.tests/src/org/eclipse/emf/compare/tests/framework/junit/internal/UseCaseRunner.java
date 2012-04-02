@@ -18,6 +18,7 @@ import junit.framework.Assert;
 
 import org.eclipse.emf.compare.tests.framework.NotifierTuple;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.BeforeMatch;
+import org.eclipse.emf.compare.tests.framework.junit.annotation.DiffTest;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.MatchTest;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.UseCase;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -58,7 +59,6 @@ public class UseCaseRunner extends BlockJUnit4ClassRunner {
 	protected String testName(FrameworkMethod method) {
 		// Replace the standard description to make it unique so that the JUnit view understands that these
 		// are two distinct tests.
-
 		final StringBuilder name = new StringBuilder();
 		name.append(super.testName(method));
 		name.append(" - "); //$NON-NLS-1$
@@ -86,9 +86,10 @@ public class UseCaseRunner extends BlockJUnit4ClassRunner {
 	 */
 	@Override
 	protected List<FrameworkMethod> computeTestMethods() {
-		final List<FrameworkMethod> matchTests = getTestClass().getAnnotatedMethods(MatchTest.class);
+		final List<FrameworkMethod> allMethods = Lists.newArrayList(getTestClass().getAnnotatedMethods(
+				MatchTest.class));
+		allMethods.addAll(getTestClass().getAnnotatedMethods(DiffTest.class));
 
-		final List<FrameworkMethod> allMethods = Lists.newArrayList(matchTests);
 		return allMethods;
 	}
 
@@ -112,8 +113,10 @@ public class UseCaseRunner extends BlockJUnit4ClassRunner {
 		if (method.getAnnotation(MatchTest.class) != null) {
 			final List<FrameworkMethod> befores = getTestClass().getAnnotatedMethods(BeforeMatch.class);
 			result = new MatchStatement(testObject, useCaseStatement, befores, method);
+		} else if (method.getAnnotation(DiffTest.class) != null) {
+			result = new DiffStatement(testObject, useCaseStatement, method);
 		} else {
-			// TODO diff test
+			// TODO merge test
 			result = null;
 		}
 		return result;
