@@ -8,14 +8,15 @@
  * Contributors:
  *     Obeo - initial API and implementation
  */
-package org.eclipse.emf.compare.tests.framework;
+package org.eclipse.emf.compare.tests.framework.junit;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
 
-import org.eclipse.emf.compare.tests.framework.annotation.UseCase;
+import org.eclipse.emf.compare.tests.framework.junit.annotation.UseCase;
+import org.eclipse.emf.compare.tests.framework.junit.internal.UseCaseRunner;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;

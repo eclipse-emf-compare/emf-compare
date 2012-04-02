@@ -8,28 +8,25 @@
  * Contributors:
  *     Obeo - initial API and implementation
  */
-package org.eclipse.emf.compare.tests.framework;
+package org.eclipse.emf.compare.tests.framework.junit.internal;
+
+import com.google.common.collect.Lists;
 
 import java.util.List;
 
 import junit.framework.Assert;
 
-import org.eclipse.emf.compare.tests.framework.annotation.BeforeMatch;
-import org.eclipse.emf.compare.tests.framework.annotation.MatchTest;
-import org.eclipse.emf.compare.tests.framework.annotation.UseCase;
-import org.eclipse.emf.compare.tests.framework.statement.MatchStatement;
-import org.eclipse.emf.compare.tests.framework.statement.ResultStatement;
-import org.eclipse.emf.compare.tests.framework.statement.UseCaseStatement;
+import org.eclipse.emf.compare.tests.framework.NotifierTuple;
+import org.eclipse.emf.compare.tests.framework.junit.annotation.BeforeMatch;
+import org.eclipse.emf.compare.tests.framework.junit.annotation.MatchTest;
+import org.eclipse.emf.compare.tests.framework.junit.annotation.UseCase;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
-import com.google.common.collect.Lists;
-
 /**
- * This particular implementation of a runner will be used to run the tests of a
- * use case.
+ * This particular implementation of a runner will be used to run the tests of a use case.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -47,10 +44,27 @@ public class UseCaseRunner extends BlockJUnit4ClassRunner {
 	 * @throws InitializationError
 	 *             Thrown if the initialization failed somehow.
 	 */
-	public UseCaseRunner(Class<?> clazz, FrameworkMethod useCaseMethod)
-			throws InitializationError {
+	public UseCaseRunner(Class<?> clazz, FrameworkMethod useCaseMethod) throws InitializationError {
 		super(clazz);
 		this.useCase = useCaseMethod;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.junit.runners.BlockJUnit4ClassRunner#testName(org.junit.runners.model.FrameworkMethod)
+	 */
+	@Override
+	protected String testName(FrameworkMethod method) {
+		// Replace the standard description to make it unique so that the JUnit view understands that these
+		// are two distinct tests.
+
+		final StringBuilder name = new StringBuilder();
+		name.append(super.testName(method));
+		name.append(" - "); //$NON-NLS-1$
+		name.append(useCase.getAnnotation(UseCase.class).value());
+
+		return name.toString();
 	}
 
 	/**
@@ -72,8 +86,7 @@ public class UseCaseRunner extends BlockJUnit4ClassRunner {
 	 */
 	@Override
 	protected List<FrameworkMethod> computeTestMethods() {
-		final List<FrameworkMethod> matchTests = getTestClass()
-				.getAnnotatedMethods(MatchTest.class);
+		final List<FrameworkMethod> matchTests = getTestClass().getAnnotatedMethods(MatchTest.class);
 
 		final List<FrameworkMethod> allMethods = Lists.newArrayList(matchTests);
 		return allMethods;
@@ -93,15 +106,12 @@ public class UseCaseRunner extends BlockJUnit4ClassRunner {
 			Assert.fail(e.getMessage());
 		}
 
-		final ResultStatement<NotifierTuple> useCaseStatement = new UseCaseStatement(
-				useCase, testObject);
+		final ResultStatement<NotifierTuple> useCaseStatement = new UseCaseStatement(useCase, testObject);
 
 		final Statement result;
 		if (method.getAnnotation(MatchTest.class) != null) {
-			final List<FrameworkMethod> befores = getTestClass()
-					.getAnnotatedMethods(BeforeMatch.class);
-			result = new MatchStatement(testObject, useCaseStatement, befores,
-					method);
+			final List<FrameworkMethod> befores = getTestClass().getAnnotatedMethods(BeforeMatch.class);
+			result = new MatchStatement(testObject, useCaseStatement, befores, method);
 		} else {
 			// TODO diff test
 			result = null;

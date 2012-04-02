@@ -13,11 +13,8 @@ package org.eclipse.emf.compare.scope;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
 
-import com.google.common.base.Predicate;
-
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EGenericType;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * This is the default implementation of an {@link IComparisonScope}. When matching EObjects through their
@@ -41,25 +38,7 @@ public class DefaultComparisonScope extends FilterComparisonScope {
 	 */
 	public DefaultComparisonScope(Notifier left, Notifier right, Notifier origin) {
 		super(left, right, origin);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.scope.FilterComparisonScope#getEObjectChildrenFilter()
-	 */
-	@Override
-	protected Predicate<? super EObject> getEObjectChildrenFilter() {
-		return not(instanceOf(EGenericType.class));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.scope.FilterComparisonScope#getResourceChildrenFilter()
-	 */
-	@Override
-	protected Predicate<? super EObject> getResourceChildrenFilter() {
-		return not(instanceOf(EGenericType.class));
+		setEObjectContentFilter(not(instanceOf(EGenericType.class)));
+		setResourceContentFilter(not(instanceOf(EGenericType.class)));
 	}
 }

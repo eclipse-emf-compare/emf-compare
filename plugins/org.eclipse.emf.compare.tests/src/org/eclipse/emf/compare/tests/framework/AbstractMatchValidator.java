@@ -14,9 +14,8 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 
 /**
- * This abstract class provides the base functionality to walk over a given
- * {@link Comparison} {@link Match}es. Sub-classes of this will be used to
- * validate the {@link Match} detected by EMF Compare.
+ * This abstract class provides the base functionality to walk over a given {@link Comparison} {@link Match}
+ * es. Sub-classes of this will be used to validate the {@link Match} detected by EMF Compare.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -35,8 +34,7 @@ public abstract class AbstractMatchValidator {
 	}
 
 	/**
-	 * Walks over the given match and its sub-matches, calling
-	 * {@link #validateMatch(Match)} on each.
+	 * Walks over the given match and its sub-matches, calling {@link #validateMatch(Match)} on each.
 	 * 
 	 * @param match
 	 *            The match we are to validate.
@@ -44,7 +42,7 @@ public abstract class AbstractMatchValidator {
 	protected void walkAndValidate(Match match) {
 		validateMatch(match);
 		for (Match submatch : match.getSubmatches()) {
-			validateMatch(submatch);
+			walkAndValidate(submatch);
 		}
 	}
 

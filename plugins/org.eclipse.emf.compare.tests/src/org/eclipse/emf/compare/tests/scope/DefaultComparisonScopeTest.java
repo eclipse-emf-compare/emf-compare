@@ -16,6 +16,9 @@ import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
 
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
+
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -31,12 +34,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.junit.Test;
 
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
-
 /**
- * This class will allow us to test the behavior of the
- * {@link DefaultComparisonScope}.
+ * This class will allow us to test the behavior of the {@link DefaultComparisonScope}.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -58,28 +57,23 @@ public class DefaultComparisonScopeTest {
 		assertNotNull(rightResource);
 		assertNotNull(originResource);
 
-		final Iterator<EObject> leftContent = EcoreUtil.getAllProperContents(
-				leftResource, false);
-		final Iterator<EObject> rightContent = EcoreUtil.getAllProperContents(
-				leftResource, false);
-		final Iterator<EObject> originContent = EcoreUtil.getAllProperContents(
-				leftResource, false);
+		final Iterator<EObject> leftContent = EcoreUtil.getAllProperContents(leftResource, false);
+		final Iterator<EObject> rightContent = EcoreUtil.getAllProperContents(leftResource, false);
+		final Iterator<EObject> originContent = EcoreUtil.getAllProperContents(leftResource, false);
 
-		while (leftContent.hasNext() && rightContent.hasNext()
-				&& originContent.hasNext()) {
+		while (leftContent.hasNext() && rightContent.hasNext() && originContent.hasNext()) {
 			final EObject left = leftContent.next();
 			final EObject right = rightContent.next();
 			final EObject origin = originContent.next();
-			final IComparisonScope eObjectScope = new DefaultComparisonScope(
-					left, right, origin);
+			final IComparisonScope eObjectScope = new DefaultComparisonScope(left, right, origin);
 
 			assertSame(left, eObjectScope.getLeft());
 			assertSame(right, eObjectScope.getRight());
 			assertSame(origin, eObjectScope.getOrigin());
 		}
 
-		final IComparisonScope resourceScope = new DefaultComparisonScope(
-				leftResource, rightResource, originResource);
+		final IComparisonScope resourceScope = new DefaultComparisonScope(leftResource, rightResource,
+				originResource);
 		assertSame(leftResource, resourceScope.getLeft());
 		assertSame(rightResource, resourceScope.getRight());
 		assertSame(originResource, resourceScope.getOrigin());
@@ -88,8 +82,7 @@ public class DefaultComparisonScopeTest {
 		final ResourceSet rightRS = newResourceSet(rightResource);
 		final ResourceSet originRS = newResourceSet(originResource);
 
-		final IComparisonScope resourceSetScope = new DefaultComparisonScope(
-				leftRS, rightRS, originRS);
+		final IComparisonScope resourceSetScope = new DefaultComparisonScope(leftRS, rightRS, originRS);
 		assertSame(leftRS, resourceSetScope.getLeft());
 		assertSame(rightRS, resourceSetScope.getRight());
 		assertSame(originRS, resourceSetScope.getOrigin());
@@ -99,9 +92,9 @@ public class DefaultComparisonScopeTest {
 	public void testGetChildrenForNull() {
 		final IComparisonScope nullScope = createNullScope();
 
-		assertFalse(nullScope.getChildren((EObject) null).hasNext());
-		assertFalse(nullScope.getChildren((Resource) null).hasNext());
-		assertFalse(nullScope.getChildren((ResourceSet) null).hasNext());
+		assertFalse(nullScope.getChildren((EObject)null).hasNext());
+		assertFalse(nullScope.getCoveredEObjects((Resource)null).hasNext());
+		assertFalse(nullScope.getCoveredResources((ResourceSet)null).hasNext());
 	}
 
 	@Test
@@ -112,30 +105,23 @@ public class DefaultComparisonScopeTest {
 		assertTrue(resourceScope.getRight() instanceof Resource);
 		assertTrue(resourceScope.getOrigin() instanceof Resource);
 
-		final Resource leftResource = (Resource) resourceScope.getLeft();
-		final Resource rightResource = (Resource) resourceScope.getRight();
-		final Resource originResource = (Resource) resourceScope.getOrigin();
+		final Resource leftResource = (Resource)resourceScope.getLeft();
+		final Resource rightResource = (Resource)resourceScope.getRight();
+		final Resource originResource = (Resource)resourceScope.getOrigin();
 
-		final Iterator<EObject> leftContent = EcoreUtil.getAllProperContents(
-				leftResource, false);
-		final Iterator<EObject> rightContent = EcoreUtil.getAllProperContents(
-				rightResource, false);
-		final Iterator<EObject> originContent = EcoreUtil.getAllProperContents(
-				originResource, false);
-		final Iterator<EObject> allEObjects = Iterators.concat(leftContent,
-				rightContent, originContent);
+		final Iterator<EObject> leftContent = EcoreUtil.getAllProperContents(leftResource, false);
+		final Iterator<EObject> rightContent = EcoreUtil.getAllProperContents(rightResource, false);
+		final Iterator<EObject> originContent = EcoreUtil.getAllProperContents(originResource, false);
+		final Iterator<EObject> allEObjects = Iterators.concat(leftContent, rightContent, originContent);
 
 		boolean empty = true;
 		while (allEObjects.hasNext()) {
 			empty = false;
 			final EObject root = allEObjects.next();
 
-			final Iterator<? extends EObject> scopeChildren = resourceScope
-					.getChildren(root);
-			final List<EObject> children = Lists
-					.newArrayList(Iterators.filter(
-							EcoreUtil.getAllProperContents(root, false),
-							EObject.class));
+			final Iterator<? extends EObject> scopeChildren = resourceScope.getChildren(root);
+			final List<EObject> children = Lists.newArrayList(Iterators.filter(EcoreUtil
+					.getAllProperContents(root, false), EObject.class));
 
 			while (scopeChildren.hasNext()) {
 				assertTrue(children.remove(scopeChildren.next()));
@@ -156,15 +142,13 @@ public class DefaultComparisonScopeTest {
 		assertTrue(resourceScope.getRight() instanceof Resource);
 		assertTrue(resourceScope.getOrigin() instanceof Resource);
 
-		final Resource leftResource = (Resource) resourceScope.getLeft();
-		final Resource rightResource = (Resource) resourceScope.getRight();
-		final Resource originResource = (Resource) resourceScope.getOrigin();
+		final Resource leftResource = (Resource)resourceScope.getLeft();
+		final Resource rightResource = (Resource)resourceScope.getRight();
+		final Resource originResource = (Resource)resourceScope.getOrigin();
 
-		final Iterator<? extends EObject> scopeLeftChildren = resourceScope
-				.getChildren(leftResource);
-		final List<EObject> leftChildren = Lists.newArrayList(Iterators.filter(
-				EcoreUtil.getAllProperContents(leftResource, false),
-				EObject.class));
+		final Iterator<? extends EObject> scopeLeftChildren = resourceScope.getCoveredEObjects(leftResource);
+		final List<EObject> leftChildren = Lists.newArrayList(Iterators.filter(EcoreUtil
+				.getAllProperContents(leftResource, false), EObject.class));
 		while (scopeLeftChildren.hasNext()) {
 			assertTrue(leftChildren.remove(scopeLeftChildren.next()));
 		}
@@ -174,10 +158,9 @@ public class DefaultComparisonScopeTest {
 		}
 
 		final Iterator<? extends EObject> scopeRightChildren = resourceScope
-				.getChildren(rightResource);
-		final List<EObject> rightChildren = Lists.newArrayList(Iterators
-				.filter(EcoreUtil.getAllProperContents(rightResource, false),
-						EObject.class));
+				.getCoveredEObjects(rightResource);
+		final List<EObject> rightChildren = Lists.newArrayList(Iterators.filter(EcoreUtil
+				.getAllProperContents(rightResource, false), EObject.class));
 		while (scopeRightChildren.hasNext()) {
 			assertTrue(rightChildren.remove(scopeRightChildren.next()));
 		}
@@ -187,10 +170,9 @@ public class DefaultComparisonScopeTest {
 		}
 
 		final Iterator<? extends EObject> scopeOriginChildren = resourceScope
-				.getChildren(originResource);
-		final List<EObject> originChildren = Lists.newArrayList(Iterators
-				.filter(EcoreUtil.getAllProperContents(originResource, false),
-						EObject.class));
+				.getCoveredEObjects(originResource);
+		final List<EObject> originChildren = Lists.newArrayList(Iterators.filter(EcoreUtil
+				.getAllProperContents(originResource, false), EObject.class));
 		while (scopeOriginChildren.hasNext()) {
 			assertTrue(originChildren.remove(scopeOriginChildren.next()));
 		}
@@ -208,17 +190,13 @@ public class DefaultComparisonScopeTest {
 		assertTrue(resourceScope.getRight() instanceof ResourceSet);
 		assertTrue(resourceScope.getOrigin() instanceof ResourceSet);
 
-		final ResourceSet leftResourceSet = (ResourceSet) resourceScope
-				.getLeft();
-		final ResourceSet rightResourceSet = (ResourceSet) resourceScope
-				.getRight();
-		final ResourceSet originResourceSet = (ResourceSet) resourceScope
-				.getOrigin();
+		final ResourceSet leftResourceSet = (ResourceSet)resourceScope.getLeft();
+		final ResourceSet rightResourceSet = (ResourceSet)resourceScope.getRight();
+		final ResourceSet originResourceSet = (ResourceSet)resourceScope.getOrigin();
 
 		final Iterator<? extends Resource> scopeLeftChildren = resourceScope
-				.getChildren(leftResourceSet);
-		final List<Resource> leftChildren = Lists.newArrayList(leftResourceSet
-				.getResources());
+				.getCoveredResources(leftResourceSet);
+		final List<Resource> leftChildren = Lists.newArrayList(leftResourceSet.getResources());
 		while (scopeLeftChildren.hasNext()) {
 			Resource child = scopeLeftChildren.next();
 
@@ -227,9 +205,8 @@ public class DefaultComparisonScopeTest {
 		assertTrue(leftChildren.isEmpty());
 
 		final Iterator<? extends Resource> scopeRightChildren = resourceScope
-				.getChildren(rightResourceSet);
-		final List<Resource> rightChildren = Lists
-				.newArrayList(rightResourceSet.getResources());
+				.getCoveredResources(rightResourceSet);
+		final List<Resource> rightChildren = Lists.newArrayList(rightResourceSet.getResources());
 		while (scopeRightChildren.hasNext()) {
 			Resource child = scopeRightChildren.next();
 
@@ -238,9 +215,8 @@ public class DefaultComparisonScopeTest {
 		assertTrue(rightChildren.isEmpty());
 
 		final Iterator<? extends Resource> scopeOriginChildren = resourceScope
-				.getChildren(originResourceSet);
-		final List<Resource> originChildren = Lists
-				.newArrayList(originResourceSet.getResources());
+				.getCoveredResources(originResourceSet);
+		final List<Resource> originChildren = Lists.newArrayList(originResourceSet.getResources());
 		while (scopeOriginChildren.hasNext()) {
 			Resource child = scopeOriginChildren.next();
 
@@ -249,11 +225,11 @@ public class DefaultComparisonScopeTest {
 		assertTrue(originChildren.isEmpty());
 	}
 
-	private IComparisonScope createNullScope() {
+	private static IComparisonScope createNullScope() {
 		return new DefaultComparisonScope(null, null, null);
 	}
 
-	private IComparisonScope createResourceScope() throws IOException {
+	private static IComparisonScope createResourceScope() throws IOException {
 		final MockCompareModel mockModel = new MockCompareModel();
 		final Resource leftResource = mockModel.getLeftModel();
 		final Resource rightResource = mockModel.getRightModel();
@@ -263,11 +239,10 @@ public class DefaultComparisonScopeTest {
 		assertNotNull(rightResource);
 		assertNotNull(originResource);
 
-		return new DefaultComparisonScope(leftResource, rightResource,
-				originResource);
+		return new DefaultComparisonScope(leftResource, rightResource, originResource);
 	}
 
-	private IComparisonScope createResourceSetScope() throws IOException {
+	private static IComparisonScope createResourceSetScope() throws IOException {
 		final MockCompareModel mockModel = new MockCompareModel();
 		final Resource leftResource = mockModel.getLeftModel();
 		final Resource rightResource = mockModel.getRightModel();
@@ -284,7 +259,7 @@ public class DefaultComparisonScopeTest {
 		return new DefaultComparisonScope(leftRS, rightRS, originRS);
 	}
 
-	private ResourceSet newResourceSet(Resource... resources) {
+	private static ResourceSet newResourceSet(Resource... resources) {
 		final ResourceSet resourceSet = new ResourceSetImpl();
 		for (int i = 0; i < resources.length; i++) {
 			resourceSet.getResources().add(resources[i]);

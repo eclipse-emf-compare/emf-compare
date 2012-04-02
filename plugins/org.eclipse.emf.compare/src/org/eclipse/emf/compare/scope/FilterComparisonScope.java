@@ -23,12 +23,30 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * This implementation of an {@link IComparisonScope} can be sub-classed in order to filter out parts of the
- * Notifiers' content lists.
+ * This implementation of an {@link IComparisonScope} can be provided specific filters to filter out parts of
+ * the Notifiers' content lists.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class FilterComparisonScope implements IComparisonScope {
+	/**
+	 * This will be used in order to determine the filter that should be used to filter the EObjects' content
+	 * list of unnecessary values.
+	 */
+	protected Predicate<? super EObject> eObjectContentFilter = Predicates.alwaysTrue();
+
+	/**
+	 * This will be used in order to determine the filter that should be used to filter the Resources' content
+	 * list of unnecessary values.
+	 */
+	protected Predicate<? super EObject> resourceContentFilter = Predicates.alwaysTrue();
+
+	/**
+	 * This will be used in order to determine the filter that should be used to filter the ResourceSets'
+	 * content list of unnecessary values.
+	 */
+	protected Predicate<? super Resource> resourceSetContentFilter = Predicates.alwaysTrue();
+
 	/** The left root of this comparison. */
 	private final Notifier left;
 
@@ -85,18 +103,18 @@ public class FilterComparisonScope implements IComparisonScope {
 	 * {@inheritDoc}
 	 * <p>
 	 * This default implementation will only return the {@link Resource}s directly contained by
-	 * {@link ResourceSet} which match the {@link #getResourceSetChildrenFilter()} predicate.
+	 * {@link ResourceSet} which match the {@link #resourceSetContentFilter} predicate.
 	 * </p>
 	 * 
-	 * @see org.eclipse.emf.compare.scope.IComparisonScope#getChildren(org.eclipse.emf.ecore.resource.ResourceSet)
+	 * @see org.eclipse.emf.compare.scope.IComparisonScope#getCoveredResources(org.eclipse.emf.ecore.resource.ResourceSet)
 	 */
-	public Iterator<? extends Resource> getChildren(ResourceSet resourceSet) {
+	public Iterator<? extends Resource> getCoveredResources(ResourceSet resourceSet) {
 		if (resourceSet == null) {
 			return Iterators.emptyIterator();
 		}
 
 		final Iterator<Resource> allResources = resourceSet.getResources().iterator();
-		final Iterator<Resource> filter = Iterators.filter(allResources, getResourceSetChildrenFilter());
+		final Iterator<Resource> filter = Iterators.filter(allResources, resourceSetContentFilter);
 		return Iterators.unmodifiableIterator(filter);
 	}
 
@@ -104,19 +122,19 @@ public class FilterComparisonScope implements IComparisonScope {
 	 * {@inheritDoc}
 	 * <p>
 	 * This default implementation will return all direct and indirect content of the given {@link Resource},
-	 * filtering out those {@link EObject}s that do not match {@link #getResourceChildrenFilter()}.
+	 * filtering out those {@link EObject}s that do not match {@link #resourceContentFilter}.
 	 * </p>
 	 * 
-	 * @see org.eclipse.emf.compare.scope.IComparisonScope#getChildren(org.eclipse.emf.ecore.resource.Resource)
+	 * @see org.eclipse.emf.compare.scope.IComparisonScope#getCoveredEObjects(org.eclipse.emf.ecore.resource.Resource)
 	 */
-	public Iterator<? extends EObject> getChildren(Resource resource) {
+	public Iterator<? extends EObject> getCoveredEObjects(Resource resource) {
 		if (resource == null) {
 			return Iterators.emptyIterator();
 		}
 
 		final Iterator<EObject> properContent = Iterators.filter(EcoreUtil.getAllProperContents(resource,
 				false), EObject.class);
-		final Iterator<EObject> filter = Iterators.filter(properContent, getResourceChildrenFilter());
+		final Iterator<EObject> filter = Iterators.filter(properContent, resourceContentFilter);
 		return Iterators.unmodifiableIterator(filter);
 	}
 
@@ -124,7 +142,7 @@ public class FilterComparisonScope implements IComparisonScope {
 	 * {@inheritDoc}
 	 * <p>
 	 * This default implementation will return all direct and indirect content of the given {@link EObject},
-	 * filtering out those {@link EObject}s that do not match {@link #getEObjectChildrenFilter()}.
+	 * filtering out those {@link EObject}s that do not match {@link #eObjectContentFilter}.
 	 * </p>
 	 * 
 	 * @see org.eclipse.emf.compare.scope.IComparisonScope#getChildren(org.eclipse.emf.ecore.EObject)
@@ -136,40 +154,43 @@ public class FilterComparisonScope implements IComparisonScope {
 
 		final Iterator<EObject> properContent = Iterators.filter(EcoreUtil.getAllProperContents(eObject,
 				false), EObject.class);
-		final Iterator<EObject> filter = Iterators.filter(properContent, getEObjectChildrenFilter());
+		final Iterator<EObject> filter = Iterators.filter(properContent, eObjectContentFilter);
 		return Iterators.unmodifiableIterator(filter);
 	}
 
 	/**
-	 * This will be used in order to determine the filter that should be used to filter the EObjects' content
-	 * list of unnecessary values. By default, we will return an "always true" predicate : the list won't be
-	 * filtered out unless this is overridden.
+	 * This can be used to set the filter that should be used to filter the EObjects' content list of
+	 * unnecessary values. By default, we will use an "always true" predicate : the list won't be filtered out
+	 * unless this is called with a new filter.
 	 * 
-	 * @return The filter that should be used when retrieving an EObject's content.
+	 * @param newContentFilter
+	 *            The filter that should be used for EObject content filtering.
 	 */
-	protected Predicate<? super EObject> getEObjectChildrenFilter() {
-		return Predicates.alwaysTrue();
+	public void setEObjectContentFilter(Predicate<? super EObject> newContentFilter) {
+		this.eObjectContentFilter = newContentFilter;
 	}
 
 	/**
-	 * This will be used in order to determine the filter that should be used to filter the Resources' content
-	 * list of unnecessary values. By default, we will return an "always true" predicate : the list won't be
-	 * filtered out unless this is overridden.
+	 * This can be used to set the filter that should be used to filter the Resources' content list of
+	 * unnecessary values. By default, we will return an "always true" predicate : the list won't be filtered
+	 * out unless this is called with a new filter.
 	 * 
-	 * @return The filter that should be used when retrieving an EObject's content.
+	 * @param resourceContentFilter
+	 *            The filter that should be used for Resource content filtering.
 	 */
-	protected Predicate<? super EObject> getResourceChildrenFilter() {
-		return Predicates.alwaysTrue();
+	public void setResourceContentFilter(Predicate<? super EObject> resourceContentFilter) {
+		this.resourceContentFilter = resourceContentFilter;
 	}
 
 	/**
-	 * This will be used in order to determine the filter that should be used to filter the ResourceSets'
-	 * content list of unnecessary values. By default, we will return an "always true" predicate : the list
-	 * won't be filtered out unless this is overridden.
+	 * This can be used to set the filter that should be used to filter the ResourceSets' content list of
+	 * unnecessary values. By default, we will return an "always true" predicate : the list won't be filtered
+	 * out unless this called with a new filter.
 	 * 
-	 * @return The filter that should be used when retrieving an EObject's content.
+	 * @param resourceSetContentFilter
+	 *            The filter that should be used for ResourceSet content filtering.
 	 */
-	protected Predicate<? super Resource> getResourceSetChildrenFilter() {
-		return Predicates.alwaysTrue();
+	public void setResourceSetContentFilter(Predicate<? super Resource> resourceSetContentFilter) {
+		this.resourceSetContentFilter = resourceSetContentFilter;
 	}
 }

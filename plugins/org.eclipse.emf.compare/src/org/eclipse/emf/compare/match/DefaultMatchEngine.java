@@ -87,11 +87,11 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 *            The common ancestor of <code>left</code> and <code>right</code>. Can be <code>null</code>.
 	 */
 	protected void match(ResourceSet left, ResourceSet right, ResourceSet origin) {
-		final Iterator<? extends Resource> leftChildren = getScope().getChildren(left);
-		final Iterator<? extends Resource> rightChildren = getScope().getChildren(right);
+		final Iterator<? extends Resource> leftChildren = getScope().getCoveredResources(left);
+		final Iterator<? extends Resource> rightChildren = getScope().getCoveredResources(right);
 		final Iterator<? extends Resource> originChildren;
 		if (origin != null) {
-			originChildren = getScope().getChildren(origin);
+			originChildren = getScope().getCoveredResources(origin);
 		} else {
 			originChildren = Iterators.emptyIterator();
 		}
@@ -135,19 +135,19 @@ public class DefaultMatchEngine implements IMatchEngine {
 
 		final Iterator<? extends EObject> leftEObjects;
 		if (left != null) {
-			leftEObjects = getScope().getChildren(left);
+			leftEObjects = getScope().getCoveredEObjects(left);
 		} else {
 			leftEObjects = Iterators.emptyIterator();
 		}
 		final Iterator<? extends EObject> rightEObjects;
 		if (right != null) {
-			rightEObjects = getScope().getChildren(right);
+			rightEObjects = getScope().getCoveredEObjects(right);
 		} else {
 			rightEObjects = Iterators.emptyIterator();
 		}
 		final Iterator<? extends EObject> originEObjects;
 		if (origin != null) {
-			originEObjects = getScope().getChildren(origin);
+			originEObjects = getScope().getCoveredEObjects(origin);
 		} else {
 			originEObjects = Iterators.emptyIterator();
 		}

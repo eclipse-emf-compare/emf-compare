@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  */
-package org.eclipse.emf.compare.tests.framework.statement;
+package org.eclipse.emf.compare.tests.framework.junit.internal;
 
 import org.junit.runners.model.Statement;
 

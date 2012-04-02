@@ -12,7 +12,7 @@ package org.eclipse.emf.compare.tests.match.data.identifier;
 
 import java.io.IOException;
 
-import org.eclipse.emf.compare.tests.framework.data.AbstractInputData;
+import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 
 /**

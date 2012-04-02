@@ -8,12 +8,12 @@
  * Contributors:
  *     Obeo - initial API and implementation
  */
-package org.eclipse.emf.compare.tests.framework.statement;
+package org.eclipse.emf.compare.tests.framework.junit.internal;
 
 import junit.framework.Assert;
 
 import org.eclipse.emf.compare.tests.framework.NotifierTuple;
-import org.eclipse.emf.compare.tests.framework.annotation.UseCase;
+import org.eclipse.emf.compare.tests.framework.junit.annotation.UseCase;
 import org.junit.runners.model.FrameworkMethod;
 
 /**
@@ -65,7 +65,7 @@ public class UseCaseStatement extends ResultStatement<NotifierTuple> {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.tests.framework.statement.ResultStatement#getResult()
+	 * @see org.eclipse.emf.compare.tests.framework.junit.internal.ResultStatement#getResult()
 	 */
 	@Override
 	public NotifierTuple getResult() {

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  */
-package org.eclipse.emf.compare.tests.framework.annotation;
+package org.eclipse.emf.compare.tests.framework.junit.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -22,7 +22,7 @@ import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.tests.framework.EMFCompareTestRunner;
+import org.eclipse.emf.compare.tests.framework.junit.EMFCompareTestRunner;
 
 /**
  * This annotation can be used to tell the {@link EMFCompareTestRunner} that a

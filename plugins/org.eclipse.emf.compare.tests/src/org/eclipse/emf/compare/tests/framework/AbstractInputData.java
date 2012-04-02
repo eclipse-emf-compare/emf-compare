@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  */
-package org.eclipse.emf.compare.tests.framework.data;
+package org.eclipse.emf.compare.tests.framework;
 
 import java.io.IOException;
 import java.io.InputStream;
