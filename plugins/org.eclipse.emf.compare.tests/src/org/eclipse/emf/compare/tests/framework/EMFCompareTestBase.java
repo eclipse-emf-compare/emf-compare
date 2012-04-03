@@ -82,6 +82,26 @@ public class EMFCompareTestBase {
 	}
 
 	/**
+	 * Removes and returns the first element returned by {@code iterator} that satisfies the given predicate.
+	 * 
+	 * @param iterator
+	 *            Iterators over which elements we are to iterate.
+	 * @param predicate
+	 *            The predicate which needs to be satisified.
+	 * @return The first element of {@code iterator} that satisfies {@code predicate}, {@code null} if none.
+	 */
+	protected static <T> T removeFirst(Iterator<T> iterator, Predicate<? super T> predicate) {
+		while (iterator.hasNext()) {
+			T element = iterator.next();
+			if (predicate.apply(element)) {
+				iterator.remove();
+				return element;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Retrieves the Predicate that is used by the given scope in order to filter out Resource children.
 	 * <p>
 	 * This uses reflection to access a protected field, and is only meant for testing purposes.
@@ -100,7 +120,7 @@ public class EMFCompareTestBase {
 			field.setAccessible(true);
 			return (Predicate<? super EObject>)field.get(scope);
 		} catch (Exception e) {
-			fail("Could not retrieve the filtering predicate of " + scope.getClass().getName());
+			fail("Could not retrieve the filtering predicate of " + scope.getClass().getName()); //$NON-NLS-1$
 		}
 		// Unreachable code
 		return null;

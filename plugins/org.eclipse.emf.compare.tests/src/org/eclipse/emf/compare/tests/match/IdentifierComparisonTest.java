@@ -10,10 +10,14 @@
  */
 package org.eclipse.emf.compare.tests.match;
 
+import static com.google.common.base.Predicates.and;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
+import static org.eclipse.emf.compare.tests.framework.predicates.EMFComparePredicates.added;
+import static org.eclipse.emf.compare.tests.framework.predicates.EMFComparePredicates.fromSide;
+import static org.eclipse.emf.compare.tests.framework.predicates.EMFComparePredicates.removed;
 
 import com.google.common.base.Predicate;
 
@@ -22,8 +26,7 @@ import java.util.List;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.EMFCompareTestBase;
@@ -36,10 +39,12 @@ import org.eclipse.emf.compare.tests.framework.junit.annotation.MatchTest;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.UseCase;
 import org.eclipse.emf.compare.tests.match.data.identifier.IdentifierMatchInputData;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.runner.RunWith;
 
 @RunWith(EMFCompareTestRunner.class)
+@SuppressWarnings("nls")
 public class IdentifierComparisonTest extends EMFCompareTestBase {
 	private IdentifierMatchInputData inputData = new IdentifierMatchInputData();
 
@@ -88,7 +93,7 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 		final IdentifierMatchValidator validator = new IdentifierMatchValidator();
 		validator.validate(comparison);
 
-		// Make sure that we have a Match for all EObjects
+		// Make sure that we have a Match for all EObjects of this scope
 		final List<EObject> leftChildren = getAllProperContent(left);
 		final List<EObject> rightChildren = getAllProperContent(right);
 		final List<EObject> originChildren = getAllProperContent(origin);
@@ -100,28 +105,31 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 
 	@DiffTest
 	public void testIdentifierDiffTest(IComparisonScope scope, Comparison comparison) {
-		List<Diff> differences = comparison.getDifferences();
+		final List<Diff> differences = comparison.getDifferences();
 
+		assertAdded(differences, "extlibrary.BookCategory.Encyclopedia", DifferenceSource.LEFT);
+		assertAdded(differences, "extlibrary.BookCategory.Dictionary", DifferenceSource.LEFT);
+		assertAdded(differences, "extlibrary.Magazine", DifferenceSource.LEFT);
+		assertAdded(differences, "extlibrary.Person.fullName", DifferenceSource.LEFT);
+
+		assertRemoved(differences, "extlibrary.Periodical", DifferenceSource.LEFT);
+		assertRemoved(differences, "extlibrary.BookOnTape.reader", DifferenceSource.LEFT);
+		assertRemoved(differences, "extlibrary.Person.firstName", DifferenceSource.LEFT);
+		assertRemoved(differences, "extlibrary.Person.lastName", DifferenceSource.LEFT);
 	}
 
-	private Predicate<? super Diff> added(final EObject eObject) {
-		return new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				if (input.getKind() == DifferenceKind.ADD) {
-					final Match match = input.getMatch();
-					return match.getLeft() == eObject || match.getRight() == eObject
-							|| match.getOrigin() == eObject;
-				}
-				return false;
-			}
-		};
+	private static void assertChanged(List<Diff> differences, String qualifiedName,
+			EStructuralFeature feature, Object oldValue, Object newValue, DifferenceSource side) {
+		// onE
 	}
 
-	private Predicate<? super Diff> ofKind(final DifferenceKind kind) {
-		return new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				return input.getKind() == kind;
-			}
-		};
+	private static void assertAdded(List<Diff> differences, String qualifiedName, DifferenceSource side) {
+		final Predicate<? super Diff> predicate = and(fromSide(side), added(qualifiedName));
+		assertTrue(removeFirst(differences.iterator(), predicate) != null);
+	}
+
+	private static void assertRemoved(List<Diff> differences, String qualifiedName, DifferenceSource side) {
+		final Predicate<? super Diff> predicate = and(fromSide(side), removed(qualifiedName));
+		assertTrue(removeFirst(differences.iterator(), predicate) != null);
 	}
 }
