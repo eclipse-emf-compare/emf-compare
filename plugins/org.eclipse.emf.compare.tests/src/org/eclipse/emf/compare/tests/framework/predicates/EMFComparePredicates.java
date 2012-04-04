@@ -44,14 +44,35 @@ public final class EMFComparePredicates {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Predicate<? super Diff> changed(final String qualifiedName, final EReference reference,
-			final String leftQualifiedName, final String rightQualifiedName) {
+	public static Predicate<? super Diff> changedReference(final String qualifiedName,
+			final String referenceName, final String leftQualifiedName, final String rightQualifiedName) {
 		final Predicate<? super Diff> valuesMatch = new Predicate<Diff>() {
 			public boolean apply(Diff input) {
-				if (input instanceof ReferenceChange && ((ReferenceChange)input).getReference() == reference) {
+				// Note that this is not meant for many-valued references
+				if (input instanceof ReferenceChange
+						&& ((ReferenceChange)input).getReference().getName().equals(referenceName)
+						&& !((ReferenceChange)input).getReference().isMany()) {
+					final EReference reference = ((ReferenceChange)input).getReference();
 					final Match match = input.getMatch();
-					return match(match.getLeft(), leftQualifiedName)
-							&& match(match.getRight(), rightQualifiedName);
+					final Object leftValue;
+					if (match.getLeft() != null) {
+						leftValue = match.getLeft().eGet(reference);
+					} else {
+						leftValue = null;
+					}
+					final Object rightValue;
+					if (match.getRight() != null) {
+						rightValue = match.getRight().eGet(reference);
+					} else {
+						rightValue = null;
+					}
+					// Using == to handle the null case
+					final boolean leftMatch = leftValue == leftQualifiedName || leftQualifiedName != null
+							&& leftValue instanceof EObject && match((EObject)leftValue, leftQualifiedName);
+					final boolean rightMatch = rightValue == rightQualifiedName || rightQualifiedName != null
+							&& rightValue instanceof EObject
+							&& match((EObject)rightValue, rightQualifiedName);
+					return leftMatch && rightMatch;
 				}
 				return false;
 			}
@@ -60,14 +81,49 @@ public final class EMFComparePredicates {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Predicate<? super Diff> changed(final String qualifiedName, final EAttribute attribute,
-			final String leftValue, final String rightValue) {
+	public static Predicate<? super Diff> addedToReference(final String qualifiedName,
+			final String referenceName, final String addedQualifiedName) {
+		final Predicate<? super Diff> valueMatch = new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				if (input instanceof ReferenceChange
+						&& ((ReferenceChange)input).getReference().getName().equals(referenceName)
+						&& ((ReferenceChange)input).getReference().isMany()) {
+					final Object value = ((ReferenceChange)input).getValue();
+					return addedQualifiedName != null && value instanceof EObject
+							&& match((EObject)value, addedQualifiedName);
+				}
+				return false;
+			}
+		};
+		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), valueMatch);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static Predicate<? super Diff> changedAttribute(final String qualifiedName,
+			final String attributeName, final Object leftValue, final Object rightValue) {
 		final Predicate<? super Diff> valuesMatch = new Predicate<Diff>() {
 			public boolean apply(Diff input) {
-				if (input instanceof AttributeChange && ((AttributeChange)input).getAttribute() == attribute) {
+				// Note that this is not meant for multi-valued attributes
+				if (input instanceof AttributeChange
+						&& ((AttributeChange)input).getAttribute().getName().equals(attributeName)
+						&& !((AttributeChange)input).getAttribute().isMany()) {
+					final EAttribute attribute = ((AttributeChange)input).getAttribute();
 					final Match match = input.getMatch();
-					// return match(match.getLeft(), leftQualifiedName)
-					// && match(match.getRight(), rightQualifiedName);
+					final Object actualLeft;
+					if (match.getLeft() != null) {
+						actualLeft = match.getLeft().eGet(attribute);
+					} else {
+						actualLeft = attribute.getDefaultValue();
+					}
+					final Object actualRight;
+					if (match.getRight() != null) {
+						actualRight = match.getRight().eGet(attribute);
+					} else {
+						actualRight = attribute.getDefaultValue();
+					}
+					return (leftValue == actualLeft || leftValue != null && leftValue.equals(actualLeft))
+							&& (rightValue == actualRight || rightValue != null
+									&& rightValue.equals(actualRight));
 				}
 				return false;
 			}

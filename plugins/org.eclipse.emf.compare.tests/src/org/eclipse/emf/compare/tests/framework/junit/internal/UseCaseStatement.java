@@ -55,7 +55,7 @@ public class UseCaseStatement extends ResultStatement<NotifierTuple> {
 	public void evaluate() throws Throwable {
 		if (result == null) {
 			final Object tuple = useCase.invokeExplosively(test);
-			Assert.assertTrue(useCase.getName() + " did not return a NotifierTuple.",
+			Assert.assertTrue(useCase.getName() + " did not return a NotifierTuple.", //$NON-NLS-1$
 					tuple instanceof NotifierTuple);
 			result = (NotifierTuple)tuple;
 		}

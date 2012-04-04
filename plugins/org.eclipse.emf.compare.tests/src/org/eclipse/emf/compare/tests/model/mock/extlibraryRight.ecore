@@ -88,7 +88,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="_15N3gG60EeGkd4g88tZXfA" name="borrowed" upperBound="-1" eType="_15IX8G60EeGkd4g88tZXfA" eOpposite="_15JmEm60EeGkd4g88tZXfA"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" xmi:id="_15N3gm60EeGkd4g88tZXfA" name="Person" eSuperTypes="_15OelG60EeGkd4g88tZXfA">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="_9M3sEG9IEeGekPcBm25hwQ" name="firstName" lowerBound="1">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="_15N3g260EeGkd4g88tZXfA" name="firstName" lowerBound="1">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="_15N3hW60EeGkd4g88tZXfA" name="familyName" lowerBound="1">
