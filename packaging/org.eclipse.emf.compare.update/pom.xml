@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (C) 2011 Obeo
+   Copyright (C) 2011, 2012 Obeo
  
    Cedric Brun <cedric.brun@obeo.fr>
-
 -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -50,7 +49,6 @@
           </execution>
         </executions>
       </plugin>
-		<!--
       	<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
@@ -68,14 +66,13 @@
 build.alias=${BUILD_ALIAS}${line.separator}
 build.qualifier=${env.BUILD_TYPE}${buildQualifier}${line.separator}
 version=${unqualifiedVersion}"/>
-								<copy file="addDownloadStats.xsl" todir="${project.build.directory}/promotion"/>
+								<copy file="p2.xsl" todir="${project.build.directory}/promotion"/>
 								<copy file="promoter.xml" todir="${project.build.directory}/promotion" />
 							</tasks>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-			-->
 		</plugins>
 	</build>
 
