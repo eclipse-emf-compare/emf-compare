@@ -52,24 +52,31 @@ Expected Differences
 	1 - Added Encyclopedia to BookCategory
 	2 - Added Dictionary to BookCategory
 	3 - Added Magazine to extlibrary
-	4 - Added fullName to Person
-	5 - Removed Periodical
-	6 - Removed firstName from Person
-	7 - Removed lastName from Person
-	8 - Attribute name of Lendable has been changed from Lendable to Borrowable
-	9 - Attribute name of minutesLength has been changed from minutesLength to length
-	10 - Remotely added Manga to BookCategory
-	11 - Remotely added Manhwa to BookCategory
-	12 - Remotely added subtitle to Book
-	13 - Remotely added Magazine
-	14 - Remotely added TitledItem
-	15 - Remotely added TitledItem to reference eSuperTypes of Book
-	16 - Remotely added TitledItem to reference eSuperTypes of Periodical
-	17 - Remotely added TitledItem to reference eSuperTypes of AudioVisualItem
-	18 - Remotely removed title from Book
-	19 - Remotely removed title from AudioVisualItem
-	20 - Attribute name of lastName has been remotely changed from lastName to familyName
-	21 - Attribute name of minutesLength has been remotely changed from minutesLength to minutes
+	4 - Added title to Magazine
+	5 - Added pages to Magazine
+	6 - Added CirculatingItem to reference eSuperTypes of Magazine
+	7 - Added fullName to Person
+	8 - Removed Periodical
+	9 - Removed issuesPerYear from Periodical
+	10 - Removed Item from reference eSuperTypes of Periodical
+	11 - Removed firstName from Person
+	12 - Removed lastName from Person
+	13 - Attribute name of Lendable has been changed from Lendable to Borrowable
+	14 - Attribute name of minutesLength has been changed from minutesLength to length
+	15 - Remotely added Manga to BookCategory
+	16 - Remotely added Manhwa to BookCategory
+	17 - Remotely added subtitle to Book
+	18 - Remotely added Magazine
+	19 - Remotely added Periodical to reference eSuperTypes of Magazine
+	20 - Remotely added TitledItem
+	21 - Remotely added title to TitledItem
+	22 - Remotely added TitledItem to reference eSuperTypes of Book
+	23 - Remotely added TitledItem to reference eSuperTypes of Periodical
+	24 - Remotely added TitledItem to reference eSuperTypes of AudioVisualItem
+	25 - Remotely removed title from Book
+	26 - Remotely removed title from AudioVisualItem
+	27 - Attribute name of lastName has been remotely changed from lastName to familyName
+	28 - Attribute name of minutesLength has been remotely changed from minutesLength to minutes
 	
 	No diff on BookOnTape.reader : has been removed from both local and remote copies.
 	No diff on Periodical.title : it has been removed in right, but its container (Periodical) has been entirely removed from left.
@@ -77,7 +84,7 @@ Expected Differences
 	No equivalences.
 	
 	Conflicts on :
-	1 and 10 : enum literals of the same enum with the same 'value'
-	5 and 13 : the remote Magazine is a subclass of the locally deleted Periodical
-	7 and 20 : remote renaming of a locally deleted attribute
-	9 and 21 : renaming to different values
+	1 and 15 : Not a generic conflict, relies on ecore-specific business rules : enum literals of the same enum with the same 'value'.
+	8 and 18 : the remote Magazine is a subclass of the locally deleted Periodical
+	12 and 27 : remote renaming of a locally deleted attribute
+	14 and 28 : renaming to different values

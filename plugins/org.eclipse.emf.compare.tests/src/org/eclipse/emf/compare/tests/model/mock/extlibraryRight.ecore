@@ -71,7 +71,7 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" xmi:id="_15MCUG60EeGkd4g88tZXfA" name="AudioVisualItem" abstract="true" eSuperTypes="_15LbQG60EeGkd4g88tZXfA _9M9ys29IEeGekPcBm25hwQ">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="_15MCVG60EeGkd4g88tZXfA" name="minutesLength" lowerBound="1">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="_15MCVG60EeGkd4g88tZXfA" name="minutes" lowerBound="1">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="_15MCVm60EeGkd4g88tZXfA" name="damaged">

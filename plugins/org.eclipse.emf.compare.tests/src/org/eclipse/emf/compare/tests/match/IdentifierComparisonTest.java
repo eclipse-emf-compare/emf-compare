@@ -16,10 +16,12 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
 import static org.eclipse.emf.compare.tests.framework.predicates.EMFComparePredicates.added;
+import static org.eclipse.emf.compare.tests.framework.predicates.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.tests.framework.predicates.EMFComparePredicates.changedAttribute;
 import static org.eclipse.emf.compare.tests.framework.predicates.EMFComparePredicates.changedReference;
 import static org.eclipse.emf.compare.tests.framework.predicates.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.tests.framework.predicates.EMFComparePredicates.removed;
+import static org.eclipse.emf.compare.tests.framework.predicates.EMFComparePredicates.removedFromReference;
 
 import com.google.common.base.Predicate;
 
@@ -113,61 +115,124 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 		assertAdded(differences, "extlibrary.BookCategory.Encyclopedia", DifferenceSource.LEFT);
 		assertAdded(differences, "extlibrary.BookCategory.Dictionary", DifferenceSource.LEFT);
 		assertAdded(differences, "extlibrary.Magazine", DifferenceSource.LEFT);
+		assertAdded(differences, "extlibrary.Magazine.title", DifferenceSource.LEFT);
+		assertAdded(differences, "extlibrary.Magazine.pages", DifferenceSource.LEFT);
 		assertAdded(differences, "extlibrary.Person.fullName", DifferenceSource.LEFT);
 
 		assertRemoved(differences, "extlibrary.Periodical", DifferenceSource.LEFT);
+		assertRemoved(differences, "extlibrary.Periodical.issuesPerYear", DifferenceSource.LEFT);
 		assertRemoved(differences, "extlibrary.Person.firstName", DifferenceSource.LEFT);
 		assertRemoved(differences, "extlibrary.Person.familyName", DifferenceSource.LEFT);
 
-		assertChangedAttribute(differences, "extlibrary.Lendable", "name", "Borrowable", "Lendable",
+		assertChangedAttribute(differences, "extlibrary.Lendable", "name", "Lendable", "Borrowable",
 				DifferenceSource.LEFT);
-		assertChangedAttribute(differences, "extlibrary.AudioVisualItem.length", "name", "length",
-				"minutesLength", DifferenceSource.LEFT);
 
+		assertAddedToReference(differences, "extlibrary.Magazine", "eSuperTypes",
+				"extlibrary.CirculatingItem", DifferenceSource.LEFT);
+		assertRemovedFromReference(differences, "extlibrary.Periodical", "eSuperTypes", "extlibrary.Item",
+				DifferenceSource.LEFT);
+
+		DifferenceSource side = DifferenceSource.LEFT;
 		if (comparison.isThreeWay()) {
-			assertAdded(differences, "extlibrary.BookCategory.Manga", DifferenceSource.RIGHT);
-			assertAdded(differences, "extlibrary.BookCategory.Manhwa", DifferenceSource.RIGHT);
-			assertAdded(differences, "extlibrary.Book.subtitle", DifferenceSource.RIGHT);
-			assertAdded(differences, "extlibrary.Magazine", DifferenceSource.RIGHT);
-			assertAdded(differences, "extlibrary.TitledItem", DifferenceSource.RIGHT);
-
-			assertRemoved(differences, "extlibrary.Book.title", DifferenceSource.RIGHT);
-			assertRemoved(differences, "extlibrary.AudioVisualItem.title", DifferenceSource.RIGHT);
-
-			assertChangedReference(differences, "extlibrary.Book", "eSuperTypes", null,
-					"extlibrary.TitledItem", DifferenceSource.RIGHT);
-		} else {
-			// In two-way, we can't have "changes" on the right side, only the left side changes
-			assertRemoved(differences, "extlibrary.BookCategory.Manga", DifferenceSource.LEFT);
-			assertRemoved(differences, "extlibrary.BookCategory.Manhwa", DifferenceSource.LEFT);
-			assertRemoved(differences, "extlibrary.Book.subtitle", DifferenceSource.LEFT);
-			assertRemoved(differences, "extlibrary.Magazine", DifferenceSource.LEFT);
-			assertRemoved(differences, "extlibrary.TitledItem", DifferenceSource.LEFT);
-
-			assertAdded(differences, "extlibrary.Book.title", DifferenceSource.LEFT);
-			assertAdded(differences, "extlibrary.AudioVisualItem.title", DifferenceSource.LEFT);
+			side = DifferenceSource.RIGHT;
 		}
+
+		// some diffs change according to the presence of an origin.
+		if (comparison.isThreeWay()) {
+			assertAdded(differences, "extlibrary.BookCategory.Manga", side);
+			assertAdded(differences, "extlibrary.BookCategory.Manhwa", side);
+			assertAdded(differences, "extlibrary.Book.subtitle", side);
+			assertAdded(differences, "extlibrary.Magazine", side);
+			assertAdded(differences, "extlibrary.TitledItem", side);
+			assertAdded(differences, "extlibrary.TitledItem.title", side);
+
+			assertRemoved(differences, "extlibrary.Book.title", side);
+			assertRemoved(differences, "extlibrary.AudioVisualItem.title", side);
+
+			/*
+			 * The following are actually conflicts, most changes according to whether we are in three-way or
+			 * not.
+			 */
+			assertChangedAttribute(differences, "extlibrary.AudioVisualItem.length", "name", "minutesLength",
+					"length", DifferenceSource.LEFT);
+			/*
+			 * These changes can only be detected with an origin : lastName has been removed in the left model
+			 * and thus only the removal can be detected in two-way. Likewise, "minutesLength" has been
+			 * renamed in both left and right, and thus no mention of that value can be found in two-way
+			 */
+			assertChangedAttribute(differences, "extlibrary.Person.familyName", "name", "lastName",
+					"familyName", side);
+			assertChangedAttribute(differences, "extlibrary.AudioVisualItem.length", "name", "minutesLength",
+					"minutes", side);
+		} else {
+			assertRemoved(differences, "extlibrary.BookCategory.Manga", side);
+			assertRemoved(differences, "extlibrary.BookCategory.Manhwa", side);
+			assertRemoved(differences, "extlibrary.Book.subtitle", side);
+			assertRemoved(differences, "extlibrary.Magazine", side);
+			assertRemoved(differences, "extlibrary.TitledItem", side);
+			assertRemoved(differences, "extlibrary.TitledItem.title", side);
+
+			assertAdded(differences, "extlibrary.Book.title", side);
+			assertAdded(differences, "extlibrary.AudioVisualItem.title", side);
+
+			// See above comment : since this is a conflict, the expected diff is not the same in two-way
+			assertChangedAttribute(differences, "extlibrary.AudioVisualItem.length", "name", "minutes",
+					"length", DifferenceSource.LEFT);
+		}
+
+		assertAddedToReference(differences, "extlibrary.Book", "eSuperTypes", "extlibrary.TitledItem", side);
+		assertAddedToReference(differences, "extlibrary.Periodical", "eSuperTypes", "extlibrary.TitledItem",
+				side);
+		assertAddedToReference(differences, "extlibrary.AudioVisualItem", "eSuperTypes",
+				"extlibrary.TitledItem", side);
+		assertAddedToReference(differences, "extlibrary.Magazine", "eSuperTypes", "extlibrary.Periodical",
+				side);
+
+		// We should have no more differences that those 21
+		assertTrue(differences.isEmpty());
 	}
 
 	private static void assertChangedReference(List<Diff> differences, String qualifiedName,
 			String referenceName, String leftQualifiedName, String rightQualifiedName, DifferenceSource side) {
-		assertTrue(removeFirst(differences.iterator(), and(fromSide(side), changedReference(qualifiedName,
-				referenceName, leftQualifiedName, rightQualifiedName))) != null);
+		final Predicate<? super Diff> changedReferenceOnSide = and(fromSide(side), changedReference(
+				qualifiedName, referenceName, leftQualifiedName, rightQualifiedName));
+		final Diff matchingDiff = removeFirst(differences.iterator(), changedReferenceOnSide);
+		assertNotNull(matchingDiff);
+	}
+
+	private static void assertRemovedFromReference(List<Diff> differences, String qualifiedName,
+			String referenceName, String removedValueQualifiedName, DifferenceSource side) {
+		final Predicate<? super Diff> removedFromReferenceOnSide = and(fromSide(side), removedFromReference(
+				qualifiedName, referenceName, removedValueQualifiedName));
+		final Diff matchingDiff = removeFirst(differences.iterator(), removedFromReferenceOnSide);
+		assertNotNull(matchingDiff);
+	}
+
+	private static void assertAddedToReference(List<Diff> differences, String qualifiedName,
+			String referenceName, String addedValueQualifiedName, DifferenceSource side) {
+		final Predicate<? super Diff> addedToReferenceOnSide = and(fromSide(side), addedToReference(
+				qualifiedName, referenceName, addedValueQualifiedName));
+		final Diff matchingDiff = removeFirst(differences.iterator(), addedToReferenceOnSide);
+		assertNotNull(matchingDiff);
 	}
 
 	private static void assertChangedAttribute(List<Diff> differences, String qualifiedName,
 			String attributeName, Object leftValue, Object rightValue, DifferenceSource side) {
-		assertTrue(removeFirst(differences.iterator(), and(fromSide(side), changedAttribute(qualifiedName,
-				attributeName, leftValue, rightValue))) != null);
+		final Predicate<? super Diff> changedAttributeOnSide = and(fromSide(side), changedAttribute(
+				qualifiedName, attributeName, leftValue, rightValue));
+		final Diff matchingDiff = removeFirst(differences.iterator(), changedAttributeOnSide);
+		assertNotNull(matchingDiff);
 	}
 
 	private static void assertAdded(List<Diff> differences, String qualifiedName, DifferenceSource side) {
-		final Predicate<? super Diff> predicate = and(fromSide(side), added(qualifiedName));
-		assertTrue(removeFirst(differences.iterator(), predicate) != null);
+		final Predicate<? super Diff> addedOnSide = and(fromSide(side), added(qualifiedName));
+		final Diff matchingDiff = removeFirst(differences.iterator(), addedOnSide);
+		assertNotNull(matchingDiff);
 	}
 
 	private static void assertRemoved(List<Diff> differences, String qualifiedName, DifferenceSource side) {
-		final Predicate<? super Diff> predicate = and(fromSide(side), removed(qualifiedName));
-		assertTrue(removeFirst(differences.iterator(), predicate) != null);
+		final Predicate<? super Diff> removedOnSide = and(fromSide(side), removed(qualifiedName));
+		final Diff matchingDiff = removeFirst(differences.iterator(), removedOnSide);
+		assertNotNull(matchingDiff);
 	}
 }

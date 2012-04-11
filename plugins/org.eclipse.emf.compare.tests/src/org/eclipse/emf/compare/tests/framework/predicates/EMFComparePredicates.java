@@ -43,9 +43,31 @@ public final class EMFComparePredicates {
 		// Hides default constructor
 	}
 
+	/**
+	 * This predicate can be used to check whether a given Diff represents the modification of a single-valued
+	 * reference going by the given {@code referenceName} on an EObject which name matches
+	 * {@code qualifiedName}. This can be used both on three-way and two-way Diffs : if three-way, we'll
+	 * consider that the {@code fromQualifiedName} can be either one of the right or origin values, and the
+	 * {@code toQualifiedName} to be either left or right. on two-way diffs however, {@code fromQualifiedName}
+	 * can only be the right value, and {@code toQualifiedName} will be the left one.
+	 * <p>
+	 * Note that to in order for this to work, we expect the EObjects to have a "name" feature returning a
+	 * String for us to compare it with the given qualified name.
+	 * </p>
+	 * 
+	 * @param qualifiedName
+	 *            Qualified name of the EObject which we expect to present an ReferenceChange.
+	 * @param referenceName
+	 *            Name of the single-valued reference on which we expect a change.
+	 * @param fromQualifiedName
+	 *            The original value of this reference.
+	 * @param toQualifiedName
+	 *            The value to which this reference has been changed.
+	 * @return The created predicate.
+	 */
 	@SuppressWarnings("unchecked")
 	public static Predicate<? super Diff> changedReference(final String qualifiedName,
-			final String referenceName, final String leftQualifiedName, final String rightQualifiedName) {
+			final String referenceName, final String fromQualifiedName, final String toQualifiedName) {
 		final Predicate<? super Diff> valuesMatch = new Predicate<Diff>() {
 			public boolean apply(Diff input) {
 				// Note that this is not meant for many-valued references
@@ -66,13 +88,24 @@ public final class EMFComparePredicates {
 					} else {
 						rightValue = null;
 					}
-					// Using == to handle the null case
-					final boolean leftMatch = leftValue == leftQualifiedName || leftQualifiedName != null
-							&& leftValue instanceof EObject && match((EObject)leftValue, leftQualifiedName);
-					final boolean rightMatch = rightValue == rightQualifiedName || rightQualifiedName != null
-							&& rightValue instanceof EObject
-							&& match((EObject)rightValue, rightQualifiedName);
-					return leftMatch && rightMatch;
+					final Object originValue;
+					if (match.getOrigin() != null) {
+						originValue = match.getOrigin().eGet(reference);
+					} else {
+						originValue = null;
+					}
+
+					// "from" is either right or origin
+					boolean applies = false;
+					if (matchAllowingNull(originValue, fromQualifiedName)) {
+						// "from" is origin, "to" can be either left or right
+						applies = matchAllowingNull(leftValue, toQualifiedName)
+								|| matchAllowingNull(rightValue, toQualifiedName);
+					} else if (matchAllowingNull(rightValue, fromQualifiedName)) {
+						// "from" is right, "to" can only be left
+						applies = matchAllowingNull(leftValue, toQualifiedName);
+					}
+					return applies;
 				}
 				return false;
 			}
@@ -80,27 +113,81 @@ public final class EMFComparePredicates {
 		return and(ofKind(DifferenceKind.CHANGE), onEObject(qualifiedName), valuesMatch);
 	}
 
+	/**
+	 * This predicate can be used to check whether a given Diff represents the addition of a value in a
+	 * multi-valued reference going by {@code referenceName} on an EObject which name matches
+	 * {@code qualifiedName}.
+	 * <p>
+	 * Note that to in order for this to work, we expect the EObjects to have a "name" feature returning a
+	 * String for us to compare it with the given qualified name.
+	 * </p>
+	 * 
+	 * @param qualifiedName
+	 *            Qualified name of the EObject which we expect to present an ReferenceChange.
+	 * @param referenceName
+	 *            Name of the multi-valued attribute on which we expect a change.
+	 * @param removedQualifiedName
+	 *            Qualified name of the EObject which we expect to have been added to this reference.
+	 * @return The created predicate.
+	 */
 	@SuppressWarnings("unchecked")
 	public static Predicate<? super Diff> addedToReference(final String qualifiedName,
 			final String referenceName, final String addedQualifiedName) {
-		final Predicate<? super Diff> valueMatch = new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				if (input instanceof ReferenceChange
-						&& ((ReferenceChange)input).getReference().getName().equals(referenceName)
-						&& ((ReferenceChange)input).getReference().isMany()) {
-					final Object value = ((ReferenceChange)input).getValue();
-					return addedQualifiedName != null && value instanceof EObject
-							&& match((EObject)value, addedQualifiedName);
-				}
-				return false;
-			}
-		};
-		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), valueMatch);
+		// This is only meant for multi-valued references
+		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), referenceValueMatch(referenceName,
+				addedQualifiedName, true));
 	}
 
+	/**
+	 * This predicate can be used to check whether a given Diff represents the deletion of a value from a
+	 * multi-valued reference going by {@code referenceName} on an EObject which name matches
+	 * {@code qualifiedName}.
+	 * <p>
+	 * Note that to in order for this to work, we expect the EObjects to have a "name" feature returning a
+	 * String for us to compare it with the given qualified name.
+	 * </p>
+	 * 
+	 * @param qualifiedName
+	 *            Qualified name of the EObject which we expect to present an ReferenceChange.
+	 * @param referenceName
+	 *            Name of the multi-valued attribute on which we expect a change.
+	 * @param removedQualifiedName
+	 *            Qualified name of the EObject which we expect to have been removed from this reference.
+	 * @return The created predicate.
+	 */
+	@SuppressWarnings("unchecked")
+	public static Predicate<? super Diff> removedFromReference(final String qualifiedName,
+			final String referenceName, final String removedQualifiedName) {
+		// This is only meant for multi-valued references
+		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), referenceValueMatch(
+				referenceName, removedQualifiedName, true));
+	}
+
+	/**
+	 * This predicate can be used to check whether a given Diff represents the modification of a single-valued
+	 * attribute going by the given {@code attributeName} on an EObject which name matches
+	 * {@code qualifiedName}. This can be used both on three-way and two-way Diffs : if three-way, we'll
+	 * consider that the {@code fromValue} can be either one of the right or origin values, and the
+	 * {@code toValue} to be either left or right. on two-way diffs however, {@code fromValue} can only be the
+	 * right value, and {@code toValue} will be the left one.
+	 * <p>
+	 * Note that to in order for this to work, we expect the EObjects to have a "name" feature returning a
+	 * String for us to compare it with the given qualified name.
+	 * </p>
+	 * 
+	 * @param qualifiedName
+	 *            Qualified name of the EObject which we expect to present an AttributeChange.
+	 * @param attributeName
+	 *            Name of the single-valued attribute on which we expect a change.
+	 * @param fromValue
+	 *            The original value of this attribute.
+	 * @param toValue
+	 *            The value to which this attribute has been changed.
+	 * @return The created predicate.
+	 */
 	@SuppressWarnings("unchecked")
 	public static Predicate<? super Diff> changedAttribute(final String qualifiedName,
-			final String attributeName, final Object leftValue, final Object rightValue) {
+			final String attributeName, final Object fromValue, final Object toValue) {
 		final Predicate<? super Diff> valuesMatch = new Predicate<Diff>() {
 			public boolean apply(Diff input) {
 				// Note that this is not meant for multi-valued attributes
@@ -109,21 +196,35 @@ public final class EMFComparePredicates {
 						&& !((AttributeChange)input).getAttribute().isMany()) {
 					final EAttribute attribute = ((AttributeChange)input).getAttribute();
 					final Match match = input.getMatch();
-					final Object actualLeft;
+					final Object leftValue;
 					if (match.getLeft() != null) {
-						actualLeft = match.getLeft().eGet(attribute);
+						leftValue = match.getLeft().eGet(attribute);
 					} else {
-						actualLeft = attribute.getDefaultValue();
+						leftValue = attribute.getDefaultValue();
 					}
-					final Object actualRight;
+					final Object rightValue;
 					if (match.getRight() != null) {
-						actualRight = match.getRight().eGet(attribute);
+						rightValue = match.getRight().eGet(attribute);
 					} else {
-						actualRight = attribute.getDefaultValue();
+						rightValue = attribute.getDefaultValue();
 					}
-					return (leftValue == actualLeft || leftValue != null && leftValue.equals(actualLeft))
-							&& (rightValue == actualRight || rightValue != null
-									&& rightValue.equals(actualRight));
+					final Object originValue;
+					if (match.getOrigin() != null) {
+						originValue = match.getOrigin().eGet(attribute);
+					} else {
+						originValue = attribute.getDefaultValue();
+					}
+
+					// "from" is either right or origin
+					boolean applies = false;
+					if (equal(fromValue, originValue)) {
+						// "from" is origin, "to" can be either left or right
+						applies = equal(toValue, leftValue) || equal(toValue, rightValue);
+					} else if (equal(fromValue, rightValue)) {
+						// "from" is right, "to" can only be left
+						applies = equal(toValue, leftValue);
+					}
+					return applies;
 				}
 				return false;
 			}
@@ -346,6 +447,38 @@ public final class EMFComparePredicates {
 	}
 
 	/**
+	 * This predicate can be used to check whether a given Diff describes a ReferenceChange with the given
+	 * {@code referenceName} and which changed value corresponds to the given {@code qualifiedName}.
+	 * <p>
+	 * For this to work, we expect the EObject to have a feature named "name" returning a String for us to try
+	 * and match it.
+	 * </p>
+	 * 
+	 * @param referenceName
+	 *            The reference for which we seek a ReferenceChange.
+	 * @param qualifiedName
+	 *            The qualified name of the EObject on which we detected a change.
+	 * @param multiValued
+	 *            Tells us to check for either multi- or single-valued reference changes.
+	 * @return The created predicate.
+	 */
+	public static Predicate<? super Diff> referenceValueMatch(final String referenceName,
+			final String qualifiedName, final boolean multiValued) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				if (input instanceof ReferenceChange
+						&& ((ReferenceChange)input).getReference().getName().equals(referenceName)
+						&& ((ReferenceChange)input).getReference().isMany() == multiValued) {
+					final Object value = ((ReferenceChange)input).getValue();
+					return qualifiedName != null && value instanceof EObject
+							&& match((EObject)value, qualifiedName);
+				}
+				return false;
+			}
+		};
+	}
+
+	/**
 	 * This can be used to check whether a given Diff describes either a {@link ReferenceChange} on an EObject
 	 * which name is {@code expectedName}.
 	 * <p>
@@ -415,6 +548,31 @@ public final class EMFComparePredicates {
 	}
 
 	/**
+	 * This will be used to check whether a given Object matches the given {@code qualifiedName}, considering
+	 * {@code null} as legal values. Namely, this will return {@code true} in the following cases :
+	 * <ul>
+	 * <li>both {@code eObject} and {@code qualifiedName} are {@code null}</li>
+	 * <li>eObject is an instance of {@link EObject} and its qualified name matches the given
+	 * {@code qualifiedName} according to the semantics of {@link #match(EObject, String)}</li>
+	 * </ul>
+	 * 
+	 * @param eObject
+	 *            The Object which qualified name we are to check. May be {@code null}.
+	 * @param qualifiedName
+	 *            The expected, <b>absolute</b> qualified name of the given {@code eObject}. May be
+	 *            {@code null}.
+	 * @return {@code true} if the given {@code eObject} matches the given {@code qualifiedName},
+	 *         {@code false} if not, or if we could not determine the "name" feature of that EObject.
+	 * @see #match(EObject, String)
+	 */
+	private static boolean matchAllowingNull(Object eObject, String qualifiedName) {
+		if (eObject == null) {
+			return qualifiedName == null;
+		}
+		return qualifiedName != null && eObject instanceof EObject && match((EObject)eObject, qualifiedName);
+	}
+
+	/**
 	 * Checks that the given {@code eObject}'s name is equal to {@code name}.
 	 * <p>
 	 * For this to work, we expect the EObject to have a feature named "name" returning a String for us to try
@@ -462,5 +620,22 @@ public final class EMFComparePredicates {
 			}
 		}
 		return nameFeature;
+	}
+
+	/**
+	 * Checks whether the two given Objects match : they are either both {@code null}, the same instance, or
+	 * their "equals" returns {@code true}. If neither is {@code true}, we assume that these two Objects don't
+	 * match.
+	 * 
+	 * @param referenceValue
+	 *            The reference value, first of the two Objects to compare.
+	 * @param expectedValue
+	 *            The expected value, second of the two Objects to compare.
+	 * @return {@code true} if these two Objects are equal, {@code false} otherwise.
+	 */
+	private static boolean equal(Object referenceValue, Object expectedValue) {
+		// Using == to handle the "null" case
+		return expectedValue == referenceValue || expectedValue != null
+				&& expectedValue.equals(referenceValue);
 	}
 }
