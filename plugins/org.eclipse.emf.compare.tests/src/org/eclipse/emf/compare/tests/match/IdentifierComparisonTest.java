@@ -132,13 +132,9 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 		assertRemovedFromReference(differences, "extlibrary.Periodical", "eSuperTypes", "extlibrary.Item",
 				DifferenceSource.LEFT);
 
-		DifferenceSource side = DifferenceSource.LEFT;
-		if (comparison.isThreeWay()) {
-			side = DifferenceSource.RIGHT;
-		}
-
 		// some diffs change according to the presence of an origin.
 		if (comparison.isThreeWay()) {
+			final DifferenceSource side = DifferenceSource.RIGHT;
 			assertAdded(differences, "extlibrary.BookCategory.Manga", side);
 			assertAdded(differences, "extlibrary.BookCategory.Manhwa", side);
 			assertAdded(differences, "extlibrary.Book.subtitle", side);
@@ -148,6 +144,15 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 
 			assertRemoved(differences, "extlibrary.Book.title", side);
 			assertRemoved(differences, "extlibrary.AudioVisualItem.title", side);
+
+			assertAddedToReference(differences, "extlibrary.Book", "eSuperTypes", "extlibrary.TitledItem",
+					side);
+			assertAddedToReference(differences, "extlibrary.Periodical", "eSuperTypes",
+					"extlibrary.TitledItem", side);
+			assertAddedToReference(differences, "extlibrary.AudioVisualItem", "eSuperTypes",
+					"extlibrary.TitledItem", side);
+			assertAddedToReference(differences, "extlibrary.Magazine", "eSuperTypes",
+					"extlibrary.Periodical", side);
 
 			/*
 			 * The following are actually conflicts, most changes according to whether we are in three-way or
@@ -165,6 +170,7 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 			assertChangedAttribute(differences, "extlibrary.AudioVisualItem.length", "name", "minutesLength",
 					"minutes", side);
 		} else {
+			final DifferenceSource side = DifferenceSource.LEFT;
 			assertRemoved(differences, "extlibrary.BookCategory.Manga", side);
 			assertRemoved(differences, "extlibrary.BookCategory.Manhwa", side);
 			assertRemoved(differences, "extlibrary.Book.subtitle", side);
@@ -175,20 +181,21 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 			assertAdded(differences, "extlibrary.Book.title", side);
 			assertAdded(differences, "extlibrary.AudioVisualItem.title", side);
 
+			assertRemovedFromReference(differences, "extlibrary.Book", "eSuperTypes",
+					"extlibrary.TitledItem", side);
+			assertRemovedFromReference(differences, "extlibrary.Periodical", "eSuperTypes",
+					"extlibrary.TitledItem", side);
+			assertRemovedFromReference(differences, "extlibrary.AudioVisualItem", "eSuperTypes",
+					"extlibrary.TitledItem", side);
+			assertRemovedFromReference(differences, "extlibrary.Magazine", "eSuperTypes",
+					"extlibrary.Periodical", side);
+
 			// See above comment : since this is a conflict, the expected diff is not the same in two-way
 			assertChangedAttribute(differences, "extlibrary.AudioVisualItem.length", "name", "minutes",
 					"length", DifferenceSource.LEFT);
 		}
 
-		assertAddedToReference(differences, "extlibrary.Book", "eSuperTypes", "extlibrary.TitledItem", side);
-		assertAddedToReference(differences, "extlibrary.Periodical", "eSuperTypes", "extlibrary.TitledItem",
-				side);
-		assertAddedToReference(differences, "extlibrary.AudioVisualItem", "eSuperTypes",
-				"extlibrary.TitledItem", side);
-		assertAddedToReference(differences, "extlibrary.Magazine", "eSuperTypes", "extlibrary.Periodical",
-				side);
-
-		// We should have no more differences that those 21
+		// We should have no more differences that those
 		assertTrue(differences.isEmpty());
 	}
 
