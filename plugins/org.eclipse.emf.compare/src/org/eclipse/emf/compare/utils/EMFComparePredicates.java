@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.framework.predicates;
+package org.eclipse.emf.compare.utils;
 
 import static com.google.common.base.Predicates.and;
 
@@ -30,8 +30,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 
 /**
- * This class will provide a number of Predicates that can be used by EMF Compare tests to check for
- * particular diffs.
+ * This class will provide a number of Predicates that can be used to retrieve particular {@link Diff}s from
+ * an iterable.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -51,8 +51,8 @@ public final class EMFComparePredicates {
 	 * {@code toQualifiedName} to be either left or right. on two-way diffs however, {@code fromQualifiedName}
 	 * can only be the right value, and {@code toQualifiedName} will be the left one.
 	 * <p>
-	 * Note that to in order for this to work, we expect the EObjects to have a "name" feature returning a
-	 * String for us to compare it with the given qualified name.
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a String
+	 * for us to compare it with the given qualified name.
 	 * </p>
 	 * 
 	 * @param qualifiedName
@@ -68,48 +68,8 @@ public final class EMFComparePredicates {
 	@SuppressWarnings("unchecked")
 	public static Predicate<? super Diff> changedReference(final String qualifiedName,
 			final String referenceName, final String fromQualifiedName, final String toQualifiedName) {
-		final Predicate<? super Diff> valuesMatch = new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				// Note that this is not meant for many-valued references
-				if (input instanceof ReferenceChange
-						&& ((ReferenceChange)input).getReference().getName().equals(referenceName)
-						&& !((ReferenceChange)input).getReference().isMany()) {
-					final EReference reference = ((ReferenceChange)input).getReference();
-					final Match match = input.getMatch();
-					final Object leftValue;
-					if (match.getLeft() != null) {
-						leftValue = match.getLeft().eGet(reference);
-					} else {
-						leftValue = null;
-					}
-					final Object rightValue;
-					if (match.getRight() != null) {
-						rightValue = match.getRight().eGet(reference);
-					} else {
-						rightValue = null;
-					}
-					final Object originValue;
-					if (match.getOrigin() != null) {
-						originValue = match.getOrigin().eGet(reference);
-					} else {
-						originValue = null;
-					}
-
-					// "from" is either right or origin
-					boolean applies = false;
-					if (matchAllowingNull(originValue, fromQualifiedName)) {
-						// "from" is origin, "to" can be either left or right
-						applies = matchAllowingNull(leftValue, toQualifiedName)
-								|| matchAllowingNull(rightValue, toQualifiedName);
-					} else if (matchAllowingNull(rightValue, fromQualifiedName)) {
-						// "from" is right, "to" can only be left
-						applies = matchAllowingNull(leftValue, toQualifiedName);
-					}
-					return applies;
-				}
-				return false;
-			}
-		};
+		final Predicate<? super Diff> valuesMatch = new ReferenceValuesMatch(referenceName,
+				fromQualifiedName, toQualifiedName);
 		return and(ofKind(DifferenceKind.CHANGE), onEObject(qualifiedName), valuesMatch);
 	}
 
@@ -118,15 +78,15 @@ public final class EMFComparePredicates {
 	 * multi-valued reference going by {@code referenceName} on an EObject which name matches
 	 * {@code qualifiedName}.
 	 * <p>
-	 * Note that to in order for this to work, we expect the EObjects to have a "name" feature returning a
-	 * String for us to compare it with the given qualified name.
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a String
+	 * for us to compare it with the given qualified name.
 	 * </p>
 	 * 
 	 * @param qualifiedName
 	 *            Qualified name of the EObject which we expect to present an ReferenceChange.
 	 * @param referenceName
 	 *            Name of the multi-valued attribute on which we expect a change.
-	 * @param removedQualifiedName
+	 * @param addedQualifiedName
 	 *            Qualified name of the EObject which we expect to have been added to this reference.
 	 * @return The created predicate.
 	 */
@@ -143,8 +103,8 @@ public final class EMFComparePredicates {
 	 * multi-valued reference going by {@code referenceName} on an EObject which name matches
 	 * {@code qualifiedName}.
 	 * <p>
-	 * Note that to in order for this to work, we expect the EObjects to have a "name" feature returning a
-	 * String for us to compare it with the given qualified name.
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a String
+	 * for us to compare it with the given qualified name.
 	 * </p>
 	 * 
 	 * @param qualifiedName
@@ -171,8 +131,8 @@ public final class EMFComparePredicates {
 	 * {@code toValue} to be either left or right. on two-way diffs however, {@code fromValue} can only be the
 	 * right value, and {@code toValue} will be the left one.
 	 * <p>
-	 * Note that to in order for this to work, we expect the EObjects to have a "name" feature returning a
-	 * String for us to compare it with the given qualified name.
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a String
+	 * for us to compare it with the given qualified name.
 	 * </p>
 	 * 
 	 * @param qualifiedName
@@ -188,47 +148,8 @@ public final class EMFComparePredicates {
 	@SuppressWarnings("unchecked")
 	public static Predicate<? super Diff> changedAttribute(final String qualifiedName,
 			final String attributeName, final Object fromValue, final Object toValue) {
-		final Predicate<? super Diff> valuesMatch = new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				// Note that this is not meant for multi-valued attributes
-				if (input instanceof AttributeChange
-						&& ((AttributeChange)input).getAttribute().getName().equals(attributeName)
-						&& !((AttributeChange)input).getAttribute().isMany()) {
-					final EAttribute attribute = ((AttributeChange)input).getAttribute();
-					final Match match = input.getMatch();
-					final Object leftValue;
-					if (match.getLeft() != null) {
-						leftValue = match.getLeft().eGet(attribute);
-					} else {
-						leftValue = attribute.getDefaultValue();
-					}
-					final Object rightValue;
-					if (match.getRight() != null) {
-						rightValue = match.getRight().eGet(attribute);
-					} else {
-						rightValue = attribute.getDefaultValue();
-					}
-					final Object originValue;
-					if (match.getOrigin() != null) {
-						originValue = match.getOrigin().eGet(attribute);
-					} else {
-						originValue = attribute.getDefaultValue();
-					}
-
-					// "from" is either right or origin
-					boolean applies = false;
-					if (equal(fromValue, originValue)) {
-						// "from" is origin, "to" can be either left or right
-						applies = equal(toValue, leftValue) || equal(toValue, rightValue);
-					} else if (equal(fromValue, rightValue)) {
-						// "from" is right, "to" can only be left
-						applies = equal(toValue, leftValue);
-					}
-					return applies;
-				}
-				return false;
-			}
-		};
+		final Predicate<? super Diff> valuesMatch = new AttributeValuesMatch(attributeName, fromValue,
+				toValue);
 		return and(ofKind(DifferenceKind.CHANGE), onEObject(qualifiedName), valuesMatch);
 	}
 
@@ -274,7 +195,7 @@ public final class EMFComparePredicates {
 	 * "org.eclipse.emf.compare.Match". The qualified name must be absolute.
 	 * </p>
 	 * <p>
-	 * Note that to in order for this to work, we expect the EObjects to have a "name" feature returning a
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a
 	 * String.
 	 * </p>
 	 * 
@@ -305,7 +226,7 @@ public final class EMFComparePredicates {
 	 * "org.eclipse.emf.compare.Match". The qualified name must be absolute.
 	 * </p>
 	 * <p>
-	 * Note that to in order for this to work, we expect the EObjects to have a "name" feature returning a
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a
 	 * String.
 	 * </p>
 	 * 
@@ -637,5 +558,162 @@ public final class EMFComparePredicates {
 		// Using == to handle the "null" case
 		return expectedValue == referenceValue || expectedValue != null
 				&& expectedValue.equals(referenceValue);
+	}
+
+	/**
+	 * This particular predicate will be used to check that a given Diff corresponds to a ReferenceChange on a
+	 * given reference, with known "original" and "changed" values.
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
+	private static final class ReferenceValuesMatch implements Predicate<Diff> {
+		/** Name of the reference we expect to have been changed. */
+		private final String referenceName;
+
+		/** Qualified name of the expected original value of this reference. */
+		private final String fromQualifiedName;
+
+		/** Qualified name of the value to which this reference is expected to have changed. */
+		private final String toQualifiedName;
+
+		/**
+		 * Instantiates this predicate given the values it is meant to match.
+		 * 
+		 * @param referenceName
+		 *            Name of the single-valued reference on which we expect a change.
+		 * @param fromQualifiedName
+		 *            The original value of this reference.
+		 * @param toQualifiedName
+		 *            The value to which this reference has been changed.
+		 */
+		public ReferenceValuesMatch(String referenceName, String fromQualifiedName, String toQualifiedName) {
+			this.referenceName = referenceName;
+			this.fromQualifiedName = fromQualifiedName;
+			this.toQualifiedName = toQualifiedName;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see com.google.common.base.Predicate#apply(java.lang.Object)
+		 */
+		public boolean apply(Diff input) {
+			// Note that this is not meant for many-valued references
+			if (input instanceof ReferenceChange
+					&& ((ReferenceChange)input).getReference().getName().equals(referenceName)
+					&& !((ReferenceChange)input).getReference().isMany()) {
+				final EReference reference = ((ReferenceChange)input).getReference();
+				final Match match = input.getMatch();
+				final Object leftValue;
+				if (match.getLeft() != null) {
+					leftValue = match.getLeft().eGet(reference);
+				} else {
+					leftValue = null;
+				}
+				final Object rightValue;
+				if (match.getRight() != null) {
+					rightValue = match.getRight().eGet(reference);
+				} else {
+					rightValue = null;
+				}
+				final Object originValue;
+				if (match.getOrigin() != null) {
+					originValue = match.getOrigin().eGet(reference);
+				} else {
+					originValue = null;
+				}
+
+				// "from" is either right or origin
+				boolean applies = false;
+				if (matchAllowingNull(originValue, fromQualifiedName)) {
+					// "from" is origin, "to" can be either left or right
+					applies = matchAllowingNull(leftValue, toQualifiedName)
+							|| matchAllowingNull(rightValue, toQualifiedName);
+				} else if (matchAllowingNull(rightValue, fromQualifiedName)) {
+					// "from" is right, "to" can only be left
+					applies = matchAllowingNull(leftValue, toQualifiedName);
+				}
+				return applies;
+			}
+			return false;
+		}
+	}
+
+	/**
+	 * This particular predicate will be used to check that a given Diff corresponds to an AttributeChange on
+	 * a given attribute, with known "original" and "changed" values.
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
+	private static final class AttributeValuesMatch implements Predicate<Diff> {
+		/** Name of the attribute we expect to have been changed. */
+		private final String attributeName;
+
+		/** The expected original value of this attribute. */
+		private final Object fromValue;
+
+		/** The value to which this attribute is expected to have changed. */
+		private final Object toValue;
+
+		/**
+		 * Instantiates this predicate given the values it is meant to match.
+		 * 
+		 * @param attributeName
+		 *            Name of the single-valued attribute on which we expect a change.
+		 * @param fromValue
+		 *            The original value of this attribute.
+		 * @param toValue
+		 *            The value to which this attribute has been changed.
+		 */
+		public AttributeValuesMatch(String attributeName, Object fromValue, Object toValue) {
+			this.attributeName = attributeName;
+			this.fromValue = fromValue;
+			this.toValue = toValue;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see com.google.common.base.Predicate#apply(java.lang.Object)
+		 */
+		public boolean apply(Diff input) {
+			// Note that this is not meant for multi-valued attributes
+			if (input instanceof AttributeChange
+					&& ((AttributeChange)input).getAttribute().getName().equals(attributeName)
+					&& !((AttributeChange)input).getAttribute().isMany()) {
+				final EAttribute attribute = ((AttributeChange)input).getAttribute();
+				final Match match = input.getMatch();
+				final Object leftValue;
+				if (match.getLeft() != null) {
+					leftValue = match.getLeft().eGet(attribute);
+				} else {
+					leftValue = attribute.getDefaultValue();
+				}
+				final Object rightValue;
+				if (match.getRight() != null) {
+					rightValue = match.getRight().eGet(attribute);
+				} else {
+					rightValue = attribute.getDefaultValue();
+				}
+				final Object originValue;
+				if (match.getOrigin() != null) {
+					originValue = match.getOrigin().eGet(attribute);
+				} else {
+					originValue = attribute.getDefaultValue();
+				}
+
+				// "from" is either right or origin
+				boolean applies = false;
+				if (equal(fromValue, originValue)) {
+					// "from" is origin, "to" can be either left or right
+					applies = equal(toValue, leftValue) || equal(toValue, rightValue);
+				} else if (equal(fromValue, rightValue)) {
+					// "from" is right, "to" can only be left
+					applies = equal(toValue, leftValue);
+				}
+				return applies;
+			}
+			return false;
+		}
 	}
 }

@@ -10,20 +10,10 @@
  */
 package org.eclipse.emf.compare.tests.match;
 
-import static com.google.common.base.Predicates.and;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
-import static org.eclipse.emf.compare.tests.framework.predicates.EMFComparePredicates.added;
-import static org.eclipse.emf.compare.tests.framework.predicates.EMFComparePredicates.addedToReference;
-import static org.eclipse.emf.compare.tests.framework.predicates.EMFComparePredicates.changedAttribute;
-import static org.eclipse.emf.compare.tests.framework.predicates.EMFComparePredicates.changedReference;
-import static org.eclipse.emf.compare.tests.framework.predicates.EMFComparePredicates.fromSide;
-import static org.eclipse.emf.compare.tests.framework.predicates.EMFComparePredicates.removed;
-import static org.eclipse.emf.compare.tests.framework.predicates.EMFComparePredicates.removedFromReference;
-
-import com.google.common.base.Predicate;
 
 import java.io.IOException;
 import java.util.List;
@@ -190,56 +180,12 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 			assertRemovedFromReference(differences, "extlibrary.Magazine", "eSuperTypes",
 					"extlibrary.Periodical", side);
 
-			// See above comment : since this is a conflict, the expected diff is not the same in two-way
+			// This is a conflict, the expected diff is not the same in two-way
 			assertChangedAttribute(differences, "extlibrary.AudioVisualItem.length", "name", "minutes",
 					"length", DifferenceSource.LEFT);
 		}
 
 		// We should have no more differences that those
 		assertTrue(differences.isEmpty());
-	}
-
-	private static void assertChangedReference(List<Diff> differences, String qualifiedName,
-			String referenceName, String leftQualifiedName, String rightQualifiedName, DifferenceSource side) {
-		final Predicate<? super Diff> changedReferenceOnSide = and(fromSide(side), changedReference(
-				qualifiedName, referenceName, leftQualifiedName, rightQualifiedName));
-		final Diff matchingDiff = removeFirst(differences.iterator(), changedReferenceOnSide);
-		assertNotNull(matchingDiff);
-	}
-
-	private static void assertRemovedFromReference(List<Diff> differences, String qualifiedName,
-			String referenceName, String removedValueQualifiedName, DifferenceSource side) {
-		final Predicate<? super Diff> removedFromReferenceOnSide = and(fromSide(side), removedFromReference(
-				qualifiedName, referenceName, removedValueQualifiedName));
-		final Diff matchingDiff = removeFirst(differences.iterator(), removedFromReferenceOnSide);
-		assertNotNull(matchingDiff);
-	}
-
-	private static void assertAddedToReference(List<Diff> differences, String qualifiedName,
-			String referenceName, String addedValueQualifiedName, DifferenceSource side) {
-		final Predicate<? super Diff> addedToReferenceOnSide = and(fromSide(side), addedToReference(
-				qualifiedName, referenceName, addedValueQualifiedName));
-		final Diff matchingDiff = removeFirst(differences.iterator(), addedToReferenceOnSide);
-		assertNotNull(matchingDiff);
-	}
-
-	private static void assertChangedAttribute(List<Diff> differences, String qualifiedName,
-			String attributeName, Object leftValue, Object rightValue, DifferenceSource side) {
-		final Predicate<? super Diff> changedAttributeOnSide = and(fromSide(side), changedAttribute(
-				qualifiedName, attributeName, leftValue, rightValue));
-		final Diff matchingDiff = removeFirst(differences.iterator(), changedAttributeOnSide);
-		assertNotNull(matchingDiff);
-	}
-
-	private static void assertAdded(List<Diff> differences, String qualifiedName, DifferenceSource side) {
-		final Predicate<? super Diff> addedOnSide = and(fromSide(side), added(qualifiedName));
-		final Diff matchingDiff = removeFirst(differences.iterator(), addedOnSide);
-		assertNotNull(matchingDiff);
-	}
-
-	private static void assertRemoved(List<Diff> differences, String qualifiedName, DifferenceSource side) {
-		final Predicate<? super Diff> removedOnSide = and(fromSide(side), removed(qualifiedName));
-		final Diff matchingDiff = removeFirst(differences.iterator(), removedOnSide);
-		assertNotNull(matchingDiff);
 	}
 }

@@ -10,8 +10,17 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.framework;
 
+import static com.google.common.base.Predicates.and;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedAttribute;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -23,13 +32,17 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.scope.FilterComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+// TODO move asserts to their own utility class
 /**
  * This provides a number of utility methods for EMF Compare tests.
  * 
@@ -62,6 +75,180 @@ public class EMFCompareTestBase {
 			final Match match = comparison.getMatch(eObject);
 			assertTrue(match != null || !scopeFilter.apply(eObject));
 		}
+	}
+
+	/**
+	 * Asserts that the given list of differences contains a ReferenceChange describing the given change for a
+	 * single-valued reference. The {@code differences} list will be updated by this call, removing the
+	 * corresponding Diff if it could be located.
+	 * <p>
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a String
+	 * so that we can compare it to the given qualified names.
+	 * </p>
+	 * 
+	 * @param differences
+	 *            List of differences in which to seek for a particular reference change.
+	 * @param qualifiedName
+	 *            Qualified name of the EObject which reference we expect to have changed.
+	 * @param referenceName
+	 *            Name of the reference which values we expect to have changed. <b>Note</b> that we expect
+	 *            this reference to be single-valued.
+	 * @param fromQualifiedName
+	 *            Qualified name of the original value of this reference (can be either the origin or right
+	 *            value).
+	 * @param toQualifiedName
+	 *            Qualified name of the value to which this reference has been changed (can be either left or
+	 *            right in three-way comparisons, only left for two-way).
+	 * @param side
+	 *            The side from which we expect this diff to originate.
+	 * @see EMFComparePredicates#changedReference(String, String, String, String)
+	 */
+	protected static void assertChangedReference(List<Diff> differences, String qualifiedName,
+			String referenceName, String fromQualifiedName, String toQualifiedName, DifferenceSource side) {
+		final Predicate<? super Diff> changedReferenceOnSide = and(fromSide(side), changedReference(
+				qualifiedName, referenceName, fromQualifiedName, toQualifiedName));
+		final Diff matchingDiff = removeFirst(differences.iterator(), changedReferenceOnSide);
+		assertNotNull(matchingDiff);
+	}
+
+	/**
+	 * Asserts that the given list of differences contains a ReferenceChange describing the removal of a value
+	 * from a multi-valued reference. The {@code differences} list will be updated by this call, removing the
+	 * corresponding Diff if it could be located.
+	 * <p>
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a String
+	 * so that we can compare it to the given qualified names.
+	 * </p>
+	 * 
+	 * @param differences
+	 *            List of differences in which to seek for a particular reference change.
+	 * @param qualifiedName
+	 *            Qualified name of the EObject which reference we expect to have changed.
+	 * @param referenceName
+	 *            Name of the reference which values we expect to have changed. <b>Note</b> that we expect
+	 *            this reference to be multi-valued.
+	 * @param removedValueQualifiedName
+	 *            Qualified name of the value we expect to have been removed from that reference's list of
+	 *            values.
+	 * @param side
+	 *            The side from which we expect this diff to originate.
+	 * @see EMFComparePredicates#removedFromReference(String, String, String)
+	 */
+	protected static void assertRemovedFromReference(List<Diff> differences, String qualifiedName,
+			String referenceName, String removedValueQualifiedName, DifferenceSource side) {
+		final Predicate<? super Diff> removedFromReferenceOnSide = and(fromSide(side), removedFromReference(
+				qualifiedName, referenceName, removedValueQualifiedName));
+		final Diff matchingDiff = removeFirst(differences.iterator(), removedFromReferenceOnSide);
+		assertNotNull(matchingDiff);
+	}
+
+	/**
+	 * Asserts that the given list of differences contains a ReferenceChange describing the addition of a
+	 * value into a multi-valued reference. The {@code differences} list will be updated by this call,
+	 * removing the corresponding Diff if it could be located.
+	 * <p>
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a String
+	 * so that we can compare it to the given qualified names.
+	 * </p>
+	 * 
+	 * @param differences
+	 *            List of differences in which to seek for a particular reference change.
+	 * @param qualifiedName
+	 *            Qualified name of the EObject which reference we expect to have changed.
+	 * @param referenceName
+	 *            Name of the reference which values we expect to have changed. <b>Note</b> that we expect
+	 *            this reference to be multi-valued.
+	 * @param addedValueQualifiedName
+	 *            Qualified name of the value we expect to have been added to that reference's list of values.
+	 * @param side
+	 *            The side from which we expect this diff to originate.
+	 * @see EMFComparePredicates#addedToReference(String, String, String)
+	 */
+	protected static void assertAddedToReference(List<Diff> differences, String qualifiedName,
+			String referenceName, String addedValueQualifiedName, DifferenceSource side) {
+		final Predicate<? super Diff> addedToReferenceOnSide = and(fromSide(side), addedToReference(
+				qualifiedName, referenceName, addedValueQualifiedName));
+		final Diff matchingDiff = removeFirst(differences.iterator(), addedToReferenceOnSide);
+		assertNotNull(matchingDiff);
+	}
+
+	/**
+	 * Asserts that the given list of differences contains an AttributeChange describing the given change for
+	 * a single-valued attribute. The {@code differences} list will be updated by this call, removing the
+	 * corresponding Diff if it could be located.
+	 * <p>
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a String
+	 * so that we can compare it to the given qualified names.
+	 * </p>
+	 * 
+	 * @param differences
+	 *            List of differences in which to seek for a particular attribute change.
+	 * @param qualifiedName
+	 *            Qualified name of the EObject which attribute we expect to have changed.
+	 * @param attributeName
+	 *            Name of the attribute which values we expect to have changed. <b>Note</b> that we expect
+	 *            this attribute to be single-valued.
+	 * @param fromValue
+	 *            The original value of this attribute. Can be either the origin or right value.
+	 * @param toValue
+	 *            The value to which this attribute has been changed. Can be either left or right for a
+	 *            three-way comparison, only left in two-way.
+	 * @param side
+	 *            The side from which we expect this diff to originate.
+	 * @see EMFComparePredicates#changedAttribute(String, String, Object, Object)
+	 */
+	protected static void assertChangedAttribute(List<Diff> differences, String qualifiedName,
+			String attributeName, Object fromValue, Object toValue, DifferenceSource side) {
+		final Predicate<? super Diff> changedAttributeOnSide = and(fromSide(side), changedAttribute(
+				qualifiedName, attributeName, fromValue, toValue));
+		final Diff matchingDiff = removeFirst(differences.iterator(), changedAttributeOnSide);
+		assertNotNull(matchingDiff);
+	}
+
+	/**
+	 * Asserts that the given list of differences contains a ReferenceChange describing the given element
+	 * addition. This is only meant for containment changes. The {@code differences} list will be updated by
+	 * this call, removing the corresponding Diff if it could be located.
+	 * <p>
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a String
+	 * so that we can compare it to the given qualified names.
+	 * </p>
+	 * 
+	 * @param differences
+	 *            List of differences in which to seek for a particular element addition.
+	 * @param qualifiedName
+	 *            Qualified name of the EObject we expect to have been added.
+	 * @param side
+	 *            The side from which we expect this diff to originate.
+	 * @see EMFComparePredicates#added(String)
+	 */
+	protected static void assertAdded(List<Diff> differences, String qualifiedName, DifferenceSource side) {
+		final Predicate<? super Diff> addedOnSide = and(fromSide(side), added(qualifiedName));
+		final Diff matchingDiff = removeFirst(differences.iterator(), addedOnSide);
+		assertNotNull(matchingDiff);
+	}
+
+	/**
+	 * Asserts that the given list of differences contains a ReferenceChange describing the given element
+	 * deletion. This is only meant for containment changes. The {@code differences} list will be updated by
+	 * this call, removing the corresponding Diff if it could be located.
+	 * <p>
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a String
+	 * so that we can compare it to the given qualified names.
+	 * </p>
+	 * 
+	 * @param differences
+	 *            List of differences in which to seek for a particular element deletion.
+	 * @param qualifiedName
+	 *            Qualified name of the EObject we expect to have been deleted.
+	 * @param side
+	 *            The side from which we expect this diff to originate.
+	 * @see EMFComparePredicates#removed(String)
+	 */
+	protected static void assertRemoved(List<Diff> differences, String qualifiedName, DifferenceSource side) {
+		final Predicate<? super Diff> removedOnSide = and(fromSide(side), removed(qualifiedName));
+		final Diff matchingDiff = removeFirst(differences.iterator(), removedOnSide);
+		assertNotNull(matchingDiff);
 	}
 
 	/**
