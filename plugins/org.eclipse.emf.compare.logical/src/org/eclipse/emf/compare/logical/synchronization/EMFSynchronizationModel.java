@@ -152,8 +152,8 @@ public final class EMFSynchronizationModel {
 			if (modelProviderId.equals(mapping.getModelProviderId()) && mapping instanceof EMFResourceMapping) {
 				EMFResourceMapping emfMapping = (EMFResourceMapping)mapping;
 
-				ResourceSet left = emfMapping.getLeftResourceSet();
-				ResourceSet right = emfMapping.getRightResourceSet();
+				ResourceSet left = emfMapping.getLocalResourceSet();
+				ResourceSet right = emfMapping.getRemoteResourceSet();
 				ResourceSet origin = emfMapping.getOriginResourceSet();
 
 				// If any one of these is null, continue on to the next mapping
@@ -186,8 +186,8 @@ public final class EMFSynchronizationModel {
 			if (emfMapping != null) {
 				emfMapping.forceResolving(context.getScope().getContext(), monitor);
 
-				leftResourceSet = emfMapping.getLeftResourceSet();
-				rightResourceSet = emfMapping.getRightResourceSet();
+				leftResourceSet = emfMapping.getLocalResourceSet();
+				rightResourceSet = emfMapping.getRemoteResourceSet();
 				originResourceSet = emfMapping.getOriginResourceSet();
 			}
 		}

@@ -179,13 +179,13 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 						assertFalse(match.getLeftRoots().isEmpty());
 						for (EObject root : match.getLeftRoots()) {
 							Resource res = root.eResource();
-							assertContainsResourceWithURI(mapping.getLeftResourceSet(), res.getURI());
+							assertContainsResourceWithURI(mapping.getLocalResourceSet(), res.getURI());
 						}
 
 						assertFalse(match.getRightRoots().isEmpty());
 						for (EObject root : match.getRightRoots()) {
 							Resource res = root.eResource();
-							assertContainsResourceWithURI(mapping.getRightResourceSet(), res.getURI());
+							assertContainsResourceWithURI(mapping.getRemoteResourceSet(), res.getURI());
 						}
 
 						if (isThreeWay) {
@@ -346,8 +346,8 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 
 				EMFResourceMapping mapping = (EMFResourceMapping)mappings[0];
 
-				ResourceSet localResourceSet = mapping.getLeftResourceSet();
-				ResourceSet remoteResourceSet = mapping.getRightResourceSet();
+				ResourceSet localResourceSet = mapping.getLocalResourceSet();
+				ResourceSet remoteResourceSet = mapping.getRemoteResourceSet();
 				ResourceSet ancestorResourceSet = mapping.getOriginResourceSet();
 
 				if (context instanceof RemoteResourceMappingContext

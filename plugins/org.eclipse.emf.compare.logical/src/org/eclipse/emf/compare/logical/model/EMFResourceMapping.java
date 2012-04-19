@@ -63,14 +63,14 @@ public class EMFResourceMapping extends ResourceMapping {
 	private final Resource emfResource;
 
 	/** Keep reference to the left resource set. */
-	private ResourceSet leftResourceSet;
+	private ResourceSet localResourceSet;
 
 	/**
 	 * Keep reference to the right resource set. This will only be available if we are fed a
 	 * RemoteResourceContext when resolving the logical model through
 	 * {@link #getTraversals(ResourceMappingContext, IProgressMonitor)}.
 	 */
-	private ResourceSet rightResourceSet;
+	private ResourceSet remoteResourceSet;
 
 	/**
 	 * Keep reference to the origin resource set. This will only be available if we are fed a
@@ -110,7 +110,7 @@ public class EMFResourceMapping extends ResourceMapping {
 		this.file = file;
 		this.emfResource = emfResource;
 		this.providerId = providerId;
-		this.leftResourceSet = emfResource.getResourceSet();
+		this.localResourceSet = emfResource.getResourceSet();
 	}
 
 	/**
@@ -189,7 +189,7 @@ public class EMFResourceMapping extends ResourceMapping {
 	 */
 	public void forceResolving(ResourceMappingContext context, IProgressMonitor monitor) throws CoreException {
 		isResolved = false;
-		rightResourceSet = null;
+		remoteResourceSet = null;
 		originResourceSet = null;
 		iResourcesInScope = null;
 
@@ -201,8 +201,8 @@ public class EMFResourceMapping extends ResourceMapping {
 	 * 
 	 * @return The resource set in which the local variant of the logical model has been loaded.
 	 */
-	public ResourceSet getLeftResourceSet() {
-		return leftResourceSet;
+	public ResourceSet getLocalResourceSet() {
+		return localResourceSet;
 	}
 
 	/**
@@ -210,8 +210,8 @@ public class EMFResourceMapping extends ResourceMapping {
 	 * 
 	 * @return The resource set in which the remote variant of the logical model has been loaded.
 	 */
-	public ResourceSet getRightResourceSet() {
-		return rightResourceSet;
+	public ResourceSet getRemoteResourceSet() {
+		return remoteResourceSet;
 	}
 
 	/**
@@ -240,7 +240,7 @@ public class EMFResourceMapping extends ResourceMapping {
 		if (context instanceof RemoteResourceMappingContext) {
 			final RemoteResourceMappingContext remoteContext = (RemoteResourceMappingContext)context;
 
-			for (Resource eResource : leftResourceSet.getResources()) {
+			for (Resource eResource : localResourceSet.getResources()) {
 				final IFile localFile;
 				if (eResource == emfResource) {
 					localFile = file;
@@ -252,14 +252,14 @@ public class EMFResourceMapping extends ResourceMapping {
 				IStorage originContents = remoteContext.fetchBaseContents(localFile, monitor);
 
 				if (remoteContents != null) {
-					if (rightResourceSet == null) {
-						rightResourceSet = createRemoteResourceSet(localFile, remoteContents);
+					if (remoteResourceSet == null) {
+						remoteResourceSet = createRemoteResourceSet(localFile, remoteContents);
 					} else {
-						final RevisionedURIConverter converter = (RevisionedURIConverter)rightResourceSet
+						final RevisionedURIConverter converter = (RevisionedURIConverter)remoteResourceSet
 								.getURIConverter();
 						converter.setStorage(remoteContents);
 					}
-					loadRemoteResource(eResource.getURI(), remoteContents, rightResourceSet);
+					loadRemoteResource(eResource.getURI(), remoteContents, remoteResourceSet);
 				}
 				if (originContents != null) {
 					if (originResourceSet == null) {
@@ -274,8 +274,8 @@ public class EMFResourceMapping extends ResourceMapping {
 			}
 
 			// make sure that these two are fully resolved
-			if (rightResourceSet != null) {
-				EcoreUtil.resolveAll(rightResourceSet);
+			if (remoteResourceSet != null) {
+				EcoreUtil.resolveAll(remoteResourceSet);
 			}
 			if (originResourceSet != null) {
 				EcoreUtil.resolveAll(originResourceSet);
@@ -292,7 +292,7 @@ public class EMFResourceMapping extends ResourceMapping {
 	 * @return The list of all physical resources that constitute this logical model.
 	 */
 	private Set<IResource> resolvePhysicalResources() {
-		if (leftResourceSet == null) {
+		if (localResourceSet == null) {
 			// FIXME throw exception of some kind
 		}
 		if (iResourcesInScope != null) {
@@ -301,7 +301,7 @@ public class EMFResourceMapping extends ResourceMapping {
 
 		iResourcesInScope = Sets.newLinkedHashSet();
 
-		for (Resource eResource : leftResourceSet.getResources()) {
+		for (Resource eResource : localResourceSet.getResources()) {
 			if (eResource == emfResource) {
 				iResourcesInScope.add(file);
 			} else {
@@ -312,8 +312,8 @@ public class EMFResourceMapping extends ResourceMapping {
 			}
 		}
 
-		if (rightResourceSet != null) {
-			for (Resource eResource : rightResourceSet.getResources()) {
+		if (remoteResourceSet != null) {
+			for (Resource eResource : remoteResourceSet.getResources()) {
 				IResource iResource = ResourceUtil.findIResource(eResource);
 				if (iResource != null) {
 					iResourcesInScope.add(iResource);
@@ -348,7 +348,7 @@ public class EMFResourceMapping extends ResourceMapping {
 			}
 		}
 		if (!resolved) {
-			EcoreUtil.resolveAll(leftResourceSet);
+			EcoreUtil.resolveAll(localResourceSet);
 		}
 	}
 
