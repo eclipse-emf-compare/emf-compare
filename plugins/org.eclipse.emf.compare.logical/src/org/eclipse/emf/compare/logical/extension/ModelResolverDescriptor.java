@@ -12,15 +12,12 @@ package org.eclipse.emf.compare.logical.extension;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.core.runtime.content.IContentTypeManager;
-import org.eclipse.emf.compare.util.ModelIdentifier;
+import org.eclipse.emf.compare.internal.ModelIdentifier;
 
 /**
  * Describes a extension as contributed to the "org.eclipse.emf.compare.modelResolver" extension point.
  * 
- * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ModelResolverDescriptor {
 	/** Name of the attribute holding the {@link IModelResolver} qualified names. */
@@ -37,11 +34,6 @@ public class ModelResolverDescriptor {
 
 	/** This attribute is common to the "enablement" tags : fileExtension, contentType, namespace. */
 	public static final String ENABLEMENT_TAG_VALUE = "value"; //$NON-NLS-1$
-
-	/**
-	 * This can be used by plugin developers to define a model resolver that applies on "all" file extensions.
-	 */
-	public static final String EXTENSIONS_WILDCARD = "*"; //$NON-NLS-1$
 
 	/** All of our "enablement" tags accept comma-separated values. */
 	public static final String VALUE_SEPARATOR = ","; //$NON-NLS-1$
@@ -132,33 +124,22 @@ public class ModelResolverDescriptor {
 	 *         identifier, <code>false</code> otherwise.
 	 */
 	public boolean canResolve(ModelIdentifier identifier) {
-		/*
-		 * Note that a given model resolver can only have a single one of file extension, namespace or content
-		 * type defined
-		 */
-		boolean canResolve = false;
-		if (fileExtension != null) {
-			String[] validExtensions = fileExtension.split(VALUE_SEPARATOR);
-			for (String validExtension : validExtensions) {
-				canResolve = identifier.getExtension().equals(validExtension.trim())
-						|| EXTENSIONS_WILDCARD.equals(validExtension.trim());
-			}
-		} else if (contentType != null) {
-			String[] validContentTypes = contentType.split(VALUE_SEPARATOR);
-			IContentTypeManager ctManager = Platform.getContentTypeManager();
-			for (int i = 0; i < validContentTypes.length && !canResolve; i++) {
-				IContentType expected = ctManager.getContentType(validContentTypes[i].trim());
-				IContentType actual = ctManager.getContentType(identifier.getContentType());
-				if (expected != null && actual != null) {
-					canResolve = actual.isKindOf(expected);
-				}
-			}
-		} else if (namespace != null) {
-			String[] validNamespaces = namespace.split(VALUE_SEPARATOR);
-			for (String validNamespace : validNamespaces) {
-				canResolve = identifier.getNamespace().matches(validNamespace.trim());
-			}
+		boolean canResolve = identifier.matchExtension(fileExtension);
+		if (!canResolve) {
+			canResolve = identifier.matchNamespace(namespace);
 		}
+		// FIXME how to handle content types while keeping the core standalone?
+		// if (contentType != null) {
+		// String[] validContentTypes = contentType.split(VALUE_SEPARATOR);
+		// IContentTypeManager ctManager = Platform.getContentTypeManager();
+		// for (int i = 0; i < validContentTypes.length && !canResolve; i++) {
+		// IContentType expected = ctManager.getContentType(validContentTypes[i].trim());
+		// IContentType actual = ctManager.getContentType(identifier.getContentType());
+		// if (expected != null && actual != null) {
+		// canResolve = actual.isKindOf(expected);
+		// }
+		// }
+		// }
 		return canResolve;
 	}
 }

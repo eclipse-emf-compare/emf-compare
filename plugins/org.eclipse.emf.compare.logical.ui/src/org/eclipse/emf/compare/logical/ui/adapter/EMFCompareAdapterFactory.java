@@ -10,16 +10,14 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.logical.ui.adapter;
 
-import java.io.IOException;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.emf.compare.logical.internal.utils.ResourceUtil;
 import org.eclipse.emf.compare.logical.model.EMFModelProvider;
 import org.eclipse.emf.compare.logical.model.EMFResourceMapping;
 import org.eclipse.emf.compare.logical.ui.synchronize.EMFCompareSynchronizationAdapter;
-import org.eclipse.emf.compare.util.EclipseModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -87,7 +85,7 @@ public class EMFCompareAdapterFactory implements IAdapterFactory {
 	 */
 	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList() {
-		return new Class[] {ISynchronizationCompareAdapter.class,};
+		return new Class[] {ISynchronizationCompareAdapter.class, };
 	}
 
 	/**
@@ -97,7 +95,7 @@ public class EMFCompareAdapterFactory implements IAdapterFactory {
 	 *            The EObject for which we need a resource mapping.
 	 * @return The resource mapping if it could be created, <code>null</code> otherwise.
 	 */
-	private ResourceMapping createResourceMapping(EObject eObject) {
+	private static ResourceMapping createResourceMapping(EObject eObject) {
 		Resource eResource = eObject.eResource();
 		if (eResource != null) {
 			return createResourceMapping(eResource);
@@ -112,8 +110,8 @@ public class EMFCompareAdapterFactory implements IAdapterFactory {
 	 *            The EMF Resource for which we need a resource mapping.
 	 * @return The resource mapping if it could be created, <code>null</code> otherwise.
 	 */
-	private ResourceMapping createResourceMapping(Resource eResource) {
-		IResource iResource = EclipseModelUtils.findIResource(eResource);
+	private static ResourceMapping createResourceMapping(Resource eResource) {
+		IResource iResource = ResourceUtil.findIResource(eResource);
 		if (iResource instanceof IFile) {
 			// We'll use our own Resource Set to resolve the logical model
 			ResourceSet resourceSet = new ResourceSetImpl();
@@ -130,14 +128,10 @@ public class EMFCompareAdapterFactory implements IAdapterFactory {
 	 *            The IFile for which we need a resource mapping.
 	 * @return The resource mapping if it could be created, <code>null</code> otherwise.
 	 */
-	private ResourceMapping createResourceMapping(IFile iFile) {
+	private static ResourceMapping createResourceMapping(IFile iFile) {
 		if (iFile.exists() && iFile.isAccessible()) {
-			Resource eResource = null;
-			try {
-				eResource = EclipseModelUtils.getResource(iFile, new ResourceSetImpl());
-			} catch (IOException e) {
-				// Will return 'null'
-			}
+			Resource eResource = ResourceUtil.loadResource(iFile);
+
 			if (eResource != null) {
 				return new EMFResourceMapping(iFile, eResource, EMFModelProvider.PROVIDER_ID);
 			}

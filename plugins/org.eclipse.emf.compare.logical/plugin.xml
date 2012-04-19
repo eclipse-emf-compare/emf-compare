@@ -17,15 +17,13 @@
             </adapt>
             <or>
                <test
-                     property="org.eclipse.emf.compare.contentType.contentTypeId"
-                     value="org.eclipse.emf.compare.ui.contenttype.ModelContentType">
-               </test>
-               <test
-                     property="org.eclipse.emf.compare.contentType.contentTypeId"
+                     args="kindOf"
+                     property="org.eclipse.core.resources.contentTypeId"
                      value="org.eclipse.emf.ecore">
                </test>
                <test
-                     property="org.eclipse.emf.compare.contentType.contentTypeId"
+                     args="kindOf"
+                     property="org.eclipse.core.resources.contentTypeId"
                      value="org.eclipse.emf.ecore.xmi">
                </test>
             </or>

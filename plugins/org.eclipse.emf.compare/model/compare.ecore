@@ -30,21 +30,6 @@
         </eAnnotations>
       </eParameters>
     </eOperations>
-    <eOperations name="addDiff">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Adds the given diff under the match corresponding to the given EObject."/>
-      </eAnnotations>
-      <eParameters name="element" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject">
-        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-          <details key="documentation" value="EObject on which we need to add a new difference."/>
-        </eAnnotations>
-      </eParameters>
-      <eParameters name="newDiff" eType="#//Diff">
-        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-          <details key="documentation" value="The difference we are to add to the comparison model."/>
-        </eAnnotations>
-      </eParameters>
-    </eOperations>
     <eOperations name="isThreeWay" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EBoolean">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Checks whether this comparison has been launched for three way comparison or if it only has two sides to compare."/>
@@ -68,6 +53,12 @@
         <details key="documentation" value="If we detected any conflict during the comparison process, this will contain them."/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="equivalences" upperBound="-1"
+        eType="#//Equivalence" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="If we detected any equivalence between diffs during the comparison process, this will contain them."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MatchResource">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -88,6 +79,24 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="originURI" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="This can be null in the case of two-way comparisons. If assigned, it will represent the URI of the origin resource for this mapping; the common ancestor of both others."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="left" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EResource"
+        transient="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Keeps a reference towards the left Resource of this Match. Might be null if this is a Comparison we have re-loaded from its serialized form and the left EResource could not be loaded."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="right" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EResource"
+        transient="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Keeps a reference towards the right Resource of this Match. Might be null if this is a Comparison we have re-loaded from its serialized form and the right EResource could not be loaded."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="origin" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EResource"
+        transient="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Keeps a reference towards the origin Resource of this Match. Might be null if this is a Comparison we have re-loaded from its serialized form and the origin EResource could not be loaded."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>

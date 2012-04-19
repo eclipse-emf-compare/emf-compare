@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.logical.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +22,7 @@ import org.eclipse.core.resources.mapping.ResourceMappingContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.common.util.WrappedException;
-import org.eclipse.emf.compare.util.EclipseModelUtils;
+import org.eclipse.emf.compare.logical.internal.utils.ResourceUtil;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -38,7 +36,7 @@ import org.eclipse.team.core.mapping.ISynchronizationContext;
  * be used to find all of these associated physical resources.
  * </p>
  * 
- * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class EMFModelProvider extends ModelProvider {
 	/** ID of this model provider. Must match the definition from the plugin.xml. */
@@ -90,7 +88,17 @@ public class EMFModelProvider extends ModelProvider {
 		 * fragment(s) are located in another folder.
 		 */
 		if (resource instanceof IFile && resource.exists() && resource.isAccessible()) {
-			return getMappings((IFile)resource, monitor);
+			final IFile file = (IFile)resource;
+			List<ResourceMapping> mappings = new ArrayList<ResourceMapping>();
+
+			// FIXME find a way to dispose of this resource set
+			final ResourceSet logicalResourceSet = new ResourceSetImpl();
+			final Resource eResource = ResourceUtil.loadResource(file, logicalResourceSet);
+			if (eResource != null) {
+				mappings.add(new EMFResourceMapping(file, eResource, PROVIDER_ID));
+			}
+
+			return mappings.toArray(new ResourceMapping[mappings.size()]);
 		}
 		return super.getMappings(resource, context, monitor);
 	}
@@ -105,40 +113,5 @@ public class EMFModelProvider extends ModelProvider {
 	public IStatus validateChange(IResourceDelta delta, IProgressMonitor monitor) {
 		// FIXME code this
 		return super.validateChange(delta, monitor);
-	}
-
-	/**
-	 * Return the {@link ResourceMapping}s that cover the given {@link IFile}.
-	 * 
-	 * @param file
-	 *            The file for which to determine mappings.
-	 * @param monitor
-	 *            A progress monitor, or <code>null</code> if progress reporting is not desired.
-	 * @return The {@link ResourceMapping}s that cover the given {@link IFile}.
-	 */
-	private ResourceMapping[] getMappings(IFile file, IProgressMonitor monitor) {
-		List<ResourceMapping> mappings = new ArrayList<ResourceMapping>();
-		// FIXME find a way to dispose of this resource set
-		try {
-			Resource resource = EclipseModelUtils.getResource(file, createLogicalModelResourceSet());
-			if (resource != null) {
-				mappings.add(new EMFResourceMapping(file, resource, PROVIDER_ID));
-			}
-		} catch (IOException e) {
-			// return an empty array
-		} catch (WrappedException e) {
-			// return an empty array
-		}
-		return mappings.toArray(new ResourceMapping[mappings.size()]);
-	}
-
-	/**
-	 * Creates the resource set that should be used to load this model's resources.
-	 * 
-	 * @return The resource set that should be used to load this model's resources.
-	 */
-	private ResourceSet createLogicalModelResourceSet() {
-		ResourceSet resourceSet = new ResourceSetImpl();
-		return resourceSet;
 	}
 }

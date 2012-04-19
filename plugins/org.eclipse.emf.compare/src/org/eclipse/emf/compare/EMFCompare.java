@@ -16,6 +16,7 @@ import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 
+// FIXME progress monitor!
 /**
  * This class provides various utility methods that can be used to call EMF Compare on various notifiers.
  * 

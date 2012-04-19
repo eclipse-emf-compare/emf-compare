@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.util.DelegatingURIConverter;
+import org.eclipse.emf.compare.utils.DelegatingURIConverter;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.team.core.RepositoryProvider;
 import org.eclipse.team.core.history.IFileHistory;
@@ -37,7 +37,7 @@ import org.eclipse.team.core.history.IFileRevision;
  * This {@link URIConverter} will be used in order to fetch remote contents instead of local contents when
  * loading resources.
  * 
- * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class RevisionedURIConverter extends DelegatingURIConverter {
 	/** The revision of the base resource. This revision's timestamp will be used to resolve proxies. */
@@ -87,6 +87,7 @@ public class RevisionedURIConverter extends DelegatingURIConverter {
 	 * @see org.eclipse.emf.compare.util.DelegatingURIConverter#createInputStream(org.eclipse.emf.common.util.URI,
 	 *      java.util.Map)
 	 */
+	@SuppressWarnings("resource")
 	@Override
 	public InputStream createInputStream(URI uri, Map<?, ?> options) throws IOException {
 		InputStream stream = null;
@@ -99,15 +100,15 @@ public class RevisionedURIConverter extends DelegatingURIConverter {
 			// Otherwise, load it from the repository (resource might not yet (or no longer) exist locally)
 			final IResource targetFile;
 			if (normalizedUri.isPlatform()) {
-				targetFile = ResourcesPlugin.getWorkspace().getRoot()
-						.getFile(new Path(normalizedUri.trimFragment().toPlatformString(true)));
+				targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
+						new Path(normalizedUri.trimFragment().toPlatformString(true)));
 			} else {
 				/*
 				 * FIXME Deresolve the URI against the workspace root, if it cannot be done, delegate to
 				 * super.createInputStream()
 				 */
-				targetFile = ResourcesPlugin.getWorkspace().getRoot()
-						.getFile(new Path(normalizedUri.trimFragment().toString()));
+				targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
+						new Path(normalizedUri.trimFragment().toString()));
 			}
 
 			if (targetFile != null) {
@@ -138,6 +139,7 @@ public class RevisionedURIConverter extends DelegatingURIConverter {
 	 *            The resource we seek a revision of.
 	 * @return The opened input stream. May be <code>null</code> if we failed to open it.
 	 */
+	@SuppressWarnings("resource")
 	private InputStream openRevisionStream(IResource targetFile) {
 		InputStream stream = null;
 		final RepositoryProvider repositoryProvider = RepositoryProvider.getProvider(targetFile.getProject());
@@ -173,7 +175,7 @@ public class RevisionedURIConverter extends DelegatingURIConverter {
 			}
 		}
 
-		if (stream != null && targetFile.exists()) {
+		if (stream == null && targetFile.exists()) {
 			// Either this file is not connected to a repository, or we failed to retrieve a revision.
 			// Search through local history.
 			try {

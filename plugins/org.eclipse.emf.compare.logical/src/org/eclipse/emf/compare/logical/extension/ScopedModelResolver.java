@@ -33,7 +33,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * Take note that this implementation is generic, and thus extremely costly.
  * </p>
  * 
- * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ScopedModelResolver implements IModelResolver {
 	/** Keeps track of the resources we've already walked up. */
@@ -63,13 +63,7 @@ public class ScopedModelResolver implements IModelResolver {
 		URI resourceURI = eResource.getURI();
 		Resource baseResource = temporaryResourceSet.getResource(resourceURI, false);
 		if (baseResource != null) {
-			EcoreUtil.CrossReferencer crossReferencer = new EcoreUtil.CrossReferencer(temporaryResourceSet) {
-				private static final long serialVersionUID = 1L;
-
-				{
-					crossReference();
-				}
-			};
+			EcoreUtil.CrossReferencer crossReferencer = new GreedyCrossReferencer(temporaryResourceSet);
 			Set<Resource> crossReferencingResources = findCrossReferencingResources(crossReferencer,
 					baseResource);
 
@@ -98,7 +92,7 @@ public class ScopedModelResolver implements IModelResolver {
 	 * 
 	 * @param iFile
 	 *            The file containing the "selected Resource" of
-	 * @return
+	 * @return The scope in which to seek for other "Resource" files related to the given iFile.
 	 */
 	protected IContainer getScope(IFile iFile) {
 		return iFile.getParent();
@@ -127,8 +121,8 @@ public class ScopedModelResolver implements IModelResolver {
 
 			Iterator<EObject> rootContent = root.eAllContents();
 			while (rootContent.hasNext()) {
-				crossReferencingResources.addAll(findCrossReferencingResources(crossReferencer,
-						rootContent.next()));
+				crossReferencingResources.addAll(findCrossReferencingResources(crossReferencer, rootContent
+						.next()));
 			}
 		}
 
@@ -169,5 +163,27 @@ public class ScopedModelResolver implements IModelResolver {
 		}
 
 		return crossReferencingResources;
+	}
+
+	/**
+	 * This implementation of a cross referencer will directly call {@link #crossReference()} at construction
+	 * time.
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
+	private final class GreedyCrossReferencer extends EcoreUtil.CrossReferencer {
+		/** Default SUID. */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Delegates to super and directly cross reference the resource set.
+		 * 
+		 * @param resourceSet
+		 *            The resource set we are to cross reference.
+		 */
+		public GreedyCrossReferencer(ResourceSet resourceSet) {
+			super(resourceSet);
+			crossReference();
+		}
 	}
 }

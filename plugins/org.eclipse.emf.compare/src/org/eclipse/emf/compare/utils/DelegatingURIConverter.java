@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.util;
+package org.eclipse.emf.compare.utils;
 
 import java.io.IOException;
 import java.io.InputStream;

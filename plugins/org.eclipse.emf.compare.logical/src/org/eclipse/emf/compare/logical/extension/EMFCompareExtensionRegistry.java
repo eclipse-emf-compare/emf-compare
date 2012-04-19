@@ -18,7 +18,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class EMFCompareExtensionRegistry {
+public final class EMFCompareExtensionRegistry {
 	/** List of all the model resolvers contributed through "org.eclipse.emf.compare.modelResolver". */
 	private static final List<ModelResolverDescriptor> MODEL_RESOLVERS = new ArrayList<ModelResolverDescriptor>();
 
@@ -31,7 +31,7 @@ public class EMFCompareExtensionRegistry {
 	 * Adds a model resolver to the registry.
 	 * 
 	 * @param modelResolver
-	 *            Model resolver that is to be added to its registry.
+	 *            Model resolver that is to be added to this registry.
 	 */
 	public static void addModelResolver(ModelResolverDescriptor modelResolver) {
 		MODEL_RESOLVERS.add(modelResolver);
@@ -39,7 +39,7 @@ public class EMFCompareExtensionRegistry {
 
 	/**
 	 * Removes all extensions from this registry. This will be called at plugin stopping and should never be
-	 * used.
+	 * used explicitly.
 	 * 
 	 * @noreference This method is not intended to be referenced by clients.
 	 */

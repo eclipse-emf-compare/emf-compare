@@ -9,11 +9,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.team.ui,
  org.eclipse.compare,
  org.eclipse.team.core,
- org.eclipse.ui.navigator,
- org.eclipse.emf.edit.ui,
- org.eclipse.emf.compare.diff,
- org.eclipse.emf.compare.ui,
- org.eclipse.emf.compare.logical
+ org.eclipse.emf.compare.logical,
+ org.eclipse.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %providerName

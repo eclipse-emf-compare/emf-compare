@@ -17,57 +17,7 @@
    <!--
       Providing the necessary content provider for the Synchronize view to display the EMF Compare team provider
    -->
-   <extension
-         point="org.eclipse.ui.navigator.viewer">
-      <viewerContentBinding 
-         viewerId="org.eclipse.team.ui.navigatorViewer">                     
-         <includes>                     
-            <contentExtension   
-               pattern="org.eclipse.emf.compare.navigator.extension" 
-               isRoot="true"/> 
-         </includes>   
-       </viewerContentBinding>   
-   </extension>
-   <extension
-         point="org.eclipse.team.ui.teamContentProviders">
-      <teamContentProvider
-            contentExtensionId="org.eclipse.emf.compare.navigator.extension"
-            modelProviderId="org.eclipse.emf.compare.model.provider">
-      </teamContentProvider>
-   </extension>
-   <extension
-         point="org.eclipse.ui.navigator.navigatorContent">
-      <navigatorContent
-            id="org.eclipse.emf.compare.navigator.extension"
-            contentProvider="org.eclipse.emf.compare.logical.ui.synchronize.EMFSynchronizationContentProvider"
-            labelProvider="org.eclipse.emf.compare.logical.ui.synchronize.EMFSynchronizationLabelProvider"
-            name="%syncProviderName">
-         <enablement>
-           <or>         
-            <instanceof value="org.eclipse.emf.compare.logical.model.EMFModelProvider"/>
-            <instanceof value="org.eclipse.team.core.mapping.ISynchronizationScope"/>
-            <instanceof value="org.eclipse.team.core.mapping.ISynchronizationContext"/> 
-           </or>
-         </enablement>
-       </navigatorContent>
-   </extension>
    <!--
       Providing the structure and content viewers that should be used with our Typed Element
    -->
-   <extension
-         point="org.eclipse.compare.structureMergeViewers">
-      <viewer
-            class="org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewerCreator"
-            extensions="EMF.TYPE"
-            id="org.eclipse.emf.compare.logical.ModelStructureMergeViewer"
-            label="%structureViewerLabel"/>
-   </extension>
-   <extension
-         point="org.eclipse.compare.contentMergeViewers">
-      <viewer
-            class="org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewerCreator"
-            extensions="EMF.TYPE"
-            id="org.eclipse.emf.compare.logical.ModelContentMergeViewer"
-            label="%contentViewerLabel"/>
-   </extension>
 </plugin>

@@ -20,19 +20,20 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
-import org.eclipse.emf.compare.util.EclipseModelUtils;
+import org.eclipse.emf.compare.logical.internal.utils.ResourceUtil;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
 /**
  * This implementation of a resource visitor will allow us to browse all models in a given hierarchy.
  * 
- * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ModelResourceVisitor implements IResourceVisitor {
 	/** Content types of the files to consider as potential parents. */
 	private static final String[] MODEL_CONTENT_TYPES = new String[] {
 			"org.eclipse.emf.compare.ui.contenttype.ModelContentType", "org.eclipse.emf.ecore", //$NON-NLS-1$ //$NON-NLS-2$
-			"org.eclipse.emf.ecore.xmi",}; //$NON-NLS-1$
+			"org.eclipse.emf.ecore.xmi", }; //$NON-NLS-1$
 
 	/** Resource Set in which we should load the temporary resources. */
 	private final ResourceSet resourceSet;
@@ -53,26 +54,29 @@ public class ModelResourceVisitor implements IResourceVisitor {
 	 * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
 	 */
 	public boolean visit(IResource resource) throws CoreException {
-		if (resource instanceof IFile) {
-			IFile file = (IFile)resource;
-			boolean isModel = false;
-			for (String contentType : MODEL_CONTENT_TYPES) {
-				if (hasContentType(file, contentType)) {
-					isModel = true;
-				}
-			}
-
-			if (isModel) {
-				try {
-					EclipseModelUtils.getResource(file, resourceSet);
-					return true;
-				} catch (IOException e) {
-					// will return false;
-				}
-			}
-			return false;
+		if (!(resource instanceof IFile)) {
+			return true;
 		}
-		return true;
+
+		IFile file = (IFile)resource;
+		boolean isModel = false;
+		for (int i = 0; i < MODEL_CONTENT_TYPES.length && !isModel; i++) {
+			isModel = hasContentType(file, MODEL_CONTENT_TYPES[i]);
+		}
+
+		boolean loaded = false;
+		if (isModel) {
+			// Do we already have this resource in the resource set?
+			final Resource eResource = ResourceUtil.loadResource(file, resourceSet);
+			loaded = eResource != null && eResource.getErrors().isEmpty();
+			if (!loaded && eResource != null) {
+				eResource.unload();
+				resourceSet.getResources().remove(eResource);
+			}
+		}
+
+		// Visit this resource only if it is a model that can be loaded
+		return loaded;
 	}
 
 	/**
@@ -86,7 +90,7 @@ public class ModelResourceVisitor implements IResourceVisitor {
 	 *            Fully qualified identifier of the content type this <em>resource</em> has to feature.
 	 * @return <code>true</code> if the given {@link IFile} has the given content type.
 	 */
-	private boolean hasContentType(IFile resource, String contentTypeId) {
+	private static boolean hasContentType(IFile resource, String contentTypeId) {
 		IContentTypeManager ctManager = Platform.getContentTypeManager();
 		IContentType expected = ctManager.getContentType(contentTypeId);
 		if (expected == null) {
@@ -107,7 +111,7 @@ public class ModelResourceVisitor implements IResourceVisitor {
 				try {
 					resourceContent.close();
 				} catch (IOException e) {
-					// would have already been caught by the outer try, leave the stream open
+					// would have already been caught by the outer try
 				}
 			}
 		}

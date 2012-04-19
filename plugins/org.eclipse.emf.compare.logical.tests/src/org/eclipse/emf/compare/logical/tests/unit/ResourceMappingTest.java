@@ -33,7 +33,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.logical.model.EMFModelProvider;
 import org.eclipse.emf.compare.logical.model.EMFResourceMapping;
-import org.eclipse.emf.compare.logical.synchronization.EMFModelDelta;
+import org.eclipse.emf.compare.logical.synchronization.EMFSynchronizationModel;
 import org.eclipse.emf.compare.logical.tests.mock.MockRemoteResourceMappingContext;
 import org.eclipse.emf.compare.logical.tests.mock.MockSynchronizationContext;
 import org.eclipse.emf.compare.logical.ui.EObjectTypedElement;
@@ -162,7 +162,7 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 					ISynchronizationContext synchronizationContext = new MockSynchronizationContext(mappings,
 							context, syncType);
 
-					EMFModelDelta delta = EMFModelDelta.createDelta(synchronizationContext, modelProvider
+					EMFSynchronizationModel delta = EMFSynchronizationModel.createModel(synchronizationContext, modelProvider
 							.getId(), new NullProgressMonitor());
 					assertNotNull(delta);
 
@@ -179,13 +179,13 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 						assertFalse(match.getLeftRoots().isEmpty());
 						for (EObject root : match.getLeftRoots()) {
 							Resource res = root.eResource();
-							assertContainsResourceWithURI(mapping.getLocalResourceSet(), res.getURI());
+							assertContainsResourceWithURI(mapping.getLeftResourceSet(), res.getURI());
 						}
 
 						assertFalse(match.getRightRoots().isEmpty());
 						for (EObject root : match.getRightRoots()) {
 							Resource res = root.eResource();
-							assertContainsResourceWithURI(mapping.getRemoteResourceSet(), res.getURI());
+							assertContainsResourceWithURI(mapping.getRightResourceSet(), res.getURI());
 						}
 
 						if (isThreeWay) {
@@ -195,7 +195,7 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 						}
 						for (EObject root : match.getAncestorRoots()) {
 							Resource res = root.eResource();
-							assertContainsResourceWithURI(mapping.getAncestorResourceSet(), res.getURI());
+							assertContainsResourceWithURI(mapping.getOriginResourceSet(), res.getURI());
 						}
 					}
 				} catch (CoreException e) {
@@ -346,9 +346,9 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 
 				EMFResourceMapping mapping = (EMFResourceMapping)mappings[0];
 
-				ResourceSet localResourceSet = mapping.getLocalResourceSet();
-				ResourceSet remoteResourceSet = mapping.getRemoteResourceSet();
-				ResourceSet ancestorResourceSet = mapping.getAncestorResourceSet();
+				ResourceSet localResourceSet = mapping.getLeftResourceSet();
+				ResourceSet remoteResourceSet = mapping.getRightResourceSet();
+				ResourceSet ancestorResourceSet = mapping.getOriginResourceSet();
 
 				if (context instanceof RemoteResourceMappingContext
 						&& ((RemoteResourceMappingContext)context).isThreeWay()) {

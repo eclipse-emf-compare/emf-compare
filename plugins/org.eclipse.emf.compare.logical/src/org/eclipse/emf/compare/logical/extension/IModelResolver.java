@@ -32,7 +32,8 @@ import org.eclipse.emf.ecore.resource.Resource;
  * <p>
  * This extension point will only be used in order to resolve the <b>local</b> resource set. When this is
  * done, we will determine which of the resolved resources is the root of the containment tree, and use it to
- * resolve the remote resource sets.
+ * resolve the remote resource sets. We assume that a model spanning three resources in the workspace won't
+ * span more than those three in the remote.
  * </p>
  * <p>
  * Take note that the very first model resolver which enablement is <code>true</code> for a given resource
@@ -43,7 +44,7 @@ import org.eclipse.emf.ecore.resource.Resource;
  * resource's containing project for cross referencing resources that would be part of its logical model.
  * </p>
  * 
- * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  * @see org.eclipse.emf.compare.logical.extension.ScopedModelResolver
  */
 public interface IModelResolver {

@@ -95,7 +95,7 @@ public class ModelResolverRegistryListener implements IRegistryEventListener {
 	 * @param extension
 	 *            Parses the given extension and adds its contribution to the registry.
 	 */
-	private void parseExtension(IExtension extension) {
+	private static void parseExtension(IExtension extension) {
 		final IConfigurationElement[] configElements = extension.getConfigurationElements();
 		for (IConfigurationElement element : configElements) {
 			if (MODEL_RESOLVER_TAG.equals(element.getName())) {
