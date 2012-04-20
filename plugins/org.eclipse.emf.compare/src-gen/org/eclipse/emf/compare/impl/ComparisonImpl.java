@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 
@@ -42,6 +43,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#getMatchedResources <em>Matched Resources</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#getMatches <em>Matches</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#getConflicts <em>Conflicts</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#getEquivalences <em>Equivalences</em>}</li>
  * </ul>
  * </p>
  *
@@ -84,6 +86,16 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 	 * @ordered
 	 */
 	protected EList<Conflict> conflicts;
+
+	/**
+	 * The cached value of the '{@link #getEquivalences() <em>Equivalences</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getEquivalences()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Equivalence> equivalences;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -148,6 +160,19 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Equivalence> getEquivalences() {
+		if (equivalences == null) {
+			equivalences = new EObjectContainmentEList<Equivalence>(Equivalence.class, this,
+					ComparePackage.COMPARISON__EQUIVALENCES);
+		}
+		return equivalences;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<Diff> getDifferences() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -181,17 +206,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void addDiff(EObject element, Diff newDiff) {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public boolean isThreeWay() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -212,6 +226,8 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 				return ((InternalEList<?>)getMatches()).basicRemove(otherEnd, msgs);
 			case ComparePackage.COMPARISON__CONFLICTS:
 				return ((InternalEList<?>)getConflicts()).basicRemove(otherEnd, msgs);
+			case ComparePackage.COMPARISON__EQUIVALENCES:
+				return ((InternalEList<?>)getEquivalences()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -230,6 +246,8 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 				return getMatches();
 			case ComparePackage.COMPARISON__CONFLICTS:
 				return getConflicts();
+			case ComparePackage.COMPARISON__EQUIVALENCES:
+				return getEquivalences();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -255,6 +273,10 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 				getConflicts().clear();
 				getConflicts().addAll((Collection<? extends Conflict>)newValue);
 				return;
+			case ComparePackage.COMPARISON__EQUIVALENCES:
+				getEquivalences().clear();
+				getEquivalences().addAll((Collection<? extends Equivalence>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -276,6 +298,9 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 			case ComparePackage.COMPARISON__CONFLICTS:
 				getConflicts().clear();
 				return;
+			case ComparePackage.COMPARISON__EQUIVALENCES:
+				getEquivalences().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -294,6 +319,8 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 				return matches != null && !matches.isEmpty();
 			case ComparePackage.COMPARISON__CONFLICTS:
 				return conflicts != null && !conflicts.isEmpty();
+			case ComparePackage.COMPARISON__EQUIVALENCES:
+				return equivalences != null && !equivalences.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

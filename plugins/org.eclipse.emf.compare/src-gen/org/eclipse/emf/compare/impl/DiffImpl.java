@@ -56,6 +56,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
+// Supressing warnings : generated code
+@SuppressWarnings("all")
 public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	/**
 	 * <!-- begin-user-doc -->
@@ -200,8 +202,8 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	 * @generated
 	 */
 	public NotificationChain basicSetMatch(Match newMatch, NotificationChain msgs) {
-		// not generated : happy compiler!
-		return eBasicSetContainer((InternalEObject)newMatch, ComparePackage.DIFF__MATCH, msgs);
+		msgs = eBasicSetContainer((InternalEObject)newMatch, ComparePackage.DIFF__MATCH, msgs);
+		return msgs;
 	}
 
 	/**
@@ -336,17 +338,15 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	public NotificationChain basicSetEquivalentDiffs(Equivalence newEquivalentDiffs, NotificationChain msgs) {
 		Equivalence oldEquivalentDiffs = equivalentDiffs;
 		equivalentDiffs = newEquivalentDiffs;
-		// not generated : happy compiler!
-		NotificationChain messages = msgs;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
 					ComparePackage.DIFF__EQUIVALENT_DIFFS, oldEquivalentDiffs, newEquivalentDiffs);
-			if (messages == null)
-				messages = notification;
+			if (msgs == null)
+				msgs = notification;
 			else
-				messages.add(notification);
+				msgs.add(notification);
 		}
-		return messages;
+		return msgs;
 	}
 
 	/**
@@ -406,17 +406,15 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	public NotificationChain basicSetConflict(Conflict newConflict, NotificationChain msgs) {
 		Conflict oldConflict = conflict;
 		conflict = newConflict;
-		// not generated : happy compiler!
-		NotificationChain messages = msgs;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
 					ComparePackage.DIFF__CONFLICT, oldConflict, newConflict);
-			if (messages == null)
-				messages = notification;
+			if (msgs == null)
+				msgs = notification;
 			else
-				messages.add(notification);
+				msgs.add(notification);
 		}
-		return messages;
+		return msgs;
 	}
 
 	/**
@@ -504,13 +502,11 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		// not generated : happy compiler!
-		NotificationChain messages = msgs;
 		switch (featureID) {
 			case ComparePackage.DIFF__MATCH:
 				if (eInternalContainer() != null)
-					messages = eBasicRemoveFromContainer(msgs);
-				return basicSetMatch((Match)otherEnd, messages);
+					msgs = eBasicRemoveFromContainer(msgs);
+				return basicSetMatch((Match)otherEnd, msgs);
 			case ComparePackage.DIFF__REQUIRES:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getRequires()).basicAdd(otherEnd,
 						msgs);
@@ -525,14 +521,14 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 						msgs);
 			case ComparePackage.DIFF__EQUIVALENT_DIFFS:
 				if (equivalentDiffs != null)
-					messages = ((InternalEObject)equivalentDiffs).eInverseRemove(this,
+					msgs = ((InternalEObject)equivalentDiffs).eInverseRemove(this,
 							ComparePackage.EQUIVALENCE__DIFFERENCES, Equivalence.class, msgs);
-				return basicSetEquivalentDiffs((Equivalence)otherEnd, messages);
+				return basicSetEquivalentDiffs((Equivalence)otherEnd, msgs);
 			case ComparePackage.DIFF__CONFLICT:
 				if (conflict != null)
-					messages = ((InternalEObject)conflict).eInverseRemove(this,
+					msgs = ((InternalEObject)conflict).eInverseRemove(this,
 							ComparePackage.CONFLICT__DIFFERENCES, Conflict.class, msgs);
-				return basicSetConflict((Conflict)otherEnd, messages);
+				return basicSetConflict((Conflict)otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}

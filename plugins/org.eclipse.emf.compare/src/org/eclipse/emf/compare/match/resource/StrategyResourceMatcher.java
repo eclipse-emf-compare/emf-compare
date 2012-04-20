@@ -15,6 +15,8 @@ import com.google.common.collect.Lists;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.compare.CompareFactory;
+import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.ecore.resource.Resource;
 
 /**
@@ -34,9 +36,9 @@ public class StrategyResourceMatcher implements IResourceMatcher {
 	 * @see org.eclipse.emf.compare.match.resource.IResourceMatcher#createMappings(java.util.Iterator,
 	 *      java.util.Iterator, java.util.Iterator)
 	 */
-	public Iterable<ResourceMapping> createMappings(Iterator<? extends Resource> leftResources,
+	public Iterable<MatchResource> createMappings(Iterator<? extends Resource> leftResources,
 			Iterator<? extends Resource> rightResources, Iterator<? extends Resource> originResources) {
-		final List<ResourceMapping> mappings;
+		final List<MatchResource> mappings;
 
 		// Copy the input Resource lists : we'll exhaust them as we go
 		final List<? extends Resource> leftCopy = Lists.newArrayList(leftResources);
@@ -49,7 +51,7 @@ public class StrategyResourceMatcher implements IResourceMatcher {
 			mappings = strategies[0].matchResources(leftCopy, rightCopy, originCopy);
 
 			// Remove all matched from the copies to leave only unmatched
-			for (ResourceMapping newMapping : mappings) {
+			for (MatchResource newMapping : mappings) {
 				leftCopy.remove(newMapping.getLeft());
 				rightCopy.remove(newMapping.getRight());
 				originCopy.remove(newMapping.getOrigin());
@@ -61,9 +63,9 @@ public class StrategyResourceMatcher implements IResourceMatcher {
 			// match remaining)
 			for (int i = 0; i < strategies.length
 					&& !atLeastTwo(leftCopy.isEmpty(), rightCopy.isEmpty(), originCopy.isEmpty()); i++) {
-				final List<ResourceMapping> newMappings = strategies[i].matchResources(leftCopy, rightCopy,
+				final List<MatchResource> newMappings = strategies[i].matchResources(leftCopy, rightCopy,
 						originCopy);
-				for (ResourceMapping newMapping : newMappings) {
+				for (MatchResource newMapping : newMappings) {
 					leftCopy.remove(newMapping.getLeft());
 					rightCopy.remove(newMapping.getRight());
 					originCopy.remove(newMapping.getOrigin());
@@ -76,13 +78,13 @@ public class StrategyResourceMatcher implements IResourceMatcher {
 		// each time we found a
 		// match, they only contain the remaining unmatch resources now.
 		for (Resource left : leftCopy) {
-			mappings.add(new ResourceMapping(left, null, null));
+			mappings.add(createMatchResource(left, null, null));
 		}
 		for (Resource right : rightCopy) {
-			mappings.add(new ResourceMapping(null, right, null));
+			mappings.add(createMatchResource(null, right, null));
 		}
 		for (Resource origin : originCopy) {
-			mappings.add(new ResourceMapping(null, null, origin));
+			mappings.add(createMatchResource(null, null, origin));
 		}
 
 		return mappings;
@@ -123,5 +125,36 @@ public class StrategyResourceMatcher implements IResourceMatcher {
 		final IResourceMatchingStrategy nameStrategy = new NameMatchingStrategy();
 		final IResourceMatchingStrategy idStrategy = new RootIDMatchingStrategy();
 		return new IResourceMatchingStrategy[] {nameStrategy, idStrategy, };
+	}
+
+	/**
+	 * Creates a {@link MatchResource} instance and sets all three resources of the mapping on it.
+	 * 
+	 * @param left
+	 *            The left resource of this mapping.
+	 * @param right
+	 *            The right resource of this mapping.
+	 * @param origin
+	 *            The origin resource of this mapping.
+	 * @return The create mapping.
+	 */
+	protected static MatchResource createMatchResource(Resource left, Resource right, Resource origin) {
+		final MatchResource match = CompareFactory.eINSTANCE.createMatchResource();
+
+		match.setLeft(left);
+		match.setRight(right);
+		match.setOrigin(origin);
+
+		if (left != null && left.getURI() != null) {
+			match.setLeftURI(left.getURI().toString());
+		}
+		if (right != null && right.getURI() != null) {
+			match.setRightURI(right.getURI().toString());
+		}
+		if (origin != null && origin.getURI() != null) {
+			match.setOriginURI(origin.getURI().toString());
+		}
+
+		return match;
 	}
 }

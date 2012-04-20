@@ -109,13 +109,22 @@ public interface ComparePackage extends EPackage {
 	int COMPARISON__CONFLICTS = 2;
 
 	/**
+	 * The feature id for the '<em><b>Equivalences</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPARISON__EQUIVALENCES = 3;
+
+	/**
 	 * The number of structural features of the '<em>Comparison</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMPARISON_FEATURE_COUNT = 3;
+	int COMPARISON_FEATURE_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.impl.MatchResourceImpl <em>Match Resource</em>}' class.
@@ -155,13 +164,40 @@ public interface ComparePackage extends EPackage {
 	int MATCH_RESOURCE__ORIGIN_URI = 2;
 
 	/**
+	 * The feature id for the '<em><b>Left</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MATCH_RESOURCE__LEFT = 3;
+
+	/**
+	 * The feature id for the '<em><b>Right</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MATCH_RESOURCE__RIGHT = 4;
+
+	/**
+	 * The feature id for the '<em><b>Origin</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MATCH_RESOURCE__ORIGIN = 5;
+
+	/**
 	 * The number of structural features of the '<em>Match Resource</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MATCH_RESOURCE_FEATURE_COUNT = 3;
+	int MATCH_RESOURCE_FEATURE_COUNT = 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.impl.MatchImpl <em>Match</em>}' class.
@@ -792,6 +828,17 @@ public interface ComparePackage extends EPackage {
 	EReference getComparison_Conflicts();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.compare.Comparison#getEquivalences <em>Equivalences</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Equivalences</em>'.
+	 * @see org.eclipse.emf.compare.Comparison#getEquivalences()
+	 * @see #getComparison()
+	 * @generated
+	 */
+	EReference getComparison_Equivalences();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.MatchResource <em>Match Resource</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -833,6 +880,39 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getMatchResource_OriginURI();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.MatchResource#getLeft <em>Left</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Left</em>'.
+	 * @see org.eclipse.emf.compare.MatchResource#getLeft()
+	 * @see #getMatchResource()
+	 * @generated
+	 */
+	EAttribute getMatchResource_Left();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.MatchResource#getRight <em>Right</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Right</em>'.
+	 * @see org.eclipse.emf.compare.MatchResource#getRight()
+	 * @see #getMatchResource()
+	 * @generated
+	 */
+	EAttribute getMatchResource_Right();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.MatchResource#getOrigin <em>Origin</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Origin</em>'.
+	 * @see org.eclipse.emf.compare.MatchResource#getOrigin()
+	 * @see #getMatchResource()
+	 * @generated
+	 */
+	EAttribute getMatchResource_Origin();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.Match <em>Match</em>}'.
@@ -1214,6 +1294,14 @@ public interface ComparePackage extends EPackage {
 		EReference COMPARISON__CONFLICTS = eINSTANCE.getComparison_Conflicts();
 
 		/**
+		 * The meta object literal for the '<em><b>Equivalences</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference COMPARISON__EQUIVALENCES = eINSTANCE.getComparison_Equivalences();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.impl.MatchResourceImpl <em>Match Resource</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1246,6 +1334,30 @@ public interface ComparePackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute MATCH_RESOURCE__ORIGIN_URI = eINSTANCE.getMatchResource_OriginURI();
+
+		/**
+		 * The meta object literal for the '<em><b>Left</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MATCH_RESOURCE__LEFT = eINSTANCE.getMatchResource_Left();
+
+		/**
+		 * The meta object literal for the '<em><b>Right</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MATCH_RESOURCE__RIGHT = eINSTANCE.getMatchResource_Right();
+
+		/**
+		 * The meta object literal for the '<em><b>Origin</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MATCH_RESOURCE__ORIGIN = eINSTANCE.getMatchResource_Origin();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.impl.MatchImpl <em>Match</em>}' class.

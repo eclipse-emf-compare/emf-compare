@@ -26,6 +26,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/matchedResources"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/matches"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/conflicts"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/equivalences"/>
       <genOperations ecoreOperation="compare.ecore#//Comparison/getDifferences"/>
       <genOperations ecoreOperation="compare.ecore#//Comparison/getDifferences.1">
         <genParameters ecoreParameter="compare.ecore#//Comparison/getDifferences.1/element"/>
@@ -33,16 +34,15 @@
       <genOperations ecoreOperation="compare.ecore#//Comparison/getMatch">
         <genParameters ecoreParameter="compare.ecore#//Comparison/getMatch/element"/>
       </genOperations>
-      <genOperations ecoreOperation="compare.ecore#//Comparison/addDiff">
-        <genParameters ecoreParameter="compare.ecore#//Comparison/addDiff/element"/>
-        <genParameters ecoreParameter="compare.ecore#//Comparison/addDiff/newDiff"/>
-      </genOperations>
       <genOperations ecoreOperation="compare.ecore#//Comparison/isThreeWay"/>
     </genClasses>
     <genClasses ecoreClass="compare.ecore#//MatchResource">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/leftURI"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/rightURI"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/originURI"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/left"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/right"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/origin"/>
     </genClasses>
     <genClasses ecoreClass="compare.ecore#//Match">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Match/submatches"/>

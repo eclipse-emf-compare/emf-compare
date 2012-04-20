@@ -53,8 +53,8 @@ public class EMFCompareSynchronizationAdapter extends SynchronizationCompareAdap
 	 */
 	@Override
 	public boolean hasCompareInput(ISynchronizationContext context, Object object) {
-		EMFSynchronizationModel delta = EMFSynchronizationModel.getModel(context);
-		return delta != null;
+		EMFSynchronizationModel model = EMFSynchronizationModel.getModel(context);
+		return model != null;
 	}
 
 	/**
@@ -65,8 +65,8 @@ public class EMFCompareSynchronizationAdapter extends SynchronizationCompareAdap
 	 */
 	@Override
 	public ICompareInput asCompareInput(ISynchronizationContext context, Object object) {
-		EMFSynchronizationModel delta = EMFSynchronizationModel.getModel(context);
-		if (delta == null) {
+		EMFSynchronizationModel model = EMFSynchronizationModel.getModel(context);
+		if (model == null) {
 			/*
 			 * We'll be here when using "Compare With" actions on a folder, then "open in compare editor" for
 			 * one of the files that are part of an EMF model.
@@ -82,20 +82,20 @@ public class EMFCompareSynchronizationAdapter extends SynchronizationCompareAdap
 					EMFModelProvider.cacheAdditionalMappings(context, additionalMappings);
 				}
 				initialize(context, new NullProgressMonitor());
-				delta = EMFSynchronizationModel.getModel(context);
+				model = EMFSynchronizationModel.getModel(context);
 			} catch (CoreException e) {
 				// FIXME log
 			}
 		}
 
 		ICompareInput input = null;
-		if (delta != null) {
+		if (model != null) {
 			if (object instanceof EObject) {
-				input = asCompareInput(context, delta, (EObject)object);
+				input = asCompareInput(context, model, (EObject)object);
 			} else if (object instanceof Resource) {
-				input = asCompareInput(context, delta, (Resource)object);
+				input = asCompareInput(context, model, (Resource)object);
 			} else {
-				input = asCompareInput(delta);
+				input = asCompareInput(model);
 			}
 		}
 		return input;

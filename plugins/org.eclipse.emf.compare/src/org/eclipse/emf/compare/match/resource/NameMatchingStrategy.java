@@ -15,6 +15,8 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.CompareFactory;
+import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.ecore.resource.Resource;
 
 /**
@@ -30,9 +32,9 @@ public class NameMatchingStrategy implements IResourceMatchingStrategy {
 	 * @see org.eclipse.emf.compare.match.resource.IResourceMatchingStrategy#matchResources(java.lang.Iterable,
 	 *      java.lang.Iterable, java.lang.Iterable)
 	 */
-	public List<ResourceMapping> matchResources(Iterable<? extends Resource> left,
+	public List<MatchResource> matchResources(Iterable<? extends Resource> left,
 			Iterable<? extends Resource> right, Iterable<? extends Resource> origin) {
-		final List<ResourceMapping> mappings = Lists.newArrayList();
+		final List<MatchResource> mappings = Lists.newArrayList();
 
 		final List<Resource> rightCopy = Lists.newArrayList(right);
 		final List<Resource> originCopy = Lists.newArrayList(origin);
@@ -45,7 +47,7 @@ public class NameMatchingStrategy implements IResourceMatchingStrategy {
 			if (matchingRight != null || matchingOrigin != null) {
 				rightCopy.remove(matchingRight);
 				originCopy.remove(matchingOrigin);
-				mappings.add(new ResourceMapping(leftResource, matchingRight, matchingOrigin));
+				mappings.add(createMatchResource(leftResource, matchingRight, matchingOrigin));
 			}
 		}
 
@@ -56,7 +58,7 @@ public class NameMatchingStrategy implements IResourceMatchingStrategy {
 			originCopy.remove(matchingOrigin);
 
 			if (matchingOrigin != null) {
-				mappings.add(new ResourceMapping(null, rightResource, matchingOrigin));
+				mappings.add(createMatchResource(null, rightResource, matchingOrigin));
 			}
 		}
 
@@ -83,5 +85,36 @@ public class NameMatchingStrategy implements IResourceMatchingStrategy {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Creates a {@link MatchResource} instance and sets all three resources of the mapping on it.
+	 * 
+	 * @param left
+	 *            The left resource of this mapping.
+	 * @param right
+	 *            The right resource of this mapping.
+	 * @param origin
+	 *            The origin resource of this mapping.
+	 * @return The create mapping.
+	 */
+	protected static MatchResource createMatchResource(Resource left, Resource right, Resource origin) {
+		final MatchResource match = CompareFactory.eINSTANCE.createMatchResource();
+
+		match.setLeft(left);
+		match.setRight(right);
+		match.setOrigin(origin);
+
+		if (left != null && left.getURI() != null) {
+			match.setLeftURI(left.getURI().toString());
+		}
+		if (right != null && right.getURI() != null) {
+			match.setRightURI(right.getURI().toString());
+		}
+		if (origin != null && origin.getURI() != null) {
+			match.setOriginURI(origin.getURI().toString());
+		}
+
+		return match;
 	}
 }

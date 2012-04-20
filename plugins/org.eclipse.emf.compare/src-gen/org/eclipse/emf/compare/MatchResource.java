@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 
 /**
  * <!-- begin-user-doc -->
@@ -27,6 +28,9 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.emf.compare.MatchResource#getLeftURI <em>Left URI</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.MatchResource#getRightURI <em>Right URI</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.MatchResource#getOriginURI <em>Origin URI</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.MatchResource#getLeft <em>Left</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.MatchResource#getRight <em>Right</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.MatchResource#getOrigin <em>Origin</em>}</li>
  * </ul>
  * </p>
  *
@@ -116,5 +120,80 @@ public interface MatchResource extends EObject {
 	 * @generated
 	 */
 	void setOriginURI(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Left</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Keeps a reference towards the left Resource of this Match. Might be null if this is a Comparison we have re-loaded from its serialized form and the left EResource could not be loaded.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Left</em>' attribute.
+	 * @see #setLeft(Resource)
+	 * @see org.eclipse.emf.compare.ComparePackage#getMatchResource_Left()
+	 * @model transient="true"
+	 * @generated
+	 */
+	Resource getLeft();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.MatchResource#getLeft <em>Left</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Left</em>' attribute.
+	 * @see #getLeft()
+	 * @generated
+	 */
+	void setLeft(Resource value);
+
+	/**
+	 * Returns the value of the '<em><b>Right</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Keeps a reference towards the right Resource of this Match. Might be null if this is a Comparison we have re-loaded from its serialized form and the right EResource could not be loaded.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Right</em>' attribute.
+	 * @see #setRight(Resource)
+	 * @see org.eclipse.emf.compare.ComparePackage#getMatchResource_Right()
+	 * @model transient="true"
+	 * @generated
+	 */
+	Resource getRight();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.MatchResource#getRight <em>Right</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Right</em>' attribute.
+	 * @see #getRight()
+	 * @generated
+	 */
+	void setRight(Resource value);
+
+	/**
+	 * Returns the value of the '<em><b>Origin</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Keeps a reference towards the origin Resource of this Match. Might be null if this is a Comparison we have re-loaded from its serialized form and the origin EResource could not be loaded.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Origin</em>' attribute.
+	 * @see #setOrigin(Resource)
+	 * @see org.eclipse.emf.compare.ComparePackage#getMatchResource_Origin()
+	 * @model transient="true"
+	 * @generated
+	 */
+	Resource getOrigin();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.MatchResource#getOrigin <em>Origin</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Origin</em>' attribute.
+	 * @see #getOrigin()
+	 * @generated
+	 */
+	void setOrigin(Resource value);
 
 } // MatchResource

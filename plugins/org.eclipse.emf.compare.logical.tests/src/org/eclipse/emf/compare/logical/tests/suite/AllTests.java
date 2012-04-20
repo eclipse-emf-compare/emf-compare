@@ -86,9 +86,19 @@ public class AllTests {
 		ecoreFolder.create(true, true, MONITOR);
 		for (String model : models) {
 			IFile modelFile = ecoreFolder.getFile(model);
-			InputStream modelInputStream = getModelInputStream(INPUT_FOLDER_NAME + '/' + folderName + '/'
-					+ model);
-			modelFile.create(modelInputStream, true, MONITOR);
+			InputStream stream = null;
+			try {
+				stream = getModelInputStream(INPUT_FOLDER_NAME + '/' + folderName + '/' + model);
+				modelFile.create(stream, true, MONITOR);
+			} finally {
+				if (stream != null) {
+					try {
+						stream.close();
+					} catch (IOException e) {
+						// Swallow this
+					}
+				}
+			}
 		}
 	}
 

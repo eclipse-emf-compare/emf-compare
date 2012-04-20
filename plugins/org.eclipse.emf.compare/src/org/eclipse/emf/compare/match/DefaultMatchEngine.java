@@ -23,7 +23,6 @@ import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
 import org.eclipse.emf.compare.match.eobject.IdentifierEObjectMatcher;
 import org.eclipse.emf.compare.match.resource.IResourceMatcher;
-import org.eclipse.emf.compare.match.resource.ResourceMapping;
 import org.eclipse.emf.compare.match.resource.StrategyResourceMatcher;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
@@ -62,7 +61,22 @@ public class DefaultMatchEngine implements IMatchEngine {
 			match((ResourceSet)left, (ResourceSet)right, (ResourceSet)origin);
 		} else if (left instanceof Resource || right instanceof Resource) {
 			// Our "roots" are Resources. Consider them matched
-			final MatchResource match = createMatchResource((Resource)left, (Resource)right, (Resource)origin);
+			final MatchResource match = CompareFactory.eINSTANCE.createMatchResource();
+
+			match.setLeft((Resource)left);
+			match.setRight((Resource)right);
+			match.setOrigin((Resource)origin);
+
+			if (left != null && ((Resource)left).getURI() != null) {
+				match.setLeftURI(((Resource)left).getURI().toString());
+			}
+			if (right != null && ((Resource)right).getURI() != null) {
+				match.setRightURI(((Resource)right).getURI().toString());
+			}
+			if (origin != null && ((Resource)origin).getURI() != null) {
+				match.setOriginURI(((Resource)origin).getURI().toString());
+			}
+
 			getComparison().getMatchedResources().add(match);
 			match((Resource)left, (Resource)right, (Resource)origin);
 		} else if (left instanceof EObject || right instanceof EObject) {
@@ -97,13 +111,11 @@ public class DefaultMatchEngine implements IMatchEngine {
 		}
 
 		final IResourceMatcher matcher = getResourceMatcher();
-		final Iterable<ResourceMapping> mappings = matcher.createMappings(leftChildren, rightChildren,
+		final Iterable<MatchResource> mappings = matcher.createMappings(leftChildren, rightChildren,
 				originChildren);
 
-		for (ResourceMapping mapping : mappings) {
-			final MatchResource matchResource = createMatchResource(mapping.getLeft(), mapping.getRight(),
-					mapping.getOrigin());
-			getComparison().getMatchedResources().add(matchResource);
+		for (MatchResource mapping : mappings) {
+			getComparison().getMatchedResources().add(mapping);
 
 			match(mapping.getLeft(), mapping.getRight(), mapping.getOrigin());
 		}
@@ -255,31 +267,5 @@ public class DefaultMatchEngine implements IMatchEngine {
 		// CHECKSTYLE:OFF This expression is alone in its method, and documented.
 		return condition1 && (condition2 || condition3) || (condition2 && condition3);
 		// CHECKSTYLE:ON
-	}
-
-	/**
-	 * This can be called to create a {@link MatchResource} for the given three resources. <b>Note </b> that
-	 * any of the arguments can be <code>null</code>.
-	 * 
-	 * @param left
-	 *            The left resource of this mapping. Can be <code>null</code>.
-	 * @param right
-	 *            The right resource of this mapping. Can be <code>null</code>.
-	 * @param origin
-	 *            The origin resource of this mapping. Can be <code>null</code>.
-	 * @return The newly created mapping.
-	 */
-	protected static MatchResource createMatchResource(Resource left, Resource right, Resource origin) {
-		final MatchResource matchResource = CompareFactory.eINSTANCE.createMatchResource();
-		if (left != null && left.getURI() != null) {
-			matchResource.setLeftURI(left.getURI().toString());
-		}
-		if (right != null && right.getURI() != null) {
-			matchResource.setRightURI(right.getURI().toString());
-		}
-		if (origin != null && origin.getURI() != null) {
-			matchResource.setOriginURI(origin.getURI().toString());
-		}
-		return matchResource;
 	}
 }

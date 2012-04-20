@@ -19,6 +19,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.compare.CompareFactory;
+import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.utils.SimilarityUtil;
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -40,9 +42,9 @@ public class NameSimilarityMatchingStrategy implements IResourceMatchingStrategy
 	 * @see org.eclipse.emf.compare.match.resource.IResourceMatchingStrategy#matchResources(java.lang.Iterable,
 	 *      java.lang.Iterable, java.lang.Iterable)
 	 */
-	public List<ResourceMapping> matchResources(Iterable<? extends Resource> left,
+	public List<MatchResource> matchResources(Iterable<? extends Resource> left,
 			Iterable<? extends Resource> right, Iterable<? extends Resource> origin) {
-		final List<ResourceMapping> mappings = Lists.newArrayList();
+		final List<MatchResource> mappings = Lists.newArrayList();
 
 		final Set<List<Resource>> productLR = cartesianProductOf(left, right);
 		final Set<List<Resource>> productLO = cartesianProductOf(left, origin);
@@ -74,7 +76,7 @@ public class NameSimilarityMatchingStrategy implements IResourceMatchingStrategy
 					originRes = sortedCoupleLO.getSecond();
 				}
 			}
-			mappings.add(new ResourceMapping(leftRes, rightRes, originRes));
+			mappings.add(createMatchResource(leftRes, rightRes, originRes));
 		}
 
 		/*
@@ -105,6 +107,37 @@ public class NameSimilarityMatchingStrategy implements IResourceMatchingStrategy
 		Set<T> set2 = Sets.newLinkedHashSet(iterable2);
 		List<Set<T>> input = ImmutableList.of(set1, set2);
 		return Sets.cartesianProduct(input);
+	}
+
+	/**
+	 * Creates a {@link MatchResource} instance and sets all three resources of the mapping on it.
+	 * 
+	 * @param left
+	 *            The left resource of this mapping.
+	 * @param right
+	 *            The right resource of this mapping.
+	 * @param origin
+	 *            The origin resource of this mapping.
+	 * @return The create mapping.
+	 */
+	protected static MatchResource createMatchResource(Resource left, Resource right, Resource origin) {
+		final MatchResource match = CompareFactory.eINSTANCE.createMatchResource();
+
+		match.setLeft(left);
+		match.setRight(right);
+		match.setOrigin(origin);
+
+		if (left != null && left.getURI() != null) {
+			match.setLeftURI(left.getURI().toString());
+		}
+		if (right != null && right.getURI() != null) {
+			match.setRightURI(right.getURI().toString());
+		}
+		if (origin != null && origin.getURI() != null) {
+			match.setOriginURI(origin.getURI().toString());
+		}
+
+		return match;
 	}
 
 	/**

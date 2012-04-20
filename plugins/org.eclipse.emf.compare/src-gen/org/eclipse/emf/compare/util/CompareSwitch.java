@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.emf.compare.ComparePackage
  * @generated
  */
+@SuppressWarnings("all")
 public class CompareSwitch<T> {
 	/**
 	 * <!-- begin-user-doc -->
@@ -79,10 +80,10 @@ public class CompareSwitch<T> {
 	protected T doSwitch(EClass theEClass, EObject theEObject) {
 		if (theEClass.eContainer() == modelPackage) {
 			return doSwitch(theEClass.getClassifierID(), theEObject);
+		} else {
+			List<EClass> eSuperTypes = theEClass.getESuperTypes();
+			return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch(eSuperTypes.get(0), theEObject);
 		}
-		// Not generated : happy compiler!
-		List<EClass> eSuperTypes = theEClass.getESuperTypes();
-		return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch(eSuperTypes.get(0), theEObject);
 	}
 
 	/**

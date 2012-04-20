@@ -89,6 +89,7 @@ public class ComparisonItemProvider extends ItemProviderAdapter implements IEdit
 			childrenFeatures.add(ComparePackage.Literals.COMPARISON__MATCHED_RESOURCES);
 			childrenFeatures.add(ComparePackage.Literals.COMPARISON__MATCHES);
 			childrenFeatures.add(ComparePackage.Literals.COMPARISON__CONFLICTS);
+			childrenFeatures.add(ComparePackage.Literals.COMPARISON__EQUIVALENCES);
 		}
 		return childrenFeatures;
 	}
@@ -143,6 +144,7 @@ public class ComparisonItemProvider extends ItemProviderAdapter implements IEdit
 			case ComparePackage.COMPARISON__MATCHED_RESOURCES:
 			case ComparePackage.COMPARISON__MATCHES:
 			case ComparePackage.COMPARISON__CONFLICTS:
+			case ComparePackage.COMPARISON__EQUIVALENCES:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true,
 						false));
 				return;
@@ -169,6 +171,9 @@ public class ComparisonItemProvider extends ItemProviderAdapter implements IEdit
 
 		newChildDescriptors.add(createChildParameter(ComparePackage.Literals.COMPARISON__CONFLICTS,
 				CompareFactory.eINSTANCE.createConflict()));
+
+		newChildDescriptors.add(createChildParameter(ComparePackage.Literals.COMPARISON__EQUIVALENCES,
+				CompareFactory.eINSTANCE.createEquivalence()));
 	}
 
 	/**

@@ -65,13 +65,11 @@
     -->
     
     <!-- Logical -->
-    <!-- Not compiling yet
     <module>../plugins/org.eclipse.emf.compare.logical</module>
     <module>../plugins/org.eclipse.emf.compare.logical.tests</module>
     <module>../plugins/org.eclipse.emf.compare.logical.ui</module>
     
     <module>../packaging/org.eclipse.emf.compare.logical-feature</module>
-    -->
     
     <!-- UML -->
     <!-- Not compiling yet

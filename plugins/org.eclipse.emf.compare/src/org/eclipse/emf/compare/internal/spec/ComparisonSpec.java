@@ -67,18 +67,6 @@ public class ComparisonSpec extends ComparisonImpl {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.impl.ComparisonImpl#addDiff(org.eclipse.emf.ecore.EObject,
-	 *      org.eclipse.emf.compare.Diff)
-	 */
-	@Override
-	public void addDiff(EObject element, Diff newDiff) {
-		final Match match = getMatch(element);
-		match.getDifferences().add(newDiff);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.emf.compare.impl.ComparisonImpl#getMatch(org.eclipse.emf.ecore.EObject)
 	 */
 	@Override

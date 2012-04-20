@@ -232,6 +232,15 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getComparison_Equivalences() {
+		return (EReference)comparisonEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getMatchResource() {
 		return matchResourceEClass;
 	}
@@ -261,6 +270,33 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 */
 	public EAttribute getMatchResource_OriginURI() {
 		return (EAttribute)matchResourceEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMatchResource_Left() {
+		return (EAttribute)matchResourceEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMatchResource_Right() {
+		return (EAttribute)matchResourceEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMatchResource_Origin() {
+		return (EAttribute)matchResourceEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -566,11 +602,15 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		createEReference(comparisonEClass, COMPARISON__MATCHED_RESOURCES);
 		createEReference(comparisonEClass, COMPARISON__MATCHES);
 		createEReference(comparisonEClass, COMPARISON__CONFLICTS);
+		createEReference(comparisonEClass, COMPARISON__EQUIVALENCES);
 
 		matchResourceEClass = createEClass(MATCH_RESOURCE);
 		createEAttribute(matchResourceEClass, MATCH_RESOURCE__LEFT_URI);
 		createEAttribute(matchResourceEClass, MATCH_RESOURCE__RIGHT_URI);
 		createEAttribute(matchResourceEClass, MATCH_RESOURCE__ORIGIN_URI);
+		createEAttribute(matchResourceEClass, MATCH_RESOURCE__LEFT);
+		createEAttribute(matchResourceEClass, MATCH_RESOURCE__RIGHT);
+		createEAttribute(matchResourceEClass, MATCH_RESOURCE__ORIGIN);
 
 		matchEClass = createEClass(MATCH);
 		createEReference(matchEClass, MATCH__SUBMATCHES);
@@ -667,6 +707,11 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 				this.getConflict(),
 				null,
 				"conflicts", null, 0, -1, Comparison.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getComparison_Equivalences(),
+				this.getEquivalence(),
+				null,
+				"equivalences", null, 0, -1, Comparison.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		addEOperation(comparisonEClass, this.getDiff(), "getDifferences", 0, -1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
@@ -676,10 +721,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 		op = addEOperation(comparisonEClass, this.getMatch(), "getMatch", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 		addEParameter(op, theEcorePackage.getEObject(), "element", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
-
-		op = addEOperation(comparisonEClass, null, "addDiff", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
-		addEParameter(op, theEcorePackage.getEObject(), "element", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
-		addEParameter(op, this.getDiff(), "newDiff", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
 		addEOperation(comparisonEClass, theEcorePackage.getEBoolean(),
 				"isThreeWay", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
@@ -698,6 +739,18 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 				getMatchResource_OriginURI(),
 				ecorePackage.getEString(),
 				"originURI", null, 0, 1, MatchResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getMatchResource_Left(),
+				theEcorePackage.getEResource(),
+				"left", null, 0, 1, MatchResource.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getMatchResource_Right(),
+				theEcorePackage.getEResource(),
+				"right", null, 0, 1, MatchResource.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getMatchResource_Origin(),
+				theEcorePackage.getEResource(),
+				"origin", null, 0, 1, MatchResource.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(matchEClass, Match.class,
 				"Match", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$

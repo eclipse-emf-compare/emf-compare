@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -22,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.mapping.ModelProvider;
 import org.eclipse.core.resources.mapping.RemoteResourceMappingContext;
@@ -36,9 +38,7 @@ import org.eclipse.emf.compare.logical.model.EMFResourceMapping;
 import org.eclipse.emf.compare.logical.synchronization.EMFSynchronizationModel;
 import org.eclipse.emf.compare.logical.tests.mock.MockRemoteResourceMappingContext;
 import org.eclipse.emf.compare.logical.tests.mock.MockSynchronizationContext;
-import org.eclipse.emf.compare.logical.ui.EObjectTypedElement;
 import org.eclipse.emf.compare.logical.ui.synchronize.EMFCompareSynchronizationAdapter;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.team.core.mapping.ISynchronizationContext;
@@ -147,7 +147,7 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 					new MockRemoteResourceMappingContext(), new MockRemoteResourceMappingContext(true), };
 			for (ResourceMappingContext context : contexts) {
 				try {
-					ResourceMapping[] mappings = modelProvider.getMappings(iResource, context,
+					final ResourceMapping[] mappings = modelProvider.getMappings(iResource, context,
 							new NullProgressMonitor());
 
 					final boolean isThreeWay = context instanceof RemoteResourceMappingContext
@@ -159,43 +159,46 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 						syncType = ISynchronizationContext.TWO_WAY;
 					}
 
-					ISynchronizationContext synchronizationContext = new MockSynchronizationContext(mappings,
-							context, syncType);
+					final ISynchronizationContext synchronizationContext = new MockSynchronizationContext(
+							mappings, context, syncType);
 
-					EMFSynchronizationModel delta = EMFSynchronizationModel.createModel(synchronizationContext, modelProvider
-							.getId(), new NullProgressMonitor());
-					assertNotNull(delta);
-
-					ComparisonSnapshot snapshot = delta.getComparisonSnapshot();
-					assertNotNull(snapshot);
-					assertTrue(snapshot instanceof ComparisonResourceSetSnapshot);
+					final EMFSynchronizationModel model = EMFSynchronizationModel.createModel(
+							synchronizationContext, modelProvider.getId(), new NullProgressMonitor());
+					assertNotNull(model);
 
 					// Our mock context provides identical resources for local, remote and ancestor.
-					ComparisonResourceSetSnapshot resourceSetSnapshot = (ComparisonResourceSetSnapshot)snapshot;
-					assertTrue(0 == resourceSetSnapshot.getDiffResourceSet().getSubchanges());
+					final ResourceSet leftResourceSet = model.getLeftResourceSet();
+					final ResourceSet rightResourceSet = model.getRightResourceSet();
+					final ResourceSet originResourceSet = model.getOriginResourceSet();
 
-					EMFResourceMapping mapping = (EMFResourceMapping)mappings[0];
-					for (MatchModel match : resourceSetSnapshot.getMatchResourceSet().getMatchModels()) {
-						assertFalse(match.getLeftRoots().isEmpty());
-						for (EObject root : match.getLeftRoots()) {
-							Resource res = root.eResource();
-							assertContainsResourceWithURI(mapping.getLocalResourceSet(), res.getURI());
-						}
+					assertNotNull(leftResourceSet);
+					assertNotNull(rightResourceSet);
+					if (isThreeWay) {
+						assertNotNull(originResourceSet);
+					} else {
+						assertNull(originResourceSet);
+					}
 
-						assertFalse(match.getRightRoots().isEmpty());
-						for (EObject root : match.getRightRoots()) {
-							Resource res = root.eResource();
-							assertContainsResourceWithURI(mapping.getRemoteResourceSet(), res.getURI());
-						}
+					final EMFResourceMapping mapping = (EMFResourceMapping)mappings[0];
+					assertSame(mapping.getLocalResourceSet(), leftResourceSet);
+					assertSame(mapping.getRemoteResourceSet(), rightResourceSet);
+					assertSame(mapping.getOriginResourceSet(), originResourceSet);
 
+					final ResourceTraversal traversal = mapping.getTraversals(context,
+							new NullProgressMonitor())[0];
+					assertTrue(traversal.getResources().length == leftResourceSet.getResources().size());
+					assertTrue(traversal.getResources().length == rightResourceSet.getResources().size());
+					if (isThreeWay) {
+						assertTrue(traversal.getResources().length == originResourceSet.getResources().size());
+					}
+
+					for (IResource resource : traversal.getResources()) {
+						final URI expectedURI = URI.createPlatformResourceURI(((IFile)resource).getFullPath()
+								.toString(), true);
+						assertContainsResourceWithURI(leftResourceSet, expectedURI);
+						assertContainsResourceWithURI(rightResourceSet, expectedURI);
 						if (isThreeWay) {
-							assertFalse(match.getAncestorRoots().isEmpty());
-						} else {
-							assertTrue(match.getAncestorRoots().isEmpty());
-						}
-						for (EObject root : match.getAncestorRoots()) {
-							Resource res = root.eResource();
-							assertContainsResourceWithURI(mapping.getOriginResourceSet(), res.getURI());
+							assertContainsResourceWithURI(originResourceSet, expectedURI);
 						}
 					}
 				} catch (CoreException e) {
@@ -254,15 +257,7 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 					ICompareInput compareInput = compareAdapter.asCompareInput(synchronizationContext,
 							iResource);
 
-					assertNotNull(compareInput);
-
-					assertEquals(EObjectTypedElement.EMF_TYPE, compareInput.getLeft().getType());
-					assertEquals(EObjectTypedElement.EMF_TYPE, compareInput.getRight().getType());
-					if (isThreeWay) {
-						assertEquals(EObjectTypedElement.EMF_TYPE, compareInput.getAncestor().getType());
-					} else {
-						assertNull(compareInput.getAncestor());
-					}
+					fail("code EMFCompareAdapter#asCompareInput");
 				} catch (CoreException e) {
 					fail("Couldn't create a compare input for '" + iResource + "' from the ResourceMapping."); //$NON-NLS-1$ //$NON-NLS-2$
 				}

@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.match.resource;
 
 import java.util.Iterator;
 
+import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.ecore.resource.Resource;
 
 /**
@@ -47,6 +48,6 @@ public interface IResourceMatcher {
 	 *            detected on the left and right sides.
 	 * @return The created resource mappings. Should include both matched and unmatched resources.
 	 */
-	Iterable<ResourceMapping> createMappings(Iterator<? extends Resource> leftResources,
+	Iterable<MatchResource> createMappings(Iterator<? extends Resource> leftResources,
 			Iterator<? extends Resource> rightResources, Iterator<? extends Resource> originResources);
 }

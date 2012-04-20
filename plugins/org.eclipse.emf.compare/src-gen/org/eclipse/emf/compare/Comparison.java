@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.emf.compare.Comparison#getMatchedResources <em>Matched Resources</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Comparison#getMatches <em>Matches</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Comparison#getConflicts <em>Conflicts</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Comparison#getEquivalences <em>Equivalences</em>}</li>
  * </ul>
  * </p>
  *
@@ -90,6 +91,21 @@ public interface Comparison extends EObject {
 	EList<Conflict> getConflicts();
 
 	/**
+	 * Returns the value of the '<em><b>Equivalences</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.emf.compare.Equivalence}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * If we detected any equivalence between diffs during the comparison process, this will contain them.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Equivalences</em>' containment reference list.
+	 * @see org.eclipse.emf.compare.ComparePackage#getComparison_Equivalences()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<Equivalence> getEquivalences();
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -123,19 +139,6 @@ public interface Comparison extends EObject {
 	 * @generated
 	 */
 	Match getMatch(EObject element);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Adds the given diff under the match corresponding to the given EObject.
-	 * @param element EObject on which we need to add a new difference.
-	 * @param newDiff The difference we are to add to the comparison model.
-	 * <!-- end-model-doc -->
-	 * @model
-	 * @generated
-	 */
-	void addDiff(EObject element, Diff newDiff);
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecore.resource.Resource;
 
 /**
  * <!-- begin-user-doc -->
@@ -30,6 +31,9 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link org.eclipse.emf.compare.impl.MatchResourceImpl#getLeftURI <em>Left URI</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.MatchResourceImpl#getRightURI <em>Right URI</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.MatchResourceImpl#getOriginURI <em>Origin URI</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.MatchResourceImpl#getLeft <em>Left</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.MatchResourceImpl#getRight <em>Right</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.MatchResourceImpl#getOrigin <em>Origin</em>}</li>
  * </ul>
  * </p>
  *
@@ -102,6 +106,66 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 	 * @ordered
 	 */
 	protected String originURI = ORIGIN_URI_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getLeft() <em>Left</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLeft()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Resource LEFT_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getLeft() <em>Left</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLeft()
+	 * @generated
+	 * @ordered
+	 */
+	protected Resource left = LEFT_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getRight() <em>Right</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getRight()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Resource RIGHT_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getRight() <em>Right</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getRight()
+	 * @generated
+	 * @ordered
+	 */
+	protected Resource right = RIGHT_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getOrigin() <em>Origin</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getOrigin()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Resource ORIGIN_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getOrigin() <em>Origin</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getOrigin()
+	 * @generated
+	 * @ordered
+	 */
+	protected Resource origin = ORIGIN_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -193,6 +257,72 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Resource getLeft() {
+		return left;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setLeft(Resource newLeft) {
+		Resource oldLeft = left;
+		left = newLeft;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ComparePackage.MATCH_RESOURCE__LEFT,
+					oldLeft, left));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Resource getRight() {
+		return right;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setRight(Resource newRight) {
+		Resource oldRight = right;
+		right = newRight;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ComparePackage.MATCH_RESOURCE__RIGHT,
+					oldRight, right));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Resource getOrigin() {
+		return origin;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setOrigin(Resource newOrigin) {
+		Resource oldOrigin = origin;
+		origin = newOrigin;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ComparePackage.MATCH_RESOURCE__ORIGIN,
+					oldOrigin, origin));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -202,6 +332,12 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 				return getRightURI();
 			case ComparePackage.MATCH_RESOURCE__ORIGIN_URI:
 				return getOriginURI();
+			case ComparePackage.MATCH_RESOURCE__LEFT:
+				return getLeft();
+			case ComparePackage.MATCH_RESOURCE__RIGHT:
+				return getRight();
+			case ComparePackage.MATCH_RESOURCE__ORIGIN:
+				return getOrigin();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -222,6 +358,15 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 				return;
 			case ComparePackage.MATCH_RESOURCE__ORIGIN_URI:
 				setOriginURI((String)newValue);
+				return;
+			case ComparePackage.MATCH_RESOURCE__LEFT:
+				setLeft((Resource)newValue);
+				return;
+			case ComparePackage.MATCH_RESOURCE__RIGHT:
+				setRight((Resource)newValue);
+				return;
+			case ComparePackage.MATCH_RESOURCE__ORIGIN:
+				setOrigin((Resource)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -244,6 +389,15 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 			case ComparePackage.MATCH_RESOURCE__ORIGIN_URI:
 				setOriginURI(ORIGIN_URI_EDEFAULT);
 				return;
+			case ComparePackage.MATCH_RESOURCE__LEFT:
+				setLeft(LEFT_EDEFAULT);
+				return;
+			case ComparePackage.MATCH_RESOURCE__RIGHT:
+				setRight(RIGHT_EDEFAULT);
+				return;
+			case ComparePackage.MATCH_RESOURCE__ORIGIN:
+				setOrigin(ORIGIN_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -263,6 +417,12 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 			case ComparePackage.MATCH_RESOURCE__ORIGIN_URI:
 				return ORIGIN_URI_EDEFAULT == null ? originURI != null : !ORIGIN_URI_EDEFAULT
 						.equals(originURI);
+			case ComparePackage.MATCH_RESOURCE__LEFT:
+				return LEFT_EDEFAULT == null ? left != null : !LEFT_EDEFAULT.equals(left);
+			case ComparePackage.MATCH_RESOURCE__RIGHT:
+				return RIGHT_EDEFAULT == null ? right != null : !RIGHT_EDEFAULT.equals(right);
+			case ComparePackage.MATCH_RESOURCE__ORIGIN:
+				return ORIGIN_EDEFAULT == null ? origin != null : !ORIGIN_EDEFAULT.equals(origin);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -284,6 +444,12 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 		result.append(rightURI);
 		result.append(", originURI: "); //$NON-NLS-1$
 		result.append(originURI);
+		result.append(", left: "); //$NON-NLS-1$
+		result.append(left);
+		result.append(", right: "); //$NON-NLS-1$
+		result.append(right);
+		result.append(", origin: "); //$NON-NLS-1$
+		result.append(origin);
 		result.append(')');
 		return result.toString();
 	}

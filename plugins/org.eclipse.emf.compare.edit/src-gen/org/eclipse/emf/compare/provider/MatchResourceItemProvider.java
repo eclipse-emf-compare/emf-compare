@@ -72,6 +72,9 @@ public class MatchResourceItemProvider extends ItemProviderAdapter implements IE
 			addLeftURIPropertyDescriptor(object);
 			addRightURIPropertyDescriptor(object);
 			addOriginURIPropertyDescriptor(object);
+			addLeftPropertyDescriptor(object);
+			addRightPropertyDescriptor(object);
+			addOriginPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -131,6 +134,60 @@ public class MatchResourceItemProvider extends ItemProviderAdapter implements IE
 	}
 
 	/**
+	 * This adds a property descriptor for the Left feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addLeftPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_MatchResource_left_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_MatchResource_left_feature", "_UI_MatchResource_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						ComparePackage.Literals.MATCH_RESOURCE__LEFT, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Right feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addRightPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_MatchResource_right_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_MatchResource_right_feature", "_UI_MatchResource_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						ComparePackage.Literals.MATCH_RESOURCE__RIGHT, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Origin feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addOriginPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_MatchResource_origin_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_MatchResource_origin_feature", "_UI_MatchResource_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						ComparePackage.Literals.MATCH_RESOURCE__ORIGIN, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
 	 * This returns MatchResource.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -169,6 +226,9 @@ public class MatchResourceItemProvider extends ItemProviderAdapter implements IE
 			case ComparePackage.MATCH_RESOURCE__LEFT_URI:
 			case ComparePackage.MATCH_RESOURCE__RIGHT_URI:
 			case ComparePackage.MATCH_RESOURCE__ORIGIN_URI:
+			case ComparePackage.MATCH_RESOURCE__LEFT:
+			case ComparePackage.MATCH_RESOURCE__RIGHT:
+			case ComparePackage.MATCH_RESOURCE__ORIGIN:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false,
 						true));
 				return;
