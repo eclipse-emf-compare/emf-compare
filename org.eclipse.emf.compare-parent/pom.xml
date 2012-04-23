@@ -371,60 +371,93 @@
       </plugin></plugins></build>
     </profile>
  
-
-	<profile>
-		<id>checkstyle</id>
-		<activation>
-			<activeByDefault>false</activeByDefault>
-		</activation>
-		<build>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-checkstyle-plugin</artifactId>
-					<version>2.6</version>
-					<executions>
-						<execution>
-							<id>check my sources</id>
-							<goals>
-								<goal>checkstyle</goal>
-							</goals>
-							<phase>verify</phase>
-							<configuration>
-								<failOnErrors>false</failOnErrors>
-								<consoleOutput>true</consoleOutput>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-		</build>
-	</profile>
-    
     <profile>
-      <id>coverage</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <modules>
-          <module>org.eclemma.runtime.equinox</module>
-      </modules>
+	    <id>quality</id>
+	    <activation>
+		    <activeByDefault>true</activeByDefault>
+	    </activation>
+	    <properties>
+		    <!-- Sonar properties -->
+		    <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+		    <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		    <!-- Points to the target folder of the global parent project -->
+		    <sonar.jacoco.reportPath>../../target/jacoco.exec</sonar.jacoco.reportPath>
+	    </properties>
+	    <build>
+		    <plugins>
+			    <plugin>
+				    <groupId>org.jacoco</groupId>
+				    <artifactId>jacoco-maven-plugin</artifactId>
+				    <version>0.5.6.201201232323</version>
+				    <executions>
+					    <execution>
+						    <goals>
+							    <goal>prepare-agent</goal>
+						    </goals>
+						    <configuration>
+							    <append>true</append>
+							    <destFile>${sonar.jacoco.reportPath}</destFile>
+						    </configuration>
+					    </execution>
+				    </executions>
+			    </plugin>
+		    </plugins>
+	    </build>
+    </profile>
+
+    <profile>
+	    <id>checkstyle</id>
+	    <activation>
+		    <activeByDefault>false</activeByDefault>
+	    </activation>
+	    <build>
+		    <plugins>
+			    <plugin>
+				    <groupId>org.apache.maven.plugins</groupId>
+				    <artifactId>maven-checkstyle-plugin</artifactId>
+				    <version>2.6</version>
+				    <executions>
+					    <execution>
+						    <id>check my sources</id>
+						    <goals>
+							    <goal>checkstyle</goal>
+						    </goals>
+						    <phase>verify</phase>
+						    <configuration>
+							    <failOnErrors>false</failOnErrors>
+							    <consoleOutput>true</consoleOutput>
+						    </configuration>
+					    </execution>
+				    </executions>
+			    </plugin>
+		    </plugins>
+	    </build>
+    </profile>
+
+    <profile>
+	    <id>coverage</id>
+	    <activation>
+		    <activeByDefault>false</activeByDefault>
+	    </activation>
+	    <modules>
+		    <module>org.eclemma.runtime.equinox</module>
+	    </modules>
     </profile>
     <profile>
-      <id>static-checks</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>findbugs-maven-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-pmd-plugin</artifactId>
-          </plugin>
-        </plugins>
-      </build>
+	    <id>static-checks</id>
+	    <build>
+		    <plugins>
+			    <plugin>
+				    <groupId>org.codehaus.mojo</groupId>
+				    <artifactId>findbugs-maven-plugin</artifactId>
+			    </plugin>
+			    <plugin>
+				    <groupId>org.apache.maven.plugins</groupId>
+				    <artifactId>maven-pmd-plugin</artifactId>
+			    </plugin>
+		    </plugins>
+	    </build>
     </profile>
   </profiles>
-  
+
 </project>
