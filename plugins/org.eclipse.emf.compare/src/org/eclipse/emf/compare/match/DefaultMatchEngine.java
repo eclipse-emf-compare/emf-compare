@@ -39,10 +39,10 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  */
 public class DefaultMatchEngine implements IMatchEngine {
 	/** Root of this comparison, should only be accessed or instantiated through {@link #getComparison()}. */
-	protected Comparison comparison;
+	private Comparison comparison;
 
 	/** The comparison scope that will be used by this engine. Should be accessed through {@link #getScope()}. */
-	protected IComparisonScope comparisonScope;
+	private IComparisonScope comparisonScope;
 
 	/**
 	 * {@inheritDoc}

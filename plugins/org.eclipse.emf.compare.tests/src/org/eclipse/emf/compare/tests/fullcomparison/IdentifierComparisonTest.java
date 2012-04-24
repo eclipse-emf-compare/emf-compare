@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  */
-package org.eclipse.emf.compare.tests.match;
+package org.eclipse.emf.compare.tests.fullcomparison;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -31,7 +31,7 @@ import org.eclipse.emf.compare.tests.framework.junit.annotation.BeforeMatch;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.DiffTest;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.MatchTest;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.UseCase;
-import org.eclipse.emf.compare.tests.match.data.identifier.IdentifierMatchInputData;
+import org.eclipse.emf.compare.tests.fullcomparison.data.identifier.IdentifierMatchInputData;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.runner.RunWith;
@@ -97,7 +97,8 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 	}
 
 	@DiffTest
-	public void testIdentifierDiffTest(IComparisonScope scope, Comparison comparison) {
+	public void testIdentifierDiffTest(@SuppressWarnings("unused") IComparisonScope scope,
+			Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// See file org.eclipse.emf.compare.tests.model.mock.CHANGES for the description of these

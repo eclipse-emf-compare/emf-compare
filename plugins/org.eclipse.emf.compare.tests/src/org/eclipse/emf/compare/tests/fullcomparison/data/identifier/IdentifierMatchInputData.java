@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  */
-package org.eclipse.emf.compare.tests.match.data.identifier;
+package org.eclipse.emf.compare.tests.fullcomparison.data.identifier;
 
 import java.io.IOException;
 
@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.resource.Resource;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
+@SuppressWarnings("nls")
 public class IdentifierMatchInputData extends AbstractInputData {
 	public Resource getExtlibraryLeft() throws IOException {
 		return loadFromClassloader("extlibraryLeft.ecore");

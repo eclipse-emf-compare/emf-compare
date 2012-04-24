@@ -1,0 +1,44 @@
+This will try and list all possible "conflict" cases that can happen in a model comparison.
+
+All of the following 4 categories apply to both "attribute" and "reference" changes
+
+1 - Left : Changing value of single-valued feature. Right : Deleting the containing element.
+	1.1 - Changing value "origin" to "left".
+	1.2 - Setting value to "left".
+	1.3 - Unsetting value.
+
+2 - Left : Changing value of single-valued feature. Right : Changing to another value the same single-valued feature.
+	2.1 - Left : Changing value "origin" to "left". Right : Changing value "origin" to "right".
+	2.2 - Left : Changing value "origin" to "left". Right : Unsetting value. 
+	2.3 - Left : Setting value to "left". Right : Setting value to "right".
+	2.4 - Left : Unsetting value. Right : changing value "origin" to "right".
+
+3 - Left : Changing value of multi-valued feature. Right : Deleting the containing element.
+	3.1 - Adding value "left1" to feature.
+	3.2 - Removing value "origin1" from feature.
+	3.3 - Setting value "left1" into empty feature.
+	3.4 - Clearing all values from feature.
+	3.5 - Moving value "origin1".
+
+4 - Left : Changing value of multi-valued feature. Right : Changing the same value in an incompatible way.
+	4.1 - Left : Removing value "origin1" from feature. Right : Moving value "origin1".
+	4.2 - Left : Moving value "origin1". Right : Removing value "origin1".
+	4.3 - Left : Moving value "origin1". Right : Moving value "origin1" to a different index.
+
+These only apply to reference changes
+
+5 - Adding reference towards deleted Notifier.
+	5.1 - Within single-valued reference.
+	5.2 - Within multi-valued reference.
+	
+6 - Changing containment feature of Notifier to two distinct features in left and right.
+7 - Changing container of Notifier to two distinct Notifiers in left and right.
+
+8 - Changing container of Notifier to a deleted Notifier.
+	8.1 - Within single-valued containment reference (refinement of case 1).
+	8.2 - Within multi-valued containment reference (refinement of case 3).
+
+Ecore specific?
+
+- Setting two different attributes as "idAttribute" in left and right.
+- Setting two distinct enum literals to the same "value" in left and right.

@@ -11,8 +11,12 @@
 package org.eclipse.emf.compare;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.compare.conflict.DefaultConflictDetector;
+import org.eclipse.emf.compare.conflict.IConflictDetector;
 import org.eclipse.emf.compare.diff.DefaultDiffEngine;
+import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
+import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 
@@ -77,12 +81,16 @@ public final class EMFCompare {
 	 */
 	public static Comparison compare(IComparisonScope scope) {
 		// TODO allow extension of the default match engine
-		final DefaultMatchEngine matchEngine = new DefaultMatchEngine();
+		final IMatchEngine matchEngine = new DefaultMatchEngine();
 		Comparison comparison = matchEngine.match(scope);
 
 		// TODO allow extension of the default diff engine
-		final DefaultDiffEngine diffEngine = new DefaultDiffEngine();
+		final IDiffEngine diffEngine = new DefaultDiffEngine();
 		diffEngine.diff(comparison);
+
+		// TODO allow extension of the default conflict detector
+		final IConflictDetector conflictDetector = new DefaultConflictDetector();
+		conflictDetector.detect(comparison);
 
 		return comparison;
 	}

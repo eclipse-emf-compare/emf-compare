@@ -71,6 +71,7 @@ public class ComparisonSpec extends ComparisonImpl {
 	 */
 	@Override
 	public Match getMatch(EObject element) {
+		// TODO use cross referencer
 		if (element == null) {
 			return null;
 		}
