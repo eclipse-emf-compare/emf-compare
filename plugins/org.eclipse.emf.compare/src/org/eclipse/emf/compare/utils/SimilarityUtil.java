@@ -73,8 +73,7 @@ public final class SimilarityUtil {
 				s2Bigrams.add(String.valueOf(chars));
 			}
 
-			Set<String> intersection = Sets.newHashSet(s1Bigrams);
-			intersection.retainAll(s2Bigrams);
+			Set<String> intersection = Sets.intersection(s1Bigrams, s2Bigrams);
 			coefficient = (2 * intersection.size()) / (s1Bigrams.size() + s2Bigrams.size());
 		}
 

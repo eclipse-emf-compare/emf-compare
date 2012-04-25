@@ -1,29 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="EMF Compare based on Juno with 4.2 Platform" sequenceNumber="28">
+<target name="EMF Compare based on Juno with 4.2 Platform" sequenceNumber="34">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="com.google.collect" version="1.0.0.v201003051000"/>
-<unit id="org.junit" version="4.8.1.v4_8_1_v20100427-1100"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/updateSite"/>
+<unit id="com.google.guava" version="10.0.1.v201203051515"/>
+<unit id="org.junit" version="4.8.2.v4_8_2_v20110321-1705"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20120308061416/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.papyrus.feature.group" version="0.8.2.v201111301839"/>
-<repository location="http://download.eclipse.org/modeling/mdt/papyrus/updates/nightly/indigo/"/>
-</location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.ecore.feature.group" version="2.8.0.v20111104-1437"/>
-<unit id="org.eclipse.emf.common.feature.group" version="2.8.0.v20111104-1437"/>
-<repository location="http://download.eclipse.org/releases/juno"/>
-</location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.uml2.sdk.feature.group" version="3.2.1.v201109082252"/>
-<repository location="http://download.eclipse.org/modeling/mdt/updates/releases/"/>
-</location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.platform.sdk" version="4.2.0.I20111130-1530"/>
+<unit id="org.eclipse.platform.sdk" version="4.2.0.I20120321-0610"/>
 <repository location="http://download.eclipse.org/eclipse/updates/4.2-I-builds"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jdt.feature.group" version="3.8.0.v20111130-1318-8-8lFpEFNOfwRe0lvGVLmVw9B15B"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.8.0.v20120319-0555"/>
+<repository location="http://download.eclipse.org/releases/juno"/>
 </location>
 </locations>
 </target>

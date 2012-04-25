@@ -17,7 +17,7 @@
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
             uri="http://www.eclipse.org/emf/compare"
-            class="org.eclipse.emf.compare.provider.CompareItemProviderAdapterFactory"
+            class="org.eclipse.emf.compare.provider.spec.CompareItemProviderAdapterFactorySpec"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
                org.eclipse.emf.edit.provider.IStructuredItemContentProvider
