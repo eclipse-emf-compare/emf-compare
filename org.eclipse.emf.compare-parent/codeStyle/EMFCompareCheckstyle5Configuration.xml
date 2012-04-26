@@ -14,6 +14,7 @@
     <module name="FileContentsHolder"/>
     <module name="JavadocMethod">
       <property name="severity" value="error"/>
+      <property name="allowUndeclaredRTE" value="true"/>
       <property name="allowMissingPropertyJavadoc" value="true"/>
       <property name="suppressLoadErrors" value="true"/>
     </module>
