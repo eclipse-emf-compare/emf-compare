@@ -13,82 +13,74 @@ package org.eclipse.emf.compare.provider.spec;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
-import org.eclipse.emf.edit.provider.IItemLabelProvider;
 
 /**
+ * Specialized {@link MatchItemProvider} returning nice output for {@link #getText(Object)} and
+ * {@link #getImage(Object)}.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class MatchItemProviderSpec extends MatchItemProvider {
 
 	/**
+	 * Constructor calling super {@link #MatchItemProvider(AdapterFactory)}.
+	 * 
 	 * @param adapterFactory
+	 *            the adapter factory
 	 */
 	public MatchItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.MatchItemProvider#getImage(java.lang.Object)
+	 */
 	@Override
 	public Object getImage(Object object) {
+		Object ret = null;
 		Match match = (Match)object;
 
-		AdapterFactory af = adapterFactory;
-		// If the adapter factory is composeable, we'll adapt using the root.
-		if (adapterFactory instanceof ComposeableAdapterFactory) {
-			af = ((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory();
+		AdapterFactory af = CompareItemProviderAdapterFactorySpec
+				.getRootAdapterFactoryIfComposeable(adapterFactory);
+
+		ret = CompareItemProviderAdapterFactorySpec.getImage(af, match.getLeft());
+
+		if (ret == null) {
+			ret = CompareItemProviderAdapterFactorySpec.getImage(af, match.getRight());
 		}
 
-		EObject left = match.getLeft();
-		if (left != null) {
-			Object adapter = af.adapt(left, IItemLabelProvider.class);
-			if (adapter instanceof IItemLabelProvider) {
-				return ((IItemLabelProvider)adapter).getImage(left);
-			}
+		if (ret == null) {
+			ret = super.getImage(object);
 		}
 
-		EObject right = match.getRight();
-		if (right != null) {
-			Object adapter = af.adapt(right, IItemLabelProvider.class);
-			if (adapter instanceof IItemLabelProvider) {
-				return ((IItemLabelProvider)adapter).getImage(right);
-			}
-		}
-
-		return super.getImage(object);
+		return ret;
 	}
 
 	/**
-	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * {@inheritDoc}
 	 * 
-	 * @generated
+	 * @see org.eclipse.emf.compare.provider.MatchItemProvider#getText(java.lang.Object)
 	 */
 	@Override
 	public String getText(Object object) {
+		String ret = null;
 		Match match = (Match)object;
 
-		AdapterFactory af = adapterFactory;
-		// If the adapter factory is composeable, we'll adapt using the root.
-		if (adapterFactory instanceof ComposeableAdapterFactory) {
-			af = ((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory();
+		AdapterFactory af = CompareItemProviderAdapterFactorySpec
+				.getRootAdapterFactoryIfComposeable(adapterFactory);
+
+		ret = CompareItemProviderAdapterFactorySpec.getText(af, match.getLeft());
+
+		if (ret == null) {
+			ret = CompareItemProviderAdapterFactorySpec.getText(af, match.getRight());
 		}
 
-		EObject left = match.getLeft();
-		if (left != null) {
-			Object adapter = af.adapt(left, IItemLabelProvider.class);
-			if (adapter instanceof IItemLabelProvider) {
-				return ((IItemLabelProvider)adapter).getText(left);
-			}
+		if (ret == null) {
+			ret = super.getText(object);
 		}
 
-		EObject right = match.getRight();
-		if (right != null) {
-			Object adapter = af.adapt(right, IItemLabelProvider.class);
-			if (adapter instanceof IItemLabelProvider) {
-				return ((IItemLabelProvider)adapter).getText(right);
-			}
-		}
-
-		return super.getText(object);
+		return ret;
 	}
 }
