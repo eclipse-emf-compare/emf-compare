@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.internal.ide.ui.contentmergeviewer;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IEditableContent;
-import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.IDiffContainer;
@@ -21,60 +20,75 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 
 /**
+ * An {@link IMergeViewerContentProvider} that delegates <code>getXXXImage(Object)</code> and
+ * <code>getXXXText()</code> to a {@link CompareConfiguration}.
+ * <p>
+ * <code>getXXXContent()</code> is computed by getting the side form the given object or from its parent if
+ * null, recursively.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class EMFCompareMergeViewerContentProvider implements IMergeViewerContentProvider {
+public class EObjectMergeViewerContentProvider implements IMergeViewerContentProvider {
 
-	public static final char ANCESTOR_CONTRIBUTOR = 'A';
+	/**
+	 * The stored {@link CompareConfiguration} to delegates most methods of this object.
+	 */
+	private final CompareConfiguration fCompareConfiguration;
 
-	public static final char RIGHT_CONTRIBUTOR = 'R';
-
-	public static final char LEFT_CONTRIBUTOR = 'L';
-
-	private CompareConfiguration fCompareConfiguration;
-
-	private String fAncestorError;
-
-	private String fLeftError;
-
-	private String fRightError;
-
-	public EMFCompareMergeViewerContentProvider(CompareConfiguration cc) {
+	/**
+	 * Creates a new {@link EObjectMergeViewerContentProvider} and stored the given
+	 * {@link CompareConfiguration}.
+	 * 
+	 * @param cc
+	 *            the {@link CompareConfiguration} that will be used to get label and image of left, right and
+	 *            ancestor.
+	 */
+	public EObjectMergeViewerContentProvider(CompareConfiguration cc) {
 		fCompareConfiguration = cc;
 	}
 
-	private boolean hasError() {
-		return fAncestorError != null || fLeftError != null || fRightError != null;
-	}
-
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+	 */
 	public void dispose() {
 		// empty default implementation
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
+	 *      java.lang.Object, java.lang.Object)
+	 */
 	public void inputChanged(Viewer v, Object o1, Object o2) {
 		// we are not interested since we have no state
 	}
 
-	// ---- ancestor
-
-	public void setAncestorError(String errorMessage) {
-		fAncestorError = errorMessage;
-	}
-
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getAncestorLabel(java.lang.Object)
+	 */
 	public String getAncestorLabel(Object element) {
-		if (fAncestorError != null) {
-			return fAncestorError;
-		}
 		return fCompareConfiguration.getAncestorLabel(element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getAncestorImage(java.lang.Object)
+	 */
 	public Image getAncestorImage(Object element) {
-		if (fAncestorError != null) {
-			return null;
-		}
 		return fCompareConfiguration.getAncestorImage(element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getAncestorContent(java.lang.Object)
+	 */
 	public Object getAncestorContent(Object element) {
 		if (element instanceof ICompareInput) {
 			ICompareInput compareInput = (ICompareInput)element;
@@ -89,6 +103,11 @@ public class EMFCompareMergeViewerContentProvider implements IMergeViewerContent
 		return null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#showAncestor(java.lang.Object)
+	 */
 	public boolean showAncestor(Object element) {
 		if (element instanceof ICompareInput) {
 			return true; // fix for #45239: Show ancestor for incoming and outgoing changes
@@ -98,26 +117,29 @@ public class EMFCompareMergeViewerContentProvider implements IMergeViewerContent
 		return false;
 	}
 
-	// ---- left
-
-	public void setLeftError(String errorMessage) {
-		fLeftError = errorMessage;
-	}
-
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getLeftLabel(java.lang.Object)
+	 */
 	public String getLeftLabel(Object element) {
-		if (fLeftError != null) {
-			return fLeftError;
-		}
 		return fCompareConfiguration.getLeftLabel(element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getLeftImage(java.lang.Object)
+	 */
 	public Image getLeftImage(Object element) {
-		if (fLeftError != null) {
-			return null;
-		}
 		return fCompareConfiguration.getLeftImage(element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getLeftContent(java.lang.Object)
+	 */
 	public Object getLeftContent(Object element) {
 		if (element instanceof ICompareInput) {
 			ICompareInput compareInput = (ICompareInput)element;
@@ -132,65 +154,59 @@ public class EMFCompareMergeViewerContentProvider implements IMergeViewerContent
 		return null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#isLeftEditable(java.lang.Object)
+	 */
 	public boolean isLeftEditable(Object element) {
-		if (hasError()) {
-			return false;
+		boolean ret = false;
+		Object left = getLeftContent(element);
+		if (left instanceof IEditableContent) {
+			ret = ((IEditableContent)left).isEditable();
 		}
-		if (element instanceof ICompareInput) {
-			Object left = ((ICompareInput)element).getLeft();
-			if (left == null && element instanceof IDiffElement) {
-				IDiffElement parent = ((IDiffElement)element).getParent();
-				if (parent instanceof ICompareInput) {
-					left = ((ICompareInput)parent).getLeft();
-				}
-			}
-			if (left instanceof IEditableContent) {
-				return ((IEditableContent)left).isEditable();
-			}
-		}
-		return false;
+		return ret;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#saveLeftContent(java.lang.Object,
+	 *      byte[])
+	 */
 	public void saveLeftContent(Object element, byte[] bytes) {
 		if (element instanceof ICompareInput) {
 			ICompareInput node = (ICompareInput)element;
 			if (bytes != null) {
-				ITypedElement left = node.getLeft();
-				// #9869: problem if left is null (because no resource exists yet) nothing is done!
-				if (left == null) {
-					node.copy(false);
-					left = node.getLeft();
-				}
-				if (left instanceof IEditableContent) {
-					((IEditableContent)left).setContent(bytes);
-				}
-
-			} else {
-				node.copy(false);
+				throw new IllegalStateException("Can not saveLeftContent() with byte[]");
 			}
+			node.copy(false);
 		}
 	}
 
-	// ---- right
-
-	public void setRightError(String errorMessage) {
-		fRightError = errorMessage;
-	}
-
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getRightLabel(java.lang.Object)
+	 */
 	public String getRightLabel(Object element) {
-		if (fRightError != null) {
-			return fRightError;
-		}
 		return fCompareConfiguration.getRightLabel(element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getRightImage(java.lang.Object)
+	 */
 	public Image getRightImage(Object element) {
-		if (fRightError != null) {
-			return null;
-		}
 		return fCompareConfiguration.getRightImage(element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getRightContent(java.lang.Object)
+	 */
 	public Object getRightContent(Object element) {
 		if (element instanceof ICompareInput) {
 			ICompareInput compareInput = (ICompareInput)element;
@@ -205,10 +221,12 @@ public class EMFCompareMergeViewerContentProvider implements IMergeViewerContent
 		return null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#isRightEditable(java.lang.Object)
+	 */
 	public boolean isRightEditable(Object element) {
-		if (hasError()) {
-			return false;
-		}
 		if (element instanceof ICompareInput) {
 			Object right = ((ICompareInput)element).getRight();
 			if (right == null && element instanceof IDiffElement) {
@@ -224,23 +242,19 @@ public class EMFCompareMergeViewerContentProvider implements IMergeViewerContent
 		return false;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#saveRightContent(java.lang.Object,
+	 *      byte[])
+	 */
 	public void saveRightContent(Object element, byte[] bytes) {
 		if (element instanceof ICompareInput) {
 			ICompareInput node = (ICompareInput)element;
 			if (bytes != null) {
-				ITypedElement right = node.getRight();
-				// #9869: problem if right is null (because no resource exists yet) nothing is done!
-				if (right == null) {
-					node.copy(true);
-					right = node.getRight();
-				}
-				if (right instanceof IEditableContent) {
-					((IEditableContent)right).setContent(bytes);
-				}
-
-			} else {
-				node.copy(true);
+				throw new IllegalStateException("Can not saveRightContent() with byte[]");
 			}
+			node.copy(true);
 		}
 	}
 

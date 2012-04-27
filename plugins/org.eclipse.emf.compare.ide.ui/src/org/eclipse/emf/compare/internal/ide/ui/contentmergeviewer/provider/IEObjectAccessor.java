@@ -13,9 +13,16 @@ package org.eclipse.emf.compare.internal.ide.ui.contentmergeviewer.provider;
 import org.eclipse.emf.ecore.EObject;
 
 /**
+ * Interface to specify that the implementing class is wrapping an EObject.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public interface IEObjectAccessor {
 
+	/**
+	 * Returns the wrapped EObject.
+	 * 
+	 * @return the wrapped EObject.
+	 */
 	EObject getEObject();
 }

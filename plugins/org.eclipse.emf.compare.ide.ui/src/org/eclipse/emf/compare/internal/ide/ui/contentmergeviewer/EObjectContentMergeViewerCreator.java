@@ -16,9 +16,16 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 
 /**
+ * A {@link IViewerCreator} that creates {@link EObjectContentMergeViewer}.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class EMFCompareContentMergeViewerCreator implements IViewerCreator {
+public class EObjectContentMergeViewerCreator implements IViewerCreator {
+
+	/**
+	 * ID of the contribution to the org.eclipse.compare.contentMergeViewers extension point.
+	 */
+	public static final String EOBJECT_CONTENT_MERGE_VIEWER_ID = "org.eclipse.emf.compare.internal.ide.ui.EObjectContentMergeViewer"; //$NON-NLS-1$
 
 	/**
 	 * {@inheritDoc}
@@ -27,7 +34,7 @@ public class EMFCompareContentMergeViewerCreator implements IViewerCreator {
 	 *      org.eclipse.compare.CompareConfiguration)
 	 */
 	public Viewer createViewer(Composite parent, CompareConfiguration config) {
-		return new EMFCompareContentMergeViewer(parent, config);
+		return new EObjectContentMergeViewer(parent, config);
 	}
 
 }
