@@ -42,66 +42,63 @@
 
 
   <modules>
+    <!-- Update Site -->
     <module>../packaging/org.eclipse.emf.compare.update</module>
     
     <!-- Core -->
+    <module>../packaging/org.eclipse.emf.compare-feature</module>
     <module>../plugins/org.eclipse.emf.compare</module>
-    <module>../plugins/org.eclipse.emf.compare.doc</module>
+    <module>../plugins/org.eclipse.emf.compare.tests</module>
+    
+    <!-- IDE UI -->
+    <module>../packaging/org.eclipse.emf.compare.ide.ui-feature</module>
     <module>../plugins/org.eclipse.emf.compare.edit</module>
     <module>../plugins/org.eclipse.emf.compare.ide</module>
     <module>../plugins/org.eclipse.emf.compare.ide.ui</module>
-    <module>../plugins/org.eclipse.emf.compare.tests</module>
-    <!-- Not compiling yet
-    <module>../plugins/org.eclipse.emf.compare.ui</module>
-    -->
+    <module>../plugins/org.eclipse.emf.compare.doc</module>
+    <module>../plugins/org.eclipse.emf.compare.ide.tests</module>
     
+    <!-- RCP UI -->
     <!-- Not compiling yet
-    <module>../packaging/org.eclipse.emf.compare-feature</module>
+    <module>../packaging/org.eclipse.emf.compare.rcp.ui-feature</module>
+    <module>../plugins/org.eclipse.emf.compare.rcp.ui</module>
     -->
-    <module>../packaging/org.eclipse.emf.compare.doc-feature</module>
-    <module>../packaging/org.eclipse.emf.compare.runtime-feature</module>
-    <!-- Not compiling yet
-    <module>../packaging/org.eclipse.emf.compare.sdk-feature</module>
-    -->
-    
-    <!-- Logical -->
-    <module>../plugins/org.eclipse.emf.compare.logical</module>
-    <module>../plugins/org.eclipse.emf.compare.logical.tests</module>
-    <module>../plugins/org.eclipse.emf.compare.logical.ui</module>
-    
-    <module>../packaging/org.eclipse.emf.compare.logical-feature</module>
     
     <!-- UML -->
     <!-- Not compiling yet
+    <module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
     <module>../plugins/org.eclipse.emf.compare.uml2</module>
     <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>
     <module>../plugins/org.eclipse.emf.compare.uml2.tests</module>
-    
-    <module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
     -->
     
     <!-- SYSML -->
     <!-- Not compiling yet
+    <module>../packaging/org.eclipse.emf.compare.sysml-feature</module>
     <module>../plugins/org.eclipse.emf.compare.sysml</module>
     <module>../plugins/org.eclipse.emf.compare.sysml.edit</module>
     <module>../plugins/org.eclipse.emf.compare.sysml.tests</module>
-    
-    <module>../packaging/org.eclipse.emf.compare.sysml-feature</module>
     -->
     
-    <!-- Diagram -->
+    <!-- GMF -->
     <!-- Not compiling yet
-    <module>../plugins/org.eclipse.emf.compare.diagram</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.papyrus</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ui</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ui.papyrus</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ui.tests</module>
-    
     <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.ui</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.ui.tests</module>
+    -->
+    
+    <!-- Ecore Tools -->
+    <!-- Not compiling yet
     <module>../packaging/org.eclipse.emf.compare.diagram.ecoretools-feature</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools</module>
+    -->
+    
+    <!-- Papyrus -->
+    <!-- Not compiling yet
     <module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.papyrus</module>
     -->
   </modules>
   
