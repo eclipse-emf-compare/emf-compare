@@ -20,5 +20,12 @@
             class="org.eclipse.emf.compare.ComparePackage"
             genModel="model/compare.genmodel"/>
    </extension>
+   <extension
+         point="org.eclipse.emf.ecore.factory_override">
+      <factory
+            class="org.eclipse.emf.compare.internal.spec.CompareFactorySpec"
+            uri="http://www.eclipse.org/emf/compare">
+      </factory>
+   </extension>
 
 </plugin>

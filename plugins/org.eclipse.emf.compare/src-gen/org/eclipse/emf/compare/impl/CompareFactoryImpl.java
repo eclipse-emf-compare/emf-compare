@@ -139,11 +139,10 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated NOT
+	 * @generated
 	 */
 	public Comparison createComparison() {
-		ComparisonImpl comparison = new ComparisonSpec();
+		ComparisonImpl comparison = new ComparisonImpl();
 		return comparison;
 	}
 

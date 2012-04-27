@@ -18,6 +18,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 
@@ -269,6 +270,17 @@ public class MatchImpl extends MinimalEObjectImpl implements Match {
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ComparePackage.MATCH__ORIGIN, oldOrigin,
 					origin));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Comparison getComparison() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
 	}
 
 	/**

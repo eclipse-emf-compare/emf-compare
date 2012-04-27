@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="compare" nsURI="http://www.eclipse.org/emf/compare" nsPrefix="compare">
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="compare"
+    nsURI="http://www.eclipse.org/emf/compare" nsPrefix="compare">
   <eClassifiers xsi:type="ecore:EClass" name="Comparison">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="This will act as the &quot;root&quot; of a comparison. It will reference one match for every root of the input models, along with the differences detected for each of them."/>
@@ -104,6 +106,11 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A MatchElement describes the mapping between the EObjects of two or three resources. This will reference all three of left, right and origin resources. However, note that instances of this class will also represent unmatched elements, in which case only one of either &quot;left&quot; or &quot;right&quot; will be assigned."/>
     </eAnnotations>
+    <eOperations name="getComparison" eType="#//Comparison">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Finds and return the Comparison containing this Match."/>
+      </eAnnotations>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="submatches" upperBound="-1"
         eType="#//Match" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

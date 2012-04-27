@@ -153,4 +153,15 @@ public interface Match extends EObject {
 	 */
 	void setOrigin(EObject value);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Finds and return the Comparison containing this Match.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	Comparison getComparison();
+
 } // Match
