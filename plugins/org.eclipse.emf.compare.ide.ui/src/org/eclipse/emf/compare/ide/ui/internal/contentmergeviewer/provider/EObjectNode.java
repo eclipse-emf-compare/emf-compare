@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.internal.ide.ui.contentmergeviewer.provider;
+package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;
 
 import com.google.common.collect.Maps;
 
@@ -116,7 +116,7 @@ public class EObjectNode implements ITypedElement, IEObjectAccessor, IStreamCont
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.internal.ide.ui.contentmergeviewer.provider.IEObjectAccessor#getEObject()
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IEObjectAccessor#getEObject()
 	 */
 	public EObject getEObject() {
 		return fEObject;

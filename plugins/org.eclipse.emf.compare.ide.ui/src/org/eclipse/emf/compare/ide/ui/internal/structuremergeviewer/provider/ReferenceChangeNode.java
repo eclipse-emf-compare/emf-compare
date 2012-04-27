@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.provider;
+package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.ReferenceChange;
@@ -28,7 +28,7 @@ public class ReferenceChangeNode extends DiffNode {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.provider.DiffNode#getTarget()
+	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.DiffNode#getTarget()
 	 */
 	@Override
 	public ReferenceChange getTarget() {

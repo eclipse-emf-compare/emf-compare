@@ -8,21 +8,21 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.provider;
+package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.Equivalence;
-import org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffNode;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class EquivalenceNode extends AbstractEDiffNode {
+public class ComparisonNode extends AbstractEDiffNode {
 
 	/**
 	 * @param adapterFactory
 	 */
-	public EquivalenceNode(AdapterFactory adapterFactory) {
+	public ComparisonNode(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -32,7 +32,8 @@ public class EquivalenceNode extends AbstractEDiffNode {
 	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#getTarget()
 	 */
 	@Override
-	public Equivalence getTarget() {
-		return (Equivalence)super.getTarget();
+	public Comparison getTarget() {
+		return (Comparison)super.getTarget();
 	}
+
 }

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer;
+package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -23,7 +23,7 @@ import org.eclipse.compare.structuremergeviewer.IDiffContainer;
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.provider.MatchNode;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.MatchNode;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 

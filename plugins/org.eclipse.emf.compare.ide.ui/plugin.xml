@@ -4,26 +4,26 @@
    <extension
          point="org.eclipse.compare.structureMergeViewers">
       <viewer
-            class="org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.EMFCompareStructureMergeViewerCreator"
+            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerCreator"
             extensions="xmi"
-            id="org.eclipse.emf.compare.internal.ide.ui.structureMergeViewer"
+            id="org.eclipse.emf.compare.ide.ui.internal.structureMergeViewer"
             label="EMFCompare Structure Merge Viewer">
       </viewer>
       <contentTypeBinding
             contentTypeId="org.eclipse.emf.ecore.xmi"
-            structureMergeViewerId="org.eclipse.emf.compare.internal.ide.ui.structureMergeViewer">
+            structureMergeViewerId="org.eclipse.emf.compare.ide.ui.internal.structureMergeViewer">
       </contentTypeBinding>
    </extension>
    <extension
          point="org.eclipse.compare.contentMergeViewers">
       <viewer
-            class="org.eclipse.emf.compare.internal.ide.ui.contentmergeviewer.EObjectContentMergeViewerCreator"
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EObjectContentMergeViewerCreator"
             extensions="eobject"
-            id="org.eclipse.emf.compare.internal.ide.ui.EObjectContentMergeViewer"
+            id="org.eclipse.emf.compare.ide.ui.internal.EObjectContentMergeViewer"
             label="EMFCompare Content Merge Viewer">
       </viewer>
       <contentTypeBinding
-            contentMergeViewerId="org.eclipse.emf.compare.internal.ide.ui.EObjectContentMergeViewer"
+            contentMergeViewerId="org.eclipse.emf.compare.ide.ui.internal.EObjectContentMergeViewer"
             contentTypeId="org.eclipse.emf.ecore.xmi">
       </contentTypeBinding>
    </extension>

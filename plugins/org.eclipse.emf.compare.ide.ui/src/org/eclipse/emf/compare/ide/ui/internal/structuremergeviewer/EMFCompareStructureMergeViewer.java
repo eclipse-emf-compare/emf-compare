@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer;
+package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -36,7 +36,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ide.ui.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.provider.CompareNodeAdapterFactory;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.CompareNodeAdapterFactory;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;

@@ -8,14 +8,14 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.provider;
+package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.internal.ide.ui.contentmergeviewer.provider.EObjectNode;
-import org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffNode;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.EObjectNode;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -43,7 +43,7 @@ public class MatchNode extends AbstractEDiffNode {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffElement#getType()
+	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffElement#getType()
 	 */
 	@Override
 	public String getType() {
@@ -53,7 +53,7 @@ public class MatchNode extends AbstractEDiffNode {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffNode#getAncestor()
+	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode#getAncestor()
 	 */
 	@Override
 	public ITypedElement getAncestor() {
@@ -67,7 +67,7 @@ public class MatchNode extends AbstractEDiffNode {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffNode#getLeft()
+	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode#getLeft()
 	 */
 	@Override
 	public ITypedElement getLeft() {
@@ -81,7 +81,7 @@ public class MatchNode extends AbstractEDiffNode {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffNode#getRight()
+	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode#getRight()
 	 */
 	@Override
 	public ITypedElement getRight() {
@@ -95,7 +95,7 @@ public class MatchNode extends AbstractEDiffNode {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffElement#getKind()
+	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffElement#getKind()
 	 */
 	@Override
 	public int getKind() {

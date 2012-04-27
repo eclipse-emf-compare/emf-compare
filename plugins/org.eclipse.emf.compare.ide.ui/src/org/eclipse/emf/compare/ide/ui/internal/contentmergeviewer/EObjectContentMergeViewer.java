@@ -8,14 +8,14 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.internal.ide.ui.contentmergeviewer;
+package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.internal.ide.ui.contentmergeviewer.provider.IEObjectAccessor;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IEObjectAccessor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
@@ -35,7 +35,7 @@ public class EObjectContentMergeViewer extends ContentMergeViewer {
 	/**
 	 * Bundle name of the property file containing all displayed strings.
 	 */
-	private static final String BUNDLE_NAME = "org.eclipse.emf.compare.internal.ide.ui.contentmergeviewer.EObjectContentMergeViewer"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EObjectContentMergeViewer"; //$NON-NLS-1$
 
 	/**
 	 * The {@link TreeViewer} for the ancestor part.

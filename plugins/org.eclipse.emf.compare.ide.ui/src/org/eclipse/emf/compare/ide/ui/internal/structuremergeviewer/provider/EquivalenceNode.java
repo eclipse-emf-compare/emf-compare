@@ -8,30 +8,31 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.provider;
+package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.Equivalence;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class ResourceAttachmentChangeNode extends DiffNode {
+public class EquivalenceNode extends AbstractEDiffNode {
 
 	/**
 	 * @param adapterFactory
 	 */
-	public ResourceAttachmentChangeNode(AdapterFactory adapterFactory) {
+	public EquivalenceNode(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.provider.DiffNode#getTarget()
+	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#getTarget()
 	 */
 	@Override
-	public ResourceAttachmentChange getTarget() {
-		return (ResourceAttachmentChange)super.getTarget();
+	public Equivalence getTarget() {
+		return (Equivalence)super.getTarget();
 	}
 }
