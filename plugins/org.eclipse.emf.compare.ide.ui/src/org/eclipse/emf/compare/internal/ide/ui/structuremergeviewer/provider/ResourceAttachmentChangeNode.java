@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.provider;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -24,4 +25,13 @@ public class ResourceAttachmentChangeNode extends DiffNode {
 		super(adapterFactory);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.provider.DiffNode#getTarget()
+	 */
+	@Override
+	public ResourceAttachmentChange getTarget() {
+		return (ResourceAttachmentChange)super.getTarget();
+	}
 }

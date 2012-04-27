@@ -10,13 +10,15 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.provider;
 
+import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.EDiffNode;
+import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffNode;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class ConflictNode extends EDiffNode {
+public class ConflictNode extends AbstractEDiffNode {
 
 	/**
 	 * @param adapterFactory
@@ -25,4 +27,23 @@ public class ConflictNode extends EDiffNode {
 		super(adapterFactory);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#getTarget()
+	 */
+	@Override
+	public Conflict getTarget() {
+		return (Conflict)super.getTarget();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffElement#getKind()
+	 */
+	@Override
+	public int getKind() {
+		return Differencer.CONFLICTING;
+	}
 }

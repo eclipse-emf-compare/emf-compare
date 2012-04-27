@@ -2,54 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.ui.commands">
-      <command
-            categoryId="org.eclipse.compare.ui.category.compare"
-            id="org.eclipse.emf.compare.internal.ide.ui.openCompareEditor"
-            name="Open EMFCompare Editor">
-      </command>
-   </extension>
-   <extension
-         point="org.eclipse.ui.handlers">
-      <handler
-            class="org.eclipse.emf.compare.internal.ide.ui.CompareWithOtherEMFResourceHandler"
-            commandId="org.eclipse.emf.compare.internal.ide.ui.openCompareEditor">
-         <activeWhen>
-            <with
-                  variable="selection">
-               <and>
-                  <iterate
-                        ifEmpty="false"
-                        operator="and">
-                     <instanceof
-                           value="org.eclipse.core.resources.IFile">
-                     </instanceof>
-                  </iterate>
-                  <and>
-                     <count
-                           value="(1-">
-                     </count>
-                     <count
-                           value="-4)">
-                     </count>
-                  </and>
-               </and>
-            </with>
-         </activeWhen>
-      </handler>
-   </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
-         <command
-               commandId="org.eclipse.emf.compare.internal.ide.ui.openCompareEditor"
-               style="push">
-         </command>
-      </menuContribution>
-   </extension>
-   <extension
          point="org.eclipse.compare.structureMergeViewers">
       <viewer
             class="org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.EMFCompareStructureMergeViewerCreator"
@@ -65,13 +17,13 @@
    <extension
          point="org.eclipse.compare.contentMergeViewers">
       <viewer
-            class="org.eclipse.emf.compare.internal.ide.ui.contentmergeviewer.EMFCompareContentMergeViewerCreator"
+            class="org.eclipse.emf.compare.internal.ide.ui.contentmergeviewer.EObjectContentMergeViewerCreator"
             extensions="eobject"
-            id="org.eclipse.emf.compare.internal.ide.ui.contentMergeViewer"
+            id="org.eclipse.emf.compare.internal.ide.ui.EObjectContentMergeViewer"
             label="EMFCompare Content Merge Viewer">
       </viewer>
       <contentTypeBinding
-            contentMergeViewerId="org.eclipse.emf.compare.internal.ide.ui.contentMergeViewer"
+            contentMergeViewerId="org.eclipse.emf.compare.internal.ide.ui.EObjectContentMergeViewer"
             contentTypeId="org.eclipse.emf.ecore.xmi">
       </contentTypeBinding>
    </extension>

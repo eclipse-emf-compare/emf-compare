@@ -11,16 +11,17 @@
 package org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.provider;
 
 import org.eclipse.compare.ITypedElement;
+import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.internal.ide.ui.contentmergeviewer.provider.EObjectNode;
-import org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.EDiffNode;
+import org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffNode;
 import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class MatchNode extends EDiffNode {
+public class MatchNode extends AbstractEDiffNode {
 
 	/**
 	 * @param adapterFactory
@@ -30,7 +31,8 @@ public class MatchNode extends EDiffNode {
 	}
 
 	/**
-	 * @{inheritDoc
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#getTarget()
 	 */
 	@Override
@@ -39,42 +41,71 @@ public class MatchNode extends EDiffNode {
 	}
 
 	/**
-	 * @{inheritDoc
-	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getAncestor()
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffElement#getType()
+	 */
+	@Override
+	public String getType() {
+		return "eobject";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffNode#getAncestor()
 	 */
 	@Override
 	public ITypedElement getAncestor() {
 		EObject o = getTarget().getOrigin();
 		if (o != null) {
-			return new EObjectNode(o);
+			return new EObjectNode(getAdapterFactory(), o);
 		}
 		return null;
 	}
 
 	/**
-	 * @{inheritDoc
-	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getLeft()
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffNode#getLeft()
 	 */
 	@Override
 	public ITypedElement getLeft() {
 		EObject o = getTarget().getLeft();
 		if (o != null) {
-			return new EObjectNode(o);
+			return new EObjectNode(getAdapterFactory(), o);
 		}
 		return null;
 	}
 
 	/**
-	 * @{inheritDoc
-	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getRight()
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffNode#getRight()
 	 */
 	@Override
 	public ITypedElement getRight() {
 		EObject o = getTarget().getRight();
 		if (o != null) {
-			return new EObjectNode(o);
+			return new EObjectNode(getAdapterFactory(), o);
 		}
 		return null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffElement#getKind()
+	 */
+	@Override
+	public int getKind() {
+		int ret = super.getKind();
+		if (getTarget().getLeft() == null) {
+			ret = Differencer.DELETION;
+		}
+		if (getTarget().getRight() == null) {
+			ret = Differencer.ADDITION;
+		}
+		return ret;
+	}
 }

@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.provider;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.ReferenceChange;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -22,6 +23,16 @@ public class ReferenceChangeNode extends DiffNode {
 	 */
 	public ReferenceChangeNode(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.provider.DiffNode#getTarget()
+	 */
+	@Override
+	public ReferenceChange getTarget() {
+		return (ReferenceChange)super.getTarget();
 	}
 
 }

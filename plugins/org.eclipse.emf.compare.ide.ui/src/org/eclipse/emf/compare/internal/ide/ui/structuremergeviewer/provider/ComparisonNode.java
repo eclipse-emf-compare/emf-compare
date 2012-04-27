@@ -11,18 +11,29 @@
 package org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.provider;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.EDiffNode;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffNode;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class ComparisonNode extends EDiffNode {
+public class ComparisonNode extends AbstractEDiffNode {
 
 	/**
 	 * @param adapterFactory
 	 */
 	public ComparisonNode(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#getTarget()
+	 */
+	@Override
+	public Comparison getTarget() {
+		return (Comparison)super.getTarget();
 	}
 
 }

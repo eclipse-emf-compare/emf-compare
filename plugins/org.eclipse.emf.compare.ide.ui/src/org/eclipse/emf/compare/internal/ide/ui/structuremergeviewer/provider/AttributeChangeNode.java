@@ -30,8 +30,9 @@ public class AttributeChangeNode extends DiffNode {
 	}
 
 	/**
-	 * @{inheritDoc
-	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#getTarget()
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.provider.DiffNode#getTarget()
 	 */
 	@Override
 	public AttributeChange getTarget() {
@@ -39,45 +40,73 @@ public class AttributeChangeNode extends DiffNode {
 	}
 
 	/**
-	 * @{inheritDoc
-	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getAncestor()
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffElement#getType()
+	 */
+	@Override
+	public String getType() {
+		return ITypedElement.TEXT_TYPE;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffNode#getAncestor()
 	 */
 	@Override
 	public ITypedElement getAncestor() {
+		ITypedElement ret = null;
 		EAttribute attribute = getTarget().getAttribute();
-		EObject o = getTarget().getMatch().getOrigin();
-		if (o != null) {
-			return new SingleAttributeChange(o, attribute);
+		EObject origin = getTarget().getMatch().getOrigin();
+		if (origin != null) {
+			if (attribute.isMany()) {
+				// todo
+			} else {
+				ret = new SingleAttributeChange(origin, attribute);
+			}
 		}
-		return null;
+		return ret;
 	}
 
 	/**
-	 * @{inheritDoc
-	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getLeft()
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffNode#getLeft()
 	 */
 	@Override
 	public ITypedElement getLeft() {
+		ITypedElement ret = null;
 		EAttribute attribute = getTarget().getAttribute();
 		EObject left = getTarget().getMatch().getLeft();
 		if (left != null) {
-			return new SingleAttributeChange(left, attribute);
+			if (attribute.isMany()) {
+				// todo
+			} else {
+				ret = new SingleAttributeChange(left, attribute);
+			}
 		}
-		return null;
+		return ret;
 	}
 
 	/**
-	 * @{inheritDoc
-	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getRight()
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.ide.ui.structuremergeviewer.AbstractEDiffNode#getRight()
 	 */
 	@Override
 	public ITypedElement getRight() {
+		ITypedElement ret = null;
 		EAttribute attribute = getTarget().getAttribute();
 		EObject right = getTarget().getMatch().getRight();
 		if (right != null) {
-			return new SingleAttributeChange(right, attribute);
+			if (attribute.isMany()) {
+				// todo
+			} else {
+				ret = new SingleAttributeChange(right, attribute);
+			}
 		}
-		return null;
+		return ret;
 	}
 
 }

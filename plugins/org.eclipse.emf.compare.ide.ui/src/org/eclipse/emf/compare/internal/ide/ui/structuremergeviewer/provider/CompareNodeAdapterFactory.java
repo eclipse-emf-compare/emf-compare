@@ -92,7 +92,8 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	}
 
 	/**
-	 * @{inheritDoc
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.util.CompareAdapterFactory#createComparisonAdapter()
 	 */
 	@Override
@@ -101,7 +102,8 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	}
 
 	/**
-	 * @{inheritDoc
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.util.CompareAdapterFactory#createMatchResourceAdapter()
 	 */
 	@Override
@@ -110,7 +112,8 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	}
 
 	/**
-	 * @{inheritDoc
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.util.CompareAdapterFactory#createMatchAdapter()
 	 */
 	@Override
@@ -119,7 +122,8 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	}
 
 	/**
-	 * @{inheritDoc
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.util.CompareAdapterFactory#createDiffAdapter()
 	 */
 	@Override
@@ -128,7 +132,8 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	}
 
 	/**
-	 * @{inheritDoc
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.util.CompareAdapterFactory#createResourceAttachmentChangeAdapter()
 	 */
 	@Override
@@ -137,7 +142,8 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	}
 
 	/**
-	 * @{inheritDoc
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.util.CompareAdapterFactory#createReferenceChangeAdapter()
 	 */
 	@Override
@@ -146,7 +152,8 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	}
 
 	/**
-	 * @{inheritDoc
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.util.CompareAdapterFactory#createAttributeChangeAdapter()
 	 */
 	@Override
@@ -155,7 +162,8 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	}
 
 	/**
-	 * @{inheritDoc
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.util.CompareAdapterFactory#createConflictAdapter()
 	 */
 	@Override
@@ -164,7 +172,8 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	}
 
 	/**
-	 * @{inheritDoc
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.util.CompareAdapterFactory#createEquivalenceAdapter()
 	 */
 	@Override
