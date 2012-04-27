@@ -1,36 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <!-- Not compiling yet
    <feature id="org.eclipse.emf.compare" version="0.0.0">
       <category name="compare"/>
    </feature>
-   -->
-   <feature id="org.eclipse.emf.compare.runtime" version="0.0.0">
+   <feature id="org.eclipse.emf.compare.ide.ui" version="0.0.0">
       <category name="compare"/>
    </feature>
-   <feature id="org.eclipse.emf.compare.doc" version="0.0.0">
-      <category name="compare"/>
-   </feature>
-   <!-- Not compiling yet
-   <feature id="org.eclipse.emf.compare.sdk" version="0.0.0">
-      <category name="compare"/>
-   </feature>
-   <feature id="org.eclipse.emf.compare.uml2" version="0.0.0">
-      <category name="compare_integration"/>
-   </feature>
-   <feature id="org.eclipse.emf.compare.sysml" version="0.0.0">
-      <category name="compare_integration"/>
-   </feature>
-   <feature url="features/org.eclipse.emf.compare.diagram.ecoretools_2.0.0.qualifier.jar" id="org.eclipse.emf.compare.diagram.ecoretools" version="2.0.0.qualifier">
-      <category name="compare_integration"/>
-   </feature>
-   <feature url="features/org.eclipse.emf.compare.diagram.gmf_2.0.0.qualifier.jar" id="org.eclipse.emf.compare.diagram.gmf" version="2.0.0.qualifier">
-      <category name="compare_integration"/>
-   </feature>
-   <feature url="features/org.eclipse.emf.compare.diagram.papyrus_2.0.0.qualifier.jar" id="org.eclipse.emf.compare.diagram.papyrus" version="2.0.0.qualifier">
-      <category name="compare_integration"/>
-   </feature>
-   -->
+   
    <category-def name="compare" label="EMF Compare">
       <description>
          EMF Compare features.
