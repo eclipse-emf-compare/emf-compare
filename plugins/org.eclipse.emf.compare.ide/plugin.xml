@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="org.eclipse.emf.compare.modelResolver" name="Model Resolver" schema="schema/ModelResolver.exsd"/>
+   
+   <extension
+         id="org.eclipse.emf.compare.model.provider"
+         name="EMF Compare"
+         point="org.eclipse.core.resources.modelProviders">
+      <modelProvider
+            class="org.eclipse.emf.compare.ide.logical.EMFModelProvider">
+      </modelProvider>
+      <enablement>
+         <and>
+            <adapt
+                  type="org.eclipse.core.resources.IFile">
+            </adapt>
+            <or>
+               <test
+                     args="kindOf"
+                     property="org.eclipse.core.resources.contentTypeId"
+                     value="org.eclipse.emf.ecore">
+               </test>
+               <test
+                     args="kindOf"
+                     property="org.eclipse.core.resources.contentTypeId"
+                     value="org.eclipse.emf.ecore.xmi">
+               </test>
+            </or>
+         </and>
+      </enablement>
+   </extension>
+</plugin>

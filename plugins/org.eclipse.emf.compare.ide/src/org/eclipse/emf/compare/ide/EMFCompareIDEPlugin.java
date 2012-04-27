@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2011, 2012 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,30 +10,65 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide;
 
-import org.osgi.framework.BundleActivator;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Plugin;
+import org.eclipse.emf.compare.ide.internal.extension.EMFCompareExtensionRegistry;
+import org.eclipse.emf.compare.ide.internal.extension.ModelResolverRegistryListener;
 import org.osgi.framework.BundleContext;
 
 /**
- * The activator class, controls the plug-in life cycle.
+ * The activator class controls the plug-in life cycle.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class EMFCompareIDEPlugin implements BundleActivator {
+public class EMFCompareIDEPlugin extends Plugin {
+	/** The plug-in ID. */
+	public static final String PLUGIN_ID = "org.eclipse.emf.compare.ide"; //$NON-NLS-1$
+
+	/** This plugin's shared instance. */
+	private static EMFCompareIDEPlugin plugin;
+
+	/** The registry listener that will be used to react to model provider changes. */
+	private ModelResolverRegistryListener modelProviderListener = new ModelResolverRegistryListener();
+
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
-	public void start(BundleContext bundleContext) throws Exception {
-		// Empty implementation
+	@Override
+	public void start(BundleContext context) throws Exception {
+		plugin = this;
+		super.start(context);
+
+		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+		registry.addListener(modelProviderListener,
+				ModelResolverRegistryListener.MODEL_RESOLVER_EXTENSION_POINT);
+		modelProviderListener.parseInitialContributions();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
+	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
-	public void stop(BundleContext bundleContext) throws Exception {
-		// Empty implementation
+	@Override
+	public void stop(BundleContext context) throws Exception {
+		super.stop(context);
+		plugin = null;
+
+		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+		registry.removeListener(modelProviderListener);
+		EMFCompareExtensionRegistry.clearRegistry();
+	}
+
+	/**
+	 * Returns the shared instance.
+	 * 
+	 * @return the shared instance
+	 */
+	public static EMFCompareIDEPlugin getDefault() {
+		return plugin;
 	}
 }
