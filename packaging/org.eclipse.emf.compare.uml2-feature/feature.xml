@@ -3,7 +3,8 @@
       id="org.eclipse.emf.compare.uml2"
       label="%featureName"
       version="2.0.0.qualifier"
-      provider-name="%providerName">
+      provider-name="%providerName"
+      plugin="org.eclipse.emf.compare">
 
    <description>
       %description
@@ -16,14 +17,11 @@
    <license url="%licenseURL">
       %license
    </license>
-   
+
    <requires>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.emf.ecore"/>
+      <import feature="org.eclipse.emf.compare" version="2.0.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare.ide.ui" version="2.0.0.qualifier"/>
       <import plugin="org.eclipse.uml2.uml" version="3.2.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.compare" version="1.2.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.edit"/>
-      <import plugin="org.eclipse.emf.ecore.edit"/>
    </requires>
 
    <plugin

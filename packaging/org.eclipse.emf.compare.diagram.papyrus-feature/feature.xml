@@ -19,21 +19,13 @@
    </license>
 
    <requires>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.emf.ecore.xmi"/>
-      <import plugin="org.eclipse.core.resources"/>
+      <import feature="org.eclipse.emf.compare" version="2.0.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare.ide.ui" version="2.0.0.qualifier"/>
+      <import feature="org.eclipse.papyrus.uml.diagram.feature" version="0.8.0"/>
    </requires>
 
    <plugin
          id="org.eclipse.emf.compare.diagram.papyrus"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.emf.compare.diagram.ui.papyrus"
          download-size="0"
          install-size="0"
          version="0.0.0"

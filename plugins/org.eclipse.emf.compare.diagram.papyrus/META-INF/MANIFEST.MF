@@ -5,7 +5,10 @@ Bundle-SymbolicName: org.eclipse.emf.compare.diagram.papyrus;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: org.eclipse.emf.compare.diagram.papyrus.Activator
 Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.compare,
  org.eclipse.emf.compare.diagram,
+ org.eclipse.emf.compare.diagram.ui,
+ org.eclipse.emf.compare.ui,
  org.eclipse.gmf.runtime.notation,
  org.eclipse.papyrus.uml.diagram.activity,
  org.eclipse.papyrus.uml.diagram.clazz,
@@ -23,3 +26,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.papyrus.infra.gmfdiag.common;bundle-version="0.9.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Eclipse Modeling Project
+Export-Package: org.eclipse.emf.compare.diagram.papyrus,
+ org.eclipse.emf.compare.diagram.papyrus.ui
