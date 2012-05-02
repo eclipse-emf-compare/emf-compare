@@ -10,7 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
-import java.util.ArrayList;
+import static com.google.common.collect.Lists.newArrayList;
+
 import java.util.Collection;
 
 import org.eclipse.compare.ITypedElement;
@@ -20,7 +21,6 @@ import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.util.CompareAdapterFactory;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
@@ -36,16 +36,31 @@ import org.eclipse.emf.edit.provider.INotifyChangedListener;
  */
 public class CompareNodeAdapterFactory extends CompareAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
 
+	/**
+	 * This keeps track of the root adapter factory that delegates to this adapter factory.
+	 */
 	protected ComposedAdapterFactory parentAdapterFactory;
 
-	protected IChangeNotifier changeNotifier = new ChangeNotifier();
+	/**
+	 * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}.
+	 */
+	protected final IChangeNotifier changeNotifier = new ChangeNotifier();
 
-	protected Collection<Object> supportedTypes = new ArrayList<Object>();
+	/**
+	 * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
+	 */
+	protected final Collection<Object> supportedTypes = newArrayList();
 
+	/**
+	 * Creates an {@link ComposeableAdapterFactory} with the following supported types:
+	 * <ul>
+	 * <li>{@link IDiffElement}</li>,
+	 * <li>{@link IDiffContainer}</li>,
+	 * <li>{@link ITypedElement}</li>,
+	 * <li>{@link ICompareInput}</li>.
+	 * </ul>
+	 */
 	public CompareNodeAdapterFactory() {
-		if (modelPackage == null) {
-			modelPackage = ComparePackage.eINSTANCE;
-		}
 		supportedTypes.add(IDiffElement.class);
 		supportedTypes.add(IDiffContainer.class);
 		supportedTypes.add(ITypedElement.class);
@@ -59,12 +74,24 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 
 	/**
 	 * This implementation substitutes the factory itself as the key for the adapter.
+	 * 
+	 * @param notifier
+	 *            the notifier to adapt
+	 * @param type
+	 *            unused
+	 * @return a previously existing associated adapter, a new associated adapter if possible, or
+	 *         <code>null</code> otherwise.
 	 */
 	@Override
 	public Adapter adapt(Notifier notifier, Object type) {
 		return super.adapt(notifier, this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.notify.impl.AdapterFactoryImpl#adapt(java.lang.Object, java.lang.Object)
+	 */
 	@Override
 	public Object adapt(Object object, Object type) {
 		if (isFactoryForType(type)) {
@@ -79,13 +106,22 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 
 	/**
 	 * This returns the root adapter factory that contains this factory.
+	 * 
+	 * @return the root adapter factory that contains this factory.
 	 */
 	public ComposeableAdapterFactory getRootAdapterFactory() {
-		return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
+		ComposeableAdapterFactory ret = this;
+		if (parentAdapterFactory != null) {
+			ret = parentAdapterFactory.getRootAdapterFactory();
+		}
+		return ret;
 	}
 
 	/**
-	 * This sets the composed adapter factory that contains this factory.
+	 * This sets the direct parent adapter factory into which this factory is composed.
+	 * 
+	 * @param parentAdapterFactory
+	 *            the direct parent adapter factory into which this factory is composed
 	 */
 	public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
 		this.parentAdapterFactory = parentAdapterFactory;
@@ -98,7 +134,7 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	 */
 	@Override
 	public Adapter createComparisonAdapter() {
-		return new ComparisonNode(this);
+		return new ComparisonNode(getRootAdapterFactory());
 	}
 
 	/**
@@ -108,7 +144,7 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	 */
 	@Override
 	public Adapter createMatchResourceAdapter() {
-		return new MatchResourceNode(this);
+		return new MatchResourceNode(getRootAdapterFactory());
 	}
 
 	/**
@@ -118,7 +154,7 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	 */
 	@Override
 	public Adapter createMatchAdapter() {
-		return new MatchNode(this);
+		return new MatchNode(getRootAdapterFactory());
 	}
 
 	/**
@@ -128,7 +164,7 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	 */
 	@Override
 	public Adapter createDiffAdapter() {
-		return new DiffNode(this);
+		return new DiffNode(getRootAdapterFactory());
 	}
 
 	/**
@@ -138,7 +174,7 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	 */
 	@Override
 	public Adapter createResourceAttachmentChangeAdapter() {
-		return new ResourceAttachmentChangeNode(this);
+		return new ResourceAttachmentChangeNode(getRootAdapterFactory());
 	}
 
 	/**
@@ -148,7 +184,7 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	 */
 	@Override
 	public Adapter createReferenceChangeAdapter() {
-		return new ReferenceChangeNode(this);
+		return new ReferenceChangeNode(getRootAdapterFactory());
 	}
 
 	/**
@@ -158,7 +194,7 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	 */
 	@Override
 	public Adapter createAttributeChangeAdapter() {
-		return new AttributeChangeNode(this);
+		return new AttributeChangeNode(getRootAdapterFactory());
 	}
 
 	/**
@@ -168,7 +204,7 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	 */
 	@Override
 	public Adapter createConflictAdapter() {
-		return new ConflictNode(this);
+		return new ConflictNode(getRootAdapterFactory());
 	}
 
 	/**
@@ -178,11 +214,14 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	 */
 	@Override
 	public Adapter createEquivalenceAdapter() {
-		return new EquivalenceNode(this);
+		return new EquivalenceNode(getRootAdapterFactory());
 	}
 
 	/**
 	 * This adds a listener.
+	 * 
+	 * @param notifyChangedListener
+	 *            the listener to add.
 	 */
 	public void addListener(INotifyChangedListener notifyChangedListener) {
 		changeNotifier.addListener(notifyChangedListener);
@@ -190,6 +229,9 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 
 	/**
 	 * This removes a listener.
+	 * 
+	 * @param notifyChangedListener
+	 *            the listener to remove.
 	 */
 	public void removeListener(INotifyChangedListener notifyChangedListener) {
 		changeNotifier.removeListener(notifyChangedListener);
@@ -197,6 +239,9 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 
 	/**
 	 * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}.
+	 * 
+	 * @param notification
+	 *            the notification to fire.
 	 */
 	public void fireNotifyChanged(Notification notification) {
 		changeNotifier.fireNotifyChanged(notification);
@@ -206,6 +251,11 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.IDisposable#dispose()
+	 */
 	public void dispose() {
 	}
 

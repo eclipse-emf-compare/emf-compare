@@ -15,7 +15,6 @@ import com.google.common.base.Preconditions;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.provider.CompareItemProviderAdapterFactory;
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 
 /**
@@ -55,30 +54,9 @@ public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAd
 	}
 
 	/**
-	 * Returns the {@link #getRootAdapterFactory() root adapter factory} of the given
-	 * <code>adapterAdapter</code> if it is a {@link ComposeableAdapterFactory composeable} one.
-	 * 
-	 * @param adapterFactory
-	 *            the adapter factory
-	 * @return either the {@link #getRootAdapterFactory() root adapter factory} of the given
-	 *         <code>adapterAdapter</code> or <code>adapterAdapter</code>.
-	 */
-	static AdapterFactory getRootAdapterFactoryIfComposeable(AdapterFactory adapterFactory) {
-		AdapterFactory af = adapterFactory;
-		// If the adapter factory is composeable, we'll adapt using the root.
-		if (adapterFactory instanceof ComposeableAdapterFactory) {
-			af = ((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory();
-		}
-		return af;
-	}
-
-	/**
 	 * Returns the text of the given <code>object</code> by adapting it to {@link IItemLabelProvider} and
 	 * asking for its {@link IItemLabelProvider#getText(Object) text}. Returns null if <code>object</code> is
 	 * null.
-	 * <p>
-	 * The {@link AdapterFactory} used to adapt <code>object</code> is either the given {@link AdapterFactory}
-	 * or its root if it is an {@link ComposeableAdapterFactory}.
 	 * 
 	 * @param adapterFactory
 	 *            the adapter factory to adapt from
@@ -91,8 +69,7 @@ public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAd
 	static String getText(AdapterFactory adapterFactory, Object object) {
 		Preconditions.checkNotNull(adapterFactory);
 		if (object != null) {
-			AdapterFactory af = getRootAdapterFactoryIfComposeable(adapterFactory);
-			Object adapter = af.adapt(object, IItemLabelProvider.class);
+			Object adapter = adapterFactory.adapt(object, IItemLabelProvider.class);
 			if (adapter instanceof IItemLabelProvider) {
 				return ((IItemLabelProvider)adapter).getText(object);
 			}
@@ -104,9 +81,6 @@ public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAd
 	 * Returns the image of the given <code>object</code> by adapting it to {@link IItemLabelProvider} and
 	 * asking for its {@link IItemLabelProvider#getImage(Object) text}. Returns null if <code>object</code> is
 	 * null.
-	 * <p>
-	 * The {@link AdapterFactory} used to adapt <code>object</code> is either the given {@link AdapterFactory}
-	 * or its root if it is an {@link ComposeableAdapterFactory}.
 	 * 
 	 * @param adapterFactory
 	 *            the adapter factory to adapt from
@@ -119,8 +93,7 @@ public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAd
 	static Object getImage(AdapterFactory adapterFactory, Object object) {
 		Preconditions.checkNotNull(adapterFactory);
 		if (object != null) {
-			AdapterFactory af = getRootAdapterFactoryIfComposeable(adapterFactory);
-			Object adapter = af.adapt(object, IItemLabelProvider.class);
+			Object adapter = adapterFactory.adapt(object, IItemLabelProvider.class);
 			if (adapter instanceof IItemLabelProvider) {
 				return ((IItemLabelProvider)adapter).getImage(object);
 			}

@@ -14,12 +14,17 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 
 /**
+ * Specific AbstractEDiffNode for {@link ResourceAttachmentChange} objects.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class ResourceAttachmentChangeNode extends DiffNode {
 
 	/**
+	 * Creates a node with the given factory.
+	 * 
 	 * @param adapterFactory
+	 *            the factory given to the super constructor.
 	 */
 	public ResourceAttachmentChangeNode(AdapterFactory adapterFactory) {
 		super(adapterFactory);

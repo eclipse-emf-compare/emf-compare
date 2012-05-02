@@ -15,12 +15,17 @@ import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode;
 
 /**
+ * Specific AbstractEDiffNode for {@link MatchResource} objects.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class MatchResourceNode extends AbstractEDiffNode {
 
 	/**
+	 * Creates a node with the given factory.
+	 * 
 	 * @param adapterFactory
+	 *            the factory given to the super constructor.
 	 */
 	public MatchResourceNode(AdapterFactory adapterFactory) {
 		super(adapterFactory);

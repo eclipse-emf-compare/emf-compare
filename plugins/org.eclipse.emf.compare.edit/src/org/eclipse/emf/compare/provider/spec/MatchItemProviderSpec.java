@@ -40,10 +40,10 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	@Override
 	public Object getImage(Object object) {
 		Match match = (Match)object;
-		Object ret = CompareItemProviderAdapterFactorySpec.getImage(adapterFactory, match.getLeft());
+		Object ret = CompareItemProviderAdapterFactorySpec.getImage(getRootAdapterFactory(), match.getLeft());
 
 		if (ret == null) {
-			ret = CompareItemProviderAdapterFactorySpec.getImage(adapterFactory, match.getRight());
+			ret = CompareItemProviderAdapterFactorySpec.getImage(getRootAdapterFactory(), match.getRight());
 		}
 
 		if (ret == null) {
@@ -61,10 +61,10 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	@Override
 	public String getText(Object object) {
 		Match match = (Match)object;
-		String ret = CompareItemProviderAdapterFactorySpec.getText(adapterFactory, match.getLeft());
+		String ret = CompareItemProviderAdapterFactorySpec.getText(getRootAdapterFactory(), match.getLeft());
 
 		if (ret == null) {
-			ret = CompareItemProviderAdapterFactorySpec.getText(adapterFactory, match.getRight());
+			ret = CompareItemProviderAdapterFactorySpec.getText(getRootAdapterFactory(), match.getRight());
 		}
 
 		if (ret == null) {

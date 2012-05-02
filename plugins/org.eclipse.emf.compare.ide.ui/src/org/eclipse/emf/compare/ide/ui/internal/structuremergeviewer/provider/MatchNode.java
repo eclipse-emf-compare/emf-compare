@@ -19,12 +19,17 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDif
 import org.eclipse.emf.ecore.EObject;
 
 /**
+ * Specific AbstractEDiffNode for {@link Match} objects.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class MatchNode extends AbstractEDiffNode {
 
 	/**
+	 * Creates a node with the given factory.
+	 * 
 	 * @param adapterFactory
+	 *            the factory given to the super constructor.
 	 */
 	public MatchNode(AdapterFactory adapterFactory) {
 		super(adapterFactory);

@@ -17,21 +17,31 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.swt.graphics.Image;
 
 /**
+ * An EMF {@link Adapter} implementing the {@link IDiffElement} interface.
+ * <p>
+ * It is delegating {@link #getImage()} and {@link #getName()} to an adapter retrieved from an
+ * {@link AdapterFactory}.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public abstract class AbstractEDiffElement extends AdapterImpl implements IDiffElement {
 
+	/**
+	 * The {@link AdapterFactory} used to implement {@link #getName()} and {@link #getImage()}.
+	 */
 	private final AdapterFactory fAdapterFactory;
 
 	/**
+	 * Simple constructor storing the given {@link AdapterFactory}.
+	 * 
 	 * @param adapterFactory
+	 *            the factory.
 	 */
 	public AbstractEDiffElement(AdapterFactory adapterFactory) {
 		fAdapterFactory = adapterFactory;
@@ -43,26 +53,12 @@ public abstract class AbstractEDiffElement extends AdapterImpl implements IDiffE
 	}
 
 	/**
-	 * @return
+	 * Final accessor to the {@link AdapterFactory} for sub classses.
+	 * 
+	 * @return the wrapped {@link AdapterFactory}.
 	 */
 	protected final AdapterFactory getAdapterFactory() {
 		return fAdapterFactory;
-	}
-
-	/**
-	 * Returns the {@link #getRootAdapterFactory() root adapter factory} of the given
-	 * <code>adapterAdapter</code> if it is a {@link ComposeableAdapterFactory composeable} one.
-	 * 
-	 * @return either the {@link #getRootAdapterFactory() root adapter factory} of this
-	 *         <code>adapterAdapter</code> or <code>adapterAdapter</code>.
-	 */
-	protected final AdapterFactory getRootAdapterFactoryIfComposeable() {
-		AdapterFactory af = getAdapterFactory();
-		// If the adapter factory is composeable, we'll adapt using the root.
-		if (fAdapterFactory instanceof ComposeableAdapterFactory) {
-			af = ((ComposeableAdapterFactory)fAdapterFactory).getRootAdapterFactory();
-		}
-		return af;
 	}
 
 	/**
@@ -72,7 +68,7 @@ public abstract class AbstractEDiffElement extends AdapterImpl implements IDiffE
 	 */
 	public String getName() {
 		String ret = null;
-		Adapter adapter = getRootAdapterFactoryIfComposeable().adapt(target, IItemLabelProvider.class);
+		Adapter adapter = getAdapterFactory().adapt(target, IItemLabelProvider.class);
 		if (adapter instanceof IItemLabelProvider) {
 			ret = ((IItemLabelProvider)adapter).getText(target);
 		}
@@ -86,19 +82,12 @@ public abstract class AbstractEDiffElement extends AdapterImpl implements IDiffE
 	 */
 	public Image getImage() {
 		Image ret = null;
-		Adapter adapter = getRootAdapterFactoryIfComposeable().adapt(target, IItemLabelProvider.class);
+		Adapter adapter = getAdapterFactory().adapt(target, IItemLabelProvider.class);
 		if (adapter instanceof IItemLabelProvider) {
-			ret = getImageFromObject(((IItemLabelProvider)adapter).getImage(target));
+			Object imageObject = ((IItemLabelProvider)adapter).getImage(target);
+			ret = ExtendedImageRegistry.getInstance().getImage(imageObject);
 		}
 		return ret;
-	}
-
-	/**
-	 * @param object
-	 * @return
-	 */
-	protected Image getImageFromObject(Object object) {
-		return ExtendedImageRegistry.getInstance().getImage(object);
 	}
 
 	/**
@@ -127,7 +116,7 @@ public abstract class AbstractEDiffElement extends AdapterImpl implements IDiffE
 	public IDiffContainer getParent() {
 		IDiffContainer ret = null;
 		if (target instanceof EObject) {
-			Adapter treeItemContentProvider = getRootAdapterFactoryIfComposeable().adapt(target,
+			Adapter treeItemContentProvider = getAdapterFactory().adapt(target,
 					ITreeItemContentProvider.class);
 			if (treeItemContentProvider instanceof ITreeItemContentProvider) {
 				ret = getParentAndAdaptAsIDiffContainer((ITreeItemContentProvider)treeItemContentProvider);

@@ -15,12 +15,17 @@ import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode;
 
 /**
+ * Specific AbstractEDiffNode for {@link Equivalence} objects.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class EquivalenceNode extends AbstractEDiffNode {
 
 	/**
+	 * Creates a node with the given factory.
+	 * 
 	 * @param adapterFactory
+	 *            the factory given to the super constructor.
 	 */
 	public EquivalenceNode(AdapterFactory adapterFactory) {
 		super(adapterFactory);

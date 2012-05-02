@@ -18,12 +18,17 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 
 /**
+ * Specific AbstractEDiffNode for {@link AttributeChange} objects.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class AttributeChangeNode extends DiffNode {
 
 	/**
+	 * Creates a node with the given factory.
+	 * 
 	 * @param adapterFactory
+	 *            the factory given to the super constructor.
 	 */
 	public AttributeChangeNode(AdapterFactory adapterFactory) {
 		super(adapterFactory);

@@ -15,12 +15,17 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode;
 
 /**
+ * Specific AbstractEDiffNode for {@link Comparison} objects.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class ComparisonNode extends AbstractEDiffNode {
 
 	/**
+	 * Creates a node with the given factory.
+	 * 
 	 * @param adapterFactory
+	 *            the factory given to the super constructor.
 	 */
 	public ComparisonNode(AdapterFactory adapterFactory) {
 		super(adapterFactory);

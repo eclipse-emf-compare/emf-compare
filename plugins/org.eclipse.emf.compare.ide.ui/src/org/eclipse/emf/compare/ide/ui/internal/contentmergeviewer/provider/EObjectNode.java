@@ -29,7 +29,6 @@ import org.eclipse.emf.compare.ide.ui.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -80,28 +79,12 @@ public class EObjectNode implements ITypedElement, IEObjectAccessor, IStreamCont
 	 * @see org.eclipse.compare.ITypedElement#getImage()
 	 */
 	public Image getImage() {
-		Adapter adapter = getRootAdapterFactoryIfComposeable().adapt(fEObject, IItemLabelProvider.class);
+		Adapter adapter = fAdapterFactory.adapt(fEObject, IItemLabelProvider.class);
 		if (adapter instanceof IItemLabelProvider) {
 			Object image = ((IItemLabelProvider)adapter).getImage(fEObject);
 			return ExtendedImageRegistry.getInstance().getImage(image);
 		}
 		return null;
-	}
-
-	/**
-	 * Returns the {@link #getRootAdapterFactory() root adapter factory} of the given
-	 * <code>adapterAdapter</code> if it is a {@link ComposeableAdapterFactory composeable} one.
-	 * 
-	 * @return either the {@link #getRootAdapterFactory() root adapter factory} of this
-	 *         <code>adapterAdapter</code> or <code>adapterAdapter</code>.
-	 */
-	private AdapterFactory getRootAdapterFactoryIfComposeable() {
-		AdapterFactory af = fAdapterFactory;
-		// If the adapter factory is composeable, we'll adapt using the root.
-		if (fAdapterFactory instanceof ComposeableAdapterFactory) {
-			af = ((ComposeableAdapterFactory)fAdapterFactory).getRootAdapterFactory();
-		}
-		return af;
 	}
 
 	/**

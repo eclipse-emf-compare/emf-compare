@@ -10,11 +10,16 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.isEmpty;
+import static com.google.common.collect.Iterables.toArray;
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Lists.newArrayList;
+
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 import java.util.Collection;
 import java.util.List;
@@ -61,13 +66,12 @@ public abstract class AbstractEDiffContainer extends AbstractEDiffElement implem
 	public boolean hasChildren() {
 		boolean ret = false;
 		if (target instanceof EObject) {
-			Adapter treeItemContentProvider = getRootAdapterFactoryIfComposeable().adapt(target,
+			Adapter treeItemContentProvider = getAdapterFactory().adapt(target,
 					ITreeItemContentProvider.class);
 			if (treeItemContentProvider instanceof ITreeItemContentProvider) {
-				List<IDiffElement> children = Lists.newArrayList(getChildren());
-				Iterable<IDiffElement> notMatchChildren = Iterables.filter(children, Predicates
-						.not(Predicates.instanceOf(MatchNode.class)));
-				if (!Iterables.isEmpty(notMatchChildren)) {
+				List<IDiffElement> children = newArrayList(getChildren());
+				Iterable<IDiffElement> notMatchChildren = filter(children, not(instanceOf(MatchNode.class)));
+				if (!isEmpty(notMatchChildren)) {
 					ret = true;
 				} else {
 					ret = hasChildren(notMatchChildren);
@@ -78,17 +82,20 @@ public abstract class AbstractEDiffContainer extends AbstractEDiffElement implem
 	}
 
 	/**
-	 * @param notMatchChildren
-	 * @return
+	 * Returns true if one of the given <code>elements</code> is a {@link IDiffContainer} and it
+	 * {@link IDiffContainer#hasChildren() has children}. Returns false if the given iterable is empty.
+	 * 
+	 * @param elements
+	 *            the elements to test
+	 * @return true true if one of the given <code>elements</code> is a {@link IDiffContainer} and it
+	 *         {@link IDiffContainer#hasChildren() has children}, false otherwise.
 	 */
-	private static boolean hasChildren(Iterable<IDiffElement> notMatchChildren) {
+	private static boolean hasChildren(Iterable<IDiffElement> elements) {
 		boolean ret = false;
-		for (IDiffElement child : notMatchChildren) {
-			if (child instanceof IDiffContainer) {
-				if (((IDiffContainer)child).hasChildren()) {
-					ret = true;
-					break;
-				}
+		for (IDiffElement child : elements) {
+			if (child instanceof IDiffContainer && ((IDiffContainer)child).hasChildren()) {
+				ret = true;
+				break;
 			}
 		}
 		return ret;
@@ -102,13 +109,13 @@ public abstract class AbstractEDiffContainer extends AbstractEDiffElement implem
 	public IDiffElement[] getChildren() {
 		IDiffElement[] ret = EMPTY_ARRAY__DIFF_ELEMENT;
 		if (target instanceof EObject) {
-			Adapter treeItemContentProvider = getRootAdapterFactoryIfComposeable().adapt(target,
+			Adapter treeItemContentProvider = getAdapterFactory().adapt(target,
 					ITreeItemContentProvider.class);
 			if (treeItemContentProvider instanceof ITreeItemContentProvider) {
 				Collection<?> children = ((ITreeItemContentProvider)treeItemContentProvider)
 						.getChildren(target);
-				Iterable<?> childrenToDisplay = Iterables.filter(children, fNeedDisplay);
-				ret = Iterables.toArray(adapt(childrenToDisplay, getAdapterFactory(), IDiffElement.class),
+				Iterable<?> childrenToDisplay = filter(children, fNeedDisplay);
+				ret = toArray(adapt(childrenToDisplay, getAdapterFactory(), IDiffElement.class),
 						IDiffElement.class);
 			}
 		}
@@ -141,13 +148,27 @@ public abstract class AbstractEDiffContainer extends AbstractEDiffElement implem
 		throw new UnsupportedOperationException();
 	}
 
-	protected static <T> Iterable<T> adapt(Iterable<?> iterable, final AdapterFactory adapterFactory,
-			final Class<T> clazz) {
+	/**
+	 * Adapts each elements of the the given <code>iterable</code> to the given <code>type</code> by using the
+	 * given <code>adapterFactory</code>.
+	 * 
+	 * @param <T>
+	 *            the type of returned elements.
+	 * @param iterable
+	 *            the iterable to transform.
+	 * @param adapterFactory
+	 *            the {@link AdapterFactory} used to adapt elements
+	 * @param type
+	 *            the target type of adapted elements
+	 * @return an iterable with element of type <code>type</code>.
+	 */
+	private static <T> Iterable<T> adapt(Iterable<?> iterable, final AdapterFactory adapterFactory,
+			final Class<T> type) {
 		Function<Object, Object> adaptFunction = new Function<Object, Object>() {
 			public Object apply(Object input) {
-				return adapterFactory.adapt(input, clazz);
+				return adapterFactory.adapt(input, type);
 			}
 		};
-		return Iterables.filter(Iterables.transform(iterable, adaptFunction), clazz);
+		return filter(transform(iterable, adaptFunction), type);
 	}
 }

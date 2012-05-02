@@ -16,12 +16,17 @@ import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode;
 
 /**
+ * Specific AbstractEDiffNode for {@link Conflict} objects.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class ConflictNode extends AbstractEDiffNode {
 
 	/**
+	 * Creates a node with the given factory.
+	 * 
 	 * @param adapterFactory
+	 *            the factory given to the super constructor.
 	 */
 	public ConflictNode(AdapterFactory adapterFactory) {
 		super(adapterFactory);

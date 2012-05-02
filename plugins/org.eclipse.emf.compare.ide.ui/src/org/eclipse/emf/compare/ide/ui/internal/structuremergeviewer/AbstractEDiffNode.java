@@ -53,6 +53,18 @@ public abstract class AbstractEDiffNode extends AbstractEDiffContainer implement
 	}
 
 	/**
+	 * Sends out notification that a change has occurred on the <code>ICompareInput</code>.
+	 */
+	protected void fireChange() {
+		if (fListener != null) {
+			Object[] listeners = fListener.getListeners();
+			for (int i = 0; i < listeners.length; i++) {
+				((ICompareInputChangeListener)listeners[i]).compareInputChanged(this);
+			}
+		}
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#copy(boolean)
