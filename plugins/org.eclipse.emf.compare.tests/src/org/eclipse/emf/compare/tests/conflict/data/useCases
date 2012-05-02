@@ -1,4 +1,5 @@
-This will try and list all possible "conflict" cases that can happen in a model comparison.
+This will try and list all possible "conflict" cases that can happen in a model comparison. For each use case, we will consider
+two models, "left" and "right", with their common ancestor "origin".
 
 All of the following 4 categories apply to both "attribute" and "reference" changes
 
