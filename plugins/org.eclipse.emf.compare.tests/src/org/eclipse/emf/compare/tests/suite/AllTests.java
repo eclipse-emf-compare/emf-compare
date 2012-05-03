@@ -14,9 +14,18 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.textui.TestRunner;
 
+import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.internal.spec.CompareFactorySpec;
+import org.eclipse.emf.compare.tests.conflict.ConflictDetectionTest;
 import org.eclipse.emf.compare.tests.fullcomparison.IdentifierComparisonTest;
 import org.eclipse.emf.compare.tests.model.CompareModelTestSuite;
+import org.eclipse.emf.compare.tests.nodes.NodesPackage;
+import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
 import org.eclipse.emf.compare.tests.scope.DefaultComparisonScopeTest;
+import org.eclipse.emf.ecore.EFactory;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -27,7 +36,8 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({CompareModelTestSuite.class, DefaultComparisonScopeTest.class, IdentifierComparisonTest.class, })
+@SuiteClasses({CompareModelTestSuite.class, DefaultComparisonScopeTest.class, IdentifierComparisonTest.class,
+		ConflictDetectionTest.class, })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.
@@ -45,5 +55,24 @@ public class AllTests {
 	 */
 	public static Test suite() {
 		return new JUnit4TestAdapter(CompareTestSuite.class);
+	}
+
+	@BeforeClass
+	public static void fillEMFRegistries() {
+		final EPackage.Descriptor descriptor = new EPackage.Descriptor() {
+			public EPackage getEPackage() {
+				return ComparePackage.eINSTANCE;
+			}
+
+			public EFactory getEFactory() {
+				return new CompareFactorySpec();
+			}
+		};
+
+		EPackage.Registry.INSTANCE.put(ComparePackage.eNS_URI, descriptor);
+		EPackage.Registry.INSTANCE.put(NodesPackage.eNS_URI, NodesPackage.eINSTANCE);
+
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("nodes", //$NON-NLS-1$
+				new NodesResourceFactoryImpl());
 	}
 }

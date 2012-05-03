@@ -14,6 +14,12 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
+import static org.eclipse.emf.compare.tests.framework.EMFCompareAssert.assertAdded;
+import static org.eclipse.emf.compare.tests.framework.EMFCompareAssert.assertAddedToReference;
+import static org.eclipse.emf.compare.tests.framework.EMFCompareAssert.assertAllMatched;
+import static org.eclipse.emf.compare.tests.framework.EMFCompareAssert.assertChangedAttribute;
+import static org.eclipse.emf.compare.tests.framework.EMFCompareAssert.assertRemoved;
+import static org.eclipse.emf.compare.tests.framework.EMFCompareAssert.assertRemovedFromReference;
 
 import java.io.IOException;
 import java.util.List;

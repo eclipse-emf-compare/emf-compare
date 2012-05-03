@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes:Node
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes"
+    xmi:id="_7tec0JReEeGwLqrAWz-_6w"
+    name="root">
+  <containmentRef1
+      xmi:id="_-iLZEJReEeGwLqrAWz-_6w"
+      name="leftContainer"/>
+  <containmentRef1
+      xmi:id="__cxZEJReEeGwLqrAWz-_6w"
+      name="rightContainer"/>
+  <containmentRef1
+      xmi:id="_AY8tcJRfEeGwLqrAWz-_6w"
+      name="originContainer">
+    <containmentRef1
+        xmi:id="_CRQ58JRfEeGwLqrAWz-_6w"
+        name="conflictNode"/>
+  </containmentRef1>
+</nodes:Node>

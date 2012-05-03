@@ -8,10 +8,11 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.emf.compare,
+ org.eclipse.emf.compare.conflict,
  org.eclipse.emf.compare.diff,
  org.eclipse.emf.compare.impl,
  org.eclipse.emf.compare.internal;x-friends:="org.eclipse.emf.compare.logical",
- org.eclipse.emf.compare.internal.spec;x-internal:=true,
+ org.eclipse.emf.compare.internal.spec;x-friends:="org.eclipse.emf.compare.tests",
  org.eclipse.emf.compare.match,
  org.eclipse.emf.compare.match.eobject,
  org.eclipse.emf.compare.match.resource,
