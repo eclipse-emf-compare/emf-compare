@@ -124,6 +124,7 @@ public final class EFactory {
 				if (reorder) {
 					attachRealPositionEAdapter(arg, elementIndex);
 					reorderList(internalEList);
+					detachPositionEAdapter(arg);
 				}
 			} else if (manyValue instanceof List<?>) {
 				final List<? super T> list = (List<? super T>)manyValue;
@@ -136,6 +137,7 @@ public final class EFactory {
 				if (reorder) {
 					attachRealPositionEAdapter(arg, elementIndex);
 					reorderList(list);
+					detachPositionEAdapter(arg);
 				}
 			} else if (manyValue instanceof Collection<?>) {
 				((Collection<? super T>)manyValue).add(arg);
@@ -158,6 +160,25 @@ public final class EFactory {
 	private static void attachRealPositionEAdapter(Object object, int expectedPosition) {
 		if (object instanceof EObject) {
 			((EObject)object).eAdapters().add(new PostionAdapter(expectedPosition));
+		}
+	}
+
+	/**
+	 * Removes the {@link PostionAdapter} installed by calling
+	 * {@link #attachRealPositionEAdapter(Object, int)}.
+	 * 
+	 * @param object
+	 *            the object on which uninstall the {@link PostionAdapter}.
+	 */
+	private static void detachPositionEAdapter(Object object) {
+		if (object instanceof EObject) {
+			final Iterator<Adapter> adapters = ((EObject)object).eAdapters().iterator();
+			while (adapters.hasNext()) {
+				final Adapter adapter = adapters.next();
+				if (adapter instanceof PostionAdapter) {
+					adapters.remove();
+				}
+			}
 		}
 	}
 
