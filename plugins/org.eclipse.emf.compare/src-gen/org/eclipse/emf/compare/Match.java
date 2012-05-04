@@ -10,6 +10,7 @@
  */
 package org.eclipse.emf.compare;
 
+import java.lang.Iterable;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
@@ -163,5 +164,27 @@ public interface Match extends EObject {
 	 * @generated
 	 */
 	Comparison getComparison();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Finds and returns all matches contained in this Match and its children, recursively.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" dataType="org.eclipse.emf.compare.EIterable<org.eclipse.emf.compare.Match>"
+	 * @generated
+	 */
+	Iterable<Match> getAllSubmatches();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Finds and returns all differences contained in this Match and its children, recursively.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" dataType="org.eclipse.emf.compare.EIterable<org.eclipse.emf.compare.Diff>"
+	 * @generated
+	 */
+	Iterable<Diff> getAllDifferences();
 
 } // Match

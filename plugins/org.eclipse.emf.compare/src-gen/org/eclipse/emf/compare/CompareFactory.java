@@ -10,6 +10,7 @@
  */
 package org.eclipse.emf.compare;
 
+import java.lang.Iterable;
 import org.eclipse.emf.ecore.EFactory;
 
 /**

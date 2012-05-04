@@ -10,6 +10,7 @@
  */
 package org.eclipse.emf.compare.impl;
 
+import java.lang.Iterable;
 import org.eclipse.emf.compare.*;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.CompareFactory;
@@ -114,6 +115,8 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 				return createDifferenceKindFromString(eDataType, initialValue);
 			case ComparePackage.DIFFERENCE_SOURCE:
 				return createDifferenceSourceFromString(eDataType, initialValue);
+			case ComparePackage.EITERABLE:
+				return createEIterableFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException(
 						"The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -131,6 +134,8 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 				return convertDifferenceKindToString(eDataType, instanceValue);
 			case ComparePackage.DIFFERENCE_SOURCE:
 				return convertDifferenceSourceToString(eDataType, instanceValue);
+			case ComparePackage.EITERABLE:
+				return convertEIterableToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException(
 						"The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -256,6 +261,24 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 	 */
 	public String convertDifferenceSourceToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Iterable<?> createEIterableFromString(EDataType eDataType, String initialValue) {
+		return (Iterable<?>)super.createFromString(initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertEIterableToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(instanceValue);
 	}
 
 	/**

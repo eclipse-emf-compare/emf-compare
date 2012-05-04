@@ -10,7 +10,16 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
 
+import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Iterables.transform;
+
+import com.google.common.base.Function;
+
+import java.util.List;
+
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.impl.MatchImpl;
 import org.eclipse.emf.ecore.EObject;
 
@@ -21,6 +30,25 @@ import org.eclipse.emf.ecore.EObject;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class MatchSpec extends MatchImpl {
+
+	/**
+	 * Function returning {@link #getSubmatches() all sub matches} of the given match.
+	 */
+	private static final Function<Match, Iterable<Match>> ALL_SUBMATCHES = new Function<Match, Iterable<Match>>() {
+		public Iterable<Match> apply(Match match) {
+			final Iterable<Match> allSubmatches = concat(transform(match.getSubmatches(), ALL_SUBMATCHES));
+			return concat(match.getSubmatches(), allSubmatches);
+		}
+	};
+
+	/**
+	 * Function returning {@link #getDifferences() all DIFFERENCES} of the given match.
+	 */
+	private static final Function<Match, List<Diff>> DIFFERENCES = new Function<Match, List<Diff>>() {
+		public List<Diff> apply(Match match) {
+			return match.getDifferences();
+		}
+	};
 
 	/**
 	 * {@inheritDoc}
@@ -41,5 +69,26 @@ public class MatchSpec extends MatchImpl {
 		}
 
 		return ret;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.impl.MatchImpl#getAllSubmatches()
+	 */
+	@Override
+	public Iterable<Match> getAllSubmatches() {
+		return ALL_SUBMATCHES.apply(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.impl.MatchImpl#getAllDifferences()
+	 */
+	@Override
+	public Iterable<Diff> getAllDifferences() {
+		final Iterable<Diff> allSubDifferences = concat(transform(getAllSubmatches(), DIFFERENCES));
+		return concat(getDifferences(), allSubDifferences);
 	}
 }

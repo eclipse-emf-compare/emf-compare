@@ -10,6 +10,7 @@
  */
 package org.eclipse.emf.compare.impl;
 
+import java.lang.Iterable;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.ComparePackage;
@@ -26,7 +27,9 @@ import org.eclipse.emf.compare.ResourceAttachmentChange;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -124,6 +127,13 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * @generated
 	 */
 	private EEnum differenceSourceEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType eIterableEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -574,6 +584,15 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EDataType getEIterable() {
+		return eIterableEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public CompareFactory getCompareFactory() {
 		return (CompareFactory)getEFactoryInstance();
 	}
@@ -650,6 +669,9 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		// Create enums
 		differenceKindEEnum = createEEnum(DIFFERENCE_KIND);
 		differenceSourceEEnum = createEEnum(DIFFERENCE_SOURCE);
+
+		// Create data types
+		eIterableEDataType = createEDataType(EITERABLE);
 	}
 
 	/**
@@ -681,6 +703,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 				.getEPackage(EcorePackage.eNS_URI);
 
 		// Create type parameters
+		addETypeParameter(eIterableEDataType, "T"); //$NON-NLS-1$
 
 		// Set bounds for type parameters
 
@@ -781,6 +804,18 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 				"origin", null, 0, 1, Match.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		addEOperation(matchEClass, this.getComparison(), "getComparison", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+
+		op = addEOperation(matchEClass, null, "getAllSubmatches", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		EGenericType g1 = createEGenericType(this.getEIterable());
+		EGenericType g2 = createEGenericType(this.getMatch());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
+
+		op = addEOperation(matchEClass, null, "getAllDifferences", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		g1 = createEGenericType(this.getEIterable());
+		g2 = createEGenericType(this.getDiff());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
 
 		initEClass(diffEClass, Diff.class, "Diff", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(
@@ -895,6 +930,10 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		initEEnum(differenceSourceEEnum, DifferenceSource.class, "DifferenceSource"); //$NON-NLS-1$
 		addEEnumLiteral(differenceSourceEEnum, DifferenceSource.LEFT);
 		addEEnumLiteral(differenceSourceEEnum, DifferenceSource.RIGHT);
+
+		// Initialize data types
+		initEDataType(eIterableEDataType, Iterable.class,
+				"EIterable", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);

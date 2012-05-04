@@ -10,6 +10,7 @@
  */
 package org.eclipse.emf.compare.util;
 
+import java.lang.Iterable;
 import java.util.List;
 
 import org.eclipse.emf.compare.*;

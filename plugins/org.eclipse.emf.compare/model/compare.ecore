@@ -111,6 +111,22 @@
         <details key="documentation" value="Finds and return the Comparison containing this Match."/>
       </eAnnotations>
     </eOperations>
+    <eOperations name="getAllSubmatches">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Finds and returns all matches contained in this Match and its children, recursively."/>
+      </eAnnotations>
+      <eGenericType eClassifier="#//EIterable">
+        <eTypeArguments eClassifier="#//Match"/>
+      </eGenericType>
+    </eOperations>
+    <eOperations name="getAllDifferences">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Finds and returns all differences contained in this Match and its children, recursively."/>
+      </eAnnotations>
+      <eGenericType eClassifier="#//EIterable">
+        <eTypeArguments eClassifier="#//Diff"/>
+      </eGenericType>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="submatches" upperBound="-1"
         eType="#//Match" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -326,5 +342,8 @@
         <details key="documentation" value="Will be used if the difference has been detected between the right element and its origin."/>
       </eAnnotations>
     </eLiterals>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="EIterable" instanceClassName="java.lang.Iterable">
+    <eTypeParameters name="T"/>
   </eClassifiers>
 </ecore:EPackage>

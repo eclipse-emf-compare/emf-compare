@@ -12,6 +12,7 @@ package org.eclipse.emf.compare;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -785,6 +786,16 @@ public interface ComparePackage extends EPackage {
 	int DIFFERENCE_SOURCE = 10;
 
 	/**
+	 * The meta object id for the '<em>EIterable</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.lang.Iterable
+	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getEIterable()
+	 * @generated
+	 */
+	int EITERABLE = 11;
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.Comparison <em>Comparison</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1236,6 +1247,17 @@ public interface ComparePackage extends EPackage {
 	EEnum getDifferenceSource();
 
 	/**
+	 * Returns the meta object for data type '{@link java.lang.Iterable <em>EIterable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>EIterable</em>'.
+	 * @see java.lang.Iterable
+	 * @model instanceClass="java.lang.Iterable" typeParameters="T"
+	 * @generated
+	 */
+	EDataType getEIterable();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1617,6 +1639,16 @@ public interface ComparePackage extends EPackage {
 		 * @generated
 		 */
 		EEnum DIFFERENCE_SOURCE = eINSTANCE.getDifferenceSource();
+
+		/**
+		 * The meta object literal for the '<em>EIterable</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.lang.Iterable
+		 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getEIterable()
+		 * @generated
+		 */
+		EDataType EITERABLE = eINSTANCE.getEIterable();
 
 	}
 

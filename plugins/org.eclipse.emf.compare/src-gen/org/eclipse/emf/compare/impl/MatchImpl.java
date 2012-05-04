@@ -10,6 +10,7 @@
  */
 package org.eclipse.emf.compare.impl;
 
+import java.lang.Iterable;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -278,6 +279,28 @@ public class MatchImpl extends MinimalEObjectImpl implements Match {
 	 * @generated
 	 */
 	public Comparison getComparison() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Iterable<Match> getAllSubmatches() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Iterable<Diff> getAllDifferences() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
 		throw new UnsupportedOperationException();
