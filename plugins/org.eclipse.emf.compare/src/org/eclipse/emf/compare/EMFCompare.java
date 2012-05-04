@@ -95,8 +95,10 @@ public final class EMFCompare {
 		reqEngine.computeRequirements(comparison);
 
 		// TODO allow extension of the default conflict detector
-		final IConflictDetector conflictDetector = new DefaultConflictDetector();
-		conflictDetector.detect(comparison);
+		if (comparison.isThreeWay()) {
+			final IConflictDetector conflictDetector = new DefaultConflictDetector();
+			conflictDetector.detect(comparison);
+		}
 
 		return comparison;
 	}

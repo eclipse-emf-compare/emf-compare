@@ -46,6 +46,8 @@ public class ComparisonTest {
 			System.out.println("origin = " + res.getOriginURI());
 		}
 		System.out.println();
+		System.out.println(comparison.getDifferences().size() + " differences");
+		System.out.println();
 		System.out
 				.println("|                  Left                  |                 Right                  |                 Origin                 |");
 		System.out

@@ -157,6 +157,11 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 			 */
 			assertChangedAttribute(differences, "extlibrary.AudioVisualItem.length", "name", "minutesLength",
 					"length", DifferenceSource.LEFT);
+			// These are actually pseudo-conflicts : same diff on both sides
+			assertRemoved(differences, "extlibrary.BookOnTape.reader", DifferenceSource.LEFT);
+			assertRemoved(differences, "extlibrary.BookOnTape.reader", DifferenceSource.RIGHT);
+			assertRemoved(differences, "extlibrary.Periodical.title", DifferenceSource.LEFT);
+			assertRemoved(differences, "extlibrary.Periodical.title", DifferenceSource.RIGHT);
 			/*
 			 * These changes can only be detected with an origin : lastName has been removed in the left model
 			 * and thus only the removal can be detected in two-way. Likewise, "minutesLength" has been

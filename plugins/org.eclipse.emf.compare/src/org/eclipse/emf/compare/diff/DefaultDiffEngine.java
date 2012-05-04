@@ -13,7 +13,6 @@ package org.eclipse.emf.compare.diff;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
-import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
@@ -22,8 +21,8 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -153,14 +152,14 @@ public class DefaultDiffEngine implements IDiffEngine {
 			rightValue = match.getRight().eGet(attribute);
 		}
 
-		if (matchingValues(leftValue, rightValue)) {
+		if (EqualityHelper.matchingValues(getComparison(), leftValue, rightValue)) {
 			return;
 		}
 
 		if (match.getOrigin() != null) {
 			final Object originValue = match.getOrigin().eGet(attribute);
 
-			if (matchingValues(leftValue, originValue)) {
+			if (EqualityHelper.matchingValues(getComparison(), leftValue, originValue)) {
 				if (rightValue != UNMATCHED_VALUE) {
 					// Value is in left and origin, but not in the right
 					getDiffProcessor().attributeChange(match, attribute, rightValue, DifferenceKind.CHANGE,
@@ -169,7 +168,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 					// Right is unmatched, left is the same as in the origin. No diff here : the diff is on
 					// the match itself, not on one of its attributes.
 				}
-			} else if (matchingValues(rightValue, originValue)) {
+			} else if (EqualityHelper.matchingValues(getComparison(), rightValue, originValue)) {
 				if (leftValue != UNMATCHED_VALUE) {
 					// Value is in right and origin, but not in left
 					getDiffProcessor().attributeChange(match, attribute, leftValue, DifferenceKind.CHANGE,
@@ -411,12 +410,34 @@ public class DefaultDiffEngine implements IDiffEngine {
 		for (EObject rightValue : rightValues) {
 			final Match valueMatch = getComparison().getMatch(rightValue);
 
+			/*
+			 * No match means we're out of the scope. Being contained in the same container in the same
+			 * reference on the left side means we've already been handled through the iteration on the left
+			 * side.
+			 */
 			if (valueMatch == null || valueMatch.getLeft() != null
 					&& isContainedBy(match.getLeft(), reference, valueMatch.getLeft())) {
 				// Either out of scope or handled by the iteration on the left side
 				// FIXME or could be a proxy : compare through URI
 			} else {
 				computeContainmentDiffForRightValue(match, reference, valueMatch, checkOrdering);
+			}
+		}
+
+		// This will only be used for iteration, once. use the original list
+		final Iterable<EObject> originValues = Iterables.filter(getValue(match.getOrigin(), reference),
+				EObject.class);
+
+		for (EObject originValue : originValues) {
+			final Match valueMatch = getComparison().getMatch(originValue);
+
+			// The only case of interest is the "pseudo" conflict happening when an element has been deleted
+			// in both left and right. All other cases have already been handled.
+			if (valueMatch == null || valueMatch.getLeft() != null || valueMatch.getRight() != null) {
+				// Either out of scope or already handled
+				// FIXME or could be a proxy : compare through URI
+			} else {
+				computeContainmentDiffForOriginValue(match, reference, valueMatch);
 			}
 		}
 	}
@@ -581,6 +602,37 @@ public class DefaultDiffEngine implements IDiffEngine {
 	}
 
 	/**
+	 * This will be called by the diff engine to compute containment differences on the given
+	 * <code>value</code>, which {@link Match#getOrigin() origin side} is known to be in the
+	 * <code>parent.reference</code>'s content list.
+	 * <p>
+	 * The necessary sanity checks have been made to know that <code>value.getorigin()</code> is not
+	 * <code>null</code> and part of <code>parent.getOrigin().eGet(reference)</code>. We also know that both
+	 * <code>value.getLeft()</code> and <code>value.getRight()</code> are {@code null}.
+	 * </p>
+	 * <p>
+	 * In other words, if this is called then we have a "pseudo" conflict : an object that is in the origin
+	 * but has been removed in both left and right.
+	 * </p>
+	 * 
+	 * @param parent
+	 *            The Match which containment references we are currently checking for differences.
+	 * @param reference
+	 *            The reference of which content <code>value</code> is known to be a part.
+	 * @param value
+	 *            The value of the given containment reference which is to be checked here.
+	 */
+	protected void computeContainmentDiffForOriginValue(Match parent, EReference reference, Match value) {
+		final EObject originValue = value.getOrigin();
+
+		// This can only be a conflict between the two following diffs (can never be called in two way)
+		getDiffProcessor().referenceChange(parent, reference, originValue, DifferenceKind.DELETE,
+				DifferenceSource.LEFT);
+		getDiffProcessor().referenceChange(parent, reference, originValue, DifferenceKind.DELETE,
+				DifferenceSource.RIGHT);
+	}
+
+	/**
 	 * Checks whether the given <code>value</code> is contained within the given <code>container</code>,
 	 * through the given <code>containmentReference</code>.
 	 * 
@@ -674,67 +726,10 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 */
 	protected Object findMatch(Object reference, Iterable<Object> candidates) {
 		for (Object candidate : candidates) {
-			if (matchingValues(reference, candidate)) {
+			if (EqualityHelper.matchingValues(getComparison(), reference, candidate)) {
 				return candidate;
 			}
 		}
 		return UNMATCHED_VALUE;
-	}
-
-	/**
-	 * Check that the two given values are "equal", considering the specifics of EMF.
-	 * 
-	 * @param object1
-	 *            First of the two objects to compare here.
-	 * @param object2
-	 *            Second of the two objects to compare here.
-	 * @return <code>true</code> if both objects are to be considered equal, <code>false</code> otherwise.
-	 */
-	protected boolean matchingValues(Object object1, Object object2) {
-		final boolean equal;
-		if (object1 == object2) {
-			equal = true;
-		} else if (object1 instanceof EEnumLiteral && object2 instanceof EEnumLiteral) {
-			final EEnumLiteral literal1 = (EEnumLiteral)object1;
-			final EEnumLiteral literal2 = (EEnumLiteral)object2;
-			final String value1 = literal1.getLiteral() + literal1.getValue();
-			final String value2 = literal2.getLiteral() + literal2.getValue();
-			equal = value1.equals(value2);
-		} else if (object1 instanceof EObject && object2 instanceof EObject) {
-			// [248442] This will handle FeatureMapEntries detection
-			final Match match = getComparison().getMatch((EObject)object1);
-			equal = match.getLeft() == object2 || match.getRight() == object2 || match.getOrigin() == object2;
-		} else if (object1 != null && object1.getClass().isArray() && object2 != null
-				&& object2.getClass().isArray()) {
-			// [299641] compare arrays by their content instead of instance equality
-			equal = matchingArrays(object1, object2);
-		} else {
-			equal = object1 != null && object1.equals(object2);
-		}
-		return equal;
-	}
-
-	/**
-	 * Compares two values as arrays, checking that their length and content match each other.
-	 * 
-	 * @param object1
-	 *            First of the two objects to compare here.
-	 * @param object2
-	 *            Second of the two objects to compare here.
-	 * @return <code>true</code> if these two arrays are to be considered equal, <code>false</code> otherwise.
-	 */
-	private boolean matchingArrays(Object object1, Object object2) {
-		boolean equal = true;
-		final int length1 = Array.getLength(object1);
-		if (length1 != Array.getLength(object2)) {
-			equal = true;
-		} else {
-			for (int i = 0; i < length1 && equal; i++) {
-				final Object element1 = Array.get(object1, i);
-				final Object element2 = Array.get(object2, i);
-				equal = matchingValues(element1, element2);
-			}
-		}
-		return equal;
 	}
 }

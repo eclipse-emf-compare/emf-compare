@@ -77,9 +77,13 @@ Expected Differences
 	26 - Remotely removed title from AudioVisualItem
 	27 - Attribute name of lastName has been remotely changed from lastName to familyName
 	28 - Attribute name of minutesLength has been remotely changed from minutesLength to minutes
+	29 - Removed reader from BookOnTape
+	30 - Remotely removed reader from BookOnTape
+	31 - Removed title from Periodical
+	32 - Remotely removed title from Periodical
 	
-	No diff on BookOnTape.reader : has been removed from both local and remote copies.
-	No diff on Periodical.title : it has been removed in right, but its container (Periodical) has been entirely removed from left.
+	Two diffs on BookOnTape.reader : has been removed from both local and remote copies (pseudo-conflict).
+	Two diffs on Periodical.title : it has been removed in right, and its container (Periodical) has been entirely removed from left.
 	
 	No equivalences.
 	
@@ -88,3 +92,5 @@ Expected Differences
 	8 and 18 : the remote Magazine is a subclass of the locally deleted Periodical
 	12 and 27 : remote renaming of a locally deleted attribute
 	14 and 28 : renaming to different values
+	29 and 30 : pseudo-conflict : same diff on both sides
+	31 and 32 : pseudo-conflict : same diff on both sides

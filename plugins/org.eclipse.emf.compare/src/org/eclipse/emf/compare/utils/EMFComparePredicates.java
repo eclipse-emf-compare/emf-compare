@@ -702,14 +702,27 @@ public final class EMFComparePredicates {
 					originValue = attribute.getDefaultValue();
 				}
 
+				final Object actualFrom;
+				if (fromValue == null) {
+					actualFrom = attribute.getDefaultValue();
+				} else {
+					actualFrom = fromValue;
+				}
+				final Object actualTo;
+				if (toValue == null) {
+					actualTo = attribute.getDefaultValue();
+				} else {
+					actualTo = toValue;
+				}
+
 				// "from" is either right or origin
 				boolean applies = false;
-				if (equal(fromValue, originValue)) {
+				if (equal(actualFrom, originValue)) {
 					// "from" is origin, "to" can be either left or right
-					applies = equal(toValue, leftValue) || equal(toValue, rightValue);
-				} else if (equal(fromValue, rightValue)) {
+					applies = equal(actualTo, leftValue) || equal(actualTo, rightValue);
+				} else if (equal(actualFrom, rightValue)) {
 					// "from" is right, "to" can only be left
-					applies = equal(toValue, leftValue);
+					applies = equal(actualTo, leftValue);
 				}
 				return applies;
 			}
