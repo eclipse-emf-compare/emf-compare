@@ -339,8 +339,13 @@ public class DefaultDiffEngine implements IDiffEngine {
 			if (valueMatch != null) {
 				final boolean originHasMatch = originValues.contains(valueMatch.getOrigin());
 				if (!reference.isMany()) {
-					getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.CHANGE,
-							DifferenceSource.RIGHT);
+					if (match.getLeft() == null) {
+						getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.CHANGE,
+								DifferenceSource.LEFT);
+					} else if (getComparison().isThreeWay()) {
+						getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.CHANGE,
+								DifferenceSource.RIGHT);
+					}
 				} else if (originHasMatch || !getComparison().isThreeWay()) {
 					// Even with no match in the origin, source is left side if not in a three way comparison
 					getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.DELETE,
