@@ -17,6 +17,8 @@ import org.eclipse.emf.compare.diff.DefaultDiffEngine;
 import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
+import org.eclipse.emf.compare.req.DefaultReqEngine;
+import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 
@@ -87,6 +89,10 @@ public final class EMFCompare {
 		// TODO allow extension of the default diff engine
 		final IDiffEngine diffEngine = new DefaultDiffEngine();
 		diffEngine.diff(comparison);
+
+		// TODO allow extension of the default requirements engine
+		final IReqEngine reqEngine = new DefaultReqEngine();
+		reqEngine.computeRequirements(comparison);
 
 		// TODO allow extension of the default conflict detector
 		final IConflictDetector conflictDetector = new DefaultConflictDetector();

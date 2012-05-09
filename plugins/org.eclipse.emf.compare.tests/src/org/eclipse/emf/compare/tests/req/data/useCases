@@ -1,0 +1,25 @@
+This will try and list all possible "requirement" cases that can happen in a model comparison. For each use case, we will consider
+two models, "left" and "right".
+
+a - One business model object dependency - left changes 
+	a1 - Object A (which references B with a single reference) and B are deleted.
+	a2 - Object A (which references B with a many reference) and B are deleted.
+	a3 - Object B is deleted and A references C instead of B (single reference).
+	a4 - Object B is deleted and A references C instead of B (many reference).
+	a5 - Several changes in the many reference.
+	a6 - References changed in the children of a node removed. Object container is removed with a sub-container which contains an object referencing (single and many reference) "destination"
+	
+b - One business model object dependency - right changes 
+	b1 - Object A (which references B with a single reference) and B are deleted.
+	b2 - Object A (which references B with a many reference) and B are deleted.
+	b3 - Object B is deleted and A references C instead of B (single reference).
+	b4 - Object B is deleted and A references C instead of B (many reference).
+	b5 - Several changes in the many reference.
+	b6 - References changed in the children of a node removed. Object container is added with a sub-container which contains an object referencing (single and many reference) "destination"
+	
+c - many business model object dependency - left changes 
+	c1 - Object A (which references B and C), B and C are deleted.
+	c2 - Object A (which references B and C) and C are deleted.
+	c3 - A reference to B (deleted) and C (deleted) is removed from object A.
+	c4 - A reference to B and C (deleted) is removed from object A.
+	c5 - A reference to C (deleted) is removed from object A.
