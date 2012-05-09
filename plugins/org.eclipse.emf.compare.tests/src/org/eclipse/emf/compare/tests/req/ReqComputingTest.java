@@ -170,6 +170,46 @@ public class ReqComputingTest {
 		testCD5(left, right, TestKind.DELETE);
 	}
 
+	@Test
+	public void testD1UseCase() throws IOException {
+		final Resource left = input.getC1Left();
+		final Resource right = input.getC1Right();
+
+		testCD1(right, left, TestKind.ADD);
+	}
+
+	@Test
+	public void testD2UseCase() throws IOException {
+		final Resource left = input.getC2Left();
+		final Resource right = input.getC2Right();
+
+		testCD2(right, left, TestKind.ADD);
+	}
+
+	@Test
+	public void testD3UseCase() throws IOException {
+		final Resource left = input.getC3Left();
+		final Resource right = input.getC3Right();
+
+		testCD3(right, left, TestKind.ADD);
+	}
+
+	@Test
+	public void testD4UseCase() throws IOException {
+		final Resource left = input.getC4Left();
+		final Resource right = input.getC4Right();
+
+		testCD4(right, left, TestKind.ADD);
+	}
+
+	@Test
+	public void testD5UseCase() throws IOException {
+		final Resource left = input.getC5Left();
+		final Resource right = input.getC5Right();
+
+		testCD5(right, left, TestKind.ADD);
+	}
+
 	private static void testAB1(final Resource left, final Resource right, TestKind kind) {
 		final Comparison comparison = EMFCompare.compare(left, right);
 
