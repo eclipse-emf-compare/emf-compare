@@ -440,7 +440,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getDiff_EquivalentDiffs() {
+	public EReference getDiff_Equivalence() {
 		return (EReference)diffEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -646,7 +646,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		createEReference(diffEClass, DIFF__REFINED_BY);
 		createEAttribute(diffEClass, DIFF__KIND);
 		createEAttribute(diffEClass, DIFF__SOURCE);
-		createEReference(diffEClass, DIFF__EQUIVALENT_DIFFS);
+		createEReference(diffEClass, DIFF__EQUIVALENCE);
 		createEReference(diffEClass, DIFF__CONFLICT);
 
 		resourceAttachmentChangeEClass = createEClass(RESOURCE_ATTACHMENT_CHANGE);
@@ -852,10 +852,10 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 				this.getDifferenceSource(),
 				"source", null, 1, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
-				getDiff_EquivalentDiffs(),
+				getDiff_Equivalence(),
 				this.getEquivalence(),
 				this.getEquivalence_Differences(),
-				"equivalentDiffs", null, 0, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"equivalence", null, 0, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getDiff_Conflict(),
 				this.getConflict(),
@@ -917,7 +917,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		initEReference(
 				getEquivalence_Differences(),
 				this.getDiff(),
-				this.getDiff_EquivalentDiffs(),
+				this.getDiff_Equivalence(),
 				"differences", null, 2, -1, Equivalence.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Initialize enums and add enum literals

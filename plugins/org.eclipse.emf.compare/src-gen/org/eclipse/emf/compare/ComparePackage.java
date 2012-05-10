@@ -338,13 +338,13 @@ public interface ComparePackage extends EPackage {
 	int DIFF__SOURCE = 6;
 
 	/**
-	 * The feature id for the '<em><b>Equivalent Diffs</b></em>' reference.
+	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF__EQUIVALENT_DIFFS = 7;
+	int DIFF__EQUIVALENCE = 7;
 
 	/**
 	 * The feature id for the '<em><b>Conflict</b></em>' reference.
@@ -438,13 +438,13 @@ public interface ComparePackage extends EPackage {
 	int RESOURCE_ATTACHMENT_CHANGE__SOURCE = DIFF__SOURCE;
 
 	/**
-	 * The feature id for the '<em><b>Equivalent Diffs</b></em>' reference.
+	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int RESOURCE_ATTACHMENT_CHANGE__EQUIVALENT_DIFFS = DIFF__EQUIVALENT_DIFFS;
+	int RESOURCE_ATTACHMENT_CHANGE__EQUIVALENCE = DIFF__EQUIVALENCE;
 
 	/**
 	 * The feature id for the '<em><b>Conflict</b></em>' reference.
@@ -547,13 +547,13 @@ public interface ComparePackage extends EPackage {
 	int REFERENCE_CHANGE__SOURCE = DIFF__SOURCE;
 
 	/**
-	 * The feature id for the '<em><b>Equivalent Diffs</b></em>' reference.
+	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REFERENCE_CHANGE__EQUIVALENT_DIFFS = DIFF__EQUIVALENT_DIFFS;
+	int REFERENCE_CHANGE__EQUIVALENCE = DIFF__EQUIVALENCE;
 
 	/**
 	 * The feature id for the '<em><b>Conflict</b></em>' reference.
@@ -665,13 +665,13 @@ public interface ComparePackage extends EPackage {
 	int ATTRIBUTE_CHANGE__SOURCE = DIFF__SOURCE;
 
 	/**
-	 * The feature id for the '<em><b>Equivalent Diffs</b></em>' reference.
+	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ATTRIBUTE_CHANGE__EQUIVALENT_DIFFS = DIFF__EQUIVALENT_DIFFS;
+	int ATTRIBUTE_CHANGE__EQUIVALENCE = DIFF__EQUIVALENCE;
 
 	/**
 	 * The feature id for the '<em><b>Conflict</b></em>' reference.
@@ -1078,15 +1078,15 @@ public interface ComparePackage extends EPackage {
 	EAttribute getDiff_Source();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.Diff#getEquivalentDiffs <em>Equivalent Diffs</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.Diff#getEquivalence <em>Equivalence</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Equivalent Diffs</em>'.
-	 * @see org.eclipse.emf.compare.Diff#getEquivalentDiffs()
+	 * @return the meta object for the reference '<em>Equivalence</em>'.
+	 * @see org.eclipse.emf.compare.Diff#getEquivalence()
 	 * @see #getDiff()
 	 * @generated
 	 */
-	EReference getDiff_EquivalentDiffs();
+	EReference getDiff_Equivalence();
 
 	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.Diff#getConflict <em>Conflict</em>}'.
@@ -1498,12 +1498,12 @@ public interface ComparePackage extends EPackage {
 		EAttribute DIFF__SOURCE = eINSTANCE.getDiff_Source();
 
 		/**
-		 * The meta object literal for the '<em><b>Equivalent Diffs</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Equivalence</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference DIFF__EQUIVALENT_DIFFS = eINSTANCE.getDiff_EquivalentDiffs();
+		EReference DIFF__EQUIVALENCE = eINSTANCE.getDiff_Equivalence();
 
 		/**
 		 * The meta object literal for the '<em><b>Conflict</b></em>' reference feature.

@@ -76,7 +76,7 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 			addRefinedByPropertyDescriptor(object);
 			addKindPropertyDescriptor(object);
 			addSourcePropertyDescriptor(object);
-			addEquivalentDiffsPropertyDescriptor(object);
+			addEquivalencePropertyDescriptor(object);
 			addConflictPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
@@ -177,20 +177,20 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This adds a property descriptor for the Equivalent Diffs feature.
+	 * This adds a property descriptor for the Equivalence feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addEquivalentDiffsPropertyDescriptor(Object object) {
+	protected void addEquivalencePropertyDescriptor(Object object) {
 		itemPropertyDescriptors
 				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 						.getRootAdapterFactory(),
 						getResourceLocator(),
-						getString("_UI_Diff_equivalentDiffs_feature"), //$NON-NLS-1$
+						getString("_UI_Diff_equivalence_feature"), //$NON-NLS-1$
 						getString(
-								"_UI_PropertyDescriptor_description", "_UI_Diff_equivalentDiffs_feature", "_UI_Diff_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						ComparePackage.Literals.DIFF__EQUIVALENT_DIFFS, true, false, true, null, null, null));
+								"_UI_PropertyDescriptor_description", "_UI_Diff_equivalence_feature", "_UI_Diff_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						ComparePackage.Literals.DIFF__EQUIVALENCE, true, false, true, null, null, null));
 	}
 
 	/**

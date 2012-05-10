@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="compare"
-    nsURI="http://www.eclipse.org/emf/compare" nsPrefix="compare">
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="compare" nsURI="http://www.eclipse.org/emf/compare" nsPrefix="compare">
   <eClassifiers xsi:type="ecore:EClass" name="Comparison">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="This will act as the &quot;root&quot; of a comparison. It will reference one match for every root of the input models, along with the differences detected for each of them."/>
@@ -215,7 +213,7 @@
         <details key="documentation" value="Returns the source of this diff, either one of DifferenceSource.LEFT (for two-way comparisons or differences detected between the left and origin elements) or DifferenceSource.RIGHT (for differences between the right and origin elements)."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="equivalentDiffs" eType="#//Equivalence"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="equivalence" eType="#//Equivalence"
         eOpposite="#//Equivalence/differences">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="If this diff is equivalent to another, we will reference the equivalence from here. For example, if a reference has an eOpposite, we will detect one diff for each side of the bidirectional reference, yet merging one of these diffs is enough. We consider them equivalent."/>
@@ -297,7 +295,7 @@
       <details key="documentation" value="Diffs are considered equivalent if merging one is enough to resolve both differences. For example, if a reference has an eOpposite, we will detect one diff for each side of the bidirectional reference, yet merging one of these diffs will automatically update the model in such a way that the second diff is &quot;merged&quot;."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="differences" lowerBound="2"
-        upperBound="-1" eType="#//Diff" eOpposite="#//Diff/equivalentDiffs">
+        upperBound="-1" eType="#//Diff" eOpposite="#//Diff/equivalence">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="References the &lt;i>n&lt;/i> diffs composing this equivalence. There are &lt;u>at least&lt;/u> two diffs in this list."/>
       </eAnnotations>

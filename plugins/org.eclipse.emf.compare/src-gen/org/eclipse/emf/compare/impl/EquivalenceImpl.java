@@ -86,7 +86,7 @@ public class EquivalenceImpl extends MinimalEObjectImpl implements Equivalence {
 	public EList<Diff> getDifferences() {
 		if (differences == null) {
 			differences = new EObjectWithInverseResolvingEList<Diff>(Diff.class, this,
-					ComparePackage.EQUIVALENCE__DIFFERENCES, ComparePackage.DIFF__EQUIVALENT_DIFFS);
+					ComparePackage.EQUIVALENCE__DIFFERENCES, ComparePackage.DIFF__EQUIVALENCE);
 		}
 		return differences;
 	}

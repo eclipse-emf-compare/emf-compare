@@ -45,7 +45,7 @@ public interface Equivalence extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Differences</b></em>' reference list.
 	 * The list contents are of type {@link org.eclipse.emf.compare.Diff}.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.compare.Diff#getEquivalentDiffs <em>Equivalent Diffs</em>}'.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.compare.Diff#getEquivalence <em>Equivalence</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -53,8 +53,8 @@ public interface Equivalence extends EObject {
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Differences</em>' reference list.
 	 * @see org.eclipse.emf.compare.ComparePackage#getEquivalence_Differences()
-	 * @see org.eclipse.emf.compare.Diff#getEquivalentDiffs
-	 * @model opposite="equivalentDiffs" lower="2"
+	 * @see org.eclipse.emf.compare.Diff#getEquivalence
+	 * @model opposite="equivalence" lower="2"
 	 * @generated
 	 */
 	EList<Diff> getDifferences();

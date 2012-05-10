@@ -33,7 +33,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.emf.compare.Diff#getRefinedBy <em>Refined By</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getKind <em>Kind</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getSource <em>Source</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.Diff#getEquivalentDiffs <em>Equivalent Diffs</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getEquivalence <em>Equivalence</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getConflict <em>Conflict</em>}</li>
  * </ul>
  * </p>
@@ -174,33 +174,6 @@ public interface Diff extends EObject {
 	void setKind(DifferenceKind value);
 
 	/**
-	 * Returns the value of the '<em><b>Equivalent Diffs</b></em>' reference.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.compare.Equivalence#getDifferences <em>Differences</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * If this diff is equivalent to another, we will reference the equivalence from here. For example, if a reference has an eOpposite, we will detect one diff for each side of the bidirectional reference, yet merging one of these diffs is enough. We consider them equivalent.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Equivalent Diffs</em>' reference.
-	 * @see #setEquivalentDiffs(Equivalence)
-	 * @see org.eclipse.emf.compare.ComparePackage#getDiff_EquivalentDiffs()
-	 * @see org.eclipse.emf.compare.Equivalence#getDifferences
-	 * @model opposite="differences"
-	 * @generated
-	 */
-	Equivalence getEquivalentDiffs();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.Diff#getEquivalentDiffs <em>Equivalent Diffs</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Equivalent Diffs</em>' reference.
-	 * @see #getEquivalentDiffs()
-	 * @generated
-	 */
-	void setEquivalentDiffs(Equivalence value);
-
-	/**
 	 * Returns the value of the '<em><b>Conflict</b></em>' reference.
 	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.compare.Conflict#getDifferences <em>Differences</em>}'.
 	 * <!-- begin-user-doc -->
@@ -254,6 +227,33 @@ public interface Diff extends EObject {
 	 * @generated
 	 */
 	void setSource(DifferenceSource value);
+
+	/**
+	 * Returns the value of the '<em><b>Equivalence</b></em>' reference.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.compare.Equivalence#getDifferences <em>Differences</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * If this diff is equivalent to another, we will reference the equivalence from here. For example, if a reference has an eOpposite, we will detect one diff for each side of the bidirectional reference, yet merging one of these diffs is enough. We consider them equivalent.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Equivalence</em>' reference.
+	 * @see #setEquivalence(Equivalence)
+	 * @see org.eclipse.emf.compare.ComparePackage#getDiff_Equivalence()
+	 * @see org.eclipse.emf.compare.Equivalence#getDifferences
+	 * @model opposite="differences"
+	 * @generated
+	 */
+	Equivalence getEquivalence();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.Diff#getEquivalence <em>Equivalence</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Equivalence</em>' reference.
+	 * @see #getEquivalence()
+	 * @generated
+	 */
+	void setEquivalence(Equivalence value);
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -49,7 +49,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getRefinedBy <em>Refined By</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getKind <em>Kind</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getSource <em>Source</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getEquivalentDiffs <em>Equivalent Diffs</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getEquivalence <em>Equivalence</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getConflict <em>Conflict</em>}</li>
  * </ul>
  * </p>
@@ -147,14 +147,14 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	protected DifferenceSource source = SOURCE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getEquivalentDiffs() <em>Equivalent Diffs</em>}' reference.
+	 * The cached value of the '{@link #getEquivalence() <em>Equivalence</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getEquivalentDiffs()
+	 * @see #getEquivalence()
 	 * @generated
 	 * @ordered
 	 */
-	protected Equivalence equivalentDiffs;
+	protected Equivalence equivalence;
 
 	/**
 	 * The cached value of the '{@link #getConflict() <em>Conflict</em>}' reference.
@@ -308,74 +308,6 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Equivalence getEquivalentDiffs() {
-		if (equivalentDiffs != null && equivalentDiffs.eIsProxy()) {
-			InternalEObject oldEquivalentDiffs = (InternalEObject)equivalentDiffs;
-			equivalentDiffs = (Equivalence)eResolveProxy(oldEquivalentDiffs);
-			if (equivalentDiffs != oldEquivalentDiffs) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							ComparePackage.DIFF__EQUIVALENT_DIFFS, oldEquivalentDiffs, equivalentDiffs));
-			}
-		}
-		return equivalentDiffs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Equivalence basicGetEquivalentDiffs() {
-		return equivalentDiffs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetEquivalentDiffs(Equivalence newEquivalentDiffs, NotificationChain msgs) {
-		Equivalence oldEquivalentDiffs = equivalentDiffs;
-		equivalentDiffs = newEquivalentDiffs;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
-					ComparePackage.DIFF__EQUIVALENT_DIFFS, oldEquivalentDiffs, newEquivalentDiffs);
-			if (msgs == null)
-				msgs = notification;
-			else
-				msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setEquivalentDiffs(Equivalence newEquivalentDiffs) {
-		if (newEquivalentDiffs != equivalentDiffs) {
-			NotificationChain msgs = null;
-			if (equivalentDiffs != null)
-				msgs = ((InternalEObject)equivalentDiffs).eInverseRemove(this,
-						ComparePackage.EQUIVALENCE__DIFFERENCES, Equivalence.class, msgs);
-			if (newEquivalentDiffs != null)
-				msgs = ((InternalEObject)newEquivalentDiffs).eInverseAdd(this,
-						ComparePackage.EQUIVALENCE__DIFFERENCES, Equivalence.class, msgs);
-			msgs = basicSetEquivalentDiffs(newEquivalentDiffs, msgs);
-			if (msgs != null)
-				msgs.dispatch();
-		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ComparePackage.DIFF__EQUIVALENT_DIFFS,
-					newEquivalentDiffs, newEquivalentDiffs));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public Conflict getConflict() {
 		if (conflict != null && conflict.eIsProxy()) {
 			InternalEObject oldConflict = (InternalEObject)conflict;
@@ -466,6 +398,74 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Equivalence getEquivalence() {
+		if (equivalence != null && equivalence.eIsProxy()) {
+			InternalEObject oldEquivalence = (InternalEObject)equivalence;
+			equivalence = (Equivalence)eResolveProxy(oldEquivalence);
+			if (equivalence != oldEquivalence) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							ComparePackage.DIFF__EQUIVALENCE, oldEquivalence, equivalence));
+			}
+		}
+		return equivalence;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Equivalence basicGetEquivalence() {
+		return equivalence;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetEquivalence(Equivalence newEquivalence, NotificationChain msgs) {
+		Equivalence oldEquivalence = equivalence;
+		equivalence = newEquivalence;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					ComparePackage.DIFF__EQUIVALENCE, oldEquivalence, newEquivalence);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setEquivalence(Equivalence newEquivalence) {
+		if (newEquivalence != equivalence) {
+			NotificationChain msgs = null;
+			if (equivalence != null)
+				msgs = ((InternalEObject)equivalence).eInverseRemove(this,
+						ComparePackage.EQUIVALENCE__DIFFERENCES, Equivalence.class, msgs);
+			if (newEquivalence != null)
+				msgs = ((InternalEObject)newEquivalence).eInverseAdd(this,
+						ComparePackage.EQUIVALENCE__DIFFERENCES, Equivalence.class, msgs);
+			msgs = basicSetEquivalence(newEquivalence, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ComparePackage.DIFF__EQUIVALENCE,
+					newEquivalence, newEquivalence));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public void apply() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -519,11 +519,11 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 			case ComparePackage.DIFF__REFINED_BY:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getRefinedBy()).basicAdd(otherEnd,
 						msgs);
-			case ComparePackage.DIFF__EQUIVALENT_DIFFS:
-				if (equivalentDiffs != null)
-					msgs = ((InternalEObject)equivalentDiffs).eInverseRemove(this,
+			case ComparePackage.DIFF__EQUIVALENCE:
+				if (equivalence != null)
+					msgs = ((InternalEObject)equivalence).eInverseRemove(this,
 							ComparePackage.EQUIVALENCE__DIFFERENCES, Equivalence.class, msgs);
-				return basicSetEquivalentDiffs((Equivalence)otherEnd, msgs);
+				return basicSetEquivalence((Equivalence)otherEnd, msgs);
 			case ComparePackage.DIFF__CONFLICT:
 				if (conflict != null)
 					msgs = ((InternalEObject)conflict).eInverseRemove(this,
@@ -551,8 +551,8 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 				return ((InternalEList<?>)getRefines()).basicRemove(otherEnd, msgs);
 			case ComparePackage.DIFF__REFINED_BY:
 				return ((InternalEList<?>)getRefinedBy()).basicRemove(otherEnd, msgs);
-			case ComparePackage.DIFF__EQUIVALENT_DIFFS:
-				return basicSetEquivalentDiffs(null, msgs);
+			case ComparePackage.DIFF__EQUIVALENCE:
+				return basicSetEquivalence(null, msgs);
 			case ComparePackage.DIFF__CONFLICT:
 				return basicSetConflict(null, msgs);
 		}
@@ -596,10 +596,10 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 				return getKind();
 			case ComparePackage.DIFF__SOURCE:
 				return getSource();
-			case ComparePackage.DIFF__EQUIVALENT_DIFFS:
+			case ComparePackage.DIFF__EQUIVALENCE:
 				if (resolve)
-					return getEquivalentDiffs();
-				return basicGetEquivalentDiffs();
+					return getEquivalence();
+				return basicGetEquivalence();
 			case ComparePackage.DIFF__CONFLICT:
 				if (resolve)
 					return getConflict();
@@ -642,8 +642,8 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 			case ComparePackage.DIFF__SOURCE:
 				setSource((DifferenceSource)newValue);
 				return;
-			case ComparePackage.DIFF__EQUIVALENT_DIFFS:
-				setEquivalentDiffs((Equivalence)newValue);
+			case ComparePackage.DIFF__EQUIVALENCE:
+				setEquivalence((Equivalence)newValue);
 				return;
 			case ComparePackage.DIFF__CONFLICT:
 				setConflict((Conflict)newValue);
@@ -681,8 +681,8 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 			case ComparePackage.DIFF__SOURCE:
 				setSource(SOURCE_EDEFAULT);
 				return;
-			case ComparePackage.DIFF__EQUIVALENT_DIFFS:
-				setEquivalentDiffs((Equivalence)null);
+			case ComparePackage.DIFF__EQUIVALENCE:
+				setEquivalence((Equivalence)null);
 				return;
 			case ComparePackage.DIFF__CONFLICT:
 				setConflict((Conflict)null);
@@ -713,8 +713,8 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 				return kind != KIND_EDEFAULT;
 			case ComparePackage.DIFF__SOURCE:
 				return source != SOURCE_EDEFAULT;
-			case ComparePackage.DIFF__EQUIVALENT_DIFFS:
-				return equivalentDiffs != null;
+			case ComparePackage.DIFF__EQUIVALENCE:
+				return equivalence != null;
 			case ComparePackage.DIFF__CONFLICT:
 				return conflict != null;
 		}
