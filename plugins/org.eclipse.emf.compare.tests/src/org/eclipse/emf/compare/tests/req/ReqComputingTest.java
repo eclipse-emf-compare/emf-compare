@@ -35,7 +35,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		testAB1(left, right, TestKind.DELETE);
+		final Comparison comparison = EMFCompare.compare(left, right);
+		testAB1(TestKind.DELETE, comparison);
 	}
 
 	@Test
@@ -43,8 +44,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
 
-		testAB2(left, right, TestKind.DELETE);
-
+		final Comparison comparison = EMFCompare.compare(left, right);
+		testAB2(TestKind.DELETE, comparison);
 	}
 
 	@Test
@@ -52,7 +53,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		testAB3(left, right, TestKind.DELETE);
+		final Comparison comparison = EMFCompare.compare(left, right);
+		testAB3(TestKind.DELETE, comparison);
 	}
 
 	@Test
@@ -60,8 +62,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA4Left();
 		final Resource right = input.getA4Right();
 
-		testAB4(left, right, TestKind.DELETE);
-
+		final Comparison comparison = EMFCompare.compare(left, right);
+		testAB4(TestKind.DELETE, comparison);
 	}
 
 	@Test
@@ -69,8 +71,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA5Left();
 		final Resource right = input.getA5Right();
 
-		testAB5(left, right, TestKind.DELETE);
-
+		final Comparison comparison = EMFCompare.compare(left, right);
+		testAB5(TestKind.DELETE, comparison);
 	}
 
 	@Test
@@ -78,7 +80,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA6Left();
 		final Resource right = input.getA6Right();
 
-		testAB6(left, right, TestKind.DELETE);
+		final Comparison comparison = EMFCompare.compare(left, right);
+		testAB6(TestKind.DELETE, comparison);
 
 	}
 
@@ -87,7 +90,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		testAB1(right, left, TestKind.ADD);
+		final Comparison comparison = EMFCompare.compare(right, left);
+		testAB1(TestKind.ADD, comparison);
 	}
 
 	@Test
@@ -95,7 +99,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
 
-		testAB2(right, left, TestKind.ADD);
+		final Comparison comparison = EMFCompare.compare(right, left);
+		testAB2(TestKind.ADD, comparison);
 	}
 
 	@Test
@@ -103,7 +108,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		testAB3(right, left, TestKind.ADD);
+		final Comparison comparison = EMFCompare.compare(right, left);
+		testAB3(TestKind.ADD, comparison);
 	}
 
 	@Test
@@ -111,7 +117,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA4Left();
 		final Resource right = input.getA4Right();
 
-		testAB4(right, left, TestKind.ADD);
+		final Comparison comparison = EMFCompare.compare(right, left);
+		testAB4(TestKind.ADD, comparison);
 	}
 
 	@Test
@@ -119,7 +126,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA5Left();
 		final Resource right = input.getA5Right();
 
-		testAB5(right, left, TestKind.ADD);
+		final Comparison comparison = EMFCompare.compare(right, left);
+		testAB5(TestKind.ADD, comparison);
 	}
 
 	@Test
@@ -127,7 +135,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA6Left();
 		final Resource right = input.getA6Right();
 
-		testAB6(right, left, TestKind.ADD);
+		final Comparison comparison = EMFCompare.compare(right, left);
+		testAB6(TestKind.ADD, comparison);
 	}
 
 	@Test
@@ -135,7 +144,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC1Left();
 		final Resource right = input.getC1Right();
 
-		testCD1(left, right, TestKind.DELETE);
+		final Comparison comparison = EMFCompare.compare(left, right);
+		testCD1(TestKind.DELETE, comparison);
 	}
 
 	@Test
@@ -143,7 +153,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC2Left();
 		final Resource right = input.getC2Right();
 
-		testCD2(left, right, TestKind.DELETE);
+		final Comparison comparison = EMFCompare.compare(left, right);
+		testCD2(TestKind.DELETE, comparison);
 	}
 
 	@Test
@@ -151,7 +162,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC3Left();
 		final Resource right = input.getC3Right();
 
-		testCD3(left, right, TestKind.DELETE);
+		final Comparison comparison = EMFCompare.compare(left, right);
+		testCD3(TestKind.DELETE, comparison);
 	}
 
 	@Test
@@ -159,7 +171,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC4Left();
 		final Resource right = input.getC4Right();
 
-		testCD4(left, right, TestKind.DELETE);
+		final Comparison comparison = EMFCompare.compare(left, right);
+		testCD4(TestKind.DELETE, comparison);
 	}
 
 	@Test
@@ -167,7 +180,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC5Left();
 		final Resource right = input.getC5Right();
 
-		testCD5(left, right, TestKind.DELETE);
+		final Comparison comparison = EMFCompare.compare(left, right);
+		testCD5(TestKind.DELETE, comparison);
 	}
 
 	@Test
@@ -175,7 +189,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC1Left();
 		final Resource right = input.getC1Right();
 
-		testCD1(right, left, TestKind.ADD);
+		final Comparison comparison = EMFCompare.compare(right, left);
+		testCD1(TestKind.ADD, comparison);
 	}
 
 	@Test
@@ -183,7 +198,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC2Left();
 		final Resource right = input.getC2Right();
 
-		testCD2(right, left, TestKind.ADD);
+		final Comparison comparison = EMFCompare.compare(right, left);
+		testCD2(TestKind.ADD, comparison);
 	}
 
 	@Test
@@ -191,7 +207,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC3Left();
 		final Resource right = input.getC3Right();
 
-		testCD3(right, left, TestKind.ADD);
+		final Comparison comparison = EMFCompare.compare(right, left);
+		testCD3(TestKind.ADD, comparison);
 	}
 
 	@Test
@@ -199,7 +216,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC4Left();
 		final Resource right = input.getC4Right();
 
-		testCD4(right, left, TestKind.ADD);
+		final Comparison comparison = EMFCompare.compare(right, left);
+		testCD4(TestKind.ADD, comparison);
 	}
 
 	@Test
@@ -207,12 +225,231 @@ public class ReqComputingTest {
 		final Resource left = input.getC5Left();
 		final Resource right = input.getC5Right();
 
-		testCD5(right, left, TestKind.ADD);
+		final Comparison comparison = EMFCompare.compare(right, left);
+		testCD5(TestKind.ADD, comparison);
 	}
 
-	private static void testAB1(final Resource left, final Resource right, TestKind kind) {
-		final Comparison comparison = EMFCompare.compare(left, right);
+	@Test
+	public void testE1UseCase1() throws IOException {
+		final Resource left = input.getE1Left();
+		final Resource right = input.getE1Right();
+		final Resource ancestor = input.getE1Ancestor();
 
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testAB1(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testE2UseCase() throws IOException {
+		final Resource left = input.getE2Left();
+		final Resource right = input.getE2Right();
+		final Resource ancestor = input.getE2Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testAB2(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testE3UseCase() throws IOException {
+		final Resource left = input.getE3Left();
+		final Resource right = input.getE3Right();
+		final Resource ancestor = input.getE3Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testAB3(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testE4UseCase() throws IOException {
+		final Resource left = input.getE4Left();
+		final Resource right = input.getE4Right();
+		final Resource ancestor = input.getE4Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testAB4(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testE5UseCase() throws IOException {
+		final Resource left = input.getE5Left();
+		final Resource right = input.getE5Right();
+		final Resource ancestor = input.getE5Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testAB5(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testE6UseCase() throws IOException {
+		final Resource left = input.getE6Left();
+		final Resource right = input.getE6Right();
+		final Resource ancestor = input.getE6Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testAB6(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testE7UseCase() throws IOException {
+		final Resource left = input.getE7Left();
+		final Resource right = input.getE7Right();
+		final Resource ancestor = input.getE7Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testCD1(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testE8UseCase() throws IOException {
+		final Resource left = input.getE8Left();
+		final Resource right = input.getE8Right();
+		final Resource ancestor = input.getE8Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testCD2(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testE9UseCase() throws IOException {
+		final Resource left = input.getE9Left();
+		final Resource right = input.getE9Right();
+		final Resource ancestor = input.getE9Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testCD3(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testE10UseCase() throws IOException {
+		final Resource left = input.getE10Left();
+		final Resource right = input.getE10Right();
+		final Resource ancestor = input.getE10Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testCD4(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testE11UseCase() throws IOException {
+		final Resource left = input.getE11Left();
+		final Resource right = input.getE11Right();
+		final Resource ancestor = input.getE11Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testCD5(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testF1UseCase1() throws IOException {
+		final Resource left = input.getF1Left();
+		final Resource right = input.getF1Right();
+		final Resource ancestor = input.getF1Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testAB1(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testF2UseCase() throws IOException {
+		final Resource left = input.getF2Left();
+		final Resource right = input.getF2Right();
+		final Resource ancestor = input.getF2Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testAB2(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testF3UseCase() throws IOException {
+		final Resource left = input.getF3Left();
+		final Resource right = input.getF3Right();
+		final Resource ancestor = input.getF3Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testAB3(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testF4UseCase() throws IOException {
+		final Resource left = input.getF4Left();
+		final Resource right = input.getF4Right();
+		final Resource ancestor = input.getF4Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testAB4(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testF5UseCase() throws IOException {
+		final Resource left = input.getF5Left();
+		final Resource right = input.getF5Right();
+		final Resource ancestor = input.getF5Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testAB5(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testF6UseCase() throws IOException {
+		final Resource left = input.getF6Left();
+		final Resource right = input.getF6Right();
+		final Resource ancestor = input.getF6Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testAB6(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testF7UseCase() throws IOException {
+		final Resource left = input.getF7Left();
+		final Resource right = input.getF7Right();
+		final Resource ancestor = input.getF7Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testCD1(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testF8UseCase() throws IOException {
+		final Resource left = input.getF8Left();
+		final Resource right = input.getF8Right();
+		final Resource ancestor = input.getF8Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testCD2(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testF9UseCase() throws IOException {
+		final Resource left = input.getF9Left();
+		final Resource right = input.getF9Right();
+		final Resource ancestor = input.getF9Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testCD3(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testF10UseCase() throws IOException {
+		final Resource left = input.getF10Left();
+		final Resource right = input.getF10Right();
+		final Resource ancestor = input.getF10Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testCD4(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testF11UseCase() throws IOException {
+		final Resource left = input.getF11Left();
+		final Resource right = input.getF11Right();
+		final Resource ancestor = input.getF11Ancestor();
+
+		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		testCD5(TestKind.ADD, comparison);
+	}
+
+	private static void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 3 differences
@@ -261,9 +498,7 @@ public class ReqComputingTest {
 		assertTrue(changedSingleValuedRefDiff.getRequires().contains(deleteSourceDiff));
 	}
 
-	private static void testAB2(final Resource left, final Resource right, TestKind kind) {
-		final Comparison comparison = EMFCompare.compare(left, right);
-
+	private static void testAB2(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 3 differences
@@ -307,9 +542,7 @@ public class ReqComputingTest {
 		assertTrue(deleteMultiValuedRefDiff.getRequires().contains(deleteSourceDiff));
 	}
 
-	private static void testAB3(final Resource left, final Resource right, TestKind kind) {
-		final Comparison comparison = EMFCompare.compare(left, right);
-
+	private static void testAB3(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 2 differences
@@ -345,9 +578,7 @@ public class ReqComputingTest {
 		assertSame(Integer.valueOf(0), Integer.valueOf(deleteDestinationDiff.getRequires().size()));
 	}
 
-	private static void testAB4(final Resource left, final Resource right, TestKind kind) {
-		final Comparison comparison = EMFCompare.compare(left, right);
-
+	private static void testAB4(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 3 differences
@@ -392,9 +623,7 @@ public class ReqComputingTest {
 		assertSame(Integer.valueOf(0), Integer.valueOf(deleteDestinationDiff.getRequires().size()));
 	}
 
-	private static void testAB5(final Resource left, final Resource right, TestKind kind) {
-		final Comparison comparison = EMFCompare.compare(left, right);
-
+	private static void testAB5(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 8 differences
@@ -476,9 +705,7 @@ public class ReqComputingTest {
 		assertSame(Integer.valueOf(0), Integer.valueOf(delDest3.getRequires().size()));
 	}
 
-	private static void testAB6(final Resource left, final Resource right, TestKind kind) {
-		final Comparison comparison = EMFCompare.compare(left, right);
-
+	private static void testAB6(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 7 differences
@@ -554,9 +781,7 @@ public class ReqComputingTest {
 		assertTrue(delRefSource2.getRequires().contains(delDest));
 	}
 
-	private static void testCD1(final Resource left, final Resource right, TestKind kind) {
-		final Comparison comparison = EMFCompare.compare(left, right);
-
+	private static void testCD1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
@@ -610,12 +835,9 @@ public class ReqComputingTest {
 		assertSame(Integer.valueOf(2), Integer.valueOf(deleteRefCDiff.getRequires().size()));
 		assertTrue(deleteRefCDiff.getRequires().contains(deleteCDiff));
 		assertTrue(deleteRefCDiff.getRequires().contains(deleteADiff));
-
 	}
 
-	private static void testCD2(final Resource left, final Resource right, TestKind kind) {
-		final Comparison comparison = EMFCompare.compare(left, right);
-
+	private static void testCD2(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
@@ -662,12 +884,9 @@ public class ReqComputingTest {
 		assertSame(Integer.valueOf(2), Integer.valueOf(deleteRefCDiff.getRequires().size()));
 		assertTrue(deleteRefCDiff.getRequires().contains(deleteCDiff));
 		assertTrue(deleteRefCDiff.getRequires().contains(deleteADiff));
-
 	}
 
-	private static void testCD3(final Resource left, final Resource right, TestKind kind) {
-		final Comparison comparison = EMFCompare.compare(left, right);
-
+	private static void testCD3(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
@@ -713,12 +932,9 @@ public class ReqComputingTest {
 
 		assertSame(Integer.valueOf(1), Integer.valueOf(deleteRefCDiff.getRequires().size()));
 		assertTrue(deleteRefCDiff.getRequires().contains(deleteCDiff));
-
 	}
 
-	private static void testCD4(final Resource left, final Resource right, TestKind kind) {
-		final Comparison comparison = EMFCompare.compare(left, right);
-
+	private static void testCD4(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
@@ -757,12 +973,9 @@ public class ReqComputingTest {
 
 		assertSame(Integer.valueOf(1), Integer.valueOf(deleteRefCDiff.getRequires().size()));
 		assertTrue(deleteRefCDiff.getRequires().contains(deleteCDiff));
-
 	}
 
-	private static void testCD5(final Resource left, final Resource right, TestKind kind) {
-		final Comparison comparison = EMFCompare.compare(left, right);
-
+	private static void testCD5(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
@@ -792,6 +1005,5 @@ public class ReqComputingTest {
 
 		assertSame(Integer.valueOf(1), Integer.valueOf(deleteRefCDiff.getRequires().size()));
 		assertTrue(deleteRefCDiff.getRequires().contains(deleteCDiff));
-
 	}
 }

@@ -23,3 +23,14 @@ c - many business model object dependency - left changes
 	c3 - A reference to B (deleted) and C (deleted) is removed from object A.
 	c4 - A reference to B and C (deleted) is removed from object A.
 	c5 - A reference to C (deleted) is removed from object A.
+	
+d - many business model object dependency - right changes 
+	d1 - Object A (which references B and C), B and C are deleted.
+	d2 - Object A (which references B and C) and C are deleted.
+	d3 - A reference to B (deleted) and C (deleted) is removed from object A.
+	d4 - A reference to B and C (deleted) is removed from object A.
+	d5 - A reference to C (deleted) is removed from object A.
+	
+e - 3-way tests - left changes
+
+f - 3 way tests - right changes
