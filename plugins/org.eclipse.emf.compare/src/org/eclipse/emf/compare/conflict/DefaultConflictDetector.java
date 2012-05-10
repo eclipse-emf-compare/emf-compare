@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -111,14 +112,14 @@ public class DefaultConflictDetector implements IConflictDetector {
 				final Object candidateChanged = ((ReferenceChange)candidate).getValue();
 				if (candidateFeature == feature
 						&& !EqualityHelper.matchingValues(comparison, changedValue, candidateChanged)) {
-					conflictOn(comparison, diff, candidate, false);
+					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 				}
 			} else if (candidate instanceof AttributeChange) {
 				final EStructuralFeature candidateFeature = ((AttributeChange)candidate).getAttribute();
 				final Object candidateChanged = ((AttributeChange)candidate).getValue();
 				if (candidateFeature == feature
 						&& !EqualityHelper.matchingValues(comparison, changedValue, candidateChanged)) {
-					conflictOn(comparison, diff, candidate, false);
+					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 				}
 			}
 		}
@@ -152,7 +153,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 				}
 
 				if (EqualityHelper.matchingValues(comparison, deletedValue, movedValue)) {
-					conflictOn(comparison, diff, candidate, false);
+					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 				}
 			}
 		}
@@ -169,7 +170,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 
 			final Diff oppositeDiff = getFirst(candidates, oppositeDiffPredicate);
 			if (oppositeDiff != null) {
-				conflictOn(comparison, diff, oppositeDiff, true);
+				conflictOn(comparison, diff, oppositeDiff, ConflictKind.PSEUDO);
 			}
 		} else {
 			final EObject deletedValue;
@@ -184,7 +185,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 			for (Diff candidate : candidates) {
 				// "candidate" is a diff on an Object that has been deleted on the other side
 				if (candidate.getMatch() == deletedMatch) {
-					conflictOn(comparison, diff, candidate, false);
+					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 				} else if (candidate instanceof ReferenceChange) {
 					/*
 					 * The only potential conflict here is if the candidate is a ReferenceChange of either
@@ -193,21 +194,28 @@ public class DefaultConflictDetector implements IConflictDetector {
 					if (candidate.getKind() == DifferenceKind.ADD
 							|| candidate.getKind() == DifferenceKind.CHANGE
 							&& ((ReferenceChange)candidate).getValue() == deletedValue) {
-						conflictOn(comparison, diff, candidate, false);
+						conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 					}
 				}
 			}
 		}
 	}
 
-	protected void conflictOn(Comparison comparison, Diff diff1, Diff diff2, boolean pseudoConflict) {
+	protected void conflictOn(Comparison comparison, Diff diff1, Diff diff2, ConflictKind kind) {
 		final Conflict conflict;
 		if (diff1.getConflict() != null) {
 			conflict = diff1.getConflict();
+			if (conflict.getKind() == ConflictKind.PSEUDO && conflict.getKind() != kind) {
+				conflict.setKind(kind);
+			}
 		} else if (diff2.getConflict() != null) {
 			conflict = diff2.getConflict();
+			if (conflict.getKind() == ConflictKind.PSEUDO && conflict.getKind() != kind) {
+				conflict.setKind(kind);
+			}
 		} else {
 			conflict = CompareFactory.eINSTANCE.createConflict();
+			conflict.setKind(kind);
 			comparison.getConflicts().add(conflict);
 		}
 

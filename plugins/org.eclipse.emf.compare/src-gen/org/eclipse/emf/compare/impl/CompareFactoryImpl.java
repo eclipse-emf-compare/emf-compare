@@ -115,6 +115,8 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 				return createDifferenceKindFromString(eDataType, initialValue);
 			case ComparePackage.DIFFERENCE_SOURCE:
 				return createDifferenceSourceFromString(eDataType, initialValue);
+			case ComparePackage.CONFLICT_KIND:
+				return createConflictKindFromString(eDataType, initialValue);
 			case ComparePackage.EITERABLE:
 				return createEIterableFromString(eDataType, initialValue);
 			default:
@@ -134,6 +136,8 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 				return convertDifferenceKindToString(eDataType, instanceValue);
 			case ComparePackage.DIFFERENCE_SOURCE:
 				return convertDifferenceSourceToString(eDataType, instanceValue);
+			case ComparePackage.CONFLICT_KIND:
+				return convertConflictKindToString(eDataType, instanceValue);
 			case ComparePackage.EITERABLE:
 				return convertEIterableToString(eDataType, instanceValue);
 			default:
@@ -260,6 +264,28 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 	 * @generated
 	 */
 	public String convertDifferenceSourceToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ConflictKind createConflictKindFromString(EDataType eDataType, String initialValue) {
+		ConflictKind result = ConflictKind.get(initialValue);
+		if (result == null)
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertConflictKindToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

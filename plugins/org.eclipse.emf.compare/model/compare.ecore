@@ -283,6 +283,11 @@
         <details key="documentation" value="This can be used to retrieve the list of differences that were made in the right element."/>
       </eAnnotations>
     </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" lowerBound="1" eType="#//ConflictKind">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Describes the kind of this conflict, whether it is a real conflict or a pseudo-conflict."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="differences" lowerBound="2"
         upperBound="-1" eType="#//Diff" eOpposite="#//Diff/conflict">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -338,6 +343,21 @@
     <eLiterals name="RIGHT" value="1">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Will be used if the difference has been detected between the right element and its origin."/>
+      </eAnnotations>
+    </eLiterals>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ConflictKind">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Conflicts detected through EMF Compare can be of a number of different types.&#xD;&#xA;&lt;ul>&#xD;&#xA;&#x9;&lt;li>REAL are the conflicts that cannot be merged automatically,&lt;/li>&#xD;&#xA;&#x9;&lt;li>PSEUDO are the &quot;conflicts&quot; that represent the same change made on the two sides, which can thus be automatically merged.&lt;/li>&#xD;&#xA;&lt;/ul>"/>
+    </eAnnotations>
+    <eLiterals name="REAL">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="conflicts that cannot be merged automatically as they represent incompatible differences on the two sides."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="PSEUDO" value="1">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="If the same change has been made on the two sides since the common ancestor, these changes will be marked as &quot;pseudo-conflicting&quot; changes : there are changes, but they can be merged automatically."/>
       </eAnnotations>
     </eLiterals>
   </eClassifiers>

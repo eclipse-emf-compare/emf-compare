@@ -720,13 +720,22 @@ public interface ComparePackage extends EPackage {
 	int CONFLICT = 7;
 
 	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONFLICT__KIND = 0;
+
+	/**
 	 * The feature id for the '<em><b>Differences</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONFLICT__DIFFERENCES = 0;
+	int CONFLICT__DIFFERENCES = 1;
 
 	/**
 	 * The number of structural features of the '<em>Conflict</em>' class.
@@ -735,7 +744,7 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONFLICT_FEATURE_COUNT = 1;
+	int CONFLICT_FEATURE_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.impl.EquivalenceImpl <em>Equivalence</em>}' class.
@@ -786,6 +795,16 @@ public interface ComparePackage extends EPackage {
 	int DIFFERENCE_SOURCE = 10;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.ConflictKind <em>Conflict Kind</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.ConflictKind
+	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getConflictKind()
+	 * @generated
+	 */
+	int CONFLICT_KIND = 11;
+
+	/**
 	 * The meta object id for the '<em>EIterable</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -793,7 +812,7 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getEIterable()
 	 * @generated
 	 */
-	int EITERABLE = 11;
+	int EITERABLE = 12;
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.Comparison <em>Comparison</em>}'.
@@ -1195,6 +1214,17 @@ public interface ComparePackage extends EPackage {
 	EClass getConflict();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.Conflict#getKind <em>Kind</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Kind</em>'.
+	 * @see org.eclipse.emf.compare.Conflict#getKind()
+	 * @see #getConflict()
+	 * @generated
+	 */
+	EAttribute getConflict_Kind();
+
+	/**
 	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.Conflict#getDifferences <em>Differences</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1245,6 +1275,16 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getDifferenceSource();
+
+	/**
+	 * Returns the meta object for enum '{@link org.eclipse.emf.compare.ConflictKind <em>Conflict Kind</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Conflict Kind</em>'.
+	 * @see org.eclipse.emf.compare.ConflictKind
+	 * @generated
+	 */
+	EEnum getConflictKind();
 
 	/**
 	 * Returns the meta object for data type '{@link java.lang.Iterable <em>EIterable</em>}'.
@@ -1595,6 +1635,14 @@ public interface ComparePackage extends EPackage {
 		EClass CONFLICT = eINSTANCE.getConflict();
 
 		/**
+		 * The meta object literal for the '<em><b>Kind</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONFLICT__KIND = eINSTANCE.getConflict_Kind();
+
+		/**
 		 * The meta object literal for the '<em><b>Differences</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1639,6 +1687,16 @@ public interface ComparePackage extends EPackage {
 		 * @generated
 		 */
 		EEnum DIFFERENCE_SOURCE = eINSTANCE.getDifferenceSource();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.ConflictKind <em>Conflict Kind</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.ConflictKind
+		 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getConflictKind()
+		 * @generated
+		 */
+		EEnum CONFLICT_KIND = eINSTANCE.getConflictKind();
 
 		/**
 		 * The meta object literal for the '<em>EIterable</em>' data type.

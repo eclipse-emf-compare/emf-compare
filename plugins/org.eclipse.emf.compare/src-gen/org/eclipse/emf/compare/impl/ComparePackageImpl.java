@@ -16,6 +16,7 @@ import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -127,6 +128,13 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * @generated
 	 */
 	private EEnum differenceSourceEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum conflictKindEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -539,8 +547,17 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getConflict_Kind() {
+		return (EAttribute)conflictEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getConflict_Differences() {
-		return (EReference)conflictEClass.getEStructuralFeatures().get(0);
+		return (EReference)conflictEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -577,6 +594,15 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 */
 	public EEnum getDifferenceSource() {
 		return differenceSourceEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getConflictKind() {
+		return conflictKindEEnum;
 	}
 
 	/**
@@ -661,6 +687,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		createEAttribute(attributeChangeEClass, ATTRIBUTE_CHANGE__VALUE);
 
 		conflictEClass = createEClass(CONFLICT);
+		createEAttribute(conflictEClass, CONFLICT__KIND);
 		createEReference(conflictEClass, CONFLICT__DIFFERENCES);
 
 		equivalenceEClass = createEClass(EQUIVALENCE);
@@ -669,6 +696,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		// Create enums
 		differenceKindEEnum = createEEnum(DIFFERENCE_KIND);
 		differenceSourceEEnum = createEEnum(DIFFERENCE_SOURCE);
+		conflictKindEEnum = createEEnum(CONFLICT_KIND);
 
 		// Create data types
 		eIterableEDataType = createEDataType(EITERABLE);
@@ -902,6 +930,10 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 		initEClass(conflictEClass, Conflict.class,
 				"Conflict", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getConflict_Kind(),
+				this.getConflictKind(),
+				"kind", null, 1, 1, Conflict.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getConflict_Differences(),
 				this.getDiff(),
@@ -930,6 +962,10 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		initEEnum(differenceSourceEEnum, DifferenceSource.class, "DifferenceSource"); //$NON-NLS-1$
 		addEEnumLiteral(differenceSourceEEnum, DifferenceSource.LEFT);
 		addEEnumLiteral(differenceSourceEEnum, DifferenceSource.RIGHT);
+
+		initEEnum(conflictKindEEnum, ConflictKind.class, "ConflictKind"); //$NON-NLS-1$
+		addEEnumLiteral(conflictKindEEnum, ConflictKind.REAL);
+		addEEnumLiteral(conflictKindEEnum, ConflictKind.PSEUDO);
 
 		// Initialize data types
 		initEDataType(eIterableEDataType, Iterable.class,

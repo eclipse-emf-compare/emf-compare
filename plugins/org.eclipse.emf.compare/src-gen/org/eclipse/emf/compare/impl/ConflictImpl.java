@@ -12,17 +12,20 @@ package org.eclipse.emf.compare.impl;
 
 import java.util.Collection;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
@@ -35,6 +38,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.eclipse.emf.compare.impl.ConflictImpl#getKind <em>Kind</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.ConflictImpl#getDifferences <em>Differences</em>}</li>
  * </ul>
  * </p>
@@ -48,6 +52,26 @@ public class ConflictImpl extends MinimalEObjectImpl implements Conflict {
 	 * @generated
 	 */
 	public static final String copyright = "Copyright (c) 2012 Obeo.\r\nAll rights reserved. This program and the accompanying materials\r\nare made available under the terms of the Eclipse Public License v1.0\r\nwhich accompanies this distribution, and is available at\r\nhttp://www.eclipse.org/legal/epl-v10.html\r\n\r\nContributors:\r\n    Obeo - initial API and implementation"; //$NON-NLS-1$
+
+	/**
+	 * The default value of the '{@link #getKind() <em>Kind</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getKind()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final ConflictKind KIND_EDEFAULT = ConflictKind.REAL;
+
+	/**
+	 * The cached value of the '{@link #getKind() <em>Kind</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getKind()
+	 * @generated
+	 * @ordered
+	 */
+	protected ConflictKind kind = KIND_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getDifferences() <em>Differences</em>}' reference list.
@@ -76,6 +100,28 @@ public class ConflictImpl extends MinimalEObjectImpl implements Conflict {
 	@Override
 	protected EClass eStaticClass() {
 		return ComparePackage.Literals.CONFLICT;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ConflictKind getKind() {
+		return kind;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setKind(ConflictKind newKind) {
+		ConflictKind oldKind = kind;
+		kind = newKind == null ? KIND_EDEFAULT : newKind;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ComparePackage.CONFLICT__KIND, oldKind,
+					kind));
 	}
 
 	/**
@@ -151,6 +197,8 @@ public class ConflictImpl extends MinimalEObjectImpl implements Conflict {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case ComparePackage.CONFLICT__KIND:
+				return getKind();
 			case ComparePackage.CONFLICT__DIFFERENCES:
 				return getDifferences();
 		}
@@ -166,6 +214,9 @@ public class ConflictImpl extends MinimalEObjectImpl implements Conflict {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case ComparePackage.CONFLICT__KIND:
+				setKind((ConflictKind)newValue);
+				return;
 			case ComparePackage.CONFLICT__DIFFERENCES:
 				getDifferences().clear();
 				getDifferences().addAll((Collection<? extends Diff>)newValue);
@@ -182,6 +233,9 @@ public class ConflictImpl extends MinimalEObjectImpl implements Conflict {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case ComparePackage.CONFLICT__KIND:
+				setKind(KIND_EDEFAULT);
+				return;
 			case ComparePackage.CONFLICT__DIFFERENCES:
 				getDifferences().clear();
 				return;
@@ -197,10 +251,29 @@ public class ConflictImpl extends MinimalEObjectImpl implements Conflict {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case ComparePackage.CONFLICT__KIND:
+				return kind != KIND_EDEFAULT;
 			case ComparePackage.CONFLICT__DIFFERENCES:
 				return differences != null && !differences.isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy())
+			return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (kind: "); //$NON-NLS-1$
+		result.append(kind);
+		result.append(')');
+		return result.toString();
 	}
 
 } //ConflictImpl
