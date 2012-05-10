@@ -113,6 +113,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 				if (candidateFeature == feature
 						&& !EqualityHelper.matchingValues(comparison, changedValue, candidateChanged)) {
 					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+				} else if (candidateFeature == feature) {
+					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
 				}
 			} else if (candidate instanceof AttributeChange) {
 				final EStructuralFeature candidateFeature = ((AttributeChange)candidate).getAttribute();
@@ -120,6 +122,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 				if (candidateFeature == feature
 						&& !EqualityHelper.matchingValues(comparison, changedValue, candidateChanged)) {
 					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+				} else if (candidateFeature == feature) {
+					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
 				}
 			}
 		}
@@ -183,9 +187,22 @@ public class DefaultConflictDetector implements IConflictDetector {
 			}
 
 			for (Diff candidate : candidates) {
-				// "candidate" is a diff on an Object that has been deleted on the other side
 				if (candidate.getMatch() == deletedMatch) {
-					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+					// "candidate" is a diff on an Object that has been deleted on the other side
+					boolean pseudoConflict = false;
+					if (candidate instanceof ReferenceChange) {
+						final EObject value = ((ReferenceChange)candidate).getValue();
+						final Match valueMatch = comparison.getMatch(value);
+
+						pseudoConflict = valueMatch != null && valueMatch.getOrigin() == value;
+					}
+					final ConflictKind kind;
+					if (pseudoConflict) {
+						kind = ConflictKind.PSEUDO;
+					} else {
+						kind = ConflictKind.REAL;
+					}
+					conflictOn(comparison, diff, candidate, kind);
 				} else if (candidate instanceof ReferenceChange) {
 					/*
 					 * The only potential conflict here is if the candidate is a ReferenceChange of either

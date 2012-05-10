@@ -307,38 +307,39 @@ public class DefaultDiffEngine implements IDiffEngine {
 		 * rightValues since we'll iterate over its values once, a plain hash set for the origin as it will
 		 * only be used for lookup purposes.
 		 */
-		// NOTE : Do not use the original list for rightValues : we will remove objects from it.
+		// NOTE : Do not use the original lists : we will remove objects from it.
 		final Set<EObject> rightValues = Sets.newLinkedHashSet(Iterables.filter(getValue(match.getRight(),
 				reference), EObject.class));
 		final Set<EObject> originValues = Sets.newHashSet(Iterables.filter(getValue(match.getOrigin(),
 				reference), EObject.class));
 
+		boolean leftIsEmpty = true;
 		for (EObject value : leftValues) {
 			final Match valueMatch = getComparison().getMatch(value);
 
 			if (valueMatch != null) {
+				leftIsEmpty = false;
 				// Is this value present in the right side?
 				final EObject rightMatch = valueMatch.getRight();
 
 				if (rightMatch == null || !rightValues.contains(rightMatch)) {
 					final boolean originHasMatch = originValues.contains(valueMatch.getOrigin());
-					final DifferenceKind kind;
-					if (!reference.isMany()) {
-						kind = DifferenceKind.CHANGE;
-					} else if (originHasMatch) {
-						kind = DifferenceKind.DELETE;
-					} else {
-						kind = DifferenceKind.ADD;
-					}
-					// no need to check if three way for these
-					if (!reference.isMany() && !rightValues.isEmpty()) {
+
+					if (!reference.isMany() && originHasMatch && !rightValues.isEmpty()) {
 						// value is also set in the right, we'll detect it on that value
+					} else if (!reference.isMany() && originHasMatch) {
+						// Value is in left and origin, but unset in right. We must detect the diff here
+						getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.CHANGE,
+								DifferenceSource.RIGHT);
 					} else if (!reference.isMany()) {
-						// Value is in left and origin, though not in right (or unset in right).
-						getDiffProcessor().referenceChange(match, reference, value, kind,
+						// Value is in left, not in right. it is either not in the origin or we are in two-way
+						getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.CHANGE,
+								DifferenceSource.LEFT);
+					} else if (originHasMatch) {
+						getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.DELETE,
 								DifferenceSource.RIGHT);
 					} else {
-						getDiffProcessor().referenceChange(match, reference, value, kind,
+						getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.ADD,
 								DifferenceSource.LEFT);
 					}
 					// FIXME if reference.isMany() then check ordering between left and origin
@@ -372,7 +373,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 						 */
 						getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.CHANGE,
 								DifferenceSource.RIGHT);
-					} else {
+					} else if (leftIsEmpty) {
 						/*
 						 * Value is in the right , but not in the left. my origin is the same as the right
 						 * value, or I am in a two-way comparison.
@@ -400,15 +401,23 @@ public class DefaultDiffEngine implements IDiffEngine {
 			final Match valueMatch = getComparison().getMatch(value);
 
 			if (valueMatch != null) {
-				// This can only be a conflict between the two following diffs (can never be here in two way)
 				final DifferenceKind kind;
 				if (!reference.isMany()) {
 					kind = DifferenceKind.CHANGE;
 				} else {
 					kind = DifferenceKind.DELETE;
 				}
-				getDiffProcessor().referenceChange(match, reference, value, kind, DifferenceSource.LEFT);
-				getDiffProcessor().referenceChange(match, reference, value, kind, DifferenceSource.RIGHT);
+				/*
+				 * The value has changed on both sides. This can be either a pseudo conflict between two
+				 * identical diffs, or a real conflict between two distinct changes. The only change we
+				 * haven't yet detected through the iterations on right and left are the deletions/unsettings.
+				 */
+				if (leftIsEmpty) {
+					getDiffProcessor().referenceChange(match, reference, value, kind, DifferenceSource.LEFT);
+				}
+				if (rightValues.isEmpty()) {
+					getDiffProcessor().referenceChange(match, reference, value, kind, DifferenceSource.RIGHT);
+				}
 			}
 		}
 	}
