@@ -312,15 +312,17 @@ public class DefaultDiffEngine implements IDiffEngine {
 						kind = DifferenceKind.ADD;
 					}
 					// no need to check if three way for these
-					if (originHasMatch) {
-						// Value is in left and origin, though not in right.
+					if (!reference.isMany() && !rightValues.isEmpty()) {
+						// value is also set in the right, we'll detect it on that value
+					} else if (!reference.isMany()) {
+						// Value is in left and origin, though not in right (or unset in right).
 						getDiffProcessor().referenceChange(match, reference, value, kind,
 								DifferenceSource.RIGHT);
-						// FIXME if reference.isMany() then check ordering between left and origin
 					} else {
 						getDiffProcessor().referenceChange(match, reference, value, kind,
 								DifferenceSource.LEFT);
 					}
+					// FIXME if reference.isMany() then check ordering between left and origin
 				} else {
 					// Value is present in both left and right lists. We can only have a diff on ordering.
 					rightValues.remove(rightMatch);
@@ -340,11 +342,23 @@ public class DefaultDiffEngine implements IDiffEngine {
 				final boolean originHasMatch = originValues.contains(valueMatch.getOrigin());
 				if (!reference.isMany()) {
 					if (match.getLeft() == null) {
+						// I have a reference value in an object that is not in the left.
 						getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.CHANGE,
 								DifferenceSource.LEFT);
-					} else if (getComparison().isThreeWay()) {
+					} else if (!originHasMatch && getComparison().isThreeWay()) {
+						/*
+						 * Value is in the right, but not in the left. We have no origin in a three way
+						 * comparison.
+						 */
 						getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.CHANGE,
 								DifferenceSource.RIGHT);
+					} else {
+						/*
+						 * Value is in the right , but not in the left. my origin is the same as the right
+						 * value, or I am in a two-way comparison.
+						 */
+						getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.CHANGE,
+								DifferenceSource.LEFT);
 					}
 				} else if (originHasMatch || !getComparison().isThreeWay()) {
 					// Even with no match in the origin, source is left side if not in a three way comparison
