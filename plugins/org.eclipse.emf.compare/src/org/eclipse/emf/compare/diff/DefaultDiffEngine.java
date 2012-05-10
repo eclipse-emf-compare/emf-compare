@@ -153,10 +153,20 @@ public class DefaultDiffEngine implements IDiffEngine {
 		}
 
 		if (EqualityHelper.matchingValues(getComparison(), leftValue, rightValue)) {
-			return;
-		}
+			// Identical values in left and right. The only problematic case is if they do not match the
+			// origin (and left and right are defined, i.e don't detect attribute change on unmatched)
+			if (leftValue != UNMATCHED_VALUE && match.getOrigin() != null) {
+				final Object originValue = match.getOrigin().eGet(attribute);
 
-		if (match.getOrigin() != null) {
+				if (!EqualityHelper.matchingValues(getComparison(), leftValue, originValue)) {
+					// The same diff change has been made on both side. This is actually a pseudo-conflict
+					getDiffProcessor().attributeChange(match, attribute, originValue, DifferenceKind.CHANGE,
+							DifferenceSource.LEFT);
+					getDiffProcessor().attributeChange(match, attribute, originValue, DifferenceKind.CHANGE,
+							DifferenceSource.RIGHT);
+				}
+			}
+		} else if (match.getOrigin() != null) {
 			final Object originValue = match.getOrigin().eGet(attribute);
 
 			if (EqualityHelper.matchingValues(getComparison(), leftValue, originValue)) {
@@ -261,6 +271,16 @@ public class DefaultDiffEngine implements IDiffEngine {
 						DifferenceSource.RIGHT);
 			}
 		}
+
+		// We've update the origin list as we matched objects. The remaining are values that have been removed
+		// from both sides.
+		for (Object value : originValues) {
+			// This can only be a conflict between the two following diffs (can never be here in two way)
+			getDiffProcessor().attributeChange(match, attribute, value, DifferenceKind.DELETE,
+					DifferenceSource.LEFT);
+			getDiffProcessor().attributeChange(match, attribute, value, DifferenceKind.DELETE,
+					DifferenceSource.RIGHT);
+		}
 	}
 
 	/**
@@ -325,6 +345,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 				} else {
 					// Value is present in both left and right lists. We can only have a diff on ordering.
 					rightValues.remove(rightMatch);
+					originValues.remove(valueMatch.getOrigin());
 					// FIXME if reference.isMany() then check ordering between left and right
 				}
 			} else {
@@ -367,9 +388,27 @@ public class DefaultDiffEngine implements IDiffEngine {
 					getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.ADD,
 							DifferenceSource.RIGHT);
 				}
+				originValues.remove(valueMatch.getOrigin());
 			} else {
 				// this value is out of the comparison scope
 				// FIXME or could be a proxy : compare through URI
+			}
+		}
+
+		// We've updated the origin list as we matched objects. The remaining are pseudo-conflicts.
+		for (EObject value : originValues) {
+			final Match valueMatch = getComparison().getMatch(value);
+
+			if (valueMatch != null) {
+				// This can only be a conflict between the two following diffs (can never be here in two way)
+				final DifferenceKind kind;
+				if (!reference.isMany()) {
+					kind = DifferenceKind.CHANGE;
+				} else {
+					kind = DifferenceKind.DELETE;
+				}
+				getDiffProcessor().referenceChange(match, reference, value, kind, DifferenceSource.LEFT);
+				getDiffProcessor().referenceChange(match, reference, value, kind, DifferenceSource.RIGHT);
 			}
 		}
 	}

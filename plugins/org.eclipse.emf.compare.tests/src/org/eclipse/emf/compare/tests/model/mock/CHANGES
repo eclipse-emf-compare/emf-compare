@@ -81,6 +81,8 @@ Expected Differences
 	30 - Remotely removed reader from BookOnTape
 	31 - Removed title from Periodical
 	32 - Remotely removed title from Periodical
+	33 - Changed reference eType of BookOnTape.reader from Person to null
+	34 - Remotely Changed reference eType of BookOnTape.reader from Person to null
 	
 	Two diffs on BookOnTape.reader : has been removed from both local and remote copies (pseudo-conflict).
 	Two diffs on Periodical.title : it has been removed in right, and its container (Periodical) has been entirely removed from left.
@@ -94,3 +96,4 @@ Expected Differences
 	14 and 28 : renaming to different values
 	29 and 30 : pseudo-conflict : same diff on both sides
 	31 and 32 : pseudo-conflict : same diff on both sides
+	33 and 34 : pseudo-conflict : same diff on both sides

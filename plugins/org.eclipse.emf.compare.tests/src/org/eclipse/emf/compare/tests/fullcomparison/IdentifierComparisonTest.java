@@ -18,6 +18,7 @@ import static org.eclipse.emf.compare.tests.framework.EMFCompareAssert.assertAdd
 import static org.eclipse.emf.compare.tests.framework.EMFCompareAssert.assertAddedToReference;
 import static org.eclipse.emf.compare.tests.framework.EMFCompareAssert.assertAllMatched;
 import static org.eclipse.emf.compare.tests.framework.EMFCompareAssert.assertChangedAttribute;
+import static org.eclipse.emf.compare.tests.framework.EMFCompareAssert.assertChangedReference;
 import static org.eclipse.emf.compare.tests.framework.EMFCompareAssert.assertRemoved;
 import static org.eclipse.emf.compare.tests.framework.EMFCompareAssert.assertRemovedFromReference;
 
@@ -162,6 +163,10 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 			assertRemoved(differences, "extlibrary.BookOnTape.reader", DifferenceSource.RIGHT);
 			assertRemoved(differences, "extlibrary.Periodical.title", DifferenceSource.LEFT);
 			assertRemoved(differences, "extlibrary.Periodical.title", DifferenceSource.RIGHT);
+			assertChangedReference(differences, "extlibrary.BookOnTape.reader", "eType", "extlibrary.Person",
+					null, DifferenceSource.LEFT);
+			assertChangedReference(differences, "extlibrary.BookOnTape.reader", "eType", "extlibrary.Person",
+					null, DifferenceSource.RIGHT);
 			/*
 			 * These changes can only be detected with an origin : lastName has been removed in the left model
 			 * and thus only the removal can be detected in two-way. Likewise, "minutesLength" has been
