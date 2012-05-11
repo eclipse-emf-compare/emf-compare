@@ -70,11 +70,6 @@
     <module>plugins/org.eclipse.emf.compare.diagram.ui</module>
     <module>plugins/org.eclipse.emf.compare.diagram.ecoretools</module>
     
-    <module>plugins/org.eclipse.emf.compare.sysml</module>
-    <module>plugins/org.eclipse.emf.compare.sysml.edit</module>
-    <module>plugins/org.eclipse.emf.compare.sysml.tests</module>
-    <module>packaging/org.eclipse.emf.compare.sysml-feature</module>
-    
     
     <module>plugins/org.eclipse.emf.compare.diff</module>
     <module>plugins/org.eclipse.emf.compare.diff.edit</module>
@@ -102,9 +97,16 @@
     <module>packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
     <module>packaging/org.eclipse.emf.compare.diagram.ecoretools-feature</module>
     
+    <!-- No longer compiles on Indigo
     <module>plugins/org.eclipse.emf.compare.diagram.papyrus</module>
     <module>plugins/org.eclipse.emf.compare.diagram.ui.papyrus</module>
     <module>packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
+    
+    <module>plugins/org.eclipse.emf.compare.sysml</module>
+    <module>plugins/org.eclipse.emf.compare.sysml.edit</module>
+    <module>plugins/org.eclipse.emf.compare.sysml.tests</module>
+    <module>packaging/org.eclipse.emf.compare.sysml-feature</module>
+    -->
     
     
     
