@@ -13,6 +13,8 @@ b - Left : Changing value of single-valued feature. Right : Changing to another 
 	b2 - Left : Changing value "origin" to "left". Right : Unsetting value. 
 	b3 - Left : Setting value to "left". Right : Setting value to "right".
 	b4 - Left : Unsetting value. Right : changing value "origin" to "right".
+----	b5 - Setting value to "leftAndRight" on both sides
+----	b6 - Unsetting value on both sides
 
 c - Left : Changing value of multi-valued feature. Right : Deleting the containing element.
 	c1 - Adding value "left1" to feature.
@@ -25,6 +27,9 @@ d - Left : Changing value of multi-valued feature. Right : Changing the same val
 	d1 - Left : Removing value "origin1" from feature. Right : Moving value "origin1".
 	d2 - Left : Moving value "origin1". Right : Removing value "origin1".
 	d3 - Left : Moving value "origin1". Right : Moving value "origin1" to a different index.
+----	d4 - Clearing all values of this feature on both sides
+----	d5 - Removing value "origin1" from both sides
+----	d6 - Moving value "origin1" to different indices on both sides
 
 These only apply to reference changes
 

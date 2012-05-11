@@ -281,10 +281,16 @@ public class DefaultDiffEngine implements IDiffEngine {
 		// from both sides.
 		for (Object value : originValues) {
 			// This can only be a conflict between the two following diffs (can never be here in two way)
-			getDiffProcessor().attributeChange(match, attribute, value, DifferenceKind.DELETE,
-					DifferenceSource.LEFT);
-			getDiffProcessor().attributeChange(match, attribute, value, DifferenceKind.DELETE,
-					DifferenceSource.RIGHT);
+			// Note that if one side has been deleted altogether, the pseudo-conflict is with the deletion,
+			// not with the attribute change.
+			if (match.getLeft() != null) {
+				getDiffProcessor().attributeChange(match, attribute, value, DifferenceKind.DELETE,
+						DifferenceSource.LEFT);
+			}
+			if (match.getRight() != null) {
+				getDiffProcessor().attributeChange(match, attribute, value, DifferenceKind.DELETE,
+						DifferenceSource.RIGHT);
+			}
 		}
 	}
 
@@ -349,9 +355,9 @@ public class DefaultDiffEngine implements IDiffEngine {
 				} else {
 					// Value is present in both left and right lists. We can only have a diff on ordering.
 					rightValues.remove(rightMatch);
-					originValues.remove(valueMatch.getOrigin());
 					// FIXME if reference.isMany() then check ordering between left and right
 				}
+				originValues.remove(valueMatch.getOrigin());
 			} else {
 				// this value is out of the comparison scope
 				// FIXME or could be a proxy : compare through URI
@@ -413,10 +419,10 @@ public class DefaultDiffEngine implements IDiffEngine {
 				 * identical diffs, or a real conflict between two distinct changes. The only change we
 				 * haven't yet detected through the iterations on right and left are the deletions/unsettings.
 				 */
-				if (leftIsEmpty) {
+				if (leftIsEmpty || reference.isMany()) {
 					getDiffProcessor().referenceChange(match, reference, value, kind, DifferenceSource.LEFT);
 				}
-				if (rightValues.isEmpty()) {
+				if (rightValues.isEmpty() || reference.isMany()) {
 					getDiffProcessor().referenceChange(match, reference, value, kind, DifferenceSource.RIGHT);
 				}
 			}

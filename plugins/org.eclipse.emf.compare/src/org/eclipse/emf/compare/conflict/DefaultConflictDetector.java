@@ -29,6 +29,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.utils.EqualityHelper;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
@@ -72,7 +73,10 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 *            An iterable over the Diffs that possible candidates for conflicts.
 	 */
 	protected void checkConflict(Comparison comparison, Diff diff, Iterable<Diff> candidates) {
-		// DELETE diffs can conflict with every other if on containment references, only with MOVE otherwise
+		/*
+		 * DELETE diffs can conflict with every other if on containment references, only with MOVE or other
+		 * DELETE otherwise.
+		 */
 		// ADD diffs can only conflict with "DELETE" ones ... These will be detected on the DELETE
 		// CHANGE diffs can only conflict with other CHANGE or DELETE ... here again detected on the DELETE
 		// MOVE diffs can conflict with DELETE ones, detected on the delete, or with other MOVE diffs.
@@ -80,7 +84,6 @@ public class DefaultConflictDetector implements IConflictDetector {
 			if (diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment()) {
 				checkContainmentDeleteConflict(comparison, (ReferenceChange)diff, candidates);
 			} else {
-				// attribute or reference, the only potential conflict is a "move" on the other side
 				checkFeatureDeleteConflict(comparison, diff, candidates);
 			}
 		} else if (diff.getKind() == DifferenceKind.CHANGE) {
@@ -161,6 +164,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 */
 	protected void checkFeatureDeleteConflict(Comparison comparison, Diff diff, Iterable<Diff> candidates) {
 		final Object deletedValue;
+		final EStructuralFeature feature;
 		if (diff instanceof ReferenceChange) {
 			final Match valueMatch = comparison.getMatch(((ReferenceChange)diff).getValue());
 			if (diff.getSource() == DifferenceSource.LEFT) {
@@ -168,26 +172,44 @@ public class DefaultConflictDetector implements IConflictDetector {
 			} else {
 				deletedValue = valueMatch.getLeft();
 			}
+			feature = ((ReferenceChange)diff).getReference();
 		} else {
 			deletedValue = ((AttributeChange)diff).getValue();
+			feature = ((AttributeChange)diff).getAttribute();
 		}
 
 		/*
-		 * The only potential conflict with the deletion of a feature value is a move concerning that value on
-		 * the opposite side (the "feature" cannot be a containment reference, those are handled through
-		 * #checkContainmentDeleteConflict)
+		 * The only potential conflict with the deletion of a feature value is a move or delete concerning
+		 * that value on the opposite side (the "feature" cannot be a containment reference, those are handled
+		 * through #checkContainmentDeleteConflict).
 		 */
-		for (Diff candidate : candidates) {
-			if (candidate.getKind() == DifferenceKind.MOVE) {
-				final Object movedValue;
-				if (candidate instanceof ReferenceChange) {
-					movedValue = ((ReferenceChange)candidate).getValue();
-				} else {
-					movedValue = ((AttributeChange)candidate).getValue();
+		final Iterable<Diff> refinedCandidates = Iterables.filter(candidates, new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				boolean apply = false;
+				if (input.getKind() == DifferenceKind.MOVE || input.getKind() == DifferenceKind.DELETE) {
+					if (input instanceof ReferenceChange) {
+						apply = ((ReferenceChange)input).getReference() == feature;
+					} else if (input instanceof AttributeChange) {
+						apply = ((AttributeChange)input).getAttribute() == feature;
+					}
 				}
+				return apply;
+			}
+		});
 
-				if (EqualityHelper.matchingValues(comparison, deletedValue, movedValue)) {
+		for (Diff candidate : refinedCandidates) {
+			final Object movedValue;
+			if (candidate instanceof ReferenceChange) {
+				movedValue = ((ReferenceChange)candidate).getValue();
+			} else {
+				movedValue = ((AttributeChange)candidate).getValue();
+			}
+
+			if (EqualityHelper.matchingValues(comparison, deletedValue, movedValue)) {
+				if (candidate.getKind() == DifferenceKind.MOVE) {
 					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+				} else {
+					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
 				}
 			}
 		}
@@ -235,15 +257,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 			for (Diff candidate : candidates) {
 				if (candidate.getMatch() == deletedMatch) {
 					// "candidate" is a diff on an Object that has been deleted on the other side
-					boolean pseudoConflict = false;
-					if (candidate instanceof ReferenceChange) {
-						final EObject value = ((ReferenceChange)candidate).getValue();
-						final Match valueMatch = comparison.getMatch(value);
-
-						pseudoConflict = valueMatch != null && valueMatch.getOrigin() == value;
-					}
 					final ConflictKind kind;
-					if (pseudoConflict) {
+					if (isDeleteOrUnsetDiff(comparison, candidate)) {
 						kind = ConflictKind.PSEUDO;
 					} else {
 						kind = ConflictKind.REAL;
@@ -262,6 +277,42 @@ public class DefaultConflictDetector implements IConflictDetector {
 				}
 			}
 		}
+	}
+
+	/**
+	 * This will be called in order to check whether the given diff represents a DELETE or "CHANGE to default"
+	 * diff. This serves the purpose of determining whether we are in th presence of a real or pseudo
+	 * conflict.
+	 * 
+	 * @param comparison
+	 *            The originating comparison of this diff.
+	 * @param diff
+	 *            Diff we are to check.
+	 * @return {@code true} if {@code diff} is of "DELETE" kind, or if it is of "CHANGE" kind and the new
+	 *         value of the corresponding feature is the default of that feature.
+	 */
+	private static boolean isDeleteOrUnsetDiff(Comparison comparison, Diff diff) {
+		boolean pseudoConflict = false;
+		if (diff.getKind() == DifferenceKind.DELETE) {
+			pseudoConflict = true;
+		} else if (diff instanceof ReferenceChange) {
+			final EObject value = ((ReferenceChange)diff).getValue();
+			final Match valueMatch = comparison.getMatch(value);
+
+			pseudoConflict = valueMatch != null && valueMatch.getOrigin() == value;
+		} else if (diff.getKind() == DifferenceKind.CHANGE && diff instanceof AttributeChange) {
+			final EAttribute attribute = ((AttributeChange)diff).getAttribute();
+			final EObject expectedContainer;
+			if (diff.getSource() == DifferenceSource.LEFT) {
+				expectedContainer = diff.getMatch().getLeft();
+			} else {
+				expectedContainer = diff.getMatch().getRight();
+			}
+
+			final Object value = expectedContainer.eGet(attribute);
+			pseudoConflict = value == null || value.equals(attribute.getDefaultValue());
+		}
+		return pseudoConflict;
 	}
 
 	/**

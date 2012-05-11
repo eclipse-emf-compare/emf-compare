@@ -124,6 +124,81 @@ public final class EMFComparePredicates {
 	}
 
 	/**
+	 * This predicate can be used to check whether a given Diff represents the moving of a value within a
+	 * multi-valued attribute going by {@code attributeName} on an EObject which name matches
+	 * {@code qualifiedName}.
+	 * <p>
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a String
+	 * for us to compare it with the given qualified name.
+	 * </p>
+	 * 
+	 * @param qualifiedName
+	 *            Qualified name of the EObject which we expect to present an AttributeChange.
+	 * @param attributeName
+	 *            Name of the multi-valued attribute on which we expect a change.
+	 * @param removedValue
+	 *            Value which we expect to have been moved within this attribute.
+	 * @return The created predicate.
+	 */
+	@SuppressWarnings("unchecked")
+	public static Predicate<? super Diff> movedInAttribute(final String qualifiedName,
+			final String attributeName, final Object removedValue) {
+		// This is only meant for multi-valued attributes
+		return and(ofKind(DifferenceKind.MOVE), onEObject(qualifiedName), attributeValueMatch(attributeName,
+				removedValue, true));
+	}
+
+	/**
+	 * This predicate can be used to check whether a given Diff represents the moving of a value within a
+	 * multi-valued reference going by {@code referenceName} on an EObject which name matches
+	 * {@code qualifiedName}.
+	 * <p>
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a String
+	 * for us to compare it with the given qualified name.
+	 * </p>
+	 * 
+	 * @param qualifiedName
+	 *            Qualified name of the EObject which we expect to present a ReferenceChange.
+	 * @param referenceName
+	 *            Name of the multi-valued reference on which we expect a change.
+	 * @param removedQualifiedName
+	 *            Qualified name of the EObject which we expect to have been moved within this reference.
+	 * @return The created predicate.
+	 */
+	@SuppressWarnings("unchecked")
+	public static Predicate<? super Diff> movedInReference(final String qualifiedName,
+			final String referenceName, final String removedQualifiedName) {
+		// This is only meant for multi-valued references
+		return and(ofKind(DifferenceKind.MOVE), onEObject(qualifiedName), referenceValueMatch(referenceName,
+				removedQualifiedName, true));
+	}
+
+	/**
+	 * This predicate can be used to check whether a given Diff represents the deletion of a value from a
+	 * multi-valued attribute going by {@code attributeName} on an EObject which name matches
+	 * {@code qualifiedName}.
+	 * <p>
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a String
+	 * for us to compare it with the given qualified name.
+	 * </p>
+	 * 
+	 * @param qualifiedName
+	 *            Qualified name of the EObject which we expect to present an AttributeChange.
+	 * @param attributeName
+	 *            Name of the multi-valued attribute on which we expect a change.
+	 * @param removedValue
+	 *            Value which we expect to have been removed from this attribute.
+	 * @return The created predicate.
+	 */
+	@SuppressWarnings("unchecked")
+	public static Predicate<? super Diff> removedFromAttribute(final String qualifiedName,
+			final String attributeName, final Object removedValue) {
+		// This is only meant for multi-valued attributes
+		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), attributeValueMatch(
+				attributeName, removedValue, true));
+	}
+
+	/**
 	 * This predicate can be used to check whether a given Diff represents the deletion of a value from a
 	 * multi-valued reference going by {@code referenceName} on an EObject which name matches
 	 * {@code qualifiedName}.
@@ -133,7 +208,7 @@ public final class EMFComparePredicates {
 	 * </p>
 	 * 
 	 * @param qualifiedName
-	 *            Qualified name of the EObject which we expect to present an ReferenceChange.
+	 *            Qualified name of the EObject which we expect to present a ReferenceChange.
 	 * @param referenceName
 	 *            Name of the multi-valued reference on which we expect a change.
 	 * @param removedQualifiedName

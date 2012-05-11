@@ -214,6 +214,102 @@ public class ConflictInputData extends AbstractInputData {
 		return loadFromClassloader("c1/conflict_c1_reference_right.nodes");
 	}
 
+	public Resource getC2AttributeLeft() throws IOException {
+		return loadFromClassloader("c2/conflict_c2_attribute_left.nodes");
+	}
+
+	public Resource getC2AttributeOrigin() throws IOException {
+		return loadFromClassloader("c2/conflict_c2_attribute_origin.nodes");
+	}
+
+	public Resource getC2AttributeRight() throws IOException {
+		return loadFromClassloader("c2/conflict_c2_attribute_right.nodes");
+	}
+
+	public Resource getC2ReferenceLeft() throws IOException {
+		return loadFromClassloader("c2/conflict_c2_reference_left.nodes");
+	}
+
+	public Resource getC2ReferenceOrigin() throws IOException {
+		return loadFromClassloader("c2/conflict_c2_reference_origin.nodes");
+	}
+
+	public Resource getC2ReferenceRight() throws IOException {
+		return loadFromClassloader("c2/conflict_c2_reference_right.nodes");
+	}
+
+	public Resource getC3AttributeLeft() throws IOException {
+		return loadFromClassloader("c3/conflict_c3_attribute_left.nodes");
+	}
+
+	public Resource getC3AttributeOrigin() throws IOException {
+		return loadFromClassloader("c3/conflict_c3_attribute_origin.nodes");
+	}
+
+	public Resource getC3AttributeRight() throws IOException {
+		return loadFromClassloader("c3/conflict_c3_attribute_right.nodes");
+	}
+
+	public Resource getC3ReferenceLeft() throws IOException {
+		return loadFromClassloader("c3/conflict_c3_reference_left.nodes");
+	}
+
+	public Resource getC3ReferenceOrigin() throws IOException {
+		return loadFromClassloader("c3/conflict_c3_reference_origin.nodes");
+	}
+
+	public Resource getC3ReferenceRight() throws IOException {
+		return loadFromClassloader("c3/conflict_c3_reference_right.nodes");
+	}
+
+	public Resource getC4AttributeLeft() throws IOException {
+		return loadFromClassloader("c4/conflict_c4_attribute_left.nodes");
+	}
+
+	public Resource getC4AttributeOrigin() throws IOException {
+		return loadFromClassloader("c4/conflict_c4_attribute_origin.nodes");
+	}
+
+	public Resource getC4AttributeRight() throws IOException {
+		return loadFromClassloader("c4/conflict_c4_attribute_right.nodes");
+	}
+
+	public Resource getC4ReferenceLeft() throws IOException {
+		return loadFromClassloader("c4/conflict_c4_reference_left.nodes");
+	}
+
+	public Resource getC4ReferenceOrigin() throws IOException {
+		return loadFromClassloader("c4/conflict_c4_reference_origin.nodes");
+	}
+
+	public Resource getC4ReferenceRight() throws IOException {
+		return loadFromClassloader("c4/conflict_c4_reference_right.nodes");
+	}
+
+	public Resource getC5AttributeLeft() throws IOException {
+		return loadFromClassloader("c5/conflict_c5_attribute_left.nodes");
+	}
+
+	public Resource getC5AttributeOrigin() throws IOException {
+		return loadFromClassloader("c5/conflict_c5_attribute_origin.nodes");
+	}
+
+	public Resource getC5AttributeRight() throws IOException {
+		return loadFromClassloader("c5/conflict_c5_attribute_right.nodes");
+	}
+
+	public Resource getC5ReferenceLeft() throws IOException {
+		return loadFromClassloader("c5/conflict_c5_reference_left.nodes");
+	}
+
+	public Resource getC5ReferenceOrigin() throws IOException {
+		return loadFromClassloader("c5/conflict_c5_reference_origin.nodes");
+	}
+
+	public Resource getC5ReferenceRight() throws IOException {
+		return loadFromClassloader("c5/conflict_c5_reference_right.nodes");
+	}
+
 	public Resource getH1Left() throws IOException {
 		return loadFromClassloader("h1/conflict_h1_left.nodes");
 	}
