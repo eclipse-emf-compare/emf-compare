@@ -31,7 +31,7 @@ import org.eclipse.emf.ecore.EReference;
  * This default implementation aims at being generic enough to be used for any model, whatever the metamodel.
  * However, specific requirements might be necessary.
  * </p>
- * TODO document available extension possibilities.
+ * TODO document available extension possibilities. TODO to test on XSD models for FeatureMaps
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
@@ -43,12 +43,30 @@ public class DefaultReqEngine implements IReqEngine {
 	private Map<EObject, Set<Diff>> crossReferencerModelObjectsToDiffs = new HashMap<EObject, Set<Diff>>();
 
 	/**
+	 * Constructor.
+	 */
+	public DefaultReqEngine() {
+	}
+
+	/**
+	 * Constructor with a cross referencer.
+	 * 
+	 * @param crossReferencerModelObjectsToDiffs
+	 *            The cross referencer.
+	 */
+	public DefaultReqEngine(Map<EObject, Set<Diff>> crossReferencerModelObjectsToDiffs) {
+		this.crossReferencerModelObjectsToDiffs = crossReferencerModelObjectsToDiffs;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.diff.IDiffEngine#computeRequirements(org.eclipse.emf.compare.Comparison)
 	 */
 	public void computeRequirements(Comparison comparison) {
-		fillCrossReferencerDifferences(comparison);
+		if (crossReferencerModelObjectsToDiffs.isEmpty()) {
+			fillCrossReferencerDifferences(comparison);
+		}
 
 		for (Diff difference : comparison.getDifferences()) {
 			checkForRequiredDifferences(comparison, difference);
