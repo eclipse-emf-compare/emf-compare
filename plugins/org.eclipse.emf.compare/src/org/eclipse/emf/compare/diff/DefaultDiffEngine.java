@@ -126,10 +126,10 @@ public class DefaultDiffEngine implements IDiffEngine {
 			return;
 		}
 
-		if (!attribute.isMany()) {
-			computeSingleValuedAttributeDifference(match, attribute);
-		} else {
+		if (attribute.isMany()) {
 			computeMultiValuedAttributeDifferences(match, attribute, checkOrdering);
+		} else {
+			computeSingleValuedAttributeDifference(match, attribute);
 		}
 	}
 
@@ -239,9 +239,14 @@ public class DefaultDiffEngine implements IDiffEngine {
 				final Object originMatch = findMatch(left, originValues);
 				// no need to check if three way for these
 				if (originMatch != UNMATCHED_VALUE) {
-					// The value is in the left and origin, but not in the right.
-					getDiffProcessor().attributeChange(match, attribute, left, DifferenceKind.DELETE,
-							DifferenceSource.RIGHT);
+					/*
+					 * The value is in the left and origin, but not in the right. However, "right" might have
+					 * been deleted altogether, in which case we do not want a diff.
+					 */
+					if (match.getRight() != null) {
+						getDiffProcessor().attributeChange(match, attribute, left, DifferenceKind.DELETE,
+								DifferenceSource.RIGHT);
+					}
 					// FIXME There could also be an ordering change between left and origin
 					originValues.remove(originMatch);
 				} else {
@@ -316,7 +321,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 		boolean leftIsEmpty = true;
 		for (EObject value : leftValues) {
 			final Match valueMatch = getComparison().getMatch(value);
-
 			if (valueMatch != null) {
 				leftIsEmpty = false;
 				// Is this value present in the right side?
@@ -324,7 +328,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 
 				if (rightMatch == null || !rightValues.contains(rightMatch)) {
 					final boolean originHasMatch = originValues.contains(valueMatch.getOrigin());
-
 					if (!reference.isMany() && originHasMatch && !rightValues.isEmpty()) {
 						// value is also set in the right, we'll detect it on that value
 					} else if (!reference.isMany() && originHasMatch) {
@@ -358,7 +361,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 		// We've updated the right list as we matched objects. The remaining are diffs.
 		for (EObject value : rightValues) {
 			final Match valueMatch = getComparison().getMatch(value);
-
 			if (valueMatch != null) {
 				final boolean originHasMatch = originValues.contains(valueMatch.getOrigin());
 				if (!reference.isMany()) {
@@ -399,7 +401,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 		// We've updated the origin list as we matched objects. The remaining are pseudo-conflicts.
 		for (EObject value : originValues) {
 			final Match valueMatch = getComparison().getMatch(value);
-
 			if (valueMatch != null) {
 				final DifferenceKind kind;
 				if (!reference.isMany()) {

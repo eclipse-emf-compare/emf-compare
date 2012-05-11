@@ -273,60 +273,59 @@ public class DiffTest extends AbstractCompareTest {
 	 * @generated
 	 */
 	@Test
-	public void testEquivalentDiffs() {
-		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE
-				.getDiff_EquivalentDiffs();
+	public void testEquivalence() {
+		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE.getDiff_Equivalence();
 		Diff diff = CompareFactory.eINSTANCE.createDiff();
 		diff.eAdapters().add(new MockEAdapter());
 		org.eclipse.emf.compare.Equivalence equivalentDiffsValue = org.eclipse.emf.compare.CompareFactory.eINSTANCE
 				.createEquivalence();
 
 		assertFalse(diff.eIsSet(feature));
-		assertNull(diff.getEquivalentDiffs());
+		assertNull(diff.getEquivalence());
 
-		diff.setEquivalentDiffs(equivalentDiffsValue);
+		diff.setEquivalence(equivalentDiffsValue);
 		assertTrue(notified);
 		notified = false;
-		assertSame(equivalentDiffsValue, diff.getEquivalentDiffs());
-		assertSame(diff.getEquivalentDiffs(), diff.eGet(feature));
-		assertSame(diff.getEquivalentDiffs(), diff.eGet(feature, false));
+		assertSame(equivalentDiffsValue, diff.getEquivalence());
+		assertSame(diff.getEquivalence(), diff.eGet(feature));
+		assertSame(diff.getEquivalence(), diff.eGet(feature, false));
 		assertTrue(diff.eIsSet(feature));
 		assertTrue(equivalentDiffsValue.getDifferences().contains(diff));
 
 		diff.eUnset(feature);
 		assertTrue(notified);
 		notified = false;
-		assertNull(diff.getEquivalentDiffs());
-		assertSame(diff.getEquivalentDiffs(), diff.eGet(feature));
-		assertSame(diff.getEquivalentDiffs(), diff.eGet(feature, false));
+		assertNull(diff.getEquivalence());
+		assertSame(diff.getEquivalence(), diff.eGet(feature));
+		assertSame(diff.getEquivalence(), diff.eGet(feature, false));
 		assertFalse(diff.eIsSet(feature));
 		assertFalse(equivalentDiffsValue.getDifferences().contains(diff));
 
-		diff.setEquivalentDiffs(equivalentDiffsValue);
+		diff.setEquivalence(equivalentDiffsValue);
 		assertTrue(notified);
 		notified = false;
-		assertSame(equivalentDiffsValue, diff.getEquivalentDiffs());
-		assertSame(diff.getEquivalentDiffs(), diff.eGet(feature));
-		assertSame(diff.getEquivalentDiffs(), diff.eGet(feature, false));
+		assertSame(equivalentDiffsValue, diff.getEquivalence());
+		assertSame(diff.getEquivalence(), diff.eGet(feature));
+		assertSame(diff.getEquivalence(), diff.eGet(feature, false));
 		assertTrue(diff.eIsSet(feature));
 		assertTrue(equivalentDiffsValue.getDifferences().contains(diff));
 
 		diff.eSet(feature, equivalentDiffsValue);
 		assertTrue(notified);
 		notified = false;
-		assertSame(equivalentDiffsValue, diff.getEquivalentDiffs());
-		assertSame(diff.getEquivalentDiffs(), diff.eGet(feature));
-		assertSame(diff.getEquivalentDiffs(), diff.eGet(feature, false));
+		assertSame(equivalentDiffsValue, diff.getEquivalence());
+		assertSame(diff.getEquivalence(), diff.eGet(feature));
+		assertSame(diff.getEquivalence(), diff.eGet(feature, false));
 		assertTrue(diff.eIsSet(feature));
 		assertTrue(equivalentDiffsValue.getDifferences().contains(diff));
 
-		diff.setEquivalentDiffs(null);
+		diff.setEquivalence(null);
 		assertTrue(notified);
 		notified = false;
-		assertNull(diff.getEquivalentDiffs());
-		assertSame(feature.getDefaultValue(), diff.getEquivalentDiffs());
-		assertSame(diff.getEquivalentDiffs(), diff.eGet(feature));
-		assertSame(diff.getEquivalentDiffs(), diff.eGet(feature, false));
+		assertNull(diff.getEquivalence());
+		assertSame(feature.getDefaultValue(), diff.getEquivalence());
+		assertSame(diff.getEquivalence(), diff.eGet(feature));
+		assertSame(diff.getEquivalence(), diff.eGet(feature, false));
 		assertFalse(diff.eIsSet(feature));
 		assertFalse(equivalentDiffsValue.getDifferences().contains(diff));
 	}

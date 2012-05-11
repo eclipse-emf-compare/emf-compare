@@ -273,60 +273,59 @@ public class ReferenceChangeTest extends AbstractCompareTest {
 	 * @generated
 	 */
 	@Test
-	public void testEquivalentDiffs() {
-		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE
-				.getDiff_EquivalentDiffs();
+	public void testEquivalence() {
+		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE.getDiff_Equivalence();
 		ReferenceChange referenceChange = CompareFactory.eINSTANCE.createReferenceChange();
 		referenceChange.eAdapters().add(new MockEAdapter());
 		org.eclipse.emf.compare.Equivalence equivalentDiffsValue = org.eclipse.emf.compare.CompareFactory.eINSTANCE
 				.createEquivalence();
 
 		assertFalse(referenceChange.eIsSet(feature));
-		assertNull(referenceChange.getEquivalentDiffs());
+		assertNull(referenceChange.getEquivalence());
 
-		referenceChange.setEquivalentDiffs(equivalentDiffsValue);
+		referenceChange.setEquivalence(equivalentDiffsValue);
 		assertTrue(notified);
 		notified = false;
-		assertSame(equivalentDiffsValue, referenceChange.getEquivalentDiffs());
-		assertSame(referenceChange.getEquivalentDiffs(), referenceChange.eGet(feature));
-		assertSame(referenceChange.getEquivalentDiffs(), referenceChange.eGet(feature, false));
+		assertSame(equivalentDiffsValue, referenceChange.getEquivalence());
+		assertSame(referenceChange.getEquivalence(), referenceChange.eGet(feature));
+		assertSame(referenceChange.getEquivalence(), referenceChange.eGet(feature, false));
 		assertTrue(referenceChange.eIsSet(feature));
 		assertTrue(equivalentDiffsValue.getDifferences().contains(referenceChange));
 
 		referenceChange.eUnset(feature);
 		assertTrue(notified);
 		notified = false;
-		assertNull(referenceChange.getEquivalentDiffs());
-		assertSame(referenceChange.getEquivalentDiffs(), referenceChange.eGet(feature));
-		assertSame(referenceChange.getEquivalentDiffs(), referenceChange.eGet(feature, false));
+		assertNull(referenceChange.getEquivalence());
+		assertSame(referenceChange.getEquivalence(), referenceChange.eGet(feature));
+		assertSame(referenceChange.getEquivalence(), referenceChange.eGet(feature, false));
 		assertFalse(referenceChange.eIsSet(feature));
 		assertFalse(equivalentDiffsValue.getDifferences().contains(referenceChange));
 
-		referenceChange.setEquivalentDiffs(equivalentDiffsValue);
+		referenceChange.setEquivalence(equivalentDiffsValue);
 		assertTrue(notified);
 		notified = false;
-		assertSame(equivalentDiffsValue, referenceChange.getEquivalentDiffs());
-		assertSame(referenceChange.getEquivalentDiffs(), referenceChange.eGet(feature));
-		assertSame(referenceChange.getEquivalentDiffs(), referenceChange.eGet(feature, false));
+		assertSame(equivalentDiffsValue, referenceChange.getEquivalence());
+		assertSame(referenceChange.getEquivalence(), referenceChange.eGet(feature));
+		assertSame(referenceChange.getEquivalence(), referenceChange.eGet(feature, false));
 		assertTrue(referenceChange.eIsSet(feature));
 		assertTrue(equivalentDiffsValue.getDifferences().contains(referenceChange));
 
 		referenceChange.eSet(feature, equivalentDiffsValue);
 		assertTrue(notified);
 		notified = false;
-		assertSame(equivalentDiffsValue, referenceChange.getEquivalentDiffs());
-		assertSame(referenceChange.getEquivalentDiffs(), referenceChange.eGet(feature));
-		assertSame(referenceChange.getEquivalentDiffs(), referenceChange.eGet(feature, false));
+		assertSame(equivalentDiffsValue, referenceChange.getEquivalence());
+		assertSame(referenceChange.getEquivalence(), referenceChange.eGet(feature));
+		assertSame(referenceChange.getEquivalence(), referenceChange.eGet(feature, false));
 		assertTrue(referenceChange.eIsSet(feature));
 		assertTrue(equivalentDiffsValue.getDifferences().contains(referenceChange));
 
-		referenceChange.setEquivalentDiffs(null);
+		referenceChange.setEquivalence(null);
 		assertTrue(notified);
 		notified = false;
-		assertNull(referenceChange.getEquivalentDiffs());
-		assertSame(feature.getDefaultValue(), referenceChange.getEquivalentDiffs());
-		assertSame(referenceChange.getEquivalentDiffs(), referenceChange.eGet(feature));
-		assertSame(referenceChange.getEquivalentDiffs(), referenceChange.eGet(feature, false));
+		assertNull(referenceChange.getEquivalence());
+		assertSame(feature.getDefaultValue(), referenceChange.getEquivalence());
+		assertSame(referenceChange.getEquivalence(), referenceChange.eGet(feature));
+		assertSame(referenceChange.getEquivalence(), referenceChange.eGet(feature, false));
 		assertFalse(referenceChange.eIsSet(feature));
 		assertFalse(equivalentDiffsValue.getDifferences().contains(referenceChange));
 	}

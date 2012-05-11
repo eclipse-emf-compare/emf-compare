@@ -278,9 +278,8 @@ public class ResourceAttachmentChangeTest extends AbstractCompareTest {
 	 * @generated
 	 */
 	@Test
-	public void testEquivalentDiffs() {
-		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE
-				.getDiff_EquivalentDiffs();
+	public void testEquivalence() {
+		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE.getDiff_Equivalence();
 		ResourceAttachmentChange resourceAttachmentChange = CompareFactory.eINSTANCE
 				.createResourceAttachmentChange();
 		resourceAttachmentChange.eAdapters().add(new MockEAdapter());
@@ -288,56 +287,51 @@ public class ResourceAttachmentChangeTest extends AbstractCompareTest {
 				.createEquivalence();
 
 		assertFalse(resourceAttachmentChange.eIsSet(feature));
-		assertNull(resourceAttachmentChange.getEquivalentDiffs());
+		assertNull(resourceAttachmentChange.getEquivalence());
 
-		resourceAttachmentChange.setEquivalentDiffs(equivalentDiffsValue);
+		resourceAttachmentChange.setEquivalence(equivalentDiffsValue);
 		assertTrue(notified);
 		notified = false;
-		assertSame(equivalentDiffsValue, resourceAttachmentChange.getEquivalentDiffs());
-		assertSame(resourceAttachmentChange.getEquivalentDiffs(), resourceAttachmentChange.eGet(feature));
-		assertSame(resourceAttachmentChange.getEquivalentDiffs(), resourceAttachmentChange.eGet(feature,
-				false));
+		assertSame(equivalentDiffsValue, resourceAttachmentChange.getEquivalence());
+		assertSame(resourceAttachmentChange.getEquivalence(), resourceAttachmentChange.eGet(feature));
+		assertSame(resourceAttachmentChange.getEquivalence(), resourceAttachmentChange.eGet(feature, false));
 		assertTrue(resourceAttachmentChange.eIsSet(feature));
 		assertTrue(equivalentDiffsValue.getDifferences().contains(resourceAttachmentChange));
 
 		resourceAttachmentChange.eUnset(feature);
 		assertTrue(notified);
 		notified = false;
-		assertNull(resourceAttachmentChange.getEquivalentDiffs());
-		assertSame(resourceAttachmentChange.getEquivalentDiffs(), resourceAttachmentChange.eGet(feature));
-		assertSame(resourceAttachmentChange.getEquivalentDiffs(), resourceAttachmentChange.eGet(feature,
-				false));
+		assertNull(resourceAttachmentChange.getEquivalence());
+		assertSame(resourceAttachmentChange.getEquivalence(), resourceAttachmentChange.eGet(feature));
+		assertSame(resourceAttachmentChange.getEquivalence(), resourceAttachmentChange.eGet(feature, false));
 		assertFalse(resourceAttachmentChange.eIsSet(feature));
 		assertFalse(equivalentDiffsValue.getDifferences().contains(resourceAttachmentChange));
 
-		resourceAttachmentChange.setEquivalentDiffs(equivalentDiffsValue);
+		resourceAttachmentChange.setEquivalence(equivalentDiffsValue);
 		assertTrue(notified);
 		notified = false;
-		assertSame(equivalentDiffsValue, resourceAttachmentChange.getEquivalentDiffs());
-		assertSame(resourceAttachmentChange.getEquivalentDiffs(), resourceAttachmentChange.eGet(feature));
-		assertSame(resourceAttachmentChange.getEquivalentDiffs(), resourceAttachmentChange.eGet(feature,
-				false));
+		assertSame(equivalentDiffsValue, resourceAttachmentChange.getEquivalence());
+		assertSame(resourceAttachmentChange.getEquivalence(), resourceAttachmentChange.eGet(feature));
+		assertSame(resourceAttachmentChange.getEquivalence(), resourceAttachmentChange.eGet(feature, false));
 		assertTrue(resourceAttachmentChange.eIsSet(feature));
 		assertTrue(equivalentDiffsValue.getDifferences().contains(resourceAttachmentChange));
 
 		resourceAttachmentChange.eSet(feature, equivalentDiffsValue);
 		assertTrue(notified);
 		notified = false;
-		assertSame(equivalentDiffsValue, resourceAttachmentChange.getEquivalentDiffs());
-		assertSame(resourceAttachmentChange.getEquivalentDiffs(), resourceAttachmentChange.eGet(feature));
-		assertSame(resourceAttachmentChange.getEquivalentDiffs(), resourceAttachmentChange.eGet(feature,
-				false));
+		assertSame(equivalentDiffsValue, resourceAttachmentChange.getEquivalence());
+		assertSame(resourceAttachmentChange.getEquivalence(), resourceAttachmentChange.eGet(feature));
+		assertSame(resourceAttachmentChange.getEquivalence(), resourceAttachmentChange.eGet(feature, false));
 		assertTrue(resourceAttachmentChange.eIsSet(feature));
 		assertTrue(equivalentDiffsValue.getDifferences().contains(resourceAttachmentChange));
 
-		resourceAttachmentChange.setEquivalentDiffs(null);
+		resourceAttachmentChange.setEquivalence(null);
 		assertTrue(notified);
 		notified = false;
-		assertNull(resourceAttachmentChange.getEquivalentDiffs());
-		assertSame(feature.getDefaultValue(), resourceAttachmentChange.getEquivalentDiffs());
-		assertSame(resourceAttachmentChange.getEquivalentDiffs(), resourceAttachmentChange.eGet(feature));
-		assertSame(resourceAttachmentChange.getEquivalentDiffs(), resourceAttachmentChange.eGet(feature,
-				false));
+		assertNull(resourceAttachmentChange.getEquivalence());
+		assertSame(feature.getDefaultValue(), resourceAttachmentChange.getEquivalence());
+		assertSame(resourceAttachmentChange.getEquivalence(), resourceAttachmentChange.eGet(feature));
+		assertSame(resourceAttachmentChange.getEquivalence(), resourceAttachmentChange.eGet(feature, false));
 		assertFalse(resourceAttachmentChange.eIsSet(feature));
 		assertFalse(equivalentDiffsValue.getDifferences().contains(resourceAttachmentChange));
 	}

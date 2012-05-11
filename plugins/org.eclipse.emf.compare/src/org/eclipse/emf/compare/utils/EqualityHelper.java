@@ -91,4 +91,60 @@ public final class EqualityHelper {
 		}
 		return equal;
 	}
+
+	/**
+	 * This should only be used when no {@link Comparison} is available or if the two given Objects are known
+	 * not to be instances of EObjects. EObjects passed for comparison through here will be compared through
+	 * their {@link Object#equals(Object)} implementation.
+	 * 
+	 * @param object1
+	 *            First of the two objects to compare here.
+	 * @param object2
+	 *            Second of the two objects to compare here.
+	 * @return <code>true</code> if both objects are to be considered equal, <code>false</code> otherwise.
+	 */
+	public static boolean matchingValues(Object object1, Object object2) {
+		final boolean equal;
+		if (object1 == object2) {
+			equal = true;
+		} else if (object1 instanceof EEnumLiteral && object2 instanceof EEnumLiteral) {
+			final EEnumLiteral literal1 = (EEnumLiteral)object1;
+			final EEnumLiteral literal2 = (EEnumLiteral)object2;
+			final String value1 = literal1.getLiteral() + literal1.getValue();
+			final String value2 = literal2.getLiteral() + literal2.getValue();
+			equal = value1.equals(value2);
+		} else if (object1 != null && object1.getClass().isArray() && object2 != null
+				&& object2.getClass().isArray()) {
+			// [299641] compare arrays by their content instead of instance equality
+			equal = matchingArrays(object1, object2);
+		} else {
+			equal = object1 != null && object1.equals(object2);
+		}
+		return equal;
+	}
+
+	/**
+	 * Compares two values as arrays, checking that their length and content match each other. Note that this
+	 * should only be used when no {@link Comparison} is available.
+	 * 
+	 * @param object1
+	 *            First of the two objects to compare here.
+	 * @param object2
+	 *            Second of the two objects to compare here.
+	 * @return <code>true</code> if these two arrays are to be considered equal, <code>false</code> otherwise.
+	 */
+	private static boolean matchingArrays(Object object1, Object object2) {
+		boolean equal = true;
+		final int length1 = Array.getLength(object1);
+		if (length1 != Array.getLength(object2)) {
+			equal = true;
+		} else {
+			for (int i = 0; i < length1 && equal; i++) {
+				final Object element1 = Array.get(object1, i);
+				final Object element2 = Array.get(object2, i);
+				equal = matchingValues(element1, element2);
+			}
+		}
+		return equal;
+	}
 }

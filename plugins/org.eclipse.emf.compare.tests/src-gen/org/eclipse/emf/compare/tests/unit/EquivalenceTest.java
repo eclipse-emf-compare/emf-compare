@@ -44,7 +44,7 @@ public class EquivalenceTest extends AbstractCompareTest {
 		assertSame(equivalence.getDifferences(), equivalence.eGet(feature));
 		assertSame(equivalence.getDifferences(), equivalence.eGet(feature, false));
 		assertTrue(equivalence.eIsSet(feature));
-		assertTrue(differencesValue.getEquivalentDiffs() == equivalence);
+		assertTrue(differencesValue.getEquivalence() == equivalence);
 
 		equivalence.eUnset(feature);
 		assertTrue(notified);
@@ -53,7 +53,7 @@ public class EquivalenceTest extends AbstractCompareTest {
 		assertSame(equivalence.getDifferences(), equivalence.eGet(feature));
 		assertSame(equivalence.getDifferences(), equivalence.eGet(feature, false));
 		assertFalse(equivalence.eIsSet(feature));
-		assertFalse(differencesValue.getEquivalentDiffs() == equivalence);
+		assertFalse(differencesValue.getEquivalence() == equivalence);
 
 		equivalence.eSet(feature, listDifferences);
 		assertTrue(notified);
@@ -62,7 +62,7 @@ public class EquivalenceTest extends AbstractCompareTest {
 		assertSame(equivalence.getDifferences(), equivalence.eGet(feature));
 		assertSame(equivalence.getDifferences(), equivalence.eGet(feature, false));
 		assertTrue(equivalence.eIsSet(feature));
-		assertTrue(differencesValue.getEquivalentDiffs() == equivalence);
+		assertTrue(differencesValue.getEquivalence() == equivalence);
 	}
 
 }

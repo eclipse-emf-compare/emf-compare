@@ -92,6 +92,21 @@ public class DefaultConflictDetector implements IConflictDetector {
 		}
 	}
 
+	/**
+	 * This will be called from {@link #checkConflict(Comparison, Diff, Iterable)} in order to detect
+	 * conflicts on a Diff that is of type "CHANGE" or "MOVE".
+	 * <p>
+	 * Those can only conflict with other Diffs of the same type on the same reference.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            The originating comparison of those diffs.
+	 * @param diff
+	 *            The diff which we are to check for conflicts.
+	 * @param candidates
+	 *            The list of candidates for a conflict. This list only contains Diff from the side opposite
+	 *            to {@code diff}.
+	 */
 	protected void checkFeatureChangeOrMoveConflict(Comparison comparison, Diff diff,
 			Iterable<Diff> candidates) {
 		// The only possible conflict for a "change" diff is another "change" on the same feature
@@ -129,6 +144,21 @@ public class DefaultConflictDetector implements IConflictDetector {
 		}
 	}
 
+	/**
+	 * This will be called from {@link #checkConflict(Comparison, Diff, Iterable)} in order to detect
+	 * conflicts on a Diff that is of type "DELETE" and which is <b>not</b> a containment reference change.
+	 * <p>
+	 * The only potential conflict for such a diff is a "MOVE" of that same value on the opposite side.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            The originating comparison of those diffs.
+	 * @param diff
+	 *            The diff which we are to check for conflicts.
+	 * @param candidates
+	 *            The list of candidates for a conflict. This list only contains Diff from the side opposite
+	 *            to {@code diff}.
+	 */
 	protected void checkFeatureDeleteConflict(Comparison comparison, Diff diff, Iterable<Diff> candidates) {
 		final Object deletedValue;
 		if (diff instanceof ReferenceChange) {
@@ -163,6 +193,22 @@ public class DefaultConflictDetector implements IConflictDetector {
 		}
 	}
 
+	/**
+	 * This will be called from {@link #checkConflict(Comparison, Diff, Iterable)} in order to detect
+	 * conflicts on a Diff that is of type "DELETE" on a containment reference.
+	 * <p>
+	 * Such diffs can conflict with most others, notably, <b>all</b> differences of the opposite side located
+	 * under the deleted element are conflicts.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            The originating comparison of those diffs.
+	 * @param diff
+	 *            The diff which we are to check for conflicts.
+	 * @param candidates
+	 *            The list of candidates for a conflict. This list only contains Diff from the side opposite
+	 *            to {@code diff}.
+	 */
 	protected void checkContainmentDeleteConflict(Comparison comparison, ReferenceChange diff,
 			Iterable<Diff> candidates) {
 		final Match deletedMatch = comparison.getMatch(diff.getValue());
@@ -218,6 +264,19 @@ public class DefaultConflictDetector implements IConflictDetector {
 		}
 	}
 
+	/**
+	 * This will be called whenever we detect a new conflict in order to create (or update) the actual
+	 * association.
+	 * 
+	 * @param comparison
+	 *            The originating comparison of those diffs.
+	 * @param diff1
+	 *            First of the two differences for which we detected a conflict.
+	 * @param diff2
+	 *            Second of the two differences for which we detected a conflict.
+	 * @param kind
+	 *            Kind of this conflict.
+	 */
 	protected void conflictOn(Comparison comparison, Diff diff1, Diff diff2, ConflictKind kind) {
 		final Conflict conflict;
 		if (diff1.getConflict() != null) {

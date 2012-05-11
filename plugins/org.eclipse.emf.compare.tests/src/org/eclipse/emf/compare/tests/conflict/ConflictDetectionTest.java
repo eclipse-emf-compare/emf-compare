@@ -14,10 +14,13 @@ import static com.google.common.base.Predicates.and;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToAttribute;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedAttribute;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -582,6 +585,100 @@ public class ConflictDetectionTest {
 		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
+		assertSame(ConflictKind.REAL, conflict.getKind());
+	}
+
+	@Test
+	public void testC1UseCaseForAttribute() throws IOException {
+		final Resource left = input.getC1AttributeLeft();
+		final Resource origin = input.getC1AttributeOrigin();
+		final Resource right = input.getC1AttributeRight();
+
+		final Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		// We should have no less and no more than 2 differences, composing a single conflict
+		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+
+		final Predicate<? super Diff> leftDiffDescription = addedToAttribute("root.conflictHolder",
+				"multiValuedAttribute", "left1");
+		final Predicate<? super Diff> rightDiffDescription = removed("root.conflictHolder");
+
+		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				rightDiffDescription));
+
+		assertNotNull(leftDiff);
+		assertNotNull(rightDiff);
+
+		// We know there's only one conflict
+		final Conflict conflict = conflicts.get(0);
+
+		final List<Diff> conflictDiff = conflict.getDifferences();
+		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertTrue(conflictDiff.contains(leftDiff));
+		assertTrue(conflictDiff.contains(rightDiff));
+		assertSame(ConflictKind.REAL, conflict.getKind());
+	}
+
+	@Test
+	public void testC1UseCaseForReference() throws IOException {
+		final Resource left = input.getC1ReferenceLeft();
+		final Resource origin = input.getC1ReferenceOrigin();
+		final Resource right = input.getC1ReferenceRight();
+
+		final Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		/*
+		 * We should have 5 differences here. An element has been deleted from the right side, all three of
+		 * its reference's values have been deleted, and finally a value has been added into that same
+		 * reference on the left side. The addition of a value into the reference conflicts with the removal
+		 * of the container from the right. The three other diffs do not conflict.
+		 */
+		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+
+		final Predicate<? super Diff> leftReferenceDiffDescription = addedToReference("root.conflictHolder",
+				"multiValuedReference", "root.left1");
+		final Predicate<? super Diff> rightDeleteDiffDescription = removed("root.conflictHolder");
+		final Predicate<? super Diff> rightReferenceDiff1Description = removedFromReference(
+				"root.conflictHolder", "multiValuedReference", "root.origin1");
+		final Predicate<? super Diff> rightReferenceDiff2Description = removedFromReference(
+				"root.conflictHolder", "multiValuedReference", "root.origin2");
+		final Predicate<? super Diff> rightReferenceDiff3Description = removedFromReference(
+				"root.conflictHolder", "multiValuedReference", "root.origin3");
+
+		final Diff leftReferenceDiff = Iterators.find(differences.iterator(), and(
+				fromSide(DifferenceSource.LEFT), leftReferenceDiffDescription));
+		final Diff rightDeleteDiff = Iterators.find(differences.iterator(), and(
+				fromSide(DifferenceSource.RIGHT), rightDeleteDiffDescription));
+		final Diff rightReferenceDiff1 = Iterators.find(differences.iterator(), and(
+				fromSide(DifferenceSource.RIGHT), rightReferenceDiff1Description));
+		final Diff rightReferenceDiff2 = Iterators.find(differences.iterator(), and(
+				fromSide(DifferenceSource.RIGHT), rightReferenceDiff2Description));
+		final Diff rightReferenceDiff3 = Iterators.find(differences.iterator(), and(
+				fromSide(DifferenceSource.RIGHT), rightReferenceDiff3Description));
+
+		assertNotNull(leftReferenceDiff);
+		assertNotNull(rightDeleteDiff);
+		assertNotNull(rightReferenceDiff1);
+		assertNotNull(rightReferenceDiff2);
+		assertNotNull(rightReferenceDiff3);
+
+		// We know there's only one conflict
+		final Conflict conflict = conflicts.get(0);
+
+		final List<Diff> conflictDiff = conflict.getDifferences();
+		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertTrue(conflictDiff.contains(leftReferenceDiff));
+		assertTrue(conflictDiff.contains(rightDeleteDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
 	}
 }

@@ -56,7 +56,7 @@ public final class EMFComparePredicates {
 	 * </p>
 	 * 
 	 * @param qualifiedName
-	 *            Qualified name of the EObject which we expect to present an ReferenceChange.
+	 *            Qualified name of the EObject which we expect to present a ReferenceChange.
 	 * @param referenceName
 	 *            Name of the single-valued reference on which we expect a change.
 	 * @param fromQualifiedName
@@ -75,6 +75,31 @@ public final class EMFComparePredicates {
 
 	/**
 	 * This predicate can be used to check whether a given Diff represents the addition of a value in a
+	 * multi-valued attribute going by {@code attributeName} on an EObject which name matches
+	 * {@code qualifiedName}.
+	 * <p>
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a String
+	 * for us to compare it with the given qualified name.
+	 * </p>
+	 * 
+	 * @param qualifiedName
+	 *            Qualified name of the EObject which we expect to present an AttributeChange.
+	 * @param attributeName
+	 *            Name of the multi-valued attribute on which we expect a change.
+	 * @param addedValue
+	 *            The value we expect to have been added to this attribute.
+	 * @return The created predicate.
+	 */
+	@SuppressWarnings("unchecked")
+	public static Predicate<? super Diff> addedToAttribute(final String qualifiedName,
+			final String attributeName, final Object addedValue) {
+		// This is only meant for multi-valued attributes
+		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), attributeValueMatch(attributeName,
+				addedValue, true));
+	}
+
+	/**
+	 * This predicate can be used to check whether a given Diff represents the addition of a value in a
 	 * multi-valued reference going by {@code referenceName} on an EObject which name matches
 	 * {@code qualifiedName}.
 	 * <p>
@@ -83,9 +108,9 @@ public final class EMFComparePredicates {
 	 * </p>
 	 * 
 	 * @param qualifiedName
-	 *            Qualified name of the EObject which we expect to present an ReferenceChange.
+	 *            Qualified name of the EObject which we expect to present a ReferenceChange.
 	 * @param referenceName
-	 *            Name of the multi-valued attribute on which we expect a change.
+	 *            Name of the multi-valued reference on which we expect a change.
 	 * @param addedQualifiedName
 	 *            Qualified name of the EObject which we expect to have been added to this reference.
 	 * @return The created predicate.
@@ -110,7 +135,7 @@ public final class EMFComparePredicates {
 	 * @param qualifiedName
 	 *            Qualified name of the EObject which we expect to present an ReferenceChange.
 	 * @param referenceName
-	 *            Name of the multi-valued attribute on which we expect a change.
+	 *            Name of the multi-valued reference on which we expect a change.
 	 * @param removedQualifiedName
 	 *            Qualified name of the EObject which we expect to have been removed from this reference.
 	 * @return The created predicate.
@@ -363,6 +388,33 @@ public final class EMFComparePredicates {
 					return false;
 				}
 				return value == expectedValue;
+			}
+		};
+	}
+
+	/**
+	 * This predicate can be used to check whether a given Diff describes an AttributeChange with the given
+	 * {@code attributeName} and which changed value corresponds to the given {@code expectedValue}.
+	 * 
+	 * @param attributeName
+	 *            The name of the attribute for which we seek an AttributeChange.
+	 * @param expectedValue
+	 *            The value we expect to correspond to this AttributeChange.
+	 * @param multiValued
+	 *            Tells us to check for either multi- or single-valued reference changes.
+	 * @return The created predicate.
+	 */
+	public static Predicate<? super Diff> attributeValueMatch(final String attributeName,
+			final Object expectedValue, final boolean multiValued) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				if (input instanceof AttributeChange
+						&& ((AttributeChange)input).getAttribute().getName().equals(attributeName)
+						&& ((AttributeChange)input).getAttribute().isMany() == multiValued) {
+					final Object value = ((AttributeChange)input).getValue();
+					return EqualityHelper.matchingValues(value, expectedValue);
+				}
+				return false;
 			}
 		};
 	}
