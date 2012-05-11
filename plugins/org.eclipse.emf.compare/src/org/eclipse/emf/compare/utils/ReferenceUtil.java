@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 
 /**
- * This utility class holds methods that will be used by the diff and merge processes.
+ * This utility class holds methods that will be used by the diff and merge processes. TODO: Maybe useless.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */

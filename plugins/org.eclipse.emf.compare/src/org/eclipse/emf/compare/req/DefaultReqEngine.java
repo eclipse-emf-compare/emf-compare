@@ -22,7 +22,6 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 
@@ -128,7 +127,11 @@ public class DefaultReqEngine implements IReqEngine {
 
 		if (difference.getReference().isContainment()) {
 			// Look for all outgoing references.
-			referencedObjects.addAll(ReferenceUtil.getReferencedEObjects(concernedObject, true));
+			/*
+			 * TODO: to study if this call is necessary or can be replaced by eCrossReferences().
+			 * referencedObjects.addAll(ReferenceUtil.getReferencedEObjects(concernedObject, true));
+			 */
+			referencedObjects.addAll(concernedObject.eCrossReferences());
 
 			// Add of the parent model object.
 			if (concernedObject.eContainer() != null) {
