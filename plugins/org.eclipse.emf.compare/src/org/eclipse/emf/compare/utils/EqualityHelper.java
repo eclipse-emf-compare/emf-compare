@@ -12,10 +12,12 @@ package org.eclipse.emf.compare.utils;
 
 import java.lang.reflect.Array;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * EMF Compare needs its own rules for "equality", which are based on similarity instead of strict equality.
@@ -54,8 +56,7 @@ public final class EqualityHelper {
 			equal = value1.equals(value2);
 		} else if (object1 instanceof EObject && object2 instanceof EObject) {
 			// [248442] This will handle FeatureMapEntries detection
-			final Match match = comparison.getMatch((EObject)object1);
-			equal = match.getLeft() == object2 || match.getRight() == object2 || match.getOrigin() == object2;
+			equal = matchingEObjects(comparison, (EObject)object1, (EObject)object2);
 		} else if (object1 != null && object1.getClass().isArray() && object2 != null
 				&& object2.getClass().isArray()) {
 			// [299641] compare arrays by their content instead of instance equality
@@ -89,6 +90,35 @@ public final class EqualityHelper {
 				equal = matchingValues(comparison, element1, element2);
 			}
 		}
+		return equal;
+	}
+
+	/**
+	 * Compares two values as EObjects, using their Match if it can be found, comparing through their URIs
+	 * otherwise.
+	 * 
+	 * @param comparison
+	 *            Provides us with the Match necessary for EObject comparison.
+	 * @param object1
+	 *            First of the two objects to compare here.
+	 * @param object2
+	 *            Second of the two objects to compare here.
+	 * @return <code>true</code> if these two EObjects are to be considered equal, <code>false</code>
+	 *         otherwise.
+	 */
+	private static boolean matchingEObjects(Comparison comparison, EObject object1, EObject object2) {
+		final Match match = comparison.getMatch(object1);
+
+		final boolean equal;
+		// Match could be null if the value is out of the scope
+		if (match != null) {
+			equal = match.getLeft() == object2 || match.getRight() == object2 || match.getOrigin() == object2;
+		} else {
+			final URI uri1 = EcoreUtil.getURI(object1);
+			final URI uri2 = EcoreUtil.getURI(object2);
+			equal = uri1.equals(uri2);
+		}
+
 		return equal;
 	}
 

@@ -120,7 +120,6 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 		assertRemoved(differences, "extlibrary.Periodical", DifferenceSource.LEFT);
 		assertRemoved(differences, "extlibrary.Periodical.issuesPerYear", DifferenceSource.LEFT);
 		assertRemoved(differences, "extlibrary.Person.firstName", DifferenceSource.LEFT);
-		assertRemoved(differences, "extlibrary.Person.familyName", DifferenceSource.LEFT);
 
 		assertChangedAttribute(differences, "extlibrary.Lendable", "name", "Lendable", "Borrowable",
 				DifferenceSource.LEFT);
@@ -132,6 +131,9 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 
 		// some diffs change according to the presence of an origin.
 		if (comparison.isThreeWay()) {
+			// This one will be detected differently in two-way
+			assertRemoved(differences, "extlibrary.Person.lastName", DifferenceSource.LEFT);
+
 			final DifferenceSource side = DifferenceSource.RIGHT;
 			assertAdded(differences, "extlibrary.BookCategory.Manga", side);
 			assertAdded(differences, "extlibrary.BookCategory.Manhwa", side);
@@ -177,6 +179,8 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 			assertChangedAttribute(differences, "extlibrary.AudioVisualItem.length", "name", "minutesLength",
 					"minutes", side);
 		} else {
+			assertRemoved(differences, "extlibrary.Person.familyName", DifferenceSource.LEFT);
+
 			final DifferenceSource side = DifferenceSource.LEFT;
 			assertRemoved(differences, "extlibrary.BookCategory.Manga", side);
 			assertRemoved(differences, "extlibrary.BookCategory.Manhwa", side);

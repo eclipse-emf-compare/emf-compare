@@ -29,7 +29,7 @@ d - Left : Changing value of multi-valued feature. Right : Changing the same val
 	d3 - Left : Moving value "origin1". Right : Moving value "origin1" to a different index.
 ----	d4 - Clearing all values of this feature on both sides
 ----	d5 - Removing value "origin1" from both sides
-----	d6 - Moving value "origin1" to different indices on both sides
+----	d6 - Moving value "origin1" to the same index on both sides
 
 These only apply to reference changes
 

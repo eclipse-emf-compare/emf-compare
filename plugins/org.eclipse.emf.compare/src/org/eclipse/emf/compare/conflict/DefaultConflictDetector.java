@@ -115,33 +115,47 @@ public class DefaultConflictDetector implements IConflictDetector {
 		// The only possible conflict for a "change" diff is another "change" on the same feature
 		final Object changedValue;
 		final EStructuralFeature feature;
+		final boolean isContainmentChange;
 		if (diff instanceof ReferenceChange) {
 			changedValue = ((ReferenceChange)diff).getValue();
 			feature = ((ReferenceChange)diff).getReference();
+			isContainmentChange = ((ReferenceChange)diff).getReference().isContainment();
 		} else {
 			changedValue = ((AttributeChange)diff).getValue();
 			feature = ((AttributeChange)diff).getAttribute();
+			isContainmentChange = false;
 		}
 
 		final Iterable<Diff> changeCandidates = Iterables.filter(candidates, ofKind(diff.getKind()));
 		for (Diff candidate : changeCandidates) {
+			EStructuralFeature candidateFeature = null;
+			Object candidateChanged = null;
 			if (candidate instanceof ReferenceChange) {
-				final EStructuralFeature candidateFeature = ((ReferenceChange)candidate).getReference();
-				final Object candidateChanged = ((ReferenceChange)candidate).getValue();
-				if (candidateFeature == feature
-						&& !EqualityHelper.matchingValues(comparison, changedValue, candidateChanged)) {
-					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
-				} else if (candidateFeature == feature) {
-					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
-				}
+				candidateFeature = ((ReferenceChange)candidate).getReference();
+				candidateChanged = ((ReferenceChange)candidate).getValue();
 			} else if (candidate instanceof AttributeChange) {
-				final EStructuralFeature candidateFeature = ((AttributeChange)candidate).getAttribute();
-				final Object candidateChanged = ((AttributeChange)candidate).getValue();
-				if (candidateFeature == feature
-						&& !EqualityHelper.matchingValues(comparison, changedValue, candidateChanged)) {
+				candidateFeature = ((AttributeChange)candidate).getAttribute();
+				candidateChanged = ((AttributeChange)candidate).getValue();
+			}
+
+			if (candidateFeature == feature) {
+				if (candidate.getKind() == DifferenceKind.MOVE
+						&& EqualityHelper.matchingValues(comparison, changedValue, candidateChanged)) {
+					// Moving to the same index is a pseudo conflict, but too costly to compute here
 					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
-				} else if (candidateFeature == feature) {
-					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
+				} else {
+					// single-valued feature (kind = CHANGE)
+					if (!EqualityHelper.matchingValues(comparison, changedValue, candidateChanged)) {
+						conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+					} else {
+						conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
+					}
+				}
+			} else if (isContainmentChange) {
+				// On containment references, we can have conflicts even if the reference is not the same
+				if (candidate.getKind() == DifferenceKind.MOVE
+						&& EqualityHelper.matchingValues(comparison, changedValue, candidateChanged)) {
+					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 				}
 			}
 		}

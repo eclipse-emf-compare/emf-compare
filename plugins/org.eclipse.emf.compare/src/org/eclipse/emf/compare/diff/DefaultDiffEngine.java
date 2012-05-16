@@ -10,12 +10,16 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff;
 
+import static com.google.common.base.Predicates.not;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -62,6 +66,169 @@ public class DefaultDiffEngine implements IDiffEngine {
 	private IDiffProcessor diffProcessor;
 
 	/**
+	 * This predicate can be used to check whether a given element is contained within the given iterable
+	 * according to the semantics of {@link EqualityHelper#matchingValues(Comparison, Object, Object)} before
+	 * returning it.
+	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param iterable
+	 *            Iterable which content we are to check.
+	 * @param <E>
+	 *            Type of the reference iterable's content.
+	 * @return The useable predicate.
+	 */
+	protected static <E> Predicate<E> containedIn(final Comparison comparison, final Iterable<E> iterable) {
+		return new Predicate<E>() {
+			public boolean apply(E input) {
+				return contains(comparison, iterable, input);
+			}
+		};
+	}
+
+	/**
+	 * Checks whether the given {@code iterable} contains the given {@code element} according to the semantics
+	 * of {@link EqualityHelper#matchingValues(Comparison, Object, Object)}.
+	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param iterable
+	 *            Iterable which content we are to check.
+	 * @param element
+	 *            The element we expect to be contained in {@code  iterable}.
+	 * @param <E>
+	 *            Type of the input iterable's content.
+	 * @return {@code true} if the given {@code iterable} contains {@code element}, {@code false} otherwise.
+	 */
+	protected static <E> boolean contains(Comparison comparison, Iterable<E> iterable, E element) {
+		for (E candidate : iterable) {
+			if (EqualityHelper.matchingValues(comparison, candidate, element)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * This utility simply allows us to retrieve the value of a given feature as a List.
+	 * 
+	 * @param object
+	 *            The object for which feature we need a value.
+	 * @param feature
+	 *            The actual feature of which we need the value.
+	 * @return The value of the given <code>feature</code> for the given <code>object</code> as a list. An
+	 *         empty list if this object has no value for that feature or if the object is <code>null</code>.
+	 */
+	@SuppressWarnings("unchecked")
+	protected static List<Object> getAsList(EObject object, EStructuralFeature feature) {
+		if (object != null) {
+			Object value = object.eGet(feature, false);
+			final List<Object> asList;
+			if (value instanceof List) {
+				asList = (List<Object>)value;
+			} else if (value instanceof Iterable) {
+				asList = ImmutableList.copyOf((Iterable<Object>)value);
+			} else if (value != null) {
+				asList = ImmutableList.of(value);
+			} else {
+				asList = Collections.emptyList();
+			}
+			return asList;
+		}
+		return Collections.emptyList();
+	}
+
+	// TODO unit test this with a number of known input
+	/**
+	 * This will compute the longest common subsequence between the two given Lists. We will use
+	 * {@link EqualityHelper#matchingValues(Comparison, Object, Object)} in order to try and match the values
+	 * from both lists two-by-two. This can thus be used both for reference values or attribute values. If
+	 * there are two subsequences of the same "longest" length, the first (according to the second argument)
+	 * will be returned.
+	 * <p>
+	 * For example, it the two given sequence are, in this order, {"a", "b", "c", "d", "e"} and {"c", "z",
+	 * "d", "a", "b"}, there are two "longest" subsequences : {"a", "b"} and {"c", "d"}. The first of those
+	 * two subsequences in the second list is {"c", "d"}. On the other hand, the LCS of {"a", "b", "c", "d",
+	 * "e"} and {"y", "c", "d", "e", "b"} is {"c", "d", "e"}.
+	 * </p>
+	 * <p>
+	 * The following algorithm has been inferred from the wikipedia article on the Longest Common Subsequence,
+	 * http://en.wikipedia.org/wiki/Longest_common_subsequence_problem at the time of writing. It is
+	 * decomposed in two : we first compute the LCS matrix, then we backtrack through the input to determine
+	 * the LCS. Evaluation will be shortcut after the first part if the LCS is one of the two input sequences.
+	 * </p>
+	 * <p>
+	 * Note : we are not using Iterables as input in order to make use of the random access cost of
+	 * ArrayLists. This might also be converted to directly use arrays. This implementation will not play well
+	 * with LinkedLists or any List which needs to iterate over the values for each call to
+	 * {@link List#get(int)}, i.e any list which is not instanceof RandomAccess or does not satisfy its
+	 * contract.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param sequence1
+	 *            First of the two sequences to consider.
+	 * @param sequence2
+	 *            Second of the two sequences to consider.
+	 * @param <E>
+	 *            Type of the sequences content.
+	 * @return The LCS of the two given sequences. Will never be the same instance as one of the input
+	 *         sequences.
+	 */
+	protected static <E> List<E> longestCommonSubsequence(Comparison comparison, List<E> sequence1,
+			List<E> sequence2) {
+		final int size1 = sequence1.size();
+		final int size2 = sequence2.size();
+		final int[][] matrix = new int[size1 + 1][size2 + 1];
+
+		// Compute the LCS matrix
+		for (int i = 1; i <= size1; i++) {
+			for (int j = 1; j <= size2; j++) {
+				final E first = sequence1.get(i - 1);
+				final E second = sequence2.get(j - 1);
+				if (EqualityHelper.matchingValues(comparison, first, second)) {
+					matrix[i][j] = 1 + matrix[i - 1][j - 1];
+				} else {
+					matrix[i][j] = Math.max(matrix[i - 1][j], matrix[i][j - 1]);
+				}
+			}
+		}
+
+		// Shortcut evaluation if the lcs is the whole sequence
+		final boolean lcsIs1 = matrix[size1][size2] == size1;
+		final boolean lcsIs2 = matrix[size1][size2] == size2;
+		if (lcsIs1 || lcsIs2) {
+			final List<E> shortcut;
+			if (lcsIs1) {
+				shortcut = ImmutableList.copyOf(sequence1);
+			} else {
+				shortcut = ImmutableList.copyOf(sequence2);
+			}
+			return shortcut;
+		}
+
+		int current1 = size1;
+		int current2 = size2;
+		final List<E> result = Lists.newArrayList();
+
+		while (current1 > 0 && current2 > 0) {
+			final E first = sequence1.get(current1 - 1);
+			final E second = sequence2.get(current2 - 1);
+			if (EqualityHelper.matchingValues(comparison, first, second)) {
+				result.add(first);
+				current1--;
+				current2--;
+			} else if (matrix[current1][current2 - 1] >= matrix[current1 - 1][current2]) {
+				current2--;
+			} else {
+				current1--;
+			}
+		}
+		return Lists.reverse(result);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.diff.IDiffEngine#diff(org.eclipse.emf.compare.Comparison)
@@ -89,11 +256,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 		while (references.hasNext()) {
 			final EReference reference = references.next();
 			final boolean considerOrdering = featureFilter.checkForOrderingChanges(reference);
-			if (reference.isContainment()) {
-				computeContainmentDifference(match, reference, considerOrdering);
-			} else {
-				computeDifferences(match, reference, considerOrdering);
-			}
+			computeDifferences(match, reference, considerOrdering);
 		}
 
 		final Iterator<EAttribute> attributes = featureFilter.getAttributesToCheck(match);
@@ -105,6 +268,181 @@ public class DefaultDiffEngine implements IDiffEngine {
 
 		for (Match submatch : match.getSubmatches()) {
 			checkForDifferences(submatch);
+		}
+	}
+
+	/**
+	 * Computes the difference between the sides of the given {@code match} for the given containment
+	 * {@code reference}.
+	 * <p>
+	 * This is only meant for three-way comparisons.
+	 * </p>
+	 * 
+	 * @param match
+	 *            The match which sides we need to check for potential differences.
+	 * @param reference
+	 *            The containment reference which values are to be checked.
+	 * @param checkOrdering
+	 *            {@code true} if we should consider ordering changes on this reference, {@code false}
+	 *            otherwise.
+	 */
+	protected void computeContainmentDifferencesThreeWay(Match match, EReference reference,
+			boolean checkOrdering) {
+		// We won't use iterables here since we need random access collections for fast LCS.
+		final List<Object> leftValues = getAsList(match.getLeft(), reference);
+		final List<Object> rightValues = getAsList(match.getRight(), reference);
+		final List<Object> originValues = getAsList(match.getOrigin(), reference);
+
+		final List<Object> lcsOriginLeft = longestCommonSubsequence(getComparison(), originValues, leftValues);
+		final List<Object> lcsOriginRight = longestCommonSubsequence(getComparison(), originValues,
+				rightValues);
+
+		// TODO Can we shortcut in any way?
+
+		// Which values have "changed" in any way?
+		final Iterable<Object> changedLeft = Iterables.filter(leftValues, not(containedIn(getComparison(),
+				lcsOriginLeft)));
+		final Iterable<Object> changedRight = Iterables.filter(rightValues, not(containedIn(getComparison(),
+				lcsOriginRight)));
+
+		// Added or moved in left
+		for (Object diffCandidate : changedLeft) {
+			/*
+			 * This value is not in the LCS between origin and left, we thus know it has changed. We also know
+			 * that this is a containment reference.
+			 */
+			final Match candidateMatch = getComparison().getMatch((EObject)diffCandidate);
+
+			if (contains(getComparison(), originValues, diffCandidate)) {
+				// This object is contained in both the left and origin lists. It can only have moved
+				if (checkOrdering) {
+					featureChange(match, reference, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
+				}
+			} else {
+				// This object is not contained in the origin list.
+				// If single-valued, this is either a CHANGE or a MOVE (moved from another container)
+				// If multi-valued references, ADD or MOVE
+				if (candidateMatch != null && candidateMatch.getOrigin() != null) {
+					featureChange(match, reference, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
+				} else {
+					featureChange(match, reference, diffCandidate, DifferenceKind.ADD, DifferenceSource.LEFT);
+				}
+			}
+		}
+
+		// Added or moved in right
+		for (Object diffCandidate : changedRight) {
+			/*
+			 * This value is not in the LCS between origin and right, we thus know it has changed. We also
+			 * know that this is a containment reference.
+			 */
+			final Match candidateMatch = getComparison().getMatch((EObject)diffCandidate);
+
+			if (contains(getComparison(), originValues, diffCandidate)) {
+				// This object is contained in both the right and origin lists. It can only have moved
+				if (checkOrdering) {
+					featureChange(match, reference, diffCandidate, DifferenceKind.MOVE,
+							DifferenceSource.RIGHT);
+				}
+			} else {
+				// This object is not contained in the origin list.
+				// If single-valued, this is either a CHANGE or a MOVE (moved from another container)
+				// If multi-valued references, ADD or MOVE
+				if (candidateMatch != null && candidateMatch.getOrigin() != null) {
+					featureChange(match, reference, diffCandidate, DifferenceKind.MOVE,
+							DifferenceSource.RIGHT);
+				} else {
+					featureChange(match, reference, diffCandidate, DifferenceKind.ADD, DifferenceSource.RIGHT);
+				}
+			}
+		}
+
+		// deleted from either side
+		for (Object diffCandidate : originValues) {
+			/*
+			 * A value that is in the origin but not in the left/right either has been deleted or is a moved
+			 * element which previously was in this reference. We'll detect the move on its new reference.
+			 */
+			final Match candidateMatch = getComparison().getMatch((EObject)diffCandidate);
+			if (candidateMatch == null) {
+				// out of scope
+			} else {
+				if (candidateMatch.getLeft() == null) {
+					featureChange(match, reference, diffCandidate, DifferenceKind.DELETE,
+							DifferenceSource.LEFT);
+				}
+				if (candidateMatch.getRight() == null) {
+					featureChange(match, reference, diffCandidate, DifferenceKind.DELETE,
+							DifferenceSource.RIGHT);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Computes the difference between the sides of the given {@code match} for the given containment
+	 * {@code reference}.
+	 * <p>
+	 * This is only meant for two-way comparisons.
+	 * </p>
+	 * 
+	 * @param match
+	 *            The match which sides we need to check for potential differences.
+	 * @param reference
+	 *            The containment reference which values are to be checked.
+	 * @param checkOrdering
+	 *            {@code true} if we should consider ordering changes on this reference, {@code false}
+	 *            otherwise.
+	 */
+	protected void computeContainmentDifferencesTwoWay(Match match, EReference reference,
+			boolean checkOrdering) {
+		final List<Object> leftValues = getAsList(match.getLeft(), reference);
+		final List<Object> rightValues = getAsList(match.getRight(), reference);
+
+		final List<Object> lcs = longestCommonSubsequence(getComparison(), rightValues, leftValues);
+
+		// TODO Can we shortcut in any way?
+
+		// Which values have "changed" in any way?
+		final Iterable<Object> changed = Iterables.filter(leftValues, not(containedIn(getComparison(), lcs)));
+
+		// Added or moved
+		for (Object diffCandidate : changed) {
+			/*
+			 * This value is not in the LCS between right and left, we thus know it has changed. We also know
+			 * that this is a containment reference.
+			 */
+			final Match candidateMatch = getComparison().getMatch((EObject)diffCandidate);
+
+			if (contains(getComparison(), rightValues, diffCandidate)) {
+				// This object is contained in both the left and right lists. It can only have moved
+				if (checkOrdering) {
+					featureChange(match, reference, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
+				}
+			} else {
+				// This object is not contained in the right list.
+				// If single-valued, this is either a CHANGE or a MOVE (moved from another container)
+				// If multi-valued references, ADD or MOVE
+				if (candidateMatch != null && candidateMatch.getRight() != null) {
+					featureChange(match, reference, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
+				} else {
+					featureChange(match, reference, diffCandidate, DifferenceKind.ADD, DifferenceSource.LEFT);
+				}
+			}
+		}
+
+		// deleted
+		for (Object diffCandidate : rightValues) {
+			/*
+			 * A value that is in the right but not in the left either has been deleted or is a moved element
+			 * which previously was in this reference. We'll detect the move on its new reference.
+			 */
+			final Match candidateMatch = getComparison().getMatch((EObject)diffCandidate);
+			if (candidateMatch == null) {
+				// out of scope
+			} else if (candidateMatch.getLeft() == null) {
+				featureChange(match, reference, diffCandidate, DifferenceKind.DELETE, DifferenceSource.LEFT);
+			}
 		}
 	}
 
@@ -127,9 +465,190 @@ public class DefaultDiffEngine implements IDiffEngine {
 		}
 
 		if (attribute.isMany()) {
-			computeMultiValuedAttributeDifferences(match, attribute, checkOrdering);
+			if (getComparison().isThreeWay()) {
+				computeMultiValuedFeatureDifferencesThreeWay(match, attribute, checkOrdering);
+			} else {
+				computeMultiValuedFeatureDifferencesTwoWay(match, attribute, checkOrdering);
+			}
 		} else {
-			computeSingleValuedAttributeDifference(match, attribute);
+			computeSingleValuedAttributeDifferences(match, attribute);
+		}
+	}
+
+	/**
+	 * Computes the difference between the sides of the given <code>match</code> for the given
+	 * <code>reference</code>.
+	 * 
+	 * @param match
+	 *            The match which sides we need to check for potential differences.
+	 * @param reference
+	 *            The reference which values are to be checked.
+	 * @param checkOrdering
+	 *            <code>true</code> if we should consider ordering changes on this reference,
+	 *            <code>false</code> otherwise.
+	 */
+	protected void computeDifferences(Match match, EReference reference, boolean checkOrdering) {
+		if (reference.isContainment()) {
+			if (getComparison().isThreeWay()) {
+				computeContainmentDifferencesThreeWay(match, reference, checkOrdering);
+			} else {
+				computeContainmentDifferencesTwoWay(match, reference, checkOrdering);
+			}
+		} else if (reference.isMany()) {
+			if (getComparison().isThreeWay()) {
+				computeMultiValuedFeatureDifferencesThreeWay(match, reference, checkOrdering);
+			} else {
+				computeMultiValuedFeatureDifferencesTwoWay(match, reference, checkOrdering);
+			}
+		} else {
+			if (getComparison().isThreeWay()) {
+				computeSingleValuedReferenceDifferencesThreeWay(match, reference);
+			} else {
+				computeSingleValuedReferenceDifferencesTwoWay(match, reference);
+			}
+		}
+	}
+
+	/**
+	 * Computes the difference between the sides of the given {@code match} for the given multi-valued
+	 * {@code feature}.
+	 * <p>
+	 * The given {@code feature} cannot be a containment reference.
+	 * </p>
+	 * <p>
+	 * This is only meant for three-way comparisons.
+	 * </p>
+	 * 
+	 * @param match
+	 *            The match which sides we need to check for potential differences.
+	 * @param feature
+	 *            The feature which values are to be checked.
+	 * @param checkOrdering
+	 *            {@code true} if we should consider ordering changes on this feature, {@code false}
+	 *            otherwise.
+	 */
+	protected void computeMultiValuedFeatureDifferencesThreeWay(Match match, EStructuralFeature feature,
+			boolean checkOrdering) {
+		// We won't use iterables here since we need random access collections for fast LCS.
+		final List<Object> leftValues = getAsList(match.getLeft(), feature);
+		final List<Object> rightValues = getAsList(match.getRight(), feature);
+		final List<Object> originValues = getAsList(match.getOrigin(), feature);
+
+		final List<Object> lcsOriginLeft = longestCommonSubsequence(getComparison(), originValues, leftValues);
+		final List<Object> lcsOriginRight = longestCommonSubsequence(getComparison(), originValues,
+				rightValues);
+
+		// TODO Can we shortcut in any way?
+
+		// Which values have "changed" in any way?
+		final Iterable<Object> changedLeft = Iterables.filter(leftValues, not(containedIn(getComparison(),
+				lcsOriginLeft)));
+		final Iterable<Object> changedRight = Iterables.filter(rightValues, not(containedIn(getComparison(),
+				lcsOriginRight)));
+
+		// Added or moved in the left
+		for (Object diffCandidate : changedLeft) {
+			/*
+			 * This value is not in the LCS between origin and left, we thus know it has changed. If it is
+			 * present in the origin, this is a move. Otherwise, it has been added in the left list.
+			 */
+			if (contains(getComparison(), originValues, diffCandidate)) {
+				if (checkOrdering) {
+					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
+				}
+			} else {
+				featureChange(match, feature, diffCandidate, DifferenceKind.ADD, DifferenceSource.LEFT);
+			}
+		}
+
+		// Added or moved in the right
+		for (Object diffCandidate : changedRight) {
+			/*
+			 * This value is not in the LCS between origin and right, we thus know it has changed. If it is
+			 * present in the origin, this is a move. Otherwise, it has been added in the right list.
+			 */
+			if (contains(getComparison(), originValues, diffCandidate)) {
+				if (checkOrdering) {
+					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.RIGHT);
+				}
+			} else {
+				featureChange(match, feature, diffCandidate, DifferenceKind.ADD, DifferenceSource.RIGHT);
+			}
+		}
+
+		// Removed from either side
+		for (Object diffCandidate : originValues) {
+			// A value that is in the origin but not in one of the side has been deleted.
+			// However, we do not want attribute changes on removed elements.
+			if (!contains(getComparison(), leftValues, diffCandidate)) {
+				if (feature instanceof EReference || match.getLeft() != null) {
+					featureChange(match, feature, diffCandidate, DifferenceKind.DELETE, DifferenceSource.LEFT);
+				}
+			}
+			if (!contains(getComparison(), rightValues, diffCandidate)) {
+				if (feature instanceof EReference || match.getRight() != null) {
+					featureChange(match, feature, diffCandidate, DifferenceKind.DELETE,
+							DifferenceSource.RIGHT);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Computes the difference between the sides of the given {@code match} for the given multi-valued
+	 * {@code feature}.
+	 * <p>
+	 * The given {@code feature} cannot be a containment reference.
+	 * </p>
+	 * <p>
+	 * This is only meant for two-way comparisons.
+	 * </p>
+	 * 
+	 * @param match
+	 *            The match which sides we need to check for potential differences.
+	 * @param feature
+	 *            The feature which values are to be checked.
+	 * @param checkOrdering
+	 *            {@code true} if we should consider ordering changes on this feature, {@code false}
+	 *            otherwise.
+	 */
+	protected void computeMultiValuedFeatureDifferencesTwoWay(Match match, EStructuralFeature feature,
+			boolean checkOrdering) {
+		// We won't use iterables here since we need random access collections for fast LCS.
+		final List<Object> leftValues = getAsList(match.getLeft(), feature);
+		final List<Object> rightValues = getAsList(match.getRight(), feature);
+
+		final List<Object> lcs = longestCommonSubsequence(getComparison(), rightValues, leftValues);
+
+		// TODO Can we shortcut in any way?
+
+		// Which values have "changed" in any way?
+		final Iterable<Object> changed = Iterables.filter(leftValues, not(containedIn(getComparison(), lcs)));
+
+		// Added or moved
+		for (Object diffCandidate : changed) {
+			/*
+			 * This value is not in the LCS between right and left, we thus know it has changed. If it is
+			 * present in the right, this is a move. Otherwise, it has been added in the left list.
+			 */
+			if (contains(getComparison(), rightValues, diffCandidate)) {
+				if (checkOrdering) {
+					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
+				}
+			} else {
+				featureChange(match, feature, diffCandidate, DifferenceKind.ADD, DifferenceSource.LEFT);
+			}
+		}
+
+		// deleted
+		for (Object diffCandidate : rightValues) {
+			// A value that is in the right but not in the left has been deleted.
+			// However, we do not want attribute changes on removed elements.
+			if (!contains(getComparison(), leftValues, diffCandidate)) {
+				if (feature instanceof EReference || match.getLeft() != null) {
+					featureChange(match, feature, diffCandidate, DifferenceKind.DELETE, DifferenceSource.LEFT);
+				}
+			}
 		}
 	}
 
@@ -142,7 +661,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 * @param attribute
 	 *            The attribute which values are to be checked.
 	 */
-	protected void computeSingleValuedAttributeDifference(Match match, EAttribute attribute) {
+	protected void computeSingleValuedAttributeDifferences(Match match, EAttribute attribute) {
 		Object leftValue = UNMATCHED_VALUE;
 		if (match.getLeft() != null) {
 			leftValue = match.getLeft().eGet(attribute);
@@ -159,7 +678,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 				final Object originValue = match.getOrigin().eGet(attribute);
 
 				if (!EqualityHelper.matchingValues(getComparison(), leftValue, originValue)) {
-					// The same diff change has been made on both side. This is actually a pseudo-conflict
+					// The same change has been made on both side. This is actually a pseudo-conflict
 					getDiffProcessor().attributeChange(match, attribute, originValue, DifferenceKind.CHANGE,
 							DifferenceSource.LEFT);
 					getDiffProcessor().attributeChange(match, attribute, originValue, DifferenceKind.CHANGE,
@@ -202,532 +721,175 @@ public class DefaultDiffEngine implements IDiffEngine {
 				}
 			}
 		} else {
-			// None of left and right are unmatched; they are different, and we have no origin
-			getDiffProcessor().attributeChange(match, attribute, leftValue, DifferenceKind.CHANGE,
-					DifferenceSource.LEFT);
-		}
-	}
-
-	/**
-	 * Computes the difference between the sides of the given <code>match</code> for the given multi-valued
-	 * <code>attribute</code>.
-	 * 
-	 * @param match
-	 *            The match which sides we need to check for potential differences.
-	 * @param attribute
-	 *            The attribute which values are to be checked.
-	 * @param checkOrdering
-	 *            <code>true</code> if we should consider ordering changes on this reference,
-	 *            <code>false</code> otherwise.
-	 */
-	protected void computeMultiValuedAttributeDifferences(Match match, EAttribute attribute,
-			boolean checkOrdering) {
-		// This will only be used for iteration, once. Use the original list
-		final Iterable<Object> leftValues = getValue(match.getLeft(), attribute);
-
-		/*
-		 * We might iterate a lot over these two. Since we'll remove objects from them in order to keep the
-		 * length of iterations as short as possible, we'll use two linked sets.
-		 */
-		final Set<Object> rightValues = Sets.newLinkedHashSet(getValue(match.getRight(), attribute));
-		final Set<Object> originValues = Sets.newLinkedHashSet(getValue(match.getOrigin(), attribute));
-
-		for (Object left : leftValues) {
-			final Object rightMatch = findMatch(left, rightValues);
-
-			if (rightMatch == UNMATCHED_VALUE) {
-				final Object originMatch = findMatch(left, originValues);
-				// no need to check if three way for these
-				if (originMatch != UNMATCHED_VALUE) {
-					/*
-					 * The value is in the left and origin, but not in the right. However, "right" might have
-					 * been deleted altogether, in which case we do not want a diff.
-					 */
-					if (match.getRight() != null) {
-						getDiffProcessor().attributeChange(match, attribute, left, DifferenceKind.DELETE,
-								DifferenceSource.RIGHT);
-					}
-					// FIXME There could also be an ordering change between left and origin
-					originValues.remove(originMatch);
-				} else {
-					// Value is in left, but not in either right or origin
-					getDiffProcessor().attributeChange(match, attribute, left, DifferenceKind.ADD,
-							DifferenceSource.LEFT);
-				}
-			} else {
-				// Value is present in both left and right sides. We can only have a diff on ordering
-				// FIXME check ordering
-				rightValues.remove(rightMatch);
-				originValues.remove(findMatch(left, originValues));
-			}
-		}
-
-		// We've updated the right list as we matched objects. The remaining are diffs.
-		for (Object right : rightValues) {
-			final Object originMatch = findMatch(right, originValues);
-			// Even with no match in the origin, source is the left side if this is not a three way
-			// comparison
-			if (originMatch != UNMATCHED_VALUE || !getComparison().isThreeWay()) {
-				getDiffProcessor().attributeChange(match, attribute, right, DifferenceKind.DELETE,
-						DifferenceSource.LEFT);
-				// FIXME if originMatch != UNMATCHED_VALUE then check ordering between right and origin
-			} else {
-				getDiffProcessor().attributeChange(match, attribute, right, DifferenceKind.ADD,
-						DifferenceSource.RIGHT);
-			}
-		}
-
-		// We've update the origin list as we matched objects. The remaining are values that have been removed
-		// from both sides.
-		for (Object value : originValues) {
-			// This can only be a conflict between the two following diffs (can never be here in two way)
-			// Note that if one side has been deleted altogether, the pseudo-conflict is with the deletion,
-			// not with the attribute change.
-			if (match.getLeft() != null) {
-				getDiffProcessor().attributeChange(match, attribute, value, DifferenceKind.DELETE,
+			// Left and right values are different, and we have no origin.
+			if (leftValue != UNMATCHED_VALUE) {
+				getDiffProcessor().attributeChange(match, attribute, leftValue, DifferenceKind.CHANGE,
 						DifferenceSource.LEFT);
 			}
-			if (match.getRight() != null) {
-				getDiffProcessor().attributeChange(match, attribute, value, DifferenceKind.DELETE,
+			if (getComparison().isThreeWay() && rightValue != UNMATCHED_VALUE) {
+				getDiffProcessor().attributeChange(match, attribute, rightValue, DifferenceKind.CHANGE,
 						DifferenceSource.RIGHT);
 			}
 		}
 	}
 
 	/**
-	 * Computes the differences between the sides of the given <code>match</code> for the given
+	 * Computes the difference between the sides of the given <code>match</code> for the given single-valued
 	 * <code>reference</code>.
 	 * <p>
-	 * Note that once here, we know that <code>reference</code> is not a containment reference.
+	 * The given {@code reference} cannot be a containment reference.
+	 * </p>
+	 * <p>
+	 * This is only meant for three-way comparisons.
 	 * </p>
 	 * 
 	 * @param match
 	 *            The match which sides we need to check for potential differences.
 	 * @param reference
 	 *            The reference which values are to be checked.
-	 * @param checkOrdering
-	 *            <code>true</code> if we should consider ordering changes on this reference,
-	 *            <code>false</code> otherwise.
 	 */
-	protected void computeDifferences(Match match, EReference reference, boolean checkOrdering) {
-		// This will only be used for iteration, once. use the original list
-		final Iterable<EObject> leftValues = Iterables.filter(getValue(match.getLeft(), reference),
-				EObject.class);
-		/*
-		 * These two will be used mainly for lookup, we'll transform them to Sets here. Linked set for the
-		 * rightValues since we'll iterate over its values once, a plain hash set for the origin as it will
-		 * only be used for lookup purposes.
-		 */
-		// NOTE : Do not use the original lists : we will remove objects from it.
-		final Set<EObject> rightValues = Sets.newLinkedHashSet(Iterables.filter(getValue(match.getRight(),
-				reference), EObject.class));
-		final Set<EObject> originValues = Sets.newHashSet(Iterables.filter(getValue(match.getOrigin(),
-				reference), EObject.class));
+	protected void computeSingleValuedReferenceDifferencesThreeWay(Match match, EReference reference) {
+		Object leftValue = UNMATCHED_VALUE;
+		if (match.getLeft() != null) {
+			leftValue = match.getLeft().eGet(reference);
+		}
+		Object rightValue = UNMATCHED_VALUE;
+		if (match.getRight() != null) {
+			rightValue = match.getRight().eGet(reference);
+		}
+		Object originValue = UNMATCHED_VALUE;
+		if (match.getOrigin() != null) {
+			originValue = match.getOrigin().eGet(reference);
+		}
 
-		boolean leftIsEmpty = true;
-		for (EObject value : leftValues) {
-			final Match valueMatch = getComparison().getMatch(value);
-			if (valueMatch != null) {
-				leftIsEmpty = false;
-				// Is this value present in the right side?
-				final EObject rightMatch = valueMatch.getRight();
+		final Match leftValueMatch;
+		if (leftValue instanceof EObject) {
+			leftValueMatch = getComparison().getMatch((EObject)leftValue);
+		} else {
+			leftValueMatch = null;
+		}
 
-				if (rightMatch == null || !rightValues.contains(rightMatch)) {
-					final boolean originHasMatch = originValues.contains(valueMatch.getOrigin());
-					if (!reference.isMany() && originHasMatch && !rightValues.isEmpty()) {
-						// value is also set in the right, we'll detect it on that value
-					} else if (!reference.isMany() && originHasMatch) {
-						// Value is in left and origin, but unset in right. We must detect the diff here
-						getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.CHANGE,
-								DifferenceSource.RIGHT);
-					} else if (!reference.isMany()) {
-						// Value is in left, not in right. it is either not in the origin or we are in two-way
-						getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.CHANGE,
-								DifferenceSource.LEFT);
-					} else if (originHasMatch) {
-						getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.DELETE,
-								DifferenceSource.RIGHT);
-					} else {
-						getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.ADD,
-								DifferenceSource.LEFT);
-					}
-					// FIXME if reference.isMany() then check ordering between left and origin
-				} else {
-					// Value is present in both left and right lists. We can only have a diff on ordering.
-					rightValues.remove(rightMatch);
-					// FIXME if reference.isMany() then check ordering between left and right
-				}
-				originValues.remove(valueMatch.getOrigin());
+		final boolean distinctValueLO;
+		if (leftValueMatch != null) {
+			distinctValueLO = originValue == null || leftValueMatch.getOrigin() != originValue;
+		} else {
+			distinctValueLO = originValue instanceof EObject;
+		}
+
+		if (distinctValueLO) {
+			final boolean leftOutOfScope = leftValue instanceof EObject && leftValueMatch == null;
+			final boolean originOutOfScope = originValue instanceof EObject
+					&& getComparison().getMatch((EObject)originValue) == null;
+
+			// Left and origin are distinct
+			if (leftValueMatch != null && !leftOutOfScope) {
+				// Left has been set to a new value, or left has been added altogether
+				getDiffProcessor().referenceChange(match, reference, (EObject)leftValue,
+						DifferenceKind.CHANGE, DifferenceSource.LEFT);
+			} else if (originValue != UNMATCHED_VALUE && !originOutOfScope) {
+				// left value is unset, or left has been removed
+				getDiffProcessor().referenceChange(match, reference, (EObject)originValue,
+						DifferenceKind.CHANGE, DifferenceSource.LEFT);
 			} else {
-				// this value is out of the comparison scope
-				// FIXME or could be a proxy : compare through URI
+				// left has been added. This reference is either unset or set to an out of scope value
 			}
 		}
 
-		// We've updated the right list as we matched objects. The remaining are diffs.
-		for (EObject value : rightValues) {
-			final Match valueMatch = getComparison().getMatch(value);
-			if (valueMatch != null) {
-				final boolean originHasMatch = originValues.contains(valueMatch.getOrigin());
-				if (!reference.isMany()) {
-					if (match.getLeft() == null) {
-						// I have a reference value in an object that is not in the left.
-						getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.CHANGE,
-								DifferenceSource.LEFT);
-					} else if (!originHasMatch && getComparison().isThreeWay()) {
-						/*
-						 * Value is in the right, but not in the left. We have no origin in a three way
-						 * comparison.
-						 */
-						getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.CHANGE,
-								DifferenceSource.RIGHT);
-					} else if (leftIsEmpty) {
-						/*
-						 * Value is in the right , but not in the left. my origin is the same as the right
-						 * value, or I am in a two-way comparison.
-						 */
-						getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.CHANGE,
-								DifferenceSource.LEFT);
-					}
-				} else if (originHasMatch || !getComparison().isThreeWay()) {
-					// Even with no match in the origin, source is left side if not in a three way comparison
-					getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.DELETE,
-							DifferenceSource.LEFT);
-				} else {
-					getDiffProcessor().referenceChange(match, reference, value, DifferenceKind.ADD,
-							DifferenceSource.RIGHT);
-				}
-				originValues.remove(valueMatch.getOrigin());
-			} else {
-				// this value is out of the comparison scope
-				// FIXME or could be a proxy : compare through URI
-			}
+		final Match rightValueMatch;
+		if (rightValue instanceof EObject) {
+			rightValueMatch = getComparison().getMatch((EObject)rightValue);
+		} else {
+			rightValueMatch = null;
 		}
 
-		// We've updated the origin list as we matched objects. The remaining are pseudo-conflicts.
-		for (EObject value : originValues) {
-			final Match valueMatch = getComparison().getMatch(value);
-			if (valueMatch != null) {
-				final DifferenceKind kind;
-				if (!reference.isMany()) {
-					kind = DifferenceKind.CHANGE;
-				} else {
-					kind = DifferenceKind.DELETE;
-				}
-				/*
-				 * The value has changed on both sides. This can be either a pseudo conflict between two
-				 * identical diffs, or a real conflict between two distinct changes. The only change we
-				 * haven't yet detected through the iterations on right and left are the deletions/unsettings.
-				 */
-				if (leftIsEmpty || reference.isMany()) {
-					getDiffProcessor().referenceChange(match, reference, value, kind, DifferenceSource.LEFT);
-				}
-				if (rightValues.isEmpty() || reference.isMany()) {
-					getDiffProcessor().referenceChange(match, reference, value, kind, DifferenceSource.RIGHT);
-				}
+		final boolean distinctValueRO;
+		if (rightValueMatch != null) {
+			distinctValueRO = originValue == null || rightValueMatch.getOrigin() != originValue;
+		} else {
+			distinctValueRO = originValue instanceof EObject;
+		}
+
+		if (distinctValueRO) {
+			final boolean rightOutOfScope = rightValue instanceof EObject && rightValueMatch == null;
+			final boolean originOutOfScope = originValue instanceof EObject
+					&& getComparison().getMatch((EObject)originValue) == null;
+
+			// Right and origin are distinct
+			if (rightValueMatch != null && !rightOutOfScope) {
+				// Right has been set to a new value, or right has been added altogether
+				getDiffProcessor().referenceChange(match, reference, (EObject)rightValue,
+						DifferenceKind.CHANGE, DifferenceSource.RIGHT);
+			} else if (originValue != UNMATCHED_VALUE && !originOutOfScope) {
+				// right value is unset, or right has been removed
+				getDiffProcessor().referenceChange(match, reference, (EObject)originValue,
+						DifferenceKind.CHANGE, DifferenceSource.RIGHT);
+			} else {
+				// right has been added. This reference is either unset or set to an out of scope value
 			}
 		}
 	}
 
 	/**
-	 * Containment differences will be treated differently than plain references since the corresponding Match
-	 * elements themselves contain all information we might need for difference detection on these, ordering
-	 * excepted.
+	 * Computes the difference between the sides of the given <code>match</code> for the given single-valued
+	 * <code>reference</code>.
+	 * <p>
+	 * The given {@code reference} cannot be a containment reference.
+	 * </p>
+	 * <p>
+	 * This is only meant for two-way comparisons.
+	 * </p>
 	 * 
 	 * @param match
 	 *            The match which sides we need to check for potential differences.
 	 * @param reference
 	 *            The reference which values are to be checked.
-	 * @param checkOrdering
-	 *            <code>true</code> if we should consider ordering changes on this reference,
-	 *            <code>false</code> otherwise.
 	 */
-	protected void computeContainmentDifference(Match match, EReference reference, boolean checkOrdering) {
-		// This will only be used for iteration, once. use the original list
-		final Iterable<EObject> leftValues = Iterables.filter(getValue(match.getLeft(), reference),
-				EObject.class);
-
-		for (EObject leftValue : leftValues) {
-			final Match valueMatch = getComparison().getMatch(leftValue);
-
-			if (valueMatch != null) {
-				computeContainmentDiffForLeftValue(match, reference, valueMatch, checkOrdering);
-			} else {
-				// this value is out of the comparison scope
-				// FIXME or could be a proxy : compare through URI
-			}
+	protected void computeSingleValuedReferenceDifferencesTwoWay(Match match, EReference reference) {
+		Object leftValue = UNMATCHED_VALUE;
+		if (match.getLeft() != null) {
+			leftValue = match.getLeft().eGet(reference);
+		}
+		Object rightValue = UNMATCHED_VALUE;
+		if (match.getRight() != null) {
+			rightValue = match.getRight().eGet(reference);
 		}
 
-		// This will only be used for iteration, once. use the original list
-		final Iterable<EObject> rightValues = Iterables.filter(getValue(match.getRight(), reference),
-				EObject.class);
+		final Match leftValueMatch;
+		if (leftValue instanceof EObject) {
+			leftValueMatch = getComparison().getMatch((EObject)leftValue);
+		} else {
+			leftValueMatch = null;
+		}
 
-		for (EObject rightValue : rightValues) {
-			final Match valueMatch = getComparison().getMatch(rightValue);
+		final boolean distinctValue;
+		if (leftValueMatch != null) {
+			distinctValue = rightValue == null || leftValueMatch.getRight() != rightValue;
+		} else {
+			distinctValue = rightValue instanceof EObject;
+		}
+
+		if (distinctValue) {
+			final boolean leftOutOfScope = leftValue instanceof EObject && leftValueMatch == null;
+			final boolean rightOutOfScope = rightValue instanceof EObject
+					&& getComparison().getMatch((EObject)rightValue) == null;
 
 			/*
-			 * No match means we're out of the scope. Being contained in the same container in the same
-			 * reference on the left side means we've already been handled through the iteration on the left
-			 * side.
+			 * TODO should probably detect diffs even for out of scope values. What if I changed the type of a
+			 * reference from "EInt" to "EString" ? Holds true for three way too.
 			 */
-			if (valueMatch == null || valueMatch.getLeft() != null
-					&& isContainedBy(match.getLeft(), reference, valueMatch.getLeft())) {
-				// Either out of scope or handled by the iteration on the left side
-				// FIXME or could be a proxy : compare through URI
+
+			if (leftValueMatch != null && !leftOutOfScope) {
+				// Left has been set to a new value, or left has been added altogether
+				getDiffProcessor().referenceChange(match, reference, (EObject)leftValue,
+						DifferenceKind.CHANGE, DifferenceSource.LEFT);
+			} else if (rightValue != UNMATCHED_VALUE && !rightOutOfScope) {
+				// left value is unset, or left has been removed
+				getDiffProcessor().referenceChange(match, reference, (EObject)rightValue,
+						DifferenceKind.CHANGE, DifferenceSource.LEFT);
 			} else {
-				computeContainmentDiffForRightValue(match, reference, valueMatch, checkOrdering);
+				// left has been added. This reference is either unset or set to an out of scope value
 			}
 		}
-
-		// This will only be used for iteration, once. use the original list
-		final Iterable<EObject> originValues = Iterables.filter(getValue(match.getOrigin(), reference),
-				EObject.class);
-
-		for (EObject originValue : originValues) {
-			final Match valueMatch = getComparison().getMatch(originValue);
-
-			// The only case of interest is the "pseudo" conflict happening when an element has been deleted
-			// in both left and right. All other cases have already been handled.
-			if (valueMatch == null || valueMatch.getLeft() != null || valueMatch.getRight() != null) {
-				// Either out of scope or already handled
-				// FIXME or could be a proxy : compare through URI
-			} else {
-				computeContainmentDiffForOriginValue(match, reference, valueMatch);
-			}
-		}
-	}
-
-	/**
-	 * This will be called by the diff engine to compute containment differences on the given
-	 * <code>value</code>, which {@link Match#getLeft() left side} is known to be in the
-	 * <code>parent.reference</code>'s content list.
-	 * <p>
-	 * The necessary sanity checks have been made to know that <code>value.getLeft()</code> is not
-	 * <code>null</code> and part of <code>parent.eGet(reference)</code>. We also know that reference is a
-	 * containment reference.
-	 * </p>
-	 * 
-	 * @param parent
-	 *            The Match which containment references we are currently checking for differences.
-	 * @param reference
-	 *            The reference of which content <code>value</code> is known to be a part.
-	 * @param value
-	 *            The value of the given containment reference which is to be checked here.
-	 * @param checkOrdering
-	 *            <code>true</code> if we should consider ordering changes on this reference,
-	 *            <code>false</code> otherwise.
-	 */
-	protected void computeContainmentDiffForLeftValue(Match parent, EReference reference, Match value,
-			boolean checkOrdering) {
-		final EObject leftValue = value.getLeft();
-		final EObject rightValue = value.getRight();
-		final EObject originValue = value.getOrigin();
-
-		if (rightValue == null) {
-			if (originValue == null) {
-				// This value has been added in the left side
-				getDiffProcessor().referenceChange(parent, reference, leftValue, DifferenceKind.ADD,
-						DifferenceSource.LEFT);
-			} else if (isContainedBy(parent.getOrigin(), reference, originValue)) {
-				// This value is also in the origin, in the same container. It has thus been removed
-				// from the right side.
-				getDiffProcessor().referenceChange(parent, reference, leftValue, DifferenceKind.DELETE,
-						DifferenceSource.RIGHT);
-				// FIXME check ordering between left and origin
-			} else {
-				/*
-				 * This value is also in the origin, it has thus been deleted from the right side. But it was
-				 * not in the same container; so there is also a MOVE difference in the left side. The delete
-				 * of the right side, however, is in another match element. It will be detected later on.
-				 */
-				getDiffProcessor().referenceChange(parent, reference, leftValue, DifferenceKind.MOVE,
-						DifferenceSource.LEFT);
-			}
-		} else if (originValue == null) {
-			// This value is in both left and right sides, but not in the origin
-			if (isContainedBy(parent.getRight(), reference, rightValue)) {
-				// they are in the same container; so there's actually no diff here : the same
-				// modification has been made in both sides
-				// FIXME check ordering between right and left
-			} else {
-				/*
-				 * This is a conflict if a three way comparison : same object added in two distinct
-				 * containers. The addition in the right side, however, is in another match element and will
-				 * be detected later on.
-				 */
-				getDiffProcessor().referenceChange(parent, reference, leftValue, DifferenceKind.ADD,
-						DifferenceSource.LEFT);
-			}
-		} else {
-			// This value is on all three sides
-			if (isContainedBy(parent.getRight(), reference, rightValue)) {
-				/*
-				 * Value is in the same container on the right and left side. The container in the origin does
-				 * not matter in this case : the only diff possible is the ordering between left and right.
-				 */
-				// FIXME check ordering between left and right
-			} else if (!isContainedBy(parent.getOrigin(), reference, originValue)) {
-				/*
-				 * Value has changed container in left _and_ in right. The move on the right side will be
-				 * detected for another match.
-				 */
-				getDiffProcessor().referenceChange(parent, reference, leftValue, DifferenceKind.MOVE,
-						DifferenceSource.LEFT);
-			} else {
-				/*
-				 * Value is in the same container on left and origin. It has moved on the right side, but that
-				 * will be detected for another match.
-				 */
-				// FIXME check ordering between left and origin
-			}
-		}
-	}
-
-	/**
-	 * This will be called by the diff engine to compute containment differences on the given
-	 * <code>value</code>, which {@link Match#getRight() right side} is known to be in the
-	 * <code>parent.reference</code>'s content list.
-	 * <p>
-	 * The necessary sanity checks have been made to know that <code>value.getRight()</code> is not
-	 * <code>null</code> and part of <code>parent.getRight().eGet(reference)</code>. We also know that
-	 * <code>value.getLeft()</code> is <b>not</b> a part of <code>parent.getLeft().eGet(reference)</code>
-	 * since these have already been taken care of by
-	 * {@link #computeContainmentDiffForLeftValue(Match, EReference, Match, boolean)}.
-	 * </p>
-	 * 
-	 * @param parent
-	 *            The Match which containment references we are currently checking for differences.
-	 * @param reference
-	 *            The reference of which content <code>value</code> is known to be a part.
-	 * @param value
-	 *            The value of the given containment reference which is to be checked here.
-	 * @param checkOrdering
-	 *            <code>true</code> if we should consider ordering changes on this reference,
-	 *            <code>false</code> otherwise.
-	 */
-	protected void computeContainmentDiffForRightValue(Match parent, EReference reference, Match value,
-			boolean checkOrdering) {
-		final EObject leftValue = value.getLeft();
-		final EObject rightValue = value.getRight();
-		final EObject originValue = value.getOrigin();
-
-		if (leftValue == null) {
-			if (originValue == null && getComparison().isThreeWay()) {
-				// This value has been added in the right side
-				getDiffProcessor().referenceChange(parent, reference, rightValue, DifferenceKind.ADD,
-						DifferenceSource.RIGHT);
-			} else if (originValue == null || isContainedBy(parent.getOrigin(), reference, originValue)) {
-				// Either we are doing a two way comparison or this value is also in the origin, in the same
-				// container. It has thus been removed from the left side.
-				getDiffProcessor().referenceChange(parent, reference, rightValue, DifferenceKind.DELETE,
-						DifferenceSource.LEFT);
-				// FIXME check ordering between right and origin
-			} else {
-				/*
-				 * This value is also in the origin, it has thus been deleted from the left side. But it was
-				 * not in the same container; so there is also a MOVE difference in the right side. The delete
-				 * of the left side, however, is in another match element. It will be detected later on.
-				 */
-				getDiffProcessor().referenceChange(parent, reference, rightValue, DifferenceKind.MOVE,
-						DifferenceSource.RIGHT);
-			}
-		} else if (originValue == null && getComparison().isThreeWay()) {
-			// This value is in both left and right sides, but not in the origin. We also know that they are
-			// not in the same container since we are on the path for the "right" match, which will only be
-			// called if right and left are in distinct containers.
-			/*
-			 * This is actually a conflict : same object added in two distinct containers. The addition in the
-			 * left side, however, will be detected for another match element.
-			 */
-			getDiffProcessor().referenceChange(parent, reference, rightValue, DifferenceKind.ADD,
-					DifferenceSource.RIGHT);
-		} else {
-			// This value is on all three sides, or we are doing a two way comparison
-			// Either way, the value is in distinct containers on left and right
-			if (getComparison().isThreeWay() && !isContainedBy(parent.getOrigin(), reference, originValue)) {
-				// value present on all sides, but its container has changed in the right side as
-				// compared to the origin
-				getDiffProcessor().referenceChange(parent, reference, rightValue, DifferenceKind.MOVE,
-						DifferenceSource.RIGHT);
-			} else {
-				// The value has been moved in the left side ... but that's in another Match element
-				// FIXME check ordering between right and origin
-			}
-		}
-	}
-
-	/**
-	 * This will be called by the diff engine to compute containment differences on the given
-	 * <code>value</code>, which {@link Match#getOrigin() origin side} is known to be in the
-	 * <code>parent.reference</code>'s content list.
-	 * <p>
-	 * The necessary sanity checks have been made to know that <code>value.getorigin()</code> is not
-	 * <code>null</code> and part of <code>parent.getOrigin().eGet(reference)</code>. We also know that both
-	 * <code>value.getLeft()</code> and <code>value.getRight()</code> are {@code null}.
-	 * </p>
-	 * <p>
-	 * In other words, if this is called then we have a "pseudo" conflict : an object that is in the origin
-	 * but has been removed in both left and right.
-	 * </p>
-	 * 
-	 * @param parent
-	 *            The Match which containment references we are currently checking for differences.
-	 * @param reference
-	 *            The reference of which content <code>value</code> is known to be a part.
-	 * @param value
-	 *            The value of the given containment reference which is to be checked here.
-	 */
-	protected void computeContainmentDiffForOriginValue(Match parent, EReference reference, Match value) {
-		final EObject originValue = value.getOrigin();
-
-		// This can only be a conflict between the two following diffs (can never be called in two way)
-		getDiffProcessor().referenceChange(parent, reference, originValue, DifferenceKind.DELETE,
-				DifferenceSource.LEFT);
-		getDiffProcessor().referenceChange(parent, reference, originValue, DifferenceKind.DELETE,
-				DifferenceSource.RIGHT);
-	}
-
-	/**
-	 * Checks whether the given <code>value</code> is contained within the given <code>container</code>,
-	 * through the given <code>containmentReference</code>.
-	 * 
-	 * @param container
-	 *            The expected container of <code>value</code>.
-	 * @param containmentReference
-	 *            The reference of <code>container</code> within which we expect to find <code>value</code>.
-	 * @param value
-	 *            The value which container we are checking.
-	 * @return <code>true</code> if the given value is contained within the expected reference of the expected
-	 *         container, <code>false</code> otherwise.
-	 */
-	protected static boolean isContainedBy(EObject container, EReference containmentReference, EObject value) {
-		return container == value.eContainer() && containmentReference == value.eContainmentFeature();
-	}
-
-	/**
-	 * This default implementation considers all values as lists. This utility simply allows us to retrieve
-	 * the value of a given value as an iterable.
-	 * 
-	 * @param object
-	 *            The object for which feature we need a value.
-	 * @param feature
-	 *            The actual feature of which we need the value.
-	 * @return The value of the given <code>feature</code> for the given <code>object</code> as a list. An
-	 *         empty list if this object has no value for that feature or if the object is <code>null</code>.
-	 */
-	@SuppressWarnings("unchecked")
-	protected static Iterable<Object> getValue(EObject object, EStructuralFeature feature) {
-		if (object != null) {
-			Object value = object.eGet(feature, false);
-			final Iterable<Object> asList;
-			if (value instanceof Iterable) {
-				asList = (Iterable<Object>)value;
-			} else {
-				asList = Collections.singleton(value);
-			}
-			return asList;
-		}
-		return Collections.emptyList();
 	}
 
 	/**
@@ -741,16 +903,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 	}
 
 	/**
-	 * This will return the diff processor that has been created through {@link #createDiffProcessor()} for
-	 * this differencing process.
-	 * 
-	 * @return The diff processor to notify of difference detections.
-	 */
-	protected final IDiffProcessor getDiffProcessor() {
-		return diffProcessor;
-	}
-
-	/**
 	 * This will be used in order to create the {@link FeatureFilter} that should be used by this engine to
 	 * determine the structural features on which it is to try and detect differences.
 	 * 
@@ -758,6 +910,29 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 */
 	protected FeatureFilter createFeatureFilter() {
 		return new FeatureFilter();
+	}
+
+	/**
+	 * Delegates to the diff processor to create the specified feature change.
+	 * 
+	 * @param match
+	 *            The match on which values we detected a diff.
+	 * @param feature
+	 *            The exact feature on which a diff was detected.
+	 * @param value
+	 *            The value for which we detected a changed.
+	 * @param kind
+	 *            The kind of difference to create.
+	 * @param source
+	 *            The source from which originates that diff.
+	 */
+	protected void featureChange(Match match, EStructuralFeature feature, Object value, DifferenceKind kind,
+			DifferenceSource source) {
+		if (feature instanceof EAttribute) {
+			getDiffProcessor().attributeChange(match, (EAttribute)feature, value, kind, source);
+		} else if (value instanceof EObject) {
+			getDiffProcessor().referenceChange(match, (EReference)feature, (EObject)value, kind, source);
+		}
 	}
 
 	/**
@@ -770,21 +945,12 @@ public class DefaultDiffEngine implements IDiffEngine {
 	}
 
 	/**
-	 * This will try and find a match to <code>reference</code> in the given list of <code>candidates</code>
-	 * by using the semantics of {@link #matchingValues(Object, Object)}.
+	 * This will return the diff processor that has been created through {@link #createDiffProcessor()} for
+	 * this differencing process.
 	 * 
-	 * @param reference
-	 *            The object we need to find in <code>candidates</code>.
-	 * @param candidates
-	 *            Potential matches for <code>reference</code>.
-	 * @return The match if we found any, {@link #UNMATCHED_VALUE} otherwise.
+	 * @return The diff processor to notify of difference detections.
 	 */
-	protected Object findMatch(Object reference, Iterable<Object> candidates) {
-		for (Object candidate : candidates) {
-			if (EqualityHelper.matchingValues(getComparison(), reference, candidate)) {
-				return candidate;
-			}
-		}
-		return UNMATCHED_VALUE;
+	protected final IDiffProcessor getDiffProcessor() {
+		return diffProcessor;
 	}
 }

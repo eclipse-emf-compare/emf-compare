@@ -254,36 +254,6 @@ public final class EMFComparePredicates {
 	}
 
 	/**
-	 * This predicate can be used to check that a given Diff represents the addition of {@code eObject} inside
-	 * the given {@code container}.
-	 * 
-	 * @param eObject
-	 *            The EObject that we expect to have been added inside a particular container.
-	 * @param container
-	 *            The expected container of {@code eObject}.
-	 * @return The created predicate.
-	 */
-	@SuppressWarnings("unchecked")
-	public static Predicate<? super Diff> addedIn(final EObject eObject, final EObject container) {
-		return and(ofKind(DifferenceKind.ADD), onEObject(container), valueIs(eObject));
-	}
-
-	/**
-	 * This predicate can be used to check that a given Diff represents the deletion of {@code eObject} from
-	 * the given {@code container}.
-	 * 
-	 * @param eObject
-	 *            The EObject that we expect to have been removed from a particular container.
-	 * @param container
-	 *            The expected previous container of {@code eObject}.
-	 * @return The created predicate.
-	 */
-	@SuppressWarnings("unchecked")
-	public static Predicate<? super Diff> removedFrom(final EObject eObject, final EObject container) {
-		return and(ofKind(DifferenceKind.DELETE), onEObject(container), valueIs(eObject));
-	}
-
-	/**
 	 * This predicate can be used to check whether a given Diff represents the addition of an EObject matching
 	 * the given qualified name. Namely, it will check that that Diff is a ReferenceChange, that one of its
 	 * Match sides correspond to the given qualified name's ancestors, and that its value correspond to the
@@ -312,6 +282,34 @@ public final class EMFComparePredicates {
 			return and(ofKind(DifferenceKind.ADD), onEObject(ancestors), valueNameMatches(objectName));
 		}
 		return and(valueNameMatches(qualifiedName), ofKind(DifferenceKind.ADD));
+	}
+
+	/**
+	 * This predicate can be used to check whether a given Diff represents the move of an EObject matching the
+	 * given qualified name. Namely, it will check that that Diff is a ReferenceChange, that one of its Match
+	 * sides correspond to the given qualified name's ancestors, and that its value correspond to the given
+	 * qualified name's last segment.
+	 * <p>
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a
+	 * String.
+	 * </p>
+	 * 
+	 * @param qualifiedName
+	 *            The qualified name of the EObject we expect to have been moved.
+	 * @param referenceName
+	 *            Name of the reference in which we expect a child to have been added.
+	 * @return The created predicate.
+	 */
+	@SuppressWarnings("unchecked")
+	public static Predicate<? super Diff> moved(final String qualifiedName, final String referenceName) {
+		final int parentEndIndex = qualifiedName.lastIndexOf('.');
+		if (parentEndIndex >= 0) {
+			final String ancestors = qualifiedName.substring(0, parentEndIndex);
+			final String objectName = qualifiedName.substring(parentEndIndex + 1);
+			return and(ofKind(DifferenceKind.MOVE), onEObject(ancestors), onFeature(referenceName),
+					valueNameMatches(objectName));
+		}
+		return and(ofKind(DifferenceKind.MOVE), valueNameMatches(qualifiedName), onFeature(referenceName));
 	}
 
 	/**
@@ -347,13 +345,14 @@ public final class EMFComparePredicates {
 
 	/**
 	 * This can be used to check that a given Diff correspond to either an {@link AttributeChange} or a
-	 * {@link ReferenceChange}, and that the corresponding reference or attribute is {@code feature}.
+	 * {@link ReferenceChange}, and that the corresponding reference or attribute matches the given
+	 * {@code featureName}.
 	 * 
-	 * @param feature
-	 *            The feature on which we expect a change.
+	 * @param featureName
+	 *            Name of the feature on which we expect a change.
 	 * @return The created predicate.
 	 */
-	public static Predicate<? super Diff> onFeature(final EStructuralFeature feature) {
+	public static Predicate<? super Diff> onFeature(final String featureName) {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
 				final EStructuralFeature affectedFeature;
@@ -364,7 +363,7 @@ public final class EMFComparePredicates {
 				} else {
 					return false;
 				}
-				return affectedFeature == feature;
+				return featureName.equals(affectedFeature.getName());
 			}
 		};
 	}

@@ -12,9 +12,10 @@ package org.eclipse.emf.compare.internal.spec;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import java.util.List;
-import java.util.ListIterator;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.BasicEList;
@@ -32,6 +33,9 @@ import org.eclipse.emf.ecore.EObject;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ComparisonSpec extends ComparisonImpl {
+	/** TODO use cross referencer or cache builder. */
+	private Map<EObject, Match> eObjectToMatch;
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -71,39 +75,40 @@ public class ComparisonSpec extends ComparisonImpl {
 	 */
 	@Override
 	public Match getMatch(EObject element) {
-		// TODO use cross referencer
+		// TODO use cross referencer or cache builder
 		if (element == null) {
 			return null;
 		}
 
-		final List<EObject> path = Lists.newArrayList(element);
-
-		EObject container = element.eContainer();
-		while (container != null) {
-			path.add(container);
-			container = container.eContainer();
-		}
-
-		final ListIterator<EObject> pathIterator = path.listIterator(path.size());
-		// We have at least one element in the list
-		EObject currentEObject = pathIterator.previous();
-
-		List<Match> rootMatches = getMatches();
-		Match currentMatch = null;
-		for (int i = 0; i < rootMatches.size() && currentMatch == null; i++) {
-			final Match root = rootMatches.get(i);
-			if (root.getLeft() == currentEObject || root.getRight() == currentEObject
-					|| root.getOrigin() == currentEObject) {
-				currentMatch = root;
+		if (eObjectToMatch == null) {
+			eObjectToMatch = Maps.newHashMap();
+			for (Match root : getMatches()) {
+				recurseMapMatch(root);
 			}
 		}
 
-		while (pathIterator.hasPrevious() && currentMatch != null) {
-			currentEObject = pathIterator.previous();
-			currentMatch = getMatch(currentMatch, currentEObject);
-		}
+		return eObjectToMatch.get(element);
+	}
 
-		return currentMatch;
+	/**
+	 * TODO use cross referencer or cache builder.
+	 * 
+	 * @param match
+	 *            current Match.
+	 */
+	private void recurseMapMatch(Match match) {
+		if (match.getLeft() != null) {
+			eObjectToMatch.put(match.getLeft(), match);
+		}
+		if (match.getRight() != null) {
+			eObjectToMatch.put(match.getRight(), match);
+		}
+		if (match.getOrigin() != null) {
+			eObjectToMatch.put(match.getOrigin(), match);
+		}
+		for (Match child : match.getSubmatches()) {
+			recurseMapMatch(child);
+		}
 	}
 
 	/**
@@ -119,28 +124,6 @@ public class ComparisonSpec extends ComparisonImpl {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Find the sub-match of <code>parent</code> that correspond to the given <code>element</code>, be it the
-	 * left, right or origin element of that sub-match.
-	 * 
-	 * @param parent
-	 *            The parent for which we need a corresponding sub-match.
-	 * @param element
-	 *            The element of which we need the match.
-	 * @return The sub-match of <code>parent</code> that correspond to the given <code>element</code>,
-	 *         <code>null</code> if we could not find a corresponding submatch.
-	 */
-	private static Match getMatch(Match parent, EObject element) {
-		Match submatch = null;
-		for (int i = 0; i < parent.getSubmatches().size() && submatch == null; i++) {
-			final Match child = parent.getSubmatches().get(i);
-			if (child.getLeft() == element || child.getRight() == element || child.getOrigin() == element) {
-				submatch = child;
-			}
-		}
-		return submatch;
 	}
 
 	/**
