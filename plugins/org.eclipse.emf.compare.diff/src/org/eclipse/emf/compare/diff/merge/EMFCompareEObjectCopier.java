@@ -565,7 +565,12 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 					} else if (referencedEObj instanceof EObject) {
 						// referenced object lies in another resource, simply reference it
 						final Object copyReferencedObject = findReferencedObjectCopy((EObject)referencedEObj);
-						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(copyReferencedObject);
+						// Bug 379740 : Don't try to set null values
+						// CHECKSTYLE:OFF maintenance only, won't refactor
+						if (copyReferencedObject != null) {
+							// CHECKSTYLE:ON
+							((List<Object>)copyEObject.eGet(getTarget(eReference))).add(copyReferencedObject);
+						}
 					} else {
 						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(referencedEObj);
 					}
@@ -581,7 +586,10 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 					copyEObject.eSet(getTarget(eReference), copyReferencedEObject);
 				} else if (referencedEObject instanceof EObject) {
 					final Object copyReferencedObject = findReferencedObjectCopy((EObject)referencedEObject);
-					copyEObject.eSet(getTarget(eReference), copyReferencedObject);
+					// Bug 379740 : Don't try to set null values
+					if (copyReferencedObject != null) {
+						copyEObject.eSet(getTarget(eReference), copyReferencedObject);
+					}
 				} else {
 					((List<Object>)copyEObject.eGet(getTarget(eReference))).add(referencedEObject);
 				}
