@@ -13,7 +13,6 @@ package org.eclipse.emf.compare.conflict;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.compare.AttributeChange;
@@ -104,6 +103,16 @@ public class DefaultConflictDetector implements IConflictDetector {
 		}
 	}
 
+	/**
+	 * This will be called once for each ReferenceChange on containment references in the comparison model.
+	 * 
+	 * @param comparison
+	 *            The originating comparison of those diffs.
+	 * @param diff
+	 *            The reference change for which we are to try and determine conflicts.
+	 * @param candidates
+	 *            An iterable over the ReferenceChanges that are possible candidates for conflicts.
+	 */
 	protected void checkContainmentConflict(Comparison comparison, ReferenceChange diff,
 			Iterable<ReferenceChange> candidates) {
 		final Match valueMatch = comparison.getMatch(diff.getValue());
@@ -128,6 +137,22 @@ public class DefaultConflictDetector implements IConflictDetector {
 		}
 	}
 
+	/**
+	 * For each couple of diffs on the same value in which one is a containment reference change, we will call
+	 * this in order to check for possible conflicts.
+	 * <p>
+	 * Once here, we know that {@code diff} is a containment reference change, and we known that {@code diff}
+	 * and {@code candidate} are both pointing to the same value. {@code candidate} can be a containment
+	 * reference change, but that is not a given.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            The originating comparison of those diffs.
+	 * @param diff
+	 *            Containment reference changes for which we need to check possible conflicts.
+	 * @param candidate
+	 *            A reference change that point to the same value as {@code diff}.
+	 */
 	protected void checkContainmentConflict(Comparison comparison, ReferenceChange diff,
 			ReferenceChange candidate) {
 		if (candidate.getReference().isContainment()) {
@@ -428,14 +453,14 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 *         value of the corresponding feature is the default of that feature.
 	 */
 	private static boolean isDeleteOrUnsetDiff(Comparison comparison, Diff diff) {
-		boolean pseudoConflict = false;
+		boolean deleteOrUnset = false;
 		if (diff.getKind() == DifferenceKind.DELETE) {
-			pseudoConflict = true;
+			deleteOrUnset = true;
 		} else if (diff instanceof ReferenceChange) {
 			final EObject value = ((ReferenceChange)diff).getValue();
 			final Match valueMatch = comparison.getMatch(value);
 
-			pseudoConflict = valueMatch != null && valueMatch.getOrigin() == value;
+			deleteOrUnset = valueMatch != null && valueMatch.getOrigin() == value;
 		} else if (diff.getKind() == DifferenceKind.CHANGE && diff instanceof AttributeChange) {
 			final EAttribute attribute = ((AttributeChange)diff).getAttribute();
 			final EObject expectedContainer;
@@ -446,9 +471,9 @@ public class DefaultConflictDetector implements IConflictDetector {
 			}
 
 			final Object value = expectedContainer.eGet(attribute);
-			pseudoConflict = value == null || value.equals(attribute.getDefaultValue());
+			deleteOrUnset = value == null || value.equals(attribute.getDefaultValue());
 		}
-		return pseudoConflict;
+		return deleteOrUnset;
 	}
 
 	/**
@@ -545,28 +570,6 @@ public class DefaultConflictDetector implements IConflictDetector {
 	}
 
 	/**
-	 * Returns the first element returned by {@code iterable.iterator()} that satisfies the given predicate.
-	 * 
-	 * @param iterable
-	 *            Iterable over which elements we are to iterate.
-	 * @param predicate
-	 *            The predicate which needs to be satisified.
-	 * @param <T>
-	 *            type of the elements we'll iterate over.
-	 * @return The first element of {@code iterator} that satisfies {@code predicate}, {@code null} if none.
-	 */
-	private static <T> T getFirst(Iterable<T> iterable, Predicate<? super T> predicate) {
-		final Iterator<T> iterator = iterable.iterator();
-		while (iterator.hasNext()) {
-			T element = iterator.next();
-			if (predicate.apply(element)) {
-				return element;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * This will be used to filter out the list of potential candidates for conflict with a given Diff.
 	 * 
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
@@ -614,42 +617,6 @@ public class DefaultConflictDetector implements IConflictDetector {
 			final Conflict conflict = diff1.getConflict();
 
 			return conflict == null || !conflict.getDifferences().contains(diff2);
-		}
-	}
-
-	/**
-	 * This will be used to try and find a Diff matching the given reference, but originating from the
-	 * opposite side.
-	 * 
-	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
-	 */
-	private final class OppositeSideDiff implements Predicate<Diff> {
-		/** The reference diff for which we need a match. */
-		private final ReferenceChange reference;
-
-		/**
-		 * Instantiates our predicate given the reference diff to try and match.
-		 * 
-		 * @param reference
-		 *            The reference diff.
-		 */
-		public OppositeSideDiff(ReferenceChange reference) {
-			this.reference = reference;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see com.google.common.base.Predicate#apply(java.lang.Object)
-		 */
-		public boolean apply(Diff input) {
-			if (input instanceof ReferenceChange && input.getMatch() == reference.getMatch()
-					&& ((ReferenceChange)input).getReference() == reference.getReference()
-					&& input.getSource() != reference.getSource()) {
-				// reference change on the same reference from the opposite side. We only care
-				return input.getKind() == reference.getKind();
-			}
-			return false;
 		}
 	}
 }
