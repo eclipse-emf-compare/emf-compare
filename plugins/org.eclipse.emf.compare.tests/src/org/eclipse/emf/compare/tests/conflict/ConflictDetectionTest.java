@@ -14,6 +14,8 @@ import static com.google.common.base.Predicates.and;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToAttribute;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedAttribute;
@@ -669,6 +671,82 @@ public class ConflictDetectionTest {
 	}
 
 	@Test
+	public void testB6UseCaseForAttribute() throws IOException {
+		final Resource left = input.getB6AttributeLeft();
+		final Resource origin = input.getB6AttributeOrigin();
+		final Resource right = input.getB6AttributeRight();
+
+		final Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		// We should have no less and no more than 2 differences, composing a single conflict
+		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+
+		final Predicate<? super Diff> leftDiffDescription = changedAttribute("root.conflictHolder",
+				"singleValuedAttribute", "origin", null);
+		final Predicate<? super Diff> rightDiffDescription = changedAttribute("root.conflictHolder",
+				"singleValuedAttribute", "origin", null);
+
+		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				rightDiffDescription));
+
+		assertNotNull(leftDiff);
+		assertNotNull(rightDiff);
+
+		// We know there's only one conflict
+		final Conflict conflict = conflicts.get(0);
+
+		final List<Diff> conflictDiff = conflict.getDifferences();
+		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertTrue(conflictDiff.contains(leftDiff));
+		assertTrue(conflictDiff.contains(rightDiff));
+		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+	}
+
+	@Test
+	public void testB6UseCaseForReference() throws IOException {
+		final Resource left = input.getB6ReferenceLeft();
+		final Resource origin = input.getB6ReferenceOrigin();
+		final Resource right = input.getB6ReferenceRight();
+
+		final Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		// We should have no less and no more than 2 differences, composing a single conflict
+		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+
+		final Predicate<? super Diff> leftDiffDescription = changedReference("root.conflictHolder",
+				"singleValuedReference", "root.origin", null);
+		final Predicate<? super Diff> rightDiffDescription = changedReference("root.conflictHolder",
+				"singleValuedReference", "root.origin", null);
+
+		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				rightDiffDescription));
+
+		assertNotNull(leftDiff);
+		assertNotNull(rightDiff);
+
+		// We know there's only one conflict
+		final Conflict conflict = conflicts.get(0);
+
+		final List<Diff> conflictDiff = conflict.getDifferences();
+		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertTrue(conflictDiff.contains(leftDiff));
+		assertTrue(conflictDiff.contains(rightDiff));
+		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+	}
+
+	@Test
 	public void testC1UseCaseForAttribute() throws IOException {
 		final Resource left = input.getC1AttributeLeft();
 		final Resource origin = input.getC1AttributeOrigin();
@@ -1009,7 +1087,7 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> referenceDiff2Description = removedFromReference("root.conflictHolder",
 				"multiValuedReference", "root.origin2");
 		final Predicate<? super Diff> referenceDiff3Description = removedFromReference("root.conflictHolder",
-				"multiValuedReference", "root.origin2");
+				"multiValuedReference", "root.origin3");
 		final Predicate<? super Diff> rightDeleteDiffDescription = removed("root.conflictHolder");
 
 		final Diff leftReferenceDiff1 = Iterators.find(differences.iterator(), and(
@@ -1373,6 +1451,294 @@ public class ConflictDetectionTest {
 	}
 
 	@Test
+	public void testD4UseCaseForAttribute() throws IOException {
+		final Resource left = input.getD4AttributeLeft();
+		final Resource origin = input.getD4AttributeOrigin();
+		final Resource right = input.getD4AttributeRight();
+
+		final Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		/*
+		 * We expect 6 differences here. On both right and left, we've emptied an attribute from its 3 values.
+		 * This should give use 3 pseudo-conflict, each removal conflicting with its other side.
+		 */
+		assertSame(Integer.valueOf(6), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(3), Integer.valueOf(conflicts.size()));
+
+		final Predicate<? super Diff> AttributeDiff1Description = removedFromAttribute("root.conflictHolder",
+				"multiValuedAttribute", "origin1");
+		final Predicate<? super Diff> AttributeDiff2Description = removedFromAttribute("root.conflictHolder",
+				"multiValuedAttribute", "origin2");
+		final Predicate<? super Diff> AttributeDiff3Description = removedFromAttribute("root.conflictHolder",
+				"multiValuedAttribute", "origin3");
+
+		final Diff leftAttributeDiff1 = Iterators.find(differences.iterator(), and(
+				fromSide(DifferenceSource.LEFT), AttributeDiff1Description));
+		final Diff leftAttributeDiff2 = Iterators.find(differences.iterator(), and(
+				fromSide(DifferenceSource.LEFT), AttributeDiff2Description));
+		final Diff leftAttributeDiff3 = Iterators.find(differences.iterator(), and(
+				fromSide(DifferenceSource.LEFT), AttributeDiff3Description));
+
+		final Diff rightAttributeDiff1 = Iterators.find(differences.iterator(), and(
+				fromSide(DifferenceSource.RIGHT), AttributeDiff1Description));
+		final Diff rightAttributeDiff2 = Iterators.find(differences.iterator(), and(
+				fromSide(DifferenceSource.RIGHT), AttributeDiff2Description));
+		final Diff rightAttributeDiff3 = Iterators.find(differences.iterator(), and(
+				fromSide(DifferenceSource.RIGHT), AttributeDiff3Description));
+
+		assertNotNull(leftAttributeDiff1);
+		assertNotNull(leftAttributeDiff2);
+		assertNotNull(leftAttributeDiff3);
+		assertNotNull(rightAttributeDiff1);
+		assertNotNull(rightAttributeDiff2);
+		assertNotNull(rightAttributeDiff3);
+
+		// We know we have three conflicts
+		final Conflict conflict1 = conflicts.get(0);
+
+		final List<Diff> conflictDiffs1 = conflict1.getDifferences();
+		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiffs1.size()));
+		assertTrue(conflictDiffs1.contains(leftAttributeDiff1));
+		assertTrue(conflictDiffs1.contains(rightAttributeDiff1));
+		assertSame(ConflictKind.PSEUDO, conflict1.getKind());
+
+		final Conflict conflict2 = conflicts.get(1);
+
+		final List<Diff> conflictDiffs2 = conflict2.getDifferences();
+		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiffs2.size()));
+		assertTrue(conflictDiffs2.contains(leftAttributeDiff2));
+		assertTrue(conflictDiffs2.contains(rightAttributeDiff2));
+		assertSame(ConflictKind.PSEUDO, conflict2.getKind());
+
+		final Conflict conflict3 = conflicts.get(2);
+
+		final List<Diff> conflictDiffs3 = conflict3.getDifferences();
+		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiffs3.size()));
+		assertTrue(conflictDiffs3.contains(leftAttributeDiff3));
+		assertTrue(conflictDiffs3.contains(rightAttributeDiff3));
+		assertSame(ConflictKind.PSEUDO, conflict3.getKind());
+	}
+
+	@Test
+	public void testD4UseCaseForReference() throws IOException {
+		final Resource left = input.getD4ReferenceLeft();
+		final Resource origin = input.getD4ReferenceOrigin();
+		final Resource right = input.getD4ReferenceRight();
+
+		final Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		/*
+		 * We expect 6 differences here. On both right and left, we've emptied a reference from its 3 values.
+		 * This should give use 3 pseudo-conflict, each removal conflicting with its other side.
+		 */
+		assertSame(Integer.valueOf(6), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(3), Integer.valueOf(conflicts.size()));
+
+		final Predicate<? super Diff> referenceDiff1Description = removedFromReference("root.conflictHolder",
+				"multiValuedReference", "root.origin1");
+		final Predicate<? super Diff> referenceDiff2Description = removedFromReference("root.conflictHolder",
+				"multiValuedReference", "root.origin2");
+		final Predicate<? super Diff> referenceDiff3Description = removedFromReference("root.conflictHolder",
+				"multiValuedReference", "root.origin3");
+
+		final Diff leftReferenceDiff1 = Iterators.find(differences.iterator(), and(
+				fromSide(DifferenceSource.LEFT), referenceDiff1Description));
+		final Diff leftReferenceDiff2 = Iterators.find(differences.iterator(), and(
+				fromSide(DifferenceSource.LEFT), referenceDiff2Description));
+		final Diff leftReferenceDiff3 = Iterators.find(differences.iterator(), and(
+				fromSide(DifferenceSource.LEFT), referenceDiff3Description));
+
+		final Diff rightReferenceDiff1 = Iterators.find(differences.iterator(), and(
+				fromSide(DifferenceSource.RIGHT), referenceDiff1Description));
+		final Diff rightReferenceDiff2 = Iterators.find(differences.iterator(), and(
+				fromSide(DifferenceSource.RIGHT), referenceDiff2Description));
+		final Diff rightReferenceDiff3 = Iterators.find(differences.iterator(), and(
+				fromSide(DifferenceSource.RIGHT), referenceDiff3Description));
+
+		assertNotNull(leftReferenceDiff1);
+		assertNotNull(leftReferenceDiff2);
+		assertNotNull(leftReferenceDiff3);
+		assertNotNull(rightReferenceDiff1);
+		assertNotNull(rightReferenceDiff2);
+		assertNotNull(rightReferenceDiff3);
+
+		// We know we have three conflicts
+		final Conflict conflict1 = conflicts.get(0);
+
+		final List<Diff> conflictDiffs1 = conflict1.getDifferences();
+		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiffs1.size()));
+		assertTrue(conflictDiffs1.contains(leftReferenceDiff1));
+		assertTrue(conflictDiffs1.contains(rightReferenceDiff1));
+		assertSame(ConflictKind.PSEUDO, conflict1.getKind());
+
+		final Conflict conflict2 = conflicts.get(1);
+
+		final List<Diff> conflictDiffs2 = conflict2.getDifferences();
+		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiffs2.size()));
+		assertTrue(conflictDiffs2.contains(leftReferenceDiff2));
+		assertTrue(conflictDiffs2.contains(rightReferenceDiff2));
+		assertSame(ConflictKind.PSEUDO, conflict2.getKind());
+
+		final Conflict conflict3 = conflicts.get(2);
+
+		final List<Diff> conflictDiffs3 = conflict3.getDifferences();
+		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiffs3.size()));
+		assertTrue(conflictDiffs3.contains(leftReferenceDiff3));
+		assertTrue(conflictDiffs3.contains(rightReferenceDiff3));
+		assertSame(ConflictKind.PSEUDO, conflict3.getKind());
+	}
+
+	@Test
+	public void testD5UseCaseForAttribute() throws IOException {
+		final Resource left = input.getD5AttributeLeft();
+		final Resource origin = input.getD5AttributeOrigin();
+		final Resource right = input.getD5AttributeRight();
+
+		final Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		// We should have no less and no more than 2 differences, composing a single conflict
+		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+
+		final Predicate<? super Diff> diffDescription = removedFromAttribute("root.conflictHolder",
+				"multiValuedAttribute", "origin1");
+
+		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				diffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				diffDescription));
+
+		assertNotNull(leftDiff);
+		assertNotNull(rightDiff);
+
+		// We know there's only one conflict
+		final Conflict conflict = conflicts.get(0);
+
+		final List<Diff> conflictDiff = conflict.getDifferences();
+		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertTrue(conflictDiff.contains(leftDiff));
+		assertTrue(conflictDiff.contains(rightDiff));
+		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+	}
+
+	@Test
+	public void testD5UseCaseForReference() throws IOException {
+		final Resource left = input.getD5ReferenceLeft();
+		final Resource origin = input.getD5ReferenceOrigin();
+		final Resource right = input.getD5ReferenceRight();
+
+		final Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		// We should have no less and no more than 2 differences, composing a single conflict
+		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+
+		final Predicate<? super Diff> diffDescription = removedFromReference("root.conflictHolder",
+				"multiValuedReference", "root.origin1");
+
+		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				diffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				diffDescription));
+
+		assertNotNull(leftDiff);
+		assertNotNull(rightDiff);
+
+		// We know there's only one conflict
+		final Conflict conflict = conflicts.get(0);
+
+		final List<Diff> conflictDiff = conflict.getDifferences();
+		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertTrue(conflictDiff.contains(leftDiff));
+		assertTrue(conflictDiff.contains(rightDiff));
+		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+	}
+
+	@Test
+	public void testD6UseCaseForAttribute() throws IOException {
+		final Resource left = input.getD6AttributeLeft();
+		final Resource origin = input.getD6AttributeOrigin();
+		final Resource right = input.getD6AttributeRight();
+
+		final Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		// We should have no less and no more than 2 differences, composing a single conflict
+		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+
+		final Predicate<? super Diff> diffDescription = movedInAttribute("root.conflictHolder",
+				"multiValuedAttribute", "origin1");
+
+		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				diffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				diffDescription));
+
+		assertNotNull(leftDiff);
+		assertNotNull(rightDiff);
+
+		// We know there's only one conflict
+		final Conflict conflict = conflicts.get(0);
+
+		final List<Diff> conflictDiff = conflict.getDifferences();
+		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertTrue(conflictDiff.contains(leftDiff));
+		assertTrue(conflictDiff.contains(rightDiff));
+		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+	}
+
+	@Test
+	public void testD6UseCaseForReference() throws IOException {
+		final Resource left = input.getD6ReferenceLeft();
+		final Resource origin = input.getD6ReferenceOrigin();
+		final Resource right = input.getD6ReferenceRight();
+
+		final Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		// We should have no less and no more than 2 differences, composing a single conflict
+		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+
+		final Predicate<? super Diff> diffDescription = movedInReference("root.conflictHolder",
+				"multiValuedReference", "root.origin1");
+
+		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				diffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				diffDescription));
+
+		assertNotNull(leftDiff);
+		assertNotNull(rightDiff);
+
+		// We know there's only one conflict
+		final Conflict conflict = conflicts.get(0);
+
+		final List<Diff> conflictDiff = conflict.getDifferences();
+		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertTrue(conflictDiff.contains(leftDiff));
+		assertTrue(conflictDiff.contains(rightDiff));
+		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+	}
+
+	@Test
 	public void testE1UseCase() throws IOException {
 		final Resource left = input.getE1Left();
 		final Resource origin = input.getE1Origin();
@@ -1594,5 +1960,123 @@ public class ConflictDetectionTest {
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
+	}
+
+	@Test
+	public void testComplexUseCase() throws IOException {
+		final Resource left = input.getComplexLeft();
+		final Resource origin = input.getComplexOrigin();
+		final Resource right = input.getComplexRight();
+
+		final Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		/*
+		 * This use case features 12 distinct differences of all types, adding up to 3 real conflict and 2
+		 * pseudo conflicts.
+		 */
+		// 1 - Left : Node8 added
+		// 2 - Left : Node9 added
+		// 3 - Left : Node1 moved
+		// 4 - Left : Node0 added
+		// 5 - Left : Node5 removed
+		// 6 - Left : Node6 removed
+		// 7 - Left : Node7 removed
+
+		// 8 - Right : Node6 moved
+		// 9 - Right : Node9 added
+		// 10 - Right : Node0 added
+		// 11 - Right : Node1 moved
+		// 12 - Right : Node5 removed
+
+		// Real conflict : 6 and 8 (Moving and deleting the same value)
+		// Real conflict : 2 and 9 (Adding the same value at different indices)
+		// Real conflict : 4 and 10 (Adding the same value at different indices)
+
+		// Pseudo conflict : 3 and 11 (Moving the same value to the same index on both sides)
+		// Pseudo conflict : 5 and 12 (Removing the same value on both sides)
+
+		assertSame(Integer.valueOf(12), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(5), Integer.valueOf(conflicts.size()));
+
+		final Predicate<? super Diff> leftDiff1Description = added("Root.Node8");
+		final Predicate<? super Diff> leftDiff2Description = added("Root.Node9");
+		final Predicate<? super Diff> leftDiff3Description = moved("Root.Node1", "containmentRef1");
+		final Predicate<? super Diff> leftDiff4Description = added("Root.Node0");
+		final Predicate<? super Diff> leftDiff5Description = removed("Root.Node5");
+		final Predicate<? super Diff> leftDiff6Description = removed("Root.Node6");
+		final Predicate<? super Diff> leftDiff7Description = removed("Root.Node7");
+
+		final Predicate<? super Diff> rightDiff8Description = moved("Root.Node6", "containmentRef1");
+		final Predicate<? super Diff> rightDiff9Description = added("Root.Node9");
+		final Predicate<? super Diff> rightDiff10Description = added("Root.Node0");
+		final Predicate<? super Diff> rightDiff11Description = moved("Root.Node1", "containmentRef1");
+		final Predicate<? super Diff> rightDiff12Description = removed("Root.Node5");
+
+		final Diff leftDiff1 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				leftDiff1Description));
+		final Diff leftDiff2 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				leftDiff2Description));
+		final Diff leftDiff3 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				leftDiff3Description));
+		final Diff leftDiff4 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				leftDiff4Description));
+		final Diff leftDiff5 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				leftDiff5Description));
+		final Diff leftDiff6 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				leftDiff6Description));
+		final Diff leftDiff7 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				leftDiff7Description));
+
+		final Diff rightDiff8 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				rightDiff8Description));
+		final Diff rightDiff9 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				rightDiff9Description));
+		final Diff rightDiff10 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				rightDiff10Description));
+		final Diff rightDiff11 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				rightDiff11Description));
+		final Diff rightDiff12 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				rightDiff12Description));
+
+		assertNotNull(leftDiff1);
+		assertNotNull(leftDiff2);
+		assertNotNull(leftDiff3);
+		assertNotNull(leftDiff4);
+		assertNotNull(leftDiff5);
+		assertNotNull(leftDiff6);
+		assertNotNull(leftDiff7);
+
+		assertNotNull(rightDiff8);
+		assertNotNull(rightDiff9);
+		assertNotNull(rightDiff10);
+		assertNotNull(rightDiff11);
+		assertNotNull(rightDiff12);
+
+		// We know there are 5 conflicts here
+		for (Conflict conflict : conflicts) {
+			final List<Diff> conflictDiffs = conflict.getDifferences();
+			assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiffs.size()));
+			if (conflictDiffs.contains(leftDiff6)) {
+				assertTrue(conflictDiffs.contains(rightDiff8));
+				assertSame(ConflictKind.REAL, conflict.getKind());
+			} else if (conflictDiffs.contains(leftDiff2)) {
+				assertTrue(conflictDiffs.contains(rightDiff9));
+				assertSame(ConflictKind.REAL, conflict.getKind());
+			} else if (conflictDiffs.contains(leftDiff4)) {
+				assertTrue(conflictDiffs.contains(rightDiff10));
+				assertSame(ConflictKind.REAL, conflict.getKind());
+			} else if (conflictDiffs.contains(leftDiff3)) {
+				assertTrue(conflictDiffs.contains(rightDiff11));
+				assertSame(ConflictKind.PSEUDO, conflict.getKind());
+			} else if (conflictDiffs.contains(leftDiff5)) {
+				assertTrue(conflictDiffs.contains(rightDiff12));
+				assertSame(ConflictKind.PSEUDO, conflict.getKind());
+			} else {
+				fail("unexpected conflict");
+			}
+		}
 	}
 }

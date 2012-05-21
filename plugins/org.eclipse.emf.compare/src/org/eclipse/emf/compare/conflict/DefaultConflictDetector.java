@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.conflict;
 
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
-
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
@@ -77,21 +75,150 @@ public class DefaultConflictDetector implements IConflictDetector {
 		 * DELETE diffs can conflict with every other if on containment references, only with MOVE or other
 		 * DELETE otherwise.
 		 */
-		// ADD diffs can only conflict with "DELETE" ones ... These will be detected on the DELETE
+		/*
+		 * ADD diffs can only conflict with "DELETE" or "ADD" ones ... Most will be detected on the DELETE.
+		 * However, ADD diffs on containment reference can conflict with other ADDs on the same match.
+		 */
 		// CHANGE diffs can only conflict with other CHANGE or DELETE ... here again detected on the DELETE
 		// MOVE diffs can conflict with DELETE ones, detected on the delete, or with other MOVE diffs.
-		if (diff.getKind() == DifferenceKind.DELETE) {
-			if (diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment()) {
-				checkContainmentDeleteConflict(comparison, (ReferenceChange)diff, candidates);
-			} else {
-				checkFeatureDeleteConflict(comparison, diff, candidates);
-			}
-		} else if (diff.getKind() == DifferenceKind.CHANGE) {
-			checkFeatureChangeOrMoveConflict(comparison, diff, candidates);
-		} else if (diff.getKind() == DifferenceKind.MOVE) {
-			checkFeatureChangeOrMoveConflict(comparison, diff, candidates);
+		if (diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment()) {
+			checkContainmentConflict(comparison, (ReferenceChange)diff, Iterables.filter(candidates,
+					ReferenceChange.class));
 		} else {
-			// no possible conflict on a "ADD" diff that wouldn't be deleted by the other paths
+			switch (diff.getKind()) {
+				case DELETE:
+					checkFeatureDeleteConflict(comparison, diff, candidates);
+					break;
+				case CHANGE:
+					checkFeatureChangeConflict(comparison, diff, candidates);
+					break;
+				case MOVE:
+					checkFeatureMoveConflict(comparison, diff, candidates);
+					break;
+				case ADD:
+					checkFeatureAddConflict(comparison, diff, candidates);
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
+	protected void checkContainmentConflict(Comparison comparison, ReferenceChange diff,
+			Iterable<ReferenceChange> candidates) {
+		final Match valueMatch = comparison.getMatch(diff.getValue());
+
+		for (ReferenceChange candidate : candidates) {
+			if (valueMatch.getLeft() == candidate.getValue() || valueMatch.getRight() == candidate.getValue()
+					|| valueMatch.getOrigin() == candidate.getValue()) {
+				checkContainmentConflict(comparison, diff, candidate);
+			}
+		}
+
+		// Every Diff "under" a containment deletion conflicts with it.
+		if (diff.getKind() == DifferenceKind.DELETE) {
+			final Predicate<? super Diff> candidateFilter = new ConflictCandidateFilter(diff);
+			for (Diff extendedCandidate : Iterables.filter(valueMatch.getAllDifferences(), candidateFilter)) {
+				if (isDeleteOrUnsetDiff(comparison, extendedCandidate)) {
+					conflictOn(comparison, diff, extendedCandidate, ConflictKind.PSEUDO);
+				} else {
+					conflictOn(comparison, diff, extendedCandidate, ConflictKind.REAL);
+				}
+			}
+		}
+	}
+
+	protected void checkContainmentConflict(Comparison comparison, ReferenceChange diff,
+			ReferenceChange candidate) {
+		if (candidate.getReference().isContainment()) {
+			// The same value has been changed on both sides in containment references
+			// This is a conflict, but is it a pseudo-conflict?
+			ConflictKind kind = ConflictKind.REAL;
+			final boolean diffIsDelete = isDeleteOrUnsetDiff(comparison, diff);
+			final boolean candidateIsDelete = isDeleteOrUnsetDiff(comparison, candidate);
+			if (diffIsDelete && candidateIsDelete) {
+				kind = ConflictKind.PSEUDO;
+			} else if (diff.getMatch() == candidate.getMatch()
+					&& diff.getReference() == candidate.getReference()) {
+				// Same value added in the same container/reference couple
+				if (!diffIsDelete
+						&& !candidateIsDelete
+						&& matchingIndices(comparison, diff.getMatch(), diff.getReference(), diff.getValue(),
+								candidate.getValue())) {
+					kind = ConflictKind.PSEUDO;
+				}
+			}
+			conflictOn(comparison, diff, candidate, kind);
+		} else if (diff.getKind() == DifferenceKind.DELETE) {
+			/*
+			 * We removed an element from its containment difference, but it has been used in some way on the
+			 * other side.
+			 */
+			if (candidate.getKind() == DifferenceKind.DELETE) {
+				// No conflict here
+			} else {
+				// Be it added, moved or changed, this is a REAL conflict
+				conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+			}
+		}
+	}
+
+	/**
+	 * This will be called from {@link #checkConflict(Comparison, Diff, Iterable)} in order to detect
+	 * conflicts on a Diff that is of type "CHANGE".
+	 * <p>
+	 * Those can only conflict with other CHANGE Diffs on the same reference.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            The originating comparison of those diffs.
+	 * @param diff
+	 *            The diff which we are to check for conflicts.
+	 * @param candidates
+	 *            The list of candidates for a conflict. This list only contains Diff from the side opposite
+	 *            to {@code diff}.
+	 */
+	protected void checkFeatureChangeConflict(Comparison comparison, Diff diff, Iterable<Diff> candidates) {
+		final Object changedValue;
+		final EStructuralFeature feature;
+		if (diff instanceof ReferenceChange) {
+			changedValue = ((ReferenceChange)diff).getValue();
+			feature = ((ReferenceChange)diff).getReference();
+		} else {
+			changedValue = ((AttributeChange)diff).getValue();
+			feature = ((AttributeChange)diff).getAttribute();
+		}
+
+		final Iterable<Diff> refinedCandidates = Iterables.filter(candidates, new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				boolean apply = false;
+				if (input.getKind() == DifferenceKind.CHANGE) {
+					if (input instanceof ReferenceChange) {
+						apply = ((ReferenceChange)input).getReference() == feature;
+					} else if (input instanceof AttributeChange) {
+						apply = ((AttributeChange)input).getAttribute() == feature;
+					}
+				}
+				return apply;
+			}
+		});
+
+		for (Diff candidate : refinedCandidates) {
+			final Object candidateValue;
+			if (candidate instanceof ReferenceChange) {
+				candidateValue = ((ReferenceChange)candidate).getValue();
+			} else {
+				candidateValue = ((AttributeChange)candidate).getValue();
+			}
+
+			if (diff.getMatch() == candidate.getMatch()) {
+				if (EqualityHelper.matchingValues(comparison, changedValue, candidateValue)) {
+					// Same value added on both side in the same container
+					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
+				} else {
+					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+				}
+			}
 		}
 	}
 
@@ -110,51 +237,45 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 *            The list of candidates for a conflict. This list only contains Diff from the side opposite
 	 *            to {@code diff}.
 	 */
-	protected void checkFeatureChangeOrMoveConflict(Comparison comparison, Diff diff,
-			Iterable<Diff> candidates) {
-		// The only possible conflict for a "change" diff is another "change" on the same feature
+	protected void checkFeatureMoveConflict(Comparison comparison, Diff diff, Iterable<Diff> candidates) {
 		final Object changedValue;
 		final EStructuralFeature feature;
-		final boolean isContainmentChange;
 		if (diff instanceof ReferenceChange) {
 			changedValue = ((ReferenceChange)diff).getValue();
 			feature = ((ReferenceChange)diff).getReference();
-			isContainmentChange = ((ReferenceChange)diff).getReference().isContainment();
 		} else {
 			changedValue = ((AttributeChange)diff).getValue();
 			feature = ((AttributeChange)diff).getAttribute();
-			isContainmentChange = false;
 		}
 
-		final Iterable<Diff> changeCandidates = Iterables.filter(candidates, ofKind(diff.getKind()));
-		for (Diff candidate : changeCandidates) {
-			EStructuralFeature candidateFeature = null;
-			Object candidateChanged = null;
-			if (candidate instanceof ReferenceChange) {
-				candidateFeature = ((ReferenceChange)candidate).getReference();
-				candidateChanged = ((ReferenceChange)candidate).getValue();
-			} else if (candidate instanceof AttributeChange) {
-				candidateFeature = ((AttributeChange)candidate).getAttribute();
-				candidateChanged = ((AttributeChange)candidate).getValue();
-			}
-
-			if (candidateFeature == feature) {
-				if (candidate.getKind() == DifferenceKind.MOVE
-						&& EqualityHelper.matchingValues(comparison, changedValue, candidateChanged)) {
-					// Moving to the same index is a pseudo conflict, but too costly to compute here
-					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
-				} else {
-					// single-valued feature (kind = CHANGE)
-					if (!EqualityHelper.matchingValues(comparison, changedValue, candidateChanged)) {
-						conflictOn(comparison, diff, candidate, ConflictKind.REAL);
-					} else {
-						conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
+		final Iterable<Diff> refinedCandidates = Iterables.filter(candidates, new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				boolean apply = false;
+				if (input.getKind() == DifferenceKind.MOVE) {
+					if (input instanceof ReferenceChange) {
+						apply = ((ReferenceChange)input).getReference() == feature;
+					} else if (input instanceof AttributeChange) {
+						apply = ((AttributeChange)input).getAttribute() == feature;
 					}
 				}
-			} else if (isContainmentChange) {
-				// On containment references, we can have conflicts even if the reference is not the same
-				if (candidate.getKind() == DifferenceKind.MOVE
-						&& EqualityHelper.matchingValues(comparison, changedValue, candidateChanged)) {
+				return apply;
+			}
+		});
+
+		for (Diff candidate : refinedCandidates) {
+			final Object candidateValue;
+			if (candidate instanceof ReferenceChange) {
+				candidateValue = ((ReferenceChange)candidate).getValue();
+			} else {
+				candidateValue = ((AttributeChange)candidate).getValue();
+			}
+
+			if (diff.getMatch() == candidate.getMatch()
+					&& EqualityHelper.matchingValues(comparison, changedValue, candidateValue)) {
+				// Same value moved in both side of the same container
+				if (matchingIndices(comparison, diff.getMatch(), feature, changedValue, candidateValue)) {
+					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
+				} else {
 					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 				}
 			}
@@ -231,10 +352,10 @@ public class DefaultConflictDetector implements IConflictDetector {
 
 	/**
 	 * This will be called from {@link #checkConflict(Comparison, Diff, Iterable)} in order to detect
-	 * conflicts on a Diff that is of type "DELETE" on a containment reference.
+	 * conflicts on a Diff that is of type "ADD" and which is <b>not</b> a containment reference change.
 	 * <p>
-	 * Such diffs can conflict with most others, notably, <b>all</b> differences of the opposite side located
-	 * under the deleted element are conflicts.
+	 * These will conflict with Diffs on the other side on the same reference in the same container, of type
+	 * ADD an on the same value.
 	 * </p>
 	 * 
 	 * @param comparison
@@ -245,49 +366,50 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 *            The list of candidates for a conflict. This list only contains Diff from the side opposite
 	 *            to {@code diff}.
 	 */
-	protected void checkContainmentDeleteConflict(Comparison comparison, ReferenceChange diff,
+	protected void checkFeatureAddConflict(final Comparison comparison, final Diff diff,
 			Iterable<Diff> candidates) {
-		final Match deletedMatch = comparison.getMatch(diff.getValue());
-
-		// If we only have an origin, we can only have a pseudo conflict with an identical diff on the other
-		// side.
-		if (deletedMatch.getLeft() == null && deletedMatch.getRight() == null) {
-			final Predicate<? super Diff> oppositeDiffPredicate = new OppositeSideDiff(diff);
-
-			final Diff oppositeDiff = getFirst(candidates, oppositeDiffPredicate);
-			if (oppositeDiff != null) {
-				conflictOn(comparison, diff, oppositeDiff, ConflictKind.PSEUDO);
-			}
+		final Object addedValue;
+		final EStructuralFeature feature;
+		if (diff instanceof ReferenceChange) {
+			addedValue = ((ReferenceChange)diff).getValue();
+			feature = ((ReferenceChange)diff).getReference();
 		} else {
-			final EObject deletedValue;
-			// The list of candidates only sports diffs of the opposite side. The "deleted value" is located
-			// on that "opposite" side.
-			if (diff.getSource() == DifferenceSource.LEFT) {
-				deletedValue = deletedMatch.getRight();
-			} else {
-				deletedValue = deletedMatch.getLeft();
-			}
+			addedValue = ((AttributeChange)diff).getValue();
+			feature = ((AttributeChange)diff).getAttribute();
+		}
 
-			for (Diff candidate : candidates) {
-				if (candidate.getMatch() == deletedMatch) {
-					// "candidate" is a diff on an Object that has been deleted on the other side
-					final ConflictKind kind;
-					if (isDeleteOrUnsetDiff(comparison, candidate)) {
-						kind = ConflictKind.PSEUDO;
-					} else {
-						kind = ConflictKind.REAL;
+		/*
+		 * Can only conflict on Diffs : of type ADD, on the opposite side, in the same container and the same
+		 * reference, with the same added value.
+		 */
+		final Iterable<Diff> refinedCandidates = Iterables.filter(candidates, new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				boolean apply = false;
+				if (input.getKind() == DifferenceKind.ADD && diff.getMatch() == input.getMatch()) {
+					if (input instanceof ReferenceChange) {
+						apply = ((ReferenceChange)input).getReference() == feature;
+					} else if (input instanceof AttributeChange) {
+						apply = ((AttributeChange)input).getAttribute() == feature;
 					}
-					conflictOn(comparison, diff, candidate, kind);
-				} else if (candidate instanceof ReferenceChange) {
-					/*
-					 * The only potential conflict here is if the candidate is a ReferenceChange of either
-					 * "ADD" or "CHANGE" kind which value is the deleted element.
-					 */
-					if (candidate.getKind() == DifferenceKind.ADD
-							|| candidate.getKind() == DifferenceKind.CHANGE
-							&& ((ReferenceChange)candidate).getValue() == deletedValue) {
-						conflictOn(comparison, diff, candidate, ConflictKind.REAL);
-					}
+				}
+				return apply;
+			}
+		});
+
+		for (Diff candidate : refinedCandidates) {
+			final Object candidateValue;
+			if (candidate instanceof ReferenceChange) {
+				candidateValue = ((ReferenceChange)candidate).getValue();
+			} else {
+				candidateValue = ((AttributeChange)candidate).getValue();
+			}
+			// No diff on non unique features : multiple same values can coexist
+			if (feature.isUnique() && EqualityHelper.matchingValues(comparison, addedValue, candidateValue)) {
+				// This is a conflict. Is it real?
+				if (matchingIndices(comparison, diff.getMatch(), feature, addedValue, candidateValue)) {
+					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
+				} else {
+					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 				}
 			}
 		}
@@ -327,6 +449,60 @@ public class DefaultConflictDetector implements IConflictDetector {
 			pseudoConflict = value == null || value.equals(attribute.getDefaultValue());
 		}
 		return pseudoConflict;
+	}
+
+	/**
+	 * This will be used whenever we check for conflictual MOVEs in order to determine whether we have a
+	 * pseudo conflict or a real conflict.
+	 * <p>
+	 * Namely, this will retrieve the value of the given {@code feature} on the right and left sides of the
+	 * given {@code match}, then check whether the two given values are on the same index.
+	 * </p>
+	 * <p>
+	 * Note that no sanity checks will be made on either the match's sides or the feature.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            Provides us with the necessary information to match EObjects.
+	 * @param match
+	 *            Match for which we need to check a feature.
+	 * @param feature
+	 *            The feature which values we need to check.
+	 * @param value1
+	 *            First of the two values which index we are to compare.
+	 * @param value2
+	 *            Second of the two values which index we are to compare.
+	 * @return {@code true} if the two given values are located at the same index in the given feature's
+	 *         values list, {@code false} otherwise.
+	 */
+	@SuppressWarnings("unchecked")
+	private static boolean matchingIndices(Comparison comparison, Match match, EStructuralFeature feature,
+			Object value1, Object value2) {
+		boolean matching = false;
+		if (feature.isMany()) {
+			final List<Object> leftValues = (List<Object>)match.getLeft().eGet(feature);
+			final List<Object> rightValues = (List<Object>)match.getRight().eGet(feature);
+
+			// Using for loops instead of indexOf to handle non unique lists
+			for (int i = 0; i < leftValues.size() && i < rightValues.size() && !matching; i++) {
+				final Object left = leftValues.get(i);
+				if (EqualityHelper.matchingValues(comparison, left, value1)) {
+					final Object right = rightValues.get(i);
+					matching = EqualityHelper.matchingValues(comparison, right, value2);
+				}
+			}
+
+			for (int i = 0; i < leftValues.size() && i < rightValues.size() && !matching; i++) {
+				final Object right = rightValues.get(i);
+				if (EqualityHelper.matchingValues(comparison, right, value1)) {
+					final Object left = leftValues.get(i);
+					matching = EqualityHelper.matchingValues(comparison, left, value2);
+				}
+			}
+		} else {
+			matching = true;
+		}
+		return matching;
 	}
 
 	/**

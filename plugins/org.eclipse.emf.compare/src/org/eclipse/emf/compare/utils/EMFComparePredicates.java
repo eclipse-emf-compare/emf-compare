@@ -670,23 +670,6 @@ public final class EMFComparePredicates {
 	}
 
 	/**
-	 * Checks whether the two given Objects match : they are either both {@code null}, the same instance, or
-	 * their "equals" returns {@code true}. If neither is {@code true}, we assume that these two Objects don't
-	 * match.
-	 * 
-	 * @param referenceValue
-	 *            The reference value, first of the two Objects to compare.
-	 * @param expectedValue
-	 *            The expected value, second of the two Objects to compare.
-	 * @return {@code true} if these two Objects are equal, {@code false} otherwise.
-	 */
-	private static boolean equal(Object referenceValue, Object expectedValue) {
-		// Using == to handle the "null" case
-		return expectedValue == referenceValue || expectedValue != null
-				&& expectedValue.equals(referenceValue);
-	}
-
-	/**
 	 * This particular predicate will be used to check that a given Diff corresponds to a ReferenceChange on a
 	 * given reference, with known "original" and "changed" values.
 	 * 
@@ -798,6 +781,33 @@ public final class EMFComparePredicates {
 		}
 
 		/**
+		 * Checks whether the two given Objects match : they are either both {@code null}, the same instance,
+		 * or their "equals" returns {@code true}. If neither is {@code true}, we assume that these two
+		 * Objects don't match.
+		 * <p>
+		 * Do note that "unset" values are in fact set to the empty String instead of {@code null}. We will
+		 * thus consider {@code null} equal to the empty String here.
+		 * </p>
+		 * 
+		 * @param referenceValue
+		 *            The reference value, first of the two Objects to compare.
+		 * @param expectedValue
+		 *            The expected value, second of the two Objects to compare.
+		 * @return {@code true} if these two Objects are equal, {@code false} otherwise.
+		 */
+		private static boolean equalAttributeValues(Object referenceValue, Object expectedValue) {
+			// Using == to handle the "null" case
+			boolean equal = expectedValue == referenceValue || expectedValue != null
+					&& expectedValue.equals(referenceValue);
+			// Consider that null is equal to the empty string (unset attributes)
+			if (!equal) {
+				equal = "".equals(referenceValue) && expectedValue == null || "".equals(expectedValue) //$NON-NLS-1$ //$NON-NLS-2$
+						&& referenceValue == null;
+			}
+			return equal;
+		}
+
+		/**
 		 * {@inheritDoc}
 		 * 
 		 * @see com.google.common.base.Predicate#apply(java.lang.Object)
@@ -809,18 +819,21 @@ public final class EMFComparePredicates {
 					&& !((AttributeChange)input).getAttribute().isMany()) {
 				final EAttribute attribute = ((AttributeChange)input).getAttribute();
 				final Match match = input.getMatch();
+
 				final Object leftValue;
 				if (match.getLeft() != null) {
 					leftValue = match.getLeft().eGet(attribute);
 				} else {
 					leftValue = attribute.getDefaultValue();
 				}
+
 				final Object rightValue;
 				if (match.getRight() != null) {
 					rightValue = match.getRight().eGet(attribute);
 				} else {
 					rightValue = attribute.getDefaultValue();
 				}
+
 				final Object originValue;
 				if (match.getOrigin() != null) {
 					originValue = match.getOrigin().eGet(attribute);
@@ -843,12 +856,13 @@ public final class EMFComparePredicates {
 
 				// "from" is either right or origin
 				boolean applies = false;
-				if (equal(actualFrom, originValue)) {
+				if (equalAttributeValues(actualFrom, originValue)) {
 					// "from" is origin, "to" can be either left or right
-					applies = equal(actualTo, leftValue) || equal(actualTo, rightValue);
-				} else if (equal(actualFrom, rightValue)) {
+					applies = equalAttributeValues(actualTo, leftValue)
+							|| equalAttributeValues(actualTo, rightValue);
+				} else if (equalAttributeValues(actualFrom, rightValue)) {
 					// "from" is right, "to" can only be left
-					applies = equal(actualTo, leftValue);
+					applies = equalAttributeValues(actualTo, leftValue);
 				}
 				return applies;
 			}
