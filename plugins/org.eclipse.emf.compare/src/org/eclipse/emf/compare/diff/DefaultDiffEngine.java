@@ -33,7 +33,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 // TODO this probably doesn't handle feature maps. Test with an XSD-based metamodel
 // TODO does not handle proxies yet (see fixmes)
-// TODO does not handle ordering yet (fixme placed at every needed location)
 /**
  * The diff engine is in charge of actually computing the differences between the objects mapped by a
  * {@link Match} object.
