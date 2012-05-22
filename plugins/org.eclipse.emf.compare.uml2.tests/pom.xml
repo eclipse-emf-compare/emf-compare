@@ -23,7 +23,7 @@
                         <includes>
 				<include>org/eclipse/emf/compare/uml2/diff/test/suite/AllUML2Tests.class</include>
                         </includes>     
-                        <useUIHarness>true</useUIHarness>
+                        <useUIHarness>false</useUIHarness>
                         <useUIThread>false</useUIThread>
                         <argLine>-Xmx1024m</argLine>
                         <argLine>-XX:MaxPermSize=256m</argLine>                 
