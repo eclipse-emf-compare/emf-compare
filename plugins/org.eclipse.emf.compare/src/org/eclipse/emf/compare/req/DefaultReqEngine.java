@@ -11,19 +11,20 @@
 package org.eclipse.emf.compare.req;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * The requirements engine is in charge of actually computing the requirements between the differences.
@@ -40,7 +41,7 @@ public class DefaultReqEngine implements IReqEngine {
 	/**
 	 * Cross referencer which links business model objects to the related differences.
 	 */
-	private Map<EObject, Set<Diff>> crossReferencerModelObjectsToDiffs = new HashMap<EObject, Set<Diff>>();
+	private EcoreUtil.CrossReferencer crossReferencerModelObjectsToDiffs;
 
 	/**
 	 * Constructor.
@@ -54,7 +55,7 @@ public class DefaultReqEngine implements IReqEngine {
 	 * @param crossReferencerModelObjectsToDiffs
 	 *            The cross referencer.
 	 */
-	public DefaultReqEngine(Map<EObject, Set<Diff>> crossReferencerModelObjectsToDiffs) {
+	public DefaultReqEngine(EcoreUtil.CrossReferencer crossReferencerModelObjectsToDiffs) {
 		this.crossReferencerModelObjectsToDiffs = crossReferencerModelObjectsToDiffs;
 	}
 
@@ -64,35 +65,12 @@ public class DefaultReqEngine implements IReqEngine {
 	 * @see org.eclipse.emf.compare.diff.IDiffEngine#computeRequirements(org.eclipse.emf.compare.Comparison)
 	 */
 	public void computeRequirements(Comparison comparison) {
-		if (crossReferencerModelObjectsToDiffs.isEmpty()) {
-			fillCrossReferencerDifferences(comparison);
+		if (crossReferencerModelObjectsToDiffs == null) {
+			crossReferencerModelObjectsToDiffs = ReferenceUtil.initializeCrossReferencer(comparison);
 		}
 
 		for (Diff difference : comparison.getDifferences()) {
 			checkForRequiredDifferences(comparison, difference);
-		}
-	}
-
-	/**
-	 * Initialize the cross referencer with mapping between mode objects and differences from the result of
-	 * the given <code>comparison</code>. Mapping created through ReferenceChange(ADD/CHANGE/DELETE).value.
-	 * 
-	 * @param comparison
-	 *            The result of the comparison.
-	 */
-	protected void fillCrossReferencerDifferences(Comparison comparison) {
-		for (Diff difference : comparison.getDifferences()) {
-			if (isConcernedByRequirements(difference)) {
-				ReferenceChange diff = (ReferenceChange)difference;
-				if (difference instanceof ReferenceChange) {
-					Set<Diff> crossedDifferences = crossReferencerModelObjectsToDiffs.get(diff.getValue());
-					if (crossedDifferences == null) {
-						crossedDifferences = new HashSet<Diff>();
-						crossReferencerModelObjectsToDiffs.put(diff.getValue(), crossedDifferences);
-					}
-					crossedDifferences.add(diff);
-				}
-			}
 		}
 	}
 
@@ -115,7 +93,9 @@ public class DefaultReqEngine implements IReqEngine {
 
 			// For each of them, look for existing other equivalent differences
 			for (EObject modelObj : referencedObjects) {
-				Set<Diff> requiredDifferences = crossReferencerModelObjectsToDiffs.get(modelObj);
+				Set<Diff> requiredDifferences = ReferenceUtil.getCrossReferences(
+						crossReferencerModelObjectsToDiffs, modelObj, ComparePackage.eINSTANCE
+								.getReferenceChange_Value(), Diff.class);
 				if (requiredDifferences != null) {
 					for (Diff diff : requiredDifferences) {
 						if (isConcernedByRequirements(diff)

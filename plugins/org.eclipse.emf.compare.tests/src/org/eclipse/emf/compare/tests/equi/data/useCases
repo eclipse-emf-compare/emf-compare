@@ -1,0 +1,9 @@
+This will try and list all possible "dependence" cases that can happen in a model comparison. For each use case, we will consider
+two models, "left" and "right".
+
+a - 2-ways comparison
+	a1 - 1-1 relation
+	a2 - 1-n relation
+	a3 - n-1 relation
+	a4 - n-n relation
+	

@@ -15,12 +15,16 @@ import org.eclipse.emf.compare.conflict.DefaultConflictDetector;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
 import org.eclipse.emf.compare.diff.DefaultDiffEngine;
 import org.eclipse.emf.compare.diff.IDiffEngine;
+import org.eclipse.emf.compare.equi.DefaultEquiEngine;
+import org.eclipse.emf.compare.equi.IEquiEngine;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.req.DefaultReqEngine;
 import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 // FIXME progress monitor!
 /**
@@ -90,9 +94,15 @@ public final class EMFCompare {
 		final IDiffEngine diffEngine = new DefaultDiffEngine();
 		diffEngine.diff(comparison);
 
+		EcoreUtil.CrossReferencer crossReferencer = ReferenceUtil.initializeCrossReferencer(comparison);
+
 		// TODO allow extension of the default requirements engine
-		final IReqEngine reqEngine = new DefaultReqEngine();
+		final IReqEngine reqEngine = new DefaultReqEngine(crossReferencer);
 		reqEngine.computeRequirements(comparison);
+
+		// TODO allow extension of the default equivalences engine
+		final IEquiEngine equiEngine = new DefaultEquiEngine(crossReferencer);
+		equiEngine.computeEquivalences(comparison);
 
 		// TODO allow extension of the default conflict detector
 		if (comparison.isThreeWay()) {

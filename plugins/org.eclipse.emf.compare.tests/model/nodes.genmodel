@@ -31,5 +31,17 @@
     <genClasses ecoreClass="nodes.ecore#//NodeMultiValueReference">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeMultiValueReference/multiValuedReference"/>
     </genClasses>
+    <genClasses ecoreClass="nodes.ecore#//NodeOppositeRefOneToOne">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeOppositeRefOneToOne/source"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeOppositeRefOneToOne/destination"/>
+    </genClasses>
+    <genClasses ecoreClass="nodes.ecore#//NodeOppositeRefOneToMany">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeOppositeRefOneToMany/source"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeOppositeRefOneToMany/destination"/>
+    </genClasses>
+    <genClasses ecoreClass="nodes.ecore#//NodeOppositeRefManyToMany">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeOppositeRefManyToMany/source"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeOppositeRefManyToMany/destination"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>
