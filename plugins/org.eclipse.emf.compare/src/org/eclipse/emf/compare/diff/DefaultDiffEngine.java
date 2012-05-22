@@ -137,7 +137,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 		return Collections.emptyList();
 	}
 
-	// TODO unit test this with a number of known input
 	/**
 	 * This will compute the longest common subsequence between the two given Lists. We will use
 	 * {@link EqualityHelper#matchingValues(Comparison, Object, Object)} in order to try and match the values
@@ -175,7 +174,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 * @return The LCS of the two given sequences. Will never be the same instance as one of the input
 	 *         sequences.
 	 */
-	protected static <E> List<E> longestCommonSubsequence(Comparison comparison, List<E> sequence1,
+	public static <E> List<E> longestCommonSubsequence(Comparison comparison, List<E> sequence1,
 			List<E> sequence2) {
 		final int size1 = sequence1.size();
 		final int size2 = sequence2.size();

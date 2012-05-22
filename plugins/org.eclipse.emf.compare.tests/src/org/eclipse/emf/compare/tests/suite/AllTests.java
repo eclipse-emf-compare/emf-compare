@@ -17,6 +17,7 @@ import junit.textui.TestRunner;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.internal.spec.CompareFactorySpec;
 import org.eclipse.emf.compare.tests.conflict.ConflictDetectionTest;
+import org.eclipse.emf.compare.tests.diff.DiffEngineTest;
 import org.eclipse.emf.compare.tests.fullcomparison.IdentifierComparisonTest;
 import org.eclipse.emf.compare.tests.model.CompareModelTestSuite;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
@@ -38,7 +39,7 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({CompareModelTestSuite.class, DefaultComparisonScopeTest.class, IdentifierComparisonTest.class,
-		ConflictDetectionTest.class, ReqComputingTest.class })
+		ConflictDetectionTest.class, ReqComputingTest.class, DiffEngineTest.class, })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.
