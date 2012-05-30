@@ -190,11 +190,14 @@ public class DefaultMatchEngine implements IMatchEngine {
 			throw new IllegalArgumentException();
 		}
 
-		final Iterator<? extends EObject> leftEObjects = getScope().getChildren(left);
-		final Iterator<? extends EObject> rightEObjects = getScope().getChildren(right);
+		final Iterator<? extends EObject> leftEObjects = Iterators.concat(Iterators.singletonIterator(left),
+				getScope().getChildren(left));
+		final Iterator<? extends EObject> rightEObjects = Iterators.concat(
+				Iterators.singletonIterator(right), getScope().getChildren(right));
 		final Iterator<? extends EObject> originEObjects;
 		if (origin != null) {
-			originEObjects = getScope().getChildren(origin);
+			originEObjects = Iterators.concat(Iterators.singletonIterator(origin), getScope().getChildren(
+					origin));
 		} else {
 			originEObjects = Iterators.emptyIterator();
 		}
