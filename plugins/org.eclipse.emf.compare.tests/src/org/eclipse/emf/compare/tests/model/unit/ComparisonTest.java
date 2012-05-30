@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.tests.model.unit;
 import com.google.common.collect.Iterables;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
@@ -239,6 +240,7 @@ public class ComparisonTest {
 
 		int missingChars = lineLength - name.length() - charsBefore.length;
 		final char[] spacesAfter = new char[Math.max(0, missingChars)];
+		Arrays.fill(spacesAfter, ' ');
 
 		return String.valueOf(charsBefore) + name + String.valueOf(spacesAfter);
 	}
@@ -258,6 +260,7 @@ public class ComparisonTest {
 
 		int missingChars = lineLength - charsBefore.length;
 		final char[] spacesAfter = new char[Math.max(0, missingChars)];
+		Arrays.fill(spacesAfter, ' ');
 
 		return String.valueOf(charsBefore) + String.valueOf(spacesAfter);
 	}
