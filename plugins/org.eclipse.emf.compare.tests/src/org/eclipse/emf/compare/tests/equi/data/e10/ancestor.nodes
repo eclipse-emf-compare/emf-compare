@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes:Node xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes" xmi:id="_yWc_0JUeEeGiestbncRZoQ" name="Requirements">
+  <containmentRef1 xsi:type="nodes:NodeOppositeRefManyToMany" xmi:id="_cDHM4KZyEeG7yYXQbTfTXQ" name="A" destination="_dS-5UKZyEeG7yYXQbTfTXQ _eIx44KZyEeG7yYXQbTfTXQ"/>
+  <containmentRef1 xsi:type="nodes:NodeOppositeRefManyToMany" xmi:id="_dS-5UKZyEeG7yYXQbTfTXQ" name="B" source="_cDHM4KZyEeG7yYXQbTfTXQ _f0yHsKZyEeG7yYXQbTfTXQ"/>
+  <containmentRef1 xsi:type="nodes:NodeOppositeRefManyToMany" xmi:id="_eIx44KZyEeG7yYXQbTfTXQ" name="C" source="_cDHM4KZyEeG7yYXQbTfTXQ"/>
+  <containmentRef1 xsi:type="nodes:NodeOppositeRefManyToMany" xmi:id="_e9ZzwKZyEeG7yYXQbTfTXQ" name="D" source="_f0yHsKZyEeG7yYXQbTfTXQ"/>
+  <containmentRef1 xsi:type="nodes:NodeOppositeRefManyToMany" xmi:id="_f0yHsKZyEeG7yYXQbTfTXQ" name="F" destination="_dS-5UKZyEeG7yYXQbTfTXQ _e9ZzwKZyEeG7yYXQbTfTXQ"/>
+</nodes:Node>

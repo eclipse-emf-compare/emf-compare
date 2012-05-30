@@ -111,6 +111,18 @@ public class NodesAdapterFactory extends AdapterFactoryImpl {
 				return createNodeMultiValueReferenceAdapter();
 			}
 			@Override
+			public Adapter caseNodeOppositeRefOneToOne(NodeOppositeRefOneToOne object) {
+				return createNodeOppositeRefOneToOneAdapter();
+			}
+			@Override
+			public Adapter caseNodeOppositeRefOneToMany(NodeOppositeRefOneToMany object) {
+				return createNodeOppositeRefOneToManyAdapter();
+			}
+			@Override
+			public Adapter caseNodeOppositeRefManyToMany(NodeOppositeRefManyToMany object) {
+				return createNodeOppositeRefManyToManyAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -225,6 +237,48 @@ public class NodesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createNodeMultiValueReferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToOne <em>Node Opposite Ref One To One</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToOne
+	 * @generated
+	 */
+	public Adapter createNodeOppositeRefOneToOneAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany <em>Node Opposite Ref One To Many</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany
+	 * @generated
+	 */
+	public Adapter createNodeOppositeRefOneToManyAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.tests.nodes.NodeOppositeRefManyToMany <em>Node Opposite Ref Many To Many</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeOppositeRefManyToMany
+	 * @generated
+	 */
+	public Adapter createNodeOppositeRefManyToManyAdapter() {
 		return null;
 	}
 

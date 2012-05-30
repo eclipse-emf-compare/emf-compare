@@ -148,6 +148,27 @@ public class NodesSwitch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case NodesPackage.NODE_OPPOSITE_REF_ONE_TO_ONE: {
+				NodeOppositeRefOneToOne nodeOppositeRefOneToOne = (NodeOppositeRefOneToOne)theEObject;
+				T result = caseNodeOppositeRefOneToOne(nodeOppositeRefOneToOne);
+				if (result == null) result = caseNode(nodeOppositeRefOneToOne);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case NodesPackage.NODE_OPPOSITE_REF_ONE_TO_MANY: {
+				NodeOppositeRefOneToMany nodeOppositeRefOneToMany = (NodeOppositeRefOneToMany)theEObject;
+				T result = caseNodeOppositeRefOneToMany(nodeOppositeRefOneToMany);
+				if (result == null) result = caseNode(nodeOppositeRefOneToMany);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case NodesPackage.NODE_OPPOSITE_REF_MANY_TO_MANY: {
+				NodeOppositeRefManyToMany nodeOppositeRefManyToMany = (NodeOppositeRefManyToMany)theEObject;
+				T result = caseNodeOppositeRefManyToMany(nodeOppositeRefManyToMany);
+				if (result == null) result = caseNode(nodeOppositeRefManyToMany);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -254,6 +275,51 @@ public class NodesSwitch<T> {
 	 * @generated
 	 */
 	public T caseNodeMultiValueReference(NodeMultiValueReference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Node Opposite Ref One To One</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Node Opposite Ref One To One</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNodeOppositeRefOneToOne(NodeOppositeRefOneToOne object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Node Opposite Ref One To Many</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Node Opposite Ref One To Many</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNodeOppositeRefOneToMany(NodeOppositeRefOneToMany object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Node Opposite Ref Many To Many</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Node Opposite Ref Many To Many</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNodeOppositeRefManyToMany(NodeOppositeRefManyToMany object) {
 		return null;
 	}
 

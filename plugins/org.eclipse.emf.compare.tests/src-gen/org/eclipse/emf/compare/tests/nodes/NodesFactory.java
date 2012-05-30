@@ -100,6 +100,33 @@ public interface NodesFactory extends EFactory {
 	NodeMultiValueReference createNodeMultiValueReference();
 
 	/**
+	 * Returns a new object of class '<em>Node Opposite Ref One To One</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Node Opposite Ref One To One</em>'.
+	 * @generated
+	 */
+	NodeOppositeRefOneToOne createNodeOppositeRefOneToOne();
+
+	/**
+	 * Returns a new object of class '<em>Node Opposite Ref One To Many</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Node Opposite Ref One To Many</em>'.
+	 * @generated
+	 */
+	NodeOppositeRefOneToMany createNodeOppositeRefOneToMany();
+
+	/**
+	 * Returns a new object of class '<em>Node Opposite Ref Many To Many</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Node Opposite Ref Many To Many</em>'.
+	 * @generated
+	 */
+	NodeOppositeRefManyToMany createNodeOppositeRefManyToMany();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

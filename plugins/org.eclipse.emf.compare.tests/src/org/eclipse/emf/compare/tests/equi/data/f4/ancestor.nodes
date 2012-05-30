@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes:Node xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes" xmi:id="_yWc_0JUeEeGiestbncRZoQ" name="Requirements">
+  <containmentRef1 xsi:type="nodes:NodeOppositeRefManyToMany" xmi:id="_xjrvsJtsEeGMQeoeefOsHA" name="A" source="_KHyT4KS-EeGRGoXThdgijA" destination="_KHyT4KS-EeGRGoXThdgijA"/>
+  <containmentRef1 xsi:type="nodes:NodeOppositeRefManyToMany" xmi:id="_KHyT4KS-EeGRGoXThdgijA" name="B" source="_xjrvsJtsEeGMQeoeefOsHA" destination="_xjrvsJtsEeGMQeoeefOsHA"/>
+</nodes:Node>

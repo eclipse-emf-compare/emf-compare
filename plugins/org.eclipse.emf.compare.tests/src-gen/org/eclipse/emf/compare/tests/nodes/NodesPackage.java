@@ -404,6 +404,171 @@ public interface NodesPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.tests.nodes.impl.NodeOppositeRefOneToOneImpl <em>Node Opposite Ref One To One</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodeOppositeRefOneToOneImpl
+	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeOppositeRefOneToOne()
+	 * @generated
+	 */
+	int NODE_OPPOSITE_REF_ONE_TO_ONE = 7;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_OPPOSITE_REF_ONE_TO_ONE__NAME = NODE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Containment Ref1</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_OPPOSITE_REF_ONE_TO_ONE__CONTAINMENT_REF1 = NODE__CONTAINMENT_REF1;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_OPPOSITE_REF_ONE_TO_ONE__SOURCE = NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Destination</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_OPPOSITE_REF_ONE_TO_ONE__DESTINATION = NODE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Node Opposite Ref One To One</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_OPPOSITE_REF_ONE_TO_ONE_FEATURE_COUNT = NODE_FEATURE_COUNT + 2;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.tests.nodes.impl.NodeOppositeRefOneToManyImpl <em>Node Opposite Ref One To Many</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodeOppositeRefOneToManyImpl
+	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeOppositeRefOneToMany()
+	 * @generated
+	 */
+	int NODE_OPPOSITE_REF_ONE_TO_MANY = 8;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_OPPOSITE_REF_ONE_TO_MANY__NAME = NODE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Containment Ref1</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_OPPOSITE_REF_ONE_TO_MANY__CONTAINMENT_REF1 = NODE__CONTAINMENT_REF1;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_OPPOSITE_REF_ONE_TO_MANY__SOURCE = NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Destination</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_OPPOSITE_REF_ONE_TO_MANY__DESTINATION = NODE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Node Opposite Ref One To Many</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_OPPOSITE_REF_ONE_TO_MANY_FEATURE_COUNT = NODE_FEATURE_COUNT + 2;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.tests.nodes.impl.NodeOppositeRefManyToManyImpl <em>Node Opposite Ref Many To Many</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodeOppositeRefManyToManyImpl
+	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeOppositeRefManyToMany()
+	 * @generated
+	 */
+	int NODE_OPPOSITE_REF_MANY_TO_MANY = 9;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_OPPOSITE_REF_MANY_TO_MANY__NAME = NODE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Containment Ref1</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_OPPOSITE_REF_MANY_TO_MANY__CONTAINMENT_REF1 = NODE__CONTAINMENT_REF1;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_OPPOSITE_REF_MANY_TO_MANY__SOURCE = NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Destination</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_OPPOSITE_REF_MANY_TO_MANY__DESTINATION = NODE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Node Opposite Ref Many To Many</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_OPPOSITE_REF_MANY_TO_MANY_FEATURE_COUNT = NODE_FEATURE_COUNT + 2;
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.tests.nodes.Node <em>Node</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -573,6 +738,102 @@ public interface NodesPackage extends EPackage {
 	EReference getNodeMultiValueReference_MultiValuedReference();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToOne <em>Node Opposite Ref One To One</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Node Opposite Ref One To One</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToOne
+	 * @generated
+	 */
+	EClass getNodeOppositeRefOneToOne();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToOne#getSource <em>Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Source</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToOne#getSource()
+	 * @see #getNodeOppositeRefOneToOne()
+	 * @generated
+	 */
+	EReference getNodeOppositeRefOneToOne_Source();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToOne#getDestination <em>Destination</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Destination</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToOne#getDestination()
+	 * @see #getNodeOppositeRefOneToOne()
+	 * @generated
+	 */
+	EReference getNodeOppositeRefOneToOne_Destination();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany <em>Node Opposite Ref One To Many</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Node Opposite Ref One To Many</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany
+	 * @generated
+	 */
+	EClass getNodeOppositeRefOneToMany();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany#getSource <em>Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Source</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany#getSource()
+	 * @see #getNodeOppositeRefOneToMany()
+	 * @generated
+	 */
+	EReference getNodeOppositeRefOneToMany_Source();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany#getDestination <em>Destination</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Destination</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany#getDestination()
+	 * @see #getNodeOppositeRefOneToMany()
+	 * @generated
+	 */
+	EReference getNodeOppositeRefOneToMany_Destination();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.tests.nodes.NodeOppositeRefManyToMany <em>Node Opposite Ref Many To Many</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Node Opposite Ref Many To Many</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeOppositeRefManyToMany
+	 * @generated
+	 */
+	EClass getNodeOppositeRefManyToMany();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.tests.nodes.NodeOppositeRefManyToMany#getSource <em>Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Source</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeOppositeRefManyToMany#getSource()
+	 * @see #getNodeOppositeRefManyToMany()
+	 * @generated
+	 */
+	EReference getNodeOppositeRefManyToMany_Source();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.tests.nodes.NodeOppositeRefManyToMany#getDestination <em>Destination</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Destination</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeOppositeRefManyToMany#getDestination()
+	 * @see #getNodeOppositeRefManyToMany()
+	 * @generated
+	 */
+	EReference getNodeOppositeRefManyToMany_Destination();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -735,6 +996,84 @@ public interface NodesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference NODE_MULTI_VALUE_REFERENCE__MULTI_VALUED_REFERENCE = eINSTANCE.getNodeMultiValueReference_MultiValuedReference();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.tests.nodes.impl.NodeOppositeRefOneToOneImpl <em>Node Opposite Ref One To One</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.tests.nodes.impl.NodeOppositeRefOneToOneImpl
+		 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeOppositeRefOneToOne()
+		 * @generated
+		 */
+		EClass NODE_OPPOSITE_REF_ONE_TO_ONE = eINSTANCE.getNodeOppositeRefOneToOne();
+
+		/**
+		 * The meta object literal for the '<em><b>Source</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference NODE_OPPOSITE_REF_ONE_TO_ONE__SOURCE = eINSTANCE.getNodeOppositeRefOneToOne_Source();
+
+		/**
+		 * The meta object literal for the '<em><b>Destination</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference NODE_OPPOSITE_REF_ONE_TO_ONE__DESTINATION = eINSTANCE.getNodeOppositeRefOneToOne_Destination();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.tests.nodes.impl.NodeOppositeRefOneToManyImpl <em>Node Opposite Ref One To Many</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.tests.nodes.impl.NodeOppositeRefOneToManyImpl
+		 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeOppositeRefOneToMany()
+		 * @generated
+		 */
+		EClass NODE_OPPOSITE_REF_ONE_TO_MANY = eINSTANCE.getNodeOppositeRefOneToMany();
+
+		/**
+		 * The meta object literal for the '<em><b>Source</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference NODE_OPPOSITE_REF_ONE_TO_MANY__SOURCE = eINSTANCE.getNodeOppositeRefOneToMany_Source();
+
+		/**
+		 * The meta object literal for the '<em><b>Destination</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference NODE_OPPOSITE_REF_ONE_TO_MANY__DESTINATION = eINSTANCE.getNodeOppositeRefOneToMany_Destination();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.tests.nodes.impl.NodeOppositeRefManyToManyImpl <em>Node Opposite Ref Many To Many</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.tests.nodes.impl.NodeOppositeRefManyToManyImpl
+		 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeOppositeRefManyToMany()
+		 * @generated
+		 */
+		EClass NODE_OPPOSITE_REF_MANY_TO_MANY = eINSTANCE.getNodeOppositeRefManyToMany();
+
+		/**
+		 * The meta object literal for the '<em><b>Source</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference NODE_OPPOSITE_REF_MANY_TO_MANY__SOURCE = eINSTANCE.getNodeOppositeRefManyToMany_Source();
+
+		/**
+		 * The meta object literal for the '<em><b>Destination</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference NODE_OPPOSITE_REF_MANY_TO_MANY__DESTINATION = eINSTANCE.getNodeOppositeRefManyToMany_Destination();
 
 	}
 

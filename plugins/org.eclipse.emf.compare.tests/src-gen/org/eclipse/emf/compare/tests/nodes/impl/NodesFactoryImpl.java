@@ -78,6 +78,9 @@ public class NodesFactoryImpl extends EFactoryImpl implements NodesFactory {
 			case NodesPackage.NODE_MULTI_VALUED_ATTRIBUTE: return createNodeMultiValuedAttribute();
 			case NodesPackage.NODE_SINGLE_VALUE_REFERENCE: return createNodeSingleValueReference();
 			case NodesPackage.NODE_MULTI_VALUE_REFERENCE: return createNodeMultiValueReference();
+			case NodesPackage.NODE_OPPOSITE_REF_ONE_TO_ONE: return createNodeOppositeRefOneToOne();
+			case NodesPackage.NODE_OPPOSITE_REF_ONE_TO_MANY: return createNodeOppositeRefOneToMany();
+			case NodesPackage.NODE_OPPOSITE_REF_MANY_TO_MANY: return createNodeOppositeRefManyToMany();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -151,6 +154,36 @@ public class NodesFactoryImpl extends EFactoryImpl implements NodesFactory {
 	public NodeMultiValueReference createNodeMultiValueReference() {
 		NodeMultiValueReferenceImpl nodeMultiValueReference = new NodeMultiValueReferenceImpl();
 		return nodeMultiValueReference;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NodeOppositeRefOneToOne createNodeOppositeRefOneToOne() {
+		NodeOppositeRefOneToOneImpl nodeOppositeRefOneToOne = new NodeOppositeRefOneToOneImpl();
+		return nodeOppositeRefOneToOne;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NodeOppositeRefOneToMany createNodeOppositeRefOneToMany() {
+		NodeOppositeRefOneToManyImpl nodeOppositeRefOneToMany = new NodeOppositeRefOneToManyImpl();
+		return nodeOppositeRefOneToMany;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NodeOppositeRefManyToMany createNodeOppositeRefManyToMany() {
+		NodeOppositeRefManyToManyImpl nodeOppositeRefManyToMany = new NodeOppositeRefManyToManyImpl();
+		return nodeOppositeRefManyToMany;
 	}
 
 	/**

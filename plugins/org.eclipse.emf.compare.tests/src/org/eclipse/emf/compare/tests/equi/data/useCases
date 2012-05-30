@@ -1,9 +1,24 @@
-This will try and list all possible "dependence" cases that can happen in a model comparison. For each use case, we will consider
+This will try and list all possible "equivalence" cases that can happen in a model comparison. For each use case, we will consider
 two models, "left" and "right".
 
-a - 2-ways comparison
+a - 2-ways comparison - null to value
 	a1 - 1-1 relation
 	a2 - 1-n relation
-	a3 - n-1 relation
-	a4 - n-n relation
+	a3 - n-n relation
+	a4 - recursive relation
+	a5 - reference to new objects
+	
+b - 2-ways comparison - value to null
+
+c - 2-ways comparison - change values
+	c1 - change from and to existing objects
+	c2 - change from existing object to an added one
+	c3 - change from a deleted object to an existing one
+	c4 - change from a deleted object to an added one
+
+d - 2-ways comparison - multiple changes
+
+e - 3 ways - left changes
+
+f - 3 ways - right changes
 	
