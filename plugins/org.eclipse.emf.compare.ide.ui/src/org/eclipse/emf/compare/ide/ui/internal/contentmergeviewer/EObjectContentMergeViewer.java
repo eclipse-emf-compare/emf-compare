@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
+import com.google.common.collect.Iterators;
+
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
@@ -20,6 +22,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -58,17 +62,20 @@ public class EObjectContentMergeViewer extends ContentMergeViewer {
 	 */
 	private final AdapterFactory fAdapterFactory;
 
-/**
+	/**
 	 * Creates a new {@link EObjectContentMergeViewer} by calling the super constructor with the given
 	 * parameters.
 	 * <p>
 	 * It calls {@link #buildControl(Composite)} as stated in its javadoc.
 	 * <p>
 	 * It sets a {@link EObjectMergeViewerContentProvider specific}
-	 * {@link #setContentProvider(org.eclipse.jface.viewers.IContentProvider) content provider to properly display ancestor, left and right parts.
+	 * {@link #setContentProvider(org.eclipse.jface.viewers.IContentProvider) content provider} to properly
+	 * display ancestor, left and right parts.
 	 * 
-	 * @param parent the parent composite to build the UI in
-	 * @param config the {@link CompareConfiguration} 
+	 * @param parent
+	 *            the parent composite to build the UI in
+	 * @param config
+	 *            the {@link CompareConfiguration}
 	 */
 	public EObjectContentMergeViewer(Composite parent, CompareConfiguration config) {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);

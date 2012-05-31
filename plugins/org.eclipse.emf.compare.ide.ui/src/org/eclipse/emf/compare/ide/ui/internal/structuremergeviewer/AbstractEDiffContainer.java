@@ -10,46 +10,25 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterables.transform;
-import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.eclipse.compare.structuremergeviewer.IDiffContainer;
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.MatchNode;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public abstract class AbstractEDiffContainer extends AbstractEDiffElement implements IDiffContainer {
-
-	/**
-	 * 
-	 */
-	private static final IDiffElement[] EMPTY_ARRAY__DIFF_ELEMENT = new IDiffElement[0];
-
-	private final Predicate<Object> fNeedDisplay = new Predicate<Object>() {
-		public boolean apply(Object input) {
-			if (input instanceof IDiffContainer) {
-				return ((IDiffContainer)input).hasChildren();
-			}
-			return true;
-		}
-	};
 
 	/**
 	 * @param adapterFactory
@@ -61,42 +40,14 @@ public abstract class AbstractEDiffContainer extends AbstractEDiffElement implem
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.compare.structuremergeviewer.IDiffContainer#hasChildren()
+	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffContainer#hasChildren()
 	 */
 	public boolean hasChildren() {
 		boolean ret = false;
-		if (target instanceof EObject) {
-			Adapter treeItemContentProvider = getAdapterFactory().adapt(target,
-					ITreeItemContentProvider.class);
-			if (treeItemContentProvider instanceof ITreeItemContentProvider) {
-				List<IDiffElement> children = newArrayList(getChildren());
-				Iterable<IDiffElement> notMatchChildren = filter(children, not(instanceOf(MatchNode.class)));
-				if (!isEmpty(notMatchChildren)) {
-					ret = true;
-				} else {
-					ret = hasChildren(notMatchChildren);
-				}
-			}
-		}
-		return ret;
-	}
-
-	/**
-	 * Returns true if one of the given <code>elements</code> is a {@link IDiffContainer} and it
-	 * {@link IDiffContainer#hasChildren() has children}. Returns false if the given iterable is empty.
-	 * 
-	 * @param elements
-	 *            the elements to test
-	 * @return true true if one of the given <code>elements</code> is a {@link IDiffContainer} and it
-	 *         {@link IDiffContainer#hasChildren() has children}, false otherwise.
-	 */
-	private static boolean hasChildren(Iterable<IDiffElement> elements) {
-		boolean ret = false;
-		for (IDiffElement child : elements) {
-			if (child instanceof IDiffContainer && ((IDiffContainer)child).hasChildren()) {
-				ret = true;
-				break;
-			}
+		Adapter treeItemContentProvider = getAdapterFactory().adapt(getTarget(),
+				ITreeItemContentProvider.class);
+		if (treeItemContentProvider instanceof ITreeItemContentProvider) {
+			ret = ((ITreeItemContentProvider)treeItemContentProvider).hasChildren(target);
 		}
 		return ret;
 	}
@@ -104,22 +55,17 @@ public abstract class AbstractEDiffContainer extends AbstractEDiffElement implem
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.compare.structuremergeviewer.IDiffContainer#getChildren()
+	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffContainer#getChildren()
 	 */
 	public IDiffElement[] getChildren() {
-		IDiffElement[] ret = EMPTY_ARRAY__DIFF_ELEMENT;
-		if (target instanceof EObject) {
-			Adapter treeItemContentProvider = getAdapterFactory().adapt(target,
-					ITreeItemContentProvider.class);
-			if (treeItemContentProvider instanceof ITreeItemContentProvider) {
-				Collection<?> children = ((ITreeItemContentProvider)treeItemContentProvider)
-						.getChildren(target);
-				Iterable<?> childrenToDisplay = filter(children, fNeedDisplay);
-				ret = toArray(adapt(childrenToDisplay, getAdapterFactory(), IDiffElement.class),
-						IDiffElement.class);
-			}
+		Iterable<IDiffElement> ret = ImmutableList.of();
+		Adapter treeItemContentProvider = getAdapterFactory().adapt(target, ITreeItemContentProvider.class);
+		if (treeItemContentProvider instanceof ITreeItemContentProvider) {
+			Collection<?> children = ((ITreeItemContentProvider)treeItemContentProvider).getChildren(target);
+			ret = adapt(children, getAdapterFactory(), IDiffElement.class);
 		}
-		return ret;
+
+		return toArray(ret, IDiffElement.class);
 	}
 
 	/**

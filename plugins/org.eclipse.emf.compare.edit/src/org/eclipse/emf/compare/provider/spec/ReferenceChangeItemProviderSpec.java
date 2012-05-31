@@ -15,8 +15,6 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.provider.ReferenceChangeItemProvider;
-import org.eclipse.emf.ecore.ENamedElement;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * Specialized {@link ReferenceChangeItemProvider} returning nice output for {@link #getText(Object)} and
@@ -45,33 +43,63 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	public String getText(Object object) {
 		final ReferenceChange refChange = (ReferenceChange)object;
 
-		EObject value = refChange.getValue();
-		final String valueName = CompareItemProviderAdapterFactorySpec.getText(adapterFactory, value);
+		final String valueText = getValueText(refChange);
+		final String referenceText = getReferenceText(refChange);
 
-		String change = "";
+		String remotely = "";
 		if (refChange.getSource() == DifferenceSource.RIGHT) {
-			change = "remotely ";
+			remotely = "remotely ";
 		}
-		if (refChange.getKind() == DifferenceKind.ADD) {
-			change += "added to";
-		} else if (refChange.getKind() == DifferenceKind.DELETE) {
-			change += "deleted from";
-		} else if (refChange.getKind() == DifferenceKind.CHANGE) {
-			change += "changed from";
+
+		String ret = "";
+		switch (refChange.getKind()) {
+			case ADD:
+				ret = valueText + " has been " + remotely + "added to " + referenceText;
+				break;
+			case DELETE:
+				ret = valueText + " has been " + remotely + "deleted from " + referenceText;
+				break;
+			case CHANGE:
+				ret = referenceText + " " + valueText + " has been " + remotely + "changed";
+				break;
+			case MOVE:
+				ret = valueText + " has been " + remotely + "moved in " + referenceText;
+				break;
+			default:
+				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName()
+						+ " value: " + refChange.getKind());
+		}
+
+		return ret;
+	}
+
+	protected String getReferenceText(final ReferenceChange refChange) {
+		return refChange.getReference().getName();
+	}
+
+	protected String getValueText(final ReferenceChange refChange) {
+		String value = CompareItemProviderAdapterFactorySpec.getText(getRootAdapterFactory(), refChange
+				.getValue());
+		if (value == null) {
+			value = "<null>";
 		} else {
-			change += "moved from";
+			value = Strings.elide(value, 20, "...");
 		}
-		final String objectName;
-		if (refChange.getMatch().getLeft() instanceof ENamedElement) {
-			objectName = ((ENamedElement)refChange.getMatch().getLeft()).getName();
-		} else if (refChange.getMatch().getRight() instanceof ENamedElement) {
-			objectName = ((ENamedElement)refChange.getMatch().getRight()).getName();
-		} else if (refChange.getMatch().getOrigin() instanceof ENamedElement) {
-			objectName = ((ENamedElement)refChange.getMatch().getOrigin()).getName();
-		} else {
-			objectName = "";
-		}
-		return "value " + valueName + " has been " + change + " reference "
-				+ refChange.getReference().getName() + " of object " + objectName;
+		return value;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.ReferenceChangeItemProvider#getImage(java.lang.Object)
+	 */
+	@Override
+	public Object getImage(Object object) {
+		ReferenceChange refChange = (ReferenceChange)object;
+
+		Object image = CompareItemProviderAdapterFactorySpec.getImage(getRootAdapterFactory(), refChange
+				.getValue());
+
+		return image;
 	}
 }

@@ -8,38 +8,38 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
+package org.eclipse.emf.compare.provider.spec;
 
-import org.eclipse.compare.structuremergeviewer.Differencer;
+import static com.google.common.collect.Iterables.concat;
+
+import com.google.common.collect.ImmutableList;
+
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode;
+import org.eclipse.emf.compare.provider.ComparisonItemProvider;
 
 /**
- * Specific AbstractEDiffNode for {@link Comparison} objects.
- * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class ComparisonNode extends AbstractEDiffNode {
+public class ComparisonItemProviderSpec extends ComparisonItemProvider {
 
 	/**
-	 * Creates a node with the given factory.
-	 * 
 	 * @param adapterFactory
-	 *            the factory given to the super constructor.
 	 */
-	public ComparisonNode(AdapterFactory adapterFactory) {
+	public ComparisonItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#getTarget()
+	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getChildren(java.lang.Object)
 	 */
 	@Override
-	public Comparison getTarget() {
-		return (Comparison)super.getTarget();
+	public Collection<?> getChildren(Object object) {
+		Comparison comparison = (Comparison)object;
+		return ImmutableList.copyOf(concat(comparison.getMatches(), comparison.getMatchedResources()));
 	}
-
 }

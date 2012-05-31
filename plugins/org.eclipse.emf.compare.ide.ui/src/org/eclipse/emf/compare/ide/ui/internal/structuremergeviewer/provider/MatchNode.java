@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
 import org.eclipse.compare.ITypedElement;
-import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.EObjectNode;
@@ -95,22 +94,5 @@ public class MatchNode extends AbstractEDiffNode {
 			return new EObjectNode(getAdapterFactory(), o);
 		}
 		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffElement#getKind()
-	 */
-	@Override
-	public int getKind() {
-		int ret = super.getKind();
-		if (getTarget().getLeft() == null) {
-			ret = Differencer.DELETION;
-		}
-		if (getTarget().getRight() == null) {
-			ret = Differencer.ADDITION;
-		}
-		return ret;
 	}
 }

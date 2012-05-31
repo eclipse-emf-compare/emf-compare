@@ -13,8 +13,12 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode;
 
 /**
@@ -51,21 +55,54 @@ public class DiffNode extends AbstractEDiffNode {
 	 */
 	@Override
 	public int getKind() {
-		int ret = Integer.MIN_VALUE;
-		DifferenceSource source = getTarget().getSource();
-		Comparison c = getTarget().getMatch().getComparison();
-		switch (getTarget().getKind()) {
-			case ADD:
-				ret = Differencer.ADDITION;
-				break;
-			case DELETE:
-				ret = Differencer.DELETION;
-				break;
-			case CHANGE:
-				ret = Differencer.CHANGE;
-				break;
-			default:
-				ret = super.getKind();
+		int ret = Differencer.NO_CHANGE;
+		final Diff diff = getTarget();
+		final DifferenceSource source = diff.getSource();
+		final Match match = diff.getMatch();
+		final Conflict conflict = diff.getConflict();
+		final DifferenceKind diffKind = diff.getKind();
+		final Comparison c = match.getComparison();
+		if (c.isThreeWay()) {
+			switch (source) {
+				case LEFT:
+					ret |= Differencer.LEFT;
+					break;
+				case RIGHT:
+					ret |= Differencer.RIGHT;
+					break;
+			}
+			if (conflict != null) {
+				ret |= Differencer.CONFLICTING;
+				if (conflict.getKind() == ConflictKind.PSEUDO) {
+					ret |= Differencer.PSEUDO_CONFLICT;
+				}
+			}
+
+			switch (diffKind) {
+				case ADD:
+					ret |= Differencer.ADDITION;
+					break;
+				case DELETE:
+					ret |= Differencer.DELETION;
+					break;
+				case CHANGE:
+				case MOVE:
+					ret |= Differencer.CHANGE;
+					break;
+			}
+		} else {
+			switch (diffKind) {
+				case ADD:
+					ret |= Differencer.DELETION;
+					break;
+				case DELETE:
+					ret |= Differencer.ADDITION;
+					break;
+				case CHANGE:
+				case MOVE:
+					ret |= Differencer.CHANGE;
+					break;
+			}
 		}
 		return ret;
 	}

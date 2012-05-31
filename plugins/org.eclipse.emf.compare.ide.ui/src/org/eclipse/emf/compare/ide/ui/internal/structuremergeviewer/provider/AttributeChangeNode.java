@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.AttributeChange;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.SingleAttributeChange;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.SingleAttributeChangeNode;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 
@@ -68,7 +68,7 @@ public class AttributeChangeNode extends DiffNode {
 			if (attribute.isMany()) {
 				// todo
 			} else {
-				ret = new SingleAttributeChange(origin, attribute);
+				ret = new SingleAttributeChangeNode(origin, attribute);
 			}
 		}
 		return ret;
@@ -88,7 +88,7 @@ public class AttributeChangeNode extends DiffNode {
 			if (attribute.isMany()) {
 				// todo
 			} else {
-				ret = new SingleAttributeChange(left, attribute);
+				ret = new SingleAttributeChangeNode(left, attribute);
 			}
 		}
 		return ret;
@@ -108,7 +108,7 @@ public class AttributeChangeNode extends DiffNode {
 			if (attribute.isMany()) {
 				// todo
 			} else {
-				ret = new SingleAttributeChange(right, attribute);
+				ret = new SingleAttributeChangeNode(right, attribute);
 			}
 		}
 		return ret;

@@ -54,6 +54,47 @@ public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAd
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.CompareItemProviderAdapterFactory#createAttributeChangeAdapter()
+	 */
+	@Override
+	public Adapter createAttributeChangeAdapter() {
+		if (attributeChangeItemProvider == null) {
+			attributeChangeItemProvider = new AttributeChangeItemProviderSpec(this);
+		}
+
+		return attributeChangeItemProvider;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.CompareItemProviderAdapterFactory#createMatchResourceAdapter()
+	 */
+	@Override
+	public Adapter createMatchResourceAdapter() {
+		if (matchResourceItemProvider == null) {
+			matchResourceItemProvider = new MatchResourceItemProviderSpec(this);
+		}
+		return matchResourceItemProvider;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.CompareItemProviderAdapterFactory#createComparisonAdapter()
+	 */
+	@Override
+	public Adapter createComparisonAdapter() {
+		if (comparisonItemProvider == null) {
+			comparisonItemProvider = new ComparisonItemProviderSpec(this);
+		}
+
+		return comparisonItemProvider;
+	}
+
+	/**
 	 * Returns the text of the given <code>object</code> by adapting it to {@link IItemLabelProvider} and
 	 * asking for its {@link IItemLabelProvider#getText(Object) text}. Returns null if <code>object</code> is
 	 * null.
