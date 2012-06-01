@@ -116,6 +116,8 @@ public final class DiffUtil {
 	 * 
 	 * @param comparison
 	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param equalityHelper
+	 *            The {@link EqualityHelper} gives us the necessary semantics for Object matching.
 	 * @param sequence1
 	 *            First of the two sequences to consider.
 	 * @param sequence2
@@ -125,8 +127,8 @@ public final class DiffUtil {
 	 * @return The LCS of the two given sequences. Will never be the same instance as one of the input
 	 *         sequences.
 	 */
-	public static <E> List<E> longestCommonSubsequence(Comparison comparison, List<E> sequence1,
-			List<E> sequence2) {
+	public static <E> List<E> longestCommonSubsequence(Comparison comparison, EqualityHelper equalityHelper,
+			List<E> sequence1, List<E> sequence2) {
 		final int size1 = sequence1.size();
 		final int size2 = sequence2.size();
 		final int[][] matrix = new int[size1 + 1][size2 + 1];
@@ -136,7 +138,7 @@ public final class DiffUtil {
 			for (int j = 1; j <= size2; j++) {
 				final E first = sequence1.get(i - 1);
 				final E second = sequence2.get(j - 1);
-				if (EqualityHelper.matchingValues(comparison, first, second)) {
+				if (equalityHelper.matchingValues(comparison, first, second)) {
 					matrix[i][j] = 1 + matrix[i - 1][j - 1];
 				} else {
 					matrix[i][j] = Math.max(matrix[i - 1][j], matrix[i][j - 1]);
@@ -164,7 +166,7 @@ public final class DiffUtil {
 		while (current1 > 0 && current2 > 0) {
 			final E first = sequence1.get(current1 - 1);
 			final E second = sequence2.get(current2 - 1);
-			if (EqualityHelper.matchingValues(comparison, first, second)) {
+			if (equalityHelper.matchingValues(comparison, first, second)) {
 				result.add(first);
 				current1--;
 				current2--;
@@ -206,6 +208,8 @@ public final class DiffUtil {
 	 * 
 	 * @param comparison
 	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param equalityHelper
+	 *            The {@link EqualityHelper} gives us the necessary semantics for Object matching.
 	 * @param source
 	 *            The List from which one element has to be added to the {@code target} list.
 	 * @param target
@@ -217,8 +221,8 @@ public final class DiffUtil {
 	 * @return The index at which {@code newElement} should be inserted in {@code target}.
 	 * @see #longestCommonSubsequence(Comparison, List, List)
 	 */
-	public static <E> int findInsertionIndex(Comparison comparison, List<E> source, List<E> target,
-			E newElement) {
+	public static <E> int findInsertionIndex(Comparison comparison, EqualityHelper equalityHelper,
+			List<E> source, List<E> target, E newElement) {
 		/*
 		 * TODO perf : all "lookups" in source and target could be rewritten by using the lcs elements'
 		 * matches. This may or may not help, should be profiled.
@@ -226,7 +230,7 @@ public final class DiffUtil {
 		// TODO split this into multiple sub-methods
 
 		// We assume that "newElement" is in source but not in the target yet
-		final List<E> lcs = longestCommonSubsequence(comparison, source, target);
+		final List<E> lcs = longestCommonSubsequence(comparison, equalityHelper, source, target);
 		E firstLCS = null;
 		E lastLCS = null;
 		if (lcs.size() > 0) {
@@ -251,13 +255,13 @@ public final class DiffUtil {
 		final Iterator<E> sourceIterator = source.iterator();
 		for (int i = 0; sourceIterator.hasNext() && (currentIndex == -1 || lastLCSIndex == -1); i++) {
 			final E sourceElement = sourceIterator.next();
-			if (currentIndex == -1 && EqualityHelper.matchingValues(comparison, sourceElement, newElement)) {
+			if (currentIndex == -1 && equalityHelper.matchingValues(comparison, sourceElement, newElement)) {
 				currentIndex = i;
 			}
-			if (firstLCSIndex == -1 && EqualityHelper.matchingValues(comparison, sourceElement, firstLCS)) {
+			if (firstLCSIndex == -1 && equalityHelper.matchingValues(comparison, sourceElement, firstLCS)) {
 				firstLCSIndex = i;
 			}
-			if (lastLCSIndex == -1 && EqualityHelper.matchingValues(comparison, sourceElement, lastLCS)) {
+			if (lastLCSIndex == -1 && equalityHelper.matchingValues(comparison, sourceElement, lastLCS)) {
 				lastLCSIndex = i;
 			}
 		}
@@ -276,7 +280,7 @@ public final class DiffUtil {
 			for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
 				final E targetElement = target.get(i);
 
-				if (EqualityHelper.matchingValues(comparison, targetElement, firstLCS)) {
+				if (equalityHelper.matchingValues(comparison, targetElement, firstLCS)) {
 					// We've reached the first element from the LCS in target. Insert here
 					insertionIndex = i;
 				}
@@ -292,7 +296,7 @@ public final class DiffUtil {
 			// First, find the LCS end in target
 			for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
 				final E targetElement = target.get(i);
-				if (EqualityHelper.matchingValues(comparison, targetElement, lastLCS)) {
+				if (equalityHelper.matchingValues(comparison, targetElement, lastLCS)) {
 					insertionIndex = i + 1;
 				}
 			}
@@ -313,7 +317,7 @@ public final class DiffUtil {
 				for (int j = 0; j < lcs.size() && !isInLCS; j++) {
 					final E lcsElement = lcs.get(j);
 
-					if (EqualityHelper.matchingValues(comparison, sourceElement, lcsElement)) {
+					if (equalityHelper.matchingValues(comparison, sourceElement, lcsElement)) {
 						isInLCS = true;
 					}
 				}
@@ -327,7 +331,7 @@ public final class DiffUtil {
 			for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
 				final E targetElement = target.get(i);
 
-				if (EqualityHelper.matchingValues(comparison, targetElement, subsequenceStart)) {
+				if (equalityHelper.matchingValues(comparison, targetElement, subsequenceStart)) {
 					insertionIndex = i + 1;
 				}
 			}
