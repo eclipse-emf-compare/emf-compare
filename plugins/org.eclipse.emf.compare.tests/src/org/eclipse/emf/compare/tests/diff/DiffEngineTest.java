@@ -20,6 +20,8 @@ import java.util.List;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.diff.DefaultDiffEngine;
+import org.eclipse.emf.compare.utils.DiffUtil;
+import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.junit.Test;
 
 /**
@@ -35,8 +37,8 @@ public class DiffEngineTest {
 		final List<Character> right = Lists.charactersOf("czdab");
 
 		final Comparison emptyComparison = CompareFactory.eINSTANCE.createComparison();
-		final List<Character> lcs = new DefaultDiffEngine().longestCommonSubsequence(emptyComparison, left,
-				right);
+		final List<Character> lcs = DiffUtil.longestCommonSubsequence(emptyComparison, new EqualityHelper(),
+				left, right);
 
 		/*
 		 * This is documented in {@link DefaultDiffEngine#longestCommonSubsequence(Comparison, List, List)}.
@@ -51,8 +53,8 @@ public class DiffEngineTest {
 		final List<Character> right = Lists.charactersOf("ycdeb");
 
 		final Comparison emptyComparison = CompareFactory.eINSTANCE.createComparison();
-		final List<Character> lcs = new DefaultDiffEngine().longestCommonSubsequence(emptyComparison, left,
-				right);
+		final List<Character> lcs = DiffUtil.longestCommonSubsequence(emptyComparison, new EqualityHelper(),
+				left, right);
 
 		/*
 		 * This is documented in {@link DefaultDiffEngine#longestCommonSubsequence(Comparison, List, List)}.
@@ -67,8 +69,8 @@ public class DiffEngineTest {
 		final List<Integer> right = Lists.newArrayList(8, 9, 2, 3, 4, 1, 0);
 
 		final Comparison emptyComparison = CompareFactory.eINSTANCE.createComparison();
-		final List<Integer> lcs = new DefaultDiffEngine().longestCommonSubsequence(emptyComparison, left,
-				right);
+		final List<Integer> lcs = DiffUtil.longestCommonSubsequence(emptyComparison, new EqualityHelper(),
+				left, right);
 
 		// These are the origin and left sides of the "complex" conflict test case.
 		assertEqualContents(Lists.newArrayList(2, 3, 4), lcs);
@@ -80,8 +82,8 @@ public class DiffEngineTest {
 		final List<Integer> right = Lists.newArrayList(6, 2, 9, 3, 0, 4, 1, 7);
 
 		final Comparison emptyComparison = CompareFactory.eINSTANCE.createComparison();
-		final List<Integer> lcs = new DefaultDiffEngine().longestCommonSubsequence(emptyComparison, left,
-				right);
+		final List<Integer> lcs = DiffUtil.longestCommonSubsequence(emptyComparison, new EqualityHelper(),
+				left, right);
 
 		// These are the origin and right sides of the "complex" conflict test case.
 		assertEqualContents(Lists.newArrayList(2, 3, 4, 7), lcs);

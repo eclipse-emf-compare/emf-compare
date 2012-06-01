@@ -21,7 +21,7 @@ import java.util.Set;
 
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.MatchResource;
-import org.eclipse.emf.compare.utils.SimilarityUtil;
+import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.ecore.resource.Resource;
 
 /**
@@ -194,7 +194,7 @@ public class NameSimilarityMatchingStrategy implements IResourceMatchingStrategy
 			String firstName = first.getURI().lastSegment();
 			String secondName = second.getURI().lastSegment();
 
-			return SimilarityUtil.diceCoefficient(firstName, secondName);
+			return DiffUtil.diceCoefficient(firstName, secondName);
 		}
 
 		/**

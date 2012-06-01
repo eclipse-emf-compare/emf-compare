@@ -15,7 +15,6 @@ import static com.google.common.base.Predicates.not;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -25,6 +24,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
@@ -163,94 +163,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 	}
 
 	/**
-	 * This will compute the longest common subsequence between the two given Lists. We will use
-	 * {@link EqualityHelper#matchingValues(Comparison, Object, Object)} in order to try and match the values
-	 * from both lists two-by-two. This can thus be used both for reference values or attribute values. If
-	 * there are two subsequences of the same "longest" length, the first (according to the second argument)
-	 * will be returned.
-	 * <p>
-	 * For example, it the two given sequence are, in this order, {"a", "b", "c", "d", "e"} and {"c", "z",
-	 * "d", "a", "b"}, there are two "longest" subsequences : {"a", "b"} and {"c", "d"}. The first of those
-	 * two subsequences in the second list is {"c", "d"}. On the other hand, the LCS of {"a", "b", "c", "d",
-	 * "e"} and {"y", "c", "d", "e", "b"} is {"c", "d", "e"}.
-	 * </p>
-	 * <p>
-	 * The following algorithm has been inferred from the wikipedia article on the Longest Common Subsequence,
-	 * http://en.wikipedia.org/wiki/Longest_common_subsequence_problem at the time of writing. It is
-	 * decomposed in two : we first compute the LCS matrix, then we backtrack through the input to determine
-	 * the LCS. Evaluation will be shortcut after the first part if the LCS is one of the two input sequences.
-	 * </p>
-	 * <p>
-	 * Note : we are not using Iterables as input in order to make use of the random access cost of
-	 * ArrayLists. This might also be converted to directly use arrays. This implementation will not play well
-	 * with LinkedLists or any List which needs to iterate over the values for each call to
-	 * {@link List#get(int)}, i.e any list which is not instanceof RandomAccess or does not satisfy its
-	 * contract.
-	 * </p>
-	 * 
-	 * @param comparison
-	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
-	 * @param sequence1
-	 *            First of the two sequences to consider.
-	 * @param sequence2
-	 *            Second of the two sequences to consider.
-	 * @param <E>
-	 *            Type of the sequences content.
-	 * @return The LCS of the two given sequences. Will never be the same instance as one of the input
-	 *         sequences.
-	 */
-	public <E> List<E> longestCommonSubsequence(Comparison comparison, List<E> sequence1, List<E> sequence2) {
-		final int size1 = sequence1.size();
-		final int size2 = sequence2.size();
-		final int[][] matrix = new int[size1 + 1][size2 + 1];
-
-		// Compute the LCS matrix
-		for (int i = 1; i <= size1; i++) {
-			for (int j = 1; j <= size2; j++) {
-				final E first = sequence1.get(i - 1);
-				final E second = sequence2.get(j - 1);
-				if (helper.matchingValues(comparison, first, second)) {
-					matrix[i][j] = 1 + matrix[i - 1][j - 1];
-				} else {
-					matrix[i][j] = Math.max(matrix[i - 1][j], matrix[i][j - 1]);
-				}
-			}
-		}
-
-		// Shortcut evaluation if the lcs is the whole sequence
-		final boolean lcsIs1 = matrix[size1][size2] == size1;
-		final boolean lcsIs2 = matrix[size1][size2] == size2;
-		if (lcsIs1 || lcsIs2) {
-			final List<E> shortcut;
-			if (lcsIs1) {
-				shortcut = ImmutableList.copyOf(sequence1);
-			} else {
-				shortcut = ImmutableList.copyOf(sequence2);
-			}
-			return shortcut;
-		}
-
-		int current1 = size1;
-		int current2 = size2;
-		final List<E> result = Lists.newArrayList();
-
-		while (current1 > 0 && current2 > 0) {
-			final E first = sequence1.get(current1 - 1);
-			final E second = sequence2.get(current2 - 1);
-			if (helper.matchingValues(comparison, first, second)) {
-				result.add(first);
-				current1--;
-				current2--;
-			} else if (matrix[current1][current2 - 1] >= matrix[current1 - 1][current2]) {
-				current2--;
-			} else {
-				current1--;
-			}
-		}
-		return Lists.reverse(result);
-	}
-
-	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.diff.IDiffEngine#diff(org.eclipse.emf.compare.Comparison)
@@ -314,8 +226,9 @@ public class DefaultDiffEngine implements IDiffEngine {
 		final List<Object> rightValues = getAsList(match.getRight(), reference);
 		final List<Object> originValues = getAsList(match.getOrigin(), reference);
 
-		final List<Object> lcsOriginLeft = longestCommonSubsequence(getComparison(), originValues, leftValues);
-		final List<Object> lcsOriginRight = longestCommonSubsequence(getComparison(), originValues,
+		final List<Object> lcsOriginLeft = DiffUtil.longestCommonSubsequence(getComparison(), originValues,
+				leftValues);
+		final List<Object> lcsOriginRight = DiffUtil.longestCommonSubsequence(getComparison(), originValues,
 				rightValues);
 
 		// TODO Can we shortcut in any way?
@@ -420,7 +333,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 		final List<Object> leftValues = getAsList(match.getLeft(), reference);
 		final List<Object> rightValues = getAsList(match.getRight(), reference);
 
-		final List<Object> lcs = longestCommonSubsequence(getComparison(), rightValues, leftValues);
+		final List<Object> lcs = DiffUtil.longestCommonSubsequence(getComparison(), rightValues, leftValues);
 
 		// TODO Can we shortcut in any way?
 
@@ -555,8 +468,9 @@ public class DefaultDiffEngine implements IDiffEngine {
 		final List<Object> rightValues = getAsList(match.getRight(), feature);
 		final List<Object> originValues = getAsList(match.getOrigin(), feature);
 
-		final List<Object> lcsOriginLeft = longestCommonSubsequence(getComparison(), originValues, leftValues);
-		final List<Object> lcsOriginRight = longestCommonSubsequence(getComparison(), originValues,
+		final List<Object> lcsOriginLeft = DiffUtil.longestCommonSubsequence(getComparison(), originValues,
+				leftValues);
+		final List<Object> lcsOriginRight = DiffUtil.longestCommonSubsequence(getComparison(), originValues,
 				rightValues);
 
 		// TODO Can we shortcut in any way?
@@ -639,7 +553,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 		final List<Object> leftValues = getAsList(match.getLeft(), feature);
 		final List<Object> rightValues = getAsList(match.getRight(), feature);
 
-		final List<Object> lcs = longestCommonSubsequence(getComparison(), rightValues, leftValues);
+		final List<Object> lcs = DiffUtil.longestCommonSubsequence(getComparison(), rightValues, leftValues);
 
 		// TODO Can we shortcut in any way?
 
