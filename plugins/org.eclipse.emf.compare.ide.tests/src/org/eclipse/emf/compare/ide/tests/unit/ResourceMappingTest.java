@@ -371,7 +371,7 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 	 * @param uri
 	 *            The {@link URI} for which we seek a corresponding {@link Resource} in the <em>set</em>.
 	 */
-	private void assertContainsResourceWithURI(ResourceSet set, URI uri) {
+	private static void assertContainsResourceWithURI(ResourceSet set, URI uri) {
 		boolean foundMatch = false;
 		Iterator<Resource> resourceIterator = set.getResources().iterator();
 		while (!foundMatch && resourceIterator.hasNext()) {

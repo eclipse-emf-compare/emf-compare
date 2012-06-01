@@ -27,12 +27,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  */
 public class EqualityHelper {
 	/**
-	 * Creates the helper.
-	 */
-	public EqualityHelper() {
-	}
-
-	/**
 	 * Check that the two given values are "equal", considering the specifics of EMF.
 	 * 
 	 * @param comparison
@@ -105,7 +99,7 @@ public class EqualityHelper {
 	 * @return <code>true</code> if these two EObjects are to be considered equal, <code>false</code>
 	 *         otherwise.
 	 */
-	private boolean matchingEObjects(Comparison comparison, EObject object1, EObject object2) {
+	private static boolean matchingEObjects(Comparison comparison, EObject object1, EObject object2) {
 		final Match match = comparison.getMatch(object1);
 
 		final boolean equal;

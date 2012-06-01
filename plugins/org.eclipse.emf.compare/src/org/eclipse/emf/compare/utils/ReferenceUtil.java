@@ -68,6 +68,7 @@ public final class ReferenceUtil {
 	 *            The expected kind.
 	 * @return A set of referencing objects.
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T extends EObject> Set<T> getCrossReferences(EcoreUtil.CrossReferencer crossReferencer,
 			EObject referencedEObject, EStructuralFeature feature, Class<T> clazz) {
 		final Set<T> result = new HashSet<T>();

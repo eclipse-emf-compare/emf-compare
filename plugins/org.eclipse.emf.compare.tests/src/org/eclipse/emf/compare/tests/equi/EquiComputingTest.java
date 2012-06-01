@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.tests.equi.data.EquiInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
+@SuppressWarnings({"nls", "boxing" })
 public class EquiComputingTest {
 
 	enum TestKind {

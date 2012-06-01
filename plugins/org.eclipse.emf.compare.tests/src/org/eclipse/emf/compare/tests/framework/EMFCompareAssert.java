@@ -43,6 +43,7 @@ import org.eclipse.emf.ecore.EObject;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
+@SuppressWarnings("nls")
 public class EMFCompareAssert {
 	/**
 	 * This can be used to check whether all objects of the given list have a corresponding {@link Match} in
