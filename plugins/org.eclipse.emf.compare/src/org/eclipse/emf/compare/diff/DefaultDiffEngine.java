@@ -59,10 +59,35 @@ public class DefaultDiffEngine implements IDiffEngine {
 	private Comparison currentComparison;
 
 	/**
-	 * The diff processor that will be used by this engine. Should only be instantiated through
-	 * {@link #createDiffProcessor()} and accessed by {@link #getDiffProcessor()}.
+	 * The diff processor that will be used by this engine. Should be passed by the constructor and accessed
+	 * by {@link #getDiffProcessor()}.
 	 */
 	private IDiffProcessor diffProcessor;
+
+	/**
+	 * helper used to check for equality of values or EObjects.
+	 */
+	private EqualityHelper helper;
+
+	/**
+	 * Create the diff engine setting up the default behavior.
+	 */
+	public DefaultDiffEngine() {
+		this(new EqualityHelper(), new DiffBuilder());
+	}
+
+	/**
+	 * Create the diff engine.
+	 * 
+	 * @param helper
+	 *            the same equality helper should be used through all the comparison process.
+	 * @param processor
+	 *            this instance will be called for each detected difference.
+	 */
+	public DefaultDiffEngine(EqualityHelper helper, IDiffProcessor processor) {
+		this.helper = helper;
+		this.diffProcessor = processor;
+	}
 
 	/**
 	 * This predicate can be used to check whether a given element is contained within the given iterable
@@ -77,7 +102,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 *            Type of the reference iterable's content.
 	 * @return The useable predicate.
 	 */
-	protected static <E> Predicate<E> containedIn(final Comparison comparison, final Iterable<E> iterable) {
+	protected <E> Predicate<E> containedIn(final Comparison comparison, final Iterable<E> iterable) {
 		return new Predicate<E>() {
 			public boolean apply(E input) {
 				return contains(comparison, iterable, input);
@@ -99,9 +124,9 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 *            Type of the input iterable's content.
 	 * @return {@code true} if the given {@code iterable} contains {@code element}, {@code false} otherwise.
 	 */
-	protected static <E> boolean contains(Comparison comparison, Iterable<E> iterable, E element) {
+	protected <E> boolean contains(Comparison comparison, Iterable<E> iterable, E element) {
 		for (E candidate : iterable) {
-			if (EqualityHelper.matchingValues(comparison, candidate, element)) {
+			if (helper.matchingValues(comparison, candidate, element)) {
 				return true;
 			}
 		}
@@ -174,8 +199,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 * @return The LCS of the two given sequences. Will never be the same instance as one of the input
 	 *         sequences.
 	 */
-	public static <E> List<E> longestCommonSubsequence(Comparison comparison, List<E> sequence1,
-			List<E> sequence2) {
+	public <E> List<E> longestCommonSubsequence(Comparison comparison, List<E> sequence1, List<E> sequence2) {
 		final int size1 = sequence1.size();
 		final int size2 = sequence2.size();
 		final int[][] matrix = new int[size1 + 1][size2 + 1];
@@ -185,7 +209,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 			for (int j = 1; j <= size2; j++) {
 				final E first = sequence1.get(i - 1);
 				final E second = sequence2.get(j - 1);
-				if (EqualityHelper.matchingValues(comparison, first, second)) {
+				if (helper.matchingValues(comparison, first, second)) {
 					matrix[i][j] = 1 + matrix[i - 1][j - 1];
 				} else {
 					matrix[i][j] = Math.max(matrix[i - 1][j], matrix[i][j - 1]);
@@ -213,7 +237,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 		while (current1 > 0 && current2 > 0) {
 			final E first = sequence1.get(current1 - 1);
 			final E second = sequence2.get(current2 - 1);
-			if (EqualityHelper.matchingValues(comparison, first, second)) {
+			if (helper.matchingValues(comparison, first, second)) {
 				result.add(first);
 				current1--;
 				current2--;
@@ -233,7 +257,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 */
 	public void diff(Comparison comparison) {
 		this.currentComparison = comparison;
-		diffProcessor = createDiffProcessor();
 
 		for (Match rootMatch : comparison.getMatches()) {
 			checkForDifferences(rootMatch);
@@ -669,13 +692,13 @@ public class DefaultDiffEngine implements IDiffEngine {
 			rightValue = match.getRight().eGet(attribute);
 		}
 
-		if (EqualityHelper.matchingValues(getComparison(), leftValue, rightValue)) {
+		if (helper.matchingValues(getComparison(), leftValue, rightValue)) {
 			// Identical values in left and right. The only problematic case is if they do not match the
 			// origin (and left and right are defined, i.e don't detect attribute change on unmatched)
 			if (leftValue != UNMATCHED_VALUE && match.getOrigin() != null) {
 				final Object originValue = match.getOrigin().eGet(attribute);
 
-				if (!EqualityHelper.matchingValues(getComparison(), leftValue, originValue)) {
+				if (!helper.matchingValues(getComparison(), leftValue, originValue)) {
 					// The same change has been made on both side. This is actually a pseudo-conflict
 					getDiffProcessor().attributeChange(match, attribute, originValue, DifferenceKind.CHANGE,
 							DifferenceSource.LEFT);
@@ -686,7 +709,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 		} else if (match.getOrigin() != null) {
 			final Object originValue = match.getOrigin().eGet(attribute);
 
-			if (EqualityHelper.matchingValues(getComparison(), leftValue, originValue)) {
+			if (helper.matchingValues(getComparison(), leftValue, originValue)) {
 				if (rightValue != UNMATCHED_VALUE) {
 					// Value is in left and origin, but not in the right
 					getDiffProcessor().attributeChange(match, attribute, rightValue, DifferenceKind.CHANGE,
@@ -695,7 +718,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 					// Right is unmatched, left is the same as in the origin. No diff here : the diff is on
 					// the match itself, not on one of its attributes.
 				}
-			} else if (EqualityHelper.matchingValues(getComparison(), rightValue, originValue)) {
+			} else if (helper.matchingValues(getComparison(), rightValue, originValue)) {
 				if (leftValue != UNMATCHED_VALUE) {
 					// Value is in right and origin, but not in left
 					getDiffProcessor().attributeChange(match, attribute, leftValue, DifferenceKind.CHANGE,
@@ -888,16 +911,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 				// left has been added. This reference is either unset or set to an out of scope value
 			}
 		}
-	}
-
-	/**
-	 * This will be used in order to create the diff processor that is to be used by this diff engine.
-	 * 
-	 * @return The diff processor of this diff engine. Will only be called once per call to
-	 *         {@link #diff(Comparison)}.
-	 */
-	protected IDiffProcessor createDiffProcessor() {
-		return new DiffBuilder();
 	}
 
 	/**

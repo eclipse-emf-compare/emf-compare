@@ -68,7 +68,7 @@ public class EMFCompareAssert {
 		while (eObjectIterator.hasNext()) {
 			final EObject eObject = eObjectIterator.next();
 			final Match match = comparison.getMatch(eObject);
-			assertTrue(match != null || !scopeFilter.apply(eObject));
+			assertTrue(eObject + " has no match", match != null || !scopeFilter.apply(eObject));
 		}
 	}
 

@@ -43,6 +43,21 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  */
 public class DefaultConflictDetector implements IConflictDetector {
 	/**
+	 * helper used to check for equality of values or EObjects.
+	 */
+	private EqualityHelper helper;
+
+	/**
+	 * Create the conflict detector.
+	 * 
+	 * @param helper
+	 *            the same equality helper used to detect the diffs.
+	 */
+	public DefaultConflictDetector(EqualityHelper helper) {
+		this.helper = helper;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.conflict.IConflictDetector#detect(org.eclipse.emf.compare.Comparison)
@@ -237,7 +252,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 			}
 
 			if (diff.getMatch() == candidate.getMatch()) {
-				if (EqualityHelper.matchingValues(comparison, changedValue, candidateValue)) {
+				if (helper.matchingValues(comparison, changedValue, candidateValue)) {
 					// Same value added on both side in the same container
 					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
 				} else {
@@ -296,7 +311,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 			}
 
 			if (diff.getMatch() == candidate.getMatch()
-					&& EqualityHelper.matchingValues(comparison, changedValue, candidateValue)) {
+					&& helper.matchingValues(comparison, changedValue, candidateValue)) {
 				// Same value moved in both side of the same container
 				if (matchingIndices(comparison, diff.getMatch(), feature, changedValue, candidateValue)) {
 					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
@@ -365,7 +380,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 				movedValue = ((AttributeChange)candidate).getValue();
 			}
 
-			if (EqualityHelper.matchingValues(comparison, deletedValue, movedValue)) {
+			if (helper.matchingValues(comparison, deletedValue, movedValue)) {
 				if (candidate.getKind() == DifferenceKind.MOVE) {
 					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 				} else {
@@ -429,7 +444,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 				candidateValue = ((AttributeChange)candidate).getValue();
 			}
 			// No diff on non unique features : multiple same values can coexist
-			if (feature.isUnique() && EqualityHelper.matchingValues(comparison, addedValue, candidateValue)) {
+			if (feature.isUnique() && helper.matchingValues(comparison, addedValue, candidateValue)) {
 				// This is a conflict. Is it real?
 				if (matchingIndices(comparison, diff.getMatch(), feature, addedValue, candidateValue)) {
 					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
@@ -501,7 +516,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 *         values list, {@code false} otherwise.
 	 */
 	@SuppressWarnings("unchecked")
-	private static boolean matchingIndices(Comparison comparison, Match match, EStructuralFeature feature,
+	private boolean matchingIndices(Comparison comparison, Match match, EStructuralFeature feature,
 			Object value1, Object value2) {
 		boolean matching = false;
 		if (feature.isMany()) {
@@ -511,17 +526,17 @@ public class DefaultConflictDetector implements IConflictDetector {
 			// Using for loops instead of indexOf to handle non unique lists
 			for (int i = 0; i < leftValues.size() && i < rightValues.size() && !matching; i++) {
 				final Object left = leftValues.get(i);
-				if (EqualityHelper.matchingValues(comparison, left, value1)) {
+				if (helper.matchingValues(comparison, left, value1)) {
 					final Object right = rightValues.get(i);
-					matching = EqualityHelper.matchingValues(comparison, right, value2);
+					matching = helper.matchingValues(comparison, right, value2);
 				}
 			}
 
 			for (int i = 0; i < leftValues.size() && i < rightValues.size() && !matching; i++) {
 				final Object right = rightValues.get(i);
-				if (EqualityHelper.matchingValues(comparison, right, value1)) {
+				if (helper.matchingValues(comparison, right, value1)) {
 					final Object left = leftValues.get(i);
-					matching = EqualityHelper.matchingValues(comparison, left, value2);
+					matching = helper.matchingValues(comparison, left, value2);
 				}
 			}
 		} else {

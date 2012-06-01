@@ -14,7 +14,9 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.conflict.DefaultConflictDetector;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
 import org.eclipse.emf.compare.diff.DefaultDiffEngine;
+import org.eclipse.emf.compare.diff.DiffBuilder;
 import org.eclipse.emf.compare.diff.IDiffEngine;
+import org.eclipse.emf.compare.diff.IDiffProcessor;
 import org.eclipse.emf.compare.equi.DefaultEquiEngine;
 import org.eclipse.emf.compare.equi.IEquiEngine;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
@@ -23,6 +25,7 @@ import org.eclipse.emf.compare.req.DefaultReqEngine;
 import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -90,8 +93,11 @@ public final class EMFCompare {
 		final IMatchEngine matchEngine = new DefaultMatchEngine();
 		Comparison comparison = matchEngine.match(scope);
 
+		final EqualityHelper helper = new EqualityHelper();
+		final IDiffProcessor diffBuilder = new DiffBuilder();
+
 		// TODO allow extension of the default diff engine
-		final IDiffEngine diffEngine = new DefaultDiffEngine();
+		final IDiffEngine diffEngine = new DefaultDiffEngine(helper, diffBuilder);
 		diffEngine.diff(comparison);
 
 		EcoreUtil.CrossReferencer crossReferencer = ReferenceUtil.initializeCrossReferencer(comparison);
@@ -106,7 +112,7 @@ public final class EMFCompare {
 
 		// TODO allow extension of the default conflict detector
 		if (comparison.isThreeWay()) {
-			final IConflictDetector conflictDetector = new DefaultConflictDetector();
+			final IConflictDetector conflictDetector = new DefaultConflictDetector(helper);
 			conflictDetector.detect(comparison);
 		}
 

@@ -25,12 +25,11 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public final class EqualityHelper {
+public class EqualityHelper {
 	/**
-	 * This utility class does not need a constructor.
+	 * Creates the helper.
 	 */
-	private EqualityHelper() {
-		// hides default constructor
+	public EqualityHelper() {
 	}
 
 	/**
@@ -44,7 +43,7 @@ public final class EqualityHelper {
 	 *            Second of the two objects to compare here.
 	 * @return <code>true</code> if both objects are to be considered equal, <code>false</code> otherwise.
 	 */
-	public static boolean matchingValues(Comparison comparison, Object object1, Object object2) {
+	public boolean matchingValues(Comparison comparison, Object object1, Object object2) {
 		final boolean equal;
 		if (object1 == object2) {
 			equal = true;
@@ -78,7 +77,7 @@ public final class EqualityHelper {
 	 *            Second of the two objects to compare here.
 	 * @return <code>true</code> if these two arrays are to be considered equal, <code>false</code> otherwise.
 	 */
-	private static boolean matchingArrays(Comparison comparison, Object object1, Object object2) {
+	private boolean matchingArrays(Comparison comparison, Object object1, Object object2) {
 		boolean equal = true;
 		final int length1 = Array.getLength(object1);
 		if (length1 != Array.getLength(object2)) {
@@ -106,7 +105,7 @@ public final class EqualityHelper {
 	 * @return <code>true</code> if these two EObjects are to be considered equal, <code>false</code>
 	 *         otherwise.
 	 */
-	private static boolean matchingEObjects(Comparison comparison, EObject object1, EObject object2) {
+	private boolean matchingEObjects(Comparison comparison, EObject object1, EObject object2) {
 		final Match match = comparison.getMatch(object1);
 
 		final boolean equal;
@@ -116,7 +115,11 @@ public final class EqualityHelper {
 		} else {
 			final URI uri1 = EcoreUtil.getURI(object1);
 			final URI uri2 = EcoreUtil.getURI(object2);
-			equal = uri1.equals(uri2);
+			if (uri1.hasFragment() && uri2.hasFragment()) {
+				equal = uri1.fragment().equals(uri2.fragment());
+			} else {
+				equal = uri1.equals(uri2);
+			}
 		}
 
 		return equal;
@@ -133,7 +136,7 @@ public final class EqualityHelper {
 	 *            Second of the two objects to compare here.
 	 * @return <code>true</code> if both objects are to be considered equal, <code>false</code> otherwise.
 	 */
-	public static boolean matchingValues(Object object1, Object object2) {
+	public boolean matchingValues(Object object1, Object object2) {
 		final boolean equal;
 		if (object1 == object2) {
 			equal = true;
@@ -163,7 +166,7 @@ public final class EqualityHelper {
 	 *            Second of the two objects to compare here.
 	 * @return <code>true</code> if these two arrays are to be considered equal, <code>false</code> otherwise.
 	 */
-	private static boolean matchingArrays(Object object1, Object object2) {
+	private boolean matchingArrays(Object object1, Object object2) {
 		boolean equal = true;
 		final int length1 = Array.getLength(object1);
 		if (length1 != Array.getLength(object2)) {

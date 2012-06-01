@@ -486,7 +486,7 @@ public final class EMFComparePredicates {
 						&& ((AttributeChange)input).getAttribute().getName().equals(attributeName)
 						&& ((AttributeChange)input).getAttribute().isMany() == multiValued) {
 					final Object value = ((AttributeChange)input).getValue();
-					return EqualityHelper.matchingValues(value, expectedValue);
+					return new EqualityHelper().matchingValues(value, expectedValue);
 				}
 				return false;
 			}
