@@ -22,7 +22,9 @@ import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
@@ -39,27 +41,40 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	/**
 	 * Predicate that filters out Match that does not have any difference.
 	 */
-	private static final Predicate<Match> HAS_DIFFERENCE = new Predicate<Match>() {
+	static final Predicate<Match> HAS_DIFFERENCE = new Predicate<Match>() {
 		public boolean apply(Match input) {
-			return !isEmpty(filter(input.getAllDifferences(), LEFT_CONFLICTUAL_DIFF));
+			return !isEmpty(filter(input.getAllDifferences(), DIFF_TO_DISPLAY));
 		}
 	};
 
 	/**
 	 * Predicate that filters out Match that match only on origin (pseudo conflict).
 	 */
-	private static final Predicate<Match> PSEUDO_MATCH = new Predicate<Match>() {
+	static final Predicate<Match> PSEUDO_MATCH = new Predicate<Match>() {
 		public boolean apply(Match input) {
 			return input.getOrigin() != null && input.getLeft() == null && input.getRight() == null;
 		}
 	};
 
-	private static final Predicate<Diff> LEFT_CONFLICTUAL_DIFF = new Predicate<Diff>() {
+	static final Predicate<Diff> LEFT_CONFLICTUAL_DIFF = new Predicate<Diff>() {
 		public boolean apply(Diff input) {
 			return input.getConflict() == null
 					|| (input.getConflict() != null && input.getSource() == DifferenceSource.LEFT);
 		}
 	};
+
+	static Predicate<Diff> PSEUDO_DELETE_CONFLICT = new Predicate<Diff>() {
+		public boolean apply(Diff input) {
+			return input.getConflict() != null && input.getConflict().getKind() == ConflictKind.PSEUDO
+					&& input.getKind() == DifferenceKind.DELETE;
+		}
+	};
+
+	/**
+	 * 
+	 */
+	private static final Predicate<Diff> DIFF_TO_DISPLAY = and(not(PSEUDO_DELETE_CONFLICT),
+			LEFT_CONFLICTUAL_DIFF);
 
 	/**
 	 * Constructor calling super {@link #MatchItemProvider(AdapterFactory)}.
@@ -128,7 +143,7 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	 */
 	@Override
 	public Collection<?> getChildren(Object object) {
-		return ImmutableList.copyOf(getChildrenIterable(object));
+		return ImmutableList.copyOf(getChildrenIterable((Match)object));
 	}
 
 	/**
@@ -139,15 +154,13 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	 * @return an {@link Iterable} with children of the given {@link Match}.
 	 * @see #getChildren(Object)
 	 */
-	private Iterable<EObject> getChildrenIterable(Object object) {
-		Collection<?> children = super.getChildren(object);
+	static Iterable<EObject> getChildrenIterable(Match object) {
+		Iterable<Match> matchToDisplay = filter(object.getSubmatches(),
+				and(not(PSEUDO_MATCH), HAS_DIFFERENCE));
 
-		Iterable<Match> matchToDisplay = filter(filter(children, Match.class), and(not(PSEUDO_MATCH),
-				HAS_DIFFERENCE));
+		Iterable<Diff> diffToDisplay = filter(object.getDifferences(), DIFF_TO_DISPLAY);
 
-		Iterable<Diff> leftConflictualDiffs = filter(filter(children, Diff.class), LEFT_CONFLICTUAL_DIFF);
-
-		Iterable<EObject> ret = concat(matchToDisplay, leftConflictualDiffs);
+		Iterable<EObject> ret = concat(matchToDisplay, diffToDisplay);
 		return ret;
 	}
 
@@ -158,6 +171,6 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	 */
 	@Override
 	public boolean hasChildren(Object object) {
-		return !isEmpty(getChildrenIterable(object));
+		return !isEmpty(getChildrenIterable((Match)object));
 	}
 }
