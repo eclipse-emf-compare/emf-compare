@@ -54,6 +54,11 @@ public class DefaultDiffEngine implements IDiffEngine {
 	protected static final Object UNMATCHED_VALUE = new Object();
 
 	/**
+	 * helper used to check for equality of values or EObjects.
+	 */
+	protected EqualityHelper helper;
+
+	/**
 	 * The comparison for which we are detecting differences. Should only be accessed through
 	 * {@link #getComparison()}.
 	 */
@@ -64,11 +69,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 * by {@link #getDiffProcessor()}.
 	 */
 	private IDiffProcessor diffProcessor;
-
-	/**
-	 * helper used to check for equality of values or EObjects.
-	 */
-	private EqualityHelper helper;
 
 	/**
 	 * Create the diff engine setting up the default behavior.
@@ -424,23 +424,27 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 *            <code>false</code> otherwise.
 	 */
 	protected void computeDifferences(Match match, EReference reference, boolean checkOrdering) {
-		if (reference.isContainment()) {
-			if (getComparison().isThreeWay()) {
-				computeContainmentDifferencesThreeWay(match, reference, checkOrdering);
+		if ((match.getLeft() != null && match.getLeft().eIsSet(reference))
+				|| (match.getRight() != null && match.getRight().eIsSet(reference))
+				|| (match.getOrigin() != null && match.getOrigin().eIsSet(reference))) {
+			if (reference.isContainment()) {
+				if (getComparison().isThreeWay()) {
+					computeContainmentDifferencesThreeWay(match, reference, checkOrdering);
+				} else {
+					computeContainmentDifferencesTwoWay(match, reference, checkOrdering);
+				}
+			} else if (reference.isMany()) {
+				if (getComparison().isThreeWay()) {
+					computeMultiValuedFeatureDifferencesThreeWay(match, reference, checkOrdering);
+				} else {
+					computeMultiValuedFeatureDifferencesTwoWay(match, reference, checkOrdering);
+				}
 			} else {
-				computeContainmentDifferencesTwoWay(match, reference, checkOrdering);
-			}
-		} else if (reference.isMany()) {
-			if (getComparison().isThreeWay()) {
-				computeMultiValuedFeatureDifferencesThreeWay(match, reference, checkOrdering);
-			} else {
-				computeMultiValuedFeatureDifferencesTwoWay(match, reference, checkOrdering);
-			}
-		} else {
-			if (getComparison().isThreeWay()) {
-				computeSingleValuedReferenceDifferencesThreeWay(match, reference);
-			} else {
-				computeSingleValuedReferenceDifferencesTwoWay(match, reference);
+				if (getComparison().isThreeWay()) {
+					computeSingleValuedReferenceDifferencesThreeWay(match, reference);
+				} else {
+					computeSingleValuedReferenceDifferencesTwoWay(match, reference);
+				}
 			}
 		}
 	}
@@ -556,8 +560,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 		final List<Object> rightValues = getAsList(match.getRight(), feature);
 
 		final List<Object> lcs = DiffUtil.longestCommonSubsequence(getComparison(), rightValues, leftValues);
-
-		// TODO Can we shortcut in any way?
 
 		// Which values have "changed" in any way?
 		final Iterable<Object> changed = Iterables.filter(leftValues, not(containedIn(getComparison(), lcs)));

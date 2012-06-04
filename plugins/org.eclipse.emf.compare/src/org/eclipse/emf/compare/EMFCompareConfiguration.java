@@ -35,10 +35,35 @@ public class EMFCompareConfiguration extends AdapterImpl {
 	private/* final */EqualityHelper fEqualityHelper;
 
 	/**
+	 * The strategy used for matching, using IDs or not.
+	 */
+	private USE_IDS shouldUseIDs = USE_IDS.WHEN_AVAILABLE;
+
+	/**
 	 * Default visibility constructor (only called by {@link Builder#build()}).
 	 */
 	/* package */EMFCompareConfiguration() {
 		// no instantiation outside of this package
+	}
+
+	/**
+	 * Configuration values for the match strategy.
+	 */
+	public enum USE_IDS {
+		/**
+		 * Only use id, do not fall back on content based matching if no id is found. This means any element
+		 * not having an ID will not be matched.
+		 */
+		ONLY,
+		/**
+		 * Use ID when available on an element, if not available use the content matching strategy.
+		 */
+		WHEN_AVAILABLE,
+		/**
+		 * Never use IDs, always use the content matching strategy. That's useful for instance when you want
+		 * to compare two results of a transformation which have arbitrary IDs.
+		 */
+		NEVER
 	}
 
 	/**
@@ -57,6 +82,15 @@ public class EMFCompareConfiguration extends AdapterImpl {
 	 */
 	public EqualityHelper getEqualityHelper() {
 		return fEqualityHelper;
+	}
+
+	/**
+	 * return the matching strategy to use regarding IDs.
+	 * 
+	 * @return the matching strategy to use regarding IDs.
+	 */
+	public USE_IDS matchByID() {
+		return shouldUseIDs;
 	}
 
 	/**
@@ -84,6 +118,11 @@ public class EMFCompareConfiguration extends AdapterImpl {
 		 * The equality helper.
 		 */
 		private EqualityHelper fEqualityHelper;
+
+		/**
+		 * Matching strategy kept by the configuration builder.
+		 */
+		private USE_IDS shouldUSEID;
 
 		/**
 		 * Package private constructor only called by {@link EMFCompareConfiguration#builder()}.
@@ -123,6 +162,19 @@ public class EMFCompareConfiguration extends AdapterImpl {
 		}
 
 		/**
+		 * Specify the matching strategy regarding IDs.
+		 * 
+		 * @param strategy
+		 *            the strategy to use.
+		 * @return This same builder to allow chained call.
+		 */
+		public Builder shouldUseID(USE_IDS strategy) {
+			checkNotNull(strategy);
+			this.shouldUSEID = strategy;
+			return this;
+		}
+
+		/**
 		 * Compile all set options to create a new {@link EMFCompareConfiguration}.
 		 * 
 		 * @return a new configuration object.
@@ -139,7 +191,9 @@ public class EMFCompareConfiguration extends AdapterImpl {
 				fEqualityHelper = new EqualityHelper();
 			}
 			configuration.fEqualityHelper = fEqualityHelper;
-
+			if (shouldUSEID != null) {
+				configuration.shouldUseIDs = shouldUSEID;
+			}
 			return configuration;
 		}
 	}

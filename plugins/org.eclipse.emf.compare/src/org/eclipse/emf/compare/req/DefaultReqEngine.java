@@ -178,6 +178,8 @@ public class DefaultReqEngine implements IReqEngine {
 	 * Retrieve candidate reference changes based on the given <code>object</code> (value) which are from the
 	 * given <code>kind</code>.
 	 * 
+	 * @param comparison
+	 *            the comparison to search in.
 	 * @param object
 	 *            The given object.
 	 * @param kind
@@ -200,6 +202,8 @@ public class DefaultReqEngine implements IReqEngine {
 	 * Retrieve candidate reference changes from a list of given <code>objects</code>.
 	 * 
 	 * @see DefaultReqEngine#getDifferenceOnGivenObject(EObject, DifferenceKind).
+	 * @param comparison
+	 *            the comparison to search in.
 	 * @param objects
 	 *            The given objects.
 	 * @param kind

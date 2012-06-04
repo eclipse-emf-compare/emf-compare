@@ -22,8 +22,10 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
+import org.eclipse.emf.compare.match.eobject.EditionDistance;
 import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
 import org.eclipse.emf.compare.match.eobject.IdentifierEObjectMatcher;
+import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher;
 import org.eclipse.emf.compare.match.resource.IResourceMatcher;
 import org.eclipse.emf.compare.match.resource.StrategyResourceMatcher;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -234,7 +236,29 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 *         comparison.
 	 */
 	protected IEObjectMatcher createEObjectMatcher() {
-		return new IdentifierEObjectMatcher();
+		/*
+		 * if we don't want to use the IDs at all, we should return the matchByContent. If we don't want to
+		 * use the content match, we should return an ID based matcher without delegate. Otherwise lets just
+		 * return an ID matcher which delegates to the content one.
+		 */
+		final IEObjectMatcher matchByContent = ProximityEObjectMatcher.builder(
+				EditionDistance.builder(comparison.getConfiguration().getEqualityHelper()).build()).build();
+		IEObjectMatcher matcherToUse = matchByContent;
+		switch (comparison.getConfiguration().matchByID()) {
+			case NEVER:
+				matcherToUse = matchByContent;
+				break;
+			case ONLY:
+				matcherToUse = new IdentifierEObjectMatcher();
+				break;
+			case WHEN_AVAILABLE:
+			default:
+				matcherToUse = new IdentifierEObjectMatcher(matchByContent);
+				break;
+
+		}
+		return matcherToUse;
+
 	}
 
 	/**

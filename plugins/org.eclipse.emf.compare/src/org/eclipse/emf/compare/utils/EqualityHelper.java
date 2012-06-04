@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.utils;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+
 import java.lang.reflect.Array;
 
 import org.eclipse.emf.common.util.URI;
@@ -26,6 +30,18 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class EqualityHelper {
+	/**
+	 * A cache keeping track of the URIs for EObjects.
+	 */
+	private LoadingCache<EObject, URI> uriCache = CacheBuilder.newBuilder().build(
+			new CacheLoader<EObject, URI>() {
+
+				@Override
+				public URI load(EObject key) throws Exception {
+					return EcoreUtil.getURI(key);
+				}
+			});
+
 	/**
 	 * Check that the two given values are "equal", considering the specifics of EMF.
 	 * 
@@ -113,7 +129,7 @@ public class EqualityHelper {
 	 * @return <code>true</code> if these two EObjects are to be considered equal, <code>false</code>
 	 *         otherwise.
 	 */
-	private static boolean matchingEObjects(Comparison comparison, EObject object1, EObject object2) {
+	private boolean matchingEObjects(Comparison comparison, EObject object1, EObject object2) {
 		final Match match = comparison.getMatch(object1);
 
 		final boolean equal;
@@ -121,8 +137,8 @@ public class EqualityHelper {
 		if (match != null) {
 			equal = match.getLeft() == object2 || match.getRight() == object2 || match.getOrigin() == object2;
 		} else {
-			final URI uri1 = EcoreUtil.getURI(object1);
-			final URI uri2 = EcoreUtil.getURI(object2);
+			final URI uri1 = uriCache.getUnchecked(object1);
+			final URI uri2 = uriCache.getUnchecked(object2);
 			if (uri1.hasFragment() && uri2.hasFragment()) {
 				equal = uri1.fragment().equals(uri2.fragment());
 			} else {
@@ -190,5 +206,17 @@ public class EqualityHelper {
 			}
 		}
 		return equal;
+	}
+
+	/**
+	 * The EqualityHelper often needs to get an EObject uri. As such it has an internal cache other might
+	 * leverage through this method.
+	 * 
+	 * @param object
+	 *            any EObject.
+	 * @return the URI of the given EObject.
+	 */
+	public URI getURI(EObject object) {
+		return uriCache.getUnchecked(object);
 	}
 }

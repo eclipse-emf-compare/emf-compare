@@ -19,6 +19,7 @@ import org.eclipse.emf.compare.tests.conflict.ConflictDetectionTest;
 import org.eclipse.emf.compare.tests.diff.DiffUtilTest;
 import org.eclipse.emf.compare.tests.equi.EquiComputingTest;
 import org.eclipse.emf.compare.tests.fullcomparison.IdentifierComparisonTest;
+import org.eclipse.emf.compare.tests.fullcomparison.ProximityComparisonTest;
 import org.eclipse.emf.compare.tests.merge.IndividualMergeTest;
 import org.eclipse.emf.compare.tests.merge.MultipleMergeTest;
 import org.eclipse.emf.compare.tests.model.CompareModelTestSuite;
@@ -42,7 +43,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({CompareModelTestSuite.class, DefaultComparisonScopeTest.class, IdentifierComparisonTest.class,
 		ConflictDetectionTest.class, ReqComputingTest.class, EquiComputingTest.class, DiffUtilTest.class,
-		MultipleMergeTest.class, PostProcessorTest.class, IndividualMergeTest.class })
+		MultipleMergeTest.class, PostProcessorTest.class, IndividualMergeTest.class,
+		ProximityComparisonTest.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.
