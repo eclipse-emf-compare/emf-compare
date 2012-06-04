@@ -358,7 +358,7 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 			@Override
 			public void run() {
 				final ComparisonSnapshot snapshot = getComparisonResult();
-				if (snapshot.eResource() != null) {
+				if (snapshot != null && snapshot.eResource() != null) {
 					disposeOfResource(snapshot.eResource());
 				}
 				disposeOfResource(getAncestorResource());
