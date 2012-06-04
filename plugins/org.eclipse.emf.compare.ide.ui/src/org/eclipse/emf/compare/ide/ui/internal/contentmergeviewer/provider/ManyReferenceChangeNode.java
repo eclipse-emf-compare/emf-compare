@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;
 
+import java.util.List;
+
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -18,7 +20,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class ReferenceChangeNode implements ITypedElement {
+public class ManyReferenceChangeNode implements ITypedElement, IManyStructuralFeatureAccessor<EObject> {
 
 	/**
 	 * The EObject to get the value of the EReference from.
@@ -30,12 +32,15 @@ public class ReferenceChangeNode implements ITypedElement {
 	 */
 	private final EReference fEReference;
 
+	private final EObject fValue;
+
 	/**
 	 * 
 	 */
-	public ReferenceChangeNode(EObject eObject, EReference eReference) {
+	public ManyReferenceChangeNode(EObject eObject, EReference eReference, EObject value) {
 		fEObject = eObject;
 		fEReference = eReference;
+		fValue = value;
 	}
 
 	/**
@@ -44,7 +49,7 @@ public class ReferenceChangeNode implements ITypedElement {
 	 * @see org.eclipse.compare.ITypedElement#getName()
 	 */
 	public String getName() {
-		return ReferenceChangeNode.class.getSimpleName();
+		return ManyReferenceChangeNode.class.getSimpleName();
 	}
 
 	/**
@@ -63,6 +68,25 @@ public class ReferenceChangeNode implements ITypedElement {
 	 */
 	public String getType() {
 		return ContentMergeViewerConstants.REFERENCE_CHANGE_NODE_TYPE;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IManyStructuralFeatureAccessor#getValues()
+	 */
+	@SuppressWarnings("unchecked")
+	public List<EObject> getValues() {
+		return (List<EObject>)fEObject.eGet(fEReference);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IManyStructuralFeatureAccessor#getValue()
+	 */
+	public EObject getValue() {
+		return fValue;
 	}
 
 }

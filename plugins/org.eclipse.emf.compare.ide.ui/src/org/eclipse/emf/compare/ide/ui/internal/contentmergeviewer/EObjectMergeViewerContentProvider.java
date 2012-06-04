@@ -63,7 +63,7 @@ public class EObjectMergeViewerContentProvider implements IMergeViewerContentPro
 	 *      java.lang.Object, java.lang.Object)
 	 */
 	public void inputChanged(Viewer v, Object o1, Object o2) {
-		// we are not interested since we have no state
+		// we are not interested in since we have no state
 	}
 
 	/**

@@ -10,13 +10,15 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;
 
+import java.util.List;
+
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public final class ContentMergeViewerConstants {
+public interface IManyStructuralFeatureAccessor<T> {
 
-	public static final String REFERENCE_CHANGE_NODE_TYPE = "objectlist";
+	List<T> getValues();
 
-	private ContentMergeViewerConstants() {
-	}
+	T getValue();
+
 }

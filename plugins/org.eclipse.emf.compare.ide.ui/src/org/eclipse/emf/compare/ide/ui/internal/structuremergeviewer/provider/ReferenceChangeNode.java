@@ -10,8 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
+import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.ManyReferenceChangeNode;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 
 /**
  * Specific AbstractEDiffNode for {@link ReferenceChange} objects.
@@ -40,4 +45,69 @@ public class ReferenceChangeNode extends DiffNode {
 		return (ReferenceChange)super.getTarget();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode#getAncestor()
+	 */
+	@Override
+	public ITypedElement getAncestor() {
+		ITypedElement ret = null;
+		final EReference reference = getTarget().getReference();
+		final Match match = getTarget().getMatch();
+		final EObject origin = match.getOrigin();
+		final EObject value = match.getComparison().getMatch(getTarget().getValue()).getOrigin();
+		if (origin != null) {
+			if (reference.isMany()) {
+				ret = new ManyReferenceChangeNode(origin, reference, value);
+			} else {
+				// todo
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode#getLeft()
+	 */
+	@Override
+	public ITypedElement getLeft() {
+		ITypedElement ret = null;
+		final EReference reference = getTarget().getReference();
+		final Match match = getTarget().getMatch();
+		final EObject left = match.getLeft();
+		final EObject value = match.getComparison().getMatch(getTarget().getValue()).getLeft();
+		if (left != null) {
+			if (reference.isMany()) {
+				ret = new ManyReferenceChangeNode(left, reference, value);
+			} else {
+				// todo
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode#getRight()
+	 */
+	@Override
+	public ITypedElement getRight() {
+		ITypedElement ret = null;
+		EReference reference = getTarget().getReference();
+		final Match match = getTarget().getMatch();
+		EObject right = match.getRight();
+		EObject value = match.getComparison().getMatch(getTarget().getValue()).getRight();
+		if (right != null) {
+			if (reference.isMany()) {
+				ret = new ManyReferenceChangeNode(right, reference, value);
+			} else {
+				// todo
+			}
+		}
+		return ret;
+	}
 }

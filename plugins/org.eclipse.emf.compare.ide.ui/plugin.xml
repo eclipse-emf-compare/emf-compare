@@ -26,6 +26,12 @@
             contentMergeViewerId="org.eclipse.emf.compare.ide.ui.internal.EObjectContentMergeViewer"
             contentTypeId="org.eclipse.emf.ecore.xmi">
       </contentTypeBinding>
+      <viewer
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.ObjectListContentMergeViewerCreator"
+            extensions="objectlist"
+            id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EObjectListContentMergeViewer"
+            label="EMFCompare Content Merge Viewer">
+      </viewer>
    </extension>
    <extension
          point="org.eclipse.core.runtime.adapters">
