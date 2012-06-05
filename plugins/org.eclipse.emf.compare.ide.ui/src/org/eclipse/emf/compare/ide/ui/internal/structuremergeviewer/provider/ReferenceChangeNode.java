@@ -56,7 +56,11 @@ public class ReferenceChangeNode extends DiffNode {
 		final EReference reference = getTarget().getReference();
 		final Match match = getTarget().getMatch();
 		final EObject origin = match.getOrigin();
-		final EObject value = match.getComparison().getMatch(getTarget().getValue()).getOrigin();
+		final Match matchOfValue = match.getComparison().getMatch(getTarget().getValue());
+		EObject value = null;
+		if (matchOfValue != null) {
+			value = matchOfValue.getOrigin();
+		}
 		if (origin != null) {
 			if (reference.isMany()) {
 				ret = new ManyReferenceChangeNode(origin, reference, value);
@@ -78,7 +82,11 @@ public class ReferenceChangeNode extends DiffNode {
 		final EReference reference = getTarget().getReference();
 		final Match match = getTarget().getMatch();
 		final EObject left = match.getLeft();
-		final EObject value = match.getComparison().getMatch(getTarget().getValue()).getLeft();
+		final Match matchOfValue = match.getComparison().getMatch(getTarget().getValue());
+		EObject value = null;
+		if (matchOfValue != null) {
+			value = matchOfValue.getLeft();
+		}
 		if (left != null) {
 			if (reference.isMany()) {
 				ret = new ManyReferenceChangeNode(left, reference, value);
@@ -100,7 +108,11 @@ public class ReferenceChangeNode extends DiffNode {
 		EReference reference = getTarget().getReference();
 		final Match match = getTarget().getMatch();
 		EObject right = match.getRight();
-		EObject value = match.getComparison().getMatch(getTarget().getValue()).getRight();
+		final Match matchOfValue = match.getComparison().getMatch(getTarget().getValue());
+		EObject value = null;
+		if (matchOfValue != null) {
+			value = matchOfValue.getRight();
+		}
 		if (right != null) {
 			if (reference.isMany()) {
 				ret = new ManyReferenceChangeNode(right, reference, value);
