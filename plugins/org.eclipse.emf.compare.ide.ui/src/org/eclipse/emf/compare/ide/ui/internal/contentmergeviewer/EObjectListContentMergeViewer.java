@@ -15,7 +15,6 @@ import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
-import org.eclipse.compare.internal.MergeViewerContentProvider;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IManyStructuralFeatureAccessor;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -56,7 +55,6 @@ public class EObjectListContentMergeViewer extends ContentMergeViewer {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
 		fAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 		buildControl(parent);
-		setContentProvider(new MergeViewerContentProvider(config));
 	}
 
 	/**
@@ -135,6 +133,8 @@ public class EObjectListContentMergeViewer extends ContentMergeViewer {
 			final Object value = manyFeatureAccessor.getValue();
 			if (values.contains(value)) {
 				viewer.setSelection(new StructuredSelection(value), true);
+			} else {
+				viewer.setSelection(StructuredSelection.EMPTY, true);
 			}
 		} else {
 			viewer.setInput(null);
