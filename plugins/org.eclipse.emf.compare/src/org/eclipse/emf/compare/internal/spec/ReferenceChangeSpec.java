@@ -10,12 +10,27 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+
+import java.util.List;
+
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.impl.ReferenceChangeImpl;
+import org.eclipse.emf.compare.utils.DiffUtil;
+import org.eclipse.emf.compare.utils.EMFCompareCopier;
+import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.ecore.xmi.XMIResource;
 
 /**
  * This specialization of the {@link referenceChangeImpl} class allows us to define the derived features and
@@ -27,54 +42,512 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.impl.DiffImpl#apply()
+	 * @see org.eclipse.emf.compare.impl.DiffImpl#copyLeftToRight()
 	 */
 	@Override
-	public void apply() {
-		// "apply" is merging from right (reference) to left (working copy)
+	public void copyLeftToRight() {
+		// Don't merge an already merged diff
+		if (getState() != DifferenceState.UNRESOLVED) {
+			return;
+		}
+
 		if (getSource() == DifferenceSource.LEFT) {
-			// Any diff that is from the left side can simply be left alone : it is already "applied"
+			// merge all "requires" diffs
+			mergeRequires(false);
+
+			switch (getKind()) {
+				case ADD:
+					// Create the same element in right
+					createInRight();
+					break;
+				case DELETE:
+					// Delete that same element from right
+					removeFromRight();
+					break;
+				case MOVE:
+					moveElement(false);
+					break;
+				default:
+					break;
+			}
+		} else {
+			// merge all "required by" diffs
+			mergeRequiredBy(false);
+
+			switch (getKind()) {
+				case ADD:
+					// We have a ADD on right. we need to revert this addition
+					removeFromRight();
+					break;
+				case DELETE:
+					// DELETE in the right. We need to re-create this element
+					createInRight();
+					break;
+				case MOVE:
+					moveElement(false);
+					break;
+				default:
+					break;
+			}
 		}
 
-		// Merge all of our dependencies if any
-		for (Diff dependency : getRequires()) {
-			// FIXME handle dependency circles
-			dependency.apply();
+		setState(DifferenceState.MERGED);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.impl.DiffImpl#copyRightToLeft()
+	 */
+	@Override
+	public void copyRightToLeft() {
+		// Don't merge an already merged diff
+		if (getState() != DifferenceState.UNRESOLVED) {
+			return;
 		}
 
-		if (getKind() == DifferenceKind.ADD) {
-			if (!getReference().isContainment()) {
-				applyAddToContainment();
+		if (getSource() == DifferenceSource.LEFT) {
+			// merge all "required by" diffs
+			mergeRequiredBy(true);
+
+			switch (getKind()) {
+				case ADD:
+					// We have a ADD on left, thus nothing in right. We need to revert the addition
+					removeFromLeft();
+					break;
+				case DELETE:
+					// DELETE in the left, thus an element in right. We need to re-create that element
+					createInLeft();
+					break;
+				case MOVE:
+					moveElement(true);
+					break;
+				default:
+					break;
+			}
+		} else {
+			// merge all "requires" diffs
+			mergeRequires(true);
+
+			switch (getKind()) {
+				case ADD:
+					createInLeft();
+					break;
+				case DELETE:
+					removeFromLeft();
+					break;
+				case MOVE:
+					moveElement(true);
+					break;
+				default:
+					break;
+			}
+		}
+
+		setState(DifferenceState.MERGED);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.impl.DiffImpl#discard()
+	 */
+	@Override
+	public void discard() {
+		setState(DifferenceState.DISCARDED);
+	}
+
+	/**
+	 * This will be called when trying to copy a "MOVE" diff.
+	 * 
+	 * @param rightToLeft
+	 *            Whether we should move the value in the left or right side.
+	 */
+	@SuppressWarnings("unchecked")
+	public void moveElement(boolean rightToLeft) {
+		final EObject expectedContainer;
+		if (rightToLeft) {
+			expectedContainer = getMatch().getLeft();
+		} else {
+			expectedContainer = getMatch().getRight();
+		}
+		final Comparison comparison = getMatch().getComparison();
+		final Match valueMatch = comparison.getMatch(getValue());
+
+		if (expectedContainer == null || valueMatch == null) {
+			// TODO throws exception?
+		} else if (rightToLeft && valueMatch.getLeft() == null || !rightToLeft
+				&& valueMatch.getRight() == null) {
+			// TODO should not happen : one of our requires should have created the value if needed
+		} else {
+			final EObject expectedValue;
+			if (rightToLeft) {
+				expectedValue = valueMatch.getLeft();
 			} else {
-				applyAdd();
+				expectedValue = valueMatch.getRight();
+			}
+
+			// We now know the target container, target reference and target value.
+			if (getReference().isMany()) {
+				// Determine the index to move the element to.
+				final boolean undoingLeft = rightToLeft && getSource() == DifferenceSource.LEFT;
+				final boolean undoingRight = !rightToLeft && getSource() == DifferenceSource.RIGHT;
+
+				final List<EObject> sourceList;
+				if (undoingLeft || undoingRight) {
+					sourceList = (List<EObject>)getMatch().getOrigin().eGet(getReference());
+				} else if (rightToLeft) {
+					sourceList = (List<EObject>)getMatch().getRight().eGet(getReference());
+				} else {
+					sourceList = (List<EObject>)getMatch().getLeft().eGet(getReference());
+				}
+
+				final List<EObject> targetList;
+				if (rightToLeft) {
+					targetList = (List<EObject>)getMatch().getLeft().eGet(getReference());
+				} else {
+					targetList = (List<EObject>)getMatch().getRight().eGet(getReference());
+				}
+
+				final Iterable<EObject> ignoredElements;
+				if (undoingLeft || undoingRight) {
+					// Undoing a change
+					ignoredElements = null;
+				} else if (comparison.isThreeWay() && getMatch().getOrigin() != null) {
+					ignoredElements = computeIgnoredElements(targetList);
+				} else {
+					ignoredElements = null;
+				}
+
+				// Element to move cannot be part of the LCS... or there would not be a MOVE diff
+				final EqualityHelper helper = new EqualityHelper();
+				int insertionIndex = DiffUtil.findInsertionIndex(comparison, helper, ignoredElements,
+						sourceList, targetList, expectedValue);
+				/*
+				 * However, it could still have been located "before" its new index, in which case we need to
+				 * take it into account.
+				 */
+				if (insertionIndex > targetList.indexOf(expectedValue)) {
+					insertionIndex--;
+				}
+
+				if (targetList instanceof EList<?>) {
+					((EList<EObject>)targetList).move(insertionIndex, expectedValue);
+				} else {
+					targetList.remove(expectedValue);
+					targetList.add(insertionIndex, expectedValue);
+				}
+			} else {
+				expectedContainer.eSet(getReference(), expectedValue);
+			}
+
+			// TODO check that XMI IDs were preserved
+		}
+	}
+
+	// TODO merge the two "createIn" methods together. They don't differ enough to justify a split
+	/**
+	 * This will be called when we need to create an element in the left side.
+	 * <p>
+	 * All necessary sanity checks have been made to ensure that the current operation is one that should
+	 * create an object in the left side. In other words, we are copying from right to left and either :
+	 * <ul>
+	 * <li>we are copying an addition to the right side (we need to create the same object in the left), or</li>
+	 * <li>we are copying a deletion from the left side (we need to revert the deletion).</li>
+	 * </ul>
+	 * </p>
+	 * <p>
+	 * This will never be called when copying differences {@link #copyLeftToRight() from left to right}.
+	 * </p>
+	 */
+	@SuppressWarnings("unchecked")
+	protected void createInLeft() {
+		final EObject expectedContainer = getMatch().getLeft();
+		final Comparison comparison = getMatch().getComparison();
+		final Match valueMatch = comparison.getMatch(getValue());
+
+		if (expectedContainer == null || valueMatch == null
+				|| (valueMatch.getLeft() == null && !getReference().isContainment())) {
+			// FIXME throw exception? log? re-try to merge our requirements?
+			// one of the "required" diffs should have created our container.
+			// another should have created our left value and added it to its Match
+		} else {
+			final EObject expectedValue;
+			if (getReference().isContainment()) {
+				expectedValue = createTarget(getValue());
+				valueMatch.setLeft(expectedValue);
+			} else {
+				expectedValue = valueMatch.getLeft();
+			}
+
+			// We have the container, reference and value. We need to know the insertion index.
+			if (getReference().isMany()) {
+				final List<EObject> sourceList;
+				if (getValue() == valueMatch.getOrigin()) {
+					sourceList = (List<EObject>)getMatch().getOrigin().eGet(getReference());
+				} else {
+					sourceList = (List<EObject>)getMatch().getRight().eGet(getReference());
+				}
+				final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(getReference());
+
+				final Iterable<EObject> ignoredElements;
+				if (comparison.isThreeWay() && getValue() != valueMatch.getOrigin()) {
+					ignoredElements = computeIgnoredElements(targetList);
+				} else {
+					ignoredElements = null;
+				}
+
+				final int insertionIndex = DiffUtil.findInsertionIndex(comparison, new EqualityHelper(),
+						ignoredElements, sourceList, targetList, expectedValue);
+
+				if (targetList instanceof InternalEList<?>) {
+					((InternalEList<EObject>)targetList).addUnique(insertionIndex, expectedValue);
+				} else {
+					targetList.add(insertionIndex, expectedValue);
+				}
+			} else {
+				expectedContainer.eSet(getReference(), expectedValue);
+			}
+
+			if (getReference().isContainment()) {
+				// Copy XMI ID when applicable.
+				final Resource initialResource = getValue().eResource();
+				final Resource targetResource = expectedValue.eResource();
+				if (initialResource instanceof XMIResource && targetResource instanceof XMIResource) {
+					((XMIResource)targetResource).setID(expectedValue, ((XMIResource)initialResource)
+							.getID(getValue()));
+				}
 			}
 		}
 	}
 
-	protected void applyAdd() {
-		// this is an addition which has been done on the right side.
-		// Applying is simply doing the same addition on the left
-		final EObject expectedContainer = getMatch().getLeft();
-		final Match valueMatch = getMatch().getComparison().getMatch(getValue());
+	/**
+	 * This will be called when we need to create an element in the right side.
+	 * <p>
+	 * All necessary sanity checks have been made to ensure that the current operation is one that should
+	 * create an object in the right side. In other words, we are copying from left to right and either :
+	 * <ul>
+	 * <li>we are copying a deletion from the right side (we need to revert the deletion), or</li>
+	 * <li>we are copying an addition to the left side (we need to create the same object in the right).</li>
+	 * </ul>
+	 * </p>
+	 * <p>
+	 * This will never be called when copying differences {@link #copyRightToLeft() from right to left}.
+	 * </p>
+	 */
+	@SuppressWarnings("unchecked")
+	protected void createInRight() {
+		final EObject expectedContainer = getMatch().getRight();
+		final Comparison comparison = getMatch().getComparison();
+		final Match valueMatch = comparison.getMatch(getValue());
 
-		if (expectedContainer == null || valueMatch == null || valueMatch.getLeft() == null) {
-			// FIXME throw exception? log? re-try to match the requires?
+		if (expectedContainer == null || valueMatch == null
+				|| (valueMatch.getRight() == null && !getReference().isContainment())) {
+			// FIXME throw exception? log? re-try to merge our requirements?
 			// one of the "required" diffs should have created our container.
-			// another should have created our left value and added it to its Match
+			// another should have created our value and added it to its Match
 		} else {
-			final EObject expectedValue = valueMatch.getLeft();
+			final EObject expectedValue;
+			if (getReference().isContainment()) {
+				expectedValue = createTarget(getValue());
+				valueMatch.setRight(expectedValue);
+			} else {
+				expectedValue = valueMatch.getRight();
+			}
 
-			// We have the container reference and value. We need to know the insertion index
+			// We have the container, reference and value. We need to know the insertion index.
+			if (getReference().isMany()) {
+				final List<EObject> sourceList;
+				if (getValue() == valueMatch.getOrigin()) {
+					sourceList = (List<EObject>)getMatch().getOrigin().eGet(getReference());
+				} else {
+					sourceList = (List<EObject>)getMatch().getLeft().eGet(getReference());
+				}
+				final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(getReference());
+
+				final Iterable<EObject> ignoredElements;
+				if (comparison.isThreeWay() && getValue() != valueMatch.getOrigin()) {
+					ignoredElements = computeIgnoredElements(targetList);
+				} else {
+					ignoredElements = null;
+				}
+
+				final int insertionIndex = DiffUtil.findInsertionIndex(comparison, new EqualityHelper(),
+						ignoredElements, sourceList, targetList, expectedValue);
+
+				if (targetList instanceof InternalEList<?>) {
+					((InternalEList<EObject>)targetList).addUnique(insertionIndex, expectedValue);
+				} else {
+					targetList.add(insertionIndex, expectedValue);
+				}
+			} else {
+				expectedContainer.eSet(getReference(), expectedValue);
+			}
+
+			if (getReference().isContainment()) {
+				// Copy XMI ID when applicable.
+				final Resource initialResource = getValue().eResource();
+				final Resource targetResource = expectedValue.eResource();
+				if (initialResource instanceof XMIResource && targetResource instanceof XMIResource) {
+					((XMIResource)targetResource).setID(expectedValue, ((XMIResource)initialResource)
+							.getID(getValue()));
+				}
+			}
 		}
 	}
 
-	protected void applyAddToContainment() {
-		// this is an addition which has been done on the right side.
-		// Applying is simply doing the same addition on the left
-		final EObject expectedContainer = getMatch().getLeft();
+	/**
+	 * This will create a copy of the given EObject that can be used as the target of an addition (or the
+	 * reverting of a deletion).
+	 * <p>
+	 * The target will be self-contained and will have no reference towards any other EObject set (neither
+	 * containment nor "classic" references). All of its attributes' values will match the given
+	 * {@code referenceObject}'s.
+	 * </p>
+	 * 
+	 * @param referenceObject
+	 *            The EObject for which we'll create a copy.
+	 * @return A self-contained copy of {@code referenceObject}.
+	 * @see EMFCompareCopier#copy(EObject)
+	 */
+	protected EObject createTarget(EObject referenceObject) {
+		/*
+		 * We can't simply use EcoreUtil.copy. References will have their own diffs and will thus be merged
+		 * later on.
+		 */
+		final EcoreUtil.Copier copier = new EMFCompareCopier();
+		return copier.copy(referenceObject);
+	}
 
-		if (expectedContainer == null) {
-			// This should never happen : one of the "required" diffs should have created our container.
+	/**
+	 * This will merge all {@link #getRequiredBy() differences that require us} in the given direction.
+	 * 
+	 * @param rightToLeft
+	 *            If {@code true}, {@link #copyRightToLeft() apply} all {@link #getRequiredBy() differences
+	 *            that require us}. Otherwise, {@link #copyLeftToRight() revert} them.
+	 */
+	protected void mergeRequiredBy(boolean rightToLeft) {
+		// TODO log back to the user what we will merge along?
+		for (Diff dependency : getRequiredBy()) {
+			if (rightToLeft) {
+				dependency.copyRightToLeft();
+			} else {
+				dependency.copyLeftToRight();
+			}
 		}
+	}
+
+	/**
+	 * This will merge all {@link #getRequires() required differences} in the given direction.
+	 * 
+	 * @param rightToLeft
+	 *            If {@code true}, {@link #copyRightToLeft() apply} all {@link #getRequires() required
+	 *            differences}. Otherwise, {@link #copyLeftToRight() revert} them.
+	 */
+	protected void mergeRequires(boolean rightToLeft) {
+		// TODO log back to the user what we will merge along?
+		for (Diff dependency : getRequires()) {
+			if (rightToLeft) {
+				dependency.copyRightToLeft();
+			} else {
+				dependency.copyLeftToRight();
+			}
+		}
+	}
+
+	/**
+	 * This will be called when we need to remove an element from the left side.
+	 * <p>
+	 * All necessary sanity checks have been made to ensure that the current operation is one that should
+	 * delete an object from the left side. In other words, we are copying from right to left and either :
+	 * <ul>
+	 * <li>we are copying a deletion from the right side (we need to remove the same object in the left) or,</li>
+	 * <li>we are copying an addition to the left side (we need to revert the addition).</li>
+	 * </ul>
+	 * </p>
+	 * <p>
+	 * This will never be called when {@link #copyLeftToRight()} differences.
+	 * </p>
+	 */
+	@SuppressWarnings("unchecked")
+	protected void removeFromLeft() {
+		final EObject currentContainer = getMatch().getLeft();
+		final Comparison comparison = getMatch().getComparison();
+		final Match valueMatch = comparison.getMatch(getValue());
+
+		if (currentContainer == null || valueMatch == null || valueMatch.getLeft() == null) {
+			// FIXME throw exception? log? re-try to merge our requirements?
+		} else {
+			// We have the container, reference and value to remove.
+			// Furthermore, we know that the reference is multi-valued (can't be here with mono-valued).
+			if (getReference().isContainment()) {
+				EcoreUtil.remove(valueMatch.getLeft());
+				valueMatch.setLeft(null);
+			} else {
+				final List<EObject> targetList = (List<EObject>)currentContainer.eGet(getReference());
+				targetList.remove(valueMatch.getLeft());
+			}
+		}
+	}
+
+	/**
+	 * This will be called when we need to remove an element from the right side.
+	 * <p>
+	 * All necessary sanity checks have been made to ensure that the current operation is one that should
+	 * delete an object from the right side. In other words, we are copying from left to right and either :
+	 * <ul>
+	 * <li>we are copying an addition to the right side (we need to revert the addition), or.</li>
+	 * <li>we are copying a deletion from the left side (we need to remove the same object in the right).</li>
+	 * </ul>
+	 * </p>
+	 * <p>
+	 * This will never be called when copying differences {@link #copyRightToLeft() from right to left}.
+	 * </p>
+	 */
+	@SuppressWarnings("unchecked")
+	protected void removeFromRight() {
+		final EObject currentContainer = getMatch().getRight();
+		final Comparison comparison = getMatch().getComparison();
+		final Match valueMatch = comparison.getMatch(getValue());
+
+		if (currentContainer == null || valueMatch == null || valueMatch.getRight() == null) {
+			// FIXME throw exception? log? re-try to merge our requirements?
+		} else {
+			// We have the container, reference and value to remove.
+			// Furthermore, we know that the reference is multi-valued (can't be here with mono-valued).
+			if (getReference().isContainment()) {
+				EcoreUtil.remove(valueMatch.getRight());
+				valueMatch.setRight(null);
+			} else {
+				final List<EObject> targetList = (List<EObject>)currentContainer.eGet(getReference());
+				targetList.remove(valueMatch.getRight());
+			}
+		}
+	}
+
+	/**
+	 * When computing the insertion index of an element in a list, we need to ignore all elements present in
+	 * that list that feature unresolved Diffs on the same reference.
+	 * 
+	 * @param candidates
+	 *            The sequence in which we need to compute an insertion index.
+	 * @return The list of elements that should be ignored when computing the insertion index for a new
+	 *         element in {@code candidates}.
+	 */
+	protected Iterable<EObject> computeIgnoredElements(Iterable<EObject> candidates) {
+		return Iterables.filter(candidates, new Predicate<EObject>() {
+			public boolean apply(final EObject element) {
+				final Match match = getMatch();
+				final Iterable<ReferenceChange> filteredCandidates = Iterables.filter(match.getDifferences(),
+						ReferenceChange.class);
+
+				return Iterables.any(filteredCandidates, new Predicate<ReferenceChange>() {
+					public boolean apply(ReferenceChange input) {
+						return input.getState() == DifferenceState.UNRESOLVED
+								&& input.getReference() == getReference() && input.getValue() == element;
+					}
+				});
+			}
+		});
 	}
 }

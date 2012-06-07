@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.internal.spec;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.impl.CompareFactoryImpl;
 import org.eclipse.emf.compare.impl.ComparisonImpl;
 import org.eclipse.emf.compare.impl.MatchImpl;
@@ -46,5 +47,15 @@ public class CompareFactorySpec extends CompareFactoryImpl {
 	public Match createMatch() {
 		MatchImpl match = new MatchSpec();
 		return match;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.impl.CompareFactoryImpl#createReferenceChange()
+	 */
+	@Override
+	public ReferenceChange createReferenceChange() {
+		return new ReferenceChangeSpec();
 	}
 }

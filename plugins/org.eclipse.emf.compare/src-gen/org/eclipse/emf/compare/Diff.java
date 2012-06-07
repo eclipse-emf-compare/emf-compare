@@ -33,6 +33,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.emf.compare.Diff#getRefinedBy <em>Refined By</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getKind <em>Kind</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getSource <em>Source</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getState <em>State</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getEquivalence <em>Equivalence</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getConflict <em>Conflict</em>}</li>
  * </ul>
@@ -229,6 +230,34 @@ public interface Diff extends EObject {
 	void setSource(DifferenceSource value);
 
 	/**
+	 * Returns the value of the '<em><b>State</b></em>' attribute.
+	 * The literals are from the enumeration {@link org.eclipse.emf.compare.DifferenceState}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Returns the current state of this diff, either one of DifferenceState.UNRESOLVED (Diff is still in its initial state), DifferenceState.MERGED when the Diff has been merged or DifferenceState.DISCARDED if the user chose to ignore this difference.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>State</em>' attribute.
+	 * @see org.eclipse.emf.compare.DifferenceState
+	 * @see #setState(DifferenceState)
+	 * @see org.eclipse.emf.compare.ComparePackage#getDiff_State()
+	 * @model required="true"
+	 * @generated
+	 */
+	DifferenceState getState();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.Diff#getState <em>State</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>State</em>' attribute.
+	 * @see org.eclipse.emf.compare.DifferenceState
+	 * @see #getState()
+	 * @generated
+	 */
+	void setState(DifferenceState value);
+
+	/**
 	 * Returns the value of the '<em><b>Equivalence</b></em>' reference.
 	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.compare.Equivalence#getDifferences <em>Differences</em>}'.
 	 * <!-- begin-user-doc -->
@@ -264,7 +293,7 @@ public interface Diff extends EObject {
 	 * @model
 	 * @generated
 	 */
-	void apply();
+	void copyRightToLeft();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -275,7 +304,7 @@ public interface Diff extends EObject {
 	 * @model
 	 * @generated
 	 */
-	void reverse();
+	void copyLeftToRight();
 
 	/**
 	 * <!-- begin-user-doc -->

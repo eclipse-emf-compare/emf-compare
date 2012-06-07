@@ -76,6 +76,7 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 			addRefinedByPropertyDescriptor(object);
 			addKindPropertyDescriptor(object);
 			addSourcePropertyDescriptor(object);
+			addStatePropertyDescriptor(object);
 			addEquivalencePropertyDescriptor(object);
 			addConflictPropertyDescriptor(object);
 		}
@@ -177,6 +178,21 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
+	 * This adds a property descriptor for the State feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addStatePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_Diff_state_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_Diff_state_feature", "_UI_Diff_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ComparePackage.Literals.DIFF__STATE, true, false, false,
+				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
 	 * This adds a property descriptor for the Equivalence feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -249,6 +265,7 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 		switch (notification.getFeatureID(Diff.class)) {
 			case ComparePackage.DIFF__KIND:
 			case ComparePackage.DIFF__SOURCE:
+			case ComparePackage.DIFF__STATE:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false,
 						true));
 				return;

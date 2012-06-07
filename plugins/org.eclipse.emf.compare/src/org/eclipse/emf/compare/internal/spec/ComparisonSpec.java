@@ -33,7 +33,7 @@ import org.eclipse.emf.ecore.EObject;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ComparisonSpec extends ComparisonImpl {
-	/** TODO use cross referencer or cache builder. */
+	/** TODO use cross referencer adapters : the Match can evolve through merging. */
 	private Map<EObject, Match> eObjectToMatch;
 
 	/**
@@ -75,7 +75,7 @@ public class ComparisonSpec extends ComparisonImpl {
 	 */
 	@Override
 	public Match getMatch(EObject element) {
-		// TODO use cross referencer or cache builder
+		// TODO use cross referencer adapters : the Match can evolve through merging
 		if (element == null) {
 			return null;
 		}
@@ -91,7 +91,7 @@ public class ComparisonSpec extends ComparisonImpl {
 	}
 
 	/**
-	 * TODO use cross referencer or cache builder.
+	 * TODO use cross referencer adapters : the Match can evolve through merging.
 	 * 
 	 * @param match
 	 *            current Match.

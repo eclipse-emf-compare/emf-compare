@@ -87,6 +87,94 @@ public final class DiffUtil {
 	}
 
 	/**
+	 * This will compute the longest common subsequence between the two given Lists, ignoring any object that
+	 * is included in {@code ignoredElements}. We will use
+	 * {@link EqualityHelper#matchingValues(Comparison, Object, Object)} in order to try and match the values
+	 * from both lists two-by-two. This can thus be used both for reference values or attribute values. If
+	 * there are two subsequences of the same "longest" length, the first (according to the second argument)
+	 * will be returned.
+	 * <p>
+	 * Take note that this might be slower than
+	 * {@link #longestCommonSubsequence(Comparison, EqualityHelper, List, List)} and should only be used when
+	 * elements should be removed from the potential LCS. This is mainly aimed at merge operations during
+	 * three-way comparisons as some objects might be in conflict and thus shifting the computed insertion
+	 * indices.
+	 * </p>
+	 * <p>
+	 * Please see {@link #longestCommonSubsequence(Comparison, EqualityHelper, List, List)} for a more
+	 * complete description.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param equalityHelper
+	 *            The {@link EqualityHelper} gives us the necessary semantics for Object matching.
+	 * @param ignoredElements
+	 *            Specifies elements that should be excluded from the subsequences.
+	 * @param sequence1
+	 *            First of the two sequences to consider.
+	 * @param sequence2
+	 *            Second of the two sequences to consider.
+	 * @param <E>
+	 *            Type of the sequences content.
+	 * @return The LCS of the two given sequences. Will never be the same instance as one of the input
+	 *         sequences.
+	 * @see #longestCommonSubsequence(Comparison, EqualityHelper, List, List).
+	 */
+	public static <E> List<E> longestCommonSubsequence(Comparison comparison, EqualityHelper equalityHelper,
+			Iterable<E> ignoredElements, List<E> sequence1, List<E> sequence2) {
+		final int size1 = sequence1.size();
+		final int size2 = sequence2.size();
+		final int[][] matrix = new int[size1 + 1][size2 + 1];
+
+		// Compute the LCS matrix
+		for (int i = 1; i <= size1; i++) {
+			for (int j = 1; j <= size2; j++) {
+				final E first = sequence1.get(i - 1);
+				final E second = sequence2.get(j - 1);
+				if (equalityHelper.matchingValues(comparison, first, second)
+						&& !contains(comparison, equalityHelper, ignoredElements, second)) {
+					matrix[i][j] = 1 + matrix[i - 1][j - 1];
+				} else {
+					matrix[i][j] = Math.max(matrix[i - 1][j], matrix[i][j - 1]);
+				}
+			}
+		}
+
+		// Shortcut evaluation if the lcs is the whole sequence
+		final boolean lcsIs1 = matrix[size1][size2] == size1;
+		final boolean lcsIs2 = matrix[size1][size2] == size2;
+		if (lcsIs1 || lcsIs2) {
+			final List<E> shortcut;
+			if (lcsIs1) {
+				shortcut = ImmutableList.copyOf(sequence1);
+			} else {
+				shortcut = ImmutableList.copyOf(sequence2);
+			}
+			return shortcut;
+		}
+
+		int current1 = size1;
+		int current2 = size2;
+		final List<E> result = Lists.newArrayList();
+
+		while (current1 > 0 && current2 > 0) {
+			final E first = sequence1.get(current1 - 1);
+			final E second = sequence2.get(current2 - 1);
+			if (equalityHelper.matchingValues(comparison, first, second)) {
+				result.add(first);
+				current1--;
+				current2--;
+			} else if (matrix[current1][current2 - 1] >= matrix[current1 - 1][current2]) {
+				current2--;
+			} else {
+				current1--;
+			}
+		}
+		return Lists.reverse(result);
+	}
+
+	/**
 	 * This will compute the longest common subsequence between the two given Lists. We will use
 	 * {@link EqualityHelper#matchingValues(Comparison, Object, Object)} in order to try and match the values
 	 * from both lists two-by-two. This can thus be used both for reference values or attribute values. If
@@ -186,17 +274,9 @@ public final class DiffUtil {
 	 * elements.
 	 * <p>
 	 * The expected insertion index will always be relative to the Longest Common Subsequence (LCS) between
-	 * the two given lists. If there are more than one "longest" subsequence between the two lists, the
-	 * insertion index will be relative to the first that comes in the {@code target} list.
-	 * </p>
-	 * <p>
-	 * For example, assume {@code source} is <code>{"1", "2", "4", "6", "8", "3", "0", "7", "5"}</code> and
-	 * {@code target} is <code>{"8", "1", "2", "9", "3", "4", "7"}</code>; I try to merge the addition of
-	 * {@code "0"} in the right list. The returned "insertion index" will be {@code 5} : just after
-	 * {@code "3"}. There are two subsequence of the same "longest" length 4 :
-	 * <code>{"1", "2", "3", "7"}</code> and <code>{"1", "2", "4", "7"}</code>. However, the first of those
-	 * two in {@code target} is <code>{"1", "2", "3", "7"}</code>. The closest element before {@code "0"} in
-	 * this LCS in {@code source} is {@code "3"}.
+	 * the two given lists, ignoring all elements from that LCS that have changed between the target list and
+	 * the common origin of the two. If there are more than one "longest" subsequence between the two lists,
+	 * the insertion index will be relative to the first that comes in the {@code target} list.
 	 * </p>
 	 * <p>
 	 * Note : we are not using Iterables as input in order to make use of the random access cost of
@@ -210,6 +290,9 @@ public final class DiffUtil {
 	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
 	 * @param equalityHelper
 	 *            The {@link EqualityHelper} gives us the necessary semantics for Object matching.
+	 * @param ignoredElements
+	 *            If there are elements from {@code target} that should be ignored when searching for an
+	 *            insertion index, set them here. Can be {@code null} or an empty list.
 	 * @param source
 	 *            The List from which one element has to be added to the {@code target} list.
 	 * @param target
@@ -222,7 +305,7 @@ public final class DiffUtil {
 	 * @see #longestCommonSubsequence(Comparison, List, List)
 	 */
 	public static <E> int findInsertionIndex(Comparison comparison, EqualityHelper equalityHelper,
-			List<E> source, List<E> target, E newElement) {
+			Iterable<E> ignoredElements, List<E> source, List<E> target, E newElement) {
 		/*
 		 * TODO perf : all "lookups" in source and target could be rewritten by using the lcs elements'
 		 * matches. This may or may not help, should be profiled.
@@ -230,7 +313,13 @@ public final class DiffUtil {
 		// TODO split this into multiple sub-methods
 
 		// We assume that "newElement" is in source but not in the target yet
-		final List<E> lcs = longestCommonSubsequence(comparison, equalityHelper, source, target);
+		final List<E> lcs;
+		if (ignoredElements != null) {
+			lcs = longestCommonSubsequence(comparison, equalityHelper, ignoredElements, source, target);
+		} else {
+			lcs = longestCommonSubsequence(comparison, equalityHelper, source, target);
+		}
+
 		E firstLCS = null;
 		E lastLCS = null;
 		if (lcs.size() > 0) {
@@ -238,10 +327,6 @@ public final class DiffUtil {
 			lastLCS = lcs.listIterator(lcs.size()).previous();
 		}
 
-		// Let's determine the subsequence where we need to be added. This is either one of :
-		// 0 - <index of first element from LCS>
-		// <index of element "above" in the LCS> - <index of element "after" in the LCS>
-		// <last element from LCS> - source.size()
 		final int noLCS = -2;
 		int currentIndex = -1;
 		int firstLCSIndex = -1;
@@ -338,5 +423,82 @@ public final class DiffUtil {
 		}
 
 		return insertionIndex;
+	}
+
+	/**
+	 * This will try and determine the index at which a given element from the {@code source} list should be
+	 * inserted in the {@code target} list. We expect {@code newElement} to be an element from the
+	 * {@code source} or to have a Match that allows us to map it to one of the {@code source} list's
+	 * elements.
+	 * <p>
+	 * The expected insertion index will always be relative to the Longest Common Subsequence (LCS) between
+	 * the two given lists. If there are more than one "longest" subsequence between the two lists, the
+	 * insertion index will be relative to the first that comes in the {@code target} list.
+	 * </p>
+	 * <p>
+	 * For example, assume {@code source} is <code>{"1", "2", "4", "6", "8", "3", "0", "7", "5"}</code> and
+	 * {@code target} is <code>{"8", "1", "2", "9", "3", "4", "7"}</code>; I try to merge the addition of
+	 * {@code "0"} in the right list. The returned "insertion index" will be {@code 5} : just after
+	 * {@code "3"}. There are two subsequence of the same "longest" length 4 :
+	 * <code>{"1", "2", "3", "7"}</code> and <code>{"1", "2", "4", "7"}</code>. However, the first of those
+	 * two in {@code target} is <code>{"1", "2", "3", "7"}</code>. The closest element before {@code "0"} in
+	 * this LCS in {@code source} is {@code "3"}.
+	 * </p>
+	 * <p>
+	 * Note : we are not using Iterables as input in order to make use of the random access cost of
+	 * ArrayLists. This might also be converted to directly use arrays. This implementation will not play well
+	 * with LinkedLists or any List which needs to iterate over the values for each call to
+	 * {@link List#get(int)}, i.e any list which is not instanceof RandomAccess or does not satisfy its
+	 * contract.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param equalityHelper
+	 *            The {@link EqualityHelper} gives us the necessary semantics for Object matching.
+	 * @param source
+	 *            The List from which one element has to be added to the {@code target} list.
+	 * @param target
+	 *            The List into which one element from {@code source} has to be added.
+	 * @param newElement
+	 *            The element from {@code source} that needs to be added into {@code target}.
+	 * @param <E>
+	 *            Type of the sequences content.
+	 * @return The index at which {@code newElement} should be inserted in {@code target}.
+	 * @see #longestCommonSubsequence(Comparison, List, List)
+	 */
+	public static <E> int findInsertionIndex(Comparison comparison, EqualityHelper equalityHelper,
+			List<E> source, List<E> target, E newElement) {
+		return findInsertionIndex(comparison, equalityHelper, null, source, target, newElement);
+	}
+
+	/**
+	 * Checks whether the given {@code sequence} contains the given {@code element} according to the semantics
+	 * of the given {@code equalityHelper}.
+	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param equalityHelper
+	 *            The {@link EqualityHelper} gives us the necessary semantics for Object matching.
+	 * @param sequence
+	 *            The sequence which elements we need to compare with {@code element}.
+	 * @param element
+	 *            The element we are seeking in {@code sequence}.
+	 * @param <E>
+	 *            Type of the sequence content.
+	 * @return {@code true} if the given {@code sequence} contains an element matching {@code element},
+	 *         {@code false} otherwise.
+	 * @see EqualityHelper#matchingValues(Comparison, Object, Object)
+	 */
+	private static <E> boolean contains(Comparison comparison, EqualityHelper equalityHelper,
+			Iterable<E> sequence, E element) {
+		final Iterator<E> iterator = sequence.iterator();
+		while (iterator.hasNext()) {
+			E candidate = iterator.next();
+			if (equalityHelper.matchingValues(comparison, candidate, element)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

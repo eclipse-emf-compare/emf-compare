@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
@@ -128,6 +129,13 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * @generated
 	 */
 	private EEnum differenceSourceEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum differenceStateEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -448,8 +456,17 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getDiff_State() {
+		return (EAttribute)diffEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getDiff_Equivalence() {
-		return (EReference)diffEClass.getEStructuralFeatures().get(7);
+		return (EReference)diffEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -458,7 +475,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * @generated
 	 */
 	public EReference getDiff_Conflict() {
-		return (EReference)diffEClass.getEStructuralFeatures().get(8);
+		return (EReference)diffEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
@@ -601,6 +618,15 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EEnum getDifferenceState() {
+		return differenceStateEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getConflictKind() {
 		return conflictKindEEnum;
 	}
@@ -672,6 +698,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		createEReference(diffEClass, DIFF__REFINED_BY);
 		createEAttribute(diffEClass, DIFF__KIND);
 		createEAttribute(diffEClass, DIFF__SOURCE);
+		createEAttribute(diffEClass, DIFF__STATE);
 		createEReference(diffEClass, DIFF__EQUIVALENCE);
 		createEReference(diffEClass, DIFF__CONFLICT);
 
@@ -696,6 +723,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		// Create enums
 		differenceKindEEnum = createEEnum(DIFFERENCE_KIND);
 		differenceSourceEEnum = createEEnum(DIFFERENCE_SOURCE);
+		differenceStateEEnum = createEEnum(DIFFERENCE_STATE);
 		conflictKindEEnum = createEEnum(CONFLICT_KIND);
 
 		// Create data types
@@ -879,6 +907,10 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 				getDiff_Source(),
 				this.getDifferenceSource(),
 				"source", null, 1, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getDiff_State(),
+				this.getDifferenceState(),
+				"state", null, 1, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getDiff_Equivalence(),
 				this.getEquivalence(),
@@ -890,9 +922,9 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 				this.getConflict_Differences(),
 				"conflict", null, 0, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		addEOperation(diffEClass, null, "apply", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		addEOperation(diffEClass, null, "copyRightToLeft", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
-		addEOperation(diffEClass, null, "reverse", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		addEOperation(diffEClass, null, "copyLeftToRight", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
 		addEOperation(diffEClass, null, "discard", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
@@ -962,6 +994,11 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		initEEnum(differenceSourceEEnum, DifferenceSource.class, "DifferenceSource"); //$NON-NLS-1$
 		addEEnumLiteral(differenceSourceEEnum, DifferenceSource.LEFT);
 		addEEnumLiteral(differenceSourceEEnum, DifferenceSource.RIGHT);
+
+		initEEnum(differenceStateEEnum, DifferenceState.class, "DifferenceState"); //$NON-NLS-1$
+		addEEnumLiteral(differenceStateEEnum, DifferenceState.UNRESOLVED);
+		addEEnumLiteral(differenceStateEEnum, DifferenceState.MERGED);
+		addEEnumLiteral(differenceStateEEnum, DifferenceState.DISCARDED);
 
 		initEEnum(conflictKindEEnum, ConflictKind.class, "ConflictKind"); //$NON-NLS-1$
 		addEEnumLiteral(conflictKindEEnum, ConflictKind.REAL);

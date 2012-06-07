@@ -157,12 +157,12 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A DiffElement describes a difference related to the EObjects mapped by its parent MatchElement."/>
     </eAnnotations>
-    <eOperations name="apply">
+    <eOperations name="copyRightToLeft">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="This will merge the diff from left to right."/>
       </eAnnotations>
     </eOperations>
-    <eOperations name="reverse">
+    <eOperations name="copyLeftToRight">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="This will merge the diff from right to left."/>
       </eAnnotations>
@@ -211,6 +211,11 @@
         eType="#//DifferenceSource">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Returns the source of this diff, either one of DifferenceSource.LEFT (for two-way comparisons or differences detected between the left and origin elements) or DifferenceSource.RIGHT (for differences between the right and origin elements)."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" lowerBound="1" eType="#//DifferenceState">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Returns the current state of this diff, either one of DifferenceState.UNRESOLVED (Diff is still in its initial state), DifferenceState.MERGED when the Diff has been merged or DifferenceState.DISCARDED if the user chose to ignore this difference."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="equivalence" eType="#//Equivalence"
@@ -343,6 +348,26 @@
     <eLiterals name="RIGHT" value="1">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Will be used if the difference has been detected between the right element and its origin."/>
+      </eAnnotations>
+    </eLiterals>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="DifferenceState">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="This will be used to represent the state of a detected diff.&#xD;&#xA;&lt;ul>&#xD;&#xA;&#x9;&lt;li>UNRESOLVED if the Diff is still in its initial state and the two sides differ,&lt;/li>&#xD;&#xA;&#x9;&lt;li>MERGED if the Diff has already been merged by the user,&lt;/li>&#xD;&#xA;&#x9;&lt;li>DISCARDED if the user chose to ignore this Diff.&lt;/li>&#xD;&#xA;&lt;/ul>"/>
+    </eAnnotations>
+    <eLiterals name="UNRESOLVED" literal="UNRESOLVED">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Indicates that the Diff is still in its initial state."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="MERGED" value="1">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Indicates that the Diff has already been merged by the user."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="DISCARDED" value="2" literal="DISCARDED">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Indicates that the user chose to ignore this Diff."/>
       </eAnnotations>
     </eLiterals>
   </eClassifiers>

@@ -22,6 +22,11 @@
       <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceSource/LEFT"/>
       <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceSource/RIGHT"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="compare.ecore#//DifferenceState">
+      <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceState/UNRESOLVED"/>
+      <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceState/MERGED"/>
+      <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceState/DISCARDED"/>
+    </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="compare.ecore#//ConflictKind">
       <genEnumLiterals ecoreEnumLiteral="compare.ecore#//ConflictKind/REAL"/>
       <genEnumLiterals ecoreEnumLiteral="compare.ecore#//ConflictKind/PSEUDO"/>
@@ -69,10 +74,11 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Diff/refinedBy"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//Diff/kind"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//Diff/source"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//Diff/state"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Diff/equivalence"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Diff/conflict"/>
-      <genOperations ecoreOperation="compare.ecore#//Diff/apply"/>
-      <genOperations ecoreOperation="compare.ecore#//Diff/reverse"/>
+      <genOperations ecoreOperation="compare.ecore#//Diff/copyRightToLeft"/>
+      <genOperations ecoreOperation="compare.ecore#//Diff/copyLeftToRight"/>
       <genOperations ecoreOperation="compare.ecore#//Diff/discard"/>
     </genClasses>
     <genClasses ecoreClass="compare.ecore#//ResourceAttachmentChange">

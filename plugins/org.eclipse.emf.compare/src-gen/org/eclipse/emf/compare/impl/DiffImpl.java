@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.Match;
 
@@ -49,6 +50,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getRefinedBy <em>Refined By</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getKind <em>Kind</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getSource <em>Source</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getState <em>State</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getEquivalence <em>Equivalence</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getConflict <em>Conflict</em>}</li>
  * </ul>
@@ -145,6 +147,26 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	 * @ordered
 	 */
 	protected DifferenceSource source = SOURCE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getState() <em>State</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getState()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final DifferenceState STATE_EDEFAULT = DifferenceState.UNRESOLVED;
+
+	/**
+	 * The cached value of the '{@link #getState() <em>State</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getState()
+	 * @generated
+	 * @ordered
+	 */
+	protected DifferenceState state = STATE_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getEquivalence() <em>Equivalence</em>}' reference.
@@ -398,6 +420,27 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public DifferenceState getState() {
+		return state;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setState(DifferenceState newState) {
+		DifferenceState oldState = state;
+		state = newState == null ? STATE_EDEFAULT : newState;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ComparePackage.DIFF__STATE, oldState, state));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Equivalence getEquivalence() {
 		if (equivalence != null && equivalence.eIsProxy()) {
 			InternalEObject oldEquivalence = (InternalEObject)equivalence;
@@ -466,7 +509,7 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void apply() {
+	public void copyRightToLeft() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
 		throw new UnsupportedOperationException();
@@ -477,7 +520,7 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void reverse() {
+	public void copyLeftToRight() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
 		throw new UnsupportedOperationException();
@@ -596,6 +639,8 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 				return getKind();
 			case ComparePackage.DIFF__SOURCE:
 				return getSource();
+			case ComparePackage.DIFF__STATE:
+				return getState();
 			case ComparePackage.DIFF__EQUIVALENCE:
 				if (resolve)
 					return getEquivalence();
@@ -642,6 +687,9 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 			case ComparePackage.DIFF__SOURCE:
 				setSource((DifferenceSource)newValue);
 				return;
+			case ComparePackage.DIFF__STATE:
+				setState((DifferenceState)newValue);
+				return;
 			case ComparePackage.DIFF__EQUIVALENCE:
 				setEquivalence((Equivalence)newValue);
 				return;
@@ -681,6 +729,9 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 			case ComparePackage.DIFF__SOURCE:
 				setSource(SOURCE_EDEFAULT);
 				return;
+			case ComparePackage.DIFF__STATE:
+				setState(STATE_EDEFAULT);
+				return;
 			case ComparePackage.DIFF__EQUIVALENCE:
 				setEquivalence((Equivalence)null);
 				return;
@@ -713,6 +764,8 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 				return kind != KIND_EDEFAULT;
 			case ComparePackage.DIFF__SOURCE:
 				return source != SOURCE_EDEFAULT;
+			case ComparePackage.DIFF__STATE:
+				return state != STATE_EDEFAULT;
 			case ComparePackage.DIFF__EQUIVALENCE:
 				return equivalence != null;
 			case ComparePackage.DIFF__CONFLICT:
@@ -736,6 +789,8 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 		result.append(kind);
 		result.append(", source: "); //$NON-NLS-1$
 		result.append(source);
+		result.append(", state: "); //$NON-NLS-1$
+		result.append(state);
 		result.append(')');
 		return result.toString();
 	}

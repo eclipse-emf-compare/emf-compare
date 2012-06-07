@@ -338,13 +338,22 @@ public interface ComparePackage extends EPackage {
 	int DIFF__SOURCE = 6;
 
 	/**
+	 * The feature id for the '<em><b>State</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF__STATE = 7;
+
+	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF__EQUIVALENCE = 7;
+	int DIFF__EQUIVALENCE = 8;
 
 	/**
 	 * The feature id for the '<em><b>Conflict</b></em>' reference.
@@ -353,7 +362,7 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF__CONFLICT = 8;
+	int DIFF__CONFLICT = 9;
 
 	/**
 	 * The number of structural features of the '<em>Diff</em>' class.
@@ -362,7 +371,7 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF_FEATURE_COUNT = 9;
+	int DIFF_FEATURE_COUNT = 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.impl.ResourceAttachmentChangeImpl <em>Resource Attachment Change</em>}' class.
@@ -436,6 +445,15 @@ public interface ComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int RESOURCE_ATTACHMENT_CHANGE__SOURCE = DIFF__SOURCE;
+
+	/**
+	 * The feature id for the '<em><b>State</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESOURCE_ATTACHMENT_CHANGE__STATE = DIFF__STATE;
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
@@ -545,6 +563,15 @@ public interface ComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int REFERENCE_CHANGE__SOURCE = DIFF__SOURCE;
+
+	/**
+	 * The feature id for the '<em><b>State</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE__STATE = DIFF__STATE;
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
@@ -663,6 +690,15 @@ public interface ComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int ATTRIBUTE_CHANGE__SOURCE = DIFF__SOURCE;
+
+	/**
+	 * The feature id for the '<em><b>State</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE__STATE = DIFF__STATE;
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
@@ -795,6 +831,16 @@ public interface ComparePackage extends EPackage {
 	int DIFFERENCE_SOURCE = 10;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.DifferenceState <em>Difference State</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.DifferenceState
+	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getDifferenceState()
+	 * @generated
+	 */
+	int DIFFERENCE_STATE = 11;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.ConflictKind <em>Conflict Kind</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -802,7 +848,7 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getConflictKind()
 	 * @generated
 	 */
-	int CONFLICT_KIND = 11;
+	int CONFLICT_KIND = 12;
 
 	/**
 	 * The meta object id for the '<em>EIterable</em>' data type.
@@ -812,7 +858,7 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getEIterable()
 	 * @generated
 	 */
-	int EITERABLE = 12;
+	int EITERABLE = 13;
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.Comparison <em>Comparison</em>}'.
@@ -1097,6 +1143,17 @@ public interface ComparePackage extends EPackage {
 	EAttribute getDiff_Source();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.Diff#getState <em>State</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>State</em>'.
+	 * @see org.eclipse.emf.compare.Diff#getState()
+	 * @see #getDiff()
+	 * @generated
+	 */
+	EAttribute getDiff_State();
+
+	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.Diff#getEquivalence <em>Equivalence</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1275,6 +1332,16 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getDifferenceSource();
+
+	/**
+	 * Returns the meta object for enum '{@link org.eclipse.emf.compare.DifferenceState <em>Difference State</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Difference State</em>'.
+	 * @see org.eclipse.emf.compare.DifferenceState
+	 * @generated
+	 */
+	EEnum getDifferenceState();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.emf.compare.ConflictKind <em>Conflict Kind</em>}'.
@@ -1538,6 +1605,14 @@ public interface ComparePackage extends EPackage {
 		EAttribute DIFF__SOURCE = eINSTANCE.getDiff_Source();
 
 		/**
+		 * The meta object literal for the '<em><b>State</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DIFF__STATE = eINSTANCE.getDiff_State();
+
+		/**
 		 * The meta object literal for the '<em><b>Equivalence</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1687,6 +1762,16 @@ public interface ComparePackage extends EPackage {
 		 * @generated
 		 */
 		EEnum DIFFERENCE_SOURCE = eINSTANCE.getDifferenceSource();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.DifferenceState <em>Difference State</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.DifferenceState
+		 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getDifferenceState()
+		 * @generated
+		 */
+		EEnum DIFFERENCE_STATE = eINSTANCE.getDifferenceState();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.ConflictKind <em>Conflict Kind</em>}' enum.
