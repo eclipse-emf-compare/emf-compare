@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -72,6 +74,7 @@ public final class ReferenceUtil {
 	public static <T extends EObject> Set<T> getCrossReferences(EcoreUtil.CrossReferencer crossReferencer,
 			EObject referencedEObject, EStructuralFeature feature, Class<T> clazz) {
 		final Set<T> result = new HashSet<T>();
+
 		final Collection<Setting> settings = crossReferencer.get(referencedEObject);
 		if (settings != null) {
 			for (Setting setting : settings) {
@@ -80,6 +83,42 @@ public final class ReferenceUtil {
 					if (clazz == null || clazz.isInstance(crossElt)) {
 						result.add((T)crossElt);
 					}
+				}
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Get the reference changes matching the <code>referencedEObject</code> from the <code>feature</code>
+	 * with the specified <code>kind</code>. Only reference changes where the nature of the reference is the
+	 * one set by <code>isContainment</code> are kept.
+	 * 
+	 * @param crossReferencer
+	 *            The cross referencer enables to request differences from the business model.
+	 * @param referencedEObject
+	 *            The given business object to find change candidates.
+	 * @param feature
+	 *            The structural feature to focus on requested changes.
+	 * @param kind
+	 *            The kind of changes to retrieve.
+	 * @param isContainment
+	 *            The nature of the reference to focus.
+	 * @return The list of found changes.
+	 */
+	public static Set<ReferenceChange> getReferenceChanges(EcoreUtil.CrossReferencer crossReferencer,
+			EObject referencedEObject, EStructuralFeature feature, DifferenceKind kind, Boolean isContainment) {
+		final Set<ReferenceChange> result = new HashSet<ReferenceChange>();
+		if (referencedEObject != null) {
+			Iterator<ReferenceChange> crossReferences = getCrossReferences(crossReferencer,
+					referencedEObject, feature, ReferenceChange.class).iterator();
+			while (crossReferences.hasNext()) {
+				ReferenceChange crossReference = crossReferences.next();
+				if ((kind == null || crossReference.getKind().equals(kind))
+						&& (isContainment == null || isContainment.booleanValue() == crossReference
+								.getReference().isContainment())) {
+					result.add(crossReference);
 				}
 			}
 		}

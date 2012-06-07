@@ -54,6 +54,46 @@ public class ReqInputData extends AbstractInputData {
 		return loadFromClassloader("a6/right.nodes"); //$NON-NLS-1$
 	}
 
+	public Resource getA7Left() throws IOException {
+		return loadFromClassloader("a7/left.nodes"); //$NON-NLS-1$
+	}
+
+	public Resource getA7Right() throws IOException {
+		return loadFromClassloader("a7/right.nodes"); //$NON-NLS-1$
+	}
+
+	public Resource getA8Left() throws IOException {
+		return loadFromClassloader("a8/left.nodes"); //$NON-NLS-1$
+	}
+
+	public Resource getA8Right() throws IOException {
+		return loadFromClassloader("a8/right.nodes"); //$NON-NLS-1$
+	}
+
+	public Resource getA9Left() throws IOException {
+		return loadFromClassloader("a9/left.nodes"); //$NON-NLS-1$
+	}
+
+	public Resource getA9Right() throws IOException {
+		return loadFromClassloader("a9/right.nodes"); //$NON-NLS-1$
+	}
+
+	public Resource getA10Left() throws IOException {
+		return loadFromClassloader("a10/left.nodes"); //$NON-NLS-1$
+	}
+
+	public Resource getA10Right() throws IOException {
+		return loadFromClassloader("a10/right.nodes"); //$NON-NLS-1$
+	}
+
+	public Resource getA11Left() throws IOException {
+		return loadFromClassloader("a11/left.nodes"); //$NON-NLS-1$
+	}
+
+	public Resource getA11Right() throws IOException {
+		return loadFromClassloader("a11/right.nodes"); //$NON-NLS-1$
+	}
+
 	public Resource getC1Left() throws IOException {
 		return loadFromClassloader("c1/left.nodes"); //$NON-NLS-1$
 	}

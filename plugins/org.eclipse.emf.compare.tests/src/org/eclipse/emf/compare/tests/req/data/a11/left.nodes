@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes:Node xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes" xmi:id="_yWc_0JUeEeGiestbncRZoQ" name="Requirements">
+  <containmentRef1 xmi:id="_OrSoALC2EeGemrgCaIO6nw" name="A">
+    <containmentRef1 xmi:id="_XL1FsLC2EeGemrgCaIO6nw" name="C"/>
+    <containmentRef1 xmi:id="_0ECKoLC3EeGemrgCaIO6nw" name="D">
+      <containmentRef1 xmi:id="_ynDPQLC3EeGemrgCaIO6nw" name="E"/>
+    </containmentRef1>
+  </containmentRef1>
+</nodes:Node>

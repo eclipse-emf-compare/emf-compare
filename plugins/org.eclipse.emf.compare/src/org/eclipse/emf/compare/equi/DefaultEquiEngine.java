@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.equi;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.emf.compare.CompareFactory;
@@ -18,11 +17,10 @@ import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Equivalence;
-import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -103,13 +101,12 @@ public class DefaultEquiEngine implements IEquiEngine {
 				 * opposite one
 				 */
 				Set<ReferenceChange> equivalentDifferences = ReferenceUtil.getCrossReferences(
-						crossReferencerModelObjectsToDiffs, getObjectContainingDifference(diff, comparison),
+						crossReferencerModelObjectsToDiffs, MatchUtil.getContainer(comparison, diff),
 						ComparePackage.eINSTANCE.getReferenceChange_Value(), ReferenceChange.class);
 				for (ReferenceChange referenceChange : equivalentDifferences) {
 					if (referenceChange.getReference().getEOpposite() != null
 							&& referenceChange.getReference().getEOpposite().equals(diff.getReference())
-							&& diff.getValue().equals(
-									getObjectContainingDifference(referenceChange, comparison))) {
+							&& diff.getValue().equals(MatchUtil.getContainer(comparison, referenceChange))) {
 						equivalence.getDifferences().add(referenceChange);
 						break;
 					}
@@ -135,91 +132,18 @@ public class DefaultEquiEngine implements IEquiEngine {
 	 */
 	private void addChangesFromOrigin(Comparison comparison, ReferenceChange diff, Equivalence equivalence) {
 		if (!diff.getReference().isMany()) {
-			EObject diffContainer = getObjectContainingDifference(diff, comparison);
-			if (comparison.isThreeWay()) {
-				diffContainer = diff.getMatch().getOrigin();
-			} else {
-				if (diffContainer.equals(diff.getMatch().getLeft())) {
-					diffContainer = diff.getMatch().getRight();
-				} else {
-					diffContainer = diff.getMatch().getLeft();
-				}
-			}
+			EObject originContainer = MatchUtil.getOriginContainer(comparison, diff);
 			Set<ReferenceChange> equivalentDifferences2 = ReferenceUtil.getCrossReferences(
-					crossReferencerModelObjectsToDiffs, diffContainer, ComparePackage.eINSTANCE
+					crossReferencerModelObjectsToDiffs, originContainer, ComparePackage.eINSTANCE
 							.getReferenceChange_Value(), ReferenceChange.class);
 
 			for (ReferenceChange referenceChange : equivalentDifferences2) {
-				if (getObjectContainingDifference(referenceChange, comparison).equals(
-						diffContainer.eGet(diff.getReference()))) {
+				if (MatchUtil.getContainer(comparison, referenceChange).equals(
+						originContainer.eGet(diff.getReference()))) {
 					equivalence.getDifferences().add(referenceChange);
 				}
 			}
 		}
-	}
-
-	/**
-	 * Get the business model object containing the given <code>difference</code>.
-	 * 
-	 * @param difference
-	 *            The difference.
-	 * @param comparison
-	 *            The comparison.
-	 * @return The object.
-	 */
-	private static EObject getObjectContainingDifference(ReferenceChange difference, Comparison comparison) {
-		EObject result = null;
-		final EObject obj = difference.getValue();
-		if (getSide(comparison, obj).equals(Side.LEFT)) {
-			result = difference.getMatch().getLeft();
-		} else if (getSide(comparison, obj).equals(Side.RIGHT)) {
-			result = difference.getMatch().getRight();
-		} else if (getSide(comparison, obj).equals(Side.ORIGIN)) {
-			result = difference.getMatch().getOrigin();
-		}
-		return result;
-	}
-
-	/**
-	 * Enumerated type enabling to know from which side come an object.
-	 * 
-	 * @author cnotot
-	 */
-	// CHECKSTYLE:OFF
-	private enum Side {
-		LEFT, RIGHT, ORIGIN, NOWHERE
-	}
-
-	// CHECKSTYLE:ON
-
-	/**
-	 * Return the side where is located the given object <code>obj</code>.
-	 * 
-	 * @param comparison
-	 *            The comparison which enable to know from which side come the business model objects owning
-	 *            the differences.
-	 * @param obj
-	 *            The object to request.
-	 * @return The side where is located the object.
-	 */
-	private static Side getSide(Comparison comparison, EObject obj) {
-		Side result = Side.NOWHERE;
-		final Iterator<MatchResource> matchResources = comparison.getMatchedResources().iterator();
-		while (matchResources.hasNext()) {
-			MatchResource matchResource = matchResources.next();
-			Resource left = matchResource.getLeft();
-			Resource right = matchResource.getRight();
-			Resource origin = matchResource.getOrigin();
-			if (obj.eResource().equals(left)) {
-				result = Side.LEFT;
-			} else if (obj.eResource().equals(right)) {
-				result = Side.RIGHT;
-			} else if (obj.eResource().equals(origin)) {
-				result = Side.ORIGIN;
-			}
-		}
-		return result;
-
 	}
 
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes:Node xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes" xmi:id="_yWc_0JUeEeGiestbncRZoQ" name="Requirements">
+  <containmentRef1 xsi:type="nodes:NodeSingleValueReference" xmi:id="_jb6rMLCeEeGemrgCaIO6nw" name="A" singleValuedReference="_5I_boLCeEeGemrgCaIO6nw"/>
+  <containmentRef1 xsi:type="nodes:NodeMultiValueReference" xmi:id="_kMRxILCeEeGemrgCaIO6nw" name="D" multiValuedReference="_9zRZcLCeEeGemrgCaIO6nw"/>
+  <containmentRef1 xmi:id="_5I_boLCeEeGemrgCaIO6nw" name="B"/>
+  <containmentRef1 xmi:id="_9zRZcLCeEeGemrgCaIO6nw" name="E"/>
+</nodes:Node>

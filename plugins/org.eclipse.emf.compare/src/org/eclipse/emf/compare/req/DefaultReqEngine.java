@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.req;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,11 +18,12 @@ import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.utils.MatchUtil;
+import org.eclipse.emf.compare.utils.MatchUtil.Side;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -75,10 +75,7 @@ public class DefaultReqEngine implements IReqEngine {
 	}
 
 	/**
-	 * Checks the potential required differences from the given <code>difference</code>. If the given
-	 * <code>difference</code> is an ADD/CHANGE or DELETE of a business model object and this object
-	 * references other business model objects, respectively added or deleted too, then the related
-	 * differences are required by the given <code>difference</code>.
+	 * Checks the potential required differences from the given <code>difference</code>.
 	 * 
 	 * @param comparison
 	 *            The comparison this engine is expected to complete.
@@ -86,107 +83,250 @@ public class DefaultReqEngine implements IReqEngine {
 	 *            The difference that is to be checked
 	 */
 	protected void checkForRequiredDifferences(Comparison comparison, Diff difference) {
-		if (isConcernedByRequirements(difference)) {
+		if (difference instanceof ReferenceChange) {
+			ReferenceChange sourceDifference = (ReferenceChange)difference;
 
-			// Look for all the other business model objects linked to the value object of the difference.
-			Set<EObject> referencedObjects = getReferencedObjects((ReferenceChange)difference);
+			Set<ReferenceChange> requiredDifferences = new HashSet<ReferenceChange>();
+			Set<ReferenceChange> requiredByDifferences = new HashSet<ReferenceChange>();
 
-			// For each of them, look for existing other equivalent differences
-			for (EObject modelObj : referencedObjects) {
-				Set<Diff> requiredDifferences = ReferenceUtil.getCrossReferences(
-						crossReferencerModelObjectsToDiffs, modelObj, ComparePackage.eINSTANCE
-								.getReferenceChange_Value(), Diff.class);
-				if (requiredDifferences != null) {
-					for (Diff diff : requiredDifferences) {
-						if (isConcernedByRequirements(diff)
-								&& ((ReferenceChange)diff).getReference().isContainment()
-								&& !diff.equals(difference)) {
-							difference.getRequires().add(diff);
-						}
-					}
-				}
+			// ADD object
+			if (sourceDifference.getKind().equals(DifferenceKind.ADD)
+					&& sourceDifference.getReference().isContainment()) {
+
+				// -> requires ADD on the container of the object
+				requiredDifferences.addAll(getDifferenceOnGivenObject(sourceDifference.getValue()
+						.eContainer(), DifferenceKind.ADD));
+
+				// -> requires DELETE of the origin value on the same containment mono-valued reference
+				requiredDifferences.addAll(getDELOriginValueOnContainmentRefSingle(comparison,
+						sourceDifference));
+
+				// ADD reference
+			} else if ((sourceDifference.getKind().equals(DifferenceKind.ADD) || isChangeAdd(comparison,
+					sourceDifference))
+					&& !sourceDifference.getReference().isContainment()) {
+
+				// -> requires ADD of the value of the reference (target object)
+				requiredDifferences.addAll(getDifferenceOnGivenObject(sourceDifference.getValue(),
+						DifferenceKind.ADD));
+
+				// -> requires ADD of the object containing the reference
+				requiredDifferences.addAll(getDifferenceOnGivenObject(MatchUtil.getContainer(comparison,
+						sourceDifference), DifferenceKind.ADD));
+
+				// DELETE object
+			} else if ((sourceDifference.getKind().equals(DifferenceKind.DELETE))
+					&& sourceDifference.getReference().isContainment()) {
+
+				// -> requires DELETE of the outgoing references and contained objects
+				requiredDifferences.addAll(getDELOutgoingReferences(comparison, sourceDifference));
+				requiredDifferences.addAll(getDifferenceOnGivenObject(
+						sourceDifference.getValue().eContents(), DifferenceKind.DELETE));
+
+				// -> requires MOVE of contained objects
+				requiredDifferences.addAll(getMOVEContainedObjects(comparison, sourceDifference));
+
+				// The DELETE or CHANGE of incoming references are handled in the DELETE reference and CHANGE
+				// reference cases.
+
+				// DELETE reference
+			} else if ((sourceDifference.getKind().equals(DifferenceKind.DELETE) || isChangeDelete(
+					comparison, sourceDifference))
+					&& !sourceDifference.getReference().isContainment()) {
+
+				// -> is required by DELETE of the target object
+				requiredByDifferences.addAll(getDifferenceOnGivenObject(sourceDifference.getValue(),
+						DifferenceKind.DELETE));
+
+				// MOVE object
+			} else if (sourceDifference.getKind().equals(DifferenceKind.MOVE)
+					&& sourceDifference.getReference().isContainment()) {
+
+				EObject container = sourceDifference.getValue().eContainer();
+
+				// -> requires ADD on the container of the object
+				requiredDifferences.addAll(getDifferenceOnGivenObject(container, DifferenceKind.ADD));
+
+				// -> requires MOVE of the container of the object
+				requiredDifferences.addAll(getDifferenceOnGivenObject(container, DifferenceKind.MOVE));
+
+				// CHANGE reference
+			} else if (sourceDifference.getKind().equals(DifferenceKind.CHANGE)
+					&& !isChangeAdd(comparison, sourceDifference)
+					&& !isChangeDelete(comparison, sourceDifference)) {
+
+				// -> is required by DELETE of the origin target object
+				requiredByDifferences.addAll(getDifferenceOnGivenObject(MatchUtil.getOriginValue(comparison,
+						sourceDifference), DifferenceKind.DELETE));
+
+				// -> requires ADD of the value of the reference (target object) if required
+				requiredDifferences.addAll(getDifferenceOnGivenObject(sourceDifference.getValue(),
+						DifferenceKind.ADD));
 			}
 
+			sourceDifference.getRequires().addAll(requiredDifferences);
+			sourceDifference.getRequiredBy().addAll(requiredByDifferences);
 		}
+
 	}
 
 	/**
-	 * Get the business model objects linked to the value object of the given difference.
+	 * From a <code>sourceDifference</code> (ADD) on a containment mono-valued reference, it retrieves a
+	 * potential DELETE difference on the origin value.
 	 * 
-	 * @param difference
-	 *            The reference change.
-	 * @return A set of linked objects.
+	 * @param comparison
+	 *            The comparison this engine is expected to complete.
+	 * @param sourceDifference
+	 *            The given difference.
+	 * @return The found differences.
 	 */
-	private static Set<EObject> getReferencedObjects(ReferenceChange difference) {
-		Set<EObject> referencedObjects = new HashSet<EObject>();
-
-		// Retrieve the business model object concerned by this difference.
-		EObject concernedObject = difference.getValue();
-
-		if (difference.getReference().isContainment()) {
-			// Look for all outgoing references.
-			/*
-			 * TODO: to study if this call is necessary or can be replaced by eCrossReferences().
-			 * referencedObjects.addAll(ReferenceUtil.getReferencedEObjects(concernedObject, true));
-			 */
-			referencedObjects.addAll(concernedObject.eCrossReferences());
-
-			// Add of the parent model object.
-			if (concernedObject.eContainer() != null) {
-				referencedObjects.add(concernedObject.eContainer());
+	private Set<ReferenceChange> getDELOriginValueOnContainmentRefSingle(Comparison comparison,
+			ReferenceChange sourceDifference) {
+		Set<ReferenceChange> result = new HashSet<ReferenceChange>();
+		if (!sourceDifference.getReference().isMany()) {
+			EObject originContainer = MatchUtil.getOriginContainer(comparison, sourceDifference);
+			Object originValue = originContainer.eGet(sourceDifference.getReference());
+			if (originValue instanceof EObject) {
+				result = getDifferenceOnGivenObject((EObject)originValue, DifferenceKind.DELETE);
 			}
-		} else {
-			List<EObject> refContainers = getModelObjects(difference.getMatch());
-			EReference concernedRef = difference.getReference();
-			if (concernedRef.isMany()) {
-				referencedObjects.add(concernedObject); // We have to retrieve containment differences on it.
-			} else {
-				// Add of the objects from ALL sides (necessity to get old value too in a CHANGE) -> maybe to
-				// fix (2 change differences instead of 1 ?)
-				for (EObject refContainer : refContainers) {
-					Object obj = refContainer.eGet(concernedRef);
-					referencedObjects.add((EObject)obj);
-				}
-			}
-
-			// Add of the container of the reference.
-			referencedObjects.addAll(refContainers);
 		}
-
-		return referencedObjects;
+		return result;
 	}
 
 	/**
-	 * Check if the given <code>difference</code> is a candidate to compute requirements.
+	 * Retrieve candidate reference changes based on the given <code>object</code> (value) which are from the
+	 * given <code>kind</code>.
 	 * 
+	 * @param object
+	 *            The given object.
+	 * @param kind
+	 *            The given kind.
+	 * @return The found differences.
+	 */
+	private Set<ReferenceChange> getDifferenceOnGivenObject(EObject object, DifferenceKind kind) {
+		return ReferenceUtil.getReferenceChanges(crossReferencerModelObjectsToDiffs, object,
+				ComparePackage.eINSTANCE.getReferenceChange_Value(), kind, Boolean.TRUE);
+	}
+
+	/**
+	 * Retrieve candidate reference changes from a list of given <code>objects</code>.
+	 * 
+	 * @see DefaultReqEngine#getDifferenceOnGivenObject(EObject, DifferenceKind).
+	 * @param objects
+	 *            The given objects.
+	 * @param kind
+	 *            The kind of requested differences.
+	 * @return The found differences.
+	 */
+	private Set<ReferenceChange> getDifferenceOnGivenObject(List<EObject> objects, DifferenceKind kind) {
+		Set<ReferenceChange> result = new HashSet<ReferenceChange>();
+		for (EObject object : objects) {
+			result.addAll(getDifferenceOnGivenObject(object, kind));
+		}
+		return result;
+	}
+
+	/**
+	 * From a <code>sourceDifference</code> (DELETE) on a containment reference, it retrieves potential DELETE
+	 * differences on the outgoing references from the value object of the <code>sourceDifference</code>.
+	 * 
+	 * @param comparison
+	 *            The comparison this engine is expected to complete.
+	 * @param sourceDifference
+	 *            The given difference.
+	 * @return The found differences.
+	 */
+	private Set<ReferenceChange> getDELOutgoingReferences(Comparison comparison,
+			ReferenceChange sourceDifference) {
+		Set<ReferenceChange> result = new HashSet<ReferenceChange>();
+		EObject value = sourceDifference.getValue();
+		/*
+		 * TODO: to study if this call is necessary or can be replaced by eCrossReferences().
+		 * ReferenceUtil.getReferencedEObjects(concernedObject, true); FeatureMap use case.
+		 */
+		List<EObject> outgoingReferences = value.eCrossReferences();
+		for (EObject outgoingRef : outgoingReferences) {
+			Set<ReferenceChange> requiredDifferences = ReferenceUtil.getCrossReferences(
+					crossReferencerModelObjectsToDiffs, outgoingRef, ComparePackage.eINSTANCE
+							.getReferenceChange_Value(), ReferenceChange.class);
+			for (ReferenceChange diff : requiredDifferences) {
+				if (!diff.getReference().isContainment()
+						&& (diff.getKind().equals(DifferenceKind.DELETE) || isChangeDelete(comparison, diff))
+						&& value.eClass().getEAllReferences().contains(diff.getReference())) {
+					result.add(diff);
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * From a <code>sourceDifference</code> (DELETE) on a containment reference, it retrieves potential MOVE
+	 * differences on the objects contained in the value object of the <code>sourceDifference</code>.
+	 * 
+	 * @param comparison
+	 *            The comparison this engine is expected to complete.
+	 * @param sourceDifference
+	 *            The given difference.
+	 * @return The found differences.
+	 */
+	private Set<ReferenceChange> getMOVEContainedObjects(Comparison comparison,
+			ReferenceChange sourceDifference) {
+		Set<ReferenceChange> result = new HashSet<ReferenceChange>();
+		EObject value = sourceDifference.getValue();
+		List<EObject> contents = value.eContents();
+		for (EObject content : contents) {
+			EObject originObject = MatchUtil.getOriginObject(comparison, content);
+			if (originObject != null) {
+				result.addAll(ReferenceUtil.getReferenceChanges(crossReferencerModelObjectsToDiffs,
+						originObject, ComparePackage.eINSTANCE.getReferenceChange_Value(),
+						DifferenceKind.MOVE, Boolean.TRUE));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Check if the given <code>difference</code> is a CHANGE from a null value on a mono-valued reference.
+	 * 
+	 * @param comparison
+	 *            The comparison this engine is expected to complete.
 	 * @param difference
 	 *            The given difference.
-	 * @return True if the given difference is a good candidate, False else.
+	 * @return True if it is a CHANGE from a null value.
 	 */
-	private static boolean isConcernedByRequirements(Diff difference) {
-		return difference instanceof ReferenceChange
-				&& (difference.getKind().equals(DifferenceKind.ADD)
-						|| difference.getKind().equals(DifferenceKind.CHANGE) || difference.getKind().equals(
-						DifferenceKind.DELETE));
+	private static boolean isChangeAdd(Comparison comparison, ReferenceChange difference) {
+		if (!difference.getReference().isMany() && !difference.getReference().isContainment()) {
+			EObject value = difference.getValue();
+			Side sideValue = MatchUtil.getSide(comparison, value);
+			boolean isAddLeft = sideValue.equals(Side.LEFT)
+					&& difference.getSource().equals(DifferenceSource.LEFT);
+			boolean isAddRight = sideValue.equals(Side.RIGHT)
+					&& difference.getSource().equals(DifferenceSource.RIGHT);
+			return MatchUtil.getOriginValue(comparison, difference) == null && (isAddLeft || isAddRight);
+		}
+		return false;
 	}
 
 	/**
-	 * Return all the business model objects related to the given <code>match</code>.
+	 * Check if the given <code>difference</code> is a CHANGE to a null value on a mono-valued reference.
 	 * 
-	 * @param match
-	 *            The given match.
-	 * @return The list of the related business model objects.
+	 * @param comparison
+	 *            The comparison this engine is expected to complete.
+	 * @param difference
+	 *            The given difference.
+	 * @return True if it is a CHANGE to a null value.
 	 */
-	private static List<EObject> getModelObjects(Match match) {
-		List<EObject> result = new ArrayList<EObject>();
-		if (match.getLeft() != null) {
-			result.add(match.getLeft());
-		}
-		if (match.getRight() != null) {
-			result.add(match.getRight());
-		}
-		if (match.getOrigin() != null) {
-			result.add(match.getOrigin());
+	private static boolean isChangeDelete(Comparison comparison, ReferenceChange difference) {
+		boolean result = false;
+		if (!difference.getReference().isMany() && !difference.getReference().isContainment()) {
+			EObject value = difference.getValue();
+			Side sideValue = MatchUtil.getSide(comparison, value);
+			if (comparison.isThreeWay()) {
+				return comparison.getMatch(value).getOrigin() == value;
+			}
+			result = sideValue.equals(Side.RIGHT) && difference.getSource().equals(DifferenceSource.LEFT);
 		}
 		return result;
 	}
