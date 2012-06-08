@@ -42,11 +42,11 @@ public class ComparisonSpec extends ComparisonImpl {
 	 */
 	@Override
 	public EList<Diff> getDifferences() {
-		final Iterator<Diff> allDiffs = Iterators.filter(eAllContents(), Diff.class);
+		final Iterator<Diff> diffIterator = Iterators.filter(eAllContents(), Diff.class);
 
 		final EList<Diff> allDifferences = new BasicEList<Diff>();
-		while (allDiffs.hasNext()) {
-			((AbstractEList<Diff>)allDifferences).addUnique(allDiffs.next());
+		while (diffIterator.hasNext()) {
+			((AbstractEList<Diff>)allDifferences).addUnique(diffIterator.next());
 		}
 
 		return allDifferences;

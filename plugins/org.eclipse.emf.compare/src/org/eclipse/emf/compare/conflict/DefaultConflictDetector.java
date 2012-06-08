@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.conflict;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * The conflict detector is in charge of refining the Comparison model with all detected Conflict between its
@@ -560,10 +562,15 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 */
 	protected void conflictOn(Comparison comparison, Diff diff1, Diff diff2, ConflictKind kind) {
 		final Conflict conflict;
+		Conflict toBeMerged = null;
 		if (diff1.getConflict() != null) {
 			conflict = diff1.getConflict();
 			if (conflict.getKind() == ConflictKind.PSEUDO && conflict.getKind() != kind) {
 				conflict.setKind(kind);
+			}
+			if (diff2.getConflict() != null) {
+				// Merge the two
+				toBeMerged = diff2.getConflict();
 			}
 		} else if (diff2.getConflict() != null) {
 			conflict = diff2.getConflict();
@@ -574,6 +581,21 @@ public class DefaultConflictDetector implements IConflictDetector {
 			conflict = CompareFactory.eINSTANCE.createConflict();
 			conflict.setKind(kind);
 			comparison.getConflicts().add(conflict);
+		}
+
+		final List<Diff> conflictDiffs = conflict.getDifferences();
+		if (toBeMerged != null) {
+			// These references are opposite. We can't simply iterate
+			for (Diff aDiff : Lists.newArrayList(toBeMerged.getDifferences())) {
+				if (!conflictDiffs.contains(aDiff)) {
+					conflictDiffs.add(aDiff);
+				}
+			}
+			if (toBeMerged.getKind() == ConflictKind.REAL && conflict.getKind() != ConflictKind.REAL) {
+				conflict.setKind(ConflictKind.REAL);
+			}
+			EcoreUtil.remove(toBeMerged);
+			toBeMerged.getDifferences().clear();
 		}
 
 		if (!conflict.getDifferences().contains(diff1)) {
