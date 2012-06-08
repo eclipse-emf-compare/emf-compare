@@ -58,14 +58,23 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			switch (getKind()) {
 				case ADD:
 					// Create the same element in right
-					createInRight();
+					addInTarget(false);
 					break;
 				case DELETE:
 					// Delete that same element from right
-					removeFromRight();
+					removeFromTarget(false);
 					break;
 				case MOVE:
 					moveElement(false);
+					break;
+				case CHANGE:
+					// Is it an unset?
+					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
+					if (valueMatch != null && getValue() == valueMatch.getOrigin()) {
+						removeFromTarget(false);
+					} else {
+						addInTarget(false);
+					}
 					break;
 				default:
 					break;
@@ -77,14 +86,25 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			switch (getKind()) {
 				case ADD:
 					// We have a ADD on right. we need to revert this addition
-					removeFromRight();
+					removeFromTarget(false);
 					break;
 				case DELETE:
 					// DELETE in the right. We need to re-create this element
-					createInRight();
+					addInTarget(false);
 					break;
 				case MOVE:
 					moveElement(false);
+					break;
+				case CHANGE:
+					// Is it an unset?
+					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
+					if (valueMatch != null && getValue() == valueMatch.getOrigin()) {
+						// Value has been unset in the right, and we are merging towards right.
+						// We need to re-add this element
+						addInTarget(false);
+					} else {
+						removeFromTarget(false);
+					}
 					break;
 				default:
 					break;
@@ -113,14 +133,25 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			switch (getKind()) {
 				case ADD:
 					// We have a ADD on left, thus nothing in right. We need to revert the addition
-					removeFromLeft();
+					removeFromTarget(true);
 					break;
 				case DELETE:
 					// DELETE in the left, thus an element in right. We need to re-create that element
-					createInLeft();
+					addInTarget(true);
 					break;
 				case MOVE:
 					moveElement(true);
+					break;
+				case CHANGE:
+					// Is it an unset?
+					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
+					if (valueMatch != null && getValue() == valueMatch.getOrigin()) {
+						// Value has been unset in the left, and we're copying towards the left.
+						// We need to re-create the element.
+						addInTarget(true);
+					} else {
+						removeFromTarget(true);
+					}
 					break;
 				default:
 					break;
@@ -131,13 +162,22 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 
 			switch (getKind()) {
 				case ADD:
-					createInLeft();
+					addInTarget(true);
 					break;
 				case DELETE:
-					removeFromLeft();
+					removeFromTarget(true);
 					break;
 				case MOVE:
 					moveElement(true);
+					break;
+				case CHANGE:
+					// Is it an unset?
+					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
+					if (valueMatch != null && getValue() == valueMatch.getOrigin()) {
+						removeFromTarget(true);
+					} else {
+						addInTarget(true);
+					}
 					break;
 				default:
 					break;
@@ -247,112 +287,59 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 
 	// TODO merge the two "createIn" methods together. They don't differ enough to justify a split
 	/**
-	 * This will be called when we need to create an element in the left side.
+	 * This will be called when we need to create an element in the target side.
 	 * <p>
 	 * All necessary sanity checks have been made to ensure that the current operation is one that should
-	 * create an object in the left side. In other words, we are copying from right to left and either :
+	 * create an object in its side or add an objet to a reference. In other words, either :
+	 * <ul>
+	 * <li>We are copying from right to left and
 	 * <ul>
 	 * <li>we are copying an addition to the right side (we need to create the same object in the left), or</li>
 	 * <li>we are copying a deletion from the left side (we need to revert the deletion).</li>
 	 * </ul>
-	 * </p>
-	 * <p>
-	 * This will never be called when copying differences {@link #copyLeftToRight() from left to right}.
-	 * </p>
-	 */
-	@SuppressWarnings("unchecked")
-	protected void createInLeft() {
-		final EObject expectedContainer = getMatch().getLeft();
-		final Comparison comparison = getMatch().getComparison();
-		final Match valueMatch = comparison.getMatch(getValue());
-
-		if (expectedContainer == null || valueMatch == null
-				|| (valueMatch.getLeft() == null && !getReference().isContainment())) {
-			// FIXME throw exception? log? re-try to merge our requirements?
-			// one of the "required" diffs should have created our container.
-			// another should have created our left value and added it to its Match
-		} else {
-			final EObject expectedValue;
-			if (getReference().isContainment()) {
-				expectedValue = createTarget(getValue());
-				valueMatch.setLeft(expectedValue);
-			} else {
-				expectedValue = valueMatch.getLeft();
-			}
-
-			// We have the container, reference and value. We need to know the insertion index.
-			if (getReference().isMany()) {
-				final List<EObject> sourceList;
-				if (getValue() == valueMatch.getOrigin()) {
-					sourceList = (List<EObject>)getMatch().getOrigin().eGet(getReference());
-				} else {
-					sourceList = (List<EObject>)getMatch().getRight().eGet(getReference());
-				}
-				final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(getReference());
-
-				final Iterable<EObject> ignoredElements;
-				if (comparison.isThreeWay() && getValue() != valueMatch.getOrigin()) {
-					ignoredElements = computeIgnoredElements(targetList);
-				} else {
-					ignoredElements = null;
-				}
-
-				final int insertionIndex = DiffUtil.findInsertionIndex(comparison, new EqualityHelper(),
-						ignoredElements, sourceList, targetList, expectedValue);
-
-				if (targetList instanceof InternalEList<?>) {
-					((InternalEList<EObject>)targetList).addUnique(insertionIndex, expectedValue);
-				} else {
-					targetList.add(insertionIndex, expectedValue);
-				}
-			} else {
-				expectedContainer.eSet(getReference(), expectedValue);
-			}
-
-			if (getReference().isContainment()) {
-				// Copy XMI ID when applicable.
-				final Resource initialResource = getValue().eResource();
-				final Resource targetResource = expectedValue.eResource();
-				if (initialResource instanceof XMIResource && targetResource instanceof XMIResource) {
-					((XMIResource)targetResource).setID(expectedValue, ((XMIResource)initialResource)
-							.getID(getValue()));
-				}
-			}
-		}
-	}
-
-	/**
-	 * This will be called when we need to create an element in the right side.
-	 * <p>
-	 * All necessary sanity checks have been made to ensure that the current operation is one that should
-	 * create an object in the right side. In other words, we are copying from left to right and either :
+	 * </li>
+	 * <li>We are copying from left to right and
 	 * <ul>
 	 * <li>we are copying a deletion from the right side (we need to revert the deletion), or</li>
 	 * <li>we are copying an addition to the left side (we need to create the same object in the right).</li>
 	 * </ul>
+	 * </li>
+	 * </ul>
 	 * </p>
-	 * <p>
-	 * This will never be called when copying differences {@link #copyRightToLeft() from right to left}.
-	 * </p>
+	 * 
+	 * @param rightToLeft
+	 *            Tells us whether we are to add an object on the left or right side.
 	 */
 	@SuppressWarnings("unchecked")
-	protected void createInRight() {
-		final EObject expectedContainer = getMatch().getRight();
+	protected void addInTarget(boolean rightToLeft) {
+		final EObject expectedContainer;
+		if (rightToLeft) {
+			expectedContainer = getMatch().getLeft();
+		} else {
+			expectedContainer = getMatch().getRight();
+		}
 		final Comparison comparison = getMatch().getComparison();
 		final Match valueMatch = comparison.getMatch(getValue());
 
-		if (expectedContainer == null || valueMatch == null
-				|| (valueMatch.getRight() == null && !getReference().isContainment())) {
+		if (expectedContainer == null || valueMatch == null) {
 			// FIXME throw exception? log? re-try to merge our requirements?
 			// one of the "required" diffs should have created our container.
-			// another should have created our value and added it to its Match
 		} else {
 			final EObject expectedValue;
-			if (getReference().isContainment()) {
-				expectedValue = createTarget(getValue());
-				valueMatch.setRight(expectedValue);
+			if (rightToLeft) {
+				if (getReference().isContainment()) {
+					expectedValue = createTarget(getValue());
+					valueMatch.setLeft(expectedValue);
+				} else {
+					expectedValue = valueMatch.getLeft();
+				}
 			} else {
-				expectedValue = valueMatch.getRight();
+				if (getReference().isContainment()) {
+					expectedValue = createTarget(getValue());
+					valueMatch.setRight(expectedValue);
+				} else {
+					expectedValue = valueMatch.getRight();
+				}
 			}
 
 			// We have the container, reference and value. We need to know the insertion index.
@@ -360,6 +347,8 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 				final List<EObject> sourceList;
 				if (getValue() == valueMatch.getOrigin()) {
 					sourceList = (List<EObject>)getMatch().getOrigin().eGet(getReference());
+				} else if (rightToLeft) {
+					sourceList = (List<EObject>)getMatch().getRight().eGet(getReference());
 				} else {
 					sourceList = (List<EObject>)getMatch().getLeft().eGet(getReference());
 				}
@@ -456,71 +445,62 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	}
 
 	/**
-	 * This will be called when we need to remove an element from the left side.
+	 * This will be called when we need to remove an element from the target side.
 	 * <p>
 	 * All necessary sanity checks have been made to ensure that the current operation is one that should
-	 * delete an object from the left side. In other words, we are copying from right to left and either :
+	 * delete an object. In other words, we are :
+	 * <ul>
+	 * <li>Copying from right to left and either
 	 * <ul>
 	 * <li>we are copying a deletion from the right side (we need to remove the same object in the left) or,</li>
 	 * <li>we are copying an addition to the left side (we need to revert the addition).</li>
 	 * </ul>
-	 * </p>
-	 * <p>
-	 * This will never be called when {@link #copyLeftToRight()} differences.
-	 * </p>
-	 */
-	@SuppressWarnings("unchecked")
-	protected void removeFromLeft() {
-		final EObject currentContainer = getMatch().getLeft();
-		final Comparison comparison = getMatch().getComparison();
-		final Match valueMatch = comparison.getMatch(getValue());
-
-		if (currentContainer == null || valueMatch == null || valueMatch.getLeft() == null) {
-			// FIXME throw exception? log? re-try to merge our requirements?
-		} else {
-			// We have the container, reference and value to remove.
-			// Furthermore, we know that the reference is multi-valued (can't be here with mono-valued).
-			if (getReference().isContainment()) {
-				EcoreUtil.remove(valueMatch.getLeft());
-				valueMatch.setLeft(null);
-			} else {
-				final List<EObject> targetList = (List<EObject>)currentContainer.eGet(getReference());
-				targetList.remove(valueMatch.getLeft());
-			}
-		}
-	}
-
-	/**
-	 * This will be called when we need to remove an element from the right side.
-	 * <p>
-	 * All necessary sanity checks have been made to ensure that the current operation is one that should
-	 * delete an object from the right side. In other words, we are copying from left to right and either :
+	 * </li>
+	 * <li>Copying from left to right and either
 	 * <ul>
 	 * <li>we are copying an addition to the right side (we need to revert the addition), or.</li>
 	 * <li>we are copying a deletion from the left side (we need to remove the same object in the right).</li>
 	 * </ul>
+	 * </li>
+	 * </ul>
 	 * </p>
-	 * <p>
-	 * This will never be called when copying differences {@link #copyRightToLeft() from right to left}.
-	 * </p>
+	 * 
+	 * @param rightToLeft
+	 *            Tells us whether we are to add an object on the left or right side.
 	 */
 	@SuppressWarnings("unchecked")
-	protected void removeFromRight() {
-		final EObject currentContainer = getMatch().getRight();
+	protected void removeFromTarget(boolean rightToLeft) {
+		final EObject currentContainer;
+		if (rightToLeft) {
+			currentContainer = getMatch().getLeft();
+		} else {
+			currentContainer = getMatch().getRight();
+		}
 		final Comparison comparison = getMatch().getComparison();
 		final Match valueMatch = comparison.getMatch(getValue());
 
-		if (currentContainer == null || valueMatch == null || valueMatch.getRight() == null) {
+		if (currentContainer == null || valueMatch == null) {
 			// FIXME throw exception? log? re-try to merge our requirements?
 		} else {
+			final EObject expectedValue;
+			if (rightToLeft) {
+				expectedValue = valueMatch.getLeft();
+			} else {
+				expectedValue = valueMatch.getRight();
+			}
 			// We have the container, reference and value to remove.
 			// Furthermore, we know that the reference is multi-valued (can't be here with mono-valued).
 			if (getReference().isContainment()) {
-				EcoreUtil.remove(valueMatch.getRight());
-				valueMatch.setRight(null);
+				EcoreUtil.remove(expectedValue);
+				if (rightToLeft) {
+					valueMatch.setLeft(null);
+				} else {
+					valueMatch.setRight(null);
+				}
+				// TODO remove dangling?
 			} else {
 				final List<EObject> targetList = (List<EObject>)currentContainer.eGet(getReference());
-				targetList.remove(valueMatch.getRight());
+				targetList.remove(expectedValue);
 			}
 		}
 	}
