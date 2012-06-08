@@ -10,11 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
 
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.AbstractEList;
@@ -43,16 +42,11 @@ public class ComparisonSpec extends ComparisonImpl {
 	 */
 	@Override
 	public EList<Diff> getDifferences() {
-		Iterable<Diff> diffIterable = Lists.newArrayList();
-
-		final List<Match> mappings = getMatches();
-		for (int i = 0; i < mappings.size(); i++) {
-			diffIterable = Iterables.concat(diffIterable, getDifferences(mappings.get(i)));
-		}
+		final Iterator<Diff> allDiffs = Iterators.filter(eAllContents(), Diff.class);
 
 		final EList<Diff> allDifferences = new BasicEList<Diff>();
-		for (Diff diff : diffIterable) {
-			((AbstractEList<Diff>)allDifferences).addUnique(diff);
+		while (allDiffs.hasNext()) {
+			((AbstractEList<Diff>)allDifferences).addUnique(allDiffs.next());
 		}
 
 		return allDifferences;
@@ -124,23 +118,5 @@ public class ComparisonSpec extends ComparisonImpl {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Returns all differences related to the given Match and its sub-matches.
-	 * 
-	 * @param match
-	 *            The match for which we need all differences.
-	 * @return All differences related to the given match and its sub-matches.
-	 */
-	private static Iterable<Diff> getDifferences(Match match) {
-		Iterable<Diff> differences = Lists.newArrayList(match.getDifferences());
-
-		final List<Match> submappings = match.getSubmatches();
-		for (int i = 0; i < submappings.size(); i++) {
-			differences = Iterables.concat(differences, getDifferences(submappings.get(i)));
-		}
-
-		return differences;
 	}
 }
