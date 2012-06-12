@@ -344,6 +344,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 
 			// We have the container, reference and value. We need to know the insertion index.
 			if (getReference().isMany()) {
+				// TODO extract this for reuse (the UI will need to compute insertion indices too)
 				final List<EObject> sourceList;
 				if (getValue() == valueMatch.getOrigin()) {
 					sourceList = (List<EObject>)getMatch().getOrigin().eGet(getReference());
