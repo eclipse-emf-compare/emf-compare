@@ -12,9 +12,12 @@ package org.eclipse.emf.compare.scope;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.collect.ForwardingIterator;
 import com.google.common.collect.Iterators;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
@@ -56,6 +59,12 @@ public class FilterComparisonScope implements IComparisonScope {
 	/** The common ancestor of {@link #left} and {@link #right}. May be <code>null</code>. */
 	private final Notifier origin;
 
+	/** The namespace uris detected in the comparison. */
+	private Set<String> nsURIs;
+
+	/** The resource uris detected in the comparison. */
+	private Set<String> resourceURIs;
+
 	/**
 	 * This will instantiate a scope with left, right and origin Notifiers defined.
 	 * 
@@ -70,6 +79,8 @@ public class FilterComparisonScope implements IComparisonScope {
 		this.left = left;
 		this.right = right;
 		this.origin = origin;
+		resourceURIs = new HashSet<String>();
+		nsURIs = new HashSet<String>();
 	}
 
 	/**
@@ -115,7 +126,10 @@ public class FilterComparisonScope implements IComparisonScope {
 
 		final Iterator<Resource> allResources = resourceSet.getResources().iterator();
 		final Iterator<Resource> filter = Iterators.filter(allResources, resourceSetContentFilter);
-		return Iterators.unmodifiableIterator(filter);
+
+		final Iterator<Resource> uriInitializingIt = new URIInitializingIterator<Resource>(filter);
+
+		return Iterators.unmodifiableIterator(uriInitializingIt);
 	}
 
 	/**
@@ -135,7 +149,10 @@ public class FilterComparisonScope implements IComparisonScope {
 		final Iterator<EObject> properContent = Iterators.filter(EcoreUtil.getAllProperContents(resource,
 				false), EObject.class);
 		final Iterator<EObject> filter = Iterators.filter(properContent, resourceContentFilter);
-		return Iterators.unmodifiableIterator(filter);
+
+		final Iterator<EObject> uriInitializingIt = new URIInitializingIterator<EObject>(resource, filter);
+
+		return Iterators.unmodifiableIterator(uriInitializingIt);
 	}
 
 	/**
@@ -155,7 +172,10 @@ public class FilterComparisonScope implements IComparisonScope {
 		final Iterator<EObject> properContent = Iterators.filter(EcoreUtil.getAllProperContents(eObject,
 				false), EObject.class);
 		final Iterator<EObject> filter = Iterators.filter(properContent, eObjectContentFilter);
-		return Iterators.unmodifiableIterator(filter);
+
+		final Iterator<EObject> uriInitializingIt = new URIInitializingIterator<EObject>(eObject, filter);
+
+		return Iterators.unmodifiableIterator(uriInitializingIt);
 	}
 
 	/**
@@ -193,4 +213,123 @@ public class FilterComparisonScope implements IComparisonScope {
 	public void setResourceSetContentFilter(Predicate<? super Resource> resourceSetContentFilter) {
 		this.resourceSetContentFilter = resourceSetContentFilter;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.scope.IComparisonScope#getNsURIs()
+	 */
+	public Set<String> getNsURIs() {
+		return nsURIs;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.scope.IComparisonScope#getResourceURIs()
+	 */
+	public Set<String> getResourceURIs() {
+		return resourceURIs;
+	}
+
+	/**
+	 * This iterator enables to add in the iteration the initialization of the namespace and resource uris
+	 * set.
+	 * 
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+	 * @param <T>
+	 *            The kind of object to iterate on.
+	 */
+	class URIInitializingIterator<T> extends ForwardingIterator<T> {
+
+		/** The origin iterator. */
+		private Iterator<T> delegate;
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param delegate
+		 *            The origin iterator.
+		 */
+		public URIInitializingIterator(Iterator<T> delegate) {
+			this.delegate = delegate;
+		}
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param resource
+		 *            The resource containing the elements to iterate on.
+		 * @param delegate
+		 *            The origin iterator.
+		 */
+		public URIInitializingIterator(Resource resource, Iterator<T> delegate) {
+			this.delegate = delegate;
+			addUri(resource);
+		}
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param eObject
+		 *            The EObject containing the elements to iterate on.
+		 * @param delegate
+		 *            The origin iterator.
+		 */
+		public URIInitializingIterator(EObject eObject, Iterator<T> delegate) {
+			this.delegate = delegate;
+			addUri(eObject);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see com.google.common.collect.ForwardingIterator#delegate()
+		 */
+		@Override
+		protected Iterator<T> delegate() {
+			return delegate;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see com.google.common.collect.ForwardingIterator#next()
+		 */
+		@Override
+		public T next() {
+			T obj = super.next();
+			if (obj instanceof EObject) {
+				addUri((EObject)obj);
+			} else if (obj instanceof Resource) {
+				addUri((Resource)obj);
+			}
+			return obj;
+		}
+
+		/**
+		 * It registers the namespace and resource URI from the given <code>eObject</code>.
+		 * 
+		 * @param eObject
+		 *            The given <code>eObject</code>.
+		 */
+		private void addUri(EObject eObject) {
+			if (eObject.eResource() != null) {
+				resourceURIs.add(eObject.eResource().getURI().toString());
+			}
+			nsURIs.add(eObject.eClass().getEPackage().getNsURI());
+		}
+
+		/**
+		 * It registers the resource URI from the given <code>resource</code>.
+		 * 
+		 * @param resource
+		 *            The given <code>resource</code>.
+		 */
+		private void addUri(Resource resource) {
+			resourceURIs.add(resource.getURI().toString());
+		}
+
+	}
+
 }

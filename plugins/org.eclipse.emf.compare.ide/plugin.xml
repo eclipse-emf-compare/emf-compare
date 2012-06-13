@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="org.eclipse.emf.compare.modelResolver" name="Model Resolver" schema="schema/ModelResolver.exsd"/>
+   <extension-point id="org.eclipse.emf.compare.postProcessor" name="Post Processor" schema="schema/PostProcess.exsd"/>
    
    <extension
          id="org.eclipse.emf.compare.model.provider"

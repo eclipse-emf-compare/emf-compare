@@ -13,8 +13,9 @@ package org.eclipse.emf.compare.ide;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.emf.compare.ide.internal.extension.EMFCompareExtensionRegistry;
+import org.eclipse.emf.compare.ide.internal.extension.EMFCompareIDEExtensionRegistry;
 import org.eclipse.emf.compare.ide.internal.extension.ModelResolverRegistryListener;
+import org.eclipse.emf.compare.ide.internal.extension.PostProcessorRegistryListener;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -32,6 +33,9 @@ public class EMFCompareIDEPlugin extends Plugin {
 	/** The registry listener that will be used to react to model provider changes. */
 	private ModelResolverRegistryListener modelProviderListener = new ModelResolverRegistryListener();
 
+	/** The registry listener that will be used to react to post processor changes. */
+	private PostProcessorRegistryListener postProcessorListener = new PostProcessorRegistryListener();
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -46,6 +50,10 @@ public class EMFCompareIDEPlugin extends Plugin {
 		registry.addListener(modelProviderListener,
 				ModelResolverRegistryListener.MODEL_RESOLVER_EXTENSION_POINT);
 		modelProviderListener.parseInitialContributions();
+
+		registry.addListener(postProcessorListener,
+				PostProcessorRegistryListener.POST_PROCESSOR_EXTENSION_POINT);
+		postProcessorListener.parseInitialContributions();
 	}
 
 	/**
@@ -60,7 +68,8 @@ public class EMFCompareIDEPlugin extends Plugin {
 
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
 		registry.removeListener(modelProviderListener);
-		EMFCompareExtensionRegistry.clearRegistry();
+		registry.removeListener(postProcessorListener);
+		EMFCompareIDEExtensionRegistry.clearRegistry();
 	}
 
 	/**

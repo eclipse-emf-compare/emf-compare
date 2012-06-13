@@ -13,18 +13,20 @@ package org.eclipse.emf.compare.ide.internal.extension;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.compare.logical.extension.EMFCompareExtensionRegistry;
+
 /**
  * This will contain all of the EMF Compare extensions parsed from its extension points.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public final class EMFCompareExtensionRegistry {
+public final class EMFCompareIDEExtensionRegistry extends EMFCompareExtensionRegistry {
 	/** List of all the model resolvers contributed through "org.eclipse.emf.compare.modelResolver". */
 	private static final List<ModelResolverDescriptor> MODEL_RESOLVERS = new ArrayList<ModelResolverDescriptor>();
 
 	/** This class should not be instantiated. */
-	private EMFCompareExtensionRegistry() {
-		// hides default constructor.
+	private EMFCompareIDEExtensionRegistry() {
+		super();
 	}
 
 	/**

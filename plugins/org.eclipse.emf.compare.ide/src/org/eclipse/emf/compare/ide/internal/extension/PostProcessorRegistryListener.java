@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2012 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,18 +16,19 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IRegistryEventListener;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.compare.logical.extension.EMFCompareExtensionRegistry;
 
 /**
  * This listener will allow us to be aware of contribution changes against the model resolver extension point.
  * 
- * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class ModelResolverRegistryListener implements IRegistryEventListener {
+public class PostProcessorRegistryListener implements IRegistryEventListener {
 	/** Name of the extension point to parse for extensions. */
-	public static final String MODEL_RESOLVER_EXTENSION_POINT = "org.eclipse.emf.compare.modelResolver"; //$NON-NLS-1$
+	public static final String POST_PROCESSOR_EXTENSION_POINT = "org.eclipse.emf.compare.postProcessor"; //$NON-NLS-1$
 
-	/** Name of the extension point's "modelResolver" tag. */
-	private static final String MODEL_RESOLVER_TAG = "modelResolver"; //$NON-NLS-1$
+	/** Name of the extension point's "postProcessor" tag. */
+	private static final String POST_PROCESSOR_TAG = "postProcessor"; //$NON-NLS-1$
 
 	/**
 	 * {@inheritDoc}
@@ -56,7 +57,7 @@ public class ModelResolverRegistryListener implements IRegistryEventListener {
 	public void parseInitialContributions() {
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
-		for (IExtension extension : registry.getExtensionPoint(MODEL_RESOLVER_EXTENSION_POINT)
+		for (IExtension extension : registry.getExtensionPoint(POST_PROCESSOR_EXTENSION_POINT)
 				.getExtensions()) {
 			parseExtension(extension);
 		}
@@ -71,10 +72,10 @@ public class ModelResolverRegistryListener implements IRegistryEventListener {
 		for (IExtension extension : extensions) {
 			final IConfigurationElement[] configElements = extension.getConfigurationElements();
 			for (IConfigurationElement elem : configElements) {
-				if (MODEL_RESOLVER_TAG.equals(elem.getName())) {
-					final String modelResolverClassName = elem
-							.getAttribute(ModelResolverDescriptor.MODEL_RESOLVER_CLASS_ATTRIBUTE);
-					EMFCompareIDEExtensionRegistry.removeModelResolver(modelResolverClassName);
+				if (POST_PROCESSOR_TAG.equals(elem.getName())) {
+					final String postProcessorClassName = elem
+							.getAttribute(PostProcessorIDEDescriptor.POST_PROCESSOR_CLASS_ATTRIBUTE);
+					EMFCompareExtensionRegistry.removePostProcessor(postProcessorClassName);
 				}
 			}
 		}
@@ -98,8 +99,8 @@ public class ModelResolverRegistryListener implements IRegistryEventListener {
 	private static void parseExtension(IExtension extension) {
 		final IConfigurationElement[] configElements = extension.getConfigurationElements();
 		for (IConfigurationElement element : configElements) {
-			if (MODEL_RESOLVER_TAG.equals(element.getName())) {
-				EMFCompareIDEExtensionRegistry.addModelResolver(new ModelResolverDescriptor(element));
+			if (POST_PROCESSOR_TAG.equals(element.getName())) {
+				EMFCompareExtensionRegistry.addPostProcessor(new PostProcessorIDEDescriptor(element));
 			}
 		}
 	}

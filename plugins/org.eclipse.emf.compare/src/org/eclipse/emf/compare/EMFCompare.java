@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare;
 
+import java.util.Iterator;
+import java.util.Set;
+
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.conflict.DefaultConflictDetector;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
@@ -19,6 +22,9 @@ import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.diff.IDiffProcessor;
 import org.eclipse.emf.compare.equi.DefaultEquiEngine;
 import org.eclipse.emf.compare.equi.IEquiEngine;
+import org.eclipse.emf.compare.logical.extension.EMFCompareExtensionRegistry;
+import org.eclipse.emf.compare.logical.extension.IPostProcessor;
+import org.eclipse.emf.compare.logical.extension.PostProcessorDescriptor;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.req.DefaultReqEngine;
@@ -89,9 +95,15 @@ public final class EMFCompare {
 	 * @return The result of this comparison.
 	 */
 	public static Comparison compare(IComparisonScope scope) {
+
 		// TODO allow extension of the default match engine
 		final IMatchEngine matchEngine = new DefaultMatchEngine();
 		Comparison comparison = matchEngine.match(scope);
+
+		IPostProcessor postProcessor = getPostProcessor(scope);
+		if (postProcessor != null) {
+			postProcessor.postMatch(comparison);
+		}
 
 		final EqualityHelper helper = new EqualityHelper();
 		final IDiffProcessor diffBuilder = new DiffBuilder();
@@ -100,22 +112,74 @@ public final class EMFCompare {
 		final IDiffEngine diffEngine = new DefaultDiffEngine(helper, diffBuilder);
 		diffEngine.diff(comparison);
 
+		if (postProcessor != null) {
+			postProcessor.postDiff(comparison);
+		}
+
 		EcoreUtil.CrossReferencer crossReferencer = ReferenceUtil.initializeCrossReferencer(comparison);
 
-		// TODO allow extension of the default requirements engine
 		final IReqEngine reqEngine = new DefaultReqEngine(crossReferencer);
 		reqEngine.computeRequirements(comparison);
 
-		// TODO allow extension of the default equivalences engine
+		if (postProcessor != null) {
+			postProcessor.postRequirements(comparison, crossReferencer);
+		}
+
 		final IEquiEngine equiEngine = new DefaultEquiEngine(crossReferencer);
 		equiEngine.computeEquivalences(comparison);
 
-		// TODO allow extension of the default conflict detector
+		if (postProcessor != null) {
+			postProcessor.postEquivalences(comparison, crossReferencer);
+		}
+
 		if (comparison.isThreeWay()) {
 			final IConflictDetector conflictDetector = new DefaultConflictDetector(helper);
 			conflictDetector.detect(comparison);
+
+			if (postProcessor != null) {
+				postProcessor.postConflicts(comparison);
+			}
 		}
 
 		return comparison;
+	}
+
+	/**
+	 * Retrieve the post processor from a given <code>scope</code>. The scope provides the set of the scanned
+	 * namespace and resource uris. If one of them matches with the regex of a
+	 * "org.eclipse.emf.compare.postProcessor" extension point, then the related post processor is returned.
+	 * 
+	 * @param scope
+	 *            The given scope.
+	 * @return The post processor.
+	 */
+	private static IPostProcessor getPostProcessor(IComparisonScope scope) {
+		IPostProcessor postProcessor = null;
+		final Iterator<PostProcessorDescriptor> postProcessorIterator = EMFCompareExtensionRegistry
+				.getRegisteredPostProcessors().iterator();
+		while (postProcessorIterator.hasNext()) {
+			final PostProcessorDescriptor descriptor = postProcessorIterator.next();
+			if (descriptor.getNsUri() != null && !descriptor.getNsUri().trim().isEmpty()) {
+				final Set<String> nsUris = scope.getNsURIs();
+				for (String nsUri : nsUris) {
+					if (nsUri.matches(descriptor.getNsUri())) {
+						postProcessor = descriptor.getPostProcessor();
+						break;
+					}
+				}
+			} else if (descriptor.getResourceUri() != null && !descriptor.getResourceUri().trim().isEmpty()) {
+				final Set<String> resourceUris = scope.getResourceURIs();
+				for (String resourceUri : resourceUris) {
+					if (resourceUri.matches(descriptor.getResourceUri())) {
+						postProcessor = descriptor.getPostProcessor();
+						break;
+					}
+				}
+			} else {
+				continue;
+			}
+			break;
+		}
+		return postProcessor;
 	}
 }

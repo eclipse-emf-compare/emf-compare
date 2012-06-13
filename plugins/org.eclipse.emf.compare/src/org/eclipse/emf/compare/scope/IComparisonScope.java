@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.scope;
 
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
@@ -100,4 +101,18 @@ public interface IComparisonScope {
 	 * @return An iterator over the {@link EObject}s which are part of this scope.
 	 */
 	Iterator<? extends EObject> getChildren(EObject eObject);
+
+	/**
+	 * This will be used by EMF Compare in order to retrieve the namespace uris detected in the scope.
+	 * 
+	 * @return The namespace uris.
+	 */
+	Set<String> getNsURIs();
+
+	/**
+	 * This will be used by EMF Compare in order to retrieve the resource uris detected in the scope.
+	 * 
+	 * @return The resource uris.
+	 */
+	Set<String> getResourceURIs();
 }

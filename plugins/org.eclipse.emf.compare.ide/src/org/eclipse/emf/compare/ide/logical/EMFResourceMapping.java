@@ -30,7 +30,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.internal.RevisionedURIConverter;
-import org.eclipse.emf.compare.ide.internal.extension.EMFCompareExtensionRegistry;
+import org.eclipse.emf.compare.ide.internal.extension.EMFCompareIDEExtensionRegistry;
 import org.eclipse.emf.compare.ide.internal.extension.ModelResolverDescriptor;
 import org.eclipse.emf.compare.ide.internal.utils.ResourceUtil;
 import org.eclipse.emf.compare.internal.ModelIdentifier;
@@ -337,7 +337,7 @@ public class EMFResourceMapping extends ResourceMapping {
 	 * This will try and resolve all logical resources that constitute this model in the local resource set.
 	 */
 	private void resolveLocalResourceSet() {
-		Iterator<ModelResolverDescriptor> modelResolverIterator = EMFCompareExtensionRegistry
+		Iterator<ModelResolverDescriptor> modelResolverIterator = EMFCompareIDEExtensionRegistry
 				.getRegisteredModelResolvers().iterator();
 		boolean resolved = false;
 		while (!resolved && modelResolverIterator.hasNext()) {
