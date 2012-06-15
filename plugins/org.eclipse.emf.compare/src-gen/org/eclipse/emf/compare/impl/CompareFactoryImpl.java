@@ -12,20 +12,9 @@ package org.eclipse.emf.compare.impl;
 
 import java.lang.Iterable;
 import org.eclipse.emf.compare.*;
-import org.eclipse.emf.compare.AttributeChange;
-import org.eclipse.emf.compare.CompareFactory;
-import org.eclipse.emf.compare.ComparePackage;
-import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Conflict;
-import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.Equivalence;
-import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.MatchResource;
-import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.spec.ComparisonSpec;
+import org.eclipse.emf.compare.internal.spec.MatchSpec;
+import org.eclipse.emf.compare.internal.spec.ReferenceChangeSpec;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -152,11 +141,10 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public Comparison createComparison() {
-		ComparisonImpl comparison = new ComparisonImpl();
-		return comparison;
+		return new ComparisonSpec();
 	}
 
 	/**
@@ -170,11 +158,10 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public Match createMatch() {
-		MatchImpl match = new MatchImpl();
-		return match;
+		return new MatchSpec();
 	}
 
 	/**
@@ -197,11 +184,10 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public ReferenceChange createReferenceChange() {
-		ReferenceChangeImpl referenceChange = new ReferenceChangeImpl();
-		return referenceChange;
+		return new ReferenceChangeSpec();
 	}
 
 	/**
