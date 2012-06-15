@@ -488,7 +488,10 @@ public class DefaultConflictDetector implements IConflictDetector {
 			}
 
 			final Object value = expectedContainer.eGet(attribute);
-			deleteOrUnset = value == null || value.equals(attribute.getDefaultValue());
+			// Though not the "default value", we consider that an empty string is an unset attribute.
+			final Object defaultValue = attribute.getDefaultValue();
+			deleteOrUnset = value == null || value.equals(defaultValue)
+					|| (defaultValue == null && "".equals(value)); //$NON-NLS-1$
 		}
 		return deleteOrUnset;
 	}

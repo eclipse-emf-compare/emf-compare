@@ -789,20 +789,20 @@ public final class EMFComparePredicates {
 		 * thus consider {@code null} equal to the empty String here.
 		 * </p>
 		 * 
-		 * @param referenceValue
+		 * @param attributeValue
 		 *            The reference value, first of the two Objects to compare.
 		 * @param expectedValue
 		 *            The expected value, second of the two Objects to compare.
 		 * @return {@code true} if these two Objects are equal, {@code false} otherwise.
 		 */
-		private static boolean equalAttributeValues(Object referenceValue, Object expectedValue) {
+		private static boolean equalAttributeValues(Object attributeValue, Object expectedValue) {
 			// Using == to handle the "null" case
-			boolean equal = expectedValue == referenceValue || expectedValue != null
-					&& expectedValue.equals(referenceValue);
+			boolean equal = expectedValue == attributeValue || expectedValue != null
+					&& expectedValue.equals(attributeValue);
 			// Consider that null is equal to the empty string (unset attributes)
 			if (!equal) {
-				equal = "".equals(referenceValue) && expectedValue == null || "".equals(expectedValue) //$NON-NLS-1$ //$NON-NLS-2$
-						&& referenceValue == null;
+				equal = "".equals(attributeValue) && expectedValue == null || "".equals(expectedValue) //$NON-NLS-1$ //$NON-NLS-2$
+						&& attributeValue == null;
 			}
 			return equal;
 		}

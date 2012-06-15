@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.impl;
 
 import java.lang.Iterable;
 import org.eclipse.emf.compare.*;
+import org.eclipse.emf.compare.internal.spec.AttributeChangeSpec;
 import org.eclipse.emf.compare.internal.spec.ComparisonSpec;
 import org.eclipse.emf.compare.internal.spec.MatchSpec;
 import org.eclipse.emf.compare.internal.spec.ReferenceChangeSpec;
@@ -192,11 +193,10 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public AttributeChange createAttributeChange() {
-		AttributeChangeImpl attributeChange = new AttributeChangeImpl();
-		return attributeChange;
+		return new AttributeChangeSpec();
 	}
 
 	/**

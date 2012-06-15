@@ -46,7 +46,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	 */
 	@Override
 	public void copyLeftToRight() {
-		// Don't merge an already merged diff
+		// Don't merge an already merged (or discarded) diff
 		if (getState() != DifferenceState.UNRESOLVED) {
 			return;
 		}
@@ -127,7 +127,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	 */
 	@Override
 	public void copyRightToLeft() {
-		// Don't merge an already merged diff
+		// Don't merge an already merged (or discarded) diff
 		if (getState() != DifferenceState.UNRESOLVED) {
 			return;
 		}
@@ -210,12 +210,47 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	}
 
 	/**
+	 * This will merge all {@link #getRequiredBy() differences that require us} in the given direction.
+	 * 
+	 * @param rightToLeft
+	 *            If {@code true}, {@link #copyRightToLeft() apply} all {@link #getRequiredBy() differences
+	 *            that require us}. Otherwise, {@link #copyLeftToRight() revert} them.
+	 */
+	protected void mergeRequiredBy(boolean rightToLeft) {
+		// TODO log back to the user what we will merge along?
+		for (Diff dependency : getRequiredBy()) {
+			if (rightToLeft) {
+				dependency.copyRightToLeft();
+			} else {
+				dependency.copyLeftToRight();
+			}
+		}
+	}
+
+	/**
+	 * This will merge all {@link #getRequires() required differences} in the given direction.
+	 * 
+	 * @param rightToLeft
+	 *            If {@code true}, {@link #copyRightToLeft() apply} all {@link #getRequires() required
+	 *            differences}. Otherwise, {@link #copyLeftToRight() revert} them.
+	 */
+	protected void mergeRequires(boolean rightToLeft) {
+		// TODO log back to the user what we will merge along?
+		for (Diff dependency : getRequires()) {
+			if (rightToLeft) {
+				dependency.copyRightToLeft();
+			} else {
+				dependency.copyLeftToRight();
+			}
+		}
+	}
+
+	/**
 	 * This will be called when trying to copy a "MOVE" diff.
 	 * 
 	 * @param rightToLeft
 	 *            Whether we should move the value in the left or right side.
 	 */
-	@SuppressWarnings("unchecked")
 	protected void moveElement(boolean rightToLeft) {
 		final EObject expectedContainer;
 		if (rightToLeft) {
@@ -240,64 +275,77 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			}
 
 			// We now know the target container, target reference and target value.
-			if (getReference().isMany()) {
-				// Determine the index to move the element to.
-				final boolean undoingLeft = rightToLeft && getSource() == DifferenceSource.LEFT;
-				final boolean undoingRight = !rightToLeft && getSource() == DifferenceSource.RIGHT;
-
-				final List<EObject> sourceList;
-				if (undoingLeft || undoingRight) {
-					sourceList = (List<EObject>)getMatch().getOrigin().eGet(getReference());
-				} else if (rightToLeft) {
-					sourceList = (List<EObject>)getMatch().getRight().eGet(getReference());
-				} else {
-					sourceList = (List<EObject>)getMatch().getLeft().eGet(getReference());
-				}
-
-				final List<EObject> targetList;
-				if (rightToLeft) {
-					targetList = (List<EObject>)getMatch().getLeft().eGet(getReference());
-				} else {
-					targetList = (List<EObject>)getMatch().getRight().eGet(getReference());
-				}
-
-				final Iterable<EObject> ignoredElements;
-				if (undoingLeft || undoingRight) {
-					// Undoing a change
-					ignoredElements = null;
-				} else if (comparison.isThreeWay() && getMatch().getOrigin() != null) {
-					ignoredElements = computeIgnoredElements(targetList);
-				} else {
-					ignoredElements = null;
-				}
-
-				// Element to move cannot be part of the LCS... or there would not be a MOVE diff
-				final EqualityHelper helper = new EqualityHelper();
-				int insertionIndex = DiffUtil.findInsertionIndex(comparison, helper, ignoredElements,
-						sourceList, targetList, expectedValue);
-				/*
-				 * However, it could still have been located "before" its new index, in which case we need to
-				 * take it into account.
-				 */
-				if (insertionIndex > targetList.indexOf(expectedValue)) {
-					insertionIndex--;
-				}
-
-				if (targetList instanceof EList<?>) {
-					((EList<EObject>)targetList).move(insertionIndex, expectedValue);
-				} else {
-					targetList.remove(expectedValue);
-					targetList.add(insertionIndex, expectedValue);
-				}
-			} else {
-				expectedContainer.eSet(getReference(), expectedValue);
-			}
+			doMove(comparison, expectedContainer, expectedValue, rightToLeft);
 
 			// TODO check that XMI IDs were preserved
 		}
 	}
 
-	// TODO merge the two "createIn" methods together. They don't differ enough to justify a split
+	/**
+	 * This will do the actual work of moving the element into its reference. All sanity checks were made in
+	 * {@link #moveElement(boolean)} and no more verification will be made here.
+	 * 
+	 * @param comparison
+	 *            Comparison holding this Diff.
+	 * @param expectedContainer
+	 *            The container in which we are reorganizing a reference.
+	 * @param expectedValue
+	 *            The value that is to be moved within its reference.
+	 * @param rightToLeft
+	 *            Whether we should move the value in the left or right side.
+	 */
+	@SuppressWarnings("unchecked")
+	protected void doMove(Comparison comparison, EObject expectedContainer, EObject expectedValue,
+			boolean rightToLeft) {
+		if (getReference().isMany()) {
+			// Determine the index to move the element to.
+			final boolean undoingLeft = rightToLeft && getSource() == DifferenceSource.LEFT;
+			final boolean undoingRight = !rightToLeft && getSource() == DifferenceSource.RIGHT;
+
+			final List<EObject> sourceList;
+			if (undoingLeft || undoingRight) {
+				sourceList = (List<EObject>)getMatch().getOrigin().eGet(getReference());
+			} else if (rightToLeft) {
+				sourceList = (List<EObject>)getMatch().getRight().eGet(getReference());
+			} else {
+				sourceList = (List<EObject>)getMatch().getLeft().eGet(getReference());
+			}
+
+			final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(getReference());
+
+			final Iterable<EObject> ignoredElements;
+			if (undoingLeft || undoingRight) {
+				// Undoing a change
+				ignoredElements = null;
+			} else if (comparison.isThreeWay() && getMatch().getOrigin() != null) {
+				ignoredElements = computeIgnoredElements(targetList);
+			} else {
+				ignoredElements = null;
+			}
+
+			// Element to move cannot be part of the LCS... or there would not be a MOVE diff
+			final EqualityHelper helper = new EqualityHelper();
+			int insertionIndex = DiffUtil.findInsertionIndex(comparison, helper, ignoredElements, sourceList,
+					targetList, expectedValue);
+			/*
+			 * However, it could still have been located "before" its new index, in which case we need to take
+			 * it into account.
+			 */
+			if (insertionIndex > targetList.indexOf(expectedValue)) {
+				insertionIndex--;
+			}
+
+			if (targetList instanceof EList<?>) {
+				((EList<EObject>)targetList).move(insertionIndex, expectedValue);
+			} else {
+				targetList.remove(expectedValue);
+				targetList.add(insertionIndex, expectedValue);
+			}
+		} else {
+			expectedContainer.eSet(getReference(), expectedValue);
+		}
+	}
+
 	/**
 	 * This will be called when we need to create an element in the target side.
 	 * <p>
@@ -422,42 +470,6 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	}
 
 	/**
-	 * This will merge all {@link #getRequiredBy() differences that require us} in the given direction.
-	 * 
-	 * @param rightToLeft
-	 *            If {@code true}, {@link #copyRightToLeft() apply} all {@link #getRequiredBy() differences
-	 *            that require us}. Otherwise, {@link #copyLeftToRight() revert} them.
-	 */
-	protected void mergeRequiredBy(boolean rightToLeft) {
-		// TODO log back to the user what we will merge along?
-		for (Diff dependency : getRequiredBy()) {
-			if (rightToLeft) {
-				dependency.copyRightToLeft();
-			} else {
-				dependency.copyLeftToRight();
-			}
-		}
-	}
-
-	/**
-	 * This will merge all {@link #getRequires() required differences} in the given direction.
-	 * 
-	 * @param rightToLeft
-	 *            If {@code true}, {@link #copyRightToLeft() apply} all {@link #getRequires() required
-	 *            differences}. Otherwise, {@link #copyLeftToRight() revert} them.
-	 */
-	protected void mergeRequires(boolean rightToLeft) {
-		// TODO log back to the user what we will merge along?
-		for (Diff dependency : getRequires()) {
-			if (rightToLeft) {
-				dependency.copyRightToLeft();
-			} else {
-				dependency.copyLeftToRight();
-			}
-		}
-	}
-
-	/**
 	 * This will be called when we need to remove an element from the target side.
 	 * <p>
 	 * All necessary sanity checks have been made to ensure that the current operation is one that should
@@ -502,7 +514,6 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 				expectedValue = valueMatch.getRight();
 			}
 			// We have the container, reference and value to remove.
-			// Furthermore, we know that the reference is multi-valued (can't be here with mono-valued).
 			if (getReference().isContainment()) {
 				EcoreUtil.remove(expectedValue);
 				if (rightToLeft) {
@@ -512,6 +523,10 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 				}
 				// TODO remove dangling?
 			} else if (getReference().isMany()) {
+				/*
+				 * TODO if the same value appears twice, should we try and find the one that has actually been
+				 * deleted? Can it happen? For now, remove the first occurence we find.
+				 */
 				final List<EObject> targetList = (List<EObject>)currentContainer.eGet(getReference());
 				targetList.remove(expectedValue);
 			} else {
@@ -549,7 +564,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 
 		if (originContainer == null || !targetContainer.eIsSet(getReference())
 				|| !originContainer.eIsSet(getReference())) {
-			removeFromTarget(rightToLeft);
+			targetContainer.eUnset(getReference());
 		} else {
 			final Match valueMatch = getMatch().getComparison().getMatch(
 					(EObject)originContainer.eGet(getReference()));
