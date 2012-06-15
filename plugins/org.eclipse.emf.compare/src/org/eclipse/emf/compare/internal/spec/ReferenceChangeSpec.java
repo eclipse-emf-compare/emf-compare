@@ -103,7 +103,8 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 						// We need to re-add this element
 						addInTarget(false);
 					} else {
-						removeFromTarget(false);
+						// We'll actually need to "reset" this reference to its original value
+						resetInTarget(false);
 					}
 					break;
 				default:
@@ -112,6 +113,11 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 		}
 
 		setState(DifferenceState.MERGED);
+		if (getEquivalence() != null) {
+			for (Diff equivalent : getEquivalence().getDifferences()) {
+				equivalent.setState(DifferenceState.MERGED);
+			}
+		}
 	}
 
 	/**
@@ -150,7 +156,8 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 						// We need to re-create the element.
 						addInTarget(true);
 					} else {
-						removeFromTarget(true);
+						// We'll actually need to "reset" this reference to its original value
+						resetInTarget(true);
 					}
 					break;
 				default:
@@ -185,6 +192,11 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 		}
 
 		setState(DifferenceState.MERGED);
+		if (getEquivalence() != null) {
+			for (Diff equivalent : getEquivalence().getDifferences()) {
+				equivalent.setState(DifferenceState.MERGED);
+			}
+		}
 	}
 
 	/**
@@ -204,7 +216,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	 *            Whether we should move the value in the left or right side.
 	 */
 	@SuppressWarnings("unchecked")
-	public void moveElement(boolean rightToLeft) {
+	protected void moveElement(boolean rightToLeft) {
 		final EObject expectedContainer;
 		if (rightToLeft) {
 			expectedContainer = getMatch().getLeft();
@@ -499,10 +511,57 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					valueMatch.setRight(null);
 				}
 				// TODO remove dangling?
-			} else {
+			} else if (getReference().isMany()) {
 				final List<EObject> targetList = (List<EObject>)currentContainer.eGet(getReference());
 				targetList.remove(expectedValue);
+			} else {
+				currentContainer.eUnset(getReference());
 			}
+		}
+	}
+
+	/**
+	 * This will be called by the merge operations in order to reset a reference to its original value, be
+	 * that the left or right side.
+	 * <p>
+	 * Should never be called on multi-valued references.
+	 * </p>
+	 * 
+	 * @param rightToLeft
+	 *            Tells us the direction of this merge operation.
+	 */
+	protected void resetInTarget(boolean rightToLeft) {
+		final EObject targetContainer;
+		if (rightToLeft) {
+			targetContainer = getMatch().getLeft();
+		} else {
+			targetContainer = getMatch().getRight();
+		}
+
+		final EObject originContainer;
+		if (getMatch().getComparison().isThreeWay()) {
+			originContainer = getMatch().getOrigin();
+		} else if (rightToLeft) {
+			originContainer = getMatch().getRight();
+		} else {
+			originContainer = getMatch().getLeft();
+		}
+
+		if (originContainer == null || !targetContainer.eIsSet(getReference())
+				|| !originContainer.eIsSet(getReference())) {
+			removeFromTarget(rightToLeft);
+		} else {
+			final Match valueMatch = getMatch().getComparison().getMatch(
+					(EObject)originContainer.eGet(getReference()));
+			final EObject expectedValue;
+			if (valueMatch == null) {
+				expectedValue = null;
+			} else if (rightToLeft) {
+				expectedValue = valueMatch.getLeft();
+			} else {
+				expectedValue = valueMatch.getRight();
+			}
+			targetContainer.eSet(getReference(), expectedValue);
 		}
 	}
 
