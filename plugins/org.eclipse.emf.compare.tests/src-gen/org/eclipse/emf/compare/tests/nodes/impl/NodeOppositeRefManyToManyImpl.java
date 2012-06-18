@@ -39,6 +39,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
+//Generated code, suppressing all warnings
+@SuppressWarnings("all")
 public class NodeOppositeRefManyToManyImpl extends NodeImpl implements NodeOppositeRefManyToMany {
 	/**
 	 * <!-- begin-user-doc -->

@@ -35,6 +35,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
+//Generated code, suppressing all warnings
+@SuppressWarnings("all")
 public class NodeOppositeRefOneToOneImpl extends NodeImpl implements NodeOppositeRefOneToOne {
 	/**
 	 * <!-- begin-user-doc -->

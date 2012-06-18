@@ -357,7 +357,7 @@ public class EquiComputingTest {
 		testA5(TestKind.LEFT, comparison);
 	}
 
-	private void testA5(final TestKind kind, final Comparison comparison) {
+	private static void testA5(final TestKind kind, final Comparison comparison) {
 		List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 12 differences

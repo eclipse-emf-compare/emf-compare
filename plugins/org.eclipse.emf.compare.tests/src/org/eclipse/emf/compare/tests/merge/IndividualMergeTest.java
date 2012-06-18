@@ -1035,6 +1035,7 @@ public class IndividualMergeTest {
 		final EReference ref = referenceChange.getReference();
 		final Match valueMatch = comparison.getMatch(referenceChange.getValue());
 		if (ref.isMany()) {
+			@SuppressWarnings("unchecked")
 			final List<EObject> refValue = (List<EObject>)container.eGet(ref);
 			if (rightToLeft && unset) {
 				assertTrue(!refValue.contains(valueMatch.getLeft()));

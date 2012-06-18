@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.After;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class PostProcessorTest {
 
 	private PostProcessInputData input = new PostProcessInputData();

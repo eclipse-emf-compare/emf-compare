@@ -23,6 +23,7 @@ import org.eclipse.emf.compare.tests.req.data.ReqInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class ReqComputingTest {
 
 	enum TestKind {
