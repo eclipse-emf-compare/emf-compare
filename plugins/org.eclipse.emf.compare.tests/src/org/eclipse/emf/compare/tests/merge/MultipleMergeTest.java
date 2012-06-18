@@ -46,7 +46,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class IndividualMergeTest {
+public class MultipleMergeTest {
 	// We'll use input from various other tests
 	private ConflictInputData conflictInput = new ConflictInputData();
 
