@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.internal.spec;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
@@ -452,7 +453,7 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 			final boolean undoingRight = !rightToLeft && getSource() == DifferenceSource.RIGHT;
 
 			final List<Object> sourceList;
-			if (undoingLeft || undoingRight) {
+			if ((undoingLeft || undoingRight) && getMatch().getOrigin() != null) {
 				sourceList = (List<Object>)getMatch().getOrigin().eGet(getAttribute());
 			} else if (rightToLeft) {
 				sourceList = (List<Object>)getMatch().getRight().eGet(getAttribute());
@@ -466,10 +467,8 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 			if (undoingLeft || undoingRight) {
 				// Undoing a change
 				ignoredElements = null;
-			} else if (comparison.isThreeWay() && getKind() == DifferenceKind.DELETE) {
-				ignoredElements = computeIgnoredElements(targetList);
 			} else {
-				ignoredElements = null;
+				ignoredElements = Collections.singleton(getValue());
 			}
 
 			// Element to move cannot be part of the LCS... or there would not be a MOVE diff

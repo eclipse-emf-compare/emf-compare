@@ -608,6 +608,8 @@ public class DefaultDiffEngine implements IDiffEngine {
 			rightValue = match.getRight().eGet(attribute);
 		}
 
+		final String emptyString = ""; //$NON-NLS-1$
+
 		if (helper.matchingValues(getComparison(), leftValue, rightValue)) {
 			// Identical values in left and right. The only problematic case is if they do not match the
 			// origin (and left and right are defined, i.e don't detect attribute change on unmatched)
@@ -626,18 +628,28 @@ public class DefaultDiffEngine implements IDiffEngine {
 			final Object originValue = match.getOrigin().eGet(attribute);
 
 			if (helper.matchingValues(getComparison(), leftValue, originValue)) {
+				Object changedValue = rightValue;
+				if (rightValue == null || rightValue == emptyString) {
+					changedValue = originValue;
+				}
+
 				if (rightValue != UNMATCHED_VALUE) {
 					// Value is in left and origin, but not in the right
-					getDiffProcessor().attributeChange(match, attribute, rightValue, DifferenceKind.CHANGE,
+					getDiffProcessor().attributeChange(match, attribute, changedValue, DifferenceKind.CHANGE,
 							DifferenceSource.RIGHT);
 				} else {
 					// Right is unmatched, left is the same as in the origin. No diff here : the diff is on
 					// the match itself, not on one of its attributes.
 				}
 			} else if (helper.matchingValues(getComparison(), rightValue, originValue)) {
+				Object changedValue = leftValue;
+				if (leftValue == null || leftValue == emptyString) {
+					changedValue = originValue;
+				}
+
 				if (leftValue != UNMATCHED_VALUE) {
 					// Value is in right and origin, but not in left
-					getDiffProcessor().attributeChange(match, attribute, leftValue, DifferenceKind.CHANGE,
+					getDiffProcessor().attributeChange(match, attribute, changedValue, DifferenceKind.CHANGE,
 							DifferenceSource.LEFT);
 				} else {
 					// Left is unmatched, right is the same as in the origin. No diff here : the diff is on
@@ -648,24 +660,43 @@ public class DefaultDiffEngine implements IDiffEngine {
 				 * Left and right are different. None match what's in the origin. Those of the two that are
 				 * not unmatched are thus a "change" difference, with a possible conflict.
 				 */
+				Object leftChange = leftValue;
+				if (leftValue == null || leftValue == emptyString) {
+					leftChange = originValue;
+				}
+				Object rightChange = rightValue;
+				if (rightValue == null || rightValue == emptyString) {
+					rightChange = originValue;
+				}
+
 				if (leftValue != UNMATCHED_VALUE) {
-					getDiffProcessor().attributeChange(match, attribute, leftValue, DifferenceKind.CHANGE,
+					getDiffProcessor().attributeChange(match, attribute, leftChange, DifferenceKind.CHANGE,
 							DifferenceSource.LEFT);
 				}
 				if (rightValue != UNMATCHED_VALUE) {
-					getDiffProcessor().attributeChange(match, attribute, rightValue, DifferenceKind.CHANGE,
+					getDiffProcessor().attributeChange(match, attribute, rightChange, DifferenceKind.CHANGE,
 							DifferenceSource.RIGHT);
 				}
 			}
 		} else {
 			// Left and right values are different, and we have no origin.
 			if (leftValue != UNMATCHED_VALUE) {
-				getDiffProcessor().attributeChange(match, attribute, leftValue, DifferenceKind.CHANGE,
-						DifferenceSource.LEFT);
+				if (leftValue == null || leftValue == emptyString) {
+					getDiffProcessor().attributeChange(match, attribute, rightValue, DifferenceKind.CHANGE,
+							DifferenceSource.LEFT);
+				} else {
+					getDiffProcessor().attributeChange(match, attribute, leftValue, DifferenceKind.CHANGE,
+							DifferenceSource.LEFT);
+				}
 			}
 			if (getComparison().isThreeWay() && rightValue != UNMATCHED_VALUE) {
-				getDiffProcessor().attributeChange(match, attribute, rightValue, DifferenceKind.CHANGE,
-						DifferenceSource.RIGHT);
+				if (rightValue == null || rightValue == emptyString) {
+					getDiffProcessor().attributeChange(match, attribute, leftValue, DifferenceKind.CHANGE,
+							DifferenceSource.RIGHT);
+				} else {
+					getDiffProcessor().attributeChange(match, attribute, rightValue, DifferenceKind.CHANGE,
+							DifferenceSource.RIGHT);
+				}
 			}
 		}
 	}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes:Node
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes"
+    xmi:id="_OxzlkLlPEeGmS9ESxeCLvg"
+    name="root">
+  <containmentRef1
+      xsi:type="nodes:NodeMultiValuedAttribute"
+      xmi:id="_QRPYALlPEeGmS9ESxeCLvg"
+      name="origin">
+    <multiValuedAttribute>value2</multiValuedAttribute>
+    <multiValuedAttribute>value1</multiValuedAttribute>
+  </containmentRef1>
+</nodes:Node>

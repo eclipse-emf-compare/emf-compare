@@ -303,7 +303,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			final boolean undoingRight = !rightToLeft && getSource() == DifferenceSource.RIGHT;
 
 			final List<EObject> sourceList;
-			if (undoingLeft || undoingRight) {
+			if ((undoingLeft || undoingRight) && getMatch().getOrigin() != null) {
 				sourceList = (List<EObject>)getMatch().getOrigin().eGet(getReference());
 			} else if (rightToLeft) {
 				sourceList = (List<EObject>)getMatch().getRight().eGet(getReference());
