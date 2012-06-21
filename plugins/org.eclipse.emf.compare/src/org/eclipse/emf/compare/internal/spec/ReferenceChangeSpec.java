@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.internal.spec;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
@@ -70,7 +71,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 				case CHANGE:
 					// Is it an unset?
 					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
-					if (valueMatch != null && getValue() == valueMatch.getOrigin()) {
+					if (valueMatch != null && getValue() != valueMatch.getLeft()) {
 						removeFromTarget(false);
 					} else {
 						addInTarget(false);
@@ -98,7 +99,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 				case CHANGE:
 					// Is it an unset?
 					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
-					if (valueMatch != null && getValue() == valueMatch.getOrigin()) {
+					if (valueMatch != null && getValue() != valueMatch.getRight()) {
 						// Value has been unset in the right, and we are merging towards right.
 						// We need to re-add this element
 						addInTarget(false);
@@ -151,7 +152,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 				case CHANGE:
 					// Is it an unset?
 					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
-					if (valueMatch != null && getValue() == valueMatch.getOrigin()) {
+					if (valueMatch != null && getValue() != valueMatch.getLeft()) {
 						// Value has been unset in the left, and we're copying towards the left.
 						// We need to re-create the element.
 						addInTarget(true);
@@ -180,7 +181,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 				case CHANGE:
 					// Is it an unset?
 					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
-					if (valueMatch != null && getValue() == valueMatch.getOrigin()) {
+					if (valueMatch != null && getValue() != valueMatch.getRight()) {
 						removeFromTarget(true);
 					} else {
 						addInTarget(true);
@@ -313,14 +314,17 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 
 			final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(getReference());
 
-			final Iterable<EObject> ignoredElements;
+			Iterable<EObject> ignoredElements;
 			if (undoingLeft || undoingRight) {
 				// Undoing a change
 				ignoredElements = null;
-			} else if (comparison.isThreeWay() && getMatch().getOrigin() != null) {
-				ignoredElements = computeIgnoredElements(targetList);
 			} else {
-				ignoredElements = null;
+				if (comparison.isThreeWay() && getMatch().getOrigin() != null) {
+					ignoredElements = computeIgnoredElements(targetList);
+					ignoredElements = Iterables.concat(ignoredElements, Collections.singleton(expectedValue));
+				} else {
+					ignoredElements = Collections.singleton(expectedValue);
+				}
 			}
 
 			// Element to move cannot be part of the LCS... or there would not be a MOVE diff

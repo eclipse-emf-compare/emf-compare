@@ -471,7 +471,6 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 				ignoredElements = Collections.singleton(getValue());
 			}
 
-			// Element to move cannot be part of the LCS... or there would not be a MOVE diff
 			final EqualityHelper helper = new EqualityHelper();
 			int insertionIndex = DiffUtil.findInsertionIndex(comparison, helper, ignoredElements, sourceList,
 					targetList, expectedValue);

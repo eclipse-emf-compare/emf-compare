@@ -18,11 +18,14 @@ import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToAttribute;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedAttribute;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.movedInAttribute;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.movedInReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromAttribute;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 
 import com.google.common.collect.Iterators;
 
@@ -35,6 +38,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.tests.merge.data.IndividualDiffInputData;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -1258,6 +1262,924 @@ public class IndividualMergeTest {
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
+	@Test
+	public void testReferenceMonoSet2WayLtR() throws IOException {
+		final Resource left = input.getReferenceMonoSetLeft();
+		final Resource right = input.getReferenceMonoSetRight();
+
+		Comparison comparison = EMFCompare.compare(left, right);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "singleValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				changedReference("root.origin", featureName, null, "root.left")));
+
+		diff.copyLeftToRight();
+		final EObject originNode = getNodeNamed(right, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(right, "left");
+		assertNotNull(targetNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		assertSame(targetNode, originNode.eGet(feature));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMonoSet2WayRtL() throws IOException {
+		final Resource left = input.getReferenceMonoSetLeft();
+		final Resource right = input.getReferenceMonoSetRight();
+
+		Comparison comparison = EMFCompare.compare(left, right);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "singleValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				changedReference("root.origin", featureName, null, "root.left")));
+
+		diff.copyRightToLeft();
+		final EObject originNode = getNodeNamed(left, "origin");
+		assertNotNull(originNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		assertNull(originNode.eGet(feature));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMonoSet3WayLeftChangeLtR() throws IOException {
+		final Resource left = input.getReferenceMonoSetLeft();
+		final Resource right = input.getReferenceMonoSetRight();
+		final Resource origin = input.getReferenceMonoSetOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "singleValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				changedReference("root.origin", featureName, null, "root.left")));
+
+		diff.copyLeftToRight();
+		final EObject originNode = getNodeNamed(right, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(right, "left");
+		assertNotNull(targetNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		assertSame(targetNode, originNode.eGet(feature));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMonoSet3WayLeftChangeRtL() throws IOException {
+		final Resource left = input.getReferenceMonoSetLeft();
+		final Resource right = input.getReferenceMonoSetRight();
+		final Resource origin = input.getReferenceMonoSetOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "singleValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				changedReference("root.origin", featureName, null, "root.left")));
+
+		diff.copyRightToLeft();
+		final EObject originNode = getNodeNamed(left, "origin");
+		assertNotNull(originNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		assertNull(originNode.eGet(feature));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMonoSet3WayRightChangeLtR() throws IOException {
+		// In order to have changes on the right side, we'll invert right and left
+		final Resource left = input.getReferenceMonoSetRight();
+		final Resource right = input.getReferenceMonoSetLeft();
+		final Resource origin = input.getReferenceMonoSetOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "singleValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				changedReference("root.origin", featureName, null, "root.left")));
+
+		diff.copyLeftToRight();
+		final EObject originNode = getNodeNamed(right, "origin");
+		assertNotNull(originNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		assertNull(originNode.eGet(feature));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMonoSet3WayRightChangeRtL() throws IOException {
+		// In order to have changes on the right side, we'll invert right and left
+		final Resource left = input.getReferenceMonoSetRight();
+		final Resource right = input.getReferenceMonoSetLeft();
+		final Resource origin = input.getReferenceMonoSetOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "singleValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				changedReference("root.origin", featureName, null, "root.left")));
+
+		diff.copyRightToLeft();
+		final EObject originNode = getNodeNamed(left, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(left, "left");
+		assertNotNull(targetNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		assertSame(targetNode, originNode.eGet(feature));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMonoUnset2WayLtR() throws IOException {
+		final Resource left = input.getReferenceMonoUnsetLeft();
+		final Resource right = input.getReferenceMonoUnsetRight();
+
+		Comparison comparison = EMFCompare.compare(left, right);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "singleValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				changedReference("root.origin", featureName, "root.target", null)));
+
+		diff.copyLeftToRight();
+		final EObject originNode = getNodeNamed(right, "origin");
+		assertNotNull(originNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		assertNull(originNode.eGet(feature));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMonoUnset2WayRtL() throws IOException {
+		final Resource left = input.getReferenceMonoUnsetLeft();
+		final Resource right = input.getReferenceMonoUnsetRight();
+
+		Comparison comparison = EMFCompare.compare(left, right);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "singleValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				changedReference("root.origin", featureName, "root.target", null)));
+
+		diff.copyRightToLeft();
+		final EObject originNode = getNodeNamed(left, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(left, "target");
+		assertNotNull(originNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		assertSame(targetNode, originNode.eGet(feature));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMonoUnset3WayLeftChangeLtR() throws IOException {
+		final Resource left = input.getReferenceMonoUnsetLeft();
+		final Resource right = input.getReferenceMonoUnsetRight();
+		final Resource origin = input.getReferenceMonoUnsetOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "singleValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				changedReference("root.origin", featureName, "root.target", null)));
+
+		diff.copyLeftToRight();
+		final EObject originNode = getNodeNamed(right, "origin");
+		assertNotNull(originNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		assertNull(originNode.eGet(feature));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMonoUnset3WayLeftChangeRtL() throws IOException {
+		final Resource left = input.getReferenceMonoUnsetLeft();
+		final Resource right = input.getReferenceMonoUnsetRight();
+		final Resource origin = input.getReferenceMonoUnsetOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "singleValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				changedReference("root.origin", featureName, "root.target", null)));
+
+		diff.copyRightToLeft();
+		final EObject originNode = getNodeNamed(left, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(left, "target");
+		assertNotNull(originNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		assertSame(targetNode, originNode.eGet(feature));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMonoUnset3WayRightChangeLtR() throws IOException {
+		// In order to have changes on the right side, we'll invert right and left
+		final Resource left = input.getReferenceMonoUnsetRight();
+		final Resource right = input.getReferenceMonoUnsetLeft();
+		final Resource origin = input.getReferenceMonoUnsetOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "singleValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				changedReference("root.origin", featureName, "root.target", null)));
+
+		diff.copyLeftToRight();
+		final EObject originNode = getNodeNamed(right, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(right, "target");
+		assertNotNull(targetNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		assertSame(targetNode, originNode.eGet(feature));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMonoUnset3WayRightChangeRtL() throws IOException {
+		// In order to have changes on the right side, we'll invert right and left
+		final Resource left = input.getReferenceMonoUnsetRight();
+		final Resource right = input.getReferenceMonoUnsetLeft();
+		final Resource origin = input.getReferenceMonoUnsetOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "singleValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				changedReference("root.origin", featureName, "root.target", null)));
+
+		diff.copyRightToLeft();
+		final EObject originNode = getNodeNamed(left, "origin");
+		assertNotNull(originNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		assertNull(originNode.eGet(feature));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMultiAdd2WayLtR() throws IOException {
+		final Resource left = input.getReferenceMultiAddLeft();
+		final Resource right = input.getReferenceMultiAddRight();
+
+		Comparison comparison = EMFCompare.compare(left, right);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				addedToReference("root.origin", featureName, "root.target")));
+
+		diff.copyLeftToRight();
+		final EObject originNode = getNodeNamed(right, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(right, "target");
+		assertNotNull(targetNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object featureValue = originNode.eGet(feature);
+		assertTrue(featureValue instanceof Collection<?>);
+		assertTrue(((Collection<?>)featureValue).contains(targetNode));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMultiAdd2WayRtL() throws IOException {
+		final Resource left = input.getReferenceMultiAddLeft();
+		final Resource right = input.getReferenceMultiAddRight();
+
+		Comparison comparison = EMFCompare.compare(left, right);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				addedToReference("root.origin", featureName, "root.target")));
+
+		diff.copyRightToLeft();
+		final EObject originNode = getNodeNamed(left, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(left, "target");
+		assertNotNull(targetNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object featureValue = originNode.eGet(feature);
+		assertTrue(featureValue instanceof Collection<?>);
+		assertFalse(((Collection<?>)featureValue).contains(targetNode));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMultiAdd3WayLeftChangeLtR() throws IOException {
+		final Resource left = input.getReferenceMultiAddLeft();
+		final Resource right = input.getReferenceMultiAddRight();
+		final Resource origin = input.getReferenceMultiAddOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				addedToReference("root.origin", featureName, "root.target")));
+
+		diff.copyLeftToRight();
+		final EObject originNode = getNodeNamed(right, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(right, "target");
+		assertNotNull(targetNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object featureValue = originNode.eGet(feature);
+		assertTrue(featureValue instanceof Collection<?>);
+		assertTrue(((Collection<?>)featureValue).contains(targetNode));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMultiAdd3WayLeftChangeRtL() throws IOException {
+		final Resource left = input.getReferenceMultiAddLeft();
+		final Resource right = input.getReferenceMultiAddRight();
+		final Resource origin = input.getReferenceMultiAddOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				addedToReference("root.origin", featureName, "root.target")));
+
+		diff.copyRightToLeft();
+		final EObject originNode = getNodeNamed(left, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(left, "target");
+		assertNotNull(targetNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object featureValue = originNode.eGet(feature);
+		assertTrue(featureValue instanceof Collection<?>);
+		assertFalse(((Collection<?>)featureValue).contains(targetNode));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMultiAdd3WayRightChangeLtR() throws IOException {
+		// In order to have changes on the right side, we'll invert right and left
+		final Resource left = input.getReferenceMultiAddRight();
+		final Resource right = input.getReferenceMultiAddLeft();
+		final Resource origin = input.getReferenceMultiAddOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				addedToReference("root.origin", featureName, "root.target")));
+
+		diff.copyLeftToRight();
+		final EObject originNode = getNodeNamed(right, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(right, "target");
+		assertNotNull(targetNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object featureValue = originNode.eGet(feature);
+		assertTrue(featureValue instanceof Collection<?>);
+		assertFalse(((Collection<?>)featureValue).contains(targetNode));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMultiAdd3WayRightChangeRtL() throws IOException {
+		// In order to have changes on the right side, we'll invert right and left
+		final Resource left = input.getReferenceMultiAddRight();
+		final Resource right = input.getReferenceMultiAddLeft();
+		final Resource origin = input.getReferenceMultiAddOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				addedToReference("root.origin", featureName, "root.target")));
+
+		diff.copyRightToLeft();
+		final EObject originNode = getNodeNamed(left, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(left, "target");
+		assertNotNull(targetNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object featureValue = originNode.eGet(feature);
+		assertTrue(featureValue instanceof Collection<?>);
+		assertTrue(((Collection<?>)featureValue).contains(targetNode));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMultiDel2WayLtR() throws IOException {
+		final Resource left = input.getReferenceMultiDelLeft();
+		final Resource right = input.getReferenceMultiDelRight();
+
+		Comparison comparison = EMFCompare.compare(left, right);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				removedFromReference("root.origin", featureName, "root.target")));
+
+		diff.copyLeftToRight();
+		final EObject originNode = getNodeNamed(right, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(right, "target");
+		assertNotNull(targetNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object featureValue = originNode.eGet(feature);
+		assertTrue(featureValue instanceof Collection<?>);
+		assertFalse(((Collection<?>)featureValue).contains(targetNode));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMultiDel2WayRtL() throws IOException {
+		final Resource left = input.getReferenceMultiDelLeft();
+		final Resource right = input.getReferenceMultiDelRight();
+
+		Comparison comparison = EMFCompare.compare(left, right);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				removedFromReference("root.origin", featureName, "root.target")));
+
+		diff.copyRightToLeft();
+		final EObject originNode = getNodeNamed(left, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(left, "target");
+		assertNotNull(targetNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object featureValue = originNode.eGet(feature);
+		assertTrue(featureValue instanceof Collection<?>);
+		assertTrue(((Collection<?>)featureValue).contains(targetNode));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMultiDel3WayLeftChangeLtR() throws IOException {
+		final Resource left = input.getReferenceMultiDelLeft();
+		final Resource right = input.getReferenceMultiDelRight();
+		final Resource origin = input.getReferenceMultiDelOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				removedFromReference("root.origin", featureName, "root.target")));
+
+		diff.copyLeftToRight();
+		final EObject originNode = getNodeNamed(right, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(right, "target");
+		assertNotNull(targetNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object featureValue = originNode.eGet(feature);
+		assertTrue(featureValue instanceof Collection<?>);
+		assertFalse(((Collection<?>)featureValue).contains(targetNode));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMultiDel3WayLeftChangeRtL() throws IOException {
+		final Resource left = input.getReferenceMultiDelLeft();
+		final Resource right = input.getReferenceMultiDelRight();
+		final Resource origin = input.getReferenceMultiDelOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				removedFromReference("root.origin", featureName, "root.target")));
+
+		diff.copyRightToLeft();
+		final EObject originNode = getNodeNamed(left, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(left, "target");
+		assertNotNull(targetNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object featureValue = originNode.eGet(feature);
+		assertTrue(featureValue instanceof Collection<?>);
+		assertTrue(((Collection<?>)featureValue).contains(targetNode));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMultiDel3WayRightChangeLtR() throws IOException {
+		// In order to have changes on the right side, we'll invert right and left
+		final Resource left = input.getReferenceMultiDelRight();
+		final Resource right = input.getReferenceMultiDelLeft();
+		final Resource origin = input.getReferenceMultiDelOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				removedFromReference("root.origin", featureName, "root.target")));
+
+		diff.copyLeftToRight();
+		final EObject originNode = getNodeNamed(right, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(right, "target");
+		assertNotNull(targetNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object featureValue = originNode.eGet(feature);
+		assertTrue(featureValue instanceof Collection<?>);
+		assertTrue(((Collection<?>)featureValue).contains(targetNode));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceMultiDel3WayRightChangeRtL() throws IOException {
+		// In order to have changes on the right side, we'll invert right and left
+		final Resource left = input.getReferenceMultiDelRight();
+		final Resource right = input.getReferenceMultiDelLeft();
+		final Resource origin = input.getReferenceMultiDelOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				removedFromReference("root.origin", featureName, "root.target")));
+
+		diff.copyRightToLeft();
+		final EObject originNode = getNodeNamed(left, "origin");
+		assertNotNull(originNode);
+		final EObject targetNode = getNodeNamed(left, "target");
+		assertNotNull(targetNode);
+		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object featureValue = originNode.eGet(feature);
+		assertTrue(featureValue instanceof Collection<?>);
+		assertFalse(((Collection<?>)featureValue).contains(targetNode));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testReferenceMultiMove2WayLtR() throws IOException {
+		final Resource left = input.getReferenceMultiMoveLeft();
+		final Resource right = input.getReferenceMultiMoveRight();
+
+		Comparison comparison = EMFCompare.compare(left, right);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				movedInReference("root.origin", featureName, "root.value1")));
+
+		diff.copyLeftToRight();
+		final EObject targetNode = getNodeNamed(right, "origin");
+		assertNotNull(targetNode);
+		final EObject sourceNode = getNodeNamed(left, "origin");
+		assertNotNull(sourceNode);
+		final EStructuralFeature feature = targetNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object targetFeatureValue = targetNode.eGet(feature);
+		final Object sourceFeatureValue = sourceNode.eGet(feature);
+		assertTrue(targetFeatureValue instanceof List<?>);
+		assertTrue(sourceFeatureValue instanceof List<?>);
+		assertEqualContents(comparison, ((List<EObject>)targetFeatureValue),
+				((List<EObject>)sourceFeatureValue));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testReferenceMultiMove2WayRtL() throws IOException {
+		final Resource left = input.getReferenceMultiMoveLeft();
+		final Resource right = input.getReferenceMultiMoveRight();
+
+		Comparison comparison = EMFCompare.compare(left, right);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				movedInReference("root.origin", featureName, "root.value1")));
+
+		diff.copyRightToLeft();
+		final EObject targetNode = getNodeNamed(left, "origin");
+		assertNotNull(targetNode);
+		final EObject sourceNode = getNodeNamed(right, "origin");
+		assertNotNull(sourceNode);
+		final EStructuralFeature feature = targetNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object targetFeatureValue = targetNode.eGet(feature);
+		final Object sourceFeatureValue = sourceNode.eGet(feature);
+		assertTrue(targetFeatureValue instanceof List<?>);
+		assertTrue(sourceFeatureValue instanceof List<?>);
+		assertEqualContents(comparison, ((List<EObject>)targetFeatureValue),
+				((List<EObject>)sourceFeatureValue));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testReferenceMultiMove3WayLeftChangeLtR() throws IOException {
+		final Resource left = input.getReferenceMultiMoveLeft();
+		final Resource right = input.getReferenceMultiMoveRight();
+		final Resource origin = input.getReferenceMultiMoveOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				movedInReference("root.origin", featureName, "root.value1")));
+
+		diff.copyLeftToRight();
+		final EObject targetNode = getNodeNamed(right, "origin");
+		assertNotNull(targetNode);
+		final EObject sourceNode = getNodeNamed(left, "origin");
+		assertNotNull(sourceNode);
+		final EStructuralFeature feature = targetNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object targetFeatureValue = targetNode.eGet(feature);
+		final Object sourceFeatureValue = sourceNode.eGet(feature);
+		assertTrue(targetFeatureValue instanceof List<?>);
+		assertTrue(sourceFeatureValue instanceof List<?>);
+		assertEqualContents(comparison, ((List<EObject>)targetFeatureValue),
+				((List<EObject>)sourceFeatureValue));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testReferenceMultiMove3WayLeftChangeRtL() throws IOException {
+		final Resource left = input.getReferenceMultiMoveLeft();
+		final Resource right = input.getReferenceMultiMoveRight();
+		final Resource origin = input.getReferenceMultiMoveOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				movedInReference("root.origin", featureName, "root.value1")));
+
+		diff.copyRightToLeft();
+		final EObject targetNode = getNodeNamed(left, "origin");
+		assertNotNull(targetNode);
+		final EObject sourceNode = getNodeNamed(origin, "origin");
+		assertNotNull(sourceNode);
+		final EStructuralFeature feature = targetNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object targetFeatureValue = targetNode.eGet(feature);
+		final Object sourceFeatureValue = sourceNode.eGet(feature);
+		assertTrue(targetFeatureValue instanceof List<?>);
+		assertTrue(sourceFeatureValue instanceof List<?>);
+		assertEqualContents(comparison, ((List<EObject>)targetFeatureValue),
+				((List<EObject>)sourceFeatureValue));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testReferenceMultiMove3WayRightChangeLtR() throws IOException {
+		// In order to have changes on the right side, we'll invert right and left
+		final Resource left = input.getReferenceMultiMoveRight();
+		final Resource right = input.getReferenceMultiMoveLeft();
+		final Resource origin = input.getReferenceMultiMoveOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				movedInReference("root.origin", featureName, "root.value1")));
+
+		diff.copyLeftToRight();
+		final EObject targetNode = getNodeNamed(right, "origin");
+		assertNotNull(targetNode);
+		final EObject sourceNode = getNodeNamed(origin, "origin");
+		assertNotNull(sourceNode);
+		final EStructuralFeature feature = targetNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object targetFeatureValue = targetNode.eGet(feature);
+		final Object sourceFeatureValue = sourceNode.eGet(feature);
+		assertTrue(targetFeatureValue instanceof List<?>);
+		assertTrue(sourceFeatureValue instanceof List<?>);
+		assertEqualContents(comparison, ((List<EObject>)targetFeatureValue),
+				((List<EObject>)sourceFeatureValue));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testReferenceMultiMove3WayRightChangeRtL() throws IOException {
+		// In order to have changes on the right side, we'll invert right and left
+		final Resource left = input.getReferenceMultiMoveRight();
+		final Resource right = input.getReferenceMultiMoveLeft();
+		final Resource origin = input.getReferenceMultiMoveOrigin();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				movedInReference("root.origin", featureName, "root.value1")));
+
+		diff.copyRightToLeft();
+		final EObject targetNode = getNodeNamed(left, "origin");
+		assertNotNull(targetNode);
+		final EObject sourceNode = getNodeNamed(right, "origin");
+		assertNotNull(sourceNode);
+		final EStructuralFeature feature = targetNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		final Object targetFeatureValue = targetNode.eGet(feature);
+		final Object sourceFeatureValue = sourceNode.eGet(feature);
+		assertTrue(targetFeatureValue instanceof List<?>);
+		assertTrue(sourceFeatureValue instanceof List<?>);
+		assertEqualContents(comparison, ((List<EObject>)targetFeatureValue),
+				((List<EObject>)sourceFeatureValue));
+
+		comparison = EMFCompare.compare(left, right);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
 	/**
 	 * Ensures that the two given lists contain the same elements in the same order. The kind of list does not
 	 * matter.
@@ -1275,6 +2197,54 @@ public class IndividualMergeTest {
 			final Object object1 = list1.get(i);
 			final Object object2 = list2.get(i);
 			assertEquals(object1, object2);
+		}
+	}
+
+	/**
+	 * Ensures that the two given lists contain the same elements in the same order. The kind of list does not
+	 * matter.
+	 * 
+	 * @param list1
+	 *            First of the two lists to compare.
+	 * @param list2
+	 *            Second of the two lists to compare.
+	 */
+	private static <T extends EObject> void assertEqualContents(Comparison comparison, List<T> list1,
+			List<T> list2) {
+		final int size = list1.size();
+		assertSame(Integer.valueOf(size), Integer.valueOf(list2.size()));
+
+		boolean list2IsOrigin = false;
+		for (int i = 0; i < size; i++) {
+			final EObject eObject1 = list1.get(i);
+			final EObject eObject2 = list2.get(i);
+			final Match match = comparison.getMatch(eObject1);
+			if (match.getLeft() == eObject1) {
+				if (i == 0) {
+					if (match.getOrigin() == eObject2) {
+						list2IsOrigin = true;
+					} else {
+						assertSame(match.getRight(), eObject2);
+					}
+				} else if (list2IsOrigin) {
+					assertSame(match.getOrigin(), eObject2);
+				} else {
+					assertSame(match.getRight(), eObject2);
+				}
+			} else {
+				assertSame(match.getRight(), eObject1);
+				if (i == 0) {
+					if (match.getOrigin() == eObject2) {
+						list2IsOrigin = true;
+					} else {
+						assertSame(match.getLeft(), eObject2);
+					}
+				} else if (list2IsOrigin) {
+					assertSame(match.getOrigin(), eObject2);
+				} else {
+					assertSame(match.getLeft(), eObject2);
+				}
+			}
 		}
 	}
 
