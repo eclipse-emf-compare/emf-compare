@@ -267,6 +267,10 @@ public final class DiffUtil {
 		return Lists.reverse(result);
 	}
 
+	/*
+	 * TODO perf : all "lookups" in source and target could be rewritten by using the lcs elements' matches.
+	 * This may or may not help, should be profiled.
+	 */
 	/**
 	 * This will try and determine the index at which a given element from the {@code source} list should be
 	 * inserted in the {@code target} list. We expect {@code newElement} to be an element from the
@@ -306,10 +310,6 @@ public final class DiffUtil {
 	 */
 	public static <E> int findInsertionIndex(Comparison comparison, EqualityHelper equalityHelper,
 			Iterable<E> ignoredElements, List<E> source, List<E> target, E newElement) {
-		/*
-		 * TODO perf : all "lookups" in source and target could be rewritten by using the lcs elements'
-		 * matches. This may or may not help, should be profiled.
-		 */
 		// TODO split this into multiple sub-methods
 
 		// We assume that "newElement" is in source but not in the target yet
@@ -420,6 +420,11 @@ public final class DiffUtil {
 					insertionIndex = i + 1;
 				}
 			}
+		}
+
+		// We somehow failed to determine the inseration index. We'll insert at the very end
+		if (insertionIndex == -1) {
+			insertionIndex = target.size();
 		}
 
 		return insertionIndex;
