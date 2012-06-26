@@ -1034,7 +1034,9 @@ public class MultipleMergeTest {
 
 		final EReference ref = referenceChange.getReference();
 		final Match valueMatch = comparison.getMatch(referenceChange.getValue());
-		if (ref.isMany()) {
+		if (unset && ref.isContainment()) {
+			assertNull(valueMatch);
+		} else if (ref.isMany()) {
 			@SuppressWarnings("unchecked")
 			final List<EObject> refValue = (List<EObject>)container.eGet(ref);
 			if (rightToLeft && unset) {
@@ -1070,7 +1072,7 @@ public class MultipleMergeTest {
 				final List<EObject> values = getAsList(containerMatch.getLeft(), diff.getReference());
 				assertSame(Integer.valueOf(expectedIndex), Integer.valueOf(values.indexOf(addedToLeft)));
 			} else {
-				assertNull(valueMatch.getLeft());
+				assertTrue(valueMatch == null || valueMatch.getLeft() == null);
 			}
 		} else {
 			if (expectedIndex != -1) {
@@ -1080,7 +1082,7 @@ public class MultipleMergeTest {
 				final List<EObject> values = getAsList(containerMatch.getRight(), diff.getReference());
 				assertSame(Integer.valueOf(expectedIndex), Integer.valueOf(values.indexOf(addedToRight)));
 			} else {
-				assertNull(valueMatch.getRight());
+				assertTrue(valueMatch == null || valueMatch.getRight() == null);
 			}
 		}
 	}

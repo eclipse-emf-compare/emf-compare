@@ -525,7 +525,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 				} else {
 					valueMatch.setRight(null);
 				}
-				// TODO remove dangling?
+				// TODO remove dangling? remove empty Match?
 			} else if (getReference().isMany()) {
 				/*
 				 * TODO if the same value appears twice, should we try and find the one that has actually been
