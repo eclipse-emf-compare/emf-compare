@@ -69,7 +69,11 @@ public class ComparisonSpec extends ComparisonImpl {
 	 */
 	@Override
 	public EList<Diff> getDifferences(EObject element) {
-		return getMatch(element).getDifferences();
+		Match match = getMatch(element);
+		if (match != null) {
+			return match.getDifferences();
+		}
+		return new BasicEList<Diff>();
 	}
 
 	/**
