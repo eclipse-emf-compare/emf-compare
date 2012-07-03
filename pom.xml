@@ -262,7 +262,7 @@
     <profile>
       <id>juno</id>
       <activation>
-          <activeByDefault>false</activeByDefault>
+          <activeByDefault>true</activeByDefault>
       </activation>
       <repositories>
         <repository><id>emf</id><layout>p2</layout>
