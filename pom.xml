@@ -265,43 +265,9 @@
           <activeByDefault>true</activeByDefault>
       </activation>
       <repositories>
-        <repository><id>emf</id><layout>p2</layout>
-           <url>http://download.eclipse.org/modeling/emf/emf/updates/2.8-I-builds</url>          
-        </repository>
-        <repository><id>uml2</id><layout>p2</layout>
-          <url>http://download.eclipse.org/modeling/mdt/uml2/updates/4.0milestones/</url>
-        </repository>
-        <repository><id>papyrus</id><layout>p2</layout>
-          <url>http://download.eclipse.org/modeling/mdt/papyrus/updates/nightly/juno/main/</url>
-        </repository>
-        <repository><id>subversive</id><layout>p2</layout>
-          <url>http://download.eclipse.org/technology/subversive/0.7/juno-site/</url>
-        </repository>
-        <repository><id>platform</id><layout>p2</layout>
-		<url>http://download.eclipse.org/releases/juno</url>
-        </repository>
-        <repository><id>orbit</id><layout>p2</layout>
-          <url>http://download.eclipse.org/tools/orbit/downloads/drops/updateSite</url>
-        </repository>         
-	<repository><id>ocl</id><layout>p2</layout>
-          <url>http://download.eclipse.org/modeling/mdt/ocl/updates/milestones/4.0.0</url>
-        </repository>
-	<repository><id>gmf</id><layout>p2</layout>
-          <url>http://download.eclipse.org/modeling/gmp/updates/milestones</url>
-        </repository>
-	<repository><id>validation-transaction</id><layout>p2</layout>
-          <url>http://download.eclipse.org/modeling/emf/updates/milestones/</url>
-        </repository>
-	<repository><id>ecoretools</id><layout>p2</layout>
-          <url>http://download.eclipse.org/modeling/amalgam/temp/ecoretools-1.0.0</url>
-        </repository>
-	<repository><id>gef</id><layout>p2</layout>
-          <url>http://download.eclipse.org/tools/gef/updates/milestones</url>
-        </repository>	
-	<repository><id>facet</id><layout>p2</layout>
-          <url>http://download.eclipse.org/facet/updates/milestones/0.2/M4</url>
-        </repository>	
-      </repositories>
+        <repository><id>juno</id><layout>p2</layout>
+	   <url>http://download.eclipse.org/releases/juno</url>          
+        </repository>        
     </profile>
     
      <profile>
