@@ -5,17 +5,15 @@
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.guava" version="10.0.1.v201203051515"/>
-<unit id="org.junit" version="4.8.2.v4_8_2_v20110321-1705"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20120308061416/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.platform.sdk" version="4.2.0.I20120321-0610"/>
-<repository location="http://download.eclipse.org/eclipse/updates/4.2-I-builds"/>
-</location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jdt.feature.group" version="3.8.0.v20111130-1318-8-8lFpEFNOfwRe0lvGVLmVw9B15B"/>
-<unit id="org.eclipse.emf.sdk.feature.group" version="2.8.0.v20120319-0555"/>
-<repository location="http://download.eclipse.org/releases/juno"/>
+<unit id="org.eclipse.platform.sdk"	version="4.2.0.I20120608-1400"/>
+<unit id="org.eclipse.jdt.feature.group" version="3.8.0.v20120525-1249-8-8nFqlFNOfwKDRGz-pXLdGxEM83"/>
+<unit id="org.eclipse.jdt.source.feature.group" version="3.8.0.v20120525-1249-8-8nFqlFNOfwKDRGz-pXLdGxEM83"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.8.0.v20120608-0554"/>
+<unit id="org.junit" version="4.10.0.v4_10_0_v20120426-0900"/>
+<repository location="http://download.eclipse.org/releases/juno/"/>
 </location>
 </locations>
 </target>
