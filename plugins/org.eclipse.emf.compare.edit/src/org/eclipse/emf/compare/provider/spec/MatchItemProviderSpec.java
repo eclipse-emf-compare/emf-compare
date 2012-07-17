@@ -22,11 +22,13 @@ import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
 import org.eclipse.emf.ecore.EObject;
 
@@ -56,10 +58,28 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 		}
 	};
 
-	static final Predicate<Diff> LEFT_CONFLICTUAL_DIFF = new Predicate<Diff>() {
+	static final Predicate<Diff> CONFLICTUAL_DIFF_TO_DISPLAY = new Predicate<Diff>() {
 		public boolean apply(Diff input) {
-			return input.getConflict() == null
-					|| (input.getConflict() != null && input.getSource() == DifferenceSource.LEFT);
+			Conflict conflict = input.getConflict();
+			if (conflict != null) {
+				if (conflict.getKind() == ConflictKind.PSEUDO) {
+					return false;
+				}
+				if (input.getMatch().getLeft() != null && input.getMatch().getRight() != null) {
+					return input.getSource() == DifferenceSource.LEFT;
+				}
+			}
+			return true;
+		}
+	};
+
+	static final Predicate<Diff> CONTAINMENT_REFERENCE_DIFF = new Predicate<Diff>() {
+		public boolean apply(Diff input) {
+			if (input instanceof ReferenceChange) {
+				ReferenceChange referenceChange = (ReferenceChange)input;
+				return referenceChange.getReference().isContainment();
+			}
+			return false;
 		}
 	};
 
@@ -73,8 +93,13 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	/**
 	 * 
 	 */
-	private static final Predicate<Diff> DIFF_TO_DISPLAY = and(not(PSEUDO_DELETE_CONFLICT),
-			LEFT_CONFLICTUAL_DIFF);
+	private static final Predicate<Diff> DIFF_TO_DISPLAY = and(CONFLICTUAL_DIFF_TO_DISPLAY,
+			not(CONTAINMENT_REFERENCE_DIFF));
+
+	/**
+	 * 
+	 */
+	private static final Predicate<Match> MATCH_TO_DISPLAY = and(not(PSEUDO_MATCH), HAS_DIFFERENCE);
 
 	/**
 	 * Constructor calling super {@link #MatchItemProvider(AdapterFactory)}.
@@ -155,8 +180,7 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	 * @see #getChildren(Object)
 	 */
 	static Iterable<EObject> getChildrenIterable(Match object) {
-		Iterable<Match> matchToDisplay = filter(object.getSubmatches(),
-				and(not(PSEUDO_MATCH), HAS_DIFFERENCE));
+		Iterable<Match> matchToDisplay = filter(object.getSubmatches(), MATCH_TO_DISPLAY);
 
 		Iterable<Diff> diffToDisplay = filter(object.getDifferences(), DIFF_TO_DISPLAY);
 
