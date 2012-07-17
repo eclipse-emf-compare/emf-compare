@@ -54,7 +54,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 	/**
 	 * 
 	 */
-	private static final String EMF_COMPARE_RESULT = "EMF.COMPARE.RESULT";
+	public static final String EMF_COMPARE_RESULT = "EMF.COMPARE.RESULT";
 
 	private final ICompareInputChangeListener fCompareInputChangeListener;
 
@@ -189,6 +189,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 				ResourceSet rightResourceSet = getResourceSetFrom(input.getRight(), monitor);
 				ResourceSet ancestorResourceSet = getResourceSetFrom(input.getAncestor(), monitor);
 
+				// TODO: run with a progress monitor.
 				Object compareResult = EMFCompare.compare(leftResourceSet, rightResourceSet,
 						ancestorResourceSet);
 				fRoot = fAdapterFactory.adapt(compareResult, IDiffElement.class);
