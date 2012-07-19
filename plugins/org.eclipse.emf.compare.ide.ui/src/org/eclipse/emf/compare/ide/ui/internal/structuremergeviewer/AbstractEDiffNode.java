@@ -59,6 +59,7 @@ public abstract class AbstractEDiffNode extends AbstractEDiffContainer implement
 		if (fListener != null) {
 			Object[] listeners = fListener.getListeners();
 			for (int i = 0; i < listeners.length; i++) {
+				// TODO: execute in a SafeRunner.
 				((ICompareInputChangeListener)listeners[i]).compareInputChanged(this);
 			}
 		}

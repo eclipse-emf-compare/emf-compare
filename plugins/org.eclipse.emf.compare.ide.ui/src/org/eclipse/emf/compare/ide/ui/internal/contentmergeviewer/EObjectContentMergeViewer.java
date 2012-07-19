@@ -21,6 +21,7 @@ import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
@@ -33,6 +34,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -188,7 +190,7 @@ public class EObjectContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void copy(boolean leftToRight) {
-
+		System.out.println("EObjectContentMergeViewer.copy()");
 	}
 
 	/**
@@ -198,7 +200,14 @@ public class EObjectContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void copyDiffLeftToRight() {
-
+		IStructuredSelection selection = (IStructuredSelection)getLeft().getViewer().getSelection();
+		Object firstElement = selection.getFirstElement();
+		EList<Diff> differences = getComparison().getDifferences((EObject)firstElement);
+		for (Diff diff : differences) {
+			if (diff.getSource() == DifferenceSource.LEFT) {
+				diff.copyLeftToRight();
+			}
+		}
 	}
 
 	/**
@@ -208,8 +217,14 @@ public class EObjectContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void copyDiffRightToLeft() {
-		// TODO Auto-generated method stub
-
+		IStructuredSelection selection = (IStructuredSelection)getRight().getViewer().getSelection();
+		Object firstElement = selection.getFirstElement();
+		EList<Diff> differences = getComparison().getDifferences((EObject)firstElement);
+		for (Diff diff : differences) {
+			if (diff.getSource() == DifferenceSource.RIGHT) {
+				diff.copyRightToLeft();
+			}
+		}
 	}
 
 	/**

@@ -68,7 +68,7 @@ public class AttributeChangeNode extends DiffNode {
 			if (attribute.isMany()) {
 				// todo
 			} else {
-				ret = new SingleAttributeChangeNode(origin, attribute);
+				ret = new SingleAttributeChangeNode(origin, attribute, getTarget());
 			}
 		}
 		return ret;
@@ -88,7 +88,7 @@ public class AttributeChangeNode extends DiffNode {
 			if (attribute.isMany()) {
 				// todo
 			} else {
-				ret = new SingleAttributeChangeNode(left, attribute);
+				ret = new SingleAttributeChangeNode(left, attribute, getTarget());
 			}
 		}
 		return ret;
@@ -108,7 +108,7 @@ public class AttributeChangeNode extends DiffNode {
 			if (attribute.isMany()) {
 				// todo
 			} else {
-				ret = new SingleAttributeChangeNode(right, attribute);
+				ret = new SingleAttributeChangeNode(right, attribute, getTarget());
 			}
 		}
 		return ret;

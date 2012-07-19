@@ -563,30 +563,33 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
 				Object firstElement = selection.getFirstElement();
 				Match match = getComparison().getMatch((EObject)firstElement);
-				EObject right = match.getRight();
-				EObject origin = match.getOrigin();
-				if (selectionProvider == getLeft().getViewer()) {
-					getRight().getViewer().setSelection(
-							right == null ? StructuredSelection.EMPTY : new StructuredSelection(right), true);
-					getAncestor().getViewer().setSelection(
-							origin == null ? StructuredSelection.EMPTY : new StructuredSelection(origin),
-							true);
-				} else {
-					EObject left = match.getLeft();
-					if (selectionProvider == getRight().getViewer()) {
-						getLeft().getViewer().setSelection(
-								left == null ? StructuredSelection.EMPTY : new StructuredSelection(left),
+				if (match != null) {
+					EObject right = match.getRight();
+					EObject origin = match.getOrigin();
+					if (selectionProvider == getLeft().getViewer()) {
+						getRight().getViewer().setSelection(
+								right == null ? StructuredSelection.EMPTY : new StructuredSelection(right),
 								true);
 						getAncestor().getViewer().setSelection(
 								origin == null ? StructuredSelection.EMPTY : new StructuredSelection(origin),
 								true);
-					} else if (selectionProvider == getAncestor().getViewer()) {
-						getLeft().getViewer().setSelection(
-								left == null ? StructuredSelection.EMPTY : new StructuredSelection(left),
-								true);
-						getRight().getViewer().setSelection(
-								right == null ? StructuredSelection.EMPTY : new StructuredSelection(right),
-								true);
+					} else {
+						EObject left = match.getLeft();
+						if (selectionProvider == getRight().getViewer()) {
+							getLeft().getViewer().setSelection(
+									left == null ? StructuredSelection.EMPTY : new StructuredSelection(left),
+									true);
+							getAncestor().getViewer().setSelection(
+									origin == null ? StructuredSelection.EMPTY : new StructuredSelection(
+											origin), true);
+						} else if (selectionProvider == getAncestor().getViewer()) {
+							getLeft().getViewer().setSelection(
+									left == null ? StructuredSelection.EMPTY : new StructuredSelection(left),
+									true);
+							getRight().getViewer().setSelection(
+									right == null ? StructuredSelection.EMPTY
+											: new StructuredSelection(right), true);
+						}
 					}
 				}
 			} finally {

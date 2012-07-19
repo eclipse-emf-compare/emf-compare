@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ASCII"?>
+<nodes:Node 
+	xmi:version="2.0" 
+	xmlns:xmi="http://www.omg.org/XMI" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes" 
+	xmi:id="_rqDnEJRfEeGwLqrAWz-_6w" 
+	name="P">
+  <containmentRef1  xmi:id="_Np10YJRiEeGwLqrAWz-_6w" name="C">
+    <containmentRef1 xmi:id="_Np11YJRiEeGwLqrAWz-_7w" name="A1"/>
+    <containmentRef1 xmi:id="_Np12YJRiEeGwLqrAWz-_8w" name="A2"/>
+  </containmentRef1>
+</nodes:Node>

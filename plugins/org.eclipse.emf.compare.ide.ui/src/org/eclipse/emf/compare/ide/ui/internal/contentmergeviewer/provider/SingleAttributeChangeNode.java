@@ -13,9 +13,11 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import org.eclipse.compare.IEditableContent;
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
@@ -29,7 +31,7 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class SingleAttributeChangeNode implements ITypedElement, IStreamContentAccessor {
+public class SingleAttributeChangeNode implements ITypedElement, IStreamContentAccessor, IEditableContent {
 
 	/**
 	 * The EObject to get the value of the EAttribute from.
@@ -41,6 +43,8 @@ public class SingleAttributeChangeNode implements ITypedElement, IStreamContentA
 	 */
 	private final EAttribute fEAtribute;
 
+	private final AttributeChange fAttributeChange;
+
 	/**
 	 * Creates a new object for the given <code>eObject</code> and <code>eAttribute</code>.
 	 * 
@@ -48,10 +52,12 @@ public class SingleAttributeChangeNode implements ITypedElement, IStreamContentA
 	 *            The EObject to get the value of the EAttribute from
 	 * @param eAtribute
 	 *            The EAttribute to retrieve from the wrapped EObject
+	 * @param attributeChange
 	 */
-	public SingleAttributeChangeNode(EObject eObject, EAttribute eAtribute) {
+	public SingleAttributeChangeNode(EObject eObject, EAttribute eAtribute, AttributeChange attributeChange) {
 		this.fEObject = eObject;
 		this.fEAtribute = eAtribute;
+		this.fAttributeChange = attributeChange;
 	}
 
 	/**
@@ -93,4 +99,33 @@ public class SingleAttributeChangeNode implements ITypedElement, IStreamContentA
 		return new ByteArrayInputStream(stringValue.getBytes());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.IEditableContent#isEditable()
+	 */
+	public boolean isEditable() {
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.IEditableContent#setContent(byte[])
+	 */
+	public void setContent(byte[] newContent) {
+		String newValue = new String(newContent);
+		System.out.println("SingleAttributeChangeNode.setContent(" + newValue + ")");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.IEditableContent#replace(org.eclipse.compare.ITypedElement,
+	 *      org.eclipse.compare.ITypedElement)
+	 */
+	public ITypedElement replace(ITypedElement dest, ITypedElement src) {
+		throw new UnsupportedOperationException(
+				"ITypedElement SingleAttributeChangeNode#replace(ITypedElement, ITypedElement)");
+	}
 }

@@ -1963,6 +1963,24 @@ public class ConflictDetectionTest {
 	}
 
 	@Test
+	public void testIUseCase() throws IOException {
+		final Resource left = input.getILeft();
+		final Resource origin = input.getIOrigin();
+		final Resource right = input.getIRight();
+
+		final Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+
+		Conflict soleConflict = conflicts.get(0);
+		assertSame(ConflictKind.PSEUDO, soleConflict.getKind());
+	}
+
+	@Test
 	public void testComplexUseCase() throws IOException {
 		final Resource left = input.getComplexLeft();
 		final Resource origin = input.getComplexOrigin();

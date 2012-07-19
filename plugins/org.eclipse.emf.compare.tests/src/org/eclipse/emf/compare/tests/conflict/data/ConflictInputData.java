@@ -574,6 +574,18 @@ public class ConflictInputData extends AbstractInputData {
 		return loadFromClassloader("h2/conflict_h2_right.nodes");
 	}
 
+	public Resource getILeft() throws IOException {
+		return loadFromClassloader("i/conflict_i_left.nodes");
+	}
+
+	public Resource getIOrigin() throws IOException {
+		return loadFromClassloader("i/conflict_i_origin.nodes");
+	}
+
+	public Resource getIRight() throws IOException {
+		return loadFromClassloader("i/conflict_i_right.nodes");
+	}
+
 	public Resource getComplexLeft() throws IOException {
 		return loadFromClassloader("complex/conflict_complex_left.nodes");
 	}
