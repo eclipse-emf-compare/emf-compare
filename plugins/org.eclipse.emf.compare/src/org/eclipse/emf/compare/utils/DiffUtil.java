@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.eclipse.emf.compare.AttributeChange;
@@ -58,8 +59,8 @@ public final class DiffUtil {
 	 * @return The dice coefficient of the two given String's bigrams, ranging from 0 to 1.
 	 */
 	public static double diceCoefficient(String first, String second) {
-		final char[] str1 = first.toLowerCase().toCharArray();
-		final char[] str2 = second.toLowerCase().toCharArray();
+		final char[] str1 = first.toLowerCase(Locale.getDefault()).toCharArray();
+		final char[] str2 = second.toLowerCase(Locale.getDefault()).toCharArray();
 
 		final double coefficient;
 
