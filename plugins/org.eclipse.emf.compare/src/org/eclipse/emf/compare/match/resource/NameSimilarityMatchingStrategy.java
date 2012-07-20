@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.resource;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -204,6 +205,37 @@ public class NameSimilarityMatchingStrategy implements IResourceMatchingStrategy
 		 */
 		public int compareTo(ResourceSimilarity other) {
 			return Double.compare(getSimilarity(), other.getSimilarity());
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public boolean equals(Object obj) {
+			final boolean equal;
+
+			if (obj == this) {
+				equal = true;
+			} else if (obj instanceof ResourceSimilarity) {
+				equal = getFirst().getURI().equals(((ResourceSimilarity)obj).getFirst().getURI())
+						&& getSecond().getURI().equals(((ResourceSimilarity)obj).getSecond().getURI());
+			} else {
+				equal = false;
+			}
+
+			return super.equals(obj);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(getFirst(), getSecond());
 		}
 	}
 }
