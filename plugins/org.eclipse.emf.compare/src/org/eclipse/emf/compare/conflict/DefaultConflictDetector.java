@@ -234,7 +234,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 		final Iterable<Diff> refinedCandidates = Iterables.filter(candidates, new Predicate<Diff>() {
 			public boolean apply(Diff input) {
 				boolean apply = false;
-				if (input.getKind() == DifferenceKind.CHANGE) {
+				if (input != null && input.getKind() == DifferenceKind.CHANGE) {
 					if (input instanceof ReferenceChange) {
 						apply = ((ReferenceChange)input).getReference() == feature;
 					} else if (input instanceof AttributeChange) {
@@ -293,7 +293,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 		final Iterable<Diff> refinedCandidates = Iterables.filter(candidates, new Predicate<Diff>() {
 			public boolean apply(Diff input) {
 				boolean apply = false;
-				if (input.getKind() == DifferenceKind.MOVE) {
+				if (input != null && input.getKind() == DifferenceKind.MOVE) {
 					if (input instanceof ReferenceChange) {
 						apply = ((ReferenceChange)input).getReference() == feature;
 					} else if (input instanceof AttributeChange) {
@@ -363,7 +363,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 		final Iterable<Diff> refinedCandidates = Iterables.filter(candidates, new Predicate<Diff>() {
 			public boolean apply(Diff input) {
 				boolean apply = false;
-				if (input.getKind() == DifferenceKind.MOVE || input.getKind() == DifferenceKind.DELETE) {
+				if (input != null
+						&& (input.getKind() == DifferenceKind.MOVE || input.getKind() == DifferenceKind.DELETE)) {
 					if (input instanceof ReferenceChange) {
 						apply = ((ReferenceChange)input).getReference() == feature;
 					} else if (input instanceof AttributeChange) {
@@ -427,7 +428,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 		final Iterable<Diff> refinedCandidates = Iterables.filter(candidates, new Predicate<Diff>() {
 			public boolean apply(Diff input) {
 				boolean apply = false;
-				if (input.getKind() == DifferenceKind.ADD && diff.getMatch() == input.getMatch()) {
+				if (input != null
+						&& (input.getKind() == DifferenceKind.ADD && diff.getMatch() == input.getMatch())) {
 					if (input instanceof ReferenceChange) {
 						apply = ((ReferenceChange)input).getReference() == feature;
 					} else if (input instanceof AttributeChange) {

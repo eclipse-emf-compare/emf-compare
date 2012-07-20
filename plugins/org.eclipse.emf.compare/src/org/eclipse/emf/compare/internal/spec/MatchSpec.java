@@ -14,6 +14,7 @@ import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.transform;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 
 import java.util.List;
 
@@ -36,6 +37,9 @@ public class MatchSpec extends MatchImpl {
 	 */
 	private static final Function<Match, Iterable<Match>> ALL_SUBMATCHES = new Function<Match, Iterable<Match>>() {
 		public Iterable<Match> apply(Match match) {
+			if (match == null) {
+				return Lists.newArrayList();
+			}
 			final Iterable<Match> allSubmatches = concat(transform(match.getSubmatches(), ALL_SUBMATCHES));
 			return concat(match.getSubmatches(), allSubmatches);
 		}
@@ -46,6 +50,9 @@ public class MatchSpec extends MatchImpl {
 	 */
 	private static final Function<Match, List<Diff>> DIFFERENCES = new Function<Match, List<Diff>>() {
 		public List<Diff> apply(Match match) {
+			if (match == null) {
+				return Lists.newArrayList();
+			}
 			return match.getDifferences();
 		}
 	};

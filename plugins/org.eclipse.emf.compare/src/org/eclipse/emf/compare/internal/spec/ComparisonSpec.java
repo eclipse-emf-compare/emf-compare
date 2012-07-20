@@ -138,7 +138,7 @@ public class ComparisonSpec extends ComparisonImpl {
 		 * @see com.google.common.base.Function#apply(java.lang.Object)
 		 */
 		public Match apply(Setting input) {
-			if (input.getEObject() instanceof Match) {
+			if (input != null && input.getEObject() instanceof Match) {
 				return (Match)input.getEObject();
 			}
 			return null;

@@ -378,7 +378,7 @@ public final class EMFComparePredicates {
 	public static Predicate<? super Diff> fromSide(final DifferenceSource source) {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
-				return input.getSource() == source;
+				return input != null && input.getSource() == source;
 			}
 		};
 	}
@@ -393,6 +393,10 @@ public final class EMFComparePredicates {
 	public static Predicate<? super Diff> onEObject(final EObject eObject) {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
+				if (input == null) {
+					return false;
+				}
+
 				final Match match = input.getMatch();
 				return match.getLeft() == eObject || match.getRight() == eObject
 						|| match.getOrigin() == eObject;
@@ -414,6 +418,10 @@ public final class EMFComparePredicates {
 	public static Predicate<? super Diff> onEObject(final String qualifiedName) {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
+				if (input == null) {
+					return false;
+				}
+
 				final Match match = input.getMatch();
 				return match(match.getLeft(), qualifiedName) || match(match.getRight(), qualifiedName)
 						|| match(match.getOrigin(), qualifiedName);
@@ -432,7 +440,7 @@ public final class EMFComparePredicates {
 	public static Predicate<? super Diff> ofKind(final DifferenceKind kind) {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
-				return input.getKind() == kind;
+				return input != null && input.getKind() == kind;
 			}
 		};
 	}
@@ -516,9 +524,8 @@ public final class EMFComparePredicates {
 				if (input instanceof ReferenceChange
 						&& ((ReferenceChange)input).getReference().getName().equals(referenceName)
 						&& ((ReferenceChange)input).getReference().isMany() == multiValued) {
-					final Object value = ((ReferenceChange)input).getValue();
-					return qualifiedName != null && value instanceof EObject
-							&& match((EObject)value, qualifiedName);
+					final EObject value = ((ReferenceChange)input).getValue();
+					return qualifiedName != null && match(value, qualifiedName);
 				}
 				return false;
 			}
