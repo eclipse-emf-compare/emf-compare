@@ -75,20 +75,18 @@ class MergeTreeViewer implements IMergeViewer<TreeViewer, Tree> {
 	}
 
 	public static List<TreeItem> visibleTreeItems(Tree tree) {
-		List<TreeItem> ret = newArrayList();
 		Rectangle treeBounds = new Rectangle(0, 0, 0, 0);
 		Point treeSize = tree.getSize();
 		TreeItem topItem = tree.getTopItem();
 		if (topItem != null) {
-			Rectangle topItemBounds = topItem.getBounds();
+			// Rectangle topItemBounds = topItem.getBounds();
 			// treeBounds.y = topItemBounds.y;
 		}
 		treeBounds.width = treeSize.x;
 		treeBounds.height = treeSize.y;
 		TreeItem[] items = tree.getItems();
-		ret = visibleTreeItems(items, treeBounds, false);
 
-		return ret;
+		return visibleTreeItems(items, treeBounds, false);
 	}
 
 	private static boolean isItemPartiallyVisible(Rectangle treeBounds, final TreeItem rootItem) {
