@@ -15,25 +15,19 @@ import static com.google.common.base.Predicates.notNull;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
 
 import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.impl.ComparisonImpl;
+import org.eclipse.emf.compare.internal.MatchCrossReferencer;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
@@ -131,7 +125,7 @@ public class ComparisonSpec extends ComparisonImpl {
 	 * 
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
-	private class MatchInverseReference implements Function<EStructuralFeature.Setting, Match> {
+	private static class MatchInverseReference implements Function<EStructuralFeature.Setting, Match> {
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -145,70 +139,4 @@ public class ComparisonSpec extends ComparisonImpl {
 		}
 	}
 
-	/**
-	 * This implementation of an {@link ECrossReferenceAdapter} will allow us to only attach ourselves to the
-	 * Match elements.
-	 * 
-	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
-	 */
-	private class MatchCrossReferencer extends ECrossReferenceAdapter {
-		/**
-		 * We're only interested in the cross references that come from the Match.left, Match.right and
-		 * Match.origin references.
-		 */
-		private final Set<EReference> includedReferences;
-
-		/**
-		 * Default constructor.
-		 */
-		public MatchCrossReferencer() {
-			final ComparePackage pack = ComparePackage.eINSTANCE;
-			includedReferences = Sets.newHashSet(pack.getMatch_Left(), pack.getMatch_Right(), pack
-					.getMatch_Origin());
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.ecore.util.ECrossReferenceAdapter#getInverseReferences(org.eclipse.emf.ecore.EObject,
-		 *      boolean)
-		 */
-		@Override
-		public Collection<Setting> getInverseReferences(EObject eObject, boolean resolve) {
-			Collection<EStructuralFeature.Setting> result = Lists.newArrayList();
-
-			Collection<EStructuralFeature.Setting> nonNavigableInverseReferences = inverseCrossReferencer
-					.get(eObject);
-			if (nonNavigableInverseReferences != null) {
-				result.addAll(nonNavigableInverseReferences);
-			}
-
-			return result;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.ecore.util.ECrossReferenceAdapter#addAdapter(org.eclipse.emf.common.notify.Notifier)
-		 */
-		@Override
-		protected void addAdapter(Notifier notifier) {
-			if (notifier instanceof Match) {
-				super.addAdapter(notifier);
-			}
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.ecore.util.ECrossReferenceAdapter#isIncluded(org.eclipse.emf.ecore.EReference)
-		 */
-		@Override
-		protected boolean isIncluded(EReference eReference) {
-			if (super.isIncluded(eReference)) {
-				return includedReferences.contains(eReference);
-			}
-			return false;
-		}
-	}
 }
