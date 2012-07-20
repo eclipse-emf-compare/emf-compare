@@ -253,7 +253,7 @@ public class EMFResourceMapping extends ResourceMapping {
 
 				if (remoteContents != null) {
 					if (remoteResourceSet == null) {
-						remoteResourceSet = createRemoteResourceSet(localFile, remoteContents);
+						remoteResourceSet = createRemoteResourceSet(remoteContents);
 					} else {
 						final RevisionedURIConverter converter = (RevisionedURIConverter)remoteResourceSet
 								.getURIConverter();
@@ -263,7 +263,7 @@ public class EMFResourceMapping extends ResourceMapping {
 				}
 				if (originContents != null) {
 					if (originResourceSet == null) {
-						originResourceSet = createRemoteResourceSet(localFile, originContents);
+						originResourceSet = createRemoteResourceSet(originContents);
 					} else {
 						final RevisionedURIConverter converter = (RevisionedURIConverter)originResourceSet
 								.getURIConverter();
@@ -394,8 +394,6 @@ public class EMFResourceMapping extends ResourceMapping {
 	 * This will be used internally in order to create a resource set that can resolve remote URIs against
 	 * their actual revision.
 	 * 
-	 * @param baseResource
-	 *            The first resource that will be loaded from this resource set.
 	 * @param storage
 	 *            The {@link IStorage} that contains the "base" resource (the first we'll load) and against
 	 *            which timestamp we'll have to resolve URIs.
@@ -403,8 +401,7 @@ public class EMFResourceMapping extends ResourceMapping {
 	 * @throws CoreException
 	 *             This will be thrown if we cannot retrieve a file revision for the given storage.
 	 */
-	private static ResourceSet createRemoteResourceSet(IResource baseResource, IStorage storage)
-			throws CoreException {
+	private static ResourceSet createRemoteResourceSet(IStorage storage) throws CoreException {
 		ResourceSet resourceSet = new ResourceSetImpl();
 
 		resourceSet.setURIConverter(new RevisionedURIConverter(resourceSet.getURIConverter(), storage));
