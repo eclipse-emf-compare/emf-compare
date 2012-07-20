@@ -147,7 +147,7 @@ public class NameSimilarityMatchingStrategy implements IResourceMatchingStrategy
 	 * 
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
-	protected class ResourceSimilarity implements Comparable<ResourceSimilarity> {
+	private static class ResourceSimilarity implements Comparable<ResourceSimilarity> {
 		/** First resource of the couple for which we computed a similarity. */
 		private Resource first;
 
@@ -225,7 +225,7 @@ public class NameSimilarityMatchingStrategy implements IResourceMatchingStrategy
 				equal = false;
 			}
 
-			return super.equals(obj);
+			return equal;
 		}
 
 		/**

@@ -616,7 +616,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 * 
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
-	private final class ConflictCandidateFilter implements Predicate<Diff> {
+	private static final class ConflictCandidateFilter implements Predicate<Diff> {
 		/** The Diff for which we seek conflict candidates. */
 		private final Diff reference;
 
