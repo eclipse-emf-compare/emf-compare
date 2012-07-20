@@ -608,8 +608,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 			rightValue = match.getRight().eGet(attribute);
 		}
 
-		final String emptyString = ""; //$NON-NLS-1$
-
 		if (helper.matchingValues(getComparison(), leftValue, rightValue)) {
 			// Identical values in left and right. The only problematic case is if they do not match the
 			// origin (and left and right are defined, i.e don't detect attribute change on unmatched)
@@ -629,7 +627,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 
 			if (helper.matchingValues(getComparison(), leftValue, originValue)) {
 				Object changedValue = rightValue;
-				if (rightValue == null || rightValue == emptyString) {
+				if (isNullOrEmptyString(rightValue)) {
 					changedValue = originValue;
 				}
 
@@ -643,7 +641,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 				}
 			} else if (helper.matchingValues(getComparison(), rightValue, originValue)) {
 				Object changedValue = leftValue;
-				if (leftValue == null || leftValue == emptyString) {
+				if (isNullOrEmptyString(leftValue)) {
 					changedValue = originValue;
 				}
 
@@ -661,11 +659,11 @@ public class DefaultDiffEngine implements IDiffEngine {
 				 * not unmatched are thus a "change" difference, with a possible conflict.
 				 */
 				Object leftChange = leftValue;
-				if (leftValue == null || leftValue == emptyString) {
+				if (isNullOrEmptyString(leftValue)) {
 					leftChange = originValue;
 				}
 				Object rightChange = rightValue;
-				if (rightValue == null || rightValue == emptyString) {
+				if (isNullOrEmptyString(rightValue)) {
 					rightChange = originValue;
 				}
 
@@ -681,7 +679,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 		} else {
 			// Left and right values are different, and we have no origin.
 			if (leftValue != UNMATCHED_VALUE) {
-				if (leftValue == null || leftValue == emptyString) {
+				if (isNullOrEmptyString(leftValue)) {
 					getDiffProcessor().attributeChange(match, attribute, rightValue, DifferenceKind.CHANGE,
 							DifferenceSource.LEFT);
 				} else {
@@ -690,7 +688,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 				}
 			}
 			if (getComparison().isThreeWay() && rightValue != UNMATCHED_VALUE) {
-				if (rightValue == null || rightValue == emptyString) {
+				if (isNullOrEmptyString(rightValue)) {
 					getDiffProcessor().attributeChange(match, attribute, leftValue, DifferenceKind.CHANGE,
 							DifferenceSource.RIGHT);
 				} else {
@@ -699,6 +697,17 @@ public class DefaultDiffEngine implements IDiffEngine {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Returns {@code true} if the given {@code object} is {@code null} or the empty String.
+	 * 
+	 * @param object
+	 *            The object we need to test.
+	 * @return {@code true} if the given {@code object} is {@code null} or the empty String.
+	 */
+	private boolean isNullOrEmptyString(Object object) {
+		return object == null || object instanceof String && ((String)object).length() == 0;
 	}
 
 	/**

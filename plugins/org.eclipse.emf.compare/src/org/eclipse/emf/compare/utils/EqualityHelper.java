@@ -26,9 +26,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class EqualityHelper {
-	/** Externalized here to avoid to many distinct uses. */
-	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
-
 	/**
 	 * Check that the two given values are "equal", considering the specifics of EMF.
 	 * 
@@ -57,13 +54,24 @@ public class EqualityHelper {
 				&& object2.getClass().isArray()) {
 			// [299641] compare arrays by their content instead of instance equality
 			equal = matchingArrays(comparison, object1, object2);
-		} else if (object1 == EMPTY_STRING || object2 == EMPTY_STRING) {
+		} else if (isEmptyString(object1) || isEmptyString(object2)) {
 			// Special case, consider that the empty String is equal to null (unset attributes)
 			equal = object1 == null || object2 == null;
 		} else {
 			equal = object1 != null && object1.equals(object2);
 		}
 		return equal;
+	}
+
+	/**
+	 * Returns {@code true} if the given {@code object} is {@code null} or the empty String.
+	 * 
+	 * @param object
+	 *            The object we need to test.
+	 * @return {@code true} if the given {@code object} is {@code null} or the empty String.
+	 */
+	private boolean isEmptyString(Object object) {
+		return object instanceof String && ((String)object).length() == 0;
 	}
 
 	/**
@@ -150,7 +158,7 @@ public class EqualityHelper {
 				&& object2.getClass().isArray()) {
 			// [299641] compare arrays by their content instead of instance equality
 			equal = matchingArrays(object1, object2);
-		} else if (object1 == EMPTY_STRING || object2 == EMPTY_STRING) {
+		} else if (isEmptyString(object1) || isEmptyString(object2)) {
 			// Special case, consider that the empty String is equal to null (unset attributes)
 			equal = object1 == null || object2 == null;
 		} else {
