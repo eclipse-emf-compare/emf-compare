@@ -40,31 +40,31 @@ public class MatchNode extends AbstractEDiffNode {
 	 */
 	private static final Predicate<Diff> CONFLICTUAL_DIFF = new Predicate<Diff>() {
 		public boolean apply(Diff input) {
-			return input.getConflict() != null;
+			return input != null && input.getConflict() != null;
 		}
 	};
 
 	private static final Predicate<Diff> REAL_CONFLICT = new Predicate<Diff>() {
 		public boolean apply(Diff input) {
-			return input.getConflict().getKind() == ConflictKind.REAL;
+			return input != null && input.getConflict().getKind() == ConflictKind.REAL;
 		}
 	};
 
 	private static final Predicate<Diff> PSEUDO_CONFLICT = new Predicate<Diff>() {
 		public boolean apply(Diff input) {
-			return input.getConflict().getKind() == ConflictKind.REAL;
+			return input != null && input.getConflict().getKind() == ConflictKind.REAL;
 		}
 	};
 
 	private static final Predicate<Diff> LEFT_DIFF = new Predicate<Diff>() {
 		public boolean apply(Diff input) {
-			return input.getSource() == DifferenceSource.LEFT;
+			return input != null && input.getSource() == DifferenceSource.LEFT;
 		}
 	};
 
 	private static final Predicate<Diff> RIGHT_DIFF = new Predicate<Diff>() {
 		public boolean apply(Diff input) {
-			return input.getSource() == DifferenceSource.RIGHT;
+			return input != null && input.getSource() == DifferenceSource.RIGHT;
 		}
 	};
 
