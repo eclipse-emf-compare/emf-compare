@@ -52,7 +52,7 @@ public class DynamicObject {
 		try {
 			Field field = fFieldCache.get(fieldName);
 			ret = field.get(fTarget);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			handleException(e);
 		}
 		return ret;
@@ -62,7 +62,7 @@ public class DynamicObject {
 		try {
 			Field field = fFieldCache.get(fieldName);
 			field.set(fTarget, value);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			handleException(e);
 		}
 	}
@@ -72,7 +72,7 @@ public class DynamicObject {
 		try {
 			Field field = fFieldCache.get(fieldName);
 			ret = field.getDouble(fTarget);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			handleException(e);
 		}
 		return ret;
@@ -82,7 +82,7 @@ public class DynamicObject {
 		try {
 			Field field = fFieldCache.get(fieldName);
 			field.setDouble(fTarget, value);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			handleException(e);
 		}
 	}
@@ -92,7 +92,7 @@ public class DynamicObject {
 		try {
 			Field field = fFieldCache.get(fieldName);
 			ret = field.getInt(fTarget);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			handleException(e);
 		}
 		return ret;
@@ -102,7 +102,7 @@ public class DynamicObject {
 		try {
 			Field field = fFieldCache.get(fieldName);
 			field.setInt(fTarget, value);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			handleException(e);
 		}
 	}
