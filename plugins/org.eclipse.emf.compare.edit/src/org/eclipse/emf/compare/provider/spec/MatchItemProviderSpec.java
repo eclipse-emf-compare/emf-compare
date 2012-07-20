@@ -48,7 +48,7 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	/**
 	 * Predicate that filters out Match that does not have any difference.
 	 */
-	static final Predicate<Match> HAS_DIFFERENCE = new Predicate<Match>() {
+	private static final Predicate<Match> HAS_DIFFERENCE = new Predicate<Match>() {
 		public boolean apply(Match input) {
 			return !isEmpty(filter(input.getAllDifferences(), DIFF_TO_DISPLAY));
 		}
@@ -57,13 +57,13 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	/**
 	 * Predicate that filters out Match that match only on origin (pseudo conflict).
 	 */
-	static final Predicate<Match> PSEUDO_MATCH = new Predicate<Match>() {
+	private static final Predicate<Match> PSEUDO_MATCH = new Predicate<Match>() {
 		public boolean apply(Match input) {
 			return input.getOrigin() != null && input.getLeft() == null && input.getRight() == null;
 		}
 	};
 
-	static final Predicate<Diff> CONFLICTUAL_DIFF_TO_DISPLAY = new Predicate<Diff>() {
+	private static final Predicate<Diff> CONFLICTUAL_DIFF_TO_DISPLAY = new Predicate<Diff>() {
 		public boolean apply(Diff input) {
 			Conflict conflict = input.getConflict();
 			if (conflict != null) {
@@ -78,7 +78,7 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 		}
 	};
 
-	static final Predicate<Diff> CONTAINMENT_REFERENCE_CHANGE = new Predicate<Diff>() {
+	private static final Predicate<Diff> CONTAINMENT_REFERENCE_CHANGE = new Predicate<Diff>() {
 		public boolean apply(Diff input) {
 			if (input instanceof ReferenceChange) {
 				ReferenceChange referenceChange = (ReferenceChange)input;
@@ -88,7 +88,7 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 		}
 	};
 
-	static Predicate<Diff> PSEUDO_DELETE_CONFLICT = new Predicate<Diff>() {
+	private static final Predicate<Diff> PSEUDO_DELETE_CONFLICT = new Predicate<Diff>() {
 		public boolean apply(Diff input) {
 			return input.getConflict() != null && input.getConflict().getKind() == ConflictKind.PSEUDO
 					&& input.getKind() == DifferenceKind.DELETE;
