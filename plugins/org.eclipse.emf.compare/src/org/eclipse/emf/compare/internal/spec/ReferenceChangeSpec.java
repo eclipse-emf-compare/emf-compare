@@ -10,10 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
@@ -22,7 +18,6 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.impl.ReferenceChangeImpl;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EMFCompareCopier;
@@ -299,42 +294,15 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	protected void doMove(Comparison comparison, EObject expectedContainer, EObject expectedValue,
 			boolean rightToLeft) {
 		if (getReference().isMany()) {
-			// Determine the index to move the element to.
-			final boolean undoingLeft = rightToLeft && getSource() == DifferenceSource.LEFT;
-			final boolean undoingRight = !rightToLeft && getSource() == DifferenceSource.RIGHT;
-
-			final List<EObject> sourceList;
-			if ((undoingLeft || undoingRight) && getMatch().getOrigin() != null) {
-				sourceList = (List<EObject>)getMatch().getOrigin().eGet(getReference());
-			} else if (rightToLeft) {
-				sourceList = (List<EObject>)getMatch().getRight().eGet(getReference());
-			} else {
-				sourceList = (List<EObject>)getMatch().getLeft().eGet(getReference());
-			}
-
-			final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(getReference());
-
-			Iterable<EObject> ignoredElements;
-			if (undoingLeft || undoingRight) {
-				// Undoing a change
-				ignoredElements = null;
-			} else {
-				if (comparison.isThreeWay() && getMatch().getOrigin() != null) {
-					ignoredElements = computeIgnoredElements(targetList);
-					ignoredElements = Iterables.concat(ignoredElements, Collections.singleton(expectedValue));
-				} else {
-					ignoredElements = Collections.singleton(expectedValue);
-				}
-			}
-
 			// Element to move cannot be part of the LCS... or there would not be a MOVE diff
-			final EqualityHelper helper = new EqualityHelper();
-			int insertionIndex = DiffUtil.findInsertionIndex(comparison, helper, ignoredElements, sourceList,
-					targetList, expectedValue);
+			int insertionIndex = DiffUtil.findInsertionIndex(comparison, new EqualityHelper(), this,
+					rightToLeft);
+
 			/*
 			 * However, it could still have been located "before" its new index, in which case we need to take
 			 * it into account.
 			 */
+			final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(getReference());
 			if (insertionIndex > targetList.indexOf(expectedValue)) {
 				insertionIndex--;
 			}
@@ -408,26 +376,10 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 
 			// We have the container, reference and value. We need to know the insertion index.
 			if (getReference().isMany()) {
-				// TODO extract this for reuse (the UI will need to compute insertion indices too)
-				final List<EObject> sourceList;
-				if (getValue() == valueMatch.getOrigin()) {
-					sourceList = (List<EObject>)getMatch().getOrigin().eGet(getReference());
-				} else if (rightToLeft) {
-					sourceList = (List<EObject>)getMatch().getRight().eGet(getReference());
-				} else {
-					sourceList = (List<EObject>)getMatch().getLeft().eGet(getReference());
-				}
-				final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(getReference());
-
-				final Iterable<EObject> ignoredElements;
-				if (comparison.isThreeWay() && getValue() != valueMatch.getOrigin()) {
-					ignoredElements = computeIgnoredElements(targetList);
-				} else {
-					ignoredElements = null;
-				}
-
 				final int insertionIndex = DiffUtil.findInsertionIndex(comparison, new EqualityHelper(),
-						ignoredElements, sourceList, targetList, expectedValue);
+						this, rightToLeft);
+
+				final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(getReference());
 
 				if (targetList instanceof InternalEList<?>) {
 					((InternalEList<EObject>)targetList).addUnique(insertionIndex, expectedValue);
@@ -582,31 +534,5 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			}
 			targetContainer.eSet(getReference(), expectedValue);
 		}
-	}
-
-	/**
-	 * When computing the insertion index of an element in a list, we need to ignore all elements present in
-	 * that list that feature unresolved Diffs on the same reference.
-	 * 
-	 * @param candidates
-	 *            The sequence in which we need to compute an insertion index.
-	 * @return The list of elements that should be ignored when computing the insertion index for a new
-	 *         element in {@code candidates}.
-	 */
-	protected Iterable<EObject> computeIgnoredElements(Iterable<EObject> candidates) {
-		return Iterables.filter(candidates, new Predicate<EObject>() {
-			public boolean apply(final EObject element) {
-				final Match match = getMatch();
-				final Iterable<ReferenceChange> filteredCandidates = Iterables.filter(match.getDifferences(),
-						ReferenceChange.class);
-
-				return Iterables.any(filteredCandidates, new Predicate<ReferenceChange>() {
-					public boolean apply(ReferenceChange input) {
-						return input.getState() == DifferenceState.UNRESOLVED
-								&& input.getReference() == getReference() && input.getValue() == element;
-					}
-				});
-			}
-		});
 	}
 }

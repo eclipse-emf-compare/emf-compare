@@ -10,10 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-
-import java.util.List;
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
@@ -23,14 +19,10 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
-import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IEObjectAccessor;
-import org.eclipse.emf.compare.utils.DiffUtil;
-import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -308,57 +300,6 @@ public class EObjectContentMergeViewer extends EMFCompareContentMergeViewer {
 			// }
 			// }
 		}
-	}
-
-	private int findInsertionIndex(Match valueMatch, ReferenceChange referenceChange, boolean rightToLeft) {
-		final EObject expectedContainer;
-		if (rightToLeft) {
-			expectedContainer = referenceChange.getMatch().getLeft();
-		} else {
-			expectedContainer = referenceChange.getMatch().getRight();
-		}
-
-		final EObject expectedValue = EcoreUtil.create(referenceChange.getValue().eClass());
-
-		final List<?> sourceList;
-		if (referenceChange.getValue() == valueMatch.getOrigin()) {
-			sourceList = (List<?>)referenceChange.getMatch().getOrigin().eGet(referenceChange.getReference());
-		} else if (rightToLeft) {
-			sourceList = (List<?>)referenceChange.getMatch().getRight().eGet(referenceChange.getReference());
-		} else {
-			sourceList = (List<?>)referenceChange.getMatch().getLeft().eGet(referenceChange.getReference());
-		}
-		final List<?> targetList = (List<?>)expectedContainer.eGet(referenceChange.getReference());
-
-		final Iterable<?> ignoredElements;
-		if (getComparison().isThreeWay() && referenceChange.getValue() != valueMatch.getOrigin()) {
-			ignoredElements = computeIgnoredElements(targetList, referenceChange);
-		} else {
-			ignoredElements = null;
-		}
-
-		return DiffUtil.findInsertionIndex(getComparison(), new EqualityHelper(),
-				(Iterable<Object>)ignoredElements, (List<Object>)sourceList, (List<Object>)targetList,
-				expectedValue);
-	}
-
-	private static Iterable<?> computeIgnoredElements(Iterable<?> candidates,
-			final ReferenceChange referenceChange) {
-		return Iterables.filter(candidates, new Predicate<Object>() {
-			public boolean apply(final Object element) {
-				final Match match = referenceChange.getMatch();
-				final Iterable<ReferenceChange> filteredCandidates = Iterables.filter(match.getDifferences(),
-						ReferenceChange.class);
-
-				return Iterables.any(filteredCandidates, new Predicate<ReferenceChange>() {
-					public boolean apply(ReferenceChange input) {
-						return input.getState() == DifferenceState.UNRESOLVED
-								&& input.getReference() == referenceChange.getReference()
-								&& input.getValue() == element;
-					}
-				});
-			}
-		});
 	}
 
 	private void paintTreeItem(Event event, TreeItem treeItem, Diff diff) {

@@ -10,20 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
-import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.impl.AttributeChangeImpl;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EqualityHelper;
@@ -297,27 +290,10 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 			final Object expectedValue = getValue();
 			// We have the container, attribute and value. We need to know the insertion index.
 			if (getAttribute().isMany()) {
-				// TODO extract this for reuse (the UI will need to compute insertion indices too)
-				final List<Object> sourceList;
-				if (getMatch().getOrigin() != null && getKind() == DifferenceKind.DELETE) {
-					sourceList = (List<Object>)getMatch().getOrigin().eGet(getAttribute());
-				} else if (rightToLeft) {
-					sourceList = (List<Object>)getMatch().getRight().eGet(getAttribute());
-				} else {
-					sourceList = (List<Object>)getMatch().getLeft().eGet(getAttribute());
-				}
-				final List<Object> targetList = (List<Object>)expectedContainer.eGet(getAttribute());
-
-				final Iterable<Object> ignoredElements;
-				if (comparison.isThreeWay() && getKind() == DifferenceKind.DELETE) {
-					ignoredElements = computeIgnoredElements(targetList);
-				} else {
-					ignoredElements = null;
-				}
-
 				final int insertionIndex = DiffUtil.findInsertionIndex(comparison, new EqualityHelper(),
-						ignoredElements, sourceList, targetList, expectedValue);
+						this, rightToLeft);
 
+				final List<Object> targetList = (List<Object>)expectedContainer.eGet(getAttribute());
 				if (targetList instanceof InternalEList<?>) {
 					((InternalEList<Object>)targetList).addUnique(insertionIndex, expectedValue);
 				} else {
@@ -327,32 +303,6 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 				expectedContainer.eSet(getAttribute(), expectedValue);
 			}
 		}
-	}
-
-	/**
-	 * When computing the insertion index of an element in a list, we need to ignore all elements present in
-	 * that list that feature unresolved Diffs on the same attribute.
-	 * 
-	 * @param candidates
-	 *            The sequence in which we need to compute an insertion index.
-	 * @return The list of elements that should be ignored when computing the insertion index for a new
-	 *         element in {@code candidates}.
-	 */
-	protected Iterable<Object> computeIgnoredElements(Iterable<Object> candidates) {
-		return Iterables.filter(candidates, new Predicate<Object>() {
-			public boolean apply(final Object element) {
-				final Match match = getMatch();
-				final Iterable<AttributeChange> filteredCandidates = Iterables.filter(match.getDifferences(),
-						AttributeChange.class);
-
-				return Iterables.any(filteredCandidates, new Predicate<AttributeChange>() {
-					public boolean apply(AttributeChange input) {
-						return input.getState() == DifferenceState.UNRESOLVED
-								&& input.getAttribute() == getAttribute() && input.getValue() == element;
-					}
-				});
-			}
-		});
 	}
 
 	/**
@@ -448,36 +398,13 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 	protected void doMove(Comparison comparison, EObject expectedContainer, Object expectedValue,
 			boolean rightToLeft) {
 		if (getAttribute().isMany()) {
-			// Determine the index to move the element to.
-			final boolean undoingLeft = rightToLeft && getSource() == DifferenceSource.LEFT;
-			final boolean undoingRight = !rightToLeft && getSource() == DifferenceSource.RIGHT;
-
-			final List<Object> sourceList;
-			if ((undoingLeft || undoingRight) && getMatch().getOrigin() != null) {
-				sourceList = (List<Object>)getMatch().getOrigin().eGet(getAttribute());
-			} else if (rightToLeft) {
-				sourceList = (List<Object>)getMatch().getRight().eGet(getAttribute());
-			} else {
-				sourceList = (List<Object>)getMatch().getLeft().eGet(getAttribute());
-			}
-
-			final List<Object> targetList = (List<Object>)expectedContainer.eGet(getAttribute());
-
-			final Iterable<Object> ignoredElements;
-			if (undoingLeft || undoingRight) {
-				// Undoing a change
-				ignoredElements = null;
-			} else {
-				ignoredElements = Collections.singleton(getValue());
-			}
-
-			final EqualityHelper helper = new EqualityHelper();
-			int insertionIndex = DiffUtil.findInsertionIndex(comparison, helper, ignoredElements, sourceList,
-					targetList, expectedValue);
+			int insertionIndex = DiffUtil.findInsertionIndex(comparison, new EqualityHelper(), this,
+					rightToLeft);
 			/*
 			 * However, it could still have been located "before" its new index, in which case we need to take
 			 * it into account.
 			 */
+			final List<Object> targetList = (List<Object>)expectedContainer.eGet(getAttribute());
 			if (insertionIndex > targetList.indexOf(expectedValue)) {
 				insertionIndex--;
 			}

@@ -10,15 +10,29 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.utils;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.EMFCompareMessages;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * This utility class will be used to provide similarity implementations.
@@ -49,7 +63,7 @@ public final class DiffUtil {
 
 		final double coefficient;
 
-		if (str1.equals(str2)) {
+		if (Arrays.equals(str1, str2)) {
 			coefficient = 1d;
 		} else if (str1.length <= 2 || str2.length <= 2) {
 			int equalChars = 0;
@@ -308,7 +322,7 @@ public final class DiffUtil {
 	 * @return The index at which {@code newElement} should be inserted in {@code target}.
 	 * @see #longestCommonSubsequence(Comparison, List, List)
 	 */
-	public static <E> int findInsertionIndex(Comparison comparison, EqualityHelper equalityHelper,
+	private static <E> int findInsertionIndex(Comparison comparison, EqualityHelper equalityHelper,
 			Iterable<E> ignoredElements, List<E> source, List<E> target, E newElement) {
 		// TODO split this into multiple sub-methods
 
@@ -478,6 +492,120 @@ public final class DiffUtil {
 	}
 
 	/**
+	 * This is the main entry point for
+	 * {@link #findInsertionIndex(Comparison, EqualityHelper, Iterable, List, List, Object)}. It will use
+	 * default algorithms to determine the source and target lists as well as the list of elements that should
+	 * be ignored when computing the insertion index.
+	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param equalityHelper
+	 *            The {@link EqualityHelper} gives us the necessary semantics for Object matching.
+	 * @param diff
+	 *            The diff which merging will trigger the need for an insertion index in its target list.
+	 * @param rightToLeft
+	 *            {@code true} if the merging will be done into the left list, so that we should consider the
+	 *            right model as the source and the left as the target.
+	 * @return The index at which this {@code diff}'s value should be inserted into the 'target' list, as
+	 *         inferred from {@code rightToLeft}.
+	 * @see #findInsertionIndex(Comparison, EqualityHelper, Iterable, List, List, Object)
+	 */
+	@SuppressWarnings("unchecked")
+	public static int findInsertionIndex(Comparison comparison, EqualityHelper equalityHelper, Diff diff,
+			boolean rightToLeft) {
+		final EStructuralFeature feature;
+		final Object value;
+		if (diff instanceof AttributeChange) {
+			feature = ((AttributeChange)diff).getAttribute();
+			value = ((AttributeChange)diff).getValue();
+		} else if (diff instanceof ReferenceChange) {
+			feature = ((ReferenceChange)diff).getReference();
+			value = ((ReferenceChange)diff).getValue();
+		} else {
+			throw new IllegalArgumentException(EMFCompareMessages.getString(
+					"DiffUtil.IllegalDiff", diff.eClass().getName())); //$NON-NLS-1$
+		}
+		if (!feature.isMany()) {
+			throw new IllegalArgumentException(EMFCompareMessages.getString(
+					"DiffUtil.IllegalFeature", feature.getName())); //$NON-NLS-1$
+		}
+		final Match match = diff.getMatch();
+
+		final EObject expectedContainer;
+		if (rightToLeft) {
+			expectedContainer = match.getLeft();
+		} else {
+			expectedContainer = match.getRight();
+		}
+
+		final List<Object> sourceList = getSourceList(diff, feature, rightToLeft);
+		final List<Object> targetList = (List<Object>)expectedContainer.eGet(feature);
+
+		final Iterable<Object> ignoredElements;
+		if (diff.getKind() == DifferenceKind.MOVE) {
+			final boolean undoingLeft = rightToLeft && diff.getSource() == DifferenceSource.LEFT;
+			final boolean undoingRight = !rightToLeft && diff.getSource() == DifferenceSource.RIGHT;
+
+			if (undoingLeft || undoingRight) {
+				ignoredElements = Lists.newArrayList();
+			} else if (!(diff instanceof AttributeChange) && comparison.isThreeWay()
+					&& match.getOrigin() != null) {
+				ignoredElements = Iterables.concat(computeIgnoredElements(targetList, diff), Collections
+						.singleton(value));
+			} else {
+				ignoredElements = Collections.singleton(value);
+			}
+		} else if (comparison.isThreeWay() && diff.getKind() == DifferenceKind.DELETE) {
+			ignoredElements = computeIgnoredElements(targetList, diff);
+		} else {
+			ignoredElements = Lists.newArrayList();
+		}
+
+		return DiffUtil.findInsertionIndex(comparison, equalityHelper, ignoredElements, sourceList,
+				targetList, value);
+	}
+
+	/**
+	 * Retrieves the "source" list of the given {@code diff}. This will be different according to the kind of
+	 * change and the direction of the merging.
+	 * 
+	 * @param diff
+	 *            The diff for which merging we need a 'source'.
+	 * @param feature
+	 *            The feature on which the merging is actually taking place.
+	 * @param rightToLeft
+	 *            Direction of the merging. {@code true} if the merge is to be done on the left side, making
+	 *            'source' the right side, {@code false} otherwise.
+	 * @return The list that should be used as a source for this merge.
+	 */
+	@SuppressWarnings("unchecked")
+	private static List<Object> getSourceList(Diff diff, EStructuralFeature feature, boolean rightToLeft) {
+		final Match match = diff.getMatch();
+		final List<Object> sourceList;
+		if (diff.getKind() == DifferenceKind.MOVE) {
+			final boolean undoingLeft = rightToLeft && diff.getSource() == DifferenceSource.LEFT;
+			final boolean undoingRight = !rightToLeft && diff.getSource() == DifferenceSource.RIGHT;
+
+			if ((undoingLeft || undoingRight) && match.getOrigin() != null) {
+				sourceList = (List<Object>)match.getOrigin().eGet(feature);
+			} else if (rightToLeft) {
+				sourceList = (List<Object>)match.getRight().eGet(feature);
+			} else {
+				sourceList = (List<Object>)match.getLeft().eGet(feature);
+			}
+		} else {
+			if (match.getOrigin() != null && diff.getKind() == DifferenceKind.DELETE) {
+				sourceList = (List<Object>)match.getOrigin().eGet(feature);
+			} else if (rightToLeft) {
+				sourceList = (List<Object>)match.getRight().eGet(feature);
+			} else {
+				sourceList = (List<Object>)match.getLeft().eGet(feature);
+			}
+		}
+		return sourceList;
+	}
+
+	/**
 	 * Checks whether the given {@code sequence} contains the given {@code element} according to the semantics
 	 * of the given {@code equalityHelper}.
 	 * 
@@ -505,5 +633,71 @@ public final class DiffUtil {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * When computing the insertion index of an element in a list, we need to ignore all elements present in
+	 * that list that feature unresolved Diffs on the same feature.
+	 * 
+	 * @param candidates
+	 *            The sequence in which we need to compute an insertion index.
+	 * @param diff
+	 *            The diff we are computing an insertion index for.
+	 * @param <E>
+	 *            Type of the list's content.
+	 * @return The list of elements that should be ignored when computing the insertion index for a new
+	 *         element in {@code candidates}.
+	 */
+	private static <E> Iterable<E> computeIgnoredElements(Iterable<E> candidates, final Diff diff) {
+		return Iterables.filter(candidates, new Predicate<Object>() {
+			public boolean apply(final Object element) {
+				final Match match = diff.getMatch();
+				final EStructuralFeature feature;
+				if (diff instanceof AttributeChange) {
+					feature = ((AttributeChange)diff).getAttribute();
+				} else if (diff instanceof ReferenceChange) {
+					feature = ((ReferenceChange)diff).getReference();
+				} else {
+					return false;
+				}
+
+				final Iterable<? extends Diff> filteredCandidates = Iterables.filter(match.getDifferences(),
+						diff.getClass());
+				return Iterables.any(filteredCandidates, unresolvedDiffMatching(feature, element));
+			}
+		});
+	}
+
+	/**
+	 * Constructs a predicate that can be used to retrieve all unresolved diffs that apply to the given
+	 * {@code feature} and {@code element}.
+	 * 
+	 * @param feature
+	 *            The feature which our diffs must concern.
+	 * @param element
+	 *            The element which must be our diffs' target.
+	 * @param <E>
+	 *            Type of the element that must be the value of our matchin diffs.
+	 * @return The newly built predicate.
+	 */
+	private static <E> Predicate<? super Diff> unresolvedDiffMatching(final EStructuralFeature feature,
+			final E element) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				boolean apply = false;
+				if (input instanceof AttributeChange) {
+					apply = input.getState() == DifferenceState.UNRESOLVED
+							&& ((AttributeChange)input).getAttribute() == feature
+							&& ((AttributeChange)input).getValue() == element;
+				} else if (input instanceof ReferenceChange) {
+					apply = input.getState() == DifferenceState.UNRESOLVED
+							&& ((ReferenceChange)input).getReference() == feature
+							&& ((ReferenceChange)input).getValue() == element;
+				} else {
+					apply = false;
+				}
+				return apply;
+			}
+		};
 	}
 }
