@@ -19,9 +19,9 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.utils.MatchUtil;
-import org.eclipse.emf.compare.utils.MatchUtil.Side;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -299,10 +299,10 @@ public class DefaultReqEngine implements IReqEngine {
 	private static boolean isChangeAdd(Comparison comparison, ReferenceChange difference) {
 		if (!difference.getReference().isMany() && !difference.getReference().isContainment()) {
 			EObject value = difference.getValue();
-			Side sideValue = MatchUtil.getSide(comparison, value);
-			boolean isAddLeft = sideValue.equals(Side.LEFT)
+			Match valueMatch = comparison.getMatch(value);
+			boolean isAddLeft = valueMatch.getLeft() == value
 					&& difference.getSource().equals(DifferenceSource.LEFT);
-			boolean isAddRight = sideValue.equals(Side.RIGHT)
+			boolean isAddRight = valueMatch.getRight() == value
 					&& difference.getSource().equals(DifferenceSource.RIGHT);
 			return MatchUtil.getOriginValue(comparison, difference) == null && (isAddLeft || isAddRight);
 		}
@@ -322,11 +322,11 @@ public class DefaultReqEngine implements IReqEngine {
 		boolean result = false;
 		if (!difference.getReference().isMany() && !difference.getReference().isContainment()) {
 			EObject value = difference.getValue();
-			Side sideValue = MatchUtil.getSide(comparison, value);
+			Match valueMatch = comparison.getMatch(value);
 			if (comparison.isThreeWay()) {
-				return comparison.getMatch(value).getOrigin() == value;
+				return valueMatch.getOrigin() == value;
 			}
-			result = sideValue.equals(Side.RIGHT) && difference.getSource().equals(DifferenceSource.LEFT);
+			result = valueMatch.getRight() == value && difference.getSource().equals(DifferenceSource.LEFT);
 		}
 		return result;
 	}
