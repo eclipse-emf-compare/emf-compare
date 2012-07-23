@@ -50,6 +50,10 @@
     <module>../plugins/org.eclipse.emf.compare</module>
     <module>../plugins/org.eclipse.emf.compare.tests</module>
     
+    <!-- Common UI Components -->
+    <!-- Required by both IDE and RCP -->
+    <module>../plugins/org.eclipse.emf.common.ui</module>
+    
     <!-- IDE UI -->
     <module>../packaging/org.eclipse.emf.compare.ide.ui-feature</module>
     <module>../plugins/org.eclipse.emf.compare.edit</module>
