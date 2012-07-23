@@ -238,8 +238,8 @@ public final class DiffUtil {
 
 		// Compute the LCS matrix
 		for (int i = 1; i <= size1; i++) {
+			final E first = sequence1.get(i - 1);
 			for (int j = 1; j <= size2; j++) {
-				final E first = sequence1.get(i - 1);
 				final E second = sequence2.get(j - 1);
 				if (equalityHelper.matchingValues(comparison, first, second)) {
 					matrix[i][j] = 1 + matrix[i - 1][j - 1];
