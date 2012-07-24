@@ -36,11 +36,15 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ide.ui.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.actions.filter.DifferenceFilter;
+import org.eclipse.emf.compare.ide.ui.internal.actions.filter.FilterActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.CompareNodeAdapterFactory;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -73,6 +77,13 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 	private Object fRoot;
 
 	/**
+	 * The difference filter that will be applied to the structure viewer. Note that this will be initialized
+	 * from {@link #createToolItems(ToolBarManager)} since that method is called from the constructor and we
+	 * cannot init ourselves beforehand.
+	 */
+	private DifferenceFilter differenceFilter;
+
+	/**
 	 * @param parent
 	 * @param configuration
 	 */
@@ -98,6 +109,10 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 				EMFCompareStructureMergeViewer.this.compareInputChanged(input, true);
 			}
 		};
+
+		differenceFilter.install(this);
+		// Wrap the defined comparer in our own.
+		setComparer(new DiffNodeComparer(super.getComparer()));
 	}
 
 	void compareInputChanged(ICompareInput input, boolean force) {
@@ -259,6 +274,33 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * @see org.eclipse.jface.viewers.StructuredViewer#setComparer(org.eclipse.jface.viewers.IElementComparer)
+	 */
+	@Override
+	public void setComparer(IElementComparer comparer) {
+		// Wrap this new comparer in our own
+		super.setComparer(new DiffNodeComparer(comparer));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.structuremergeviewer.DiffTreeViewer#createToolItems(org.eclipse.jface.action.ToolBarManager)
+	 */
+	@Override
+	protected void createToolItems(ToolBarManager toolbarManager) {
+		super.createToolItems(toolbarManager);
+		// Initialized here since this is called from the super-constructor
+		if (differenceFilter == null) {
+			differenceFilter = new DifferenceFilter();
+		}
+
+		toolbarManager.add(new FilterActionMenu(differenceFilter));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.compare.structuremergeviewer.DiffTreeViewer#inputChanged(java.lang.Object,
 	 *      java.lang.Object)
 	 */
@@ -342,5 +384,67 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * We'll use this in order to compare our diff nodes through their target's {@link Object#equals(Object)}
+	 * instead of the nodes' own equals (which only resorts to instance equality).
+	 * <p>
+	 * Note that this will fall back to the default behavior for anything that is not an
+	 * {@link AbstractEDiffElement}.
+	 * </p>
+	 * refreshViewers();
+	 */
+	private class DiffNodeComparer implements IElementComparer {
+		/** Our delegate comparer. May be {@code null}. */
+		private IElementComparer delegate;
+
+		/**
+		 * Constructs this comparer given the previous one that was installed on this viewer.
+		 * 
+		 * @param delegate
+		 *            The comparer to which we should delegate our default behavior. May be {@code null}.
+		 */
+		public DiffNodeComparer(IElementComparer delegate) {
+			this.delegate = delegate;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.viewers.IElementComparer#equals(java.lang.Object, java.lang.Object)
+		 */
+		public boolean equals(Object a, Object b) {
+			final boolean equal;
+			if (a instanceof AbstractEDiffElement && b instanceof AbstractEDiffElement) {
+				equal = ((AbstractEDiffElement)a).getTarget().equals(((AbstractEDiffElement)b).getTarget());
+			} else if (delegate != null) {
+				equal = delegate.equals(a, b);
+			} else if (a != null) {
+				equal = a.equals(b);
+			} else {
+				equal = a == b;
+			}
+			return equal;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.viewers.IElementComparer#hashCode(java.lang.Object)
+		 */
+		public int hashCode(Object element) {
+			final int hashCode;
+			if (element instanceof AbstractEDiffElement) {
+				hashCode = ((AbstractEDiffElement)element).getTarget().hashCode();
+			} else if (delegate != null) {
+				hashCode = delegate.hashCode(element);
+			} else if (element != null) {
+				hashCode = element.hashCode();
+			} else {
+				hashCode = 0;
+			}
+			return hashCode;
+		}
 	}
 }
