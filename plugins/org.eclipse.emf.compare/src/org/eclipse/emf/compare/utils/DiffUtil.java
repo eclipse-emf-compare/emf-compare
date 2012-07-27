@@ -540,7 +540,13 @@ public final class DiffUtil {
 		}
 
 		final List<Object> sourceList = getSourceList(diff, feature, rightToLeft);
-		final List<Object> targetList = (List<Object>)expectedContainer.eGet(feature);
+		final List<Object> targetList;
+
+		if (expectedContainer != null) {
+			targetList = (List<Object>)expectedContainer.eGet(feature);
+		} else {
+			targetList = ImmutableList.of();
+		}
 
 		final Iterable<Object> ignoredElements;
 		if (diff.getKind() == DifferenceKind.MOVE) {
@@ -577,32 +583,42 @@ public final class DiffUtil {
 	 * @param rightToLeft
 	 *            Direction of the merging. {@code true} if the merge is to be done on the left side, making
 	 *            'source' the right side, {@code false} otherwise.
-	 * @return The list that should be used as a source for this merge.
+	 * @return The list that should be used as a source for this merge. May be empty, but never <code>null</code>.
 	 */
 	@SuppressWarnings("unchecked")
 	private static List<Object> getSourceList(Diff diff, EStructuralFeature feature, boolean rightToLeft) {
 		final Match match = diff.getMatch();
 		final List<Object> sourceList;
+		final EObject expectedContainer;
+
 		if (diff.getKind() == DifferenceKind.MOVE) {
 			final boolean undoingLeft = rightToLeft && diff.getSource() == DifferenceSource.LEFT;
 			final boolean undoingRight = !rightToLeft && diff.getSource() == DifferenceSource.RIGHT;
 
 			if ((undoingLeft || undoingRight) && match.getOrigin() != null) {
-				sourceList = (List<Object>)match.getOrigin().eGet(feature);
+				expectedContainer = match.getOrigin();
 			} else if (rightToLeft) {
-				sourceList = (List<Object>)match.getRight().eGet(feature);
+				expectedContainer = match.getRight();
 			} else {
-				sourceList = (List<Object>)match.getLeft().eGet(feature);
+				expectedContainer = match.getLeft();
 			}
+
 		} else {
 			if (match.getOrigin() != null && diff.getKind() == DifferenceKind.DELETE) {
-				sourceList = (List<Object>)match.getOrigin().eGet(feature);
+				expectedContainer = match.getOrigin();
 			} else if (rightToLeft) {
-				sourceList = (List<Object>)match.getRight().eGet(feature);
+				expectedContainer = match.getRight();
 			} else {
-				sourceList = (List<Object>)match.getLeft().eGet(feature);
+				expectedContainer = match.getLeft();
 			}
 		}
+
+		if (expectedContainer != null) {
+			sourceList = (List<Object>)expectedContainer.eGet(feature);
+		} else {
+			sourceList = ImmutableList.of();
+		}
+
 		return sourceList;
 	}
 
