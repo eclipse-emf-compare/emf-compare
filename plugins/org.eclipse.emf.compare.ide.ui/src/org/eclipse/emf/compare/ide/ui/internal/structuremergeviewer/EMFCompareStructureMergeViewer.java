@@ -409,7 +409,11 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 	 * Note that this will fall back to the default behavior for anything that is not an
 	 * {@link AbstractEDiffElement}.
 	 * </p>
-	 * refreshViewers();
+	 * <p>
+	 * This class most likely breaks the implicit contract of equals() since we are comparing
+	 * AbstractEDiffElement through two different means : if we have a target, use it... otherwise fall back
+	 * to instance equality. Both equals() and hashCode() follow this same rule.
+	 * </p>
 	 */
 	private class DiffNodeComparer implements IElementComparer {
 		/** Our delegate comparer. May be {@code null}. */
@@ -435,7 +439,8 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 			if (a instanceof AbstractEDiffElement && b instanceof AbstractEDiffElement) {
 				final Notifier targetA = ((AbstractEDiffElement)a).getTarget();
 				if (targetA == null) {
-					equal = ((AbstractEDiffElement)b).getTarget() == null;
+					// Fall back to default behavior
+					equal = a.equals(b);
 				} else {
 					equal = targetA.equals(((AbstractEDiffElement)b).getTarget());
 				}
@@ -459,7 +464,8 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 			if (element instanceof AbstractEDiffElement) {
 				final Notifier target = ((AbstractEDiffElement)element).getTarget();
 				if (target == null) {
-					hashCode = 0;
+					// Fall back to default behavior
+					hashCode = element.hashCode();
 				} else {
 					hashCode = target.hashCode();
 				}
