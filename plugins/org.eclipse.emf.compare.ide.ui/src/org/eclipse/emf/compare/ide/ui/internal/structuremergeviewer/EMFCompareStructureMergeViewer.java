@@ -33,11 +33,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ide.ui.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.actions.filter.DifferenceFilter;
 import org.eclipse.emf.compare.ide.ui.internal.actions.filter.FilterActionMenu;
+import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGrouper;
+import org.eclipse.emf.compare.ide.ui.internal.actions.group.GroupActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.CompareNodeAdapterFactory;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -78,10 +81,17 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 
 	/**
 	 * The difference filter that will be applied to the structure viewer. Note that this will be initialized
-	 * from {@link #createToolItems(ToolBarManager)} since that method is called from the constructor and we
-	 * cannot init ourselves beforehand.
+	 * from {@link #createToolItems(ToolBarManager)} since that method is called from the super-constructor
+	 * and we cannot init ourselves beforehand.
 	 */
 	private DifferenceFilter differenceFilter;
+
+	/**
+	 * This will be used by our adapter factory in order to group together the differences located under the
+	 * Comparison. Note that this will be initialized from {@link #createToolItems(ToolBarManager)} since that
+	 * method is called from the super-constructor and we cannot init ourselves beforehand.
+	 */
+	private DifferenceGrouper differenceGrouper;
 
 	/**
 	 * @param parent
@@ -95,8 +105,11 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 			fParent = null;
 		}
 
+		differenceFilter.install(this);
+		differenceGrouper.install(this);
+
 		fAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-		fAdapterFactory.addAdapterFactory(new CompareNodeAdapterFactory());
+		fAdapterFactory.addAdapterFactory(new CompareNodeAdapterFactory(differenceGrouper));
 
 		fContentChangedListener = new IContentChangeListener() {
 			public void contentChanged(IContentChangeNotifier changed) {
@@ -110,7 +123,6 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 			}
 		};
 
-		differenceFilter.install(this);
 		// Wrap the defined comparer in our own.
 		setComparer(new DiffNodeComparer(super.getComparer()));
 	}
@@ -294,8 +306,12 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 		if (differenceFilter == null) {
 			differenceFilter = new DifferenceFilter();
 		}
+		if (differenceGrouper == null) {
+			differenceGrouper = new DifferenceGrouper();
+		}
 
 		toolbarManager.add(new FilterActionMenu(differenceFilter));
+		toolbarManager.add(new GroupActionMenu(differenceGrouper));
 	}
 
 	/**
@@ -417,7 +433,12 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 		public boolean equals(Object a, Object b) {
 			final boolean equal;
 			if (a instanceof AbstractEDiffElement && b instanceof AbstractEDiffElement) {
-				equal = ((AbstractEDiffElement)a).getTarget().equals(((AbstractEDiffElement)b).getTarget());
+				final Notifier targetA = ((AbstractEDiffElement)a).getTarget();
+				if (targetA == null) {
+					equal = ((AbstractEDiffElement)b).getTarget() == null;
+				} else {
+					equal = targetA.equals(((AbstractEDiffElement)b).getTarget());
+				}
 			} else if (delegate != null) {
 				equal = delegate.equals(a, b);
 			} else if (a != null) {
@@ -436,7 +457,12 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 		public int hashCode(Object element) {
 			final int hashCode;
 			if (element instanceof AbstractEDiffElement) {
-				hashCode = ((AbstractEDiffElement)element).getTarget().hashCode();
+				final Notifier target = ((AbstractEDiffElement)element).getTarget();
+				if (target == null) {
+					hashCode = 0;
+				} else {
+					hashCode = target.hashCode();
+				}
 			} else if (delegate != null) {
 				hashCode = delegate.hashCode(element);
 			} else if (element != null) {

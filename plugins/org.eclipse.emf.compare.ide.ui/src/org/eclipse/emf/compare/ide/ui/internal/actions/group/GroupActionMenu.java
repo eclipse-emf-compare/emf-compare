@@ -8,9 +8,8 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.actions.filter;
+package org.eclipse.emf.compare.ide.ui.internal.actions.group;
 
-import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ide.ui.EMFCompareIDEUIPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -21,51 +20,48 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
- * Using this action the user could filter the differences as :
- * <ul>
- * <li>Changed Elements,</li>
- * <li>Added Elements,</li>
- * <li>Removed Elements,</li>
- * <li>Moved Elements.</li>
- * </ul>
+ * This menu will display actions that will allow the user to group differences together.
  * 
  * @author <a href="mailto:maher.bouanani@obeo.fr">Bouanani Maher</a>
  */
-public class FilterActionMenu extends Action implements IMenuCreator {
-	/** The Filter that will be modified by this menu's actions. */
-	private final DifferenceFilter differenceFilter;
+public class GroupActionMenu extends Action implements IMenuCreator {
+	/** The difference grouper that will be affected by this menu's actions. */
+	private final DifferenceGrouper differenceGrouper;
 
 	/** Menu Manager that will contain our menu. */
 	private MenuManager menuManager;
 
 	/**
-	 * Constructs our filtering menu.
+	 * Constructs our grouping menu.
 	 * 
-	 * @param differenceFilter
-	 *            The filter for which we'll create actions.
+	 * @param tree
+	 *            The tree viewer which will be used to display our groups.
+	 * @param comparison
+	 *            The comparison which differences are to be split into groups.
 	 */
-	public FilterActionMenu(DifferenceFilter differenceFilter) {
-		super("", IAction.AS_DROP_DOWN_MENU);
+	public GroupActionMenu(DifferenceGrouper differenceGrouper) {
+		super("", IAction.AS_DROP_DOWN_MENU); //$NON-NLS-1$
 		this.menuManager = new MenuManager();
-		this.differenceFilter = differenceFilter;
-		setMenuCreator(this);
-		setToolTipText("Filters");
+		this.differenceGrouper = differenceGrouper;
+		setToolTipText("Groups");
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
-				"icons/full/toolb16/filter.gif")); //$NON-NLS-1$
+				"icons/full/toolb16/group.gif")); //$NON-NLS-1$
+		setMenuCreator(this);
 		createActions(menuManager);
 	}
 
 	/**
-	 * Create all of our filtering actions into the given menu.
+	 * Create the grouping action in the given menu.
 	 * 
 	 * @param menu
-	 *            The menu in which we are to create filter actions.
 	 */
 	public void createActions(MenuManager menu) {
-		menu.add(new FilterAction("Changed Elements", DifferenceKind.CHANGE, differenceFilter));
-		menu.add(new FilterAction("Added Elements", DifferenceKind.ADD, differenceFilter));
-		menu.add(new FilterAction("Removed Elements", DifferenceKind.DELETE, differenceFilter));
-		menu.add(new FilterAction("Moved Elements", DifferenceKind.MOVE, differenceFilter));
+		// TODO make this extensible. we need to allow clients to add new groups to this list.
+		final IAction defaultAction = new GroupAction("Default", differenceGrouper, null);
+		defaultAction.setChecked(true);
+		menu.add(defaultAction);
+		menu.add(new GroupAction("By Kind", differenceGrouper, new KindGroupProvider()));
+		menu.add(new GroupAction("By Metaclass", differenceGrouper, new MetamodelGroupProvider()));
 	}
 
 	/**

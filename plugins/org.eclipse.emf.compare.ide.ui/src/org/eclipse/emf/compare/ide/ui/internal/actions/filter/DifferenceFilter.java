@@ -135,6 +135,5 @@ public class DifferenceFilter extends ViewerFilter {
 	public void uninstall(TreeViewer viewer) {
 		viewer.removeFilter(this);
 		viewers.remove(viewer);
-
 	}
 }

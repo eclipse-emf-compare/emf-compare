@@ -10,6 +10,12 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui;
 
+import com.google.common.collect.Maps;
+
+import java.util.Map;
+
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -24,6 +30,9 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 
 	/** Plug-in's shared instance. */
 	private static EMFCompareIDEUIPlugin plugin;
+
+	/** Caches the images that were loaded by EMF Compare. */
+	private Map<String, Image> imageMap = Maps.newHashMap();
 
 	/**
 	 * Default constructor.
@@ -51,6 +60,9 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+		for (Image image : imageMap.values()) {
+			image.dispose();
+		}
 		super.stop(context);
 	}
 
@@ -61,5 +73,26 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	 */
 	public static EMFCompareIDEUIPlugin getDefault() {
 		return plugin;
+	}
+
+	/**
+	 * Loads an image from this plugin's path and returns it.
+	 * 
+	 * @param path
+	 *            Path to the image we are to load.
+	 * @return The loaded image.
+	 */
+	public Image getImage(String path) {
+		Image result = imageMap.get(path);
+		if (result != null) {
+			return result;
+		}
+		final ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
+				EMFCompareIDEUIPlugin.PLUGIN_ID, path);
+		if (descriptor != null) {
+			result = descriptor.createImage();
+			imageMap.put(path, result);
+		}
+		return result;
 	}
 }

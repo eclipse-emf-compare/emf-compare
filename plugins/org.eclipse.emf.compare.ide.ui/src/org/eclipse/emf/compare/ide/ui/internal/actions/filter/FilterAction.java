@@ -10,7 +10,6 @@ import org.eclipse.jface.action.IAction;
  * @author <a href="mailto:bouanani.meher@obeo.fr">Bouanani Maher</a>
  */
 public class FilterAction extends Action {
-
 	/**
 	 * The Filter type (ADD, MOVE, REMOVE or CHANGE).
 	 */

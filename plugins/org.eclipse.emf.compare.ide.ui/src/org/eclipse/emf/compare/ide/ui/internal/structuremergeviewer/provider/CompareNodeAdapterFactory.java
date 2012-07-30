@@ -21,6 +21,7 @@ import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGrouper;
 import org.eclipse.emf.compare.util.CompareAdapterFactory;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
@@ -51,6 +52,8 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	 */
 	protected final Collection<Object> supportedTypes = newArrayList();
 
+	private DifferenceGrouper grouper;
+
 	/**
 	 * Creates an {@link ComposeableAdapterFactory} with the following supported types:
 	 * <ul>
@@ -59,12 +62,16 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	 * <li>{@link ITypedElement}</li>,
 	 * <li>{@link ICompareInput}</li>.
 	 * </ul>
+	 * 
+	 * @param grouper
+	 *            This will be used by the comparison adapter to group differences together.
 	 */
-	public CompareNodeAdapterFactory() {
+	public CompareNodeAdapterFactory(DifferenceGrouper grouper) {
 		supportedTypes.add(IDiffElement.class);
 		supportedTypes.add(IDiffContainer.class);
 		supportedTypes.add(ITypedElement.class);
 		supportedTypes.add(ICompareInput.class);
+		this.grouper = grouper;
 	}
 
 	@Override
@@ -134,7 +141,7 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	 */
 	@Override
 	public Adapter createComparisonAdapter() {
-		return new ComparisonNode(getRootAdapterFactory());
+		return new ComparisonNode(getRootAdapterFactory(), grouper);
 	}
 
 	/**
@@ -259,4 +266,14 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	public void dispose() {
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.notify.impl.AdapterFactoryImpl#createAdapter(org.eclipse.emf.common.notify.Notifier,
+	 *      java.lang.Object)
+	 */
+	@Override
+	protected Adapter createAdapter(Notifier target, Object type) {
+		return super.createAdapter(target, type);
+	}
 }

@@ -108,7 +108,7 @@ public abstract class AbstractEDiffContainer extends AbstractEDiffElement implem
 	 *            the target type of adapted elements
 	 * @return an iterable with element of type <code>type</code>.
 	 */
-	private static <T> Iterable<T> adapt(Iterable<?> iterable, final AdapterFactory adapterFactory,
+	protected static <T> Iterable<T> adapt(Iterable<?> iterable, final AdapterFactory adapterFactory,
 			final Class<T> type) {
 		Function<Object, Object> adaptFunction = new Function<Object, Object>() {
 			public Object apply(Object input) {
