@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
+import static com.google.common.collect.Iterables.all;
+import static com.google.common.collect.Iterables.any;
+import static org.eclipse.emf.compare.ide.ui.internal.IEMFCompareConstants.IS_CONFLICT;
+import static org.eclipse.emf.compare.ide.ui.internal.IEMFCompareConstants.PSEUDO_CONFLICT_OR_NOT;
+
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
@@ -74,6 +79,11 @@ public class DiffNode extends AbstractEDiffNode {
 			if (conflict != null) {
 				ret |= Differencer.CONFLICTING;
 				if (conflict.getKind() == ConflictKind.PSEUDO) {
+					ret |= Differencer.PSEUDO_CONFLICT;
+				}
+			} else if (any(diff.getRequiredBy(), IS_CONFLICT)) {
+				ret |= Differencer.CONFLICTING;
+				if (all(diff.getRequiredBy(), PSEUDO_CONFLICT_OR_NOT)) {
 					ret |= Differencer.PSEUDO_CONFLICT;
 				}
 			}

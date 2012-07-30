@@ -10,11 +10,21 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
+import static com.google.common.collect.Lists.newArrayList;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.provider.ReferenceChangeItemProvider;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
  * Specialized {@link ReferenceChangeItemProvider} returning nice output for {@link #getText(Object)} and
@@ -101,5 +111,45 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 				.getValue());
 
 		return image;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getChildren(java.lang.Object)
+	 */
+	@Override
+	public Collection<?> getChildren(Object object) {
+		Collection<?> superChildren = super.getChildren(object);
+		List<? super Object> ret = newArrayList(superChildren);
+		ReferenceChange referenceChange = (ReferenceChange)object;
+		EReference reference = referenceChange.getReference();
+		Conflict conflict = referenceChange.getConflict();
+		if (conflict != null) {
+			// ret.addAll(conflict.getDifferences());
+		}
+
+		if (reference.isContainment()) {
+			Match match = referenceChange.getMatch().getComparison().getMatch(referenceChange.getValue());
+			ITreeItemContentProvider treeItemContentProvider = (ITreeItemContentProvider)adapterFactory
+					.adapt(match, ITreeItemContentProvider.class);
+			if (treeItemContentProvider != null) {
+				Collection<?> children = treeItemContentProvider.getChildren(match);
+
+				children.remove(referenceChange);
+
+				Iterator<?> iterator = children.iterator();
+				while (iterator.hasNext()) {
+					Object object2 = iterator.next();
+					if (object2 instanceof Match) {
+						iterator.remove();
+					}
+
+				}
+				ret.addAll(children);
+			}
+		}
+
+		return ret;
 	}
 }

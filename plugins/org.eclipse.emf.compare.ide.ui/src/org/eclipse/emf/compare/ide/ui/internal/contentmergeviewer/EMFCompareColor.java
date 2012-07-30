@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
+import static com.google.common.collect.Iterables.any;
+import static org.eclipse.emf.compare.ide.ui.internal.IEMFCompareConstants.IS_CONFLICT;
 import static org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareConfigurationExtension.getBoolean;
 
 import com.google.common.cache.Cache;
@@ -21,6 +23,7 @@ import com.google.common.cache.RemovalNotification;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.ide.ui.internal.IEMFCompareConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ColorRegistry;
@@ -37,31 +40,31 @@ import org.eclipse.swt.widgets.Display;
  */
 public class EMFCompareColor implements RemovalListener<RGB, Color> {
 
-	private RGB SELECTED_INCOMING;
+	private RGB fIncomingSelected;
 
-	private RGB INCOMING;
+	private RGB fIncoming;
 
-	private RGB INCOMING_FILL;
+	private RGB fIncomingFill;
 
-	private RGB INCOMING_TEXT_FILL;
+	private RGB fIncomingTextFill;
 
-	private RGB SELECTED_CONFLICT;
+	private RGB fConflictSelected;
 
-	private RGB CONFLICT;
+	private RGB fConflict;
 
-	private RGB CONFLICT_FILL;
+	private RGB fConflictFill;
 
-	private RGB CONFLICT_TEXT_FILL;
+	private RGB fConflictTextFill;
 
-	private RGB SELECTED_OUTGOING;
+	private RGB fOutgoingSelected;
 
-	private RGB OUTGOING;
+	private RGB fOutgoing;
 
-	private RGB OUTGOING_FILL;
+	private RGB fOutgoingFill;
 
-	private RGB OUTGOING_TEXT_FILL;
+	private RGB fOutgoingTextFill;
 
-	private RGB RESOLVED;
+	private RGB fResolved;
 
 	private final Cache<RGB, Color> fColors;
 
@@ -71,12 +74,19 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 
 	private final IPropertyChangeListener fPreferenceChangeListener;
 
+	private final IPropertyChangeListener fCompareConfigurationChangeListener;
+
 	private final boolean fLeftIsLocal;
+
+	private boolean fMergeTipRightToLeft;
+
+	private final CompareConfiguration fCompareConfiguration;
 
 	public EMFCompareColor(ContentMergeViewer contentMergeViewer, IPreferenceStore preferenceStore,
 			CompareConfiguration compareConfiguration) {
 		this.fContentMergeViewer = contentMergeViewer;
 		this.fPreferenceStore = preferenceStore;
+		this.fCompareConfiguration = compareConfiguration;
 		this.fColors = CacheBuilder.newBuilder().maximumSize(16).removalListener(this).build(
 				new CacheLoader<RGB, Color>() {
 					@Override
@@ -89,9 +99,21 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 				handlePropertyChangeEvent(event);
 			}
 		};
+
+		this.fCompareConfigurationChangeListener = new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				handlePropertyChangeEvent(event);
+			}
+		};
+
 		if (fPreferenceStore != null) {
 			fPreferenceStore.addPropertyChangeListener(fPreferenceChangeListener);
 		}
+
+		compareConfiguration.addPropertyChangeListener(fCompareConfigurationChangeListener);
+
+		fMergeTipRightToLeft = getBoolean(compareConfiguration, IEMFCompareConstants.MERGE_TIP_RIGHT_TO_LEFT,
+				IEMFCompareConstants.MERGE_TIP_RIGHT_TO_LEFT_DEFAULT);
 		fLeftIsLocal = getBoolean(compareConfiguration, "LEFT_IS_LOCAL", false); //$NON-NLS-1$
 		updateColors();
 	}
@@ -116,6 +138,14 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 				|| key.equals(IEMFCompareConstants.RESOLVED_COLOR)) {
 			updateColors();
 		}
+
+		if (key.equals(IEMFCompareConstants.MERGE_TIP_RIGHT_TO_LEFT)) {
+			fMergeTipRightToLeft = getBoolean(fCompareConfiguration,
+					IEMFCompareConstants.MERGE_TIP_RIGHT_TO_LEFT,
+					IEMFCompareConstants.MERGE_TIP_RIGHT_TO_LEFT_DEFAULT);
+			// fContentMergeViewer.getControl().redraw();
+		}
+
 	}
 
 	private Color getColor(RGB rgb) {
@@ -133,25 +163,34 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 	private RGB getFillRGB(Diff diff, boolean isThreeWay, boolean isIgnoreAncestor, boolean selected) {
 		RGB selected_fill = getBackground();
 		if (isThreeWay && !isIgnoreAncestor) {
-			if (diff.getConflict() == null) {
+			boolean requiredConflictForWayOfMerge = false;
+			if (any(diff.getRequiredBy(), IS_CONFLICT)) {
+				if (diff.getSource() == DifferenceSource.LEFT && !fMergeTipRightToLeft) {
+					requiredConflictForWayOfMerge = true;
+				} else if (diff.getSource() == DifferenceSource.RIGHT && fMergeTipRightToLeft) {
+					requiredConflictForWayOfMerge = true;
+				}
+			}
+
+			if (diff.getConflict() == null && !requiredConflictForWayOfMerge) {
 				switch (diff.getSource()) {
 					case RIGHT:
 						if (fLeftIsLocal) {
-							return selected ? selected_fill : INCOMING_FILL;
+							return selected ? selected_fill : fIncomingFill;
 						}
-						return selected ? selected_fill : OUTGOING_FILL;
+						return selected ? selected_fill : fOutgoingFill;
 					case LEFT:
 						if (fLeftIsLocal) {
-							return selected ? selected_fill : OUTGOING_FILL;
+							return selected ? selected_fill : fOutgoingFill;
 						}
-						return selected ? selected_fill : INCOMING_FILL;
+						return selected ? selected_fill : fIncomingFill;
 				}
 			} else {
-				return selected ? selected_fill : CONFLICT_FILL;
+				return selected ? selected_fill : fConflictFill;
 			}
-			return selected ? selected_fill : CONFLICT_FILL;
+			return selected ? selected_fill : fConflictFill;
 		}
-		return selected ? selected_fill : OUTGOING_FILL;
+		return selected ? selected_fill : fOutgoingFill;
 	}
 
 	public Color getStrokeColor(Diff diff, boolean isThreeWay, boolean isIgnoreAncestor, boolean selected) {
@@ -160,25 +199,41 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 
 	private RGB getStrokeRGB(Diff diff, boolean isThreeWay, boolean isIgnoreAncestor, boolean selected) {
 		if (isThreeWay && !isIgnoreAncestor) {
-			if (diff.getConflict() == null) {
+			boolean requiredConflictForWayOfMerge = false;
+			if (any(diff.getRequiredBy(), IS_CONFLICT)) {
+				if (diff.getSource() == DifferenceSource.LEFT && !fMergeTipRightToLeft) {
+					requiredConflictForWayOfMerge = true;
+				} else if (diff.getSource() == DifferenceSource.RIGHT && fMergeTipRightToLeft) {
+					requiredConflictForWayOfMerge = true;
+				}
+			}
+			if (any(diff.getRequires(), IS_CONFLICT)) {
+				if (diff.getSource() == DifferenceSource.LEFT && !fMergeTipRightToLeft) {
+					requiredConflictForWayOfMerge = true;
+				} else if (diff.getSource() == DifferenceSource.RIGHT && fMergeTipRightToLeft) {
+					requiredConflictForWayOfMerge = true;
+				}
+			}
+
+			if (diff.getConflict() == null && !requiredConflictForWayOfMerge) {
 				switch (diff.getSource()) {
 					case RIGHT:
 						if (fLeftIsLocal) {
-							return selected ? SELECTED_INCOMING : INCOMING;
+							return selected ? fIncomingSelected : fIncoming;
 						}
-						return selected ? SELECTED_OUTGOING : OUTGOING;
+						return selected ? fOutgoingSelected : fOutgoing;
 					case LEFT:
 						if (fLeftIsLocal) {
-							return selected ? SELECTED_OUTGOING : OUTGOING;
+							return selected ? fOutgoingSelected : fOutgoing;
 						}
-						return selected ? SELECTED_INCOMING : INCOMING;
+						return selected ? fIncomingSelected : fIncoming;
 				}
 			} else {
-				return selected ? SELECTED_CONFLICT : CONFLICT;
+				return selected ? fConflictSelected : fConflict;
 			}
-			return selected ? SELECTED_CONFLICT : CONFLICT;
+			return selected ? fConflictSelected : fConflict;
 		}
-		return selected ? SELECTED_OUTGOING : OUTGOING;
+		return selected ? fOutgoingSelected : fOutgoing;
 	}
 
 	private RGB getBackground() {
@@ -189,33 +244,33 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 		ColorRegistry registry = JFaceResources.getColorRegistry();
 
 		RGB bg = getBackground();
-		SELECTED_INCOMING = registry.getRGB(IEMFCompareConstants.INCOMING_COLOR);
-		if (SELECTED_INCOMING == null) {
-			SELECTED_INCOMING = new RGB(0, 0, 255); // BLUE
+		fIncomingSelected = registry.getRGB(IEMFCompareConstants.INCOMING_COLOR);
+		if (fIncomingSelected == null) {
+			fIncomingSelected = new RGB(0, 0, 255); // BLUE
 		}
-		INCOMING = interpolate(SELECTED_INCOMING, bg, 0.6);
-		INCOMING_FILL = interpolate(SELECTED_INCOMING, bg, 0.97);
-		INCOMING_TEXT_FILL = interpolate(SELECTED_INCOMING, bg, 0.85);
+		fIncoming = interpolate(fIncomingSelected, bg, 0.6);
+		fIncomingFill = interpolate(fIncomingSelected, bg, 0.97);
+		fIncomingTextFill = interpolate(fIncomingSelected, bg, 0.85);
 
-		SELECTED_OUTGOING = registry.getRGB(IEMFCompareConstants.OUTGOING_COLOR);
-		if (SELECTED_OUTGOING == null) {
-			SELECTED_OUTGOING = new RGB(0, 0, 0); // BLACK
+		fOutgoingSelected = registry.getRGB(IEMFCompareConstants.OUTGOING_COLOR);
+		if (fOutgoingSelected == null) {
+			fOutgoingSelected = new RGB(0, 0, 0); // BLACK
 		}
-		OUTGOING = interpolate(SELECTED_OUTGOING, bg, 0.6);
-		OUTGOING_FILL = interpolate(SELECTED_OUTGOING, bg, 0.97);
-		OUTGOING_TEXT_FILL = interpolate(SELECTED_OUTGOING, bg, 0.85);
+		fOutgoing = interpolate(fOutgoingSelected, bg, 0.6);
+		fOutgoingFill = interpolate(fOutgoingSelected, bg, 0.97);
+		fOutgoingTextFill = interpolate(fOutgoingSelected, bg, 0.85);
 
-		SELECTED_CONFLICT = registry.getRGB(IEMFCompareConstants.CONFLICTING_COLOR);
-		if (SELECTED_CONFLICT == null) {
-			SELECTED_CONFLICT = new RGB(255, 0, 0); // RED
+		fConflictSelected = registry.getRGB(IEMFCompareConstants.CONFLICTING_COLOR);
+		if (fConflictSelected == null) {
+			fConflictSelected = new RGB(255, 0, 0); // RED
 		}
-		CONFLICT = interpolate(SELECTED_CONFLICT, bg, 0.6);
-		CONFLICT_FILL = interpolate(SELECTED_CONFLICT, bg, 0.97);
-		CONFLICT_TEXT_FILL = interpolate(SELECTED_CONFLICT, bg, 0.85);
+		fConflict = interpolate(fConflictSelected, bg, 0.6);
+		fConflictFill = interpolate(fConflictSelected, bg, 0.97);
+		fConflictTextFill = interpolate(fConflictSelected, bg, 0.85);
 
-		RESOLVED = registry.getRGB(IEMFCompareConstants.RESOLVED_COLOR);
-		if (RESOLVED == null) {
-			RESOLVED = new RGB(0, 255, 0); // GREEN
+		fResolved = registry.getRGB(IEMFCompareConstants.RESOLVED_COLOR);
+		if (fResolved == null) {
+			fResolved = new RGB(0, 255, 0); // GREEN
 		}
 	}
 
@@ -236,5 +291,7 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 
 	public void dispose() {
 		fColors.invalidateAll();
+		fPreferenceStore.removePropertyChangeListener(fPreferenceChangeListener);
+		fCompareConfiguration.removePropertyChangeListener(fCompareConfigurationChangeListener);
 	}
 }

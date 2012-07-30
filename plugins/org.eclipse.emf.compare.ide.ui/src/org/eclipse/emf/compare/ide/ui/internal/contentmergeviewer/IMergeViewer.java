@@ -10,32 +10,36 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.swt.widgets.Scrollable;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IManyStructuralFeatureAccessor;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.IInputSelectionProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public interface IMergeViewer<V extends Viewer, C extends Scrollable> {
+public interface IMergeViewer<C extends Composite> extends IInputSelectionProvider {
 
 	C getControl();
 
-	V getViewer();
-
-	int getLineHeight();
-
-	int getViewportHeight();
-
-	int getVerticalScrollOffset();
-
-	public static enum MergeViewerSide {
-		LEFT, RIGHT, ANCESTOR,
-	}
+	void setInput(Object input);
 
 	MergeViewerSide getSide();
 
-	/**
-	 * @param b
-	 */
-	void setEnabled(boolean b);
+	void setSelection(Object selection);
+
+	void setSelection(IManyStructuralFeatureAccessor<?> selection);
+
+	void setSelection(Match match);
+
+	void setContentProvider(IContentProvider contentProvider);
+
+	void setLabelProvider(ILabelProvider labelProvider);
+
+	static enum MergeViewerSide {
+		LEFT, RIGHT, ANCESTOR,
+	}
+
 }

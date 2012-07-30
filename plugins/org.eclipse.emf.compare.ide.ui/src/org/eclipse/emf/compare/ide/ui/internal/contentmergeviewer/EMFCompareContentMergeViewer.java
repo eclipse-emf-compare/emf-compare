@@ -19,6 +19,7 @@ import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.Utilities;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ide.ui.internal.IEMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.BufferedCanvas;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
@@ -32,8 +33,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.DisposeEvent;
@@ -47,8 +46,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Scrollable;
 
@@ -96,11 +93,11 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	private CompareHandlerService fHandlerService;
 
-	private IMergeViewer<? extends Viewer, ? extends Scrollable> fAncestor;
+	private IMergeViewer<? extends Composite> fAncestor;
 
-	private IMergeViewer<? extends Viewer, ? extends Scrollable> fLeft;
+	private IMergeViewer<? extends Composite> fLeft;
 
-	private IMergeViewer<? extends Viewer, ? extends Scrollable> fRight;
+	private IMergeViewer<? extends Composite> fRight;
 
 	private final DynamicObject fDynamicObject;
 
@@ -110,7 +107,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	private final Comparison fComparison;
 
-	private final AtomicBoolean syncingSelections = new AtomicBoolean(false);
+	private final AtomicBoolean fSyncingSelections = new AtomicBoolean(false);
+
+	private EMFCompareColor fColors;
 
 	/**
 	 * @param style
@@ -125,7 +124,14 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 		fDynamicObject = new DynamicObject(this);
 
-		fComparison = ((ComparisonNode)cc.getProperty("EMF.COMPARE.RESULT")).getTarget();
+		fComparison = ((ComparisonNode)cc.getProperty(IEMFCompareConstants.COMPARE_RESULT)).getTarget();
+	}
+
+	/**
+	 * @return the fColors
+	 */
+	public EMFCompareColor getColors() {
+		return fColors;
 	}
 
 	/**
@@ -138,44 +144,51 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#isThreeWay()
+	 */
+	@Override
+	public boolean isThreeWay() {
+		return super.isThreeWay();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#updateContent(java.lang.Object,
+	 *      java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	protected void updateContent(Object ancestor, Object left, Object right) {
+		fAncestor.setInput(ancestor);
+		fLeft.setInput(left);
+		fRight.setInput(right);
+		// must update selection after the three viewers input has been set
+		// to avoid some NPE/AssertionError (they are calling each other on selectionChanged event to
+		// synchronize their selection)
+		fAncestor.setSelection(ancestor);
+		fLeft.setSelection(left);
+		fRight.setSelection(right);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#createControls(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
 	protected void createControls(Composite composite) {
 		fAncestor = createMergeViewer(composite, MergeViewerSide.ANCESTOR);
-		addListenersToViewer(fAncestor);
+		fAncestor.addSelectionChangedListener(this);
 
 		fLeft = createMergeViewer(composite, MergeViewerSide.LEFT);
-		addListenersToViewer(fLeft);
+		fLeft.addSelectionChangedListener(this);
 		fLeft.getControl().getVerticalBar().setVisible(false);
 
 		fRight = createMergeViewer(composite, MergeViewerSide.RIGHT);
-		addListenersToViewer(fRight);
+		fRight.addSelectionChangedListener(this);
 		fRight.getControl().getVerticalBar().setVisible(false);
-	}
 
-	/**
-	 * @param fAncestor2
-	 */
-	private void addListenersToViewer(
-			final IMergeViewer<? extends Viewer, ? extends Scrollable> mergeTreeViewer) {
-		Scrollable mergeTreeViewerControl = mergeTreeViewer.getControl();
-		mergeTreeViewerControl.addListener(SWT.EraseItem, new Listener() {
-			public void handleEvent(Event event) {
-				paint(event, mergeTreeViewer);
-			}
-		});
-
-		mergeTreeViewerControl.addListener(SWT.MeasureItem, new Listener() {
-			public void handleEvent(Event event) {
-				event.height = (int)(event.gc.getFontMetrics().getHeight() * 1.33);
-				if (event.height % 2 == 1) {
-					event.height += 1;
-				}
-			}
-		});
-
-		mergeTreeViewer.getViewer().addSelectionChangedListener(this);
+		fColors = new EMFCompareColor(this, null, getCompareConfiguration());
 	}
 
 	/**
@@ -186,8 +199,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	@Override
 	protected void createToolItems(ToolBarManager toolBarManager) {
 		Action a;
-		fHandlerService = CompareHandlerService.createFor(getCompareConfiguration().getContainer(), getLeft()
-				.getViewer().getControl().getShell());
+		fHandlerService = CompareHandlerService.createFor(getCompareConfiguration().getContainer(),
+				getLeftMergeViewer().getControl().getShell());
 
 		CompareConfiguration cc = getCompareConfiguration();
 		if (cc.isRightEditable()) {
@@ -230,13 +243,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	protected abstract void copyDiffLeftToRight();
 
 	/**
-	 * @param e
-	 * @param mergeTreeViewer
-	 */
-	protected abstract void paint(Event e,
-			IMergeViewer<? extends Viewer, ? extends Scrollable> mergeTreeViewer);
-
-	/**
 	 * Set the currently active Diff and update the toolbars controls and lines. If
 	 * <code>revealAndSelect</code> is <code>true</code> the Diff is revealed and selected in both Parts.
 	 */
@@ -252,10 +258,10 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	@Override
 	protected void handleResizeAncestor(int x, int y, int width, int height) {
 		if (width > 0) {
-			getAncestor().getControl().setVisible(true);
-			getAncestor().getControl().setBounds(x, y, width, height);
+			getAncestorMergeViewer().getControl().setVisible(true);
+			getAncestorMergeViewer().getControl().setBounds(x, y, width, height);
 		} else {
-			getAncestor().getControl().setVisible(false);
+			getAncestorMergeViewer().getControl().setVisible(false);
 		}
 	}
 
@@ -271,8 +277,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		fRight.getControl().setBounds(x + width1 + centerWidth, y, width2, height);
 	}
 
-	protected abstract IMergeViewer<? extends Viewer, ? extends Scrollable> createMergeViewer(
-			Composite parent, MergeViewerSide side);
+	protected abstract IMergeViewer<? extends Scrollable> createMergeViewer(Composite parent,
+			MergeViewerSide side);
 
 	@Override
 	protected final int getCenterWidth() {
@@ -533,21 +539,21 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	/**
 	 * @return the fAncestor
 	 */
-	protected IMergeViewer<? extends Viewer, ? extends Scrollable> getAncestor() {
+	protected IMergeViewer<? extends Scrollable> getAncestorMergeViewer() {
 		return fAncestor;
 	}
 
 	/**
 	 * @return the fLeft
 	 */
-	protected IMergeViewer<? extends Viewer, ? extends Scrollable> getLeft() {
+	protected IMergeViewer<? extends Scrollable> getLeftMergeViewer() {
 		return fLeft;
 	}
 
 	/**
 	 * @return the fRight
 	 */
-	protected IMergeViewer<? extends Viewer, ? extends Scrollable> getRight() {
+	protected IMergeViewer<? extends Scrollable> getRightMergeViewer() {
 		return fRight;
 	}
 
@@ -557,44 +563,42 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent event) {
-		if (syncingSelections.compareAndSet(false, true)) { // prevents stack overflow :)
+		if (fSyncingSelections.compareAndSet(false, true)) { // prevents stack overflow :)
 			try {
 				ISelectionProvider selectionProvider = event.getSelectionProvider();
-				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
-				Object firstElement = selection.getFirstElement();
-				Match match = getComparison().getMatch((EObject)firstElement);
-				if (match != null) {
-					EObject right = match.getRight();
-					EObject origin = match.getOrigin();
-					if (selectionProvider == getLeft().getViewer()) {
-						getRight().getViewer().setSelection(
-								right == null ? StructuredSelection.EMPTY : new StructuredSelection(right),
-								true);
-						getAncestor().getViewer().setSelection(
-								origin == null ? StructuredSelection.EMPTY : new StructuredSelection(origin),
-								true);
+				if (event.getSelection() instanceof IStructuredSelection && !event.getSelection().isEmpty()) {
+					IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+					Object firstElement = selection.getFirstElement();
+
+					final Match match;
+					if (firstElement instanceof DiffInsertionPoint) {
+						match = ((DiffInsertionPoint)firstElement).getMatch();
+					} else if (firstElement instanceof EObject) {
+						match = getComparison().getMatch((EObject)firstElement);
 					} else {
-						EObject left = match.getLeft();
-						if (selectionProvider == getRight().getViewer()) {
-							getLeft().getViewer().setSelection(
-									left == null ? StructuredSelection.EMPTY : new StructuredSelection(left),
-									true);
-							getAncestor().getViewer().setSelection(
-									origin == null ? StructuredSelection.EMPTY : new StructuredSelection(
-											origin), true);
-						} else if (selectionProvider == getAncestor().getViewer()) {
-							getLeft().getViewer().setSelection(
-									left == null ? StructuredSelection.EMPTY : new StructuredSelection(left),
-									true);
-							getRight().getViewer().setSelection(
-									right == null ? StructuredSelection.EMPTY
-											: new StructuredSelection(right), true);
-						}
+						match = null;
+					}
+
+					if (match != null) {
+						synchronizeSelection(selectionProvider, match);
 					}
 				}
 			} finally {
-				syncingSelections.set(false);
+				fSyncingSelections.set(false);
 			}
+		}
+	}
+
+	private void synchronizeSelection(final ISelectionProvider selectionProvider, final Match match) {
+		if (selectionProvider == fLeft) {
+			fRight.setSelection(match);
+			fAncestor.setSelection(match);
+		} else if (selectionProvider == fRight) { // selection is not coming from the left
+			fLeft.setSelection(match);
+			fAncestor.setSelection(match);
+		} else { // selectionProvider == ancestorViewer
+			fLeft.setSelection(match);
+			fRight.setSelection(match);
 		}
 	}
 }

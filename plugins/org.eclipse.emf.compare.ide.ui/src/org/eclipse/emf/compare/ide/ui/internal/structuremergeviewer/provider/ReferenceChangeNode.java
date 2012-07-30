@@ -12,11 +12,9 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.ManyReferenceChangeNode;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 
 /**
  * Specific AbstractEDiffNode for {@link ReferenceChange} objects.
@@ -52,23 +50,7 @@ public class ReferenceChangeNode extends DiffNode {
 	 */
 	@Override
 	public ITypedElement getAncestor() {
-		ITypedElement ret = null;
-		final EReference reference = getTarget().getReference();
-		final Match match = getTarget().getMatch();
-		final EObject origin = match.getOrigin();
-		final Match matchOfValue = match.getComparison().getMatch(getTarget().getValue());
-		EObject value = null;
-		if (matchOfValue != null) {
-			value = matchOfValue.getOrigin();
-		}
-		if (origin != null) {
-			if (reference.isMany()) {
-				ret = new ManyReferenceChangeNode(origin, reference, value);
-			} else {
-				// todo
-			}
-		}
-		return ret;
+		return new ManyReferenceChangeNode(getTarget(), MergeViewerSide.ANCESTOR);
 	}
 
 	/**
@@ -78,23 +60,7 @@ public class ReferenceChangeNode extends DiffNode {
 	 */
 	@Override
 	public ITypedElement getLeft() {
-		ITypedElement ret = null;
-		final EReference reference = getTarget().getReference();
-		final Match match = getTarget().getMatch();
-		final EObject left = match.getLeft();
-		final Match matchOfValue = match.getComparison().getMatch(getTarget().getValue());
-		EObject value = null;
-		if (matchOfValue != null) {
-			value = matchOfValue.getLeft();
-		}
-		if (left != null) {
-			if (reference.isMany()) {
-				ret = new ManyReferenceChangeNode(left, reference, value);
-			} else {
-				// todo
-			}
-		}
-		return ret;
+		return new ManyReferenceChangeNode(getTarget(), MergeViewerSide.LEFT);
 	}
 
 	/**
@@ -104,22 +70,6 @@ public class ReferenceChangeNode extends DiffNode {
 	 */
 	@Override
 	public ITypedElement getRight() {
-		ITypedElement ret = null;
-		EReference reference = getTarget().getReference();
-		final Match match = getTarget().getMatch();
-		EObject right = match.getRight();
-		final Match matchOfValue = match.getComparison().getMatch(getTarget().getValue());
-		EObject value = null;
-		if (matchOfValue != null) {
-			value = matchOfValue.getRight();
-		}
-		if (right != null) {
-			if (reference.isMany()) {
-				ret = new ManyReferenceChangeNode(right, reference, value);
-			} else {
-				// todo
-			}
-		}
-		return ret;
+		return new ManyReferenceChangeNode(getTarget(), MergeViewerSide.RIGHT);
 	}
 }

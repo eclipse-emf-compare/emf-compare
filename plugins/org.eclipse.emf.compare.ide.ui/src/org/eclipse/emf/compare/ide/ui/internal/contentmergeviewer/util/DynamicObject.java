@@ -10,7 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util;
 
-import com.google.common.base.Throwables;
+import static com.google.common.base.Throwables.propagate;
+
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -111,7 +112,7 @@ public class DynamicObject {
 	 * @param cause
 	 */
 	protected void handleException(Throwable cause) {
-		Throwables.propagate(cause);
+		propagate(cause);
 	}
 
 	private static Field getField(Class<?> clazz, String fieldName) {
@@ -122,7 +123,7 @@ public class DynamicObject {
 		} catch (NoSuchFieldException e) {
 			Class<?> superClass = clazz.getSuperclass();
 			if (superClass == null) {
-				e.printStackTrace();
+				propagate(e);
 			} else {
 				return getField(superClass, fieldName);
 			}

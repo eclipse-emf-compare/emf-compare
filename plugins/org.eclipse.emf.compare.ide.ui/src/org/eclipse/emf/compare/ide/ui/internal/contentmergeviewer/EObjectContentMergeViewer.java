@@ -29,7 +29,6 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -61,8 +60,6 @@ public class EObjectContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	private final AdapterFactory fAdapterFactory;
 
-	private EMFCompareColor fColors;
-
 	/**
 	 * Creates a new {@link EObjectContentMergeViewer} by calling the super constructor with the given
 	 * parameters.
@@ -93,48 +90,48 @@ public class EObjectContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void updateContent(Object ancestor, Object left, Object right) {
-		doUpdateContent(ancestor, getAncestor().getViewer());
-		doUpdateContent(left, getLeft().getViewer());
-		doUpdateContent(right, getRight().getViewer());
+		doUpdateContent(ancestor, getAncestorMergeViewer());
+		doUpdateContent(left, getLeftMergeViewer());
+		doUpdateContent(right, getRightMergeViewer());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#getAncestor()
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#getAncestorMergeViewer()
 	 */
 	@SuppressWarnings("unchecked")
 	// see createMergeViewer() to see it is safe
 	@Override
-	protected IMergeViewer<TreeViewer, Tree> getAncestor() {
-		return (IMergeViewer<TreeViewer, Tree>)super.getAncestor();
+	protected IMergeViewer<Tree> getAncestorMergeViewer() {
+		return (IMergeViewer<Tree>)super.getAncestorMergeViewer();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#getLeft()
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#getLeftMergeViewer()
 	 */
 	@SuppressWarnings("unchecked")
 	// see createMergeViewer() to see it is safe
 	@Override
-	protected IMergeViewer<TreeViewer, Tree> getLeft() {
-		return (IMergeViewer<TreeViewer, Tree>)super.getLeft();
+	protected IMergeViewer<Tree> getLeftMergeViewer() {
+		return (IMergeViewer<Tree>)super.getLeftMergeViewer();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#getRight()
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#getRightMergeViewer()
 	 */
 	@SuppressWarnings("unchecked")
 	// see createMergeViewer() to see it is safe
 	@Override
-	protected IMergeViewer<TreeViewer, Tree> getRight() {
-		return (IMergeViewer<TreeViewer, Tree>)super.getRight();
+	protected IMergeViewer<Tree> getRightMergeViewer() {
+		return (IMergeViewer<Tree>)super.getRightMergeViewer();
 	}
 
-	private static void doUpdateContent(Object object, TreeViewer viewer) {
+	private static void doUpdateContent(Object object, IMergeViewer<? extends Composite> viewer) {
 		if (object instanceof IEObjectAccessor) {
 			EObject eObject = ((IEObjectAccessor)object).getEObject();
 			final Object viewerInput = doGetInput(eObject);
@@ -147,8 +144,8 @@ public class EObjectContentMergeViewer extends EMFCompareContentMergeViewer {
 					selection = eObject;
 				}
 			}
-			viewer.setSelection(new StructuredSelection(selection), true);
-			viewer.expandToLevel(selection, 1);
+			viewer.setSelection(new StructuredSelection(selection));
+			// viewer.expandToLevel(selection, 1);
 		} else {
 			viewer.setInput(null);
 		}
@@ -192,7 +189,7 @@ public class EObjectContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void copyDiffLeftToRight() {
-		IStructuredSelection selection = (IStructuredSelection)getLeft().getViewer().getSelection();
+		IStructuredSelection selection = (IStructuredSelection)getLeftMergeViewer().getSelection();
 		Object firstElement = selection.getFirstElement();
 		EList<Diff> differences = getComparison().getDifferences((EObject)firstElement);
 		for (Diff diff : differences) {
@@ -209,7 +206,7 @@ public class EObjectContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void copyDiffRightToLeft() {
-		IStructuredSelection selection = (IStructuredSelection)getRight().getViewer().getSelection();
+		IStructuredSelection selection = (IStructuredSelection)getRightMergeViewer().getSelection();
 		Object firstElement = selection.getFirstElement();
 		EList<Diff> differences = getComparison().getDifferences((EObject)firstElement);
 		for (Diff diff : differences) {
@@ -237,7 +234,6 @@ public class EObjectContentMergeViewer extends EMFCompareContentMergeViewer {
 	@Override
 	protected void createControls(Composite composite) {
 		super.createControls(composite);
-		fColors = new EMFCompareColor(this, null, getCompareConfiguration());
 	}
 
 	/**
@@ -246,15 +242,14 @@ public class EObjectContentMergeViewer extends EMFCompareContentMergeViewer {
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#createMergeViewer(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
-	protected IMergeViewer<TreeViewer, Tree> createMergeViewer(final Composite parent, MergeViewerSide side) {
+	protected IMergeViewer<Tree> createMergeViewer(final Composite parent, MergeViewerSide side) {
 		final MergeTreeViewer mergeTreeViewer = new MergeTreeViewer(parent, side,
 				new AdapterFactoryContentProvider(fAdapterFactory), new AdapterFactoryLabelProvider(
 						fAdapterFactory));
 		return mergeTreeViewer;
 	}
 
-	@Override
-	protected void paint(Event event, IMergeViewer<? extends Viewer, ? extends Scrollable> mergeTreeViewer) {
+	protected void paint(Event event, IMergeViewer<? extends Scrollable> mergeTreeViewer) {
 		TreeItem treeItem = (TreeItem)event.item;
 
 		if (!getComparison().getDifferences().isEmpty()) {
@@ -270,35 +265,6 @@ public class EObjectContentMergeViewer extends EMFCompareContentMergeViewer {
 					}
 				}
 			}
-
-			// this code aims at painting line above or under a treeitem where an element will be merged
-			// EList<Diff> dataDifferences = getComparison().getDifferences(data);
-			// for (Diff diff : dataDifferences) {
-			// if (diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment())
-			// {
-			// ReferenceChange referenceChange = (ReferenceChange)diff;
-			// EObject value = referenceChange.getValue();
-			// Match matchOfValueContainer = getComparison().getMatch(value.eContainer());
-			// if (matchOfValueContainer != null) {
-			// EObject leftMatchedEObject = matchOfValueContainer.getLeft();
-			// EObject rightMatchedEObject = matchOfValueContainer.getRight();
-			// switch (mergeTreeViewer.getSide()) {
-			// case LEFT:
-			// if (rightMatchedEObject != null
-			// && rightMatchedEObject.eContents().contains(value)) {
-			// paintTreeItem2(event, treeItem, diff);
-			// }
-			// break;
-			// case RIGHT:
-			// if (leftMatchedEObject != null
-			// && leftMatchedEObject.eContents().contains(value)) {
-			// paintTreeItem2(event, treeItem, diff);
-			// }
-			// break;
-			// }
-			// }
-			// }
-			// }
 		}
 	}
 
@@ -320,8 +286,8 @@ public class EObjectContentMergeViewer extends EMFCompareContentMergeViewer {
 		}
 		boolean selected = ((event.detail & SWT.SELECTED) != 0);
 
-		g.setForeground(fColors.getStrokeColor(diff, isThreeWay(), false, selected));
-		g.setBackground(fColors.getFillColor(diff, isThreeWay(), false, selected));
+		g.setForeground(getColors().getStrokeColor(diff, isThreeWay(), false, selected));
+		g.setBackground(getColors().getFillColor(diff, isThreeWay(), false, selected));
 		g.fillRectangle(fill);
 		g.drawRectangle(fill);
 

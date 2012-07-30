@@ -164,7 +164,7 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 			ret = super.getText(object);
 		}
 
-		return "M " + ret;
+		return ret;
 	}
 
 	/**
@@ -183,13 +183,26 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 				sub.add((EObject)child);
 			}
 		}
+
+		Iterator<EObject> subIt = sub.iterator();
+		while (subIt.hasNext()) {
+			EObject eObject = subIt.next();
+			if (eObject instanceof Diff) {
+				Diff diff = (Diff)eObject;
+				if (diff.getConflict() != null) {
+					if (diff.getConflict().getKind() == ConflictKind.PSEUDO) {
+						subIt.remove();
+					}
+				}
+			}
+		}
+
 		Iterator<EObject> it = sub.iterator();
 		List<EObject> newSub = newArrayList();
 		while (it.hasNext()) {
 			EObject eObject = it.next();
 			if (eObject instanceof Match) {
-				if (isEmpty(((Match)eObject).getAllDifferences())
-						&& containmentDifferences((Match)eObject).isEmpty()) {
+				if (this.getChildren(eObject).isEmpty()) {
 					it.remove();
 				}
 
@@ -201,23 +214,10 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 		}
 		ArrayList<EObject> ret = newArrayList(concat(sub, newSub));
 
-		Iterator<EObject> retIt = ret.iterator();
-		while (retIt.hasNext()) {
-			EObject eObject = retIt.next();
-			if (eObject instanceof Diff) {
-				if (((Diff)eObject).getConflict() != null) {
-					if (((Diff)eObject).getConflict().getKind() == ConflictKind.PSEUDO) {
-
-					}
-				}
-			}
-		}
-
 		return ret;
-		// return ImmutableList.copyOf(getChildrenIterable((Match)object));
 	}
 
-	private static List<EObject> containmentDifferences(Match match) {
+	static List<EObject> containmentDifferences(Match match) {
 		EObject eContainer = match.eContainer();
 		List<EObject> ret = newArrayList();
 		if (eContainer instanceof Match) {
@@ -226,11 +226,7 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 
 			for (Diff containmentReferenceChange : containmentReferenceChanges) {
 				EObject value = ((ReferenceChange)containmentReferenceChange).getValue();
-				if (value == match.getLeft()) {
-					ret.add(containmentReferenceChange);
-				} else if (value == match.getRight()) {
-					ret.add(containmentReferenceChange);
-				} else if (value == match.getOrigin()) {
+				if (value == match.getLeft() || value == match.getRight() || value == match.getOrigin()) {
 					ret.add(containmentReferenceChange);
 				}
 			}
@@ -263,6 +259,5 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	@Override
 	public boolean hasChildren(Object object) {
 		return !getChildren(object).isEmpty();
-		// return !isEmpty(getChildrenIterable((Match)object));
 	}
 }

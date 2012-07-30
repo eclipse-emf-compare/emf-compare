@@ -95,6 +95,20 @@ public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAd
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.CompareItemProviderAdapterFactory#createConflictAdapter()
+	 */
+	@Override
+	public Adapter createConflictAdapter() {
+		if (conflictItemProvider == null) {
+			conflictItemProvider = new ConflictItemProviderSpec(this);
+		}
+
+		return conflictItemProvider;
+	}
+
+	/**
 	 * Returns the text of the given <code>object</code> by adapting it to {@link IItemLabelProvider} and
 	 * asking for its {@link IItemLabelProvider#getText(Object) text}. Returns null if <code>object</code> is
 	 * null.

@@ -10,20 +10,17 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
-import static com.google.common.collect.Lists.newArrayList;
-
-import java.util.List;
-
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IManyStructuralFeatureAccessor;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 
-class MergeTreeViewer implements IMergeViewer<TreeViewer, Tree> {
+class MergeTreeViewer implements IMergeViewer<Tree> {
 
 	private final TreeViewer fViewer;
 
@@ -44,102 +41,6 @@ class MergeTreeViewer implements IMergeViewer<TreeViewer, Tree> {
 		return fViewer.getTree();
 	}
 
-	public TreeViewer getViewer() {
-		return fViewer;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#getLineHeight()
-	 */
-	public int getLineHeight() {
-		return fViewer.getTree().getItemHeight();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#getViewportHeight()
-	 */
-	public int getViewportHeight() {
-		Rectangle clientArea = fViewer.getTree().getClientArea();
-		if (!clientArea.isEmpty()) {
-			return clientArea.height;
-		}
-		return 0;
-	}
-
-	public List<TreeItem> getVisibleTreeItem() {
-		return visibleTreeItems(getControl());
-	}
-
-	public static List<TreeItem> visibleTreeItems(Tree tree) {
-		Rectangle treeBounds = new Rectangle(0, 0, 0, 0);
-		Point treeSize = tree.getSize();
-		TreeItem topItem = tree.getTopItem();
-		if (topItem != null) {
-			// Rectangle topItemBounds = topItem.getBounds();
-			// treeBounds.y = topItemBounds.y;
-		}
-		treeBounds.width = treeSize.x;
-		treeBounds.height = treeSize.y;
-		TreeItem[] items = tree.getItems();
-
-		return visibleTreeItems(items, treeBounds, false);
-	}
-
-	private static boolean isItemPartiallyVisible(Rectangle treeBounds, final TreeItem rootItem) {
-		return treeBounds.intersects(rootItem.getBounds());
-	}
-
-	public static List<TreeItem> visibleTreeItems(TreeItem[] items, Rectangle treeBounds,
-			boolean parentVisible) {
-		List<TreeItem> ret = newArrayList();
-
-		boolean previousItemWasVisible = false;
-		for (TreeItem treeItem : items) {
-			if (treeItem.getExpanded()) {
-				boolean itemPartiallyVisible = isItemPartiallyVisible(treeBounds, treeItem);
-				if (itemPartiallyVisible) {
-					ret.add(treeItem);
-					previousItemWasVisible = true;
-				}
-				if (previousItemWasVisible && !itemPartiallyVisible) {
-					break; // quick loop exit
-				}
-			}
-		}
-
-		if (!ret.isEmpty()) { // some items are visible, so browse children to see if some are visible
-			for (TreeItem treeItem : newArrayList(ret)) {
-				if (treeItem.getExpanded()) { // only if the current visible item is expanded
-					List<TreeItem> visibleChildren = visibleTreeItems(treeItem.getItems(), treeBounds, true);
-					ret.addAll(visibleChildren);
-				}
-			}
-		} else if (!parentVisible) { // the parent is not visible but expanded and then some children are
-										// visible
-			for (TreeItem treeItem : items) {
-				if (treeItem.getExpanded()) { // only if the current item is expanded
-					List<TreeItem> visibleChildren = visibleTreeItems(treeItem.getItems(), treeBounds, false);
-					ret.addAll(visibleChildren);
-				}
-			}
-		}
-
-		return ret;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#getVerticalScrollOffset()
-	 */
-	public int getVerticalScrollOffset() {
-		return -14;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -152,9 +53,109 @@ class MergeTreeViewer implements IMergeViewer<TreeViewer, Tree> {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#setEnabled(boolean)
+	 * @see org.eclipse.jface.viewers.IInputProvider#getInput()
 	 */
-	public void setEnabled(boolean b) {
+	public Object getInput() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+	 */
+	public void addSelectionChangedListener(ISelectionChangedListener listener) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
+	 */
+	public ISelection getSelection() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+	 */
+	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
+	 */
+	public void setSelection(ISelection selection) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#setSelection(java.lang.Object)
+	 */
+	public void setSelection(Object selection) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#setSelection(org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IManyStructuralFeatureAccessor)
+	 */
+	public void setSelection(IManyStructuralFeatureAccessor<?> selection) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#setSelection(org.eclipse.emf.compare.Match)
+	 */
+	public void setSelection(Match match) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#setInput(java.lang.Object)
+	 */
+	public void setInput(Object input) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#setContentProvider(org.eclipse.jface.viewers.IContentProvider)
+	 */
+	public void setContentProvider(IContentProvider contentProvider) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#setLabelProvider(org.eclipse.jface.viewers.ILabelProvider)
+	 */
+	public void setLabelProvider(ILabelProvider labelProvider) {
 		// TODO Auto-generated method stub
 
 	}

@@ -37,11 +37,14 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ide.ui.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.IEMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.actions.filter.DifferenceFilter;
 import org.eclipse.emf.compare.ide.ui.internal.actions.filter.FilterActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGrouper;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.GroupActionMenu;
+import org.eclipse.emf.compare.ide.ui.internal.actions.mergeway.MergeWayAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.CompareNodeAdapterFactory;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -57,11 +60,6 @@ import org.eclipse.swt.widgets.Display;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
-
-	/**
-	 * 
-	 */
-	public static final String EMF_COMPARE_RESULT = "EMF.COMPARE.RESULT";
 
 	private final ICompareInputChangeListener fCompareInputChangeListener;
 
@@ -173,6 +171,8 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 		}
 	};
 
+	private ToolBarManager fToolbarManager;
+
 	void compareInputChanged(ICompareInput input, boolean force, IProgressMonitor monitor) {
 		ITypedElement t = null;
 
@@ -191,7 +191,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 		}
 		fRightStructure.setInput(t, force);
 
-		Object previousResult = getCompareConfiguration().getProperty(EMF_COMPARE_RESULT);
+		Object previousResult = getCompareConfiguration().getProperty(IEMFCompareConstants.COMPARE_RESULT);
 		if (previousResult instanceof Comparison) {
 			fRoot = (Comparison)previousResult;
 
@@ -220,7 +220,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 				Object compareResult = EMFCompare.compare(leftResourceSet, rightResourceSet,
 						ancestorResourceSet);
 				fRoot = fAdapterFactory.adapt(compareResult, IDiffElement.class);
-				getCompareConfiguration().setProperty(EMF_COMPARE_RESULT, fRoot);
+				getCompareConfiguration().setProperty(IEMFCompareConstants.COMPARE_RESULT, fRoot);
 
 				getCompareConfiguration().getContainer().runAsynchronously(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException,
@@ -245,6 +245,13 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 		if (getControl().isDisposed()) {
 			return;
 		}
+
+		// remove the merge way action if the comparison is two way only
+		if (fRoot instanceof ComparisonNode && !((ComparisonNode)fRoot).getTarget().isThreeWay()) {
+			fToolbarManager.remove(MergeWayAction.class.getName());
+			fToolbarManager.update(true);
+		}
+
 		if (fParent != null) {
 			fParent.setTitleArgument(message);
 		}
@@ -301,7 +308,12 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 	 */
 	@Override
 	protected void createToolItems(ToolBarManager toolbarManager) {
+		fToolbarManager = toolbarManager;
 		super.createToolItems(toolbarManager);
+
+		// will be removed later if two ways only
+		fToolbarManager.add(new MergeWayAction(getCompareConfiguration()));
+
 		// Initialized here since this is called from the super-constructor
 		if (differenceFilter == null) {
 			differenceFilter = new DifferenceFilter();
@@ -310,8 +322,8 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 			differenceGrouper = new DifferenceGrouper();
 		}
 
-		toolbarManager.add(new FilterActionMenu(differenceFilter));
-		toolbarManager.add(new GroupActionMenu(differenceGrouper));
+		fToolbarManager.add(new GroupActionMenu(differenceGrouper));
+		fToolbarManager.add(new FilterActionMenu(differenceFilter));
 	}
 
 	/**
