@@ -14,7 +14,7 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.ManyReferenceChangeNode;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.ReferenceChangeAccessor;
 
 /**
  * Specific AbstractEDiffNode for {@link ReferenceChange} objects.
@@ -50,7 +50,7 @@ public class ReferenceChangeNode extends DiffNode {
 	 */
 	@Override
 	public ITypedElement getAncestor() {
-		return new ManyReferenceChangeNode(getTarget(), MergeViewerSide.ANCESTOR);
+		return new ReferenceChangeAccessor(getTarget(), MergeViewerSide.ANCESTOR);
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class ReferenceChangeNode extends DiffNode {
 	 */
 	@Override
 	public ITypedElement getLeft() {
-		return new ManyReferenceChangeNode(getTarget(), MergeViewerSide.LEFT);
+		return new ReferenceChangeAccessor(getTarget(), MergeViewerSide.LEFT);
 	}
 
 	/**
@@ -70,6 +70,6 @@ public class ReferenceChangeNode extends DiffNode {
 	 */
 	@Override
 	public ITypedElement getRight() {
-		return new ManyReferenceChangeNode(getTarget(), MergeViewerSide.RIGHT);
+		return new ReferenceChangeAccessor(getTarget(), MergeViewerSide.RIGHT);
 	}
 }

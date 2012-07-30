@@ -13,7 +13,6 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.AbstractMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IEObjectAccessor;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IManyStructuralFeatureAccessor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -62,16 +61,6 @@ class TreeMergeViewer extends AbstractMergeViewer<Tree> {
 	 */
 	public void setSelection(Object selection) {
 		System.out.println("TreeMergeViewer.setSelection()");
-		// TODO Auto-generated method stub
-
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#setSelection(org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IManyStructuralFeatureAccessor)
-	 */
-	public void setSelection(IManyStructuralFeatureAccessor<?> selection) {
 		// TODO Auto-generated method stub
 
 	}

@@ -13,7 +13,9 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.AttributeChange;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.SingleAttributeChangeNode;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.AttributeChangeAccessor;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.StringAttributeChangeAccessor;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 
@@ -65,10 +67,10 @@ public class AttributeChangeNode extends DiffNode {
 		EAttribute attribute = getTarget().getAttribute();
 		EObject origin = getTarget().getMatch().getOrigin();
 		if (origin != null) {
-			if (attribute.isMany()) {
-				// todo
+			if (attribute.getEAttributeType().getInstanceClass() == String.class && !attribute.isMany()) {
+				ret = new StringAttributeChangeAccessor(origin, attribute, getTarget());
 			} else {
-				ret = new SingleAttributeChangeNode(origin, attribute, getTarget());
+				ret = new AttributeChangeAccessor(getTarget(), MergeViewerSide.ANCESTOR);
 			}
 		}
 		return ret;
@@ -85,10 +87,10 @@ public class AttributeChangeNode extends DiffNode {
 		EAttribute attribute = getTarget().getAttribute();
 		EObject left = getTarget().getMatch().getLeft();
 		if (left != null) {
-			if (attribute.isMany()) {
-				// todo
+			if (attribute.getEAttributeType().getInstanceClass() == String.class && !attribute.isMany()) {
+				ret = new StringAttributeChangeAccessor(left, attribute, getTarget());
 			} else {
-				ret = new SingleAttributeChangeNode(left, attribute, getTarget());
+				ret = new AttributeChangeAccessor(getTarget(), MergeViewerSide.ANCESTOR);
 			}
 		}
 		return ret;
@@ -105,10 +107,10 @@ public class AttributeChangeNode extends DiffNode {
 		EAttribute attribute = getTarget().getAttribute();
 		EObject right = getTarget().getMatch().getRight();
 		if (right != null) {
-			if (attribute.isMany()) {
-				// todo
+			if (attribute.getEAttributeType().getInstanceClass() == String.class && !attribute.isMany()) {
+				ret = new StringAttributeChangeAccessor(right, attribute, getTarget());
 			} else {
-				ret = new SingleAttributeChangeNode(right, attribute, getTarget());
+				ret = new AttributeChangeAccessor(getTarget(), MergeViewerSide.ANCESTOR);
 			}
 		}
 		return ret;

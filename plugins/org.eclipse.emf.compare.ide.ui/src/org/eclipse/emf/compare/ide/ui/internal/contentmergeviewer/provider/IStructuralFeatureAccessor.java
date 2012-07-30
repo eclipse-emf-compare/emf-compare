@@ -15,24 +15,25 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public interface IManyStructuralFeatureAccessor<T> {
+public interface IStructuralFeatureAccessor {
 
-	List<T> getValues();
+	EStructuralFeature getEStructuralFeature();
 
-	T getValue();
+	List<?> getValues();
 
-	EObject getValue(ReferenceChange referenceChange);
+	Object getValue();
 
-	ImmutableList<? extends Diff> getDiffFromThisSide();
+	Object getValue(Diff diff);
 
-	ImmutableList<? extends Diff> getDiffFromTheOtherSide();
+	ImmutableList<Diff> getDiffFromThisSide();
 
-	ImmutableList<? extends Diff> getDiffFromAncestor();
+	ImmutableList<Diff> getDiffFromTheOtherSide();
+
+	ImmutableList<Diff> getDiffFromAncestor();
 
 }

@@ -31,7 +31,7 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class SingleAttributeChangeNode implements ITypedElement, IStreamContentAccessor, IEditableContent {
+public class StringAttributeChangeAccessor implements ITypedElement, IStreamContentAccessor, IEditableContent {
 
 	/**
 	 * The EObject to get the value of the EAttribute from.
@@ -54,7 +54,7 @@ public class SingleAttributeChangeNode implements ITypedElement, IStreamContentA
 	 *            The EAttribute to retrieve from the wrapped EObject
 	 * @param attributeChange
 	 */
-	public SingleAttributeChangeNode(EObject eObject, EAttribute eAtribute, AttributeChange attributeChange) {
+	public StringAttributeChangeAccessor(EObject eObject, EAttribute eAtribute, AttributeChange attributeChange) {
 		this.fEObject = eObject;
 		this.fEAtribute = eAtribute;
 		this.fAttributeChange = attributeChange;
@@ -115,7 +115,7 @@ public class SingleAttributeChangeNode implements ITypedElement, IStreamContentA
 	 */
 	public void setContent(byte[] newContent) {
 		String newValue = new String(newContent);
-		System.out.println("SingleAttributeChangeNode.setContent(" + newValue + ")");
+		System.out.println("StringAttributeChangeAccessor.setContent(" + newValue + ")");
 	}
 
 	/**
@@ -126,6 +126,6 @@ public class SingleAttributeChangeNode implements ITypedElement, IStreamContentA
 	 */
 	public ITypedElement replace(ITypedElement dest, ITypedElement src) {
 		throw new UnsupportedOperationException(
-				"ITypedElement SingleAttributeChangeNode#replace(ITypedElement, ITypedElement)");
+				"ITypedElement StringAttributeChangeAccessor#replace(ITypedElement, ITypedElement)");
 	}
 }

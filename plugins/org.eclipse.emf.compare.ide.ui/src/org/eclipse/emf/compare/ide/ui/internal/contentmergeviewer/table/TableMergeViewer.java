@@ -24,7 +24,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.AbstractMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IManyStructuralFeatureAccessor;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DiffInsertionPoint;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EqualityHelper;
@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.TableItem;
  */
 class TableMergeViewer extends AbstractMergeViewer<Table> {
 
-	private IManyStructuralFeatureAccessor<?> fInput;
+	private IStructuralFeatureAccessor fInput;
 
 	private final EMFCompareContentMergeViewer fContentMergeViewer;
 
@@ -111,8 +111,8 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#setInput(java.lang.Object)
 	 */
 	public void setInput(Object object) {
-		if (object instanceof IManyStructuralFeatureAccessor<?>) {
-			fInput = (IManyStructuralFeatureAccessor<?>)object;
+		if (object instanceof IStructuralFeatureAccessor) {
+			fInput = (IStructuralFeatureAccessor)object;
 			final List<Object> values = newArrayList(fInput.getValues());
 			addInsertionPoints(values);
 			getStructuredViewer().setInput(values);
@@ -123,8 +123,8 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 	}
 
 	public void setSelection(Object selection) {
-		if (selection instanceof IManyStructuralFeatureAccessor<?>) {
-			setSelection((IManyStructuralFeatureAccessor<?>)selection);
+		if (selection instanceof IStructuralFeatureAccessor) {
+			setSelection((IStructuralFeatureAccessor)selection);
 		} else if (selection instanceof Match) {
 			setSelection((Match)selection);
 		} else if (selection instanceof ISelection) {
@@ -138,7 +138,7 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		}
 	}
 
-	private void setSelection(IManyStructuralFeatureAccessor<?> selection) {
+	private void setSelection(IStructuralFeatureAccessor selection) {
 		if (selection != null) {
 			final Object value = selection.getValue();
 			if (((Collection<?>)getStructuredViewer().getInput()).contains(value)) {
@@ -212,20 +212,16 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		}
 		if (fInput != null) {
 			for (Diff diff : fInput.getDiffFromThisSide()) {
-				if (diff instanceof ReferenceChange) {
-					if (fInput.getValue(((ReferenceChange)diff)) == data) {
-						paintItemDiffBox(event, diff, getBounds(tableItem));
-						specialPaint = true;
-					}
+				if (fInput.getValue(diff) == data) {
+					paintItemDiffBox(event, diff, getBounds(tableItem));
+					specialPaint = true;
 				}
 			}
 			if (getSide() == MergeViewerSide.ANCESTOR) {
 				for (Diff diff : fInput.getDiffFromAncestor()) {
-					if (diff instanceof ReferenceChange) {
-						if (fInput.getValue(((ReferenceChange)diff)) == data) {
-							paintItemDiffBox(event, diff, getBounds(tableItem));
-							specialPaint = true;
-						}
+					if (fInput.getValue(diff) == data) {
+						paintItemDiffBox(event, diff, getBounds(tableItem));
+						specialPaint = true;
 					}
 				}
 			}
