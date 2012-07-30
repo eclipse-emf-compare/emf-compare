@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
+package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util;
 
 import static com.google.common.collect.Iterables.any;
 import static org.eclipse.emf.compare.ide.ui.internal.IEMFCompareConstants.IS_CONFLICT;

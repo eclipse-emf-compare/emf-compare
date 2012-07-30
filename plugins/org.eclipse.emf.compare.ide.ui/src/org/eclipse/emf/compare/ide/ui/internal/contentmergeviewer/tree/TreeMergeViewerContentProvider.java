@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
+package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IEditableContent;
@@ -28,7 +28,7 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class EObjectMergeViewerContentProvider implements IMergeViewerContentProvider {
+public class TreeMergeViewerContentProvider implements IMergeViewerContentProvider {
 
 	/**
 	 * The stored {@link CompareConfiguration} to delegates most methods of this object.
@@ -36,14 +36,14 @@ public class EObjectMergeViewerContentProvider implements IMergeViewerContentPro
 	private final CompareConfiguration fCompareConfiguration;
 
 	/**
-	 * Creates a new {@link EObjectMergeViewerContentProvider} and stored the given
+	 * Creates a new {@link TreeMergeViewerContentProvider} and stored the given
 	 * {@link CompareConfiguration}.
 	 * 
 	 * @param cc
 	 *            the {@link CompareConfiguration} that will be used to get label and image of left, right and
 	 *            ancestor.
 	 */
-	public EObjectMergeViewerContentProvider(CompareConfiguration cc) {
+	public TreeMergeViewerContentProvider(CompareConfiguration cc) {
 		fCompareConfiguration = cc;
 	}
 

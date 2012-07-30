@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
+package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IViewerCreator;
@@ -16,11 +16,11 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * A {@link IViewerCreator} that creates {@link EObjectContentMergeViewer}.
+ * A {@link IViewerCreator} that creates {@link TreeContentMergeViewer}.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class EObjectContentMergeViewerCreator implements IViewerCreator {
+public class TreeContentMergeViewerCreator implements IViewerCreator {
 
 	/**
 	 * ID of the contribution to the org.eclipse.compare.contentMergeViewers extension point.
@@ -34,7 +34,7 @@ public class EObjectContentMergeViewerCreator implements IViewerCreator {
 	 *      org.eclipse.compare.CompareConfiguration)
 	 */
 	public Viewer createViewer(Composite parent, CompareConfiguration config) {
-		return new EObjectContentMergeViewer(parent, config);
+		return new TreeContentMergeViewer(parent, config);
 	}
 
 }

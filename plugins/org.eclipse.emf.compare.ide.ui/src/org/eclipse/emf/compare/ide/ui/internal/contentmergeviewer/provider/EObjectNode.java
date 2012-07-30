@@ -34,7 +34,7 @@ import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * A {@link ITypedElement} that can be used as input of EObjectContentMergeViewer. It is implementing
+ * A {@link ITypedElement} that can be used as input of TreeContentMergeViewer. It is implementing
  * {@link IStreamContentAccessor} to be able to compare XMI serialization of wrapped {@link EObject}.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>

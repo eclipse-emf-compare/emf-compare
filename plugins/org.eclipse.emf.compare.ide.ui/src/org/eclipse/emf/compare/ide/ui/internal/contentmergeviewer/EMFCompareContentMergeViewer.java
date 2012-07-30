@@ -22,7 +22,9 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.IEMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.BufferedCanvas;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DiffInsertionPoint;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
@@ -593,10 +595,10 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		if (selectionProvider == fLeft) {
 			fRight.setSelection(match);
 			fAncestor.setSelection(match);
-		} else if (selectionProvider == fRight) { // selection is not coming from the left
+		} else if (selectionProvider == fRight) {
 			fLeft.setSelection(match);
 			fAncestor.setSelection(match);
-		} else { // selectionProvider == ancestorViewer
+		} else { // selectionProvider == fAncestor
 			fLeft.setSelection(match);
 			fRight.setSelection(match);
 		}

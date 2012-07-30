@@ -24,7 +24,9 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
+import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -34,7 +36,7 @@ public class ManyReferenceChangeNode implements ITypedElement, IManyStructuralFe
 
 	private final MergeViewerSide fSide;
 
-	private final EReference fEReference;
+	private final EStructuralFeature fEReference;
 
 	private final ImmutableList<ReferenceChange> fReferenceChangesFromThisSide;
 
@@ -173,7 +175,8 @@ public class ManyReferenceChangeNode implements ITypedElement, IManyStructuralFe
 	 * @see org.eclipse.compare.ITypedElement#getImage()
 	 */
 	public Image getImage() {
-		return null;
+		return ExtendedImageRegistry.getInstance().getImage(
+				EcoreEditPlugin.getPlugin().getImage("full/obj16/EReference")); //$NON-NLS-1$
 	}
 
 	/**

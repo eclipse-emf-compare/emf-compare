@@ -17,7 +17,7 @@
    <extension
          point="org.eclipse.compare.contentMergeViewers">
       <viewer
-            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EObjectContentMergeViewerCreator"
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerCreator"
             extensions="eobject"
             id="org.eclipse.emf.compare.ide.ui.internal.EObjectContentMergeViewer"
             label="EMFCompare Content Merge Viewer">
@@ -27,7 +27,7 @@
             contentTypeId="org.eclipse.emf.ecore.xmi">
       </contentTypeBinding>
       <viewer
-            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.ObjectListContentMergeViewerCreator"
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table.TableContentMergeViewerCreator"
             extensions="objectlist"
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EObjectListContentMergeViewer"
             label="EMFCompare Content Merge Viewer">

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
+package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util;
 
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Diff;
@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-final class DiffInsertionPoint {
+public final class DiffInsertionPoint {
 
 	private final Diff fDiff;
 

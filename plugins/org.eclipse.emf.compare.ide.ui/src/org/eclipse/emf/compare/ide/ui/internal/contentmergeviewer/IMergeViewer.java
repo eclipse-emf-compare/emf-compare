@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IManyStructuralFeatureAccessor;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IInputSelectionProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -29,8 +28,6 @@ public interface IMergeViewer<C extends Composite> extends IInputSelectionProvid
 	MergeViewerSide getSide();
 
 	void setSelection(Object selection);
-
-	void setSelection(IManyStructuralFeatureAccessor<?> selection);
 
 	void setSelection(Match match);
 

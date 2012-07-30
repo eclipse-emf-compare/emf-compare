@@ -8,12 +8,14 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
+package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;
 
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -27,21 +29,21 @@ import org.eclipse.swt.widgets.Table;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class EObjectListContentMergeViewer extends EMFCompareContentMergeViewer {
+public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 
 	/**
 	 * Bundle name of the property file containing all displayed strings.
 	 */
-	private static final String BUNDLE_NAME = "org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EObjectListContentMergeViewer"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = TableContentMergeViewer.class.getName();
 
 	private final AdapterFactory fAdapterFactory;
 
 	/**
 	 * Call the super constructor.
 	 * 
-	 * @see EObjectListContentMergeViewer
+	 * @see TableContentMergeViewer
 	 */
-	protected EObjectListContentMergeViewer(Composite parent, CompareConfiguration config) {
+	protected TableContentMergeViewer(Composite parent, CompareConfiguration config) {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
 		fAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 		buildControl(parent);
@@ -95,7 +97,7 @@ public class EObjectListContentMergeViewer extends EMFCompareContentMergeViewer 
 	 */
 	@Override
 	protected IMergeViewer<? extends Composite> createMergeViewer(Composite parent, MergeViewerSide side) {
-		IMergeViewer<Table> ret = new MergeTableViewer(parent, this, side);
+		IMergeViewer<Table> ret = new TableMergeViewer(parent, this, side);
 		ret.setContentProvider(new ArrayContentProvider());
 		ret.setLabelProvider(new AdapterFactoryLabelProvider(fAdapterFactory));
 		return ret;
