@@ -17,6 +17,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.AbstractEList;
@@ -39,6 +40,15 @@ import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ComparisonSpec extends ComparisonImpl {
+	/**
+	 * Caches the value of this boolean. {@link #isThreeWay()} is called a lot of times during the comparison
+	 * process. We do not want to compute it again each of these times.
+	 */
+	private boolean isThreeWay;
+
+	/** This will be used to determine whether we need to invalidate {@link #isThreeWay}. */
+	private int resourceCount = -1;
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -112,12 +122,27 @@ public class ComparisonSpec extends ComparisonImpl {
 	 */
 	@Override
 	public boolean isThreeWay() {
-		for (MatchResource matchResource : getMatchedResources()) {
-			if (matchResource.getOriginURI() != null && matchResource.getOriginURI().length() > 0) {
-				return true;
+		/*
+		 * No need to go further if we found that we were in three way : adding new Resources to the
+		 * comparison will not magically put us in two-way mode.
+		 */
+		if (isThreeWay) {
+			return isThreeWay;
+		}
+
+		final List<MatchResource> resources = getMatchedResources();
+		final int count = resources.size();
+		if (resourceCount != count) {
+			isThreeWay = false;
+			resourceCount = count;
+			for (int i = 0; i < count; i++) {
+				final MatchResource matchResource = resources.get(i);
+				if (matchResource.getOriginURI() != null && matchResource.getOriginURI().length() > 0) {
+					isThreeWay = true;
+				}
 			}
 		}
-		return false;
+		return isThreeWay;
 	}
 
 	/**
