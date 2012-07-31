@@ -15,6 +15,7 @@ import com.google.common.collect.Sets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -28,25 +29,26 @@ import org.eclipse.core.resources.mapping.ResourceMappingContext;
 import org.eclipse.core.resources.mapping.ResourceTraversal;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.internal.RevisionedURIConverter;
 import org.eclipse.emf.compare.ide.internal.extension.EMFCompareIDEExtensionRegistry;
 import org.eclipse.emf.compare.ide.internal.extension.ModelResolverDescriptor;
 import org.eclipse.emf.compare.ide.internal.utils.ResourceUtil;
 import org.eclipse.emf.compare.internal.ModelIdentifier;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 // FIXME find a way to properly dispose of the three resource sets
 /**
  * This will be used to map EMF {@link Resource}s to their physical {@link IResource}s.
  * <p>
  * Take note that this will keep references to all three resource sets (left, right and origin) in order to
- * avoid doing more than one {@link EcoreUtil#resolveAll(org.eclipse.emf.ecore.resource.ResourceSet)} for
- * these. We need to do one on each here in order to determine whether either one of them references a
- * resource that no longer exist in the others.
+ * avoid doing more than one {@link #resolveAll(org.eclipse.emf.ecore.resource.ResourceSet)} for these. We
+ * need to do one on each here in order to determine whether either one of them references a resource that no
+ * longer exist in the others.
  * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
@@ -275,10 +277,10 @@ public class EMFResourceMapping extends ResourceMapping {
 
 			// make sure that these two are fully resolved
 			if (remoteResourceSet != null) {
-				EcoreUtil.resolveAll(remoteResourceSet);
+				resolveAll(remoteResourceSet);
 			}
 			if (originResourceSet != null) {
-				EcoreUtil.resolveAll(originResourceSet);
+				resolveAll(originResourceSet);
 			}
 		}
 
@@ -348,7 +350,7 @@ public class EMFResourceMapping extends ResourceMapping {
 			}
 		}
 		if (!resolved) {
-			EcoreUtil.resolveAll(localResourceSet);
+			resolveAll(localResourceSet);
 		}
 	}
 
@@ -407,5 +409,74 @@ public class EMFResourceMapping extends ResourceMapping {
 		resourceSet.setURIConverter(new RevisionedURIConverter(resourceSet.getURIConverter(), storage));
 
 		return resourceSet;
+	}
+
+	/**
+	 * Resolved all proxies within the given resource set.
+	 * 
+	 * @param resourceSet
+	 *            the resource set to resolve.
+	 * @since 1.3
+	 */
+	protected void resolveAll(ResourceSet resourceSet) {
+		if (resourceSet == null) {
+			return;
+		}
+
+		Set<Resource> originalSet = new HashSet<Resource>(resourceSet.getResources());
+		resolveAll(originalSet);
+
+		Set<Resource> newSet = new HashSet<Resource>(resourceSet.getResources());
+		Set<Resource> delta = Sets.difference(newSet, originalSet);
+		while (delta.size() > 0) {
+			originalSet = newSet;
+			resolveAll(delta);
+
+			newSet = new HashSet<Resource>(resourceSet.getResources());
+			delta = Sets.difference(newSet, originalSet);
+		}
+	}
+
+	/**
+	 * Resolves all proxies within the given set of resources. We won't go down in any resource "below" those
+	 * : that will be taken care of in a latter call from {@link #resolveAll(ResourceSet)}.
+	 * 
+	 * @param resources
+	 *            The resources we need to resolve.
+	 */
+	private void resolveAll(Set<Resource> resources) {
+		final Iterator<Resource> resourceIterator = resources.iterator();
+		while (resourceIterator.hasNext()) {
+			Resource current = resourceIterator.next();
+
+			final Iterator<EObject> resourceContent = current.getContents().iterator();
+			while (resourceContent.hasNext()) {
+				final EObject eObject = resourceContent.next();
+				resolveCrossReferences(eObject);
+				final TreeIterator<EObject> childContent = eObject.eAllContents();
+				while (childContent.hasNext()) {
+					final EObject child = childContent.next();
+					if (child.eResource() != current) {
+						childContent.prune();
+					} else {
+						resolveCrossReferences(child);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Resolves the cross references of the given EObject.
+	 * 
+	 * @param eObject
+	 *            The EObject for which we are to resolve the cross references.
+	 */
+	private void resolveCrossReferences(EObject eObject) {
+		final Iterator<EObject> objectChildren = eObject.eCrossReferences().iterator();
+		while (objectChildren.hasNext()) {
+			// Resolves cross references by simply visiting them.
+			objectChildren.next();
+		}
 	}
 }
