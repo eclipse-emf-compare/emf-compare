@@ -30,9 +30,10 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 
 /**
- * An instance of this class intends to filter differences between elements.
+ * This will be used by the structure viewer to filter out its list of differences according to the selected
+ * difference kind.
  * 
- * @author <a href="mailto:maher.bouanani@obeo.fr">Bouanani Maher</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class DifferenceFilter extends ViewerFilter {
 	/** The kinds of differences accepted by this filter. */

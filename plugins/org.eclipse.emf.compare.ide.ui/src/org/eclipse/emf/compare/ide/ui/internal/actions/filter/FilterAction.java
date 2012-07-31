@@ -5,9 +5,10 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 
 /**
- * This class represents the filter action, it acts corresponding to the given filter Type.
+ * These will be the actual actions displayed in the filter menu. Their sole purpose is to provide a
+ * DifferenceKind to the structure viewer's filter.
  * 
- * @author <a href="mailto:bouanani.meher@obeo.fr">Bouanani Maher</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class FilterAction extends Action {
 	/**

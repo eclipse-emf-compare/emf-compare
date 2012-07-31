@@ -21,15 +21,9 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
- * Using this action the user could filter the differences as :
- * <ul>
- * <li>Changed Elements,</li>
- * <li>Added Elements,</li>
- * <li>Removed Elements,</li>
- * <li>Moved Elements.</li>
- * </ul>
+ * This will be displayed atop the structure viewer as the "filters" menu.
  * 
- * @author <a href="mailto:maher.bouanani@obeo.fr">Bouanani Maher</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class FilterActionMenu extends Action implements IMenuCreator {
 	/** The Filter that will be modified by this menu's actions. */

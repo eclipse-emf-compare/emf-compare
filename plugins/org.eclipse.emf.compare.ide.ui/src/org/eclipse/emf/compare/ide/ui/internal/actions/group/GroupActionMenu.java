@@ -22,7 +22,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 /**
  * This menu will display actions that will allow the user to group differences together.
  * 
- * @author <a href="mailto:maher.bouanani@obeo.fr">Bouanani Maher</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class GroupActionMenu extends Action implements IMenuCreator {
 	/** The difference grouper that will be affected by this menu's actions. */
