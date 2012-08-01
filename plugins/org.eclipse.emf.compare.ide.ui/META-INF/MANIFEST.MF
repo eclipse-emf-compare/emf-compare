@@ -18,6 +18,17 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Export-Package: org.eclipse.emf.compare.ide.ui,
+ org.eclipse.emf.compare.ide.ui.internal;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.actions.filter;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.actions.group;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.actions.mergeway;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.logical.adapter,
  org.eclipse.emf.compare.ide.ui.logical.sync
 Import-Package: com.google.common.base;version="2.0.0",
