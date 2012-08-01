@@ -32,6 +32,7 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
@@ -189,10 +190,15 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 			EObject eObject = subIt.next();
 			if (eObject instanceof Diff) {
 				Diff diff = (Diff)eObject;
+				boolean removed = false;
 				if (diff.getConflict() != null) {
 					if (diff.getConflict().getKind() == ConflictKind.PSEUDO) {
 						subIt.remove();
+						removed = true;
 					}
+				}
+				if (!removed && diff.getState() != DifferenceState.UNRESOLVED) {
+					subIt.remove();
 				}
 			}
 		}
@@ -202,11 +208,13 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 		while (it.hasNext()) {
 			EObject eObject = it.next();
 			if (eObject instanceof Match) {
+				boolean removed = false;
 				if (this.getChildren(eObject).isEmpty()) {
 					it.remove();
+					removed = true;
 				}
 
-				if (containmentDifferences((Match)eObject).size() == 1) {
+				if (!removed && containmentDifferences((Match)eObject).size() == 1) {
 					it.remove();
 					newSub.add(containmentDifferences((Match)eObject).iterator().next());
 				}
