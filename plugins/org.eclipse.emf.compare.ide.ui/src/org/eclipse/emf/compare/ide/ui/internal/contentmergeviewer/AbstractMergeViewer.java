@@ -152,12 +152,4 @@ public abstract class AbstractMergeViewer<C extends Composite> implements IMerge
 		getStructuredViewer().setLabelProvider(labelProvider);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.IInputProvider#getInput()
-	 */
-	public Object getInput() {
-		return getStructuredViewer().getInput();
-	}
 }

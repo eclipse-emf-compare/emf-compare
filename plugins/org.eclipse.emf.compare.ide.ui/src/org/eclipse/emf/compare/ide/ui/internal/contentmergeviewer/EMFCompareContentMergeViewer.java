@@ -19,7 +19,7 @@ import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.Utilities;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ide.ui.internal.IEMFCompareConstants;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.AbstractBufferedCanvas;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DiffInsertionPoint;
@@ -31,6 +31,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.util.Util;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -126,7 +127,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 		fDynamicObject = new DynamicObject(this);
 
-		fComparison = ((ComparisonNode)cc.getProperty(IEMFCompareConstants.COMPARE_RESULT)).getTarget();
+		fComparison = ((ComparisonNode)cc.getProperty(EMFCompareConstants.COMPARE_RESULT)).getTarget();
 	}
 
 	/**
@@ -167,9 +168,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		// must update selection after the three viewers input has been set
 		// to avoid some NPE/AssertionError (they are calling each other on selectionChanged event to
 		// synchronize their selection)
-		fAncestor.setSelection(ancestor);
-		fLeft.setSelection(left);
-		fRight.setSelection(right);
+		fLeft.setSelection(left); // others will synchronize on this one :)
 	}
 
 	/**
@@ -568,9 +567,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		if (fSyncingSelections.compareAndSet(false, true)) { // prevents stack overflow :)
 			try {
 				ISelectionProvider selectionProvider = event.getSelectionProvider();
-				if (event.getSelection() instanceof IStructuredSelection && !event.getSelection().isEmpty()) {
-					IStructuredSelection selection = (IStructuredSelection)event.getSelection();
-					Object firstElement = selection.getFirstElement();
+				ISelection selection = event.getSelection();
+				if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
+					Object firstElement = ((IStructuredSelection)selection).getFirstElement();
 
 					final Match match;
 					if (firstElement instanceof DiffInsertionPoint) {

@@ -14,16 +14,22 @@ import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DiffInsertionPoint;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Table;
 
 /**
@@ -76,7 +82,28 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void copyDiffRightToLeft() {
-		// TODO Auto-generated method stub
+		copy(getRightMergeViewer(), MergeViewerSide.RIGHT);
+	}
+
+	private void copy(IMergeViewer<? extends Scrollable> mergeViewer, MergeViewerSide side) {
+		ISelection selection = mergeViewer.getSelection();
+		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
+			Object firstElement = ((IStructuredSelection)selection).getFirstElement();
+			Diff diffToCopy = null;
+			if (firstElement instanceof DiffInsertionPoint) {
+				diffToCopy = ((DiffInsertionPoint)firstElement).getDiff();
+			} else {
+				Object mergeViewerInput = mergeViewer.getInput();
+				if (mergeViewerInput instanceof IStructuralFeatureAccessor) {
+					diffToCopy = ((IStructuralFeatureAccessor)mergeViewerInput).getDiff(firstElement, side);
+				}
+			}
+
+			if (diffToCopy != null) {
+				diffToCopy.copyRightToLeft();
+				refresh();
+			}
+		}
 	}
 
 	/**
@@ -86,7 +113,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void copyDiffLeftToRight() {
-		// TODO Auto-generated method stub
+		copy(getLeftMergeViewer(), MergeViewerSide.LEFT);
 	}
 
 	/**

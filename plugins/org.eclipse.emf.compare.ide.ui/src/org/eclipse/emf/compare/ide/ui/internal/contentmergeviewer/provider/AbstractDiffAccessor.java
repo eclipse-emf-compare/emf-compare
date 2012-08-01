@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;
 
+import static com.google.common.collect.Iterables.filter;
+
 import com.google.common.collect.ImmutableList;
 
 import java.util.List;
@@ -18,8 +20,10 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -80,7 +84,8 @@ public abstract class AbstractDiffAccessor implements IStructuralFeatureAccessor
 	private void fillSiblingDifferencesLists(List<Diff> siblingDifferences,
 			ImmutableList.Builder<Diff> thisSide, ImmutableList.Builder<Diff> otherSide,
 			ImmutableList.Builder<Diff> ancestorSide) {
-		for (Diff siblingDiff : siblingDifferences) {
+		for (Diff siblingDiff : filter(siblingDifferences, EMFCompareConstants
+				.diffWithStates(DifferenceState.UNRESOLVED))) {
 			final EStructuralFeature feature = getEStructuralFeature(siblingDiff);
 			if (feature == getEStructuralFeature()) {
 				switch (siblingDiff.getKind()) {
@@ -104,6 +109,10 @@ public abstract class AbstractDiffAccessor implements IStructuralFeatureAccessor
 	 */
 	public EStructuralFeature getEStructuralFeature() {
 		return getEStructuralFeature(fDiff);
+	}
+
+	public Diff getDiff() {
+		return fDiff;
 	}
 
 	/**

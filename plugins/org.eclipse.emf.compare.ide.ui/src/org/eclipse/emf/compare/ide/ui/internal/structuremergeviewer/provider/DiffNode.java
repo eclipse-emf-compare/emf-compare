@@ -12,8 +12,8 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
 import static com.google.common.collect.Iterables.all;
 import static com.google.common.collect.Iterables.any;
-import static org.eclipse.emf.compare.ide.ui.internal.IEMFCompareConstants.IS_CONFLICT;
-import static org.eclipse.emf.compare.ide.ui.internal.IEMFCompareConstants.PSEUDO_CONFLICT_OR_NOT;
+import static org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants.IS_CONFLICT;
+import static org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants.PSEUDO_CONFLICT_OR_NOT;
 
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.emf.common.notify.AdapterFactory;

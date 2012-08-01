@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;
 
+import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Iterables.filter;
+
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
@@ -35,7 +38,7 @@ public class AttributeChangeAccessor extends AbstractDiffAccessor {
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor#getValue(org.eclipse.emf.compare.Diff)
 	 */
 	public Object getValue(Diff diff) {
-		final Match match = diff.getMatch();
+		final Match match = getMatch(diff);
 		final Object value;
 		switch (getSide()) {
 			case ANCESTOR:
@@ -53,6 +56,39 @@ public class AttributeChangeAccessor extends AbstractDiffAccessor {
 		String toString = EcoreUtil.convertToString(
 				((EAttribute)getEStructuralFeature()).getEAttributeType(), value);
 		return toString;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor#getDiff(java.lang.Object)
+	 */
+	public Diff getDiff(Object value, MergeViewerSide side) {
+		Diff ret = null;
+		Iterable<AttributeChange> attributeChanges = filter(concat(getDiffFromThisSide(),
+				getDiffFromTheOtherSide()), AttributeChange.class);
+		for (AttributeChange attributeChange : attributeChanges) {
+			Object attributeChangeValue = attributeChange.getValue();
+			if (attributeChangeValue == value) {
+				ret = attributeChange;
+				break;
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor#getMatch()
+	 */
+	public Match getMatch() {
+		return getMatch(getDiff());
+	}
+
+	private Match getMatch(Diff diff) {
+		final Match match = diff.getMatch();
+		return match;
 	}
 
 	/**

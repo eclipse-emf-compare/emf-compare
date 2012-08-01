@@ -27,6 +27,12 @@ public interface IMergeViewer<C extends Composite> extends IInputSelectionProvid
 
 	MergeViewerSide getSide();
 
+	/**
+	 * This method will be called after all the three (ancestor, left and right) {@link IMergeViewer} has been
+	 * {@link #setInput(Object) initialized with their inputs}.
+	 * 
+	 * @param selection
+	 */
 	void setSelection(Object selection);
 
 	void setSelection(Match match);

@@ -122,17 +122,18 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.IInputProvider#getInput()
+	 */
+	public Object getInput() {
+		return fInput;
+	}
+
 	public void setSelection(Object selection) {
 		if (selection instanceof IStructuralFeatureAccessor) {
 			setSelection((IStructuralFeatureAccessor)selection);
-		} else if (selection instanceof Match) {
-			setSelection((Match)selection);
-		} else if (selection instanceof ISelection) {
-			setSelection((ISelection)selection);
-		} else if (selection instanceof List<?>) {
-			setSelection(new StructuredSelection((List<?>)selection));
-		} else if (selection != null) {
-			setSelection(new StructuredSelection(selection));
 		} else {
 			setSelection(StructuredSelection.EMPTY);
 		}
@@ -144,7 +145,12 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 			if (((Collection<?>)getStructuredViewer().getInput()).contains(value)) {
 				setSelection(new StructuredSelection(value));
 			} else {
-				setSelection(StructuredSelection.EMPTY);
+				DiffInsertionPoint insertionPoint = fInsertionPoints.get(selection.getMatch());
+				if (insertionPoint != null) {
+					setSelection(new StructuredSelection(insertionPoint));
+				} else {
+					setSelection(StructuredSelection.EMPTY);
+				}
 			}
 		} else {
 			setSelection(StructuredSelection.EMPTY);
@@ -209,8 +215,7 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 			DiffInsertionPoint insertionPoint = (DiffInsertionPoint)data;
 			paintItemDiffBox(event, insertionPoint.getDiff(), getBoundsForInsertionPoint(tableItem));
 			specialPaint = true;
-		}
-		if (fInput != null) {
+		} else if (fInput != null) {
 			for (Diff diff : fInput.getDiffFromThisSide()) {
 				if (fInput.getValue(diff) == data) {
 					paintItemDiffBox(event, diff, getBounds(tableItem));
@@ -297,14 +302,9 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 	}
 
 	private static Rectangle getBoundsForInsertionPoint(TableItem tableItem) {
-		Rectangle tableBounds = tableItem.getParent().getBounds();
-		Rectangle itemBounds = tableItem.getBounds();
-
-		Rectangle fill = new Rectangle(0, 0, 0, 0);
-		fill.x = 2;
-		fill.y = itemBounds.y + 8;
-		fill.width = tableBounds.width - 6;
-		fill.height = itemBounds.height - 15;
+		Rectangle fill = getBounds(tableItem);
+		fill.y = fill.y + 6;
+		fill.height = fill.height - 12;
 
 		return fill;
 	}

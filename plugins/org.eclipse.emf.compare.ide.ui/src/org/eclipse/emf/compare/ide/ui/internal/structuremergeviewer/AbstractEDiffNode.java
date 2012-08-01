@@ -14,7 +14,9 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.jface.util.SafeRunnable;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -57,10 +59,15 @@ public abstract class AbstractEDiffNode extends AbstractEDiffContainer implement
 	 */
 	protected void fireChange() {
 		if (fListener != null) {
-			Object[] listeners = fListener.getListeners();
+			final Object[] listeners = fListener.getListeners();
 			for (int i = 0; i < listeners.length; i++) {
-				// TODO: execute in a SafeRunner.
-				((ICompareInputChangeListener)listeners[i]).compareInputChanged(this);
+				final ICompareInputChangeListener listener = (ICompareInputChangeListener)listeners[i];
+				SafeRunnable runnable = new SafeRunnable() {
+					public void run() throws Exception {
+						listener.compareInputChanged(AbstractEDiffNode.this);
+					}
+				};
+				SafeRunner.run(runnable);
 			}
 		}
 	}

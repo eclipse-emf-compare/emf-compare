@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.Tree;
 
 class TreeMergeViewer extends AbstractMergeViewer<Tree> {
 
+	private IEObjectAccessor fInput;
+
 	/**
 	 * @param parent
 	 */
@@ -59,10 +61,21 @@ class TreeMergeViewer extends AbstractMergeViewer<Tree> {
 	 * 
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#setSelection(java.lang.Object)
 	 */
-	public void setSelection(Object selection) {
-		System.out.println("TreeMergeViewer.setSelection()");
-		// TODO Auto-generated method stub
-
+	public void setSelection(Object input) {
+		if (input instanceof IEObjectAccessor) {
+			EObject eObject = ((IEObjectAccessor)input).getEObject();
+			final Object viewerInput = doGetInput(eObject);
+			Object selection = viewerInput;
+			if (eObject != null) {
+				if (eObject.eContainer() == viewerInput) {
+					selection = eObject;
+				} else if (eObject.eContainer() == null) {
+					selection = eObject;
+				}
+			}
+			getStructuredViewer().setSelection(new StructuredSelection(selection));
+			getStructuredViewer().expandToLevel(selection, 1);
+		}
 	}
 
 	/**
@@ -102,6 +115,7 @@ class TreeMergeViewer extends AbstractMergeViewer<Tree> {
 	 */
 	public void setInput(Object input) {
 		if (input instanceof IEObjectAccessor) {
+			fInput = ((IEObjectAccessor)input);
 			EObject eObject = ((IEObjectAccessor)input).getEObject();
 			final Object viewerInput = doGetInput(eObject);
 			getStructuredViewer().setInput(viewerInput);
@@ -118,6 +132,15 @@ class TreeMergeViewer extends AbstractMergeViewer<Tree> {
 		} else {
 			getStructuredViewer().setInput(null);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.IInputProvider#getInput()
+	 */
+	public Object getInput() {
+		return fInput;
 	}
 
 	/**

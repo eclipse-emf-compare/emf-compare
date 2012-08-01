@@ -12,7 +12,8 @@ package org.eclipse.emf.compare.ide.ui.internal.actions.mergeway;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.ui.internal.IEMFCompareConstants;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareConfigurationExtension;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -22,8 +23,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class MergeWayAction extends Action {
 
-	private boolean fRightToLeft;
-
 	private final CompareConfiguration fCompareConfiguration;
 
 	/**
@@ -31,25 +30,39 @@ public class MergeWayAction extends Action {
 	 */
 	public MergeWayAction(CompareConfiguration compareConfiguration) {
 		fCompareConfiguration = compareConfiguration;
-		fRightToLeft = IEMFCompareConstants.MERGE_TIP_RIGHT_TO_LEFT_DEFAULT;
-		fCompareConfiguration.setProperty(IEMFCompareConstants.MERGE_TIP_RIGHT_TO_LEFT, Boolean
-				.valueOf(fRightToLeft));
-
 		setId(MergeWayAction.class.getName());
-		setToolTipText(doGetToolTipText());
-		setImageDescriptor(doGetImageDescriptor());
+
+		update();
 	}
 
-	private String doGetToolTipText() {
-		if (fRightToLeft) {
+	private void update() {
+		boolean rightToLeft = getRightToLeft();
+		setRightToLeft(rightToLeft);
+		setToolTipText(doGetToolTipText(rightToLeft));
+		setImageDescriptor(doGetImageDescriptor(rightToLeft));
+	}
+
+	private boolean getRightToLeft() {
+		return CompareConfigurationExtension.getBoolean(fCompareConfiguration,
+				EMFCompareConstants.MERGE_TIP_RIGHT_TO_LEFT,
+				EMFCompareConstants.MERGE_TIP_RIGHT_TO_LEFT_DEFAULT);
+	}
+
+	private void setRightToLeft(boolean rightToLeft) {
+		fCompareConfiguration.setProperty(EMFCompareConstants.MERGE_TIP_RIGHT_TO_LEFT, Boolean
+				.valueOf(rightToLeft));
+	}
+
+	private static String doGetToolTipText(boolean rightToLeft) {
+		if (rightToLeft) {
 			return "Consider merging from right to left";
 		} else {
 			return "Consider merging from left to right";
 		}
 	}
 
-	public ImageDescriptor doGetImageDescriptor() {
-		if (fRightToLeft) {
+	public static ImageDescriptor doGetImageDescriptor(boolean rightToLeft) {
+		if (rightToLeft) {
 			return AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
 					"icons/full/toolb16/merge_rl.gif");
 		} else {
@@ -65,10 +78,6 @@ public class MergeWayAction extends Action {
 	 */
 	@Override
 	public void run() {
-		fRightToLeft = !fRightToLeft;
-		fCompareConfiguration.setProperty(IEMFCompareConstants.MERGE_TIP_RIGHT_TO_LEFT, Boolean
-				.valueOf(fRightToLeft));
-		setToolTipText(doGetToolTipText());
-		setImageDescriptor(doGetImageDescriptor());
+		update();
 	}
 }

@@ -15,6 +15,8 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
@@ -28,7 +30,13 @@ public interface IStructuralFeatureAccessor {
 
 	Object getValue();
 
+	Diff getDiff();
+
+	Match getMatch();
+
 	Object getValue(Diff diff);
+
+	Diff getDiff(Object value, MergeViewerSide side);
 
 	ImmutableList<Diff> getDiffFromThisSide();
 

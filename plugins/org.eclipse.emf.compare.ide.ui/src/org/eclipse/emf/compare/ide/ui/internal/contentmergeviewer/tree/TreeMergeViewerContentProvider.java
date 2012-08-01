@@ -36,8 +36,7 @@ public class TreeMergeViewerContentProvider implements IMergeViewerContentProvid
 	private final CompareConfiguration fCompareConfiguration;
 
 	/**
-	 * Creates a new {@link TreeMergeViewerContentProvider} and stored the given
-	 * {@link CompareConfiguration}.
+	 * Creates a new {@link TreeMergeViewerContentProvider} and stored the given {@link CompareConfiguration}.
 	 * 
 	 * @param cc
 	 *            the {@link CompareConfiguration} that will be used to get label and image of left, right and
@@ -146,8 +145,9 @@ public class TreeMergeViewerContentProvider implements IMergeViewerContentProvid
 			Object ret = compareInput.getLeft();
 			// if no left and element is a diff, try to reach the left of parent, recursively
 			if (ret == null && element instanceof IDiffElement) {
-				IDiffContainer parent = ((IDiffElement)compareInput).getParent();
-				ret = getLeftContent(parent);
+				throw new IllegalStateException();
+				// IDiffContainer parent = ((IDiffElement)compareInput).getParent();
+				// ret = getLeftContent(parent);
 			}
 			return ret;
 		}

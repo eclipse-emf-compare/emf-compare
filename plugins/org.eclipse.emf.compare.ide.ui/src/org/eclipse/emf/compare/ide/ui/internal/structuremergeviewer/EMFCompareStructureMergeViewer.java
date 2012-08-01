@@ -33,11 +33,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ide.ui.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.ui.internal.IEMFCompareConstants;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.actions.filter.DifferenceFilter;
 import org.eclipse.emf.compare.ide.ui.internal.actions.filter.FilterActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGrouper;
@@ -47,6 +48,7 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.Com
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -191,7 +193,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 		}
 		fRightStructure.setInput(t, force);
 
-		Object previousResult = getCompareConfiguration().getProperty(IEMFCompareConstants.COMPARE_RESULT);
+		Object previousResult = getCompareConfiguration().getProperty(EMFCompareConstants.COMPARE_RESULT);
 		if (previousResult instanceof Comparison) {
 			fRoot = (Comparison)previousResult;
 
@@ -217,10 +219,21 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 				ResourceSet ancestorResourceSet = getResourceSetFrom(input.getAncestor(), monitor);
 
 				// TODO: run with a progress monitor.
-				Object compareResult = EMFCompare.compare(leftResourceSet, rightResourceSet,
+				Comparison compareResult = EMFCompare.compare(leftResourceSet, rightResourceSet,
 						ancestorResourceSet);
+				compareResult.eAdapters().add(new EContentAdapter() {
+					/**
+					 * {@inheritDoc}
+					 * 
+					 * @see org.eclipse.emf.ecore.util.EContentAdapter#notifyChanged(org.eclipse.emf.common.notify.Notification)
+					 */
+					@Override
+					public void notifyChanged(Notification notification) {
+						refresh();
+					}
+				});
 				fRoot = fAdapterFactory.adapt(compareResult, IDiffElement.class);
-				getCompareConfiguration().setProperty(IEMFCompareConstants.COMPARE_RESULT, fRoot);
+				getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, fRoot);
 
 				getCompareConfiguration().getContainer().runAsynchronously(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException,
@@ -257,8 +270,6 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 		}
 
 		refresh(root);
-		// Setting the auto-expand level doesn't do anything for refreshes
-		// expandToLevel(3);
 	}
 
 	private class SideInputInfo {
@@ -351,16 +362,6 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.compare.structuremergeviewer.DiffTreeViewer#initialSelection()
-	 */
-	@Override
-	protected void initialSelection() {
-		// expandToLevel(2);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.compare.structuremergeviewer.DiffTreeViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
 	 */
 	@Override
@@ -376,12 +377,12 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 	}
 
 	private static ResourceSet getResourceSetFrom(ITypedElement typedElement, IProgressMonitor monitor) {
-		ResourceSet ancestorResourceSet = null;
+		ResourceSet resourceSet = null;
 		if (typedElement instanceof IResourceProvider) {
 			IResource resource = ((IResourceProvider)typedElement).getResource();
-			ancestorResourceSet = getResourceSet(resource, monitor);
+			resourceSet = getResourceSet(resource, monitor);
 		}
-		return ancestorResourceSet;
+		return resourceSet;
 	}
 
 	private static ResourceSet getResourceSet(IResource resource, IProgressMonitor monitor) {
