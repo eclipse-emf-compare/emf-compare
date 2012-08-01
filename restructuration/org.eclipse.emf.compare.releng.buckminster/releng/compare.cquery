@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" resourceMap="compare.rmap">
-	<cq:rootRequest name="org.eclipse.emf.compare.build" componentType="eclipse.feature"/>
-
-	<cq:advisorNode namePattern="^org\.eclipse\.emf\.compare(?:\..*)?\.source$" skipComponent="true"/>
-	<cq:advisorNode namePattern="^org\.eclipse\.emf\.compare\.releng\.buckminster$" useMaterialization="false" useWorkspace="false"/>
-	<cq:advisorNode namePattern="^org\.eclipse\.emf\.compare(?:\..*)?"/>
-</cq:componentQuery>

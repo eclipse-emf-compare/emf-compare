@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_IuVWsc8wEeCJYMy3zngnLg">
-  <packagedElement xmi:type="uml:Class" xmi:id="_LwXkUM8wEeCJYMy3zngnLg" name="A" redefinedClassifier="_NrGysM8wEeCJYMy3zngnLg _Oob9oM8wEeCJYMy3zngnLg _PXNIIM8wEeCJYMy3zngnLg _QbBDoM8yEeCJYMy3zngnLg"/>
-  <packagedElement xmi:type="uml:Class" xmi:id="_NrGysM8wEeCJYMy3zngnLg" name="B"/>
-  <packagedElement xmi:type="uml:Class" xmi:id="_Oob9oM8wEeCJYMy3zngnLg" name="C"/>
-  <packagedElement xmi:type="uml:Class" xmi:id="_PXNIIM8wEeCJYMy3zngnLg" name="D"/>
-  <packagedElement xmi:type="uml:Class" xmi:id="_QbBDoM8yEeCJYMy3zngnLg" name="E"/>
-</uml:Model>

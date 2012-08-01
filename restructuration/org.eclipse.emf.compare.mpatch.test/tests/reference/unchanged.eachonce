@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<eachonce:Entity xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:eachonce="http://eachonce" singleAttribute="root">
-  <children singleAttribute="UpdateReference">
-    <children singleAttribute="changeUpdateReference" singleReference="UpdateReference"/>
-  </children>
-</eachonce:Entity>
