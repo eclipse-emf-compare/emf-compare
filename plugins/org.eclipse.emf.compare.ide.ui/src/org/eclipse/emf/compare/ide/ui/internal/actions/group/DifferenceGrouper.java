@@ -61,7 +61,7 @@ public final class DifferenceGrouper {
 
 		final Predicate<DifferenceGroup> nonEmptyGroups = new Predicate<DifferenceGroup>() {
 			public boolean apply(DifferenceGroup input) {
-				return !Iterables.isEmpty(input.getDifferences());
+				return input != null && !Iterables.isEmpty(input.getDifferences());
 			}
 		};
 		final Function<DifferenceGroup, IDiffElement> groupWrapper = new Function<DifferenceGroup, IDiffElement>() {
