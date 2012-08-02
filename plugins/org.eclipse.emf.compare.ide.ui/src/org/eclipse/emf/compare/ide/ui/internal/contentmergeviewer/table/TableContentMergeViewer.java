@@ -83,6 +83,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	@Override
 	protected void copyDiffRightToLeft() {
 		copy(getRightMergeViewer(), MergeViewerSide.RIGHT);
+		setLeftDirty(true);
 	}
 
 	private void copy(IMergeViewer<? extends Scrollable> mergeViewer, MergeViewerSide side) {
@@ -114,6 +115,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	@Override
 	protected void copyDiffLeftToRight() {
 		copy(getLeftMergeViewer(), MergeViewerSide.LEFT);
+		setRightDirty(true);
 	}
 
 	/**
