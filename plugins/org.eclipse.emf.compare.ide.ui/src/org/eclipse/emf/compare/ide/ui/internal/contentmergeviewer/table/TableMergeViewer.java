@@ -67,10 +67,11 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 
 		getControl().addListener(SWT.MeasureItem, new Listener() {
 			public void handleEvent(Event event) {
-				event.height = (int)(event.gc.getFontMetrics().getHeight() * 1.33d);
-				if (event.height % 2 == 1) {
-					event.height += 1;
+				int newHeight = (int)(event.gc.getFontMetrics().getHeight() * 1.33d);
+				if (newHeight % 2 == 1) {
+					newHeight += 1;
 				}
+				event.height = newHeight;
 			}
 		});
 
