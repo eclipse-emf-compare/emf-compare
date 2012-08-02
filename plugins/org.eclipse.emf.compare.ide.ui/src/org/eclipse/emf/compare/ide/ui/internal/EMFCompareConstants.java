@@ -26,6 +26,8 @@ public final class EMFCompareConstants {
 		// prevents instantiation
 	}
 
+	public static final int COMPARE_IMAGE_WIDTH = 22;
+
 	public static final String INCOMING_COLOR = "INCOMING_COLOR"; //$NON-NLS-1$
 
 	public static final String OUTGOING_COLOR = "OUTGOING_COLOR"; //$NON-NLS-1$
