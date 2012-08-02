@@ -35,7 +35,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ide.ui.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
@@ -229,7 +231,16 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 					 */
 					@Override
 					public void notifyChanged(Notification notification) {
-						refresh();
+						int eventType = notification.getEventType();
+						Object feature = notification.getFeature();
+						Object oldValue = notification.getOldValue();
+						Object newValue = notification.getNewValue();
+						if (eventType == Notification.SET
+								&& feature == ComparePackage.Literals.DIFF__STATE
+								&& oldValue == DifferenceState.UNRESOLVED
+								&& (newValue == DifferenceState.MERGED || newValue == DifferenceState.DISCARDED)) {
+							refresh();
+						}
 					}
 				});
 				fRoot = fAdapterFactory.adapt(compareResult, IDiffElement.class);
