@@ -16,6 +16,7 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
+import org.eclipse.compare.IEditableContent;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Diff;
@@ -31,7 +32,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public abstract class AbstractDiffAccessor implements IStructuralFeatureAccessor, ITypedElement {
+public abstract class AbstractDiffAccessor implements IStructuralFeatureAccessor, ITypedElement, IEditableContent {
 
 	private final Diff fDiff;
 
@@ -208,5 +209,33 @@ public abstract class AbstractDiffAccessor implements IStructuralFeatureAccessor
 	 */
 	public ImmutableList<Diff> getDiffFromAncestor() {
 		return fDiffFromAncestor;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.IEditableContent#replace(org.eclipse.compare.ITypedElement,
+	 *      org.eclipse.compare.ITypedElement)
+	 */
+	public ITypedElement replace(ITypedElement dest, ITypedElement src) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.IEditableContent#isEditable()
+	 */
+	public boolean isEditable() {
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.IEditableContent#setContent(byte[])
+	 */
+	public void setContent(byte[] newContent) {
+		throw new UnsupportedOperationException();
 	}
 }
