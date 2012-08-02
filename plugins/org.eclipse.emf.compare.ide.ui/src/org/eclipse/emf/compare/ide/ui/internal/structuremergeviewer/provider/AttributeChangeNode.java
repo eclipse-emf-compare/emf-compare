@@ -90,7 +90,7 @@ public class AttributeChangeNode extends DiffNode {
 			if (attribute.getEAttributeType().getInstanceClass() == String.class && !attribute.isMany()) {
 				ret = new StringAttributeChangeAccessor(left, attribute, getTarget());
 			} else {
-				ret = new AttributeChangeAccessor(getTarget(), MergeViewerSide.ANCESTOR);
+				ret = new AttributeChangeAccessor(getTarget(), MergeViewerSide.LEFT);
 			}
 		}
 		return ret;
@@ -110,10 +110,9 @@ public class AttributeChangeNode extends DiffNode {
 			if (attribute.getEAttributeType().getInstanceClass() == String.class && !attribute.isMany()) {
 				ret = new StringAttributeChangeAccessor(right, attribute, getTarget());
 			} else {
-				ret = new AttributeChangeAccessor(getTarget(), MergeViewerSide.ANCESTOR);
+				ret = new AttributeChangeAccessor(getTarget(), MergeViewerSide.RIGHT);
 			}
 		}
 		return ret;
 	}
-
 }
