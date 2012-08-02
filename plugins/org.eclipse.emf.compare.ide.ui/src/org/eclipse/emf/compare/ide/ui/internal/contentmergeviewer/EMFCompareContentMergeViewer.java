@@ -21,7 +21,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.IEMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.BufferedCanvas;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.AbstractBufferedCanvas;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DiffInsertionPoint;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
@@ -415,7 +415,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 */
 	@Override
 	protected Control createCenterControl(Composite parent) {
-		final Canvas canvas = new BufferedCanvas(parent, SWT.NONE) {
+		final Canvas canvas = new AbstractBufferedCanvas(parent, SWT.NONE) {
 			@Override
 			public void doPaint(GC gc) {
 				paintCenter(this, gc);
