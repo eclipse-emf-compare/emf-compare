@@ -10,11 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui;
 
-import com.google.common.collect.Maps;
-
-import java.util.Map;
-
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -31,8 +30,8 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	/** Plug-in's shared instance. */
 	private static EMFCompareIDEUIPlugin plugin;
 
-	/** Caches the images that were loaded by EMF Compare. */
-	private Map<String, Image> imageMap = Maps.newHashMap();
+	/** Manages the images that were loaded by EMF Compare. */
+	private LocalResourceManager fResourceManager;
 
 	/**
 	 * Default constructor.
@@ -60,8 +59,8 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
-		for (Image image : imageMap.values()) {
-			image.dispose();
+		if (fResourceManager != null) {
+			fResourceManager.dispose();
 		}
 		super.stop(context);
 	}
@@ -75,6 +74,15 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
+	public ImageDescriptor getImageDescriptor(String path) {
+		return imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID, path);
+	}
+
+	public Image getImage(ImageDescriptor descriptor) {
+		ResourceManager rm = getResourceManager();
+		return rm.createImage(descriptor);
+	}
+
 	/**
 	 * Loads an image from this plugin's path and returns it.
 	 * 
@@ -83,16 +91,19 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	 * @return The loaded image.
 	 */
 	public Image getImage(String path) {
-		Image result = imageMap.get(path);
-		if (result != null) {
-			return result;
-		}
-		final ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
-				EMFCompareIDEUIPlugin.PLUGIN_ID, path);
+		final ImageDescriptor descriptor = imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID, path);
+		Image result = null;
 		if (descriptor != null) {
-			result = descriptor.createImage();
-			imageMap.put(path, result);
+			ResourceManager rm = getResourceManager();
+			result = rm.createImage(descriptor);
 		}
 		return result;
+	}
+
+	private synchronized ResourceManager getResourceManager() {
+		if (fResourceManager == null) {
+			fResourceManager = new LocalResourceManager(JFaceResources.getResources());
+		}
+		return fResourceManager;
 	}
 }
