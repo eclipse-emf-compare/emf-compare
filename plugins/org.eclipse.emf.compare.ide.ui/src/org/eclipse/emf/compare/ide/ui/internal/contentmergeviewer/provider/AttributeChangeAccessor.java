@@ -38,7 +38,7 @@ public class AttributeChangeAccessor extends AbstractDiffAccessor {
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor#getValue(org.eclipse.emf.compare.Diff)
 	 */
 	public Object getValue(Diff diff) {
-		final Match match = getMatch(diff);
+		Match match = diff.getMatch();
 		final Object value;
 		switch (getSide()) {
 			case ANCESTOR:
@@ -53,6 +53,7 @@ public class AttributeChangeAccessor extends AbstractDiffAccessor {
 			default:
 				throw new IllegalStateException();
 		}
+		// TODO: handle many EStructuralFeature
 		String toString = EcoreUtil.convertToString(
 				((EAttribute)getEStructuralFeature()).getEAttributeType(), value);
 		return toString;
@@ -66,7 +67,7 @@ public class AttributeChangeAccessor extends AbstractDiffAccessor {
 	public Diff getDiff(Object value, MergeViewerSide side) {
 		Diff ret = null;
 		Iterable<AttributeChange> attributeChanges = filter(concat(getDiffFromThisSide(),
-				getDiffFromTheOtherSide()), AttributeChange.class);
+				getDiffFromTheOtherSide(), getDiffFromAncestor()), AttributeChange.class);
 		for (AttributeChange attributeChange : attributeChanges) {
 			Object attributeChangeValue = attributeChange.getValue();
 			if (attributeChangeValue == value) {
