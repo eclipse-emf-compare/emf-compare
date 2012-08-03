@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -98,6 +100,16 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 			result = rm.createImage(descriptor);
 		}
 		return result;
+	}
+
+	/**
+	 * Log an {@link Exception} in the {@link #getLog() current logger}.
+	 * 
+	 * @param e
+	 *            the exception to be logged.
+	 */
+	public void log(Exception e) {
+		getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, e.getMessage(), e));
 	}
 
 	private synchronized ResourceManager getResourceManager() {
