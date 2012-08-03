@@ -172,6 +172,17 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	}
 
 	/**
+	 * Inhibates this method to avoid asking to save on each input change!!
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#doSave(java.lang.Object,
+	 *      java.lang.Object)
+	 */
+	@Override
+	protected boolean doSave(Object newInput, Object oldInput) {
+		return false;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#createControls(org.eclipse.swt.widgets.Composite)
