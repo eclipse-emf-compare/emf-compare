@@ -11,8 +11,8 @@
 package org.eclipse.emf.compare.ide.ui.internal.actions.mergeway;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.emf.compare.ide.ui.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareConfigurationExtension;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;

@@ -19,7 +19,7 @@ import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.ide.ui.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode;
 import org.eclipse.swt.graphics.Image;
 

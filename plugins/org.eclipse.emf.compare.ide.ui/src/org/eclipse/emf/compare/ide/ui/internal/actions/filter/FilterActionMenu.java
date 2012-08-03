@@ -11,7 +11,7 @@
 package org.eclipse.emf.compare.ide.ui.internal.actions.filter;
 
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.ide.ui.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;

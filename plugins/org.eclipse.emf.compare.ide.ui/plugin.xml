@@ -49,7 +49,7 @@
          point="org.eclipse.core.runtime.adapters">
       <factory
             adaptableType="org.eclipse.emf.compare.ide.logical.EMFModelProvider"
-            class="org.eclipse.emf.compare.ide.ui.logical.adapter.EMFCompareAdapterFactory">
+            class="org.eclipse.emf.compare.ide.ui.internal.logical.adapter.EMFCompareAdapterFactory">
          <adapter
                type="org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter">
          </adapter>

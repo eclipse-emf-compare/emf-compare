@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.compare.ide.tests.mock.MockRemoteResourceMappingContext;
 import org.eclipse.emf.compare.ide.tests.mock.MockSynchronizationContext;
-import org.eclipse.emf.compare.ide.ui.logical.sync.EMFCompareSynchronizationAdapter;
+import org.eclipse.emf.compare.ide.ui.internal.logical.sync.EMFCompareSynchronizationAdapter;
 import org.eclipse.emf.compare.ide.ui.tests.utils.TestUtils;
 import org.eclipse.team.core.mapping.ISynchronizationContext;
 import org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter;

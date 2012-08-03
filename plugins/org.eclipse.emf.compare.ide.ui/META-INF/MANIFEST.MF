@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.ide.ui;singleton:=true
 Bundle-Version: 2.0.0.qualifier
-Bundle-Activator: org.eclipse.emf.compare.ide.ui.EMFCompareIDEUIPlugin
+Bundle-Activator: org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.team.ui,
@@ -17,8 +17,7 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
-Export-Package: org.eclipse.emf.compare.ide.ui,
- org.eclipse.emf.compare.ide.ui.internal;x-internal:=true,
+Export-Package: org.eclipse.emf.compare.ide.ui.internal;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.actions.filter;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.actions.group;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.actions.mergeway;x-internal:=true,
@@ -27,10 +26,10 @@ Export-Package: org.eclipse.emf.compare.ide.ui,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.logical.adapter;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.logical.sync;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;x-internal:=true,
- org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;x-internal:=true,
- org.eclipse.emf.compare.ide.ui.logical.adapter,
- org.eclipse.emf.compare.ide.ui.logical.sync
+ org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;x-internal:=true
 Import-Package: com.google.common.base;version="2.0.0",
  com.google.common.cache;version="10.0.0",
  com.google.common.collect;version="2.0.0"

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.logical.adapter;
+package org.eclipse.emf.compare.ide.ui.internal.logical.adapter;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.emf.compare.ide.internal.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.logical.EMFModelProvider;
 import org.eclipse.emf.compare.ide.logical.EMFResourceMapping;
-import org.eclipse.emf.compare.ide.ui.logical.sync.EMFCompareSynchronizationAdapter;
+import org.eclipse.emf.compare.ide.ui.internal.logical.sync.EMFCompareSynchronizationAdapter;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;

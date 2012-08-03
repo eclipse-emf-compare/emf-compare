@@ -15,7 +15,6 @@ import com.google.common.base.Predicate;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
-import org.eclipse.emf.compare.ide.ui.EMFCompareIDEUIPlugin;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
