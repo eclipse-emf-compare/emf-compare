@@ -39,6 +39,7 @@ import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.actions.filter.DifferenceFilter;
@@ -226,8 +227,9 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 				ResourceSet ancestorResourceSet = getResourceSetFrom(input.getAncestor(), monitor);
 
 				// TODO: run with a progress monitor.
+				EMFCompareConfiguration emfCompareConfiguration = EMFCompareConfiguration.builder().build();
 				Comparison compareResult = EMFCompare.compare(leftResourceSet, rightResourceSet,
-						ancestorResourceSet);
+						ancestorResourceSet, emfCompareConfiguration);
 				compareResult.eAdapters().add(new EContentAdapter() {
 					/**
 					 * {@inheritDoc}

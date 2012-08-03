@@ -31,7 +31,6 @@ import org.eclipse.emf.compare.req.DefaultReqEngine;
 import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -61,7 +60,24 @@ public final class EMFCompare {
 	 * @return The result of the two-way comparison of these two notifiers.
 	 */
 	public static Comparison compare(Notifier left, Notifier right) {
-		return compare(left, right, null);
+		return compare(left, right, null, EMFCompareConfiguration.builder().build());
+	}
+
+	/**
+	 * Launch a two-way comparison on the two given {@link Notifier}s and their direct children according to
+	 * the semantics of the {@link DefaultComparisonScope}. The result of this comparison will be returned in
+	 * the form of a {@link Comparison} instance.
+	 * 
+	 * @param left
+	 *            The notifier that is to be consider as the left side of this comparison.
+	 * @param right
+	 *            The notifier that is to be consider as the right side of this comparison.
+	 * @param configuration
+	 *            The configuration object from which compare engines will be configured.
+	 * @return The result of the two-way comparison of these two notifiers.
+	 */
+	public static Comparison compare(Notifier left, Notifier right, EMFCompareConfiguration configuration) {
+		return compare(left, right, null, configuration);
 	}
 
 	/**
@@ -82,9 +98,33 @@ public final class EMFCompare {
 	 *         <code>right</code> otherwise.
 	 */
 	public static Comparison compare(Notifier left, Notifier right, Notifier origin) {
+		return compare(left, right, origin, EMFCompareConfiguration.builder().build());
+	}
+
+	/**
+	 * According to the value of <code>origin</code>, this will launch either a two-way or a three-way
+	 * comparison on the given {@link Notifier}s and their direct content (according to the semantics of the
+	 * {@link DefaultComparisonScope}). The result of this comparison will be returned in the form of a
+	 * {@link Comparison} instance.
+	 * 
+	 * @param left
+	 *            The notifier that is to be consider as the left side of this comparison.
+	 * @param right
+	 *            The notifier that is to be consider as the right side of this comparison.
+	 * @param origin
+	 *            The notifier that should be considered as the common ancestor of <code>left</code> and
+	 *            <code>right</code>. If <code>null</code>, a two-way comparison will be performed instead.
+	 * @param configuration
+	 *            The configuration object from which compare engines will be configured.
+	 * @return The result of the three-way comparison of these notifiers if <code>origin</code> is not
+	 *         <code>null</code>, the result of the two-way comparison of <code>left</code> and
+	 *         <code>right</code> otherwise.
+	 */
+	public static Comparison compare(Notifier left, Notifier right, Notifier origin,
+			EMFCompareConfiguration configuration) {
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 
-		return compare(scope);
+		return compare(scope, configuration);
 	}
 
 	/**
@@ -95,21 +135,33 @@ public final class EMFCompare {
 	 * @return The result of this comparison.
 	 */
 	public static Comparison compare(IComparisonScope scope) {
+		return compare(scope, EMFCompareConfiguration.builder().build());
+	}
+
+	/**
+	 * Launches the comparison for the given comparison scope.
+	 * 
+	 * @param scope
+	 *            The scope on which a comparison is to be performed.
+	 * @param configuration
+	 *            The configuration object from which compare engines will be configured.
+	 * @return The result of this comparison.
+	 */
+	public static Comparison compare(IComparisonScope scope, EMFCompareConfiguration configuration) {
 
 		// TODO allow extension of the default match engine
 		final IMatchEngine matchEngine = new DefaultMatchEngine();
-		Comparison comparison = matchEngine.match(scope);
+		Comparison comparison = matchEngine.match(scope, configuration);
 
 		IPostProcessor postProcessor = getPostProcessor(scope);
 		if (postProcessor != null) {
 			postProcessor.postMatch(comparison);
 		}
 
-		final EqualityHelper helper = new EqualityHelper();
 		final IDiffProcessor diffBuilder = new DiffBuilder();
 
 		// TODO allow extension of the default diff engine
-		final IDiffEngine diffEngine = new DefaultDiffEngine(helper, diffBuilder);
+		final IDiffEngine diffEngine = new DefaultDiffEngine(diffBuilder);
 		diffEngine.diff(comparison);
 
 		if (postProcessor != null) {
@@ -133,7 +185,7 @@ public final class EMFCompare {
 		}
 
 		if (comparison.isThreeWay()) {
-			final IConflictDetector conflictDetector = new DefaultConflictDetector(helper);
+			final IConflictDetector conflictDetector = new DefaultConflictDetector();
 			conflictDetector.detect(comparison);
 
 			if (postProcessor != null) {

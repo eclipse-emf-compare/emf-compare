@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.match;
 
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 
 /**
@@ -45,7 +46,9 @@ public interface IMatchEngine {
 	 * 
 	 * @param scope
 	 *            The comparison scope that should be used by this engine to determine the objects to match.
+	 * @param configuration
+	 *            The configuration object from which the engine will be configured.
 	 * @return An initialized {@link Comparison} model with all matches determined.
 	 */
-	Comparison match(IComparisonScope scope);
+	Comparison match(IComparisonScope scope, EMFCompareConfiguration configuration);
 }

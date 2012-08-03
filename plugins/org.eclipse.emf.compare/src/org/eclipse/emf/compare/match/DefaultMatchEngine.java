@@ -15,9 +15,11 @@ import com.google.common.collect.Iterators;
 
 import java.util.Iterator;
 
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
@@ -49,8 +51,9 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * 
 	 * @see org.eclipse.emf.compare.match.IMatchEngine#match(org.eclipse.emf.compare.scope.IComparisonScope)
 	 */
-	public Comparison match(IComparisonScope scope) {
+	public Comparison match(IComparisonScope scope, EMFCompareConfiguration configuration) {
 		this.comparisonScope = scope;
+		associate(getComparison(), configuration);
 
 		final Notifier left = getScope().getLeft();
 		final Notifier right = getScope().getRight();
@@ -270,5 +273,30 @@ public class DefaultMatchEngine implements IMatchEngine {
 		// CHECKSTYLE:OFF This expression is alone in its method, and documented.
 		return condition1 && (condition2 || condition3) || (condition2 && condition3);
 		// CHECKSTYLE:ON
+	}
+
+	/**
+	 * Removes any already existing {@link EMFCompareConfiguration} adapter on the given
+	 * <code>comparison</code> object. Then it associates the given <code>configuration</code> with the
+	 * <code>comparison</code>.
+	 * 
+	 * @param comparison
+	 *            the comparison receiver of the Adapter
+	 * @param configuration
+	 *            the Adapter to associtate to the comparison.
+	 */
+	private static void associate(Comparison comparison, EMFCompareConfiguration configuration) {
+		Iterator<Adapter> eAdapters = comparison.eAdapters().iterator();
+		while (eAdapters.hasNext()) {
+			Adapter eAdapter = eAdapters.next();
+			if (eAdapter.isAdapterForType(EMFCompareConfiguration.class)) {
+				eAdapters.remove();
+				if (eAdapter instanceof Adapter.Internal) {
+					((Adapter.Internal)eAdapter).unsetTarget(comparison);
+				}
+			}
+		}
+		comparison.eAdapters().add(configuration);
+		configuration.setTarget(comparison);
 	}
 }

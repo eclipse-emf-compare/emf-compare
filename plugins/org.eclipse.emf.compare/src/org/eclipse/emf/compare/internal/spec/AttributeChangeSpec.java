@@ -19,7 +19,6 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.impl.AttributeChangeImpl;
 import org.eclipse.emf.compare.utils.DiffUtil;
-import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -290,8 +289,7 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 			final Object expectedValue = getValue();
 			// We have the container, attribute and value. We need to know the insertion index.
 			if (getAttribute().isMany()) {
-				final int insertionIndex = DiffUtil.findInsertionIndex(comparison, new EqualityHelper(),
-						this, rightToLeft);
+				final int insertionIndex = DiffUtil.findInsertionIndex(comparison, this, rightToLeft);
 
 				final List<Object> targetList = (List<Object>)expectedContainer.eGet(getAttribute());
 				if (targetList instanceof InternalEList<?>) {
@@ -398,8 +396,7 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 	protected void doMove(Comparison comparison, EObject expectedContainer, Object expectedValue,
 			boolean rightToLeft) {
 		if (getAttribute().isMany()) {
-			int insertionIndex = DiffUtil.findInsertionIndex(comparison, new EqualityHelper(), this,
-					rightToLeft);
+			int insertionIndex = DiffUtil.findInsertionIndex(comparison, this, rightToLeft);
 			/*
 			 * However, it could still have been located "before" its new index, in which case we need to take
 			 * it into account.

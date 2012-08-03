@@ -50,21 +50,12 @@ public class DefaultConflictDetector implements IConflictDetector {
 	private EqualityHelper helper;
 
 	/**
-	 * Create the conflict detector.
-	 * 
-	 * @param helper
-	 *            the same equality helper used to detect the diffs.
-	 */
-	public DefaultConflictDetector(EqualityHelper helper) {
-		this.helper = helper;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.conflict.IConflictDetector#detect(org.eclipse.emf.compare.Comparison)
 	 */
 	public void detect(Comparison comparison) {
+		this.helper = comparison.getConfiguration().getEqualityHelper();
 		final List<Diff> differences = comparison.getDifferences();
 		final int diffCount = differences.size();
 

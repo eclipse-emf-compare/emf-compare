@@ -27,7 +27,6 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareCont
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DiffInsertionPoint;
 import org.eclipse.emf.compare.utils.DiffUtil;
-import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -183,8 +182,8 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 						DiffInsertionPoint insertionPoint = new DiffInsertionPoint(diff);
 						final int insertionIndex;
 						if (diff.getReference().isMany()) {
-							insertionIndex = DiffUtil.findInsertionIndex(match.getComparison(),
-									new EqualityHelper(), diff, rightToLeft);
+							insertionIndex = DiffUtil.findInsertionIndex(match.getComparison(), diff,
+									rightToLeft);
 						} else {
 							insertionIndex = 0;
 						}

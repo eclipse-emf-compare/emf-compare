@@ -108,6 +108,14 @@ public interface Comparison extends EObject {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @model kind="operation" dataType="org.eclipse.emf.compare.CompareConfiguration"
+	 * @generated
+	 */
+	EMFCompareConfiguration getConfiguration();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * Returns all differences contained by this Comparison and its children.
 	 * <!-- end-model-doc -->

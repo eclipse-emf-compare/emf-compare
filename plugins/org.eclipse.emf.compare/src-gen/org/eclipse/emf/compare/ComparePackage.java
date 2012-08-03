@@ -861,6 +861,16 @@ public interface ComparePackage extends EPackage {
 	int EITERABLE = 13;
 
 	/**
+	 * The meta object id for the '<em>Configuration</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.EMFCompareConfiguration
+	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getCompareConfiguration()
+	 * @generated
+	 */
+	int COMPARE_CONFIGURATION = 14;
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.Comparison <em>Comparison</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1365,6 +1375,17 @@ public interface ComparePackage extends EPackage {
 	EDataType getEIterable();
 
 	/**
+	 * Returns the meta object for data type '{@link org.eclipse.emf.compare.EMFCompareConfiguration <em>Configuration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Configuration</em>'.
+	 * @see org.eclipse.emf.compare.EMFCompareConfiguration
+	 * @model instanceClass="org.eclipse.emf.compare.EMFCompareConfiguration"
+	 * @generated
+	 */
+	EDataType getCompareConfiguration();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1792,6 +1813,16 @@ public interface ComparePackage extends EPackage {
 		 * @generated
 		 */
 		EDataType EITERABLE = eINSTANCE.getEIterable();
+
+		/**
+		 * The meta object literal for the '<em>Configuration</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.EMFCompareConfiguration
+		 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getCompareConfiguration()
+		 * @generated
+		 */
+		EDataType COMPARE_CONFIGURATION = eINSTANCE.getCompareConfiguration();
 
 	}
 

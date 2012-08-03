@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
@@ -82,7 +83,7 @@ public class MatchStatement extends Statement {
 		final MatchTest annotation = test.getAnnotation(MatchTest.class);
 		final IMatchEngine engine = createMatchEngine(annotation);
 		final IComparisonScope scope = createComparisonScope(tuple, annotation);
-		final Comparison comparison = engine.match(scope);
+		final Comparison comparison = engine.match(scope, EMFCompareConfiguration.builder().build());
 
 		test.invokeExplosively(testObject, scope, comparison);
 	}

@@ -25,6 +25,7 @@ import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.impl.ComparisonImpl;
@@ -112,6 +113,26 @@ public class ComparisonSpec extends ComparisonImpl {
 			result = matchIter.next();
 		}
 		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.impl.ComparisonImpl#getConfiguration()
+	 */
+	@Override
+	public EMFCompareConfiguration getConfiguration() {
+		EMFCompareConfiguration ret = null;
+		for (Adapter eAdapter : eAdapters()) {
+			if (eAdapter.isAdapterForType(EMFCompareConfiguration.class)) {
+				ret = (EMFCompareConfiguration)eAdapter;
+				break;
+			}
+		}
+		if (ret == null) {
+			ret = EMFCompareConfiguration.builder().build();
+		}
+		return ret;
 	}
 
 	/**

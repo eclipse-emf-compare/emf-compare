@@ -21,7 +21,6 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.impl.ReferenceChangeImpl;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EMFCompareCopier;
-import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -295,8 +294,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			boolean rightToLeft) {
 		if (getReference().isMany()) {
 			// Element to move cannot be part of the LCS... or there would not be a MOVE diff
-			int insertionIndex = DiffUtil.findInsertionIndex(comparison, new EqualityHelper(), this,
-					rightToLeft);
+			int insertionIndex = DiffUtil.findInsertionIndex(comparison, this, rightToLeft);
 
 			/*
 			 * However, it could still have been located "before" its new index, in which case we need to take
@@ -376,8 +374,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 
 			// We have the container, reference and value. We need to know the insertion index.
 			if (getReference().isMany()) {
-				final int insertionIndex = DiffUtil.findInsertionIndex(comparison, new EqualityHelper(),
-						this, rightToLeft);
+				final int insertionIndex = DiffUtil.findInsertionIndex(comparison, this, rightToLeft);
 
 				final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(getReference());
 

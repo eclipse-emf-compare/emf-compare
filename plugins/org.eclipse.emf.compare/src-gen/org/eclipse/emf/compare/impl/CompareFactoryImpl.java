@@ -111,6 +111,8 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 				return createConflictKindFromString(eDataType, initialValue);
 			case ComparePackage.EITERABLE:
 				return createEIterableFromString(eDataType, initialValue);
+			case ComparePackage.COMPARE_CONFIGURATION:
+				return createCompareConfigurationFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException(
 						"The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -134,6 +136,8 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 				return convertConflictKindToString(eDataType, instanceValue);
 			case ComparePackage.EITERABLE:
 				return convertEIterableToString(eDataType, instanceValue);
+			case ComparePackage.COMPARE_CONFIGURATION:
+				return convertCompareConfigurationToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException(
 						"The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -317,6 +321,25 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 	 */
 	public String convertEIterableToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EMFCompareConfiguration createCompareConfigurationFromString(EDataType eDataType,
+			String initialValue) {
+		return (EMFCompareConfiguration)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertCompareConfigurationToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
 	}
 
 	/**

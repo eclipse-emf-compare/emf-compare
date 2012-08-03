@@ -21,6 +21,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
@@ -150,6 +151,13 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * @generated
 	 */
 	private EDataType eIterableEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType compareConfigurationEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -645,6 +653,15 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EDataType getCompareConfiguration() {
+		return compareConfigurationEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public CompareFactory getCompareFactory() {
 		return (CompareFactory)getEFactoryInstance();
 	}
@@ -728,6 +745,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 		// Create data types
 		eIterableEDataType = createEDataType(EITERABLE);
+		compareConfigurationEDataType = createEDataType(COMPARE_CONFIGURATION);
 	}
 
 	/**
@@ -803,6 +821,9 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 		addEOperation(comparisonEClass, theEcorePackage.getEBoolean(),
 				"isThreeWay", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+
+		addEOperation(comparisonEClass, this.getCompareConfiguration(),
+				"getConfiguration", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(matchResourceEClass, MatchResource.class,
 				"MatchResource", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -1007,6 +1028,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		// Initialize data types
 		initEDataType(eIterableEDataType, Iterable.class,
 				"EIterable", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEDataType(compareConfigurationEDataType, EMFCompareConfiguration.class,
+				"CompareConfiguration", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);

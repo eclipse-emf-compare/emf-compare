@@ -14,6 +14,7 @@ import java.lang.reflect.Constructor;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.diff.DefaultDiffEngine;
 import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
@@ -75,7 +76,7 @@ public class DiffStatement extends Statement {
 		final IComparisonScope scope = createComparisonScope(tuple, annotation);
 		final IMatchEngine matchEngine = createMatchEngine(annotation);
 		final IDiffEngine diffEngine = createDiffEngine(annotation);
-		final Comparison comparison = matchEngine.match(scope);
+		final Comparison comparison = matchEngine.match(scope, EMFCompareConfiguration.builder().build());
 		diffEngine.diff(comparison);
 
 		test.invokeExplosively(testObject, scope, comparison);

@@ -73,19 +73,16 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 * Create the diff engine setting up the default behavior.
 	 */
 	public DefaultDiffEngine() {
-		this(new EqualityHelper(), new DiffBuilder());
+		this(new DiffBuilder());
 	}
 
 	/**
 	 * Create the diff engine.
 	 * 
-	 * @param helper
-	 *            the same equality helper should be used through all the comparison process.
 	 * @param processor
 	 *            this instance will be called for each detected difference.
 	 */
-	public DefaultDiffEngine(EqualityHelper helper, IDiffProcessor processor) {
-		this.helper = helper;
+	public DefaultDiffEngine(IDiffProcessor processor) {
 		this.diffProcessor = processor;
 	}
 
@@ -169,6 +166,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 */
 	public void diff(Comparison comparison) {
 		this.currentComparison = comparison;
+		this.helper = comparison.getConfiguration().getEqualityHelper();
 
 		for (Match rootMatch : comparison.getMatches()) {
 			checkForDifferences(rootMatch);
@@ -226,10 +224,10 @@ public class DefaultDiffEngine implements IDiffEngine {
 		final List<Object> rightValues = getAsList(match.getRight(), reference);
 		final List<Object> originValues = getAsList(match.getOrigin(), reference);
 
-		final List<Object> lcsOriginLeft = DiffUtil.longestCommonSubsequence(getComparison(), helper,
-				originValues, leftValues);
-		final List<Object> lcsOriginRight = DiffUtil.longestCommonSubsequence(getComparison(), helper,
-				originValues, rightValues);
+		final List<Object> lcsOriginLeft = DiffUtil.longestCommonSubsequence(getComparison(), originValues,
+				leftValues);
+		final List<Object> lcsOriginRight = DiffUtil.longestCommonSubsequence(getComparison(), originValues,
+				rightValues);
 
 		// TODO Can we shortcut in any way?
 
@@ -333,8 +331,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 		final List<Object> leftValues = getAsList(match.getLeft(), reference);
 		final List<Object> rightValues = getAsList(match.getRight(), reference);
 
-		final List<Object> lcs = DiffUtil.longestCommonSubsequence(getComparison(), helper, rightValues,
-				leftValues);
+		final List<Object> lcs = DiffUtil.longestCommonSubsequence(getComparison(), rightValues, leftValues);
 
 		// TODO Can we shortcut in any way?
 
@@ -469,10 +466,10 @@ public class DefaultDiffEngine implements IDiffEngine {
 		final List<Object> rightValues = getAsList(match.getRight(), feature);
 		final List<Object> originValues = getAsList(match.getOrigin(), feature);
 
-		final List<Object> lcsOriginLeft = DiffUtil.longestCommonSubsequence(getComparison(), helper,
-				originValues, leftValues);
-		final List<Object> lcsOriginRight = DiffUtil.longestCommonSubsequence(getComparison(), helper,
-				originValues, rightValues);
+		final List<Object> lcsOriginLeft = DiffUtil.longestCommonSubsequence(getComparison(), originValues,
+				leftValues);
+		final List<Object> lcsOriginRight = DiffUtil.longestCommonSubsequence(getComparison(), originValues,
+				rightValues);
 
 		// TODO Can we shortcut in any way?
 
@@ -554,8 +551,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 		final List<Object> leftValues = getAsList(match.getLeft(), feature);
 		final List<Object> rightValues = getAsList(match.getRight(), feature);
 
-		final List<Object> lcs = DiffUtil.longestCommonSubsequence(getComparison(), helper, rightValues,
-				leftValues);
+		final List<Object> lcs = DiffUtil.longestCommonSubsequence(getComparison(), rightValues, leftValues);
 
 		// TODO Can we shortcut in any way?
 

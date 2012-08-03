@@ -122,8 +122,6 @@ public final class DiffUtil {
 	 * 
 	 * @param comparison
 	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
-	 * @param equalityHelper
-	 *            The {@link EqualityHelper} gives us the necessary semantics for Object matching.
 	 * @param ignoredElements
 	 *            Specifies elements that should be excluded from the subsequences.
 	 * @param sequence1
@@ -136,8 +134,9 @@ public final class DiffUtil {
 	 *         sequences.
 	 * @see #longestCommonSubsequence(Comparison, EqualityHelper, List, List).
 	 */
-	public static <E> List<E> longestCommonSubsequence(Comparison comparison, EqualityHelper equalityHelper,
-			Iterable<E> ignoredElements, List<E> sequence1, List<E> sequence2) {
+	public static <E> List<E> longestCommonSubsequence(Comparison comparison, Iterable<E> ignoredElements,
+			List<E> sequence1, List<E> sequence2) {
+		final EqualityHelper equalityHelper = comparison.getConfiguration().getEqualityHelper();
 		final int size1 = sequence1.size();
 		final int size2 = sequence2.size();
 		final int[][] matrix = new int[size1 + 1][size2 + 1];
@@ -219,8 +218,6 @@ public final class DiffUtil {
 	 * 
 	 * @param comparison
 	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
-	 * @param equalityHelper
-	 *            The {@link EqualityHelper} gives us the necessary semantics for Object matching.
 	 * @param sequence1
 	 *            First of the two sequences to consider.
 	 * @param sequence2
@@ -230,8 +227,9 @@ public final class DiffUtil {
 	 * @return The LCS of the two given sequences. Will never be the same instance as one of the input
 	 *         sequences.
 	 */
-	public static <E> List<E> longestCommonSubsequence(Comparison comparison, EqualityHelper equalityHelper,
-			List<E> sequence1, List<E> sequence2) {
+	public static <E> List<E> longestCommonSubsequence(Comparison comparison, List<E> sequence1,
+			List<E> sequence2) {
+		final EqualityHelper equalityHelper = comparison.getConfiguration().getEqualityHelper();
 		final int size1 = sequence1.size();
 		final int size2 = sequence2.size();
 		final int[][] matrix = new int[size1 + 1][size2 + 1];
@@ -307,8 +305,6 @@ public final class DiffUtil {
 	 * 
 	 * @param comparison
 	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
-	 * @param equalityHelper
-	 *            The {@link EqualityHelper} gives us the necessary semantics for Object matching.
 	 * @param ignoredElements
 	 *            If there are elements from {@code target} that should be ignored when searching for an
 	 *            insertion index, set them here. Can be {@code null} or an empty list.
@@ -323,16 +319,17 @@ public final class DiffUtil {
 	 * @return The index at which {@code newElement} should be inserted in {@code target}.
 	 * @see #longestCommonSubsequence(Comparison, List, List)
 	 */
-	private static <E> int findInsertionIndex(Comparison comparison, EqualityHelper equalityHelper,
-			Iterable<E> ignoredElements, List<E> source, List<E> target, E newElement) {
+	private static <E> int findInsertionIndex(Comparison comparison, Iterable<E> ignoredElements,
+			List<E> source, List<E> target, E newElement) {
+		EqualityHelper equalityHelper = comparison.getConfiguration().getEqualityHelper();
 		// TODO split this into multiple sub-methods
 
 		// We assume that "newElement" is in source but not in the target yet
 		final List<E> lcs;
 		if (ignoredElements != null) {
-			lcs = longestCommonSubsequence(comparison, equalityHelper, ignoredElements, source, target);
+			lcs = longestCommonSubsequence(comparison, ignoredElements, source, target);
 		} else {
-			lcs = longestCommonSubsequence(comparison, equalityHelper, source, target);
+			lcs = longestCommonSubsequence(comparison, source, target);
 		}
 
 		E firstLCS = null;
@@ -474,8 +471,6 @@ public final class DiffUtil {
 	 * 
 	 * @param comparison
 	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
-	 * @param equalityHelper
-	 *            The {@link EqualityHelper} gives us the necessary semantics for Object matching.
 	 * @param source
 	 *            The List from which one element has to be added to the {@code target} list.
 	 * @param target
@@ -487,9 +482,9 @@ public final class DiffUtil {
 	 * @return The index at which {@code newElement} should be inserted in {@code target}.
 	 * @see #longestCommonSubsequence(Comparison, List, List)
 	 */
-	public static <E> int findInsertionIndex(Comparison comparison, EqualityHelper equalityHelper,
-			List<E> source, List<E> target, E newElement) {
-		return findInsertionIndex(comparison, equalityHelper, null, source, target, newElement);
+	public static <E> int findInsertionIndex(Comparison comparison, List<E> source, List<E> target,
+			E newElement) {
+		return findInsertionIndex(comparison, null, source, target, newElement);
 	}
 
 	/**
@@ -500,8 +495,6 @@ public final class DiffUtil {
 	 * 
 	 * @param comparison
 	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
-	 * @param equalityHelper
-	 *            The {@link EqualityHelper} gives us the necessary semantics for Object matching.
 	 * @param diff
 	 *            The diff which merging will trigger the need for an insertion index in its target list.
 	 * @param rightToLeft
@@ -512,8 +505,7 @@ public final class DiffUtil {
 	 * @see #findInsertionIndex(Comparison, EqualityHelper, Iterable, List, List, Object)
 	 */
 	@SuppressWarnings("unchecked")
-	public static int findInsertionIndex(Comparison comparison, EqualityHelper equalityHelper, Diff diff,
-			boolean rightToLeft) {
+	public static int findInsertionIndex(Comparison comparison, Diff diff, boolean rightToLeft) {
 		final EStructuralFeature feature;
 		final Object value;
 		if (diff instanceof AttributeChange) {
@@ -568,8 +560,7 @@ public final class DiffUtil {
 			ignoredElements = Lists.newArrayList();
 		}
 
-		return DiffUtil.findInsertionIndex(comparison, equalityHelper, ignoredElements, sourceList,
-				targetList, value);
+		return DiffUtil.findInsertionIndex(comparison, ignoredElements, sourceList, targetList, value);
 	}
 
 	/**
@@ -583,7 +574,8 @@ public final class DiffUtil {
 	 * @param rightToLeft
 	 *            Direction of the merging. {@code true} if the merge is to be done on the left side, making
 	 *            'source' the right side, {@code false} otherwise.
-	 * @return The list that should be used as a source for this merge. May be empty, but never <code>null</code>.
+	 * @return The list that should be used as a source for this merge. May be empty, but never
+	 *         <code>null</code>.
 	 */
 	@SuppressWarnings("unchecked")
 	private static List<Object> getSourceList(Diff diff, EStructuralFeature feature, boolean rightToLeft) {
