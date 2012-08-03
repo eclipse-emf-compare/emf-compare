@@ -144,7 +144,7 @@ public class ImageProvider {
 	}
 
 	public ImageDescriptor getImageDescriptorOverlay(Match match) {
-		String path = "/icons/full/ovr16/";
+		String path = null;
 		final EObject ancestor = match.getOrigin();
 		final EObject left = match.getLeft();
 		final EObject right = match.getRight();
@@ -156,25 +156,23 @@ public class ImageProvider {
 
 			if (ancestor == null) {
 				if (left == null) {
-					if (right == null) {
-						path = null;
-					} else {
+					if (right != null) {
 						if (fLeftIsLocal) {
-							path += "r_inadd_ov.gif";
+							path = "r_inadd_ov.gif";
 						} else {
-							path += "inadd_ov.gif";
+							path = "inadd_ov.gif";
 						}
 					}
 				} else {
 					if (right == null) {
 						if (fLeftIsLocal) {
-							path += "r_outadd_ov.gif";
+							path = "r_outadd_ov.gif";
 						} else {
-							path += "outadd_ov.gif";
+							path = "outadd_ov.gif";
 						}
 					} else {
 						if (!isEmpty(conflictualDiffs)) {
-							path += "confadd_ov.png";
+							path = "confadd_ov.png";
 							if (all(conflictualDiffs, PSEUDO_CONFLICT)) {
 								// path |= Differencer.PSEUDO_CONFLICT;
 							}
@@ -189,13 +187,13 @@ public class ImageProvider {
 					} else {
 						if (isEmpty(conflictualDiffs)) {
 							if (fLeftIsLocal) {
-								path += "r_outdel_ov.gif";
+								path = "r_outdel_ov.gif";
 							} else {
-								path += "outdel_ov.gif";
+								path = "outdel_ov.gif";
 							}
 						} else {
 							if (!isEmpty(conflictualDiffs)) {
-								path += "confdel_ov.png";
+								path = "confdel_ov.png";
 								if (all(conflictualDiffs, PSEUDO_CONFLICT)) {
 									// path |= Differencer.PSEUDO_CONFLICT;
 								}
@@ -206,13 +204,13 @@ public class ImageProvider {
 					if (right == null) {
 						if (isEmpty(conflictualDiffs)) {
 							if (fLeftIsLocal) {
-								path += "r_indel_ov.gif";
+								path = "r_indel_ov.gif";
 							} else {
-								path += "indel_ov.gif";
+								path = "indel_ov.gif";
 							}
 						} else {
 							if (!isEmpty(conflictualDiffs)) {
-								path += "confchg_ov.png";
+								path = "confchg_ov.png";
 								if (all(conflictualDiffs, PSEUDO_CONFLICT)) {
 									// path |= Differencer.PSEUDO_CONFLICT;
 								}
@@ -226,24 +224,22 @@ public class ImageProvider {
 							// empty
 						} else if (ay && !am) {
 							if (fLeftIsLocal) {
-								path += "r_inchg_ov.gif";
+								path = "r_inchg_ov.gif";
 							} else {
-								path += "inchg_ov.gif";
+								path = "inchg_ov.gif";
 							}
 						} else if (!ay && am) {
 							if (fLeftIsLocal) {
-								path += "r_outchg_ov.gif";
+								path = "r_outchg_ov.gif";
 							} else {
-								path += "outchg_ov.gif";
+								path = "outchg_ov.gif";
 							}
 						} else {
 							if (!isEmpty(conflictualDiffs)) {
-								path += "confchg_ov.png";
+								path = "confchg_ov.png";
 								if (all(conflictualDiffs, PSEUDO_CONFLICT)) {
 									// path |= Differencer.PSEUDO_CONFLICT;
 								}
-							} else {
-								path += "chg_ov.gif";
 							}
 						}
 					}
@@ -251,30 +247,32 @@ public class ImageProvider {
 			}
 		} else { // two way compare ignores ancestor
 			if (left == null) {
-				if (right == null) {
-					path = null;
-				} else { // right != null
+				if (right != null) {
 					if (fLeftIsLocal) {
-						path += "add_ov.gif";
+						path = "add_ov.gif";
 					} else {
-						path += "del_ov.gif";
+						path = "del_ov.gif";
 					}
 				}
 			} else {
 				if (right == null) {
 					if (fLeftIsLocal) {
-						path += "del_ov.gif";
+						path = "del_ov.gif";
 					} else {
-						path += "add_ov.gif";
+						path = "add_ov.gif";
 					}
 				} else {
 					if (!isEmpty(differences)) {
-						path += "chg_ov.gif";
+						path = "chg_ov.gif";
 					}
 				}
 			}
 		}
-		ImageDescriptor ret = EMFCompareIDEUIPlugin.getDefault().getImageDescriptor(path);
+
+		ImageDescriptor ret = null;
+		if (path != null) {
+			ret = EMFCompareIDEUIPlugin.getDefault().getImageDescriptor("/icons/full/ovr16/" + path);
+		}
 		return ret;
 	}
 
