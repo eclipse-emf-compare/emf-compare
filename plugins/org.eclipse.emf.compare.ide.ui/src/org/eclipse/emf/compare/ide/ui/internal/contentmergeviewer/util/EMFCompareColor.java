@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util;
 
-import static com.google.common.collect.Iterables.any;
-import static org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants.IS_CONFLICT;
 import static org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareConfigurationExtension.getBoolean;
 
 import com.google.common.cache.Cache;
@@ -23,7 +21,6 @@ import com.google.common.cache.RemovalNotification;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ColorRegistry;
@@ -164,13 +161,6 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 		RGB selected_fill = getBackground();
 		if (isThreeWay && !isIgnoreAncestor) {
 			boolean requiredConflictForWayOfMerge = false;
-			if (any(diff.getRequiredBy(), IS_CONFLICT)) {
-				if (diff.getSource() == DifferenceSource.LEFT && !fMergeTipRightToLeft) {
-					requiredConflictForWayOfMerge = true;
-				} else if (diff.getSource() == DifferenceSource.RIGHT && fMergeTipRightToLeft) {
-					requiredConflictForWayOfMerge = true;
-				}
-			}
 
 			if (diff.getConflict() == null && !requiredConflictForWayOfMerge) {
 				switch (diff.getSource()) {
@@ -200,20 +190,6 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 	private RGB getStrokeRGB(Diff diff, boolean isThreeWay, boolean isIgnoreAncestor, boolean selected) {
 		if (isThreeWay && !isIgnoreAncestor) {
 			boolean requiredConflictForWayOfMerge = false;
-			if (any(diff.getRequiredBy(), IS_CONFLICT)) {
-				if (diff.getSource() == DifferenceSource.LEFT && !fMergeTipRightToLeft) {
-					requiredConflictForWayOfMerge = true;
-				} else if (diff.getSource() == DifferenceSource.RIGHT && fMergeTipRightToLeft) {
-					requiredConflictForWayOfMerge = true;
-				}
-			}
-			if (any(diff.getRequires(), IS_CONFLICT)) {
-				if (diff.getSource() == DifferenceSource.LEFT && !fMergeTipRightToLeft) {
-					requiredConflictForWayOfMerge = true;
-				} else if (diff.getSource() == DifferenceSource.RIGHT && fMergeTipRightToLeft) {
-					requiredConflictForWayOfMerge = true;
-				}
-			}
 
 			if (diff.getConflict() == null && !requiredConflictForWayOfMerge) {
 				switch (diff.getSource()) {

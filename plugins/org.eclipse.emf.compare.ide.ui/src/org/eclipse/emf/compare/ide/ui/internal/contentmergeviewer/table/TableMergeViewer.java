@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -66,7 +67,18 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		});
 
 		getControl().addListener(SWT.MeasureItem, new Listener() {
+			private Widget fLastWidget;
+
+			private int fLastHeight;
+
 			public void handleEvent(Event event) {
+				// Windows bug: prevents StackOverflow
+				if (event.item == fLastWidget && event.height == fLastHeight) {
+					return;
+				}
+
+				fLastWidget = event.item;
+				fLastHeight = event.height;
 				int newHeight = (int)(event.gc.getFontMetrics().getHeight() * 1.33d);
 				if (newHeight % 2 == 1) {
 					newHeight += 1;
@@ -161,16 +173,27 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 	private void addInsertionPoints(final List<Object> values) {
 		ImmutableMap.Builder<Match, DiffInsertionPoint> insertionsPoints = ImmutableMap.builder();
 		for (ReferenceChange diff : filter(fInput.getDiffFromTheOtherSide().reverse(), ReferenceChange.class)) {
-			boolean rightToLeft = (getSide() == MergeViewerSide.LEFT);
+			if (diff.getState() == DifferenceState.UNRESOLVED) {
+				boolean rightToLeft = (getSide() == MergeViewerSide.LEFT);
+				EObject value = diff.getValue();
+				if (value != null) {
+					Match match = diff.getMatch();
+					Match matchOfDiffValue = match.getComparison().getMatch(value);
+					if (matchOfDiffValue != null) { // diff has been merge so that there is no match anymore
+						DiffInsertionPoint insertionPoint = new DiffInsertionPoint(diff);
+						final int insertionIndex;
+						if (diff.getReference().isMany()) {
+							insertionIndex = DiffUtil.findInsertionIndex(match.getComparison(),
+									new EqualityHelper(), diff, rightToLeft);
+						} else {
+							insertionIndex = 0;
+						}
+						values.add(insertionIndex, insertionPoint);
+						insertionsPoints.put(matchOfDiffValue, insertionPoint);
+					}
+				}
+			}
 
-			Match match = diff.getMatch();
-			int insertionIndex = DiffUtil.findInsertionIndex(match.getComparison(), new EqualityHelper(),
-					diff, rightToLeft);
-			Match matchOfDiffValue = match.getComparison().getMatch(diff.getValue());
-			DiffInsertionPoint insertionPoint = new DiffInsertionPoint(diff);
-
-			values.add(insertionIndex, insertionPoint);
-			insertionsPoints.put(matchOfDiffValue, insertionPoint);
 		}
 		fInsertionPoints = insertionsPoints.build();
 	}

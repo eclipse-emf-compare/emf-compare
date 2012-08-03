@@ -145,9 +145,8 @@ public class TreeMergeViewerContentProvider implements IMergeViewerContentProvid
 			Object ret = compareInput.getLeft();
 			// if no left and element is a diff, try to reach the left of parent, recursively
 			if (ret == null && element instanceof IDiffElement) {
-				throw new IllegalStateException();
-				// IDiffContainer parent = ((IDiffElement)compareInput).getParent();
-				// ret = getLeftContent(parent);
+				IDiffContainer parent = ((IDiffElement)compareInput).getParent();
+				ret = getLeftContent(parent);
 			}
 			return ret;
 		}

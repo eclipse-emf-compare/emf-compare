@@ -82,15 +82,19 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void copyDiffRightToLeft() {
-		copy(getRightMergeViewer(), MergeViewerSide.RIGHT);
-		setLeftDirty(true);
+		Diff diffToCopy = getDiffToCopy(getRightMergeViewer(), MergeViewerSide.RIGHT);
+		if (diffToCopy != null) {
+			diffToCopy.copyRightToLeft();
+			setLeftDirty(true);
+			refresh();
+		}
 	}
 
-	private void copy(IMergeViewer<? extends Scrollable> mergeViewer, MergeViewerSide side) {
+	private Diff getDiffToCopy(IMergeViewer<? extends Scrollable> mergeViewer, MergeViewerSide side) {
+		Diff diffToCopy = null;
 		ISelection selection = mergeViewer.getSelection();
 		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
 			Object firstElement = ((IStructuredSelection)selection).getFirstElement();
-			Diff diffToCopy = null;
 			if (firstElement instanceof DiffInsertionPoint) {
 				diffToCopy = ((DiffInsertionPoint)firstElement).getDiff();
 			} else {
@@ -100,11 +104,8 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 				}
 			}
 
-			if (diffToCopy != null) {
-				diffToCopy.copyRightToLeft();
-				refresh();
-			}
 		}
+		return diffToCopy;
 	}
 
 	/**
@@ -114,8 +115,12 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void copyDiffLeftToRight() {
-		copy(getLeftMergeViewer(), MergeViewerSide.LEFT);
-		setRightDirty(true);
+		Diff diffToCopy = getDiffToCopy(getLeftMergeViewer(), MergeViewerSide.LEFT);
+		if (diffToCopy != null) {
+			diffToCopy.copyLeftToRight();
+			setRightDirty(true);
+			refresh();
+		}
 	}
 
 	/**

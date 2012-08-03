@@ -82,21 +82,24 @@ public class ReferenceChangeAccessor extends AbstractDiffAccessor {
 		for (ReferenceChange referenceChange : referencesChanges) {
 			final EObject referenceChangeValue = referenceChange.getValue();
 			final Match match = referenceChange.getMatch().getComparison().getMatch(referenceChangeValue);
-			final EObject matchValue;
-			switch (side) {
-				case LEFT:
-					matchValue = match.getLeft();
+			// match can be null if the referenceChange has been merged and it is a delete
+			if (match != null) {
+				final EObject matchValue;
+				switch (side) {
+					case LEFT:
+						matchValue = match.getLeft();
+						break;
+					case RIGHT:
+						matchValue = match.getRight();
+						break;
+					default:
+						matchValue = null;
+						break;
+				}
+				if (matchValue == value) {
+					ret = referenceChange;
 					break;
-				case RIGHT:
-					matchValue = match.getRight();
-					break;
-				default:
-					matchValue = null;
-					break;
-			}
-			if (matchValue == value) {
-				ret = referenceChange;
-				break;
+				}
 			}
 		}
 		return ret;
