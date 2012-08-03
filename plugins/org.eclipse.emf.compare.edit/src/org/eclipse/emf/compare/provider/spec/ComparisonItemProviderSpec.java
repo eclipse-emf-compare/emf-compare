@@ -23,6 +23,8 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.provider.ComparisonItemProvider;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -44,11 +46,44 @@ public class ComparisonItemProviderSpec extends ComparisonItemProvider {
 	@Override
 	public Collection<?> getChildren(Object object) {
 		Comparison comparison = (Comparison)object;
+		return ImmutableList.copyOf(getChildrenIterable(comparison));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#hasChildren(java.lang.Object)
+	 */
+	@Override
+	public boolean hasChildren(Object object) {
+		Comparison comparison = (Comparison)object;
+		return !isEmpty(getChildrenIterable(comparison));
+	}
+
+	private Iterable<EObject> getChildrenIterable(Comparison comparison) {
+		Iterable<Match> match = getNonEmptyMatches(comparison);
+		return concat(match, comparison.getMatchedResources());
+	}
+
+	private Iterable<Match> getNonEmptyMatches(Comparison comparison) {
 		Iterable<Match> match = filter(comparison.getMatches(), new Predicate<Match>() {
 			public boolean apply(Match input) {
-				return !isEmpty(MatchItemProviderSpec.getChildrenIterable(input));
+				final boolean ret;
+				IEditingDomainItemProvider editingDomainItemProvider = (IEditingDomainItemProvider)adapterFactory
+						.adapt(input, IEditingDomainItemProvider.class);
+
+				if (editingDomainItemProvider instanceof MatchItemProviderSpec) {
+					ret = !isEmpty(((MatchItemProviderSpec)editingDomainItemProvider)
+							.getChildrenIterable(input));
+				} else if (editingDomainItemProvider != null) {
+					ret = !editingDomainItemProvider.getChildren(input).isEmpty();
+				} else {
+					ret = false;
+				}
+
+				return ret;
 			}
 		});
-		return ImmutableList.copyOf(concat(match, comparison.getMatchedResources()));
+		return match;
 	}
 }

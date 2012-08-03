@@ -17,7 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
@@ -124,29 +123,29 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		List<? super Object> ret = newArrayList(superChildren);
 		ReferenceChange referenceChange = (ReferenceChange)object;
 		EReference reference = referenceChange.getReference();
-		Conflict conflict = referenceChange.getConflict();
-		if (conflict != null) {
-			// ret.addAll(conflict.getDifferences());
-		}
 
 		if (reference.isContainment()) {
 			Match match = referenceChange.getMatch().getComparison().getMatch(referenceChange.getValue());
-			ITreeItemContentProvider treeItemContentProvider = (ITreeItemContentProvider)adapterFactory
-					.adapt(match, ITreeItemContentProvider.class);
-			if (treeItemContentProvider != null) {
-				Collection<?> children = treeItemContentProvider.getChildren(match);
+			if (match != null) {
+				ITreeItemContentProvider matchItemContentProvider = (ITreeItemContentProvider)adapterFactory
+						.adapt(match, ITreeItemContentProvider.class);
+				if (matchItemContentProvider != null) {
+					Collection<Object> children = newArrayList(matchItemContentProvider.getChildren(match));
 
-				children.remove(referenceChange);
+					children.remove(referenceChange);
 
-				Iterator<?> iterator = children.iterator();
-				while (iterator.hasNext()) {
-					Object object2 = iterator.next();
-					if (object2 instanceof Match) {
-						iterator.remove();
+					Iterator<?> childrenIterator = children.iterator();
+					while (childrenIterator.hasNext()) {
+						Object child = childrenIterator.next();
+						if (child instanceof Match) {
+							if (!matchItemContentProvider.hasChildren(child)) {
+								childrenIterator.remove();
+							}
+						}
+
 					}
-
+					ret.addAll(children);
 				}
-				ret.addAll(children);
 			}
 		}
 
