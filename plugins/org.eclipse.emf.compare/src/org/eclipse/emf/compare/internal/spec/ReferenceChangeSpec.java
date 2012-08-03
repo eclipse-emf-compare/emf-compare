@@ -214,10 +214,13 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	protected void mergeRequiredBy(boolean rightToLeft) {
 		// TODO log back to the user what we will merge along?
 		for (Diff dependency : getRequiredBy()) {
-			if (rightToLeft) {
-				dependency.copyRightToLeft();
-			} else {
-				dependency.copyLeftToRight();
+			if (dependency.getState() != DifferenceState.MERGED) { // TODO: what to do when state = Discarded
+				// but is required?
+				if (rightToLeft) {
+					dependency.copyRightToLeft();
+				} else {
+					dependency.copyLeftToRight();
+				}
 			}
 		}
 	}
@@ -232,10 +235,13 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	protected void mergeRequires(boolean rightToLeft) {
 		// TODO log back to the user what we will merge along?
 		for (Diff dependency : getRequires()) {
-			if (rightToLeft) {
-				dependency.copyRightToLeft();
-			} else {
-				dependency.copyLeftToRight();
+			if (dependency.getState() != DifferenceState.MERGED) { // TODO: what to do when state = Discarded
+																	// but is required?
+				if (rightToLeft) {
+					dependency.copyRightToLeft();
+				} else {
+					dependency.copyLeftToRight();
+				}
 			}
 		}
 	}
@@ -466,8 +472,9 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			} else {
 				expectedValue = valueMatch.getRight();
 			}
-			// We have the container, reference and value to remove.
-			if (getReference().isContainment()) {
+			// We have the container, reference and value to remove. Expected value can be null when the
+			// deletion was made on both side (i.e. a pseudo delete)
+			if (getReference().isContainment() && expectedValue != null) {
 				EcoreUtil.remove(expectedValue);
 				if (rightToLeft) {
 					valueMatch.setLeft(null);

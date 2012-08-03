@@ -14,7 +14,11 @@ import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
@@ -63,7 +67,31 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void copy(boolean leftToRight) {
-
+		EList<Diff> differences = getComparison().getDifferences();
+		boolean merged = false;
+		for (Diff diff : differences) {
+			if (leftToRight && diff.getSource() == DifferenceSource.LEFT
+					&& diff.getState() == DifferenceState.UNRESOLVED) {
+				if (diff.getConflict() == null || diff.getConflict().getKind() == ConflictKind.PSEUDO) {
+					diff.copyLeftToRight();
+					merged = true;
+				}
+			} else if (!leftToRight && diff.getSource() == DifferenceSource.RIGHT
+					&& diff.getState() == DifferenceState.UNRESOLVED) {
+				if (diff.getConflict() == null || diff.getConflict().getKind() == ConflictKind.PSEUDO) {
+					diff.copyRightToLeft();
+					merged = true;
+				}
+			}
+		}
+		if (merged) {
+			if (leftToRight) {
+				setRightDirty(true);
+			} else {
+				setLeftDirty(true);
+			}
+			refresh();
+		}
 	}
 
 	/**
