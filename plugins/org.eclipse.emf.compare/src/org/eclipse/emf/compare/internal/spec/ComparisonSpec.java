@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.notNull;
 
 import com.google.common.base.Function;
@@ -87,9 +88,7 @@ public class ComparisonSpec extends ComparisonImpl {
 	 */
 	@Override
 	public Match getMatch(EObject element) {
-		if (element == null) {
-			return null;
-		}
+		checkNotNull(element);
 
 		ECrossReferenceAdapter adapter = null;
 		final Iterator<Adapter> adapterIterator = eAdapters().iterator();
