@@ -17,6 +17,7 @@ import java.util.Arrays;
 
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -73,6 +74,32 @@ public class ComparisonTest {
 		for (Diff diff : attChanges) {
 			printDiff(diff);
 		}
+		System.out.println();
+		System.out.println("CONFLICTS");
+		for (Conflict conflict : comparison.getConflicts()) {
+			printConflict(conflict);
+		}
+
+	}
+
+	/**
+	 * @param conflict
+	 */
+	private static void printConflict(Conflict conflict) {
+		System.out.println(conflict.getKind() + " conflict:");
+		final Iterable<ReferenceChange> refChanges = Iterables.filter(conflict.getDifferences(),
+				ReferenceChange.class);
+		for (Diff diff : refChanges) {
+			System.out.print("\t");
+			printDiff(diff);
+		}
+		final Iterable<AttributeChange> attChanges = Iterables.filter(conflict.getDifferences(),
+				AttributeChange.class);
+		for (Diff diff : attChanges) {
+			System.out.print("\t");
+			printDiff(diff);
+		}
+
 	}
 
 	private static void printDiff(Diff diff) {
