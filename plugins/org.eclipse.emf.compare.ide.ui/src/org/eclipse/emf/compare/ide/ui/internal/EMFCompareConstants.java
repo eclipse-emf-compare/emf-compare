@@ -37,9 +37,6 @@ public final class EMFCompareConstants {
 
 	// CompareConfiguration
 
-	public static final String MERGE_TIP_RIGHT_TO_LEFT = EMFCompareIDEUIPlugin.PLUGIN_ID
-			+ ".MERGE_TIP_RIGHT_TO_LEFT"; //$NON-NLS-1$
-
 	public static final String COMPARE_RESULT = EMFCompareIDEUIPlugin.PLUGIN_ID + ".COMPARE.RESULT"; //$NON-NLS-1$
 
 	public static final boolean MERGE_TIP_RIGHT_TO_LEFT_DEFAULT = true;

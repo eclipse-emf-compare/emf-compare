@@ -75,8 +75,6 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 
 	private final boolean fLeftIsLocal;
 
-	private boolean fMergeTipRightToLeft;
-
 	private final CompareConfiguration fCompareConfiguration;
 
 	public EMFCompareColor(ContentMergeViewer contentMergeViewer, IPreferenceStore preferenceStore,
@@ -109,8 +107,6 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 
 		compareConfiguration.addPropertyChangeListener(fCompareConfigurationChangeListener);
 
-		fMergeTipRightToLeft = getBoolean(compareConfiguration, EMFCompareConstants.MERGE_TIP_RIGHT_TO_LEFT,
-				EMFCompareConstants.MERGE_TIP_RIGHT_TO_LEFT_DEFAULT);
 		fLeftIsLocal = getBoolean(compareConfiguration, "LEFT_IS_LOCAL", false); //$NON-NLS-1$
 		updateColors();
 	}
@@ -129,20 +125,11 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 	private void handlePropertyChangeEvent(PropertyChangeEvent event) {
 		String key = event.getProperty();
 
-		if (key.equals(EMFCompareConstants.INCOMING_COLOR)
-				|| key.equals(EMFCompareConstants.OUTGOING_COLOR)
+		if (key.equals(EMFCompareConstants.INCOMING_COLOR) || key.equals(EMFCompareConstants.OUTGOING_COLOR)
 				|| key.equals(EMFCompareConstants.CONFLICTING_COLOR)
 				|| key.equals(EMFCompareConstants.RESOLVED_COLOR)) {
 			updateColors();
 		}
-
-		if (key.equals(EMFCompareConstants.MERGE_TIP_RIGHT_TO_LEFT)) {
-			fMergeTipRightToLeft = getBoolean(fCompareConfiguration,
-					EMFCompareConstants.MERGE_TIP_RIGHT_TO_LEFT,
-					EMFCompareConstants.MERGE_TIP_RIGHT_TO_LEFT_DEFAULT);
-			// fContentMergeViewer.getControl().redraw();
-		}
-
 	}
 
 	private Color getColor(RGB rgb) {

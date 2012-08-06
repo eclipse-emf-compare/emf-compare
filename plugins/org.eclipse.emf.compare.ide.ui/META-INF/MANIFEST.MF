@@ -20,7 +20,6 @@ Bundle-Localization: plugin
 Export-Package: org.eclipse.emf.compare.ide.ui.internal;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.actions.filter;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.actions.group;x-internal:=true,
- org.eclipse.emf.compare.ide.ui.internal.actions.mergeway;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;x-internal:=true,

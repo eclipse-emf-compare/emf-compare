@@ -46,7 +46,6 @@ import org.eclipse.emf.compare.ide.ui.internal.actions.filter.DifferenceFilter;
 import org.eclipse.emf.compare.ide.ui.internal.actions.filter.FilterActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGrouper;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.GroupActionMenu;
-import org.eclipse.emf.compare.ide.ui.internal.actions.mergeway.MergeWayAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareConfigurationExtension;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.CompareNodeAdapterFactory;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
@@ -277,12 +276,6 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 			return;
 		}
 
-		// remove the merge way action if the comparison is two way only
-		if (fRoot instanceof ComparisonNode && !((ComparisonNode)fRoot).getTarget().isThreeWay()) {
-			fToolbarManager.remove(MergeWayAction.class.getName());
-			fToolbarManager.update(true);
-		}
-
 		if (fParent != null) {
 			fParent.setTitleArgument(message);
 		}
@@ -339,9 +332,6 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 	protected void createToolItems(ToolBarManager toolbarManager) {
 		fToolbarManager = toolbarManager;
 		super.createToolItems(toolbarManager);
-
-		// will be removed later if two ways only
-		fToolbarManager.add(new MergeWayAction(getCompareConfiguration()));
 
 		// Initialized here since this is called from the super-constructor
 		if (differenceFilter == null) {
