@@ -12,9 +12,7 @@ package org.eclipse.emf.compare.uml2diff.impl;
 
 import org.eclipse.emf.compare.ComparePackage;
 
-import org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChange;
 import org.eclipse.emf.compare.uml2diff.UMLAssociationChange;
-import org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChange;
 import org.eclipse.emf.compare.uml2diff.UMLDependencyChange;
 import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChange;
 import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChange;
@@ -35,8 +33,8 @@ import org.eclipse.emf.compare.uml2diff.Uml2diffPackage;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.EcorePackage;
+
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 import org.eclipse.uml2.uml.UMLPackage;
@@ -54,13 +52,6 @@ public class Uml2diffPackageImpl extends EPackageImpl implements Uml2diffPackage
 	 * @generated
 	 */
 	private EClass umlAssociationChangeEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass umlGeneralizationSetChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -89,6 +80,13 @@ public class Uml2diffPackageImpl extends EPackageImpl implements Uml2diffPackage
 	 * @generated
 	 */
 	private EClass umlExtendChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlGeneralizationSetChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -241,24 +239,6 @@ public class Uml2diffPackageImpl extends EPackageImpl implements Uml2diffPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getUMLGeneralizationSetChange() {
-		return umlGeneralizationSetChangeEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getUMLGeneralizationSetChange_GeneralizationSet() {
-		return (EReference)umlGeneralizationSetChangeEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getUMLDependencyChange() {
 		return umlDependencyChangeEClass;
 	}
@@ -306,6 +286,24 @@ public class Uml2diffPackageImpl extends EPackageImpl implements Uml2diffPackage
 	 */
 	public EReference getUMLExtendChange_Extend() {
 		return (EReference)umlExtendChangeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLGeneralizationSetChange() {
+		return umlGeneralizationSetChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getUMLGeneralizationSetChange_GeneralizationSet() {
+		return (EReference)umlGeneralizationSetChangeEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**

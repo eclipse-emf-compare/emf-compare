@@ -11,8 +11,8 @@
 package org.eclipse.emf.compare.uml2diff.util;
 
 import org.eclipse.emf.compare.Diff;
-
 import org.eclipse.emf.compare.ReferenceChange;
+
 import org.eclipse.emf.compare.uml2diff.*;
 
 import org.eclipse.emf.ecore.EObject;
@@ -218,21 +218,6 @@ public class Uml2diffSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>UML Generalization Set Change</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>UML Generalization Set Change</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseUMLGeneralizationSetChange(UMLGeneralizationSetChange object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>UML Dependency Change</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -289,6 +274,21 @@ public class Uml2diffSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseUMLExtendChange(UMLExtendChange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Generalization Set Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Generalization Set Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLGeneralizationSetChange(UMLGeneralizationSetChange object) {
 		return null;
 	}
 

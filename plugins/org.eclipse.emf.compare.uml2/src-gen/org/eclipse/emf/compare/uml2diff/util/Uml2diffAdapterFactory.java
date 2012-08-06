@@ -16,8 +16,8 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 
 import org.eclipse.emf.compare.Diff;
-
 import org.eclipse.emf.compare.ReferenceChange;
+
 import org.eclipse.emf.compare.uml2diff.*;
 
 import org.eclipse.emf.ecore.EObject;
@@ -181,20 +181,6 @@ public class Uml2diffAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChange <em>UML Generalization Set Change</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChange
-	 * @generated
-	 */
-	public Adapter createUMLGeneralizationSetChangeAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.uml2diff.UMLDependencyChange <em>UML Dependency Change</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -247,6 +233,20 @@ public class Uml2diffAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createUMLExtendChangeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChange <em>UML Generalization Set Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChange
+	 * @generated
+	 */
+	public Adapter createUMLGeneralizationSetChangeAdapter() {
 		return null;
 	}
 

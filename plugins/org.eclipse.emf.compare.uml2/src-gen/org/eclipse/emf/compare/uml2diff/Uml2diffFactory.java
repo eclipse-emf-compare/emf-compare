@@ -39,15 +39,6 @@ public interface Uml2diffFactory extends EFactory {
 	UMLAssociationChange createUMLAssociationChange();
 
 	/**
-	 * Returns a new object of class '<em>UML Generalization Set Change</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>UML Generalization Set Change</em>'.
-	 * @generated
-	 */
-	UMLGeneralizationSetChange createUMLGeneralizationSetChange();
-
-	/**
 	 * Returns a new object of class '<em>UML Dependency Change</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -82,6 +73,15 @@ public interface Uml2diffFactory extends EFactory {
 	 * @generated
 	 */
 	UMLExtendChange createUMLExtendChange();
+
+	/**
+	 * Returns a new object of class '<em>UML Generalization Set Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Generalization Set Change</em>'.
+	 * @generated
+	 */
+	UMLGeneralizationSetChange createUMLGeneralizationSetChange();
 
 	/**
 	 * Returns a new object of class '<em>UML Execution Specification Change</em>'.

@@ -24,3 +24,4 @@ Export-Package: org.eclipse.emf.compare.uml2,
  org.eclipse.emf.compare.uml2diff.impl,
  org.eclipse.emf.compare.uml2diff.util
 Bundle-Activator: org.eclipse.emf.compare.uml2.UMLDiffEnginePlugin
+Import-Package: org.eclipse.emf.compare.uml2diff

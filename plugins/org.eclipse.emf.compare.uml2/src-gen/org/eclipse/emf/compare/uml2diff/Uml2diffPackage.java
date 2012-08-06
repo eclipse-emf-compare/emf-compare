@@ -65,126 +65,6 @@ public interface Uml2diffPackage extends EPackage {
 	Uml2diffPackage eINSTANCE = org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLAssociationChangeImpl <em>UML Association Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLAssociationChangeImpl
-	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLAssociationChange()
-	 * @generated
-	 */
-	int UML_ASSOCIATION_CHANGE = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLGeneralizationSetChangeImpl <em>UML Generalization Set Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLGeneralizationSetChangeImpl
-	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLGeneralizationSetChange()
-	 * @generated
-	 */
-	int UML_GENERALIZATION_SET_CHANGE = 5;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLDependencyChangeImpl <em>UML Dependency Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLDependencyChangeImpl
-	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLDependencyChange()
-	 * @generated
-	 */
-	int UML_DEPENDENCY_CHANGE = 1;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLExtendChangeImpl <em>UML Extend Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLExtendChangeImpl
-	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLExtendChange()
-	 * @generated
-	 */
-	int UML_EXTEND_CHANGE = 4;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLExecutionSpecificationChangeImpl <em>UML Execution Specification Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLExecutionSpecificationChangeImpl
-	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLExecutionSpecificationChange()
-	 * @generated
-	 */
-	int UML_EXECUTION_SPECIFICATION_CHANGE = 6;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLDestructionEventChangeImpl <em>UML Destruction Event Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLDestructionEventChangeImpl
-	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLDestructionEventChange()
-	 * @generated
-	 */
-	int UML_DESTRUCTION_EVENT_CHANGE = 7;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLIntervalConstraintChangeImpl <em>UML Interval Constraint Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLIntervalConstraintChangeImpl
-	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLIntervalConstraintChange()
-	 * @generated
-	 */
-	int UML_INTERVAL_CONSTRAINT_CHANGE = 8;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLMessageChangeImpl <em>UML Message Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLMessageChangeImpl
-	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLMessageChange()
-	 * @generated
-	 */
-	int UML_MESSAGE_CHANGE = 9;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLStereotypePropertyChangeImpl <em>UML Stereotype Property Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLStereotypePropertyChangeImpl
-	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLStereotypePropertyChange()
-	 * @generated
-	 */
-	int UML_STEREOTYPE_PROPERTY_CHANGE = 10;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLStereotypeApplicationChangeImpl <em>UML Stereotype Application Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLStereotypeApplicationChangeImpl
-	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLStereotypeApplicationChange()
-	 * @generated
-	 */
-	int UML_STEREOTYPE_APPLICATION_CHANGE = 11;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLStereotypeReferenceChangeImpl <em>UML Stereotype Reference Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLStereotypeReferenceChangeImpl
-	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLStereotypeReferenceChange()
-	 * @generated
-	 */
-	int UML_STEREOTYPE_REFERENCE_CHANGE = 12;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationChangeImpl <em>UML Profile Application Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationChangeImpl
-	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLProfileApplicationChange()
-	 * @generated
-	 */
-	int UML_PROFILE_APPLICATION_CHANGE = 13;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLExtensionImpl <em>UML Extension</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -303,6 +183,16 @@ public interface Uml2diffPackage extends EPackage {
 	int UML_EXTENSION_FEATURE_COUNT = ComparePackage.DIFF_FEATURE_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLAssociationChangeImpl <em>UML Association Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLAssociationChangeImpl
+	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLAssociationChange()
+	 * @generated
+	 */
+	int UML_ASSOCIATION_CHANGE = 0;
+
+	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -418,6 +308,16 @@ public interface Uml2diffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_ASSOCIATION_CHANGE_FEATURE_COUNT = UML_EXTENSION_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLDependencyChangeImpl <em>UML Dependency Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLDependencyChangeImpl
+	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLDependencyChange()
+	 * @generated
+	 */
+	int UML_DEPENDENCY_CHANGE = 1;
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
@@ -773,6 +673,16 @@ public interface Uml2diffPackage extends EPackage {
 	int UML_SUBSTITUTION_CHANGE_FEATURE_COUNT = UML_EXTENSION_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLExtendChangeImpl <em>UML Extend Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLExtendChangeImpl
+	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLExtendChange()
+	 * @generated
+	 */
+	int UML_EXTEND_CHANGE = 4;
+
+	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -888,6 +798,16 @@ public interface Uml2diffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_EXTEND_CHANGE_FEATURE_COUNT = UML_EXTENSION_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLGeneralizationSetChangeImpl <em>UML Generalization Set Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLGeneralizationSetChangeImpl
+	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLGeneralizationSetChange()
+	 * @generated
+	 */
+	int UML_GENERALIZATION_SET_CHANGE = 5;
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
@@ -1007,6 +927,16 @@ public interface Uml2diffPackage extends EPackage {
 	int UML_GENERALIZATION_SET_CHANGE_FEATURE_COUNT = UML_EXTENSION_FEATURE_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLExecutionSpecificationChangeImpl <em>UML Execution Specification Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLExecutionSpecificationChangeImpl
+	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLExecutionSpecificationChange()
+	 * @generated
+	 */
+	int UML_EXECUTION_SPECIFICATION_CHANGE = 6;
+
+	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1113,6 +1043,16 @@ public interface Uml2diffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_EXECUTION_SPECIFICATION_CHANGE_FEATURE_COUNT = UML_EXTENSION_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLDestructionEventChangeImpl <em>UML Destruction Event Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLDestructionEventChangeImpl
+	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLDestructionEventChange()
+	 * @generated
+	 */
+	int UML_DESTRUCTION_EVENT_CHANGE = 7;
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
@@ -1223,6 +1163,16 @@ public interface Uml2diffPackage extends EPackage {
 	int UML_DESTRUCTION_EVENT_CHANGE_FEATURE_COUNT = UML_EXTENSION_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLIntervalConstraintChangeImpl <em>UML Interval Constraint Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLIntervalConstraintChangeImpl
+	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLIntervalConstraintChange()
+	 * @generated
+	 */
+	int UML_INTERVAL_CONSTRAINT_CHANGE = 8;
+
+	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1331,6 +1281,16 @@ public interface Uml2diffPackage extends EPackage {
 	int UML_INTERVAL_CONSTRAINT_CHANGE_FEATURE_COUNT = UML_EXTENSION_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLMessageChangeImpl <em>UML Message Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLMessageChangeImpl
+	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLMessageChange()
+	 * @generated
+	 */
+	int UML_MESSAGE_CHANGE = 9;
+
+	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1437,6 +1397,16 @@ public interface Uml2diffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_MESSAGE_CHANGE_FEATURE_COUNT = UML_EXTENSION_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLStereotypePropertyChangeImpl <em>UML Stereotype Property Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLStereotypePropertyChangeImpl
+	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLStereotypePropertyChange()
+	 * @generated
+	 */
+	int UML_STEREOTYPE_PROPERTY_CHANGE = 10;
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
@@ -1554,6 +1524,16 @@ public interface Uml2diffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_STEREOTYPE_PROPERTY_CHANGE_FEATURE_COUNT = UML_EXTENSION_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLStereotypeApplicationChangeImpl <em>UML Stereotype Application Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLStereotypeApplicationChangeImpl
+	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLStereotypeApplicationChange()
+	 * @generated
+	 */
+	int UML_STEREOTYPE_APPLICATION_CHANGE = 11;
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
@@ -1691,6 +1671,16 @@ public interface Uml2diffPackage extends EPackage {
 	int UML_STEREOTYPE_APPLICATION_CHANGE_FEATURE_COUNT = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 2;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLStereotypeReferenceChangeImpl <em>UML Stereotype Reference Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLStereotypeReferenceChangeImpl
+	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLStereotypeReferenceChange()
+	 * @generated
+	 */
+	int UML_STEREOTYPE_REFERENCE_CHANGE = 12;
+
+	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1797,6 +1787,16 @@ public interface Uml2diffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_STEREOTYPE_REFERENCE_CHANGE_FEATURE_COUNT = UML_EXTENSION_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationChangeImpl <em>UML Profile Application Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationChangeImpl
+	 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLProfileApplicationChange()
+	 * @generated
+	 */
+	int UML_PROFILE_APPLICATION_CHANGE = 13;
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
@@ -1956,27 +1956,6 @@ public interface Uml2diffPackage extends EPackage {
 	EReference getUMLAssociationChange_Association();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChange <em>UML Generalization Set Change</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>UML Generalization Set Change</em>'.
-	 * @see org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChange
-	 * @generated
-	 */
-	EClass getUMLGeneralizationSetChange();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChange#getGeneralizationSet <em>Generalization Set</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Generalization Set</em>'.
-	 * @see org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChange#getGeneralizationSet()
-	 * @see #getUMLGeneralizationSetChange()
-	 * @generated
-	 */
-	EReference getUMLGeneralizationSetChange_GeneralizationSet();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2diff.UMLDependencyChange <em>UML Dependency Change</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2037,6 +2016,27 @@ public interface Uml2diffPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getUMLExtendChange_Extend();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChange <em>UML Generalization Set Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>UML Generalization Set Change</em>'.
+	 * @see org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChange
+	 * @generated
+	 */
+	EClass getUMLGeneralizationSetChange();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChange#getGeneralizationSet <em>Generalization Set</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Generalization Set</em>'.
+	 * @see org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChange#getGeneralizationSet()
+	 * @see #getUMLGeneralizationSetChange()
+	 * @generated
+	 */
+	EReference getUMLGeneralizationSetChange_GeneralizationSet();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChange <em>UML Execution Specification Change</em>}'.
@@ -2213,24 +2213,6 @@ public interface Uml2diffPackage extends EPackage {
 		EReference UML_ASSOCIATION_CHANGE__ASSOCIATION = eINSTANCE.getUMLAssociationChange_Association();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLGeneralizationSetChangeImpl <em>UML Generalization Set Change</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.emf.compare.uml2diff.impl.UMLGeneralizationSetChangeImpl
-		 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLGeneralizationSetChange()
-		 * @generated
-		 */
-		EClass UML_GENERALIZATION_SET_CHANGE = eINSTANCE.getUMLGeneralizationSetChange();
-
-		/**
-		 * The meta object literal for the '<em><b>Generalization Set</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference UML_GENERALIZATION_SET_CHANGE__GENERALIZATION_SET = eINSTANCE.getUMLGeneralizationSetChange_GeneralizationSet();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLDependencyChangeImpl <em>UML Dependency Change</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2285,6 +2267,24 @@ public interface Uml2diffPackage extends EPackage {
 		 * @generated
 		 */
 		EReference UML_EXTEND_CHANGE__EXTEND = eINSTANCE.getUMLExtendChange_Extend();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLGeneralizationSetChangeImpl <em>UML Generalization Set Change</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.uml2diff.impl.UMLGeneralizationSetChangeImpl
+		 * @see org.eclipse.emf.compare.uml2diff.impl.Uml2diffPackageImpl#getUMLGeneralizationSetChange()
+		 * @generated
+		 */
+		EClass UML_GENERALIZATION_SET_CHANGE = eINSTANCE.getUMLGeneralizationSetChange();
+
+		/**
+		 * The meta object literal for the '<em><b>Generalization Set</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference UML_GENERALIZATION_SET_CHANGE__GENERALIZATION_SET = eINSTANCE.getUMLGeneralizationSetChange_GeneralizationSet();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLExecutionSpecificationChangeImpl <em>UML Execution Specification Change</em>}' class.

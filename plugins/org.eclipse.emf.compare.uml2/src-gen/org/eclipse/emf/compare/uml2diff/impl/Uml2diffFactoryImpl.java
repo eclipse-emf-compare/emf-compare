@@ -98,16 +98,6 @@ public class Uml2diffFactoryImpl extends EFactoryImpl implements Uml2diffFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public UMLGeneralizationSetChange createUMLGeneralizationSetChange() {
-		UMLGeneralizationSetChangeImpl umlGeneralizationSetChange = new UMLGeneralizationSetChangeImpl();
-		return umlGeneralizationSetChange;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public UMLDependencyChange createUMLDependencyChange() {
 		UMLDependencyChangeImpl umlDependencyChange = new UMLDependencyChangeImpl();
 		return umlDependencyChange;
@@ -141,6 +131,16 @@ public class Uml2diffFactoryImpl extends EFactoryImpl implements Uml2diffFactory
 	public UMLExtendChange createUMLExtendChange() {
 		UMLExtendChangeImpl umlExtendChange = new UMLExtendChangeImpl();
 		return umlExtendChange;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public UMLGeneralizationSetChange createUMLGeneralizationSetChange() {
+		UMLGeneralizationSetChangeImpl umlGeneralizationSetChange = new UMLGeneralizationSetChangeImpl();
+		return umlGeneralizationSetChange;
 	}
 
 	/**
