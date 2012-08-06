@@ -141,7 +141,7 @@ public class UMLAssociationChangeFactory extends AbstractDiffExtensionFactory {
 		if (isAddAssociation(referenceChange) || isDeleteAssociation(referenceChange)) {
 			association = (Association)referenceChange.getValue();
 		} else if (isChangeAssociation(referenceChange)) {
-			final EObject container = MatchUtil.getContainer(MatchUtil.getComparison(referenceChange),
+			final EObject container = MatchUtil.getContainer(referenceChange.getMatch().getComparison(),
 					referenceChange);
 			if (container instanceof Property) {
 				association = ((Property)container).getAssociation();
@@ -165,7 +165,7 @@ public class UMLAssociationChangeFactory extends AbstractDiffExtensionFactory {
 	}
 
 	private static boolean isChangeAssociation(Diff input) {
-		final EObject diffContainer = MatchUtil.getContainer(MatchUtil.getComparison(input),
+		final EObject diffContainer = MatchUtil.getContainer(input.getMatch().getComparison(),
 				(ReferenceChange)input);
 		return input instanceof ReferenceChange
 				&& (isAssociationPropertyChange(input, diffContainer) || isAssociationPropertyCardinalityChange(

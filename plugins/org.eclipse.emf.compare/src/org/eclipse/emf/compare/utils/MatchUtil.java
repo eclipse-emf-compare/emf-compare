@@ -11,9 +11,6 @@
 package org.eclipse.emf.compare.utils;
 
 import org.eclipse.emf.compare.AttributeChange;
-import org.eclipse.emf.compare.ComparePackage;
-import org.eclipse.emf.compare.AttributeChange;
-import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -129,41 +126,40 @@ public final class MatchUtil {
 		return result;
 	}
 
-	public static EObject getContainer(Comparison comparison, AttributeChange difference) {
-		EObject result = null;
-		EObject obj = difference.getMatch().getLeft();
-		if (obj != null) {
-			return obj;
+	/**
+	 * Get the business model object containing the given <code>difference</code>.
+	 * 
+	 * @param difference
+	 *            The detected difference for which we need the actually modified object.
+	 * @return The object which presents the given difference.
+	 */
+	public static EObject getContainer(AttributeChange difference) {
+		EObject result = difference.getMatch().getLeft();
+		if (result == null) {
+			result = difference.getMatch().getRight();
 		}
-		obj = difference.getMatch().getRight();
-		if (obj != null) {
-			return obj;
-		}
-		obj = difference.getMatch().getOrigin();
-		if (obj != null) {
-			return obj;
+		if (result == null) {
+			result = difference.getMatch().getOrigin();
 		}
 		return result;
 	}
 
+	/**
+	 * Get the business model object containing the given <code>difference</code>.
+	 * 
+	 * @param comparison
+	 *            The current comparison.
+	 * @param difference
+	 *            The detected difference for which we need the actually modified object.
+	 * @return The object which presents the given difference.
+	 */
 	public static EObject getContainer(Comparison comparison, Diff difference) {
+		EObject result = null;
 		if (difference instanceof AttributeChange) {
-			return getContainer(comparison, (AttributeChange)difference);
+			result = getContainer((AttributeChange)difference);
 		} else if (difference instanceof ReferenceChange) {
-			return getContainer(comparison, (ReferenceChange)difference);
+			result = getContainer(comparison, (ReferenceChange)difference);
 		}
-		return null;
-	}
-
-	public static Comparison getComparison(EObject comparisonObject) {
-		if (comparisonObject.eClass().getEPackage().equals(ComparePackage.eINSTANCE)) {
-			EObject container = comparisonObject.eContainer();
-			if (container instanceof Comparison) {
-				return (Comparison)container;
-			} else if (container != null) {
-				return getComparison(container);
-			}
-		}
-		return null;
+		return result;
 	}
 }

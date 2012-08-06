@@ -144,7 +144,7 @@ public class UMLExtendChangeFactory extends AbstractDiffExtensionFactory {
 		if (isAddExtend(referenceChange) || isDeleteExtend(referenceChange)) {
 			extend = (Extend)referenceChange.getValue();
 		} else if (isChangeExtend(referenceChange)) {
-			final EObject container = MatchUtil.getContainer(MatchUtil.getComparison(referenceChange),
+			final EObject container = MatchUtil.getContainer(referenceChange.getMatch().getComparison(),
 					referenceChange);
 			if (container instanceof Extend) {
 				extend = (Extend)container;

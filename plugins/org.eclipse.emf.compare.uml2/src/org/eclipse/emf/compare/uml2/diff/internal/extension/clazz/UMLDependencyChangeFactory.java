@@ -145,7 +145,7 @@ public class UMLDependencyChangeFactory extends AbstractDiffExtensionFactory {
 		if (isAddDependency(referenceChange) || isDeleteDependency(referenceChange)) {
 			dependency = (Dependency)referenceChange.getValue();
 		} else if (isChangeDependency(referenceChange)) {
-			final EObject container = MatchUtil.getContainer(MatchUtil.getComparison(referenceChange),
+			final EObject container = MatchUtil.getContainer(referenceChange.getMatch().getComparison(),
 					referenceChange);
 			if (container instanceof Dependency) {
 				dependency = (Dependency)container;

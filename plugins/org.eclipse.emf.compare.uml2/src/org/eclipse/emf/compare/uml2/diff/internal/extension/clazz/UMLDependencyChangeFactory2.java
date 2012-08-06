@@ -53,7 +53,7 @@ public class UMLDependencyChangeFactory2 extends UMLAbstractDiffExtensionFactory
 				&& (((ReferenceChange)input).getReference().equals(UMLPackage.Literals.DEPENDENCY__CLIENT) || ((ReferenceChange)input)
 						.getReference().equals(UMLPackage.Literals.DEPENDENCY__SUPPLIER))
 				&& getManagedConcreteDiscriminantKind().contains(
-						MatchUtil.getContainer(MatchUtil.getComparison(input), input).eClass());
+						MatchUtil.getContainer(input.getMatch().getComparison(), input).eClass());
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class UMLDependencyChangeFactory2 extends UMLAbstractDiffExtensionFactory
 		if (isRelatedToAnExtensionAdd(input) || isRelatedToAnExtensionDelete(input)) {
 			result = ((ReferenceChange)input).getValue();
 		} else if (isRelatedToAnExtensionChange(input)) {
-			final EObject container = MatchUtil.getContainer(MatchUtil.getComparison(input), input);
+			final EObject container = MatchUtil.getContainer(input.getMatch().getComparison(), input);
 			if (container instanceof Dependency) {
 				result = container;
 			}

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.diff.internal.extension.profile;
 
-import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -19,7 +18,6 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeReferenceChange;
 import org.eclipse.emf.compare.uml2diff.Uml2diffFactory;
-import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.uml2.uml.util.UMLUtil;
@@ -74,10 +72,11 @@ public class UMLStereotypeReferenceOrderChangeFactory extends AbstractDiffExtens
 
 	@Override
 	public Match getParentMatch(Diff input, EcoreUtil.CrossReferencer crossReferencer) {
-		final EObject right = ((AttributeChange)input).getMatch().getRight();
+		final Match match = input.getMatch();
+		final EObject right = match.getRight();
 		final EObject rightBase = UMLUtil.getBaseElement(right);
 
-		Comparison comparison = MatchUtil.getComparison(input);
+		Comparison comparison = match.getComparison();
 		return comparison.getMatch(rightBase);
 	}
 }

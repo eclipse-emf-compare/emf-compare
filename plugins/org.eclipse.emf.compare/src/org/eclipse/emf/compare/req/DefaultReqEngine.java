@@ -253,11 +253,12 @@ public class DefaultReqEngine implements IReqEngine {
 					crossReferencerModelObjectsToDiffs, outgoingRef, ComparePackage.eINSTANCE
 							.getReferenceChange_Value(), ReferenceChange.class);
 			for (ReferenceChange diff : requiredDifferences) {
-				if (!diff.getReference().isContainment()
-						&& (diff.getKind().equals(DifferenceKind.DELETE) || isChangeDelete(comparison, diff))
-						&& value.eClass().getEAllReferences().contains(diff.getReference())
-						&& MatchUtil.getContainer(comparison, diff).equals(value)) {
-					result.add(diff);
+				if (!diff.getReference().isContainment()) {
+					if ((diff.getKind().equals(DifferenceKind.DELETE) || isChangeDelete(comparison, diff))
+							&& MatchUtil.getContainer(comparison, diff).equals(value)
+							&& value.eClass().getEAllReferences().contains(diff.getReference())) {
+						result.add(diff);
+					}
 				}
 			}
 		}

@@ -60,9 +60,12 @@ public class FeatureFilter {
 				 * means in ecore (eGenericSuperTypes and eSuperTypes, EGenericType and eType...). As these
 				 * aren't even shown to the user, we wish to avoid detection of changes on them.
 				 */
-				return input != null && !input.isDerived() && !input.isContainer()
-						&& input.getEType() != EcorePackage.eINSTANCE.getEGenericType()
-						&& !input.isTransient();
+				if (input != null) {
+					return !input.isDerived() && !input.isContainer()
+							&& input.getEType() != EcorePackage.eINSTANCE.getEGenericType()
+							&& !input.isTransient();
+				}
+				return false;
 			}
 		});
 	}

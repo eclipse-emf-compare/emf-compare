@@ -389,11 +389,10 @@ public final class DiffUtil {
 			 * We'll insert it just after the LCS end : there cannot be any common element between the two
 			 * lists "after" the LCS since it would be part of the LCS itself.
 			 */
-
-			// First, find the LCS end in target
 			for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
 				final E targetElement = target.get(i);
 				if (equalityHelper.matchingValues(comparison, targetElement, lastLCS)) {
+					// We've reached the last element of the LCS in target. insert after it.
 					insertionIndex = i + 1;
 				}
 			}
@@ -434,7 +433,7 @@ public final class DiffUtil {
 			}
 		}
 
-		// We somehow failed to determine the inseration index. We'll insert at the very end
+		// We somehow failed to determine the insertion index. Insert at the very end.
 		if (insertionIndex == -1) {
 			insertionIndex = target.size();
 		}
