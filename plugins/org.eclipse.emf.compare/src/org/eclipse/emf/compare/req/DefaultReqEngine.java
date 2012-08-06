@@ -185,9 +185,11 @@ public class DefaultReqEngine implements IReqEngine {
 		Set<ReferenceChange> result = new HashSet<ReferenceChange>();
 		if (!sourceDifference.getReference().isMany()) {
 			EObject originContainer = MatchUtil.getOriginContainer(comparison, sourceDifference);
-			Object originValue = originContainer.eGet(sourceDifference.getReference());
-			if (originValue instanceof EObject) {
-				result = getDifferenceOnGivenObject((EObject)originValue, DifferenceKind.DELETE);
+			if (originContainer != null) {
+				Object originValue = originContainer.eGet(sourceDifference.getReference());
+				if (originValue instanceof EObject) {
+					result = getDifferenceOnGivenObject((EObject)originValue, DifferenceKind.DELETE);
+				}
 			}
 		}
 		return result;
@@ -244,7 +246,8 @@ public class DefaultReqEngine implements IReqEngine {
 		 * TODO: to study if this call is necessary or can be replaced by eCrossReferences().
 		 * ReferenceUtil.getReferencedEObjects(concernedObject, true); FeatureMap use case.
 		 */
-		List<EObject> outgoingReferences = value.eCrossReferences();
+		final List<EObject> outgoingReferences = value.eCrossReferences();
+
 		for (EObject outgoingRef : outgoingReferences) {
 			Set<ReferenceChange> requiredDifferences = ReferenceUtil.getCrossReferences(
 					crossReferencerModelObjectsToDiffs, outgoingRef, ComparePackage.eINSTANCE
@@ -252,9 +255,9 @@ public class DefaultReqEngine implements IReqEngine {
 			for (ReferenceChange diff : requiredDifferences) {
 				if (!diff.getReference().isContainment()
 						&& (diff.getKind().equals(DifferenceKind.DELETE) || isChangeDelete(comparison, diff))
-						&& value.eClass().getEAllReferences().contains(diff.getReference())) {
+						&& value.eClass().getEAllReferences().contains(diff.getReference())
+						&& MatchUtil.getContainer(comparison, diff).equals(value)) {
 					result.add(diff);
-					break;
 				}
 			}
 		}

@@ -61,7 +61,8 @@ public class FeatureFilter {
 				 * aren't even shown to the user, we wish to avoid detection of changes on them.
 				 */
 				return input != null && !input.isDerived() && !input.isContainer()
-						&& input.getEType() != EcorePackage.eINSTANCE.getEGenericType();
+						&& input.getEType() != EcorePackage.eINSTANCE.getEGenericType()
+						&& !input.isTransient();
 			}
 		});
 	}
@@ -91,7 +92,7 @@ public class FeatureFilter {
 		}
 		return Iterators.filter(clazz.getEAllAttributes().iterator(), new Predicate<EAttribute>() {
 			public boolean apply(EAttribute input) {
-				return input != null && !input.isDerived();
+				return input != null && !input.isDerived() && !input.isTransient();
 			}
 		});
 	}

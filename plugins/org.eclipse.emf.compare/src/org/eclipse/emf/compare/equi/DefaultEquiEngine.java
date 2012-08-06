@@ -82,7 +82,9 @@ public class DefaultEquiEngine implements IEquiEngine {
 	protected void checkForEquivalences(Comparison comparison, Diff difference) {
 		// If reference change on an opposite reference
 		if (difference instanceof ReferenceChange
-				&& ((ReferenceChange)difference).getReference().getEOpposite() != null) {
+				&& ((ReferenceChange)difference).getReference().getEOpposite() != null
+				&& !((ReferenceChange)difference).getReference().getEOpposite().isContainer()
+				&& !((ReferenceChange)difference).getReference().getEOpposite().isDerived()) {
 
 			ReferenceChange diff = (ReferenceChange)difference;
 

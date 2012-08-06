@@ -10,7 +10,12 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.utils;
 
+import org.eclipse.emf.compare.AttributeChange;
+import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.AttributeChange;
+import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
@@ -124,4 +129,41 @@ public final class MatchUtil {
 		return result;
 	}
 
+	public static EObject getContainer(Comparison comparison, AttributeChange difference) {
+		EObject result = null;
+		EObject obj = difference.getMatch().getLeft();
+		if (obj != null) {
+			return obj;
+		}
+		obj = difference.getMatch().getRight();
+		if (obj != null) {
+			return obj;
+		}
+		obj = difference.getMatch().getOrigin();
+		if (obj != null) {
+			return obj;
+		}
+		return result;
+	}
+
+	public static EObject getContainer(Comparison comparison, Diff difference) {
+		if (difference instanceof AttributeChange) {
+			return getContainer(comparison, (AttributeChange)difference);
+		} else if (difference instanceof ReferenceChange) {
+			return getContainer(comparison, (ReferenceChange)difference);
+		}
+		return null;
+	}
+
+	public static Comparison getComparison(EObject comparisonObject) {
+		if (comparisonObject.eClass().getEPackage().equals(ComparePackage.eINSTANCE)) {
+			EObject container = comparisonObject.eContainer();
+			if (container instanceof Comparison) {
+				return (Comparison)container;
+			} else if (container != null) {
+				return getComparison(container);
+			}
+		}
+		return null;
+	}
 }
