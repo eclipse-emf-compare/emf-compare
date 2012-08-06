@@ -13,7 +13,6 @@ package org.eclipse.emf.compare.uml2.diff.internal.extension.clazz;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2diff.UMLExtension;
 import org.eclipse.emf.compare.uml2diff.UMLSubstitutionChange;
@@ -45,15 +44,15 @@ public class UMLSubstitutionChangeFactory2 extends UMLDependencyChangeFactory2 {
 	}
 
 	@Override
-	protected boolean isRelatedToAnExtensionChange(Diff input) {
+	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
 		return super.isRelatedToAnExtensionChange(input)
-				|| ((ReferenceChange)input).getReference().equals(UMLPackage.Literals.SUBSTITUTION__CONTRACT);
+				|| input.getReference().equals(UMLPackage.Literals.SUBSTITUTION__CONTRACT);
 	}
 
 	@Override
-	protected boolean isRelatedToAnExtensionAdd(Diff input) {
+	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
 		return super.isRelatedToAnExtensionAdd(input)
-				&& ((Substitution)((ReferenceChange)input).getValue()).getContract() != null;
+				&& ((Substitution)input.getValue()).getContract() != null;
 	}
 
 	@Override

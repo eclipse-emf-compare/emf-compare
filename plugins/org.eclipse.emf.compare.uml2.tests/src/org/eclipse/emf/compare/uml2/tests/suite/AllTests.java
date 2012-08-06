@@ -16,6 +16,7 @@ import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.tests.suite.CompareTestSuite;
+import org.eclipse.emf.compare.uml2.tests.actionExecutionSpecification.AddActionExecutionSpecificationTest;
 import org.eclipse.emf.compare.uml2.tests.association.AddAssociation2Test;
 import org.eclipse.emf.compare.uml2.tests.association.AddAssociation3Test;
 import org.eclipse.emf.compare.uml2.tests.association.AddAssociationTest;
@@ -30,6 +31,7 @@ import org.eclipse.emf.compare.uml2.tests.dependency.ChangeDependencyTest;
 import org.eclipse.emf.compare.uml2.tests.dependency.ChangeUsageTest;
 import org.eclipse.emf.compare.uml2.tests.extend.AddExtendTest;
 import org.eclipse.emf.compare.uml2.tests.generalizationSet.AddGeneralizationSetTest;
+import org.eclipse.emf.compare.uml2.tests.message.AddMessageTest;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.UMLPackage;
@@ -49,7 +51,8 @@ import org.junit.runners.Suite.SuiteClasses;
 		AddAssociation2Test.class, ChangeAssociationTest.class, ChangeDependencyTest.class,
 		ChangeUsageTest.class, AddAssociation3Test.class, AddExtendTest.class,
 		AddGeneralizationSetTest.class, AddInterfaceRealizationTest.class, AddRealizationTest.class,
-		AddSubstitutionTest.class, AddUsageTest.class })
+		AddSubstitutionTest.class, AddUsageTest.class, AddMessageTest.class,
+		AddActionExecutionSpecificationTest.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.

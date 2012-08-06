@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_LxpeMJfvEeCbMPQymh8CnA" name="model">
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_LxpeMJfvEeCbMPQymh8CnA" name="model">
   <packagedElement xmi:type="uml:Interaction" xmi:id="_L0jBMJfvEeCbMPQymh8CnA" name="interaction0">
     <lifeline xmi:id="_ONoYcJfvEeCbMPQymh8CnA" name="Lifeline0"/>
     <lifeline xmi:id="_PLOCEJfvEeCbMPQymh8CnA" name="Lifeline1"/>

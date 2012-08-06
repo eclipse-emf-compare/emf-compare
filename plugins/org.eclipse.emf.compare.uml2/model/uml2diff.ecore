@@ -16,10 +16,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="UMLGeneralizationSetChange" eSuperTypes="#//UMLExtension">
     <eStructuralFeatures xsi:type="ecore:EReference" name="generalizationSet" eType="ecore:EClass platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//GeneralizationSet"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLMessageChange" eSuperTypes="#//UMLExtension"/>
   <eClassifiers xsi:type="ecore:EClass" name="UMLExecutionSpecificationChange" eSuperTypes="#//UMLExtension"/>
   <eClassifiers xsi:type="ecore:EClass" name="UMLDestructionEventChange" eSuperTypes="#//UMLExtension"/>
   <eClassifiers xsi:type="ecore:EClass" name="UMLIntervalConstraintChange" eSuperTypes="#//UMLExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLMessageChange" eSuperTypes="#//UMLExtension"/>
   <eClassifiers xsi:type="ecore:EClass" name="UMLStereotypePropertyChange" eSuperTypes="#//UMLExtension">
     <eStructuralFeatures xsi:type="ecore:EReference" name="stereotype" eType="ecore:EClass platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//Stereotype"/>
   </eClassifiers>

@@ -22,6 +22,8 @@ import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLDependencyC
 import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLGeneralizationSetChangeFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLInterfaceRealizationChangeFactory2;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLSubstitutionChangeFactory2;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.sequence.UMLExecutionSpecificationChangeFactory2;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.sequence.UMLMessageChangeFactory2;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.usecase.UMLExtendChangeFactory;
 
 /**
@@ -54,6 +56,8 @@ public final class DiffExtensionFactoryRegistry {
 		factories.add(new UMLSubstitutionChangeFactory2());
 		factories.add(new UMLGeneralizationSetChangeFactory());
 		factories.add(new UMLExtendChangeFactory());
+		factories.add(new UMLMessageChangeFactory2());
+		factories.add(new UMLExecutionSpecificationChangeFactory2());
 
 		for (IDiffExtensionFactory iDiffExtensionFactory : factories) {
 			dataset.put(iDiffExtensionFactory.getExtensionKind(), iDiffExtensionFactory);

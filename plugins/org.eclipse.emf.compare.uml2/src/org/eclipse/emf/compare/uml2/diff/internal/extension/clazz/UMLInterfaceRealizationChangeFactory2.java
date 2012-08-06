@@ -13,7 +13,6 @@ package org.eclipse.emf.compare.uml2.diff.internal.extension.clazz;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2diff.UMLExtension;
 import org.eclipse.emf.compare.uml2diff.UMLInterfaceRealizationChange;
@@ -45,16 +44,15 @@ public class UMLInterfaceRealizationChangeFactory2 extends UMLDependencyChangeFa
 	}
 
 	@Override
-	protected boolean isRelatedToAnExtensionChange(Diff input) {
+	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
 		return super.isRelatedToAnExtensionChange(input)
-				|| ((ReferenceChange)input).getReference().equals(
-						UMLPackage.Literals.INTERFACE_REALIZATION__CONTRACT);
+				|| input.getReference().equals(UMLPackage.Literals.INTERFACE_REALIZATION__CONTRACT);
 	}
 
 	@Override
-	protected boolean isRelatedToAnExtensionAdd(Diff input) {
+	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
 		return super.isRelatedToAnExtensionAdd(input)
-				&& ((InterfaceRealization)((ReferenceChange)input).getValue()).getContract() != null;
+				&& ((InterfaceRealization)input.getValue()).getContract() != null;
 	}
 
 	@Override

@@ -56,8 +56,7 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#handles(org.eclipse.emf.compare.diff.metamodel.DiffElement)
 	 */
 	public boolean handles(Diff input) {
-		return (isRelatedToAnExtensionChange(input) || isRelatedToAnExtensionAdd(input) || isRelatedToAnExtensionDelete(input))
-				&& !isExtensionAlreadyExist(input);
+		return (getRelatedExtensionKind(input) != null) && !isExtensionAlreadyExist(input);
 	}
 
 	/**
@@ -73,7 +72,7 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 		final EObject discriminant = getDiscriminantFromDiff(input);
 
 		if (discriminant != null) {
-			if (isRelatedToAnExtensionDelete(input)) {
+			if (getRelatedExtensionKind(input) == DifferenceKind.DELETE) {
 				ret.getRefinedBy().add(input);
 			} else {
 				fillRefiningDifferences(crossReferencer, ret, discriminant);
@@ -81,13 +80,7 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 		}
 
 		ret.setDiscriminant(discriminant);
-		if (isRelatedToAnExtensionAdd(input)) {
-			ret.setKind(DifferenceKind.ADD);
-		} else if (isRelatedToAnExtensionDelete(input)) {
-			ret.setKind(DifferenceKind.DELETE);
-		} else if (isRelatedToAnExtensionChange(input)) {
-			ret.setKind(DifferenceKind.CHANGE);
-		}
+		ret.setKind(getRelatedExtensionKind(input));
 
 		registerUMLExtension(crossReferencer, ret, Uml2diffPackage.Literals.UML_EXTENSION__DISCRIMINANT,
 				discriminant);
@@ -123,7 +116,7 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 	protected abstract UMLExtension createExtension();
 
 	protected boolean isPartOfRefiningDifference(Diff diff) {
-		return diff instanceof ReferenceChange && isRelatedToAnExtensionChange(diff);
+		return diff instanceof ReferenceChange && getRelatedExtensionKind(diff) == DifferenceKind.CHANGE;
 	}
 
 	private boolean isExtensionAlreadyExist(Diff input) {
@@ -141,10 +134,12 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 
 	protected abstract List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant);
 
-	protected abstract boolean isRelatedToAnExtensionChange(Diff input);
+	protected abstract DifferenceKind getRelatedExtensionKind(Diff input);
 
-	protected abstract boolean isRelatedToAnExtensionAdd(Diff input);
-
-	protected abstract boolean isRelatedToAnExtensionDelete(Diff input);
+	// protected abstract boolean isRelatedToAnExtensionChange(Diff input);
+	//
+	// protected abstract boolean isRelatedToAnExtensionAdd(Diff input);
+	//
+	// protected abstract boolean isRelatedToAnExtensionDelete(Diff input);
 
 }
