@@ -10,8 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.diff.internal.extension;
 
-import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
-import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.uml2diff.UMLExtension;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -21,10 +22,10 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * <p>
  * A factory must be able to say in which parent a {@link AbstractDiffExtension} must be attached if it
  * handles the {@link DiffElement} from which it has been {@link #create(DiffElement) created}.
- * 
- * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public interface IDiffExtensionFactory {
+
+	Class<? extends UMLExtension> getExtensionKind();
 
 	/**
 	 * Returns true if this factory handles the given kind of DiffElement, i.e., if it can create an
@@ -37,7 +38,7 @@ public interface IDiffExtensionFactory {
 	 *            the element to test
 	 * @return true if this factory handles the given input, false otherwise.
 	 */
-	boolean handles(DiffElement input);
+	boolean handles(Diff input);
 
 	/**
 	 * Creates and returns an {@link AbstractDiffExtension} from the given {@link DiffElement}. The returned
@@ -49,7 +50,7 @@ public interface IDiffExtensionFactory {
 	 *            The cross referencer.
 	 * @return The difference extension.
 	 */
-	AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer);
+	Diff create(Diff input, EcoreUtil.CrossReferencer crossReferencer);
 
 	/**
 	 * Returns the {@link DiffElement} in which the {@link #create(DiffElement) created}
@@ -62,7 +63,7 @@ public interface IDiffExtensionFactory {
 	 *            The cross referencer.
 	 * @return The difference extension.
 	 */
-	DiffElement getParentDiff(DiffElement input, EcoreUtil.CrossReferencer crossReferencer);
+	Match getParentMatch(Diff input, EcoreUtil.CrossReferencer crossReferencer);
 
 	/**
 	 * Sets the required link of the difference extension created by the related factory.
@@ -72,5 +73,5 @@ public interface IDiffExtensionFactory {
 	 * @param crossReferencer
 	 *            The DiffModel cross-referencer.
 	 */
-	void fillRequiredDifferences(AbstractDiffExtension diff, EcoreUtil.CrossReferencer crossReferencer);
+	void fillRequiredDifferences(UMLExtension extension, EcoreUtil.CrossReferencer crossReferencer);
 }

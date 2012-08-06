@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2012 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  */
 package org.eclipse.emf.compare.uml2diff;
 
+import org.eclipse.emf.compare.Diff;
 
 /**
  * <!-- begin-user-doc -->
@@ -17,10 +18,9 @@ package org.eclipse.emf.compare.uml2diff;
  * <!-- end-user-doc -->
  *
  *
- * @see org.eclipse.emf.compare.uml2diff.UML2DiffPackage#getUMLExecutionSpecificationChange()
- * @model interface="true" abstract="true"
+ * @see org.eclipse.emf.compare.uml2diff.Uml2diffPackage#getUMLExecutionSpecificationChange()
+ * @model
  * @generated
  */
-public interface UMLExecutionSpecificationChange extends UMLDiffExtension {
-	// UMLExecutionSpecificationChange
-} 
+public interface UMLExecutionSpecificationChange extends UMLExtension {
+} // UMLExecutionSpecificationChange

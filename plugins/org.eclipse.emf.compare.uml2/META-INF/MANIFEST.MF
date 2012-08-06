@@ -9,21 +9,17 @@ Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
- org.eclipse.emf.compare.diff;visibility:=reexport,
- org.eclipse.emf.compare.match;visibility:=reexport,
  org.eclipse.uml2.uml,
- org.eclipse.emf.compare
+ org.eclipse.emf.compare,
+ org.eclipse.emf.compare.ide
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.emf.compare.uml2,
  org.eclipse.emf.compare.uml2.diff,
  org.eclipse.emf.compare.uml2.diff.internal.extension;x-internal:=true,
  org.eclipse.emf.compare.uml2.diff.internal.extension.clazz;x-internal:=true,
- org.eclipse.emf.compare.uml2.diff.internal.extension.element;x-internal:=true,
  org.eclipse.emf.compare.uml2.diff.internal.extension.profile;x-internal:=true,
  org.eclipse.emf.compare.uml2.diff.internal.extension.sequence;x-internal:=true,
  org.eclipse.emf.compare.uml2.diff.internal.extension.usecase;x-internal:=true,
- org.eclipse.emf.compare.uml2.diff.internal.merger;x-internal:=true,
- org.eclipse.emf.compare.uml2.match,
  org.eclipse.emf.compare.uml2diff,
  org.eclipse.emf.compare.uml2diff.impl,
  org.eclipse.emf.compare.uml2diff.util

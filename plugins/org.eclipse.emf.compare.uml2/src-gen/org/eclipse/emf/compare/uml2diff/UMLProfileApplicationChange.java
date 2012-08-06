@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2012 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,9 @@
  *     Obeo - initial API and implementation
  */
 package org.eclipse.emf.compare.uml2diff;
+
+import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.Diff;
 
 import org.eclipse.uml2.uml.Profile;
 
@@ -24,11 +27,11 @@ import org.eclipse.uml2.uml.Profile;
  * </ul>
  * </p>
  *
- * @see org.eclipse.emf.compare.uml2diff.UML2DiffPackage#getUMLProfileApplicationChange()
- * @model interface="true" abstract="true"
+ * @see org.eclipse.emf.compare.uml2diff.Uml2diffPackage#getUMLProfileApplicationChange()
+ * @model
  * @generated
  */
-public interface UMLProfileApplicationChange extends UMLDiffExtension {
+public interface UMLProfileApplicationChange extends ReferenceChange, UMLExtension {
 	/**
 	 * Returns the value of the '<em><b>Profile</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -39,7 +42,7 @@ public interface UMLProfileApplicationChange extends UMLDiffExtension {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Profile</em>' reference.
 	 * @see #setProfile(Profile)
-	 * @see org.eclipse.emf.compare.uml2diff.UML2DiffPackage#getUMLProfileApplicationChange_Profile()
+	 * @see org.eclipse.emf.compare.uml2diff.Uml2diffPackage#getUMLProfileApplicationChange_Profile()
 	 * @model
 	 * @generated
 	 */

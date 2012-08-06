@@ -13,10 +13,11 @@ package org.eclipse.emf.compare.uml2.diff.internal.extension.profile;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
-import org.eclipse.emf.compare.diff.metamodel.DiffElement;
-import org.eclipse.emf.compare.uml2.diff.UML2DiffEngine;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -41,8 +42,7 @@ public abstract class AbstractUMLApplicationChangeFactory extends AbstractDiffEx
 	 * @param engine
 	 *            UML2DiffEngine
 	 */
-	public AbstractUMLApplicationChangeFactory(UML2DiffEngine engine) {
-		super(engine);
+	public AbstractUMLApplicationChangeFactory() {
 	}
 
 	/**
@@ -84,19 +84,15 @@ public abstract class AbstractUMLApplicationChangeFactory extends AbstractDiffEx
 	 *            The EClass of the expected difference.
 	 * @return The list of differences on stereotypes.
 	 */
-	protected List<DiffElement> getStereotypeDiffs(ProfileApplication profileApplication,
+	protected List<Diff> getStereotypeDiffs(ProfileApplication profileApplication,
 			EcoreUtil.CrossReferencer crossReferencer, EReference diffSide, EClass expectedDiff) {
-		final List<DiffElement> result = new ArrayList<DiffElement>();
+		final List<Diff> result = new ArrayList<Diff>();
 		final Iterator<EObject> it = getStereotypeApplications(profileApplication).iterator();
 		while (it.hasNext()) {
 			final EObject st = it.next();
 			final Element elt = UMLUtil.getBaseElement(st);
-			final List<DiffElement> findCrossReferences = findCrossReferences(elt, diffSide, crossReferencer);
-			for (DiffElement diffElement : findCrossReferences) {
-				if (expectedDiff.isInstance(diffElement)) {
-					result.add(diffElement);
-				}
-			}
+			result.addAll((Set<Diff>)ReferenceUtil.getCrossReferences(crossReferencer, elt, diffSide,
+					expectedDiff.getClass()));
 		}
 		return result;
 	}
@@ -114,16 +110,14 @@ public abstract class AbstractUMLApplicationChangeFactory extends AbstractDiffEx
 	 *            The EClass of the expected difference.
 	 * @return The difference on profile.
 	 */
-	protected DiffElement getProfileDiff(EObject stereotypeApplication, CrossReferencer crossReferencer,
+	protected Diff getProfileDiff(EObject stereotypeApplication, CrossReferencer crossReferencer,
 			EReference diffSide, EClass expectedDiff) {
 		final ProfileApplication profileApplication = getProfileApplication(stereotypeApplication);
 		if (profileApplication != null) {
-			final List<DiffElement> findCrossReferences = findCrossReferences(profileApplication, diffSide,
-					crossReferencer);
-			for (DiffElement diffElement : findCrossReferences) {
-				if (expectedDiff.isInstance(diffElement)) {
-					return diffElement;
-				}
+			final Set<Diff> findCrossReferences = (Set<Diff>)ReferenceUtil.getCrossReferences(
+					crossReferencer, profileApplication, diffSide, expectedDiff.getClass());
+			for (Diff diffElement : findCrossReferences) {
+				return diffElement;
 			}
 		}
 		return null;

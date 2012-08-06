@@ -12,12 +12,10 @@ Export-Package: org.eclipse.emf.compare.uml2diff.provider
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare.uml2;visibility:=reexport,
  org.eclipse.emf.edit;visibility:=reexport,
- org.eclipse.emf.compare.diff;visibility:=reexport,
- org.eclipse.emf.compare.diff.edit;visibility:=reexport,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.ecore.edit;visibility:=reexport,
- org.eclipse.emf.compare.match;visibility:=reexport,
  org.eclipse.uml2.uml,
  org.eclipse.emf.compare,
  org.eclipse.uml2.uml.edit
 Bundle-ActivationPolicy: lazy
+Import-Package: org.eclipse.emf.compare.provider

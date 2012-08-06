@@ -16,27 +16,18 @@ Contributors:
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
-            uri="http://www.eclipse.org/emf/compare/diff/uml2/1.0"
-            class="org.eclipse.emf.compare.uml2diff.UML2DiffPackage"
+            uri="http://www.eclipse.org/emf/compare/diff/uml2/2.0"
+            class="org.eclipse.emf.compare.uml2diff.Uml2diffPackage"
             genModel="model/uml2diff.genmodel"/>
    </extension>
    <extension
-         point="org.eclipse.emf.compare.diff.engine">
-      <diffengine
-            engineClass="org.eclipse.emf.compare.uml2.diff.UML2DiffEngine"
-            fileExtension="uml"
-            label="UML2 Diff Engine"
-            priority="low">
-      </diffengine>
-   </extension>
-   <extension
-         point="org.eclipse.emf.compare.match.engine">
-      <matchengine
-            engineClass="org.eclipse.emf.compare.uml2.match.UML2MatchEngine"
-            fileExtension="uml"
-            label="UML2 Match Engine"
-            priority="highest">
-      </matchengine>
+         point="org.eclipse.emf.compare.postProcessor">
+      <postProcessor
+            class="org.eclipse.emf.compare.uml2.diff.UMLDiffExtensionPostProcessor">
+         <nsURI
+               value="http://www.eclipse.org/uml2/4.0.0/UML">
+         </nsURI>
+      </postProcessor>
    </extension>
 
 </plugin>

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2012 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,9 @@
  *     Obeo - initial API and implementation
  */
 package org.eclipse.emf.compare.uml2diff;
+
+import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.Diff;
 
 import org.eclipse.uml2.uml.Stereotype;
 
@@ -24,11 +27,11 @@ import org.eclipse.uml2.uml.Stereotype;
  * </ul>
  * </p>
  *
- * @see org.eclipse.emf.compare.uml2diff.UML2DiffPackage#getUMLStereotypeApplicationChange()
- * @model interface="true" abstract="true"
+ * @see org.eclipse.emf.compare.uml2diff.Uml2diffPackage#getUMLStereotypeApplicationChange()
+ * @model
  * @generated
  */
-public interface UMLStereotypeApplicationChange extends UMLDiffExtension {
+public interface UMLStereotypeApplicationChange extends ReferenceChange, UMLExtension {
 	/**
 	 * Returns the value of the '<em><b>Stereotype</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -39,7 +42,7 @@ public interface UMLStereotypeApplicationChange extends UMLDiffExtension {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Stereotype</em>' reference.
 	 * @see #setStereotype(Stereotype)
-	 * @see org.eclipse.emf.compare.uml2diff.UML2DiffPackage#getUMLStereotypeApplicationChange_Stereotype()
+	 * @see org.eclipse.emf.compare.uml2diff.Uml2diffPackage#getUMLStereotypeApplicationChange_Stereotype()
 	 * @model
 	 * @generated
 	 */

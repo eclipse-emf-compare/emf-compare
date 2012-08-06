@@ -1,90 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="uml2diff"
-    nsURI="http://www.eclipse.org/emf/compare/diff/uml2/1.0" nsPrefix="uml2diff">
-  <eClassifiers xsi:type="ecore:EClass" name="UMLDiffExtension" abstract="true" interface="true"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//DiffElement platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//AbstractDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLAssociationChange" abstract="true"
-      interface="true" eSuperTypes="#//UMLDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLAssociationChangeLeftTarget" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeLeftTarget #//UMLAssociationChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLAssociationChangeRightTarget" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeRightTarget #//UMLAssociationChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLAssociationBranchChange" abstract="true"
-      interface="true" eSuperTypes="#//UMLDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLAssociationBranchChangeLeftTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeLeftTarget #//UMLAssociationBranchChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLAssociationBranchChangeRightTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeRightTarget #//UMLAssociationBranchChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLDependencyBranchChange" abstract="true"
-      interface="true" eSuperTypes="#//UMLDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLDependencyBranchChangeLeftTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ReferenceChangeLeftTarget #//UMLDependencyBranchChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLDependencyBranchChangeRightTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ReferenceChangeRightTarget #//UMLDependencyBranchChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLGeneralizationSetChange" abstract="true"
-      interface="true" eSuperTypes="#//UMLDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLGeneralizationSetChangeLeftTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeLeftTarget #//UMLGeneralizationSetChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLGeneralizationSetChangeRightTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeRightTarget #//UMLGeneralizationSetChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLDependencyChange" abstract="true"
-      interface="true" eSuperTypes="#//UMLDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLDependencyChangeLeftTarget" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeLeftTarget #//UMLDependencyChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLDependencyChangeRightTarget" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeRightTarget #//UMLDependencyChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLExtendChange" abstract="true" interface="true"
-      eSuperTypes="#//UMLDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLExtendChangeLeftTarget" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeLeftTarget #//UMLExtendChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLExtendChangeRightTarget" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeRightTarget #//UMLExtendChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLExecutionSpecificationChange" abstract="true"
-      interface="true" eSuperTypes="#//UMLDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLExecutionSpecificationChangeLeftTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeLeftTarget #//UMLExecutionSpecificationChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLExecutionSpecificationChangeRightTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeRightTarget #//UMLExecutionSpecificationChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLDestructionEventChange" abstract="true"
-      interface="true" eSuperTypes="#//UMLDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLDestructionEventChangeLeftTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeLeftTarget #//UMLDestructionEventChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLDestructionEventChangeRightTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeRightTarget #//UMLDestructionEventChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLIntervalConstraintChange" abstract="true"
-      interface="true" eSuperTypes="#//UMLDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLIntervalConstraintChangeLeftTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeLeftTarget #//UMLIntervalConstraintChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLIntervalConstraintChangeRightTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeRightTarget #//UMLIntervalConstraintChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLMessageChange" abstract="true" interface="true"
-      eSuperTypes="#//UMLDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLMessageChangeLeftTarget" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeLeftTarget #//UMLMessageChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLMessageChangeRightTarget" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeRightTarget #//UMLMessageChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLStereotypePropertyChange" abstract="true"
-      interface="true" eSuperTypes="#//UMLDiffExtension">
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="uml2diff" nsURI="http://www.eclipse.org/emf/compare/diff/uml2/2.0"
+    nsPrefix="uml2diff">
+  <eClassifiers xsi:type="ecore:EClass" name="UMLAssociationChange" eSuperTypes="#//UMLExtension">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="association" eType="ecore:EClass platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//Association"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLDependencyChange" eSuperTypes="#//UMLExtension">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependency" eType="ecore:EClass platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//Dependency"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLInterfaceRealizationChange" eSuperTypes="#//UMLExtension"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLSubstitutionChange" eSuperTypes="#//UMLExtension"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLExtendChange" eSuperTypes="#//UMLExtension">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extend" eType="ecore:EClass platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//Extend"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLGeneralizationSetChange" eSuperTypes="#//UMLExtension">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="generalizationSet" eType="ecore:EClass platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//GeneralizationSet"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLExecutionSpecificationChange" eSuperTypes="#//UMLExtension"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLDestructionEventChange" eSuperTypes="#//UMLExtension"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLIntervalConstraintChange" eSuperTypes="#//UMLExtension"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLMessageChange" eSuperTypes="#//UMLExtension"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLStereotypePropertyChange" eSuperTypes="#//UMLExtension">
     <eStructuralFeatures xsi:type="ecore:EReference" name="stereotype" eType="ecore:EClass platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//Stereotype"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLStereotypeAttributeChangeLeftTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//AttributeChangeLeftTarget #//UMLStereotypePropertyChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLStereotypeAttributeChangeRightTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//AttributeChangeRightTarget #//UMLStereotypePropertyChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLStereotypeUpdateAttribute" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateAttribute #//UMLStereotypePropertyChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLStereotypeApplicationChange" abstract="true"
-      interface="true" eSuperTypes="#//UMLDiffExtension">
+  <eClassifiers xsi:type="ecore:EClass" name="UMLStereotypeApplicationChange" eSuperTypes="platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//ReferenceChange #//UMLExtension">
     <eStructuralFeatures xsi:type="ecore:EReference" name="stereotype" eType="ecore:EClass platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//Stereotype"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLStereotypeApplicationAddition" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateModelElement #//UMLStereotypeApplicationChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLStereotypeApplicationRemoval" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateModelElement #//UMLStereotypeApplicationChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLStereotypeReferenceChangeLeftTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ReferenceChangeLeftTarget #//UMLStereotypePropertyChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLStereotypeReferenceChangeRightTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ReferenceChangeRightTarget #//UMLStereotypePropertyChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLStereotypeUpdateReference" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateReference #//UMLStereotypePropertyChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLStereotypeReferenceOrderChange" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ReferenceOrderChange #//UMLStereotypePropertyChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLProfileApplicationChange" abstract="true"
-      interface="true" eSuperTypes="#//UMLDiffExtension">
+  <eClassifiers xsi:type="ecore:EClass" name="UMLStereotypeReferenceChange" eSuperTypes="#//UMLExtension"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLProfileApplicationChange" eSuperTypes="platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//ReferenceChange #//UMLExtension">
     <eStructuralFeatures xsi:type="ecore:EReference" name="profile" eType="ecore:EClass platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//Profile"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLProfileApplicationAddition" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateModelElement #//UMLProfileApplicationChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLProfileApplicationRemoval" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateModelElement #//UMLProfileApplicationChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLElementChange" abstract="true" eSuperTypes="#//UMLDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLElementChangeLeftTarget" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeLeftTarget #//UMLElementChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UMLElementChangeRightTarget" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeRightTarget #//UMLElementChange"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLExtension" abstract="true" eSuperTypes="platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//Diff">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="discriminant" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+  </eClassifiers>
 </ecore:EPackage>

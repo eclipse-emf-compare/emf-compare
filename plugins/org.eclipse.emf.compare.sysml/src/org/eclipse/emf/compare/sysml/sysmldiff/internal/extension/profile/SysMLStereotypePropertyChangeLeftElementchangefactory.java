@@ -21,7 +21,7 @@ import org.eclipse.emf.compare.sysml.sysmldiff.SysMLStereotypePropertyChangeLeft
 import org.eclipse.emf.compare.sysml.sysmldiff.SysMLdiffFactory;
 import org.eclipse.emf.compare.sysml.utils.Utils;
 import org.eclipse.emf.compare.uml2.diff.UML2DiffEngine;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.profile.UMLStereotypeAttributeChangeLeftTargetFactory;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.profile.UMLStereotypePropertyChangeFactory;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeAttributeChangeLeftTarget;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -35,7 +35,7 @@ import org.eclipse.uml2.uml.util.UMLUtil;
  * @author Arthur Daussy <a href="mailto:arthur.daussy@atos.net">arthur.daussy@atos.net</a>
  * @since 1.3
  */
-public class SysMLStereotypePropertyChangeLeftElementchangefactory extends UMLStereotypeAttributeChangeLeftTargetFactory {
+public class SysMLStereotypePropertyChangeLeftElementchangefactory extends UMLStereotypePropertyChangeFactory {
 	/**
 	 * Constructor.
 	 * 
