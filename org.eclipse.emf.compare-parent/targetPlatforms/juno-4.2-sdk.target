@@ -12,6 +12,7 @@
 <unit id="org.eclipse.jdt.feature.group" version="3.8.0.v20120525-1249-8-8nFqlFNOfwKDRGz-pXLdGxEM83"/>
 <unit id="org.eclipse.jdt.source.feature.group" version="3.8.0.v20120525-1249-8-8nFqlFNOfwKDRGz-pXLdGxEM83"/>
 <unit id="org.eclipse.emf.sdk.feature.group" version="2.8.0.v20120608-0554"/>
+<unit id="org.eclipse.uml2.sdk.feature.group" version="4.0.0.v20120604-0919"/>
 <unit id="org.junit" version="4.10.0.v4_10_0_v20120426-0900"/>
 <repository location="http://download.eclipse.org/releases/juno/"/>
 </location>

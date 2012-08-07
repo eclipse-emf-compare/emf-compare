@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.uml2diff.UMLExtension;
-import org.eclipse.emf.compare.uml2diff.UMLSubstitutionChange;
-import org.eclipse.emf.compare.uml2diff.Uml2diffFactory;
+import org.eclipse.emf.compare.uml2.SubstitutionChange;
+import org.eclipse.emf.compare.uml2.UMLCompareFactory;
+import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.Substitution;
@@ -25,13 +25,13 @@ import org.eclipse.uml2.uml.UMLPackage;
 public class UMLSubstitutionChangeFactory extends UMLDependencyChangeFactory {
 
 	@Override
-	public Class<? extends UMLExtension> getExtensionKind() {
-		return UMLSubstitutionChange.class;
+	public Class<? extends UMLDiff> getExtensionKind() {
+		return SubstitutionChange.class;
 	}
 
 	@Override
-	protected UMLExtension createExtension() {
-		return Uml2diffFactory.eINSTANCE.createUMLSubstitutionChange();
+	protected UMLDiff createExtension() {
+		return UMLCompareFactory.eINSTANCE.createSubstitutionChange();
 	}
 
 	@Override

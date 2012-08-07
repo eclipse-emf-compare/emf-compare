@@ -8,9 +8,9 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.extension.IPostProcessor;
+import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.DiffExtensionFactoryRegistry;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory;
-import org.eclipse.emf.compare.uml2diff.UMLExtension;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
 
@@ -45,12 +45,12 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 		}
 
 		// Filling of the requirements link of the UML difference extensions
-		for (Diff umlExtension : comparison.getDifferences()) {
-			if (umlExtension instanceof UMLExtension) {
-				final Class<?> classDiffElement = umlExtension.eClass().getInstanceClass();
+		for (Diff UMLDiff : comparison.getDifferences()) {
+			if (UMLDiff instanceof UMLDiff) {
+				final Class<?> classDiffElement = UMLDiff.eClass().getInstanceClass();
 				final IDiffExtensionFactory diffFactory = mapUml2ExtensionFactories.get(classDiffElement);
 				if (diffFactory != null) {
-					diffFactory.fillRequiredDifferences((UMLExtension)umlExtension, crossReferencer);
+					diffFactory.fillRequiredDifferences((UMLDiff)UMLDiff, crossReferencer);
 				}
 			}
 		}

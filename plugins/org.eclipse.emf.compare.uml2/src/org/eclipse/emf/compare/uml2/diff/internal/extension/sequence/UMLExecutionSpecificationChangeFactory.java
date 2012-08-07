@@ -16,10 +16,10 @@ import java.util.List;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.uml2.ExecutionSpecificationChange;
+import org.eclipse.emf.compare.uml2.UMLCompareFactory;
+import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.UMLAbstractDiffExtensionFactory;
-import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChange;
-import org.eclipse.emf.compare.uml2diff.UMLExtension;
-import org.eclipse.emf.compare.uml2diff.Uml2diffFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -32,13 +32,13 @@ import org.eclipse.uml2.uml.UMLPackage;
  */
 public class UMLExecutionSpecificationChangeFactory extends UMLAbstractDiffExtensionFactory {
 
-	public Class<? extends UMLExtension> getExtensionKind() {
-		return UMLExecutionSpecificationChange.class;
+	public Class<? extends UMLDiff> getExtensionKind() {
+		return ExecutionSpecificationChange.class;
 	}
 
 	@Override
-	protected UMLExtension createExtension() {
-		return Uml2diffFactory.eINSTANCE.createUMLExecutionSpecificationChange();
+	protected UMLDiff createExtension() {
+		return UMLCompareFactory.eINSTANCE.createExecutionSpecificationChange();
 	}
 
 	@Override

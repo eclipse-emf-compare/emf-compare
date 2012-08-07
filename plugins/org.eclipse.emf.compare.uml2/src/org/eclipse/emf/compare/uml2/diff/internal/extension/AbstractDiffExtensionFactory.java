@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.uml2diff.UMLExtension;
+import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
@@ -223,14 +223,14 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 		beRefinedByCrossReferences(lookup, inFeature, refinedExtension, alwaysTrue(), crossReferencer);
 	}
 
-	protected void registerUMLExtension(EcoreUtil.CrossReferencer crossReferencer, final Diff umlExtension,
-			final EStructuralFeature umlExtensionFeature, final EObject umlExtensionValue) {
-		Collection<Setting> settings = crossReferencer.get(umlExtensionValue);
+	protected void registerUMLDiff(EcoreUtil.CrossReferencer crossReferencer, final Diff UMLDiff,
+			final EStructuralFeature UMLDiffFeature, final EObject UMLDiffValue) {
+		Collection<Setting> settings = crossReferencer.get(UMLDiffValue);
 		if (settings == null) {
 			settings = new ArrayList<Setting>();
-			crossReferencer.put(umlExtensionValue, settings);
+			crossReferencer.put(UMLDiffValue, settings);
 		}
-		settings.add(((InternalEObject)umlExtension).eSetting(umlExtensionFeature));
+		settings.add(((InternalEObject)UMLDiff).eSetting(UMLDiffFeature));
 	}
 
 	protected EObject eContainer(EObject obj, Class<? extends EObject> clazz) {
@@ -275,7 +275,7 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#fillRequiredDifferences(org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension,
 	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
 	 */
-	public void fillRequiredDifferences(UMLExtension extension, EcoreUtil.CrossReferencer crossReferencer) {
+	public void fillRequiredDifferences(UMLDiff extension, EcoreUtil.CrossReferencer crossReferencer) {
 		// Default behavior
 	}
 

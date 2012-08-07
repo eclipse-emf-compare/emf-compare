@@ -20,9 +20,9 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.uml2.SubstitutionChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.dependency.data.DependencyInputData;
-import org.eclipse.emf.compare.uml2diff.UMLSubstitutionChange;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
@@ -107,14 +107,14 @@ public class AddSubstitutionTest extends AbstractTest {
 		assertNotNull(addContractInInterfaceRealization);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(2), count(differences, instanceOf(UMLSubstitutionChange.class)));
+		assertSame(Integer.valueOf(2), count(differences, instanceOf(SubstitutionChange.class)));
 		Diff addUMLDependency = null;
 		Diff changeUMLDependency = Iterators.find(differences.iterator(), and(
-				instanceOf(UMLSubstitutionChange.class), ofKind(DifferenceKind.CHANGE)));
+				instanceOf(SubstitutionChange.class), ofKind(DifferenceKind.CHANGE)));
 		assertNotNull(changeUMLDependency);
 		if (kind.equals(TestKind.ADD)) {
 			addUMLDependency = Iterators.find(differences.iterator(), and(
-					instanceOf(UMLSubstitutionChange.class), ofKind(DifferenceKind.ADD)));
+					instanceOf(SubstitutionChange.class), ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLDependency);
 			assertSame(Integer.valueOf(3), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
 			assertTrue(addUMLDependency.getRefinedBy().contains(addClientInInterfaceRealization));
@@ -126,7 +126,7 @@ public class AddSubstitutionTest extends AbstractTest {
 			assertTrue(changeUMLDependency.getRefinedBy().contains(addContractInInterfaceRealization));
 		} else {
 			addUMLDependency = Iterators.find(differences.iterator(), and(
-					instanceOf(UMLSubstitutionChange.class), ofKind(DifferenceKind.DELETE)));
+					instanceOf(SubstitutionChange.class), ofKind(DifferenceKind.DELETE)));
 			assertNotNull(addUMLDependency);
 			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
 			assertTrue(addUMLDependency.getRefinedBy().contains(addInterfaceRealization));

@@ -14,8 +14,8 @@ import java.util.List;
 
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.UMLAbstractDiffExtensionFactory;
-import org.eclipse.emf.compare.uml2diff.UMLExtension;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -23,13 +23,13 @@ import org.eclipse.emf.ecore.EObject;
  */
 public class UMLStereotypeReferenceOrderChangeFactory extends UMLAbstractDiffExtensionFactory {
 
-	public Class<? extends UMLExtension> getExtensionKind() {
+	public Class<? extends UMLDiff> getExtensionKind() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	protected UMLExtension createExtension() {
+	protected UMLDiff createExtension() {
 		// TODO Auto-generated method stub
 		return null;
 	}

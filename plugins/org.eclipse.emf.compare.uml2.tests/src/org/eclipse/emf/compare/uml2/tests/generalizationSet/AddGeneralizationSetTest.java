@@ -21,9 +21,9 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.uml2.GeneralizationSetChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.generalizationSet.data.GeneralizationSetInputData;
-import org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChange;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
@@ -102,14 +102,14 @@ public class AddGeneralizationSetTest extends AbstractTest {
 		assertNotNull(addRefGeneralizationInGeneralizationSet2);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(2), count(differences, instanceOf(UMLGeneralizationSetChange.class)));
+		assertSame(Integer.valueOf(2), count(differences, instanceOf(GeneralizationSetChange.class)));
 		Diff addUMLGeneralizationSet = null;
 		Diff changeUMLGeneralizationSet = Iterators.find(differences.iterator(), and(
-				instanceOf(UMLGeneralizationSetChange.class), ofKind(DifferenceKind.CHANGE)));
+				instanceOf(GeneralizationSetChange.class), ofKind(DifferenceKind.CHANGE)));
 		assertNotNull(changeUMLGeneralizationSet);
 		if (kind.equals(TestKind.ADD)) {
 			addUMLGeneralizationSet = Iterators.find(differences.iterator(), and(
-					instanceOf(UMLGeneralizationSetChange.class), ofKind(DifferenceKind.ADD)));
+					instanceOf(GeneralizationSetChange.class), ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLGeneralizationSet);
 			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLGeneralizationSet.getRefinedBy().size()));
 			assertTrue(addUMLGeneralizationSet.getRefinedBy().contains(
@@ -123,7 +123,7 @@ public class AddGeneralizationSetTest extends AbstractTest {
 					addRefGeneralizationInGeneralizationSet2));
 		} else {
 			addUMLGeneralizationSet = Iterators.find(differences.iterator(), and(
-					instanceOf(UMLGeneralizationSetChange.class), ofKind(DifferenceKind.DELETE)));
+					instanceOf(GeneralizationSetChange.class), ofKind(DifferenceKind.DELETE)));
 			assertNotNull(addUMLGeneralizationSet);
 			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLGeneralizationSet.getRefinedBy().size()));
 			assertTrue(addUMLGeneralizationSet.getRefinedBy().contains(addGeneralizationSet));

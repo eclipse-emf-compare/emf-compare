@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.uml2diff.UMLExtension;
-import org.eclipse.emf.compare.uml2diff.UMLInterfaceRealizationChange;
-import org.eclipse.emf.compare.uml2diff.Uml2diffFactory;
+import org.eclipse.emf.compare.uml2.InterfaceRealizationChange;
+import org.eclipse.emf.compare.uml2.UMLCompareFactory;
+import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.InterfaceRealization;
@@ -25,13 +25,13 @@ import org.eclipse.uml2.uml.UMLPackage;
 public class UMLInterfaceRealizationChangeFactory extends UMLDependencyChangeFactory {
 
 	@Override
-	public Class<? extends UMLExtension> getExtensionKind() {
-		return UMLInterfaceRealizationChange.class;
+	public Class<? extends UMLDiff> getExtensionKind() {
+		return InterfaceRealizationChange.class;
 	}
 
 	@Override
-	protected UMLExtension createExtension() {
-		return Uml2diffFactory.eINSTANCE.createUMLInterfaceRealizationChange();
+	protected UMLDiff createExtension() {
+		return UMLCompareFactory.eINSTANCE.createInterfaceRealizationChange();
 	}
 
 	@Override

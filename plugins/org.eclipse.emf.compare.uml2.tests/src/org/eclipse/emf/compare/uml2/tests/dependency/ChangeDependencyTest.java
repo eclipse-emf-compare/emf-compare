@@ -19,9 +19,9 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.uml2.DependencyChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.dependency.data.DependencyInputData;
-import org.eclipse.emf.compare.uml2diff.UMLDependencyChange;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
@@ -70,9 +70,9 @@ public class ChangeDependencyTest extends AbstractTest {
 		assertNotNull(addSupplierInDependency);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(UMLDependencyChange.class)));
+		assertSame(Integer.valueOf(1), count(differences, instanceOf(DependencyChange.class)));
 		Diff changeUMLDependency = Iterators.find(differences.iterator(), and(
-				instanceOf(UMLDependencyChange.class), ofKind(DifferenceKind.CHANGE)));
+				instanceOf(DependencyChange.class), ofKind(DifferenceKind.CHANGE)));
 		assertNotNull(changeUMLDependency);
 		assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLDependency.getRefinedBy().size()));
 		assertTrue(changeUMLDependency.getRefinedBy().contains(addSupplierInDependency));

@@ -22,9 +22,9 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.uml2.AssociationChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.association.data.AssociationInputData;
-import org.eclipse.emf.compare.uml2diff.UMLAssociationChange;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
@@ -108,9 +108,9 @@ public class ChangeAssociationTest extends AbstractTest {
 		assertNotNull(addUnlimitedNaturalInClass2);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(UMLAssociationChange.class)));
+		assertSame(Integer.valueOf(1), count(differences, instanceOf(AssociationChange.class)));
 		Diff changeUMLAssociation = Iterators.find(differences.iterator(), and(
-				instanceOf(UMLAssociationChange.class), ofKind(DifferenceKind.CHANGE)));
+				instanceOf(AssociationChange.class), ofKind(DifferenceKind.CHANGE)));
 		assertNotNull(changeUMLAssociation);
 		assertSame(Integer.valueOf(4), Integer.valueOf(changeUMLAssociation.getRefinedBy().size()));
 		assertTrue(changeUMLAssociation.getRefinedBy().contains(addRefTypeInPropertyClass2));

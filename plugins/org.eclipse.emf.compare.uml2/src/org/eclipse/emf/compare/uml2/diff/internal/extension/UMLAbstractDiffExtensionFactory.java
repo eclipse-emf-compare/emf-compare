@@ -17,8 +17,8 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.uml2diff.UMLExtension;
-import org.eclipse.emf.compare.uml2diff.Uml2diffPackage;
+import org.eclipse.emf.compare.uml2.UMLComparePackage;
+import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
@@ -40,14 +40,14 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 	private final UMLPredicate<Setting> REQUIRES_ADD_DISCRIMINANT_PREDICATE = new UMLPredicate<EStructuralFeature.Setting>() {
 		public boolean apply(Setting input) {
 			return getExtensionKind().isInstance(input.getEObject())
-					&& ((UMLExtension)input.getEObject()).getKind().equals(DifferenceKind.ADD);
+					&& ((UMLDiff)input.getEObject()).getKind().equals(DifferenceKind.ADD);
 		}
 	};
 
 	private final UMLPredicate<Setting> REQUIRES_CHANGE_DISCRIMINANT_PREDICATE = new UMLPredicate<EStructuralFeature.Setting>() {
 		public boolean apply(Setting input) {
 			return getExtensionKind().isInstance(input.getEObject())
-					&& ((UMLExtension)input.getEObject()).getKind().equals(DifferenceKind.CHANGE);
+					&& ((UMLDiff)input.getEObject()).getKind().equals(DifferenceKind.CHANGE);
 		}
 	};
 
@@ -68,7 +68,7 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 	 */
 	public Diff create(Diff input, EcoreUtil.CrossReferencer crossReferencer) {
 
-		final UMLExtension ret = createExtension();
+		final UMLDiff ret = createExtension();
 
 		final EObject discriminant = getDiscriminantFromDiff(input);
 
@@ -83,8 +83,7 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 		ret.setDiscriminant(discriminant);
 		ret.setKind(getRelatedExtensionKind(input));
 
-		registerUMLExtension(crossReferencer, ret, Uml2diffPackage.Literals.UML_EXTENSION__DISCRIMINANT,
-				discriminant);
+		registerUMLDiff(crossReferencer, ret, UMLComparePackage.Literals.UML_DIFF__DISCRIMINANT, discriminant);
 
 		return ret;
 	}
@@ -98,17 +97,17 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 	}
 
 	@Override
-	public void fillRequiredDifferences(UMLExtension extension, CrossReferencer crossReferencer) {
+	public void fillRequiredDifferences(UMLDiff extension, CrossReferencer crossReferencer) {
 		if (getExtensionKind().isInstance(extension)) {
 			if (extension.getKind().equals(DifferenceKind.CHANGE)) {
 				extension.getRequires().addAll(
 						findCrossReferences(extension.getDiscriminant(),
-								Uml2diffPackage.Literals.UML_EXTENSION__DISCRIMINANT,
+								UMLComparePackage.Literals.UML_DIFF__DISCRIMINANT,
 								REQUIRES_ADD_DISCRIMINANT_PREDICATE, crossReferencer));
 			} else if (extension.getKind().equals(DifferenceKind.DELETE)) {
 				extension.getRequires().addAll(
 						findCrossReferences(extension.getDiscriminant(),
-								Uml2diffPackage.Literals.UML_EXTENSION__DISCRIMINANT,
+								UMLComparePackage.Literals.UML_DIFF__DISCRIMINANT,
 								REQUIRES_CHANGE_DISCRIMINANT_PREDICATE, crossReferencer));
 			}
 		}
@@ -123,7 +122,7 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 		return super.getParentMatch(input, crossReferencer);
 	}
 
-	protected abstract UMLExtension createExtension();
+	protected abstract UMLDiff createExtension();
 
 	protected boolean isPartOfRefiningDifference(Diff diff) {
 		return diff instanceof ReferenceChange && getRelatedExtensionKind(diff) == DifferenceKind.CHANGE;
@@ -131,8 +130,8 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 
 	private boolean isExtensionAlreadyExist(Diff input) {
 		for (Diff diff : input.getRefines()) {
-			if (diff instanceof UMLExtension
-					&& ((UMLExtension)diff).getDiscriminant().equals(getDiscriminantFromDiff(input))) {
+			if (diff instanceof UMLDiff
+					&& ((UMLDiff)diff).getDiscriminant().equals(getDiscriminantFromDiff(input))) {
 				return true;
 			}
 

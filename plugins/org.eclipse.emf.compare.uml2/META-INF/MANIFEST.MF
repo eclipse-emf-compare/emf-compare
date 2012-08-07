@@ -20,8 +20,6 @@ Export-Package: org.eclipse.emf.compare.uml2,
  org.eclipse.emf.compare.uml2.diff.internal.extension.profile;x-internal:=true,
  org.eclipse.emf.compare.uml2.diff.internal.extension.sequence;x-internal:=true,
  org.eclipse.emf.compare.uml2.diff.internal.extension.usecase;x-internal:=true,
- org.eclipse.emf.compare.uml2diff,
- org.eclipse.emf.compare.uml2diff.impl,
- org.eclipse.emf.compare.uml2diff.util
+ org.eclipse.emf.compare.uml2.impl,
+ org.eclipse.emf.compare.uml2.util
 Bundle-Activator: org.eclipse.emf.compare.uml2.UMLDiffEnginePlugin
-Import-Package: org.eclipse.emf.compare.uml2diff

@@ -16,10 +16,10 @@ import java.util.List;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.uml2.GeneralizationSetChange;
+import org.eclipse.emf.compare.uml2.UMLCompareFactory;
+import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.UMLAbstractDiffExtensionFactory;
-import org.eclipse.emf.compare.uml2diff.UMLExtension;
-import org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChange;
-import org.eclipse.emf.compare.uml2diff.Uml2diffFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.GeneralizationSet;
@@ -30,13 +30,13 @@ import org.eclipse.uml2.uml.UMLPackage;
  */
 public class UMLGeneralizationSetChangeFactory extends UMLAbstractDiffExtensionFactory {
 
-	public Class<? extends UMLExtension> getExtensionKind() {
-		return UMLGeneralizationSetChange.class;
+	public Class<? extends UMLDiff> getExtensionKind() {
+		return GeneralizationSetChange.class;
 	}
 
 	@Override
-	protected UMLExtension createExtension() {
-		return Uml2diffFactory.eINSTANCE.createUMLGeneralizationSetChange();
+	protected UMLDiff createExtension() {
+		return UMLCompareFactory.eINSTANCE.createGeneralizationSetChange();
 	}
 
 	@Override

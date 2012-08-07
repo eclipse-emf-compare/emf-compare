@@ -12,7 +12,7 @@ package org.eclipse.emf.compare.uml2.diff.internal.extension;
 
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.uml2diff.UMLExtension;
+import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  */
 public interface IDiffExtensionFactory {
 
-	Class<? extends UMLExtension> getExtensionKind();
+	Class<? extends UMLDiff> getExtensionKind();
 
 	/**
 	 * Returns true if this factory handles the given kind of DiffElement, i.e., if it can create an
@@ -73,5 +73,5 @@ public interface IDiffExtensionFactory {
 	 * @param crossReferencer
 	 *            The DiffModel cross-referencer.
 	 */
-	void fillRequiredDifferences(UMLExtension extension, EcoreUtil.CrossReferencer crossReferencer);
+	void fillRequiredDifferences(UMLDiff extension, EcoreUtil.CrossReferencer crossReferencer);
 }

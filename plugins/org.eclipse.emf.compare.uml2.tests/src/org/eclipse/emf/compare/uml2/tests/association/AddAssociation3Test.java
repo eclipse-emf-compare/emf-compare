@@ -24,9 +24,9 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.uml2.AssociationChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.association.data.AssociationInputData;
-import org.eclipse.emf.compare.uml2diff.UMLAssociationChange;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
@@ -158,11 +158,11 @@ public class AddAssociation3Test extends AbstractTest {
 		assertNotNull(addUnlimitedNaturalInClass0);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(2), count(differences, instanceOf(UMLAssociationChange.class)));
+		assertSame(Integer.valueOf(2), count(differences, instanceOf(AssociationChange.class)));
 		Diff addUMLAssociation = null;
 		if (kind.equals(TestKind.ADD)) {
 			addUMLAssociation = Iterators.find(differences.iterator(), and(
-					instanceOf(UMLAssociationChange.class), ofKind(DifferenceKind.ADD)));
+					instanceOf(AssociationChange.class), ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLAssociation);
 			assertSame(Integer.valueOf(8), Integer.valueOf(addUMLAssociation.getRefinedBy().size()));
 			assertTrue(addUMLAssociation.getRefinedBy().contains(addRefTypeInPropertyClass1));
@@ -175,14 +175,14 @@ public class AddAssociation3Test extends AbstractTest {
 			assertTrue(addUMLAssociation.getRefinedBy().contains(addRefAssociationInPropertyClass0));
 		} else {
 			addUMLAssociation = Iterators.find(differences.iterator(), and(
-					instanceOf(UMLAssociationChange.class), ofKind(DifferenceKind.DELETE)));
+					instanceOf(AssociationChange.class), ofKind(DifferenceKind.DELETE)));
 			assertNotNull(addUMLAssociation);
 			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLAssociation.getRefinedBy().size()));
 			assertTrue(addUMLAssociation.getRefinedBy().contains(addAssociation));
 		}
 
 		Diff changeUMLAssociation = Iterators.find(differences.iterator(), and(
-				instanceOf(UMLAssociationChange.class), ofKind(DifferenceKind.CHANGE)));
+				instanceOf(AssociationChange.class), ofKind(DifferenceKind.CHANGE)));
 		assertNotNull(changeUMLAssociation);
 		assertSame(Integer.valueOf(8), Integer.valueOf(changeUMLAssociation.getRefinedBy().size()));
 		assertTrue(changeUMLAssociation.getRefinedBy().contains(addRefTypeInPropertyClass1));

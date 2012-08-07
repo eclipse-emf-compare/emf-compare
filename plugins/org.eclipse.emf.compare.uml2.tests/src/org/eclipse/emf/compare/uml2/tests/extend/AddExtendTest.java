@@ -22,9 +22,9 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.uml2.ExtendChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.extend.data.ExtendInputData;
-import org.eclipse.emf.compare.uml2diff.UMLExtendChange;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
@@ -91,13 +91,13 @@ public class AddExtendTest extends AbstractTest {
 		assertNotNull(addExtensionPoint);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(2), count(differences, instanceOf(UMLExtendChange.class)));
+		assertSame(Integer.valueOf(2), count(differences, instanceOf(ExtendChange.class)));
 		Diff addUMLExtend = null;
-		Diff changeUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(UMLExtendChange.class),
+		Diff changeUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(ExtendChange.class),
 				ofKind(DifferenceKind.CHANGE)));
 		assertNotNull(changeUMLExtend);
 		if (kind.equals(TestKind.ADD)) {
-			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(UMLExtendChange.class),
+			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(ExtendChange.class),
 					ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLExtend);
 			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLExtend.getRefinedBy().size()));
@@ -107,7 +107,7 @@ public class AddExtendTest extends AbstractTest {
 			assertTrue(changeUMLExtend.getRefinedBy().contains(addRefExtendedCaseInExtend));
 			assertTrue(changeUMLExtend.getRefinedBy().contains(addRefExtensionLocationInExtend));
 		} else {
-			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(UMLExtendChange.class),
+			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(ExtendChange.class),
 					ofKind(DifferenceKind.DELETE)));
 			assertNotNull(addUMLExtend);
 			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLExtend.getRefinedBy().size()));
