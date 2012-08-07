@@ -15,9 +15,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.ForwardingIterator;
 import com.google.common.collect.Iterators;
 
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
@@ -31,7 +29,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class FilterComparisonScope implements IComparisonScope {
+public class FilterComparisonScope extends AbstractComparisonScope {
 	/**
 	 * This will be used in order to determine the filter that should be used to filter the EObjects' content
 	 * list of unnecessary values.
@@ -50,21 +48,6 @@ public class FilterComparisonScope implements IComparisonScope {
 	 */
 	protected Predicate<? super Resource> resourceSetContentFilter = Predicates.alwaysTrue();
 
-	/** The left root of this comparison. */
-	private final Notifier left;
-
-	/** The right root of this comparison. */
-	private final Notifier right;
-
-	/** The common ancestor of {@link #left} and {@link #right}. May be <code>null</code>. */
-	private final Notifier origin;
-
-	/** The namespace uris detected in the comparison. */
-	private Set<String> nsURIs;
-
-	/** The resource uris detected in the comparison. */
-	private Set<String> resourceURIs;
-
 	/**
 	 * This will instantiate a scope with left, right and origin Notifiers defined.
 	 * 
@@ -76,38 +59,7 @@ public class FilterComparisonScope implements IComparisonScope {
 	 *            The common ancestor of <code>left</code> and <code>right</code>. May be <code>null</code>.
 	 */
 	public FilterComparisonScope(Notifier left, Notifier right, Notifier origin) {
-		this.left = left;
-		this.right = right;
-		this.origin = origin;
-		resourceURIs = new HashSet<String>();
-		nsURIs = new HashSet<String>();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.scope.IComparisonScope#getLeft()
-	 */
-	public Notifier getLeft() {
-		return left;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.scope.IComparisonScope#getRight()
-	 */
-	public Notifier getRight() {
-		return right;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.scope.IComparisonScope#getOrigin()
-	 */
-	public Notifier getOrigin() {
-		return origin;
+		super(left, right, origin);
 	}
 
 	/**
@@ -146,8 +98,7 @@ public class FilterComparisonScope implements IComparisonScope {
 			return Iterators.emptyIterator();
 		}
 
-		final Iterator<EObject> properContent = Iterators.filter(EcoreUtil.getAllProperContents(resource,
-				false), EObject.class);
+		final Iterator<EObject> properContent = EcoreUtil.getAllProperContents(resource, false);
 		final Iterator<EObject> filter = Iterators.filter(properContent, resourceContentFilter);
 
 		final Iterator<EObject> uriInitializingIt = new URIInitializingIterator<EObject>(resource, filter);
@@ -169,8 +120,7 @@ public class FilterComparisonScope implements IComparisonScope {
 			return Iterators.emptyIterator();
 		}
 
-		final Iterator<EObject> properContent = Iterators.filter(EcoreUtil.getAllProperContents(eObject,
-				false), EObject.class);
+		final Iterator<EObject> properContent = EcoreUtil.getAllProperContents(eObject, false);
 		final Iterator<EObject> filter = Iterators.filter(properContent, eObjectContentFilter);
 
 		final Iterator<EObject> uriInitializingIt = new URIInitializingIterator<EObject>(eObject, filter);
@@ -215,24 +165,6 @@ public class FilterComparisonScope implements IComparisonScope {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.scope.IComparisonScope#getNsURIs()
-	 */
-	public Set<String> getNsURIs() {
-		return nsURIs;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.scope.IComparisonScope#getResourceURIs()
-	 */
-	public Set<String> getResourceURIs() {
-		return resourceURIs;
-	}
-
-	/**
 	 * This iterator enables to add in the iteration the initialization of the namespace and resource uris
 	 * set.
 	 * 
@@ -240,7 +172,7 @@ public class FilterComparisonScope implements IComparisonScope {
 	 * @param <T>
 	 *            The kind of object to iterate on.
 	 */
-	class URIInitializingIterator<T> extends ForwardingIterator<T> {
+	private class URIInitializingIterator<T> extends ForwardingIterator<T> {
 
 		/** The origin iterator. */
 		private Iterator<T> delegate;
@@ -315,9 +247,9 @@ public class FilterComparisonScope implements IComparisonScope {
 		 */
 		private void addUri(EObject eObject) {
 			if (eObject.eResource() != null) {
-				resourceURIs.add(eObject.eResource().getURI().toString());
+				getResourceURIs().add(eObject.eResource().getURI().toString());
 			}
-			nsURIs.add(eObject.eClass().getEPackage().getNsURI());
+			getNsURIs().add(eObject.eClass().getEPackage().getNsURI());
 		}
 
 		/**
@@ -327,9 +259,7 @@ public class FilterComparisonScope implements IComparisonScope {
 		 *            The given <code>resource</code>.
 		 */
 		private void addUri(Resource resource) {
-			resourceURIs.add(resource.getURI().toString());
+			getResourceURIs().add(resource.getURI().toString());
 		}
-
 	}
-
 }

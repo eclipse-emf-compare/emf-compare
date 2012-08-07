@@ -7,8 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.logical.extension.EMFCompareExtensionRegistry;
-import org.eclipse.emf.compare.logical.extension.PostProcessorDescriptor;
+import org.eclipse.emf.compare.extension.EMFCompareExtensionRegistry;
+import org.eclipse.emf.compare.extension.PostProcessorDescriptor;
 import org.eclipse.emf.compare.uml2.diff.UMLDiffExtensionPostProcessor;
 import org.junit.After;
 import org.junit.Before;

@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.logical.extension.IPostProcessor;
+import org.eclipse.emf.compare.extension.IPostProcessor;
 import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
 
 /**
@@ -29,7 +29,7 @@ public class TestPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}.
 	 * 
-	 * @see org.eclipse.emf.compare.logical.extension.IPostProcessor#postMatch(org.eclipse.emf.compare.Comparison)
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postMatch(org.eclipse.emf.compare.Comparison)
 	 */
 	public void postMatch(Comparison comparison) {
 		final List<Match> matches = comparison.getMatches();
@@ -44,7 +44,7 @@ public class TestPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}.
 	 * 
-	 * @see org.eclipse.emf.compare.logical.extension.IPostProcessor#postDiff(org.eclipse.emf.compare.Comparison)
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postDiff(org.eclipse.emf.compare.Comparison)
 	 */
 	public void postDiff(Comparison comparison) {
 
@@ -53,7 +53,7 @@ public class TestPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}.
 	 * 
-	 * @see org.eclipse.emf.compare.logical.extension.IPostProcessor#postRequirements(org.eclipse.emf.compare.Comparison,
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postRequirements(org.eclipse.emf.compare.Comparison,
 	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
 	 */
 	public void postRequirements(Comparison comparison, CrossReferencer crossReferencer) {
@@ -63,7 +63,7 @@ public class TestPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}.
 	 * 
-	 * @see org.eclipse.emf.compare.logical.extension.IPostProcessor#postEquivalences(org.eclipse.emf.compare.Comparison,
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postEquivalences(org.eclipse.emf.compare.Comparison,
 	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
 	 */
 	public void postEquivalences(Comparison comparison, CrossReferencer crossReferencer) {
@@ -73,7 +73,7 @@ public class TestPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}.
 	 * 
-	 * @see org.eclipse.emf.compare.logical.extension.IPostProcessor#postConflicts(org.eclipse.emf.compare.Comparison)
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postConflicts(org.eclipse.emf.compare.Comparison)
 	 */
 	public void postConflicts(Comparison comparison) {
 

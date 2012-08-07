@@ -7,7 +7,7 @@ import java.util.Set;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.logical.extension.IPostProcessor;
+import org.eclipse.emf.compare.extension.IPostProcessor;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.DiffExtensionFactoryRegistry;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory;
 import org.eclipse.emf.compare.uml2diff.UMLExtension;

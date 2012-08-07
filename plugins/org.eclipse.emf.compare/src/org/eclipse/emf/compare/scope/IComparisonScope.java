@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ * @see AbstractComparisonScope
  * @see FilterComparisonScope
  */
 public interface IComparisonScope {

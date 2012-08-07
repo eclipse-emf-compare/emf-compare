@@ -12,8 +12,8 @@ package org.eclipse.emf.compare.ide.internal.extension;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.emf.compare.logical.extension.IPostProcessor;
-import org.eclipse.emf.compare.logical.extension.PostProcessorDescriptor;
+import org.eclipse.emf.compare.extension.IPostProcessor;
+import org.eclipse.emf.compare.extension.PostProcessorDescriptor;
 
 /**
  * Describes an extension as contributed to the "org.eclipse.emf.compare.postProcessor" extension point.

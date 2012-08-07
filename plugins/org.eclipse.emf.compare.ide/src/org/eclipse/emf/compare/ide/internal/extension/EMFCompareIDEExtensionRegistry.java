@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.ide.internal.extension;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.compare.logical.extension.EMFCompareExtensionRegistry;
+import org.eclipse.emf.compare.extension.EMFCompareExtensionRegistry;
 
 /**
  * This will contain all of the EMF Compare extensions parsed from its extension points.

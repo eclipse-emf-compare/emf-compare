@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IRegistryEventListener;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.compare.logical.extension.EMFCompareExtensionRegistry;
+import org.eclipse.emf.compare.extension.EMFCompareExtensionRegistry;
 
 /**
  * This listener will allow us to be aware of contribution changes against the model resolver extension point.

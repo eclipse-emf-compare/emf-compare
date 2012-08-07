@@ -16,8 +16,8 @@ import java.io.IOException;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.logical.extension.EMFCompareExtensionRegistry;
-import org.eclipse.emf.compare.logical.extension.PostProcessorDescriptor;
+import org.eclipse.emf.compare.extension.EMFCompareExtensionRegistry;
+import org.eclipse.emf.compare.extension.PostProcessorDescriptor;
 import org.eclipse.emf.compare.tests.postprocess.data.PostProcessInputData;
 import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
 import org.eclipse.emf.ecore.resource.Resource;
