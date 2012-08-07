@@ -8,7 +8,9 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.uml2.edit.utils;
+package org.eclipse.emf.compare.uml2.provider.spec;
+
+import com.google.common.base.Preconditions;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
@@ -18,6 +20,8 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.UMLDiff;
+import org.eclipse.emf.compare.uml2.internal.utils.ForwardingItemProvider;
+import org.eclipse.emf.compare.uml2.internal.utils.Strings;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
@@ -25,19 +29,19 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class UMLDiffItemProvider extends ForwardingItemProvider {
+public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 
 	/**
 	 * @param delegate
 	 */
-	public UMLDiffItemProvider(ItemProviderAdapter delegate) {
+	public ForwardingUMLDiffItemProvider(ItemProviderAdapter delegate) {
 		super(delegate);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.uml2.edit.utils.ForwardingItemProvider#getText(java.lang.Object)
+	 * @see org.eclipse.emf.compare.uml2.internal.utils.ForwardingItemProvider#getText(java.lang.Object)
 	 */
 	@Override
 	public String getText(Object object) {
@@ -60,7 +64,7 @@ public class UMLDiffItemProvider extends ForwardingItemProvider {
 				ret = valueText + " has been " + remotely + "deleted from " + referenceText;
 				break;
 			case CHANGE:
-				ret = referenceText + " " + valueText + " has been " + remotely + "changed";
+				ret = valueText + " has been " + remotely + "changed";
 				break;
 			case MOVE:
 				ret = valueText + " has been " + remotely + "moved in " + referenceText;
@@ -71,6 +75,18 @@ public class UMLDiffItemProvider extends ForwardingItemProvider {
 		}
 
 		return ret;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.ReferenceChangeItemProvider#getImage(java.lang.Object)
+	 */
+	@Override
+	public Object getImage(Object object) {
+		final UMLDiff umlDiff = (UMLDiff)object;
+		Object image = getImage(getRootAdapterFactory(), umlDiff.getDiscriminant());
+		return image;
 	}
 
 	private String getValueText(final UMLDiff umlDiff) {
@@ -102,7 +118,6 @@ public class UMLDiffItemProvider extends ForwardingItemProvider {
 				}
 				break;
 			case CHANGE:
-				ret = "CHANGE";
 				break;
 			default:
 				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName()
@@ -124,8 +139,8 @@ public class UMLDiffItemProvider extends ForwardingItemProvider {
 	 * @throws NullPointerException
 	 *             if <code>adapterFactory</code> is null.
 	 */
-	static String getText(AdapterFactory adapterFactory, Object object) {
-		// Preconditions.checkNotNull(adapterFactory);
+	private static String getText(AdapterFactory adapterFactory, Object object) {
+		Preconditions.checkNotNull(adapterFactory);
 		if (object != null) {
 			Object adapter = adapterFactory.adapt(object, IItemLabelProvider.class);
 			if (adapter instanceof IItemLabelProvider) {
@@ -135,4 +150,27 @@ public class UMLDiffItemProvider extends ForwardingItemProvider {
 		return null;
 	}
 
+	/**
+	 * Returns the image of the given <code>object</code> by adapting it to {@link IItemLabelProvider} and
+	 * asking for its {@link IItemLabelProvider#getImage(Object) text}. Returns null if <code>object</code> is
+	 * null.
+	 * 
+	 * @param adapterFactory
+	 *            the adapter factory to adapt from
+	 * @param object
+	 *            the object from which we want a image
+	 * @return the image, or null if object is null.
+	 * @throws NullPointerException
+	 *             if <code>adapterFactory</code> is null.
+	 */
+	private static Object getImage(AdapterFactory adapterFactory, Object object) {
+		Preconditions.checkNotNull(adapterFactory);
+		if (object != null) {
+			Object adapter = adapterFactory.adapt(object, IItemLabelProvider.class);
+			if (adapter instanceof IItemLabelProvider) {
+				return ((IItemLabelProvider)adapter).getImage(object);
+			}
+		}
+		return null;
+	}
 }

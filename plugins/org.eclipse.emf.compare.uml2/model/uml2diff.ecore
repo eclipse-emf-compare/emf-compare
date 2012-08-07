@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="uml2" nsURI="http://www.eclipse.org/emf/compare/diff/uml2/2.0"
-    nsPrefix="umlcompare">
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="uml2" nsURI="http://www.eclipse.org/emf/compare/uml2/2.0" nsPrefix="umlcompare">
   <eClassifiers xsi:type="ecore:EClass" name="AssociationChange" eSuperTypes="#//UMLDiff">
     <eStructuralFeatures xsi:type="ecore:EReference" name="association" eType="ecore:EClass platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//Association"/>
   </eClassifiers>

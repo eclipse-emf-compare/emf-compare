@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.uml2.edit;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-ClassPath: .
-Bundle-Activator: org.eclipse.emf.compare.uml2diff.provider.UML2DiffEditPlugin$Implementation
+Bundle-Activator: org.eclipse.emf.compare.uml2.provider.UMLCompareEditPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
@@ -17,6 +17,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare,
  org.eclipse.uml2.uml.edit
 Bundle-ActivationPolicy: lazy
-Import-Package: org.eclipse.emf.compare.provider
-Export-Package: org.eclipse.emf.compare.uml2.edit.utils,
+Import-Package: com.google.common.base;version="2.0.0",
+ org.eclipse.emf.compare.provider
+Export-Package: org.eclipse.emf.compare.uml2.internal.utils,
  org.eclipse.emf.compare.uml2.provider

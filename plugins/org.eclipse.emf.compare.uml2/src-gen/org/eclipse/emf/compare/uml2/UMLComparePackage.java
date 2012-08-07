@@ -46,7 +46,7 @@ public interface UMLComparePackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://www.eclipse.org/emf/compare/diff/uml2/2.0"; //$NON-NLS-1$
+	String eNS_URI = "http://www.eclipse.org/emf/compare/uml2/2.0"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace name.

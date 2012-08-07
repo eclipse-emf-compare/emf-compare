@@ -16,8 +16,8 @@ Contributors:
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
-            uri="http://www.eclipse.org/emf/compare/diff/uml2/2.0"
-            class="org.eclipse.emf.compare.uml2diff.Uml2diffPackage"
+            uri="http://www.eclipse.org/emf/compare/uml2/2.0"
+            class="org.eclipse.emf.compare.uml2.UMLComparePackage"
             genModel="model/uml2diff.genmodel"/>
    </extension>
    <extension

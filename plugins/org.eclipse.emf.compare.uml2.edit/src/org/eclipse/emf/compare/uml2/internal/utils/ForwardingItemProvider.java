@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.uml2.edit.utils;
+package org.eclipse.emf.compare.uml2.internal.utils;
 
 import java.net.URL;
 import java.util.Collection;
