@@ -15,6 +15,7 @@ import java.util.List;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2diff.UMLExtension;
 import org.eclipse.emf.compare.uml2diff.Uml2diffPackage;
@@ -113,6 +114,15 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 		}
 	}
 
+	@Override
+	public Match getParentMatch(Diff input, CrossReferencer crossReferencer) {
+		if (getRelatedExtensionKind(input) == DifferenceKind.CHANGE) {
+			return (Match)input.getMatch().getComparison().getMatch(getDiscriminantFromDiff(input))
+					.eContainer();
+		}
+		return super.getParentMatch(input, crossReferencer);
+	}
+
 	protected abstract UMLExtension createExtension();
 
 	protected boolean isPartOfRefiningDifference(Diff diff) {
@@ -135,11 +145,5 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 	protected abstract List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant);
 
 	protected abstract DifferenceKind getRelatedExtensionKind(Diff input);
-
-	// protected abstract boolean isRelatedToAnExtensionChange(Diff input);
-	//
-	// protected abstract boolean isRelatedToAnExtensionAdd(Diff input);
-	//
-	// protected abstract boolean isRelatedToAnExtensionDelete(Diff input);
 
 }

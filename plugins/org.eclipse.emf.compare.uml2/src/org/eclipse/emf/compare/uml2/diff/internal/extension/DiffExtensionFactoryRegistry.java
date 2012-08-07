@@ -18,12 +18,12 @@ import java.util.Map;
 
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLAssociationChangeFactory;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLDependencyChangeFactory2;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLDependencyChangeFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLGeneralizationSetChangeFactory;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLInterfaceRealizationChangeFactory2;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLSubstitutionChangeFactory2;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.sequence.UMLExecutionSpecificationChangeFactory2;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.sequence.UMLMessageChangeFactory2;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLInterfaceRealizationChangeFactory;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLSubstitutionChangeFactory;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.sequence.UMLExecutionSpecificationChangeFactory;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.sequence.UMLMessageChangeFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.usecase.UMLExtendChangeFactory;
 
 /**
@@ -51,13 +51,13 @@ public final class DiffExtensionFactoryRegistry {
 
 		List<IDiffExtensionFactory> factories = new ArrayList<IDiffExtensionFactory>();
 		factories.add(new UMLAssociationChangeFactory());
-		factories.add(new UMLDependencyChangeFactory2());
-		factories.add(new UMLInterfaceRealizationChangeFactory2());
-		factories.add(new UMLSubstitutionChangeFactory2());
+		factories.add(new UMLDependencyChangeFactory());
+		factories.add(new UMLInterfaceRealizationChangeFactory());
+		factories.add(new UMLSubstitutionChangeFactory());
 		factories.add(new UMLGeneralizationSetChangeFactory());
 		factories.add(new UMLExtendChangeFactory());
-		factories.add(new UMLMessageChangeFactory2());
-		factories.add(new UMLExecutionSpecificationChangeFactory2());
+		factories.add(new UMLMessageChangeFactory());
+		factories.add(new UMLExecutionSpecificationChangeFactory());
 
 		for (IDiffExtensionFactory iDiffExtensionFactory : factories) {
 			dataset.put(iDiffExtensionFactory.getExtensionKind(), iDiffExtensionFactory);

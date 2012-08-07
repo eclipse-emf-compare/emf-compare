@@ -10,72 +10,46 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.diff.internal.extension.profile;
 
-import org.eclipse.emf.compare.AttributeChange;
-import org.eclipse.emf.compare.Comparison;
+import java.util.List;
+
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory;
-import org.eclipse.emf.compare.uml2diff.UMLStereotypePropertyChange;
-import org.eclipse.emf.compare.uml2diff.Uml2diffFactory;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.UMLAbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2diff.UMLExtension;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.uml2.uml.util.UMLUtil;
 
 /**
  * Factory for UMLStereotypeAttributeChangeLeftTarget.
  */
-public class UMLStereotypePropertyChangeFactory extends AbstractDiffExtensionFactory {
+public class UMLStereotypePropertyChangeFactory extends UMLAbstractDiffExtensionFactory {
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param engine
-	 *            The UML2 difference engine.
-	 */
-	public UMLStereotypePropertyChangeFactory() {
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#handles(org.eclipse.emf.compare.diff.metamodel.DiffElement)
-	 */
-	public boolean handles(Diff input) {
-		if (input instanceof AttributeChange) {
-			final EObject left = input.getMatch().getLeft();
-			final EObject right = input.getMatch().getRight();
-			final EObject leftBase = UMLUtil.getBaseElement(left);
-			final EObject rightBase = UMLUtil.getBaseElement(right);
-			return leftBase != null && rightBase != null;
-		}
-		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.diff.metamodel.DiffElement,
-	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
-	 */
-	public Diff create(Diff input, EcoreUtil.CrossReferencer crossReferencer) {
-		final AttributeChange attributeChange = (AttributeChange)input;
-		final EObject leftElement = attributeChange.getMatch().getLeft();
-
-		final UMLStereotypePropertyChange ret = Uml2diffFactory.eINSTANCE.createUMLStereotypePropertyChange();
-
-		ret.setStereotype(UMLUtil.getStereotype(leftElement));
-		ret.getRefinedBy().add(input);
-
-		return ret;
+	public Class<? extends UMLExtension> getExtensionKind() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public Match getParentMatch(Diff input, EcoreUtil.CrossReferencer crossReferencer) {
-		final Match match = input.getMatch();
-		final EObject right = match.getRight();
-		final EObject rightBase = UMLUtil.getBaseElement(right);
-
-		Comparison comparison = match.getComparison();
-		return comparison.getMatch(rightBase);
+	protected UMLExtension createExtension() {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+	@Override
+	protected EObject getDiscriminantFromDiff(Diff input) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected DifferenceKind getRelatedExtensionKind(Diff input) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

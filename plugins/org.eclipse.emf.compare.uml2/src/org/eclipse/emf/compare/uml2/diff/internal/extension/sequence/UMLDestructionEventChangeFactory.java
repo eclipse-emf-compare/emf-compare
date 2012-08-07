@@ -10,50 +10,46 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.diff.internal.extension.sequence;
 
+import java.util.List;
+
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory;
-import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChange;
-import org.eclipse.emf.compare.uml2diff.Uml2diffFactory;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.uml2.uml.DestructionOccurrenceSpecification;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.UMLAbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2diff.UMLExtension;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * Factory for UMLDestructionEventChangeLeftTarget.
  */
-public class UMLDestructionEventChangeFactory extends AbstractDiffExtensionFactory {
+public class UMLDestructionEventChangeFactory extends UMLAbstractDiffExtensionFactory {
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param engine
-	 *            The UML2 difference engine.
-	 */
-	public UMLDestructionEventChangeFactory() {
+	public Class<? extends UMLExtension> getExtensionKind() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#handles(org.eclipse.emf.compare.diff.metamodel.DiffElement)
-	 */
-	public boolean handles(Diff input) {
-		return input instanceof ReferenceChange && ((ReferenceChange)input).getReference().isContainment()
-				&& ((ReferenceChange)input).getValue() instanceof DestructionOccurrenceSpecification;
+	@Override
+	protected UMLExtension createExtension() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.diff.metamodel.DiffElement,
-	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
-	 */
-	public Diff create(Diff input, EcoreUtil.CrossReferencer crossReferencer) {
-
-		final UMLDestructionEventChange ret = Uml2diffFactory.eINSTANCE.createUMLDestructionEventChange();
-
-		ret.getRefinedBy().add(input);
-
-		return ret;
+	@Override
+	protected EObject getDiscriminantFromDiff(Diff input) {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+	@Override
+	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected DifferenceKind getRelatedExtensionKind(Diff input) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
