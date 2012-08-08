@@ -70,6 +70,7 @@ public class UMLDiffItemProvider
 			super.getPropertyDescriptors(object);
 
 			addDiscriminantPropertyDescriptor(object);
+			addEReferencePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -88,6 +89,28 @@ public class UMLDiffItemProvider
 				 getString("_UI_UMLDiff_discriminant_feature"), //$NON-NLS-1$
 				 getString("_UI_PropertyDescriptor_description", "_UI_UMLDiff_discriminant_feature", "_UI_UMLDiff_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 UMLComparePackage.Literals.UML_DIFF__DISCRIMINANT,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the EReference feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addEReferencePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_UMLDiff_eReference_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_UMLDiff_eReference_feature", "_UI_UMLDiff_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				 UMLComparePackage.Literals.UML_DIFF__EREFERENCE,
 				 true,
 				 false,
 				 true,

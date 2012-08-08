@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.uml2.UMLDiff;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -34,6 +35,7 @@ import org.eclipse.uml2.uml.Profile;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.uml2.impl.ProfileApplicationChangeImpl#getDiscriminant <em>Discriminant</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.uml2.impl.ProfileApplicationChangeImpl#getEReference <em>EReference</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.uml2.impl.ProfileApplicationChangeImpl#getProfile <em>Profile</em>}</li>
  * </ul>
  * </p>
@@ -50,6 +52,16 @@ public class ProfileApplicationChangeImpl extends ReferenceChangeImpl implements
 	 * @ordered
 	 */
 	protected EObject discriminant;
+
+	/**
+	 * The cached value of the '{@link #getEReference() <em>EReference</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getEReference()
+	 * @generated
+	 * @ordered
+	 */
+	protected EReference eReference;
 
 	/**
 	 * The cached value of the '{@link #getProfile() <em>Profile</em>}' reference.
@@ -123,6 +135,44 @@ public class ProfileApplicationChangeImpl extends ReferenceChangeImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getEReference() {
+		if (eReference != null && eReference.eIsProxy()) {
+			InternalEObject oldEReference = (InternalEObject)eReference;
+			eReference = (EReference)eResolveProxy(oldEReference);
+			if (eReference != oldEReference) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, UMLComparePackage.PROFILE_APPLICATION_CHANGE__EREFERENCE, oldEReference, eReference));
+			}
+		}
+		return eReference;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference basicGetEReference() {
+		return eReference;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setEReference(EReference newEReference) {
+		EReference oldEReference = eReference;
+		eReference = newEReference;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, UMLComparePackage.PROFILE_APPLICATION_CHANGE__EREFERENCE, oldEReference, eReference));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Profile getProfile() {
 		if (profile != null && profile.eIsProxy()) {
 			InternalEObject oldProfile = (InternalEObject)profile;
@@ -167,6 +217,9 @@ public class ProfileApplicationChangeImpl extends ReferenceChangeImpl implements
 			case UMLComparePackage.PROFILE_APPLICATION_CHANGE__DISCRIMINANT:
 				if (resolve) return getDiscriminant();
 				return basicGetDiscriminant();
+			case UMLComparePackage.PROFILE_APPLICATION_CHANGE__EREFERENCE:
+				if (resolve) return getEReference();
+				return basicGetEReference();
 			case UMLComparePackage.PROFILE_APPLICATION_CHANGE__PROFILE:
 				if (resolve) return getProfile();
 				return basicGetProfile();
@@ -184,6 +237,9 @@ public class ProfileApplicationChangeImpl extends ReferenceChangeImpl implements
 		switch (featureID) {
 			case UMLComparePackage.PROFILE_APPLICATION_CHANGE__DISCRIMINANT:
 				setDiscriminant((EObject)newValue);
+				return;
+			case UMLComparePackage.PROFILE_APPLICATION_CHANGE__EREFERENCE:
+				setEReference((EReference)newValue);
 				return;
 			case UMLComparePackage.PROFILE_APPLICATION_CHANGE__PROFILE:
 				setProfile((Profile)newValue);
@@ -203,6 +259,9 @@ public class ProfileApplicationChangeImpl extends ReferenceChangeImpl implements
 			case UMLComparePackage.PROFILE_APPLICATION_CHANGE__DISCRIMINANT:
 				setDiscriminant((EObject)null);
 				return;
+			case UMLComparePackage.PROFILE_APPLICATION_CHANGE__EREFERENCE:
+				setEReference((EReference)null);
+				return;
 			case UMLComparePackage.PROFILE_APPLICATION_CHANGE__PROFILE:
 				setProfile((Profile)null);
 				return;
@@ -220,6 +279,8 @@ public class ProfileApplicationChangeImpl extends ReferenceChangeImpl implements
 		switch (featureID) {
 			case UMLComparePackage.PROFILE_APPLICATION_CHANGE__DISCRIMINANT:
 				return discriminant != null;
+			case UMLComparePackage.PROFILE_APPLICATION_CHANGE__EREFERENCE:
+				return eReference != null;
 			case UMLComparePackage.PROFILE_APPLICATION_CHANGE__PROFILE:
 				return profile != null;
 		}
@@ -236,6 +297,7 @@ public class ProfileApplicationChangeImpl extends ReferenceChangeImpl implements
 		if (baseClass == UMLDiff.class) {
 			switch (derivedFeatureID) {
 				case UMLComparePackage.PROFILE_APPLICATION_CHANGE__DISCRIMINANT: return UMLComparePackage.UML_DIFF__DISCRIMINANT;
+				case UMLComparePackage.PROFILE_APPLICATION_CHANGE__EREFERENCE: return UMLComparePackage.UML_DIFF__EREFERENCE;
 				default: return -1;
 			}
 		}
@@ -252,6 +314,7 @@ public class ProfileApplicationChangeImpl extends ReferenceChangeImpl implements
 		if (baseClass == UMLDiff.class) {
 			switch (baseFeatureID) {
 				case UMLComparePackage.UML_DIFF__DISCRIMINANT: return UMLComparePackage.PROFILE_APPLICATION_CHANGE__DISCRIMINANT;
+				case UMLComparePackage.UML_DIFF__EREFERENCE: return UMLComparePackage.PROFILE_APPLICATION_CHANGE__EREFERENCE;
 				default: return -1;
 			}
 		}

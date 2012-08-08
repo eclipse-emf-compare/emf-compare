@@ -428,6 +428,15 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getUMLDiff_EReference() {
+		return (EReference)umlDiffEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public UMLCompareFactory getUMLCompareFactory() {
 		return (UMLCompareFactory)getEFactoryInstance();
 	}
@@ -488,6 +497,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 		umlDiffEClass = createEClass(UML_DIFF);
 		createEReference(umlDiffEClass, UML_DIFF__DISCRIMINANT);
+		createEReference(umlDiffEClass, UML_DIFF__EREFERENCE);
 	}
 
 	/**
@@ -579,6 +589,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 		initEClass(umlDiffEClass, UMLDiff.class, "UMLDiff", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(getUMLDiff_Discriminant(), theEcorePackage.getEObject(), null, "discriminant", null, 0, 1, UMLDiff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getUMLDiff_EReference(), theEcorePackage.getEReference(), null, "eReference", null, 0, 1, UMLDiff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);

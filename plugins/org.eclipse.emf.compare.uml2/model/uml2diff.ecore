@@ -31,5 +31,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UMLDiff" abstract="true" eSuperTypes="platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//Diff">
     <eStructuralFeatures xsi:type="ecore:EReference" name="discriminant" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eReference" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EReference"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -174,13 +174,22 @@ public interface UMLComparePackage extends EPackage {
 	int UML_DIFF__DISCRIMINANT = ComparePackage.DIFF_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>EReference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DIFF__EREFERENCE = ComparePackage.DIFF_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>UML Diff</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UML_DIFF_FEATURE_COUNT = ComparePackage.DIFF_FEATURE_COUNT + 1;
+	int UML_DIFF_FEATURE_COUNT = ComparePackage.DIFF_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.AssociationChangeImpl <em>Association Change</em>}' class.
@@ -290,6 +299,15 @@ public interface UMLComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int ASSOCIATION_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
+
+	/**
+	 * The feature id for the '<em><b>EReference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ASSOCIATION_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
 
 	/**
 	 * The feature id for the '<em><b>Association</b></em>' reference.
@@ -419,6 +437,15 @@ public interface UMLComparePackage extends EPackage {
 	int DEPENDENCY_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
 
 	/**
+	 * The feature id for the '<em><b>EReference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEPENDENCY_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
+
+	/**
 	 * The feature id for the '<em><b>Dependency</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -546,6 +573,15 @@ public interface UMLComparePackage extends EPackage {
 	int INTERFACE_REALIZATION_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
 
 	/**
+	 * The feature id for the '<em><b>EReference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERFACE_REALIZATION_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
+
+	/**
 	 * The number of structural features of the '<em>Interface Realization Change</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -664,6 +700,15 @@ public interface UMLComparePackage extends EPackage {
 	int SUBSTITUTION_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
 
 	/**
+	 * The feature id for the '<em><b>EReference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SUBSTITUTION_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
+
+	/**
 	 * The number of structural features of the '<em>Substitution Change</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -780,6 +825,15 @@ public interface UMLComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int EXTEND_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
+
+	/**
+	 * The feature id for the '<em><b>EReference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTEND_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
 
 	/**
 	 * The feature id for the '<em><b>Extend</b></em>' reference.
@@ -909,6 +963,15 @@ public interface UMLComparePackage extends EPackage {
 	int GENERALIZATION_SET_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
 
 	/**
+	 * The feature id for the '<em><b>EReference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERALIZATION_SET_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
+
+	/**
 	 * The feature id for the '<em><b>Generalization Set</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1036,6 +1099,15 @@ public interface UMLComparePackage extends EPackage {
 	int EXECUTION_SPECIFICATION_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
 
 	/**
+	 * The feature id for the '<em><b>EReference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXECUTION_SPECIFICATION_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
+
+	/**
 	 * The number of structural features of the '<em>Execution Specification Change</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1152,6 +1224,15 @@ public interface UMLComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int DESTRUCTION_EVENT_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
+
+	/**
+	 * The feature id for the '<em><b>EReference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DESTRUCTION_EVENT_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
 
 	/**
 	 * The number of structural features of the '<em>Destruction Event Change</em>' class.
@@ -1272,6 +1353,15 @@ public interface UMLComparePackage extends EPackage {
 	int INTERVAL_CONSTRAINT_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
 
 	/**
+	 * The feature id for the '<em><b>EReference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERVAL_CONSTRAINT_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
+
+	/**
 	 * The number of structural features of the '<em>Interval Constraint Change</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1390,6 +1480,15 @@ public interface UMLComparePackage extends EPackage {
 	int MESSAGE_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
 
 	/**
+	 * The feature id for the '<em><b>EReference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MESSAGE_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
+
+	/**
 	 * The number of structural features of the '<em>Message Change</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1506,6 +1605,15 @@ public interface UMLComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int STEREOTYPE_PROPERTY_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
+
+	/**
+	 * The feature id for the '<em><b>EReference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STEREOTYPE_PROPERTY_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
 
 	/**
 	 * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -1653,13 +1761,22 @@ public interface UMLComparePackage extends EPackage {
 	int STEREOTYPE_APPLICATION_CHANGE__DISCRIMINANT = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>EReference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STEREOTYPE_APPLICATION_CHANGE__EREFERENCE = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>Stereotype</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 1;
+	int STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Stereotype Application Change</em>' class.
@@ -1668,7 +1785,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_APPLICATION_CHANGE_FEATURE_COUNT = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 2;
+	int STEREOTYPE_APPLICATION_CHANGE_FEATURE_COUNT = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.StereotypeReferenceChangeImpl <em>Stereotype Reference Change</em>}' class.
@@ -1778,6 +1895,15 @@ public interface UMLComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int STEREOTYPE_REFERENCE_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
+
+	/**
+	 * The feature id for the '<em><b>EReference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STEREOTYPE_REFERENCE_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
 
 	/**
 	 * The number of structural features of the '<em>Stereotype Reference Change</em>' class.
@@ -1916,13 +2042,22 @@ public interface UMLComparePackage extends EPackage {
 	int PROFILE_APPLICATION_CHANGE__DISCRIMINANT = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>EReference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROFILE_APPLICATION_CHANGE__EREFERENCE = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>Profile</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROFILE_APPLICATION_CHANGE__PROFILE = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 1;
+	int PROFILE_APPLICATION_CHANGE__PROFILE = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Profile Application Change</em>' class.
@@ -1931,7 +2066,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROFILE_APPLICATION_CHANGE_FEATURE_COUNT = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 2;
+	int PROFILE_APPLICATION_CHANGE_FEATURE_COUNT = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 3;
 
 
 	/**
@@ -2173,6 +2308,17 @@ public interface UMLComparePackage extends EPackage {
 	EReference getUMLDiff_Discriminant();
 
 	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.uml2.UMLDiff#getEReference <em>EReference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>EReference</em>'.
+	 * @see org.eclipse.emf.compare.uml2.UMLDiff#getEReference()
+	 * @see #getUMLDiff()
+	 * @generated
+	 */
+	EReference getUMLDiff_EReference();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2407,6 +2553,14 @@ public interface UMLComparePackage extends EPackage {
 		 * @generated
 		 */
 		EReference UML_DIFF__DISCRIMINANT = eINSTANCE.getUMLDiff_Discriminant();
+
+		/**
+		 * The meta object literal for the '<em><b>EReference</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference UML_DIFF__EREFERENCE = eINSTANCE.getUMLDiff_EReference();
 
 	}
 

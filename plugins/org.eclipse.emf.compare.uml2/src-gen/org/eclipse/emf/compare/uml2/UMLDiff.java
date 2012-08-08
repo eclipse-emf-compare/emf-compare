@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.uml2;
 import org.eclipse.emf.compare.Diff;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 
 /**
  * <!-- begin-user-doc -->
@@ -23,6 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.uml2.UMLDiff#getDiscriminant <em>Discriminant</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.uml2.UMLDiff#getEReference <em>EReference</em>}</li>
  * </ul>
  * </p>
  *
@@ -56,5 +58,31 @@ public interface UMLDiff extends Diff {
 	 * @generated
 	 */
 	void setDiscriminant(EObject value);
+
+	/**
+	 * Returns the value of the '<em><b>EReference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>EReference</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>EReference</em>' reference.
+	 * @see #setEReference(EReference)
+	 * @see org.eclipse.emf.compare.uml2.UMLComparePackage#getUMLDiff_EReference()
+	 * @model
+	 * @generated
+	 */
+	EReference getEReference();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.uml2.UMLDiff#getEReference <em>EReference</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>EReference</em>' reference.
+	 * @see #getEReference()
+	 * @generated
+	 */
+	void setEReference(EReference value);
 
 } // UMLDiff
