@@ -90,6 +90,24 @@ public class AddMessageTest extends AbstractTest {
 		testAB3(TestKind.DELETE, comparison);
 	}
 
+	@Test
+	public void testA40UseCase() throws IOException {
+		final Resource left = input.getA4Left();
+		final Resource right = input.getA4Right();
+
+		final Comparison comparison = EMFCompare.compare(left, right);
+		testAB1(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA41UseCase() throws IOException {
+		final Resource left = input.getA4Left();
+		final Resource right = input.getA4Right();
+
+		final Comparison comparison = EMFCompare.compare(right, left);
+		testAB1(TestKind.DELETE, comparison);
+	}
+
 	private static void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 

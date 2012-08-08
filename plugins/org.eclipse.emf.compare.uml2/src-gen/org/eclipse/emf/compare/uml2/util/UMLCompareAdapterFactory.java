@@ -99,16 +99,16 @@ public class UMLCompareAdapterFactory extends AdapterFactoryImpl {
 				return createExtendChangeAdapter();
 			}
 			@Override
+			public Adapter caseIncludeChange(IncludeChange object) {
+				return createIncludeChangeAdapter();
+			}
+			@Override
 			public Adapter caseGeneralizationSetChange(GeneralizationSetChange object) {
 				return createGeneralizationSetChangeAdapter();
 			}
 			@Override
 			public Adapter caseExecutionSpecificationChange(ExecutionSpecificationChange object) {
 				return createExecutionSpecificationChangeAdapter();
-			}
-			@Override
-			public Adapter caseDestructionEventChange(DestructionEventChange object) {
-				return createDestructionEventChangeAdapter();
 			}
 			@Override
 			public Adapter caseIntervalConstraintChange(IntervalConstraintChange object) {
@@ -237,6 +237,20 @@ public class UMLCompareAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.uml2.IncludeChange <em>Include Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.uml2.IncludeChange
+	 * @generated
+	 */
+	public Adapter createIncludeChangeAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.uml2.GeneralizationSetChange <em>Generalization Set Change</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -261,20 +275,6 @@ public class UMLCompareAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createExecutionSpecificationChangeAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.uml2.DestructionEventChange <em>Destruction Event Change</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.emf.compare.uml2.DestructionEventChange
-	 * @generated
-	 */
-	public Adapter createDestructionEventChangeAdapter() {
 		return null;
 	}
 

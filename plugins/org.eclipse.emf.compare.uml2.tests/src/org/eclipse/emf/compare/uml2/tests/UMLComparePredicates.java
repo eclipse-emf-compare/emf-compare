@@ -20,6 +20,8 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.uml2.uml.NamedElement;
+import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.edit.providers.UMLItemProviderAdapterFactory;
 
 public final class UMLComparePredicates {
@@ -629,14 +631,14 @@ public final class UMLComparePredicates {
 			final Object featureValue = eObject.eGet(nameFeature);
 			if (featureValue instanceof String) {
 				return featureValue.equals(name);
+			} else if (eObject instanceof NamedElement && ((NamedElement)eObject).getName() != null) {
+				return name.equals(((NamedElement)eObject).getName());
 			}
-		} else {
-			IItemLabelProvider adapter = (IItemLabelProvider)factory.adapt(eObject, IItemLabelProvider.class);
-			String featureValue = adapter.getText(eObject);
-			featureValue = featureValue.replaceAll("<.*>", "");
-			return featureValue.trim().equals(name);
 		}
-		return false;
+		IItemLabelProvider adapter = (IItemLabelProvider)factory.adapt(eObject, IItemLabelProvider.class);
+		String featureValue = adapter.getText(eObject);
+		featureValue = featureValue.replaceAll("<.*>", "");
+		return featureValue.trim().equals(name);
 	}
 
 	/**
@@ -651,6 +653,9 @@ public final class UMLComparePredicates {
 	private static EStructuralFeature getNameFeature(EObject eObject) {
 		if (eObject instanceof ENamedElement) {
 			return EcorePackage.eINSTANCE.getENamedElement_Name();
+		}
+		if (eObject instanceof NamedElement) {
+			return UMLPackage.eINSTANCE.getNamedElement_Name();
 		}
 		EStructuralFeature nameFeature = null;
 		final Iterator<EStructuralFeature> features = eObject.eClass().getEAllStructuralFeatures().iterator();

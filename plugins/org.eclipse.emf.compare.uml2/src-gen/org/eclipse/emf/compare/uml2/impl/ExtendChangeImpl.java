@@ -27,25 +27,11 @@ import org.eclipse.uml2.uml.Extend;
  * An implementation of the model object '<em><b>Extend Change</b></em>'.
  * <!-- end-user-doc -->
  * <p>
- * The following features are implemented:
- * <ul>
- *   <li>{@link org.eclipse.emf.compare.uml2.impl.ExtendChangeImpl#getExtend <em>Extend</em>}</li>
- * </ul>
  * </p>
  *
  * @generated
  */
 public class ExtendChangeImpl extends UMLDiffImpl implements ExtendChange {
-	/**
-	 * The cached value of the '{@link #getExtend() <em>Extend</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getExtend()
-	 * @generated
-	 * @ordered
-	 */
-	protected Extend extend;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -63,103 +49,6 @@ public class ExtendChangeImpl extends UMLDiffImpl implements ExtendChange {
 	@Override
 	protected EClass eStaticClass() {
 		return UMLComparePackage.Literals.EXTEND_CHANGE;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Extend getExtend() {
-		if (extend != null && extend.eIsProxy()) {
-			InternalEObject oldExtend = (InternalEObject)extend;
-			extend = (Extend)eResolveProxy(oldExtend);
-			if (extend != oldExtend) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, UMLComparePackage.EXTEND_CHANGE__EXTEND, oldExtend, extend));
-			}
-		}
-		return extend;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Extend basicGetExtend() {
-		return extend;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setExtend(Extend newExtend) {
-		Extend oldExtend = extend;
-		extend = newExtend;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, UMLComparePackage.EXTEND_CHANGE__EXTEND, oldExtend, extend));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case UMLComparePackage.EXTEND_CHANGE__EXTEND:
-				if (resolve) return getExtend();
-				return basicGetExtend();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case UMLComparePackage.EXTEND_CHANGE__EXTEND:
-				setExtend((Extend)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void eUnset(int featureID) {
-		switch (featureID) {
-			case UMLComparePackage.EXTEND_CHANGE__EXTEND:
-				setExtend((Extend)null);
-				return;
-		}
-		super.eUnset(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case UMLComparePackage.EXTEND_CHANGE__EXTEND:
-				return extend != null;
-		}
-		return super.eIsSet(featureID);
 	}
 
 } //ExtendChangeImpl

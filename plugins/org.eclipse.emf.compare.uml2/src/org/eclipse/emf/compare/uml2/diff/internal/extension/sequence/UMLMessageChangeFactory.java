@@ -100,10 +100,11 @@ public class UMLMessageChangeFactory extends UMLAbstractDiffExtensionFactory {
 	}
 
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
-		return ((input.getReference().equals(UMLPackage.Literals.MESSAGE__RECEIVE_EVENT)
+		return (input.getReference().equals(UMLPackage.Literals.MESSAGE__RECEIVE_EVENT)
 				|| input.getReference().equals(UMLPackage.Literals.MESSAGE__SEND_EVENT) || input
-				.getReference().equals(UMLPackage.Literals.INTERACTION_FRAGMENT__COVERED)) && getManagedConcreteDiscriminantKind()
-				.contains(MatchUtil.getContainer(input.getMatch().getComparison(), input).eClass()));
+				.getReference().equals(UMLPackage.Literals.INTERACTION_FRAGMENT__COVERED))
+				&& getManagedConcreteDiscriminantKind().contains(
+						MatchUtil.getContainer(input.getMatch().getComparison(), input).eClass());
 	}
 
 	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {

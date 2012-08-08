@@ -94,12 +94,12 @@ public class UMLAssociationChangeFactory extends UMLAbstractDiffExtensionFactory
 				&& ((Association)input.getValue()).getEndTypes().size() > 1;
 	}
 
-	protected static boolean isRelatedToAnExtensionDelete(ReferenceChange input) {
+	protected boolean isRelatedToAnExtensionDelete(ReferenceChange input) {
 		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.DELETE)
 				&& input.getValue() instanceof Association;
 	}
 
-	private static boolean isRelatedToAnExtensionChange(ReferenceChange input) {
+	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
 		final EObject diffContainer = MatchUtil.getContainer(input.getMatch().getComparison(), input);
 		return isAssociationPropertyChange(input, diffContainer)
 				|| isAssociationPropertyCardinalityChange(input, diffContainer);

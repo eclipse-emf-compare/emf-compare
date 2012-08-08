@@ -30,4 +30,12 @@ public class MessageInputData extends AbstractInputData {
 		return loadFromClassloader("a3/right.uml"); //$NON-NLS-1$
 	}
 
+	public Resource getA4Left() throws IOException {
+		return loadFromClassloader("a4/left.uml"); //$NON-NLS-1$
+	}
+
+	public Resource getA4Right() throws IOException {
+		return loadFromClassloader("a4/right.uml"); //$NON-NLS-1$
+	}
+
 }

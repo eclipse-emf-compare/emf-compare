@@ -10,18 +10,16 @@
  */
 package org.eclipse.emf.compare.uml2;
 
-import org.eclipse.uml2.uml.Extend;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Extend Change</b></em>'.
+ * A representation of the model object '<em><b>Include Change</b></em>'.
  * <!-- end-user-doc -->
  *
  *
- * @see org.eclipse.emf.compare.uml2.UMLComparePackage#getExtendChange()
+ * @see org.eclipse.emf.compare.uml2.UMLComparePackage#getIncludeChange()
  * @model
  * @generated
  */
-public interface ExtendChange extends UMLDiff {
-
-} // ExtendChange
+public interface IncludeChange extends UMLDiff {
+} // IncludeChange

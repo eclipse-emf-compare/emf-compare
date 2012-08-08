@@ -11,13 +11,12 @@
 package org.eclipse.emf.compare.uml2.impl;
 
 import org.eclipse.emf.compare.ComparePackage;
-
 import org.eclipse.emf.compare.uml2.AssociationChange;
 import org.eclipse.emf.compare.uml2.DependencyChange;
-import org.eclipse.emf.compare.uml2.DestructionEventChange;
 import org.eclipse.emf.compare.uml2.ExecutionSpecificationChange;
 import org.eclipse.emf.compare.uml2.ExtendChange;
 import org.eclipse.emf.compare.uml2.GeneralizationSetChange;
+import org.eclipse.emf.compare.uml2.IncludeChange;
 import org.eclipse.emf.compare.uml2.InterfaceRealizationChange;
 import org.eclipse.emf.compare.uml2.IntervalConstraintChange;
 import org.eclipse.emf.compare.uml2.MessageChange;
@@ -29,124 +28,104 @@ import org.eclipse.emf.compare.uml2.SubstitutionChange;
 import org.eclipse.emf.compare.uml2.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.UMLComparePackage;
 import org.eclipse.emf.compare.uml2.UMLDiff;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-
 import org.eclipse.uml2.uml.UMLPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Package</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
  * @generated
  */
 public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePackage {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass associationChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass dependencyChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass interfaceRealizationChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass substitutionChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass extendChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass includeChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass generalizationSetChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass executionSpecificationChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass destructionEventChangeEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass intervalConstraintChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass messageChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass stereotypePropertyChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass stereotypeApplicationChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass stereotypeReferenceChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass profileApplicationChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass umlDiffEClass = null;
@@ -159,8 +138,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	 * factory method {@link #init init()}, which also performs
 	 * initialization of the package, or returns the registered package,
 	 * if one already exists.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see org.eclipse.emf.compare.uml2.UMLComparePackage#eNS_URI
 	 * @see #init()
@@ -171,8 +149,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private static boolean isInited = false;
@@ -182,8 +159,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	 * 
 	 * <p>This method is used to initialize {@link UMLComparePackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #eNS_URI
 	 * @see #createPackageContents()
 	 * @see #initializePackageContents()
@@ -217,8 +193,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getAssociationChange() {
@@ -226,17 +201,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getAssociationChange_Association() {
-		return (EReference)associationChangeEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getDependencyChange() {
@@ -244,17 +209,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getDependencyChange_Dependency() {
-		return (EReference)dependencyChangeEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getInterfaceRealizationChange() {
@@ -262,8 +217,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getSubstitutionChange() {
@@ -271,8 +225,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getExtendChange() {
@@ -280,17 +233,15 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getExtendChange_Extend() {
-		return (EReference)extendChangeEClass.getEStructuralFeatures().get(0);
+	public EClass getIncludeChange() {
+		return includeChangeEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getGeneralizationSetChange() {
@@ -298,17 +249,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getGeneralizationSetChange_GeneralizationSet() {
-		return (EReference)generalizationSetChangeEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getExecutionSpecificationChange() {
@@ -316,17 +257,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getDestructionEventChange() {
-		return destructionEventChangeEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getIntervalConstraintChange() {
@@ -334,8 +265,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getMessageChange() {
@@ -343,8 +273,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getStereotypePropertyChange() {
@@ -352,8 +281,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getStereotypePropertyChange_Stereotype() {
@@ -361,8 +289,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getStereotypeApplicationChange() {
@@ -370,8 +297,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getStereotypeApplicationChange_Stereotype() {
@@ -379,8 +305,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getStereotypeReferenceChange() {
@@ -388,8 +313,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getProfileApplicationChange() {
@@ -397,8 +321,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getProfileApplicationChange_Profile() {
@@ -406,8 +329,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getUMLDiff() {
@@ -415,8 +337,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getUMLDiff_Discriminant() {
@@ -424,8 +345,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getUMLDiff_EReference() {
@@ -433,8 +353,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public UMLCompareFactory getUMLCompareFactory() {
@@ -442,8 +361,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private boolean isCreated = false;
@@ -451,8 +369,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	/**
 	 * Creates the meta-model objects for the package.  This method is
 	 * guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void createPackageContents() {
@@ -461,24 +378,20 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 		// Create classes and their features
 		associationChangeEClass = createEClass(ASSOCIATION_CHANGE);
-		createEReference(associationChangeEClass, ASSOCIATION_CHANGE__ASSOCIATION);
 
 		dependencyChangeEClass = createEClass(DEPENDENCY_CHANGE);
-		createEReference(dependencyChangeEClass, DEPENDENCY_CHANGE__DEPENDENCY);
 
 		interfaceRealizationChangeEClass = createEClass(INTERFACE_REALIZATION_CHANGE);
 
 		substitutionChangeEClass = createEClass(SUBSTITUTION_CHANGE);
 
 		extendChangeEClass = createEClass(EXTEND_CHANGE);
-		createEReference(extendChangeEClass, EXTEND_CHANGE__EXTEND);
+
+		includeChangeEClass = createEClass(INCLUDE_CHANGE);
 
 		generalizationSetChangeEClass = createEClass(GENERALIZATION_SET_CHANGE);
-		createEReference(generalizationSetChangeEClass, GENERALIZATION_SET_CHANGE__GENERALIZATION_SET);
 
 		executionSpecificationChangeEClass = createEClass(EXECUTION_SPECIFICATION_CHANGE);
-
-		destructionEventChangeEClass = createEClass(DESTRUCTION_EVENT_CHANGE);
 
 		intervalConstraintChangeEClass = createEClass(INTERVAL_CONSTRAINT_CHANGE);
 
@@ -501,8 +414,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private boolean isInitialized = false;
@@ -510,8 +422,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	/**
 	 * Complete the initialization of the package and its meta-model.  This
 	 * method is guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void initializePackageContents() {
@@ -538,9 +449,9 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 		interfaceRealizationChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		substitutionChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		extendChangeEClass.getESuperTypes().add(this.getUMLDiff());
+		includeChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		generalizationSetChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		executionSpecificationChangeEClass.getESuperTypes().add(this.getUMLDiff());
-		destructionEventChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		intervalConstraintChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		messageChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		stereotypePropertyChangeEClass.getESuperTypes().add(this.getUMLDiff());
@@ -553,24 +464,20 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(associationChangeEClass, AssociationChange.class, "AssociationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getAssociationChange_Association(), theUMLPackage.getAssociation(), null, "association", null, 0, 1, AssociationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(dependencyChangeEClass, DependencyChange.class, "DependencyChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getDependencyChange_Dependency(), theUMLPackage.getDependency(), null, "dependency", null, 0, 1, DependencyChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(interfaceRealizationChangeEClass, InterfaceRealizationChange.class, "InterfaceRealizationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(substitutionChangeEClass, SubstitutionChange.class, "SubstitutionChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(extendChangeEClass, ExtendChange.class, "ExtendChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getExtendChange_Extend(), theUMLPackage.getExtend(), null, "extend", null, 0, 1, ExtendChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(includeChangeEClass, IncludeChange.class, "IncludeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(generalizationSetChangeEClass, GeneralizationSetChange.class, "GeneralizationSetChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getGeneralizationSetChange_GeneralizationSet(), theUMLPackage.getGeneralizationSet(), null, "generalizationSet", null, 0, 1, GeneralizationSetChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(executionSpecificationChangeEClass, ExecutionSpecificationChange.class, "ExecutionSpecificationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(destructionEventChangeEClass, DestructionEventChange.class, "DestructionEventChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(intervalConstraintChangeEClass, IntervalConstraintChange.class, "IntervalConstraintChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
@@ -595,4 +502,4 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 		createResource(eNS_URI);
 	}
 
-} //UMLComparePackageImpl
+} // UMLComparePackageImpl

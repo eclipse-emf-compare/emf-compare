@@ -11,20 +11,18 @@
 package org.eclipse.emf.compare.uml2;
 
 import org.eclipse.emf.compare.ComparePackage;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
 /**
- * <!-- begin-user-doc -->
- * The <b>Package</b> for the model.
- * It contains accessors for the meta objects to represent
+ * <!-- begin-user-doc --> The <b>Package</b> for the model. It contains accessors for the meta objects to
+ * represent
  * <ul>
- *   <li>each class,</li>
- *   <li>each feature of each class,</li>
- *   <li>each enum,</li>
- *   <li>and each data type</li>
+ * <li>each class,</li>
+ * <li>each feature of each class,</li>
+ * <li>each enum,</li>
+ * <li>and each data type</li>
  * </ul>
  * <!-- end-user-doc -->
  * @see org.eclipse.emf.compare.uml2.UMLCompareFactory
@@ -34,40 +32,35 @@ import org.eclipse.emf.ecore.EReference;
 public interface UMLComparePackage extends EPackage {
 	/**
 	 * The package name.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	String eNAME = "uml2"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace URI.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://www.eclipse.org/emf/compare/uml2/2.0"; //$NON-NLS-1$
+	String eNS_URI = "http://www.eclipse.org/emf/compare/diff/uml2/2.0"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace name.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	String eNS_PREFIX = "umlcompare"; //$NON-NLS-1$
 
 	/**
 	 * The singleton instance of the package.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	UMLComparePackage eINSTANCE = org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl.init();
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.UMLDiffImpl <em>UML Diff</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.compare.uml2.impl.UMLDiffImpl
 	 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getUMLDiff()
 	 * @generated
@@ -76,8 +69,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -85,8 +78,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Requires</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -94,8 +87,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Required By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -103,8 +96,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -112,8 +105,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -121,17 +114,16 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int UML_DIFF__KIND = ComparePackage.DIFF__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Source</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -139,8 +131,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -148,17 +139,17 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int UML_DIFF__EQUIVALENCE = ComparePackage.DIFF__EQUIVALENCE;
 
 	/**
-	 * The feature id for the '<em><b>Conflict</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -166,8 +157,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -175,8 +166,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>EReference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -184,8 +175,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The number of structural features of the '<em>UML Diff</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -193,8 +184,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.AssociationChangeImpl <em>Association Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.compare.uml2.impl.AssociationChangeImpl
 	 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getAssociationChange()
 	 * @generated
@@ -203,8 +193,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -212,8 +202,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Requires</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -221,8 +211,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Required By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -230,8 +220,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -239,8 +229,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -248,17 +238,16 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int ASSOCIATION_CHANGE__KIND = UML_DIFF__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Source</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -266,8 +255,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -275,17 +263,17 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int ASSOCIATION_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
 
 	/**
-	 * The feature id for the '<em><b>Conflict</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -293,8 +281,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -302,21 +290,12 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>EReference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int ASSOCIATION_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
-
-	/**
-	 * The feature id for the '<em><b>Association</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ASSOCIATION_CHANGE__ASSOCIATION = UML_DIFF_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Association Change</em>' class.
@@ -325,12 +304,11 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ASSOCIATION_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 1;
+	int ASSOCIATION_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.DependencyChangeImpl <em>Dependency Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.compare.uml2.impl.DependencyChangeImpl
 	 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getDependencyChange()
 	 * @generated
@@ -339,8 +317,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -348,8 +326,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Requires</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -357,8 +335,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Required By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -366,8 +344,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -375,8 +353,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -384,17 +362,16 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int DEPENDENCY_CHANGE__KIND = UML_DIFF__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Source</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -402,8 +379,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -411,17 +387,17 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int DEPENDENCY_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
 
 	/**
-	 * The feature id for the '<em><b>Conflict</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -429,8 +405,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -438,21 +414,12 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>EReference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int DEPENDENCY_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
-
-	/**
-	 * The feature id for the '<em><b>Dependency</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DEPENDENCY_CHANGE__DEPENDENCY = UML_DIFF_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Dependency Change</em>' class.
@@ -461,12 +428,11 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DEPENDENCY_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 1;
+	int DEPENDENCY_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.InterfaceRealizationChangeImpl <em>Interface Realization Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.compare.uml2.impl.InterfaceRealizationChangeImpl
 	 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getInterfaceRealizationChange()
 	 * @generated
@@ -475,8 +441,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -484,8 +450,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Requires</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -493,8 +459,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Required By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -502,8 +468,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -511,8 +477,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -520,17 +486,16 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int INTERFACE_REALIZATION_CHANGE__KIND = UML_DIFF__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Source</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -538,8 +503,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -547,17 +511,17 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int INTERFACE_REALIZATION_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
 
 	/**
-	 * The feature id for the '<em><b>Conflict</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -565,8 +529,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -574,17 +538,17 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>EReference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int INTERFACE_REALIZATION_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
 
 	/**
-	 * The number of structural features of the '<em>Interface Realization Change</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The number of structural features of the '<em>Interface Realization Change</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -592,8 +556,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.SubstitutionChangeImpl <em>Substitution Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.compare.uml2.impl.SubstitutionChangeImpl
 	 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getSubstitutionChange()
 	 * @generated
@@ -602,8 +565,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -611,8 +574,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Requires</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -620,8 +583,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Required By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -629,8 +592,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -638,8 +601,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -647,17 +610,16 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int SUBSTITUTION_CHANGE__KIND = UML_DIFF__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Source</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -665,8 +627,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -674,17 +635,17 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int SUBSTITUTION_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
 
 	/**
-	 * The feature id for the '<em><b>Conflict</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -692,8 +653,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -701,8 +662,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>EReference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -719,8 +680,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.ExtendChangeImpl <em>Extend Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.compare.uml2.impl.ExtendChangeImpl
 	 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getExtendChange()
 	 * @generated
@@ -729,8 +689,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -738,8 +698,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Requires</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -747,8 +707,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Required By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -756,8 +716,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -765,8 +725,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -774,17 +734,16 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int EXTEND_CHANGE__KIND = UML_DIFF__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Source</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -792,8 +751,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -801,17 +759,17 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int EXTEND_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
 
 	/**
-	 * The feature id for the '<em><b>Conflict</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -819,8 +777,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -828,45 +786,159 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>EReference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int EXTEND_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
 
 	/**
-	 * The feature id for the '<em><b>Extend</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The number of structural features of the '<em>Extend Change</em>' class.
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXTEND_CHANGE__EXTEND = UML_DIFF_FEATURE_COUNT + 0;
+	int EXTEND_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Extend Change</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.IncludeChangeImpl <em>Include Change</em>}' class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2.impl.IncludeChangeImpl
+	 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getIncludeChange()
+	 * @generated
+	 */
+	int INCLUDE_CHANGE = 5;
+
+	/**
+	 * The feature id for the '<em><b>Match</b></em>' container reference.
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXTEND_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 1;
+	int INCLUDE_CHANGE__MATCH = UML_DIFF__MATCH;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INCLUDE_CHANGE__REQUIRES = UML_DIFF__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INCLUDE_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Refines</b></em>' reference list.
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INCLUDE_CHANGE__REFINES = UML_DIFF__REFINES;
+
+	/**
+	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INCLUDE_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INCLUDE_CHANGE__KIND = UML_DIFF__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int INCLUDE_CHANGE__SOURCE = UML_DIFF__SOURCE;
+
+	/**
+	 * The feature id for the '<em><b>State</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INCLUDE_CHANGE__STATE = UML_DIFF__STATE;
+
+	/**
+	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INCLUDE_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
+
+	/**
+	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int INCLUDE_CHANGE__CONFLICT = UML_DIFF__CONFLICT;
+
+	/**
+	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INCLUDE_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
+
+	/**
+	 * The feature id for the '<em><b>EReference</b></em>' reference.
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INCLUDE_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
+
+	/**
+	 * The number of structural features of the '<em>Include Change</em>' class.
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INCLUDE_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.GeneralizationSetChangeImpl <em>Generalization Set Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.compare.uml2.impl.GeneralizationSetChangeImpl
 	 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getGeneralizationSetChange()
 	 * @generated
 	 */
-	int GENERALIZATION_SET_CHANGE = 5;
+	int GENERALIZATION_SET_CHANGE = 6;
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -874,8 +946,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Requires</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -883,8 +955,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Required By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -892,8 +964,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -901,8 +973,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -910,17 +982,16 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int GENERALIZATION_SET_CHANGE__KIND = UML_DIFF__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Source</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -928,8 +999,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -937,17 +1007,17 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int GENERALIZATION_SET_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
 
 	/**
-	 * The feature id for the '<em><b>Conflict</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -955,8 +1025,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -964,45 +1034,35 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>EReference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int GENERALIZATION_SET_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
 
 	/**
-	 * The feature id for the '<em><b>Generalization Set</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The number of structural features of the '<em>Generalization Set Change</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int GENERALIZATION_SET_CHANGE__GENERALIZATION_SET = UML_DIFF_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Generalization Set Change</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERALIZATION_SET_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 1;
+	int GENERALIZATION_SET_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.ExecutionSpecificationChangeImpl <em>Execution Specification Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.compare.uml2.impl.ExecutionSpecificationChangeImpl
 	 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getExecutionSpecificationChange()
 	 * @generated
 	 */
-	int EXECUTION_SPECIFICATION_CHANGE = 6;
+	int EXECUTION_SPECIFICATION_CHANGE = 7;
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1010,8 +1070,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Requires</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1019,8 +1079,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Required By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1028,8 +1088,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1037,8 +1097,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1046,17 +1106,16 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int EXECUTION_SPECIFICATION_CHANGE__KIND = UML_DIFF__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Source</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -1064,8 +1123,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1073,17 +1131,17 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int EXECUTION_SPECIFICATION_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
 
 	/**
-	 * The feature id for the '<em><b>Conflict</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -1091,8 +1149,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1100,153 +1158,25 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>EReference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int EXECUTION_SPECIFICATION_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
 
 	/**
-	 * The number of structural features of the '<em>Execution Specification Change</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The number of structural features of the '<em>Execution Specification Change</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int EXECUTION_SPECIFICATION_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.DestructionEventChangeImpl <em>Destruction Event Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.uml2.impl.DestructionEventChangeImpl
-	 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getDestructionEventChange()
-	 * @generated
-	 */
-	int DESTRUCTION_EVENT_CHANGE = 7;
-
-	/**
-	 * The feature id for the '<em><b>Match</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DESTRUCTION_EVENT_CHANGE__MATCH = UML_DIFF__MATCH;
-
-	/**
-	 * The feature id for the '<em><b>Requires</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DESTRUCTION_EVENT_CHANGE__REQUIRES = UML_DIFF__REQUIRES;
-
-	/**
-	 * The feature id for the '<em><b>Required By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DESTRUCTION_EVENT_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
-
-	/**
-	 * The feature id for the '<em><b>Refines</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DESTRUCTION_EVENT_CHANGE__REFINES = UML_DIFF__REFINES;
-
-	/**
-	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DESTRUCTION_EVENT_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
-
-	/**
-	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DESTRUCTION_EVENT_CHANGE__KIND = UML_DIFF__KIND;
-
-	/**
-	 * The feature id for the '<em><b>Source</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DESTRUCTION_EVENT_CHANGE__SOURCE = UML_DIFF__SOURCE;
-
-	/**
-	 * The feature id for the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DESTRUCTION_EVENT_CHANGE__STATE = UML_DIFF__STATE;
-
-	/**
-	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DESTRUCTION_EVENT_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
-
-	/**
-	 * The feature id for the '<em><b>Conflict</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DESTRUCTION_EVENT_CHANGE__CONFLICT = UML_DIFF__CONFLICT;
-
-	/**
-	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DESTRUCTION_EVENT_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
-
-	/**
-	 * The feature id for the '<em><b>EReference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DESTRUCTION_EVENT_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
-
-	/**
-	 * The number of structural features of the '<em>Destruction Event Change</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DESTRUCTION_EVENT_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.IntervalConstraintChangeImpl <em>Interval Constraint Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.compare.uml2.impl.IntervalConstraintChangeImpl
 	 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getIntervalConstraintChange()
 	 * @generated
@@ -1255,8 +1185,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1264,8 +1194,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Requires</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1273,8 +1203,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Required By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1282,8 +1212,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1291,8 +1221,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1300,17 +1230,16 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int INTERVAL_CONSTRAINT_CHANGE__KIND = UML_DIFF__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Source</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -1318,8 +1247,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1327,17 +1255,17 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int INTERVAL_CONSTRAINT_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
 
 	/**
-	 * The feature id for the '<em><b>Conflict</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -1345,8 +1273,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1354,17 +1282,17 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>EReference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int INTERVAL_CONSTRAINT_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
 
 	/**
-	 * The number of structural features of the '<em>Interval Constraint Change</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The number of structural features of the '<em>Interval Constraint Change</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -1372,8 +1300,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.MessageChangeImpl <em>Message Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.compare.uml2.impl.MessageChangeImpl
 	 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getMessageChange()
 	 * @generated
@@ -1382,8 +1309,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1391,8 +1318,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Requires</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1400,8 +1327,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Required By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1409,8 +1336,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1418,8 +1345,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1427,17 +1354,16 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int MESSAGE_CHANGE__KIND = UML_DIFF__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Source</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -1445,8 +1371,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1454,17 +1379,17 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int MESSAGE_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
 
 	/**
-	 * The feature id for the '<em><b>Conflict</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -1472,8 +1397,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1481,8 +1406,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>EReference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1490,8 +1415,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The number of structural features of the '<em>Message Change</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1499,8 +1424,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.StereotypePropertyChangeImpl <em>Stereotype Property Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.compare.uml2.impl.StereotypePropertyChangeImpl
 	 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getStereotypePropertyChange()
 	 * @generated
@@ -1509,8 +1433,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1518,8 +1442,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Requires</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1527,8 +1451,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Required By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1536,8 +1460,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1545,8 +1469,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1554,17 +1478,16 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int STEREOTYPE_PROPERTY_CHANGE__KIND = UML_DIFF__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Source</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -1572,8 +1495,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1581,17 +1503,17 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int STEREOTYPE_PROPERTY_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
 
 	/**
-	 * The feature id for the '<em><b>Conflict</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -1599,8 +1521,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1608,8 +1530,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>EReference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1617,17 +1539,17 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Stereotype</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int STEREOTYPE_PROPERTY_CHANGE__STEREOTYPE = UML_DIFF_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Stereotype Property Change</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The number of structural features of the '<em>Stereotype Property Change</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -1635,8 +1557,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.StereotypeApplicationChangeImpl <em>Stereotype Application Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.compare.uml2.impl.StereotypeApplicationChangeImpl
 	 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getStereotypeApplicationChange()
 	 * @generated
@@ -1645,8 +1566,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1654,8 +1575,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Requires</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1663,8 +1584,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Required By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1672,8 +1593,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1681,8 +1602,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1690,17 +1611,16 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int STEREOTYPE_APPLICATION_CHANGE__KIND = ComparePackage.REFERENCE_CHANGE__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Source</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -1708,8 +1628,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1717,26 +1636,26 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int STEREOTYPE_APPLICATION_CHANGE__EQUIVALENCE = ComparePackage.REFERENCE_CHANGE__EQUIVALENCE;
 
 	/**
-	 * The feature id for the '<em><b>Conflict</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int STEREOTYPE_APPLICATION_CHANGE__CONFLICT = ComparePackage.REFERENCE_CHANGE__CONFLICT;
 
 	/**
-	 * The feature id for the '<em><b>Reference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Reference</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -1744,8 +1663,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1753,8 +1671,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1762,8 +1680,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>EReference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1771,17 +1689,17 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Stereotype</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 2;
 
 	/**
-	 * The number of structural features of the '<em>Stereotype Application Change</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The number of structural features of the '<em>Stereotype Application Change</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -1789,8 +1707,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.StereotypeReferenceChangeImpl <em>Stereotype Reference Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.compare.uml2.impl.StereotypeReferenceChangeImpl
 	 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getStereotypeReferenceChange()
 	 * @generated
@@ -1799,8 +1716,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1808,8 +1725,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Requires</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1817,8 +1734,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Required By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1826,8 +1743,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1835,8 +1752,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1844,17 +1761,16 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int STEREOTYPE_REFERENCE_CHANGE__KIND = UML_DIFF__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Source</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -1862,8 +1778,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1871,17 +1786,17 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int STEREOTYPE_REFERENCE_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
 
 	/**
-	 * The feature id for the '<em><b>Conflict</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -1889,8 +1804,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1898,17 +1813,17 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>EReference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int STEREOTYPE_REFERENCE_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
 
 	/**
-	 * The number of structural features of the '<em>Stereotype Reference Change</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The number of structural features of the '<em>Stereotype Reference Change</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -1916,8 +1831,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.ProfileApplicationChangeImpl <em>Profile Application Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.compare.uml2.impl.ProfileApplicationChangeImpl
 	 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getProfileApplicationChange()
 	 * @generated
@@ -1926,8 +1840,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1935,8 +1849,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Requires</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1944,8 +1858,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Required By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1953,8 +1867,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1962,8 +1876,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1971,17 +1885,16 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int PROFILE_APPLICATION_CHANGE__KIND = ComparePackage.REFERENCE_CHANGE__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Source</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -1989,8 +1902,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -1998,26 +1910,26 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int PROFILE_APPLICATION_CHANGE__EQUIVALENCE = ComparePackage.REFERENCE_CHANGE__EQUIVALENCE;
 
 	/**
-	 * The feature id for the '<em><b>Conflict</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int PROFILE_APPLICATION_CHANGE__CONFLICT = ComparePackage.REFERENCE_CHANGE__CONFLICT;
 
 	/**
-	 * The feature id for the '<em><b>Reference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Reference</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
@@ -2025,8 +1937,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -2034,8 +1945,8 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
@@ -2043,36 +1954,34 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * The feature id for the '<em><b>EReference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int PROFILE_APPLICATION_CHANGE__EREFERENCE = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Profile</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Profile</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int PROFILE_APPLICATION_CHANGE__PROFILE = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 2;
 
 	/**
-	 * The number of structural features of the '<em>Profile Application Change</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The number of structural features of the '<em>Profile Application Change</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 * @ordered
 	 */
 	int PROFILE_APPLICATION_CHANGE_FEATURE_COUNT = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 3;
 
-
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.AssociationChange <em>Association Change</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Association Change</em>'.
 	 * @see org.eclipse.emf.compare.uml2.AssociationChange
 	 * @generated
@@ -2080,20 +1989,8 @@ public interface UMLComparePackage extends EPackage {
 	EClass getAssociationChange();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.uml2.AssociationChange#getAssociation <em>Association</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Association</em>'.
-	 * @see org.eclipse.emf.compare.uml2.AssociationChange#getAssociation()
-	 * @see #getAssociationChange()
-	 * @generated
-	 */
-	EReference getAssociationChange_Association();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.DependencyChange <em>Dependency Change</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Dependency Change</em>'.
 	 * @see org.eclipse.emf.compare.uml2.DependencyChange
 	 * @generated
@@ -2101,20 +1998,8 @@ public interface UMLComparePackage extends EPackage {
 	EClass getDependencyChange();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.uml2.DependencyChange#getDependency <em>Dependency</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Dependency</em>'.
-	 * @see org.eclipse.emf.compare.uml2.DependencyChange#getDependency()
-	 * @see #getDependencyChange()
-	 * @generated
-	 */
-	EReference getDependencyChange_Dependency();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.InterfaceRealizationChange <em>Interface Realization Change</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Interface Realization Change</em>'.
 	 * @see org.eclipse.emf.compare.uml2.InterfaceRealizationChange
 	 * @generated
@@ -2123,8 +2008,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.SubstitutionChange <em>Substitution Change</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Substitution Change</em>'.
 	 * @see org.eclipse.emf.compare.uml2.SubstitutionChange
 	 * @generated
@@ -2133,8 +2017,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.ExtendChange <em>Extend Change</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Extend Change</em>'.
 	 * @see org.eclipse.emf.compare.uml2.ExtendChange
 	 * @generated
@@ -2142,20 +2025,17 @@ public interface UMLComparePackage extends EPackage {
 	EClass getExtendChange();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.uml2.ExtendChange#getExtend <em>Extend</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Extend</em>'.
-	 * @see org.eclipse.emf.compare.uml2.ExtendChange#getExtend()
-	 * @see #getExtendChange()
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.IncludeChange <em>Include Change</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Include Change</em>'.
+	 * @see org.eclipse.emf.compare.uml2.IncludeChange
 	 * @generated
 	 */
-	EReference getExtendChange_Extend();
+	EClass getIncludeChange();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.GeneralizationSetChange <em>Generalization Set Change</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Generalization Set Change</em>'.
 	 * @see org.eclipse.emf.compare.uml2.GeneralizationSetChange
 	 * @generated
@@ -2163,20 +2043,8 @@ public interface UMLComparePackage extends EPackage {
 	EClass getGeneralizationSetChange();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.uml2.GeneralizationSetChange#getGeneralizationSet <em>Generalization Set</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Generalization Set</em>'.
-	 * @see org.eclipse.emf.compare.uml2.GeneralizationSetChange#getGeneralizationSet()
-	 * @see #getGeneralizationSetChange()
-	 * @generated
-	 */
-	EReference getGeneralizationSetChange_GeneralizationSet();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.ExecutionSpecificationChange <em>Execution Specification Change</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Execution Specification Change</em>'.
 	 * @see org.eclipse.emf.compare.uml2.ExecutionSpecificationChange
 	 * @generated
@@ -2184,19 +2052,8 @@ public interface UMLComparePackage extends EPackage {
 	EClass getExecutionSpecificationChange();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.DestructionEventChange <em>Destruction Event Change</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Destruction Event Change</em>'.
-	 * @see org.eclipse.emf.compare.uml2.DestructionEventChange
-	 * @generated
-	 */
-	EClass getDestructionEventChange();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.IntervalConstraintChange <em>Interval Constraint Change</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Interval Constraint Change</em>'.
 	 * @see org.eclipse.emf.compare.uml2.IntervalConstraintChange
 	 * @generated
@@ -2205,8 +2062,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.MessageChange <em>Message Change</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Message Change</em>'.
 	 * @see org.eclipse.emf.compare.uml2.MessageChange
 	 * @generated
@@ -2215,8 +2071,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.StereotypePropertyChange <em>Stereotype Property Change</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Stereotype Property Change</em>'.
 	 * @see org.eclipse.emf.compare.uml2.StereotypePropertyChange
 	 * @generated
@@ -2224,9 +2079,10 @@ public interface UMLComparePackage extends EPackage {
 	EClass getStereotypePropertyChange();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.uml2.StereotypePropertyChange#getStereotype <em>Stereotype</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the meta object for the reference '
+	 * {@link org.eclipse.emf.compare.uml2.StereotypePropertyChange#getStereotype <em>Stereotype</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @return the meta object for the reference '<em>Stereotype</em>'.
 	 * @see org.eclipse.emf.compare.uml2.StereotypePropertyChange#getStereotype()
 	 * @see #getStereotypePropertyChange()
@@ -2236,8 +2092,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.StereotypeApplicationChange <em>Stereotype Application Change</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Stereotype Application Change</em>'.
 	 * @see org.eclipse.emf.compare.uml2.StereotypeApplicationChange
 	 * @generated
@@ -2246,8 +2101,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.uml2.StereotypeApplicationChange#getStereotype <em>Stereotype</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Stereotype</em>'.
 	 * @see org.eclipse.emf.compare.uml2.StereotypeApplicationChange#getStereotype()
 	 * @see #getStereotypeApplicationChange()
@@ -2257,8 +2111,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.StereotypeReferenceChange <em>Stereotype Reference Change</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Stereotype Reference Change</em>'.
 	 * @see org.eclipse.emf.compare.uml2.StereotypeReferenceChange
 	 * @generated
@@ -2267,8 +2120,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.ProfileApplicationChange <em>Profile Application Change</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Profile Application Change</em>'.
 	 * @see org.eclipse.emf.compare.uml2.ProfileApplicationChange
 	 * @generated
@@ -2276,9 +2128,10 @@ public interface UMLComparePackage extends EPackage {
 	EClass getProfileApplicationChange();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.uml2.ProfileApplicationChange#getProfile <em>Profile</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the meta object for the reference '
+	 * {@link org.eclipse.emf.compare.uml2.ProfileApplicationChange#getProfile <em>Profile</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @return the meta object for the reference '<em>Profile</em>'.
 	 * @see org.eclipse.emf.compare.uml2.ProfileApplicationChange#getProfile()
 	 * @see #getProfileApplicationChange()
@@ -2288,8 +2141,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.UMLDiff <em>UML Diff</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>UML Diff</em>'.
 	 * @see org.eclipse.emf.compare.uml2.UMLDiff
 	 * @generated
@@ -2298,8 +2150,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.uml2.UMLDiff#getDiscriminant <em>Discriminant</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Discriminant</em>'.
 	 * @see org.eclipse.emf.compare.uml2.UMLDiff#getDiscriminant()
 	 * @see #getUMLDiff()
@@ -2309,8 +2160,7 @@ public interface UMLComparePackage extends EPackage {
 
 	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.uml2.UMLDiff#getEReference <em>EReference</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>EReference</em>'.
 	 * @see org.eclipse.emf.compare.uml2.UMLDiff#getEReference()
 	 * @see #getUMLDiff()
@@ -2319,22 +2169,21 @@ public interface UMLComparePackage extends EPackage {
 	EReference getUMLDiff_EReference();
 
 	/**
-	 * Returns the factory that creates the instances of the model.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the factory that creates the instances of the model. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @return the factory that creates the instances of the model.
 	 * @generated
 	 */
 	UMLCompareFactory getUMLCompareFactory();
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * Defines literals for the meta objects that represent
+	 * <!-- begin-user-doc --> Defines literals for the meta objects that represent
 	 * <ul>
-	 *   <li>each class,</li>
-	 *   <li>each feature of each class,</li>
-	 *   <li>each enum,</li>
-	 *   <li>and each data type</li>
+	 * <li>each class,</li>
+	 * <li>each feature of each class,</li>
+	 * <li>each enum,</li>
+	 * <li>and each data type</li>
 	 * </ul>
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -2342,8 +2191,7 @@ public interface UMLComparePackage extends EPackage {
 	interface Literals {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.impl.AssociationChangeImpl <em>Association Change</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see org.eclipse.emf.compare.uml2.impl.AssociationChangeImpl
 		 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getAssociationChange()
 		 * @generated
@@ -2351,17 +2199,8 @@ public interface UMLComparePackage extends EPackage {
 		EClass ASSOCIATION_CHANGE = eINSTANCE.getAssociationChange();
 
 		/**
-		 * The meta object literal for the '<em><b>Association</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ASSOCIATION_CHANGE__ASSOCIATION = eINSTANCE.getAssociationChange_Association();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.impl.DependencyChangeImpl <em>Dependency Change</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see org.eclipse.emf.compare.uml2.impl.DependencyChangeImpl
 		 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getDependencyChange()
 		 * @generated
@@ -2369,17 +2208,8 @@ public interface UMLComparePackage extends EPackage {
 		EClass DEPENDENCY_CHANGE = eINSTANCE.getDependencyChange();
 
 		/**
-		 * The meta object literal for the '<em><b>Dependency</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference DEPENDENCY_CHANGE__DEPENDENCY = eINSTANCE.getDependencyChange_Dependency();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.impl.InterfaceRealizationChangeImpl <em>Interface Realization Change</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see org.eclipse.emf.compare.uml2.impl.InterfaceRealizationChangeImpl
 		 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getInterfaceRealizationChange()
 		 * @generated
@@ -2388,8 +2218,7 @@ public interface UMLComparePackage extends EPackage {
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.impl.SubstitutionChangeImpl <em>Substitution Change</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see org.eclipse.emf.compare.uml2.impl.SubstitutionChangeImpl
 		 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getSubstitutionChange()
 		 * @generated
@@ -2398,8 +2227,7 @@ public interface UMLComparePackage extends EPackage {
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.impl.ExtendChangeImpl <em>Extend Change</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see org.eclipse.emf.compare.uml2.impl.ExtendChangeImpl
 		 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getExtendChange()
 		 * @generated
@@ -2407,17 +2235,17 @@ public interface UMLComparePackage extends EPackage {
 		EClass EXTEND_CHANGE = eINSTANCE.getExtendChange();
 
 		/**
-		 * The meta object literal for the '<em><b>Extend</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.impl.IncludeChangeImpl <em>Include Change</em>}' class.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.uml2.impl.IncludeChangeImpl
+		 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getIncludeChange()
 		 * @generated
 		 */
-		EReference EXTEND_CHANGE__EXTEND = eINSTANCE.getExtendChange_Extend();
+		EClass INCLUDE_CHANGE = eINSTANCE.getIncludeChange();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.impl.GeneralizationSetChangeImpl <em>Generalization Set Change</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see org.eclipse.emf.compare.uml2.impl.GeneralizationSetChangeImpl
 		 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getGeneralizationSetChange()
 		 * @generated
@@ -2425,17 +2253,8 @@ public interface UMLComparePackage extends EPackage {
 		EClass GENERALIZATION_SET_CHANGE = eINSTANCE.getGeneralizationSetChange();
 
 		/**
-		 * The meta object literal for the '<em><b>Generalization Set</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference GENERALIZATION_SET_CHANGE__GENERALIZATION_SET = eINSTANCE.getGeneralizationSetChange_GeneralizationSet();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.impl.ExecutionSpecificationChangeImpl <em>Execution Specification Change</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see org.eclipse.emf.compare.uml2.impl.ExecutionSpecificationChangeImpl
 		 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getExecutionSpecificationChange()
 		 * @generated
@@ -2443,19 +2262,8 @@ public interface UMLComparePackage extends EPackage {
 		EClass EXECUTION_SPECIFICATION_CHANGE = eINSTANCE.getExecutionSpecificationChange();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.impl.DestructionEventChangeImpl <em>Destruction Event Change</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.emf.compare.uml2.impl.DestructionEventChangeImpl
-		 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getDestructionEventChange()
-		 * @generated
-		 */
-		EClass DESTRUCTION_EVENT_CHANGE = eINSTANCE.getDestructionEventChange();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.impl.IntervalConstraintChangeImpl <em>Interval Constraint Change</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see org.eclipse.emf.compare.uml2.impl.IntervalConstraintChangeImpl
 		 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getIntervalConstraintChange()
 		 * @generated
@@ -2464,8 +2272,7 @@ public interface UMLComparePackage extends EPackage {
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.impl.MessageChangeImpl <em>Message Change</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see org.eclipse.emf.compare.uml2.impl.MessageChangeImpl
 		 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getMessageChange()
 		 * @generated
@@ -2474,8 +2281,7 @@ public interface UMLComparePackage extends EPackage {
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.impl.StereotypePropertyChangeImpl <em>Stereotype Property Change</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see org.eclipse.emf.compare.uml2.impl.StereotypePropertyChangeImpl
 		 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getStereotypePropertyChange()
 		 * @generated
@@ -2484,16 +2290,15 @@ public interface UMLComparePackage extends EPackage {
 
 		/**
 		 * The meta object literal for the '<em><b>Stereotype</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc
+		 * --> <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference STEREOTYPE_PROPERTY_CHANGE__STEREOTYPE = eINSTANCE.getStereotypePropertyChange_Stereotype();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.impl.StereotypeApplicationChangeImpl <em>Stereotype Application Change</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see org.eclipse.emf.compare.uml2.impl.StereotypeApplicationChangeImpl
 		 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getStereotypeApplicationChange()
 		 * @generated
@@ -2502,16 +2307,15 @@ public interface UMLComparePackage extends EPackage {
 
 		/**
 		 * The meta object literal for the '<em><b>Stereotype</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc
+		 * --> <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE = eINSTANCE.getStereotypeApplicationChange_Stereotype();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.impl.StereotypeReferenceChangeImpl <em>Stereotype Reference Change</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see org.eclipse.emf.compare.uml2.impl.StereotypeReferenceChangeImpl
 		 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getStereotypeReferenceChange()
 		 * @generated
@@ -2520,8 +2324,7 @@ public interface UMLComparePackage extends EPackage {
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.impl.ProfileApplicationChangeImpl <em>Profile Application Change</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see org.eclipse.emf.compare.uml2.impl.ProfileApplicationChangeImpl
 		 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getProfileApplicationChange()
 		 * @generated
@@ -2530,16 +2333,15 @@ public interface UMLComparePackage extends EPackage {
 
 		/**
 		 * The meta object literal for the '<em><b>Profile</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc
+		 * --> <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference PROFILE_APPLICATION_CHANGE__PROFILE = eINSTANCE.getProfileApplicationChange_Profile();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.impl.UMLDiffImpl <em>UML Diff</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see org.eclipse.emf.compare.uml2.impl.UMLDiffImpl
 		 * @see org.eclipse.emf.compare.uml2.impl.UMLComparePackageImpl#getUMLDiff()
 		 * @generated
@@ -2547,21 +2349,21 @@ public interface UMLComparePackage extends EPackage {
 		EClass UML_DIFF = eINSTANCE.getUMLDiff();
 
 		/**
-		 * The meta object literal for the '<em><b>Discriminant</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * The meta object literal for the '<em><b>Discriminant</b></em>' reference feature. <!--
+		 * begin-user-doc --> <!-- end-user-doc -->
+		 * 
 		 * @generated
 		 */
 		EReference UML_DIFF__DISCRIMINANT = eINSTANCE.getUMLDiff_Discriminant();
 
 		/**
 		 * The meta object literal for the '<em><b>EReference</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+		 * <!-- begin-user-doc
+		 * --> <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference UML_DIFF__EREFERENCE = eINSTANCE.getUMLDiff_EReference();
 
 	}
 
-} //UMLComparePackage
+} // UMLComparePackage

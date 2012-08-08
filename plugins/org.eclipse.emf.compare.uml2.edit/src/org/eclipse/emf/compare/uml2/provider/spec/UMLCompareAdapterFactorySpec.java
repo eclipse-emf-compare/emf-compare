@@ -104,17 +104,6 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.uml2.provider.UMLCompareItemProviderAdapterFactory#createDestructionEventChangeAdapter()
-	 */
-	@Override
-	public Adapter createDestructionEventChangeAdapter() {
-		// TODO Auto-generated method stub
-		return super.createDestructionEventChangeAdapter();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.emf.compare.uml2.provider.UMLCompareItemProviderAdapterFactory#createIntervalConstraintChangeAdapter()
 	 */
 	@Override

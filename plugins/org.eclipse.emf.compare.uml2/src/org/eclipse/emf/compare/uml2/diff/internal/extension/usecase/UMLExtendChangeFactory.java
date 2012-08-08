@@ -67,30 +67,30 @@ public class UMLExtendChangeFactory extends UMLAbstractDiffExtensionFactory {
 	@Override
 	protected DifferenceKind getRelatedExtensionKind(Diff input) {
 		if (input instanceof ReferenceChange) {
-			if (isChangeGeneralizationSet((ReferenceChange)input)) {
+			if (isRelatedToAnExtensionChange((ReferenceChange)input)) {
 				return DifferenceKind.CHANGE;
-			} else if (isAddGeneralizationSet((ReferenceChange)input)) {
+			} else if (isRelatedToAnExtensionAdd((ReferenceChange)input)) {
 				return DifferenceKind.ADD;
-			} else if (isDeleteGeneralizationSet((ReferenceChange)input)) {
+			} else if (isRelatedToAnExtensionDelete((ReferenceChange)input)) {
 				return DifferenceKind.DELETE;
 			}
 		}
 		return null;
 	}
 
-	protected boolean isAddGeneralizationSet(ReferenceChange input) {
+	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
 		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.ADD)
 				&& input.getValue() instanceof Extend && ((Extend)input.getValue()).getExtendedCase() != null
 				&& ((Extend)input.getValue()).getExtensionLocations() != null
 				&& !((Extend)input.getValue()).getExtensionLocations().isEmpty();
 	}
 
-	protected boolean isDeleteGeneralizationSet(ReferenceChange input) {
+	protected boolean isRelatedToAnExtensionDelete(ReferenceChange input) {
 		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.DELETE)
 				&& input.getValue() instanceof Extend;
 	}
 
-	protected boolean isChangeGeneralizationSet(ReferenceChange input) {
+	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
 		return input.getReference().equals(UMLPackage.Literals.EXTEND__EXTENDED_CASE)
 				|| input.getReference().equals(UMLPackage.Literals.EXTEND__EXTENSION_LOCATION);
 	}

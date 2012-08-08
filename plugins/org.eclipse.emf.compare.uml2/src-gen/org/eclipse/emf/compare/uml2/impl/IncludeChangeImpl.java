@@ -10,34 +10,27 @@
  */
 package org.eclipse.emf.compare.uml2.impl;
 
-import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.compare.uml2.GeneralizationSetChange;
+import org.eclipse.emf.compare.uml2.IncludeChange;
 import org.eclipse.emf.compare.uml2.UMLComparePackage;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
-import org.eclipse.uml2.uml.GeneralizationSet;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Generalization Set Change</b></em>'.
+ * An implementation of the model object '<em><b>Include Change</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
-public class GeneralizationSetChangeImpl extends UMLDiffImpl implements GeneralizationSetChange {
+public class IncludeChangeImpl extends UMLDiffImpl implements IncludeChange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected GeneralizationSetChangeImpl() {
+	protected IncludeChangeImpl() {
 		super();
 	}
 
@@ -48,7 +41,7 @@ public class GeneralizationSetChangeImpl extends UMLDiffImpl implements Generali
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return UMLComparePackage.Literals.GENERALIZATION_SET_CHANGE;
+		return UMLComparePackage.Literals.INCLUDE_CHANGE;
 	}
 
-} //GeneralizationSetChangeImpl
+} //IncludeChangeImpl

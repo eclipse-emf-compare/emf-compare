@@ -115,7 +115,7 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 
 	@Override
 	public Match getParentMatch(Diff input, CrossReferencer crossReferencer) {
-		if (getRelatedExtensionKind(input) == DifferenceKind.CHANGE) {
+		if (getRelatedExtensionKind(input) == DifferenceKind.CHANGE && getDiscriminantFromDiff(input) != null) {
 			return (Match)input.getMatch().getComparison().getMatch(getDiscriminantFromDiff(input))
 					.eContainer();
 		}

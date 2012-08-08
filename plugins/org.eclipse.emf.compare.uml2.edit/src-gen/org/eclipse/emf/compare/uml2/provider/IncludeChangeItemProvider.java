@@ -19,10 +19,8 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.compare.DifferenceKind;
 
-import org.eclipse.emf.compare.uml2.DependencyChange;
-import org.eclipse.emf.compare.uml2.UMLComparePackage;
+import org.eclipse.emf.compare.uml2.IncludeChange;
 
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -31,12 +29,12 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.uml2.DependencyChange} object.
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.uml2.IncludeChange} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class DependencyChangeItemProvider
+public class IncludeChangeItemProvider
 	extends UMLDiffItemProvider
 	implements
 		IEditingDomainItemProvider,
@@ -50,7 +48,7 @@ public class DependencyChangeItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DependencyChangeItemProvider(AdapterFactory adapterFactory) {
+	public IncludeChangeItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -70,14 +68,14 @@ public class DependencyChangeItemProvider
 	}
 
 	/**
-	 * This returns DependencyChange.gif.
+	 * This returns IncludeChange.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/DependencyChange")); //$NON-NLS-1$
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/IncludeChange")); //$NON-NLS-1$
 	}
 
 	/**
@@ -88,11 +86,11 @@ public class DependencyChangeItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		DifferenceKind labelValue = ((DependencyChange)object).getKind();
+		DifferenceKind labelValue = ((IncludeChange)object).getKind();
 		String label = labelValue == null ? null : labelValue.toString();
 		return label == null || label.length() == 0 ?
-			getString("_UI_DependencyChange_type") : //$NON-NLS-1$
-			getString("_UI_DependencyChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+			getString("_UI_IncludeChange_type") : //$NON-NLS-1$
+			getString("_UI_IncludeChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

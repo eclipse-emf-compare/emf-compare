@@ -32,7 +32,9 @@ import org.eclipse.emf.compare.uml2.tests.executionSpecification.AddActionExecut
 import org.eclipse.emf.compare.uml2.tests.executionSpecification.AddBehaviorExecutionSpecificationTest;
 import org.eclipse.emf.compare.uml2.tests.extend.AddExtendTest;
 import org.eclipse.emf.compare.uml2.tests.generalizationSet.AddGeneralizationSetTest;
+import org.eclipse.emf.compare.uml2.tests.include.AddIncludeTest;
 import org.eclipse.emf.compare.uml2.tests.message.AddMessageTest;
+import org.eclipse.emf.compare.uml2.tests.timeConstraint.AddTimeConstraintTest;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.UMLPackage;
@@ -53,7 +55,8 @@ import org.junit.runners.Suite.SuiteClasses;
 		ChangeUsageTest.class, AddAssociation3Test.class, AddExtendTest.class,
 		AddGeneralizationSetTest.class, AddInterfaceRealizationTest.class, AddRealizationTest.class,
 		AddSubstitutionTest.class, AddUsageTest.class, AddMessageTest.class,
-		AddActionExecutionSpecificationTest.class, AddBehaviorExecutionSpecificationTest.class })
+		AddActionExecutionSpecificationTest.class, AddBehaviorExecutionSpecificationTest.class,
+		AddIncludeTest.class, AddTimeConstraintTest.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.

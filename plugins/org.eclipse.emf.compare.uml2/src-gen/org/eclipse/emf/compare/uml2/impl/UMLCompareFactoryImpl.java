@@ -35,7 +35,7 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	 */
 	public static UMLCompareFactory init() {
 		try {
-			UMLCompareFactory theUMLCompareFactory = (UMLCompareFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/emf/compare/uml2/2.0"); //$NON-NLS-1$ 
+			UMLCompareFactory theUMLCompareFactory = (UMLCompareFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/emf/compare/diff/uml2/2.0"); //$NON-NLS-1$ 
 			if (theUMLCompareFactory != null) {
 				return theUMLCompareFactory;
 			}
@@ -69,9 +69,9 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 			case UMLComparePackage.INTERFACE_REALIZATION_CHANGE: return createInterfaceRealizationChange();
 			case UMLComparePackage.SUBSTITUTION_CHANGE: return createSubstitutionChange();
 			case UMLComparePackage.EXTEND_CHANGE: return createExtendChange();
+			case UMLComparePackage.INCLUDE_CHANGE: return createIncludeChange();
 			case UMLComparePackage.GENERALIZATION_SET_CHANGE: return createGeneralizationSetChange();
 			case UMLComparePackage.EXECUTION_SPECIFICATION_CHANGE: return createExecutionSpecificationChange();
-			case UMLComparePackage.DESTRUCTION_EVENT_CHANGE: return createDestructionEventChange();
 			case UMLComparePackage.INTERVAL_CONSTRAINT_CHANGE: return createIntervalConstraintChange();
 			case UMLComparePackage.MESSAGE_CHANGE: return createMessageChange();
 			case UMLComparePackage.STEREOTYPE_PROPERTY_CHANGE: return createStereotypePropertyChange();
@@ -138,6 +138,16 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public IncludeChange createIncludeChange() {
+		IncludeChangeImpl includeChange = new IncludeChangeImpl();
+		return includeChange;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public GeneralizationSetChange createGeneralizationSetChange() {
 		GeneralizationSetChangeImpl generalizationSetChange = new GeneralizationSetChangeImpl();
 		return generalizationSetChange;
@@ -151,16 +161,6 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	public ExecutionSpecificationChange createExecutionSpecificationChange() {
 		ExecutionSpecificationChangeImpl executionSpecificationChange = new ExecutionSpecificationChangeImpl();
 		return executionSpecificationChange;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DestructionEventChange createDestructionEventChange() {
-		DestructionEventChangeImpl destructionEventChange = new DestructionEventChangeImpl();
-		return destructionEventChange;
 	}
 
 	/**

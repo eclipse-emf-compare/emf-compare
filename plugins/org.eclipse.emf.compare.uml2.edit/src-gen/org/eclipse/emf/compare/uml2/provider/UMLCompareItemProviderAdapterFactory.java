@@ -195,6 +195,29 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.IncludeChange} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected IncludeChangeItemProvider includeChangeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.IncludeChange}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createIncludeChangeAdapter() {
+		if (includeChangeItemProvider == null) {
+			includeChangeItemProvider = new IncludeChangeItemProvider(this);
+		}
+
+		return includeChangeItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.GeneralizationSetChange} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -238,29 +261,6 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 		}
 
 		return executionSpecificationChangeItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.DestructionEventChange} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected DestructionEventChangeItemProvider destructionEventChangeItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.DestructionEventChange}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createDestructionEventChangeAdapter() {
-		if (destructionEventChangeItemProvider == null) {
-			destructionEventChangeItemProvider = new DestructionEventChangeItemProvider(this);
-		}
-
-		return destructionEventChangeItemProvider;
 	}
 
 	/**
@@ -505,9 +505,9 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 		if (interfaceRealizationChangeItemProvider != null) interfaceRealizationChangeItemProvider.dispose();
 		if (substitutionChangeItemProvider != null) substitutionChangeItemProvider.dispose();
 		if (extendChangeItemProvider != null) extendChangeItemProvider.dispose();
+		if (includeChangeItemProvider != null) includeChangeItemProvider.dispose();
 		if (generalizationSetChangeItemProvider != null) generalizationSetChangeItemProvider.dispose();
 		if (executionSpecificationChangeItemProvider != null) executionSpecificationChangeItemProvider.dispose();
-		if (destructionEventChangeItemProvider != null) destructionEventChangeItemProvider.dispose();
 		if (intervalConstraintChangeItemProvider != null) intervalConstraintChangeItemProvider.dispose();
 		if (messageChangeItemProvider != null) messageChangeItemProvider.dispose();
 		if (stereotypePropertyChangeItemProvider != null) stereotypePropertyChangeItemProvider.dispose();

@@ -65,31 +65,8 @@ public class GeneralizationSetChangeItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addGeneralizationSetPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Generalization Set feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addGeneralizationSetPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_GeneralizationSetChange_generalizationSet_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_GeneralizationSetChange_generalizationSet_feature", "_UI_GeneralizationSetChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 UMLComparePackage.Literals.GENERALIZATION_SET_CHANGE__GENERALIZATION_SET,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
 	}
 
 	/**

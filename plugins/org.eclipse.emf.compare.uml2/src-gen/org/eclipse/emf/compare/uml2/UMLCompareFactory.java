@@ -75,6 +75,15 @@ public interface UMLCompareFactory extends EFactory {
 	ExtendChange createExtendChange();
 
 	/**
+	 * Returns a new object of class '<em>Include Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Include Change</em>'.
+	 * @generated
+	 */
+	IncludeChange createIncludeChange();
+
+	/**
 	 * Returns a new object of class '<em>Generalization Set Change</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -91,15 +100,6 @@ public interface UMLCompareFactory extends EFactory {
 	 * @generated
 	 */
 	ExecutionSpecificationChange createExecutionSpecificationChange();
-
-	/**
-	 * Returns a new object of class '<em>Destruction Event Change</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Destruction Event Change</em>'.
-	 * @generated
-	 */
-	DestructionEventChange createDestructionEventChange();
 
 	/**
 	 * Returns a new object of class '<em>Interval Constraint Change</em>'.

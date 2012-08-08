@@ -117,6 +117,14 @@ public class UMLCompareSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case UMLComparePackage.INCLUDE_CHANGE: {
+				IncludeChange includeChange = (IncludeChange)theEObject;
+				T result = caseIncludeChange(includeChange);
+				if (result == null) result = caseUMLDiff(includeChange);
+				if (result == null) result = caseDiff(includeChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case UMLComparePackage.GENERALIZATION_SET_CHANGE: {
 				GeneralizationSetChange generalizationSetChange = (GeneralizationSetChange)theEObject;
 				T result = caseGeneralizationSetChange(generalizationSetChange);
@@ -130,14 +138,6 @@ public class UMLCompareSwitch<T> extends Switch<T> {
 				T result = caseExecutionSpecificationChange(executionSpecificationChange);
 				if (result == null) result = caseUMLDiff(executionSpecificationChange);
 				if (result == null) result = caseDiff(executionSpecificationChange);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case UMLComparePackage.DESTRUCTION_EVENT_CHANGE: {
-				DestructionEventChange destructionEventChange = (DestructionEventChange)theEObject;
-				T result = caseDestructionEventChange(destructionEventChange);
-				if (result == null) result = caseUMLDiff(destructionEventChange);
-				if (result == null) result = caseDiff(destructionEventChange);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -278,6 +278,21 @@ public class UMLCompareSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Include Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Include Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIncludeChange(IncludeChange object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Generalization Set Change</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -304,21 +319,6 @@ public class UMLCompareSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseExecutionSpecificationChange(ExecutionSpecificationChange object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Destruction Event Change</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Destruction Event Change</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseDestructionEventChange(DestructionEventChange object) {
 		return null;
 	}
 
