@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
+import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
+
+import com.google.common.collect.ImmutableList;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -149,6 +153,9 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 			}
 		}
 
-		return ret;
+		return ImmutableList.copyOf(filter(ret,
+				not(MatchItemProviderSpec.REFINED_OR_REQUIRED_BY_REFINED_DIFF)));
+
 	}
+
 }
