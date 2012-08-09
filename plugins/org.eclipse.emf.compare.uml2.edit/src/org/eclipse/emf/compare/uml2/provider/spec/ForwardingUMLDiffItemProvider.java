@@ -12,6 +12,8 @@ package org.eclipse.emf.compare.uml2.provider.spec;
 
 import com.google.common.base.Preconditions;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.AttributeChange;
@@ -36,6 +38,33 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 	 */
 	public ForwardingUMLDiffItemProvider(ItemProviderAdapter delegate) {
 		super(delegate);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.utils.ForwardingItemProvider#getChildren(java.lang.Object)
+	 */
+	@Override
+	public Collection<?> getChildren(Object object) {
+		final Collection<?> ret;
+		UMLDiff umlDiff = (UMLDiff)object;
+		if (umlDiff.getKind() == DifferenceKind.CHANGE) {
+			ret = umlDiff.getRefinedBy();
+		} else {
+			ret = super.getChildren(object);
+		}
+		return ret;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.utils.ForwardingItemProvider#hasChildren(java.lang.Object)
+	 */
+	@Override
+	public boolean hasChildren(Object object) {
+		return !getChildren(object).isEmpty();
 	}
 
 	/**
