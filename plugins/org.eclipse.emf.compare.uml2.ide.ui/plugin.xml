@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.emf.edit.itemProviderAdapterFactories">
+      <factory
+            class="org.eclipse.emf.compare.uml2.ide.ui.internal.provider.UMLCompareNodeAdapterFactory"
+            supportedTypes=
+            "org.eclipse.compare.structuremergeviewer.IDiffElement
+             org.eclipse.compare.structuremergeviewer.IDiffContainer
+             org.eclipse.compare.structuremergeviewer.ITypedElement
+             org.eclipse.compare.structuremergeviewer.ICompareInput"
+            uri="http://www.eclipse.org/emf/compare/uml2/2.0">
+      </factory>
+   </extension>
+</plugin>
