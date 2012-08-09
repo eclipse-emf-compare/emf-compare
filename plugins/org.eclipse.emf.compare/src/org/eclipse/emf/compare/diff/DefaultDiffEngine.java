@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 // TODO this probably doesn't handle feature maps. Test with an XSD-based metamodel
 // TODO does not handle proxies yet (see fixmes)
@@ -145,7 +146,10 @@ public class DefaultDiffEngine implements IDiffEngine {
 		if (object != null) {
 			Object value = object.eGet(feature, false);
 			final List<Object> asList;
-			if (value instanceof List) {
+			if (value instanceof InternalEList<?>) {
+				// EMF ignores the "resolve" flag for containment lists...
+				asList = ((InternalEList<Object>)value).basicList();
+			} else if (value instanceof List) {
 				asList = (List<Object>)value;
 			} else if (value instanceof Iterable) {
 				asList = ImmutableList.copyOf((Iterable<Object>)value);

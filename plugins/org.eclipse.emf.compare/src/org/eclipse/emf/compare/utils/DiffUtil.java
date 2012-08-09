@@ -34,6 +34,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * This utility class will be used to provide similarity implementations.
@@ -534,7 +535,13 @@ public final class DiffUtil {
 		final List<Object> targetList;
 
 		if (expectedContainer != null) {
-			targetList = (List<Object>)expectedContainer.eGet(feature);
+			final List<Object> temp = (List<Object>)expectedContainer.eGet(feature, false);
+			if (temp instanceof InternalEList<?>) {
+				// EMF ignores the "resolve" flag for containment lists...
+				targetList = ((InternalEList<Object>)temp).basicList();
+			} else {
+				targetList = temp;
+			}
 		} else {
 			targetList = ImmutableList.of();
 		}
@@ -605,7 +612,13 @@ public final class DiffUtil {
 		}
 
 		if (expectedContainer != null) {
-			sourceList = (List<Object>)expectedContainer.eGet(feature);
+			final List<Object> temp = (List<Object>)expectedContainer.eGet(feature, false);
+			if (temp instanceof InternalEList<?>) {
+				// EMF ignores the "resolve" flag for containment lists...
+				sourceList = ((InternalEList<Object>)temp).basicList();
+			} else {
+				sourceList = temp;
+			}
 		} else {
 			sourceList = ImmutableList.of();
 		}
