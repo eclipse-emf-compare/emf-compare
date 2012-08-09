@@ -11,9 +11,18 @@
 package org.eclipse.emf.compare.internal.spec;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Predicates.notNull;
+import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.getFirst;
+import static com.google.common.collect.Iterables.transform;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.base.Supplier;
+import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
@@ -21,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
@@ -29,6 +39,7 @@ import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.impl.ComparisonImpl;
+import org.eclipse.emf.compare.internal.DiffCrossReferencer;
 import org.eclipse.emf.compare.internal.MatchCrossReferencer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -75,11 +86,20 @@ public class ComparisonSpec extends ComparisonImpl {
 	 */
 	@Override
 	public EList<Diff> getDifferences(EObject element) {
+		checkNotNull(element);
+
+		List<Diff> diffsOfMatch;
 		Match match = getMatch(element);
 		if (match != null) {
-			return match.getDifferences();
+			diffsOfMatch = match.getDifferences();
+		} else {
+			diffsOfMatch = ImmutableList.of();
 		}
-		return new BasicEList<Diff>();
+
+		ECrossReferenceAdapter adapter = adapt(this, DiffCrossReferencer.class);
+		Iterable<Diff> crossRefs = filter(getInverse(element, adapter), Diff.class);
+
+		return new BasicEList<Diff>(ImmutableList.copyOf(concat(diffsOfMatch, crossRefs)));
 	}
 
 	/**
@@ -91,28 +111,101 @@ public class ComparisonSpec extends ComparisonImpl {
 	public Match getMatch(EObject element) {
 		checkNotNull(element);
 
-		ECrossReferenceAdapter adapter = null;
-		final Iterator<Adapter> adapterIterator = eAdapters().iterator();
-		while (adapterIterator.hasNext() && adapter == null) {
-			final Adapter candidate = adapterIterator.next();
-			if (candidate instanceof MatchCrossReferencer) {
-				adapter = (MatchCrossReferencer)candidate;
-			}
-		}
-		if (adapter == null) {
-			adapter = new MatchCrossReferencer();
-			eAdapters().add(adapter);
-		}
+		ECrossReferenceAdapter adapter = adapt(this, MatchCrossReferencer.class);
+		Iterable<Match> crossRefs = filter(getInverse(element, adapter), Match.class);
 
+		return Iterables.getFirst(crossRefs, null);
+	}
+
+	/**
+	 * Returns an {@link Iterable} of EObject being inverse references of the given {@code element} stored by
+	 * the {@code adapter}.
+	 * 
+	 * @param element
+	 *            the target of the search cross references.
+	 * @param adapter
+	 *            the {@link ECrossReferenceAdapter} to use to look for inverse references.
+	 * @return a possibly empty {@link Iterable} of inverse references.
+	 */
+	private Iterable<EObject> getInverse(EObject element, ECrossReferenceAdapter adapter) {
+		return getInverse(element, adapter, Predicates.<Setting> alwaysTrue());
+	}
+
+	/**
+	 * Returns an {@link Iterable} of EObject being inverse references of the given {@code element} stored by
+	 * the {@code adapter}. It is possible to filter returned EObject by filtering out on {@link Setting cross
+	 * references}.
+	 * 
+	 * @param element
+	 *            the target of the search cross references.
+	 * @param adapter
+	 *            the {@link ECrossReferenceAdapter} to use to look for inverse references.
+	 * @param settingsFilter
+	 *            a filter of {@link Setting} applied on the output of
+	 *            {@link ECrossReferenceAdapter#getInverseReferences(EObject, boolean)}.
+	 * @return a possibly empty {@link Iterable} of inverse references.
+	 */
+	private Iterable<EObject> getInverse(EObject element, ECrossReferenceAdapter adapter,
+			Predicate<Setting> settingsFilter) {
 		final Iterable<EStructuralFeature.Setting> settings = adapter.getInverseReferences(element, false);
-		final Iterator<Match> matchIter = Iterables.filter(
-				Iterables.transform(settings, new MatchInverseReference()), notNull()).iterator();
+		return transform(filter(settings, settingsFilter), INVERSE_REFERENCES);
+	}
 
-		Match result = null;
-		if (matchIter.hasNext()) {
-			result = matchIter.next();
+	/**
+	 * Get or create a {@link Adapter} of type {@code clazz} on the given {@code}.
+	 * 
+	 * @param notifier
+	 *            the object to adapt.
+	 * @param clazz
+	 *            the type of adapter we want to get.
+	 * @return the first found adapter of type {@code clazz} or a newly created one.
+	 */
+	private static <T extends Adapter> T adapt(final Notifier notifier, final Class<T> clazz) {
+		Optional<T> adapter = getAdapter(notifier, clazz);
+		return adapter.or(new Supplier<T>() {
+			public T get() {
+				return adaptNew(notifier, clazz);
+			}
+		});
+	}
+
+	/**
+	 * Creates and returns a new instance of {@code clazz} and adds it to the {@link Notifier#eAdapters() list
+	 * of adapters} of the given {@code notifier}.
+	 * 
+	 * @param notifier
+	 *            the object to be adapted.
+	 * @param clazz
+	 *            the type of adapter ot create.
+	 * @return the newly created adapter.
+	 * @throws RuntimeException
+	 *             if something goes wrong while creating the instance of {@code clazz} (e.g. there is no
+	 *             default constructor available).
+	 */
+	private static <T extends Adapter> T adaptNew(Notifier notifier, Class<T> clazz) {
+		final T adapter;
+		try {
+			adapter = clazz.newInstance();
+		} catch (Exception e) {
+			throw Throwables.propagate(e);
 		}
-		return result;
+		notifier.eAdapters().add(adapter);
+		return adapter;
+	}
+
+	/**
+	 * Returns an {@link Optional} adapter of the specified {@code clazz} by iterating on all
+	 * {@link Notifier#eAdapters() adapters} of the given {@code notifier}.
+	 * 
+	 * @param notifier
+	 *            the object we are looking to adapt to the given type.
+	 * @param clazz
+	 *            the type of adapter we want to get.
+	 * @return the potentially {@link Optional#absent() absent} adapter .
+	 */
+	private static <T extends Adapter> Optional<T> getAdapter(Notifier notifier, Class<T> clazz) {
+		Iterable<T> eAdaptersOfType = filter(notifier.eAdapters(), clazz);
+		return Optional.fromNullable(getFirst(eAdaptersOfType, null));
 	}
 
 	/**
@@ -166,22 +259,22 @@ public class ComparisonSpec extends ComparisonImpl {
 	}
 
 	/**
-	 * Converts an inverse reference to its corresponding Match.
+	 * Converts an inverse reference to its corresponding EObject.
 	 * 
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
-	private static class MatchInverseReference implements Function<EStructuralFeature.Setting, Match> {
+	private static final Function<EStructuralFeature.Setting, EObject> INVERSE_REFERENCES = new Function<EStructuralFeature.Setting, EObject>() {
 		/**
 		 * {@inheritDoc}
 		 * 
 		 * @see com.google.common.base.Function#apply(java.lang.Object)
 		 */
-		public Match apply(Setting input) {
-			if (input != null && input.getEObject() instanceof Match) {
-				return (Match)input.getEObject();
+		public EObject apply(Setting input) {
+			if (input != null) {
+				return input.getEObject();
 			}
 			return null;
 		}
-	}
+	};
 
 }
