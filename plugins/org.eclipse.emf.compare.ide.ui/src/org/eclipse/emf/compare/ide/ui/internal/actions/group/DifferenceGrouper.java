@@ -10,15 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.actions.group;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import java.util.List;
 
-import org.eclipse.compare.structuremergeviewer.IDiffElement;
-import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -47,16 +45,12 @@ public final class DifferenceGrouper {
 	 * 
 	 * @param comparison
 	 *            The comparison which differences need to be grouped.
-	 * @param factory
-	 *            The adapter factory that is currently in use to adapt EMF Compare's Diff elements into
-	 *            {@link IDiffElement}s.
-	 * @return The collection of groups we could retrieve from the currently selected group provider.
-	 *         {@code null} if we have no group provider set.
+	 * @return The collection of groups we could retrieve from the currently selected group provider. Empty
+	 *         {@link Iterable} if we have no group provider set.
 	 */
-	public Iterable<? extends IDiffElement> getGroups(final Comparison comparison,
-			final AdapterFactory factory) {
+	public Iterable<? extends DifferenceGroup> getGroups(final Comparison comparison) {
 		if (provider == null) {
-			return null;
+			return ImmutableList.of();
 		}
 
 		final Predicate<DifferenceGroup> nonEmptyGroups = new Predicate<DifferenceGroup>() {
@@ -64,15 +58,10 @@ public final class DifferenceGrouper {
 				return input != null && !Iterables.isEmpty(input.getDifferences());
 			}
 		};
-		final Function<DifferenceGroup, IDiffElement> groupWrapper = new Function<DifferenceGroup, IDiffElement>() {
-			public IDiffElement apply(DifferenceGroup input) {
-				return new DifferenceGroupNode(comparison, factory, input);
-			}
-		};
 
 		final Iterable<? extends DifferenceGroup> groups = provider.getGroups(comparison);
 		final Iterable<? extends DifferenceGroup> filteredGroups = Iterables.filter(groups, nonEmptyGroups);
-		return Iterables.transform(filteredGroups, groupWrapper);
+		return filteredGroups;
 	}
 
 	/**

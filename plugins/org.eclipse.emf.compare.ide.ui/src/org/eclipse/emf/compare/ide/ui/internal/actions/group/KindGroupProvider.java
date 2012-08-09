@@ -35,13 +35,14 @@ public class KindGroupProvider implements DifferenceGroupProvider {
 	public Iterable<? extends DifferenceGroup> getGroups(Comparison comparison) {
 		final List<Diff> diffs = comparison.getDifferences();
 
-		final DifferenceGroup additions = new DefaultDifferenceGroup(diffs, ofKind(DifferenceKind.ADD),
-				"Additions");
-		final DifferenceGroup deletions = new DefaultDifferenceGroup(diffs, ofKind(DifferenceKind.DELETE),
-				"Deletions");
-		final DifferenceGroup changes = new DefaultDifferenceGroup(diffs, ofKind(DifferenceKind.CHANGE),
-				"Changes");
-		final DifferenceGroup moves = new DefaultDifferenceGroup(diffs, ofKind(DifferenceKind.MOVE), "Moves");
+		final DifferenceGroup additions = new DefaultDifferenceGroup(comparison, diffs,
+				ofKind(DifferenceKind.ADD), "Additions");
+		final DifferenceGroup deletions = new DefaultDifferenceGroup(comparison, diffs,
+				ofKind(DifferenceKind.DELETE), "Deletions");
+		final DifferenceGroup changes = new DefaultDifferenceGroup(comparison, diffs,
+				ofKind(DifferenceKind.CHANGE), "Changes");
+		final DifferenceGroup moves = new DefaultDifferenceGroup(comparison, diffs,
+				ofKind(DifferenceKind.MOVE), "Moves");
 
 		return ImmutableList.of(additions, deletions, changes, moves);
 	}

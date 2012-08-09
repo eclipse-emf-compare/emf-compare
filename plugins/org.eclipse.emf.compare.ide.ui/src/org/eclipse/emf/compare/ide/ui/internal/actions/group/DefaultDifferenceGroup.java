@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.ide.ui.internal.actions.group;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.swt.graphics.Image;
 
@@ -37,6 +38,9 @@ public class DefaultDifferenceGroup implements DifferenceGroup {
 	/** The icon that the EMF Compare UI will display for this group. */
 	protected final Image image;
 
+	/** The comparison that is the parent of this group. */
+	protected final Comparison comparison;
+
 	/**
 	 * Instantiates this group given the comparison and filter that should be used in order to determine its
 	 * list of differences.
@@ -49,8 +53,9 @@ public class DefaultDifferenceGroup implements DifferenceGroup {
 	 * @param filter
 	 *            The filter we'll use in order to filter the differences that are part of this group.
 	 */
-	public DefaultDifferenceGroup(Iterable<? extends Diff> unfiltered, Predicate<? super Diff> filter) {
-		this(unfiltered, filter, "Group", null);
+	public DefaultDifferenceGroup(Comparison comparison, Iterable<? extends Diff> unfiltered,
+			Predicate<? super Diff> filter) {
+		this(comparison, unfiltered, filter, "Group", null);
 	}
 
 	/**
@@ -64,9 +69,9 @@ public class DefaultDifferenceGroup implements DifferenceGroup {
 	 * @param name
 	 *            The name that the EMF Compare UI will display for this group.
 	 */
-	public DefaultDifferenceGroup(Iterable<? extends Diff> unfiltered, Predicate<? super Diff> filter,
-			String name) {
-		this(unfiltered, filter, name, null);
+	public DefaultDifferenceGroup(Comparison comparison, Iterable<? extends Diff> unfiltered,
+			Predicate<? super Diff> filter, String name) {
+		this(comparison, unfiltered, filter, name, null);
 	}
 
 	/**
@@ -82,8 +87,9 @@ public class DefaultDifferenceGroup implements DifferenceGroup {
 	 * @param image
 	 *            The icon that the EMF Compare UI will display for this group.
 	 */
-	public DefaultDifferenceGroup(Iterable<? extends Diff> unfiltered, Predicate<? super Diff> filter,
-			String name, Image image) {
+	public DefaultDifferenceGroup(Comparison comparison, Iterable<? extends Diff> unfiltered,
+			Predicate<? super Diff> filter, String name, Image image) {
+		this.comparison = comparison;
 		this.candidates = unfiltered;
 		this.filter = filter;
 		this.name = name;
@@ -92,6 +98,15 @@ public class DefaultDifferenceGroup implements DifferenceGroup {
 
 	public Iterable<? extends Diff> getDifferences() {
 		return Iterables.filter(candidates, filter);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGroup#getComparison()
+	 */
+	public Comparison getComparison() {
+		return comparison;
 	}
 
 	/**

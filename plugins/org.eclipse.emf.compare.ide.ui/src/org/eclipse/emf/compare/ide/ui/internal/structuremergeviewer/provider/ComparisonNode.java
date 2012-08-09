@@ -10,12 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
-import com.google.common.collect.Iterables;
-
-import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGrouper;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode;
 
 /**
@@ -24,7 +20,6 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDif
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class ComparisonNode extends AbstractEDiffNode {
-	private DifferenceGrouper grouper;
 
 	/**
 	 * Creates a node with the given factory.
@@ -32,9 +27,8 @@ public class ComparisonNode extends AbstractEDiffNode {
 	 * @param adapterFactory
 	 *            the factory given to the super constructor.
 	 */
-	public ComparisonNode(AdapterFactory adapterFactory, DifferenceGrouper grouper) {
+	public ComparisonNode(AdapterFactory adapterFactory) {
 		super(adapterFactory);
-		this.grouper = grouper;
 	}
 
 	/**
@@ -45,23 +39,6 @@ public class ComparisonNode extends AbstractEDiffNode {
 	@Override
 	public Comparison getTarget() {
 		return (Comparison)super.getTarget();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffContainer#getChildren()
-	 */
-	@Override
-	public IDiffElement[] getChildren() {
-		if (grouper != null) {
-			final Iterable<? extends IDiffElement> groups = grouper.getGroups(getTarget(),
-					getAdapterFactory());
-			if (groups != null) {
-				return Iterables.toArray(groups, IDiffElement.class);
-			}
-		}
-		return super.getChildren();
 	}
 
 }

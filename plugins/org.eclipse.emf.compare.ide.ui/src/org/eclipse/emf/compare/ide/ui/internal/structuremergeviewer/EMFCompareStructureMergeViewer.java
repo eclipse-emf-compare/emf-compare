@@ -47,8 +47,6 @@ import org.eclipse.emf.compare.ide.ui.internal.actions.filter.FilterActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGrouper;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.GroupActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareConfigurationExtension;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.CompareNodeAdapterFactory;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EContentAdapter;
@@ -107,10 +105,11 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 		differenceGrouper.install(this);
 
 		fAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-		fAdapterFactory.addAdapterFactory(new CompareNodeAdapterFactory(differenceGrouper));
 
 		boolean leftIsLocal = CompareConfigurationExtension.getBoolean(configuration, "LEFT_IS_LOCAL", false);
 		setLabelProvider(new EMFCompareStructureMergeViewerLabelProvider(fAdapterFactory, leftIsLocal));
+		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(fAdapterFactory,
+				differenceGrouper));
 
 		if (parent instanceof CompareViewerSwitchingPane) {
 			fParent = (CompareViewerSwitchingPane)parent;

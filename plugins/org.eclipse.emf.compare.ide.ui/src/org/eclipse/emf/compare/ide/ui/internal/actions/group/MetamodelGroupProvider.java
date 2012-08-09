@@ -72,7 +72,8 @@ public class MetamodelGroupProvider implements DifferenceGroupProvider {
 
 		final List<DifferenceGroup> groups = Lists.newArrayList();
 		for (Map.Entry<EClass, List<Diff>> entry : diffByEClass.entrySet()) {
-			groups.add(new DefaultDifferenceGroup(entry.getValue(), alwaysTrue(), entry.getKey().getName()));
+			groups.add(new DefaultDifferenceGroup(comparison, entry.getValue(), alwaysTrue(), entry.getKey()
+					.getName()));
 		}
 
 		return groups;

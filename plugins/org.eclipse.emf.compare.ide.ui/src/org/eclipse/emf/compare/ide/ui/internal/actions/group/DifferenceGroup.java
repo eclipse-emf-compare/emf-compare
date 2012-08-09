@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.actions.group;
 
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.swt.graphics.Image;
 
@@ -27,6 +28,13 @@ public interface DifferenceGroup {
 	 * @return All differences that should be considered a part of this group.
 	 */
 	Iterable<? extends Diff> getDifferences();
+
+	/**
+	 * Returns the {@link Comparison} in which this group is defined.
+	 * 
+	 * @return The {@link Comparison} in which this group is defined.
+	 */
+	Comparison getComparison();
 
 	/**
 	 * A human-readable label for this group. This will be displayed in the EMF Compare UI.

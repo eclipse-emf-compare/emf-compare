@@ -16,6 +16,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGroup;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.DiffNode;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ImageProvider;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.MatchNode;
@@ -41,10 +42,15 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 
 	@Override
 	public String getText(Object element) {
+		final String ret;
 		if (element instanceof IDiffElement) {
-			return ((IDiffElement)element).getName();
+			ret = ((IDiffElement)element).getName();
+		} else if (element instanceof DifferenceGroup) {
+			ret = ((DifferenceGroup)element).getName();
+		} else {
+			ret = super.getText(element);
 		}
-		return super.getText(element);
+		return ret;
 	}
 
 	@Override
@@ -66,6 +72,13 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 			ret = EMFCompareIDEUIPlugin.getDefault().getImage(descriptor);
 		} else if (element instanceof AbstractEDiffElement) {
 			ret = ((AbstractEDiffElement)element).getImage();
+		} else if (element instanceof DifferenceGroup) {
+			final Image groupImage = ((DifferenceGroup)element).getImage();
+			if (groupImage != null) {
+				ret = groupImage;
+			} else {
+				ret = EMFCompareIDEUIPlugin.getDefault().getImage("icons/full/toolb16/group.gif"); //$NON-NLS-1$ 
+			}
 		} else {
 			ret = super.getImage(element);
 		}
