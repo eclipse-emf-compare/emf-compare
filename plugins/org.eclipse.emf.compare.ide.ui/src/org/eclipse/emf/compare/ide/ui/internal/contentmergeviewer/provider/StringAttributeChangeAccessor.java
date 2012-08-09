@@ -54,7 +54,8 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	 *            The EAttribute to retrieve from the wrapped EObject
 	 * @param attributeChange
 	 */
-	public StringAttributeChangeAccessor(EObject eObject, EAttribute eAtribute, AttributeChange attributeChange) {
+	public StringAttributeChangeAccessor(EObject eObject, EAttribute eAtribute,
+			AttributeChange attributeChange) {
 		this.fEObject = eObject;
 		this.fEAtribute = eAtribute;
 		this.fAttributeChange = attributeChange;
@@ -85,7 +86,7 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	 * @see org.eclipse.compare.ITypedElement#getType()
 	 */
 	public String getType() {
-		return ITypedElement.TEXT_TYPE;
+		return "eText";
 	}
 
 	/**
