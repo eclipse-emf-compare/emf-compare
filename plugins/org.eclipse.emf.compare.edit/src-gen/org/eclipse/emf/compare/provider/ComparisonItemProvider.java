@@ -73,8 +73,27 @@ public class ComparisonItemProvider extends ItemProviderAdapter implements IEdit
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
+			addThreeWayPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * This adds a property descriptor for the Three Way feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addThreeWayPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_Comparison_threeWay_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_Comparison_threeWay_feature", "_UI_Comparison_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						ComparePackage.Literals.COMPARISON__THREE_WAY, true, false, false,
+						ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -129,7 +148,8 @@ public class ComparisonItemProvider extends ItemProviderAdapter implements IEdit
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_Comparison_type"); //$NON-NLS-1$
+		Comparison comparison = (Comparison)object;
+		return getString("_UI_Comparison_type") + " " + comparison.isThreeWay(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -144,6 +164,10 @@ public class ComparisonItemProvider extends ItemProviderAdapter implements IEdit
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(Comparison.class)) {
+			case ComparePackage.COMPARISON__THREE_WAY:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false,
+						true));
+				return;
 			case ComparePackage.COMPARISON__MATCHED_RESOURCES:
 			case ComparePackage.COMPARISON__MATCHES:
 			case ComparePackage.COMPARISON__CONFLICTS:

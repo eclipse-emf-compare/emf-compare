@@ -41,6 +41,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/matches"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/conflicts"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/equivalences"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//Comparison/threeWay"/>
       <genOperations ecoreOperation="compare.ecore#//Comparison/getDifferences"/>
       <genOperations ecoreOperation="compare.ecore#//Comparison/getDifferences.1">
         <genParameters ecoreParameter="compare.ecore#//Comparison/getDifferences.1/element"/>
@@ -48,7 +49,6 @@
       <genOperations ecoreOperation="compare.ecore#//Comparison/getMatch">
         <genParameters ecoreParameter="compare.ecore#//Comparison/getMatch/element"/>
       </genOperations>
-      <genOperations ecoreOperation="compare.ecore#//Comparison/isThreeWay"/>
       <genOperations ecoreOperation="compare.ecore#//Comparison/getConfiguration"/>
     </genClasses>
     <genClasses ecoreClass="compare.ecore#//MatchResource">

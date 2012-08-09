@@ -275,6 +275,15 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getComparison_ThreeWay() {
+		return (EAttribute)comparisonEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getMatchResource() {
 		return matchResourceEClass;
 	}
@@ -691,6 +700,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		createEReference(comparisonEClass, COMPARISON__MATCHES);
 		createEReference(comparisonEClass, COMPARISON__CONFLICTS);
 		createEReference(comparisonEClass, COMPARISON__EQUIVALENCES);
+		createEAttribute(comparisonEClass, COMPARISON__THREE_WAY);
 
 		matchResourceEClass = createEClass(MATCH_RESOURCE);
 		createEAttribute(matchResourceEClass, MATCH_RESOURCE__LEFT_URI);
@@ -809,6 +819,10 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 				this.getEquivalence(),
 				null,
 				"equivalences", null, 0, -1, Comparison.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getComparison_ThreeWay(),
+				ecorePackage.getEBoolean(),
+				"threeWay", null, 0, 1, Comparison.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		addEOperation(comparisonEClass, this.getDiff(), "getDifferences", 0, -1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
@@ -818,9 +832,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 		op = addEOperation(comparisonEClass, this.getMatch(), "getMatch", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 		addEParameter(op, theEcorePackage.getEObject(), "element", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
-
-		addEOperation(comparisonEClass, theEcorePackage.getEBoolean(),
-				"isThreeWay", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
 		addEOperation(comparisonEClass, this.getCompareConfiguration(),
 				"getConfiguration", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$

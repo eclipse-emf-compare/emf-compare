@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.impl;
 
 import java.util.Collection;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -29,6 +30,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
@@ -45,6 +47,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#getMatches <em>Matches</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#getConflicts <em>Conflicts</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#getEquivalences <em>Equivalences</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#isThreeWay <em>Three Way</em>}</li>
  * </ul>
  * </p>
  *
@@ -97,6 +100,26 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 	 * @ordered
 	 */
 	protected EList<Equivalence> equivalences;
+
+	/**
+	 * The default value of the '{@link #isThreeWay() <em>Three Way</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isThreeWay()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean THREE_WAY_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isThreeWay() <em>Three Way</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isThreeWay()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean threeWay = THREE_WAY_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -219,9 +242,20 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 	 * @generated
 	 */
 	public boolean isThreeWay() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		return threeWay;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setThreeWay(boolean newThreeWay) {
+		boolean oldThreeWay = threeWay;
+		threeWay = newThreeWay;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ComparePackage.COMPARISON__THREE_WAY,
+					oldThreeWay, threeWay));
 	}
 
 	/**
@@ -260,6 +294,8 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 				return getConflicts();
 			case ComparePackage.COMPARISON__EQUIVALENCES:
 				return getEquivalences();
+			case ComparePackage.COMPARISON__THREE_WAY:
+				return isThreeWay();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -289,6 +325,9 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 				getEquivalences().clear();
 				getEquivalences().addAll((Collection<? extends Equivalence>)newValue);
 				return;
+			case ComparePackage.COMPARISON__THREE_WAY:
+				setThreeWay((Boolean)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -313,6 +352,9 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 			case ComparePackage.COMPARISON__EQUIVALENCES:
 				getEquivalences().clear();
 				return;
+			case ComparePackage.COMPARISON__THREE_WAY:
+				setThreeWay(THREE_WAY_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -333,8 +375,27 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 				return conflicts != null && !conflicts.isEmpty();
 			case ComparePackage.COMPARISON__EQUIVALENCES:
 				return equivalences != null && !equivalences.isEmpty();
+			case ComparePackage.COMPARISON__THREE_WAY:
+				return threeWay != THREE_WAY_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy())
+			return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (threeWay: "); //$NON-NLS-1$
+		result.append(threeWay);
+		result.append(')');
+		return result.toString();
 	}
 
 } //ComparisonImpl

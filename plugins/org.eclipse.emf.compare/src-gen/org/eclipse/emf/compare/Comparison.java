@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.emf.compare.Comparison#getMatches <em>Matches</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Comparison#getConflicts <em>Conflicts</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Comparison#getEquivalences <em>Equivalences</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Comparison#isThreeWay <em>Three Way</em>}</li>
  * </ul>
  * </p>
  *
@@ -149,14 +150,25 @@ public interface Comparison extends EObject {
 	Match getMatch(EObject element);
 
 	/**
+	 * Returns the value of the '<em><b>Three Way</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Checks whether this comparison has been launched for three way comparison or if it only has two sides to compare.
-	 * <!-- end-model-doc -->
-	 * @model kind="operation"
+	 * @return the value of the '<em>Three Way</em>' attribute.
+	 * @see #setThreeWay(boolean)
+	 * @see org.eclipse.emf.compare.ComparePackage#getComparison_ThreeWay()
+	 * @model
 	 * @generated
 	 */
 	boolean isThreeWay();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.Comparison#isThreeWay <em>Three Way</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Three Way</em>' attribute.
+	 * @see #isThreeWay()
+	 * @generated
+	 */
+	void setThreeWay(boolean value);
 
 } // Comparison

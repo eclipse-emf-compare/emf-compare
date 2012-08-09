@@ -119,13 +119,22 @@ public interface ComparePackage extends EPackage {
 	int COMPARISON__EQUIVALENCES = 3;
 
 	/**
+	 * The feature id for the '<em><b>Three Way</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPARISON__THREE_WAY = 4;
+
+	/**
 	 * The number of structural features of the '<em>Comparison</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMPARISON_FEATURE_COUNT = 4;
+	int COMPARISON_FEATURE_COUNT = 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.impl.MatchResourceImpl <em>Match Resource</em>}' class.
@@ -925,6 +934,17 @@ public interface ComparePackage extends EPackage {
 	EReference getComparison_Equivalences();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.Comparison#isThreeWay <em>Three Way</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Three Way</em>'.
+	 * @see org.eclipse.emf.compare.Comparison#isThreeWay()
+	 * @see #getComparison()
+	 * @generated
+	 */
+	EAttribute getComparison_ThreeWay();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.MatchResource <em>Match Resource</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1450,6 +1470,14 @@ public interface ComparePackage extends EPackage {
 		 * @generated
 		 */
 		EReference COMPARISON__EQUIVALENCES = eINSTANCE.getComparison_Equivalences();
+
+		/**
+		 * The meta object literal for the '<em><b>Three Way</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute COMPARISON__THREE_WAY = eINSTANCE.getComparison_ThreeWay();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.impl.MatchResourceImpl <em>Match Resource</em>}' class.

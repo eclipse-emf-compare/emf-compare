@@ -37,9 +37,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.impl.ComparisonImpl;
-import org.eclipse.emf.compare.internal.DiffCrossReferencer;
 import org.eclipse.emf.compare.internal.MatchCrossReferencer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -53,14 +51,6 @@ import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ComparisonSpec extends ComparisonImpl {
-	/**
-	 * Caches the value of this boolean. {@link #isThreeWay()} is called a lot of times during the comparison
-	 * process. We do not want to compute it again each of these times.
-	 */
-	private boolean isThreeWay;
-
-	/** This will be used to determine whether we need to invalidate {@link #isThreeWay}. */
-	private int resourceCount = -1;
 
 	/**
 	 * {@inheritDoc}
@@ -226,36 +216,6 @@ public class ComparisonSpec extends ComparisonImpl {
 			ret = EMFCompareConfiguration.builder().build();
 		}
 		return ret;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.impl.ComparisonImpl#isThreeWay()
-	 */
-	@Override
-	public boolean isThreeWay() {
-		/*
-		 * No need to go further if we found that we were in three way : adding new Resources to the
-		 * comparison will not magically put us in two-way mode.
-		 */
-		if (isThreeWay) {
-			return isThreeWay;
-		}
-
-		final List<MatchResource> resources = getMatchedResources();
-		final int count = resources.size();
-		if (resourceCount != count) {
-			isThreeWay = false;
-			resourceCount = count;
-			for (int i = 0; i < count; i++) {
-				final MatchResource matchResource = resources.get(i);
-				if (matchResource.getOriginURI() != null && matchResource.getOriginURI().length() > 0) {
-					isThreeWay = true;
-				}
-			}
-		}
-		return isThreeWay;
 	}
 
 	/**
