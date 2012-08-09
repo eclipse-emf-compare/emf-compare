@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;
 
 import com.google.common.collect.ImmutableList;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.compare.ITypedElement;
@@ -23,6 +24,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -167,17 +169,40 @@ public abstract class AbstractDiffAccessor implements IStructuralFeatureAccessor
 	 */
 	public List<?> getValues() {
 		EObject eObject = getEObject(fDiff);
-		if (eObject != null) {
-			EStructuralFeature eStructuralFeature = getEStructuralFeature(fDiff);
-			Object value = eObject.eGet(eStructuralFeature);
-			if (eStructuralFeature.isMany()) {
-				return (List<?>)value;
+		EStructuralFeature eStructuralFeature = getEStructuralFeature(fDiff);
+		return getAsList(eObject, eStructuralFeature);
+	}
+
+	/**
+	 * This utility simply allows us to retrieve the value of a given feature as a List.
+	 * 
+	 * @param object
+	 *            The object for which feature we need a value.
+	 * @param feature
+	 *            The actual feature of which we need the value.
+	 * @return The value of the given <code>feature</code> for the given <code>object</code> as a list. An
+	 *         empty list if this object has no value for that feature or if the object is <code>null</code>.
+	 */
+	@SuppressWarnings("unchecked")
+	protected static List<Object> getAsList(EObject object, EStructuralFeature feature) {
+		if (object != null) {
+			Object value = object.eGet(feature, false);
+			final List<Object> asList;
+			if (value instanceof InternalEList<?>) {
+				// EMF ignores the "resolve" flag for containment lists...
+				asList = ((InternalEList<Object>)value).basicList();
+			} else if (value instanceof List) {
+				asList = (List<Object>)value;
+			} else if (value instanceof Iterable) {
+				asList = ImmutableList.copyOf((Iterable<Object>)value);
+			} else if (value != null) {
+				asList = ImmutableList.of(value);
 			} else {
-				return ImmutableList.of(value);
+				asList = Collections.emptyList();
 			}
-		} else {
-			return ImmutableList.of();
+			return asList;
 		}
+		return Collections.emptyList();
 	}
 
 	/**

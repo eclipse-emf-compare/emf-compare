@@ -16,6 +16,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
@@ -27,7 +29,9 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
@@ -112,7 +116,11 @@ public class EObjectNode implements ITypedElement, IEObjectAccessor, IStreamCont
 	 */
 	public InputStream getContents() throws CoreException {
 		XMIResourceImpl r = new XMIResourceImpl(URI.createURI("dummy.xmi")); //$NON-NLS-1$
-		final EObject copy = EcoreUtil.copy(fEObject);
+
+		final ProperContentCopier copier = new ProperContentCopier();
+		final EObject copy = copier.copy(fEObject);
+		copier.copyReferences();
+
 		r.getContents().add(copy);
 		StringWriter sw = new StringWriter();
 		try {
@@ -122,5 +130,141 @@ public class EObjectNode implements ITypedElement, IEObjectAccessor, IStreamCont
 					e.getMessage(), e));
 		}
 		return new ByteArrayInputStream(sw.toString().getBytes());
+	}
+
+	private class ProperContentCopier extends EcoreUtil.Copier {
+		/** Generated SUID. */
+		private static final long serialVersionUID = -5458049632291531717L;
+
+		public ProperContentCopier() {
+			this.resolveProxies = false;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Implementation mostly copy/pasted from EcoreUtil.Copier#copyContainment(EReference, EObject,
+		 * EObject). We're only making sure not to resolve any proxy to another resource.
+		 * </p>
+		 * 
+		 * @see org.eclipse.emf.ecore.util.EcoreUtil.Copier#copyContainment(org.eclipse.emf.ecore.EReference,
+		 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
+		 */
+		@Override
+		protected void copyContainment(EReference eReference, EObject eObject, EObject copyEObject) {
+			if (!eObject.eIsSet(eReference)) {
+				return;
+			}
+
+			if (eReference.isMany()) {
+				final Iterator<EObject> source = new BoundProperContentIterator(eObject, eReference);
+				@SuppressWarnings("unchecked")
+				List<EObject> target = (List<EObject>)copyEObject.eGet(getTarget(eReference), resolveProxies);
+				if (!source.hasNext()) {
+					target.clear();
+				} else {
+					while (source.hasNext()) {
+						final EObject next = source.next();
+						target.add(copy(next));
+					}
+				}
+			} else {
+				/*
+				 * TODO untested yet as this is a rare case. EMF ignors the "resolve" argument of eGet for
+				 * multi-valued containment features. Will it honor it for unique features?
+				 */
+				EObject childEObject = (EObject)eObject.eGet(eReference, resolveProxies);
+				if (childEObject == null) {
+					copyEObject.eSet(getTarget(eReference), null);
+				} else {
+					copyEObject.eSet(getTarget(eReference), copy(childEObject));
+				}
+			}
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Implementation mostly copy/pasted from EcoreUtil.Copier#copyContainment(EReference, EObject,
+		 * EObject). We're only making sure not to resolve any proxy to another resource.
+		 * </p>
+		 * 
+		 * @see org.eclipse.emf.ecore.util.EcoreUtil.Copier#copyReference(org.eclipse.emf.ecore.EReference,
+		 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
+		 */
+		@Override
+		protected void copyReference(EReference eReference, EObject eObject, EObject copyEObject) {
+			if (!eObject.eIsSet(eReference)) {
+				return;
+			}
+
+			if (eReference.isMany()) {
+				final Iterator<EObject> source = new BoundProperContentIterator(eObject, eReference);
+				@SuppressWarnings("unchecked")
+				InternalEList<EObject> target = (InternalEList<EObject>)copyEObject.eGet(
+						getTarget(eReference), false);
+				if (!source.hasNext()) {
+					target.clear();
+				} else {
+					boolean isBidirectional = eReference.getEOpposite() != null;
+					int index = 0;
+					while (source.hasNext()) {
+						final EObject next = source.next();
+						final EObject copyReferencedEObject = get(next);
+
+						if (copyReferencedEObject == null) {
+							if (useOriginalReferences && !isBidirectional) {
+								target.addUnique(index, next);
+								++index;
+							}
+						} else {
+							if (isBidirectional) {
+								int position = target.indexOf(copyReferencedEObject);
+								if (position == -1) {
+									target.addUnique(index, copyReferencedEObject);
+								} else if (index != position) {
+									target.move(index, copyReferencedEObject);
+								}
+							} else {
+								target.addUnique(index, copyReferencedEObject);
+							}
+							++index;
+						}
+					}
+				}
+			} else {
+				/*
+				 * TODO untested yet as this is a rare case. EMF ignors the "resolve" argument of eGet for
+				 * multi-valued containment features. Will it honor it for unique features?
+				 */
+				final Object referencedEObject = eObject.eGet(eReference, resolveProxies);
+				if (referencedEObject == null) {
+					copyEObject.eSet(getTarget(eReference), null);
+				} else {
+					final Object copyReferencedEObject = get(referencedEObject);
+					if (copyReferencedEObject == null) {
+						if (useOriginalReferences && eReference.getEOpposite() == null) {
+							copyEObject.eSet(getTarget(eReference), referencedEObject);
+						}
+					} else {
+						copyEObject.eSet(getTarget(eReference), copyReferencedEObject);
+					}
+				}
+			}
+		}
+	}
+
+	private final class BoundProperContentIterator extends EcoreUtil.ProperContentIterator<EObject> {
+		public BoundProperContentIterator(EObject eObject, EReference eReference) {
+			super(eObject, false);
+			// Calling super-constructor since we need to, but we'll override what it just did
+			@SuppressWarnings("unchecked")
+			final List<EObject> contents = (List<EObject>)eObject.eGet(eReference, false);
+			if (contents instanceof InternalEList<?>) {
+				this.iterator = ((InternalEList<EObject>)contents).basicIterator();
+			} else {
+				this.iterator = contents.iterator();
+			}
+		}
 	}
 }
