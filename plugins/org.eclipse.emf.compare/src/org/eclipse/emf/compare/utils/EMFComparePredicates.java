@@ -17,6 +17,7 @@ import com.google.common.base.Predicate;
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.AttributeChange;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -559,6 +560,36 @@ public final class EMFComparePredicates {
 	}
 
 	/**
+	 * This can be used to check whether a given Diff is in a pseudo conflict state regarding other diffs.
+	 * <p>
+	 * pseudo conflict means both parties did the same change compared to the ancestor state.
+	 * </p>
+	 * 
+	 * @return The created predicate.
+	 */
+	public static Predicate<? super Diff> hasPseudoConflict() {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input.getConflict() != null && input.getConflict().getKind() == ConflictKind.PSEUDO;
+			}
+		};
+	}
+
+	/**
+	 * This can be used to check whether a given Diff is in a conflicting state regarding other diffs. It is
+	 * only considering states which are real conflicts opposed to the pseudo conflicts.
+	 * 
+	 * @return The created predicate.
+	 */
+	public static Predicate<? super Diff> hasRealConflict() {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input.getConflict() != null && input.getConflict().getKind() == ConflictKind.REAL;
+			}
+		};
+	}
+
+	/**
 	 * This will be used to check that a given {@link EObject} corresponds to the given {@code qualifiedName}.
 	 * <p>
 	 * For example, {@code match("extlibrary.BookCategory.Encyclopedia")} will return {@code true} for an
@@ -876,4 +907,5 @@ public final class EMFComparePredicates {
 			return false;
 		}
 	}
+
 }
