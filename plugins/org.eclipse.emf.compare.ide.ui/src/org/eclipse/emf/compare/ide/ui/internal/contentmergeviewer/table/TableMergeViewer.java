@@ -37,7 +37,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -293,25 +292,9 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		g.drawRectangle(bounds);
 
 		if (getSide() == MergeViewerSide.LEFT) {
-			TableItem tableItem = (TableItem)event.item;
-			Rectangle itemBounds = tableItem.getBounds();
-			Rectangle clientArea = tableItem.getParent().getClientArea();
-			Point from = new Point(0, 0);
-			from.x = bounds.x + bounds.width;
-			from.y = itemBounds.y + (itemBounds.height / 2);
-			Point to = new Point(0, 0);
-			to.x = clientArea.x + clientArea.width;
-			to.y = from.y;
-			g.drawLine(from.x, from.y, to.x, to.y);
+			drawLineFromBoxToCenter(event, bounds, g);
 		} else {
-			TableItem tableItem = (TableItem)event.item;
-			Rectangle itemBounds = tableItem.getBounds();
-			Point from = new Point(0, 0);
-			from.y = itemBounds.y + (itemBounds.height / 2);
-			Point to = new Point(0, 0);
-			to.x = bounds.x;
-			to.y = from.y;
-			g.drawLine(from.x, from.y, to.x, to.y);
+			drawLineFromCenterToBox(event, bounds, g);
 		}
 
 		if (isSelected(event)) {
@@ -322,6 +305,27 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 			g.setBackground(oldBackground);
 			g.setForeground(oldForeground);
 		}
+	}
+
+	private void drawLineFromCenterToBox(Event event, Rectangle boxBounds, GC g) {
+		TableItem tableItem = (TableItem)event.item;
+		Rectangle itemBounds = tableItem.getBounds();
+		Point from = new Point(0, 0);
+		from.y = itemBounds.y + (itemBounds.height / 2);
+		Point to = new Point(boxBounds.x, from.y);
+		g.drawLine(from.x, from.y, to.x, to.y);
+	}
+
+	private void drawLineFromBoxToCenter(Event event, Rectangle boxBounds, GC g) {
+		TableItem tableItem = (TableItem)event.item;
+		Rectangle itemBounds = tableItem.getBounds();
+		Rectangle clientArea = tableItem.getParent().getClientArea();
+		Point from = new Point(0, 0);
+		from.x = boxBounds.x + boxBounds.width;
+		from.y = itemBounds.y + (itemBounds.height / 2);
+		Point to = new Point(0, from.y);
+		to.x = clientArea.x + clientArea.width;
+		g.drawLine(from.x, from.y, to.x, to.y);
 	}
 
 	static boolean isSelected(Event event) {
@@ -351,6 +355,8 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		fill.height = itemBounds.height - 3;
 
 		final GC g = event.gc;
+		// If you wish to paint the selection beyond the end of last column, you must change the clipping
+		// region.
 		int columnCount = table.getColumnCount();
 		if (event.index == columnCount - 1 || columnCount == 0) {
 			int width = tableBounds.x + tableBounds.width - event.x;
@@ -367,13 +373,12 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		return fill;
 	}
 
-
 	private static Rectangle getBoundsForInsertionPoint(Event event) {
 		Rectangle fill = getBounds(event);
 		TableItem tableItem = (TableItem)event.item;
 		Rectangle tableBounds = tableItem.getParent().getClientArea();
 		fill.y = fill.y + 6;
-		fill.width = tableBounds.width / 3;
+		fill.width = tableBounds.width / 4;
 		fill.height = fill.height - 12;
 
 		return fill;

@@ -37,6 +37,7 @@ import org.eclipse.swt.events.GestureEvent;
 import org.eclipse.swt.events.GestureListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseWheelListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -45,7 +46,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Scrollable;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
@@ -222,13 +222,16 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 		TableMergeViewer leftMergeViewer = (TableMergeViewer)getLeftMergeViewer();
 		TableMergeViewer rightMergeViewer = (TableMergeViewer)getRightMergeViewer();
 
-		Table leftTable = leftMergeViewer.getControl();
-		Table rightTable = rightMergeViewer.getControl();
+		IStructuralFeatureAccessor leftInput = (IStructuralFeatureAccessor)leftMergeViewer.getInput();
+		IStructuralFeatureAccessor rightInput = (IStructuralFeatureAccessor)rightMergeViewer.getInput();
 
-		TableItem[] leftItems = leftTable.getItems();
-		TableItem[] rightItems = rightTable.getItems();
+		Rectangle leftClientArea = leftMergeViewer.getControl().getClientArea();
+		Rectangle rightClientArea = rightMergeViewer.getControl().getClientArea();
 
-		TableItem[] selection = leftTable.getSelection();
+		TableItem[] leftItems = leftMergeViewer.getControl().getItems();
+		TableItem[] rightItems = rightMergeViewer.getControl().getItems();
+
+		TableItem[] selection = leftMergeViewer.getControl().getSelection();
 
 		for (TableItem leftItem : leftItems) {
 			final boolean selected;
@@ -237,57 +240,69 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			} else {
 				selected = false;
 			}
-			Object leftData = leftItem.getData();
-
-			final Diff leftDiff;
-			if (leftData instanceof DiffInsertionPoint) {
-				leftDiff = ((DiffInsertionPoint)leftData).getDiff();
-			} else {
-				leftDiff = ((IStructuralFeatureAccessor)leftMergeViewer.getInput()).getDiff(leftData,
-						MergeViewerSide.LEFT);
-			}
+			final Diff leftDiff = getDiffFromItem(leftInput, leftItem, MergeViewerSide.LEFT);
 
 			if (leftDiff != null) {
-				for (TableItem rightItem : rightItems) {
-					Object rightData = rightItem.getData();
-					final Diff rightDiff;
-					if (rightData instanceof DiffInsertionPoint) {
-						rightDiff = ((DiffInsertionPoint)rightData).getDiff();
-					} else {
-						rightDiff = ((IStructuralFeatureAccessor)rightMergeViewer.getInput()).getDiff(
-								rightData, MergeViewerSide.RIGHT);
-					}
+				TableItem rightItem = findRightTableItemFromLeftDiff(rightItems, rightInput, leftDiff);
 
-					if (leftDiff == rightDiff) {
-						Point from = new Point(0, 0);
-						Point to = new Point(0, 0);
-
-						Rectangle leftClientArea = leftMergeViewer.getControl().getClientArea();
-						Rectangle rightClientArea = rightMergeViewer.getControl().getClientArea();
-
-						Rectangle leftBounds = leftItem.getBounds();
-						Rectangle rightBounds = rightItem.getBounds();
-
-						from.y = leftBounds.y + (leftBounds.height / 2) - leftClientArea.y + 1;
-
-						to.x = canvas.getBounds().width;
-						to.y = rightBounds.y + (rightBounds.height / 2) - rightClientArea.y + 1;
-
-						g.setForeground(getColors().getStrokeColor(leftDiff, isThreeWay(), false, selected));
-
-						int[] points = getCenterCurvePoints(from.x, from.y, to.x, to.y);
-						for (int i = 1; i < points.length; i++) {
-							g.drawLine(from.x + i - 1, points[i - 1], i, points[i]);
-						}
-
-						break;
-					}
+				if (rightItem != null) {
+					Color strokeColor = getColors().getStrokeColor(leftDiff, isThreeWay(), false, selected);
+					g.setForeground(strokeColor);
+					drawCenterLine(g, leftClientArea, rightClientArea, leftItem, rightItem);
 				}
 			}
 		}
 	}
 
-	private int[] getCenterCurvePoints(int startx, int starty, int endx, int endy) {
+	private void drawCenterLine(GC g, Rectangle leftClientArea, Rectangle rightClientArea,
+			TableItem leftItem, TableItem rightItem) {
+		Canvas canvas = (Canvas)getCenterControl();
+		Point from = new Point(0, 0);
+		Point to = new Point(0, 0);
+
+		Rectangle leftBounds = leftItem.getBounds();
+		Rectangle rightBounds = rightItem.getBounds();
+
+		from.y = leftBounds.y + (leftBounds.height / 2) - leftClientArea.y + 1;
+
+		to.x = canvas.getBounds().width;
+		to.y = rightBounds.y + (rightBounds.height / 2) - rightClientArea.y + 1;
+
+		int[] points = getCenterCurvePoints(from, to);
+		for (int i = 1; i < points.length; i++) {
+			g.drawLine(from.x + i - 1, points[i - 1], i, points[i]);
+		}
+	}
+
+	private TableItem findRightTableItemFromLeftDiff(TableItem[] rightItems,
+			IStructuralFeatureAccessor rightInput, Diff leftDiff) {
+		TableItem ret = null;
+		for (int i = 0; i < rightItems.length && ret == null; i++) {
+			TableItem rightItem = rightItems[i];
+			final Diff rightDiff = getDiffFromItem(rightInput, rightItem, MergeViewerSide.RIGHT);
+			if (leftDiff == rightDiff) {
+				ret = rightItem;
+			}
+		}
+		return ret;
+	}
+
+	private Diff getDiffFromItem(IStructuralFeatureAccessor accessor, TableItem item, MergeViewerSide side) {
+		Object rightData = item.getData();
+		final Diff rightDiff;
+		if (rightData instanceof DiffInsertionPoint) {
+			rightDiff = ((DiffInsertionPoint)rightData).getDiff();
+		} else {
+			rightDiff = accessor.getDiff(rightData, side);
+		}
+		return rightDiff;
+	}
+
+	private int[] getCenterCurvePoints(Point from, Point to) {
+		int startx = from.x;
+		int starty = from.y;
+		int endx = to.x;
+		int endy = to.y;
 		if (fBasicCenterCurve == null) {
 			buildBaseCenterCurve(endx - startx);
 		}
