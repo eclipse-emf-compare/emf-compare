@@ -15,11 +15,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="StereotypePropertyChange" eSuperTypes="#//UMLDiff">
     <eStructuralFeatures xsi:type="ecore:EReference" name="stereotype" eType="ecore:EClass platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//Stereotype"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StereotypeApplicationChange" eSuperTypes="platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//ReferenceChange #//UMLDiff">
+  <eClassifiers xsi:type="ecore:EClass" name="StereotypeApplicationChange" eSuperTypes="#//UMLDiff">
     <eStructuralFeatures xsi:type="ecore:EReference" name="stereotype" eType="ecore:EClass platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//Stereotype"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StereotypeReferenceChange" eSuperTypes="#//UMLDiff"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ProfileApplicationChange" eSuperTypes="platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//ReferenceChange #//UMLDiff">
+  <eClassifiers xsi:type="ecore:EClass" name="ProfileApplicationChange" eSuperTypes="#//UMLDiff">
     <eStructuralFeatures xsi:type="ecore:EReference" name="profile" eType="ecore:EClass platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//Profile"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UMLDiff" abstract="true" eSuperTypes="platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//Diff">

@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.diff.internal.extension;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterators;
+
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.compare.ComparePackage;
@@ -24,6 +28,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
+import org.eclipse.uml2.common.util.UML2Util;
 
 /**
  * Factory for the difference extensions.
@@ -72,8 +77,10 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 
 		final EObject discriminant = getDiscriminantFromDiff(input);
 
+		final DifferenceKind extensionKind = getRelatedExtensionKind(input);
+
 		if (discriminant != null) {
-			if (getRelatedExtensionKind(input) == DifferenceKind.DELETE) {
+			if (extensionKind == DifferenceKind.DELETE) {
 				ret.getRefinedBy().add(input);
 			} else {
 				fillRefiningDifferences(crossReferencer, ret, discriminant);
@@ -81,7 +88,10 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 		}
 
 		ret.setDiscriminant(discriminant);
-		ret.setKind(getRelatedExtensionKind(input));
+		ret.setKind(extensionKind);
+		if (extensionKind == DifferenceKind.ADD || extensionKind == DifferenceKind.DELETE) {
+			ret.setEReference(((ReferenceChange)input).getReference());
+		}
 
 		registerUMLDiff(crossReferencer, ret, UMLComparePackage.Literals.UML_DIFF__DISCRIMINANT, discriminant);
 
@@ -144,5 +154,15 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 	protected abstract List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant);
 
 	protected abstract DifferenceKind getRelatedExtensionKind(Diff input);
+
+	protected Setting getInverseReferences(EObject object, Predicate<EStructuralFeature.Setting> predicate) {
+		final Iterator<EStructuralFeature.Setting> crossReferences = UML2Util.getInverseReferences(object)
+				.iterator();
+		try {
+			return Iterators.find(crossReferences, predicate);
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
 }

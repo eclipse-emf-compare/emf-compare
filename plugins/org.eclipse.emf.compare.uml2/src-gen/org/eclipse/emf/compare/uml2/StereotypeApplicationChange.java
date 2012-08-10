@@ -30,7 +30,7 @@ import org.eclipse.uml2.uml.Stereotype;
  * @model
  * @generated
  */
-public interface StereotypeApplicationChange extends ReferenceChange, UMLDiff {
+public interface StereotypeApplicationChange extends UMLDiff {
 	/**
 	 * Returns the value of the '<em><b>Stereotype</b></em>' reference.
 	 * <!-- begin-user-doc -->

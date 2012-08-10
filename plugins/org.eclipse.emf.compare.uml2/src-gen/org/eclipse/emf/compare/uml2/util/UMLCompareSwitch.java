@@ -168,7 +168,6 @@ public class UMLCompareSwitch<T> extends Switch<T> {
 			case UMLComparePackage.STEREOTYPE_APPLICATION_CHANGE: {
 				StereotypeApplicationChange stereotypeApplicationChange = (StereotypeApplicationChange)theEObject;
 				T result = caseStereotypeApplicationChange(stereotypeApplicationChange);
-				if (result == null) result = caseReferenceChange(stereotypeApplicationChange);
 				if (result == null) result = caseUMLDiff(stereotypeApplicationChange);
 				if (result == null) result = caseDiff(stereotypeApplicationChange);
 				if (result == null) result = defaultCase(theEObject);
@@ -185,7 +184,6 @@ public class UMLCompareSwitch<T> extends Switch<T> {
 			case UMLComparePackage.PROFILE_APPLICATION_CHANGE: {
 				ProfileApplicationChange profileApplicationChange = (ProfileApplicationChange)theEObject;
 				T result = caseProfileApplicationChange(profileApplicationChange);
-				if (result == null) result = caseReferenceChange(profileApplicationChange);
 				if (result == null) result = caseUMLDiff(profileApplicationChange);
 				if (result == null) result = caseDiff(profileApplicationChange);
 				if (result == null) result = defaultCase(theEObject);
@@ -439,21 +437,6 @@ public class UMLCompareSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseDiff(Diff object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Reference Change</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Reference Change</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseReferenceChange(ReferenceChange object) {
 		return null;
 	}
 

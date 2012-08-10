@@ -30,7 +30,7 @@ import org.eclipse.uml2.uml.Profile;
  * @model
  * @generated
  */
-public interface ProfileApplicationChange extends ReferenceChange, UMLDiff {
+public interface ProfileApplicationChange extends UMLDiff {
 	/**
 	 * Returns the value of the '<em><b>Profile</b></em>' reference.
 	 * <!-- begin-user-doc -->

@@ -116,12 +116,14 @@ public final class MatchUtil {
 		EObject result = null;
 		final EObject obj = difference.getValue();
 		Match valueMatch = comparison.getMatch(obj);
-		if (valueMatch.getLeft() == obj) {
-			result = difference.getMatch().getLeft();
-		} else if (valueMatch.getRight() == obj) {
-			result = difference.getMatch().getRight();
-		} else if (valueMatch.getOrigin() == obj) {
-			result = difference.getMatch().getOrigin();
+		if (valueMatch != null) {
+			if (valueMatch.getLeft() == obj) {
+				result = difference.getMatch().getLeft();
+			} else if (valueMatch.getRight() == obj) {
+				result = difference.getMatch().getRight();
+			} else if (valueMatch.getOrigin() == obj) {
+				result = difference.getMatch().getOrigin();
+			}
 		}
 		return result;
 	}

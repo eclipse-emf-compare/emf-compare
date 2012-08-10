@@ -327,6 +327,11 @@ public class AddMessageTest extends AbstractTest {
 	private static void testAB2(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
+		/*
+		 * FIXME assertFalse("No move expected", Iterators.filter(differences.iterator(),
+		 * ofKind(DifferenceKind.MOVE)) .hasNext());
+		 */
+
 		// We should have no less and no more than 8 differences
 		final Iterator<Diff> itUseFullDiffs = Iterators.filter(differences.iterator(),
 				not(ofKind(DifferenceKind.MOVE)));
@@ -469,6 +474,11 @@ public class AddMessageTest extends AbstractTest {
 
 	private static void testAB3(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
+
+		/*
+		 * FIXME assertFalse("No move expected", Iterators.filter(differences.iterator(),
+		 * ofKind(DifferenceKind.MOVE)) .hasNext());
+		 */
 
 		// We should have no less and no more than 8 differences
 		final Iterator<Diff> itUseFullDiffs = Iterators.filter(differences.iterator(),

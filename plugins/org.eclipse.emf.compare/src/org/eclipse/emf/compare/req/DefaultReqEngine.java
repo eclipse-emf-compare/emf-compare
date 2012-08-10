@@ -255,7 +255,7 @@ public class DefaultReqEngine implements IReqEngine {
 			for (ReferenceChange diff : requiredDifferences) {
 				if (!diff.getReference().isContainment()) {
 					if ((diff.getKind().equals(DifferenceKind.DELETE) || isChangeDelete(comparison, diff))
-							&& MatchUtil.getContainer(comparison, diff).equals(value)
+							&& value.equals(MatchUtil.getContainer(comparison, diff))
 							&& value.eClass().getEAllReferences().contains(diff.getReference())) {
 						result.add(diff);
 					}

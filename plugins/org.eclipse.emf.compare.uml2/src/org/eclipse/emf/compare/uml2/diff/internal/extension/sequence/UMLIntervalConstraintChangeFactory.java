@@ -11,10 +11,8 @@
 package org.eclipse.emf.compare.uml2.diff.internal.extension.sequence;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterators;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.compare.Diff;
@@ -28,7 +26,7 @@ import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.uml2.uml.Interval;
 import org.eclipse.uml2.uml.IntervalConstraint;
 import org.eclipse.uml2.uml.UMLPackage;
@@ -69,23 +67,14 @@ public class UMLIntervalConstraintChangeFactory extends UMLAbstractDiffExtension
 		} else if (object instanceof ValueSpecification && object.eContainer() instanceof ValueSpecification) {
 			return getIntervalContraint(object.eContainer());
 		} else if (object instanceof ValueSpecification) {
-			final ECrossReferenceAdapter crossReferencer = ECrossReferenceAdapter
-					.getCrossReferenceAdapter(object);
-			final Iterator<EStructuralFeature.Setting> crossReferences = crossReferencer
-					.getInverseReferences(object, false).iterator();
-			try {
-				EObject interval = Iterators.find(crossReferences,
-						new Predicate<EStructuralFeature.Setting>() {
-							public boolean apply(EStructuralFeature.Setting input) {
-								return ((input.getEStructuralFeature() == UMLPackage.Literals.INTERVAL__MIN || input
-										.getEStructuralFeature() == UMLPackage.Literals.INTERVAL__MAX))
-										&& input.getEObject().eContainer() instanceof IntervalConstraint;
-							}
-						}).getEObject();
-				return (IntervalConstraint)((Interval)interval).eContainer();
-			} catch (Exception e) {
-				return null;
-			}
+			final Setting setting = getInverseReferences(object, new Predicate<EStructuralFeature.Setting>() {
+				public boolean apply(EStructuralFeature.Setting input) {
+					return ((input.getEStructuralFeature() == UMLPackage.Literals.INTERVAL__MIN || input
+							.getEStructuralFeature() == UMLPackage.Literals.INTERVAL__MAX))
+							&& input.getEObject().eContainer() instanceof IntervalConstraint;
+				}
+			});
+			return (IntervalConstraint)((Interval)setting.getEObject()).eContainer();
 		}
 		return null;
 	}

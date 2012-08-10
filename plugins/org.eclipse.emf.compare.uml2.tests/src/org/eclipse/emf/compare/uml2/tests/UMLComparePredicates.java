@@ -638,6 +638,11 @@ public final class UMLComparePredicates {
 		IItemLabelProvider adapter = (IItemLabelProvider)factory.adapt(eObject, IItemLabelProvider.class);
 		String featureValue = adapter.getText(eObject);
 		featureValue = featureValue.replaceAll("<.*>", "");
+		featureValue = featureValue.replaceAll("<<.*>>", "");
+		featureValue = featureValue.substring(featureValue.lastIndexOf("/") + 1); //$NON-NLS-1$
+		if (featureValue.trim().length() == 0) {
+			featureValue = eObject.eClass().getName();
+		}
 		return featureValue.trim().equals(name);
 	}
 

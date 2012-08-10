@@ -455,10 +455,8 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 		intervalConstraintChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		messageChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		stereotypePropertyChangeEClass.getESuperTypes().add(this.getUMLDiff());
-		stereotypeApplicationChangeEClass.getESuperTypes().add(theComparePackage.getReferenceChange());
 		stereotypeApplicationChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		stereotypeReferenceChangeEClass.getESuperTypes().add(this.getUMLDiff());
-		profileApplicationChangeEClass.getESuperTypes().add(theComparePackage.getReferenceChange());
 		profileApplicationChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		umlDiffEClass.getESuperTypes().add(theComparePackage.getDiff());
 

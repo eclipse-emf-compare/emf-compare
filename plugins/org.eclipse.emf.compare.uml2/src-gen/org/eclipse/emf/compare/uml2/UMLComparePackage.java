@@ -1571,7 +1571,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_APPLICATION_CHANGE__MATCH = ComparePackage.REFERENCE_CHANGE__MATCH;
+	int STEREOTYPE_APPLICATION_CHANGE__MATCH = UML_DIFF__MATCH;
 
 	/**
 	 * The feature id for the '<em><b>Requires</b></em>' reference list.
@@ -1580,7 +1580,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_APPLICATION_CHANGE__REQUIRES = ComparePackage.REFERENCE_CHANGE__REQUIRES;
+	int STEREOTYPE_APPLICATION_CHANGE__REQUIRES = UML_DIFF__REQUIRES;
 
 	/**
 	 * The feature id for the '<em><b>Required By</b></em>' reference list.
@@ -1589,7 +1589,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_APPLICATION_CHANGE__REQUIRED_BY = ComparePackage.REFERENCE_CHANGE__REQUIRED_BY;
+	int STEREOTYPE_APPLICATION_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
@@ -1598,7 +1598,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_APPLICATION_CHANGE__REFINES = ComparePackage.REFERENCE_CHANGE__REFINES;
+	int STEREOTYPE_APPLICATION_CHANGE__REFINES = UML_DIFF__REFINES;
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
@@ -1607,7 +1607,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_APPLICATION_CHANGE__REFINED_BY = ComparePackage.REFERENCE_CHANGE__REFINED_BY;
+	int STEREOTYPE_APPLICATION_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -1615,7 +1615,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_APPLICATION_CHANGE__KIND = ComparePackage.REFERENCE_CHANGE__KIND;
+	int STEREOTYPE_APPLICATION_CHANGE__KIND = UML_DIFF__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -1624,7 +1624,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_APPLICATION_CHANGE__SOURCE = ComparePackage.REFERENCE_CHANGE__SOURCE;
+	int STEREOTYPE_APPLICATION_CHANGE__SOURCE = UML_DIFF__SOURCE;
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
@@ -1632,7 +1632,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_APPLICATION_CHANGE__STATE = ComparePackage.REFERENCE_CHANGE__STATE;
+	int STEREOTYPE_APPLICATION_CHANGE__STATE = UML_DIFF__STATE;
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
@@ -1641,7 +1641,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_APPLICATION_CHANGE__EQUIVALENCE = ComparePackage.REFERENCE_CHANGE__EQUIVALENCE;
+	int STEREOTYPE_APPLICATION_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
 
 	/**
 	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
@@ -1650,24 +1650,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_APPLICATION_CHANGE__CONFLICT = ComparePackage.REFERENCE_CHANGE__CONFLICT;
-
-	/**
-	 * The feature id for the '<em><b>Reference</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int STEREOTYPE_APPLICATION_CHANGE__REFERENCE = ComparePackage.REFERENCE_CHANGE__REFERENCE;
-
-	/**
-	 * The feature id for the '<em><b>Value</b></em>' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STEREOTYPE_APPLICATION_CHANGE__VALUE = ComparePackage.REFERENCE_CHANGE__VALUE;
+	int STEREOTYPE_APPLICATION_CHANGE__CONFLICT = UML_DIFF__CONFLICT;
 
 	/**
 	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
@@ -1676,7 +1659,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_APPLICATION_CHANGE__DISCRIMINANT = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 0;
+	int STEREOTYPE_APPLICATION_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
 
 	/**
 	 * The feature id for the '<em><b>EReference</b></em>' reference.
@@ -1685,7 +1668,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_APPLICATION_CHANGE__EREFERENCE = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 1;
+	int STEREOTYPE_APPLICATION_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
 
 	/**
 	 * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -1694,7 +1677,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 2;
+	int STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE = UML_DIFF_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Stereotype Application Change</em>' class. <!--
@@ -1703,7 +1686,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_APPLICATION_CHANGE_FEATURE_COUNT = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 3;
+	int STEREOTYPE_APPLICATION_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.impl.StereotypeReferenceChangeImpl <em>Stereotype Reference Change</em>}' class.
@@ -1845,7 +1828,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROFILE_APPLICATION_CHANGE__MATCH = ComparePackage.REFERENCE_CHANGE__MATCH;
+	int PROFILE_APPLICATION_CHANGE__MATCH = UML_DIFF__MATCH;
 
 	/**
 	 * The feature id for the '<em><b>Requires</b></em>' reference list.
@@ -1854,7 +1837,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROFILE_APPLICATION_CHANGE__REQUIRES = ComparePackage.REFERENCE_CHANGE__REQUIRES;
+	int PROFILE_APPLICATION_CHANGE__REQUIRES = UML_DIFF__REQUIRES;
 
 	/**
 	 * The feature id for the '<em><b>Required By</b></em>' reference list.
@@ -1863,7 +1846,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROFILE_APPLICATION_CHANGE__REQUIRED_BY = ComparePackage.REFERENCE_CHANGE__REQUIRED_BY;
+	int PROFILE_APPLICATION_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
@@ -1872,7 +1855,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROFILE_APPLICATION_CHANGE__REFINES = ComparePackage.REFERENCE_CHANGE__REFINES;
+	int PROFILE_APPLICATION_CHANGE__REFINES = UML_DIFF__REFINES;
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
@@ -1881,7 +1864,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROFILE_APPLICATION_CHANGE__REFINED_BY = ComparePackage.REFERENCE_CHANGE__REFINED_BY;
+	int PROFILE_APPLICATION_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -1889,7 +1872,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROFILE_APPLICATION_CHANGE__KIND = ComparePackage.REFERENCE_CHANGE__KIND;
+	int PROFILE_APPLICATION_CHANGE__KIND = UML_DIFF__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -1898,7 +1881,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROFILE_APPLICATION_CHANGE__SOURCE = ComparePackage.REFERENCE_CHANGE__SOURCE;
+	int PROFILE_APPLICATION_CHANGE__SOURCE = UML_DIFF__SOURCE;
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
@@ -1906,7 +1889,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROFILE_APPLICATION_CHANGE__STATE = ComparePackage.REFERENCE_CHANGE__STATE;
+	int PROFILE_APPLICATION_CHANGE__STATE = UML_DIFF__STATE;
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
@@ -1915,7 +1898,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROFILE_APPLICATION_CHANGE__EQUIVALENCE = ComparePackage.REFERENCE_CHANGE__EQUIVALENCE;
+	int PROFILE_APPLICATION_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
 
 	/**
 	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
@@ -1924,24 +1907,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROFILE_APPLICATION_CHANGE__CONFLICT = ComparePackage.REFERENCE_CHANGE__CONFLICT;
-
-	/**
-	 * The feature id for the '<em><b>Reference</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int PROFILE_APPLICATION_CHANGE__REFERENCE = ComparePackage.REFERENCE_CHANGE__REFERENCE;
-
-	/**
-	 * The feature id for the '<em><b>Value</b></em>' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROFILE_APPLICATION_CHANGE__VALUE = ComparePackage.REFERENCE_CHANGE__VALUE;
+	int PROFILE_APPLICATION_CHANGE__CONFLICT = UML_DIFF__CONFLICT;
 
 	/**
 	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
@@ -1950,7 +1916,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROFILE_APPLICATION_CHANGE__DISCRIMINANT = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 0;
+	int PROFILE_APPLICATION_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
 
 	/**
 	 * The feature id for the '<em><b>EReference</b></em>' reference.
@@ -1959,7 +1925,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROFILE_APPLICATION_CHANGE__EREFERENCE = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 1;
+	int PROFILE_APPLICATION_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
 
 	/**
 	 * The feature id for the '<em><b>Profile</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
@@ -1968,7 +1934,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROFILE_APPLICATION_CHANGE__PROFILE = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 2;
+	int PROFILE_APPLICATION_CHANGE__PROFILE = UML_DIFF_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Profile Application Change</em>' class. <!--
@@ -1977,7 +1943,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROFILE_APPLICATION_CHANGE_FEATURE_COUNT = ComparePackage.REFERENCE_CHANGE_FEATURE_COUNT + 3;
+	int PROFILE_APPLICATION_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 1;
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.AssociationChange <em>Association Change</em>}'.
