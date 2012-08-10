@@ -54,6 +54,25 @@ import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 public class ComparisonSpec extends ComparisonImpl {
 
 	/**
+	 * Converts an inverse reference to its corresponding EObject.
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
+	private static final Function<EStructuralFeature.Setting, EObject> INVERSE_REFERENCES = new Function<EStructuralFeature.Setting, EObject>() {
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see com.google.common.base.Function#apply(java.lang.Object)
+		 */
+		public EObject apply(Setting input) {
+			if (input != null) {
+				return input.getEObject();
+			}
+			return null;
+		}
+	};
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.impl.ComparisonImpl#getDifferences()
@@ -145,6 +164,8 @@ public class ComparisonSpec extends ComparisonImpl {
 	/**
 	 * Get or create a {@link Adapter} of type {@code clazz} on the given {@code}.
 	 * 
+	 * @param <T>
+	 *            the type of adapter we want to get.
 	 * @param notifier
 	 *            the object to adapt.
 	 * @param clazz
@@ -164,10 +185,12 @@ public class ComparisonSpec extends ComparisonImpl {
 	 * Creates and returns a new instance of {@code clazz} and adds it to the {@link Notifier#eAdapters() list
 	 * of adapters} of the given {@code notifier}.
 	 * 
+	 * @param <T>
+	 *            The type of adapter to create and return.
 	 * @param notifier
 	 *            the object to be adapted.
 	 * @param clazz
-	 *            the type of adapter ot create.
+	 *            the type of adapter to create.
 	 * @return the newly created adapter.
 	 * @throws RuntimeException
 	 *             if something goes wrong while creating the instance of {@code clazz} (e.g. there is no
@@ -177,7 +200,9 @@ public class ComparisonSpec extends ComparisonImpl {
 		final T adapter;
 		try {
 			adapter = clazz.newInstance();
-		} catch (Exception e) {
+		} catch (InstantiationException e) {
+			throw Throwables.propagate(e);
+		} catch (IllegalAccessException e) {
 			throw Throwables.propagate(e);
 		}
 		notifier.eAdapters().add(adapter);
@@ -188,6 +213,8 @@ public class ComparisonSpec extends ComparisonImpl {
 	 * Returns an {@link Optional} adapter of the specified {@code clazz} by iterating on all
 	 * {@link Notifier#eAdapters() adapters} of the given {@code notifier}.
 	 * 
+	 * @param <T>
+	 *            the type of adapter we want to get.
 	 * @param notifier
 	 *            the object we are looking to adapt to the given type.
 	 * @param clazz
@@ -218,24 +245,5 @@ public class ComparisonSpec extends ComparisonImpl {
 		}
 		return ret;
 	}
-
-	/**
-	 * Converts an inverse reference to its corresponding EObject.
-	 * 
-	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
-	 */
-	private static final Function<EStructuralFeature.Setting, EObject> INVERSE_REFERENCES = new Function<EStructuralFeature.Setting, EObject>() {
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see com.google.common.base.Function#apply(java.lang.Object)
-		 */
-		public EObject apply(Setting input) {
-			if (input != null) {
-				return input.getEObject();
-			}
-			return null;
-		}
-	};
 
 }
