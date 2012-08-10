@@ -64,8 +64,8 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.diff.metamodel.DiffElement,
-	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.
+	 *      compare.diff.metamodel.DiffElement)
 	 */
 	public Diff create(Diff input) {
 
@@ -87,7 +87,12 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 		ret.setKind(extensionKind);
 		if (extensionKind == DifferenceKind.ADD || extensionKind == DifferenceKind.DELETE) {
 			ret.setEReference(((ReferenceChange)input).getReference());
-		}
+		} /*
+		 * else if (discriminant != null && discriminant.eContainingFeature() instanceof EReference) {
+		 * ret.setReference((EReference)discriminant.eContainingFeature()); } //FIXME: replace discriminant
+		 * and eReference by value and reference. ret.setValue(ret.getDiscriminant());
+		 * ret.setReference(ret.getEReference());
+		 */
 
 		return ret;
 	}

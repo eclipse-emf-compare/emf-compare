@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.uml2.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.compare.impl.ReferenceChangeImpl;
 import org.eclipse.emf.compare.impl.DiffImpl;
 
 import org.eclipse.emf.compare.uml2.UMLComparePackage;

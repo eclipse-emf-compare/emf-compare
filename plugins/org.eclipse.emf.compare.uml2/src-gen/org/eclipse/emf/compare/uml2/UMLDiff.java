@@ -10,6 +10,7 @@
  */
 package org.eclipse.emf.compare.uml2;
 
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.Diff;
 
 import org.eclipse.emf.ecore.EObject;
