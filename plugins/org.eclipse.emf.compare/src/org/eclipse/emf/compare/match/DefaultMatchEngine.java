@@ -59,6 +59,8 @@ public class DefaultMatchEngine implements IMatchEngine {
 		final Notifier right = getScope().getRight();
 		final Notifier origin = getScope().getOrigin();
 
+		getComparison().setThreeWay(origin != null);
+
 		// FIXME side-effect coding
 		if (left instanceof ResourceSet || right instanceof ResourceSet) {
 			match((ResourceSet)left, (ResourceSet)right, (ResourceSet)origin);
@@ -109,7 +111,6 @@ public class DefaultMatchEngine implements IMatchEngine {
 		final Iterator<? extends Resource> originChildren;
 		if (origin != null) {
 			originChildren = getScope().getCoveredResources(origin);
-			comparison.setThreeWay(true);
 		} else {
 			originChildren = Iterators.emptyIterator();
 		}
@@ -158,7 +159,6 @@ public class DefaultMatchEngine implements IMatchEngine {
 		final Iterator<? extends EObject> rightEObjects;
 		if (right != null) {
 			rightEObjects = getScope().getCoveredEObjects(right);
-			comparison.setThreeWay(true);
 		} else {
 			rightEObjects = Iterators.emptyIterator();
 		}
@@ -203,7 +203,6 @@ public class DefaultMatchEngine implements IMatchEngine {
 		if (origin != null) {
 			originEObjects = Iterators.concat(Iterators.singletonIterator(origin), getScope().getChildren(
 					origin));
-			comparison.setThreeWay(true);
 		} else {
 			originEObjects = Iterators.emptyIterator();
 		}
