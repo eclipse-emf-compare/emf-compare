@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.diff.internal.extension;
 
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.uml2.UMLDiff;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * An {@link IDiffExtensionFactory} is a factory capable to create an {@link AbstractDiffExtension} from a
@@ -46,11 +46,9 @@ public interface IDiffExtensionFactory {
 	 * 
 	 * @param input
 	 *            The input difference element.
-	 * @param crossReferencer
-	 *            The cross referencer.
 	 * @return The difference extension.
 	 */
-	Diff create(Diff input, EcoreUtil.CrossReferencer crossReferencer);
+	Diff create(Diff input);
 
 	/**
 	 * Returns the {@link DiffElement} in which the {@link #create(DiffElement) created}
@@ -59,19 +57,17 @@ public interface IDiffExtensionFactory {
 	 * 
 	 * @param input
 	 *            The input difference element.
-	 * @param crossReferencer
-	 *            The cross referencer.
 	 * @return The difference extension.
 	 */
-	Match getParentMatch(Diff input, EcoreUtil.CrossReferencer crossReferencer);
+	Match getParentMatch(Diff input);
 
 	/**
 	 * Sets the required link of the difference extension created by the related factory.
 	 * 
 	 * @param diff
 	 *            The difference extension.
-	 * @param crossReferencer
-	 *            The DiffModel cross-referencer.
+	 * @param comaprison
+	 *            The comparison.
 	 */
-	void fillRequiredDifferences(UMLDiff extension, EcoreUtil.CrossReferencer crossReferencer);
+	void fillRequiredDifferences(Comparison comparison, UMLDiff extension);
 }

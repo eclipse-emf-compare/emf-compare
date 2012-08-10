@@ -16,18 +16,15 @@ import com.google.common.collect.Iterators;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.uml2.UMLComparePackage;
 import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
 import org.eclipse.uml2.common.util.UML2Util;
 
 /**
@@ -35,24 +32,23 @@ import org.eclipse.uml2.common.util.UML2Util;
  */
 public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtensionFactory {
 
-	private final UMLPredicate<Setting> REFINING_PREDICATE = new UMLPredicate<EStructuralFeature.Setting>() {
-		public boolean apply(Setting input) {
-			final Diff diff = (Diff)input.getEObject();
+	private final Predicate<Diff> REFINING_PREDICATE = new Predicate<Diff>() {
+		public boolean apply(Diff diff) {
 			return isPartOfRefiningDifference(diff);
 		}
 	};
 
-	private final UMLPredicate<Setting> REQUIRES_ADD_DISCRIMINANT_PREDICATE = new UMLPredicate<EStructuralFeature.Setting>() {
-		public boolean apply(Setting input) {
-			return getExtensionKind().isInstance(input.getEObject())
-					&& ((UMLDiff)input.getEObject()).getKind().equals(DifferenceKind.ADD);
+	private final Predicate<Diff> REQUIRES_ADD_DISCRIMINANT_PREDICATE = new Predicate<Diff>() {
+		public boolean apply(Diff diff) {
+			return getExtensionKind().isInstance(diff)
+					&& ((UMLDiff)diff).getKind().equals(DifferenceKind.ADD);
 		}
 	};
 
-	private final UMLPredicate<Setting> REQUIRES_CHANGE_DISCRIMINANT_PREDICATE = new UMLPredicate<EStructuralFeature.Setting>() {
-		public boolean apply(Setting input) {
-			return getExtensionKind().isInstance(input.getEObject())
-					&& ((UMLDiff)input.getEObject()).getKind().equals(DifferenceKind.CHANGE);
+	private final Predicate<Diff> REQUIRES_CHANGE_DISCRIMINANT_PREDICATE = new Predicate<Diff>() {
+		public boolean apply(Diff diff) {
+			return getExtensionKind().isInstance(diff)
+					&& ((UMLDiff)diff).getKind().equals(DifferenceKind.CHANGE);
 		}
 	};
 
@@ -71,7 +67,7 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.diff.metamodel.DiffElement,
 	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
 	 */
-	public Diff create(Diff input, EcoreUtil.CrossReferencer crossReferencer) {
+	public Diff create(Diff input) {
 
 		final UMLDiff ret = createExtension();
 
@@ -83,7 +79,7 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 			if (extensionKind == DifferenceKind.DELETE) {
 				ret.getRefinedBy().add(input);
 			} else {
-				fillRefiningDifferences(crossReferencer, ret, discriminant);
+				fillRefiningDifferences(input.getMatch().getComparison(), ret, discriminant);
 			}
 		}
 
@@ -93,43 +89,43 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 			ret.setEReference(((ReferenceChange)input).getReference());
 		}
 
-		registerUMLDiff(crossReferencer, ret, UMLComparePackage.Literals.UML_DIFF__DISCRIMINANT, discriminant);
-
 		return ret;
 	}
 
-	protected void fillRefiningDifferences(EcoreUtil.CrossReferencer crossReferencer,
-			final Diff diffExtension, final EObject discriminant) {
+	protected void fillRefiningDifferences(final Comparison comparison, final UMLDiff diffExtension,
+			final EObject discriminant) {
+		// Find Diffs through ComparePackage.Literals.REFERENCE_CHANGE__VALUE
 		for (EObject elt : getPotentialChangedValuesFromDiscriminant(discriminant)) {
-			beRefinedByCrossReferences(elt, ComparePackage.Literals.REFERENCE_CHANGE__VALUE, diffExtension,
-					REFINING_PREDICATE, crossReferencer);
+			beRefinedByCrossReferences(comparison, elt, diffExtension, REFINING_PREDICATE);
 		}
 	}
 
 	@Override
-	public void fillRequiredDifferences(UMLDiff extension, CrossReferencer crossReferencer) {
+	public void fillRequiredDifferences(Comparison comparison, UMLDiff extension) {
 		if (getExtensionKind().isInstance(extension)) {
-			if (extension.getKind().equals(DifferenceKind.CHANGE)) {
-				extension.getRequires().addAll(
-						findCrossReferences(extension.getDiscriminant(),
-								UMLComparePackage.Literals.UML_DIFF__DISCRIMINANT,
-								REQUIRES_ADD_DISCRIMINANT_PREDICATE, crossReferencer));
-			} else if (extension.getKind().equals(DifferenceKind.DELETE)) {
-				extension.getRequires().addAll(
-						findCrossReferences(extension.getDiscriminant(),
-								UMLComparePackage.Literals.UML_DIFF__DISCRIMINANT,
-								REQUIRES_CHANGE_DISCRIMINANT_PREDICATE, crossReferencer));
+			// Find UMLDiffs through UMLComparePackage.Literals.UML_DIFF__DISCRIMINANT
+			final EObject discriminant = extension.getDiscriminant();
+			if (discriminant != null) {
+				if (extension.getKind().equals(DifferenceKind.CHANGE)) {
+					extension.getRequires()
+							.addAll(findCrossReferences(comparison, discriminant,
+									REQUIRES_ADD_DISCRIMINANT_PREDICATE));
+				} else if (extension.getKind().equals(DifferenceKind.DELETE)) {
+					extension.getRequires().addAll(
+							findCrossReferences(comparison, discriminant,
+									REQUIRES_CHANGE_DISCRIMINANT_PREDICATE));
+				}
 			}
 		}
 	}
 
 	@Override
-	public Match getParentMatch(Diff input, CrossReferencer crossReferencer) {
+	public Match getParentMatch(Diff input) {
 		if (getRelatedExtensionKind(input) == DifferenceKind.CHANGE && getDiscriminantFromDiff(input) != null) {
 			return (Match)input.getMatch().getComparison().getMatch(getDiscriminantFromDiff(input))
 					.eContainer();
 		}
-		return super.getParentMatch(input, crossReferencer);
+		return super.getParentMatch(input);
 	}
 
 	protected abstract UMLDiff createExtension();

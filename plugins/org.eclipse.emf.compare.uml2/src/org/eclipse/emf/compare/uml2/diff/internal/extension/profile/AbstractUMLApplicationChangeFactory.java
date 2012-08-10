@@ -13,16 +13,9 @@ package org.eclipse.emf.compare.uml2.diff.internal.extension.profile;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory;
-import org.eclipse.emf.compare.utils.ReferenceUtil;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.ProfileApplication;
@@ -69,58 +62,6 @@ public abstract class AbstractUMLApplicationChangeFactory extends AbstractDiffEx
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * Get the differences on applications of stereotypes in relation to the profile application.
-	 * 
-	 * @param profileApplication
-	 *            The profile application.
-	 * @param crossReferencer
-	 *            Cross referencer to retrieve the differences related to stereotypes.
-	 * @param diffSide
-	 *            Side to look for stereotypes.
-	 * @param expectedDiff
-	 *            The EClass of the expected difference.
-	 * @return The list of differences on stereotypes.
-	 */
-	protected List<Diff> getStereotypeDiffs(ProfileApplication profileApplication,
-			EcoreUtil.CrossReferencer crossReferencer, EReference diffSide, EClass expectedDiff) {
-		final List<Diff> result = new ArrayList<Diff>();
-		final Iterator<EObject> it = getStereotypeApplications(profileApplication).iterator();
-		while (it.hasNext()) {
-			final EObject st = it.next();
-			final Element elt = UMLUtil.getBaseElement(st);
-			result.addAll((Set<Diff>)ReferenceUtil.getCrossReferences(crossReferencer, elt, diffSide,
-					expectedDiff.getClass()));
-		}
-		return result;
-	}
-
-	/**
-	 * Get the difference on application of profile in relation to a stereotype application.
-	 * 
-	 * @param stereotypeApplication
-	 *            the stereotype application.
-	 * @param crossReferencer
-	 *            Cross referencer to retrieve the differences related to the profile.
-	 * @param diffSide
-	 *            Side to look for the profile.
-	 * @param expectedDiff
-	 *            The EClass of the expected difference.
-	 * @return The difference on profile.
-	 */
-	protected Diff getProfileDiff(EObject stereotypeApplication, CrossReferencer crossReferencer,
-			EReference diffSide, EClass expectedDiff) {
-		final ProfileApplication profileApplication = getProfileApplication(stereotypeApplication);
-		if (profileApplication != null) {
-			final Set<Diff> findCrossReferences = (Set<Diff>)ReferenceUtil.getCrossReferences(
-					crossReferencer, profileApplication, diffSide, expectedDiff.getClass());
-			for (Diff diffElement : findCrossReferences) {
-				return diffElement;
-			}
-		}
-		return null;
 	}
 
 	/**

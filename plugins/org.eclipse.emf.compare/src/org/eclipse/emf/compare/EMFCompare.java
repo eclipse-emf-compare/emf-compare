@@ -31,8 +31,6 @@ import org.eclipse.emf.compare.req.DefaultReqEngine;
 import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.utils.ReferenceUtil;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 // FIXME progress monitor!
 /**
@@ -168,20 +166,18 @@ public final class EMFCompare {
 			postProcessor.postDiff(comparison);
 		}
 
-		EcoreUtil.CrossReferencer crossReferencer = ReferenceUtil.initializeCrossReferencer(comparison);
-
-		final IReqEngine reqEngine = new DefaultReqEngine(crossReferencer);
+		final IReqEngine reqEngine = new DefaultReqEngine();
 		reqEngine.computeRequirements(comparison);
 
 		if (postProcessor != null) {
-			postProcessor.postRequirements(comparison, crossReferencer);
+			postProcessor.postRequirements(comparison);
 		}
 
-		final IEquiEngine equiEngine = new DefaultEquiEngine(crossReferencer);
+		final IEquiEngine equiEngine = new DefaultEquiEngine();
 		equiEngine.computeEquivalences(comparison);
 
 		if (postProcessor != null) {
-			postProcessor.postEquivalences(comparison, crossReferencer);
+			postProcessor.postEquivalences(comparison);
 		}
 
 		if (comparison.isThreeWay()) {

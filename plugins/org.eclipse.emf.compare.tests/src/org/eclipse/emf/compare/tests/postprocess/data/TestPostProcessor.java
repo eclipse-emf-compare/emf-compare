@@ -16,7 +16,6 @@ import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.extension.IPostProcessor;
-import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
 
 /**
  * This provides a post processor to add a copy of the first scanned match at the same level of the
@@ -53,20 +52,18 @@ public class TestPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}.
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postRequirements(org.eclipse.emf.compare.Comparison,
-	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postRequirements(org.eclipse.emf.compare.Comparison)
 	 */
-	public void postRequirements(Comparison comparison, CrossReferencer crossReferencer) {
+	public void postRequirements(Comparison comparison) {
 
 	}
 
 	/**
 	 * {@inheritDoc}.
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postEquivalences(org.eclipse.emf.compare.Comparison,
-	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postEquivalences(org.eclipse.emf.compare.Comparison)
 	 */
-	public void postEquivalences(Comparison comparison, CrossReferencer crossReferencer) {
+	public void postEquivalences(Comparison comparison) {
 
 	}
 

@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.extension;
 
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * Implementations of this interface can be used in order to tell EMF Compare how to make post treatments at
@@ -45,10 +44,8 @@ public interface IPostProcessor {
 	 * 
 	 * @param comparison
 	 *            The comparison after the requirements step.
-	 * @param crossReferencer
-	 *            The available cross referencer on the resource set.
 	 */
-	void postRequirements(Comparison comparison, EcoreUtil.CrossReferencer crossReferencer);
+	void postRequirements(Comparison comparison);
 
 	/**
 	 * This will be called by EMF Compare in order to execute the specified behavior after the equivalences
@@ -56,10 +53,8 @@ public interface IPostProcessor {
 	 * 
 	 * @param comparison
 	 *            The comparison after the equivalences step.
-	 * @param crossReferencer
-	 *            The available cross referencer on the resource set.
 	 */
-	void postEquivalences(Comparison comparison, EcoreUtil.CrossReferencer crossReferencer);
+	void postEquivalences(Comparison comparison);
 
 	/**
 	 * This will be called by EMF Compare in order to execute the specified behavior after the conflicts step,

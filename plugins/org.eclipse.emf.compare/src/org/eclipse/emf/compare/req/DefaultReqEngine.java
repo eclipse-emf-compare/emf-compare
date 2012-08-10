@@ -22,9 +22,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.utils.MatchUtil;
-import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * The requirements engine is in charge of actually computing the requirements between the differences.
@@ -39,36 +37,11 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 public class DefaultReqEngine implements IReqEngine {
 
 	/**
-	 * Cross referencer which links business model objects to the related differences.
-	 */
-	private EcoreUtil.CrossReferencer crossReferencerModelObjectsToDiffs;
-
-	/**
-	 * Constructor.
-	 */
-	public DefaultReqEngine() {
-	}
-
-	/**
-	 * Constructor with a cross referencer.
-	 * 
-	 * @param crossReferencerModelObjectsToDiffs
-	 *            The cross referencer.
-	 */
-	public DefaultReqEngine(EcoreUtil.CrossReferencer crossReferencerModelObjectsToDiffs) {
-		this.crossReferencerModelObjectsToDiffs = crossReferencerModelObjectsToDiffs;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.diff.IDiffEngine#computeRequirements(org.eclipse.emf.compare.Comparison)
 	 */
 	public void computeRequirements(Comparison comparison) {
-		if (crossReferencerModelObjectsToDiffs == null) {
-			crossReferencerModelObjectsToDiffs = ReferenceUtil.initializeCrossReferencer(comparison);
-		}
-
 		for (Diff difference : comparison.getDifferences()) {
 			checkForRequiredDifferences(comparison, difference);
 		}
@@ -94,7 +67,7 @@ public class DefaultReqEngine implements IReqEngine {
 					&& sourceDifference.getReference().isContainment()) {
 
 				// -> requires ADD on the container of the object
-				requiredDifferences.addAll(getDifferenceOnGivenObject(sourceDifference.getValue()
+				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, sourceDifference.getValue()
 						.eContainer(), DifferenceKind.ADD));
 
 				// -> requires DELETE of the origin value on the same containment mono-valued reference
@@ -107,12 +80,15 @@ public class DefaultReqEngine implements IReqEngine {
 					&& !sourceDifference.getReference().isContainment()) {
 
 				// -> requires ADD of the value of the reference (target object)
-				requiredDifferences.addAll(getDifferenceOnGivenObject(sourceDifference.getValue(),
-						DifferenceKind.ADD));
+				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison,
+						sourceDifference.getValue(), DifferenceKind.ADD));
 
 				// -> requires ADD of the object containing the reference
-				requiredDifferences.addAll(getDifferenceOnGivenObject(MatchUtil.getContainer(comparison,
-						sourceDifference), DifferenceKind.ADD));
+				final EObject container = MatchUtil.getContainer(comparison, sourceDifference);
+				if (container != null) {
+					requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, container,
+							DifferenceKind.ADD));
+				}
 
 				// DELETE object
 			} else if ((sourceDifference.getKind().equals(DifferenceKind.DELETE))
@@ -120,8 +96,8 @@ public class DefaultReqEngine implements IReqEngine {
 
 				// -> requires DELETE of the outgoing references and contained objects
 				requiredDifferences.addAll(getDELOutgoingReferences(comparison, sourceDifference));
-				requiredDifferences.addAll(getDifferenceOnGivenObject(
-						sourceDifference.getValue().eContents(), DifferenceKind.DELETE));
+				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, sourceDifference.getValue()
+						.eContents(), DifferenceKind.DELETE));
 
 				// -> requires MOVE of contained objects
 				requiredDifferences.addAll(getMOVEContainedObjects(comparison, sourceDifference));
@@ -135,8 +111,8 @@ public class DefaultReqEngine implements IReqEngine {
 					&& !sourceDifference.getReference().isContainment()) {
 
 				// -> is required by DELETE of the target object
-				requiredByDifferences.addAll(getDifferenceOnGivenObject(sourceDifference.getValue(),
-						DifferenceKind.DELETE));
+				requiredByDifferences.addAll(getDifferenceOnGivenObject(comparison, sourceDifference
+						.getValue(), DifferenceKind.DELETE));
 
 				// MOVE object
 			} else if (sourceDifference.getKind().equals(DifferenceKind.MOVE)
@@ -145,10 +121,12 @@ public class DefaultReqEngine implements IReqEngine {
 				EObject container = sourceDifference.getValue().eContainer();
 
 				// -> requires ADD on the container of the object
-				requiredDifferences.addAll(getDifferenceOnGivenObject(container, DifferenceKind.ADD));
+				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, container,
+						DifferenceKind.ADD));
 
 				// -> requires MOVE of the container of the object
-				requiredDifferences.addAll(getDifferenceOnGivenObject(container, DifferenceKind.MOVE));
+				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, container,
+						DifferenceKind.MOVE));
 
 				// CHANGE reference
 			} else if (sourceDifference.getKind().equals(DifferenceKind.CHANGE)
@@ -156,12 +134,12 @@ public class DefaultReqEngine implements IReqEngine {
 					&& !isChangeDelete(comparison, sourceDifference)) {
 
 				// -> is required by DELETE of the origin target object
-				requiredByDifferences.addAll(getDifferenceOnGivenObject(MatchUtil.getOriginValue(comparison,
-						sourceDifference), DifferenceKind.DELETE));
+				requiredByDifferences.addAll(getDifferenceOnGivenObject(comparison, MatchUtil.getOriginValue(
+						comparison, sourceDifference), DifferenceKind.DELETE));
 
 				// -> requires ADD of the value of the reference (target object) if required
-				requiredDifferences.addAll(getDifferenceOnGivenObject(sourceDifference.getValue(),
-						DifferenceKind.ADD));
+				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison,
+						sourceDifference.getValue(), DifferenceKind.ADD));
 			}
 
 			sourceDifference.getRequires().addAll(requiredDifferences);
@@ -188,7 +166,8 @@ public class DefaultReqEngine implements IReqEngine {
 			if (originContainer != null) {
 				Object originValue = originContainer.eGet(sourceDifference.getReference());
 				if (originValue instanceof EObject) {
-					result = getDifferenceOnGivenObject((EObject)originValue, DifferenceKind.DELETE);
+					result = getDifferenceOnGivenObject(comparison, (EObject)originValue,
+							DifferenceKind.DELETE);
 				}
 			}
 		}
@@ -205,9 +184,19 @@ public class DefaultReqEngine implements IReqEngine {
 	 *            The given kind.
 	 * @return The found differences.
 	 */
-	private Set<ReferenceChange> getDifferenceOnGivenObject(EObject object, DifferenceKind kind) {
-		return ReferenceUtil.getReferenceChanges(crossReferencerModelObjectsToDiffs, object,
-				ComparePackage.eINSTANCE.getReferenceChange_Value(), kind, Boolean.TRUE);
+	private Set<ReferenceChange> getDifferenceOnGivenObject(Comparison comparison, EObject object,
+			DifferenceKind kind) {
+		final Set<ReferenceChange> result = new HashSet<ReferenceChange>();
+		for (Diff diff : comparison.getDifferences(object)) {
+			if (diff.getKind() == kind
+					&& diff instanceof ReferenceChange
+					&& ((ReferenceChange)diff).getReference() == ComparePackage.eINSTANCE
+							.getReferenceChange_Value()
+					&& ((ReferenceChange)diff).getReference().isContainment()) {
+				result.add((ReferenceChange)diff);
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -220,10 +209,11 @@ public class DefaultReqEngine implements IReqEngine {
 	 *            The kind of requested differences.
 	 * @return The found differences.
 	 */
-	private Set<ReferenceChange> getDifferenceOnGivenObject(List<EObject> objects, DifferenceKind kind) {
+	private Set<ReferenceChange> getDifferenceOnGivenObject(Comparison comparison, List<EObject> objects,
+			DifferenceKind kind) {
 		Set<ReferenceChange> result = new HashSet<ReferenceChange>();
 		for (EObject object : objects) {
-			result.addAll(getDifferenceOnGivenObject(object, kind));
+			result.addAll(getDifferenceOnGivenObject(comparison, object, kind));
 		}
 		return result;
 	}
@@ -249,15 +239,15 @@ public class DefaultReqEngine implements IReqEngine {
 		final List<EObject> outgoingReferences = value.eCrossReferences();
 
 		for (EObject outgoingRef : outgoingReferences) {
-			Set<ReferenceChange> requiredDifferences = ReferenceUtil.getCrossReferences(
-					crossReferencerModelObjectsToDiffs, outgoingRef, ComparePackage.eINSTANCE
-							.getReferenceChange_Value(), ReferenceChange.class);
-			for (ReferenceChange diff : requiredDifferences) {
-				if (!diff.getReference().isContainment()) {
-					if ((diff.getKind().equals(DifferenceKind.DELETE) || isChangeDelete(comparison, diff))
+			for (Diff diff : comparison.getDifferences(outgoingRef)) {
+				if (diff instanceof ReferenceChange
+						&& !((ReferenceChange)diff).getReference().isContainment()) {
+					if ((diff.getKind().equals(DifferenceKind.DELETE) || isChangeDelete(comparison,
+							(ReferenceChange)diff))
 							&& value.equals(MatchUtil.getContainer(comparison, diff))
-							&& value.eClass().getEAllReferences().contains(diff.getReference())) {
-						result.add(diff);
+							&& value.eClass().getEAllReferences().contains(
+									((ReferenceChange)diff).getReference())) {
+						result.add((ReferenceChange)diff);
 					}
 				}
 			}
@@ -283,9 +273,14 @@ public class DefaultReqEngine implements IReqEngine {
 		for (EObject content : contents) {
 			EObject originObject = MatchUtil.getOriginObject(comparison, content);
 			if (originObject != null) {
-				result.addAll(ReferenceUtil.getReferenceChanges(crossReferencerModelObjectsToDiffs,
-						originObject, ComparePackage.eINSTANCE.getReferenceChange_Value(),
-						DifferenceKind.MOVE, Boolean.TRUE));
+				for (Diff difference : comparison.getDifferences(originObject)) {
+					if (difference instanceof ReferenceChange
+							&& ((ReferenceChange)difference).getReference().isContainment()
+							&& difference.getKind() == DifferenceKind.MOVE) {
+						result.add((ReferenceChange)difference);
+					}
+
+				}
 			}
 		}
 		return result;

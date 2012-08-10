@@ -64,14 +64,14 @@ public class UMLMessageChangeFactory extends UMLAbstractDiffExtensionFactory {
 	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
 		List<EObject> result = new ArrayList<EObject>();
 		if (discriminant instanceof Message) {
-			MessageEnd recvEvent = ((Message)discriminant).getReceiveEvent();
-			MessageEnd sendEvent = ((Message)discriminant).getSendEvent();
-			result.add(recvEvent);
-			result.add(sendEvent);
+			final MessageEnd recvEvent = ((Message)discriminant).getReceiveEvent();
+			final MessageEnd sendEvent = ((Message)discriminant).getSendEvent();
 			if (recvEvent instanceof InteractionFragment) {
+				result.add(recvEvent);
 				result.addAll(((InteractionFragment)recvEvent).getCovereds());
 			}
 			if (sendEvent instanceof InteractionFragment) {
+				result.add(sendEvent);
 				result.addAll(((InteractionFragment)sendEvent).getCovereds());
 			}
 		}

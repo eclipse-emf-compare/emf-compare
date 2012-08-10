@@ -11,8 +11,6 @@ import org.eclipse.emf.compare.extension.IPostProcessor;
 import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.DiffExtensionFactoryRegistry;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
 
 public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 
@@ -34,14 +32,14 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 
 	}
 
-	public void postRequirements(Comparison comparison, CrossReferencer crossReferencer) {
+	public void postRequirements(Comparison comparison) {
 		final Map<Class<? extends Diff>, IDiffExtensionFactory> mapUml2ExtensionFactories = DiffExtensionFactoryRegistry
 				.createExtensionFactories();
 		uml2ExtensionFactories = new HashSet<IDiffExtensionFactory>(mapUml2ExtensionFactories.values());
 
 		// Creation of the UML difference extensions
 		for (Diff diff : comparison.getDifferences()) {
-			applyManagedTypes(diff, crossReferencer);
+			applyManagedTypes(diff);
 		}
 
 		// Filling of the requirements link of the UML difference extensions
@@ -50,13 +48,13 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 				final Class<?> classDiffElement = UMLDiff.eClass().getInstanceClass();
 				final IDiffExtensionFactory diffFactory = mapUml2ExtensionFactories.get(classDiffElement);
 				if (diffFactory != null) {
-					diffFactory.fillRequiredDifferences((UMLDiff)UMLDiff, crossReferencer);
+					diffFactory.fillRequiredDifferences(comparison, (UMLDiff)UMLDiff);
 				}
 			}
 		}
 	}
 
-	public void postEquivalences(Comparison comparison, CrossReferencer crossReferencer) {
+	public void postEquivalences(Comparison comparison) {
 		// TODO Auto-generated method stub
 
 	}
@@ -74,11 +72,11 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 	 * @param diffModelCrossReferencer
 	 *            The cross referencer.
 	 */
-	private void applyManagedTypes(Diff element, EcoreUtil.CrossReferencer diffModelCrossReferencer) {
+	private void applyManagedTypes(Diff element) {
 		for (IDiffExtensionFactory factory : uml2ExtensionFactories) {
 			if (factory.handles(element)) {
-				final Diff extension = factory.create(element, diffModelCrossReferencer);
-				final Match match = factory.getParentMatch(element, diffModelCrossReferencer);
+				final Diff extension = factory.create(element);
+				final Match match = factory.getParentMatch(element);
 				match.getDifferences().add(extension);
 			}
 		}

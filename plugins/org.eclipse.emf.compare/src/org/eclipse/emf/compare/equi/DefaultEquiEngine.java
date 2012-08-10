@@ -10,18 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.equi;
 
-import java.util.Set;
-
 import org.eclipse.emf.compare.CompareFactory;
-import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.utils.MatchUtil;
-import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * The requirements engine is in charge of actually computing the equivalences between the differences.
@@ -36,36 +31,11 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 public class DefaultEquiEngine implements IEquiEngine {
 
 	/**
-	 * Cross referencer which links business model objects to the related differences.
-	 */
-	private EcoreUtil.CrossReferencer crossReferencerModelObjectsToDiffs;
-
-	/**
-	 * Constructor.
-	 */
-	public DefaultEquiEngine() {
-	}
-
-	/**
-	 * Constructor with a cross referencer.
-	 * 
-	 * @param crossReferencer
-	 *            The cross referencer.
-	 */
-	public DefaultEquiEngine(EcoreUtil.CrossReferencer crossReferencer) {
-		this.crossReferencerModelObjectsToDiffs = crossReferencer;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.equi.IEquiEngine#computeEquivalences(org.eclipse.emf.compare.Comparison)
 	 */
 	public void computeEquivalences(Comparison comparison) {
-		if (crossReferencerModelObjectsToDiffs == null) {
-			crossReferencerModelObjectsToDiffs = ReferenceUtil.initializeCrossReferencer(comparison);
-		}
-
 		for (Diff difference : comparison.getDifferences()) {
 			checkForEquivalences(comparison, difference);
 		}
@@ -102,16 +72,17 @@ public class DefaultEquiEngine implements IEquiEngine {
 				 * is contained by the value of the current difference, where the reference is linked to the
 				 * opposite one
 				 */
-				Set<ReferenceChange> equivalentDifferences = ReferenceUtil.getCrossReferences(
-						crossReferencerModelObjectsToDiffs, MatchUtil.getContainer(comparison, diff),
-						ComparePackage.eINSTANCE.getReferenceChange_Value(), ReferenceChange.class);
-				for (ReferenceChange referenceChange : equivalentDifferences) {
-					if (referenceChange.getReference().getEOpposite() != null
-							&& referenceChange.getReference().getEOpposite().equals(diff.getReference())
+				for (Diff referenceChange : comparison.getDifferences(MatchUtil
+						.getContainer(comparison, diff))) {
+					if (referenceChange instanceof ReferenceChange
+							&& ((ReferenceChange)referenceChange).getReference().getEOpposite() != null
+							&& ((ReferenceChange)referenceChange).getReference().getEOpposite().equals(
+									diff.getReference())
 							&& diff.getValue().equals(MatchUtil.getContainer(comparison, referenceChange))) {
 						equivalence.getDifferences().add(referenceChange);
 						break;
 					}
+
 				}
 
 				// Add the change differences on the old references (origin)
@@ -134,15 +105,14 @@ public class DefaultEquiEngine implements IEquiEngine {
 	 */
 	private void addChangesFromOrigin(Comparison comparison, ReferenceChange diff, Equivalence equivalence) {
 		if (!diff.getReference().isMany()) {
-			EObject originContainer = MatchUtil.getOriginContainer(comparison, diff);
-			Set<ReferenceChange> equivalentDifferences2 = ReferenceUtil.getCrossReferences(
-					crossReferencerModelObjectsToDiffs, originContainer, ComparePackage.eINSTANCE
-							.getReferenceChange_Value(), ReferenceChange.class);
-
-			for (ReferenceChange referenceChange : equivalentDifferences2) {
-				if (MatchUtil.getContainer(comparison, referenceChange).equals(
-						originContainer.eGet(diff.getReference()))) {
-					equivalence.getDifferences().add(referenceChange);
+			final EObject originContainer = MatchUtil.getOriginContainer(comparison, diff);
+			if (originContainer != null) {
+				for (Diff referenceChange : comparison.getDifferences(originContainer)) {
+					if (referenceChange instanceof ReferenceChange
+							&& MatchUtil.getContainer(comparison, referenceChange).equals(
+									originContainer.eGet(diff.getReference()))) {
+						equivalence.getDifferences().add(referenceChange);
+					}
 				}
 			}
 		}
