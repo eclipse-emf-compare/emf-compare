@@ -10,13 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal;
 
-import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 
 /**
- * This implementation of an {@link ECrossReferenceAdapter} will allow us to only attach ourselves to the
- * Match elements.
+ * This implementation of an {@link ECrossReferenceAdapter} will allow us to only attach ourselves to the Diff
+ * elements.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -30,7 +30,8 @@ public class DiffCrossReferencer extends ECrossReferenceAdapter {
 	@Override
 	protected boolean isIncluded(EReference eReference) {
 		if (super.isIncluded(eReference)) {
-			return eReference == ComparePackage.Literals.REFERENCE_CHANGE__VALUE;
+			EClass eClass = eReference.eClass();
+			return eClass.getEAllSuperTypes().contains(eClass);
 		}
 		return false;
 
