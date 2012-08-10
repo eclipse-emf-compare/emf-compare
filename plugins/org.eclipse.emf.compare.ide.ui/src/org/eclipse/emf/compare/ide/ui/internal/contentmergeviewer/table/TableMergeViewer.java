@@ -35,6 +35,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -104,7 +105,8 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 	 */
 	@Override
 	protected final TableViewer createStructuredViewer(Composite parent) {
-		return new TableViewer(parent);
+		return new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
+				| SWT.FULL_SELECTION);
 	}
 
 	/**
@@ -236,19 +238,19 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		boolean specialPaint = false;
 		if (data instanceof DiffInsertionPoint) {
 			DiffInsertionPoint insertionPoint = (DiffInsertionPoint)data;
-			paintItemDiffBox(event, insertionPoint.getDiff(), getBoundsForInsertionPoint(tableItem));
+			paintItemDiffBox(event, insertionPoint.getDiff(), getBoundsForInsertionPoint(event));
 			specialPaint = true;
 		} else if (fInput != null) {
 			for (Diff diff : fInput.getDiffFromThisSide()) {
 				if (fInput.getValue(diff) == data) {
-					paintItemDiffBox(event, diff, getBounds(tableItem));
+					paintItemDiffBox(event, diff, getBounds(event));
 					specialPaint = true;
 				}
 			}
 			if (getSide() == MergeViewerSide.ANCESTOR) {
 				for (Diff diff : fInput.getDiffFromAncestor()) {
 					if (fInput.getValue(diff) == data) {
-						paintItemDiffBox(event, diff, getBounds(tableItem));
+						paintItemDiffBox(event, diff, getBounds(event));
 						specialPaint = true;
 					}
 				}
@@ -256,7 +258,7 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		}
 
 		if (!specialPaint) {
-			paintItem(event, tableItem);
+			paintItem(event);
 		}
 	}
 
@@ -264,11 +266,11 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 	 * @param event
 	 * @param tableItem
 	 */
-	private void paintItem(Event event, TableItem tableItem) {
+	private void paintItem(Event event) {
 		event.detail &= ~SWT.HOT;
 
 		if (isSelected(event)) {
-			Rectangle fill = getBounds(tableItem);
+			Rectangle fill = getBounds(event);
 			drawSelectionBox(event, fill);
 		}
 	}
@@ -311,8 +313,10 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		event.detail &= ~SWT.SELECTED;
 	}
 
-	private static Rectangle getBounds(TableItem tableItem) {
-		Rectangle tableBounds = tableItem.getParent().getBounds();
+	private static Rectangle getBounds(Event event) {
+		TableItem tableItem = (TableItem)event.item;
+		Table table = tableItem.getParent();
+		Rectangle tableBounds = table.getClientArea();
 		Rectangle itemBounds = tableItem.getBounds();
 
 		Rectangle fill = new Rectangle(0, 0, 0, 0);
@@ -321,11 +325,25 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		fill.width = tableBounds.width - 6;
 		fill.height = itemBounds.height - 3;
 
+		final GC g = event.gc;
+		int columnCount = table.getColumnCount();
+		if (event.index == columnCount - 1 || columnCount == 0) {
+			int width = tableBounds.x + tableBounds.width - event.x;
+			if (width > 0) {
+				Region region = new Region();
+				g.getClipping(region);
+				region.add(event.x, event.y, width, event.height);
+				g.setClipping(region);
+				region.dispose();
+			}
+		}
+		g.setAdvanced(true);
+
 		return fill;
 	}
 
-	private static Rectangle getBoundsForInsertionPoint(TableItem tableItem) {
-		Rectangle fill = getBounds(tableItem);
+	private static Rectangle getBoundsForInsertionPoint(Event event) {
+		Rectangle fill = getBounds(event);
 		fill.y = fill.y + 6;
 		fill.height = fill.height - 12;
 
