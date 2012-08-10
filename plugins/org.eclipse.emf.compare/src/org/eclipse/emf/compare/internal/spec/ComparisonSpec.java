@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.internal.spec;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.transform;
@@ -27,7 +26,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -98,18 +96,10 @@ public class ComparisonSpec extends ComparisonImpl {
 	public EList<Diff> getDifferences(EObject element) {
 		checkNotNull(element);
 
-		List<Diff> diffsOfMatch;
-		Match match = getMatch(element);
-		if (match != null) {
-			diffsOfMatch = match.getDifferences();
-		} else {
-			diffsOfMatch = ImmutableList.of();
-		}
-
 		ECrossReferenceAdapter adapter = adapt(this, DiffCrossReferencer.class);
 		Iterable<Diff> crossRefs = filter(getInverse(element, adapter), Diff.class);
 
-		return new BasicEList<Diff>(ImmutableList.copyOf(concat(diffsOfMatch, crossRefs)));
+		return new BasicEList<Diff>(ImmutableList.copyOf(crossRefs));
 	}
 
 	/**

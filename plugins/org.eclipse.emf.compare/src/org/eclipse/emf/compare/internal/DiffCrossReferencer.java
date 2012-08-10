@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal;
 
+import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
@@ -30,8 +31,8 @@ public class DiffCrossReferencer extends ECrossReferenceAdapter {
 	@Override
 	protected boolean isIncluded(EReference eReference) {
 		if (super.isIncluded(eReference)) {
-			EClass eClass = eReference.eClass();
-			return eClass.getEAllSuperTypes().contains(eClass);
+			EClass eClass = eReference.getEContainingClass();
+			return eClass.getEAllSuperTypes().contains(ComparePackage.Literals.DIFF);
 		}
 		return false;
 

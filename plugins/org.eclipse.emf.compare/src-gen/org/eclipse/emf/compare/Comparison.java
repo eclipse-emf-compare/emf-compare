@@ -129,7 +129,15 @@ public interface Comparison extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Returns all differences that were detected on the given EObject or one of its counterpart in left, right or origin.
+	 * Returns all differences that reference the given EObject (for instance, all ReferenceChanges that reference the given EObject through the "value" EReference). 
+	 * <p>
+	 * To get differences detected on the given EObject or one of its counterpart in left, right or origin, you should call the following code:
+	 * <pre>
+	 * Match match = getMatch(eObject);
+	 * if (match != null) {
+	 *     differences = match.getDifferences();
+	 * }
+	 * </pre>
 	 * @param element The EObject for which we seek all related differences.
 	 * <!-- end-model-doc -->
 	 * @model

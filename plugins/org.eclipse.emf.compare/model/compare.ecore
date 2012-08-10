@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="compare"
-    nsURI="http://www.eclipse.org/emf/compare" nsPrefix="compare">
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="compare" nsURI="http://www.eclipse.org/emf/compare" nsPrefix="compare">
   <eClassifiers xsi:type="ecore:EClass" name="Comparison">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="This will act as the &quot;root&quot; of a comparison. It will reference one match for every root of the input models, along with the differences detected for each of them."/>
@@ -14,7 +12,7 @@
     </eOperations>
     <eOperations name="getDifferences" upperBound="-1" eType="#//Diff">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Returns all differences that were detected on the given EObject or one of its counterpart in left, right or origin."/>
+        <details key="documentation" value="Returns all differences that reference the given EObject (for instance, all ReferenceChanges that reference the given EObject through the &quot;value&quot; EReference). &#xA;&lt;p>&#xA;To get differences detected on the given EObject or one of its counterpart in left, right or origin, you should call the following code:&#xA;&lt;pre>&#xA;Match match = getMatch(eObject);&#xA;if (match != null) {&#xA;    differences = match.getDifferences();&#xA;}&#xA;&lt;/pre>"/>
       </eAnnotations>
       <eParameters name="element" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject">
         <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
