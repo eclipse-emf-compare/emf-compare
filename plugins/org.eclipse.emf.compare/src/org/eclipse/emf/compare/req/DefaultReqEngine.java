@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -144,6 +143,7 @@ public class DefaultReqEngine implements IReqEngine {
 
 			sourceDifference.getRequires().addAll(requiredDifferences);
 			sourceDifference.getRequiredBy().addAll(requiredByDifferences);
+
 		}
 
 	}
@@ -188,10 +188,7 @@ public class DefaultReqEngine implements IReqEngine {
 			DifferenceKind kind) {
 		final Set<ReferenceChange> result = new HashSet<ReferenceChange>();
 		for (Diff diff : comparison.getDifferences(object)) {
-			if (diff.getKind() == kind
-					&& diff instanceof ReferenceChange
-					&& ((ReferenceChange)diff).getReference() == ComparePackage.eINSTANCE
-							.getReferenceChange_Value()
+			if (diff.getKind() == kind && diff instanceof ReferenceChange
 					&& ((ReferenceChange)diff).getReference().isContainment()) {
 				result.add((ReferenceChange)diff);
 			}

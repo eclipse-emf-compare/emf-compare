@@ -182,7 +182,7 @@ public final class EMFCompare {
 
 		if (comparison.isThreeWay()) {
 			final IConflictDetector conflictDetector = new DefaultConflictDetector();
-			conflictDetector.detect(comparison);
+			// conflictDetector.detect(comparison);
 
 			if (postProcessor != null) {
 				postProcessor.postConflicts(comparison);
