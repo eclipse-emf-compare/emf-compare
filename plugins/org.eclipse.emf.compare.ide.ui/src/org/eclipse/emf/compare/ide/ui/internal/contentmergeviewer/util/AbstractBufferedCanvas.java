@@ -74,6 +74,14 @@ public abstract class AbstractBufferedCanvas extends Canvas {
 		}
 	}
 
+	public void repaint() {
+		if (!isDisposed()) {
+			GC gc = new GC(this);
+			doubleBufferedPaint(gc);
+			gc.dispose();
+		}
+	}
+
 	/**
 	 * Paints this component using double-buffering.
 	 * 

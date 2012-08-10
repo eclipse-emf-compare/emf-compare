@@ -34,8 +34,10 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -290,6 +292,28 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		g.fillRectangle(bounds);
 		g.drawRectangle(bounds);
 
+		if (getSide() == MergeViewerSide.LEFT) {
+			TableItem tableItem = (TableItem)event.item;
+			Rectangle itemBounds = tableItem.getBounds();
+			Rectangle clientArea = tableItem.getParent().getClientArea();
+			Point from = new Point(0, 0);
+			from.x = bounds.x + bounds.width;
+			from.y = itemBounds.y + (itemBounds.height / 2);
+			Point to = new Point(0, 0);
+			to.x = clientArea.x + clientArea.width;
+			to.y = from.y;
+			g.drawLine(from.x, from.y, to.x, to.y);
+		} else {
+			TableItem tableItem = (TableItem)event.item;
+			Rectangle itemBounds = tableItem.getBounds();
+			Point from = new Point(0, 0);
+			from.y = itemBounds.y + (itemBounds.height / 2);
+			Point to = new Point(0, 0);
+			to.x = bounds.x;
+			to.y = from.y;
+			g.drawLine(from.x, from.y, to.x, to.y);
+		}
+
 		if (isSelected(event)) {
 			g.setForeground(event.display.getSystemColor(SWT.COLOR_LIST_FOREGROUND));
 			g.setBackground(event.display.getSystemColor(SWT.COLOR_LIST_BACKGROUND));
@@ -300,7 +324,7 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		}
 	}
 
-	private static boolean isSelected(Event event) {
+	static boolean isSelected(Event event) {
 		return (event.detail & SWT.SELECTED) != 0;
 	}
 
@@ -322,7 +346,8 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		Rectangle fill = new Rectangle(0, 0, 0, 0);
 		fill.x = 2;
 		fill.y = itemBounds.y + 2;
-		fill.width = tableBounds.width - 6;
+		// +x to add the icon and the expand "+" if we are in a tree
+		fill.width = itemBounds.width + itemBounds.x;
 		fill.height = itemBounds.height - 3;
 
 		final GC g = event.gc;
@@ -342,9 +367,13 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		return fill;
 	}
 
+
 	private static Rectangle getBoundsForInsertionPoint(Event event) {
 		Rectangle fill = getBounds(event);
+		TableItem tableItem = (TableItem)event.item;
+		Rectangle tableBounds = tableItem.getParent().getClientArea();
 		fill.y = fill.y + 6;
+		fill.width = tableBounds.width / 3;
 		fill.height = fill.height - 12;
 
 		return fill;
