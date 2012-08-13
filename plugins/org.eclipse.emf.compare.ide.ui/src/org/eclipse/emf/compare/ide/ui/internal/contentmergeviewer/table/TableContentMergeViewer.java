@@ -13,9 +13,6 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.core.commands.operations.IOperationHistoryListener;
-import org.eclipse.core.commands.operations.OperationHistoryEvent;
-import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
@@ -29,7 +26,9 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.M
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.AbstractBufferedCanvas;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DiffInsertionPoint;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.provider.IItemFontProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -42,6 +41,7 @@ import org.eclipse.swt.events.GestureListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -184,7 +184,22 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	protected IMergeViewer<? extends Composite> createMergeViewer(Composite parent, MergeViewerSide side) {
 		TableMergeViewer ret = new TableMergeViewer(parent, this, side);
 		ret.setContentProvider(new ArrayContentProvider());
-		ret.setLabelProvider(new AdapterFactoryLabelProvider(fAdapterFactory));
+		ret.setLabelProvider(new AdapterFactoryLabelProvider.FontAndColorProvider(fAdapterFactory, ret
+				.getStructuredViewer()) {
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getFont(java.lang.Object)
+			 */
+			@Override
+			public Font getFont(Object object) {
+				Font font = super.getFont(object);
+				if (object instanceof EObject && ((EObject)object).eIsProxy()) {
+					return getFontFromObject(IItemFontProvider.ITALIC_FONT);
+				}
+				return font;
+			}
+		});
 		ret.getControl().getVerticalBar().addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				if (getCenterControl() instanceof AbstractBufferedCanvas) {
