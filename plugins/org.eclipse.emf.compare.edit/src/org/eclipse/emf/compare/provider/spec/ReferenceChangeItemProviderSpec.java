@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
@@ -156,6 +157,23 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		return ImmutableList.copyOf(filter(ret,
 				not(MatchItemProviderSpec.REFINED_OR_REQUIRED_BY_REFINED_DIFF)));
 
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getForeground(java.lang.Object)
+	 */
+	@Override
+	public Object getForeground(Object object) {
+		ReferenceChange referenceChange = (ReferenceChange)object;
+		switch (referenceChange.getState()) {
+			case MERGED:
+			case DISCARDED:
+				return URI.createURI("color://rgb/156/156/156");
+			default:
+				return super.getForeground(object);
+		}
 	}
 
 }

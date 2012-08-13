@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -123,5 +124,22 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 		}
 
 		return ret;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getForeground(java.lang.Object)
+	 */
+	@Override
+	public Object getForeground(Object object) {
+		AttributeChange attributeChange = (AttributeChange)object;
+		switch (attributeChange.getState()) {
+			case MERGED:
+			case DISCARDED:
+				return URI.createURI("color://rgb/156/156/156");
+			default:
+				return super.getForeground(object);
+		}
 	}
 }

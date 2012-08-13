@@ -23,9 +23,12 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.Mat
 import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareCompositeImageDescriptor;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
-class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelProvider {
+class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelProvider.FontAndColorProvider {
 
 	private final boolean fLeftIsLocal;
 
@@ -34,8 +37,9 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 	/**
 	 * @param adapterFactory
 	 */
-	public EMFCompareStructureMergeViewerLabelProvider(AdapterFactory adapterFactory, boolean leftIsLocal) {
-		super(adapterFactory);
+	public EMFCompareStructureMergeViewerLabelProvider(AdapterFactory adapterFactory, Viewer viewer,
+			boolean leftIsLocal) {
+		super(adapterFactory, viewer);
 		fLeftIsLocal = leftIsLocal;
 		imgProvider = new ImageProvider(fLeftIsLocal);
 	}
@@ -51,6 +55,45 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 			ret = super.getText(element);
 		}
 		return ret;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getFont(java.lang.Object)
+	 */
+	@Override
+	public Font getFont(Object object) {
+		if (object instanceof AbstractEDiffElement) {
+			return super.getFont(((AbstractEDiffElement)object).getTarget());
+		}
+		return super.getFont(object);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getForeground(java.lang.Object)
+	 */
+	@Override
+	public Color getForeground(Object object) {
+		if (object instanceof AbstractEDiffElement) {
+			return super.getForeground(((AbstractEDiffElement)object).getTarget());
+		}
+		return super.getForeground(object);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getBackground(java.lang.Object)
+	 */
+	@Override
+	public Color getBackground(Object object) {
+		if (object instanceof AbstractEDiffElement) {
+			return super.getBackground(((AbstractEDiffElement)object).getTarget());
+		}
+		return super.getBackground(object);
 	}
 
 	@Override

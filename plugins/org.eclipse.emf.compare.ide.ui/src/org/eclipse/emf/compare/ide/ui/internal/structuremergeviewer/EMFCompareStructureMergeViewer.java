@@ -106,7 +106,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 		fAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 
 		boolean leftIsLocal = CompareConfigurationExtension.getBoolean(configuration, "LEFT_IS_LOCAL", false);
-		setLabelProvider(new EMFCompareStructureMergeViewerLabelProvider(fAdapterFactory, leftIsLocal));
+		setLabelProvider(new EMFCompareStructureMergeViewerLabelProvider(fAdapterFactory, this, leftIsLocal));
 		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(fAdapterFactory,
 				differenceGrouper));
 
