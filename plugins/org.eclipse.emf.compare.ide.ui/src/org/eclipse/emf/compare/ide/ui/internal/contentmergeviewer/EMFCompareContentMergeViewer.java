@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
+import java.util.EventObject;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -17,6 +18,7 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.Utilities;
+import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
@@ -25,7 +27,10 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.AbstractB
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DiffInsertionPoint;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
+import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -51,6 +56,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Scrollable;
+import org.eclipse.ui.actions.ActionFactory;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -114,6 +120,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	private EMFCompareColor fColors;
 
+	private final EMFCompareEditingDomain fEditingDomain;
+
 	/**
 	 * @param style
 	 * @param bundle
@@ -128,6 +136,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		fDynamicObject = new DynamicObject(this);
 
 		fComparison = ((ComparisonNode)cc.getProperty(EMFCompareConstants.COMPARE_RESULT)).getTarget();
+
+		fEditingDomain = (EMFCompareEditingDomain)getCompareConfiguration().getProperty(
+				EMFCompareConstants.EDITING_DOMAIN);
 	}
 
 	/**
@@ -135,6 +146,13 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 */
 	public EMFCompareColor getColors() {
 		return fColors;
+	}
+
+	/**
+	 * @return the fEditingDomain
+	 */
+	protected final EMFCompareEditingDomain getEditingDomain() {
+		return fEditingDomain;
 	}
 
 	/**
@@ -172,7 +190,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	}
 
 	/**
-	 * Inhibates this method to avoid asking to save on each input change!!
+	 * Inhibits this method to avoid asking to save on each input change!!
 	 * 
 	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#doSave(java.lang.Object,
 	 *      java.lang.Object)
@@ -242,6 +260,20 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			toolBarManager.appendToGroup("merge", fCopyDiffRightToLeftItem); //$NON-NLS-1$
 			fHandlerService.registerAction(a, "org.eclipse.compare.copyRightToLeft"); //$NON-NLS-1$
 		}
+
+		final UndoAction undoAction = new UndoAction(fEditingDomain);
+		final RedoAction redoAction = new RedoAction(fEditingDomain);
+
+		fEditingDomain.getCommandStack().addCommandStackListener(new CommandStackListener() {
+			public void commandStackChanged(EventObject event) {
+				undoAction.update();
+				redoAction.update();
+				refresh();
+			}
+		});
+
+		fHandlerService.setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
+		fHandlerService.setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
 	}
 
 	/**

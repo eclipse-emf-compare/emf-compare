@@ -39,7 +39,7 @@ public final class EMFCompareConstants {
 
 	public static final String COMPARE_RESULT = EMFCompareIDEUIPlugin.PLUGIN_ID + ".COMPARE.RESULT"; //$NON-NLS-1$
 
-	public static final boolean MERGE_TIP_RIGHT_TO_LEFT_DEFAULT = true;
+	public static final String EDITING_DOMAIN = EMFCompareIDEUIPlugin.PLUGIN_ID + ".EDITING_DOMAIN"; //$NON-NLS-1$
 
 	public static final Predicate<? super Diff> IS_CONFLICT = new Predicate<Diff>() {
 		public boolean apply(Diff input) {

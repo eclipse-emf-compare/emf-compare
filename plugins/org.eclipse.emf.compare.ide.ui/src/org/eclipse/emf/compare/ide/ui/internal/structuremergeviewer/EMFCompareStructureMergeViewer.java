@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.EventObject;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareViewerSwitchingPane;
@@ -33,11 +34,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
@@ -47,9 +46,9 @@ import org.eclipse.emf.compare.ide.ui.internal.actions.filter.FilterActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGrouper;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.GroupActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareConfigurationExtension;
+import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -167,6 +166,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 	}
 
 	protected void contentChanged(final IContentChangeNotifier changed) {
+		System.out.println("EMFCompareStructureMergeViewer.contentChanged()");
 		// refresh diff
 	}
 
@@ -228,24 +228,13 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 				EMFCompareConfiguration emfCompareConfiguration = EMFCompareConfiguration.builder().build();
 				Comparison compareResult = EMFCompare.compare(leftResourceSet, rightResourceSet,
 						ancestorResourceSet, emfCompareConfiguration);
-				compareResult.eAdapters().add(new EContentAdapter() {
-					/**
-					 * {@inheritDoc}
-					 * 
-					 * @see org.eclipse.emf.ecore.util.EContentAdapter#notifyChanged(org.eclipse.emf.common.notify.Notification)
-					 */
-					@Override
-					public void notifyChanged(Notification notification) {
-						int eventType = notification.getEventType();
-						Object feature = notification.getFeature();
-						Object oldValue = notification.getOldValue();
-						Object newValue = notification.getNewValue();
-						if (eventType == Notification.SET
-								&& feature == ComparePackage.Literals.DIFF__STATE
-								&& oldValue == DifferenceState.UNRESOLVED
-								&& (newValue == DifferenceState.MERGED || newValue == DifferenceState.DISCARDED)) {
-							refresh();
-						}
+				EMFCompareEditingDomain editingDomain = new EMFCompareEditingDomain(compareResult,
+						leftResourceSet, rightResourceSet, ancestorResourceSet);
+				getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);
+
+				editingDomain.getCommandStack().addCommandStackListener(new CommandStackListener() {
+					public void commandStackChanged(EventObject event) {
+						refresh();
 					}
 				});
 				fRoot = fAdapterFactory.adapt(compareResult, IDiffElement.class);

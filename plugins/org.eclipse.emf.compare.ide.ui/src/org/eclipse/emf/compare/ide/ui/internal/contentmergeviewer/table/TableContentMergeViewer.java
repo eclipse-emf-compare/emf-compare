@@ -13,6 +13,10 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.core.commands.operations.IOperationHistoryListener;
+import org.eclipse.core.commands.operations.OperationHistoryEvent;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.ConflictKind;
@@ -127,7 +131,9 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	protected void copyDiffRightToLeft() {
 		Diff diffToCopy = getDiffToCopy(getRightMergeViewer(), MergeViewerSide.RIGHT);
 		if (diffToCopy != null) {
-			diffToCopy.copyRightToLeft();
+			Command copyCommand = getEditingDomain().createCopyRightToLeftCommand(diffToCopy);
+			getEditingDomain().getCommandStack().execute(copyCommand);
+
 			setLeftDirty(true);
 			refresh();
 		}
@@ -160,7 +166,9 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	protected void copyDiffLeftToRight() {
 		Diff diffToCopy = getDiffToCopy(getLeftMergeViewer(), MergeViewerSide.LEFT);
 		if (diffToCopy != null) {
-			diffToCopy.copyLeftToRight();
+			Command copyCommand = getEditingDomain().createCopyLeftToRightCommand(diffToCopy);
+			getEditingDomain().getCommandStack().execute(copyCommand);
+
 			setRightDirty(true);
 			refresh();
 		}
