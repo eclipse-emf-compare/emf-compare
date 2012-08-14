@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;
 
 import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.collect.ImmutableMap;
@@ -190,7 +191,11 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 						} else {
 							insertionIndex = 0;
 						}
-						values.add(insertionIndex, insertionPoint);
+
+						int nbInsertionPointBefore = size(filter(values.subList(0, insertionIndex),
+								DiffInsertionPoint.class));
+
+						values.add(insertionIndex + nbInsertionPointBefore, insertionPoint);
 						insertionsPoints.put(matchOfDiffValue, insertionPoint);
 					}
 				}
