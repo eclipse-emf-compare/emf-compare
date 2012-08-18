@@ -250,6 +250,9 @@
         <repository><id>orbit</id><layout>p2</layout>
           <url>http://download.eclipse.org/tools/orbit/downloads/drops/updateSite</url>
         </repository>         
+        <repository><id>swtbot</id><layout>p2</layout>
+		<url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site</url>          
+        </repository>        
 	<!--repository><id>ocl</id><layout>p2</layout>
           <url>http://download.eclipse.org/modeling/mdt/ocl/updates/milestones/4.0.0</url>
         </repository>
@@ -284,8 +287,11 @@
          <!-- For now, use a "known" update site as the global one does not yet hold guava
           <url>http://download.eclipse.org/tools/orbit/downloads/drops/updateSite</url>
          -->
-          <url>http://download.eclipse.org/tools/orbit/downloads/drops/S20120308061416/repository/</url>
+          <url>http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/</url>
         </repository>         
+        <repository><id>swtbot</id><layout>p2</layout>
+		<url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site</url>          
+        </repository>        
       </repositories>
     </profile>
     
