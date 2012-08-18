@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_yZDFAOBtEeC2NdPostZ7ew" name="Model">
+  <packageImport xmi:id="_yZDFAeBtEeC2NdPostZ7ew">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+  </packageImport>
+  <packagedElement xmi:type="uml:Class" xmi:id="_y6wD4OBtEeC2NdPostZ7ew" name="Class0">
+    <ownedOperation xmi:id="_03s4wOBtEeC2NdPostZ7ew" name="Operation0"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Interface" xmi:id="_z5OeUOBtEeC2NdPostZ7ew" name="Interface0">
+    <ownedAttribute xmi:id="_1jp_0OBtEeC2NdPostZ7ew" name="Property0"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Model" xmi:id="_3TrL8OBtEeC2NdPostZ7ew" name="Model0">
+    <packagedElement xmi:type="uml:Package" xmi:id="_3xfwYOBtEeC2NdPostZ7ew" name="Package0">
+      <packagedElement xmi:type="uml:Class" xmi:id="_4z8r4OBtEeC2NdPostZ7ew" name="Class0" clientDependency="_-03sgOBtEeC2NdPostZ7ew">
+        <generalization xmi:id="_91KjAOBtEeC2NdPostZ7ew" general="_y6wD4OBtEeC2NdPostZ7ew"/>
+        <interfaceRealization xmi:id="_-03sgOBtEeC2NdPostZ7ew" name="InterfaceRealization0" supplier="_z5OeUOBtEeC2NdPostZ7ew" client="_4z8r4OBtEeC2NdPostZ7ew" contract="_z5OeUOBtEeC2NdPostZ7ew"/>
+      </packagedElement>
+    </packagedElement>
+  </packagedElement>
+</uml:Model>

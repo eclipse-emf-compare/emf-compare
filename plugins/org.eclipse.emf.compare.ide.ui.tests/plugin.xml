@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+<extension point="org.eclipse.ui.newWizards">  
+   <wizard
+         category="org.eclipse.ui.Examples"
+         class="org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard"         
+         id="org.eclipse.emf.compare.ide.ui.tests.UMLComparison"
+         name="UMLComparison"
+         project="true">
+    <description>Projects used for manual or automated tests for EMF compare.</description>
+  </wizard>
+  </extension>
+
+
+<extension point="org.eclipse.emf.common.ui.examples">
+  <example wizardID="org.eclipse.emf.compare.ide.ui.tests.UMLComparison">
+    <projectDescriptor name="UMLComparison"
+           contentURI="projects/UMLComparison/" 
+           description="Project containing UML models to compare"/>                  
+  </example>   
+</extension>
+</plugin>
