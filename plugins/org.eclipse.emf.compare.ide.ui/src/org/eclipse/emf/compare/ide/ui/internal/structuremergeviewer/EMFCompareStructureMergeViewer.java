@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
+import com.google.common.collect.Maps;
+import com.google.common.io.Closeables;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.EventObject;
 
@@ -18,6 +23,7 @@ import org.eclipse.compare.CompareViewerSwitchingPane;
 import org.eclipse.compare.IContentChangeListener;
 import org.eclipse.compare.IContentChangeNotifier;
 import org.eclipse.compare.IResourceProvider;
+import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.internal.CompareUIPlugin;
 import org.eclipse.compare.structuremergeviewer.DiffTreeViewer;
@@ -36,6 +42,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompareConfiguration;
@@ -49,6 +56,7 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareCo
 import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -372,11 +380,35 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 		super.handleDispose(event);
 	}
 
+	@SuppressWarnings("resource")
 	private static ResourceSet getResourceSetFrom(ITypedElement typedElement, IProgressMonitor monitor) {
 		ResourceSet resourceSet = null;
 		if (typedElement instanceof IResourceProvider) {
 			IResource resource = ((IResourceProvider)typedElement).getResource();
 			resourceSet = getResourceSet(resource, monitor);
+		} else if (typedElement instanceof IStreamContentAccessor) {
+			InputStream stream = null;
+			try {
+				stream = ((IStreamContentAccessor)typedElement).getContents();
+				String name = typedElement.getName();
+				resourceSet = getResourceSet(stream, name, monitor);
+			} catch (CoreException e) {
+				EMFCompareIDEUIPlugin.getDefault().log(e);
+			} finally {
+				Closeables.closeQuietly(stream);
+			}
+		}
+		return resourceSet;
+	}
+
+	private static ResourceSet getResourceSet(InputStream stream, String resourceName,
+			IProgressMonitor monitor) {
+		ResourceSet resourceSet = new ResourceSetImpl();
+		Resource resource = resourceSet.createResource(URI.createURI(resourceName));
+		try {
+			resource.load(stream, Maps.newHashMap());
+		} catch (IOException e) {
+			EMFCompareIDEUIPlugin.getDefault().log(e);
 		}
 		return resourceSet;
 	}
