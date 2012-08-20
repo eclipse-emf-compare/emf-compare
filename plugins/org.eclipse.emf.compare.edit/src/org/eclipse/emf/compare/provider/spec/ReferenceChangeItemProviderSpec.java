@@ -130,12 +130,14 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		EReference reference = referenceChange.getReference();
 
 		if (reference.isContainment()) {
-			Match match = referenceChange.getMatch().getComparison().getMatch(referenceChange.getValue());
-			if (match != null) {
+			Match matchOfValue = referenceChange.getMatch().getComparison().getMatch(
+					referenceChange.getValue());
+			if (matchOfValue != null) {
 				ITreeItemContentProvider matchItemContentProvider = (ITreeItemContentProvider)adapterFactory
-						.adapt(match, ITreeItemContentProvider.class);
+						.adapt(matchOfValue, ITreeItemContentProvider.class);
 				if (matchItemContentProvider != null) {
-					Collection<Object> children = newArrayList(matchItemContentProvider.getChildren(match));
+					Collection<Object> children = newArrayList(matchItemContentProvider
+							.getChildren(matchOfValue));
 
 					children.remove(referenceChange);
 
