@@ -13,11 +13,16 @@ package org.eclipse.emf.compare.ide.ui.internal.util;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.edit.command.ChangeCommand;
 
@@ -64,6 +69,14 @@ public class EMFCompareEditingDomain {
 		return new CopyLeftToRightCommand(diff);
 	}
 
+	public Command createCopyAllNonConflictingRightToLeftCommand(Collection<? extends Diff> diff) {
+		return new CopyAllNonConflictingRightToLeftCommand(diff);
+	}
+
+	public Command createCopyAllNonConflictingLeftToRightCommand(final Collection<? extends Diff> diff) {
+		return new CopyAllNonConflictingLeftToRightCommand(diff);
+	}
+
 	private class CopyLeftToRightCommand extends ChangeCommand {
 
 		private final Diff fDiff;
@@ -108,6 +121,70 @@ public class EMFCompareEditingDomain {
 		@Override
 		protected void doExecute() {
 			fDiff.copyRightToLeft();
+		}
+
+	}
+
+	private class CopyAllNonConflictingRightToLeftCommand extends ChangeCommand {
+
+		private final Collection<? extends Diff> fDiff;
+
+		/**	
+		 * 
+		 */
+		public CopyAllNonConflictingRightToLeftCommand(Collection<? extends Diff> diff) {
+			super(fChangeRecorder, fNotifiers);
+			fDiff = diff;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.edit.command.ChangeCommand#doExecute()
+		 */
+		@Override
+		protected void doExecute() {
+			for (Diff diff : fDiff) {
+				if (diff.getSource() == DifferenceSource.RIGHT
+						&& diff.getState() == DifferenceState.UNRESOLVED) {
+					if (diff.getConflict() == null || diff.getConflict().getKind() == ConflictKind.PSEUDO) {
+						diff.copyRightToLeft();
+					}
+				}
+			}
+
+		}
+
+	}
+
+	private class CopyAllNonConflictingLeftToRightCommand extends ChangeCommand {
+
+		private final Collection<? extends Diff> fDiff;
+
+		/**	
+		 * 
+		 */
+		public CopyAllNonConflictingLeftToRightCommand(Collection<? extends Diff> diff) {
+			super(fChangeRecorder, fNotifiers);
+			fDiff = diff;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.edit.command.ChangeCommand#doExecute()
+		 */
+		@Override
+		protected void doExecute() {
+			for (Diff diff : fDiff) {
+				if (diff.getSource() == DifferenceSource.LEFT
+						&& diff.getState() == DifferenceState.UNRESOLVED) {
+					if (diff.getConflict() == null || diff.getConflict().getKind() == ConflictKind.PSEUDO) {
+						diff.copyLeftToRight();
+					}
+				}
+			}
+
 		}
 
 	}
