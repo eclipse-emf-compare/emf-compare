@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;
 
 import com.google.common.collect.ImmutableList;
 
-import java.util.List;
 
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
@@ -26,7 +25,7 @@ public interface IStructuralFeatureAccessor {
 
 	EStructuralFeature getEStructuralFeature();
 
-	List<?> getValues();
+	ImmutableList<?> getValues();
 
 	Object getValue();
 

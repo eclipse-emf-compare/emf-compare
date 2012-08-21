@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;
 
 import com.google.common.collect.ImmutableList;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.compare.ITypedElement;
@@ -167,7 +166,7 @@ public abstract class AbstractDiffAccessor implements IStructuralFeatureAccessor
 	 * 
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor#getValues()
 	 */
-	public List<?> getValues() {
+	public ImmutableList<?> getValues() {
 		EObject eObject = getEObject(fDiff);
 		EStructuralFeature eStructuralFeature = getEStructuralFeature(fDiff);
 		return getAsList(eObject, eStructuralFeature);
@@ -184,25 +183,25 @@ public abstract class AbstractDiffAccessor implements IStructuralFeatureAccessor
 	 *         empty list if this object has no value for that feature or if the object is <code>null</code>.
 	 */
 	@SuppressWarnings("unchecked")
-	protected static List<Object> getAsList(EObject object, EStructuralFeature feature) {
+	protected static ImmutableList<Object> getAsList(EObject object, EStructuralFeature feature) {
 		if (object != null) {
 			Object value = object.eGet(feature, false);
-			final List<Object> asList;
+			final ImmutableList<Object> asList;
 			if (value instanceof InternalEList<?>) {
 				// EMF ignores the "resolve" flag for containment lists...
-				asList = ((InternalEList<Object>)value).basicList();
+				asList = ImmutableList.copyOf(((InternalEList<Object>)value).basicList());
 			} else if (value instanceof List) {
-				asList = (List<Object>)value;
+				asList = ImmutableList.copyOf((List<Object>)value);
 			} else if (value instanceof Iterable) {
 				asList = ImmutableList.copyOf((Iterable<Object>)value);
 			} else if (value != null) {
 				asList = ImmutableList.of(value);
 			} else {
-				asList = Collections.emptyList();
+				asList = ImmutableList.of();
 			}
 			return asList;
 		}
-		return Collections.emptyList();
+		return ImmutableList.of();
 	}
 
 	/**

@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
@@ -29,6 +30,7 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStru
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DiffInsertionPoint;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -175,34 +177,54 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 
 	private void addInsertionPoints(final List<Object> values) {
 		ImmutableMap.Builder<Match, DiffInsertionPoint> insertionsPoints = ImmutableMap.builder();
-		for (ReferenceChange diff : filter(fInput.getDiffFromTheOtherSide().reverse(), ReferenceChange.class)) {
+		for (Diff diff : fInput.getDiffFromTheOtherSide().reverse()) {
 			if (diff.getState() == DifferenceState.UNRESOLVED) {
 				boolean rightToLeft = (getSide() == MergeViewerSide.LEFT);
-				EObject value = diff.getValue();
-				if (value != null) {
-					Match match = diff.getMatch();
-					Match matchOfDiffValue = match.getComparison().getMatch(value);
-					if (matchOfDiffValue != null) { // diff has been merge so that there is no match anymore
-						DiffInsertionPoint insertionPoint = new DiffInsertionPoint(diff);
-						final int insertionIndex;
-						if (diff.getReference().isMany()) {
-							insertionIndex = DiffUtil.findInsertionIndex(match.getComparison(), diff,
-									rightToLeft);
-						} else {
-							insertionIndex = 0;
-						}
-
-						int nbInsertionPointBefore = size(filter(values.subList(0, insertionIndex),
-								DiffInsertionPoint.class));
-
-						values.add(insertionIndex + nbInsertionPointBefore, insertionPoint);
-						insertionsPoints.put(matchOfDiffValue, insertionPoint);
+				Match ownerMatch = getOwnerMatch(diff);
+				if (ownerMatch != null) { // diff has been merge so that there is no match anymore
+					DiffInsertionPoint insertionPoint = new DiffInsertionPoint(diff);
+					final int insertionIndex;
+					if (featureIsMany(diff)) {
+						insertionIndex = DiffUtil.findInsertionIndex(ownerMatch.getComparison(), diff,
+								rightToLeft);
+					} else {
+						insertionIndex = 0;
 					}
+
+					int nbInsertionPointBefore = size(filter(values.subList(0, insertionIndex),
+							DiffInsertionPoint.class));
+
+					values.add(insertionIndex + nbInsertionPointBefore, insertionPoint);
+					insertionsPoints.put(ownerMatch, insertionPoint);
 				}
 			}
-
 		}
 		fInsertionPoints = insertionsPoints.build();
+	}
+
+	private boolean featureIsMany(Diff diff) {
+		final EStructuralFeature eStructuralFeature;
+		if (diff instanceof ReferenceChange) {
+			eStructuralFeature = ((ReferenceChange)diff).getReference();
+		} else {
+			eStructuralFeature = ((AttributeChange)diff).getAttribute();
+		}
+		return eStructuralFeature.isMany();
+	}
+
+	private Match getOwnerMatch(Diff diff) {
+		final Match ret;
+		if (diff instanceof ReferenceChange) {
+			EObject value = ((ReferenceChange)diff).getValue();
+			if (value != null) {
+				ret = diff.getMatch().getComparison().getMatch(value);
+			} else {
+				ret = null;
+			}
+		} else {
+			ret = diff.getMatch();
+		}
+		return ret;
 	}
 
 	public void setSelection(Match match) {
