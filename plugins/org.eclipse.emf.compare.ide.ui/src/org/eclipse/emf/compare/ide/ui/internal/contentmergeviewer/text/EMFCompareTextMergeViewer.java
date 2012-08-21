@@ -14,6 +14,7 @@ import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
+import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.MergeSourceViewer;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.compare.AttributeChange;
@@ -38,7 +39,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 
 	private final EMFCompareEditingDomain fEditingDomain;
 
-	private final DynamicObject fDynamicObject;
+	private DynamicObject fDynamicObject;
 
 	/**
 	 * @param parent
@@ -48,7 +49,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 		super(parent, configuration);
 		fEditingDomain = (EMFCompareEditingDomain)getCompareConfiguration().getProperty(
 				EMFCompareConstants.EDITING_DOMAIN);
-		fDynamicObject = new DynamicObject(this);
 	}
 
 	/**
@@ -93,14 +93,28 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 		}
 	}
 
+	/**
+	 * @return the fDynamicObject
+	 */
+	public DynamicObject getDynamicObject() {
+		if (fDynamicObject == null) {
+			this.fDynamicObject = new DynamicObject(this);
+		}
+		return fDynamicObject;
+	}
+
 	@SuppressWarnings("restriction")
 	protected final MergeSourceViewer getLeftSourceViewer() {
-		return (MergeSourceViewer)fDynamicObject.get("fLeft"); //$NON-NLS-1$
+		return (MergeSourceViewer)getDynamicObject().get("fLeft"); //$NON-NLS-1$
 	}
 
 	@SuppressWarnings("restriction")
 	protected final MergeSourceViewer getRightSourceViewer() {
-		return (MergeSourceViewer)fDynamicObject.get("fRight"); //$NON-NLS-1$
+		return (MergeSourceViewer)getDynamicObject().get("fRight"); //$NON-NLS-1$
+	}
+
+	protected final void setHandlerService(@SuppressWarnings("restriction") CompareHandlerService service) {
+		getDynamicObject().set("fHandlerService", service); //$NON-NLS-1$
 	}
 
 	/**
@@ -108,8 +122,12 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 	 * 
 	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#createToolItems(org.eclipse.jface.action.ToolBarManager)
 	 */
+	@SuppressWarnings("restriction")
 	@Override
 	protected void createToolItems(ToolBarManager tbm) {
+		// forced to do that to avoid NPE in org.eclipse.compare.internal.ViewerDescriptor.createViewer
+		setHandlerService(CompareHandlerService.createFor(getCompareConfiguration().getContainer(),
+				getLeftSourceViewer().getSourceViewer().getControl().getShell()));
 	}
 
 	@Override
