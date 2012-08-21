@@ -479,8 +479,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 		final List<Object> lcsOriginRight = DiffUtil.longestCommonSubsequence(getComparison(), originValues,
 				rightValues);
 
-		// TODO Can we shortcut in any way?
-
 		// Which values have "changed" in any way?
 		final Iterable<Object> changedLeft = Iterables.filter(leftValues, not(containedIn(getComparison(),
 				lcsOriginLeft)));
