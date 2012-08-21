@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.util;
 
+import static com.google.common.collect.Iterables.any;
+
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 
@@ -92,6 +95,16 @@ public class EMFCompareEditingDomain {
 		/**
 		 * {@inheritDoc}
 		 * 
+		 * @see org.eclipse.emf.common.command.AbstractCommand#canExecute()
+		 */
+		@Override
+		public boolean canExecute() {
+			return fDiff.getState() == DifferenceState.UNRESOLVED && super.canExecute();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
 		 * @see org.eclipse.emf.edit.command.ChangeCommand#doExecute()
 		 */
 		@Override
@@ -100,6 +113,12 @@ public class EMFCompareEditingDomain {
 		}
 
 	}
+
+	private static final Predicate<Diff> UNRESOLVED_DIFF = new Predicate<Diff>() {
+		public boolean apply(Diff input) {
+			return input.getState() == DifferenceState.UNRESOLVED;
+		}
+	};
 
 	private class CopyRightToLeftCommand extends ChangeCommand {
 
@@ -111,6 +130,16 @@ public class EMFCompareEditingDomain {
 		private CopyRightToLeftCommand(Diff diff) {
 			super(fChangeRecorder, fNotifiers);
 			fDiff = diff;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.common.command.AbstractCommand#canExecute()
+		 */
+		@Override
+		public boolean canExecute() {
+			return fDiff.getState() == DifferenceState.UNRESOLVED && super.canExecute();
 		}
 
 		/**
@@ -135,6 +164,16 @@ public class EMFCompareEditingDomain {
 		public CopyAllNonConflictingRightToLeftCommand(Collection<? extends Diff> diff) {
 			super(fChangeRecorder, fNotifiers);
 			fDiff = diff;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.common.command.AbstractCommand#canExecute()
+		 */
+		@Override
+		public boolean canExecute() {
+			return any(fDiff, UNRESOLVED_DIFF) && super.canExecute();
 		}
 
 		/**
@@ -167,6 +206,16 @@ public class EMFCompareEditingDomain {
 		public CopyAllNonConflictingLeftToRightCommand(Collection<? extends Diff> diff) {
 			super(fChangeRecorder, fNotifiers);
 			fDiff = diff;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.common.command.AbstractCommand#canExecute()
+		 */
+		@Override
+		public boolean canExecute() {
+			return any(fDiff, UNRESOLVED_DIFF) && super.canExecute();
 		}
 
 		/**
