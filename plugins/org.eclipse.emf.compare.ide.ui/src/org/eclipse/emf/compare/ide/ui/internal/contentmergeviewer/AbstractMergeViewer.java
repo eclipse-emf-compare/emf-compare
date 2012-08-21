@@ -18,6 +18,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -44,15 +46,24 @@ public abstract class AbstractMergeViewer<C extends Composite> implements IMerge
 
 		fForwardingSelectionListener = new ForwardingViewerSelectionListener();
 		fStructuredViewer.addSelectionChangedListener(fForwardingSelectionListener);
+		hookControl(fStructuredViewer.getControl());
 	}
 
 	protected abstract StructuredViewer createStructuredViewer(Composite parent);
+
+	protected void hookControl(Control control) {
+		control.addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent event) {
+				handleDispose(event);
+			}
+		});
+	}
 
 	protected StructuredViewer getStructuredViewer() {
 		return fStructuredViewer;
 	}
 
-	public void dispose() {
+	protected void handleDispose(DisposeEvent event) {
 		fStructuredViewer.removeSelectionChangedListener(fForwardingSelectionListener);
 	}
 
