@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.Display;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
+public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements CommandStackListener {
 
 	private final ICompareInputChangeListener fCompareInputChangeListener;
 
@@ -113,7 +113,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 
 		fAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 
-		boolean leftIsLocal = CompareConfigurationExtension.getBoolean(configuration, "LEFT_IS_LOCAL", false);
+		boolean leftIsLocal = CompareConfigurationExtension.getBoolean(configuration, "LEFT_IS_LOCAL", false); //$NON-NLS-1$
 		setLabelProvider(new EMFCompareStructureMergeViewerLabelProvider(fAdapterFactory, this, leftIsLocal));
 		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(fAdapterFactory,
 				differenceGrouper));
@@ -209,7 +209,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 
 		Object previousResult = getCompareConfiguration().getProperty(EMFCompareConstants.COMPARE_RESULT);
 		if (previousResult instanceof Comparison) {
-			fRoot = (Comparison)previousResult;
+			fRoot = previousResult;
 
 			getCompareConfiguration().getContainer().runAsynchronously(new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException,
@@ -240,11 +240,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 						leftResourceSet, rightResourceSet, ancestorResourceSet);
 				getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);
 
-				editingDomain.getCommandStack().addCommandStackListener(new CommandStackListener() {
-					public void commandStackChanged(EventObject event) {
-						refresh();
-					}
-				});
+				editingDomain.getCommandStack().addCommandStackListener(this);
 				fRoot = fAdapterFactory.adapt(compareResult, IDiffElement.class);
 				getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, fRoot);
 
@@ -377,6 +373,13 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 		}
 		compareInputChanged(null);
 		fContentChangedListener = null;
+
+		EMFCompareEditingDomain editingDomain = (EMFCompareEditingDomain)getCompareConfiguration()
+				.getProperty(EMFCompareConstants.EDITING_DOMAIN);
+		if (editingDomain != null) {
+			editingDomain.getCommandStack().removeCommandStackListener(this);
+		}
+
 		super.handleDispose(event);
 	}
 
@@ -519,5 +522,14 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer {
 			}
 			return hashCode;
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.command.CommandStackListener#commandStackChanged(java.util.EventObject)
+	 */
+	public void commandStackChanged(EventObject event) {
+		refresh();
 	}
 }
