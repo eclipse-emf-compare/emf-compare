@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.logical;
 
+import static com.google.common.collect.Iterables.filter;
+
+import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 
 import java.io.IOException;
@@ -57,6 +60,16 @@ public class EMFResourceMapping extends ResourceMapping {
 	// FIXME can we use "resolveable" URIs? git:/repo/commit/revSHA#file ?
 	/** We'll use this as the scheme of our remotely loaded resources. */
 	public static final String REMOTE_RESOURCE_SCHEME = "remote"; //$NON-NLS-1$
+
+	/**
+	 * A predicates that filters out {@link Resource} with an URI with the file:// scheme or the
+	 * platform:/resource/ scheme and authority.
+	 */
+	private static final Predicate<Resource> FILE_OR_PLATFORM_RESOURCE_RESOURCE = new Predicate<Resource>() {
+		public boolean apply(Resource input) {
+			return input.getURI().isFile() || input.getURI().isPlatformResource();
+		}
+	};
 
 	/** The physical resource for which this mapping has been created. */
 	private final IFile file;
@@ -242,8 +255,10 @@ public class EMFResourceMapping extends ResourceMapping {
 		if (context instanceof RemoteResourceMappingContext) {
 			final RemoteResourceMappingContext remoteContext = (RemoteResourceMappingContext)context;
 
-			for (Resource eResource : localResourceSet.getResources()) {
+			for (Resource eResource : filter(localResourceSet.getResources(),
+					FILE_OR_PLATFORM_RESOURCE_RESOURCE)) {
 				final IFile localFile;
+
 				if (eResource == emfResource) {
 					localFile = file;
 				} else {
