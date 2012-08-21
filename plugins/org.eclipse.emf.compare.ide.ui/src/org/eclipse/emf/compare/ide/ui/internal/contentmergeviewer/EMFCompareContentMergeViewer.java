@@ -83,6 +83,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 */
 	private static final String V_SASH_CURSOR = "fVSashCursor"; //$NON-NLS-1$
 
+	private static final String HANDLER_SERVICE = "fHandlerService";
+
 	protected static final int HORIZONTAL = 1;
 
 	protected static final int VERTICAL = 2;
@@ -99,8 +101,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	protected final boolean fIsCarbon;
 
 	protected final boolean fIsMac;
-
-	private CompareHandlerService fHandlerService;
 
 	private IMergeViewer<? extends Composite> fAncestor;
 
@@ -229,8 +229,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	@Override
 	protected void createToolItems(ToolBarManager toolBarManager) {
 		Action a;
-		fHandlerService = CompareHandlerService.createFor(getCompareConfiguration().getContainer(),
-				getLeftMergeViewer().getControl().getShell());
 
 		CompareConfiguration cc = getCompareConfiguration();
 		if (cc.isRightEditable()) {
@@ -244,7 +242,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			fCopyDiffLeftToRightItem = new ActionContributionItem(a);
 			fCopyDiffLeftToRightItem.setVisible(true);
 			toolBarManager.appendToGroup("merge", fCopyDiffLeftToRightItem); //$NON-NLS-1$
-			fHandlerService.registerAction(a, "org.eclipse.compare.copyLeftToRight"); //$NON-NLS-1$
+			getHandlerService().registerAction(a, "org.eclipse.compare.copyLeftToRight"); //$NON-NLS-1$
 		}
 
 		if (cc.isLeftEditable()) {
@@ -258,7 +256,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			fCopyDiffRightToLeftItem = new ActionContributionItem(a);
 			fCopyDiffRightToLeftItem.setVisible(true);
 			toolBarManager.appendToGroup("merge", fCopyDiffRightToLeftItem); //$NON-NLS-1$
-			fHandlerService.registerAction(a, "org.eclipse.compare.copyRightToLeft"); //$NON-NLS-1$
+			getHandlerService().registerAction(a, "org.eclipse.compare.copyRightToLeft"); //$NON-NLS-1$
 		}
 
 		final UndoAction undoAction = new UndoAction(fEditingDomain);
@@ -272,8 +270,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			}
 		});
 
-		fHandlerService.setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
-		fHandlerService.setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
+		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
+		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
 	}
 
 	/**
@@ -327,6 +325,10 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	@Override
 	protected final int getCenterWidth() {
 		return CENTER_WIDTH;
+	}
+
+	protected final CompareHandlerService getHandlerService() {
+		return (CompareHandlerService)fDynamicObject.get(HANDLER_SERVICE);
 	}
 
 	protected void setCenterControl(Control center) {
