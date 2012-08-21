@@ -14,8 +14,18 @@ import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
+import org.eclipse.compare.internal.MergeSourceViewer;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.compare.AttributeChange;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.AttributeChangeNode;
+import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.widgets.Composite;
 
@@ -26,12 +36,19 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 
 	private static final String BUNDLE_NAME = EMFCompareTextMergeViewer.class.getName();
 
+	private final EMFCompareEditingDomain fEditingDomain;
+
+	private final DynamicObject fDynamicObject;
+
 	/**
 	 * @param parent
 	 * @param configuration
 	 */
 	public EMFCompareTextMergeViewer(Composite parent, CompareConfiguration configuration) {
 		super(parent, configuration);
+		fEditingDomain = (EMFCompareEditingDomain)getCompareConfiguration().getProperty(
+				EMFCompareConstants.EDITING_DOMAIN);
+		fDynamicObject = new DynamicObject(this);
 	}
 
 	/**
@@ -39,19 +56,51 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 	 * 
 	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#copy(boolean)
 	 */
+	@SuppressWarnings("restriction")
 	@Override
 	protected void copy(boolean leftToRight) {
-		// super.copy(leftToRight);
 		Object input = getInput();
 		if (input instanceof AttributeChangeNode) {
 			AttributeChange attributeChange = ((AttributeChangeNode)input).getTarget();
+			final Command copyCommand;
 			if (leftToRight) {
-				attributeChange.copyLeftToRight();
+				copyCommand = fEditingDomain.createCopyLeftToRightCommand(attributeChange);
 			} else {
-				attributeChange.copyRightToLeft();
+				copyCommand = fEditingDomain.createCopyRightToLeftCommand(attributeChange);
 			}
+			fEditingDomain.getCommandStack().execute(copyCommand);
+
+			Match match = attributeChange.getMatch();
+			final MergeSourceViewer mergeSourceViewer;
+			final EObject eObject;
+			if (leftToRight) {
+				eObject = match.getRight();
+				mergeSourceViewer = getRightSourceViewer();
+				setRightDirty(true);
+			} else {
+				eObject = match.getLeft();
+				mergeSourceViewer = getLeftSourceViewer();
+				setLeftDirty(true);
+			}
+
+			EAttribute attribute = attributeChange.getAttribute();
+			EDataType eAttributeType = attribute.getEAttributeType();
+			String newValue = EcoreUtil.convertToString(eAttributeType, eObject.eGet(attribute));
+
+			// mergeSourceViewer.getSourceViewer().getTextWidget().setText(newValue);
+
+			refresh();
 		}
-		System.out.println("EMFCompareTextMergeViewer.copy(" + leftToRight + ")");
+	}
+
+	@SuppressWarnings("restriction")
+	protected final MergeSourceViewer getLeftSourceViewer() {
+		return (MergeSourceViewer)fDynamicObject.get("fLeft"); //$NON-NLS-1$
+	}
+
+	@SuppressWarnings("restriction")
+	protected final MergeSourceViewer getRightSourceViewer() {
+		return (MergeSourceViewer)fDynamicObject.get("fRight"); //$NON-NLS-1$
 	}
 
 	/**
