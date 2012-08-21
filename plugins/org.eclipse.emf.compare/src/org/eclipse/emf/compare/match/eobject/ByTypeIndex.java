@@ -10,9 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.eobject;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import com.google.common.base.Function;
+import com.google.common.collect.MapMaker;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -32,7 +31,7 @@ class ByTypeIndex implements EObjectIndex {
 	/**
 	 * All the type specific indexes, created on demand.
 	 */
-	private LoadingCache<EClass, EObjectIndex> allIndexes;
+	private Map<EClass, EObjectIndex> allIndexes;
 
 	/**
 	 * The distance function to use to create the delegates indexes.
@@ -48,12 +47,12 @@ class ByTypeIndex implements EObjectIndex {
 	 */
 	public ByTypeIndex(ProximityEObjectMatcher.DistanceFunction meter) {
 		this.meter = meter;
-		this.allIndexes = CacheBuilder.newBuilder().build(new CacheLoader<EClass, EObjectIndex>() {
+		this.allIndexes = new MapMaker().makeComputingMap(new Function<EClass, EObjectIndex>() {
 
-			@Override
-			public EObjectIndex load(EClass key) throws Exception {
+			public EObjectIndex apply(EClass input) {
 				return new ProximityIndex(ByTypeIndex.this.meter);
 			}
+
 		});
 	}
 
@@ -62,7 +61,7 @@ class ByTypeIndex implements EObjectIndex {
 	 */
 	public Collection<EObject> getValuesStillThere(Side side) {
 		LinkedHashSet<EObject> values = new LinkedHashSet<EObject>();
-		for (EObjectIndex typeSpecificIndex : allIndexes.asMap().values()) {
+		for (EObjectIndex typeSpecificIndex : allIndexes.values()) {
 			values.addAll(typeSpecificIndex.getValuesStillThere(side));
 		}
 		return values;
@@ -72,7 +71,7 @@ class ByTypeIndex implements EObjectIndex {
 	 * {@inheritDoc}
 	 */
 	public Map<Side, EObject> findClosests(EObject obj, Side side, int maxDistance) {
-		EObjectIndex typeSpecificIndex = allIndexes.getUnchecked(obj.eClass());
+		EObjectIndex typeSpecificIndex = allIndexes.get(obj.eClass());
 		return typeSpecificIndex.findClosests(obj, side, maxDistance);
 	}
 
@@ -80,7 +79,7 @@ class ByTypeIndex implements EObjectIndex {
 	 * {@inheritDoc}
 	 */
 	public void remove(EObject obj, Side side) {
-		EObjectIndex typeSpecificIndex = allIndexes.getUnchecked(obj.eClass());
+		EObjectIndex typeSpecificIndex = allIndexes.get(obj.eClass());
 		typeSpecificIndex.remove(obj, side);
 	}
 
@@ -88,7 +87,7 @@ class ByTypeIndex implements EObjectIndex {
 	 * {@inheritDoc}
 	 */
 	public void index(EObject eObjs, Side side) {
-		EObjectIndex typeSpecificIndex = allIndexes.getUnchecked(eObjs.eClass());
+		EObjectIndex typeSpecificIndex = allIndexes.get(eObjs.eClass());
 		typeSpecificIndex.index(eObjs, side);
 	}
 

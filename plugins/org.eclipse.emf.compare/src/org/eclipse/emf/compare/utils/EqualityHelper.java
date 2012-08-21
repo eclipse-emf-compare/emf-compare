@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.utils;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import com.google.common.base.Function;
+import com.google.common.collect.MapMaker;
 
 import java.lang.reflect.Array;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
@@ -33,14 +33,12 @@ public class EqualityHelper {
 	/**
 	 * A cache keeping track of the URIs for EObjects.
 	 */
-	private LoadingCache<EObject, URI> uriCache = CacheBuilder.newBuilder().build(
-			new CacheLoader<EObject, URI>() {
+	private Map<EObject, URI> uriCache = new MapMaker().makeComputingMap(new Function<EObject, URI>() {
 
-				@Override
-				public URI load(EObject key) throws Exception {
-					return EcoreUtil.getURI(key);
-				}
-			});
+		public URI apply(EObject input) {
+			return EcoreUtil.getURI(input);
+		}
+	});
 
 	/**
 	 * Check that the two given values are "equal", considering the specifics of EMF.
@@ -137,8 +135,8 @@ public class EqualityHelper {
 		if (match != null) {
 			equal = match.getLeft() == object2 || match.getRight() == object2 || match.getOrigin() == object2;
 		} else {
-			final URI uri1 = uriCache.getUnchecked(object1);
-			final URI uri2 = uriCache.getUnchecked(object2);
+			final URI uri1 = uriCache.get(object1);
+			final URI uri2 = uriCache.get(object2);
 			if (uri1.hasFragment() && uri2.hasFragment()) {
 				equal = uri1.fragment().equals(uri2.fragment());
 			} else {
@@ -217,6 +215,6 @@ public class EqualityHelper {
 	 * @return the URI of the given EObject.
 	 */
 	public URI getURI(EObject object) {
-		return uriCache.getUnchecked(object);
+		return uriCache.get(object);
 	}
 }
