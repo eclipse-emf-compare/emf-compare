@@ -18,7 +18,6 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -297,16 +296,18 @@ public class DefaultReqEngine implements IReqEngine {
 	 * @return True if it is a CHANGE from a null value.
 	 */
 	private static boolean isChangeAdd(Comparison comparison, ReferenceChange difference) {
+		boolean result = false;
 		if (!difference.getReference().isMany() && !difference.getReference().isContainment()) {
-			EObject value = difference.getValue();
-			Match valueMatch = comparison.getMatch(value);
-			boolean isAddLeft = valueMatch.getLeft() == value
-					&& difference.getSource().equals(DifferenceSource.LEFT);
-			boolean isAddRight = valueMatch.getRight() == value
-					&& difference.getSource().equals(DifferenceSource.RIGHT);
-			return MatchUtil.getOriginValue(comparison, difference) == null && (isAddLeft || isAddRight);
+			if (comparison.isThreeWay()) {
+				final EObject origin = difference.getMatch().getOrigin();
+				result = origin == null || origin.eGet(difference.getReference()) == null;
+			} else {
+				// two way can't have "remote" diffs. This is an addition if right is null
+				final EObject right = difference.getMatch().getRight();
+				result = right == null || right.eGet(difference.getReference()) == null;
+			}
 		}
-		return false;
+		return result;
 	}
 
 	/**
@@ -321,12 +322,13 @@ public class DefaultReqEngine implements IReqEngine {
 	private static boolean isChangeDelete(Comparison comparison, ReferenceChange difference) {
 		boolean result = false;
 		if (!difference.getReference().isMany() && !difference.getReference().isContainment()) {
-			EObject value = difference.getValue();
-			Match valueMatch = comparison.getMatch(value);
-			if (comparison.isThreeWay()) {
-				return valueMatch.getOrigin() == value;
+			if (difference.getSource() == DifferenceSource.LEFT) {
+				final EObject left = difference.getMatch().getLeft();
+				result = left == null || left.eGet(difference.getReference()) == null;
+			} else {
+				final EObject right = difference.getMatch().getRight();
+				result = right == null || right.eGet(difference.getReference()) == null;
 			}
-			result = valueMatch.getRight() == value && difference.getSource().equals(DifferenceSource.LEFT);
 		}
 		return result;
 	}

@@ -611,11 +611,27 @@ public class DefaultDiffEngine implements IDiffEngine {
 		if (helper.matchingValues(getComparison(), leftValue, rightValue)) {
 			// Identical values in left and right. The only problematic case is if they do not match the
 			// origin (and left and right are defined, i.e don't detect attribute change on unmatched)
-			if (leftValue != UNMATCHED_VALUE && match.getOrigin() != null) {
-				final Object originValue = match.getOrigin().eGet(attribute);
+			if (leftValue != UNMATCHED_VALUE && getComparison().isThreeWay()) {
+				final Object originValue;
+				if (match.getOrigin() == null) {
+					originValue = null;
+				} else {
+					originValue = match.getOrigin().eGet(attribute);
+				}
+				final boolean matchingLO = helper.matchingValues(getComparison(), leftValue, originValue);
 
-				if (!helper.matchingValues(getComparison(), leftValue, originValue)) {
-					// The same change has been made on both side. This is actually a pseudo-conflict
+				/*
+				 * if !matchingLO, the same change has been made on both side. This is actually a
+				 * pseudo-conflict. It can be either a set or unset diff according to the value of origin.
+				 */
+				if (!matchingLO && isNullOrEmptyString(originValue)) {
+					// The same value has been SET on both sides
+					getDiffProcessor().attributeChange(match, attribute, leftValue, DifferenceKind.CHANGE,
+							DifferenceSource.LEFT);
+					getDiffProcessor().attributeChange(match, attribute, rightValue, DifferenceKind.CHANGE,
+							DifferenceSource.RIGHT);
+				} else if (!matchingLO) {
+					// The same value has been UNSET from both sides
 					getDiffProcessor().attributeChange(match, attribute, originValue, DifferenceKind.CHANGE,
 							DifferenceSource.LEFT);
 					getDiffProcessor().attributeChange(match, attribute, originValue, DifferenceKind.CHANGE,
@@ -711,6 +727,17 @@ public class DefaultDiffEngine implements IDiffEngine {
 	}
 
 	/**
+	 * Returns {@code true} if the given {@code object} is {@code null} or the {@link #UNMATCHED_VALUE}.
+	 * 
+	 * @param object
+	 *            The object we need to test.
+	 * @return {@code true} if the given {@code object} is {@code null} or the {@link #UNMATCHED_VALUE}.
+	 */
+	private boolean isNullOrUnmatched(Object object) {
+		return object == null || object == UNMATCHED_VALUE;
+	}
+
+	/**
 	 * Computes the difference between the sides of the given <code>match</code> for the given single-valued
 	 * <code>reference</code>.
 	 * <p>
@@ -746,29 +773,21 @@ public class DefaultDiffEngine implements IDiffEngine {
 			leftValueMatch = null;
 		}
 
-		final boolean distinctValueLO;
-		if (leftValueMatch != null) {
-			distinctValueLO = originValue == null || leftValueMatch.getOrigin() != originValue;
-		} else {
-			distinctValueLO = originValue instanceof EObject;
-		}
+		boolean distinctValueLO = !helper.matchingValues(getComparison(), leftValue, originValue);
+		// consider null and unmatched as the same
+		distinctValueLO = distinctValueLO
+				&& !(isNullOrUnmatched(leftValue) && isNullOrUnmatched(originValue));
 
 		if (distinctValueLO) {
-			final boolean leftOutOfScope = leftValue instanceof EObject && leftValueMatch == null;
-			final boolean originOutOfScope = originValue instanceof EObject
-					&& getComparison().getMatch((EObject)originValue) == null;
-
 			// Left and origin are distinct
-			if (leftValueMatch != null && !leftOutOfScope) {
-				// Left has been set to a new value, or left has been added altogether
-				getDiffProcessor().referenceChange(match, reference, (EObject)leftValue,
-						DifferenceKind.CHANGE, DifferenceSource.LEFT);
-			} else if (originValue != UNMATCHED_VALUE && !originOutOfScope) {
-				// left value is unset, or left has been removed
+			if (leftValue == null || leftValue == UNMATCHED_VALUE) {
+				// Left has been removed
 				getDiffProcessor().referenceChange(match, reference, (EObject)originValue,
 						DifferenceKind.CHANGE, DifferenceSource.LEFT);
 			} else {
-				// left has been added. This reference is either unset or set to an out of scope value
+				// Left has been set to a new value, or left has been added altogether
+				getDiffProcessor().referenceChange(match, reference, (EObject)leftValue,
+						DifferenceKind.CHANGE, DifferenceSource.LEFT);
 			}
 		}
 
@@ -779,29 +798,21 @@ public class DefaultDiffEngine implements IDiffEngine {
 			rightValueMatch = null;
 		}
 
-		final boolean distinctValueRO;
-		if (rightValueMatch != null) {
-			distinctValueRO = originValue == null || rightValueMatch.getOrigin() != originValue;
-		} else {
-			distinctValueRO = originValue instanceof EObject;
-		}
+		boolean distinctValueRO = !helper.matchingValues(getComparison(), rightValue, originValue);
+		// consider null and unmatched as the same
+		distinctValueRO = distinctValueRO
+				&& !(isNullOrUnmatched(rightValue) && isNullOrUnmatched(originValue));
 
 		if (distinctValueRO) {
-			final boolean rightOutOfScope = rightValue instanceof EObject && rightValueMatch == null;
-			final boolean originOutOfScope = originValue instanceof EObject
-					&& getComparison().getMatch((EObject)originValue) == null;
-
 			// Right and origin are distinct
-			if (rightValueMatch != null && !rightOutOfScope) {
-				// Right has been set to a new value, or right has been added altogether
-				getDiffProcessor().referenceChange(match, reference, (EObject)rightValue,
-						DifferenceKind.CHANGE, DifferenceSource.RIGHT);
-			} else if (originValue != UNMATCHED_VALUE && !originOutOfScope) {
+			if (rightValue == null || rightValue == UNMATCHED_VALUE) {
 				// right value is unset, or right has been removed
 				getDiffProcessor().referenceChange(match, reference, (EObject)originValue,
 						DifferenceKind.CHANGE, DifferenceSource.RIGHT);
 			} else {
-				// right has been added. This reference is either unset or set to an out of scope value
+				// Right has been set to a new value, or right has been added altogether
+				getDiffProcessor().referenceChange(match, reference, (EObject)rightValue,
+						DifferenceKind.CHANGE, DifferenceSource.RIGHT);
 			}
 		}
 	}
@@ -838,33 +849,19 @@ public class DefaultDiffEngine implements IDiffEngine {
 			leftValueMatch = null;
 		}
 
-		final boolean distinctValue;
-		if (leftValueMatch != null) {
-			distinctValue = rightValue == null || leftValueMatch.getRight() != rightValue;
-		} else {
-			distinctValue = rightValue instanceof EObject;
-		}
+		boolean distinctValue = !helper.matchingValues(getComparison(), leftValue, rightValue);
+		// consider null and unmatched as the same
+		distinctValue = distinctValue && !(isNullOrUnmatched(leftValue) && isNullOrUnmatched(rightValue));
 
 		if (distinctValue) {
-			final boolean leftOutOfScope = leftValue instanceof EObject && leftValueMatch == null;
-			final boolean rightOutOfScope = rightValue instanceof EObject
-					&& getComparison().getMatch((EObject)rightValue) == null;
-
-			/*
-			 * TODO should probably detect diffs even for out of scope values. What if I changed the type of a
-			 * reference from "EInt" to "EString" ? Holds true for three way too.
-			 */
-
-			if (leftValueMatch != null && !leftOutOfScope) {
-				// Left has been set to a new value, or left has been added altogether
-				getDiffProcessor().referenceChange(match, reference, (EObject)leftValue,
-						DifferenceKind.CHANGE, DifferenceSource.LEFT);
-			} else if (rightValue != UNMATCHED_VALUE && !rightOutOfScope) {
+			if (leftValue == null || leftValue == UNMATCHED_VALUE) {
 				// left value is unset, or left has been removed
 				getDiffProcessor().referenceChange(match, reference, (EObject)rightValue,
 						DifferenceKind.CHANGE, DifferenceSource.LEFT);
 			} else {
-				// left has been added. This reference is either unset or set to an out of scope value
+				// Left has been set to a new value, or left has been added altogether
+				getDiffProcessor().referenceChange(match, reference, (EObject)leftValue,
+						DifferenceKind.CHANGE, DifferenceSource.LEFT);
 			}
 		}
 	}
