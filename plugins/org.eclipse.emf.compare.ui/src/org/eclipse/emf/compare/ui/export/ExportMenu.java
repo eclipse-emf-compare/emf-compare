@@ -195,8 +195,9 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	 */
 	public Set<String> getComparedModelsExtensions() {
 		final Set<String> extensions = new LinkedHashSet<String>();
-		if (parentViewer.getInput() instanceof ComparisonResourceSnapshot) {
-			final DiffModel diffModel = ((ComparisonResourceSnapshot)parentViewer.getInput()).getDiff();
+		final ComparisonSnapshot snapshot = getComparisonSnapshot();
+		if (snapshot instanceof ComparisonResourceSnapshot) {
+			final DiffModel diffModel = ((ComparisonResourceSnapshot)snapshot).getDiff();
 			if (diffModel.getLeftRoots().get(0).eResource() != null) {
 				extensions.add(getFileExtension(diffModel.getLeftRoots().get(0).eResource()));
 			}
@@ -207,9 +208,9 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 					&& diffModel.getAncestorRoots().get(0).eResource() != null) {
 				extensions.add(getFileExtension(diffModel.getAncestorRoots().get(0).eResource()));
 			}
-		} else {
-			for (final DiffModel diff : ((ComparisonResourceSetSnapshot)parentViewer.getInput())
-					.getDiffResourceSet().getDiffModels()) {
+		} else if (snapshot instanceof ComparisonResourceSetSnapshot) {
+			for (final DiffModel diff : ((ComparisonResourceSetSnapshot)snapshot).getDiffResourceSet()
+					.getDiffModels()) {
 				if (diff.getLeftRoots().get(0).eResource() != null) {
 					extensions.add(getFileExtension(diff.getLeftRoots().get(0).eResource()));
 				}
@@ -234,12 +235,7 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	@Deprecated
 	public String getComparedModelsExtension() {
 		String extension = ALL_EXTENSIONS;
-		ComparisonSnapshot snapshot = null;
-		if (parentViewer.getInput() instanceof ComparisonSnapshot) {
-			snapshot = (ComparisonSnapshot)parentViewer.getInput();
-		} else if (parentViewer.getInput() instanceof ModelCompareInput) {
-			snapshot = ((ModelCompareInput)parentViewer.getInput()).getComparisonSnapshot();
-		}
+		final ComparisonSnapshot snapshot = getComparisonSnapshot();
 		if (snapshot instanceof ComparisonResourceSnapshot) {
 			final DiffModel diffModel = ((ComparisonResourceSnapshot)snapshot).getDiff();
 			String leftExtension = ALL_EXTENSIONS;
@@ -293,6 +289,21 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	}
 
 	/**
+	 * Helper method to retrieve the comparison snapshot from the parentViewer.
+	 * 
+	 * @return The comparison snapshot of the parentViewer, if there is any; <code>null</code> otherwise.
+	 */
+	private ComparisonSnapshot getComparisonSnapshot() {
+		ComparisonSnapshot snapshot = null;
+		if (parentViewer.getInput() instanceof ComparisonSnapshot) {
+			snapshot = (ComparisonSnapshot)parentViewer.getInput();
+		} else if (parentViewer.getInput() instanceof ModelCompareInput) {
+			snapshot = ((ModelCompareInput)parentViewer.getInput()).getComparisonSnapshot();
+		}
+		return snapshot;
+	}
+
+	/**
 	 * Retrieves the file extension of the given EMF resource if any.
 	 * 
 	 * @param resource
@@ -330,7 +341,12 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 			final Action action = new AbstractCompareAction(actionDescriptor) {
 				@Override
 				public void run() {
-					actionDescriptor.exportSnapshot((ComparisonSnapshot)parentViewer.getInput());
+					if (parentViewer.getInput() instanceof ComparisonSnapshot) {
+						actionDescriptor.exportSnapshot((ComparisonSnapshot)parentViewer.getInput());
+					} else if (parentViewer.getInput() instanceof ModelCompareInput) {
+						actionDescriptor.exportSnapshot(((ModelCompareInput)parentViewer.getInput())
+								.getComparisonSnapshot());
+					}
 				}
 			};
 			addActionToMenu(action);
