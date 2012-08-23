@@ -141,37 +141,39 @@ public class ProximityIndex implements EObjectIndex {
 				bestDist = 0;
 			}
 		}
-		if (best == null) {
-			/*
-			 * We could not find an EObject which is identical, let's search again and find the closest
-			 * EObject.
-			 */
-			it = storageToSearchFor.iterator();
-			while (bestDist != 0 && it.hasNext()) {
-				EObject potentialClosest = it.next();
-				int dist = meter.distance(eObj, potentialClosest, maxDistance);
-				if (dist < bestDist) {
-					if (shouldDoubleCheck) {
-						// We need to double check the currentlyDigging has the same object as the closest !
 
-						EObject doubleCheck = findTheClosest(potentialClosest, sideToFind, originalSide,
-								maxDistance, false);
-						if (doubleCheck == eObj) {
-							bestDist = dist;
-							best = potentialClosest;
-						}
-					} else {
+		if (best != null) {
+			return best;
+		}
+
+		/*
+		 * We could not find an EObject which is identical, let's search again and find the closest EObject.
+		 */
+		it = storageToSearchFor.iterator();
+		while (bestDist != 0 && it.hasNext()) {
+			EObject potentialClosest = it.next();
+			int dist = meter.distance(eObj, potentialClosest, maxDistance);
+			if (dist < bestDist) {
+				if (shouldDoubleCheck) {
+					// We need to double check the currentlyDigging has the same object as the closest !
+
+					EObject doubleCheck = findTheClosest(potentialClosest, sideToFind, originalSide,
+							maxDistance, false);
+					if (doubleCheck == eObj) {
 						bestDist = dist;
 						best = potentialClosest;
 					}
+				} else {
+					bestDist = dist;
+					best = potentialClosest;
 				}
 			}
 		}
 
-		if (bestDist <= maxDistance) {
-			return best;
+		if (bestDist > maxDistance) {
+			best = null;
 		}
-		return null;
+		return best;
 	}
 
 	/**
