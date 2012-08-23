@@ -275,7 +275,7 @@ public class EditionDistance implements DistanceFunction {
 			if (found == null) {
 				found = Integer.valueOf(1);
 			}
-			return found;
+			return found.intValue();
 		}
 
 		/**
