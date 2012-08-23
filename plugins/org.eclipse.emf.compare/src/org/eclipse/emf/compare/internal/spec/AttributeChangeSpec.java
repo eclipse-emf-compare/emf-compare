@@ -23,8 +23,8 @@ import org.eclipse.emf.compare.impl.AttributeChangeImpl;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -463,7 +463,7 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 	public String toString() {
 		EDataType eAttributeType = getAttribute().getEAttributeType();
 		final String valueString;
-		if (EcorePackage.Literals.EFEATURE_MAP_ENTRY != eAttributeType) {
+		if (!FeatureMapUtil.isFeatureMap(getAttribute())) {
 			valueString = EcoreUtil.convertToString(eAttributeType, getValue());
 		} else {
 			valueString = getValue().toString();
