@@ -14,6 +14,7 @@ import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 
+import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 
 import java.util.Collection;
@@ -22,12 +23,16 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.provider.ReferenceChangeItemProvider;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
@@ -60,30 +65,94 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		final String valueText = getValueText(refChange);
 		final String referenceText = getReferenceText(refChange);
 
-		String remotely = "";
+		String remotely = ""; //$NON-NLS-1$
 		if (refChange.getSource() == DifferenceSource.RIGHT) {
-			remotely = "remotely ";
+			remotely = "remotely "; //$NON-NLS-1$
 		}
 
-		String ret = "";
+		String ret = ""; //$NON-NLS-1$
 		switch (refChange.getKind()) {
 			case ADD:
-				ret = valueText + " has been " + remotely + "added to " + referenceText;
+				ret = valueText + " has been " + remotely + "added to " + referenceText; //$NON-NLS-1$ //$NON-NLS-2$
 				break;
 			case DELETE:
-				ret = valueText + " has been " + remotely + "deleted from " + referenceText;
+				ret = valueText + " has been " + remotely + "deleted from " + referenceText; //$NON-NLS-1$ //$NON-NLS-2$
 				break;
 			case CHANGE:
-				ret = referenceText + " " + valueText + " has been " + remotely + "changed";
+				String changeText = changeText(refChange, refChange.getReference());
+				ret = referenceText + " " + valueText + " has been " + remotely + changeText; //$NON-NLS-1$ //$NON-NLS-2$
 				break;
 			case MOVE:
-				ret = valueText + " has been " + remotely + "moved in " + referenceText;
+				ret = valueText + " has been " + remotely + "moved in " + referenceText; //$NON-NLS-1$ //$NON-NLS-2$
 				break;
 			default:
-				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName()
-						+ " value: " + refChange.getKind());
+				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
+						+ " value: " + refChange.getKind()); //$NON-NLS-1$
 		}
 
+		return ret;
+	}
+
+	static String changeText(final Diff diff, EStructuralFeature feature) {
+		DifferenceSource source = diff.getSource();
+		Match matchOfInterrest = getMatchOfInterrest(diff);
+		final EObject sourceSide;
+		final EObject otherSide;
+		if (source == DifferenceSource.LEFT) {
+			sourceSide = matchOfInterrest.getLeft();
+			otherSide = matchOfInterrest.getRight();
+		} else { // source == DifferenceSource.RIGHT
+			sourceSide = matchOfInterrest.getRight();
+			otherSide = matchOfInterrest.getLeft();
+		}
+		String changeText = changeText(feature, sourceSide, otherSide);
+		return changeText;
+	}
+
+	private static String changeText(final EStructuralFeature eStructuralFeature, EObject sourceSide,
+			EObject otherSide) {
+		String changeText;
+		if (sourceSide != null) {
+			Object leftValue = sourceSide.eGet(eStructuralFeature);
+			if (leftValue == null) {
+				changeText = "unset"; //$NON-NLS-1$
+			} else {
+				if (otherSide != null) {
+					changeText = "changed"; //$NON-NLS-1$
+				} else {
+					changeText = "set"; //$NON-NLS-1$
+				}
+			}
+		} else {
+			changeText = "unset"; //$NON-NLS-1$
+		}
+		return changeText;
+	}
+
+	private static Match getMatchOfInterrest(Diff diff) {
+		final Match ret;
+		if (diff instanceof ReferenceChange) {
+			ReferenceChange change = (ReferenceChange)diff;
+			ret = getMatchOfInterrest(change);
+		} else {
+			return diff.getMatch();
+		}
+		return ret;
+	}
+
+	private static Match getMatchOfInterrest(ReferenceChange change) {
+		final Match ret;
+		Match ownerMatch = change.getMatch();
+		Comparison comparison = ownerMatch.getComparison();
+
+		EObject value = change.getValue();
+
+		Match matchOfValue = comparison.getMatch(value);
+		if (matchOfValue != null) {
+			ret = matchOfValue;
+		} else {
+			ret = ownerMatch;
+		}
 		return ret;
 	}
 
@@ -95,9 +164,9 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		String value = CompareItemProviderAdapterFactorySpec.getText(getRootAdapterFactory(), refChange
 				.getValue());
 		if (value == null) {
-			value = "<null>";
+			value = "<null>"; //$NON-NLS-1$
 		} else {
-			value = Strings.elide(value, 20, "...");
+			value = Strings.elide(value, 32, "..."); //$NON-NLS-1$
 		}
 		return value;
 	}
@@ -126,6 +195,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	public Collection<?> getChildren(Object object) {
 		Collection<?> superChildren = super.getChildren(object);
 		List<? super Object> ret = newArrayList(superChildren);
+
 		ReferenceChange referenceChange = (ReferenceChange)object;
 		EReference reference = referenceChange.getReference();
 
@@ -133,32 +203,43 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 			Match matchOfValue = referenceChange.getMatch().getComparison().getMatch(
 					referenceChange.getValue());
 			if (matchOfValue != null) {
-				ITreeItemContentProvider matchItemContentProvider = (ITreeItemContentProvider)adapterFactory
-						.adapt(matchOfValue, ITreeItemContentProvider.class);
-				if (matchItemContentProvider != null) {
-					Collection<Object> children = newArrayList(matchItemContentProvider
-							.getChildren(matchOfValue));
-
-					children.remove(referenceChange);
-
-					Iterator<?> childrenIterator = children.iterator();
-					while (childrenIterator.hasNext()) {
-						Object child = childrenIterator.next();
-						if (child instanceof Match) {
-							if (!matchItemContentProvider.hasChildren(child)) {
-								childrenIterator.remove();
-							}
-						}
-
-					}
-					ret.addAll(children);
-				}
+				Collection<?> children = getChildren(matchOfValue);
+				children.remove(referenceChange);
+				ret.addAll(children);
 			}
 		}
 
 		return ImmutableList.copyOf(filter(ret,
 				not(MatchItemProviderSpec.REFINED_OR_REQUIRED_BY_REFINED_DIFF)));
 
+	}
+
+	private Collection<?> getChildren(Match matchOfValue) {
+		final Collection<?> children;
+		ITreeItemContentProvider matchItemContentProvider = (ITreeItemContentProvider)adapterFactory.adapt(
+				matchOfValue, ITreeItemContentProvider.class);
+		if (matchItemContentProvider != null) {
+			Collection<?> itemProviderChildren = matchItemContentProvider.getChildren(matchOfValue);
+			if (itemProviderChildren instanceof ImmutableCollection<?>) {
+				children = newArrayList(itemProviderChildren);
+			} else {
+				children = itemProviderChildren;
+			}
+
+			Iterator<?> childrenIterator = children.iterator();
+			while (childrenIterator.hasNext()) {
+				Object child = childrenIterator.next();
+				if (child instanceof Match) {
+					if (!matchItemContentProvider.hasChildren(child)) {
+						childrenIterator.remove();
+					}
+				}
+
+			}
+		} else {
+			children = ImmutableList.of();
+		}
+		return children;
 	}
 
 	/**
@@ -172,7 +253,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		switch (referenceChange.getState()) {
 			case MERGED:
 			case DISCARDED:
-				return URI.createURI("color://rgb/156/156/156");
+				return URI.createURI("color://rgb/156/156/156"); //$NON-NLS-1$
 			default:
 				return super.getForeground(object);
 		}

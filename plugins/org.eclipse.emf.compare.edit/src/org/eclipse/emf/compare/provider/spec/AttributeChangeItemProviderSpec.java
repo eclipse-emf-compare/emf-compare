@@ -66,28 +66,30 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 		final String valueText = getValueText(attChange);
 		final String attributeText = getAttributeText(attChange);
 
-		String remotely = "";
+		String remotely = ""; //$NON-NLS-1$
 		if (attChange.getSource() == DifferenceSource.RIGHT) {
-			remotely = "remotely ";
+			remotely = "remotely "; //$NON-NLS-1$
 		}
 
-		String ret = "";
+		String ret = ""; //$NON-NLS-1$
 		switch (attChange.getKind()) {
 			case ADD:
-				ret = valueText + " has been " + remotely + "added to " + attributeText;
+				ret = valueText + " has been " + remotely + "added to " + attributeText; //$NON-NLS-1$ //$NON-NLS-2$
 				break;
 			case DELETE:
-				ret = valueText + " has been " + remotely + "deleted from '" + attributeText;
+				ret = valueText + " has been " + remotely + "deleted from " + attributeText; //$NON-NLS-1$ //$NON-NLS-2$
 				break;
 			case CHANGE:
-				ret = attributeText + " " + valueText + " has been " + remotely + "changed";
+				String changeText = ReferenceChangeItemProviderSpec.changeText(attChange, attChange
+						.getAttribute());
+				ret = attributeText + " " + valueText + " has been " + remotely + changeText; //$NON-NLS-1$ //$NON-NLS-2$
 				break;
 			case MOVE:
-				ret = valueText + " has been " + remotely + "moved in '" + attributeText;
+				ret = valueText + " has been " + remotely + "moved in '" + attributeText; //$NON-NLS-1$ //$NON-NLS-2$
 				break;
 			default:
-				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName()
-						+ " value: " + attChange.getKind());
+				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
+						+ " value: " + attChange.getKind()); //$NON-NLS-1$
 		}
 
 		return ret;
@@ -101,9 +103,9 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 		String value = EcoreUtil.convertToString(attChange.getAttribute().getEAttributeType(), attChange
 				.getValue());
 		if (value == null) {
-			value = "<null>";
+			value = "<null>"; //$NON-NLS-1$
 		} else {
-			value = Strings.elide(value, 20, "...");
+			value = Strings.elide(value, 32, "..."); //$NON-NLS-1$
 		}
 		return value;
 	}
@@ -137,7 +139,7 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 		switch (attributeChange.getState()) {
 			case MERGED:
 			case DISCARDED:
-				return URI.createURI("color://rgb/156/156/156");
+				return URI.createURI("color://rgb/156/156/156"); //$NON-NLS-1$
 			default:
 				return super.getForeground(object);
 		}
