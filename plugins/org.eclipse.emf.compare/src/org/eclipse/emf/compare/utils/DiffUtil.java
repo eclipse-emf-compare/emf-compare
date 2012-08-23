@@ -234,13 +234,6 @@ public final class DiffUtil {
 		final int size1 = sequence1.size();
 		final int size2 = sequence2.size();
 
-		if (size1 == 1 && size2 == 1) {
-			if (equalityHelper.matchingValues(comparison, sequence1.get(0), sequence2.get(0))) {
-				return ImmutableList.copyOf(sequence1);
-			}
-			return Collections.emptyList();
-		}
-
 		final int[][] matrix = new int[size1 + 1][size2 + 1];
 
 		// Compute the LCS matrix
