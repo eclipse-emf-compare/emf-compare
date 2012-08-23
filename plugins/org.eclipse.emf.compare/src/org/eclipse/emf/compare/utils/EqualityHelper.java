@@ -68,9 +68,9 @@ public class EqualityHelper {
 				&& object2.getClass().isArray()) {
 			// [299641] compare arrays by their content instead of instance equality
 			equal = matchingArrays(comparison, object1, object2);
-		} else if (isEmptyString(object1) || isEmptyString(object2)) {
+		} else if (isNullOrEmptyString(object1) && isNullOrEmptyString(object2)) {
 			// Special case, consider that the empty String is equal to null (unset attributes)
-			equal = object1 == null || object2 == null;
+			equal = true;
 		} else {
 			equal = object1 != null && object1.equals(object2);
 		}
@@ -84,8 +84,8 @@ public class EqualityHelper {
 	 *            The object we need to test.
 	 * @return {@code true} if the given {@code object} is {@code null} or the empty String.
 	 */
-	private boolean isEmptyString(Object object) {
-		return object instanceof String && ((String)object).length() == 0;
+	private boolean isNullOrEmptyString(Object object) {
+		return object == null || object instanceof String && ((String)object).length() == 0;
 	}
 
 	/**
@@ -172,9 +172,9 @@ public class EqualityHelper {
 				&& object2.getClass().isArray()) {
 			// [299641] compare arrays by their content instead of instance equality
 			equal = matchingArrays(object1, object2);
-		} else if (isEmptyString(object1) || isEmptyString(object2)) {
+		} else if (isNullOrEmptyString(object1) && isNullOrEmptyString(object2)) {
 			// Special case, consider that the empty String is equal to null (unset attributes)
-			equal = object1 == null || object2 == null;
+			equal = true;
 		} else {
 			equal = object1 != null && object1.equals(object2);
 		}
