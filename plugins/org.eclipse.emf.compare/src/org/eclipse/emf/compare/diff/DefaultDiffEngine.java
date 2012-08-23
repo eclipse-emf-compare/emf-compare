@@ -768,13 +768,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 			originValue = match.getOrigin().eGet(reference);
 		}
 
-		final Match leftValueMatch;
-		if (leftValue instanceof EObject) {
-			leftValueMatch = getComparison().getMatch((EObject)leftValue);
-		} else {
-			leftValueMatch = null;
-		}
-
 		boolean distinctValueLO = !helper.matchingValues(getComparison(), leftValue, originValue);
 		// consider null and unmatched as the same
 		distinctValueLO = distinctValueLO
@@ -791,13 +784,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 				getDiffProcessor().referenceChange(match, reference, (EObject)leftValue,
 						DifferenceKind.CHANGE, DifferenceSource.LEFT);
 			}
-		}
-
-		final Match rightValueMatch;
-		if (rightValue instanceof EObject) {
-			rightValueMatch = getComparison().getMatch((EObject)rightValue);
-		} else {
-			rightValueMatch = null;
 		}
 
 		boolean distinctValueRO = !helper.matchingValues(getComparison(), rightValue, originValue);
@@ -842,13 +828,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 		Object rightValue = UNMATCHED_VALUE;
 		if (match.getRight() != null) {
 			rightValue = match.getRight().eGet(reference);
-		}
-
-		final Match leftValueMatch;
-		if (leftValue instanceof EObject) {
-			leftValueMatch = getComparison().getMatch((EObject)leftValue);
-		} else {
-			leftValueMatch = null;
 		}
 
 		boolean distinctValue = !helper.matchingValues(getComparison(), leftValue, rightValue);
