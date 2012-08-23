@@ -11,14 +11,33 @@
 package org.eclipse.emf.compare.provider.spec;
 
 /**
+ * Utility class for {@link String}s objects.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-class Strings {
+final class Strings {
 
+	/**
+	 * Private constructor to avoid instantiation.
+	 */
 	private Strings() {
 	}
 
-	final static String elide(String original, int max, String suffix) {
+	/**
+	 * Shorten the given {@code original} string and append the given {@code suffix} if it is longest than the
+	 * defined {@code max} length minus the length of the {@code suffix}.
+	 * <p>
+	 * The returned String length will always be in {@code Math.min(original.length, max)}.
+	 * 
+	 * @param original
+	 *            the original string to elide if necessary.
+	 * @param max
+	 *            the maximum length of the returned string.
+	 * @param suffix
+	 *            the suffix to append in case the original String is too long.
+	 * @return the elided string or the original string.
+	 */
+	static String elide(String original, int max, String suffix) {
 		if (original.length() > max) {
 			String elided = original.substring(0, original.length() - suffix.length());
 			return elided + suffix;
