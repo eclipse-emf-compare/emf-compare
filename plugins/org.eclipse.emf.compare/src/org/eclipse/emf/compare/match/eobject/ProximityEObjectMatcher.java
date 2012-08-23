@@ -40,6 +40,9 @@ import org.eclipse.emf.ecore.EObject;
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class ProximityEObjectMatcher implements IEObjectMatcher {
+	/** If the {@link #maxDistanceForMatching} is not specifically set, we'll use this. */
+	private static final int DEFAULT_DISTANCE = 500;
+
 	/**
 	 * The index which keep the EObjects.
 	 */
@@ -48,7 +51,7 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 	/**
 	 * The maximum distance until we consider two objects are not the same.
 	 */
-	private int maxDistanceForMatching = 500;
+	private int maxDistanceForMatching = DEFAULT_DISTANCE;
 
 	/**
 	 * The list of matches found.
@@ -168,7 +171,7 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 			}
 			Match possibleContainerMatch = eObjectsToMatch.get(possibleContainer);
 			if (possibleContainerMatch != null) {
-				((BasicEList)possibleContainerMatch.getSubmatches()).addUnique(cur);
+				((BasicEList<Match>)possibleContainerMatch.getSubmatches()).addUnique(cur);
 				it.remove();
 			}
 		}
@@ -177,7 +180,7 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 		if (it2.hasNext()) {
 			Match root = it2.next();
 			while (it2.hasNext()) {
-				((BasicEList)root.getSubmatches()).addUnique(it2.next());
+				((BasicEList<Match>)root.getSubmatches()).addUnique(it2.next());
 				it2.remove();
 			}
 
