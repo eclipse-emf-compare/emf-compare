@@ -44,7 +44,7 @@ public class FeatureFilter {
 	 * @return The set of references that are to be checked by the diff engine. May be an empty iterator, in
 	 *         which case no difference will be detected on any of this <code>match</code>'s references.
 	 */
-	public Iterator<EReference> getReferencesToCheck(Match match) {
+	public Iterator<EReference> getReferencesToCheck(final Match match) {
 		final EClass clazz;
 		if (match.getLeft() != null) {
 			clazz = match.getLeft().eClass();
@@ -55,17 +55,21 @@ public class FeatureFilter {
 		}
 		return Iterators.filter(clazz.getEAllReferences().iterator(), new Predicate<EReference>() {
 			public boolean apply(EReference input) {
-				/*
-				 * EGenericTypes are usually "mutually derived" references that are handled through specific
-				 * means in ecore (eGenericSuperTypes and eSuperTypes, EGenericType and eType...). As these
-				 * aren't even shown to the user, we wish to avoid detection of changes on them.
-				 */
+				boolean ignore = false;
 				if (input != null) {
-					return !input.isDerived() && !input.isContainer()
-							&& input.getEType() != EcorePackage.eINSTANCE.getEGenericType()
-							&& !input.isTransient();
+					// ignore the derived, container or transient
+					ignore = input.isDerived() || input.isContainer() || input.isTransient();
+					/*
+					 * EGenericTypes are usually "mutually derived" references that are handled through
+					 * specific means in ecore (eGenericSuperTypes and eSuperTypes, EGenericType and
+					 * eType...). As these aren't even shown to the user, we wish to avoid detection of
+					 * changes on them.
+					 */
+					ignore = ignore || input.getEType() == EcorePackage.eINSTANCE.getEGenericType();
+					// If this reference is not set on any side, no use checking it
+					ignore = ignore || !referenceIsSet(input, match);
 				}
-				return false;
+				return !ignore;
 			}
 		});
 	}
@@ -116,5 +120,23 @@ public class FeatureFilter {
 					&& ((EReference)feature).isContainment();
 		}
 		return false;
+	}
+
+	/**
+	 * Checks whether the given reference is set on at least one of the three sides of the given match.
+	 * 
+	 * @param reference
+	 *            The reference we need to be set.
+	 * @param match
+	 *            The match for which values we need to check the given reference.
+	 * @return {@code true} if the given reference is set on at least one of the three sides of the given
+	 *         match.
+	 */
+	protected boolean referenceIsSet(EReference reference, Match match) {
+		if (match.getLeft() != null && match.getLeft().eIsSet(reference)) {
+			return true;
+		}
+		return (match.getRight() != null && match.getRight().eIsSet(reference))
+				|| (match.getOrigin() != null && match.getOrigin().eIsSet(reference));
 	}
 }

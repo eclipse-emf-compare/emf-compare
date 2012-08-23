@@ -83,6 +83,18 @@ Expected Differences
 	32 - Remotely removed title from Periodical
 	33 - Changed reference eType of BookOnTape.reader from Person to null
 	34 - Remotely Changed reference eType of BookOnTape.reader from Person to null
+	35 - Remotely changed reference eType of TitledItem.title from null to EString
+	36 - Changed reference eType of Periodical.issuesPerYear from EInt to null
+	37 - Changed reference eType of Person.firstName from EString to null
+	38 - Remotely changed reference eType of Book.subtitle from null to EString
+	39 - Remotely changed reference eType of Book.title from EString to null
+	40 - Remotely changed reference eType of AudioVisualItem.title from EString to null
+	41 - Changed reference eType of Person.fullName from null to EString
+	42 - Changed reference eType of Person.lastName from EString to null
+	43 - Changed reference eType of Magazine.title from null to EString
+	44 - Changed reference eType of Magazine.pages from null to EInt
+	45 - Changed reference eType of Periodical.title from EString to null
+	45 - Remotely changed reference eType of Periodical.title from EString to null
 	
 	Two diffs on BookOnTape.reader : has been removed from both local and remote copies (pseudo-conflict).
 	Two diffs on Periodical.title : it has been removed in right, and its container (Periodical) has been entirely removed from left.

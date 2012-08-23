@@ -129,10 +129,24 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 		assertRemovedFromReference(differences, "extlibrary.Periodical", "eSuperTypes", "extlibrary.Item",
 				DifferenceSource.LEFT);
 
+		assertChangedReference(differences, "extlibrary.Magazine.title", "eType", null, "ecore.EString",
+				DifferenceSource.LEFT);
+		assertChangedReference(differences, "extlibrary.Magazine.pages", "eType", null, "ecore.EInt",
+				DifferenceSource.LEFT);
+		assertChangedReference(differences, "extlibrary.Person.fullName", "eType", null, "ecore.EString",
+				DifferenceSource.LEFT);
+
+		assertChangedReference(differences, "extlibrary.Periodical.issuesPerYear", "eType", "ecore.EInt",
+				null, DifferenceSource.LEFT);
+		assertChangedReference(differences, "extlibrary.Person.firstName", "eType", "ecore.EString", null,
+				DifferenceSource.LEFT);
+
 		// some diffs change according to the presence of an origin.
 		if (comparison.isThreeWay()) {
 			// This one will be detected differently in two-way
 			assertRemoved(differences, "extlibrary.Person.lastName", DifferenceSource.LEFT);
+			assertChangedReference(differences, "extlibrary.Person.lastName", "eType", "ecore.EString", null,
+					DifferenceSource.LEFT);
 
 			final DifferenceSource side = DifferenceSource.RIGHT;
 			assertAdded(differences, "extlibrary.BookCategory.Manga", side);
@@ -154,6 +168,15 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 			assertAddedToReference(differences, "extlibrary.Magazine", "eSuperTypes",
 					"extlibrary.Periodical", side);
 
+			assertChangedReference(differences, "extlibrary.Book.subtitle", "eType", null, "ecore.EString",
+					side);
+			assertChangedReference(differences, "extlibrary.TitledItem.title", "eType", null,
+					"ecore.EString", side);
+
+			assertChangedReference(differences, "extlibrary.Book.title", "eType", "ecore.EString", null, side);
+			assertChangedReference(differences, "extlibrary.AudioVisualItem.title", "eType", "ecore.EString",
+					null, side);
+
 			/*
 			 * The following are actually conflicts, most changes according to whether we are in three-way or
 			 * not.
@@ -169,6 +192,10 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 					null, DifferenceSource.LEFT);
 			assertChangedReference(differences, "extlibrary.BookOnTape.reader", "eType", "extlibrary.Person",
 					null, DifferenceSource.RIGHT);
+			assertChangedReference(differences, "extlibrary.Periodical.title", "eType", "ecore.EString",
+					null, DifferenceSource.LEFT);
+			assertChangedReference(differences, "extlibrary.Periodical.title", "eType", "ecore.EString",
+					null, DifferenceSource.RIGHT);
 			/*
 			 * These changes can only be detected with an origin : lastName has been removed in the left model
 			 * and thus only the removal can be detected in two-way. Likewise, "minutesLength" has been
@@ -180,6 +207,8 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 					"minutes", side);
 		} else {
 			assertRemoved(differences, "extlibrary.Person.familyName", DifferenceSource.LEFT);
+			assertChangedReference(differences, "extlibrary.Person.familyName", "eType", "ecore.EString",
+					null, DifferenceSource.LEFT);
 
 			final DifferenceSource side = DifferenceSource.LEFT;
 			assertRemoved(differences, "extlibrary.BookCategory.Manga", side);
@@ -200,6 +229,15 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 					"extlibrary.TitledItem", side);
 			assertRemovedFromReference(differences, "extlibrary.Magazine", "eSuperTypes",
 					"extlibrary.Periodical", side);
+
+			assertChangedReference(differences, "extlibrary.Book.subtitle", "eType", "ecore.EString", null,
+					side);
+			assertChangedReference(differences, "extlibrary.TitledItem.title", "eType", "ecore.EString",
+					null, side);
+
+			assertChangedReference(differences, "extlibrary.Book.title", "eType", null, "ecore.EString", side);
+			assertChangedReference(differences, "extlibrary.AudioVisualItem.title", "eType", null,
+					"ecore.EString", side);
 
 			// This is a conflict, the expected diff is not the same in two-way
 			assertChangedAttribute(differences, "extlibrary.AudioVisualItem.length", "name", "minutes",

@@ -395,8 +395,14 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 *            <code>false</code> otherwise.
 	 */
 	protected void computeDifferences(Match match, EAttribute attribute, boolean checkOrdering) {
-		// This default implementation does not care about "attribute" changes on unmatched elements
-		if (match.getOrigin() == null && (match.getLeft() == null || match.getRight() == null)) {
+		// This default implementation does not care about "attribute" changes on added/removed elements
+		boolean shortcut = false;
+		if (getComparison().isThreeWay()) {
+			shortcut = match.getOrigin() == null;
+		} else {
+			shortcut = match.getLeft() == null || match.getRight() == null;
+		}
+		if (shortcut) {
 			return;
 		}
 
@@ -424,27 +430,23 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 *            <code>false</code> otherwise.
 	 */
 	protected void computeDifferences(Match match, EReference reference, boolean checkOrdering) {
-		if ((match.getLeft() != null && match.getLeft().eIsSet(reference))
-				|| (match.getRight() != null && match.getRight().eIsSet(reference))
-				|| (match.getOrigin() != null && match.getOrigin().eIsSet(reference))) {
-			if (reference.isContainment()) {
-				if (getComparison().isThreeWay()) {
-					computeContainmentDifferencesThreeWay(match, reference, checkOrdering);
-				} else {
-					computeContainmentDifferencesTwoWay(match, reference, checkOrdering);
-				}
-			} else if (reference.isMany()) {
-				if (getComparison().isThreeWay()) {
-					computeMultiValuedFeatureDifferencesThreeWay(match, reference, checkOrdering);
-				} else {
-					computeMultiValuedFeatureDifferencesTwoWay(match, reference, checkOrdering);
-				}
+		if (reference.isContainment()) {
+			if (getComparison().isThreeWay()) {
+				computeContainmentDifferencesThreeWay(match, reference, checkOrdering);
 			} else {
-				if (getComparison().isThreeWay()) {
-					computeSingleValuedReferenceDifferencesThreeWay(match, reference);
-				} else {
-					computeSingleValuedReferenceDifferencesTwoWay(match, reference);
-				}
+				computeContainmentDifferencesTwoWay(match, reference, checkOrdering);
+			}
+		} else if (reference.isMany()) {
+			if (getComparison().isThreeWay()) {
+				computeMultiValuedFeatureDifferencesThreeWay(match, reference, checkOrdering);
+			} else {
+				computeMultiValuedFeatureDifferencesTwoWay(match, reference, checkOrdering);
+			}
+		} else {
+			if (getComparison().isThreeWay()) {
+				computeSingleValuedReferenceDifferencesThreeWay(match, reference);
+			} else {
+				computeSingleValuedReferenceDifferencesTwoWay(match, reference);
 			}
 		}
 	}
