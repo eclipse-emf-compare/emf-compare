@@ -14,6 +14,7 @@ import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.transform;
 
 import com.google.common.base.Function;
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -97,5 +98,19 @@ public class MatchSpec extends MatchImpl {
 	public Iterable<Diff> getAllDifferences() {
 		final Iterable<Diff> allSubDifferences = concat(transform(getAllSubmatches(), DIFFERENCES));
 		return concat(getDifferences(), allSubDifferences);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.ecore.impl.BasicEObjectImpl#toString()
+	 */
+	@SuppressWarnings("boxing")
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("left", EObjectUtil.getLabel(getLeft())).add("right", //$NON-NLS-1$ //$NON-NLS-2$
+				EObjectUtil.getLabel(getRight())).add("origin", EObjectUtil.getLabel(getOrigin())).add(//$NON-NLS-1$
+				"#differences", getDifferences().size()).add("#submatches", getSubmatches().size()) //$NON-NLS-1$ //$NON-NLS-2$
+				.toString();
 	}
 }

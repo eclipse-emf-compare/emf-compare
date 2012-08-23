@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
 
+import com.google.common.base.Objects;
+
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
@@ -19,7 +21,10 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.impl.AttributeChangeImpl;
 import org.eclipse.emf.compare.utils.DiffUtil;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -452,5 +457,21 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 			final Object expectedValue = originContainer.eGet(getAttribute());
 			targetContainer.eSet(getAttribute(), expectedValue);
 		}
+	}
+
+	@Override
+	public String toString() {
+		EDataType eAttributeType = getAttribute().getEAttributeType();
+		final String valueString;
+		if (EcorePackage.Literals.EFEATURE_MAP_ENTRY != eAttributeType) {
+			valueString = EcoreUtil.convertToString(eAttributeType, getValue());
+		} else {
+			valueString = getValue().toString();
+		}
+
+		return Objects.toStringHelper(this).add("attribute", //$NON-NLS-1$
+				getAttribute().getEContainingClass().getName() + "." + getAttribute().getName()).add("value", //$NON-NLS-1$ //$NON-NLS-2$
+				valueString)
+				.add("kind", getKind()).add("source", getSource()).add("state", getState()).toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }

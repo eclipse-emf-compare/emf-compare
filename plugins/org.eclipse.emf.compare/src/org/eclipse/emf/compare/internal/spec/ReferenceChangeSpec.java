@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
 
+import com.google.common.base.Objects;
+
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
@@ -64,7 +66,13 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					break;
 				case CHANGE:
 					// Is it an unset?
-					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
+					final Match valueMatch;
+					if (getValue() != null) {
+						valueMatch = getMatch().getComparison().getMatch(getValue());
+					} else {
+						valueMatch = null;
+					}
+
 					if (valueMatch != null && getValue() != valueMatch.getLeft()) {
 						removeFromTarget(false);
 					} else {
@@ -92,7 +100,13 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					break;
 				case CHANGE:
 					// Is it an unset?
-					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
+					final Match valueMatch;
+					if (getValue() != null) {
+						valueMatch = getMatch().getComparison().getMatch(getValue());
+					} else {
+						valueMatch = null;
+					}
+
 					if (valueMatch != null && getValue() != valueMatch.getRight()) {
 						// Value has been unset in the right, and we are merging towards right.
 						// We need to re-add this element
@@ -145,7 +159,13 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					break;
 				case CHANGE:
 					// Is it an unset?
-					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
+					final Match valueMatch;
+					if (getValue() != null) {
+						valueMatch = getMatch().getComparison().getMatch(getValue());
+					} else {
+						valueMatch = null;
+					}
+
 					if (valueMatch != null && getValue() != valueMatch.getLeft()) {
 						// Value has been unset in the left, and we're copying towards the left.
 						// We need to re-create the element.
@@ -174,7 +194,13 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					break;
 				case CHANGE:
 					// Is it an unset?
-					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
+					final Match valueMatch;
+					if (getValue() != null) {
+						valueMatch = getMatch().getComparison().getMatch(getValue());
+					} else {
+						valueMatch = null;
+					}
+
 					if (valueMatch != null && getValue() != valueMatch.getRight()) {
 						removeFromTarget(true);
 					} else {
@@ -355,7 +381,12 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			expectedContainer = getMatch().getRight();
 		}
 		final Comparison comparison = getMatch().getComparison();
-		final Match valueMatch = comparison.getMatch(getValue());
+		final Match valueMatch;
+		if (getValue() != null) {
+			valueMatch = comparison.getMatch(getValue());
+		} else {
+			valueMatch = null;
+		}
 
 		if (expectedContainer == null || valueMatch == null) {
 			// FIXME throw exception? log? re-try to merge our requirements?
@@ -538,5 +569,19 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			}
 			targetContainer.eSet(getReference(), expectedValue);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.impl.DiffImpl#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("reference", //$NON-NLS-1$
+				getReference().getEContainingClass().getName() + "." + getReference().getName()).add("value", //$NON-NLS-1$ //$NON-NLS-2$
+				EObjectUtil.getLabel(getValue())).add("parentMatch", getMatch().toString()).add(//$NON-NLS-1$
+				"match of value", getMatch().getComparison().getMatch(getValue())).add("kind", getKind()) //$NON-NLS-1$ //$NON-NLS-2$
+				.add("source", getSource()).add("state", getState()).toString(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }
