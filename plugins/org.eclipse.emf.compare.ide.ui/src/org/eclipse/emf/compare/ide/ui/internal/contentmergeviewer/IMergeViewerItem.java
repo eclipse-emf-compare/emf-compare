@@ -8,22 +8,23 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;
+package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
-import com.google.common.collect.ImmutableList;
-
-import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewerItem;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public interface IStructuralFeatureAccessor {
+public interface IMergeViewerItem {
 
-	Comparison getComparison();
+	Diff getDiff();
 
-	IMergeViewerItem getInitialItem();
+	Object getLeft();
 
-	ImmutableList<? extends IMergeViewerItem> getItems();
+	Object getRight();
 
+	Object getAncestor();
+
+	Object getSideValue(MergeViewerSide side);
 }

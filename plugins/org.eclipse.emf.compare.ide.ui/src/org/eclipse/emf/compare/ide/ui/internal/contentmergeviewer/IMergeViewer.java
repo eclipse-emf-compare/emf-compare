@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
-import org.eclipse.emf.compare.Match;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IInputSelectionProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -27,22 +26,25 @@ public interface IMergeViewer<C extends Composite> extends IInputSelectionProvid
 
 	MergeViewerSide getSide();
 
-	/**
-	 * This method will be called after all the three (ancestor, left and right) {@link IMergeViewer} has been
-	 * {@link #setInput(Object) initialized with their inputs}.
-	 * 
-	 * @param selection
-	 */
-	void setSelection(Object selection);
-
-	void setSelection(Match match);
-
 	void setContentProvider(IContentProvider contentProvider);
 
 	void setLabelProvider(ILabelProvider labelProvider);
 
-	static enum MergeViewerSide {
-		LEFT, RIGHT, ANCESTOR,
+	public static enum MergeViewerSide {
+		LEFT, RIGHT, ANCESTOR;
+
+		public MergeViewerSide opposite() {
+			switch (this) {
+				case LEFT:
+					return RIGHT;
+				case RIGHT:
+					return LEFT;
+				case ANCESTOR:
+					return ANCESTOR;
+				default:
+					throw new IllegalStateException(); // happy compiler :)
+			}
+		}
 	}
 
 }

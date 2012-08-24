@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;
 
-import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.AbstractMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IEObjectAccessor;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -54,58 +52,6 @@ class TreeMergeViewer extends AbstractMergeViewer<Tree> {
 	@Override
 	protected StructuredViewer createStructuredViewer(Composite parent) {
 		return new TreeViewer(parent);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#setSelection(java.lang.Object)
-	 */
-	public void setSelection(Object input) {
-		if (input instanceof IEObjectAccessor) {
-			EObject eObject = ((IEObjectAccessor)input).getEObject();
-			final Object viewerInput = doGetInput(eObject);
-			Object selection = viewerInput;
-			if (eObject != null) {
-				if (eObject.eContainer() == viewerInput) {
-					selection = eObject;
-				} else if (eObject.eContainer() == null) {
-					selection = eObject;
-				}
-			}
-			getStructuredViewer().setSelection(new StructuredSelection(selection));
-			getStructuredViewer().expandToLevel(selection, 1);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#setSelection(org.eclipse.emf.compare.Match)
-	 */
-	public void setSelection(Match match) {
-		final EObject eObject;
-		switch (getSide()) {
-			case ANCESTOR:
-				eObject = match.getOrigin();
-				break;
-			case LEFT:
-				eObject = match.getLeft();
-				break;
-			case RIGHT:
-				eObject = match.getRight();
-				break;
-			default:
-				throw new IllegalStateException();
-		}
-		final ISelection selection;
-		if (eObject != null) {
-			selection = new StructuredSelection(eObject);
-		} else {
-			selection = StructuredSelection.EMPTY;
-		}
-		setSelection(selection);
-
 	}
 
 	/**

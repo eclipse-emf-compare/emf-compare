@@ -10,13 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;
 
-import static com.google.common.collect.Iterables.filter;
-
-import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.Match;
+import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -24,85 +20,13 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class ReferenceChangeAccessor extends AbstractDiffAccessor {
+public class ReferenceChangeAccessor extends BasicStructuralAccessorImpl implements ITypedElement {
 
 	/**
 	 * 
 	 */
 	public ReferenceChangeAccessor(ReferenceChange referenceChange, MergeViewerSide side) {
 		super(referenceChange, side);
-	}
-
-	public EObject getValue(final Diff diff) {
-		final Match matchOfValue = getMatch(diff);
-		final EObject value;
-		if (matchOfValue != null) {
-			switch (getSide()) {
-				case ANCESTOR:
-					value = matchOfValue.getOrigin();
-					break;
-				case LEFT:
-					value = matchOfValue.getLeft();
-					break;
-				case RIGHT:
-					value = matchOfValue.getRight();
-					break;
-				default:
-					throw new IllegalStateException();
-			}
-		} else {
-			value = null;
-		}
-		return value;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor#getMatch()
-	 */
-	public Match getMatch() {
-		return getMatch(getDiff());
-	}
-
-	private Match getMatch(final Diff diff) {
-		final Match match = diff.getMatch();
-		final Match matchOfValue = match.getComparison().getMatch(((ReferenceChange)diff).getValue());
-		return matchOfValue;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor#getDiff(java.lang.Object)
-	 */
-	public Diff getDiff(Object value, MergeViewerSide side) {
-		Diff ret = null;
-		Iterable<ReferenceChange> referencesChanges = filter(getDiffFromThisSide(), ReferenceChange.class);
-		for (ReferenceChange referenceChange : referencesChanges) {
-			final EObject referenceChangeValue = referenceChange.getValue();
-			final Match match = referenceChange.getMatch().getComparison().getMatch(referenceChangeValue);
-			// match can be null if the referenceChange has been merged and it is a delete
-			if (match != null) {
-				final EObject matchValue;
-				switch (side) {
-					case LEFT:
-						matchValue = match.getLeft();
-						break;
-					case RIGHT:
-						matchValue = match.getRight();
-						break;
-					default:
-						matchValue = null;
-						break;
-				}
-				if (matchValue == value) {
-					ret = referenceChange;
-					break;
-				}
-			}
-		}
-		return ret;
 	}
 
 	/**

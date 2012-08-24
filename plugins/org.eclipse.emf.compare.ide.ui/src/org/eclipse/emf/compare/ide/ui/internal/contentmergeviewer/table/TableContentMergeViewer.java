@@ -17,12 +17,13 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewerItem;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.MatchedObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.AbstractBufferedCanvas;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DiffInsertionPoint;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemFontProvider;
@@ -40,6 +41,7 @@ import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
@@ -118,7 +120,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void copyDiffRightToLeft() {
-		Diff diffToCopy = getDiffToCopy(getRightMergeViewer(), MergeViewerSide.RIGHT);
+		Diff diffToCopy = getDiffToCopy(getRightMergeViewer());
 		if (diffToCopy != null) {
 			Command copyCommand = getEditingDomain().createCopyRightToLeftCommand(diffToCopy);
 			getEditingDomain().getCommandStack().execute(copyCommand);
@@ -128,20 +130,14 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 		}
 	}
 
-	private Diff getDiffToCopy(IMergeViewer<? extends Scrollable> mergeViewer, MergeViewerSide side) {
+	private Diff getDiffToCopy(IMergeViewer<? extends Scrollable> mergeViewer) {
 		Diff diffToCopy = null;
 		ISelection selection = mergeViewer.getSelection();
 		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
 			Object firstElement = ((IStructuredSelection)selection).getFirstElement();
-			if (firstElement instanceof DiffInsertionPoint) {
-				diffToCopy = ((DiffInsertionPoint)firstElement).getDiff();
-			} else {
-				Object mergeViewerInput = mergeViewer.getInput();
-				if (mergeViewerInput instanceof IStructuralFeatureAccessor) {
-					diffToCopy = ((IStructuralFeatureAccessor)mergeViewerInput).getDiff(firstElement, side);
-				}
+			if (firstElement instanceof IMergeViewerItem) {
+				diffToCopy = ((IMergeViewerItem)firstElement).getDiff();
 			}
-
 		}
 		return diffToCopy;
 	}
@@ -153,7 +149,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void copyDiffLeftToRight() {
-		Diff diffToCopy = getDiffToCopy(getLeftMergeViewer(), MergeViewerSide.LEFT);
+		Diff diffToCopy = getDiffToCopy(getLeftMergeViewer());
 		if (diffToCopy != null) {
 			Command copyCommand = getEditingDomain().createCopyLeftToRightCommand(diffToCopy);
 			getEditingDomain().getCommandStack().execute(copyCommand);
@@ -170,7 +166,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 *      org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide)
 	 */
 	@Override
-	protected IMergeViewer<? extends Composite> createMergeViewer(Composite parent, MergeViewerSide side) {
+	protected IMergeViewer<? extends Composite> createMergeViewer(Composite parent, final MergeViewerSide side) {
 		TableMergeViewer ret = new TableMergeViewer(parent, this, side);
 		ret.setContentProvider(new ArrayContentProvider());
 		ret.setLabelProvider(new AdapterFactoryLabelProvider.FontAndColorProvider(fAdapterFactory, ret
@@ -187,6 +183,34 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 					return getFontFromObject(IItemFontProvider.ITALIC_FONT);
 				}
 				return font;
+			}
+
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getColumnText(java.lang.Object,
+			 *      int)
+			 */
+			@Override
+			public String getColumnText(Object object, int columnIndex) {
+				if (object instanceof MatchedObject) {
+					return super.getColumnText(((MatchedObject)object).getSideValue(side), columnIndex);
+				}
+				return super.getColumnText(object, columnIndex);
+			}
+
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getColumnImage(java.lang.Object,
+			 *      int)
+			 */
+			@Override
+			public Image getColumnImage(Object object, int columnIndex) {
+				if (object instanceof MatchedObject) {
+					return super.getColumnImage(((MatchedObject)object).getSideValue(side), columnIndex);
+				}
+				return super.getColumnImage(object, columnIndex);
 			}
 		});
 		ret.getControl().getVerticalBar().addListener(SWT.Selection, new Listener() {
@@ -234,9 +258,6 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 		TableMergeViewer leftMergeViewer = (TableMergeViewer)getLeftMergeViewer();
 		TableMergeViewer rightMergeViewer = (TableMergeViewer)getRightMergeViewer();
 
-		IStructuralFeatureAccessor leftInput = (IStructuralFeatureAccessor)leftMergeViewer.getInput();
-		IStructuralFeatureAccessor rightInput = (IStructuralFeatureAccessor)rightMergeViewer.getInput();
-
 		Rectangle leftClientArea = leftMergeViewer.getControl().getClientArea();
 		Rectangle rightClientArea = rightMergeViewer.getControl().getClientArea();
 
@@ -252,10 +273,10 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			} else {
 				selected = false;
 			}
-			final Diff leftDiff = getDiffFromItem(leftInput, leftItem, MergeViewerSide.LEFT);
+			final Diff leftDiff = ((IMergeViewerItem)leftItem.getData()).getDiff();
 
-			if (leftDiff != null) {
-				TableItem rightItem = findRightTableItemFromLeftDiff(rightItems, rightInput, leftDiff);
+			if (leftDiff != null && leftDiff.getState() == DifferenceState.UNRESOLVED) {
+				TableItem rightItem = findRightTableItemFromLeftDiff(rightItems, leftDiff);
 
 				if (rightItem != null) {
 					Color strokeColor = getColors().getStrokeColor(leftDiff, isThreeWay(), false, selected);
@@ -286,28 +307,16 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 		}
 	}
 
-	private TableItem findRightTableItemFromLeftDiff(TableItem[] rightItems,
-			IStructuralFeatureAccessor rightInput, Diff leftDiff) {
+	private TableItem findRightTableItemFromLeftDiff(TableItem[] rightItems, Diff leftDiff) {
 		TableItem ret = null;
 		for (int i = 0; i < rightItems.length && ret == null; i++) {
 			TableItem rightItem = rightItems[i];
-			final Diff rightDiff = getDiffFromItem(rightInput, rightItem, MergeViewerSide.RIGHT);
+			final Diff rightDiff = ((IMergeViewerItem)rightItem.getData()).getDiff();
 			if (leftDiff == rightDiff) {
 				ret = rightItem;
 			}
 		}
 		return ret;
-	}
-
-	private Diff getDiffFromItem(IStructuralFeatureAccessor accessor, TableItem item, MergeViewerSide side) {
-		Object rightData = item.getData();
-		final Diff rightDiff;
-		if (rightData instanceof DiffInsertionPoint) {
-			rightDiff = ((DiffInsertionPoint)rightData).getDiff();
-		} else {
-			rightDiff = accessor.getDiff(rightData, side);
-		}
-		return rightDiff;
 	}
 
 	private int[] getCenterCurvePoints(Point from, Point to) {

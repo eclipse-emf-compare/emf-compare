@@ -10,29 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;
 
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.size;
-import static com.google.common.collect.Lists.newArrayList;
-
-import com.google.common.collect.ImmutableMap;
-
-import java.util.Collection;
-import java.util.List;
-
-import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
-import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.AbstractMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewerItem;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.InsertionPoint;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DiffInsertionPoint;
-import org.eclipse.emf.compare.utils.DiffUtil;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -57,12 +41,9 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 
 	private final EMFCompareContentMergeViewer fContentMergeViewer;
 
-	private ImmutableMap<Match, DiffInsertionPoint> fInsertionPoints;
-
 	TableMergeViewer(Composite parent, EMFCompareContentMergeViewer contentMergeViewer, MergeViewerSide side) {
 		super(parent, side);
 		fContentMergeViewer = contentMergeViewer;
-		fInsertionPoints = ImmutableMap.of();
 
 		getControl().addListener(SWT.EraseItem, new Listener() {
 			public void handleEvent(Event event) {
@@ -131,9 +112,7 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 	public void setInput(Object object) {
 		if (object instanceof IStructuralFeatureAccessor) {
 			fInput = (IStructuralFeatureAccessor)object;
-			final List<Object> values = newArrayList(fInput.getValues());
-			addInsertionPoints(values);
-			getStructuredViewer().setInput(values);
+			getStructuredViewer().setInput(fInput.getItems());
 		} else {
 			fInput = null;
 			getStructuredViewer().setInput(null);
@@ -149,139 +128,20 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		return fInput;
 	}
 
-	public void setSelection(Object selection) {
-		if (selection instanceof IStructuralFeatureAccessor) {
-			setSelection((IStructuralFeatureAccessor)selection);
-		} else {
-			setSelection(StructuredSelection.EMPTY);
-		}
-	}
-
-	private void setSelection(IStructuralFeatureAccessor selection) {
-		if (selection != null) {
-			final Object value = selection.getValue();
-			if (((Collection<?>)getStructuredViewer().getInput()).contains(value)) {
-				setSelection(new StructuredSelection(value));
-			} else {
-				DiffInsertionPoint insertionPoint = fInsertionPoints.get(selection.getMatch());
-				if (insertionPoint != null) {
-					setSelection(new StructuredSelection(insertionPoint));
-				} else {
-					setSelection(StructuredSelection.EMPTY);
-				}
-			}
-		} else {
-			setSelection(StructuredSelection.EMPTY);
-		}
-	}
-
-	private void addInsertionPoints(final List<Object> values) {
-		ImmutableMap.Builder<Match, DiffInsertionPoint> insertionsPoints = ImmutableMap.builder();
-		for (Diff diff : fInput.getDiffFromTheOtherSide().reverse()) {
-			if (diff.getState() == DifferenceState.UNRESOLVED) {
-				boolean rightToLeft = (getSide() == MergeViewerSide.LEFT);
-				Match ownerMatch = getOwnerMatch(diff);
-				if (ownerMatch != null) { // diff has been merge so that there is no match anymore
-					DiffInsertionPoint insertionPoint = new DiffInsertionPoint(diff);
-					final int insertionIndex;
-					if (featureIsMany(diff)) {
-						insertionIndex = DiffUtil.findInsertionIndex(ownerMatch.getComparison(), diff,
-								rightToLeft);
-					} else {
-						insertionIndex = 0;
-					}
-
-					int nbInsertionPointBefore = size(filter(values.subList(0, insertionIndex),
-							DiffInsertionPoint.class));
-
-					values.add(insertionIndex + nbInsertionPointBefore, insertionPoint);
-					insertionsPoints.put(ownerMatch, insertionPoint);
-				}
-			}
-		}
-		fInsertionPoints = insertionsPoints.build();
-	}
-
-	private boolean featureIsMany(Diff diff) {
-		final EStructuralFeature eStructuralFeature;
-		if (diff instanceof ReferenceChange) {
-			eStructuralFeature = ((ReferenceChange)diff).getReference();
-		} else {
-			eStructuralFeature = ((AttributeChange)diff).getAttribute();
-		}
-		return eStructuralFeature.isMany();
-	}
-
-	private Match getOwnerMatch(Diff diff) {
-		final Match ret;
-		if (diff instanceof ReferenceChange) {
-			EObject value = ((ReferenceChange)diff).getValue();
-			if (value != null) {
-				ret = diff.getMatch().getComparison().getMatch(value);
-			} else {
-				ret = null;
-			}
-		} else {
-			ret = diff.getMatch();
-		}
-		return ret;
-	}
-
-	public void setSelection(Match match) {
-		final EObject eObject;
-		switch (getSide()) {
-			case ANCESTOR:
-				eObject = match.getOrigin();
-				break;
-			case LEFT:
-				eObject = match.getLeft();
-				break;
-			case RIGHT:
-				eObject = match.getRight();
-				break;
-			default:
-				throw new IllegalStateException();
-		}
-		final DiffInsertionPoint insertionPoint = fInsertionPoints.get(match);
-		ISelection selection = createSelectionForFirstNonNull(eObject, insertionPoint);
-		setSelection(selection);
-	}
-
-	private ISelection createSelectionForFirstNonNull(final Object first, final Object second) {
-		final ISelection selection;
-		if (first != null) {
-			selection = new StructuredSelection(first);
-		} else if (second != null) {
-			selection = new StructuredSelection(second);
-		} else {
-			selection = StructuredSelection.EMPTY;
-		}
-		return selection;
-	}
-
 	private void handleEraseItemEvent(Event event) {
 		TableItem tableItem = (TableItem)event.item;
 		Object data = tableItem.getData();
 
 		boolean specialPaint = false;
-		if (data instanceof DiffInsertionPoint) {
-			DiffInsertionPoint insertionPoint = (DiffInsertionPoint)data;
+		if (data instanceof InsertionPoint) {
+			InsertionPoint insertionPoint = (InsertionPoint)data;
 			paintItemDiffBox(event, insertionPoint.getDiff(), getBoundsForInsertionPoint(event));
 			specialPaint = true;
-		} else if (fInput != null) {
-			for (Diff diff : fInput.getDiffFromThisSide()) {
-				if (fInput.getValue(diff) == data) {
-					paintItemDiffBox(event, diff, getBounds(event));
-					specialPaint = true;
-				}
-			}
-			if (getSide() == MergeViewerSide.ANCESTOR) {
-				for (Diff diff : fInput.getDiffFromAncestor()) {
-					if (fInput.getValue(diff) == data) {
-						paintItemDiffBox(event, diff, getBounds(event));
-						specialPaint = true;
-					}
-				}
+		} else if (data instanceof IMergeViewerItem) {
+			Diff diff = ((IMergeViewerItem)data).getDiff();
+			if (diff != null) {
+				paintItemDiffBox(event, diff, getBounds(event));
+				specialPaint = true;
 			}
 		}
 

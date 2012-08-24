@@ -19,7 +19,7 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor;
@@ -51,10 +51,6 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 
 	public TableContentMergeViewerContentProvider(CompareConfiguration cc) {
 		fCompareConfiguration = cc;
-	}
-
-	private boolean hasError() {
-		return fAncestorError != null || fLeftError != null || fRightError != null;
 	}
 
 	public void dispose() {
@@ -137,8 +133,8 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 			ICompareInput node = (ICompareInput)element;
 			ITypedElement left = node.getLeft();
 			if (left instanceof IStructuralFeatureAccessor) {
-				Diff diff = ((IStructuralFeatureAccessor)left).getDiff();
-				EList<Match> matches = diff.getMatch().getComparison().getMatches();
+				Comparison comparison = ((IStructuralFeatureAccessor)left).getComparison();
+				EList<Match> matches = comparison.getMatches();
 				EObject leftEObject = null;
 				for (Match match : matches) {
 					leftEObject = match.getLeft();
@@ -191,8 +187,8 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 			ICompareInput node = (ICompareInput)element;
 			ITypedElement right = node.getRight();
 			if (right instanceof AbstractEDiffNode) {
-				Diff diff = ((IStructuralFeatureAccessor)right).getDiff();
-				EList<Match> matches = diff.getMatch().getComparison().getMatches();
+				Comparison comparison = ((IStructuralFeatureAccessor)right).getComparison();
+				EList<Match> matches = comparison.getMatches();
 				EObject rightEObject = null;
 				for (Match match : matches) {
 					rightEObject = match.getRight();
@@ -206,9 +202,6 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 					saveAllResources(resourceSet);
 				}
 			}
-			// if (node instanceof ResourceCompareInput.MyDiffNode) {
-			// ((ResourceCompareInput.MyDiffNode)node).fireChange();
-			// }
 		}
 	}
 

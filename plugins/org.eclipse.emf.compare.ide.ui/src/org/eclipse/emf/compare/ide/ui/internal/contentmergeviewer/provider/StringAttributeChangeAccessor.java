@@ -86,7 +86,7 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	 * @see org.eclipse.compare.ITypedElement#getType()
 	 */
 	public String getType() {
-		return "eText";
+		return "eText"; //$NON-NLS-1$
 	}
 
 	/**
@@ -115,8 +115,8 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	 * @see org.eclipse.compare.IEditableContent#setContent(byte[])
 	 */
 	public void setContent(byte[] newContent) {
-		String newValue = new String(newContent);
-		System.out.println("StringAttributeChangeAccessor.setContent(" + newValue + ")");
+		throw new UnsupportedOperationException(
+				"ITypedElement StringAttributeChangeAccessor#replace(ITypedElement, ITypedElement)"); //$NON-NLS-1$
 	}
 
 	/**
@@ -127,6 +127,6 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	 */
 	public ITypedElement replace(ITypedElement dest, ITypedElement src) {
 		throw new UnsupportedOperationException(
-				"ITypedElement StringAttributeChangeAccessor#replace(ITypedElement, ITypedElement)");
+				"ITypedElement StringAttributeChangeAccessor#replace(ITypedElement, ITypedElement)"); //$NON-NLS-1$
 	}
 }

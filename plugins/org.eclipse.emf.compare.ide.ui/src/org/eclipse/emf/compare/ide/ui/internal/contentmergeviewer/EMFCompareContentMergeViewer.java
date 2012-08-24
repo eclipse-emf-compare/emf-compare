@@ -20,18 +20,16 @@ import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.Utilities;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.AbstractBufferedCanvas;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DiffInsertionPoint;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
 import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
@@ -39,8 +37,8 @@ import org.eclipse.jface.util.Util;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.DisposeEvent;
@@ -186,7 +184,26 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		// must update selection after the three viewers input has been set
 		// to avoid some NPE/AssertionError (they are calling each other on selectionChanged event to
 		// synchronize their selection)
-		fLeft.setSelection(left); // others will synchronize on this one :)
+
+		IMergeViewerItem leftInitialItem = null;
+		if (left instanceof IStructuralFeatureAccessor) {
+			leftInitialItem = ((IStructuralFeatureAccessor)left).getInitialItem();
+		}
+
+		ISelection leftSelection = createSelectionOrEmpty(leftInitialItem);
+		fLeft.setSelection(leftSelection); // others will synchronize on this one :)
+
+		getCenterControl().redraw();
+	}
+
+	private ISelection createSelectionOrEmpty(final Object o) {
+		final ISelection selection;
+		if (o != null) {
+			selection = new StructuredSelection(o);
+		} else {
+			selection = StructuredSelection.EMPTY;
+		}
+		return selection;
 	}
 
 	/**
@@ -613,38 +630,23 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			try {
 				ISelectionProvider selectionProvider = event.getSelectionProvider();
 				ISelection selection = event.getSelection();
-				if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
-					Object firstElement = ((IStructuredSelection)selection).getFirstElement();
-
-					final Match match;
-					if (firstElement instanceof DiffInsertionPoint) {
-						match = ((DiffInsertionPoint)firstElement).getMatch();
-					} else if (firstElement instanceof EObject) {
-						match = getComparison().getMatch((EObject)firstElement);
-					} else {
-						match = null;
-					}
-
-					if (match != null) {
-						synchronizeSelection(selectionProvider, match);
-					}
-				}
+				synchronizeSelection(selectionProvider, selection);
 			} finally {
 				fSyncingSelections.set(false);
 			}
 		}
 	}
 
-	private void synchronizeSelection(final ISelectionProvider selectionProvider, final Match match) {
+	private void synchronizeSelection(final ISelectionProvider selectionProvider, final ISelection selection) {
 		if (selectionProvider == fLeft) {
-			fRight.setSelection(match);
-			fAncestor.setSelection(match);
+			fRight.setSelection(selection);
+			fAncestor.setSelection(selection);
 		} else if (selectionProvider == fRight) {
-			fLeft.setSelection(match);
-			fAncestor.setSelection(match);
+			fLeft.setSelection(selection);
+			fAncestor.setSelection(selection);
 		} else { // selectionProvider == fAncestor
-			fLeft.setSelection(match);
-			fRight.setSelection(match);
+			fLeft.setSelection(selection);
+			fRight.setSelection(selection);
 		}
 	}
 }
