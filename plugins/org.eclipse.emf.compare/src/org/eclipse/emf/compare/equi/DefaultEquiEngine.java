@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.equi;
 
+import static com.google.common.collect.Iterables.filter;
+
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -17,6 +19,7 @@ import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 
 /**
  * The requirements engine is in charge of actually computing the equivalences between the differences.
@@ -50,44 +53,63 @@ public class DefaultEquiEngine implements IEquiEngine {
 	 *            The difference that is to be checked
 	 */
 	protected void checkForEquivalences(Comparison comparison, Diff difference) {
-		// If reference change on an opposite reference
-		if (difference instanceof ReferenceChange
-				&& ((ReferenceChange)difference).getReference().getEOpposite() != null
-				&& !((ReferenceChange)difference).getReference().getEOpposite().isContainer()
-				&& !((ReferenceChange)difference).getReference().getEOpposite().isDerived()) {
+		if (difference instanceof ReferenceChange) {
+			ReferenceChange referenceChange = (ReferenceChange)difference;
+			EReference reference = referenceChange.getReference();
+			EReference eOpposite = reference.getEOpposite();
 
-			ReferenceChange diff = (ReferenceChange)difference;
+			// If reference change on an opposite reference
+			if (eOpposite != null && !eOpposite.isContainer() && !eOpposite.isDerived()) {
+				checkForEquivalences(comparison, referenceChange);
+			}
+		}
+	}
 
-			Equivalence equivalence = diff.getEquivalence();
-			if (equivalence == null) {
-				// If no equivalence, create one
-				equivalence = CompareFactory.eINSTANCE.createEquivalence();
-				comparison.getEquivalences().add(equivalence);
+	/**
+	 * Checks the potential equivalence from the given <code>difference</code>.
+	 * 
+	 * @param comparison
+	 *            The comparison this engine is expected to complete.
+	 * @param referenceChange
+	 *            The difference that is to be checked
+	 */
+	protected void checkForEquivalences(Comparison comparison, ReferenceChange referenceChange) {
+		Equivalence equivalence = referenceChange.getEquivalence();
+		if (equivalence == null) {
+			// If no equivalence, create one
+			equivalence = CompareFactory.eINSTANCE.createEquivalence();
+			comparison.getEquivalences().add(equivalence);
 
-				// Add the current difference to the equivalence
-				equivalence.getDifferences().add(diff);
+			// Add the current difference to the equivalence
+			equivalence.getDifferences().add(referenceChange);
 
-				/*
-				 * Add the difference where the value is the object containing the current difference, which
-				 * is contained by the value of the current difference, where the reference is linked to the
-				 * opposite one
-				 */
-				for (Diff referenceChange : comparison.getDifferences(MatchUtil
-						.getContainer(comparison, diff))) {
-					if (referenceChange instanceof ReferenceChange
-							&& ((ReferenceChange)referenceChange).getReference().getEOpposite() != null
-							&& ((ReferenceChange)referenceChange).getReference().getEOpposite().equals(
-									diff.getReference())
-							&& diff.getValue().equals(MatchUtil.getContainer(comparison, referenceChange))) {
-						equivalence.getDifferences().add(referenceChange);
+			/*
+			 * Add the difference where the value is the object containing the current difference, which is
+			 * contained by the value of the current difference, where the reference is linked to the opposite
+			 * one
+			 */
+			EObject container = MatchUtil.getContainer(comparison, referenceChange);
+			if (container != null) {
+				for (ReferenceChange diff : filter(comparison.getDifferences(container),
+						ReferenceChange.class)) {
+					EReference reference = diff.getReference();
+					EReference eOpposite = reference.getEOpposite();
+
+					EObject referenceChangeContainer = MatchUtil.getContainer(comparison, diff);
+					EObject value = referenceChange.getValue();
+
+					if (eOpposite != null && eOpposite.equals(referenceChange.getReference())
+							&& value.equals(referenceChangeContainer)) {
+						equivalence.getDifferences().add(diff);
 						break;
 					}
 
 				}
-
+				
 				// Add the change differences on the old references (origin)
-				addChangesFromOrigin(comparison, diff, equivalence);
+				addChangesFromOrigin(comparison, referenceChange, equivalence);
 			}
+
 		}
 	}
 
