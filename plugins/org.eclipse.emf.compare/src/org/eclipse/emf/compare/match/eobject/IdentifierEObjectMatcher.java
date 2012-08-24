@@ -51,27 +51,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 	 * <li>If the eObject is located in an XMI resource and has an XMI ID, use this as its unique identifier.</li>
 	 * </ol>
 	 */
-	private Function<EObject, String> idComputation = new Function<EObject, String>() {
-		/**
-		 * @param eObject
-		 *            The EObject for which we need an identifier.
-		 * @return The identifier for that EObject if we could determine one. <code>null</code> if no
-		 *         condition (see description above) is fulfilled for the given eObject.
-		 */
-		public String apply(EObject eObject) {
-			if (eObject.eIsProxy()) {
-				return ((InternalEObject)eObject).eProxyURI().fragment();
-			}
-			String identifier = EcoreUtil.getID(eObject);
-			if (identifier == null) {
-				final Resource eObjectResource = eObject.eResource();
-				if (eObjectResource instanceof XMIResource) {
-					identifier = ((XMIResource)eObjectResource).getID(eObject);
-				}
-			}
-			return identifier;
-		}
-	};
+	private Function<EObject, String> idComputation = new DefaultIDFunction();
 
 	/**
 	 * Create an ID based matcher without any delegate.
@@ -262,9 +242,46 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 	}
 
 	/**
+	 * The default function used to retrieve IDs from EObject. You might want to extend or compose with it if
+	 * you want to reuse its behavior.
+	 */
+	public static class DefaultIDFunction implements Function<EObject, String> {
+		/**
+		 * Return an ID for an EObject, null if not found.
+		 * 
+		 * @param eObject
+		 *            The EObject for which we need an identifier.
+		 * @return The identifier for that EObject if we could determine one. <code>null</code> if no
+		 *         condition (see description above) is fulfilled for the given eObject.
+		 */
+		public String apply(EObject eObject) {
+			if (eObject.eIsProxy()) {
+				return ((InternalEObject)eObject).eProxyURI().fragment();
+			}
+			String identifier = EcoreUtil.getID(eObject);
+			if (identifier == null) {
+				final Resource eObjectResource = eObject.eResource();
+				if (eObjectResource instanceof XMIResource) {
+					identifier = ((XMIResource)eObjectResource).getID(eObject);
+				}
+			}
+			return identifier;
+		}
+	}
+
+	/**
+	 * Returns a new Builder to construct an {@link IdentifierEObjectMatcher}.
+	 * 
+	 * @return the new Builder instance.
+	 */
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	/**
 	 * An utility class to configure an instance of {@link IdentifierEObjectMatcher}.
 	 */
-	public class Builder {
+	public static class Builder {
 		/**
 		 * The instance under construction.
 		 */
