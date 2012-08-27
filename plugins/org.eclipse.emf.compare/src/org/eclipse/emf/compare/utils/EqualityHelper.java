@@ -11,10 +11,12 @@
 package org.eclipse.emf.compare.utils;
 
 import com.google.common.base.Function;
-import com.google.common.collect.MapMaker;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
 
 import java.lang.reflect.Array;
-import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
@@ -33,12 +35,12 @@ public class EqualityHelper {
 	/**
 	 * A cache keeping track of the URIs for EObjects.
 	 */
-	private Map<EObject, URI> uriCache = new MapMaker().makeComputingMap(new Function<EObject, URI>() {
-
-		public URI apply(EObject input) {
-			return EcoreUtil.getURI(input);
-		}
-	});
+	private Cache<EObject, URI> uriCache = CacheBuilder.newBuilder().build(
+			CacheLoader.from(new Function<EObject, URI>() {
+				public URI apply(EObject input) {
+					return EcoreUtil.getURI(input);
+				}
+			}));
 
 	/**
 	 * Check that the two given values are "equal", considering the specifics of EMF.
@@ -135,13 +137,24 @@ public class EqualityHelper {
 		if (match != null) {
 			equal = match.getLeft() == object2 || match.getRight() == object2 || match.getOrigin() == object2;
 		} else {
-			final URI uri1 = uriCache.get(object1);
-			final URI uri2 = uriCache.get(object2);
-			if (uri1.hasFragment() && uri2.hasFragment()) {
-				equal = uri1.fragment().equals(uri2.fragment());
-			} else {
-				equal = uri1.equals(uri2);
+			/*
+			 * use a temporary variable as buffer for the "equal" boolean. We know that the following
+			 * try/catch block can, and will, only initialize it once ... but the compiler does not.
+			 */
+			boolean temp = false;
+			try {
+				final URI uri1 = uriCache.get(object1);
+				final URI uri2 = uriCache.get(object2);
+				if (uri1.hasFragment() && uri2.hasFragment()) {
+					temp = uri1.fragment().equals(uri2.fragment());
+				} else {
+					temp = uri1.equals(uri2);
+				}
+			} catch (ExecutionException e) {
+				// Could not compute the URIs of these objects, assume not equal
+				temp = false;
 			}
+			equal = temp;
 		}
 
 		return equal;
@@ -207,14 +220,18 @@ public class EqualityHelper {
 	}
 
 	/**
-	 * The EqualityHelper often needs to get an EObject uri. As such it has an internal cache other might
-	 * leverage through this method.
+	 * The EqualityHelper often needs to get an EObject uri. As such it has an internal cache that clients
+	 * might leverage through this method.
 	 * 
 	 * @param object
 	 *            any EObject.
-	 * @return the URI of the given EObject.
+	 * @return the URI of the given EObject, or {@code null} if we somehow could not compute it.
 	 */
 	public URI getURI(EObject object) {
-		return uriCache.get(object);
+		try {
+			return uriCache.get(object);
+		} catch (ExecutionException e) {
+			return null;
+		}
 	}
 }
