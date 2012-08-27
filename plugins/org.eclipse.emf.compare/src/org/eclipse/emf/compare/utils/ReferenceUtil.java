@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.utils;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -23,6 +26,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * This utility class holds methods that will be used by the diff and merge processes. TODO: Maybe useless.
@@ -146,5 +150,37 @@ public final class ReferenceUtil {
 		// result.addAll(getReferencedEObjects(child, resolveProxies));
 		// }
 		return result;
+	}
+
+	/**
+	 * This utility simply allows us to retrieve the value of a given feature as a List.
+	 * 
+	 * @param object
+	 *            The object for which feature we need a value.
+	 * @param feature
+	 *            The actual feature of which we need the value.
+	 * @return The value of the given <code>feature</code> for the given <code>object</code> as a list. An
+	 *         empty list if this object has no value for that feature or if the object is <code>null</code>.
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<Object> getAsList(EObject object, EStructuralFeature feature) {
+		if (object != null) {
+			Object value = object.eGet(feature, false);
+			final List<Object> asList;
+			if (value instanceof InternalEList<?>) {
+				// EMF ignores the "resolve" flag for containment lists...
+				asList = ((InternalEList<Object>)value).basicList();
+			} else if (value instanceof List) {
+				asList = (List<Object>)value;
+			} else if (value instanceof Iterable) {
+				asList = ImmutableList.copyOf((Iterable<Object>)value);
+			} else if (value != null) {
+				asList = ImmutableList.of(value);
+			} else {
+				asList = Collections.emptyList();
+			}
+			return asList;
+		}
+		return Collections.emptyList();
 	}
 }

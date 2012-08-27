@@ -11,12 +11,11 @@
 package org.eclipse.emf.compare.diff;
 
 import static com.google.common.base.Predicates.not;
+import static org.eclipse.emf.compare.utils.ReferenceUtil.getAsList;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,7 +30,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.InternalEList;
 
 // TODO this probably doesn't handle feature maps. Test with an XSD-based metamodel
 /**
@@ -129,38 +127,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * This utility simply allows us to retrieve the value of a given feature as a List.
-	 * 
-	 * @param object
-	 *            The object for which feature we need a value.
-	 * @param feature
-	 *            The actual feature of which we need the value.
-	 * @return The value of the given <code>feature</code> for the given <code>object</code> as a list. An
-	 *         empty list if this object has no value for that feature or if the object is <code>null</code>.
-	 */
-	@SuppressWarnings("unchecked")
-	protected static List<Object> getAsList(EObject object, EStructuralFeature feature) {
-		if (object != null) {
-			Object value = safeEGet(object, feature);
-			final List<Object> asList;
-			if (value instanceof InternalEList<?>) {
-				// EMF ignores the "resolve" flag for containment lists...
-				asList = ((InternalEList<Object>)value).basicList();
-			} else if (value instanceof List) {
-				asList = (List<Object>)value;
-			} else if (value instanceof Iterable) {
-				asList = ImmutableList.copyOf((Iterable<Object>)value);
-			} else if (value != null) {
-				asList = ImmutableList.of(value);
-			} else {
-				asList = Collections.emptyList();
-			}
-			return asList;
-		}
-		return Collections.emptyList();
 	}
 
 	/**
