@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -95,7 +94,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 
 	static String changeText(final Diff diff, EStructuralFeature feature) {
 		DifferenceSource source = diff.getSource();
-		Match matchOfInterrest = getMatchOfInterrest(diff);
+		Match matchOfInterrest = diff.getMatch();
 		final EObject sourceSide;
 		final EObject otherSide;
 		if (source == DifferenceSource.LEFT) {
@@ -117,7 +116,8 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 			if (leftValue == null) {
 				changeText = "unset"; //$NON-NLS-1$
 			} else {
-				if (otherSide != null) {
+				Object otherValue = otherSide.eGet(eStructuralFeature);
+				if (otherValue != null) {
 					changeText = "changed"; //$NON-NLS-1$
 				} else {
 					changeText = "set"; //$NON-NLS-1$
@@ -127,33 +127,6 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 			changeText = "unset"; //$NON-NLS-1$
 		}
 		return changeText;
-	}
-
-	private static Match getMatchOfInterrest(Diff diff) {
-		final Match ret;
-		if (diff instanceof ReferenceChange) {
-			ReferenceChange change = (ReferenceChange)diff;
-			ret = getMatchOfInterrest(change);
-		} else {
-			return diff.getMatch();
-		}
-		return ret;
-	}
-
-	private static Match getMatchOfInterrest(ReferenceChange change) {
-		final Match ret;
-		Match ownerMatch = change.getMatch();
-		Comparison comparison = ownerMatch.getComparison();
-
-		EObject value = change.getValue();
-
-		Match matchOfValue = comparison.getMatch(value);
-		if (matchOfValue != null) {
-			ret = matchOfValue;
-		} else {
-			ret = ownerMatch;
-		}
-		return ret;
 	}
 
 	protected String getReferenceText(final ReferenceChange refChange) {
