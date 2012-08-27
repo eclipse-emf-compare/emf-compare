@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.actions.filter;
 
+import static com.google.common.base.Predicates.not;
+
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -17,11 +22,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.DiffNode;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.MatchNode;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -30,14 +35,21 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 
 /**
- * This will be used by the structure viewer to filter out its list of differences according to the selected
- * difference kind.
+ * This will be used by the structure viewer to filter out its list of differences according to a number of
+ * provided predicates.
+ * <p>
+ * <b>Note</b> that this filter acts as an "OR" predicate between all provided ones, and that filters are
+ * "exclude" filters. Basically, that means if the user selects two filters, any difference that applies for
+ * any of these two filters will be <i>hidden</i> from the view, contrarily to "classic" {@link ViewerFilter}
+ * that act as "AND" predicates for "include" filters, forcing any displayed element to meet the criterion of
+ * all provided filters.
+ * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class DifferenceFilter extends ViewerFilter {
-	/** The kinds of differences accepted by this filter. */
-	private Set<DifferenceKind> differenceKind = Sets.newHashSet();
+	/** The set of predicates known by this filter. */
+	private Set<Predicate<? super EObject>> predicates = Sets.newLinkedHashSet();
 
 	/** List of all TreeViewers on which this filter is applied. */
 	private List<TreeViewer> viewers = Lists.newArrayList();
@@ -50,46 +62,56 @@ public class DifferenceFilter extends ViewerFilter {
 	 */
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
+		if (predicates.isEmpty()) {
+			return true;
+		}
 		boolean result = false;
+		final Predicate<? super EObject> predicate = Predicates.or(predicates);
 
-		if (differenceKind.isEmpty()) {
+		if (predicates.isEmpty()) {
 			result = true;
 		} else if (element instanceof DiffNode) {
 			final Diff diff = ((DiffNode)element).getTarget();
-			result = diff.getState() == DifferenceState.UNRESOLVED && differenceKind.contains(diff.getKind());
+			result = !predicate.apply(diff);
 		} else if (element instanceof MatchNode) {
 			final Iterator<Diff> differences = ((MatchNode)element).getTarget().getAllDifferences()
 					.iterator();
-			while (!result && differences.hasNext()) {
-				result = differenceKind.contains(differences.next().getKind());
-			}
+			result = Iterators.any(differences, not(predicate));
+		} else if (element instanceof Adapter && ((Adapter)element).getTarget() instanceof EObject) {
+			/*
+			 * Same code as the DiffNode case... extracted here as this is aimed at handling the cases not
+			 * known at the time of writing (and the case of the "MatchResource" elements).
+			 */
+			final EObject target = (EObject)((Adapter)element).getTarget();
+			result = !predicate.apply(target);
 		}
 
 		return result;
 	}
 
 	/**
-	 * Add a difference kind to those that are accepted by this filter.
+	 * Add a predicate to the set known by this filter.
 	 * 
-	 * @param diffKind
-	 *            The new kind of difference to be accepted by this viewer. No effect if already accepted.
+	 * @param predicate
+	 *            The new predicate for differences to be accepted by this viewer. No effect if already
+	 *            accepted.
 	 */
-	public void addFilter(DifferenceKind diffKind) {
-		final boolean changed = differenceKind.add(diffKind);
+	public void addPredicate(Predicate<? super EObject> predicate) {
+		final boolean changed = predicates.add(predicate);
 		if (changed) {
 			refreshViewers();
 		}
 	}
 
 	/**
-	 * Removes a difference kind from those accepted by this filter.
+	 * Removes a predicate from those accepted by this filter.
 	 * 
-	 * @param diffKind
-	 *            The difference kind that should no longer by accepted by this filter. No effect if it was
-	 *            not one of the accepted kinds.
+	 * @param predicate
+	 *            The predicate that should no longer by accepted by this filter. No effect if it was not one
+	 *            of the accepted ones.
 	 */
-	public void removeFilter(DifferenceKind diffKind) {
-		final boolean changed = differenceKind.remove(diffKind);
+	public void removePredicate(Predicate<? super EObject> predicate) {
+		final boolean changed = predicates.remove(predicate);
 		if (changed) {
 			refreshViewers();
 		}

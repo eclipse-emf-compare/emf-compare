@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.actions.filter;
 
+import static com.google.common.base.Predicates.instanceOf;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
+
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -56,10 +60,23 @@ public class FilterActionMenu extends Action implements IMenuCreator {
 	 *            The menu in which we are to create filter actions.
 	 */
 	public void createActions(MenuManager menu) {
-		menu.add(new FilterAction("Changed Elements", DifferenceKind.CHANGE, differenceFilter));
-		menu.add(new FilterAction("Added Elements", DifferenceKind.ADD, differenceFilter));
-		menu.add(new FilterAction("Removed Elements", DifferenceKind.DELETE, differenceFilter));
-		menu.add(new FilterAction("Moved Elements", DifferenceKind.MOVE, differenceFilter));
+		// TODO make this extensible and use the extension point. Hardcoded for now.
+		// The four "difference of kind" predicate
+		menu.add(FilterAction.fromDiffPredicate("Changed Elements", ofKind(DifferenceKind.CHANGE),
+				differenceFilter));
+		menu.add(FilterAction.fromDiffPredicate("Added Elements", ofKind(DifferenceKind.ADD),
+				differenceFilter));
+		menu.add(FilterAction.fromDiffPredicate("Removed Elements", ofKind(DifferenceKind.DELETE),
+				differenceFilter));
+		menu.add(FilterAction.fromDiffPredicate("Moved Elements", ofKind(DifferenceKind.MOVE),
+				differenceFilter));
+		// And one to remove the ResourceMatch from the view.
+		final FilterAction matchResourceFilter = new FilterAction("Resource Mappings",
+				instanceOf(MatchResource.class), differenceFilter);
+		// Make it checked by default, we need to run it once for that
+		matchResourceFilter.setChecked(true);
+		matchResourceFilter.run();
+		menu.add(matchResourceFilter);
 	}
 
 	/**
