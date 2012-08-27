@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.utils;
 
+import static org.eclipse.emf.compare.utils.ReferenceUtil.getAsList;
+
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -114,16 +116,14 @@ public final class MatchUtil {
 	 */
 	public static EObject getContainer(Comparison comparison, ReferenceChange difference) {
 		EObject result = null;
-		final EObject obj = difference.getValue();
-		Match valueMatch = comparison.getMatch(obj);
-		if (valueMatch != null) {
-			if (valueMatch.getLeft() == obj) {
-				result = difference.getMatch().getLeft();
-			} else if (valueMatch.getRight() == obj) {
-				result = difference.getMatch().getRight();
-			} else if (valueMatch.getOrigin() == obj) {
-				result = difference.getMatch().getOrigin();
-			}
+		final EObject value = difference.getValue();
+		Match match = difference.getMatch();
+		if (getAsList(match.getLeft(), difference.getReference()).contains(value)) {
+			result = match.getLeft();
+		} else if (getAsList(match.getRight(), difference.getReference()).contains(value)) {
+			result = match.getRight();
+		} else if (getAsList(match.getOrigin(), difference.getReference()).contains(value)) {
+			result = match.getOrigin();
 		}
 		return result;
 	}

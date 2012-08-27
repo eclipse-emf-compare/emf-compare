@@ -408,4 +408,11 @@ public class ReqInputData extends AbstractInputData {
 		return loadFromClassloader("f11/ancestor.nodes"); //$NON-NLS-1$
 	}
 
+	public Resource getG1Left() throws IOException {
+		return loadFromClassloader("g1/left.nodes"); //$NON-NLS-1$
+	}
+
+	public Resource getG1Right() throws IOException {
+		return loadFromClassloader("g1/right.nodes"); //$NON-NLS-1$
+	}
 }

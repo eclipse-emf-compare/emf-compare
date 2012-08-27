@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.req;
 
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
@@ -26,9 +28,12 @@ import com.google.common.collect.Iterators;
 import java.io.IOException;
 import java.util.List;
 
+import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.tests.req.data.ReqInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
@@ -551,7 +556,41 @@ public class ReqComputingTest {
 		testCD5(TestKind.ADD, comparison);
 	}
 
-	private static void testAB1(TestKind kind, final Comparison comparison) {
+	@Test
+	public void testG1UseCase() throws IOException {
+		final Resource left = input.getG1Left();
+		final Resource right = input.getG1Right();
+
+		final Comparison comparison = EMFCompare.compare(left, right, (Notifier)null);
+		String root = "root";
+		String node1 = root + ".node1";
+		String node2 = node1 + ".node2";
+
+		EList<Diff> differences = comparison.getDifferences();
+
+		assertSame(3, differences.size());
+		Diff added1 = getOnlyElement(filter(differences, added(node1)), null);
+		assertNotNull(added1);
+		Diff added2 = getOnlyElement(filter(differences, added(node2)), null);
+		assertNotNull(added2);
+
+		ReferenceChange singleChange = null;
+		for (ReferenceChange change : filter(differences, ReferenceChange.class)) {
+			if ("singleValuedReference".equals(change.getReference().getName())) {
+				singleChange = change;
+				break;
+			}
+		}
+		assertNotNull(singleChange);
+		assertTrue(singleChange.getValue().eIsProxy());
+		assertSame(0, added1.getRequires().size());
+		assertSame(1, added2.getRequires().size());
+		assertTrue(added2.getRequires().contains(added1));
+		assertSame(1, singleChange.getRequires().size());
+		assertTrue(singleChange.getRequires().contains(added2));
+	}
+
+	private void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 3 differences
@@ -607,7 +646,7 @@ public class ReqComputingTest {
 		}
 	}
 
-	private static void testAB2(TestKind kind, final Comparison comparison) {
+	private void testAB2(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 3 differences
@@ -660,7 +699,7 @@ public class ReqComputingTest {
 		}
 	}
 
-	private static void testAB3(TestKind kind, final Comparison comparison) {
+	private void testAB3(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 2 differences
@@ -703,7 +742,7 @@ public class ReqComputingTest {
 		}
 	}
 
-	private static void testAB4(TestKind kind, final Comparison comparison) {
+	private void testAB4(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 3 differences
@@ -759,7 +798,7 @@ public class ReqComputingTest {
 
 	}
 
-	private static void testAB5(TestKind kind, final Comparison comparison) {
+	private void testAB5(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 8 differences
@@ -869,7 +908,7 @@ public class ReqComputingTest {
 
 	}
 
-	private static void testAB6(TestKind kind, final Comparison comparison) {
+	private void testAB6(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 7 differences
@@ -970,7 +1009,7 @@ public class ReqComputingTest {
 
 	}
 
-	private static void testAB7(TestKind kind, final Comparison comparison) {
+	private void testAB7(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 4 differences
@@ -1026,7 +1065,7 @@ public class ReqComputingTest {
 
 	}
 
-	private static void testAB8(TestKind kind, final Comparison comparison) {
+	private void testAB8(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 7 differences
@@ -1119,7 +1158,7 @@ public class ReqComputingTest {
 
 	}
 
-	private static void testAB9(TestKind kind, final Comparison comparison) {
+	private void testAB9(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 2 differences
@@ -1157,7 +1196,7 @@ public class ReqComputingTest {
 
 	}
 
-	private static void testAB10(TestKind kind, final Comparison comparison) {
+	private void testAB10(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 4 differences
@@ -1218,7 +1257,7 @@ public class ReqComputingTest {
 
 	}
 
-	private static void testAB11(TestKind kind, final Comparison comparison) {
+	private void testAB11(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 4 differences
@@ -1276,7 +1315,7 @@ public class ReqComputingTest {
 
 	}
 
-	private static void testCD1(TestKind kind, final Comparison comparison) {
+	private void testCD1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
@@ -1351,7 +1390,7 @@ public class ReqComputingTest {
 
 	}
 
-	private static void testCD2(TestKind kind, final Comparison comparison) {
+	private void testCD2(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
@@ -1415,7 +1454,7 @@ public class ReqComputingTest {
 
 	}
 
-	private static void testCD3(TestKind kind, final Comparison comparison) {
+	private void testCD3(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
@@ -1477,7 +1516,7 @@ public class ReqComputingTest {
 
 	}
 
-	private static void testCD4(TestKind kind, final Comparison comparison) {
+	private void testCD4(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
@@ -1528,7 +1567,7 @@ public class ReqComputingTest {
 
 	}
 
-	private static void testCD5(TestKind kind, final Comparison comparison) {
+	private void testCD5(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 2 differences
