@@ -39,9 +39,49 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		MatchResource matchResource = (MatchResource)object;
-		return matchResource.getLeftURI() + " <-> " + matchResource.getRightURI() + " ("
-				+ matchResource.getOriginURI() + ")";
+		final MatchResource matchResource = (MatchResource)object;
+		final String leftURI = matchResource.getLeftURI();
+		final String rightURI = matchResource.getRightURI();
+
+		final String commonBase = getCommonBase(leftURI, rightURI);
+
+		String text = leftURI.substring(commonBase.length()) + " <-> "
+				+ rightURI.substring(commonBase.length());
+		// TODO is that really useful info?
+		// if (matchResource.eContainer() instanceof Comparison
+		// && ((Comparison)matchResource.eContainer()).isThreeWay()) {
+		// final String originURI = matchResource.getOriginURI();
+		// text += " (" + originURI + ")";
+		// }
+		return text;
 	}
 
+	/**
+	 * Returns the longest common starting substring of the two given strings.
+	 * 
+	 * @param left
+	 *            First of the two strings for which we need the common starting substring.
+	 * @param right
+	 *            Second of the two strings for which we need the common starting substring.
+	 * @return The longest common starting substring of the two given strings.
+	 */
+	public String getCommonBase(String left, String right) {
+		if (left == null || right == null) {
+			return ""; //$NON-NLS-1$
+		}
+
+		final char[] leftChars = left.toCharArray();
+		final char[] rightChars = right.toCharArray();
+
+		final StringBuilder buffer = new StringBuilder();
+		for (int i = 0; i < Math.min(leftChars.length, rightChars.length); i++) {
+			if (leftChars[i] == rightChars[i]) {
+				buffer.append(leftChars[i]);
+			} else {
+				break;
+			}
+		}
+
+		return buffer.toString();
+	}
 }
