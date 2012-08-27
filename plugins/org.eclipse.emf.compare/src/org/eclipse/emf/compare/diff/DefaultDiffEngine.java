@@ -27,13 +27,13 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 // TODO this probably doesn't handle feature maps. Test with an XSD-based metamodel
-// TODO does not handle proxies yet (see fixmes)
 /**
  * The diff engine is in charge of actually computing the differences between the objects mapped by a
  * {@link Match} object.
@@ -144,7 +144,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 	@SuppressWarnings("unchecked")
 	protected static List<Object> getAsList(EObject object, EStructuralFeature feature) {
 		if (object != null) {
-			Object value = object.eGet(feature, false);
+			Object value = safeEGet(object, feature);
 			final List<Object> asList;
 			if (value instanceof InternalEList<?>) {
 				// EMF ignores the "resolve" flag for containment lists...
@@ -161,6 +161,28 @@ public class DefaultDiffEngine implements IDiffEngine {
 			return asList;
 		}
 		return Collections.emptyList();
+	}
+
+	/**
+	 * In case of dynamic EObjects, the EClasses of both sides might be different, making "eget" fail in
+	 * "unknown feature". We assume that even if the EClasses are distinct instances, they are the same
+	 * nontheless, and thus we can use the feature name in order to retrieve the feature's value.
+	 * 
+	 * @param object
+	 *            The object for which feature we need a value.
+	 * @param feature
+	 *            The actual feature of which we need the value.
+	 * @return The value of the given {@code feature} for the given {@code object}.
+	 */
+	protected static Object safeEGet(EObject object, EStructuralFeature feature) {
+		final EClass clazz = object.eClass();
+		// TODO profile. This "if" might be counter productive : accessing both packages is probably as long
+		// as a direct lookup to the clazz.eGetEStructuralFeature...
+		if (clazz.getEPackage() == feature.getEContainingClass().getEPackage()) {
+			return object.eGet(feature, false);
+		}
+		// Assumes that the containing package is the same, let it fail otherwise
+		return object.eGet(clazz.getEStructuralFeature(feature.getName()), false);
 	}
 
 	/**
@@ -603,11 +625,11 @@ public class DefaultDiffEngine implements IDiffEngine {
 	protected void computeSingleValuedAttributeDifferences(Match match, EAttribute attribute) {
 		Object leftValue = UNMATCHED_VALUE;
 		if (match.getLeft() != null) {
-			leftValue = match.getLeft().eGet(attribute);
+			leftValue = safeEGet(match.getLeft(), attribute);
 		}
 		Object rightValue = UNMATCHED_VALUE;
 		if (match.getRight() != null) {
-			rightValue = match.getRight().eGet(attribute);
+			rightValue = safeEGet(match.getRight(), attribute);
 		}
 
 		if (helper.matchingValues(getComparison(), leftValue, rightValue)) {
@@ -618,7 +640,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 				if (match.getOrigin() == null) {
 					originValue = null;
 				} else {
-					originValue = match.getOrigin().eGet(attribute);
+					originValue = safeEGet(match.getOrigin(), attribute);
 				}
 				final boolean matchingLO = helper.matchingValues(getComparison(), leftValue, originValue);
 
@@ -641,7 +663,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 				}
 			}
 		} else if (match.getOrigin() != null) {
-			final Object originValue = match.getOrigin().eGet(attribute);
+			final Object originValue = safeEGet(match.getOrigin(), attribute);
 
 			if (helper.matchingValues(getComparison(), leftValue, originValue)) {
 				Object changedValue = rightValue;
@@ -757,15 +779,15 @@ public class DefaultDiffEngine implements IDiffEngine {
 	protected void computeSingleValuedReferenceDifferencesThreeWay(Match match, EReference reference) {
 		Object leftValue = UNMATCHED_VALUE;
 		if (match.getLeft() != null) {
-			leftValue = match.getLeft().eGet(reference);
+			leftValue = safeEGet(match.getLeft(), reference);
 		}
 		Object rightValue = UNMATCHED_VALUE;
 		if (match.getRight() != null) {
-			rightValue = match.getRight().eGet(reference);
+			rightValue = safeEGet(match.getRight(), reference);
 		}
 		Object originValue = UNMATCHED_VALUE;
 		if (match.getOrigin() != null) {
-			originValue = match.getOrigin().eGet(reference);
+			originValue = safeEGet(match.getOrigin(), reference);
 		}
 
 		boolean distinctValueLO = !helper.matchingValues(getComparison(), leftValue, originValue);
@@ -823,11 +845,11 @@ public class DefaultDiffEngine implements IDiffEngine {
 	protected void computeSingleValuedReferenceDifferencesTwoWay(Match match, EReference reference) {
 		Object leftValue = UNMATCHED_VALUE;
 		if (match.getLeft() != null) {
-			leftValue = match.getLeft().eGet(reference);
+			leftValue = safeEGet(match.getLeft(), reference);
 		}
 		Object rightValue = UNMATCHED_VALUE;
 		if (match.getRight() != null) {
-			rightValue = match.getRight().eGet(reference);
+			rightValue = safeEGet(match.getRight(), reference);
 		}
 
 		boolean distinctValue = !helper.matchingValues(getComparison(), leftValue, rightValue);
