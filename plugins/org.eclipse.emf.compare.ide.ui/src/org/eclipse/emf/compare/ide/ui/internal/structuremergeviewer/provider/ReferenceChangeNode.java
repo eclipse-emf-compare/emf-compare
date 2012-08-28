@@ -14,7 +14,9 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.ReferenceChangeAccessor;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.ManyStructuralFeatureAccessorImpl;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.SingleStructuralFeatureAccessorImpl;
+import org.eclipse.emf.ecore.EReference;
 
 /**
  * Specific AbstractEDiffNode for {@link ReferenceChange} objects.
@@ -50,7 +52,12 @@ public class ReferenceChangeNode extends DiffNode {
 	 */
 	@Override
 	public ITypedElement getAncestor() {
-		return new ReferenceChangeAccessor(getTarget(), MergeViewerSide.ANCESTOR);
+		EReference reference = getTarget().getReference();
+		if (reference.isMany()) {
+			return new ManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.ANCESTOR);
+		} else {
+			return new SingleStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.ANCESTOR);
+		}
 	}
 
 	/**
@@ -60,7 +67,12 @@ public class ReferenceChangeNode extends DiffNode {
 	 */
 	@Override
 	public ITypedElement getLeft() {
-		return new ReferenceChangeAccessor(getTarget(), MergeViewerSide.LEFT);
+		EReference reference = getTarget().getReference();
+		if (reference.isMany()) {
+			return new ManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.LEFT);
+		} else {
+			return new SingleStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.LEFT);
+		}
 	}
 
 	/**
@@ -70,6 +82,11 @@ public class ReferenceChangeNode extends DiffNode {
 	 */
 	@Override
 	public ITypedElement getRight() {
-		return new ReferenceChangeAccessor(getTarget(), MergeViewerSide.RIGHT);
+		EReference reference = getTarget().getReference();
+		if (reference.isMany()) {
+			return new ManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.RIGHT);
+		} else {
+			return new SingleStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.RIGHT);
+		}
 	}
 }

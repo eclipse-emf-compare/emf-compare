@@ -14,7 +14,8 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.AttributeChangeAccessor;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.ManyStructuralFeatureAccessorImpl;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.SingleStructuralFeatureAccessorImpl;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.StringAttributeChangeAccessor;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
@@ -69,8 +70,10 @@ public class AttributeChangeNode extends DiffNode {
 		if (origin != null) {
 			if (attribute.getEAttributeType().getInstanceClass() == String.class && !attribute.isMany()) {
 				ret = new StringAttributeChangeAccessor(origin, attribute, getTarget());
+			} else if (attribute.isMany()) {
+				ret = new ManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.ANCESTOR);
 			} else {
-				ret = new AttributeChangeAccessor(getTarget(), MergeViewerSide.ANCESTOR);
+				ret = new SingleStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.ANCESTOR);
 			}
 		}
 		return ret;
@@ -89,8 +92,10 @@ public class AttributeChangeNode extends DiffNode {
 		if (left != null) {
 			if (attribute.getEAttributeType().getInstanceClass() == String.class && !attribute.isMany()) {
 				ret = new StringAttributeChangeAccessor(left, attribute, getTarget());
+			} else if (attribute.isMany()) {
+				ret = new ManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.LEFT);
 			} else {
-				ret = new AttributeChangeAccessor(getTarget(), MergeViewerSide.LEFT);
+				ret = new SingleStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.LEFT);
 			}
 		}
 		return ret;
@@ -109,8 +114,10 @@ public class AttributeChangeNode extends DiffNode {
 		if (right != null) {
 			if (attribute.getEAttributeType().getInstanceClass() == String.class && !attribute.isMany()) {
 				ret = new StringAttributeChangeAccessor(right, attribute, getTarget());
+			} else if (attribute.isMany()) {
+				ret = new ManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.RIGHT);
 			} else {
-				ret = new AttributeChangeAccessor(getTarget(), MergeViewerSide.RIGHT);
+				ret = new SingleStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.RIGHT);
 			}
 		}
 		return ret;
