@@ -132,34 +132,14 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		TableItem tableItem = (TableItem)event.item;
 		Object data = tableItem.getData();
 
-		boolean specialPaint = false;
 		if (data instanceof InsertionPoint) {
 			InsertionPoint insertionPoint = (InsertionPoint)data;
 			paintItemDiffBox(event, insertionPoint.getDiff(), getBoundsForInsertionPoint(event));
-			specialPaint = true;
 		} else if (data instanceof IMergeViewerItem) {
 			Diff diff = ((IMergeViewerItem)data).getDiff();
 			if (diff != null) {
 				paintItemDiffBox(event, diff, getBounds(event));
-				specialPaint = true;
 			}
-		}
-
-		if (!specialPaint) {
-			paintItem(event);
-		}
-	}
-
-	/**
-	 * @param event
-	 * @param tableItem
-	 */
-	private void paintItem(Event event) {
-		event.detail &= ~SWT.HOT;
-
-		if (isSelected(event)) {
-			Rectangle fill = getBounds(event);
-			drawSelectionBox(event, fill);
 		}
 	}
 
@@ -217,15 +197,6 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 
 	static boolean isSelected(Event event) {
 		return (event.detail & SWT.SELECTED) != 0;
-	}
-
-	private static void drawSelectionBox(Event event, Rectangle fill) {
-		Display display = event.display;
-		GC g = event.gc;
-		g.setBackground(display.getSystemColor(SWT.COLOR_LIST_SELECTION));
-		g.setForeground(display.getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT));
-		g.fillRectangle(fill);
-		event.detail &= ~SWT.SELECTED;
 	}
 
 	private static Rectangle getBounds(Event event) {
