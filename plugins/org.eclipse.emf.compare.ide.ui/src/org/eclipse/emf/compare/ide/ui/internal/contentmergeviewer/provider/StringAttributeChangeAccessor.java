@@ -97,7 +97,11 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	public InputStream getContents() throws CoreException {
 		Object value = fEObject.eGet(fEAtribute);
 		String stringValue = EcoreUtil.convertToString(fEAtribute.getEAttributeType(), value);
-		return new ByteArrayInputStream(stringValue.getBytes());
+		if (stringValue != null) {
+			return new ByteArrayInputStream(stringValue.getBytes());
+		} else {
+			return new ByteArrayInputStream(new byte[0]);
+		}
 	}
 
 	/**
