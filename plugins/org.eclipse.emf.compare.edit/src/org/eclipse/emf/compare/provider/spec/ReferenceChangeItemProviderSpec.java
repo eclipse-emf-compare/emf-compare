@@ -14,6 +14,7 @@ import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 
@@ -113,20 +114,30 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		String changeText;
 		if (sourceSide != null) {
 			Object leftValue = sourceSide.eGet(eStructuralFeature);
-			if (leftValue == null) {
+			if (leftValue == null || isStringAndNullOrEmpty(leftValue)) {
 				changeText = "unset"; //$NON-NLS-1$
-			} else {
+			} else if (otherSide != null) {
 				Object otherValue = otherSide.eGet(eStructuralFeature);
-				if (otherValue != null) {
-					changeText = "changed"; //$NON-NLS-1$
-				} else {
+				if (otherValue == null || isStringAndNullOrEmpty(otherValue)) {
 					changeText = "set"; //$NON-NLS-1$
+				} else {
+					changeText = "changed"; //$NON-NLS-1$
 				}
+			} else {
+				changeText = "set"; //$NON-NLS-1$
 			}
 		} else {
 			changeText = "unset"; //$NON-NLS-1$
 		}
 		return changeText;
+	}
+
+	private static boolean isStringAndNullOrEmpty(Object s) {
+		if (s instanceof String) {
+			return Strings.isNullOrEmpty((String)s);
+		} else {
+			return false;
+		}
 	}
 
 	protected String getReferenceText(final ReferenceChange refChange) {
@@ -139,7 +150,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		if (value == null) {
 			value = "<null>"; //$NON-NLS-1$
 		} else {
-			value = Strings.elide(value, 32, "..."); //$NON-NLS-1$
+			value = org.eclipse.emf.compare.provider.spec.Strings.elide(value, 32, "..."); //$NON-NLS-1$
 		}
 		return value;
 	}
