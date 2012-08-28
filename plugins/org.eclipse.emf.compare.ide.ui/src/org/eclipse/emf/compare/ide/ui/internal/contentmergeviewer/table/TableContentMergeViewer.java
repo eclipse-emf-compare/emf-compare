@@ -14,7 +14,6 @@ import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
@@ -27,6 +26,8 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.AbstractB
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemFontProvider;
+import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
+import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -34,6 +35,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.GestureEvent;
 import org.eclipse.swt.events.GestureListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -61,7 +63,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	private static final String BUNDLE_NAME = TableContentMergeViewer.class.getName();
 
-	private final AdapterFactory fAdapterFactory;
+	private final ComposedAdapterFactory fAdapterFactory;
 
 	private double[] fBasicCenterCurve;
 
@@ -73,8 +75,22 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	protected TableContentMergeViewer(Composite parent, CompareConfiguration config) {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
 		fAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
+		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
+
 		buildControl(parent);
 		setContentProvider(new TableContentMergeViewerContentProvider(config));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
+	 */
+	@Override
+	protected void handleDispose(DisposeEvent event) {
+		fAdapterFactory.dispose();
+		super.handleDispose(event);
 	}
 
 	/**

@@ -23,6 +23,8 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
+import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
@@ -30,6 +32,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
@@ -52,7 +55,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	 * The {@link AdapterFactory} used to create {@link AdapterFactoryContentProvider} and
 	 * {@link AdapterFactoryLabelProvider} for ancestor, left and right {@link TreeViewer}.
 	 */
-	private final AdapterFactory fAdapterFactory;
+	private final ComposedAdapterFactory fAdapterFactory;
 
 	/**
 	 * Creates a new {@link TreeContentMergeViewer} by calling the super constructor with the given
@@ -72,8 +75,22 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	public TreeContentMergeViewer(Composite parent, CompareConfiguration config) {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
 		fAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
+		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
+
 		buildControl(parent);
 		setContentProvider(new TreeMergeViewerContentProvider(config));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
+	 */
+	@Override
+	protected void handleDispose(DisposeEvent event) {
+		fAdapterFactory.dispose();
+		super.handleDispose(event);
 	}
 
 	/**
