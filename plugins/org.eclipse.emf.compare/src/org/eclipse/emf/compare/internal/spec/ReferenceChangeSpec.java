@@ -66,13 +66,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					break;
 				case CHANGE:
 					// Is it an unset?
-					final Match valueMatch;
-					if (getValue() != null) {
-						valueMatch = getMatch().getComparison().getMatch(getValue());
-					} else {
-						valueMatch = null;
-					}
-
+					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
 					if (valueMatch != null && getValue() != valueMatch.getLeft()) {
 						removeFromTarget(false);
 					} else {
@@ -100,13 +94,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					break;
 				case CHANGE:
 					// Is it an unset?
-					final Match valueMatch;
-					if (getValue() != null) {
-						valueMatch = getMatch().getComparison().getMatch(getValue());
-					} else {
-						valueMatch = null;
-					}
-
+					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
 					if (valueMatch != null && getValue() != valueMatch.getRight()) {
 						// Value has been unset in the right, and we are merging towards right.
 						// We need to re-add this element
@@ -159,13 +147,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					break;
 				case CHANGE:
 					// Is it an unset?
-					final Match valueMatch;
-					if (getValue() != null) {
-						valueMatch = getMatch().getComparison().getMatch(getValue());
-					} else {
-						valueMatch = null;
-					}
-
+					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
 					if (valueMatch != null && getValue() != valueMatch.getLeft()) {
 						// Value has been unset in the left, and we're copying towards the left.
 						// We need to re-create the element.
@@ -194,13 +176,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					break;
 				case CHANGE:
 					// Is it an unset?
-					final Match valueMatch;
-					if (getValue() != null) {
-						valueMatch = getMatch().getComparison().getMatch(getValue());
-					} else {
-						valueMatch = null;
-					}
-
+					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
 					if (valueMatch != null && getValue() != valueMatch.getRight()) {
 						removeFromTarget(true);
 					} else {
@@ -240,8 +216,8 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	protected void mergeRequiredBy(boolean rightToLeft) {
 		// TODO log back to the user what we will merge along?
 		for (Diff dependency : getRequiredBy()) {
-			if (dependency.getState() != DifferenceState.MERGED) { // TODO: what to do when state = Discarded
-				// but is required?
+			// TODO: what to do when state = Discarded but is required?
+			if (dependency.getState() != DifferenceState.MERGED) {
 				if (rightToLeft) {
 					dependency.copyRightToLeft();
 				} else {
@@ -261,8 +237,8 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	protected void mergeRequires(boolean rightToLeft) {
 		// TODO log back to the user what we will merge along?
 		for (Diff dependency : getRequires()) {
-			if (dependency.getState() != DifferenceState.MERGED) { // TODO: what to do when state = Discarded
-																	// but is required?
+			// TODO: what to do when state = Discarded but is required?
+			if (dependency.getState() != DifferenceState.MERGED) {
 				if (rightToLeft) {
 					dependency.copyRightToLeft();
 				} else {
@@ -288,24 +264,28 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 		final Comparison comparison = getMatch().getComparison();
 		final Match valueMatch = comparison.getMatch(getValue());
 
-		if (expectedContainer == null || valueMatch == null) {
-			// TODO throws exception?
-		} else if (rightToLeft && valueMatch.getLeft() == null || !rightToLeft
-				&& valueMatch.getRight() == null) {
-			// TODO should not happen : one of our requires should have created the value if needed
+		if (expectedContainer == null) {
+			// FIXME throw exception? log? re-try to merge our requirements?
+			// one of the "required" diffs should have created our container.
+			return;
+		}
+
+		final EObject expectedValue;
+		if (valueMatch == null) {
+			// The value being moved is out of the scope
+			// Whether it is a proxy or not, move the value itself.
+			expectedValue = getValue();
 		} else {
-			final EObject expectedValue;
 			if (rightToLeft) {
 				expectedValue = valueMatch.getLeft();
 			} else {
 				expectedValue = valueMatch.getRight();
 			}
-
-			// We now know the target container, target reference and target value.
-			doMove(comparison, expectedContainer, expectedValue, rightToLeft);
-
-			// TODO check that XMI IDs were preserved
 		}
+		// We now know the target container, target reference and target value.
+		doMove(comparison, expectedContainer, expectedValue, rightToLeft);
+
+		// TODO check that XMI IDs were preserved
 	}
 
 	/**
@@ -381,57 +361,62 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			expectedContainer = getMatch().getRight();
 		}
 		final Comparison comparison = getMatch().getComparison();
-		final Match valueMatch;
-		if (getValue() != null) {
-			valueMatch = comparison.getMatch(getValue());
-		} else {
-			valueMatch = null;
-		}
 
-		if (expectedContainer == null || valueMatch == null) {
+		if (expectedContainer == null) {
 			// FIXME throw exception? log? re-try to merge our requirements?
 			// one of the "required" diffs should have created our container.
-		} else {
-			final EObject expectedValue;
-			if (rightToLeft) {
-				if (getReference().isContainment()) {
-					expectedValue = createTarget(getValue());
-					valueMatch.setLeft(expectedValue);
-				} else {
-					expectedValue = valueMatch.getLeft();
-				}
+			return;
+		}
+
+		final EObject expectedValue;
+		final Match valueMatch = comparison.getMatch(getValue());
+		if (valueMatch == null) {
+			// This is an out of scope value.
+			if (getValue().eIsProxy()) {
+				// Copy the proxy
+				expectedValue = EcoreUtil.copy(getValue());
 			} else {
-				if (getReference().isContainment()) {
-					expectedValue = createTarget(getValue());
-					valueMatch.setRight(expectedValue);
-				} else {
-					expectedValue = valueMatch.getRight();
-				}
+				// Use the same value.
+				expectedValue = getValue();
 			}
-
-			// We have the container, reference and value. We need to know the insertion index.
-			if (getReference().isMany()) {
-				final int insertionIndex = DiffUtil.findInsertionIndex(comparison, this, rightToLeft);
-
-				final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(getReference());
-
-				if (targetList instanceof InternalEList<?>) {
-					((InternalEList<EObject>)targetList).addUnique(insertionIndex, expectedValue);
-				} else {
-					targetList.add(insertionIndex, expectedValue);
-				}
-			} else {
-				expectedContainer.eSet(getReference(), expectedValue);
-			}
-
+		} else if (rightToLeft) {
 			if (getReference().isContainment()) {
-				// Copy XMI ID when applicable.
-				final Resource initialResource = getValue().eResource();
-				final Resource targetResource = expectedValue.eResource();
-				if (initialResource instanceof XMIResource && targetResource instanceof XMIResource) {
-					((XMIResource)targetResource).setID(expectedValue, ((XMIResource)initialResource)
-							.getID(getValue()));
-				}
+				expectedValue = createTarget(getValue());
+				valueMatch.setLeft(expectedValue);
+			} else {
+				expectedValue = valueMatch.getLeft();
+			}
+		} else {
+			if (getReference().isContainment()) {
+				expectedValue = createTarget(getValue());
+				valueMatch.setRight(expectedValue);
+			} else {
+				expectedValue = valueMatch.getRight();
+			}
+		}
+
+		// We have the container, reference and value. We need to know the insertion index.
+		if (getReference().isMany()) {
+			final int insertionIndex = DiffUtil.findInsertionIndex(comparison, this, rightToLeft);
+
+			final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(getReference());
+
+			if (targetList instanceof InternalEList<?>) {
+				((InternalEList<EObject>)targetList).addUnique(insertionIndex, expectedValue);
+			} else {
+				targetList.add(insertionIndex, expectedValue);
+			}
+		} else {
+			expectedContainer.eSet(getReference(), expectedValue);
+		}
+
+		if (getReference().isContainment()) {
+			// Copy XMI ID when applicable.
+			final Resource initialResource = getValue().eResource();
+			final Resource targetResource = expectedValue.eResource();
+			if (initialResource instanceof XMIResource && targetResource instanceof XMIResource) {
+				((XMIResource)targetResource).setID(expectedValue, ((XMIResource)initialResource)
+						.getID(getValue()));
 			}
 		}
 	}
@@ -494,35 +479,41 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 		final Comparison comparison = getMatch().getComparison();
 		final Match valueMatch = comparison.getMatch(getValue());
 
-		if (currentContainer == null || valueMatch == null) {
+		if (currentContainer == null) {
 			// FIXME throw exception? log? re-try to merge our requirements?
+			// one of the "required" diffs should have created our container.
+			return;
+		}
+
+		final EObject expectedValue;
+		if (valueMatch == null) {
+			// value is out of the scope, use it as-is
+			expectedValue = getValue();
+		} else if (rightToLeft) {
+			expectedValue = valueMatch.getLeft();
 		} else {
-			final EObject expectedValue;
-			if (rightToLeft) {
-				expectedValue = valueMatch.getLeft();
-			} else {
-				expectedValue = valueMatch.getRight();
+			expectedValue = valueMatch.getRight();
+		}
+
+		// We have the container, reference and value to remove. Expected value can be null when the
+		// deletion was made on both side (i.e. a pseudo delete)
+		if (getReference().isContainment() && expectedValue != null) {
+			EcoreUtil.remove(expectedValue);
+			if (rightToLeft && valueMatch != null) {
+				valueMatch.setLeft(null);
+			} else if (valueMatch != null) {
+				valueMatch.setRight(null);
 			}
-			// We have the container, reference and value to remove. Expected value can be null when the
-			// deletion was made on both side (i.e. a pseudo delete)
-			if (getReference().isContainment() && expectedValue != null) {
-				EcoreUtil.remove(expectedValue);
-				if (rightToLeft) {
-					valueMatch.setLeft(null);
-				} else {
-					valueMatch.setRight(null);
-				}
-				// TODO remove dangling? remove empty Match?
-			} else if (getReference().isMany()) {
-				/*
-				 * TODO if the same value appears twice, should we try and find the one that has actually been
-				 * deleted? Can it happen? For now, remove the first occurence we find.
-				 */
-				final List<EObject> targetList = (List<EObject>)currentContainer.eGet(getReference());
-				targetList.remove(expectedValue);
-			} else {
-				currentContainer.eUnset(getReference());
-			}
+			// TODO remove dangling? remove empty Match?
+		} else if (getReference().isMany()) {
+			/*
+			 * TODO if the same value appears twice, should we try and find the one that has actually been
+			 * deleted? Can it happen? For now, remove the first occurence we find.
+			 */
+			final List<EObject> targetList = (List<EObject>)currentContainer.eGet(getReference());
+			targetList.remove(expectedValue);
+		} else {
+			currentContainer.eUnset(getReference());
 		}
 	}
 
@@ -561,7 +552,8 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					(EObject)originContainer.eGet(getReference()));
 			final EObject expectedValue;
 			if (valueMatch == null) {
-				expectedValue = null;
+				// Value is out of the scope, use it as-is
+				expectedValue = getValue();
 			} else if (rightToLeft) {
 				expectedValue = valueMatch.getLeft();
 			} else {
@@ -578,10 +570,16 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("reference", //$NON-NLS-1$
-				getReference().getEContainingClass().getName() + "." + getReference().getName()).add("value", //$NON-NLS-1$ //$NON-NLS-2$
-				EObjectUtil.getLabel(getValue())).add("parentMatch", getMatch().toString()).add(//$NON-NLS-1$
-				"match of value", getMatch().getComparison().getMatch(getValue())).add("kind", getKind()) //$NON-NLS-1$ //$NON-NLS-2$
-				.add("source", getSource()).add("state", getState()).toString(); //$NON-NLS-1$ //$NON-NLS-2$
+		// @formatter:off
+		// Formatting these would make them unreadable
+		return Objects.toStringHelper(this)
+					.add("reference", getReference().getEContainingClass().getName() + "." + getReference().getName()) //$NON-NLS-1$ //$NON-NLS-2$
+					.add("value", EObjectUtil.getLabel(getValue())) //$NON-NLS-1$
+					.add("parentMatch", getMatch().toString()) //$NON-NLS-1$
+					.add("match of value", getMatch().getComparison().getMatch(getValue())) //$NON-NLS-1$
+					.add("kind", getKind()) //$NON-NLS-1$
+					.add("source", getSource()) //$NON-NLS-1$
+					.add("state", getState()).toString(); //$NON-NLS-1$
+		// @formatter:on
 	}
 }
