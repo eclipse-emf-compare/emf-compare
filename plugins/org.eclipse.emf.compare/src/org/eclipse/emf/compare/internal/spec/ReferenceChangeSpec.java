@@ -66,11 +66,16 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					break;
 				case CHANGE:
 					// Is it an unset?
-					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
-					if (valueMatch != null && getValue() != valueMatch.getLeft()) {
-						removeFromTarget(false);
+					if (getMatch().getLeft() != null) {
+						final EObject leftValue = (EObject)getMatch().getLeft().eGet(getReference(), false);
+						if (leftValue == null) {
+							removeFromTarget(false);
+						} else {
+							addInTarget(false);
+						}
 					} else {
-						addInTarget(false);
+						// we have no left, and the source is on the left. Can only be an unset
+						removeFromTarget(false);
 					}
 					break;
 				default:
@@ -94,14 +99,19 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					break;
 				case CHANGE:
 					// Is it an unset?
-					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
-					if (valueMatch != null && getValue() != valueMatch.getRight()) {
-						// Value has been unset in the right, and we are merging towards right.
-						// We need to re-add this element
-						addInTarget(false);
+					if (getMatch().getRight() != null) {
+						final EObject rightValue = (EObject)getMatch().getRight().eGet(getReference(), false);
+						if (rightValue == null) {
+							// Value has been unset in the right, and we are merging towards right.
+							// We need to re-add this element
+							addInTarget(false);
+						} else {
+							// We'll actually need to "reset" this reference to its original value
+							resetInTarget(false);
+						}
 					} else {
-						// We'll actually need to "reset" this reference to its original value
-						resetInTarget(false);
+						// we have no right, and the source is on the right. Can only be an unset
+						addInTarget(false);
 					}
 					break;
 				default:
@@ -147,14 +157,19 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					break;
 				case CHANGE:
 					// Is it an unset?
-					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
-					if (valueMatch != null && getValue() != valueMatch.getLeft()) {
-						// Value has been unset in the left, and we're copying towards the left.
-						// We need to re-create the element.
-						addInTarget(true);
+					if (getMatch().getLeft() != null) {
+						final EObject leftValue = (EObject)getMatch().getLeft().eGet(getReference(), false);
+						if (leftValue == null) {
+							// Value has been unset in the right, and we are merging towards right.
+							// We need to re-add this element
+							addInTarget(true);
+						} else {
+							// We'll actually need to "reset" this reference to its original value
+							resetInTarget(true);
+						}
 					} else {
-						// We'll actually need to "reset" this reference to its original value
-						resetInTarget(true);
+						// we have no left, and the source is on the left. Can only be an unset
+						addInTarget(true);
 					}
 					break;
 				default:
@@ -176,11 +191,16 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					break;
 				case CHANGE:
 					// Is it an unset?
-					final Match valueMatch = getMatch().getComparison().getMatch(getValue());
-					if (valueMatch != null && getValue() != valueMatch.getRight()) {
-						removeFromTarget(true);
+					if (getMatch().getRight() != null) {
+						final EObject rightValue = (EObject)getMatch().getRight().eGet(getReference(), false);
+						if (rightValue == null) {
+							removeFromTarget(true);
+						} else {
+							addInTarget(true);
+						}
 					} else {
-						addInTarget(true);
+						// we have no right, and the source is on the right. Can only be an unset
+						removeFromTarget(true);
 					}
 					break;
 				default:
