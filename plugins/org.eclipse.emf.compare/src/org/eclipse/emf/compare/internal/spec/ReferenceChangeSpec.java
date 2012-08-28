@@ -548,12 +548,12 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 				|| !originContainer.eIsSet(getReference())) {
 			targetContainer.eUnset(getReference());
 		} else {
-			final Match valueMatch = getMatch().getComparison().getMatch(
-					(EObject)originContainer.eGet(getReference()));
+			final EObject originalValue = (EObject)originContainer.eGet(getReference());
+			final Match valueMatch = getMatch().getComparison().getMatch(originalValue);
 			final EObject expectedValue;
 			if (valueMatch == null) {
 				// Value is out of the scope, use it as-is
-				expectedValue = getValue();
+				expectedValue = originalValue;
 			} else if (rightToLeft) {
 				expectedValue = valueMatch.getLeft();
 			} else {

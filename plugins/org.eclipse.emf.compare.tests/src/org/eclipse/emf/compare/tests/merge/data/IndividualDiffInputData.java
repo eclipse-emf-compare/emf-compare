@@ -177,4 +177,16 @@ public class IndividualDiffInputData extends AbstractInputData {
 	public Resource getReferenceMonoChangeRightOutOfScope() throws IOException {
 		return loadFromClassloader("outofscope/referencemonochange/right.nodes");
 	}
+
+	public Resource getReferenceMonoSetLeftOutOfScope() throws IOException {
+		return loadFromClassloader("outofscope/referencemonoset/left.nodes");
+	}
+
+	public Resource getReferenceMonoSetOriginOutOfScope() throws IOException {
+		return loadFromClassloader("outofscope/referencemonoset/origin.nodes");
+	}
+
+	public Resource getReferenceMonoSetRightOutOfScope() throws IOException {
+		return loadFromClassloader("outofscope/referencemonoset/right.nodes");
+	}
 }
