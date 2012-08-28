@@ -582,6 +582,8 @@ public class ReqComputingTest {
 			}
 		}
 		assertNotNull(singleChange);
+		// Happy compiler
+		assert singleChange != null;
 		assertTrue(singleChange.getValue().eIsProxy());
 		assertSame(0, added1.getRequires().size());
 		assertSame(1, added2.getRequires().size());
