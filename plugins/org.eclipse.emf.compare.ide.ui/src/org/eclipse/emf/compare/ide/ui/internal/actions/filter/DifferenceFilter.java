@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGroup;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.DiffNode;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.MatchNode;
 import org.eclipse.emf.ecore.EObject;
@@ -75,6 +76,10 @@ public class DifferenceFilter extends ViewerFilter {
 			result = !predicate.apply(diff);
 		} else if (element instanceof MatchNode) {
 			final Iterator<Diff> differences = ((MatchNode)element).getTarget().getAllDifferences()
+					.iterator();
+			result = Iterators.any(differences, not(predicate));
+		} else if (element instanceof DifferenceGroup) {
+			final Iterator<? extends Diff> differences = ((DifferenceGroup)element).getDifferences()
 					.iterator();
 			result = Iterators.any(differences, not(predicate));
 		} else if (element instanceof Adapter && ((Adapter)element).getTarget() instanceof EObject) {
