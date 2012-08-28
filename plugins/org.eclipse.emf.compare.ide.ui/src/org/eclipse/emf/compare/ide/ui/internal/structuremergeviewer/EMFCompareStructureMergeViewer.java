@@ -213,15 +213,19 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 
 		Object previousResult = getCompareConfiguration().getProperty(EMFCompareConstants.COMPARE_RESULT);
 		if (previousResult instanceof Comparison) {
-			fRoot = previousResult;
-
+			fRoot = fAdapterFactory.adapt(previousResult, IDiffElement.class);
 			getCompareConfiguration().getContainer().runAsynchronously(new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException,
 						InterruptedException {
+					String message = null;
+					if (((Comparison)fRoot).getDifferences().isEmpty()) {
+						message = "No Differences"; //$NON-NLS-1$
+					}
+
 					if (Display.getCurrent() != null) {
-						refreshAfterDiff("my message", fRoot);
+						refreshAfterDiff(message, fRoot);
 					} else {
-						final String theMessage = "my message";
+						final String theMessage = message;
 						Display.getDefault().asyncExec(new Runnable() {
 							public void run() {
 								refreshAfterDiff(theMessage, fRoot);
@@ -238,7 +242,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 
 				// TODO: run with a progress monitor.
 				EMFCompareConfiguration emfCompareConfiguration = EMFCompareConfiguration.builder().build();
-				Comparison compareResult = EMFCompare.compare(leftResourceSet, rightResourceSet,
+				final Comparison compareResult = EMFCompare.compare(leftResourceSet, rightResourceSet,
 						ancestorResourceSet, emfCompareConfiguration);
 				EMFCompareEditingDomain editingDomain = new EMFCompareEditingDomain(compareResult,
 						leftResourceSet, rightResourceSet, ancestorResourceSet);
@@ -251,10 +255,15 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				getCompareConfiguration().getContainer().runAsynchronously(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException,
 							InterruptedException {
+						String message = null;
+						if (((Comparison)compareResult).getDifferences().isEmpty()) {
+							message = "No Differences"; //$NON-NLS-1$
+						}
+
 						if (Display.getCurrent() != null) {
-							refreshAfterDiff("my message", fRoot);
+							refreshAfterDiff(message, fRoot);
 						} else {
-							final String theMessage = "my message";
+							final String theMessage = message;
 							Display.getDefault().asyncExec(new Runnable() {
 								public void run() {
 									refreshAfterDiff(theMessage, fRoot);
