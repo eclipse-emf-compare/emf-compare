@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Sash;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.ui.actions.ActionFactory;
 
@@ -229,11 +230,17 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 		fLeft = createMergeViewer(composite, MergeViewerSide.LEFT);
 		fLeft.addSelectionChangedListener(this);
-		fLeft.getControl().getVerticalBar().setVisible(false);
+		ScrollBar leftVerticalBar = fLeft.getControl().getVerticalBar();
+		if (leftVerticalBar != null) {
+			leftVerticalBar.setVisible(false);
+		}
 
 		fRight = createMergeViewer(composite, MergeViewerSide.RIGHT);
 		fRight.addSelectionChangedListener(this);
-		fRight.getControl().getVerticalBar().setVisible(false);
+		ScrollBar rightVerticalBar = fRight.getControl().getVerticalBar();
+		if (rightVerticalBar != null) {
+			rightVerticalBar.setVisible(false);
+		}
 
 		fColors = new EMFCompareColor(this, null, getCompareConfiguration());
 	}
