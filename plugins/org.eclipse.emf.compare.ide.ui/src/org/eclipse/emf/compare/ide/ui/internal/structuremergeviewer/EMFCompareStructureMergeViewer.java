@@ -405,7 +405,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			try {
 				stream = ((IStreamContentAccessor)typedElement).getContents();
 				String name = typedElement.getName();
-				resourceSet = getResourceSet(stream, name, monitor);
+				resourceSet = getResourceSet(stream, name);
 			} catch (CoreException e) {
 				EMFCompareIDEUIPlugin.getDefault().log(e);
 			} finally {
@@ -415,8 +415,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		return resourceSet;
 	}
 
-	private static ResourceSet getResourceSet(InputStream stream, String resourceName,
-			IProgressMonitor monitor) {
+	private static ResourceSet getResourceSet(InputStream stream, String resourceName) {
 		ResourceSet resourceSet = new ResourceSetImpl();
 		Resource resource = resourceSet.createResource(URI.createURI(resourceName));
 		try {
