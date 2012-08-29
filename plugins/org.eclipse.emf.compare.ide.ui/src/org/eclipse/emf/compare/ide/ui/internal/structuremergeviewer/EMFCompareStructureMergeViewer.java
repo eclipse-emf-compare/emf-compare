@@ -174,13 +174,12 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	}
 
 	protected void contentChanged(final IContentChangeNotifier changed) {
-		System.out.println("EMFCompareStructureMergeViewer.contentChanged()");
 		// refresh diff
 	}
 
 	private IRunnableWithProgress inputChangedTask = new IRunnableWithProgress() {
 		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-			monitor.beginTask("Computing Structure Differences", 100);
+			monitor.beginTask("Computing Structure Differences", 100); //$NON-NLS-1$
 			// TODO: Should we always force
 			compareInputChanged((ICompareInput)getInput(), true, new SubProgressMonitor(monitor, 100));
 			monitor.done();

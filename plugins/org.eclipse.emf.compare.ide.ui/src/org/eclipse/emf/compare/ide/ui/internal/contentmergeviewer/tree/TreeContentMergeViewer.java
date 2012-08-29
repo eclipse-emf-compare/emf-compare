@@ -133,7 +133,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void copy(boolean leftToRight) {
-		System.out.println("TreeContentMergeViewer.copy()");
+		// do nothing
 	}
 
 	/**
