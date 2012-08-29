@@ -67,7 +67,8 @@ public class EMFResourceMapping extends ResourceMapping {
 	 */
 	private static final Predicate<Resource> FILE_OR_PLATFORM_RESOURCE_RESOURCE = new Predicate<Resource>() {
 		public boolean apply(Resource input) {
-			return input.getURI().isFile() || input.getURI().isPlatformResource();
+			return input != null && input.getURI() != null
+					&& (input.getURI().isFile() || input.getURI().isPlatformResource());
 		}
 	};
 
