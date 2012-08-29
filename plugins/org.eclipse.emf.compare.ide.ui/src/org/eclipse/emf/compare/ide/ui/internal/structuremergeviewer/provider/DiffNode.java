@@ -73,6 +73,9 @@ public class DiffNode extends AbstractEDiffNode {
 				case RIGHT:
 					ret |= Differencer.RIGHT;
 					break;
+				default:
+					// Cannot happen ... for now.
+					break;
 			}
 			if (conflict != null) {
 				ret |= Differencer.CONFLICTING;
@@ -94,8 +97,12 @@ public class DiffNode extends AbstractEDiffNode {
 					ret |= Differencer.DELETION;
 					break;
 				case CHANGE:
+					// fallthrough
 				case MOVE:
 					ret |= Differencer.CHANGE;
+					break;
+				default:
+					// Cannot happen ... for now
 					break;
 			}
 		} else {
@@ -107,8 +114,12 @@ public class DiffNode extends AbstractEDiffNode {
 					ret |= Differencer.ADDITION;
 					break;
 				case CHANGE:
+					// fallthrough
 				case MOVE:
 					ret |= Differencer.CHANGE;
+					break;
+				default:
+					// Cannot happen ... for now
 					break;
 			}
 		}
