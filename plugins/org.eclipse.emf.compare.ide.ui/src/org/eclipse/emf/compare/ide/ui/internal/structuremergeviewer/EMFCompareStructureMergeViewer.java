@@ -41,7 +41,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.emf.common.command.CommandStackListener;
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
@@ -477,84 +476,6 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * We'll use this in order to compare our diff nodes through their target's {@link Object#equals(Object)}
-	 * instead of the nodes' own equals (which only resorts to instance equality).
-	 * <p>
-	 * Note that this will fall back to the default behavior for anything that is not an
-	 * {@link AbstractEDiffElement}.
-	 * </p>
-	 * <p>
-	 * This class most likely breaks the implicit contract of equals() since we are comparing
-	 * AbstractEDiffElement through two different means : if we have a target, use it... otherwise fall back
-	 * to instance equality. Both equals() and hashCode() follow this same rule.
-	 * </p>
-	 */
-	private class DiffNodeComparer implements IElementComparer {
-		/** Our delegate comparer. May be {@code null}. */
-		private IElementComparer delegate;
-
-		/**
-		 * Constructs this comparer given the previous one that was installed on this viewer.
-		 * 
-		 * @param delegate
-		 *            The comparer to which we should delegate our default behavior. May be {@code null}.
-		 */
-		public DiffNodeComparer(IElementComparer delegate) {
-			this.delegate = delegate;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.jface.viewers.IElementComparer#equals(java.lang.Object, java.lang.Object)
-		 */
-		public boolean equals(Object a, Object b) {
-			final boolean equal;
-			if (a instanceof AbstractEDiffElement && b instanceof AbstractEDiffElement) {
-				final Notifier targetA = ((AbstractEDiffElement)a).getTarget();
-				if (targetA == null) {
-					// Fall back to default behavior
-					equal = a.equals(b);
-				} else {
-					equal = targetA.equals(((AbstractEDiffElement)b).getTarget());
-				}
-			} else if (delegate != null) {
-				equal = delegate.equals(a, b);
-			} else if (a != null) {
-				equal = a.equals(b);
-			} else {
-				equal = b == null;
-			}
-			return equal;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.jface.viewers.IElementComparer#hashCode(java.lang.Object)
-		 */
-		public int hashCode(Object element) {
-			final int hashCode;
-			if (element instanceof AbstractEDiffElement) {
-				final Notifier target = ((AbstractEDiffElement)element).getTarget();
-				if (target == null) {
-					// Fall back to default behavior
-					hashCode = element.hashCode();
-				} else {
-					hashCode = target.hashCode();
-				}
-			} else if (delegate != null) {
-				hashCode = delegate.hashCode(element);
-			} else if (element != null) {
-				hashCode = element.hashCode();
-			} else {
-				hashCode = 0;
-			}
-			return hashCode;
-		}
 	}
 
 	/**
