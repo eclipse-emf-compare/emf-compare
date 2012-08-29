@@ -58,7 +58,6 @@ Take note that EMF Compare will use the very first model resolver that can be ap
       <complexType>
          <choice>
             <element ref="fileExtension"/>
-            <element ref="contentType"/>
             <element ref="namespace"/>
          </choice>
          <attribute name="class" type="string" use="required">
@@ -82,25 +81,6 @@ Take note that EMF Compare will use the very first model resolver that can be ap
 Note : &quot;*&quot; is accepted as a wildcard for all extensions ... but should not be used as it would prevent any other model resolver to be provided to the framework.
 
 Example : &lt;fileExtension value=&quot;uml, ecore&quot;/&gt;
-         </documentation>
-      </annotation>
-      <complexType>
-         <attribute name="value" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
-      </complexType>
-   </element>
-
-   <element name="contentType">
-      <annotation>
-         <documentation>
-            Content type of the files that this model resolver consider as part of the models it can resolve. Can be multiple content types identifiers separated with commas.
-
-Example : &lt;contentType value=&quot;org.eclipse.emf.ecore, org.eclipse.emf.ecore.xmi&quot;/&gt;
          </documentation>
       </annotation>
       <complexType>

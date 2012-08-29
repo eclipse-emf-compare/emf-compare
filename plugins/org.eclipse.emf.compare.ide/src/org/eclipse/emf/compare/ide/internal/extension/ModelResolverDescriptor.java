@@ -27,9 +27,6 @@ public class ModelResolverDescriptor {
 	/** Name of the attribute holding the file extension(s) this resolver applies to. */
 	public static final String MODEL_RESOLVER_FILE_EXTENSION_TAG = "fileExtension"; //$NON-NLS-1$
 
-	/** Name of the attribute holding the content type(s) this resolver applies to. */
-	public static final String MODEL_RESOLVER_CONTENT_TYPE_TAG = "contentType"; //$NON-NLS-1$
-
 	/** Name of the attribute holding the namespace(s) this resolver applies to. */
 	public static final String MODEL_RESOLVER_NAMESPACE_TAG = "namespace"; //$NON-NLS-1$
 
@@ -44,9 +41,6 @@ public class ModelResolverDescriptor {
 
 	/** Qualified class name of the model resolver. This will be used as an id to remove contributions. */
 	private final String extensionClassName;
-
-	/** Content type(s) of the models this resolver applies to. */
-	private final String contentType;
 
 	/** File extension(s) of the models this resolver applies to. */
 	private final String fileExtension;
@@ -66,13 +60,6 @@ public class ModelResolverDescriptor {
 	public ModelResolverDescriptor(IConfigurationElement element) {
 		this.element = element;
 		this.extensionClassName = element.getAttribute(MODEL_RESOLVER_CLASS_ATTRIBUTE);
-
-		IConfigurationElement[] contentTypeConfig = element.getChildren(MODEL_RESOLVER_CONTENT_TYPE_TAG);
-		if (contentTypeConfig.length > 0) {
-			contentType = contentTypeConfig[0].getAttribute(ENABLEMENT_TAG_VALUE);
-		} else {
-			contentType = null;
-		}
 
 		IConfigurationElement[] fileExtensionConfig = element.getChildren(MODEL_RESOLVER_FILE_EXTENSION_TAG);
 		if (fileExtensionConfig.length > 0) {
@@ -129,18 +116,6 @@ public class ModelResolverDescriptor {
 		if (!canResolve) {
 			canResolve = identifier.matchNamespace(namespace);
 		}
-		// FIXME how to handle content types while keeping the core standalone?
-		// if (contentType != null) {
-		// String[] validContentTypes = contentType.split(VALUE_SEPARATOR);
-		// IContentTypeManager ctManager = Platform.getContentTypeManager();
-		// for (int i = 0; i < validContentTypes.length && !canResolve; i++) {
-		// IContentType expected = ctManager.getContentType(validContentTypes[i].trim());
-		// IContentType actual = ctManager.getContentType(identifier.getContentType());
-		// if (expected != null && actual != null) {
-		// canResolve = actual.isKindOf(expected);
-		// }
-		// }
-		// }
 		return canResolve;
 	}
 }
