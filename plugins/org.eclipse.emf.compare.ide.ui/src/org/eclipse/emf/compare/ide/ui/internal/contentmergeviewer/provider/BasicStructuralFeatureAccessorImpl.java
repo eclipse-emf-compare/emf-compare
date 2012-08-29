@@ -113,7 +113,7 @@ public abstract class BasicStructuralFeatureAccessorImpl implements IStructuralF
 		return ContentMergeViewerConstants.REFERENCE_CHANGE_NODE_TYPE;
 	}
 
-	protected final EObject getEObject(MergeViewerSide side) {
+	public EObject getEObject(MergeViewerSide side) {
 		final EObject eObject;
 		switch (side) {
 			case ANCESTOR:
@@ -134,7 +134,7 @@ public abstract class BasicStructuralFeatureAccessorImpl implements IStructuralF
 	/**
 	 * @return the fStructuralFeature
 	 */
-	protected final EStructuralFeature getStructuralFeature() {
+	public EStructuralFeature getStructuralFeature() {
 		return fStructuralFeature;
 	}
 

@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Scrollable;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
@@ -178,12 +179,44 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#getLeftMergeViewer()
+	 */
+	@Override
+	protected TableMergeViewer getLeftMergeViewer() {
+		return (TableMergeViewer)super.getLeftMergeViewer();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#getRightMergeViewer()
+	 */
+	@Override
+	protected TableMergeViewer getRightMergeViewer() {
+		return (TableMergeViewer)super.getRightMergeViewer();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#getAncestorMergeViewer()
+	 */
+	@Override
+	protected TableMergeViewer getAncestorMergeViewer() {
+		return (TableMergeViewer)super.getAncestorMergeViewer();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#createMergeViewer(org.eclipse.swt.widgets.Composite,
 	 *      org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide)
 	 */
 	@Override
 	protected IMergeViewer<? extends Composite> createMergeViewer(Composite parent, final MergeViewerSide side) {
 		TableMergeViewer ret = new TableMergeViewer(parent, this, side);
+		ret.getStructuredViewer().getTable().getVerticalBar().setVisible(false);
+
 		ret.setContentProvider(new ArrayContentProvider());
 		ret.setLabelProvider(new AdapterFactoryLabelProvider.FontAndColorProvider(fAdapterFactory, ret
 				.getStructuredViewer()) {
@@ -229,14 +262,14 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 				return super.getColumnImage(object, columnIndex);
 			}
 		});
-		ret.getControl().getVerticalBar().addListener(SWT.Selection, new Listener() {
+		ret.getStructuredViewer().getTable().getVerticalBar().addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				if (getCenterControl() instanceof AbstractBufferedCanvas) {
 					((AbstractBufferedCanvas)getCenterControl()).repaint();
 				}
 			}
 		});
-		ret.getControl().addGestureListener(new GestureListener() {
+		ret.getStructuredViewer().getTable().addGestureListener(new GestureListener() {
 			public void gesture(GestureEvent e) {
 				if (e.detail == SWT.GESTURE_PAN) {
 					if (getCenterControl() instanceof AbstractBufferedCanvas) {
@@ -246,7 +279,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			}
 		});
 
-		ret.getControl().addMouseWheelListener(new MouseWheelListener() {
+		ret.getStructuredViewer().getTable().addMouseWheelListener(new MouseWheelListener() {
 			public void mouseScrolled(MouseEvent e) {
 				if (getCenterControl() instanceof AbstractBufferedCanvas) {
 					((AbstractBufferedCanvas)getCenterControl()).repaint();
@@ -271,16 +304,19 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void paintCenter(Canvas canvas, GC g) {
-		TableMergeViewer leftMergeViewer = (TableMergeViewer)getLeftMergeViewer();
-		TableMergeViewer rightMergeViewer = (TableMergeViewer)getRightMergeViewer();
+		TableMergeViewer leftMergeViewer = getLeftMergeViewer();
+		TableMergeViewer rightMergeViewer = getRightMergeViewer();
 
-		Rectangle leftClientArea = leftMergeViewer.getControl().getClientArea();
-		Rectangle rightClientArea = rightMergeViewer.getControl().getClientArea();
+		Table leftTable = leftMergeViewer.getStructuredViewer().getTable();
+		Table rightTable = rightMergeViewer.getStructuredViewer().getTable();
 
-		TableItem[] leftItems = leftMergeViewer.getControl().getItems();
-		TableItem[] rightItems = rightMergeViewer.getControl().getItems();
+		Rectangle leftClientArea = leftTable.getClientArea();
+		Rectangle rightClientArea = rightTable.getClientArea();
 
-		TableItem[] selection = leftMergeViewer.getControl().getSelection();
+		TableItem[] leftItems = leftTable.getItems();
+		TableItem[] rightItems = rightTable.getItems();
+
+		TableItem[] selection = leftTable.getSelection();
 
 		for (TableItem leftItem : leftItems) {
 			final boolean selected;
@@ -312,10 +348,12 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 		Rectangle leftBounds = leftItem.getBounds();
 		Rectangle rightBounds = rightItem.getBounds();
 
-		from.y = leftBounds.y + (leftBounds.height / 2) - leftClientArea.y + 1;
+		from.y = leftBounds.y + (leftBounds.height / 2) - leftClientArea.y + 1
+				+ getLeftMergeViewer().getVerticalOffset();
 
 		to.x = canvas.getBounds().width;
-		to.y = rightBounds.y + (rightBounds.height / 2) - rightClientArea.y + 1;
+		to.y = rightBounds.y + (rightBounds.height / 2) - rightClientArea.y + 1
+				+ getRightMergeViewer().getVerticalOffset();
 
 		int[] points = getCenterCurvePoints(from, to);
 		for (int i = 1; i < points.length; i++) {

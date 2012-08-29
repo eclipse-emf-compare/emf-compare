@@ -16,7 +16,9 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.AbstractMergeV
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewerItem;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.InsertionPoint;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.MergeViewerInfoComposite;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -24,8 +26,9 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
@@ -35,23 +38,27 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-class TableMergeViewer extends AbstractMergeViewer<Table> {
+class TableMergeViewer extends AbstractMergeViewer<Composite> {
 
 	private IStructuralFeatureAccessor fInput;
 
 	private final EMFCompareContentMergeViewer fContentMergeViewer;
 
+	private Composite c;
+
+	private MergeViewerInfoComposite mergeViewerInfoComposite;
+
 	TableMergeViewer(Composite parent, EMFCompareContentMergeViewer contentMergeViewer, MergeViewerSide side) {
 		super(parent, side);
 		fContentMergeViewer = contentMergeViewer;
 
-		getControl().addListener(SWT.EraseItem, new Listener() {
+		getStructuredViewer().getTable().addListener(SWT.EraseItem, new Listener() {
 			public void handleEvent(Event event) {
 				TableMergeViewer.this.handleEraseItemEvent(event);
 			}
 		});
 
-		getControl().addListener(SWT.MeasureItem, new Listener() {
+		getStructuredViewer().getTable().addListener(SWT.MeasureItem, new Listener() {
 			private Widget fLastWidget;
 
 			private int fLastHeight;
@@ -79,8 +86,8 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 	 * 
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#getControl()
 	 */
-	public Table getControl() {
-		return getStructuredViewer().getTable();
+	public Composite getControl() {
+		return c;
 	}
 
 	/**
@@ -90,8 +97,42 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 	 */
 	@Override
 	protected final TableViewer createStructuredViewer(Composite parent) {
-		return new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
+		c = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(1, false);
+		layout.marginLeft = -1;
+		layout.marginRight = -1;
+		layout.marginTop = -1;
+		layout.marginBottom = 0;
+		layout.horizontalSpacing = 0;
+		layout.verticalSpacing = 0;
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		c.setLayout(layout);
+
+		mergeViewerInfoComposite = new MergeViewerInfoComposite(c);
+		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		mergeViewerInfoComposite.setLayoutData(layoutData);
+
+		TableViewer tableViewer = new TableViewer(c, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL
 				| SWT.FULL_SELECTION);
+		tableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		return tableViewer;
+	}
+
+	public int getVerticalOffset() {
+		return mergeViewerInfoComposite.getSize().y - 2;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.AbstractMergeViewer#setLabelProvider(org.eclipse.jface.viewers.ILabelProvider)
+	 */
+	@Override
+	public void setLabelProvider(ILabelProvider labelProvider) {
+		super.setLabelProvider(labelProvider);
+		mergeViewerInfoComposite.setLabelProvider(labelProvider);
 	}
 
 	/**
@@ -113,6 +154,7 @@ class TableMergeViewer extends AbstractMergeViewer<Table> {
 		if (object instanceof IStructuralFeatureAccessor) {
 			fInput = (IStructuralFeatureAccessor)object;
 			getStructuredViewer().setInput(fInput.getItems());
+			mergeViewerInfoComposite.setInput(fInput, getSide());
 		} else {
 			fInput = null;
 			getStructuredViewer().setInput(null);
