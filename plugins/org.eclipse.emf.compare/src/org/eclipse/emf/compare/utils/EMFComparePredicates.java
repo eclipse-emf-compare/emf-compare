@@ -570,7 +570,8 @@ public final class EMFComparePredicates {
 	public static Predicate<? super Diff> hasPseudoConflict() {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
-				return input.getConflict() != null && input.getConflict().getKind() == ConflictKind.PSEUDO;
+				return input != null && input.getConflict() != null
+						&& input.getConflict().getKind() == ConflictKind.PSEUDO;
 			}
 		};
 	}
@@ -584,7 +585,8 @@ public final class EMFComparePredicates {
 	public static Predicate<? super Diff> hasRealConflict() {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
-				return input.getConflict() != null && input.getConflict().getKind() == ConflictKind.REAL;
+				return input != null && input.getConflict() != null
+						&& input.getConflict().getKind() == ConflictKind.REAL;
 			}
 		};
 	}
