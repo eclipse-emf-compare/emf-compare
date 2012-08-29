@@ -46,8 +46,8 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Scrollable;
@@ -264,36 +264,36 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 		});
 		ret.getStructuredViewer().getTable().getVerticalBar().addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				if (getCenterControl() instanceof AbstractBufferedCanvas) {
-					((AbstractBufferedCanvas)getCenterControl()).repaint();
-				}
+				redrawCenterControl();
 			}
 		});
 		ret.getStructuredViewer().getTable().addGestureListener(new GestureListener() {
 			public void gesture(GestureEvent e) {
 				if (e.detail == SWT.GESTURE_PAN) {
-					if (getCenterControl() instanceof AbstractBufferedCanvas) {
-						((AbstractBufferedCanvas)getCenterControl()).repaint();
-					}
+					redrawCenterControl();
 				}
 			}
 		});
 
 		ret.getStructuredViewer().getTable().addMouseWheelListener(new MouseWheelListener() {
 			public void mouseScrolled(MouseEvent e) {
-				if (getCenterControl() instanceof AbstractBufferedCanvas) {
-					((AbstractBufferedCanvas)getCenterControl()).repaint();
-				}
+				redrawCenterControl();
 			}
 		});
 		ret.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				if (getCenterControl() instanceof AbstractBufferedCanvas) {
-					((AbstractBufferedCanvas)getCenterControl()).repaint();
-				}
+				redrawCenterControl();
 			}
 		});
 		return ret;
+	}
+
+	private void redrawCenterControl() {
+		if (getCenterControl() instanceof AbstractBufferedCanvas) {
+			((AbstractBufferedCanvas)getCenterControl()).repaint();
+		} else {
+			getCenterControl().redraw();
+		}
 	}
 
 	/**
@@ -303,7 +303,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 *      org.eclipse.swt.graphics.GC)
 	 */
 	@Override
-	protected void paintCenter(Canvas canvas, GC g) {
+	protected void paintCenter(GC g) {
 		TableMergeViewer leftMergeViewer = getLeftMergeViewer();
 		TableMergeViewer rightMergeViewer = getRightMergeViewer();
 
@@ -341,7 +341,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 
 	private void drawCenterLine(GC g, Rectangle leftClientArea, Rectangle rightClientArea,
 			TableItem leftItem, TableItem rightItem) {
-		Canvas canvas = (Canvas)getCenterControl();
+		Control control = getCenterControl();
 		Point from = new Point(0, 0);
 		Point to = new Point(0, 0);
 
@@ -351,7 +351,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 		from.y = leftBounds.y + (leftBounds.height / 2) - leftClientArea.y + 1
 				+ getLeftMergeViewer().getVerticalOffset();
 
-		to.x = canvas.getBounds().width;
+		to.x = control.getBounds().width;
 		to.y = rightBounds.y + (rightBounds.height / 2) - rightClientArea.y + 1
 				+ getRightMergeViewer().getVerticalOffset();
 

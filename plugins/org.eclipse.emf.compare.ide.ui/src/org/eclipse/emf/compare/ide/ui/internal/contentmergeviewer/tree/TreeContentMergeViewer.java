@@ -31,7 +31,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 
@@ -203,7 +202,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	 *      org.eclipse.swt.graphics.GC)
 	 */
 	@Override
-	protected void paintCenter(Canvas canvas, GC g) {
+	protected void paintCenter(GC g) {
 
 	}
 
