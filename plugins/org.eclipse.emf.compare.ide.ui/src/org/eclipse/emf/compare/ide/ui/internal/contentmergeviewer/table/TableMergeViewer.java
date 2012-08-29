@@ -72,7 +72,8 @@ class TableMergeViewer extends AbstractMergeViewer<Composite> {
 				fLastWidget = event.item;
 				fLastHeight = event.height;
 				int newHeight = (int)(event.gc.getFontMetrics().getHeight() * 1.33d);
-				if (newHeight % 2 == 1) {
+				// If odd, make even
+				if ((newHeight & 1) == 1) {
 					newHeight += 1;
 				}
 				event.height = newHeight;
