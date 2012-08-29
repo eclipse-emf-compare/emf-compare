@@ -129,6 +129,7 @@ public class EObjectNode implements ITypedElement, IEObjectAccessor, IStreamCont
 			throw new CoreException(new Status(IStatus.ERROR, EMFCompareIDEUIPlugin.PLUGIN_ID,
 					e.getMessage(), e));
 		}
+		// Assume that the platform locale is appropriate.
 		return new ByteArrayInputStream(sw.toString().getBytes());
 	}
 
