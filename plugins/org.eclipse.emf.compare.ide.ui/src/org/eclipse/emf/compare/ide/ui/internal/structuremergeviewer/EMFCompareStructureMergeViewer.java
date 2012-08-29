@@ -296,10 +296,10 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				if (fInput instanceof IContentChangeNotifier && fContentChangedListener != null) {
 					((IContentChangeNotifier)fInput).removeContentChangeListener(fContentChangedListener);
 				}
-				fInput = newInput;
-				if (fInput instanceof IContentChangeNotifier && fContentChangedListener != null) {
-					((IContentChangeNotifier)fInput).addContentChangeListener(fContentChangedListener);
+				if (newInput instanceof IContentChangeNotifier && fContentChangedListener != null) {
+					((IContentChangeNotifier)newInput).addContentChangeListener(fContentChangedListener);
 				}
+				fInput = newInput;
 			}
 			return changed;
 		}
