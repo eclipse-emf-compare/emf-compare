@@ -210,9 +210,9 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 			expectedContainer = getMatch().getRight();
 		}
 
-		final Object currentValue = expectedContainer.eGet(attribute);
+		final Object currentValue = expectedContainer.eGet(getAttribute());
 		// Though not the "default value", we consider that an empty string is an unset attribute.
-		final Object defaultValue = attribute.getDefaultValue();
+		final Object defaultValue = getAttribute().getDefaultValue();
 		return currentValue == null || currentValue.equals(defaultValue)
 				|| (defaultValue == null && "".equals(currentValue)); //$NON-NLS-1$
 	}
