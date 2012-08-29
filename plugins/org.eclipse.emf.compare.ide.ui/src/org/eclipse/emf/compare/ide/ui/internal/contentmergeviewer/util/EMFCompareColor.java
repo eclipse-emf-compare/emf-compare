@@ -55,8 +55,6 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 
 	private RGB fOutgoingFill;
 
-	private RGB fResolved;
-
 	private final Cache<RGB, Color> fColors;
 
 	private final ContentMergeViewer fContentMergeViewer;
@@ -221,11 +219,6 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 		}
 		fConflict = interpolate(fConflictSelected, bg, 0.6);
 		fConflictFill = interpolate(fConflictSelected, bg, 0.97);
-
-		fResolved = registry.getRGB(EMFCompareConstants.RESOLVED_COLOR);
-		if (fResolved == null) {
-			fResolved = new RGB(0, 255, 0); // GREEN
-		}
 	}
 
 	private static RGB interpolate(RGB fg, RGB bg, double scale) {
