@@ -81,6 +81,9 @@ public class ImageProvider {
 							path += "in";
 						}
 						break;
+					default:
+						// Cannot happen ... for now
+						break;
 				}
 			}
 
@@ -92,8 +95,12 @@ public class ImageProvider {
 					path += "del_ov";
 					break;
 				case CHANGE:
+					// fallthrough
 				case MOVE:
 					path += "chg_ov";
+					break;
+				default:
+					// Cannot happen ... for now
 					break;
 			}
 			path += filext;
@@ -121,6 +128,7 @@ public class ImageProvider {
 				}
 				break;
 			case CHANGE:
+				// fallthrough
 			case MOVE:
 				path = "chg_ov.gif";
 				break;
