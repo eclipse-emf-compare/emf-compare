@@ -186,8 +186,6 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		}
 	};
 
-	private ToolBarManager fToolbarManager;
-
 	void compareInputChanged(ICompareInput input, boolean force, IProgressMonitor monitor) {
 		ITypedElement t = null;
 
@@ -328,11 +326,10 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	 */
 	@Override
 	protected void createToolItems(ToolBarManager toolbarManager) {
-		fToolbarManager = toolbarManager;
 		super.createToolItems(toolbarManager);
 
-		fToolbarManager.add(new GroupActionMenu(getDifferenceGrouper()));
-		fToolbarManager.add(new FilterActionMenu(getDifferenceFilter()));
+		toolbarManager.add(new GroupActionMenu(getDifferenceGrouper()));
+		toolbarManager.add(new FilterActionMenu(getDifferenceFilter()));
 	}
 
 	/**
