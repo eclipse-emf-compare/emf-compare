@@ -13,8 +13,6 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
-import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -30,7 +28,6 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.graphics.GC;
@@ -39,8 +36,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 
 /**
- * Specialized {@link ContentMergeViewer} that uses {@link TreeViewer} to display left, right and ancestor
- * {@link EObject}.
+ * Specialized {@link org.eclipse.compare.contentmergeviewer.ContentMergeViewer} that uses
+ * {@link org.eclipse.jface.viewers.TreeViewer} to display left, right and ancestor {@link EObject}.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
@@ -52,8 +49,9 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	private static final String BUNDLE_NAME = TreeContentMergeViewer.class.getName();
 
 	/**
-	 * The {@link AdapterFactory} used to create {@link AdapterFactoryContentProvider} and
-	 * {@link AdapterFactoryLabelProvider} for ancestor, left and right {@link TreeViewer}.
+	 * The {@link org.eclipse.emf.common.notify.AdapterFactory} used to create
+	 * {@link AdapterFactoryContentProvider} and {@link AdapterFactoryLabelProvider} for ancestor, left and
+	 * right {@link org.eclipse.jface.viewers.TreeViewer}.
 	 */
 	private final ComposedAdapterFactory fAdapterFactory;
 

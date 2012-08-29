@@ -13,7 +13,6 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;
 import com.google.common.collect.ImmutableList;
 
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewerItem;
 import org.eclipse.emf.ecore.EObject;

@@ -12,12 +12,11 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IViewerCreator;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * A {@link IViewerCreator} that creates {@link TreeContentMergeViewer}.
+ * A {@link IViewerCreator} that creates {@link TableContentMergeViewer}.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */

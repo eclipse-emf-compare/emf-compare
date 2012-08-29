@@ -14,7 +14,6 @@ import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.jface.viewers.ILabelProvider;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -50,8 +49,9 @@ public final class DiffInsertionPoint {
 	}
 
 	/**
-	 * Returns an empty String to avoid having to override {@link ILabelProvider#getText(Object)} to do not
-	 * display anything for insertion point. {@inheritDoc}
+	 * Returns an empty String to avoid having to override
+	 * {@link org.eclipse.jface.viewers.ILabelProvider#getText(Object)} to do not display anything for
+	 * insertion point. {@inheritDoc}
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
