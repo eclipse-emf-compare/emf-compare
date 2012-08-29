@@ -139,7 +139,7 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 	}
 
 	private RGB getFillRGB(Diff diff, boolean isThreeWay, boolean isIgnoreAncestor, boolean selected) {
-		RGB selected_fill = getBackground();
+		RGB selectedFill = getBackground();
 		if (isThreeWay && !isIgnoreAncestor) {
 			boolean requiredConflictForWayOfMerge = false;
 
@@ -147,21 +147,21 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 				switch (diff.getSource()) {
 					case RIGHT:
 						if (fLeftIsLocal) {
-							return selected ? selected_fill : fIncomingFill;
+							return selected ? selectedFill : fIncomingFill;
 						}
-						return selected ? selected_fill : fOutgoingFill;
+						return selected ? selectedFill : fOutgoingFill;
 					case LEFT:
 						if (fLeftIsLocal) {
-							return selected ? selected_fill : fOutgoingFill;
+							return selected ? selectedFill : fOutgoingFill;
 						}
-						return selected ? selected_fill : fIncomingFill;
+						return selected ? selectedFill : fIncomingFill;
 				}
 			} else {
-				return selected ? selected_fill : fConflictFill;
+				return selected ? selectedFill : fConflictFill;
 			}
-			return selected ? selected_fill : fConflictFill;
+			return selected ? selectedFill : fConflictFill;
 		}
-		return selected ? selected_fill : fOutgoingFill;
+		return selected ? selectedFill : fOutgoingFill;
 	}
 
 	public Color getStrokeColor(Diff diff, boolean isThreeWay, boolean isIgnoreAncestor, boolean selected) {
