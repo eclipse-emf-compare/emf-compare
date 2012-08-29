@@ -147,7 +147,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	void compareInputChanged(ICompareInput input, boolean force) {
 		if (input == null) {
 			// When closing, we don't need a progress monitor to handle the input change
-			compareInputChanged(input, force, null);
+			compareInputChanged(null, force, null);
 			return;
 		}
 		CompareConfiguration cc = getCompareConfiguration();
@@ -234,45 +234,43 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 					}
 				}
 			});
-		} else {
-			if (input != null) {
-				ResourceSet leftResourceSet = getResourceSetFrom(input.getLeft(), monitor);
-				ResourceSet rightResourceSet = getResourceSetFrom(input.getRight(), monitor);
-				ResourceSet ancestorResourceSet = getResourceSetFrom(input.getAncestor(), monitor);
+		} else if (input != null) {
+			ResourceSet leftResourceSet = getResourceSetFrom(input.getLeft(), monitor);
+			ResourceSet rightResourceSet = getResourceSetFrom(input.getRight(), monitor);
+			ResourceSet ancestorResourceSet = getResourceSetFrom(input.getAncestor(), monitor);
 
-				// TODO: run with a progress monitor.
-				EMFCompareConfiguration emfCompareConfiguration = EMFCompareConfiguration.builder().build();
-				final Comparison compareResult = EMFCompare.compare(leftResourceSet, rightResourceSet,
-						ancestorResourceSet, emfCompareConfiguration);
-				EMFCompareEditingDomain editingDomain = new EMFCompareEditingDomain(compareResult,
-						leftResourceSet, rightResourceSet, ancestorResourceSet);
-				getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);
+			// TODO: run with a progress monitor.
+			EMFCompareConfiguration emfCompareConfiguration = EMFCompareConfiguration.builder().build();
+			final Comparison compareResult = EMFCompare.compare(leftResourceSet, rightResourceSet,
+					ancestorResourceSet, emfCompareConfiguration);
+			EMFCompareEditingDomain editingDomain = new EMFCompareEditingDomain(compareResult,
+					leftResourceSet, rightResourceSet, ancestorResourceSet);
+			getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);
 
-				editingDomain.getCommandStack().addCommandStackListener(this);
-				fRoot = fAdapterFactory.adapt(compareResult, IDiffElement.class);
-				getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, fRoot);
+			editingDomain.getCommandStack().addCommandStackListener(this);
+			fRoot = fAdapterFactory.adapt(compareResult, IDiffElement.class);
+			getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, fRoot);
 
-				getCompareConfiguration().getContainer().runAsynchronously(new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InvocationTargetException,
-							InterruptedException {
-						String message = null;
-						if (((Comparison)compareResult).getDifferences().isEmpty()) {
-							message = "No Differences"; //$NON-NLS-1$
-						}
-
-						if (Display.getCurrent() != null) {
-							refreshAfterDiff(message, fRoot);
-						} else {
-							final String theMessage = message;
-							Display.getDefault().asyncExec(new Runnable() {
-								public void run() {
-									refreshAfterDiff(theMessage, fRoot);
-								}
-							});
-						}
+			getCompareConfiguration().getContainer().runAsynchronously(new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException,
+						InterruptedException {
+					String message = null;
+					if (((Comparison)compareResult).getDifferences().isEmpty()) {
+						message = "No Differences"; //$NON-NLS-1$
 					}
-				});
-			}
+
+					if (Display.getCurrent() != null) {
+						refreshAfterDiff(message, fRoot);
+					} else {
+						final String theMessage = message;
+						Display.getDefault().asyncExec(new Runnable() {
+							public void run() {
+								refreshAfterDiff(theMessage, fRoot);
+							}
+						});
+					}
+				}
+			});
 		}
 	}
 
