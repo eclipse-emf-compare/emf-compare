@@ -151,6 +151,8 @@ public class EMFCompareCompositeImageDescriptor extends CompositeImageDescriptor
 		if (i1 == null || i2 == null) {
 			return false;
 		}
+		// CHECKSTYLE:OFF
+		// This is a copy/paste from DiffImageDescriptor ... leave as-is and pray
 		return (i1.width == i2.width && i1.height == i2.height && i1.depth == i2.depth
 				&& i1.scanlinePad == i2.scanlinePad && i1.bytesPerLine == i2.bytesPerLine
 				/* && i1.palette == i2.palette */
@@ -159,6 +161,7 @@ public class EMFCompareCompositeImageDescriptor extends CompositeImageDescriptor
 				&& i1.disposalMethod == i2.disposalMethod && i1.delayTime == i2.delayTime
 				&& equals(i1.data, i2.data) && equals(i1.maskData, i2.maskData) && equals(i1.alphaData,
 					i2.alphaData));
+		// CHECKSTYLE:ON
 	}
 
 	private boolean equals(byte[] data, byte[] data2) {
