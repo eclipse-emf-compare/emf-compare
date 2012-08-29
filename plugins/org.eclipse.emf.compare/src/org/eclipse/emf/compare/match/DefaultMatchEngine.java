@@ -242,9 +242,10 @@ public class DefaultMatchEngine implements IMatchEngine {
 		 * return an ID matcher which delegates to the content one.
 		 */
 		final IEObjectMatcher matchByContent = ProximityEObjectMatcher.builder(
-				EditionDistance.builder(comparison.getConfiguration().getEqualityHelper()).build()).build();
+				EditionDistance.builder(getComparison().getConfiguration().getEqualityHelper()).build())
+				.build();
 		IEObjectMatcher matcherToUse = matchByContent;
-		switch (comparison.getConfiguration().matchByID()) {
+		switch (getComparison().getConfiguration().matchByID()) {
 			case NEVER:
 				matcherToUse = matchByContent;
 				break;
@@ -252,6 +253,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 				matcherToUse = new IdentifierEObjectMatcher();
 				break;
 			case WHEN_AVAILABLE:
+				// fallthrough to default
 			default:
 				matcherToUse = new IdentifierEObjectMatcher(matchByContent);
 				break;
