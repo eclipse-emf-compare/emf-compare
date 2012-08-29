@@ -65,30 +65,31 @@ public class EMFCompareEditingDomain {
 	}
 
 	public Command createCopyRightToLeftCommand(Diff diff) {
-		return new CopyRightToLeftCommand(diff);
+		return new CopyRightToLeftCommand(fChangeRecorder, fNotifiers, diff);
 	}
 
 	public Command createCopyLeftToRightCommand(final Diff diff) {
-		return new CopyLeftToRightCommand(diff);
+		return new CopyLeftToRightCommand(fChangeRecorder, fNotifiers, diff);
 	}
 
 	public Command createCopyAllNonConflictingRightToLeftCommand(Collection<? extends Diff> diff) {
-		return new CopyAllNonConflictingRightToLeftCommand(diff);
+		return new CopyAllNonConflictingRightToLeftCommand(fChangeRecorder, fNotifiers, diff);
 	}
 
 	public Command createCopyAllNonConflictingLeftToRightCommand(final Collection<? extends Diff> diff) {
-		return new CopyAllNonConflictingLeftToRightCommand(diff);
+		return new CopyAllNonConflictingLeftToRightCommand(fChangeRecorder, fNotifiers, diff);
 	}
 
-	private class CopyLeftToRightCommand extends ChangeCommand {
+	private static class CopyLeftToRightCommand extends ChangeCommand {
 
 		private final Diff fDiff;
 
 		/**
 		 * 
 		 */
-		private CopyLeftToRightCommand(Diff diff) {
-			super(fChangeRecorder, fNotifiers);
+		private CopyLeftToRightCommand(ChangeRecorder changeRecorder, Collection<Notifier> notifiers,
+				Diff diff) {
+			super(changeRecorder, notifiers);
 			fDiff = diff;
 		}
 
@@ -114,15 +115,16 @@ public class EMFCompareEditingDomain {
 
 	}
 
-	private class CopyRightToLeftCommand extends ChangeCommand {
+	private static class CopyRightToLeftCommand extends ChangeCommand {
 
 		private final Diff fDiff;
 
 		/**
 		 * 
 		 */
-		private CopyRightToLeftCommand(Diff diff) {
-			super(fChangeRecorder, fNotifiers);
+		private CopyRightToLeftCommand(ChangeRecorder changeRecorder, Collection<Notifier> notifiers,
+				Diff diff) {
+			super(changeRecorder, notifiers);
 			fDiff = diff;
 		}
 
@@ -148,15 +150,16 @@ public class EMFCompareEditingDomain {
 
 	}
 
-	private class CopyAllNonConflictingRightToLeftCommand extends ChangeCommand {
+	private static class CopyAllNonConflictingRightToLeftCommand extends ChangeCommand {
 
 		private final Collection<? extends Diff> fDiff;
 
 		/**	
 		 * 
 		 */
-		public CopyAllNonConflictingRightToLeftCommand(Collection<? extends Diff> diff) {
-			super(fChangeRecorder, fNotifiers);
+		public CopyAllNonConflictingRightToLeftCommand(ChangeRecorder changeRecorder,
+				Collection<Notifier> notifiers, Collection<? extends Diff> diff) {
+			super(changeRecorder, notifiers);
 			fDiff = diff;
 		}
 
@@ -190,15 +193,16 @@ public class EMFCompareEditingDomain {
 
 	}
 
-	private class CopyAllNonConflictingLeftToRightCommand extends ChangeCommand {
+	private static class CopyAllNonConflictingLeftToRightCommand extends ChangeCommand {
 
 		private final Collection<? extends Diff> fDiff;
 
 		/**	
 		 * 
 		 */
-		public CopyAllNonConflictingLeftToRightCommand(Collection<? extends Diff> diff) {
-			super(fChangeRecorder, fNotifiers);
+		public CopyAllNonConflictingLeftToRightCommand(ChangeRecorder changeRecorder,
+				Collection<Notifier> notifiers, Collection<? extends Diff> diff) {
+			super(changeRecorder, notifiers);
 			fDiff = diff;
 		}
 
