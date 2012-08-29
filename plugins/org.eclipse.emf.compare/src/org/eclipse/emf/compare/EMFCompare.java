@@ -207,19 +207,19 @@ public final class EMFCompare {
 				.getRegisteredPostProcessors().iterator();
 		while (postProcessorIterator.hasNext()) {
 			final PostProcessorDescriptor descriptor = postProcessorIterator.next();
-			if (descriptor.getNsUri() != null && descriptor.getNsUri().trim().length() != 0) {
+			if (descriptor.getNsURI() != null && descriptor.getNsURI().trim().length() != 0) {
 				final Set<String> nsUris = scope.getNsURIs();
 				for (String nsUri : nsUris) {
-					if (nsUri.matches(descriptor.getNsUri())) {
+					if (nsUri.matches(descriptor.getNsURI())) {
 						postProcessor = descriptor.getPostProcessor();
 						break;
 					}
 				}
-			} else if (descriptor.getResourceUri() != null
-					&& descriptor.getResourceUri().trim().length() != 0) {
+			} else if (descriptor.getResourceURI() != null
+					&& descriptor.getResourceURI().trim().length() != 0) {
 				final Set<String> resourceUris = scope.getResourceURIs();
 				for (String resourceUri : resourceUris) {
-					if (resourceUri.matches(descriptor.getResourceUri())) {
+					if (resourceUri.matches(descriptor.getResourceURI())) {
 						postProcessor = descriptor.getPostProcessor();
 						break;
 					}

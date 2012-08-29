@@ -79,7 +79,7 @@ public class PostProcessorDescriptor {
 	 * 
 	 * @return The namespace URI.
 	 */
-	public String getNsUri() {
+	public String getNsURI() {
 		return nsUri;
 	}
 
@@ -88,7 +88,7 @@ public class PostProcessorDescriptor {
 	 * 
 	 * @return The resource URI.
 	 */
-	public String getResourceUri() {
+	public String getResourceURI() {
 		return resourceUri;
 	}
 
