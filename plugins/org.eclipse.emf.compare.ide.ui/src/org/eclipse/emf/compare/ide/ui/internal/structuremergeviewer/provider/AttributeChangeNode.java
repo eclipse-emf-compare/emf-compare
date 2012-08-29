@@ -69,7 +69,7 @@ public class AttributeChangeNode extends DiffNode {
 		EObject origin = getTarget().getMatch().getOrigin();
 		if (origin != null) {
 			if (attribute.getEAttributeType().getInstanceClass() == String.class && !attribute.isMany()) {
-				ret = new StringAttributeChangeAccessor(origin, attribute, getTarget());
+				ret = new StringAttributeChangeAccessor(origin, attribute);
 			} else if (attribute.isMany()) {
 				ret = new ManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.ANCESTOR);
 			} else {
@@ -91,7 +91,7 @@ public class AttributeChangeNode extends DiffNode {
 		EObject left = getTarget().getMatch().getLeft();
 		if (left != null) {
 			if (attribute.getEAttributeType().getInstanceClass() == String.class && !attribute.isMany()) {
-				ret = new StringAttributeChangeAccessor(left, attribute, getTarget());
+				ret = new StringAttributeChangeAccessor(left, attribute);
 			} else if (attribute.isMany()) {
 				ret = new ManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.LEFT);
 			} else {
@@ -113,7 +113,7 @@ public class AttributeChangeNode extends DiffNode {
 		EObject right = getTarget().getMatch().getRight();
 		if (right != null) {
 			if (attribute.getEAttributeType().getInstanceClass() == String.class && !attribute.isMany()) {
-				ret = new StringAttributeChangeAccessor(right, attribute, getTarget());
+				ret = new StringAttributeChangeAccessor(right, attribute);
 			} else if (attribute.isMany()) {
 				ret = new ManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.RIGHT);
 			} else {
