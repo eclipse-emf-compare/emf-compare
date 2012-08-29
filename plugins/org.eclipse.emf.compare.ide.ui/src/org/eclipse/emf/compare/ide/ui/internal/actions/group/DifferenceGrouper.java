@@ -53,14 +53,9 @@ public final class DifferenceGrouper {
 			return ImmutableList.of();
 		}
 
-		final Predicate<DifferenceGroup> nonEmptyGroups = new Predicate<DifferenceGroup>() {
-			public boolean apply(DifferenceGroup input) {
-				return input != null && !Iterables.isEmpty(input.getDifferences());
-			}
-		};
-
 		final Iterable<? extends DifferenceGroup> groups = provider.getGroups(comparison);
-		final Iterable<? extends DifferenceGroup> filteredGroups = Iterables.filter(groups, nonEmptyGroups);
+		final Iterable<? extends DifferenceGroup> filteredGroups = Iterables.filter(groups,
+				new NonEmptyGroup());
 		return filteredGroups;
 	}
 
@@ -116,5 +111,21 @@ public final class DifferenceGrouper {
 	 */
 	public void uninstall(TreeViewer viewer) {
 		viewers.remove(viewer);
+	}
+
+	/**
+	 * This predicate will be used to filter the empty groups out of the displayed list.
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
+	private static class NonEmptyGroup implements Predicate<DifferenceGroup> {
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see com.google.common.base.Predicate#apply(java.lang.Object)
+		 */
+		public boolean apply(DifferenceGroup input) {
+			return input != null && !Iterables.isEmpty(input.getDifferences());
+		}
 	}
 }
