@@ -108,7 +108,7 @@ public class DefaultReqEngine implements IReqEngine {
 				// reference cases.
 
 				// DELETE reference
-			} else if ((kind == DifferenceKind.DELETE || isChangeDelete(comparison, sourceDifference))
+			} else if ((kind == DifferenceKind.DELETE || isChangeDelete(sourceDifference))
 					&& !reference.isContainment()) {
 
 				// -> is required by DELETE of the target object
@@ -130,7 +130,7 @@ public class DefaultReqEngine implements IReqEngine {
 
 				// CHANGE reference
 			} else if (kind == DifferenceKind.CHANGE && !isChangeAdd(comparison, sourceDifference)
-					&& !isChangeDelete(comparison, sourceDifference)) {
+					&& !isChangeDelete(sourceDifference)) {
 
 				// -> is required by DELETE of the origin target object
 				requiredByDifferences.addAll(getDifferenceOnGivenObject(comparison, MatchUtil.getOriginValue(
@@ -242,7 +242,7 @@ public class DefaultReqEngine implements IReqEngine {
 			for (ReferenceChange diff : filter(comparison.getDifferences(outgoingRef), ReferenceChange.class)) {
 				EReference reference = diff.getReference();
 				if (!reference.isContainment()) {
-					if ((diff.getKind() == DifferenceKind.DELETE || isChangeDelete(comparison, diff))
+					if ((diff.getKind() == DifferenceKind.DELETE || isChangeDelete(diff))
 							&& value.equals(MatchUtil.getContainer(comparison, diff))
 							&& value.eClass().getEAllReferences().contains(reference)) {
 						result.add(diff);
@@ -313,13 +313,11 @@ public class DefaultReqEngine implements IReqEngine {
 	/**
 	 * Check if the given <code>difference</code> is a CHANGE to a null value on a mono-valued reference.
 	 * 
-	 * @param comparison
-	 *            The comparison this engine is expected to complete.
 	 * @param difference
 	 *            The given difference.
 	 * @return True if it is a CHANGE to a null value.
 	 */
-	private static boolean isChangeDelete(Comparison comparison, ReferenceChange difference) {
+	private static boolean isChangeDelete(ReferenceChange difference) {
 		boolean result = false;
 		EReference reference = difference.getReference();
 		if (!reference.isMany() && !reference.isContainment()) {
