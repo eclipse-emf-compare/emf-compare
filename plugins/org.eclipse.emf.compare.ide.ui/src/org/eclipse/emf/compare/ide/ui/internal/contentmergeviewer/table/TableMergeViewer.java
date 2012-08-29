@@ -58,27 +58,7 @@ class TableMergeViewer extends AbstractMergeViewer<Composite> {
 			}
 		});
 
-		getStructuredViewer().getTable().addListener(SWT.MeasureItem, new Listener() {
-			private Widget fLastWidget;
-
-			private int fLastHeight;
-
-			public void handleEvent(Event event) {
-				// Windows bug: prevents StackOverflow
-				if (event.item == fLastWidget && event.height == fLastHeight) {
-					return;
-				}
-
-				fLastWidget = event.item;
-				fLastHeight = event.height;
-				int newHeight = (int)(event.gc.getFontMetrics().getHeight() * 1.33d);
-				// If odd, make even
-				if ((newHeight & 1) == 1) {
-					newHeight += 1;
-				}
-				event.height = newHeight;
-			}
-		});
+		getStructuredViewer().getTable().addListener(SWT.MeasureItem, new ItemResizeListener());
 
 	}
 
@@ -292,4 +272,40 @@ class TableMergeViewer extends AbstractMergeViewer<Composite> {
 				false, selected));
 	}
 
+	/**
+	 * This will be used in order to resize the table items to an even height. Otherwise the lines we draw
+	 * around it look somewhat flattened.
+	 * 
+	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+	 */
+	private static class ItemResizeListener implements Listener {
+		/** The last item we resized. Will be used to workaround a windows-specific bug. */
+		private Widget fLastWidget;
+
+		/**
+		 * The height to which we've resized the last item. Will be used to workaround a windows-specific bug.
+		 */
+		private int fLastHeight;
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
+		 */
+		public void handleEvent(Event event) {
+			// Windows bug: prevents StackOverflow
+			if (event.item == fLastWidget && event.height == fLastHeight) {
+				return;
+			}
+
+			fLastWidget = event.item;
+			fLastHeight = event.height;
+			int newHeight = (int)(event.gc.getFontMetrics().getHeight() * 1.33d);
+			// If odd, make even
+			if ((newHeight & 1) == 1) {
+				newHeight += 1;
+			}
+			event.height = newHeight;
+		}
+	}
 }
