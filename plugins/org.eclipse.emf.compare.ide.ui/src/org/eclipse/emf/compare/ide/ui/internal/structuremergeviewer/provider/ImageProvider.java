@@ -282,12 +282,6 @@ public class ImageProvider {
 		}
 	};
 
-	private static final Predicate<Diff> REAL_CONFLICT = new Predicate<Diff>() {
-		public boolean apply(Diff input) {
-			return input != null && input.getConflict().getKind() == ConflictKind.REAL;
-		}
-	};
-
 	private static final Predicate<Diff> PSEUDO_CONFLICT = new Predicate<Diff>() {
 		public boolean apply(Diff input) {
 			return input != null && input.getConflict().getKind() == ConflictKind.REAL;
