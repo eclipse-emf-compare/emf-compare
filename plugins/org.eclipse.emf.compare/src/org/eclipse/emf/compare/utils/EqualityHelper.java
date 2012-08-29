@@ -32,15 +32,9 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class EqualityHelper {
-	/**
-	 * A cache keeping track of the URIs for EObjects.
-	 */
+	/** A cache keeping track of the URIs for EObjects. */
 	private Cache<EObject, URI> uriCache = CacheBuilder.newBuilder().build(
-			CacheLoader.from(new Function<EObject, URI>() {
-				public URI apply(EObject input) {
-					return EcoreUtil.getURI(input);
-				}
-			}));
+			CacheLoader.from(new URICacheFunction()));
 
 	/**
 	 * Check that the two given values are "equal", considering the specifics of EMF.
@@ -232,6 +226,25 @@ public class EqualityHelper {
 			return uriCache.get(object);
 		} catch (ExecutionException e) {
 			return null;
+		}
+	}
+
+	/**
+	 * This is the function that will be used by our {@link #uriCache} to compute its values.
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
+	private static class URICacheFunction implements Function<EObject, URI> {
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see com.google.common.base.Function#apply(java.lang.Object)
+		 */
+		public URI apply(EObject input) {
+			if (input == null) {
+				return null;
+			}
+			return EcoreUtil.getURI(input);
 		}
 	}
 }
