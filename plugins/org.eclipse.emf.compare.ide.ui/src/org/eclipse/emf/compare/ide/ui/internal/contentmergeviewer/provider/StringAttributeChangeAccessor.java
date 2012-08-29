@@ -43,8 +43,6 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	 */
 	private final EAttribute fEAtribute;
 
-	private final AttributeChange fAttributeChange;
-
 	/**
 	 * Creates a new object for the given <code>eObject</code> and <code>eAttribute</code>.
 	 * 
@@ -58,7 +56,6 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 			AttributeChange attributeChange) {
 		this.fEObject = eObject;
 		this.fEAtribute = eAtribute;
-		this.fAttributeChange = attributeChange;
 	}
 
 	/**
