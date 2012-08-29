@@ -43,23 +43,17 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 
 	private RGB fIncomingFill;
 
-	private RGB fIncomingTextFill;
-
 	private RGB fConflictSelected;
 
 	private RGB fConflict;
 
 	private RGB fConflictFill;
 
-	private RGB fConflictTextFill;
-
 	private RGB fOutgoingSelected;
 
 	private RGB fOutgoing;
 
 	private RGB fOutgoingFill;
-
-	private RGB fOutgoingTextFill;
 
 	private RGB fResolved;
 
@@ -213,7 +207,6 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 		}
 		fIncoming = interpolate(fIncomingSelected, bg, 0.6);
 		fIncomingFill = interpolate(fIncomingSelected, bg, 0.97);
-		fIncomingTextFill = interpolate(fIncomingSelected, bg, 0.85);
 
 		fOutgoingSelected = registry.getRGB(EMFCompareConstants.OUTGOING_COLOR);
 		if (fOutgoingSelected == null) {
@@ -221,7 +214,6 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 		}
 		fOutgoing = interpolate(fOutgoingSelected, bg, 0.6);
 		fOutgoingFill = interpolate(fOutgoingSelected, bg, 0.97);
-		fOutgoingTextFill = interpolate(fOutgoingSelected, bg, 0.85);
 
 		fConflictSelected = registry.getRGB(EMFCompareConstants.CONFLICTING_COLOR);
 		if (fConflictSelected == null) {
@@ -229,7 +221,6 @@ public class EMFCompareColor implements RemovalListener<RGB, Color> {
 		}
 		fConflict = interpolate(fConflictSelected, bg, 0.6);
 		fConflictFill = interpolate(fConflictSelected, bg, 0.97);
-		fConflictTextFill = interpolate(fConflictSelected, bg, 0.85);
 
 		fResolved = registry.getRGB(EMFCompareConstants.RESOLVED_COLOR);
 		if (fResolved == null) {
