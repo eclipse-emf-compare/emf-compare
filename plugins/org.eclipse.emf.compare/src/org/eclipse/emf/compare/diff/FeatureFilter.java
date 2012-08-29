@@ -55,21 +55,7 @@ public class FeatureFilter {
 		}
 		return Iterators.filter(clazz.getEAllReferences().iterator(), new Predicate<EReference>() {
 			public boolean apply(EReference input) {
-				boolean ignore = false;
-				if (input != null) {
-					// ignore the derived, container or transient
-					ignore = input.isDerived() || input.isContainer() || input.isTransient();
-					/*
-					 * EGenericTypes are usually "mutually derived" references that are handled through
-					 * specific means in ecore (eGenericSuperTypes and eSuperTypes, EGenericType and
-					 * eType...). As these aren't even shown to the user, we wish to avoid detection of
-					 * changes on them.
-					 */
-					ignore = ignore || input.getEType() == EcorePackage.eINSTANCE.getEGenericType();
-					// If this reference is not set on any side, no use checking it
-					ignore = ignore || !referenceIsSet(input, match);
-				}
-				return !ignore;
+				return !isIgnoredReference(match, input);
 			}
 		});
 	}
@@ -99,7 +85,7 @@ public class FeatureFilter {
 		}
 		return Iterators.filter(clazz.getEAllAttributes().iterator(), new Predicate<EAttribute>() {
 			public boolean apply(EAttribute input) {
-				return input != null && !input.isDerived() && !input.isTransient();
+				return !isIgnoredAttribute(input);
 			}
 		});
 	}
@@ -138,5 +124,44 @@ public class FeatureFilter {
 		}
 		return (match.getRight() != null && match.getRight().eIsSet(reference))
 				|| (match.getOrigin() != null && match.getOrigin().eIsSet(reference));
+	}
+
+	/**
+	 * This will be used by {@link #getReferencesToCheck(Match)} in order to determine whether a given
+	 * reference should be ignored.
+	 * 
+	 * @param match
+	 *            The match from which was taken that particular reference.
+	 * @param reference
+	 *            The candidate that might be ignored.
+	 * @return {@code true} if that reference should be ignored by the comparison engine.
+	 */
+	protected boolean isIgnoredReference(Match match, EReference reference) {
+		if (reference != null) {
+			// ignore the derived, container or transient
+			if (!reference.isDerived() && !reference.isContainer() && !reference.isTransient()) {
+				/*
+				 * EGenericTypes are usually "mutually derived" references that are handled through specific
+				 * means in ecore (eGenericSuperTypes and eSuperTypes, EGenericType and eType...). As these
+				 * aren't even shown to the user, we wish to avoid detection of changes on them.
+				 */
+				// Otherwise if this reference is not set on any side, no use checking it
+				return reference.getEType() == EcorePackage.eINSTANCE.getEGenericType()
+						|| !referenceIsSet(reference, match);
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * This will be used by {@link #getAttributesToCheck(Match)} in order to determine whether a given
+	 * attribute should be ignored.
+	 * 
+	 * @param attribute
+	 *            The candidate that might be ignored.
+	 * @return {@code true} if that attribute should be ignored by the comparison engine.
+	 */
+	protected boolean isIgnoredAttribute(EAttribute attribute) {
+		return attribute == null || attribute.isDerived() || attribute.isTransient();
 	}
 }
