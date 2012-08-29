@@ -110,9 +110,6 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	public EMFCompareStructureMergeViewer(Composite parent, CompareConfiguration configuration) {
 		super(parent, configuration);
 
-		differenceFilter.install(this);
-		differenceGrouper.install(this);
-
 		fAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
@@ -336,16 +333,42 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		fToolbarManager = toolbarManager;
 		super.createToolItems(toolbarManager);
 
-		// Initialized here since this is called from the super-constructor
+		fToolbarManager.add(new GroupActionMenu(getDifferenceGrouper()));
+		fToolbarManager.add(new FilterActionMenu(getDifferenceFilter()));
+	}
+
+	/**
+	 * Returns the difference filter that is to be applied on the structure viewer.
+	 * <p>
+	 * Note that this will be called from {@link #createToolItems(ToolBarManager)}, which is called from the
+	 * super-constructor, when we have had no time to initialize the {@link #differenceFilter} field.
+	 * </p>
+	 * 
+	 * @return The difference filter that is to be applied on the structure viewer.
+	 */
+	protected DifferenceFilter getDifferenceFilter() {
 		if (differenceFilter == null) {
 			differenceFilter = new DifferenceFilter();
+			differenceFilter.install(this);
 		}
+		return differenceFilter;
+	}
+
+	/**
+	 * Returns the difference grouper that is to be applied on the structure viewer.
+	 * <p>
+	 * Note that this will be called from {@link #createToolItems(ToolBarManager)}, which is called from the
+	 * super-constructor, when we have had no time to initialize the {@link #differenceGrouper} field.
+	 * </p>
+	 * 
+	 * @return The difference grouper that is to be applied on the structure viewer.
+	 */
+	protected DifferenceGrouper getDifferenceGrouper() {
 		if (differenceGrouper == null) {
 			differenceGrouper = new DifferenceGrouper();
+			differenceGrouper.install(this);
 		}
-
-		fToolbarManager.add(new GroupActionMenu(differenceGrouper));
-		fToolbarManager.add(new FilterActionMenu(differenceFilter));
+		return differenceGrouper;
 	}
 
 	/**
