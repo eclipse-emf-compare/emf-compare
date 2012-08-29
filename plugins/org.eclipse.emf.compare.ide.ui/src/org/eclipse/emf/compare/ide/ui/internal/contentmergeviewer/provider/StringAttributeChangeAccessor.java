@@ -17,7 +17,6 @@ import org.eclipse.compare.IEditableContent;
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
@@ -50,10 +49,8 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	 *            The EObject to get the value of the EAttribute from
 	 * @param eAtribute
 	 *            The EAttribute to retrieve from the wrapped EObject
-	 * @param attributeChange
 	 */
-	public StringAttributeChangeAccessor(EObject eObject, EAttribute eAtribute,
-			AttributeChange attributeChange) {
+	public StringAttributeChangeAccessor(EObject eObject, EAttribute eAtribute) {
 		this.fEObject = eObject;
 		this.fEAtribute = eAtribute;
 	}
