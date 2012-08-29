@@ -459,6 +459,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 						cursor = getHSashCursor();
 					}
 					break;
+				default:
+					// Not other cases for now
+					break;
 			}
 			if (cursor != null) {
 				c.setCursor(cursor);
