@@ -55,7 +55,7 @@ public abstract class BasicStructuralFeatureAccessorImpl implements IStructuralF
 		fStructuralFeature = getDiffFeature(diff);
 
 		List<Diff> siblingDifferences = fOwnerMatch.getDifferences();
-		final Predicate<Diff> diffWithThisFeature = diffWithThisFeature(getStructuralFeature());
+		final Predicate<Diff> diffWithThisFeature = diffWithThisFeature(fStructuralFeature);
 		fDifferences = ImmutableList.copyOf(filter(siblingDifferences, diffWithThisFeature));
 	}
 
