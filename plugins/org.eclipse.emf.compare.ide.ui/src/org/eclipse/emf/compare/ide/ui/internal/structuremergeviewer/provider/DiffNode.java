@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
-import static com.google.common.collect.Iterables.all;
 import static com.google.common.collect.Iterables.any;
-import static org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants.IS_CONFLICT;
-import static org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants.PSEUDO_CONFLICT_OR_NOT;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasPseudoConflict;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasRealConflict;
 
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -32,7 +31,6 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDif
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class DiffNode extends AbstractEDiffNode {
-
 	/**
 	 * Call {@link AbstractEDiffNode super} constructor.
 	 * 
@@ -81,11 +79,11 @@ public class DiffNode extends AbstractEDiffNode {
 				if (conflict.getKind() == ConflictKind.PSEUDO) {
 					ret |= Differencer.PSEUDO_CONFLICT;
 				}
-			} else if (any(diff.getRequiredBy(), IS_CONFLICT)) {
+			} else if (any(diff.getRequiredBy(), hasRealConflict())) {
 				ret |= Differencer.CONFLICTING;
-				if (all(diff.getRequiredBy(), PSEUDO_CONFLICT_OR_NOT)) {
-					ret |= Differencer.PSEUDO_CONFLICT;
-				}
+			} else if (any(diff.getRequiredBy(), hasPseudoConflict())) {
+				// We know there is no real conflict as that would have been handled above
+				ret |= Differencer.CONFLICTING | Differencer.PSEUDO_CONFLICT;
 			}
 
 			switch (diffKind) {

@@ -504,7 +504,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			} else if (a != null) {
 				equal = a.equals(b);
 			} else {
-				equal = a == b;
+				equal = b == null;
 			}
 			return equal;
 		}
