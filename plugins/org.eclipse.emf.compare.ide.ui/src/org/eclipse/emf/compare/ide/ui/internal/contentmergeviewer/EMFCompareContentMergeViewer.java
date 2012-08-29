@@ -163,11 +163,15 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	/**
 	 * {@inheritDoc}
+	 * <p>
+	 * Overriden to enhance visibility.
+	 * </p>
 	 * 
 	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#isThreeWay()
 	 */
 	@Override
 	public boolean isThreeWay() {
+		// enhances visibility
 		return super.isThreeWay();
 	}
 
