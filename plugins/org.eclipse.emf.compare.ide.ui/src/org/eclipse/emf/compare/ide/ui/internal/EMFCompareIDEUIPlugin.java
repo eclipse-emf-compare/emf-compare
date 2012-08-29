@@ -35,9 +35,7 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	/** Manages the images that were loaded by EMF Compare. */
 	private LocalResourceManager fResourceManager;
 
-	/**
-	 * Default constructor.
-	 */
+	/** Default constructor. */
 	public EMFCompareIDEUIPlugin() {
 		// Empty implementation
 	}
@@ -112,7 +110,12 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, e.getMessage(), e));
 	}
 
-	private synchronized ResourceManager getResourceManager() {
+	/**
+	 * Returns the resource manager for this plugin, creating it if needed.
+	 * 
+	 * @return The resource manager for this plugin, creating it if needed.
+	 */
+	private ResourceManager getResourceManager() {
 		if (fResourceManager == null) {
 			fResourceManager = new LocalResourceManager(JFaceResources.getResources());
 		}
