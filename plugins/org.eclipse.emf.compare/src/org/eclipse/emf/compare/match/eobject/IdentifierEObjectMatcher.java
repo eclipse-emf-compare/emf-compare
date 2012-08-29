@@ -255,14 +255,22 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 		 *         condition (see description above) is fulfilled for the given eObject.
 		 */
 		public String apply(EObject eObject) {
-			if (eObject.eIsProxy()) {
-				return ((InternalEObject)eObject).eProxyURI().fragment();
-			}
-			String identifier = EcoreUtil.getID(eObject);
-			if (identifier == null) {
-				final Resource eObjectResource = eObject.eResource();
-				if (eObjectResource instanceof XMIResource) {
-					identifier = ((XMIResource)eObjectResource).getID(eObject);
+			final String identifier;
+			if (eObject == null) {
+				identifier = null;
+			} else if (eObject.eIsProxy()) {
+				identifier = ((InternalEObject)eObject).eProxyURI().fragment();
+			} else {
+				String functionalId = EcoreUtil.getID(eObject);
+				if (functionalId != null) {
+					identifier = functionalId;
+				} else {
+					final Resource eObjectResource = eObject.eResource();
+					if (eObjectResource instanceof XMIResource) {
+						identifier = ((XMIResource)eObjectResource).getID(eObject);
+					} else {
+						identifier = null;
+					}
 				}
 			}
 			return identifier;
