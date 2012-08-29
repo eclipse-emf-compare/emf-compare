@@ -14,6 +14,7 @@ import static com.google.common.base.Predicates.and;
 
 import com.google.common.base.Predicate;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.AttributeChange;
@@ -21,6 +22,7 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.ecore.EAttribute;
@@ -587,6 +589,21 @@ public final class EMFComparePredicates {
 			public boolean apply(Diff input) {
 				return input != null && input.getConflict() != null
 						&& input.getConflict().getKind() == ConflictKind.REAL;
+			}
+		};
+	}
+
+	/**
+	 * This can be used to check whether a given Diff is in (one of) the given state(s).
+	 * 
+	 * @param states
+	 *            State(s) in which we need a Diff to be.
+	 * @return The created predicate.
+	 */
+	public static Predicate<? super Diff> hasState(final DifferenceState... states) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input != null && Arrays.asList(states).contains(input.getState());
 			}
 		};
 	}

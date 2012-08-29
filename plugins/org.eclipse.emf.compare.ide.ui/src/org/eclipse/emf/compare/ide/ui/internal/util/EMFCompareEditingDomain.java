@@ -11,8 +11,8 @@
 package org.eclipse.emf.compare.ide.ui.internal.util;
 
 import static com.google.common.collect.Iterables.any;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 
@@ -114,12 +114,6 @@ public class EMFCompareEditingDomain {
 
 	}
 
-	private static final Predicate<Diff> UNRESOLVED_DIFF = new Predicate<Diff>() {
-		public boolean apply(Diff input) {
-			return input.getState() == DifferenceState.UNRESOLVED;
-		}
-	};
-
 	private class CopyRightToLeftCommand extends ChangeCommand {
 
 		private final Diff fDiff;
@@ -173,7 +167,7 @@ public class EMFCompareEditingDomain {
 		 */
 		@Override
 		public boolean canExecute() {
-			return any(fDiff, UNRESOLVED_DIFF) && super.canExecute();
+			return any(fDiff, hasState(DifferenceState.UNRESOLVED)) && super.canExecute();
 		}
 
 		/**
@@ -215,7 +209,7 @@ public class EMFCompareEditingDomain {
 		 */
 		@Override
 		public boolean canExecute() {
-			return any(fDiff, UNRESOLVED_DIFF) && super.canExecute();
+			return any(fDiff, hasState(DifferenceState.UNRESOLVED)) && super.canExecute();
 		}
 
 		/**
