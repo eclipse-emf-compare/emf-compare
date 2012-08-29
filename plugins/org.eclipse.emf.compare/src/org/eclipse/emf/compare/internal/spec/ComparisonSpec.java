@@ -12,23 +12,17 @@ package org.eclipse.emf.compare.internal.spec;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.transform;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import com.google.common.base.Supplier;
-import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
 import java.util.Iterator;
 
 import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
@@ -50,7 +44,6 @@ import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ComparisonSpec extends ComparisonImpl {
-
 	/**
 	 * Converts an inverse reference to its corresponding EObject.
 	 * 
@@ -69,6 +62,12 @@ public class ComparisonSpec extends ComparisonImpl {
 			return null;
 		}
 	};
+
+	/** Keeps a reference to our match cross referencer. */
+	private MatchCrossReferencer matchCrossReferencer;
+
+	/** Keeps a reference to our diff cross referencer. */
+	private DiffCrossReferencer diffCrossReferencer;
 
 	/**
 	 * {@inheritDoc}
@@ -96,10 +95,17 @@ public class ComparisonSpec extends ComparisonImpl {
 	public EList<Diff> getDifferences(EObject element) {
 		checkNotNull(element);
 
-		ECrossReferenceAdapter adapter = adapt(this, DiffCrossReferencer.class);
-		Iterable<Diff> crossRefs = filter(getInverse(element, adapter), Diff.class);
+		if (diffCrossReferencer == null) {
+			diffCrossReferencer = new DiffCrossReferencer();
+			eAdapters().add(diffCrossReferencer);
+		}
+		Iterable<Diff> crossRefs = filter(getInverse(element, diffCrossReferencer), Diff.class);
 
-		return new BasicEList<Diff>(ImmutableList.copyOf(crossRefs));
+		final BasicEList<Diff> diffs = new BasicEList<Diff>();
+		for (Diff diff : crossRefs) {
+			diffs.add(diff);
+		}
+		return diffs;
 	}
 
 	/**
@@ -111,8 +117,11 @@ public class ComparisonSpec extends ComparisonImpl {
 	public Match getMatch(EObject element) {
 		checkNotNull(element);
 
-		ECrossReferenceAdapter adapter = adapt(this, MatchCrossReferencer.class);
-		Iterable<Match> crossRefs = filter(getInverse(element, adapter), Match.class);
+		if (matchCrossReferencer == null) {
+			matchCrossReferencer = new MatchCrossReferencer();
+			eAdapters().add(matchCrossReferencer);
+		}
+		Iterable<Match> crossRefs = filter(getInverse(element, matchCrossReferencer), Match.class);
 
 		return Iterables.getFirst(crossRefs, null);
 	}
@@ -152,71 +161,6 @@ public class ComparisonSpec extends ComparisonImpl {
 	}
 
 	/**
-	 * Get or create a {@link Adapter} of type {@code clazz} on the given {@code}.
-	 * 
-	 * @param <T>
-	 *            the type of adapter we want to get.
-	 * @param notifier
-	 *            the object to adapt.
-	 * @param clazz
-	 *            the type of adapter we want to get.
-	 * @return the first found adapter of type {@code clazz} or a newly created one.
-	 */
-	private static <T extends Adapter> T adapt(final Notifier notifier, final Class<T> clazz) {
-		Optional<T> adapter = getAdapter(notifier, clazz);
-		return adapter.or(new Supplier<T>() {
-			public T get() {
-				return adaptNew(notifier, clazz);
-			}
-		});
-	}
-
-	/**
-	 * Creates and returns a new instance of {@code clazz} and adds it to the {@link Notifier#eAdapters() list
-	 * of adapters} of the given {@code notifier}.
-	 * 
-	 * @param <T>
-	 *            The type of adapter to create and return.
-	 * @param notifier
-	 *            the object to be adapted.
-	 * @param clazz
-	 *            the type of adapter to create.
-	 * @return the newly created adapter.
-	 * @throws RuntimeException
-	 *             if something goes wrong while creating the instance of {@code clazz} (e.g. there is no
-	 *             default constructor available).
-	 */
-	private static <T extends Adapter> T adaptNew(Notifier notifier, Class<T> clazz) {
-		final T adapter;
-		try {
-			adapter = clazz.newInstance();
-		} catch (InstantiationException e) {
-			throw Throwables.propagate(e);
-		} catch (IllegalAccessException e) {
-			throw Throwables.propagate(e);
-		}
-		notifier.eAdapters().add(adapter);
-		return adapter;
-	}
-
-	/**
-	 * Returns an {@link Optional} adapter of the specified {@code clazz} by iterating on all
-	 * {@link Notifier#eAdapters() adapters} of the given {@code notifier}.
-	 * 
-	 * @param <T>
-	 *            the type of adapter we want to get.
-	 * @param notifier
-	 *            the object we are looking to adapt to the given type.
-	 * @param clazz
-	 *            the type of adapter we want to get.
-	 * @return the potentially {@link Optional#absent() absent} adapter .
-	 */
-	private static <T extends Adapter> Optional<T> getAdapter(Notifier notifier, Class<T> clazz) {
-		Iterable<T> eAdaptersOfType = filter(notifier.eAdapters(), clazz);
-		return Optional.fromNullable(getFirst(eAdaptersOfType, null));
-	}
-
-	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.impl.ComparisonImpl#getConfiguration()
@@ -235,5 +179,4 @@ public class ComparisonSpec extends ComparisonImpl {
 		}
 		return ret;
 	}
-
 }
