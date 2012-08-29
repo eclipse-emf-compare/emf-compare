@@ -41,7 +41,7 @@ import org.eclipse.team.core.history.IFileRevision;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class RevisionedURIConverter extends DelegatingURIConverter {
+public final class RevisionedURIConverter extends DelegatingURIConverter {
 	/** The revision of the base resource. This revision's timestamp will be used to resolve proxies. */
 	private IFileRevision baseRevision;
 
