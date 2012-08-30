@@ -23,7 +23,6 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -186,7 +185,7 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 		if (element instanceof ICompareInput) {
 			ICompareInput node = (ICompareInput)element;
 			ITypedElement right = node.getRight();
-			if (right instanceof AbstractEDiffNode) {
+			if (right instanceof IStructuralFeatureAccessor) {
 				Comparison comparison = ((IStructuralFeatureAccessor)right).getComparison();
 				EList<Match> matches = comparison.getMatches();
 				EObject rightEObject = null;
