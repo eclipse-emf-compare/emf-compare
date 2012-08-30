@@ -56,7 +56,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	 * 
 	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#copy(boolean)
 	 */
-	@SuppressWarnings("restriction")
 	@Override
 	protected void copy(boolean leftToRight) {
 		Object input = getInput();
