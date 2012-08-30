@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal;
 
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
@@ -22,7 +25,6 @@ import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class DiffCrossReferencer extends ECrossReferenceAdapter {
-
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -36,5 +38,19 @@ public class DiffCrossReferencer extends ECrossReferenceAdapter {
 		}
 		return false;
 
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.ecore.util.ECrossReferenceAdapter#addAdapter(org.eclipse.emf.common.notify.Notifier)
+	 */
+	@Override
+	protected void addAdapter(Notifier notifier) {
+		// We only need to install ourselves on Match elements (to listen to new Diffs) and the Diff
+		// themselves as they're what we wish to cross reference.
+		if (notifier instanceof Match || notifier instanceof Diff) {
+			super.addAdapter(notifier);
+		}
 	}
 }
