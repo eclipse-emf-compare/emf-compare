@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.diff.internal.extension.profile;
 
-import com.google.common.base.Predicate;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,15 +21,13 @@ import org.eclipse.emf.compare.uml2.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.UMLAbstractDiffExtensionFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.ProfileApplication;
 import org.eclipse.uml2.uml.UMLPackage;
+import org.eclipse.uml2.uml.internal.impl.ProfileApplicationImpl;
 
 /**
  * Factory for UMLProfileApplicationAddition.
@@ -63,36 +59,43 @@ public class UMLProfileApplicationChangeFactory extends UMLAbstractDiffExtension
 	}
 
 	private ProfileApplication getDiscriminantForChanges(EObject container) {
-		if (container instanceof EAnnotation && container.eContainer() instanceof ProfileApplication) {
+		// FIXME Doit gérer une liste de ProfileApplications et choisir le bon.
+		if (container instanceof ProfileApplication) {
+			return (ProfileApplication)container;
+		} else if (container instanceof EAnnotation && container.eContainer() instanceof ProfileApplication) {
 			return (ProfileApplication)container.eContainer();
-		} else if (container instanceof Profile) {
-			final Setting setting = getInverseReferences(container,
-					new Predicate<EStructuralFeature.Setting>() {
-						public boolean apply(EStructuralFeature.Setting currentSetting) {
-							return currentSetting.getEStructuralFeature() == UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE;
-						}
-					});
-			return (ProfileApplication)setting.getEObject();
-		} else if (container instanceof EPackage) {
-			final Setting setting = getInverseReferences(container,
-					new Predicate<EStructuralFeature.Setting>() {
-						public boolean apply(EStructuralFeature.Setting currentSetting) {
-							return currentSetting.getEStructuralFeature() == EcorePackage.Literals.EANNOTATION__REFERENCES
-									&& currentSetting.getEObject().eContainer() instanceof ProfileApplication;
-						}
-					});
-			return (ProfileApplication)((EAnnotation)setting.getEObject()).eContainer();
 		}
+		// } else if (container instanceof Profile) {
+		// final Setting setting = getInverseReferences(container,
+		// new Predicate<EStructuralFeature.Setting>() {
+		// public boolean apply(EStructuralFeature.Setting currentSetting) {
+		// return currentSetting.getEStructuralFeature() ==
+		// UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE;
+		// }
+		// });
+		// return (ProfileApplication)setting.getEObject();
+		// } else if (container instanceof EPackage) {
+		// final Setting setting = getInverseReferences(container,
+		// new Predicate<EStructuralFeature.Setting>() {
+		// public boolean apply(EStructuralFeature.Setting currentSetting) {
+		// return currentSetting.getEStructuralFeature() == EcorePackage.Literals.EANNOTATION__REFERENCES
+		// && currentSetting.getEObject().eContainer() instanceof ProfileApplication;
+		// }
+		// });
+		// return (ProfileApplication)((EAnnotation)setting.getEObject()).eContainer();
+		// }
 		return null;
 	}
 
 	@Override
 	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
 		List<EObject> result = new ArrayList<EObject>();
-		if (discriminant instanceof ProfileApplication) {
-			result.add(((ProfileApplication)discriminant).getAppliedProfile());
-			for (EAnnotation annotation : ((ProfileApplication)discriminant).getEAnnotations()) {
-				result.addAll(annotation.getReferences());
+		if (discriminant instanceof ProfileApplicationImpl) {
+			result.add(((ProfileApplicationImpl)discriminant).basicGetAppliedProfile());
+			for (EAnnotation annotation : (List<? extends EAnnotation>)ReferenceUtil.getAsList(discriminant,
+					EcorePackage.Literals.EMODEL_ELEMENT__EANNOTATIONS)) {
+				result.addAll((List<? extends EObject>)ReferenceUtil.getAsList(annotation,
+						EcorePackage.Literals.EANNOTATION__REFERENCES));
 			}
 		}
 		return result;
@@ -123,8 +126,9 @@ public class UMLProfileApplicationChangeFactory extends UMLAbstractDiffExtension
 	}
 
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
-		return (input.getReference().equals(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE) || input
-				.getReference().equals(EcorePackage.Literals.EANNOTATION__REFERENCES));
+		return (input.getReference().equals(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE)
+				|| input.getReference().equals(EcorePackage.Literals.EANNOTATION__REFERENCES) || input
+				.getReference().equals(EcorePackage.Literals.EMODEL_ELEMENT__EANNOTATIONS));
 	}
 
 }

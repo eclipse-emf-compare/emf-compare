@@ -54,8 +54,8 @@ public class AddActionExecutionSpecificationTest extends AbstractTest {
 	private static void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
-		// We should have no less and no more than 15 differences
-		assertSame(Integer.valueOf(15), Integer.valueOf(differences.size()));
+		// We should have no less and no more than 14 differences
+		assertSame(Integer.valueOf(14), Integer.valueOf(differences.size()));
 
 		Predicate<? super Diff> addActionExecSpecDescription = null;
 		Predicate<? super Diff> addCoveredInStartDescription = null;
@@ -158,11 +158,8 @@ public class AddActionExecutionSpecificationTest extends AbstractTest {
 		assertNotNull(addCoveredInActionExecSpec);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(2), count(differences, instanceOf(ExecutionSpecificationChange.class)));
+		assertSame(Integer.valueOf(1), count(differences, instanceOf(ExecutionSpecificationChange.class)));
 		Diff addUMLMessage = null;
-		Diff changeUMLMessage = Iterators.find(differences.iterator(), and(
-				instanceOf(ExecutionSpecificationChange.class), ofKind(DifferenceKind.CHANGE)));
-		assertNotNull(changeUMLMessage);
 		if (kind.equals(TestKind.ADD)) {
 			addUMLMessage = Iterators.find(differences.iterator(), and(
 					instanceOf(ExecutionSpecificationChange.class), ofKind(DifferenceKind.ADD)));
@@ -182,12 +179,6 @@ public class AddActionExecutionSpecificationTest extends AbstractTest {
 			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addActionExecSpec));
 		}
-		assertSame(Integer.valueOf(5), Integer.valueOf(changeUMLMessage.getRefinedBy().size()));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addFinishInActionExecSpec));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addStartInActionExecSpec));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addCoveredInFinish));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addCoveredInStart));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addCoveredInActionExecSpec));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {

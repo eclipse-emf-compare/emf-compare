@@ -54,8 +54,8 @@ public class AddExtendTest extends AbstractTest {
 	private static void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
-		// We should have no less and no more than 6 differences
-		assertSame(Integer.valueOf(6), Integer.valueOf(differences.size()));
+		// We should have no less and no more than 5 differences
+		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
 
 		Predicate<? super Diff> addExtendDescription = null;
 		Predicate<? super Diff> changeRefExtendedCaseInExtendDescription = null;
@@ -91,11 +91,8 @@ public class AddExtendTest extends AbstractTest {
 		assertNotNull(addExtensionPoint);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(2), count(differences, instanceOf(ExtendChange.class)));
+		assertSame(Integer.valueOf(1), count(differences, instanceOf(ExtendChange.class)));
 		Diff addUMLExtend = null;
-		Diff changeUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(ExtendChange.class),
-				ofKind(DifferenceKind.CHANGE)));
-		assertNotNull(changeUMLExtend);
 		if (kind.equals(TestKind.ADD)) {
 			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(ExtendChange.class),
 					ofKind(DifferenceKind.ADD)));
@@ -103,18 +100,12 @@ public class AddExtendTest extends AbstractTest {
 			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLExtend.getRefinedBy().size()));
 			assertTrue(addUMLExtend.getRefinedBy().contains(addRefExtendedCaseInExtend));
 			assertTrue(addUMLExtend.getRefinedBy().contains(addRefExtensionLocationInExtend));
-			assertSame(Integer.valueOf(2), Integer.valueOf(changeUMLExtend.getRefinedBy().size()));
-			assertTrue(changeUMLExtend.getRefinedBy().contains(addRefExtendedCaseInExtend));
-			assertTrue(changeUMLExtend.getRefinedBy().contains(addRefExtensionLocationInExtend));
 		} else {
 			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(ExtendChange.class),
 					ofKind(DifferenceKind.DELETE)));
 			assertNotNull(addUMLExtend);
 			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLExtend.getRefinedBy().size()));
 			assertTrue(addUMLExtend.getRefinedBy().contains(addExtend));
-			assertSame(Integer.valueOf(2), Integer.valueOf(changeUMLExtend.getRefinedBy().size()));
-			assertTrue(changeUMLExtend.getRefinedBy().contains(addRefExtendedCaseInExtend));
-			assertTrue(changeUMLExtend.getRefinedBy().contains(addRefExtensionLocationInExtend));
 		}
 
 		// CHECK REQUIREMENT
@@ -127,9 +118,6 @@ public class AddExtendTest extends AbstractTest {
 			assertTrue(addRefExtensionLocationInExtend.getRequires().contains(addExtend));
 			assertTrue(addRefExtensionLocationInExtend.getRequires().contains(addExtensionPoint));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLExtend.getRequires().size()));
-			assertTrue(changeUMLExtend.getRequires().contains(addUMLExtend));
-
 			assertSame(Integer.valueOf(0), Integer.valueOf(addExtend.getRequires().size()));
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLExtend.getRequires().size()));
 		} else {
@@ -138,14 +126,11 @@ public class AddExtendTest extends AbstractTest {
 			assertSame(Integer.valueOf(0), Integer.valueOf(addRefExtensionLocationInExtend.getRequires()
 					.size()));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(changeUMLExtend.getRequires().size()));
-
 			assertSame(Integer.valueOf(2), Integer.valueOf(addExtend.getRequires().size()));
 			assertTrue(addExtend.getRequires().contains(addRefExtendedCaseInExtend));
 			assertTrue(addExtend.getRequires().contains(addRefExtensionLocationInExtend));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLExtend.getRequires().size()));
-			assertTrue(addUMLExtend.getRequires().contains(changeUMLExtend));
+			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLExtend.getRequires().size()));
 		}
 
 		// CHECK EQUIVALENCE

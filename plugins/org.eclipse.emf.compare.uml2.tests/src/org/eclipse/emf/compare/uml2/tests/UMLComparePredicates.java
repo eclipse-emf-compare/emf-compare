@@ -628,7 +628,7 @@ public final class UMLComparePredicates {
 	private static boolean internalMatch(EObject eObject, String name) {
 		final EStructuralFeature nameFeature = getNameFeature(eObject);
 		if (nameFeature != null) {
-			final Object featureValue = eObject.eGet(nameFeature);
+			final Object featureValue = eObject.eGet(nameFeature, false);
 			if (featureValue instanceof String) {
 				return featureValue.equals(name);
 			} else if (eObject instanceof NamedElement && ((NamedElement)eObject).getName() != null) {

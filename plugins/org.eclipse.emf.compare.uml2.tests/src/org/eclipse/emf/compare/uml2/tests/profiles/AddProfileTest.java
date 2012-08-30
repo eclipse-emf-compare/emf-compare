@@ -7,6 +7,7 @@ import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
 import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.added;
 import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.addedToReference;
+import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.changedReference;
 import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.ofKind;
 import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.removed;
 import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.removedFromReference;
@@ -26,6 +27,12 @@ import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.profiles.data.ProfileInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
+//import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
+//import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
+//import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
+//import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
+//import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
+//import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 
 @SuppressWarnings("nls")
 public class AddProfileTest extends AbstractTest {
@@ -53,76 +60,68 @@ public class AddProfileTest extends AbstractTest {
 	private static void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
-		// We should have no less and no more than 6 differences
-		// FIXME assertSame(Integer.valueOf(6), Integer.valueOf(differences.size()));
-
+		// We should have no less and no more than 5 differences
 		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
 
 		Predicate<? super Diff> addProfileApplicationDescription = null;
-		// FIXME Predicate<? super Diff> addAppliedProfileInProfileApplicationDescription = null;
+		Predicate<? super Diff> addAppliedProfileInProfileApplicationDescription = null;
 		Predicate<? super Diff> addUMLAnnotationDescription = null;
 		Predicate<? super Diff> addReferencesInUMLAnnotationDescription = null;
 
 		if (kind.equals(TestKind.DELETE)) {
 			addProfileApplicationDescription = removed("aModel.Ecore Profile"); //$NON-NLS-1$
-			/*
-			 * addAppliedProfileInProfileApplicationDescription = changedReference("aModel.Ecore Profile",
-			 * "appliedProfile", "Ecore", null);
-			 */
+
+			addAppliedProfileInProfileApplicationDescription = changedReference("aModel.Ecore Profile",
+					"appliedProfile", "Ecore", null);
+
 			addUMLAnnotationDescription = removed("aModel.Ecore Profile.UML");
 			addReferencesInUMLAnnotationDescription = removedFromReference("aModel.Ecore Profile.UML",
-					"references", "Ecore.UML.EPackage");
+					"references", "Ecore.UML.Ecore");
 		} else {
 			addProfileApplicationDescription = added("aModel.Ecore Profile"); //$NON-NLS-1$
-			/*
-			 * addAppliedProfileInProfileApplicationDescription = changedReference("aModel.Ecore Profile",
-			 * "appliedProfile", null, "Ecore");
-			 */
+
+			addAppliedProfileInProfileApplicationDescription = changedReference("aModel.Ecore Profile",
+					"appliedProfile", null, "Ecore");
+
 			addUMLAnnotationDescription = added("aModel.Ecore Profile.UML");
 			addReferencesInUMLAnnotationDescription = addedToReference("aModel.Ecore Profile.UML",
-					"references", "Ecore.UML.EPackage");
+					"references", "Ecore.UML.Ecore");
 		}
 
 		final Diff addProfileApplication = Iterators.find(differences.iterator(),
 				addProfileApplicationDescription);
-		/*
-		 * final Diff addAppliedProfileInProfileApplication = Iterators.find(differences.iterator(),
-		 * addAppliedProfileInProfileApplicationDescription);
-		 */
+		final Diff addAppliedProfileInProfileApplication = Iterators.find(differences.iterator(),
+				addAppliedProfileInProfileApplicationDescription);
 		final Diff addUMLAnnotation = Iterators.find(differences.iterator(), addUMLAnnotationDescription);
 		final Diff addReferencesInUMLAnnotation = Iterators.find(differences.iterator(),
 				addReferencesInUMLAnnotationDescription);
 
 		assertNotNull(addProfileApplication);
+		assertNotNull(addAppliedProfileInProfileApplication);
 		assertNotNull(addUMLAnnotation);
 		assertNotNull(addReferencesInUMLAnnotation);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(2), count(differences, instanceOf(ProfileApplicationChange.class)));
-		Diff addUMLMessage = null;
+		assertSame(Integer.valueOf(1), count(differences, instanceOf(ProfileApplicationChange.class)));
+		Diff addUMLProfileApplication = null;
 		if (kind.equals(TestKind.ADD)) {
-			addUMLMessage = Iterators.find(differences.iterator(), and(
+			addUMLProfileApplication = Iterators.find(differences.iterator(), and(
 					instanceOf(ProfileApplicationChange.class), ofKind(DifferenceKind.ADD)));
-			assertNotNull(addUMLMessage);
-			// FIXME: Should be ok after proxy resolution
-			// assertSame(Integer.valueOf(1), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
-			// assertTrue(addUMLMessage.getRefinedBy().contains(addReferencesInUMLAnnotation));
+			assertNotNull(addUMLProfileApplication);
+			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLProfileApplication.getRefinedBy().size()));
+			assertTrue(addUMLProfileApplication.getRefinedBy().contains(addReferencesInUMLAnnotation));
+			assertTrue(addUMLProfileApplication.getRefinedBy()
+					.contains(addAppliedProfileInProfileApplication));
 		} else {
-			addUMLMessage = Iterators.find(differences.iterator(), and(
+			addUMLProfileApplication = Iterators.find(differences.iterator(), and(
 					instanceOf(ProfileApplicationChange.class), ofKind(DifferenceKind.DELETE)));
-			assertNotNull(addUMLMessage);
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
-			assertTrue(addUMLMessage.getRefinedBy().contains(addProfileApplication));
+			assertNotNull(addUMLProfileApplication);
+			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLProfileApplication.getRefinedBy().size()));
+			assertTrue(addUMLProfileApplication.getRefinedBy().contains(addProfileApplication));
 		}
-		Diff changeUMLMessage = Iterators.find(differences.iterator(), and(
-				instanceOf(ProfileApplicationChange.class), ofKind(DifferenceKind.CHANGE)));
-		assertNotNull(changeUMLMessage);
-		// FIXME: Should be ok after proxy resolution
-		// assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLMessage.getRefinedBy().size()));
-		// assertTrue(changeUMLMessage.getRefinedBy().contains(addReferencesInUMLAnnotation));
 
 		// CHECK REQUIREMENT
-		assertSame(Integer.valueOf(0), Integer.valueOf(addUMLMessage.getRequires().size()));
+		assertSame(Integer.valueOf(0), Integer.valueOf(addUMLProfileApplication.getRequires().size()));
 		if (kind.equals(TestKind.ADD)) {
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addProfileApplication.getRequires().size()));
@@ -130,16 +129,16 @@ public class AddProfileTest extends AbstractTest {
 			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLAnnotation.getRequires().size()));
 			assertTrue(addUMLAnnotation.getRequires().contains(addProfileApplication));
 
-			// FIXME assertSame(Integer.valueOf(1),
-			// Integer.valueOf(addReferencesInUMLAnnotation.getRequires().size()));
-			// assertTrue(addReferencesInUMLAnnotation.getRequires().contains(addUMLAnnotation));
+			assertSame(Integer.valueOf(1), Integer.valueOf(addReferencesInUMLAnnotation.getRequires().size()));
+			assertTrue(addReferencesInUMLAnnotation.getRequires().contains(addUMLAnnotation));
 
 		} else {
-			assertSame(Integer.valueOf(1), Integer.valueOf(addProfileApplication.getRequires().size()));
+			assertSame(Integer.valueOf(2), Integer.valueOf(addProfileApplication.getRequires().size()));
+			assertTrue(addProfileApplication.getRequires().contains(addAppliedProfileInProfileApplication));
 			assertTrue(addProfileApplication.getRequires().contains(addUMLAnnotation));
 
-			// FIXME assertSame(Integer.valueOf(1), Integer.valueOf(addUMLAnnotation.getRequires().size()));
-			// assertTrue(addUMLAnnotation.getRequires().contains(addProfileApplication));
+			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLAnnotation.getRequires().size()));
+			assertTrue(addUMLAnnotation.getRequires().contains(addReferencesInUMLAnnotation));
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addReferencesInUMLAnnotation.getRequires().size()));
 		}

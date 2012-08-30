@@ -111,8 +111,8 @@ public class AddMessageTest extends AbstractTest {
 	private static void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
-		// We should have no less and no more than 13 differences
-		assertSame(Integer.valueOf(13), Integer.valueOf(differences.size()));
+		// We should have no less and no more than 12 differences
+		assertSame(Integer.valueOf(12), Integer.valueOf(differences.size()));
 
 		Predicate<? super Diff> addMessageDescription = null;
 		Predicate<? super Diff> addCoveredInMessage0Send0Description = null;
@@ -201,11 +201,8 @@ public class AddMessageTest extends AbstractTest {
 		assertNotNull(addMessageRecv);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(2), count(differences, instanceOf(MessageChange.class)));
+		assertSame(Integer.valueOf(1), count(differences, instanceOf(MessageChange.class)));
 		Diff addUMLMessage = null;
-		Diff changeUMLMessage = Iterators.find(differences.iterator(), and(instanceOf(MessageChange.class),
-				ofKind(DifferenceKind.CHANGE)));
-		assertNotNull(changeUMLMessage);
 		if (kind.equals(TestKind.ADD)) {
 			addUMLMessage = Iterators.find(differences.iterator(), and(instanceOf(MessageChange.class),
 					ofKind(DifferenceKind.ADD)));
@@ -224,11 +221,6 @@ public class AddMessageTest extends AbstractTest {
 			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addMessage));
 		}
-		assertSame(Integer.valueOf(4), Integer.valueOf(changeUMLMessage.getRefinedBy().size()));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addReceiveEventInMessage));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addSendEventInMessage));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addCoveredInMessage0Recv0));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addCoveredInMessage0Send0));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
@@ -332,7 +324,7 @@ public class AddMessageTest extends AbstractTest {
 		 * ofKind(DifferenceKind.MOVE)) .hasNext());
 		 */
 
-		// We should have no less and no more than 8 differences
+		// We should have no less and no more than 7 differences
 		final Iterator<Diff> itUseFullDiffs = Iterators.filter(differences.iterator(),
 				not(ofKind(DifferenceKind.MOVE)));
 		final List<Diff> useFullDiffs = new ArrayList<Diff>();
@@ -341,7 +333,7 @@ public class AddMessageTest extends AbstractTest {
 			useFullDiffs.add(diff);
 		}
 
-		assertSame(Integer.valueOf(8), Integer.valueOf(useFullDiffs.size()));
+		assertSame(Integer.valueOf(7), Integer.valueOf(useFullDiffs.size()));
 
 		Predicate<? super Diff> addMessageDescription = null;
 		Predicate<? super Diff> addCoveredInMessage0Recv0Description = null;
@@ -393,11 +385,8 @@ public class AddMessageTest extends AbstractTest {
 		assertNotNull(addMessageRecv);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(2), count(useFullDiffs, instanceOf(MessageChange.class)));
+		assertSame(Integer.valueOf(1), count(useFullDiffs, instanceOf(MessageChange.class)));
 		Diff addUMLMessage = null;
-		Diff changeUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
-				ofKind(DifferenceKind.CHANGE)));
-		assertNotNull(changeUMLMessage);
 		if (kind.equals(TestKind.ADD)) {
 			addUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
 					ofKind(DifferenceKind.ADD)));
@@ -414,9 +403,6 @@ public class AddMessageTest extends AbstractTest {
 			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addMessage));
 		}
-		assertSame(Integer.valueOf(2), Integer.valueOf(changeUMLMessage.getRefinedBy().size()));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addReceiveEventInMessage));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addCoveredInMessage0Recv0));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
@@ -480,7 +466,7 @@ public class AddMessageTest extends AbstractTest {
 		 * ofKind(DifferenceKind.MOVE)) .hasNext());
 		 */
 
-		// We should have no less and no more than 8 differences
+		// We should have no less and no more than 7 differences
 		final Iterator<Diff> itUseFullDiffs = Iterators.filter(differences.iterator(),
 				not(ofKind(DifferenceKind.MOVE)));
 		final List<Diff> useFullDiffs = new ArrayList<Diff>();
@@ -489,7 +475,7 @@ public class AddMessageTest extends AbstractTest {
 			useFullDiffs.add(diff);
 		}
 
-		assertSame(Integer.valueOf(8), Integer.valueOf(useFullDiffs.size()));
+		assertSame(Integer.valueOf(7), Integer.valueOf(useFullDiffs.size()));
 
 		Predicate<? super Diff> addMessageDescription = null;
 		Predicate<? super Diff> addCoveredInMessage0Recv0Description = null;
@@ -541,11 +527,8 @@ public class AddMessageTest extends AbstractTest {
 		assertNotNull(addMessageRecv);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(2), count(useFullDiffs, instanceOf(MessageChange.class)));
+		assertSame(Integer.valueOf(1), count(useFullDiffs, instanceOf(MessageChange.class)));
 		Diff addUMLMessage = null;
-		Diff changeUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
-				ofKind(DifferenceKind.CHANGE)));
-		assertNotNull(changeUMLMessage);
 		if (kind.equals(TestKind.ADD)) {
 			addUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
 					ofKind(DifferenceKind.ADD)));
@@ -562,9 +545,6 @@ public class AddMessageTest extends AbstractTest {
 			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addMessage));
 		}
-		assertSame(Integer.valueOf(2), Integer.valueOf(changeUMLMessage.getRefinedBy().size()));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addReceiveEventInMessage));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addCoveredInMessage0Recv0));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {

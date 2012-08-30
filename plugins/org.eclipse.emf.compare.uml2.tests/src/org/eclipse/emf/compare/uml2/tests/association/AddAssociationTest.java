@@ -56,8 +56,8 @@ public class AddAssociationTest extends AbstractTest {
 	private static void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
-		// We should have no less and no more than 17 differences
-		assertSame(Integer.valueOf(17), Integer.valueOf(differences.size()));
+		// We should have no less and no more than 16 differences
+		assertSame(Integer.valueOf(16), Integer.valueOf(differences.size()));
 
 		Predicate<? super Diff> addAssociationDescription = null;
 		Predicate<? super Diff> addMemberEndClass1InAssociationDescription = null;
@@ -174,7 +174,7 @@ public class AddAssociationTest extends AbstractTest {
 		assertNotNull(addUnlimitedNaturalInClass2);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(2), count(differences, instanceOf(AssociationChange.class)));
+		assertSame(Integer.valueOf(1), count(differences, instanceOf(AssociationChange.class)));
 		Diff addUMLAssociation = null;
 		if (kind.equals(TestKind.ADD)) {
 			addUMLAssociation = Iterators.find(differences.iterator(), and(
@@ -196,19 +196,6 @@ public class AddAssociationTest extends AbstractTest {
 			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLAssociation.getRefinedBy().size()));
 			assertTrue(addUMLAssociation.getRefinedBy().contains(addAssociation));
 		}
-
-		Diff changeUMLAssociation = Iterators.find(differences.iterator(), and(
-				instanceOf(AssociationChange.class), ofKind(DifferenceKind.CHANGE)));
-		assertNotNull(changeUMLAssociation);
-		assertSame(Integer.valueOf(8), Integer.valueOf(changeUMLAssociation.getRefinedBy().size()));
-		assertTrue(changeUMLAssociation.getRefinedBy().contains(addRefTypeInPropertyClass1));
-		assertTrue(changeUMLAssociation.getRefinedBy().contains(addRefTypeInPropertyClass2));
-		assertTrue(changeUMLAssociation.getRefinedBy().contains(addLiteralIntegerInClass1));
-		assertTrue(changeUMLAssociation.getRefinedBy().contains(addUnlimitedNaturalInClass1));
-		assertTrue(changeUMLAssociation.getRefinedBy().contains(addLiteralIntegerInClass2));
-		assertTrue(changeUMLAssociation.getRefinedBy().contains(addUnlimitedNaturalInClass2));
-		assertTrue(changeUMLAssociation.getRefinedBy().contains(addRefAssociationInPropertyClass1));
-		assertTrue(changeUMLAssociation.getRefinedBy().contains(addRefAssociationInPropertyClass2));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
@@ -233,9 +220,6 @@ public class AddAssociationTest extends AbstractTest {
 
 			assertSame(Integer.valueOf(1), Integer.valueOf(addRefTypeInPropertyClass2.getRequires().size()));
 			assertTrue(addRefTypeInPropertyClass2.getRequires().contains(addPropertyClass2));
-
-			assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLAssociation.getRequires().size()));
-			assertTrue(changeUMLAssociation.getRequires().contains(addUMLAssociation));
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addAssociation.getRequires().size()));
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLAssociation.getRequires().size()));
@@ -294,7 +278,6 @@ public class AddAssociationTest extends AbstractTest {
 			assertSame(Integer.valueOf(0), Integer.valueOf(addRefAssociationInPropertyClass2.getRequires()
 					.size()));
 			assertSame(Integer.valueOf(0), Integer.valueOf(addRefTypeInPropertyClass2.getRequires().size()));
-			assertSame(Integer.valueOf(0), Integer.valueOf(changeUMLAssociation.getRequires().size()));
 
 			assertSame(Integer.valueOf(8), Integer.valueOf(addAssociation.getRequires().size()));
 			assertTrue(addAssociation.getRequires().contains(addPropertyClass1));
@@ -306,8 +289,7 @@ public class AddAssociationTest extends AbstractTest {
 			assertTrue(addAssociation.getRequires().contains(addRefAssociationInPropertyClass1));
 			assertTrue(addAssociation.getRequires().contains(addRefAssociationInPropertyClass2));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLAssociation.getRequires().size()));
-			assertTrue(addUMLAssociation.getRequires().contains(changeUMLAssociation));
+			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLAssociation.getRequires().size()));
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addMemberEndClass1InAssociation.getRequires()
 					.size()));

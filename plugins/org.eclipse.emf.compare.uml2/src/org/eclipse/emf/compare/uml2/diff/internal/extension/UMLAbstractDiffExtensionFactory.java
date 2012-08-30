@@ -58,7 +58,8 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#handles(org.eclipse.emf.compare.diff.metamodel.DiffElement)
 	 */
 	public boolean handles(Diff input) {
-		return (getRelatedExtensionKind(input) != null) && !isExtensionAlreadyExist(input);
+		return (getRelatedExtensionKind(input) != null) && !isExtensionAlreadyExist(input)
+				&& !isChangeOnAddOrDelete(input);
 	}
 
 	/**
@@ -146,6 +147,20 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 				return true;
 			}
 
+		}
+		return false;
+	}
+
+	private boolean isChangeOnAddOrDelete(Diff input) {
+		if (getRelatedExtensionKind(input) == DifferenceKind.CHANGE) {
+			final List<Diff> differences = input.getMatch().getComparison().getDifferences();
+			differences.remove(input);
+			for (Diff diff : differences) {
+				if ((getRelatedExtensionKind(diff) == DifferenceKind.ADD || getRelatedExtensionKind(diff) == DifferenceKind.DELETE)
+						&& getDiscriminantFromDiff(diff) == getDiscriminantFromDiff(input)) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}

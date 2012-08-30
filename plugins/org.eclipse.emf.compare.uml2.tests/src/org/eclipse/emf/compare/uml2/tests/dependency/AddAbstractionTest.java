@@ -54,8 +54,8 @@ public class AddAbstractionTest extends AbstractTest {
 	private static void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
-		// We should have no less and no more than 6 differences
-		assertSame(Integer.valueOf(6), Integer.valueOf(differences.size()));
+		// We should have no less and no more than 5 differences
+		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
 
 		Predicate<? super Diff> addAbstractionDescription = null;
 		Predicate<? super Diff> addRefAbstractionInClass1Description = null;
@@ -94,30 +94,21 @@ public class AddAbstractionTest extends AbstractTest {
 		assertNotNull(addRefClass0InAbstraction);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(2), count(differences, instanceOf(DependencyChange.class)));
+		assertSame(Integer.valueOf(1), count(differences, instanceOf(DependencyChange.class)));
 		Diff addUMLDependency = null;
-		Diff changeUMLDependency = Iterators.find(differences.iterator(), and(
-				instanceOf(DependencyChange.class), ofKind(DifferenceKind.CHANGE)));
-		assertNotNull(changeUMLDependency);
 		if (kind.equals(TestKind.ADD)) {
-			addUMLDependency = Iterators.find(differences.iterator(), and(
-					instanceOf(DependencyChange.class), ofKind(DifferenceKind.ADD)));
+			addUMLDependency = Iterators.find(differences.iterator(), and(instanceOf(DependencyChange.class),
+					ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLDependency);
 			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
 			assertTrue(addUMLDependency.getRefinedBy().contains(addRefClass1InAbstraction));
 			assertTrue(addUMLDependency.getRefinedBy().contains(addRefClass0InAbstraction));
-			assertSame(Integer.valueOf(2), Integer.valueOf(changeUMLDependency.getRefinedBy().size()));
-			assertTrue(changeUMLDependency.getRefinedBy().contains(addRefClass1InAbstraction));
-			assertTrue(changeUMLDependency.getRefinedBy().contains(addRefClass0InAbstraction));
 		} else {
-			addUMLDependency = Iterators.find(differences.iterator(), and(
-					instanceOf(DependencyChange.class), ofKind(DifferenceKind.DELETE)));
+			addUMLDependency = Iterators.find(differences.iterator(), and(instanceOf(DependencyChange.class),
+					ofKind(DifferenceKind.DELETE)));
 			assertNotNull(addUMLDependency);
 			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
 			assertTrue(addUMLDependency.getRefinedBy().contains(addAbstraction));
-			assertSame(Integer.valueOf(2), Integer.valueOf(changeUMLDependency.getRefinedBy().size()));
-			assertTrue(changeUMLDependency.getRefinedBy().contains(addRefClass1InAbstraction));
-			assertTrue(changeUMLDependency.getRefinedBy().contains(addRefClass0InAbstraction));
 		}
 
 		// CHECK REQUIREMENT
@@ -131,9 +122,6 @@ public class AddAbstractionTest extends AbstractTest {
 			assertSame(Integer.valueOf(1), Integer.valueOf(addRefAbstractionInClass1.getRequires().size()));
 			assertTrue(addRefAbstractionInClass1.getRequires().contains(addAbstraction));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLDependency.getRequires().size()));
-			assertTrue(changeUMLDependency.getRequires().contains(addUMLDependency));
-
 			assertSame(Integer.valueOf(0), Integer.valueOf(addAbstraction.getRequires().size()));
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
 		} else {
@@ -143,15 +131,12 @@ public class AddAbstractionTest extends AbstractTest {
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addRefAbstractionInClass1.getRequires().size()));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(changeUMLDependency.getRequires().size()));
-
 			assertSame(Integer.valueOf(3), Integer.valueOf(addAbstraction.getRequires().size()));
 			assertTrue(addAbstraction.getRequires().contains(addRefClass1InAbstraction));
 			assertTrue(addAbstraction.getRequires().contains(addRefClass0InAbstraction));
 			assertTrue(addAbstraction.getRequires().contains(addRefAbstractionInClass1));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLDependency.getRequires().size()));
-			assertTrue(addUMLDependency.getRequires().contains(changeUMLDependency));
+			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
 		}
 
 		// CHECK EQUIVALENCE

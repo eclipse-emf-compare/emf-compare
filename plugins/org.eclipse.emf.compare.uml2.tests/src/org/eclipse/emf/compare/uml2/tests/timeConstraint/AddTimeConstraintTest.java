@@ -56,8 +56,8 @@ public class AddTimeConstraintTest extends AbstractTest {
 	private static void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
-		// We should have no less and no more than 11 differences
-		assertSame(Integer.valueOf(11), Integer.valueOf(differences.size()));
+		// We should have no less and no more than 10 differences
+		assertSame(Integer.valueOf(10), Integer.valueOf(differences.size()));
 
 		Predicate<? super Diff> addTimeConstraintDescription = null;
 		Predicate<? super Diff> addTimeIntervalDescription = null;
@@ -125,11 +125,8 @@ public class AddTimeConstraintTest extends AbstractTest {
 		assertNotNull(addMaxInTimeInterval);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(2), count(differences, instanceOf(IntervalConstraintChange.class)));
+		assertSame(Integer.valueOf(1), count(differences, instanceOf(IntervalConstraintChange.class)));
 		Diff addUMLMessage = null;
-		Diff changeUMLMessage = Iterators.find(differences.iterator(), and(
-				instanceOf(IntervalConstraintChange.class), ofKind(DifferenceKind.CHANGE)));
-		assertNotNull(changeUMLMessage);
 		if (kind.equals(TestKind.ADD)) {
 			addUMLMessage = Iterators.find(differences.iterator(), and(
 					instanceOf(IntervalConstraintChange.class), ofKind(DifferenceKind.ADD)));
@@ -149,13 +146,6 @@ public class AddTimeConstraintTest extends AbstractTest {
 			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addTimeConstraint));
 		}
-		assertSame(Integer.valueOf(6), Integer.valueOf(changeUMLMessage.getRefinedBy().size()));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addConstrainedElementInTimeConstraint));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addTimeInterval));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addMinInTimeInterval));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addMaxInTimeInterval));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addMinValue));
-		assertTrue(changeUMLMessage.getRefinedBy().contains(addMaxValue));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
