@@ -45,7 +45,7 @@ public class MergeViewerInfoComposite extends Composite {
 	public MergeViewerInfoComposite(Composite parent) {
 		super(parent, SWT.BORDER);
 		setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-		GridLayout layout = new GridLayout(6, false);
+		GridLayout layout = new GridLayout(3, false);
 		layout.verticalSpacing = 0;
 		layout.horizontalSpacing = 0;
 		layout.marginLeft = 1;
@@ -54,29 +54,35 @@ public class MergeViewerInfoComposite extends Composite {
 		layout.marginBottom = 0;
 		setLayout(layout);
 
-		Label changesLabel = new Label(this, SWT.NONE);
-		changesLabel.setText("Changes in"); //$NON-NLS-1$
+		Composite eObjectComposite = new Composite(this, SWT.NONE);
+		GridLayout eObjectCompositelayout = new GridLayout(2, false);
+		eObjectCompositelayout.verticalSpacing = 0;
+		eObjectCompositelayout.horizontalSpacing = 0;
+		eObjectCompositelayout.marginLeft = 0;
+		eObjectCompositelayout.marginHeight = 0;
+		eObjectCompositelayout.marginWidth = 0;
+		eObjectCompositelayout.marginBottom = 0;
+		eObjectComposite.setLayout(eObjectCompositelayout);
+		eObjectIcon = new Label(eObjectComposite, SWT.NONE);
+		eObjectIcon.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+		eObjectLabel = new Label(eObjectComposite, SWT.NONE);
+		eObjectLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		eObjectComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 3, 1));
+
+		Label lblIn = new Label(this, SWT.NONE);
+		lblIn.setText("    "); //$NON-NLS-1$
 
 		featureIcon = new Label(this, SWT.NONE);
 		featureIcon.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		featureLabel = new Label(this, SWT.NONE);
 		featureLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 
-		Label lblIn = new Label(this, SWT.NONE);
-		lblIn.setText("of"); //$NON-NLS-1$
-
-		eObjectIcon = new Label(this, SWT.NONE);
-		eObjectIcon.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-
-		eObjectLabel = new Label(this, SWT.NONE);
-		eObjectLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
 	}
 
 	public void setInput(IStructuralFeatureAccessor featureAccessor, MergeViewerSide side) {
 		EStructuralFeature structuralFeature = featureAccessor.getStructuralFeature();
 		featureIcon.setImage(fLabelProvider.getImage(structuralFeature));
-		featureLabel.setText(structuralFeature.getName());
+		featureLabel.setText(fLabelProvider.getText(structuralFeature));
 
 		EObject eObject = featureAccessor.getEObject(side);
 		if (eObject == null) {
