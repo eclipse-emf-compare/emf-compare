@@ -146,7 +146,6 @@ public class EqualityHelper {
 				}
 			} catch (ExecutionException e) {
 				// Could not compute the URIs of these objects, assume not equal
-				temp = false;
 			}
 			equal = temp;
 		}
