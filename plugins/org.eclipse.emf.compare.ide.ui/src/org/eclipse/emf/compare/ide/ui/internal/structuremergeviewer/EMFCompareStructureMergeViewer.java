@@ -20,12 +20,9 @@ import java.util.EventObject;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareViewerSwitchingPane;
-import org.eclipse.compare.IContentChangeListener;
-import org.eclipse.compare.IContentChangeNotifier;
 import org.eclipse.compare.IResourceProvider;
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
-import org.eclipse.compare.internal.CompareUIPlugin;
 import org.eclipse.compare.structuremergeviewer.DiffTreeViewer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
@@ -52,6 +49,7 @@ import org.eclipse.emf.compare.ide.ui.internal.actions.filter.FilterActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGrouper;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.GroupActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareConfigurationExtension;
+import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareCompositeImageDescriptor;
 import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -75,14 +73,6 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	private final ICompareInputChangeListener fCompareInputChangeListener;
 
 	private final ComposedAdapterFactory fAdapterFactory;
-
-	private IContentChangeListener fContentChangedListener;
-
-	private final SideInputInfo fAncestorStructure = new SideInputInfo();
-
-	private final SideInputInfo fLeftStructure = new SideInputInfo();
-
-	private final SideInputInfo fRightStructure = new SideInputInfo();
 
 	private final CompareViewerSwitchingPane fParent;
 
@@ -124,15 +114,9 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			fParent = null;
 		}
 
-		fContentChangedListener = new IContentChangeListener() {
-			public void contentChanged(IContentChangeNotifier changed) {
-				EMFCompareStructureMergeViewer.this.contentChanged(changed);
-			}
-		};
-
 		fCompareInputChangeListener = new ICompareInputChangeListener() {
 			public void compareInputChanged(ICompareInput input) {
-				EMFCompareStructureMergeViewer.this.compareInputChanged(input, true);
+				EMFCompareStructureMergeViewer.this.compareInputChanged(input);
 			}
 		};
 
@@ -140,10 +124,13 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		setComparer(new DiffNodeComparer(super.getComparer()));
 	}
 
-	void compareInputChanged(ICompareInput input, boolean force) {
+	/**
+	 * Triggered by fCompareInputChangeListener
+	 */
+	void compareInputChanged(ICompareInput input) {
 		if (input == null) {
 			// When closing, we don't need a progress monitor to handle the input change
-			compareInputChanged(null, force, null);
+			compareInputChanged(null, null);
 			return;
 		}
 		CompareConfiguration cc = getCompareConfiguration();
@@ -154,7 +141,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 					try {
 						inputChangedTask.run(new NullProgressMonitor());
 					} catch (InvocationTargetException e) {
-						CompareUIPlugin.log(e.getTargetException());
+						EMFCompareIDEUIPlugin.getDefault().log(e.getTargetException());
 					} catch (InterruptedException e) {
 						// Ignore
 					}
@@ -173,60 +160,18 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		return fRoot;
 	}
 
-	protected void contentChanged(final IContentChangeNotifier changed) {
-		// refresh diff
-	}
-
 	private IRunnableWithProgress inputChangedTask = new IRunnableWithProgress() {
 		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 			monitor.beginTask("Computing Structure Differences", 100); //$NON-NLS-1$
-			// TODO: Should we always force
-			compareInputChanged((ICompareInput)getInput(), true, new SubProgressMonitor(monitor, 100));
+			compareInputChanged((ICompareInput)getInput(), new SubProgressMonitor(monitor, 100));
 			monitor.done();
 		}
 	};
 
-	void compareInputChanged(ICompareInput input, boolean force, IProgressMonitor monitor) {
-		ITypedElement t = null;
-
-		if (input != null) {
-			t = input.getAncestor();
-		}
-		fAncestorStructure.setInput(t, force);
-
-		if (input != null) {
-			t = input.getLeft();
-		}
-		fLeftStructure.setInput(t, force);
-
-		if (input != null) {
-			t = input.getRight();
-		}
-		fRightStructure.setInput(t, force);
-
+	void compareInputChanged(ICompareInput input, IProgressMonitor monitor) {
 		Object previousResult = getCompareConfiguration().getProperty(EMFCompareConstants.COMPARE_RESULT);
 		if (previousResult instanceof Comparison) {
-			fRoot = fAdapterFactory.adapt(previousResult, IDiffElement.class);
-			getCompareConfiguration().getContainer().runAsynchronously(new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException,
-						InterruptedException {
-					String message = null;
-					if (((Comparison)fRoot).getDifferences().isEmpty()) {
-						message = "No Differences"; //$NON-NLS-1$
-					}
-
-					if (Display.getCurrent() != null) {
-						refreshAfterDiff(message, fRoot);
-					} else {
-						final String theMessage = message;
-						Display.getDefault().asyncExec(new Runnable() {
-							public void run() {
-								refreshAfterDiff(theMessage, fRoot);
-							}
-						});
-					}
-				}
-			});
+			compareInputChanged((Comparison)previousResult);
 		} else if (input != null) {
 			ResourceSet leftResourceSet = getResourceSetFrom(input.getLeft(), monitor);
 			ResourceSet rightResourceSet = getResourceSetFrom(input.getRight(), monitor);
@@ -241,30 +186,35 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);
 
 			editingDomain.getCommandStack().addCommandStackListener(this);
-			fRoot = fAdapterFactory.adapt(compareResult, IDiffElement.class);
-			getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, fRoot);
-
-			getCompareConfiguration().getContainer().runAsynchronously(new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException,
-						InterruptedException {
-					String message = null;
-					if (((Comparison)compareResult).getDifferences().isEmpty()) {
-						message = "No Differences"; //$NON-NLS-1$
-					}
-
-					if (Display.getCurrent() != null) {
-						refreshAfterDiff(message, fRoot);
-					} else {
-						final String theMessage = message;
-						Display.getDefault().asyncExec(new Runnable() {
-							public void run() {
-								refreshAfterDiff(theMessage, fRoot);
-							}
-						});
-					}
-				}
-			});
+			compareInputChanged(compareResult);
+		} else {
+			fRoot = input;
 		}
+	}
+
+	void compareInputChanged(final Comparison comparison) {
+		fRoot = fAdapterFactory.adapt(comparison, IDiffElement.class);
+		getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, fRoot);
+
+		getCompareConfiguration().getContainer().runAsynchronously(new IRunnableWithProgress() {
+			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				String message = null;
+				if (comparison.getDifferences().isEmpty()) {
+					message = "No Differences"; //$NON-NLS-1$
+				}
+
+				if (Display.getCurrent() != null) {
+					refreshAfterDiff(message, fRoot);
+				} else {
+					final String theMessage = message;
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							refreshAfterDiff(theMessage, fRoot);
+						}
+					});
+				}
+			}
+		});
 	}
 
 	private void refreshAfterDiff(String message, Object root) {
@@ -277,35 +227,6 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		}
 
 		refresh(root);
-	}
-
-	private class SideInputInfo {
-		private ITypedElement fInput;
-
-		public boolean setInput(ITypedElement newInput, boolean force) {
-			boolean changed = false;
-			if (force || newInput != fInput) {
-				changed = newInput != null;
-				if (fInput instanceof IContentChangeNotifier && fContentChangedListener != null) {
-					((IContentChangeNotifier)fInput).removeContentChangeListener(fContentChangedListener);
-				}
-				if (newInput instanceof IContentChangeNotifier && fContentChangedListener != null) {
-					((IContentChangeNotifier)newInput).addContentChangeListener(fContentChangedListener);
-				}
-				fInput = newInput;
-			}
-			return changed;
-		}
-	}
-
-	/**
-	 * Recreates the comparable structures for the input sides.
-	 * 
-	 * @param input
-	 *            this viewer's new input
-	 */
-	protected void compareInputChanged(ICompareInput input) {
-		compareInputChanged(input, false);
 	}
 
 	/**
@@ -400,8 +321,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			ICompareInput ci = (ICompareInput)input;
 			ci.removeCompareInputChangeListener(fCompareInputChangeListener);
 		}
-		compareInputChanged(null);
-		fContentChangedListener = null;
+		compareInputChanged((ICompareInput)null);
 
 		EMFCompareEditingDomain editingDomain = (EMFCompareEditingDomain)getCompareConfiguration()
 				.getProperty(EMFCompareConstants.EDITING_DOMAIN);
