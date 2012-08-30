@@ -26,6 +26,7 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicOb
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.AttributeChangeNode;
 import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Composite;
 
@@ -139,6 +140,17 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		// forced to do that to avoid NPE in org.eclipse.compare.internal.ViewerDescriptor.createViewer
 		setHandlerService(CompareHandlerService.createFor(getCompareConfiguration().getContainer(),
 				getLeftSourceViewer().getSourceViewer().getControl().getShell()));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#setEditable(org.eclipse.jface.text.source.ISourceViewer,
+	 *      boolean)
+	 */
+	@Override
+	protected void setEditable(ISourceViewer sourceViewer, boolean state) {
+		sourceViewer.setEditable(false);
 	}
 
 	@Override
