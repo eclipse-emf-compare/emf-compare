@@ -105,7 +105,7 @@ public class DefaultEquiEngine implements IEquiEngine {
 					}
 
 				}
-				
+
 				// Add the change differences on the old references (origin)
 				addChangesFromOrigin(comparison, referenceChange, equivalence);
 			}
@@ -132,7 +132,7 @@ public class DefaultEquiEngine implements IEquiEngine {
 				for (Diff referenceChange : comparison.getDifferences(originContainer)) {
 					if (referenceChange instanceof ReferenceChange
 							&& MatchUtil.getContainer(comparison, referenceChange).equals(
-									originContainer.eGet(diff.getReference()))) {
+									originContainer.eGet(diff.getReference(), false))) {
 						equivalence.getDifferences().add(referenceChange);
 					}
 				}
