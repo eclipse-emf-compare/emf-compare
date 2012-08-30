@@ -106,7 +106,7 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	 * @param e
 	 *            the exception to be logged.
 	 */
-	public void log(Exception e) {
+	public void log(Throwable e) {
 		getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, e.getMessage(), e));
 	}
 
