@@ -49,6 +49,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		fEditingDomain = (EMFCompareEditingDomain)getCompareConfiguration().getProperty(
 				EMFCompareConstants.EDITING_DOMAIN);
 		fEditingDomain.getCommandStack().addCommandStackListener(this);
+		setContentProvider(new EMFCompareTextMergeViewerContentProvider(configuration));
 	}
 
 	/**
