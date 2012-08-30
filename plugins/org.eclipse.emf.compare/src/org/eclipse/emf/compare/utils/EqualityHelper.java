@@ -164,7 +164,7 @@ public class EqualityHelper {
 	 *            Second of the two objects to compare here.
 	 * @return <code>true</code> if both objects are to be considered equal, <code>false</code> otherwise.
 	 */
-	public boolean matchingValues(Object object1, Object object2) {
+	public boolean matchingAttributeValues(Object object1, Object object2) {
 		final boolean equal;
 		if (object1 == object2) {
 			equal = true;
@@ -206,7 +206,7 @@ public class EqualityHelper {
 			for (int i = 0; i < length1 && equal; i++) {
 				final Object element1 = Array.get(object1, i);
 				final Object element2 = Array.get(object2, i);
-				equal = matchingValues(element1, element2);
+				equal = matchingAttributeValues(element1, element2);
 			}
 		}
 		return equal;
