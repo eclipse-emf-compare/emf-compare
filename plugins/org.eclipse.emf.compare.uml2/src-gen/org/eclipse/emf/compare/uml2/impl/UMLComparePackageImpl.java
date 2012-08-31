@@ -461,7 +461,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 		umlDiffEClass.getESuperTypes().add(theComparePackage.getDiff());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(associationChangeEClass, AssociationChange.class, "AssociationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(associationChangeEClass, AssociationChange.class, "AssociationChangeSpec", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(dependencyChangeEClass, DependencyChange.class, "DependencyChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 

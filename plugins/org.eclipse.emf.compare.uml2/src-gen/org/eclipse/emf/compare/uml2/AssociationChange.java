@@ -24,4 +24,4 @@ import org.eclipse.uml2.uml.Association;
  */
 public interface AssociationChange extends UMLDiff {
 
-} // AssociationChange
+} // AssociationChangeSpec
