@@ -19,7 +19,33 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
  */
 public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterFactory {
 
-	private Adapter fAssociationChangeItemProvider;
+	ForwardingUMLDiffItemProvider fAssociationChangeItemProvider;
+
+	ForwardingUMLDiffItemProvider fDependencyChangeItemProvider;
+
+	ForwardingUMLDiffItemProvider fExecutionSpecificationChangeItemProvider;
+
+	ForwardingUMLDiffItemProvider fExtendChangeItemProvider;
+
+	ForwardingUMLDiffItemProvider fGeneralizationSetChangeItemProvider;
+
+	ForwardingUMLDiffItemProvider fIncludeChangeItemProvider;
+
+	ForwardingUMLDiffItemProvider fInterfaceRealizationChangeItemProvider;
+
+	ForwardingUMLDiffItemProvider fIntervalConstraintChangeItemProvider;
+
+	ForwardingUMLDiffItemProvider fMessageChangeItemProvider;
+
+	ForwardingUMLDiffItemProvider fProfileApplicationChangeItemProvider;
+
+	ForwardingUMLDiffItemProvider fStereotypeApplicationChangeItemProvider;
+
+	ForwardingUMLDiffItemProvider fStereotypePropertyChangeItemProvider;
+
+	ForwardingUMLDiffItemProvider fStereotypeReferenceChangeItemProvider;
+
+	ForwardingUMLDiffItemProvider fSubstitutionChangeItemProvider;
 
 	/**
 	 * {@inheritDoc}
@@ -42,8 +68,11 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 	 */
 	@Override
 	public Adapter createDependencyChangeAdapter() {
-		// TODO Auto-generated method stub
-		return super.createDependencyChangeAdapter();
+		if (fDependencyChangeItemProvider == null) {
+			fDependencyChangeItemProvider = new ForwardingUMLDiffItemProvider((ItemProviderAdapter)super
+					.createDependencyChangeAdapter());
+		}
+		return fDependencyChangeItemProvider;
 	}
 
 	/**
@@ -53,8 +82,11 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 	 */
 	@Override
 	public Adapter createInterfaceRealizationChangeAdapter() {
-		// TODO Auto-generated method stub
-		return super.createInterfaceRealizationChangeAdapter();
+		if (fInterfaceRealizationChangeItemProvider == null) {
+			fInterfaceRealizationChangeItemProvider = new ForwardingUMLDiffItemProvider(
+					(ItemProviderAdapter)super.createInterfaceRealizationChangeAdapter());
+		}
+		return fInterfaceRealizationChangeItemProvider;
 	}
 
 	/**
@@ -64,8 +96,11 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 	 */
 	@Override
 	public Adapter createSubstitutionChangeAdapter() {
-		// TODO Auto-generated method stub
-		return super.createSubstitutionChangeAdapter();
+		if (fSubstitutionChangeItemProvider == null) {
+			fSubstitutionChangeItemProvider = new ForwardingUMLDiffItemProvider((ItemProviderAdapter)super
+					.createSubstitutionChangeAdapter());
+		}
+		return fSubstitutionChangeItemProvider;
 	}
 
 	/**
@@ -75,8 +110,11 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 	 */
 	@Override
 	public Adapter createExtendChangeAdapter() {
-		// TODO Auto-generated method stub
-		return super.createExtendChangeAdapter();
+		if (fExtendChangeItemProvider == null) {
+			fExtendChangeItemProvider = new ForwardingUMLDiffItemProvider((ItemProviderAdapter)super
+					.createExtendChangeAdapter());
+		}
+		return fExtendChangeItemProvider;
 	}
 
 	/**
@@ -86,8 +124,11 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 	 */
 	@Override
 	public Adapter createGeneralizationSetChangeAdapter() {
-		// TODO Auto-generated method stub
-		return super.createGeneralizationSetChangeAdapter();
+		if (fGeneralizationSetChangeItemProvider == null) {
+			fGeneralizationSetChangeItemProvider = new ForwardingUMLDiffItemProvider(
+					(ItemProviderAdapter)super.createGeneralizationSetChangeAdapter());
+		}
+		return fGeneralizationSetChangeItemProvider;
 	}
 
 	/**
@@ -97,8 +138,11 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 	 */
 	@Override
 	public Adapter createExecutionSpecificationChangeAdapter() {
-		// TODO Auto-generated method stub
-		return super.createExecutionSpecificationChangeAdapter();
+		if (fExecutionSpecificationChangeItemProvider == null) {
+			fExecutionSpecificationChangeItemProvider = new ForwardingUMLDiffItemProvider(
+					(ItemProviderAdapter)super.createExecutionSpecificationChangeAdapter());
+		}
+		return fExecutionSpecificationChangeItemProvider;
 	}
 
 	/**
@@ -108,8 +152,11 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 	 */
 	@Override
 	public Adapter createIntervalConstraintChangeAdapter() {
-		// TODO Auto-generated method stub
-		return super.createIntervalConstraintChangeAdapter();
+		if (fIntervalConstraintChangeItemProvider == null) {
+			fIntervalConstraintChangeItemProvider = new ForwardingUMLDiffItemProvider(
+					(ItemProviderAdapter)super.createIntervalConstraintChangeAdapter());
+		}
+		return fIntervalConstraintChangeItemProvider;
 	}
 
 	/**
@@ -119,8 +166,11 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 	 */
 	@Override
 	public Adapter createMessageChangeAdapter() {
-		// TODO Auto-generated method stub
-		return super.createMessageChangeAdapter();
+		if (fMessageChangeItemProvider == null) {
+			fMessageChangeItemProvider = new ForwardingUMLDiffItemProvider((ItemProviderAdapter)super
+					.createMessageChangeAdapter());
+		}
+		return fMessageChangeItemProvider;
 	}
 
 	/**
@@ -130,8 +180,11 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 	 */
 	@Override
 	public Adapter createStereotypePropertyChangeAdapter() {
-		// TODO Auto-generated method stub
-		return super.createStereotypePropertyChangeAdapter();
+		if (fStereotypePropertyChangeItemProvider == null) {
+			fStereotypePropertyChangeItemProvider = new ForwardingUMLDiffItemProvider(
+					(ItemProviderAdapter)super.createStereotypePropertyChangeAdapter());
+		}
+		return fStereotypePropertyChangeItemProvider;
 	}
 
 	/**
@@ -141,8 +194,11 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 	 */
 	@Override
 	public Adapter createStereotypeApplicationChangeAdapter() {
-		// TODO Auto-generated method stub
-		return super.createStereotypeApplicationChangeAdapter();
+		if (fStereotypeApplicationChangeItemProvider == null) {
+			fStereotypeApplicationChangeItemProvider = new ForwardingUMLDiffItemProvider(
+					(ItemProviderAdapter)super.createStereotypeApplicationChangeAdapter());
+		}
+		return fStereotypeApplicationChangeItemProvider;
 	}
 
 	/**
@@ -152,8 +208,11 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 	 */
 	@Override
 	public Adapter createStereotypeReferenceChangeAdapter() {
-		// TODO Auto-generated method stub
-		return super.createStereotypeReferenceChangeAdapter();
+		if (fStereotypeReferenceChangeItemProvider == null) {
+			fStereotypeReferenceChangeItemProvider = new ForwardingUMLDiffItemProvider(
+					(ItemProviderAdapter)super.createStereotypeReferenceChangeAdapter());
+		}
+		return fStereotypeReferenceChangeItemProvider;
 	}
 
 	/**
@@ -163,8 +222,25 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 	 */
 	@Override
 	public Adapter createProfileApplicationChangeAdapter() {
-		// TODO Auto-generated method stub
-		return super.createProfileApplicationChangeAdapter();
+		if (fProfileApplicationChangeItemProvider == null) {
+			fProfileApplicationChangeItemProvider = new ForwardingUMLDiffItemProvider(
+					(ItemProviderAdapter)super.createProfileApplicationChangeAdapter());
+		}
+		return fProfileApplicationChangeItemProvider;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.provider.UMLCompareItemProviderAdapterFactory#createIncludeChangeAdapter()
+	 */
+	@Override
+	public Adapter createIncludeChangeAdapter() {
+		if (fIncludeChangeItemProvider == null) {
+			fIncludeChangeItemProvider = new ForwardingUMLDiffItemProvider((ItemProviderAdapter)super
+					.createIncludeChangeAdapter());
+		}
+		return fIncludeChangeItemProvider;
 	}
 
 }

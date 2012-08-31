@@ -70,14 +70,14 @@ public class AssociationChangeItemProvider
 	}
 
 	/**
-	 * This returns AssociationChange.gif.
+	 * This returns AssociationChangeSpec.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/AssociationChange")); //$NON-NLS-1$
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/AssociationChangeSpec")); //$NON-NLS-1$
 	}
 
 	/**
