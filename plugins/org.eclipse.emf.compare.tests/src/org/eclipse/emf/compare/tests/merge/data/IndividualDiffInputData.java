@@ -201,4 +201,40 @@ public class IndividualDiffInputData extends AbstractInputData {
 	public Resource getReferenceMonoUnsetRightOutOfScope() throws IOException {
 		return loadFromClassloader("outofscope/referencemonounset/right.nodes");
 	}
+
+	public Resource getReferenceMultiAddLeftOutOfScope() throws IOException {
+		return loadFromClassloader("outofscope/referencemultiadd/left.nodes");
+	}
+
+	public Resource getReferenceMultiAddOriginOutOfScope() throws IOException {
+		return loadFromClassloader("outofscope/referencemultiadd/origin.nodes");
+	}
+
+	public Resource getReferenceMultiAddRightOutOfScope() throws IOException {
+		return loadFromClassloader("outofscope/referencemultiadd/right.nodes");
+	}
+
+	public Resource getReferenceMultiDelLeftOutOfScope() throws IOException {
+		return loadFromClassloader("outofscope/referencemultidel/left.nodes");
+	}
+
+	public Resource getReferenceMultiDelOriginOutOfScope() throws IOException {
+		return loadFromClassloader("outofscope/referencemultidel/origin.nodes");
+	}
+
+	public Resource getReferenceMultiDelRightOutOfScope() throws IOException {
+		return loadFromClassloader("outofscope/referencemultidel/right.nodes");
+	}
+
+	public Resource getReferenceMultiMoveLeftOutOfScope() throws IOException {
+		return loadFromClassloader("outofscope/referencemultimove/left.nodes");
+	}
+
+	public Resource getReferenceMultiMoveOriginOutOfScope() throws IOException {
+		return loadFromClassloader("outofscope/referencemultimove/origin.nodes");
+	}
+
+	public Resource getReferenceMultiMoveRightOutOfScope() throws IOException {
+		return loadFromClassloader("outofscope/referencemultimove/right.nodes");
+	}
 }

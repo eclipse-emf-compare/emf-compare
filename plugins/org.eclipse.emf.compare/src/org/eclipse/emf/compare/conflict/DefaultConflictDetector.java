@@ -334,12 +334,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 		final Object deletedValue;
 		final EStructuralFeature feature;
 		if (diff instanceof ReferenceChange) {
-			final Match valueMatch = comparison.getMatch(((ReferenceChange)diff).getValue());
-			if (diff.getSource() == DifferenceSource.LEFT) {
-				deletedValue = valueMatch.getRight();
-			} else {
-				deletedValue = valueMatch.getLeft();
-			}
+			deletedValue = ((ReferenceChange)diff).getValue();
 			feature = ((ReferenceChange)diff).getReference();
 		} else {
 			deletedValue = ((AttributeChange)diff).getValue();

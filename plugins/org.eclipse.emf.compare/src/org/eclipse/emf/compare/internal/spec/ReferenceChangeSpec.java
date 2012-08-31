@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.internal.spec;
 
 import com.google.common.base.Objects;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
@@ -23,6 +24,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.impl.ReferenceChangeImpl;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EMFCompareCopier;
+import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -293,8 +295,14 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 		final EObject expectedValue;
 		if (valueMatch == null) {
 			// The value being moved is out of the scope
-			// Whether it is a proxy or not, move the value itself.
-			expectedValue = getValue();
+			// We need to look it up
+			if (getReference().isMany()) {
+				@SuppressWarnings("unchecked")
+				final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(getReference());
+				expectedValue = findMatchIn(targetList, getValue());
+			} else {
+				expectedValue = (EObject)expectedContainer.eGet(getReference());
+			}
 		} else {
 			if (rightToLeft) {
 				expectedValue = valueMatch.getLeft();
@@ -507,8 +515,14 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 
 		final EObject expectedValue;
 		if (valueMatch == null) {
-			// value is out of the scope, use it as-is
-			expectedValue = getValue();
+			// value is out of the scope... we need to look it up
+			if (getReference().isMany()) {
+				final List<EObject> targetList = (List<EObject>)currentContainer.eGet(getReference());
+				expectedValue = findMatchIn(targetList, getValue());
+			} else {
+				// the value will not be needed anyway
+				expectedValue = null;
+			}
 		} else if (rightToLeft) {
 			expectedValue = valueMatch.getLeft();
 		} else {
@@ -581,6 +595,29 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			}
 			targetContainer.eSet(getReference(), expectedValue);
 		}
+	}
+
+	/**
+	 * Seeks a match of the given {@code element} in the given list, using the equality helper to find it.
+	 * This is only used when moving or deleting proxies for now.
+	 * 
+	 * @param list
+	 *            The list from which we seek a value.
+	 * @param element
+	 *            The value for which we need a match in {@code list}.
+	 * @return The match of {@code element} in {@code list}, {@code null} if none.
+	 */
+	private EObject findMatchIn(List<EObject> list, EObject element) {
+		final Comparison comparison = getMatch().getComparison();
+		final EqualityHelper helper = comparison.getConfiguration().getEqualityHelper();
+		final Iterator<EObject> it = list.iterator();
+		while (it.hasNext()) {
+			final EObject next = it.next();
+			if (helper.matchingValues(comparison, next, element)) {
+				return next;
+			}
+		}
+		return null;
 	}
 
 	/**

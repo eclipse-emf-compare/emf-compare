@@ -54,8 +54,8 @@ public class DiffUtilTest {
 		final List<Character> lcs = DiffUtil.longestCommonSubsequence(emptyComparison, left, right);
 
 		/*
-		 * This is documented in {@link DefaultDiffEngine#longestCommonSubsequence(Comparison, List, List)}.
-		 * Ensure the documentation stays in sync.
+		 * This is documented in {@link DiffUtil#longestCommonSubsequence(Comparison, List, List)}. Ensure the
+		 * documentation stays in sync.
 		 */
 		assertEqualContents(Lists.charactersOf("cde"), lcs);
 	}

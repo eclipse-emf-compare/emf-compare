@@ -197,11 +197,10 @@ public final class DiffUtil {
 	 * will be returned.
 	 * <p>
 	 * For example, it the two given sequence are, in this order, <code>{"a", "b", "c", "d", "e"}</code> and
-	 * <code>{"c", "z",
-	 * "d", "a", "b"}</code>, there are two "longest" subsequences : <code>{"a", "b"}</code> and
-	 * <code>{"c", "d"}</code>. The first of those two subsequences in the second list is
-	 * <code>{"c", "d"}</code>. On the other hand, the LCS of <code>{"a", "b", "c", "d",
-	 * "e"}</code> and <code>{"y", "c", "d", "e", "b"}</code> is <code>{"c", "d", "e"}</code>.
+	 * <code>{"c", "z", "d", "a", "b"}</code>, there are two "longest" subsequences : <code>{"a", "b"}</code>
+	 * and <code>{"c", "d"}</code>. The first of those two subsequences in the second list is
+	 * <code>{"c", "d"}</code>. On the other hand, the LCS of <code>{"a", "b", "c", "d", "e"}</code> and
+	 * <code>{"y", "c", "d", "e", "b"}</code> is <code>{"c", "d", "e"}</code>.
 	 * </p>
 	 * <p>
 	 * The following algorithm has been inferred from the wikipedia article on the Longest Common Subsequence,

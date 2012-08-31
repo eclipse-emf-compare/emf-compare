@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes:Node xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes" xmi:id="_IhRlcPDjEeGulMJQ4WFvpA" name="oosRoot">
+  <containmentRef1 xmi:id="_M3_uEPDjEeGulMJQ4WFvpA" name="oosNode1"/>
+  <containmentRef1 xmi:id="_PlpnIPDjEeGulMJQ4WFvpA" name="oosNode2"/>
+  <containmentRef1 xmi:id="_YHOJAPJ3EeGYnYyjjeeYdA" name="oosNode3"/>
+</nodes:Node>
