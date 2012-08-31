@@ -14,11 +14,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.eclipse.emf.compare.rcp.ui.input.EMFCompareEditorInput;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -131,28 +128,6 @@ public class Activator extends AbstractUIPlugin {
 			iterator.next().dispose();
 		}
 		resourcesMapper.clear();
-	}
-
-	/**
-	 * finds the editor associated with this input.
-	 * 
-	 * @param input
-	 *            : {@link EditorInput}
-	 * @return associated editor
-	 */
-	public static IEditorPart getEditor(EMFCompareEditorInput input) {
-		IWorkbenchPage activePage = getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		return activePage.findEditor(input);
-	}
-
-	/**
-	 * gets the active editor in the workbench.
-	 * 
-	 * @return editor part
-	 */
-	public static IEditorPart getActiveEditor() {
-		IWorkbenchPage activePage = getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		return activePage.getActiveEditor();
 	}
 
 }
