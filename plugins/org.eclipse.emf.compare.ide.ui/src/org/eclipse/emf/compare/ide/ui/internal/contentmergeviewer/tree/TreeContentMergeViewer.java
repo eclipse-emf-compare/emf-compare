@@ -17,8 +17,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
@@ -32,7 +32,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Tree;
 
 /**
  * Specialized {@link org.eclipse.compare.contentmergeviewer.ContentMergeViewer} that uses
@@ -98,8 +97,8 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	@SuppressWarnings("unchecked")
 	// see createMergeViewer() to see it is safe
 	@Override
-	protected IMergeViewer<Tree> getAncestorMergeViewer() {
-		return (IMergeViewer<Tree>)super.getAncestorMergeViewer();
+	protected TreeMergeViewer getAncestorMergeViewer() {
+		return (TreeMergeViewer)super.getAncestorMergeViewer();
 	}
 
 	/**
@@ -110,8 +109,8 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	@SuppressWarnings("unchecked")
 	// see createMergeViewer() to see it is safe
 	@Override
-	protected IMergeViewer<Tree> getLeftMergeViewer() {
-		return (IMergeViewer<Tree>)super.getLeftMergeViewer();
+	protected TreeMergeViewer getLeftMergeViewer() {
+		return (TreeMergeViewer)super.getLeftMergeViewer();
 	}
 
 	/**
@@ -122,8 +121,8 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	@SuppressWarnings("unchecked")
 	// see createMergeViewer() to see it is safe
 	@Override
-	protected IMergeViewer<Tree> getRightMergeViewer() {
-		return (IMergeViewer<Tree>)super.getRightMergeViewer();
+	protected TreeMergeViewer getRightMergeViewer() {
+		return (TreeMergeViewer)super.getRightMergeViewer();
 	}
 
 	/**
@@ -186,7 +185,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#createMergeViewer(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
-	protected IMergeViewer<Tree> createMergeViewer(final Composite parent, MergeViewerSide side) {
+	protected MergeViewer createMergeViewer(final Composite parent, MergeViewerSide side) {
 		final TreeMergeViewer mergeTreeViewer = new TreeMergeViewer(parent, side);
 		IContentProvider contentProvider = new AdapterFactoryContentProvider(fAdapterFactory);
 		mergeTreeViewer.setContentProvider(contentProvider);

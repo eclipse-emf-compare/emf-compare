@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.xmi;bundle-version="2.5.0",
  org.eclipse.team.core;bundle-version="3.5.0",
  org.eclipse.emf.compare.ide;bundle-version="2.0.0",
- org.eclipse.jface.text;bundle-version="3.5.0"
+ org.eclipse.jface.text;bundle-version="3.5.0",
+ org.eclipse.emf.compare.rcp.ui;bundle-version="2.0.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
@@ -22,7 +23,6 @@ Export-Package: org.eclipse.emf.compare.ide.ui.internal;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.actions.filter;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.actions.group;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer,
- org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;x-internal:=true,

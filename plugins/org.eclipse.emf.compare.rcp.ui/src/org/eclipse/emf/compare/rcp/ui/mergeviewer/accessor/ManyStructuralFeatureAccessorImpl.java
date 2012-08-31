@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;
+package org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor;
 
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.size;
@@ -24,10 +24,10 @@ import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewerItem;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.InsertionPoint;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.MatchedObject;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.InsertionPoint;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.MatchedObject;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EObject;
@@ -65,15 +65,15 @@ public class ManyStructuralFeatureAccessorImpl extends BasicStructuralFeatureAcc
 	}
 
 	private List<? extends IMergeViewerItem> createMergeViewerItemFrom(List<?> values) {
-		List<MatchedObject> ret = newArrayListWithCapacity(values.size());
+		List<IMergeViewerItem> ret = newArrayListWithCapacity(values.size());
 		for (Object value : values) {
-			MatchedObject valueToAdd = createMergeViewerItemFrom(value);
+			IMergeViewerItem valueToAdd = createMergeViewerItemFrom(value);
 			ret.add(valueToAdd);
 		}
 		return ret;
 	}
 
-	private MatchedObject createMergeViewerItemFrom(Object object) {
+	private IMergeViewerItem createMergeViewerItemFrom(Object object) {
 		Diff diff = getDiffWithValue(object);
 		Object left = matchingValue(object, MergeViewerSide.LEFT);
 		Object right = matchingValue(object, MergeViewerSide.RIGHT);

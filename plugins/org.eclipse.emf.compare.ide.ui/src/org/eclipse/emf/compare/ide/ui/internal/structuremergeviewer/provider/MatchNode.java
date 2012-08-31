@@ -24,7 +24,7 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.EObjectNode;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IDEEObjectNode;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode;
 import org.eclipse.emf.ecore.EObject;
 
@@ -101,7 +101,7 @@ public class MatchNode extends AbstractEDiffNode {
 	public ITypedElement getAncestor() {
 		EObject o = getTarget().getOrigin();
 		if (o != null) {
-			return new EObjectNode(getAdapterFactory(), o);
+			return new IDEEObjectNode(getAdapterFactory(), o);
 		}
 		return null;
 	}
@@ -115,7 +115,7 @@ public class MatchNode extends AbstractEDiffNode {
 	public ITypedElement getLeft() {
 		EObject o = getTarget().getLeft();
 		if (o != null) {
-			return new EObjectNode(getAdapterFactory(), o);
+			return new IDEEObjectNode(getAdapterFactory(), o);
 		}
 		return null;
 	}
@@ -129,7 +129,7 @@ public class MatchNode extends AbstractEDiffNode {
 	public ITypedElement getRight() {
 		EObject o = getTarget().getRight();
 		if (o != null) {
-			return new EObjectNode(getAdapterFactory(), o);
+			return new IDEEObjectNode(getAdapterFactory(), o);
 		}
 		return null;
 	}

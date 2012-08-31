@@ -8,21 +8,23 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;
+package org.eclipse.emf.compare.rcp.ui.mergeviewer;
 
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 
 /**
- * Interface to specify that the implementing class is wrapping an EObject.
- * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public interface IEObjectAccessor {
+public interface IMergeViewerItem {
 
-	/**
-	 * Returns the wrapped EObject.
-	 * 
-	 * @return the wrapped EObject.
-	 */
-	EObject getEObject();
+	Diff getDiff();
+
+	Object getLeft();
+
+	Object getRight();
+
+	Object getAncestor();
+
+	Object getSideValue(MergeViewerSide side);
 }

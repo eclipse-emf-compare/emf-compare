@@ -8,23 +8,19 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
-
-import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
+package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public interface IMergeViewerItem {
+public final class ContentMergeViewerConstants {
 
-	Diff getDiff();
+	public static final String DIFF_NODE_TYPE = "emfcompare_diff"; //$NON-NLS-1$
 
-	Object getLeft();
+	public static final String TEXT_DIFF_NODE_TYPE = "eText"; //$NON-NLS-1$
 
-	Object getRight();
+	public static final String EOBJECT_NODE_TYPE = "eobject"; //$NON-NLS-1$
 
-	Object getAncestor();
-
-	Object getSideValue(MergeViewerSide side);
+	private ContentMergeViewerConstants() {
+	}
 }

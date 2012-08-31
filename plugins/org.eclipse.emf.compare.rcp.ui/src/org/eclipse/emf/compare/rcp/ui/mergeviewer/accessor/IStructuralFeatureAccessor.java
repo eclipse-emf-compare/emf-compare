@@ -8,13 +8,13 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;
+package org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor;
 
 import com.google.common.collect.ImmutableList;
 
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 

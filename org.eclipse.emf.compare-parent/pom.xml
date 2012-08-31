@@ -62,8 +62,8 @@
     <!-- RCP UI -->
     <!-- Not compiling yet
     <module>../packaging/org.eclipse.emf.compare.rcp.ui-feature</module>
-    <module>../plugins/org.eclipse.emf.compare.rcp.ui</module>
     -->
+    <module>../plugins/org.eclipse.emf.compare.rcp.ui</module>
     
     <!-- UML -->
     <!-- Not compiling yet

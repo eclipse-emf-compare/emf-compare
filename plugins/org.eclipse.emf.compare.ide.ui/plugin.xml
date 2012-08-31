@@ -40,7 +40,7 @@
       </contentTypeBinding>
       <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table.TableContentMergeViewerCreator"
-            extensions="objectlist"
+            extensions="emfcompare_diff"
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EObjectListContentMergeViewer"
             label="EMFCompare Content Merge Viewer">
       </viewer>

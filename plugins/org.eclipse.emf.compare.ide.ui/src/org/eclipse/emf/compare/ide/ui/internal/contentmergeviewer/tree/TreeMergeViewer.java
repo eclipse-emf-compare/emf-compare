@@ -10,18 +10,19 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;
 
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.AbstractMergeViewer;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IEObjectAccessor;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.StructuredMergeViewer;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IEObjectAccessor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.Control;
 
-class TreeMergeViewer extends AbstractMergeViewer<Tree> {
+class TreeMergeViewer extends StructuredMergeViewer {
 
 	private IEObjectAccessor fInput;
+
+	private TreeViewer fTreeViewer;
 
 	/**
 	 * @param parent
@@ -30,8 +31,15 @@ class TreeMergeViewer extends AbstractMergeViewer<Tree> {
 		super(parent, side);
 	}
 
-	public Tree getControl() {
-		return getStructuredViewer().getTree();
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer#createControl(org.eclipse.swt.widgets.Composite)
+	 */
+	@Override
+	protected Control createControl(Composite parent) {
+		fTreeViewer = new TreeViewer(parent);
+		return fTreeViewer.getControl();
 	}
 
 	/**
@@ -41,17 +49,7 @@ class TreeMergeViewer extends AbstractMergeViewer<Tree> {
 	 */
 	@Override
 	protected TreeViewer getStructuredViewer() {
-		return (TreeViewer)super.getStructuredViewer();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.AbstractMergeViewer#createStructuredViewer(org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	protected StructuredViewer createStructuredViewer(Composite parent) {
-		return new TreeViewer(parent);
+		return fTreeViewer;
 	}
 
 	/**
@@ -59,6 +57,7 @@ class TreeMergeViewer extends AbstractMergeViewer<Tree> {
 	 * 
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#setInput(java.lang.Object)
 	 */
+	@Override
 	public void setInput(Object input) {
 		if (input instanceof IEObjectAccessor) {
 			fInput = ((IEObjectAccessor)input);
@@ -85,6 +84,7 @@ class TreeMergeViewer extends AbstractMergeViewer<Tree> {
 	 * 
 	 * @see org.eclipse.jface.viewers.IInputProvider#getInput()
 	 */
+	@Override
 	public Object getInput() {
 		return fInput;
 	}
@@ -108,5 +108,15 @@ class TreeMergeViewer extends AbstractMergeViewer<Tree> {
 			}
 		}
 		return input;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.Viewer#refresh()
+	 */
+	@Override
+	public void refresh() {
+		fTreeViewer.refresh();
 	}
 }

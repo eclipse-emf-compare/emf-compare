@@ -13,9 +13,9 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.ManyStructuralFeatureAccessorImpl;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.SingleStructuralFeatureAccessorImpl;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IDEManyStructuralFeatureAccessorImpl;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IDESingleStructuralFeatureAccessorImpl;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EReference;
 
 /**
@@ -54,9 +54,9 @@ public class ReferenceChangeNode extends DiffNode {
 	public ITypedElement getAncestor() {
 		EReference reference = getTarget().getReference();
 		if (reference.isMany()) {
-			return new ManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.ANCESTOR);
+			return new IDEManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.ANCESTOR);
 		} else {
-			return new SingleStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.ANCESTOR);
+			return new IDESingleStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.ANCESTOR);
 		}
 	}
 
@@ -69,9 +69,9 @@ public class ReferenceChangeNode extends DiffNode {
 	public ITypedElement getLeft() {
 		EReference reference = getTarget().getReference();
 		if (reference.isMany()) {
-			return new ManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.LEFT);
+			return new IDEManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.LEFT);
 		} else {
-			return new SingleStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.LEFT);
+			return new IDESingleStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.LEFT);
 		}
 	}
 
@@ -84,9 +84,9 @@ public class ReferenceChangeNode extends DiffNode {
 	public ITypedElement getRight() {
 		EReference reference = getTarget().getReference();
 		if (reference.isMany()) {
-			return new ManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.RIGHT);
+			return new IDEManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.RIGHT);
 		} else {
-			return new SingleStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.RIGHT);
+			return new IDESingleStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.RIGHT);
 		}
 	}
 }

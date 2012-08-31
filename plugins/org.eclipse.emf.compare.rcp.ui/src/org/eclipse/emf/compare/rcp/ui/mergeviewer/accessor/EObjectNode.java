@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;
+package org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor;
 
 import com.google.common.collect.Maps;
 
@@ -19,15 +19,13 @@ import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.compare.IStreamContentAccessor;
-import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.rcp.ui.Activator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -43,7 +41,7 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class EObjectNode implements ITypedElement, IEObjectAccessor, IStreamContentAccessor {
+public class EObjectNode implements IEObjectAccessor {
 
 	/**
 	 * The wrapped {@link EObject}.
@@ -94,26 +92,12 @@ public class EObjectNode implements ITypedElement, IEObjectAccessor, IStreamCont
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.compare.ITypedElement#getType()
-	 */
-	public String getType() {
-		return "eobject";
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IEObjectAccessor#getEObject()
 	 */
 	public EObject getEObject() {
 		return fEObject;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.IStreamContentAccessor#getContents()
-	 */
 	public InputStream getContents() throws CoreException {
 		XMIResourceImpl r = new XMIResourceImpl(URI.createURI("dummy.xmi")); //$NON-NLS-1$
 
@@ -126,8 +110,7 @@ public class EObjectNode implements ITypedElement, IEObjectAccessor, IStreamCont
 		try {
 			r.save(sw, Maps.newHashMap());
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, EMFCompareIDEUIPlugin.PLUGIN_ID,
-					e.getMessage(), e));
+			throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
 		}
 		// Assume that the platform locale is appropriate.
 		return new ByteArrayInputStream(sw.toString().getBytes());

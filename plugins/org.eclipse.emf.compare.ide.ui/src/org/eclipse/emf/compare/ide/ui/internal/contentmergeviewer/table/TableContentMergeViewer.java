@@ -18,11 +18,12 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewerItem;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.MatchedObject;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.AbstractBufferedCanvas;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.MatchedObject;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.TableMergeViewer;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemFontProvider;
@@ -50,7 +51,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
@@ -147,7 +147,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 		}
 	}
 
-	private Diff getDiffToCopy(IMergeViewer<? extends Scrollable> mergeViewer) {
+	private Diff getDiffToCopy(MergeViewer mergeViewer) {
 		Diff diffToCopy = null;
 		ISelection selection = mergeViewer.getSelection();
 		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
@@ -213,11 +213,24 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 *      org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide)
 	 */
 	@Override
-	protected IMergeViewer<? extends Composite> createMergeViewer(Composite parent, final MergeViewerSide side) {
-		TableMergeViewer ret = new TableMergeViewer(parent, this, side);
+	protected MergeViewer createMergeViewer(Composite parent, final MergeViewerSide side) {
+		TableMergeViewer ret = new TableMergeViewer(parent, side, this);
 		ret.getStructuredViewer().getTable().getVerticalBar().setVisible(false);
 
-		ret.setContentProvider(new ArrayContentProvider());
+		ret.setContentProvider(new ArrayContentProvider() {
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see org.eclipse.jface.viewers.ArrayContentProvider#getElements(java.lang.Object)
+			 */
+			@Override
+			public Object[] getElements(Object inputElement) {
+				if (inputElement instanceof IStructuralFeatureAccessor) {
+					return super.getElements(((IStructuralFeatureAccessor)inputElement).getItems());
+				}
+				return super.getElements(inputElement);
+			}
+		});
 		ret.setLabelProvider(new AdapterFactoryLabelProvider.FontAndColorProvider(fAdapterFactory, ret
 				.getStructuredViewer()) {
 			/**
@@ -288,12 +301,8 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 		return ret;
 	}
 
-	private void redrawCenterControl() {
-		if (getCenterControl() instanceof AbstractBufferedCanvas) {
-			((AbstractBufferedCanvas)getCenterControl()).repaint();
-		} else {
-			getCenterControl().redraw();
-		}
+	protected void redrawCenterControl() {
+		getCenterControl().redraw();
 	}
 
 	/**
@@ -331,7 +340,8 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 				TableItem rightItem = findRightTableItemFromLeftDiff(rightItems, leftDiff);
 
 				if (rightItem != null) {
-					Color strokeColor = getColors().getStrokeColor(leftDiff, isThreeWay(), false, selected);
+					Color strokeColor = getCompareColor().getStrokeColor(leftDiff, isThreeWay(), false,
+							selected);
 					g.setForeground(strokeColor);
 					drawCenterLine(g, leftClientArea, rightClientArea, leftItem, rightItem);
 				}

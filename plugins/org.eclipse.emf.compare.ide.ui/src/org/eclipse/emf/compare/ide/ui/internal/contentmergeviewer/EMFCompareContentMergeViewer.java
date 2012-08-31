@@ -21,14 +21,18 @@ import org.eclipse.compare.internal.Utilities;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
 import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColorProvider;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
@@ -47,14 +51,12 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.ScrollBar;
-import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.ui.actions.ActionFactory;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer implements ISelectionChangedListener {
+public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer implements ISelectionChangedListener, ICompareColorProvider {
 
 	private static final String HANDLER_SERVICE = "fHandlerService";
 
@@ -71,11 +73,11 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 */
 	protected static final int CENTER_WIDTH = 34;
 
-	private IMergeViewer<? extends Composite> fAncestor;
+	private MergeViewer fAncestor;
 
-	private IMergeViewer<? extends Composite> fLeft;
+	private MergeViewer fLeft;
 
-	private IMergeViewer<? extends Composite> fRight;
+	private MergeViewer fRight;
 
 	private ActionContributionItem fCopyDiffLeftToRightItem;
 
@@ -107,9 +109,11 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	}
 
 	/**
-	 * @return the fColors
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColorProvider#getCompareColor()
 	 */
-	public EMFCompareColor getColors() {
+	public ICompareColor getCompareColor() {
 		return fColors;
 	}
 
@@ -200,17 +204,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 		fLeft = createMergeViewer(composite, MergeViewerSide.LEFT);
 		fLeft.addSelectionChangedListener(this);
-		ScrollBar leftVerticalBar = fLeft.getControl().getVerticalBar();
-		if (leftVerticalBar != null) {
-			leftVerticalBar.setVisible(false);
-		}
 
 		fRight = createMergeViewer(composite, MergeViewerSide.RIGHT);
 		fRight.addSelectionChangedListener(this);
-		ScrollBar rightVerticalBar = fRight.getControl().getVerticalBar();
-		if (rightVerticalBar != null) {
-			rightVerticalBar.setVisible(false);
-		}
 
 		fColors = new EMFCompareColor(this, null, getCompareConfiguration());
 	}
@@ -305,8 +301,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		fRight.getControl().setBounds(x + width1 + centerWidth, y, width2, height);
 	}
 
-	protected abstract IMergeViewer<? extends Scrollable> createMergeViewer(Composite parent,
-			MergeViewerSide side);
+	protected abstract MergeViewer createMergeViewer(Composite parent, MergeViewerSide side);
 
 	@Override
 	protected final int getCenterWidth() {
@@ -404,21 +399,21 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	/**
 	 * @return the fAncestor
 	 */
-	protected IMergeViewer<? extends Scrollable> getAncestorMergeViewer() {
+	protected MergeViewer getAncestorMergeViewer() {
 		return fAncestor;
 	}
 
 	/**
 	 * @return the fLeft
 	 */
-	protected IMergeViewer<? extends Scrollable> getLeftMergeViewer() {
+	protected MergeViewer getLeftMergeViewer() {
 		return fLeft;
 	}
 
 	/**
 	 * @return the fRight
 	 */
-	protected IMergeViewer<? extends Scrollable> getRightMergeViewer() {
+	protected MergeViewer getRightMergeViewer() {
 		return fRight;
 	}
 

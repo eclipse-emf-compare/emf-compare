@@ -8,44 +8,20 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util;
+package org.eclipse.emf.compare.rcp.ui.mergeviewer;
 
-import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ReferenceChange;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public final class DiffInsertionPoint {
-
-	private final Diff fDiff;
+public final class InsertionPoint extends BasicMergeViewerItemImpl {
 
 	/**
 	 * 
 	 */
-	public DiffInsertionPoint(Diff diff) {
-		this.fDiff = diff;
-	}
-
-	/**
-	 * @return
-	 */
-	public Diff getDiff() {
-		return fDiff;
-	}
-
-	public Match getMatch() {
-		final Match ret;
-		if (fDiff instanceof ReferenceChange) {
-			ret = fDiff.getMatch().getComparison().getMatch(((ReferenceChange)fDiff).getValue());
-		} else if (fDiff instanceof AttributeChange) {
-			ret = fDiff.getMatch();
-		} else {
-			ret = null;
-		}
-		return ret;
+	public InsertionPoint(Diff diff, Object left, Object right, Object ancestor) {
+		super(diff, left, right, ancestor);
 	}
 
 	/**

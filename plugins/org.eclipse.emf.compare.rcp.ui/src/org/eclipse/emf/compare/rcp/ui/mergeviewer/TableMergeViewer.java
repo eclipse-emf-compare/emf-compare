@@ -8,17 +8,14 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;
+package org.eclipse.emf.compare.rcp.ui.mergeviewer;
 
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.AbstractMergeViewer;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewerItem;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.InsertionPoint;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.MergeViewerInfoComposite;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor;
-import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
+import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -29,6 +26,7 @@ import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
@@ -38,19 +36,17 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-class TableMergeViewer extends AbstractMergeViewer<Composite> {
+public class TableMergeViewer extends StructuredMergeViewer {
 
-	private IStructuralFeatureAccessor fInput;
+	private final ICompareColorProvider fColorProvider;
 
-	private final EMFCompareContentMergeViewer fContentMergeViewer;
+	private TableViewer fTableViewer;
 
-	private Composite c;
+	private MergeViewerInfoViewer fInfoViewer;
 
-	private MergeViewerInfoComposite mergeViewerInfoComposite;
-
-	TableMergeViewer(Composite parent, EMFCompareContentMergeViewer contentMergeViewer, MergeViewerSide side) {
+	public TableMergeViewer(Composite parent, MergeViewerSide side, ICompareColorProvider colorProvider) {
 		super(parent, side);
-		fContentMergeViewer = contentMergeViewer;
+		fColorProvider = colorProvider;
 
 		getStructuredViewer().getTable().addListener(SWT.EraseItem, new Listener() {
 			public void handleEvent(Event event) {
@@ -65,20 +61,11 @@ class TableMergeViewer extends AbstractMergeViewer<Composite> {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#getControl()
-	 */
-	public Composite getControl() {
-		return c;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.AbstractMergeViewer#createStructuredViewer()
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer#createControl(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
-	protected final TableViewer createStructuredViewer(Composite parent) {
-		c = new Composite(parent, SWT.NONE);
+	protected Control createControl(Composite parent) {
+		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(1, false);
 		layout.marginLeft = -1;
 		layout.marginRight = -1;
@@ -88,67 +75,64 @@ class TableMergeViewer extends AbstractMergeViewer<Composite> {
 		layout.verticalSpacing = 0;
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
-		c.setLayout(layout);
+		composite.setLayout(layout);
 
-		mergeViewerInfoComposite = new MergeViewerInfoComposite(c);
-		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
-		mergeViewerInfoComposite.setLayoutData(layoutData);
+		fInfoViewer = new MergeViewerInfoViewer(composite, getSide());
+		fInfoViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
-		TableViewer tableViewer = new TableViewer(c, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL
+		fTableViewer = new TableViewer(composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL
 				| SWT.FULL_SELECTION);
-		tableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		fTableViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		return tableViewer;
+		return composite;
 	}
 
-	public int getVerticalOffset() {
-		return mergeViewerInfoComposite.getSize().y - 2;
+	public final int getVerticalOffset() {
+		return fInfoViewer.getControl().getSize().y - 2;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.AbstractMergeViewer#setLabelProvider(org.eclipse.jface.viewers.ILabelProvider)
+	 * @see org.eclipse.emf.compare.MergeViewer.ui.internal.contentmergeviewer.AbstractMergeViewer#getStructuredViewer()
 	 */
 	@Override
-	public void setLabelProvider(ILabelProvider labelProvider) {
+	public final TableViewer getStructuredViewer() {
+		return fTableViewer;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer#setContentProvider(org.eclipse.jface.viewers.IContentProvider)
+	 */
+	@Override
+	public void setContentProvider(IContentProvider contentProvider) {
+		super.setContentProvider(contentProvider);
+		fInfoViewer.setContentProvider(contentProvider);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer#setLabelProvider(org.eclipse.jface.viewers.IBaseLabelProvider)
+	 */
+	@Override
+	public void setLabelProvider(IBaseLabelProvider labelProvider) {
 		super.setLabelProvider(labelProvider);
-		mergeViewerInfoComposite.setLabelProvider(labelProvider);
+		fInfoViewer.setLabelProvider(labelProvider);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.AbstractMergeViewer#getStructuredViewer()
+	 * @see org.eclipse.jface.viewers.Viewer#inputChanged(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	protected TableViewer getStructuredViewer() {
-		return (TableViewer)super.getStructuredViewer();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#setInput(java.lang.Object)
-	 */
-	public void setInput(Object object) {
-		if (object instanceof IStructuralFeatureAccessor) {
-			fInput = (IStructuralFeatureAccessor)object;
-			getStructuredViewer().setInput(fInput.getItems());
-			mergeViewerInfoComposite.setInput(fInput, getSide());
-		} else {
-			fInput = null;
-			getStructuredViewer().setInput(null);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.IInputProvider#getInput()
-	 */
-	public Object getInput() {
-		return fInput;
+	protected void inputChanged(Object input, Object oldInput) {
+		fTableViewer.setInput(input);
+		fInfoViewer.setInput(input);
+		((Composite)getControl()).layout(true);
 	}
 
 	private void handleEraseItemEvent(Event event) {
@@ -266,10 +250,13 @@ class TableMergeViewer extends AbstractMergeViewer<Composite> {
 	}
 
 	private void setDiffColorsToGC(GC g, Diff diff, boolean selected) {
-		g.setForeground(fContentMergeViewer.getColors().getStrokeColor(diff,
-				fContentMergeViewer.isThreeWay(), false, selected));
-		g.setBackground(fContentMergeViewer.getColors().getFillColor(diff, fContentMergeViewer.isThreeWay(),
-				false, selected));
+		boolean isThreeWay = false;
+		if (getInput() instanceof IStructuralFeatureAccessor) {
+			Comparison comparison = ((IStructuralFeatureAccessor)getInput()).getComparison();
+			isThreeWay = comparison.isThreeWay();
+		}
+		g.setForeground(fColorProvider.getCompareColor().getStrokeColor(diff, isThreeWay, false, selected));
+		g.setBackground(fColorProvider.getCompareColor().getFillColor(diff, isThreeWay, false, selected));
 	}
 
 	/**
@@ -308,4 +295,16 @@ class TableMergeViewer extends AbstractMergeViewer<Composite> {
 			event.height = newHeight;
 		}
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.Viewer#refresh()
+	 */
+	@Override
+	public void refresh() {
+		fInfoViewer.refresh();
+		fTableViewer.refresh();
+	}
+
 }

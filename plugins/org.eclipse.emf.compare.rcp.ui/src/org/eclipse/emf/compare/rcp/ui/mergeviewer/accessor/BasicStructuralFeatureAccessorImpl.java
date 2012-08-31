@@ -9,7 +9,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;
+package org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor;
 
 import static com.google.common.collect.Iterables.filter;
 
@@ -18,25 +18,20 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
-import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewerItem;
-import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
-import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public abstract class BasicStructuralFeatureAccessorImpl implements IStructuralFeatureAccessor, ITypedElement {
+public abstract class BasicStructuralFeatureAccessorImpl implements IStructuralFeatureAccessor {
 
 	private final Diff fDiff;
 
@@ -78,39 +73,6 @@ public abstract class BasicStructuralFeatureAccessorImpl implements IStructuralF
 			}
 		}
 		return ret;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.ITypedElement#getName()
-	 */
-	public String getName() {
-		return this.getClass().getName();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.ITypedElement#getImage()
-	 */
-	public Image getImage() {
-		if (fStructuralFeature instanceof EAttribute) {
-			return ExtendedImageRegistry.getInstance().getImage(
-					EcoreEditPlugin.getPlugin().getImage("full/obj16/EAttribute")); //$NON-NLS-1$
-		} else {
-			return ExtendedImageRegistry.getInstance().getImage(
-					EcoreEditPlugin.getPlugin().getImage("full/obj16/EReference")); //$NON-NLS-1$
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.ITypedElement#getType()
-	 */
-	public String getType() {
-		return ContentMergeViewerConstants.REFERENCE_CHANGE_NODE_TYPE;
 	}
 
 	public EObject getEObject(MergeViewerSide side) {

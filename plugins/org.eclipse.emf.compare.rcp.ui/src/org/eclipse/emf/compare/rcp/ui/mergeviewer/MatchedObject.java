@@ -8,32 +8,35 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
+package org.eclipse.emf.compare.rcp.ui.mergeviewer;
 
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Match;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public final class InsertionPoint extends BasicMergeViewerItemImpl {
+public class MatchedObject extends BasicMergeViewerItemImpl {
 
 	/**
-	 * 
+	 * @param left
+	 * @param right
+	 * @param ancestor
 	 */
-	public InsertionPoint(Diff diff, Object left, Object right, Object ancestor) {
+	public MatchedObject(Diff diff, Object left, Object right, Object ancestor) {
 		super(diff, left, right, ancestor);
 	}
 
-	/**
-	 * Returns an empty String to avoid having to override
-	 * {@link org.eclipse.jface.viewers.ILabelProvider#getText(Object)} to do not display anything for
-	 * insertion point. {@inheritDoc}
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return ""; //$NON-NLS-1$
+	public MatchedObject(Object left, Object right, Object ancestor) {
+		this(null, left, right, ancestor);
+	}
+
+	public MatchedObject(Diff diff, Match match) {
+		this(diff, match.getLeft(), match.getRight(), match.getOrigin());
+	}
+
+	public MatchedObject(Match match) {
+		this(null, match.getLeft(), match.getRight(), match.getOrigin());
 	}
 
 }
