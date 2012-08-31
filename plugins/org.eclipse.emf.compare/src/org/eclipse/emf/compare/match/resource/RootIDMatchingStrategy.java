@@ -92,7 +92,7 @@ public class RootIDMatchingStrategy implements IResourceMatchingStrategy {
 		while (candidateIterator.hasNext() && match == null) {
 			final Resource candidate = candidateIterator.next();
 			final Set<String> candidateIDs = getResourceIdentifiers(candidate);
-			if (!candidateIDs.isEmpty() && candidateIDs.equals(referenceIDs)) {
+			if (!candidateIDs.isEmpty() && !Sets.intersection(candidateIDs, referenceIDs).isEmpty()) {
 				match = candidate;
 			}
 		}
