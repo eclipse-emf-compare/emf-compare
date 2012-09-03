@@ -1709,20 +1709,8 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertEquals(2, rightValue.size());
 
 		final URI proxyURI = ((InternalEObject)diff.getValue()).eProxyURI();
-		int leftProxyIndex = -1;
-		int rightProxyIndex = -1;
-		for (int i = 0; i < leftValue.size() && leftProxyIndex == -1; i++) {
-			final EObject candidate = leftValue.get(i);
-			if (candidate.eIsProxy() && proxyURI.equals(((InternalEObject)candidate).eProxyURI())) {
-				leftProxyIndex = i;
-			}
-		}
-		for (int i = 0; i < rightValue.size() && rightProxyIndex == -1; i++) {
-			final EObject candidate = rightValue.get(i);
-			if (candidate.eIsProxy() && proxyURI.equals(((InternalEObject)candidate).eProxyURI())) {
-				rightProxyIndex = i;
-			}
-		}
+		int leftProxyIndex = findProxyIndexIn(proxyURI, leftValue);
+		int rightProxyIndex = findProxyIndexIn(proxyURI, rightValue);
 
 		assertTrue(leftProxyIndex != -1);
 		assertTrue(rightProxyIndex != -1);
@@ -1738,20 +1726,8 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertEquals(2, leftValue.size());
 		assertEquals(2, rightValue.size());
 
-		leftProxyIndex = -1;
-		rightProxyIndex = -1;
-		for (int i = 0; i < leftValue.size() && leftProxyIndex == -1; i++) {
-			final EObject candidate = leftValue.get(i);
-			if (candidate.eIsProxy() && proxyURI.equals(((InternalEObject)candidate).eProxyURI())) {
-				leftProxyIndex = i;
-			}
-		}
-		for (int i = 0; i < rightValue.size() && rightProxyIndex == -1; i++) {
-			final EObject candidate = rightValue.get(i);
-			if (candidate.eIsProxy() && proxyURI.equals(((InternalEObject)candidate).eProxyURI())) {
-				rightProxyIndex = i;
-			}
-		}
+		leftProxyIndex = findProxyIndexIn(proxyURI, leftValue);
+		rightProxyIndex = findProxyIndexIn(proxyURI, rightValue);
 
 		assertTrue(leftProxyIndex != -1);
 		assertTrue(rightProxyIndex != -1);
@@ -1791,20 +1767,8 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertEquals(2, rightValue.size());
 
 		final URI proxyURI = ((InternalEObject)diff.getValue()).eProxyURI();
-		int leftProxyIndex = -1;
-		int rightProxyIndex = -1;
-		for (int i = 0; i < leftValue.size() && leftProxyIndex == -1; i++) {
-			final EObject candidate = leftValue.get(i);
-			if (candidate.eIsProxy() && proxyURI.equals(((InternalEObject)candidate).eProxyURI())) {
-				leftProxyIndex = i;
-			}
-		}
-		for (int i = 0; i < rightValue.size() && rightProxyIndex == -1; i++) {
-			final EObject candidate = rightValue.get(i);
-			if (candidate.eIsProxy() && proxyURI.equals(((InternalEObject)candidate).eProxyURI())) {
-				rightProxyIndex = i;
-			}
-		}
+		int leftProxyIndex = findProxyIndexIn(proxyURI, leftValue);
+		int rightProxyIndex = findProxyIndexIn(proxyURI, rightValue);
 
 		assertTrue(leftProxyIndex != -1);
 		assertTrue(rightProxyIndex != -1);
@@ -1820,163 +1784,299 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertEquals(2, leftValue.size());
 		assertEquals(2, rightValue.size());
 
-		leftProxyIndex = -1;
-		rightProxyIndex = -1;
-		for (int i = 0; i < leftValue.size() && leftProxyIndex == -1; i++) {
-			final EObject candidate = leftValue.get(i);
-			if (candidate.eIsProxy() && proxyURI.equals(((InternalEObject)candidate).eProxyURI())) {
-				leftProxyIndex = i;
-			}
-		}
-		for (int i = 0; i < rightValue.size() && rightProxyIndex == -1; i++) {
-			final EObject candidate = rightValue.get(i);
-			if (candidate.eIsProxy() && proxyURI.equals(((InternalEObject)candidate).eProxyURI())) {
-				rightProxyIndex = i;
-			}
-		}
+		leftProxyIndex = findProxyIndexIn(proxyURI, leftValue);
+		rightProxyIndex = findProxyIndexIn(proxyURI, rightValue);
 
 		assertTrue(leftProxyIndex != -1);
 		assertTrue(rightProxyIndex != -1);
 		assertEquals(leftProxyIndex, rightProxyIndex);
 	}
 
-	// @Test
-	// public void testReferenceMultiMove3WayLeftChangeLtR() throws IOException {
-	// final Resource left = input.getReferenceMultiMoveLeft();
-	// final Resource right = input.getReferenceMultiMoveRight();
-	// final Resource origin = input.getReferenceMultiMoveOrigin();
-	//
-	// Comparison comparison = EMFCompare.compare(left, right, origin);
-	//
-	// final List<Diff> differences = comparison.getDifferences();
-	// assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
-	//
-	// final String featureName = "multiValuedReference";
-	// final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-	// movedInReference("root.origin", featureName, "root.value1")));
-	//
-	// diff.copyLeftToRight();
-	// final EObject targetNode = getNodeNamed(right, "origin");
-	// assertNotNull(targetNode);
-	// final EObject sourceNode = getNodeNamed(left, "origin");
-	// assertNotNull(sourceNode);
-	// final EStructuralFeature feature = targetNode.eClass().getEStructuralFeature(featureName);
-	// assertNotNull(feature);
-	//
-	// final Object targetFeatureValue = targetNode.eGet(feature);
-	// final Object sourceFeatureValue = sourceNode.eGet(feature);
-	// assertTrue(targetFeatureValue instanceof List<?>);
-	// assertTrue(sourceFeatureValue instanceof List<?>);
-	// assertEqualContents(comparison, ((List<EObject>)targetFeatureValue),
-	// ((List<EObject>)sourceFeatureValue));
-	//
-	// comparison = EMFCompare.compare(left, right);
-	// assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
-	// }
+	@Test
+	public void testReferenceMultiMove3WayLeftChangeLtR() throws IOException {
+		final Resource left = input.getReferenceMultiMoveLeftOutOfScope();
+		final Resource right = input.getReferenceMultiMoveRightOutOfScope();
+		final Resource origin = input.getReferenceMultiMoveOriginOutOfScope();
 
-	// @Test
-	// public void testReferenceMultiMove3WayLeftChangeRtL() throws IOException {
-	// final Resource left = input.getReferenceMultiMoveLeft();
-	// final Resource right = input.getReferenceMultiMoveRight();
-	// final Resource origin = input.getReferenceMultiMoveOrigin();
-	//
-	// Comparison comparison = EMFCompare.compare(left, right, origin);
-	//
-	// final List<Diff> differences = comparison.getDifferences();
-	// assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
-	//
-	// final String featureName = "multiValuedReference";
-	// final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-	// movedInReference("root.origin", featureName, "root.value1")));
-	//
-	// diff.copyRightToLeft();
-	// final EObject targetNode = getNodeNamed(left, "origin");
-	// assertNotNull(targetNode);
-	// final EObject sourceNode = getNodeNamed(origin, "origin");
-	// assertNotNull(sourceNode);
-	// final EStructuralFeature feature = targetNode.eClass().getEStructuralFeature(featureName);
-	// assertNotNull(feature);
-	//
-	// final Object targetFeatureValue = targetNode.eGet(feature);
-	// final Object sourceFeatureValue = sourceNode.eGet(feature);
-	// assertTrue(targetFeatureValue instanceof List<?>);
-	// assertTrue(sourceFeatureValue instanceof List<?>);
-	// assertEqualContents(comparison, ((List<EObject>)targetFeatureValue),
-	// ((List<EObject>)sourceFeatureValue));
-	//
-	// comparison = EMFCompare.compare(left, right);
-	// assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
-	// }
+		Comparison comparison = EMFCompare.compare(left, right, origin);
 
-	// @Test
-	// public void testReferenceMultiMove3WayRightChangeLtR() throws IOException {
-	// // In order to have changes on the right side, we'll invert right and left
-	// final Resource left = input.getReferenceMultiMoveRight();
-	// final Resource right = input.getReferenceMultiMoveLeft();
-	// final Resource origin = input.getReferenceMultiMoveOrigin();
-	//
-	// Comparison comparison = EMFCompare.compare(left, right, origin);
-	//
-	// final List<Diff> differences = comparison.getDifferences();
-	// assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
-	//
-	// final String featureName = "multiValuedReference";
-	// final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-	// movedInReference("root.origin", featureName, "root.value1")));
-	//
-	// diff.copyLeftToRight();
-	// final EObject targetNode = getNodeNamed(right, "origin");
-	// assertNotNull(targetNode);
-	// final EObject sourceNode = getNodeNamed(origin, "origin");
-	// assertNotNull(sourceNode);
-	// final EStructuralFeature feature = targetNode.eClass().getEStructuralFeature(featureName);
-	// assertNotNull(feature);
-	//
-	// final Object targetFeatureValue = targetNode.eGet(feature);
-	// final Object sourceFeatureValue = sourceNode.eGet(feature);
-	// assertTrue(targetFeatureValue instanceof List<?>);
-	// assertTrue(sourceFeatureValue instanceof List<?>);
-	// assertEqualContents(comparison, ((List<EObject>)targetFeatureValue),
-	// ((List<EObject>)sourceFeatureValue));
-	//
-	// comparison = EMFCompare.compare(left, right);
-	// assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
-	// }
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
 
-	// @Test
-	// public void testReferenceMultiMove3WayRightChangeRtL() throws IOException {
-	// // In order to have changes on the right side, we'll invert right and left
-	// final Resource left = input.getReferenceMultiMoveRight();
-	// final Resource right = input.getReferenceMultiMoveLeft();
-	// final Resource origin = input.getReferenceMultiMoveOrigin();
-	//
-	// Comparison comparison = EMFCompare.compare(left, right, origin);
-	//
-	// final List<Diff> differences = comparison.getDifferences();
-	// assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
-	//
-	// final String featureName = "multiValuedReference";
-	// final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-	// movedInReference("root.origin", featureName, "root.value1")));
-	//
-	// diff.copyRightToLeft();
-	// final EObject targetNode = getNodeNamed(left, "origin");
-	// assertNotNull(targetNode);
-	// final EObject sourceNode = getNodeNamed(right, "origin");
-	// assertNotNull(sourceNode);
-	// final EStructuralFeature feature = targetNode.eClass().getEStructuralFeature(featureName);
-	// assertNotNull(feature);
-	//
-	// final Object targetFeatureValue = targetNode.eGet(feature);
-	// final Object sourceFeatureValue = sourceNode.eGet(feature);
-	// assertTrue(targetFeatureValue instanceof List<?>);
-	// assertTrue(sourceFeatureValue instanceof List<?>);
-	// assertEqualContents(comparison, ((List<EObject>)targetFeatureValue),
-	// ((List<EObject>)sourceFeatureValue));
-	//
-	// comparison = EMFCompare.compare(left, right);
-	// assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
-	// }
+		final String featureName = "multiValuedReference";
+		assertTrue(differences.get(0) instanceof ReferenceChange);
+
+		final ReferenceChange diff = (ReferenceChange)differences.get(0);
+
+		assertTrue(diff.getValue().eIsProxy());
+		assertEquals(featureName, diff.getReference().getName());
+
+		final EObject leftDiffContainer = getNodeNamed(left, "origin");
+		final EObject rightDiffContainer = getNodeNamed(right, "origin");
+		final EObject originDiffContainer = getNodeNamed(origin, "origin");
+		assertSame(leftDiffContainer, diff.getMatch().getLeft());
+		assertSame(rightDiffContainer, diff.getMatch().getRight());
+		assertSame(originDiffContainer, diff.getMatch().getOrigin());
+
+		final EStructuralFeature feature = leftDiffContainer.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		List<EObject> leftValue = (List<EObject>)leftDiffContainer.eGet(feature, false);
+		List<EObject> rightValue = (List<EObject>)rightDiffContainer.eGet(feature, false);
+		List<EObject> originValue = (List<EObject>)originDiffContainer.eGet(feature, false);
+
+		assertEquals(2, leftValue.size());
+		assertEquals(2, rightValue.size());
+		assertEquals(2, rightValue.size());
+
+		final URI proxyURI = ((InternalEObject)diff.getValue()).eProxyURI();
+		int leftProxyIndex = findProxyIndexIn(proxyURI, leftValue);
+		int rightProxyIndex = findProxyIndexIn(proxyURI, rightValue);
+		int originProxyIndex = findProxyIndexIn(proxyURI, originValue);
+
+		assertTrue(leftProxyIndex != -1);
+		assertTrue(rightProxyIndex != -1);
+		assertTrue(originProxyIndex != -1);
+		assertFalse(leftProxyIndex == rightProxyIndex);
+		assertEquals(rightProxyIndex, originProxyIndex);
+
+		diff.copyLeftToRight();
+		// The proxy should not have been resolved by the merge operation
+		assertTrue(diff.getValue().eIsProxy());
+
+		leftValue = (List<EObject>)leftDiffContainer.eGet(feature, false);
+		rightValue = (List<EObject>)rightDiffContainer.eGet(feature, false);
+		originValue = (List<EObject>)originDiffContainer.eGet(feature, false);
+
+		assertEquals(2, leftValue.size());
+		assertEquals(2, rightValue.size());
+		assertEquals(2, originValue.size());
+
+		leftProxyIndex = findProxyIndexIn(proxyURI, leftValue);
+		rightProxyIndex = findProxyIndexIn(proxyURI, rightValue);
+		originProxyIndex = findProxyIndexIn(proxyURI, originValue);
+
+		assertTrue(leftProxyIndex != -1);
+		assertTrue(rightProxyIndex != -1);
+		assertTrue(originProxyIndex != -1);
+		assertEquals(leftProxyIndex, rightProxyIndex);
+		assertFalse(leftProxyIndex == originProxyIndex);
+	}
+
+	@Test
+	public void testReferenceMultiMove3WayLeftChangeRtL() throws IOException {
+		final Resource left = input.getReferenceMultiMoveLeftOutOfScope();
+		final Resource right = input.getReferenceMultiMoveRightOutOfScope();
+		final Resource origin = input.getReferenceMultiMoveOriginOutOfScope();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		assertTrue(differences.get(0) instanceof ReferenceChange);
+
+		final ReferenceChange diff = (ReferenceChange)differences.get(0);
+
+		assertTrue(diff.getValue().eIsProxy());
+		assertEquals(featureName, diff.getReference().getName());
+
+		final EObject leftDiffContainer = getNodeNamed(left, "origin");
+		final EObject rightDiffContainer = getNodeNamed(right, "origin");
+		final EObject originDiffContainer = getNodeNamed(origin, "origin");
+		assertSame(leftDiffContainer, diff.getMatch().getLeft());
+		assertSame(rightDiffContainer, diff.getMatch().getRight());
+		assertSame(originDiffContainer, diff.getMatch().getOrigin());
+
+		final EStructuralFeature feature = leftDiffContainer.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		List<EObject> leftValue = (List<EObject>)leftDiffContainer.eGet(feature, false);
+		List<EObject> rightValue = (List<EObject>)rightDiffContainer.eGet(feature, false);
+		List<EObject> originValue = (List<EObject>)originDiffContainer.eGet(feature, false);
+
+		assertEquals(2, leftValue.size());
+		assertEquals(2, rightValue.size());
+		assertEquals(2, rightValue.size());
+
+		final URI proxyURI = ((InternalEObject)diff.getValue()).eProxyURI();
+		int leftProxyIndex = findProxyIndexIn(proxyURI, leftValue);
+		int rightProxyIndex = findProxyIndexIn(proxyURI, rightValue);
+		int originProxyIndex = findProxyIndexIn(proxyURI, originValue);
+
+		assertTrue(leftProxyIndex != -1);
+		assertTrue(rightProxyIndex != -1);
+		assertTrue(originProxyIndex != -1);
+		assertFalse(leftProxyIndex == rightProxyIndex);
+		assertEquals(rightProxyIndex, originProxyIndex);
+
+		diff.copyRightToLeft();
+		// The proxy should not have been resolved by the merge operation
+		assertTrue(diff.getValue().eIsProxy());
+
+		leftValue = (List<EObject>)leftDiffContainer.eGet(feature, false);
+		rightValue = (List<EObject>)rightDiffContainer.eGet(feature, false);
+		originValue = (List<EObject>)originDiffContainer.eGet(feature, false);
+
+		assertEquals(2, leftValue.size());
+		assertEquals(2, rightValue.size());
+		assertEquals(2, originValue.size());
+
+		leftProxyIndex = findProxyIndexIn(proxyURI, leftValue);
+		rightProxyIndex = findProxyIndexIn(proxyURI, rightValue);
+		originProxyIndex = findProxyIndexIn(proxyURI, originValue);
+
+		assertTrue(leftProxyIndex != -1);
+		assertTrue(rightProxyIndex != -1);
+		assertTrue(originProxyIndex != -1);
+		assertEquals(leftProxyIndex, rightProxyIndex);
+		assertEquals(leftProxyIndex, originProxyIndex);
+	}
+
+	@Test
+	public void testReferenceMultiMove3WayRightChangeLtR() throws IOException {
+		// In order to have changes on the right side, we'll invert right and left
+		final Resource left = input.getReferenceMultiMoveRightOutOfScope();
+		final Resource right = input.getReferenceMultiMoveLeftOutOfScope();
+		final Resource origin = input.getReferenceMultiMoveOriginOutOfScope();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		assertTrue(differences.get(0) instanceof ReferenceChange);
+
+		final ReferenceChange diff = (ReferenceChange)differences.get(0);
+
+		assertTrue(diff.getValue().eIsProxy());
+		assertEquals(featureName, diff.getReference().getName());
+
+		final EObject leftDiffContainer = getNodeNamed(left, "origin");
+		final EObject rightDiffContainer = getNodeNamed(right, "origin");
+		final EObject originDiffContainer = getNodeNamed(origin, "origin");
+		assertSame(leftDiffContainer, diff.getMatch().getLeft());
+		assertSame(rightDiffContainer, diff.getMatch().getRight());
+		assertSame(originDiffContainer, diff.getMatch().getOrigin());
+
+		final EStructuralFeature feature = leftDiffContainer.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		List<EObject> leftValue = (List<EObject>)leftDiffContainer.eGet(feature, false);
+		List<EObject> rightValue = (List<EObject>)rightDiffContainer.eGet(feature, false);
+		List<EObject> originValue = (List<EObject>)originDiffContainer.eGet(feature, false);
+
+		assertEquals(2, leftValue.size());
+		assertEquals(2, rightValue.size());
+		assertEquals(2, rightValue.size());
+
+		final URI proxyURI = ((InternalEObject)diff.getValue()).eProxyURI();
+		int leftProxyIndex = findProxyIndexIn(proxyURI, leftValue);
+		int rightProxyIndex = findProxyIndexIn(proxyURI, rightValue);
+		int originProxyIndex = findProxyIndexIn(proxyURI, originValue);
+
+		assertTrue(leftProxyIndex != -1);
+		assertTrue(rightProxyIndex != -1);
+		assertTrue(originProxyIndex != -1);
+		assertFalse(leftProxyIndex == rightProxyIndex);
+		assertEquals(leftProxyIndex, originProxyIndex);
+
+		diff.copyLeftToRight();
+		// The proxy should not have been resolved by the merge operation
+		assertTrue(diff.getValue().eIsProxy());
+
+		leftValue = (List<EObject>)leftDiffContainer.eGet(feature, false);
+		rightValue = (List<EObject>)rightDiffContainer.eGet(feature, false);
+		originValue = (List<EObject>)originDiffContainer.eGet(feature, false);
+
+		assertEquals(2, leftValue.size());
+		assertEquals(2, rightValue.size());
+		assertEquals(2, originValue.size());
+
+		leftProxyIndex = findProxyIndexIn(proxyURI, leftValue);
+		rightProxyIndex = findProxyIndexIn(proxyURI, rightValue);
+		originProxyIndex = findProxyIndexIn(proxyURI, originValue);
+
+		assertTrue(leftProxyIndex != -1);
+		assertTrue(rightProxyIndex != -1);
+		assertTrue(originProxyIndex != -1);
+		assertEquals(leftProxyIndex, rightProxyIndex);
+		assertEquals(leftProxyIndex, originProxyIndex);
+	}
+
+	@Test
+	public void testReferenceMultiMove3WayRightChangeRtL() throws IOException {
+		// In order to have changes on the right side, we'll invert right and left
+		final Resource left = input.getReferenceMultiMoveRightOutOfScope();
+		final Resource right = input.getReferenceMultiMoveLeftOutOfScope();
+		final Resource origin = input.getReferenceMultiMoveOriginOutOfScope();
+
+		Comparison comparison = EMFCompare.compare(left, right, origin);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "multiValuedReference";
+		assertTrue(differences.get(0) instanceof ReferenceChange);
+
+		final ReferenceChange diff = (ReferenceChange)differences.get(0);
+
+		assertTrue(diff.getValue().eIsProxy());
+		assertEquals(featureName, diff.getReference().getName());
+
+		final EObject leftDiffContainer = getNodeNamed(left, "origin");
+		final EObject rightDiffContainer = getNodeNamed(right, "origin");
+		final EObject originDiffContainer = getNodeNamed(origin, "origin");
+		assertSame(leftDiffContainer, diff.getMatch().getLeft());
+		assertSame(rightDiffContainer, diff.getMatch().getRight());
+		assertSame(originDiffContainer, diff.getMatch().getOrigin());
+
+		final EStructuralFeature feature = leftDiffContainer.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+
+		List<EObject> leftValue = (List<EObject>)leftDiffContainer.eGet(feature, false);
+		List<EObject> rightValue = (List<EObject>)rightDiffContainer.eGet(feature, false);
+		List<EObject> originValue = (List<EObject>)originDiffContainer.eGet(feature, false);
+
+		assertEquals(2, leftValue.size());
+		assertEquals(2, rightValue.size());
+		assertEquals(2, rightValue.size());
+
+		final URI proxyURI = ((InternalEObject)diff.getValue()).eProxyURI();
+		int leftProxyIndex = findProxyIndexIn(proxyURI, leftValue);
+		int rightProxyIndex = findProxyIndexIn(proxyURI, rightValue);
+		int originProxyIndex = findProxyIndexIn(proxyURI, originValue);
+
+		assertTrue(leftProxyIndex != -1);
+		assertTrue(rightProxyIndex != -1);
+		assertTrue(originProxyIndex != -1);
+		assertFalse(leftProxyIndex == rightProxyIndex);
+		assertEquals(leftProxyIndex, originProxyIndex);
+
+		diff.copyRightToLeft();
+		// The proxy should not have been resolved by the merge operation
+		assertTrue(diff.getValue().eIsProxy());
+
+		leftValue = (List<EObject>)leftDiffContainer.eGet(feature, false);
+		rightValue = (List<EObject>)rightDiffContainer.eGet(feature, false);
+		originValue = (List<EObject>)originDiffContainer.eGet(feature, false);
+
+		assertEquals(2, leftValue.size());
+		assertEquals(2, rightValue.size());
+		assertEquals(2, originValue.size());
+
+		leftProxyIndex = findProxyIndexIn(proxyURI, leftValue);
+		rightProxyIndex = findProxyIndexIn(proxyURI, rightValue);
+		originProxyIndex = findProxyIndexIn(proxyURI, originValue);
+
+		assertTrue(leftProxyIndex != -1);
+		assertTrue(rightProxyIndex != -1);
+		assertTrue(originProxyIndex != -1);
+		assertEquals(leftProxyIndex, rightProxyIndex);
+		assertFalse(leftProxyIndex == originProxyIndex);
+	}
 
 	private EObject getNodeNamed(Resource res, String name) {
 		final Iterator<EObject> iterator = EcoreUtil.getAllProperContents(res, false);
@@ -1988,5 +2088,15 @@ public class IndividualMergeOutOfScopeValuesTest {
 			}
 		}
 		return null;
+	}
+
+	private int findProxyIndexIn(URI proxyURI, List<EObject> list) {
+		for (int i = 0; i < list.size(); i++) {
+			final EObject candidate = list.get(i);
+			if (candidate.eIsProxy() && proxyURI.equals(((InternalEObject)candidate).eProxyURI())) {
+				return i;
+			}
+		}
+		return -1;
 	}
 }
