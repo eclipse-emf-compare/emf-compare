@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  * An EObjectIndex has for responsability to store/remove EObjects and return the closest EObject from another
  * one (each one being registered with a different Side.
  * 
- * @author <a href="mailto:lcedric.brun@obeo.fr">Cedric Brun</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public interface EObjectIndex {
 	/**

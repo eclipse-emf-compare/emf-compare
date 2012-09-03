@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * a Class to statistically compare two strings.
  * 
- * @author <a href="mailto:lcedric.brun@obeo.fr">Cedric Brun</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class PairCharDistance {
 
@@ -41,7 +41,7 @@ public class PairCharDistance {
 	}
 
 	/**
-	 * This method returns a {@link List} of {@link String}s called "pairs". For example,
+	 * This method returns a {@link Set} of {@link String}s called "pairs". For example,
 	 * 
 	 * <pre>
 	 * pairs(&quot;MyString&quot;)
@@ -51,7 +51,7 @@ public class PairCharDistance {
 	 * 
 	 * @param source
 	 *            The {@link String} to process.
-	 * @return A {@link List} of {@link String} corresponding to the possibles pairs of the source one.
+	 * @return A {@link Set} of {@link String} corresponding to the possibles pairs of the source one.
 	 */
 	private Set<String> pairs(String source) {
 		final Set<String> result = Sets.newLinkedHashSet();

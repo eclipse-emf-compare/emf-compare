@@ -29,7 +29,7 @@ import org.junit.Test;
 /**
  * A very crude performance test comparing the match per id and match per content time.
  * 
- * @author <a href="mailto:lcedric.brun@obeo.fr">Cedric Brun</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class MatchPerformanceComparisonTest {
 

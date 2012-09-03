@@ -36,7 +36,7 @@ import org.junit.runner.RunWith;
  * looks like we don't really need it so far, looks like we are going fast enough. I'd like to keep this test
  * around anyway as its neet and it might be of use at some point.
  * 
- * @author <a href="mailto:lcedric.brun@obeo.fr">Cedric Brun</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 @RunWith(Theories.class)
 public class DistanceAxiomsTests {

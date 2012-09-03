@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  * It is also based on the assumption that it is <b> very likely that the EObject has another version with e
  * distance of value 0</b> in the other versions sets.
  * 
- * @author <a href="mailto:lcedric.brun@obeo.fr">Cedric Brun</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class ProximityIndex implements EObjectIndex {
 	/**

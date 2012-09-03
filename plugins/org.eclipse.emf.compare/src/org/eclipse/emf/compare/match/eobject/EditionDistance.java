@@ -38,7 +38,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 /**
  * This distance function implementation will actually compare the given EObject.
  * 
- * @author <a href="mailto:lcedric.brun@obeo.fr">Cedric Brun</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class EditionDistance implements DistanceFunction {
 	/**
