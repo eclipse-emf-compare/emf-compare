@@ -123,7 +123,7 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 		if (value == null) {
 			value = "<null>";
 		} else {
-			value = Strings.elide(value, 20, "...");
+			value = Strings.elide(value, 25, "...");
 		}
 		return value;
 	}
