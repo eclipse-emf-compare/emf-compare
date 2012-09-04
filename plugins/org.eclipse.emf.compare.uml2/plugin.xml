@@ -25,7 +25,7 @@ Contributors:
       <postProcessor
             class="org.eclipse.emf.compare.uml2.diff.UMLDiffExtensionPostProcessor">
          <nsURI
-               value="http://www.eclipse.org/uml2/4.0.0/UML">
+               value="http://www.eclipse.org/uml2/\d.0.0/UML">
          </nsURI>
       </postProcessor>
    </extension>
