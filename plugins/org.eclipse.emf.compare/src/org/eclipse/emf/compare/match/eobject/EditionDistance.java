@@ -260,7 +260,18 @@ public class EditionDistance implements DistanceFunction {
 				default:
 					break;
 			}
+		}
 
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diff.IDiffProcessor#resourceAttachmentChange(org.eclipse.emf.compare.Match,
+		 *      java.lang.String, org.eclipse.emf.compare.DifferenceKind,
+		 *      org.eclipse.emf.compare.DifferenceSource)
+		 */
+		public void resourceAttachmentChange(Match match, String uri, DifferenceKind kind,
+				DifferenceSource source) {
+			// Not important for the distance computation
 		}
 
 		/**

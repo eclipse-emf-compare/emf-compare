@@ -89,7 +89,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 		} else if (left instanceof EObject || right instanceof EObject) {
 			match((EObject)left, (EObject)right, (EObject)origin);
 		} else {
-			// FIXME
+			// TODO Cannot happen ... for now. Should we log an exception?
 		}
 
 		return getComparison();
@@ -241,21 +241,24 @@ public class DefaultMatchEngine implements IMatchEngine {
 		 * use the content match, we should return an ID based matcher without delegate. Otherwise lets just
 		 * return an ID matcher which delegates to the content one.
 		 */
-		final IEObjectMatcher matchByContent = ProximityEObjectMatcher.builder(
-				EditionDistance.builder(getComparison().getConfiguration().getEqualityHelper()).build())
-				.build();
-		IEObjectMatcher matcherToUse = matchByContent;
+		final IEObjectMatcher matcherToUse;
 		switch (getComparison().getConfiguration().matchByID()) {
 			case NEVER:
-				matcherToUse = matchByContent;
+				matcherToUse = ProximityEObjectMatcher.builder(
+						EditionDistance.builder(getComparison().getConfiguration().getEqualityHelper())
+								.build()).build();
 				break;
 			case ONLY:
 				matcherToUse = new IdentifierEObjectMatcher();
 				break;
 			case WHEN_AVAILABLE:
-				// fallthrough to default
+				// fall through to default
 			default:
-				matcherToUse = new IdentifierEObjectMatcher(matchByContent);
+				// Use an ID matcher, delegating to proximity if no ID is available
+				final IEObjectMatcher contentMatcher = ProximityEObjectMatcher.builder(
+						EditionDistance.builder(getComparison().getConfiguration().getEqualityHelper())
+								.build()).build();
+				matcherToUse = new IdentifierEObjectMatcher(contentMatcher);
 				break;
 
 		}

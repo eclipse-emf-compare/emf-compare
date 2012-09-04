@@ -16,6 +16,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -59,5 +60,20 @@ public class DiffBuilder implements IDiffProcessor {
 		attributeChange.setValue(value);
 		attributeChange.setKind(kind);
 		attributeChange.setSource(source);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diff.IDiffProcessor#resourceAttachmentChange(org.eclipse.emf.compare.Match,
+	 *      java.lang.String, org.eclipse.emf.compare.DifferenceKind,
+	 *      org.eclipse.emf.compare.DifferenceSource)
+	 */
+	public void resourceAttachmentChange(Match match, String uri, DifferenceKind kind, DifferenceSource source) {
+		final ResourceAttachmentChange change = CompareFactory.eINSTANCE.createResourceAttachmentChange();
+		change.setMatch(match);
+		change.setResourceURI(uri);
+		change.setKind(kind);
+		change.setSource(source);
 	}
 }

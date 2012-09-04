@@ -161,6 +161,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 		this.helper = comparison.getConfiguration().getEqualityHelper();
 
 		for (Match rootMatch : comparison.getMatches()) {
+			checkResourceAttachment(rootMatch);
 			checkForDifferences(rootMatch);
 		}
 	}
@@ -191,6 +192,49 @@ public class DefaultDiffEngine implements IDiffEngine {
 
 		for (Match submatch : match.getSubmatches()) {
 			checkForDifferences(submatch);
+		}
+	}
+
+	/**
+	 * Checks whether the given {@link Match}'s sides have changed resources. This will only be called for
+	 * {@link Match} elements referencing the root(s) of an EMF Resource.
+	 * 
+	 * @param match
+	 *            The match that is to be checked.
+	 */
+	protected void checkResourceAttachment(Match match) {
+		final Comparison comparison = match.getComparison();
+		if (comparison.getMatchedResources().isEmpty()) {
+			// This is a comparison of EObjects, do not go up to the resources
+			return;
+		}
+
+		if (match.getLeft() == null && match.getRight() == null) {
+			// PSEUDO conflict : root removed on both sides
+			final String uri = match.getOrigin().eResource().getURI().toString();
+			getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
+					DifferenceSource.LEFT);
+			getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
+					DifferenceSource.RIGHT);
+		} else if (match.getLeft() == null || match.getRight() == null) {
+			// Unmatched root, it can only be a change
+			if (comparison.isThreeWay() && match.getLeft() == null) {
+				final String uri = match.getOrigin().eResource().getURI().toString();
+				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
+						DifferenceSource.LEFT);
+			} else if (comparison.isThreeWay()) {
+				final String uri = match.getRight().eResource().getURI().toString();
+				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
+						DifferenceSource.RIGHT);
+			} else if (match.getLeft() == null) {
+				final String uri = match.getRight().eResource().getURI().toString();
+				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.ADD,
+						DifferenceSource.RIGHT);
+			} else {
+				final String uri = match.getLeft().eResource().getURI().toString();
+				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.ADD,
+						DifferenceSource.LEFT);
+			}
 		}
 	}
 
