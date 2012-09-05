@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.utils;
 
 import static org.eclipse.emf.compare.utils.ReferenceUtil.getAsList;
 
-import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -135,7 +134,7 @@ public final class MatchUtil {
 	 *            The detected difference for which we need the actually modified object.
 	 * @return The object which presents the given difference.
 	 */
-	public static EObject getContainer(AttributeChange difference) {
+	public static EObject getContainer(Diff difference) {
 		EObject result = difference.getMatch().getLeft();
 		if (result == null) {
 			result = difference.getMatch().getRight();
@@ -157,10 +156,10 @@ public final class MatchUtil {
 	 */
 	public static EObject getContainer(Comparison comparison, Diff difference) {
 		EObject result = null;
-		if (difference instanceof AttributeChange) {
-			result = getContainer((AttributeChange)difference);
-		} else if (difference instanceof ReferenceChange) {
+		if (difference instanceof ReferenceChange) {
 			result = getContainer(comparison, (ReferenceChange)difference);
+		} else {
+			result = getContainer(difference);
 		}
 		return result;
 	}

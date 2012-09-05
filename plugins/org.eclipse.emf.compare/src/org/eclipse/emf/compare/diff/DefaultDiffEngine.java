@@ -206,8 +206,8 @@ public class DefaultDiffEngine implements IDiffEngine {
 						DifferenceSource.RIGHT);
 			} else if (match.getLeft() == null) {
 				final String uri = match.getRight().eResource().getURI().toString();
-				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.ADD,
-						DifferenceSource.RIGHT);
+				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
+						DifferenceSource.LEFT);
 			} else {
 				final String uri = match.getLeft().eResource().getURI().toString();
 				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.ADD,
