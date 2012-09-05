@@ -11,12 +11,15 @@
 package org.eclipse.emf.compare.uml2.diff.internal.extension.profile;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.ProfileApplicationChange;
+import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.UMLAbstractDiffExtensionFactory;
@@ -25,7 +28,9 @@ import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.ProfileApplication;
+import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.internal.impl.ProfileApplicationImpl;
 
@@ -59,7 +64,7 @@ public class UMLProfileApplicationChangeFactory extends UMLAbstractDiffExtension
 	}
 
 	private ProfileApplication getDiscriminantForChanges(EObject container) {
-		// FIXME Doit gérer une liste de ProfileApplications et choisir le bon.
+		// FIXME Have to manage a list of ProfileApplication from a Profile and choose the correct one
 		if (container instanceof ProfileApplication) {
 			return (ProfileApplication)container;
 		} else if (container instanceof EAnnotation && container.eContainer() instanceof ProfileApplication) {
@@ -102,33 +107,61 @@ public class UMLProfileApplicationChangeFactory extends UMLAbstractDiffExtension
 	}
 
 	@Override
-	protected DifferenceKind getRelatedExtensionKind(Diff input) {
-		if (input instanceof ReferenceChange) {
-			if (isRelatedToAnExtensionAdd((ReferenceChange)input)) {
-				return DifferenceKind.ADD;
-			} else if (isRelatedToAnExtensionDelete((ReferenceChange)input)) {
-				return DifferenceKind.DELETE;
-			} else if (isRelatedToAnExtensionChange((ReferenceChange)input)) {
-				return DifferenceKind.CHANGE;
-			}
-		}
-		return null;
-	}
-
 	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
 		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.ADD)
 				&& input.getValue() instanceof ProfileApplication;
 	}
 
+	@Override
 	protected boolean isRelatedToAnExtensionDelete(ReferenceChange input) {
 		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.DELETE)
 				&& input.getValue() instanceof ProfileApplication;
 	}
 
+	@Override
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
 		return (input.getReference().equals(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE)
 				|| input.getReference().equals(EcorePackage.Literals.EANNOTATION__REFERENCES) || input
 				.getReference().equals(EcorePackage.Literals.EMODEL_ELEMENT__EANNOTATIONS));
+	}
+
+	@Override
+	public void fillRequiredDifferences(Comparison comparison, UMLDiff extension) {
+		if (extension instanceof ProfileApplicationChange) {
+			final ProfileApplicationChange profileApplicationChange = (ProfileApplicationChange)extension;
+			if (profileApplicationChange.getKind() == DifferenceKind.DELETE) {
+				final Iterator<EObject> stereotypeApplications = getStereotypeApplications(
+						(ProfileApplication)profileApplicationChange.getDiscriminant()).iterator();
+				while (stereotypeApplications.hasNext()) {
+					final EObject eObject = stereotypeApplications.next();
+					for (Diff diff : comparison.getDifferences(eObject)) {
+						if (diff instanceof StereotypeApplicationChange
+								&& diff.getKind() == DifferenceKind.DELETE) {
+							profileApplicationChange.getRequires().add(diff);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private List<EObject> getStereotypeApplications(ProfileApplication profileApplication) {
+		final List<EObject> result = new ArrayList<EObject>();
+		final org.eclipse.uml2.uml.Package p = profileApplication.getApplyingPackage();
+		final Iterator<EObject> it = p.eAllContents();
+		while (it.hasNext()) {
+			final EObject elt = it.next();
+			if (elt instanceof Element) {
+				for (Stereotype stereotype : ((Element)elt).getAppliedStereotypes()) {
+					if (stereotype.getProfile().equals(profileApplication.getAppliedProfile())) {
+						final EObject stereotypeApplication = ((Element)elt)
+								.getStereotypeApplication(stereotype);
+						result.add(stereotypeApplication);
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 }

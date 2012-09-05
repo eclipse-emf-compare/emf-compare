@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.uml2.uml.resource.UMLResource;
+import org.eclipse.uml2.uml.util.UMLUtil;
 
 public class ProfilesInputData extends AbstractInputData {
 
@@ -51,6 +52,8 @@ public class ProfilesInputData extends AbstractInputData {
 					+ UML_RESOURCES_JAR_LOCATION_ENV + " and " + TEST_PROFILE_JAR_LOCATION_ENV
 					+ " have to be defined.", umlResourcesJarLocation != null
 					&& testProfileJarLocation != null);
+
+			UMLUtil.init(resourceSet);
 
 			final Map uriMap = resourceSet.getURIConverter().getURIMap();
 			uriMap.put(URI.createURI(UMLResource.LIBRARIES_PATHMAP), URI.createURI(umlResourcesJarLocation

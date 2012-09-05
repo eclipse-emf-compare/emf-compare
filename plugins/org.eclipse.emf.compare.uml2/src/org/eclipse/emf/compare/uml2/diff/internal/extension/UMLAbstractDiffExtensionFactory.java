@@ -16,12 +16,15 @@ import com.google.common.collect.Iterators;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.uml2.UMLDiff;
+import org.eclipse.emf.compare.util.CompareSwitch;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
@@ -58,7 +61,7 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#handles(org.eclipse.emf.compare.diff.metamodel.DiffElement)
 	 */
 	public boolean handles(Diff input) {
-		return (getRelatedExtensionKind(input) != null) && !isExtensionAlreadyExist(input)
+		return getRelatedExtensionKind(input) != null && !isExtensionAlreadyExist(input)
 				&& !isChangeOnAddOrDelete(input);
 	}
 
@@ -87,7 +90,9 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 		ret.setDiscriminant(discriminant);
 		ret.setKind(extensionKind);
 		if (extensionKind == DifferenceKind.ADD || extensionKind == DifferenceKind.DELETE) {
-			ret.setEReference(((ReferenceChange)input).getReference());
+			if (input instanceof ReferenceChange) {
+				ret.setEReference(((ReferenceChange)input).getReference());
+			}
 		} /*
 		 * else if (discriminant != null && discriminant.eContainingFeature() instanceof EReference) {
 		 * ret.setReference((EReference)discriminant.eContainingFeature()); } //FIXME: replace discriminant
@@ -169,7 +174,84 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 
 	protected abstract List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant);
 
-	protected abstract DifferenceKind getRelatedExtensionKind(Diff input);
+	protected DifferenceKind getRelatedExtensionKind(Diff input) {
+		return new CompareSwitch<DifferenceKind>() {
+			@Override
+			public DifferenceKind caseAttributeChange(AttributeChange object) {
+				if (isRelatedToAnExtensionAdd(object)) {
+					return DifferenceKind.ADD;
+				} else if (isRelatedToAnExtensionDelete(object)) {
+					return DifferenceKind.DELETE;
+				} else if (isRelatedToAnExtensionChange(object)) {
+					return DifferenceKind.CHANGE;
+				} else {
+					return super.caseAttributeChange(object);
+				}
+			}
+
+			@Override
+			public DifferenceKind caseReferenceChange(ReferenceChange object) {
+				if (isRelatedToAnExtensionAdd(object)) {
+					return DifferenceKind.ADD;
+				} else if (isRelatedToAnExtensionDelete(object)) {
+					return DifferenceKind.DELETE;
+				} else if (isRelatedToAnExtensionChange(object)) {
+					return DifferenceKind.CHANGE;
+				} else {
+					return super.caseReferenceChange(object);
+				}
+			}
+
+			@Override
+			public DifferenceKind caseResourceAttachmentChange(ResourceAttachmentChange object) {
+				if (isRelatedToAnExtensionAdd(object)) {
+					return DifferenceKind.ADD;
+				} else if (isRelatedToAnExtensionDelete(object)) {
+					return DifferenceKind.DELETE;
+				} else if (isRelatedToAnExtensionChange(object)) {
+					return DifferenceKind.CHANGE;
+				} else {
+					return super.caseResourceAttachmentChange(object);
+				}
+			}
+		}.doSwitch(input);
+	}
+
+	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
+		return false;
+	}
+
+	protected boolean isRelatedToAnExtensionDelete(ReferenceChange input) {
+		return false;
+	}
+
+	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
+		return false;
+	}
+
+	protected boolean isRelatedToAnExtensionAdd(AttributeChange input) {
+		return false;
+	}
+
+	protected boolean isRelatedToAnExtensionDelete(AttributeChange input) {
+		return false;
+	}
+
+	protected boolean isRelatedToAnExtensionChange(AttributeChange input) {
+		return false;
+	}
+
+	protected boolean isRelatedToAnExtensionAdd(ResourceAttachmentChange input) {
+		return false;
+	}
+
+	protected boolean isRelatedToAnExtensionDelete(ResourceAttachmentChange input) {
+		return false;
+	}
+
+	protected boolean isRelatedToAnExtensionChange(ResourceAttachmentChange input) {
+		return false;
+	}
 
 	protected Setting getInverseReferences(EObject object, Predicate<EStructuralFeature.Setting> predicate) {
 		final Iterator<EStructuralFeature.Setting> crossReferences = UML2Util.getInverseReferences(object)

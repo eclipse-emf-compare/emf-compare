@@ -23,6 +23,7 @@ import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLGeneralizat
 import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLInterfaceRealizationChangeFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLSubstitutionChangeFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.profile.UMLProfileApplicationChangeFactory;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.profile.UMLStereotypeApplicationChangeFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.sequence.UMLExecutionSpecificationChangeFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.sequence.UMLIntervalConstraintChangeFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.sequence.UMLMessageChangeFactory;
@@ -64,6 +65,7 @@ public final class DiffExtensionFactoryRegistry {
 		factories.add(new UMLIncludeChangeFactory());
 		factories.add(new UMLIntervalConstraintChangeFactory());
 		factories.add(new UMLProfileApplicationChangeFactory());
+		factories.add(new UMLStereotypeApplicationChangeFactory());
 
 		for (IDiffExtensionFactory iDiffExtensionFactory : factories) {
 			dataset.put(iDiffExtensionFactory.getExtensionKind(), iDiffExtensionFactory);
