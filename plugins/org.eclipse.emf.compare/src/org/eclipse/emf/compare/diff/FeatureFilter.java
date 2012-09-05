@@ -122,8 +122,18 @@ public class FeatureFilter {
 		if (match.getLeft() != null && match.getLeft().eIsSet(reference)) {
 			return true;
 		}
-		return (match.getRight() != null && match.getRight().eIsSet(reference))
-				|| (match.getOrigin() != null && match.getOrigin().eIsSet(reference));
+		boolean isSet = false;
+		final String featureName = reference.getName();
+		if (match.getRight() != null) {
+			final EStructuralFeature rightRef = match.getRight().eClass().getEStructuralFeature(featureName);
+			isSet = match.getRight().eIsSet(rightRef);
+		}
+		if (!isSet && match.getOrigin() != null) {
+			final EStructuralFeature originRef = match.getOrigin().eClass()
+					.getEStructuralFeature(featureName);
+			isSet = match.getOrigin().eIsSet(originRef);
+		}
+		return isSet;
 	}
 
 	/**

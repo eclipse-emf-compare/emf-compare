@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.diff;
 
 import static com.google.common.base.Predicates.not;
 import static org.eclipse.emf.compare.utils.ReferenceUtil.getAsList;
+import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEGet;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -26,7 +27,6 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -127,28 +127,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * In case of dynamic EObjects, the EClasses of both sides might be different, making "eget" fail in
-	 * "unknown feature". We assume that even if the EClasses are distinct instances, they are the same
-	 * nontheless, and thus we can use the feature name in order to retrieve the feature's value.
-	 * 
-	 * @param object
-	 *            The object for which feature we need a value.
-	 * @param feature
-	 *            The actual feature of which we need the value.
-	 * @return The value of the given {@code feature} for the given {@code object}.
-	 */
-	protected static Object safeEGet(EObject object, EStructuralFeature feature) {
-		final EClass clazz = object.eClass();
-		// TODO profile. This "if" might be counter productive : accessing both packages is probably as long
-		// as a direct lookup to the clazz.eGetEStructuralFeature...
-		if (clazz.getEPackage() == feature.getEContainingClass().getEPackage()) {
-			return object.eGet(feature, false);
-		}
-		// Assumes that the containing package is the same, let it fail otherwise
-		return object.eGet(clazz.getEStructuralFeature(feature.getName()), false);
 	}
 
 	/**
