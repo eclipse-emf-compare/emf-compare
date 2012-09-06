@@ -426,8 +426,39 @@ public final class EMFComparePredicates {
 				}
 
 				final Match match = input.getMatch();
-				return match(match.getLeft(), qualifiedName) || match(match.getRight(), qualifiedName)
-						|| match(match.getOrigin(), qualifiedName);
+				return match(match.getLeft(), qualifiedName, null)
+						|| match(match.getRight(), qualifiedName, null)
+						|| match(match.getOrigin(), qualifiedName, null);
+			}
+		};
+	}
+
+	/**
+	 * This can be used in order to check whether a Diff has been detected on an EObject matching the given
+	 * qualified name or the qualified name under the given feature.
+	 * <p>
+	 * For this to work, we expect the EObjects to have a feature named "name" returning a String or to have
+	 * the given feature (String or EObject with a feature named "name").
+	 * </p>
+	 * 
+	 * @param qualifiedName
+	 *            The qualified name of the EObject we expect that diff to concern.
+	 * @param featureDelegate
+	 *            The optional feature to define the name of the objects. May be null.
+	 * @return The created predicate.
+	 */
+	public static Predicate<? super Diff> onEObject(final String qualifiedName,
+			final EStructuralFeature featureDelegate) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				if (input == null) {
+					return false;
+				}
+
+				final Match match = input.getMatch();
+				return match(match.getLeft(), qualifiedName, featureDelegate)
+						|| match(match.getRight(), qualifiedName, featureDelegate)
+						|| match(match.getOrigin(), qualifiedName, featureDelegate);
 			}
 		};
 	}
@@ -528,7 +559,41 @@ public final class EMFComparePredicates {
 						&& ((ReferenceChange)input).getReference().getName().equals(referenceName)
 						&& ((ReferenceChange)input).getReference().isMany() == multiValued) {
 					final EObject value = ((ReferenceChange)input).getValue();
-					return qualifiedName != null && match(value, qualifiedName);
+					return qualifiedName != null && match(value, qualifiedName, null);
+				}
+				return false;
+			}
+		};
+	}
+
+	/**
+	 * This predicate can be used to check whether a given Diff describes a ReferenceChange with the given
+	 * {@code referenceName} and which changed value corresponds to the given {@code qualifiedName} or the
+	 * qualified name under the given {@code featureDelegate}.
+	 * <p>
+	 * For this to work, we expect the EObject to have a feature named "name" returning a String or to have
+	 * the given feature (String or EObject with a feature named "name") for us to try and match it.
+	 * </p>
+	 * 
+	 * @param referenceName
+	 *            The reference for which we seek a ReferenceChange.
+	 * @param qualifiedName
+	 *            The qualified name of the EObject on which we detected a change.
+	 * @param multiValued
+	 *            Tells us to check for either multi- or single-valued reference changes.
+	 * @param featureDelegate
+	 *            The optional feature to define the name of the objects. May be null.
+	 * @return The created predicate.
+	 */
+	public static Predicate<? super Diff> referenceValueMatch(final String referenceName,
+			final String qualifiedName, final boolean multiValued, final EStructuralFeature featureDelegate) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				if (input instanceof ReferenceChange
+						&& ((ReferenceChange)input).getReference().getName().equals(referenceName)
+						&& ((ReferenceChange)input).getReference().isMany() == multiValued) {
+					final EObject value = ((ReferenceChange)input).getValue();
+					return qualifiedName != null && match(value, qualifiedName, featureDelegate);
 				}
 				return false;
 			}
@@ -556,7 +621,36 @@ public final class EMFComparePredicates {
 				} else {
 					return false;
 				}
-				return internalMatch(value, expectedName);
+				return internalMatch(value, expectedName, null);
+			}
+		};
+	}
+
+	/**
+	 * This can be used to check whether a given Diff describes either a {@link ReferenceChange} on an EObject
+	 * which name is {@code expectedName} or which the given feature provides the {@code expectedName}.
+	 * <p>
+	 * For this to work, we expect the EObject to have a feature named "name" returning a String or to have
+	 * the given feature (String or EObject with a feature named "name") for us to try and match it.
+	 * </p>
+	 * 
+	 * @param expectedName
+	 *            The name of the EObject which we expect as a changed reference value.
+	 * @param featureDelegate
+	 *            The optional feature to define the name of the objects. May be null.
+	 * @return The created predicate.
+	 */
+	public static Predicate<? super Diff> valueNameMatches(final String expectedName,
+			final EStructuralFeature featureDelegate) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				final EObject value;
+				if (input instanceof ReferenceChange) {
+					value = ((ReferenceChange)input).getValue();
+				} else {
+					return false;
+				}
+				return internalMatch(value, expectedName, featureDelegate);
 			}
 		};
 	}
@@ -617,30 +711,33 @@ public final class EMFComparePredicates {
 	 * The qualified name must be absolute.
 	 * </p>
 	 * <p>
-	 * For this to work, we expect the EObject to have a feature named "name" returning a String for us to try
-	 * and match it. See also {@link #getNameFeature(EObject)}.
+	 * For this to work, we expect the EObject to have a feature named "name" returning a String or to have
+	 * the given feature (String or EObject with a feature named "name") for us to try and match it. See also
+	 * {@link #getNameFeature(EObject)}.
 	 * </p>
 	 * 
 	 * @param eObject
 	 *            The EObject which qualified name we are to check.
 	 * @param qualifiedName
 	 *            The expected, <b>absolute</b> qualified name of the given {@code eObject}.
+	 * @param The
+	 *            optional feature to define the name of the objects. May be null.
 	 * @return {@code true} if the given {@code eObject} matches the given {@code qualifiedName},
 	 *         {@code false} if not, or if we could not determine the "name" feature of that EObject.
 	 * @see #getNameFeature(EObject)
 	 */
-	private static boolean match(EObject eObject, String qualifiedName) {
+	private static boolean match(EObject eObject, String qualifiedName, EStructuralFeature featureDelegate) {
 		if (eObject == null || qualifiedName == null || qualifiedName.length() == 0) {
 			return false;
 		}
 		final String[] names = qualifiedName.split("\\."); //$NON-NLS-1$
 
 		int current = names.length - 1;
-		boolean matches = internalMatch(eObject, names[current--]);
+		boolean matches = internalMatch(eObject, names[current--], featureDelegate);
 		if (matches) {
 			EObject container = eObject.eContainer();
 			while (matches && container != null && current >= 0) {
-				matches = internalMatch(container, names[current--]);
+				matches = internalMatch(container, names[current--], featureDelegate);
 				container = container.eContainer();
 			}
 			// This qualified name does not match if there was still a container "above"
@@ -673,30 +770,41 @@ public final class EMFComparePredicates {
 		if (eObject == null) {
 			return qualifiedName == null;
 		}
-		return qualifiedName != null && eObject instanceof EObject && match((EObject)eObject, qualifiedName);
+		return qualifiedName != null && eObject instanceof EObject
+				&& match((EObject)eObject, qualifiedName, null);
 	}
 
 	/**
 	 * Checks that the given {@code eObject}'s name is equal to {@code name}.
 	 * <p>
-	 * For this to work, we expect the EObject to have a feature named "name" returning a String for us to try
-	 * and match it. See also {@link #getNameFeature(EObject)}.
+	 * For this to work, we expect the EObject to have a feature named "name" returning a String or to have
+	 * the given feature (String or EObject with a feature named "name") for us to try and match it. See also
+	 * {@link #getNameFeature(EObject)}.
 	 * </p>
 	 * 
 	 * @param eObject
 	 *            the EObject which name we are to check.
 	 * @param name
 	 *            The expected name of {@code eObject}.
+	 * @param The
+	 *            optional feature to define the name of the objects. May be null.
 	 * @return {@code true} if the given {@code eObject}'s name is equal to the given {@code name},
 	 *         {@code false} if not, or if we could not determine the "name" feature of that EObject.
 	 * @see #getNameFeature(EObject)
 	 */
-	private static boolean internalMatch(EObject eObject, String name) {
+	private static boolean internalMatch(EObject eObject, String name, EStructuralFeature featureDelegate) {
 		final EStructuralFeature nameFeature = getNameFeature(eObject);
 		if (nameFeature != null) {
 			final Object featureValue = eObject.eGet(nameFeature);
 			if (featureValue instanceof String) {
 				return featureValue.equals(name);
+			}
+		} else if (featureDelegate != null && !featureDelegate.isMany()) {
+			final Object featureValue = eObject.eGet(featureDelegate, false);
+			if (featureValue instanceof String) {
+				return featureValue.equals(name);
+			} else if (featureValue instanceof EObject) {
+				return internalMatch((EObject)featureValue, name, null);
 			}
 		}
 		return false;
