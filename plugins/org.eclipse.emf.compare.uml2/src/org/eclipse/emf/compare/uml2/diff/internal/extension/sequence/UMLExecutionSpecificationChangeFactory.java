@@ -78,19 +78,6 @@ public class UMLExecutionSpecificationChangeFactory extends UMLAbstractDiffExten
 	}
 
 	@Override
-	protected DifferenceKind getRelatedExtensionKind(Diff input) {
-		if (input instanceof ReferenceChange) {
-			if (isRelatedToAnExtensionChange((ReferenceChange)input)) {
-				return DifferenceKind.CHANGE;
-			} else if (isRelatedToAnExtensionAdd((ReferenceChange)input)) {
-				return DifferenceKind.ADD;
-			} else if (isRelatedToAnExtensionDelete((ReferenceChange)input)) {
-				return DifferenceKind.DELETE;
-			}
-		}
-		return null;
-	}
-
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
 		return ((input.getReference().equals(UMLPackage.Literals.EXECUTION_SPECIFICATION__START)
 				|| input.getReference().equals(UMLPackage.Literals.EXECUTION_SPECIFICATION__FINISH) || input
@@ -98,6 +85,7 @@ public class UMLExecutionSpecificationChangeFactory extends UMLAbstractDiffExten
 				.contains(MatchUtil.getContainer(input.getMatch().getComparison(), input).eClass()));
 	}
 
+	@Override
 	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
 		return (input.getReference().isContainment() && input.getKind().equals(DifferenceKind.ADD)
 				&& input.getValue() instanceof ExecutionSpecification
@@ -108,6 +96,7 @@ public class UMLExecutionSpecificationChangeFactory extends UMLAbstractDiffExten
 				.contains(input.getValue().eClass()));
 	}
 
+	@Override
 	protected boolean isRelatedToAnExtensionDelete(ReferenceChange input) {
 		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.DELETE)
 				&& input.getValue() instanceof ExecutionSpecification

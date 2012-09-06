@@ -64,19 +64,6 @@ public class UMLGeneralizationSetChangeFactory extends UMLAbstractDiffExtensionF
 	}
 
 	@Override
-	protected DifferenceKind getRelatedExtensionKind(Diff input) {
-		if (input instanceof ReferenceChange) {
-			if (isRelatedToAnExtensionChange((ReferenceChange)input)) {
-				return DifferenceKind.CHANGE;
-			} else if (isRelatedToAnExtensionAdd((ReferenceChange)input)) {
-				return DifferenceKind.ADD;
-			} else if (isRelatedToAnExtensionDelete((ReferenceChange)input)) {
-				return DifferenceKind.DELETE;
-			}
-		}
-		return null;
-	}
-
 	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
 		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.ADD)
 				&& input.getValue() instanceof GeneralizationSet
@@ -84,11 +71,13 @@ public class UMLGeneralizationSetChangeFactory extends UMLAbstractDiffExtensionF
 				&& !((GeneralizationSet)input.getValue()).getGeneralizations().isEmpty();
 	}
 
+	@Override
 	protected boolean isRelatedToAnExtensionDelete(ReferenceChange input) {
 		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.DELETE)
 				&& input.getValue() instanceof GeneralizationSet;
 	}
 
+	@Override
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
 		return input.getReference().equals(UMLPackage.Literals.GENERALIZATION_SET__GENERALIZATION);
 	}

@@ -55,6 +55,54 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 		}
 	};
 
+	private CompareSwitch<DifferenceKind> differenceKindCompareSwitch = new CompareSwitch<DifferenceKind>() {
+
+		@Override
+		public DifferenceKind caseAttributeChange(AttributeChange object) {
+			if (isRelatedToAnExtensionAdd(object)) {
+				return DifferenceKind.ADD;
+			} else if (isRelatedToAnExtensionDelete(object)) {
+				return DifferenceKind.DELETE;
+			} else if (isRelatedToAnExtensionChange(object)) {
+				return DifferenceKind.CHANGE;
+			} else if (isRelatedToAnExtensionMove(object)) {
+				return DifferenceKind.MOVE;
+			} else {
+				return super.caseAttributeChange(object);
+			}
+		}
+
+		@Override
+		public DifferenceKind caseReferenceChange(ReferenceChange object) {
+			if (isRelatedToAnExtensionAdd(object)) {
+				return DifferenceKind.ADD;
+			} else if (isRelatedToAnExtensionDelete(object)) {
+				return DifferenceKind.DELETE;
+			} else if (isRelatedToAnExtensionChange(object)) {
+				return DifferenceKind.CHANGE;
+			} else if (isRelatedToAnExtensionMove(object)) {
+				return DifferenceKind.MOVE;
+			} else {
+				return super.caseReferenceChange(object);
+			}
+		}
+
+		@Override
+		public DifferenceKind caseResourceAttachmentChange(ResourceAttachmentChange object) {
+			if (isRelatedToAnExtensionAdd(object)) {
+				return DifferenceKind.ADD;
+			} else if (isRelatedToAnExtensionDelete(object)) {
+				return DifferenceKind.DELETE;
+			} else if (isRelatedToAnExtensionChange(object)) {
+				return DifferenceKind.CHANGE;
+			} else if (isRelatedToAnExtensionMove(object)) {
+				return DifferenceKind.MOVE;
+			} else {
+				return super.caseResourceAttachmentChange(object);
+			}
+		}
+	};
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -175,46 +223,7 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 	protected abstract List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant);
 
 	protected DifferenceKind getRelatedExtensionKind(Diff input) {
-		return new CompareSwitch<DifferenceKind>() {
-			@Override
-			public DifferenceKind caseAttributeChange(AttributeChange object) {
-				if (isRelatedToAnExtensionAdd(object)) {
-					return DifferenceKind.ADD;
-				} else if (isRelatedToAnExtensionDelete(object)) {
-					return DifferenceKind.DELETE;
-				} else if (isRelatedToAnExtensionChange(object)) {
-					return DifferenceKind.CHANGE;
-				} else {
-					return super.caseAttributeChange(object);
-				}
-			}
-
-			@Override
-			public DifferenceKind caseReferenceChange(ReferenceChange object) {
-				if (isRelatedToAnExtensionAdd(object)) {
-					return DifferenceKind.ADD;
-				} else if (isRelatedToAnExtensionDelete(object)) {
-					return DifferenceKind.DELETE;
-				} else if (isRelatedToAnExtensionChange(object)) {
-					return DifferenceKind.CHANGE;
-				} else {
-					return super.caseReferenceChange(object);
-				}
-			}
-
-			@Override
-			public DifferenceKind caseResourceAttachmentChange(ResourceAttachmentChange object) {
-				if (isRelatedToAnExtensionAdd(object)) {
-					return DifferenceKind.ADD;
-				} else if (isRelatedToAnExtensionDelete(object)) {
-					return DifferenceKind.DELETE;
-				} else if (isRelatedToAnExtensionChange(object)) {
-					return DifferenceKind.CHANGE;
-				} else {
-					return super.caseResourceAttachmentChange(object);
-				}
-			}
-		}.doSwitch(input);
+		return differenceKindCompareSwitch.doSwitch(input);
 	}
 
 	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
@@ -226,6 +235,10 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 	}
 
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
+		return false;
+	}
+
+	protected boolean isRelatedToAnExtensionMove(ReferenceChange input) {
 		return false;
 	}
 
@@ -241,6 +254,10 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 		return false;
 	}
 
+	protected boolean isRelatedToAnExtensionMove(AttributeChange input) {
+		return false;
+	}
+
 	protected boolean isRelatedToAnExtensionAdd(ResourceAttachmentChange input) {
 		return false;
 	}
@@ -250,6 +267,10 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 	}
 
 	protected boolean isRelatedToAnExtensionChange(ResourceAttachmentChange input) {
+		return false;
+	}
+
+	protected boolean isRelatedToAnExtensionMove(ResourceAttachmentChange input) {
 		return false;
 	}
 

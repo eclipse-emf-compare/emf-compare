@@ -74,19 +74,6 @@ public class UMLAssociationChangeFactory extends UMLAbstractDiffExtensionFactory
 	}
 
 	@Override
-	protected DifferenceKind getRelatedExtensionKind(Diff input) {
-		if (input instanceof ReferenceChange) {
-			if (isRelatedToAnExtensionChange((ReferenceChange)input)) {
-				return DifferenceKind.CHANGE;
-			} else if (isRelatedToAnExtensionAdd((ReferenceChange)input)) {
-				return DifferenceKind.ADD;
-			} else if (isRelatedToAnExtensionDelete((ReferenceChange)input)) {
-				return DifferenceKind.DELETE;
-			}
-		}
-		return null;
-	}
-
 	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
 		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.ADD)
 				&& input.getValue() instanceof Association
@@ -94,11 +81,13 @@ public class UMLAssociationChangeFactory extends UMLAbstractDiffExtensionFactory
 				&& ((Association)input.getValue()).getEndTypes().size() > 1;
 	}
 
+	@Override
 	protected boolean isRelatedToAnExtensionDelete(ReferenceChange input) {
 		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.DELETE)
 				&& input.getValue() instanceof Association;
 	}
 
+	@Override
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
 		final EObject diffContainer = MatchUtil.getContainer(input.getMatch().getComparison(), input);
 		return isAssociationPropertyChange(input, diffContainer)

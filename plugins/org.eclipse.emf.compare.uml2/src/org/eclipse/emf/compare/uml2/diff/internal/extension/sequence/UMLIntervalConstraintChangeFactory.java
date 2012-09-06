@@ -100,19 +100,6 @@ public class UMLIntervalConstraintChangeFactory extends UMLAbstractDiffExtension
 	}
 
 	@Override
-	protected DifferenceKind getRelatedExtensionKind(Diff input) {
-		if (input instanceof ReferenceChange) {
-			if (isRelatedToAnExtensionChange((ReferenceChange)input)) {
-				return DifferenceKind.CHANGE;
-			} else if (isRelatedToAnExtensionAdd((ReferenceChange)input)) {
-				return DifferenceKind.ADD;
-			} else if (isRelatedToAnExtensionDelete((ReferenceChange)input)) {
-				return DifferenceKind.DELETE;
-			}
-		}
-		return null;
-	}
-
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
 		return (input.getReference().equals(UMLPackage.Literals.CONSTRAINT__CONSTRAINED_ELEMENT)
 				|| input.getReference().equals(UMLPackage.Literals.CONSTRAINT__SPECIFICATION)
@@ -123,6 +110,7 @@ public class UMLIntervalConstraintChangeFactory extends UMLAbstractDiffExtension
 						MatchUtil.getContainer(input.getMatch().getComparison(), input).eClass());
 	}
 
+	@Override
 	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
 		return (input.getReference().isContainment() && input.getKind().equals(DifferenceKind.ADD)
 				&& input.getValue() instanceof IntervalConstraint
@@ -131,6 +119,7 @@ public class UMLIntervalConstraintChangeFactory extends UMLAbstractDiffExtension
 				.contains(input.getValue().eClass()));
 	}
 
+	@Override
 	protected boolean isRelatedToAnExtensionDelete(ReferenceChange input) {
 		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.DELETE)
 				&& input.getValue() instanceof IntervalConstraint
