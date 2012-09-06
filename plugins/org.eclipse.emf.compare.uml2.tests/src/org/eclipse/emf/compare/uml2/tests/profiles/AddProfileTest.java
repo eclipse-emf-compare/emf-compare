@@ -2,15 +2,16 @@ package org.eclipse.emf.compare.uml2.tests.profiles;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.base.Predicates.not;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
-import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.added;
-import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.addedToReference;
-import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.changedReference;
-import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.ofKind;
-import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.removed;
-import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.removedFromReference;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -22,6 +23,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.FilterComparisonScope;
@@ -30,15 +32,11 @@ import org.eclipse.emf.compare.uml2.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.profiles.data.ProfileInputData;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.resource.UMLResource;
 import org.junit.Test;
-//import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
-//import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
-//import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
-//import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
-//import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
-//import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 
 @SuppressWarnings("nls")
 public class AddProfileTest extends AbstractTest {
@@ -130,23 +128,36 @@ public class AddProfileTest extends AbstractTest {
 		Predicate<? super Diff> addReferencesInUMLAnnotationDescription = null;
 
 		if (kind.equals(TestKind.DELETE)) {
-			addProfileApplicationDescription = removed("aModel.Ecore Profile"); //$NON-NLS-1$
+			addProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
+					ofKind(DifferenceKind.DELETE),
+					onRealFeature(UMLPackage.Literals.PACKAGE__PROFILE_APPLICATION));
 
-			addAppliedProfileInProfileApplicationDescription = changedReference("aModel.Ecore Profile",
-					"appliedProfile", "Ecore", null);
+			addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
+					ofKind(DifferenceKind.CHANGE),
+					onRealFeature(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE),
+					not(isChangeAdd()));
 
-			addUMLAnnotationDescription = removed("aModel.Ecore Profile.UML");
-			addReferencesInUMLAnnotationDescription = removedFromReference("aModel.Ecore Profile.UML",
-					"references", "Ecore.UML.Ecore");
+			addUMLAnnotationDescription = and(instanceOf(ReferenceChange.class),
+					ofKind(DifferenceKind.DELETE),
+					onRealFeature(EcorePackage.Literals.EMODEL_ELEMENT__EANNOTATIONS));
+
+			addReferencesInUMLAnnotationDescription = and(instanceOf(ReferenceChange.class),
+					ofKind(DifferenceKind.DELETE),
+					onRealFeature(EcorePackage.Literals.EANNOTATION__REFERENCES));
 		} else {
-			addProfileApplicationDescription = added("aModel.Ecore Profile"); //$NON-NLS-1$
+			addProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
+					ofKind(DifferenceKind.ADD),
+					onRealFeature(UMLPackage.Literals.PACKAGE__PROFILE_APPLICATION));
 
-			addAppliedProfileInProfileApplicationDescription = changedReference("aModel.Ecore Profile",
-					"appliedProfile", null, "Ecore");
+			addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
+					ofKind(DifferenceKind.CHANGE),
+					onRealFeature(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE), isChangeAdd());
 
-			addUMLAnnotationDescription = added("aModel.Ecore Profile.UML");
-			addReferencesInUMLAnnotationDescription = addedToReference("aModel.Ecore Profile.UML",
-					"references", "Ecore.UML.Ecore");
+			addUMLAnnotationDescription = and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.ADD),
+					onRealFeature(EcorePackage.Literals.EMODEL_ELEMENT__EANNOTATIONS));
+
+			addReferencesInUMLAnnotationDescription = and(instanceOf(ReferenceChange.class),
+					ofKind(DifferenceKind.ADD), onRealFeature(EcorePackage.Literals.EANNOTATION__REFERENCES));
 		}
 
 		final Diff addProfileApplication = Iterators.find(differences.iterator(),
@@ -222,24 +233,36 @@ public class AddProfileTest extends AbstractTest {
 		Predicate<? super Diff> addStereotypeApplicationDescription = null;
 
 		if (kind.equals(TestKind.DELETE)) {
-			addProfileApplicationDescription = removed("aModel.UML2CompareTestProfile"); //$NON-NLS-1$
+			addProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
+					ofKind(DifferenceKind.DELETE),
+					onRealFeature(UMLPackage.Literals.PACKAGE__PROFILE_APPLICATION));
 
-			addAppliedProfileInProfileApplicationDescription = changedReference(
-					"aModel.UML2CompareTestProfile", "appliedProfile", "UML2CompareTestProfile", null);
+			addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
+					ofKind(DifferenceKind.CHANGE),
+					onRealFeature(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE),
+					not(isChangeAdd()));
 
-			addUMLAnnotationDescription = removed("aModel.UML2CompareTestProfile.UML");
-			addReferencesInUMLAnnotationDescription = removedFromReference(
-					"aModel.UML2CompareTestProfile.UML", "references",
-					"UML2CompareTestProfile.UML.uml2comparetestprofile");
+			addUMLAnnotationDescription = and(instanceOf(ReferenceChange.class),
+					ofKind(DifferenceKind.DELETE),
+					onRealFeature(EcorePackage.Literals.EMODEL_ELEMENT__EANNOTATIONS));
+
+			addReferencesInUMLAnnotationDescription = and(instanceOf(ReferenceChange.class),
+					ofKind(DifferenceKind.DELETE),
+					onRealFeature(EcorePackage.Literals.EANNOTATION__REFERENCES));
 		} else {
-			addProfileApplicationDescription = added("aModel.UML2CompareTestProfile"); //$NON-NLS-1$
+			addProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
+					ofKind(DifferenceKind.ADD),
+					onRealFeature(UMLPackage.Literals.PACKAGE__PROFILE_APPLICATION));
 
-			addAppliedProfileInProfileApplicationDescription = changedReference(
-					"aModel.UML2CompareTestProfile", "appliedProfile", null, "UML2CompareTestProfile");
+			addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
+					ofKind(DifferenceKind.CHANGE),
+					onRealFeature(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE), isChangeAdd());
 
-			addUMLAnnotationDescription = added("aModel.UML2CompareTestProfile.UML");
-			addReferencesInUMLAnnotationDescription = addedToReference("aModel.UML2CompareTestProfile.UML",
-					"references", "UML2CompareTestProfile.UML.uml2comparetestprofile");
+			addUMLAnnotationDescription = and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.ADD),
+					onRealFeature(EcorePackage.Literals.EMODEL_ELEMENT__EANNOTATIONS));
+
+			addReferencesInUMLAnnotationDescription = and(instanceOf(ReferenceChange.class),
+					ofKind(DifferenceKind.ADD), onRealFeature(EcorePackage.Literals.EANNOTATION__REFERENCES));
 		}
 
 		addStereotypeApplicationDescription = instanceOf(ResourceAttachmentChange.class);

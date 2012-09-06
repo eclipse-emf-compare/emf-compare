@@ -5,12 +5,12 @@ import static com.google.common.base.Predicates.instanceOf;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
-import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.added;
-import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.addedToReference;
-import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.changedReference;
-import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.ofKind;
-import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.removed;
-import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.removedFromReference;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;

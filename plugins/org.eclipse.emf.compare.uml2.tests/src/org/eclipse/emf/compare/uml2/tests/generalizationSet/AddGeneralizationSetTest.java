@@ -5,11 +5,11 @@ import static com.google.common.base.Predicates.instanceOf;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
-import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.added;
-import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.addedToReference;
-import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.ofKind;
-import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.removed;
-import static org.eclipse.emf.compare.uml2.tests.UMLComparePredicates.removedFromReference;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.onEObject;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.referenceValueMatch;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -25,7 +25,9 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.uml2.GeneralizationSetChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.generalizationSet.data.GeneralizationSetInputData;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.uml2.uml.UMLPackage;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
@@ -67,24 +69,32 @@ public class AddGeneralizationSetTest extends AbstractTest {
 
 		if (kind.equals(TestKind.DELETE)) {
 			addGeneralizationSetDescription = removed("model.GeneralizationSet_Class2_Class0"); //$NON-NLS-1$
-			addRefGeneralizationSetInClass2Description = removedFromReference("model.Class2.Class1",
-					"generalizationSet", "model.GeneralizationSet_Class2_Class0");
-			addRefGeneralizationSetInClass0Description = removedFromReference("model.Class0.Class1",
-					"generalizationSet", "model.GeneralizationSet_Class2_Class0");
-			addRefGeneralizationInGeneralizationSetDescription1 = removedFromReference(
-					"model.GeneralizationSet_Class2_Class0", "generalization", "model.Class0.Class1");
-			addRefGeneralizationInGeneralizationSetDescription2 = removedFromReference(
-					"model.GeneralizationSet_Class2_Class0", "generalization", "model.Class2.Class1");
+			addRefGeneralizationSetInClass2Description = removedFromReference1("model.Class2.Class1",
+					"generalizationSet", "model.GeneralizationSet_Class2_Class0",
+					UMLPackage.Literals.GENERALIZATION__GENERAL);
+			addRefGeneralizationSetInClass0Description = removedFromReference1("model.Class0.Class1",
+					"generalizationSet", "model.GeneralizationSet_Class2_Class0",
+					UMLPackage.Literals.GENERALIZATION__GENERAL);
+			addRefGeneralizationInGeneralizationSetDescription1 = removedFromReference2(
+					"model.GeneralizationSet_Class2_Class0", "generalization", "model.Class0.Class1",
+					UMLPackage.Literals.GENERALIZATION__GENERAL);
+			addRefGeneralizationInGeneralizationSetDescription2 = removedFromReference2(
+					"model.GeneralizationSet_Class2_Class0", "generalization", "model.Class2.Class1",
+					UMLPackage.Literals.GENERALIZATION__GENERAL);
 		} else {
 			addGeneralizationSetDescription = added("model.GeneralizationSet_Class2_Class0"); //$NON-NLS-1$
-			addRefGeneralizationSetInClass2Description = addedToReference("model.Class2.Class1",
-					"generalizationSet", "model.GeneralizationSet_Class2_Class0");
-			addRefGeneralizationSetInClass0Description = addedToReference("model.Class0.Class1",
-					"generalizationSet", "model.GeneralizationSet_Class2_Class0");
-			addRefGeneralizationInGeneralizationSetDescription1 = addedToReference(
-					"model.GeneralizationSet_Class2_Class0", "generalization", "model.Class0.Class1");
-			addRefGeneralizationInGeneralizationSetDescription2 = addedToReference(
-					"model.GeneralizationSet_Class2_Class0", "generalization", "model.Class2.Class1");
+			addRefGeneralizationSetInClass2Description = addedToReference1("model.Class2.Class1",
+					"generalizationSet", "model.GeneralizationSet_Class2_Class0",
+					UMLPackage.Literals.GENERALIZATION__GENERAL);
+			addRefGeneralizationSetInClass0Description = addedToReference1("model.Class0.Class1",
+					"generalizationSet", "model.GeneralizationSet_Class2_Class0",
+					UMLPackage.Literals.GENERALIZATION__GENERAL);
+			addRefGeneralizationInGeneralizationSetDescription1 = addedToReference2(
+					"model.GeneralizationSet_Class2_Class0", "generalization", "model.Class0.Class1",
+					UMLPackage.Literals.GENERALIZATION__GENERAL);
+			addRefGeneralizationInGeneralizationSetDescription2 = addedToReference2(
+					"model.GeneralizationSet_Class2_Class0", "generalization", "model.Class2.Class1",
+					UMLPackage.Literals.GENERALIZATION__GENERAL);
 		}
 
 		final Diff addGeneralizationSet = Iterators.find(differences.iterator(),
@@ -181,6 +191,38 @@ public class AddGeneralizationSetTest extends AbstractTest {
 		assertTrue(addRefGeneralizationInGeneralizationSet2.getEquivalence().getDifferences().contains(
 				addRefGeneralizationSetInClass2));
 
+	}
+
+	public static Predicate<? super Diff> removedFromReference1(final String qualifiedName,
+			final String referenceName, final String removedQualifiedName,
+			final EStructuralFeature featureDelegate) {
+		// This is only meant for multi-valued references
+		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName, featureDelegate),
+				referenceValueMatch(referenceName, removedQualifiedName, true));
+	}
+
+	public static Predicate<? super Diff> removedFromReference2(final String qualifiedName,
+			final String referenceName, final String removedQualifiedName,
+			final EStructuralFeature featureDelegate) {
+		// This is only meant for multi-valued references
+		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), referenceValueMatch(
+				referenceName, removedQualifiedName, true, featureDelegate));
+	}
+
+	public static Predicate<? super Diff> addedToReference1(final String qualifiedName,
+			final String referenceName, final String removedQualifiedName,
+			final EStructuralFeature featureDelegate) {
+		// This is only meant for multi-valued references
+		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName, featureDelegate),
+				referenceValueMatch(referenceName, removedQualifiedName, true));
+	}
+
+	public static Predicate<? super Diff> addedToReference2(final String qualifiedName,
+			final String referenceName, final String removedQualifiedName,
+			final EStructuralFeature featureDelegate) {
+		// This is only meant for multi-valued references
+		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), referenceValueMatch(referenceName,
+				removedQualifiedName, true, featureDelegate));
 	}
 
 }
