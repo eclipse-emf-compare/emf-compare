@@ -53,7 +53,7 @@ public class AddDependencyTest extends AbstractTest {
 		testAB1(TestKind.DELETE, comparison);
 	}
 
-	protected static void testAB1(TestKind kind, final Comparison comparison) {
+	protected void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences

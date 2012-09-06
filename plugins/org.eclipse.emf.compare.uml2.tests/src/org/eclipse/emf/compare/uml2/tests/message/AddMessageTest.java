@@ -3,6 +3,7 @@ package org.eclipse.emf.compare.uml2.tests.message;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
@@ -117,7 +118,7 @@ public class AddMessageTest extends AbstractTest {
 		testAB1(TestKind.DELETE, comparison);
 	}
 
-	private static void testAB1(TestKind kind, final Comparison comparison) {
+	private void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 12 differences
@@ -325,13 +326,8 @@ public class AddMessageTest extends AbstractTest {
 
 	}
 
-	private static void testAB2(TestKind kind, final Comparison comparison) {
+	private void testAB2(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
-
-		/*
-		 * FIXME assertFalse("No move expected", Iterators.filter(differences.iterator(),
-		 * ofKind(DifferenceKind.MOVE)) .hasNext());
-		 */
 
 		// We should have no less and no more than 7 differences
 		final Iterator<Diff> itUseFullDiffs = Iterators.filter(differences.iterator(),
@@ -465,15 +461,14 @@ public class AddMessageTest extends AbstractTest {
 		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
 				addCoveredByInLifeline0));
 
+		// FIXME
+		assertFalse("No move expected", Iterators.filter(differences.iterator(), ofKind(DifferenceKind.MOVE))
+				.hasNext());
+
 	}
 
-	private static void testAB3(TestKind kind, final Comparison comparison) {
+	private void testAB3(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
-
-		/*
-		 * FIXME assertFalse("No move expected", Iterators.filter(differences.iterator(),
-		 * ofKind(DifferenceKind.MOVE)) .hasNext());
-		 */
 
 		// We should have no less and no more than 7 differences
 		final Iterator<Diff> itUseFullDiffs = Iterators.filter(differences.iterator(),
@@ -606,6 +601,10 @@ public class AddMessageTest extends AbstractTest {
 				addCoveredInMessage0Recv0));
 		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
 				addCoveredByInLifeline0));
+
+		// FIXME
+		assertFalse("No move expected", Iterators.filter(differences.iterator(), ofKind(DifferenceKind.MOVE))
+				.hasNext());
 
 	}
 

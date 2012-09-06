@@ -54,7 +54,7 @@ public class AddExtendTest extends AbstractTest {
 		testAB1(TestKind.DELETE, comparison);
 	}
 
-	private static void testAB1(TestKind kind, final Comparison comparison) {
+	private void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences

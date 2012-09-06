@@ -180,9 +180,13 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 
 	@Override
 	public Match getParentMatch(Diff input) {
-		if (getRelatedExtensionKind(input) == DifferenceKind.CHANGE && getDiscriminantFromDiff(input) != null) {
-			return (Match)input.getMatch().getComparison().getMatch(getDiscriminantFromDiff(input))
-					.eContainer();
+		if (getRelatedExtensionKind(input) == DifferenceKind.CHANGE) {
+			Match match = input.getMatch().getComparison().getMatch(getDiscriminantFromDiff(input));
+			if (match.eContainer() instanceof Match) {
+				return (Match)match.eContainer();
+			} else {
+				return match;
+			}
 		}
 		return super.getParentMatch(input);
 	}
@@ -199,7 +203,6 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 					&& ((UMLDiff)diff).getDiscriminant().equals(getDiscriminantFromDiff(input))) {
 				return true;
 			}
-
 		}
 		return false;
 	}
