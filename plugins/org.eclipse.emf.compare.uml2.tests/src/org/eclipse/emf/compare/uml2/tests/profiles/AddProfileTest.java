@@ -25,6 +25,7 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.FilterComparisonScope;
+import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.uml2.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
@@ -49,7 +50,9 @@ public class AddProfileTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final Comparison comparison = EMFCompare.compare(left.getResourceSet(), right.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right
+				.getResourceSet());
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB1(TestKind.ADD, comparison);
 	}
 
@@ -58,7 +61,9 @@ public class AddProfileTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final Comparison comparison = EMFCompare.compare(right.getResourceSet(), left.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(), left
+				.getResourceSet());
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB1(TestKind.DELETE, comparison);
 	}
 
@@ -67,7 +72,9 @@ public class AddProfileTest extends AbstractTest {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
 
-		final Comparison comparison = EMFCompare.compare(left.getResourceSet(), right.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right
+				.getResourceSet());
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB2(TestKind.ADD, comparison);
 	}
 
@@ -76,7 +83,9 @@ public class AddProfileTest extends AbstractTest {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
 
-		final Comparison comparison = EMFCompare.compare(right.getResourceSet(), left.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(), left
+				.getResourceSet());
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB2(TestKind.DELETE, comparison);
 	}
 
@@ -93,7 +102,7 @@ public class AddProfileTest extends AbstractTest {
 						UMLResource.PROFILES_PATHMAP + "/" + "Ecore.profile.uml");
 			}
 		});
-		final Comparison comparison = EMFCompare.compare(scope);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 
 		testAB3(TestKind.ADD, comparison);
 	}
@@ -103,7 +112,9 @@ public class AddProfileTest extends AbstractTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		final Comparison comparison = EMFCompare.compare(right.getResourceSet(), left.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(), left
+				.getResourceSet());
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB3(TestKind.DELETE, comparison);
 	}
 

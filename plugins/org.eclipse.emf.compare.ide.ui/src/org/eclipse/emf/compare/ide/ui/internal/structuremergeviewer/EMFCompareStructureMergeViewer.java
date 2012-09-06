@@ -38,10 +38,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.emf.common.command.CommandStackListener;
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.actions.filter.DifferenceFilter;
@@ -49,8 +49,8 @@ import org.eclipse.emf.compare.ide.ui.internal.actions.filter.FilterActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGrouper;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.GroupActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareConfigurationExtension;
-import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareCompositeImageDescriptor;
 import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
+import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -177,10 +177,10 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			ResourceSet rightResourceSet = getResourceSetFrom(input.getRight(), monitor);
 			ResourceSet ancestorResourceSet = getResourceSetFrom(input.getAncestor(), monitor);
 
-			// TODO: run with a progress monitor.
-			EMFCompareConfiguration emfCompareConfiguration = EMFCompareConfiguration.builder().build();
-			final Comparison compareResult = EMFCompare.compare(leftResourceSet, rightResourceSet,
-					ancestorResourceSet, emfCompareConfiguration);
+			final IComparisonScope scope = EMFCompare.createDefaultScope(leftResourceSet, rightResourceSet,
+					ancestorResourceSet);
+			final Comparison compareResult = EMFCompare.newComparator(scope).setMonitor(
+					BasicMonitor.toMonitor(monitor)).compare();
 			EMFCompareEditingDomain editingDomain = new EMFCompareEditingDomain(compareResult,
 					leftResourceSet, rightResourceSet, ancestorResourceSet);
 			getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);

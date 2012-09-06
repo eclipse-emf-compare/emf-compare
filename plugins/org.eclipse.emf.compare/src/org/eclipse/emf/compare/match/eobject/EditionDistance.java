@@ -224,11 +224,6 @@ public class EditionDistance implements DistanceFunction {
 		private int distance;
 
 		/**
-		 * The class used to compare strings. We want to be more fine grain for those.
-		 */
-		private PairCharDistance stringMeter = new PairCharDistance();
-
-		/**
 		 * {@inheritDoc}
 		 */
 		public void referenceChange(Match match, EReference reference, EObject value, DifferenceKind kind,
@@ -252,7 +247,7 @@ public class EditionDistance implements DistanceFunction {
 				case CHANGE:
 					if (aValue instanceof String && bValue instanceof String) {
 						distance += getWeight(attribute)
-								* stringMeter.distance((String)aValue, (String)bValue);
+								* new PairCharDistance().distance((String)aValue, (String)bValue);
 					} else {
 						distance += getWeight(attribute) * attributeChangeCoef;
 					}

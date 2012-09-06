@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -37,6 +38,8 @@ public class MockCompareModel extends AbstractInputData {
 	}
 
 	public Comparison createComparisonModel() throws IOException {
-		return EMFCompare.compare(getLeftModel(), getRightModel(), getOriginModel());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(getLeftModel(), getRightModel(),
+				getOriginModel());
+		return EMFCompare.newComparator(scope).compare();
 	}
 }

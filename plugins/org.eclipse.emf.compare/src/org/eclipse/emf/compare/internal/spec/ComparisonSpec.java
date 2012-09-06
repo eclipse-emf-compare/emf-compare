@@ -27,6 +27,7 @@ import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.impl.ComparisonImpl;
@@ -175,7 +176,7 @@ public class ComparisonSpec extends ComparisonImpl {
 			}
 		}
 		if (ret == null) {
-			ret = EMFCompareConfiguration.builder().build();
+			ret = EMFCompare.createDefaultConfiguration();
 		}
 		return ret;
 	}

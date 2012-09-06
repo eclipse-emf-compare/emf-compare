@@ -28,12 +28,12 @@ import com.google.common.collect.Iterators;
 import java.io.IOException;
 import java.util.List;
 
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.req.data.ReqInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
@@ -52,7 +52,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final Comparison comparison = EMFCompare.compare(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB1(TestKind.DELETE, comparison);
 	}
 
@@ -61,7 +62,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
 
-		final Comparison comparison = EMFCompare.compare(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB2(TestKind.DELETE, comparison);
 	}
 
@@ -70,7 +72,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		final Comparison comparison = EMFCompare.compare(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB3(TestKind.DELETE, comparison);
 	}
 
@@ -79,7 +82,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA4Left();
 		final Resource right = input.getA4Right();
 
-		final Comparison comparison = EMFCompare.compare(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB4(TestKind.DELETE, comparison);
 	}
 
@@ -88,7 +92,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA5Left();
 		final Resource right = input.getA5Right();
 
-		final Comparison comparison = EMFCompare.compare(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB5(TestKind.DELETE, comparison);
 	}
 
@@ -97,7 +102,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA6Left();
 		final Resource right = input.getA6Right();
 
-		final Comparison comparison = EMFCompare.compare(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB6(TestKind.DELETE, comparison);
 
 	}
@@ -107,7 +113,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA7Left();
 		final Resource right = input.getA7Right();
 
-		final Comparison comparison = EMFCompare.compare(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB7(TestKind.ADD, comparison);
 	}
 
@@ -116,7 +123,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA8Left();
 		final Resource right = input.getA8Right();
 
-		final Comparison comparison = EMFCompare.compare(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB8(TestKind.ADD, comparison);
 	}
 
@@ -125,7 +133,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA9Left();
 		final Resource right = input.getA9Right();
 
-		final Comparison comparison = EMFCompare.compare(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB9(TestKind.ADD, comparison);
 	}
 
@@ -134,7 +143,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA10Left();
 		final Resource right = input.getA10Right();
 
-		final Comparison comparison = EMFCompare.compare(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB10(TestKind.ADD, comparison);
 	}
 
@@ -143,7 +153,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA11Left();
 		final Resource right = input.getA11Right();
 
-		final Comparison comparison = EMFCompare.compare(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB11(TestKind.ADD, comparison);
 	}
 
@@ -152,7 +163,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final Comparison comparison = EMFCompare.compare(right, left);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB1(TestKind.ADD, comparison);
 	}
 
@@ -161,7 +173,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
 
-		final Comparison comparison = EMFCompare.compare(right, left);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB2(TestKind.ADD, comparison);
 	}
 
@@ -170,7 +183,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		final Comparison comparison = EMFCompare.compare(right, left);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB3(TestKind.ADD, comparison);
 	}
 
@@ -179,7 +193,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA4Left();
 		final Resource right = input.getA4Right();
 
-		final Comparison comparison = EMFCompare.compare(right, left);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB4(TestKind.ADD, comparison);
 	}
 
@@ -188,7 +203,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA5Left();
 		final Resource right = input.getA5Right();
 
-		final Comparison comparison = EMFCompare.compare(right, left);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB5(TestKind.ADD, comparison);
 	}
 
@@ -197,7 +213,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA6Left();
 		final Resource right = input.getA6Right();
 
-		final Comparison comparison = EMFCompare.compare(right, left);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB6(TestKind.ADD, comparison);
 	}
 
@@ -206,7 +223,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA7Left();
 		final Resource right = input.getA7Right();
 
-		final Comparison comparison = EMFCompare.compare(right, left);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB7(TestKind.DELETE, comparison);
 	}
 
@@ -215,7 +233,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA8Left();
 		final Resource right = input.getA8Right();
 
-		final Comparison comparison = EMFCompare.compare(right, left);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB8(TestKind.DELETE, comparison);
 	}
 
@@ -224,7 +243,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA9Left();
 		final Resource right = input.getA9Right();
 
-		final Comparison comparison = EMFCompare.compare(right, left);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB9(TestKind.DELETE, comparison);
 	}
 
@@ -233,7 +253,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA10Left();
 		final Resource right = input.getA10Right();
 
-		final Comparison comparison = EMFCompare.compare(right, left);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB10(TestKind.DELETE, comparison);
 	}
 
@@ -242,7 +263,8 @@ public class ReqComputingTest {
 		final Resource left = input.getA11Left();
 		final Resource right = input.getA11Right();
 
-		final Comparison comparison = EMFCompare.compare(right, left);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB11(TestKind.DELETE, comparison);
 	}
 
@@ -251,7 +273,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC1Left();
 		final Resource right = input.getC1Right();
 
-		final Comparison comparison = EMFCompare.compare(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD1(TestKind.DELETE, comparison);
 	}
 
@@ -260,7 +283,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC2Left();
 		final Resource right = input.getC2Right();
 
-		final Comparison comparison = EMFCompare.compare(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD2(TestKind.DELETE, comparison);
 	}
 
@@ -269,7 +293,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC3Left();
 		final Resource right = input.getC3Right();
 
-		final Comparison comparison = EMFCompare.compare(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD3(TestKind.DELETE, comparison);
 	}
 
@@ -278,7 +303,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC4Left();
 		final Resource right = input.getC4Right();
 
-		final Comparison comparison = EMFCompare.compare(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD4(TestKind.DELETE, comparison);
 	}
 
@@ -287,7 +313,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC5Left();
 		final Resource right = input.getC5Right();
 
-		final Comparison comparison = EMFCompare.compare(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD5(TestKind.DELETE, comparison);
 	}
 
@@ -296,7 +323,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC1Left();
 		final Resource right = input.getC1Right();
 
-		final Comparison comparison = EMFCompare.compare(right, left);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD1(TestKind.ADD, comparison);
 	}
 
@@ -305,7 +333,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC2Left();
 		final Resource right = input.getC2Right();
 
-		final Comparison comparison = EMFCompare.compare(right, left);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD2(TestKind.ADD, comparison);
 	}
 
@@ -314,7 +343,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC3Left();
 		final Resource right = input.getC3Right();
 
-		final Comparison comparison = EMFCompare.compare(right, left);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD3(TestKind.ADD, comparison);
 	}
 
@@ -323,7 +353,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC4Left();
 		final Resource right = input.getC4Right();
 
-		final Comparison comparison = EMFCompare.compare(right, left);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD4(TestKind.ADD, comparison);
 	}
 
@@ -332,7 +363,8 @@ public class ReqComputingTest {
 		final Resource left = input.getC5Left();
 		final Resource right = input.getC5Right();
 
-		final Comparison comparison = EMFCompare.compare(right, left);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD5(TestKind.ADD, comparison);
 	}
 
@@ -342,7 +374,8 @@ public class ReqComputingTest {
 		final Resource right = input.getE1Right();
 		final Resource ancestor = input.getE1Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB1(TestKind.DELETE, comparison);
 	}
 
@@ -352,7 +385,8 @@ public class ReqComputingTest {
 		final Resource right = input.getE2Right();
 		final Resource ancestor = input.getE2Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB2(TestKind.DELETE, comparison);
 	}
 
@@ -362,7 +396,8 @@ public class ReqComputingTest {
 		final Resource right = input.getE3Right();
 		final Resource ancestor = input.getE3Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB3(TestKind.DELETE, comparison);
 	}
 
@@ -372,7 +407,8 @@ public class ReqComputingTest {
 		final Resource right = input.getE4Right();
 		final Resource ancestor = input.getE4Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB4(TestKind.DELETE, comparison);
 	}
 
@@ -382,7 +418,8 @@ public class ReqComputingTest {
 		final Resource right = input.getE5Right();
 		final Resource ancestor = input.getE5Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB5(TestKind.DELETE, comparison);
 	}
 
@@ -392,7 +429,8 @@ public class ReqComputingTest {
 		final Resource right = input.getE6Right();
 		final Resource ancestor = input.getE6Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB6(TestKind.DELETE, comparison);
 	}
 
@@ -402,7 +440,8 @@ public class ReqComputingTest {
 		final Resource right = input.getE7Right();
 		final Resource ancestor = input.getE7Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD1(TestKind.DELETE, comparison);
 	}
 
@@ -412,7 +451,8 @@ public class ReqComputingTest {
 		final Resource right = input.getE8Right();
 		final Resource ancestor = input.getE8Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD2(TestKind.DELETE, comparison);
 	}
 
@@ -422,7 +462,8 @@ public class ReqComputingTest {
 		final Resource right = input.getE9Right();
 		final Resource ancestor = input.getE9Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD3(TestKind.DELETE, comparison);
 	}
 
@@ -432,7 +473,8 @@ public class ReqComputingTest {
 		final Resource right = input.getE10Right();
 		final Resource ancestor = input.getE10Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD4(TestKind.DELETE, comparison);
 	}
 
@@ -442,7 +484,8 @@ public class ReqComputingTest {
 		final Resource right = input.getE11Right();
 		final Resource ancestor = input.getE11Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD5(TestKind.DELETE, comparison);
 	}
 
@@ -452,7 +495,8 @@ public class ReqComputingTest {
 		final Resource right = input.getF1Right();
 		final Resource ancestor = input.getF1Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB1(TestKind.ADD, comparison);
 	}
 
@@ -462,7 +506,8 @@ public class ReqComputingTest {
 		final Resource right = input.getF2Right();
 		final Resource ancestor = input.getF2Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB2(TestKind.ADD, comparison);
 	}
 
@@ -472,7 +517,8 @@ public class ReqComputingTest {
 		final Resource right = input.getF3Right();
 		final Resource ancestor = input.getF3Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB3(TestKind.ADD, comparison);
 	}
 
@@ -482,7 +528,8 @@ public class ReqComputingTest {
 		final Resource right = input.getF4Right();
 		final Resource ancestor = input.getF4Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB4(TestKind.ADD, comparison);
 	}
 
@@ -492,7 +539,8 @@ public class ReqComputingTest {
 		final Resource right = input.getF5Right();
 		final Resource ancestor = input.getF5Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB5(TestKind.ADD, comparison);
 	}
 
@@ -502,7 +550,8 @@ public class ReqComputingTest {
 		final Resource right = input.getF6Right();
 		final Resource ancestor = input.getF6Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB6(TestKind.ADD, comparison);
 	}
 
@@ -512,7 +561,8 @@ public class ReqComputingTest {
 		final Resource right = input.getF7Right();
 		final Resource ancestor = input.getF7Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD1(TestKind.ADD, comparison);
 	}
 
@@ -522,7 +572,8 @@ public class ReqComputingTest {
 		final Resource right = input.getF8Right();
 		final Resource ancestor = input.getF8Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD2(TestKind.ADD, comparison);
 	}
 
@@ -532,7 +583,8 @@ public class ReqComputingTest {
 		final Resource right = input.getF9Right();
 		final Resource ancestor = input.getF9Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD3(TestKind.ADD, comparison);
 	}
 
@@ -542,7 +594,8 @@ public class ReqComputingTest {
 		final Resource right = input.getF10Right();
 		final Resource ancestor = input.getF10Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD4(TestKind.ADD, comparison);
 	}
 
@@ -552,7 +605,8 @@ public class ReqComputingTest {
 		final Resource right = input.getF11Right();
 		final Resource ancestor = input.getF11Ancestor();
 
-		final Comparison comparison = EMFCompare.compare(left, right, ancestor);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testCD5(TestKind.ADD, comparison);
 	}
 
@@ -561,7 +615,8 @@ public class ReqComputingTest {
 		final Resource left = input.getG1Left();
 		final Resource right = input.getG1Right();
 
-		final Comparison comparison = EMFCompare.compare(left, right, (Notifier)null);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		String root = "root";
 		String node1 = root + ".node1";
 		String node2 = node1 + ".node2";

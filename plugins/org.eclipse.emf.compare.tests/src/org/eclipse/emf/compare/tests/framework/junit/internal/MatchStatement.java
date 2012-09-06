@@ -15,13 +15,18 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.EMFCompareConfiguration;
+import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
+import org.eclipse.emf.compare.match.eobject.EditionDistance;
+import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
+import org.eclipse.emf.compare.match.eobject.IdentifierEObjectMatcher;
+import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.NotifierTuple;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.MatchTest;
+import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 
@@ -83,7 +88,7 @@ public class MatchStatement extends Statement {
 		final MatchTest annotation = test.getAnnotation(MatchTest.class);
 		final IMatchEngine engine = createMatchEngine(annotation);
 		final IComparisonScope scope = createComparisonScope(tuple, annotation);
-		final Comparison comparison = engine.match(scope, EMFCompareConfiguration.builder().build());
+		final Comparison comparison = engine.match(scope, EMFCompare.createDefaultConfiguration());
 
 		test.invokeExplosively(testObject, scope, comparison);
 	}
@@ -109,7 +114,10 @@ public class MatchStatement extends Statement {
 			// Swallow : we'll create a default engine instead.
 		}
 		if (engine == null) {
-			engine = new DefaultMatchEngine();
+			final IEObjectMatcher contentMatcher = ProximityEObjectMatcher.builder(
+					EditionDistance.builder(new EqualityHelper()).build()).build();
+			final IEObjectMatcher matcher = new IdentifierEObjectMatcher(contentMatcher);
+			engine = new DefaultMatchEngine(matcher);
 		}
 		return engine;
 	}

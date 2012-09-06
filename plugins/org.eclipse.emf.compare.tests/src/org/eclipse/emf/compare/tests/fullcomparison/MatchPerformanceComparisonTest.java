@@ -12,13 +12,17 @@ package org.eclipse.emf.compare.tests.fullcomparison;
 
 import java.io.IOException;
 
-import org.eclipse.emf.compare.EMFCompareConfiguration;
-import org.eclipse.emf.compare.EMFCompareConfiguration.USE_IDS;
+import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
+import org.eclipse.emf.compare.match.eobject.EditionDistance;
+import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
+import org.eclipse.emf.compare.match.eobject.IdentifierEObjectMatcher;
+import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.fullcomparison.data.distance.DistanceMatchInputData;
 import org.eclipse.emf.compare.tests.suite.AllTests;
+import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.UMLPackage;
@@ -57,26 +61,32 @@ public class MatchPerformanceComparisonTest {
 
 	@Test
 	public void warmup() throws IOException {
-		DefaultMatchEngine matchEngine = new DefaultMatchEngine();
+		final IEObjectMatcher contentMatcher = ProximityEObjectMatcher.builder(
+				EditionDistance.builder(new EqualityHelper()).build()).build();
+		final IEObjectMatcher matcher = new IdentifierEObjectMatcher(contentMatcher);
+		DefaultMatchEngine matchEngine = new DefaultMatchEngine(matcher);
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		matchEngine.match(scope, EMFCompareConfiguration.builder().build());
+		matchEngine.match(scope, EMFCompare.createDefaultConfiguration());
 	}
 
 	@Test
 	public void matchPerIdAlmostIdenticalModels() throws IOException {
-		DefaultMatchEngine matchEngine = new DefaultMatchEngine();
+		final IEObjectMatcher matcher = new IdentifierEObjectMatcher();
+		DefaultMatchEngine matchEngine = new DefaultMatchEngine(matcher);
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		for (int i = 0; i < nbIterations; i++) {
-			matchEngine.match(scope, EMFCompareConfiguration.builder().shouldUseID(USE_IDS.ONLY).build());
+			matchEngine.match(scope, EMFCompare.createDefaultConfiguration());
 		}
 	}
 
 	@Test
 	public void matchPerContentAlmostIdenticalModels() throws IOException {
-		DefaultMatchEngine matchEngine = new DefaultMatchEngine();
+		final IEObjectMatcher contentMatcher = ProximityEObjectMatcher.builder(
+				EditionDistance.builder(new EqualityHelper()).build()).build();
+		DefaultMatchEngine matchEngine = new DefaultMatchEngine(contentMatcher);
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		for (int i = 0; i < nbIterations; i++) {
-			matchEngine.match(scope, EMFCompareConfiguration.builder().shouldUseID(USE_IDS.NEVER).build());
+			matchEngine.match(scope, EMFCompare.createDefaultConfiguration());
 		}
 	}
 

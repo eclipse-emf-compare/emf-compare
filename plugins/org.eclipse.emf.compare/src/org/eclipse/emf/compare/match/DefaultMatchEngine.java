@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
@@ -22,10 +24,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
-import org.eclipse.emf.compare.match.eobject.EditionDistance;
 import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
-import org.eclipse.emf.compare.match.eobject.IdentifierEObjectMatcher;
-import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher;
 import org.eclipse.emf.compare.match.resource.IResourceMatcher;
 import org.eclipse.emf.compare.match.resource.StrategyResourceMatcher;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -48,10 +47,25 @@ public class DefaultMatchEngine implements IMatchEngine {
 	/** The comparison scope that will be used by this engine. Should be accessed through {@link #getScope()}. */
 	private IComparisonScope comparisonScope;
 
+	/** The delegate {@link IEObjectMatcher matcher} that will actually pair EObjects together. */
+	private IEObjectMatcher eObjectMatcher;
+
+	/**
+	 * This default engine delegates the pairing of EObjects to an {@link IEObjectMatcher}.This constructor
+	 * allows initialization of this matcher.
+	 * 
+	 * @param matcher
+	 *            The matcher that will be in charge of pairing EObjects together for this comparison process.
+	 */
+	public DefaultMatchEngine(IEObjectMatcher matcher) {
+		checkNotNull(matcher);
+		this.eObjectMatcher = matcher;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.IMatchEngine#match(org.eclipse.emf.compare.scope.IComparisonScope)
+	 * @see org.eclipse.emf.compare.match.IMatchEngine#match(IComparisonScope, EMFCompareConfiguration)
 	 */
 	public Comparison match(IComparisonScope scope, EMFCompareConfiguration configuration) {
 		this.comparisonScope = scope;
@@ -117,8 +131,8 @@ public class DefaultMatchEngine implements IMatchEngine {
 			originChildren = Iterators.emptyIterator();
 		}
 
-		final IResourceMatcher matcher = getResourceMatcher();
-		final Iterable<MatchResource> mappings = matcher.createMappings(leftChildren, rightChildren,
+		final IResourceMatcher resourceMatcher = getResourceMatcher();
+		final Iterable<MatchResource> mappings = resourceMatcher.createMappings(leftChildren, rightChildren,
 				originChildren);
 
 		for (MatchResource mapping : mappings) {
@@ -171,8 +185,8 @@ public class DefaultMatchEngine implements IMatchEngine {
 			originEObjects = Iterators.emptyIterator();
 		}
 
-		final IEObjectMatcher matcher = createEObjectMatcher();
-		final Iterable<Match> matches = matcher.createMatches(leftEObjects, rightEObjects, originEObjects);
+		final Iterable<Match> matches = getEObjectMatcher().createMatches(leftEObjects, rightEObjects,
+				originEObjects);
 
 		Iterables.addAll(getComparison().getMatches(), matches);
 	}
@@ -209,8 +223,8 @@ public class DefaultMatchEngine implements IMatchEngine {
 			originEObjects = Iterators.emptyIterator();
 		}
 
-		final IEObjectMatcher matcher = createEObjectMatcher();
-		final Iterable<Match> matches = matcher.createMatches(leftEObjects, rightEObjects, originEObjects);
+		final Iterable<Match> matches = getEObjectMatcher().createMatches(leftEObjects, rightEObjects,
+				originEObjects);
 
 		Iterables.addAll(getComparison().getMatches(), matches);
 	}
@@ -226,44 +240,12 @@ public class DefaultMatchEngine implements IMatchEngine {
 	}
 
 	/**
-	 * This will be used to create the EObject matcher that will be used by this match engine.
-	 * <p>
-	 * This default implementation uses an {@link IdentifierEObjectMatcher} to match EObjects through their ID
-	 * only.
-	 * </p>
+	 * Returns the EObject matcher associated with this match engine.
 	 * 
-	 * @return An {@link IEObjectMatcher} that can be used to retrieve the {@link Match}es for this
-	 *         comparison.
+	 * @return The EObject matcher associated with this match engine.
 	 */
-	protected IEObjectMatcher createEObjectMatcher() {
-		/*
-		 * if we don't want to use the IDs at all, we should return the matchByContent. If we don't want to
-		 * use the content match, we should return an ID based matcher without delegate. Otherwise lets just
-		 * return an ID matcher which delegates to the content one.
-		 */
-		final IEObjectMatcher matcherToUse;
-		switch (getComparison().getConfiguration().matchByID()) {
-			case NEVER:
-				matcherToUse = ProximityEObjectMatcher.builder(
-						EditionDistance.builder(getComparison().getConfiguration().getEqualityHelper())
-								.build()).build();
-				break;
-			case ONLY:
-				matcherToUse = new IdentifierEObjectMatcher();
-				break;
-			case WHEN_AVAILABLE:
-				// fall through to default
-			default:
-				// Use an ID matcher, delegating to proximity if no ID is available
-				final IEObjectMatcher contentMatcher = ProximityEObjectMatcher.builder(
-						EditionDistance.builder(getComparison().getConfiguration().getEqualityHelper())
-								.build()).build();
-				matcherToUse = new IdentifierEObjectMatcher(contentMatcher);
-				break;
-
-		}
-		return matcherToUse;
-
+	protected IEObjectMatcher getEObjectMatcher() {
+		return eObjectMatcher;
 	}
 
 	/**

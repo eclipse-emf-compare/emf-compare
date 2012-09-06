@@ -477,7 +477,7 @@ public final class UMLComparePredicates {
 						&& ((AttributeChange)input).getAttribute().getName().equals(attributeName)
 						&& ((AttributeChange)input).getAttribute().isMany() == multiValued) {
 					final Object value = ((AttributeChange)input).getValue();
-					return new EqualityHelper().matchingValues(value, expectedValue);
+					return new EqualityHelper().matchingAttributeValues(value, expectedValue);
 				}
 				return false;
 			}

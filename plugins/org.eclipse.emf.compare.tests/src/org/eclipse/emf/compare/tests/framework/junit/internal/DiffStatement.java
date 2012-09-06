@@ -14,15 +14,20 @@ import java.lang.reflect.Constructor;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.EMFCompareConfiguration;
+import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.diff.DefaultDiffEngine;
 import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
+import org.eclipse.emf.compare.match.eobject.EditionDistance;
+import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
+import org.eclipse.emf.compare.match.eobject.IdentifierEObjectMatcher;
+import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.NotifierTuple;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.DiffTest;
+import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 
@@ -76,7 +81,7 @@ public class DiffStatement extends Statement {
 		final IComparisonScope scope = createComparisonScope(tuple, annotation);
 		final IMatchEngine matchEngine = createMatchEngine(annotation);
 		final IDiffEngine diffEngine = createDiffEngine(annotation);
-		final Comparison comparison = matchEngine.match(scope, EMFCompareConfiguration.builder().build());
+		final Comparison comparison = matchEngine.match(scope, EMFCompare.createDefaultConfiguration());
 		diffEngine.diff(comparison);
 
 		test.invokeExplosively(testObject, scope, comparison);
@@ -103,7 +108,10 @@ public class DiffStatement extends Statement {
 			// Swallow : we'll create a default engine instead.
 		}
 		if (engine == null) {
-			engine = new DefaultMatchEngine();
+			final IEObjectMatcher contentMatcher = ProximityEObjectMatcher.builder(
+					EditionDistance.builder(new EqualityHelper()).build()).build();
+			final IEObjectMatcher matcher = new IdentifierEObjectMatcher(contentMatcher);
+			engine = new DefaultMatchEngine(matcher);
 		}
 		return engine;
 	}
