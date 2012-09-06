@@ -478,7 +478,7 @@ public class EquiComputingTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		Comparison comparison = EMFCompare.newComparator(scope).compare();
 
 		testA1(TestKind.RIGHT, comparison);
@@ -489,7 +489,7 @@ public class EquiComputingTest {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		Comparison comparison = EMFCompare.newComparator(scope).compare();
 
 		testA2(TestKind.RIGHT, comparison);
@@ -500,7 +500,7 @@ public class EquiComputingTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		Comparison comparison = EMFCompare.newComparator(scope).compare();
 
 		testA3(TestKind.RIGHT, comparison);
@@ -511,7 +511,7 @@ public class EquiComputingTest {
 		final Resource left = input.getA4Left();
 		final Resource right = input.getA4Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		Comparison comparison = EMFCompare.newComparator(scope).compare();
 
 		testA4(TestKind.RIGHT, comparison);
@@ -522,7 +522,7 @@ public class EquiComputingTest {
 		final Resource left = input.getA5Left();
 		final Resource right = input.getA5Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		Comparison comparison = EMFCompare.newComparator(scope).compare();
 
 		testA5(TestKind.RIGHT, comparison);
