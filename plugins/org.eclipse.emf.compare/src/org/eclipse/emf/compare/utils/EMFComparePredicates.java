@@ -720,8 +720,8 @@ public final class EMFComparePredicates {
 	 *            The EObject which qualified name we are to check.
 	 * @param qualifiedName
 	 *            The expected, <b>absolute</b> qualified name of the given {@code eObject}.
-	 * @param The
-	 *            optional feature to define the name of the objects. May be null.
+	 * @param featureDelegate
+	 *            The optional feature to define the name of the objects. May be null.
 	 * @return {@code true} if the given {@code eObject} matches the given {@code qualifiedName},
 	 *         {@code false} if not, or if we could not determine the "name" feature of that EObject.
 	 * @see #getNameFeature(EObject)
@@ -786,28 +786,29 @@ public final class EMFComparePredicates {
 	 *            the EObject which name we are to check.
 	 * @param name
 	 *            The expected name of {@code eObject}.
-	 * @param The
-	 *            optional feature to define the name of the objects. May be null.
+	 * @param featureDelegate
+	 *            The optional feature to define the name of the objects. May be null.
 	 * @return {@code true} if the given {@code eObject}'s name is equal to the given {@code name},
 	 *         {@code false} if not, or if we could not determine the "name" feature of that EObject.
 	 * @see #getNameFeature(EObject)
 	 */
 	private static boolean internalMatch(EObject eObject, String name, EStructuralFeature featureDelegate) {
 		final EStructuralFeature nameFeature = getNameFeature(eObject);
+		boolean match = false;
 		if (nameFeature != null) {
 			final Object featureValue = eObject.eGet(nameFeature);
 			if (featureValue instanceof String) {
-				return featureValue.equals(name);
+				match = featureValue.equals(name);
 			}
 		} else if (featureDelegate != null && !featureDelegate.isMany()) {
 			final Object featureValue = eObject.eGet(featureDelegate, false);
 			if (featureValue instanceof String) {
-				return featureValue.equals(name);
+				match = featureValue.equals(name);
 			} else if (featureValue instanceof EObject) {
-				return internalMatch((EObject)featureValue, name, null);
+				match = internalMatch((EObject)featureValue, name, null);
 			}
 		}
-		return false;
+		return match;
 	}
 
 	/**
