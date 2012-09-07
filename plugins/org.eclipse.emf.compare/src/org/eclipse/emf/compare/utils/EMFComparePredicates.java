@@ -656,33 +656,17 @@ public final class EMFComparePredicates {
 	}
 
 	/**
-	 * This can be used to check whether a given Diff is in a pseudo conflict state regarding other diffs.
-	 * <p>
-	 * pseudo conflict means both parties did the same change compared to the ancestor state.
-	 * </p>
+	 * This can be used to check whether a given Diff has a conflict of one of the given type.
 	 * 
+	 * @param kinds
+	 *            Type(s) of the conflict(s) we seek.
 	 * @return The created predicate.
 	 */
-	public static Predicate<? super Diff> hasPseudoConflict() {
+	public static Predicate<? super Diff> hasConflict(final ConflictKind... kinds) {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
 				return input != null && input.getConflict() != null
-						&& input.getConflict().getKind() == ConflictKind.PSEUDO;
-			}
-		};
-	}
-
-	/**
-	 * This can be used to check whether a given Diff is in a conflicting state regarding other diffs. It is
-	 * only considering states which are real conflicts opposed to the pseudo conflicts.
-	 * 
-	 * @return The created predicate.
-	 */
-	public static Predicate<? super Diff> hasRealConflict() {
-		return new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				return input != null && input.getConflict() != null
-						&& input.getConflict().getKind() == ConflictKind.REAL;
+						&& Arrays.asList(kinds).contains(input.getConflict().getKind());
 			}
 		};
 	}

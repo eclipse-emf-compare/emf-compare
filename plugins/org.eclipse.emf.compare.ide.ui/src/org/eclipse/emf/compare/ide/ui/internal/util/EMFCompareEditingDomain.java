@@ -180,10 +180,8 @@ public class EMFCompareEditingDomain {
 		@Override
 		protected void doExecute() {
 			for (Diff diff : fDiff) {
-				if (diff.getSource() == DifferenceSource.RIGHT) {
-					if (diff.getConflict() == null) {
-						diff.copyRightToLeft();
-					}
+				if (diff.getSource() == DifferenceSource.RIGHT && diff.getConflict() == null) {
+					diff.copyRightToLeft();
 				}
 			}
 
@@ -222,10 +220,8 @@ public class EMFCompareEditingDomain {
 		@Override
 		protected void doExecute() {
 			for (Diff diff : fDiff) {
-				if (diff.getSource() == DifferenceSource.LEFT) {
-					if (diff.getConflict() == null) {
-						diff.copyLeftToRight();
-					}
+				if (diff.getSource() == DifferenceSource.LEFT && diff.getConflict() == null) {
+					diff.copyLeftToRight();
 				}
 			}
 		}

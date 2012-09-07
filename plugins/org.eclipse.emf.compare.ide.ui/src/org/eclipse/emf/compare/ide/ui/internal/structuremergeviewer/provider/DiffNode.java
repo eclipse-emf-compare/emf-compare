@@ -11,8 +11,7 @@
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
 import static com.google.common.collect.Iterables.any;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasPseudoConflict;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasRealConflict;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -82,9 +81,9 @@ public class DiffNode extends AbstractEDiffNode {
 				if (conflict.getKind() == ConflictKind.PSEUDO) {
 					ret |= Differencer.PSEUDO_CONFLICT;
 				}
-			} else if (any(diff.getRequiredBy(), hasRealConflict())) {
+			} else if (any(diff.getRequiredBy(), hasConflict(ConflictKind.REAL))) {
 				ret |= Differencer.CONFLICTING;
-			} else if (any(diff.getRequiredBy(), hasPseudoConflict())) {
+			} else if (any(diff.getRequiredBy(), hasConflict(ConflictKind.PSEUDO))) {
 				// We know there is no real conflict as that would have been handled above
 				ret |= Differencer.CONFLICTING | Differencer.PSEUDO_CONFLICT;
 			}

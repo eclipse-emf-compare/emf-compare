@@ -10,9 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
-import static com.google.common.collect.Iterables.all;
+import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.isEmpty;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 
 import com.google.common.base.Predicate;
 
@@ -160,7 +161,7 @@ public class ImageProvider {
 		final Iterable<Diff> differences = match.getAllDifferences();
 
 		if (match.getComparison().isThreeWay()) {
-			Iterable<Diff> conflictualDiffs = filter(differences, CONFLICTUAL_DIFF);
+			boolean hasConflicts = any(differences, hasConflict(ConflictKind.REAL, ConflictKind.PSEUDO));
 
 			if (ancestor == null) {
 				if (left == null) {
@@ -171,110 +172,78 @@ public class ImageProvider {
 							path = "inadd_ov.gif";
 						}
 					}
-				} else {
-					if (right == null) {
-						if (fLeftIsLocal) {
-							path = "r_outadd_ov.gif";
-						} else {
-							path = "outadd_ov.gif";
-						}
-					} else {
-						if (!isEmpty(conflictualDiffs)) {
-							path = "confadd_ov.png";
-							if (all(conflictualDiffs, PSEUDO_CONFLICT)) {
-								// path |= Differencer.PSEUDO_CONFLICT;
-							}
-						}
-					}
-				}
-			} else {
-				if (left == null) {
-					if (right == null) {
-						// path = Differencer.CONFLICTING | Differencer.DELETION |
-						// Differencer.PSEUDO_CONFLICT;
-					} else {
-						if (isEmpty(conflictualDiffs)) {
-							if (fLeftIsLocal) {
-								path = "r_outdel_ov.gif";
-							} else {
-								path = "outdel_ov.gif";
-							}
-						} else {
-							if (!isEmpty(conflictualDiffs)) {
-								path = "confdel_ov.png";
-								if (all(conflictualDiffs, PSEUDO_CONFLICT)) {
-									// path |= Differencer.PSEUDO_CONFLICT;
-								}
-							}
-						}
-					}
-				} else {
-					if (right == null) {
-						if (isEmpty(conflictualDiffs)) {
-							if (fLeftIsLocal) {
-								path = "r_indel_ov.gif";
-							} else {
-								path = "indel_ov.gif";
-							}
-						} else {
-							if (!isEmpty(conflictualDiffs)) {
-								path = "confchg_ov.png";
-								if (all(conflictualDiffs, PSEUDO_CONFLICT)) {
-									// path |= Differencer.PSEUDO_CONFLICT;
-								}
-							}
-						}
-					} else {
-						boolean ay = isEmpty(filter(differences, LEFT_DIFF));
-						boolean am = isEmpty(filter(differences, RIGHT_DIFF));
-
-						if (isEmpty(differences)) {
-							// empty
-						} else if (ay && !am) {
-							if (fLeftIsLocal) {
-								path = "r_inchg_ov.gif";
-							} else {
-								path = "inchg_ov.gif";
-							}
-						} else if (!ay && am) {
-							if (fLeftIsLocal) {
-								path = "r_outchg_ov.gif";
-							} else {
-								path = "outchg_ov.gif";
-							}
-						} else {
-							if (!isEmpty(conflictualDiffs)) {
-								path = "confchg_ov.png";
-								if (all(conflictualDiffs, PSEUDO_CONFLICT)) {
-									// path |= Differencer.PSEUDO_CONFLICT;
-								}
-							}
-						}
-					}
-				}
-			}
-		} else { // two way compare ignores ancestor
-			if (left == null) {
-				if (right != null) {
+				} else if (right == null) {
 					if (fLeftIsLocal) {
-						path = "add_ov.gif";
+						path = "r_outadd_ov.gif";
 					} else {
-						path = "del_ov.gif";
+						path = "outadd_ov.gif";
 					}
+				} else if (hasConflicts && any(differences, hasConflict(ConflictKind.REAL))) {
+					path = "confadd_ov.png";
 				}
-			} else {
+			} else if (left == null) {
 				if (right == null) {
+					// path = Differencer.CONFLICTING | Differencer.DELETION |
+					// Differencer.PSEUDO_CONFLICT;
+				} else if (!hasConflicts) {
 					if (fLeftIsLocal) {
-						path = "del_ov.gif";
+						path = "r_outdel_ov.gif";
 					} else {
-						path = "add_ov.gif";
+						path = "outdel_ov.gif";
+					}
+				} else if (any(differences, hasConflict(ConflictKind.REAL))) {
+					path = "confdel_ov.png";
+				}
+			} else if (right == null) {
+				if (!hasConflicts) {
+					if (fLeftIsLocal) {
+						path = "r_indel_ov.gif";
+					} else {
+						path = "indel_ov.gif";
+					}
+				} else if (any(differences, hasConflict(ConflictKind.REAL))) {
+					path = "confchg_ov.png";
+				}
+			} else {
+				boolean ay = isEmpty(filter(differences, LEFT_DIFF));
+				boolean am = isEmpty(filter(differences, RIGHT_DIFF));
+
+				if (isEmpty(differences)) {
+					// empty
+				} else if (ay && !am) {
+					if (fLeftIsLocal) {
+						path = "r_inchg_ov.gif";
+					} else {
+						path = "inchg_ov.gif";
+					}
+				} else if (!ay && am) {
+					if (fLeftIsLocal) {
+						path = "r_outchg_ov.gif";
+					} else {
+						path = "outchg_ov.gif";
 					}
 				} else {
-					if (!isEmpty(differences)) {
-						path = "chg_ov.gif";
+					if (hasConflicts && any(differences, hasConflict(ConflictKind.REAL))) {
+						path = "confchg_ov.png";
 					}
 				}
 			}
+		} else if (left == null) {
+			if (right != null) {
+				if (fLeftIsLocal) {
+					path = "add_ov.gif";
+				} else {
+					path = "del_ov.gif";
+				}
+			}
+		} else if (right == null) {
+			if (fLeftIsLocal) {
+				path = "del_ov.gif";
+			} else {
+				path = "add_ov.gif";
+			}
+		} else if (!isEmpty(differences)) {
+			path = "chg_ov.gif";
 		}
 
 		ImageDescriptor ret = null;
@@ -283,18 +252,6 @@ public class ImageProvider {
 		}
 		return ret;
 	}
-
-	private static final Predicate<Diff> CONFLICTUAL_DIFF = new Predicate<Diff>() {
-		public boolean apply(Diff input) {
-			return input != null && input.getConflict() != null;
-		}
-	};
-
-	private static final Predicate<Diff> PSEUDO_CONFLICT = new Predicate<Diff>() {
-		public boolean apply(Diff input) {
-			return input != null && input.getConflict().getKind() == ConflictKind.REAL;
-		}
-	};
 
 	private static final Predicate<Diff> LEFT_DIFF = new Predicate<Diff>() {
 		public boolean apply(Diff input) {
