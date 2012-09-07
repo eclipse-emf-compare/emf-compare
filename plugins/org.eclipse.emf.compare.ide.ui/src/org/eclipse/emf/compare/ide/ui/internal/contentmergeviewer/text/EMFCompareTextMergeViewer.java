@@ -17,18 +17,24 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.MergeSourceViewer;
+import org.eclipse.compare.internal.Utilities;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.AttributeChangeNode;
 import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.actions.ActionFactory;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -40,6 +46,10 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	private final EMFCompareEditingDomain fEditingDomain;
 
 	private DynamicObject fDynamicObject;
+
+	private ActionContributionItem fCopyDiffLeftToRightItem;
+
+	private ActionContributionItem fCopyDiffRightToLeftItem;
 
 	/**
 	 * @param parent
@@ -67,6 +77,24 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 			final Command copyCommand = fEditingDomain.createCopyAllNonConflictingCommand(comparison
 					.getDifferences(), leftToRight);
+			fEditingDomain.getCommandStack().execute(copyCommand);
+
+			if (leftToRight) {
+				setRightDirty(true);
+			} else {
+				setLeftDirty(true);
+			}
+
+			refresh();
+		}
+	}
+
+	protected void copyDiff(boolean leftToRight) {
+		Object input = getInput();
+		if (input instanceof AttributeChangeNode) {
+			final AttributeChange attributeChange = ((AttributeChangeNode)input).getTarget();
+
+			final Command copyCommand = fEditingDomain.createCopyCommand(attributeChange, leftToRight);
 			fEditingDomain.getCommandStack().execute(copyCommand);
 
 			if (leftToRight) {
@@ -132,10 +160,61 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	 */
 	@SuppressWarnings("restriction")
 	@Override
-	protected void createToolItems(ToolBarManager tbm) {
-		// forced to do that to avoid NPE in org.eclipse.compare.internal.ViewerDescriptor.createViewer
-		setHandlerService(CompareHandlerService.createFor(getCompareConfiguration().getContainer(),
-				getLeftSourceViewer().getSourceViewer().getControl().getShell()));
+	protected void createToolItems(ToolBarManager toolBarManager) {
+		// TODO copied from EMFCompareContentMergeViewer ... externalize
+		Action a;
+
+		// avoid super to avoid NPE in org.eclipse.compare.internal.ViewerDescriptor.createViewer
+		CompareHandlerService handlerService = CompareHandlerService.createFor(getCompareConfiguration()
+				.getContainer(), getLeftSourceViewer().getSourceViewer().getControl().getShell());
+		setHandlerService(handlerService);
+
+		CompareConfiguration cc = getCompareConfiguration();
+		if (cc.isRightEditable()) {
+			a = new Action() {
+				@Override
+				public void run() {
+					copyDiff(true);
+				}
+			};
+			Utilities.initAction(a, getResourceBundle(), "action.CopyDiffLeftToRight."); //$NON-NLS-1$
+			fCopyDiffLeftToRightItem = new ActionContributionItem(a);
+			fCopyDiffLeftToRightItem.setVisible(true);
+			toolBarManager.appendToGroup("merge", fCopyDiffLeftToRightItem); //$NON-NLS-1$
+			handlerService.registerAction(a, "org.eclipse.compare.copyLeftToRight"); //$NON-NLS-1$
+		}
+
+		if (cc.isLeftEditable()) {
+			a = new Action() {
+				@Override
+				public void run() {
+					copyDiff(false);
+				}
+			};
+			Utilities.initAction(a, getResourceBundle(), "action.CopyDiffRightToLeft."); //$NON-NLS-1$
+			fCopyDiffRightToLeftItem = new ActionContributionItem(a);
+			fCopyDiffRightToLeftItem.setVisible(true);
+			toolBarManager.appendToGroup("merge", fCopyDiffRightToLeftItem); //$NON-NLS-1$
+			handlerService.registerAction(a, "org.eclipse.compare.copyRightToLeft"); //$NON-NLS-1$
+		}
+
+		// This is called from the super-constructor, fEditingDomain is not set yet.
+		final EMFCompareEditingDomain domain = (EMFCompareEditingDomain)getCompareConfiguration()
+				.getProperty(EMFCompareConstants.EDITING_DOMAIN);
+
+		final UndoAction undoAction = new UndoAction(domain);
+		final RedoAction redoAction = new RedoAction(domain);
+
+		domain.getCommandStack().addCommandStackListener(new CommandStackListener() {
+			public void commandStackChanged(EventObject event) {
+				undoAction.update();
+				redoAction.update();
+				refresh();
+			}
+		});
+
+		handlerService.setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
+		handlerService.setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
 	}
 
 	/**
@@ -162,5 +241,4 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	public void commandStackChanged(EventObject event) {
 		refresh();
 	}
-
 }
