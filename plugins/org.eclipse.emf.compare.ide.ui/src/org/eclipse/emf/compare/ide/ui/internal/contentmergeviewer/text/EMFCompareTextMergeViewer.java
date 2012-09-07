@@ -64,12 +64,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		if (input instanceof AttributeChangeNode) {
 			AttributeChange attributeChange = ((AttributeChangeNode)input).getTarget();
 			if (attributeChange.getState() == DifferenceState.UNRESOLVED) {
-				final Command copyCommand;
-				if (leftToRight) {
-					copyCommand = fEditingDomain.createCopyLeftToRightCommand(attributeChange);
-				} else {
-					copyCommand = fEditingDomain.createCopyRightToLeftCommand(attributeChange);
-				}
+				final Command copyCommand = fEditingDomain.createCopyCommand(attributeChange, leftToRight);
 				fEditingDomain.getCommandStack().execute(copyCommand);
 
 				if (leftToRight) {

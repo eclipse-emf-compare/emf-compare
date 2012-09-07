@@ -8,7 +8,8 @@ Bundle-Activator: org.eclipse.emf.compare.provider.EMFCompareEditPlugin$Implemen
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.eclipse.emf.compare.provider,
+Export-Package: org.eclipse.emf.compare.commands,
+ org.eclipse.emf.compare.provider,
  org.eclipse.emf.compare.provider.spec
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare;visibility:=reexport,

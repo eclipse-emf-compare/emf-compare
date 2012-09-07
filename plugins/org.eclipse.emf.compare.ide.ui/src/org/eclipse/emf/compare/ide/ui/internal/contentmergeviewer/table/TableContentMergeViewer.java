@@ -103,12 +103,8 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	protected void copy(boolean leftToRight) {
 		EList<Diff> differences = getComparison().getDifferences();
 
-		final Command copyCommand;
-		if (leftToRight) {
-			copyCommand = getEditingDomain().createCopyAllNonConflictingLeftToRightCommand(differences);
-		} else {
-			copyCommand = getEditingDomain().createCopyAllNonConflictingRightToLeftCommand(differences);
-		}
+		final Command copyCommand = getEditingDomain().createCopyAllNonConflictingCommand(differences,
+				leftToRight);
 
 		getEditingDomain().getCommandStack().execute(copyCommand);
 
@@ -139,7 +135,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	protected void copyDiffRightToLeft() {
 		Diff diffToCopy = getDiffToCopy(getRightMergeViewer());
 		if (diffToCopy != null) {
-			Command copyCommand = getEditingDomain().createCopyRightToLeftCommand(diffToCopy);
+			Command copyCommand = getEditingDomain().createCopyCommand(diffToCopy, false);
 			getEditingDomain().getCommandStack().execute(copyCommand);
 
 			setLeftDirty(true);
@@ -168,7 +164,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	protected void copyDiffLeftToRight() {
 		Diff diffToCopy = getDiffToCopy(getLeftMergeViewer());
 		if (diffToCopy != null) {
-			Command copyCommand = getEditingDomain().createCopyLeftToRightCommand(diffToCopy);
+			Command copyCommand = getEditingDomain().createCopyCommand(diffToCopy, true);
 			getEditingDomain().getCommandStack().execute(copyCommand);
 
 			setRightDirty(true);
