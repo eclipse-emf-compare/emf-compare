@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
@@ -46,7 +47,8 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	@Override
 	public void copyLeftToRight() {
 		// Don't merge an already merged (or discarded) diff
-		if (getState() != DifferenceState.UNRESOLVED) {
+		if (getState() != DifferenceState.UNRESOLVED || getConflict() != null
+				&& getConflict().getKind() == ConflictKind.PSEUDO) {
 			return;
 		}
 
@@ -137,7 +139,9 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	@Override
 	public void copyRightToLeft() {
 		// Don't merge an already merged (or discarded) diff
-		if (getState() != DifferenceState.UNRESOLVED) {
+		// We don't have anything to do for pseudo conflicts either
+		if (getState() != DifferenceState.UNRESOLVED || getConflict() != null
+				&& getConflict().getKind() == ConflictKind.PSEUDO) {
 			return;
 		}
 
