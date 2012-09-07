@@ -75,7 +75,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 
 		buildControl(parent);
-		setContentProvider(new TreeMergeViewerContentProvider(config));
+		setContentProvider(new TreeMergeViewerContentProvider(config, getComparison()));
 	}
 
 	/**

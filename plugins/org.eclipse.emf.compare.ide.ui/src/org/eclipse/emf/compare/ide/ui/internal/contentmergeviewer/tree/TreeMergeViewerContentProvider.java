@@ -10,12 +10,23 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;
 
+import com.google.common.collect.ImmutableMap;
+
+import java.io.IOException;
+
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IEditableContent;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.IDiffContainer;
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 
@@ -35,15 +46,21 @@ public class TreeMergeViewerContentProvider implements IMergeViewerContentProvid
 	 */
 	private final CompareConfiguration fCompareConfiguration;
 
+	/** The comparison currently being displayed. */
+	private final Comparison fComparison;
+
 	/**
 	 * Creates a new {@link TreeMergeViewerContentProvider} and stored the given {@link CompareConfiguration}.
 	 * 
 	 * @param cc
 	 *            the {@link CompareConfiguration} that will be used to get label and image of left, right and
 	 *            ancestor.
+	 * @param comparison
+	 *            the comparison that is to be displayed by this viewer.
 	 */
-	public TreeMergeViewerContentProvider(CompareConfiguration cc) {
-		fCompareConfiguration = cc;
+	public TreeMergeViewerContentProvider(CompareConfiguration cc, Comparison comparison) {
+		this.fCompareConfiguration = cc;
+		this.fComparison = comparison;
 	}
 
 	/**
@@ -174,12 +191,29 @@ public class TreeMergeViewerContentProvider implements IMergeViewerContentProvid
 	 *      byte[])
 	 */
 	public void saveLeftContent(Object element, byte[] bytes) {
-		if (element instanceof ICompareInput) {
-			ICompareInput node = (ICompareInput)element;
-			if (bytes != null) {
-				throw new IllegalStateException("Can not saveLeftContent() with byte[]");
+		EList<Match> matches = fComparison.getMatches();
+		EObject leftEObject = null;
+		for (Match match : matches) {
+			leftEObject = match.getLeft();
+			if (leftEObject != null) {
+				break;
 			}
-			node.copy(false);
+		}
+		if (leftEObject != null) {
+			Resource eResource = leftEObject.eResource();
+			ResourceSet resourceSet = eResource.getResourceSet();
+			saveAllResources(resourceSet);
+		}
+	}
+
+	private void saveAllResources(ResourceSet resourceSet) {
+		EList<Resource> resources = resourceSet.getResources();
+		for (Resource resource : resources) {
+			try {
+				resource.save(ImmutableMap.of());
+			} catch (IOException e) {
+				EMFCompareIDEUIPlugin.getDefault().log(e);
+			}
 		}
 	}
 
@@ -248,12 +282,18 @@ public class TreeMergeViewerContentProvider implements IMergeViewerContentProvid
 	 *      byte[])
 	 */
 	public void saveRightContent(Object element, byte[] bytes) {
-		if (element instanceof ICompareInput) {
-			ICompareInput node = (ICompareInput)element;
-			if (bytes != null) {
-				throw new IllegalStateException("Can not saveRightContent() with byte[]");
+		EList<Match> matches = fComparison.getMatches();
+		EObject rightEObject = null;
+		for (Match match : matches) {
+			rightEObject = match.getRight();
+			if (rightEObject != null) {
+				break;
 			}
-			node.copy(true);
+		}
+		if (rightEObject != null) {
+			Resource eResource = rightEObject.eResource();
+			ResourceSet resourceSet = eResource.getResourceSet();
+			saveAllResources(resourceSet);
 		}
 	}
 
