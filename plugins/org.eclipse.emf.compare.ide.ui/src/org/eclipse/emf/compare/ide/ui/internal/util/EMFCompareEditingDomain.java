@@ -22,7 +22,6 @@ import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
@@ -181,9 +180,8 @@ public class EMFCompareEditingDomain {
 		@Override
 		protected void doExecute() {
 			for (Diff diff : fDiff) {
-				if (diff.getSource() == DifferenceSource.RIGHT
-						&& diff.getState() == DifferenceState.UNRESOLVED) {
-					if (diff.getConflict() == null || diff.getConflict().getKind() == ConflictKind.PSEUDO) {
+				if (diff.getSource() == DifferenceSource.RIGHT) {
+					if (diff.getConflict() == null) {
 						diff.copyRightToLeft();
 					}
 				}
@@ -224,14 +222,12 @@ public class EMFCompareEditingDomain {
 		@Override
 		protected void doExecute() {
 			for (Diff diff : fDiff) {
-				if (diff.getSource() == DifferenceSource.LEFT
-						&& diff.getState() == DifferenceState.UNRESOLVED) {
-					if (diff.getConflict() == null || diff.getConflict().getKind() == ConflictKind.PSEUDO) {
+				if (diff.getSource() == DifferenceSource.LEFT) {
+					if (diff.getConflict() == null) {
 						diff.copyLeftToRight();
 					}
 				}
 			}
-
 		}
 
 	}
