@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 
@@ -94,7 +93,9 @@ public class ComparisonSpec extends ComparisonImpl {
 	 */
 	@Override
 	public EList<Diff> getDifferences(EObject element) {
-		checkNotNull(element);
+		if (element == null) {
+			return new BasicEList<Diff>();
+		}
 
 		if (diffCrossReferencer == null) {
 			diffCrossReferencer = new DiffCrossReferencer();
@@ -116,7 +117,9 @@ public class ComparisonSpec extends ComparisonImpl {
 	 */
 	@Override
 	public Match getMatch(EObject element) {
-		checkNotNull(element);
+		if (element == null) {
+			return null;
+		}
 
 		if (matchCrossReferencer == null) {
 			matchCrossReferencer = new MatchCrossReferencer();
