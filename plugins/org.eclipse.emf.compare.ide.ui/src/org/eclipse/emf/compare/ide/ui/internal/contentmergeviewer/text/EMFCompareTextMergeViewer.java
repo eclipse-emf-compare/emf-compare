@@ -20,7 +20,7 @@ import org.eclipse.compare.internal.MergeSourceViewer;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.compare.AttributeChange;
-import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.AttributeChangeNode;
@@ -62,19 +62,20 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	protected void copy(boolean leftToRight) {
 		Object input = getInput();
 		if (input instanceof AttributeChangeNode) {
-			AttributeChange attributeChange = ((AttributeChangeNode)input).getTarget();
-			if (attributeChange.getState() == DifferenceState.UNRESOLVED) {
-				final Command copyCommand = fEditingDomain.createCopyCommand(attributeChange, leftToRight);
-				fEditingDomain.getCommandStack().execute(copyCommand);
+			final AttributeChange attributeChange = ((AttributeChangeNode)input).getTarget();
+			final Comparison comparison = attributeChange.getMatch().getComparison();
 
-				if (leftToRight) {
-					setRightDirty(true);
-				} else {
-					setLeftDirty(true);
-				}
+			final Command copyCommand = fEditingDomain.createCopyAllNonConflictingCommand(comparison
+					.getDifferences(), leftToRight);
+			fEditingDomain.getCommandStack().execute(copyCommand);
 
-				refresh();
+			if (leftToRight) {
+				setRightDirty(true);
+			} else {
+				setLeftDirty(true);
 			}
+
+			refresh();
 		}
 	}
 

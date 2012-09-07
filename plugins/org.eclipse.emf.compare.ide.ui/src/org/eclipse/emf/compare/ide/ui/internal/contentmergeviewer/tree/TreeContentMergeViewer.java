@@ -13,9 +13,9 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
@@ -128,45 +128,30 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#copy(boolean)
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#copyDiff(boolean)
 	 */
 	@Override
-	protected void copy(boolean leftToRight) {
-		// do nothing
-	}
+	protected void copyDiff(boolean leftToRight) {
+		final IStructuredSelection selection;
+		if (leftToRight) {
+			selection = (IStructuredSelection)getLeftMergeViewer().getSelection();
+		} else {
+			selection = (IStructuredSelection)getRightMergeViewer().getSelection();
+		}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#copyDiffLeftToRight()
-	 */
-	@Override
-	protected void copyDiffLeftToRight() {
-		IStructuredSelection selection = (IStructuredSelection)getLeftMergeViewer().getSelection();
 		Object firstElement = selection.getFirstElement();
 		EList<Diff> differences = getComparison().getDifferences((EObject)firstElement);
-		for (Diff diff : differences) {
-			if (diff.getSource() == DifferenceSource.LEFT) {
-				diff.copyLeftToRight();
-			}
-		}
-	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#copyDiffRightToLeft()
-	 */
-	@Override
-	protected void copyDiffRightToLeft() {
-		IStructuredSelection selection = (IStructuredSelection)getRightMergeViewer().getSelection();
-		Object firstElement = selection.getFirstElement();
-		EList<Diff> differences = getComparison().getDifferences((EObject)firstElement);
-		for (Diff diff : differences) {
-			if (diff.getSource() == DifferenceSource.RIGHT) {
-				diff.copyRightToLeft();
-			}
+		final Command command = getEditingDomain().createCopyAllNonConflictingCommand(differences,
+				leftToRight);
+		getEditingDomain().getCommandStack().execute(command);
+
+		if (leftToRight) {
+			setRightDirty(true);
+		} else {
+			setLeftDirty(true);
 		}
+		refresh();
 	}
 
 	/**

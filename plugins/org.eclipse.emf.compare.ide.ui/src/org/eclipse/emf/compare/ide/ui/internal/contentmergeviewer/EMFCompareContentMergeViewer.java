@@ -18,8 +18,11 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.Utilities;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStackListener;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
@@ -225,7 +228,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			a = new Action() {
 				@Override
 				public void run() {
-					copyDiffLeftToRight();
+					copyDiff(true);
 				}
 			};
 			Utilities.initAction(a, getResourceBundle(), "action.CopyDiffLeftToRight."); //$NON-NLS-1$
@@ -239,7 +242,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			a = new Action() {
 				@Override
 				public void run() {
-					copyDiffRightToLeft();
+					copyDiff(false);
 				}
 			};
 			Utilities.initAction(a, getResourceBundle(), "action.CopyDiffRightToLeft."); //$NON-NLS-1$
@@ -265,14 +268,31 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	}
 
 	/**
+	 * {@inheritDoc}
 	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#copy(boolean)
 	 */
-	protected abstract void copyDiffRightToLeft();
+	@Override
+	protected void copy(boolean leftToRight) {
+		EList<Diff> differences = getComparison().getDifferences();
+
+		final Command copyCommand = getEditingDomain().createCopyAllNonConflictingCommand(differences,
+				leftToRight);
+
+		getEditingDomain().getCommandStack().execute(copyCommand);
+
+		if (leftToRight) {
+			setRightDirty(true);
+		} else {
+			setLeftDirty(true);
+		}
+		refresh();
+	}
 
 	/**
 	 * 
 	 */
-	protected abstract void copyDiffLeftToRight();
+	protected abstract void copyDiff(boolean leftToRight);
 
 	/**
 	 * {@inheritDoc}
