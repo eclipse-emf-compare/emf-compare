@@ -232,24 +232,16 @@ public class DefaultReqEngine implements IReqEngine {
 			ReferenceChange sourceDifference) {
 		Set<ReferenceChange> result = new HashSet<ReferenceChange>();
 		EObject value = sourceDifference.getValue();
-		/*
-		 * TODO: to study if this call is necessary or can be replaced by eCrossReferences().
-		 * ReferenceUtil.getReferencedEObjects(concernedObject, true); FeatureMap use case.
-		 */
-		final List<EObject> outgoingReferences = value.eCrossReferences();
 
-		for (EObject outgoingRef : outgoingReferences) {
-			for (ReferenceChange diff : filter(comparison.getDifferences(outgoingRef), ReferenceChange.class)) {
-				EReference reference = diff.getReference();
-				if (!reference.isContainment()) {
-					if ((diff.getKind() == DifferenceKind.DELETE || isChangeDelete(diff))
-							&& value.equals(MatchUtil.getContainer(comparison, diff))
-							&& value.eClass().getEAllReferences().contains(reference)) {
-						result.add(diff);
-					}
+		final Match valueMatch = comparison.getMatch(value);
+		if (valueMatch != null) {
+			for (ReferenceChange candidate : filter(valueMatch.getDifferences(), ReferenceChange.class)) {
+				if (candidate.getKind() == DifferenceKind.DELETE || isChangeDelete(candidate)) {
+					result.add(candidate);
 				}
 			}
 		}
+
 		return result;
 	}
 
