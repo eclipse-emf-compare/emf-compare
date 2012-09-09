@@ -2041,7 +2041,7 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		/*
-		 * This use case features 12 distinct differences of all types, adding up to 3 real conflict and 2
+		 * This use case features 12 distinct differences of all types, adding up to 4 real conflict and 1
 		 * pseudo conflicts.
 		 */
 		// 1 - Left : Node8 added
@@ -2061,8 +2061,8 @@ public class ConflictDetectionTest {
 		// Real conflict : 6 and 8 (Moving and deleting the same value)
 		// Real conflict : 2 and 9 (Adding the same value at different indices)
 		// Real conflict : 4 and 10 (Adding the same value at different indices)
+		// Real conflict : 3 and 11 (Moving the same value to different indices)
 
-		// Pseudo conflict : 3 and 11 (Moving the same value to the same index on both sides)
 		// Pseudo conflict : 5 and 12 (Removing the same value on both sides)
 
 		assertSame(Integer.valueOf(12), Integer.valueOf(differences.size()));
@@ -2137,7 +2137,7 @@ public class ConflictDetectionTest {
 				assertSame(ConflictKind.REAL, conflict.getKind());
 			} else if (conflictDiffs.contains(leftDiff3)) {
 				assertTrue(conflictDiffs.contains(rightDiff11));
-				assertSame(ConflictKind.PSEUDO, conflict.getKind());
+				assertSame(ConflictKind.REAL, conflict.getKind());
 			} else if (conflictDiffs.contains(leftDiff5)) {
 				assertTrue(conflictDiffs.contains(rightDiff12));
 				assertSame(ConflictKind.PSEUDO, conflict.getKind());

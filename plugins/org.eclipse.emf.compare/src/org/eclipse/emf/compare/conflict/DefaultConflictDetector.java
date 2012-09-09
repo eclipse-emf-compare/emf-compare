@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.conflict;
 
+import static com.google.common.base.Predicates.and;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -516,26 +521,80 @@ public class DefaultConflictDetector implements IConflictDetector {
 			final List<Object> leftValues = (List<Object>)match.getLeft().eGet(feature);
 			final List<Object> rightValues = (List<Object>)match.getRight().eGet(feature);
 
-			// Using for loops instead of indexOf to handle non unique lists
-			for (int i = 0; i < leftValues.size() && i < rightValues.size() && !matching; i++) {
+			// FIXME the detection _will_ fail for non-unique lists with multiple identical values...
+			int leftIndex = -1;
+			int rightIndex = -1;
+			for (int i = 0; i < leftValues.size(); i++) {
 				final Object left = leftValues.get(i);
 				if (helper.matchingValues(comparison, left, value1)) {
-					final Object right = rightValues.get(i);
-					matching = helper.matchingValues(comparison, right, value2);
+					break;
+				} else if (hasDiff(match, feature, left) || hasDeleteDiff(match, feature, left)) {
+					// Do not increment.
+				} else {
+					leftIndex++;
 				}
 			}
-
-			for (int i = 0; i < leftValues.size() && i < rightValues.size() && !matching; i++) {
+			for (int i = 0; i < rightValues.size(); i++) {
 				final Object right = rightValues.get(i);
-				if (helper.matchingValues(comparison, right, value1)) {
-					final Object left = leftValues.get(i);
-					matching = helper.matchingValues(comparison, left, value2);
+				if (helper.matchingValues(comparison, right, value2)) {
+					break;
+				} else if (hasDiff(match, feature, right) || hasDeleteDiff(match, feature, right)) {
+					// Do not increment.
+				} else {
+					rightIndex++;
 				}
 			}
+			matching = leftIndex == rightIndex;
 		} else {
 			matching = true;
 		}
 		return matching;
+	}
+
+	/**
+	 * Checks whether the given {@code match} presents a difference of any kind on the given {@code feature}'s
+	 * {@code value}.
+	 * 
+	 * @param match
+	 *            The match which differences we'll check.
+	 * @param feature
+	 *            The feature on which we expect a difference.
+	 * @param value
+	 *            The value we expect to have changed inside {@code feature}.
+	 * @return <code>true</code> if there is such a Diff on {@code match}, <code>false</code> otherwise.
+	 */
+	private boolean hasDiff(Match match, EStructuralFeature feature, Object value) {
+		return Iterables.any(match.getDifferences(), and(onFeature(feature.getName()), valueIs(value)));
+	}
+
+	/**
+	 * Checks whether the given {@code value} has been deleted from the given {@code feature} of {@code match}
+	 * .
+	 * 
+	 * @param match
+	 *            The match which differences we'll check.
+	 * @param feature
+	 *            The feature on which we expect a difference.
+	 * @param value
+	 *            The value we expect to have been removed from {@code feature}.
+	 * @return <code>true</code> if there is such a Diff on {@code match}, <code>false</code> otherwise.
+	 */
+	@SuppressWarnings("unchecked")
+	private boolean hasDeleteDiff(Match match, EStructuralFeature feature, Object value) {
+		final Comparison comparison = match.getComparison();
+		final Object expectedValue;
+		if (value instanceof EObject && comparison.isThreeWay()) {
+			final Match valueMatch = comparison.getMatch((EObject)value);
+			if (valueMatch != null) {
+				expectedValue = valueMatch.getOrigin();
+			} else {
+				expectedValue = value;
+			}
+		} else {
+			expectedValue = value;
+		}
+		return Iterables.any(match.getDifferences(), and(onFeature(feature.getName()),
+				valueIs(expectedValue), ofKind(DifferenceKind.DELETE)));
 	}
 
 	/**
