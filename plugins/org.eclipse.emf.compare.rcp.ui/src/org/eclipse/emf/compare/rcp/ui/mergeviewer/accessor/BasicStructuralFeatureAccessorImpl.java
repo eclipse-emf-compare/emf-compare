@@ -11,7 +11,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor;
 
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.filter;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
@@ -20,6 +24,7 @@ import java.util.List;
 
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
@@ -47,11 +52,13 @@ public abstract class BasicStructuralFeatureAccessorImpl implements IStructuralF
 		fDiff = diff;
 		fSide = side;
 		fOwnerMatch = diff.getMatch();
-		fStructuralFeature = getDiffFeature(diff);
+		fStructuralFeature = getAffectedFeature(diff);
 
 		List<Diff> siblingDifferences = fOwnerMatch.getDifferences();
-		final Predicate<Diff> diffWithThisFeature = diffWithThisFeature(fStructuralFeature);
-		fDifferences = ImmutableList.copyOf(filter(siblingDifferences, diffWithThisFeature));
+		// We'll display all diffs on the same reference, excluding the pseudo conflicts.
+		Predicate<? super Diff> diffFilter = and(onFeature(fStructuralFeature.getName()),
+				not(hasConflict(ConflictKind.PSEUDO)));
+		fDifferences = ImmutableList.copyOf(filter(siblingDifferences, diffFilter));
 	}
 
 	public Comparison getComparison() {
@@ -114,28 +121,19 @@ public abstract class BasicStructuralFeatureAccessorImpl implements IStructuralF
 		return fDifferences;
 	}
 
-	private static Predicate<Diff> diffWithThisFeature(final EStructuralFeature thisFeature) {
-		return new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				final EStructuralFeature feature = getDiffFeature(input);
-				return feature == thisFeature;
-			}
-		};
-	}
-
 	/**
-	 * Returns either {@link ReferenceChange#getReference()} or {@link AttributeChange#getAttribute()}
-	 * depending on the runtime type of the give {@code diff} or null otherwise.
+	 * Returns the structural feature affected by the given diff, if any.
 	 * 
-	 * @param siblingDiff
-	 * @return
+	 * @param diff
+	 *            The diff from which we need to retrieve a feature.
+	 * @return The feature affected by this {@code diff}, if any. <code>null</code> if none.
 	 */
-	private static EStructuralFeature getDiffFeature(Diff siblingDiff) {
+	private static EStructuralFeature getAffectedFeature(Diff diff) {
 		final EStructuralFeature feature;
-		if (siblingDiff instanceof ReferenceChange) {
-			feature = ((ReferenceChange)siblingDiff).getReference();
-		} else if (siblingDiff instanceof AttributeChange) {
-			feature = ((AttributeChange)siblingDiff).getAttribute();
+		if (diff instanceof ReferenceChange) {
+			feature = ((ReferenceChange)diff).getReference();
+		} else if (diff instanceof AttributeChange) {
+			feature = ((AttributeChange)diff).getAttribute();
 		} else {
 			feature = null;
 		}
