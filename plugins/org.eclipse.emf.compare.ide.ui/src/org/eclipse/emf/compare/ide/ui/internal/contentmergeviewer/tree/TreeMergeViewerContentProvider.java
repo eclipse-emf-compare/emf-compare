@@ -24,6 +24,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.MatchNode;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -177,9 +178,13 @@ public class TreeMergeViewerContentProvider implements IMergeViewerContentProvid
 	 */
 	public boolean isLeftEditable(Object element) {
 		boolean ret = false;
-		Object left = getLeftContent(element);
-		if (left instanceof IEditableContent) {
-			ret = ((IEditableContent)left).isEditable();
+		if (element instanceof MatchNode) {
+			ret = fCompareConfiguration.isLeftEditable();
+		} else {
+			Object left = getLeftContent(element);
+			if (left instanceof IEditableContent) {
+				ret = ((IEditableContent)left).isEditable();
+			}
 		}
 		return ret;
 	}
@@ -260,7 +265,10 @@ public class TreeMergeViewerContentProvider implements IMergeViewerContentProvid
 	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#isRightEditable(java.lang.Object)
 	 */
 	public boolean isRightEditable(Object element) {
-		if (element instanceof ICompareInput) {
+		boolean editable = false;
+		if (element instanceof MatchNode) {
+			editable = fCompareConfiguration.isRightEditable();
+		} else if (element instanceof ICompareInput) {
 			Object right = ((ICompareInput)element).getRight();
 			if (right == null && element instanceof IDiffElement) {
 				IDiffContainer parent = ((IDiffElement)element).getParent();
@@ -269,10 +277,10 @@ public class TreeMergeViewerContentProvider implements IMergeViewerContentProvid
 				}
 			}
 			if (right instanceof IEditableContent) {
-				return ((IEditableContent)right).isEditable();
+				editable = ((IEditableContent)right).isEditable();
 			}
 		}
-		return false;
+		return editable;
 	}
 
 	/**

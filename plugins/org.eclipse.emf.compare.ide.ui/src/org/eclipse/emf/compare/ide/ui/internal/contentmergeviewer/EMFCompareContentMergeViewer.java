@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
 import java.util.EventObject;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -42,6 +43,7 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.events.DisposeEvent;
@@ -232,6 +234,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 				}
 			};
 			Utilities.initAction(a, getResourceBundle(), "action.CopyDiffLeftToRight."); //$NON-NLS-1$
+			a.setEnabled(false);
 			fCopyDiffLeftToRightItem = new ActionContributionItem(a);
 			fCopyDiffLeftToRightItem.setVisible(true);
 			toolBarManager.appendToGroup("merge", fCopyDiffLeftToRightItem); //$NON-NLS-1$
@@ -246,6 +249,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 				}
 			};
 			Utilities.initAction(a, getResourceBundle(), "action.CopyDiffRightToLeft."); //$NON-NLS-1$
+			a.setEnabled(false);
 			fCopyDiffRightToLeftItem = new ActionContributionItem(a);
 			fCopyDiffRightToLeftItem.setVisible(true);
 			toolBarManager.appendToGroup("merge", fCopyDiffRightToLeftItem); //$NON-NLS-1$
@@ -448,10 +452,56 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 				ISelectionProvider selectionProvider = event.getSelectionProvider();
 				ISelection selection = event.getSelection();
 				synchronizeSelection(selectionProvider, selection);
+				updateToolItems();
 			} finally {
 				fSyncingSelections.set(false);
 			}
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#updateToolItems()
+	 */
+	@Override
+	protected void updateToolItems() {
+		super.updateToolItems();
+
+		Diff diff = getDiffFrom(getRightMergeViewer());
+		if (diff == null) {
+			diff = getDiffFrom(getLeftMergeViewer());
+		}
+		boolean enableCopy = false;
+		if (diff != null) {
+			enableCopy = true;
+		}
+
+		fCopyDiffLeftToRightItem.getAction().setEnabled(enableCopy);
+		fCopyDiffRightToLeftItem.getAction().setEnabled(enableCopy);
+	}
+
+	/**
+	 * Checks the element selected in the given viewer in order to determine whether it can be adapted into a
+	 * Diff.
+	 * 
+	 * @param viewer
+	 *            The viewer which selection is to be checked.
+	 * @return The first of the Diffs selected in the given viewer, if any.
+	 */
+	protected Diff getDiffFrom(MergeViewer viewer) {
+		Diff diff = null;
+		final ISelection selection = viewer.getSelection();
+		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
+			final Iterator<?> selectedElements = ((IStructuredSelection)selection).iterator();
+			while (diff == null && selectedElements.hasNext()) {
+				final Object element = selectedElements.next();
+				if (element instanceof IMergeViewerItem) {
+					diff = ((IMergeViewerItem)element).getDiff();
+				}
+			}
+		}
+		return diff;
 	}
 
 	private void synchronizeSelection(final ISelectionProvider selectionProvider, final ISelection selection) {
