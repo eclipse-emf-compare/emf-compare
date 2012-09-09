@@ -20,6 +20,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 
 import java.util.Collection;
 
@@ -122,11 +123,11 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	@Override
 	public Collection<?> getChildren(Object object) {
 		Match match = (Match)object;
-		Iterable<Object> filteredChildren = getChildrenIterable(match);
+		Iterable<?> filteredChildren = getChildrenIterable(match);
 		return ImmutableList.copyOf(filteredChildren);
 	}
 
-	Iterable<Object> getChildrenIterable(Match match) {
+	Iterable<?> getChildrenIterable(Match match) {
 		ImmutableSet<EObject> containementDifferenceValues = containmentReferencesValues(match);
 
 		@SuppressWarnings("unchecked")
@@ -134,8 +135,7 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 				matchWithNoChildren(), PSEUDO_CONFLICT_DIFF, REFINED_OR_REQUIRED_BY_REFINED_DIFF,
 				PSEUDO_DELETE_CONFLICT));
 
-		Iterable<Object> filteredChildren = filter(filter(super.getChildren(match), Object.class),
-				childrenFilter);
+		Iterable<?> filteredChildren = filter(super.getChildren(match), childrenFilter);
 		return filteredChildren;
 	}
 
@@ -172,7 +172,7 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 				boolean ret = false;
 				if (input instanceof Match) {
 					Match match = (Match)input;
-					ret = MatchItemProviderSpec.this.getChildren(match).isEmpty();
+					ret = Iterables.isEmpty(MatchItemProviderSpec.this.getChildrenIterable(match));
 				}
 				return ret;
 			}
