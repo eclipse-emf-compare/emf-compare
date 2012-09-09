@@ -137,7 +137,6 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	@Override
 	public void copyRightToLeft() {
 		// Don't merge an already merged (or discarded) diff
-		// We don't have anything to do for pseudo conflicts either
 		if (getState() != DifferenceState.UNRESOLVED) {
 			return;
 		}
