@@ -477,8 +477,12 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			enableCopy = true;
 		}
 
-		fCopyDiffLeftToRightItem.getAction().setEnabled(enableCopy);
-		fCopyDiffRightToLeftItem.getAction().setEnabled(enableCopy);
+		if (fCopyDiffLeftToRightItem != null) {
+			fCopyDiffLeftToRightItem.getAction().setEnabled(enableCopy);
+		}
+		if (fCopyDiffRightToLeftItem != null) {
+			fCopyDiffRightToLeftItem.getAction().setEnabled(enableCopy);
+		}
 	}
 
 	/**
