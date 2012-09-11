@@ -86,29 +86,37 @@ public class ManyStructuralFeatureAccessorImpl extends BasicStructuralFeatureAcc
 		List<IMergeViewerItem> ret = newArrayList(values);
 		for (Diff diff : getDifferences().reverse()) {
 			boolean rightToLeft = (getSide() == MergeViewerSide.LEFT);
-			Object value = getValueFromDiff(diff, getSide());
+			Object left = getValueFromDiff(diff, MergeViewerSide.LEFT);
+			Object right = getValueFromDiff(diff, MergeViewerSide.RIGHT);
 
-			if (value == null || !getFeatureValues(getSide()).contains(value)) {
-				Object left = getValueFromDiff(diff, MergeViewerSide.LEFT);
-				Object right = getValueFromDiff(diff, MergeViewerSide.RIGHT);
-				Object ancestor = getValueFromDiff(diff, MergeViewerSide.ANCESTOR);
-				InsertionPoint insertionPoint = new InsertionPoint(diff, left, right, ancestor);
+			if (left == null && right == null) {
+				// Do not display anything
+			} else {
+				final boolean leftEmptyBox = getSide() == MergeViewerSide.LEFT
+						&& (left == null || !getFeatureValues(getSide()).contains(left));
+				final boolean rightEmptyBox = getSide() == MergeViewerSide.RIGHT
+						&& (right == null || !getFeatureValues(getSide()).contains(right));
+				if (leftEmptyBox || rightEmptyBox) {
+					Object ancestor = getValueFromDiff(diff, MergeViewerSide.ANCESTOR);
 
-				final int insertionIndex;
-				final int nbInsertionPointBefore;
+					InsertionPoint insertionPoint = new InsertionPoint(diff, left, right, ancestor);
 
-				if (featureIsMany(diff)) {
-					insertionIndex = Math.min(
-							DiffUtil.findInsertionIndex(getComparison(), diff, rightToLeft), ret.size());
-					List<IMergeViewerItem> subList = ret.subList(0, insertionIndex);
-					nbInsertionPointBefore = size(filter(subList, InsertionPoint.class));
-				} else {
-					insertionIndex = 0;
-					nbInsertionPointBefore = 0;
+					final int insertionIndex;
+					final int nbInsertionPointBefore;
+
+					if (featureIsMany(diff)) {
+						insertionIndex = Math.min(DiffUtil.findInsertionIndex(getComparison(), diff,
+								rightToLeft), ret.size());
+						List<IMergeViewerItem> subList = ret.subList(0, insertionIndex);
+						nbInsertionPointBefore = size(filter(subList, InsertionPoint.class));
+					} else {
+						insertionIndex = 0;
+						nbInsertionPointBefore = 0;
+					}
+
+					int index = Math.min(insertionIndex + nbInsertionPointBefore, ret.size());
+					ret.add(index, insertionPoint);
 				}
-
-				int index = Math.min(insertionIndex + nbInsertionPointBefore, ret.size());
-				ret.add(index, insertionPoint);
 			}
 		}
 		return ret;
