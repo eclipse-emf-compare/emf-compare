@@ -175,7 +175,19 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		} else if (input != null) {
 			ResourceSet leftResourceSet = getResourceSetFrom(input.getLeft(), monitor);
 			ResourceSet rightResourceSet = getResourceSetFrom(input.getRight(), monitor);
-			ResourceSet ancestorResourceSet = getResourceSetFrom(input.getAncestor(), monitor);
+			final ResourceSet ancestorResourceSet = getResourceSetFrom(input.getAncestor(), monitor);
+			/*
+			 * TODO if any of the following ifs is true, we may want to display something in the error log or
+			 * structure viewer so that the user has a visual feedback of the failure.
+			 */
+			if (leftResourceSet == null) {
+				// Do not fail at opening the editor, allow user to switch to text compare
+				leftResourceSet = new ResourceSetImpl();
+			}
+			if (rightResourceSet == null) {
+				// Do not fail at opening the editor, allow user to switch to text compare
+				rightResourceSet = new ResourceSetImpl();
+			}
 
 			final IComparisonScope scope = EMFCompare.createDefaultScope(leftResourceSet, rightResourceSet,
 					ancestorResourceSet);
