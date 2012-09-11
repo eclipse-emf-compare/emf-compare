@@ -132,8 +132,8 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 
 		@SuppressWarnings("unchecked")
 		Predicate<Object> childrenFilter = not(or(matchOfContainmentDiff(containementDifferenceValues),
-				matchWithNoChildren(), PSEUDO_CONFLICT_DIFF, REFINED_OR_REQUIRED_BY_REFINED_DIFF,
-				PSEUDO_DELETE_CONFLICT));
+				matchWithNoChildren(), emptyMatch(), PSEUDO_CONFLICT_DIFF,
+				REFINED_OR_REQUIRED_BY_REFINED_DIFF, PSEUDO_DELETE_CONFLICT));
 
 		Iterable<?> filteredChildren = filter(super.getChildren(match), childrenFilter);
 		return filteredChildren;
@@ -175,6 +175,18 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 					ret = Iterables.isEmpty(MatchItemProviderSpec.this.getChildrenIterable(match));
 				}
 				return ret;
+			}
+		};
+	}
+
+	private static final Predicate<? super Object> emptyMatch() {
+		return new Predicate<Object>() {
+			public boolean apply(Object input) {
+				if (input instanceof Match) {
+					final Match match = ((Match)input);
+					return match.getLeft() == null && match.getRight() == null && match.getOrigin() == null;
+				}
+				return false;
 			}
 		};
 	}
