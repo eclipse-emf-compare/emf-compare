@@ -350,6 +350,10 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				Closeables.closeQuietly(stream);
 			}
 		}
+		if (resourceSet == null) {
+			// We were unable to load one, do not fail : the user will have to switch to text compare
+			resourceSet = new ResourceSetImpl();
+		}
 		return resourceSet;
 	}
 
