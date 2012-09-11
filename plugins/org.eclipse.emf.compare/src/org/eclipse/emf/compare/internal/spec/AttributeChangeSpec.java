@@ -46,6 +46,14 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 			return;
 		}
 
+		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
+		setState(DifferenceState.MERGED);
+		if (getEquivalence() != null) {
+			for (Diff equivalent : getEquivalence().getDifferences()) {
+				equivalent.setState(DifferenceState.MERGED);
+			}
+		}
+
 		if (getSource() == DifferenceSource.LEFT) {
 			// merge all "requires" diffs
 			mergeRequires(false);
@@ -102,13 +110,6 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 					break;
 			}
 		}
-
-		setState(DifferenceState.MERGED);
-		if (getEquivalence() != null) {
-			for (Diff equivalent : getEquivalence().getDifferences()) {
-				equivalent.setState(DifferenceState.MERGED);
-			}
-		}
 	}
 
 	/**
@@ -121,6 +122,14 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 		// Don't merge an already merged (or discarded) diff
 		if (getState() != DifferenceState.UNRESOLVED) {
 			return;
+		}
+
+		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
+		setState(DifferenceState.MERGED);
+		if (getEquivalence() != null) {
+			for (Diff equivalent : getEquivalence().getDifferences()) {
+				equivalent.setState(DifferenceState.MERGED);
+			}
 		}
 
 		if (getSource() == DifferenceSource.LEFT) {
@@ -177,13 +186,6 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 					break;
 			}
 		}
-
-		setState(DifferenceState.MERGED);
-		if (getEquivalence() != null) {
-			for (Diff equivalent : getEquivalence().getDifferences()) {
-				equivalent.setState(DifferenceState.MERGED);
-			}
-		}
 	}
 
 	/**
@@ -194,6 +196,7 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 	@Override
 	public void discard() {
 		setState(DifferenceState.DISCARDED);
+		// Should we also discard equivalent diffs? And diffs that require this one?
 	}
 
 	/**

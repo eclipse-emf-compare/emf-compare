@@ -50,6 +50,14 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			return;
 		}
 
+		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
+		setState(DifferenceState.MERGED);
+		if (getEquivalence() != null) {
+			for (Diff equivalent : getEquivalence().getDifferences()) {
+				equivalent.setState(DifferenceState.MERGED);
+			}
+		}
+
 		if (getSource() == DifferenceSource.LEFT) {
 			// merge all "requires" diffs
 			mergeRequires(false);
@@ -120,13 +128,6 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					break;
 			}
 		}
-
-		setState(DifferenceState.MERGED);
-		if (getEquivalence() != null) {
-			for (Diff equivalent : getEquivalence().getDifferences()) {
-				equivalent.setState(DifferenceState.MERGED);
-			}
-		}
 	}
 
 	/**
@@ -139,6 +140,14 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 		// Don't merge an already merged (or discarded) diff
 		if (getState() != DifferenceState.UNRESOLVED) {
 			return;
+		}
+
+		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
+		setState(DifferenceState.MERGED);
+		if (getEquivalence() != null) {
+			for (Diff equivalent : getEquivalence().getDifferences()) {
+				equivalent.setState(DifferenceState.MERGED);
+			}
 		}
 
 		if (getSource() == DifferenceSource.LEFT) {
@@ -209,13 +218,6 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					break;
 			}
 		}
-
-		setState(DifferenceState.MERGED);
-		if (getEquivalence() != null) {
-			for (Diff equivalent : getEquivalence().getDifferences()) {
-				equivalent.setState(DifferenceState.MERGED);
-			}
-		}
 	}
 
 	/**
@@ -226,6 +228,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	@Override
 	public void discard() {
 		setState(DifferenceState.DISCARDED);
+		// Should we also discard equivalent diffs? And diffs that require this one?
 	}
 
 	/**
@@ -239,12 +242,10 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 		// TODO log back to the user what we will merge along?
 		for (Diff dependency : getRequiredBy()) {
 			// TODO: what to do when state = Discarded but is required?
-			if (dependency.getState() != DifferenceState.MERGED) {
-				if (rightToLeft) {
-					dependency.copyRightToLeft();
-				} else {
-					dependency.copyLeftToRight();
-				}
+			if (rightToLeft) {
+				dependency.copyRightToLeft();
+			} else {
+				dependency.copyLeftToRight();
 			}
 		}
 	}
@@ -260,12 +261,10 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 		// TODO log back to the user what we will merge along?
 		for (Diff dependency : getRequires()) {
 			// TODO: what to do when state = Discarded but is required?
-			if (dependency.getState() != DifferenceState.MERGED) {
-				if (rightToLeft) {
-					dependency.copyRightToLeft();
-				} else {
-					dependency.copyLeftToRight();
-				}
+			if (rightToLeft) {
+				dependency.copyRightToLeft();
+			} else {
+				dependency.copyLeftToRight();
 			}
 		}
 	}
