@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.TableMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemFontProvider;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
@@ -196,15 +197,18 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			/**
 			 * {@inheritDoc}
 			 * 
-			 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getFont(java.lang.Object)
+			 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getFont(java.lang.Object,
+			 *      int)
 			 */
 			@Override
-			public Font getFont(Object object) {
-				Font font = super.getFont(object);
-				if (object instanceof EObject && ((EObject)object).eIsProxy()) {
-					return getFontFromObject(IItemFontProvider.ITALIC_FONT);
+			public Font getFont(Object object, int columnIndex) {
+				if (object instanceof MatchedObject) {
+					final Object value = ((MatchedObject)object).getSideValue(side);
+					if (value instanceof EObject && ((EObject)value).eIsProxy()) {
+						return getFontFromObject(IItemFontProvider.ITALIC_FONT);
+					}
 				}
-				return font;
+				return super.getFont(object, columnIndex);
 			}
 
 			/**
@@ -216,7 +220,14 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			@Override
 			public String getColumnText(Object object, int columnIndex) {
 				if (object instanceof MatchedObject) {
-					return super.getColumnText(((MatchedObject)object).getSideValue(side), columnIndex);
+					final String text;
+					final Object value = ((MatchedObject)object).getSideValue(side);
+					if (value instanceof EObject && ((EObject)value).eIsProxy()) {
+						text = "proxy : " + ((InternalEObject)value).eProxyURI().toString();
+					} else {
+						text = super.getColumnText(value, columnIndex);
+					}
+					return text;
 				}
 				return super.getColumnText(object, columnIndex);
 			}
