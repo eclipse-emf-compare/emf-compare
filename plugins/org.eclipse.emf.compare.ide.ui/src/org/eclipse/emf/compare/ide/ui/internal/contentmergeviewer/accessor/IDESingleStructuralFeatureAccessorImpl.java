@@ -10,7 +10,12 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.SingleStructuralFeatureAccessorImpl;
@@ -22,7 +27,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class IDESingleStructuralFeatureAccessorImpl extends SingleStructuralFeatureAccessorImpl implements ITypedElement {
+public class IDESingleStructuralFeatureAccessorImpl extends SingleStructuralFeatureAccessorImpl implements ITypedElement, IStreamContentAccessor {
 
 	/**
 	 * @param diff
@@ -63,5 +68,20 @@ public class IDESingleStructuralFeatureAccessorImpl extends SingleStructuralFeat
 	 */
 	public String getType() {
 		return ContentMergeViewerConstants.DIFF_NODE_TYPE;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.IStreamContentAccessor#getContents()
+	 */
+	public InputStream getContents() throws CoreException {
+		/*
+		 * #293926 : Whatever we return has no importance as long as it is not "null", this is only to make
+		 * CompareUIPlugin#guessType happy. However, it is only happy if what we return resembles a text. Note
+		 * that this bug has been fixed in 3.7.1, we're keeping this around for the compatibility with 3.5 and
+		 * 3.6.
+		 */
+		return new ByteArrayInputStream(new byte[] {' ' });
 	}
 }
