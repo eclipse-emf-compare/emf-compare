@@ -8,7 +8,7 @@ Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.team.ui,
  org.eclipse.core.resources;bundle-version="3.5.0",
- org.eclipse.compare;bundle-version="3.5.202",
+ org.eclipse.compare;bundle-version="3.5.0",
  org.eclipse.emf.edit.ui;bundle-version="2.5.0",
  org.eclipse.emf.compare.edit;bundle-version="2.0.0",
  org.eclipse.emf.ecore.xmi;bundle-version="2.5.0",
