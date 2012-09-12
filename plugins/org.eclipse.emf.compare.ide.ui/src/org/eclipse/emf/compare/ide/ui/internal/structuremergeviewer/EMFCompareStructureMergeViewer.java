@@ -200,7 +200,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			editingDomain.getCommandStack().addCommandStackListener(this);
 			compareInputChanged(compareResult);
 		} else {
-			fRoot = input;
+			fRoot = null;
 		}
 	}
 
