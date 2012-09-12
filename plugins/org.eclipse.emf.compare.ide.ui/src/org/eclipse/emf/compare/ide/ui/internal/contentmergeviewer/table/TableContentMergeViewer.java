@@ -37,8 +37,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.GestureEvent;
-import org.eclipse.swt.events.GestureListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Color;
@@ -249,13 +247,6 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 		ret.getStructuredViewer().getTable().getVerticalBar().addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				redrawCenterControl();
-			}
-		});
-		ret.getStructuredViewer().getTable().addGestureListener(new GestureListener() {
-			public void gesture(GestureEvent e) {
-				if (e.detail == SWT.GESTURE_PAN) {
-					redrawCenterControl();
-				}
 			}
 		});
 
