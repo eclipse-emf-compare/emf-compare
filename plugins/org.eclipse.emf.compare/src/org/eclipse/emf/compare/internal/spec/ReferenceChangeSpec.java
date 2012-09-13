@@ -340,11 +340,22 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			 * it into account.
 			 */
 			final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(getReference());
-			if (insertionIndex > targetList.indexOf(expectedValue)) {
+			final int currentIndex = targetList.indexOf(expectedValue);
+			if (insertionIndex > currentIndex) {
 				insertionIndex--;
 			}
 
-			if (targetList instanceof EList<?>) {
+			if (currentIndex == -1) {
+				// happens for container changes for example.
+				if (!getReference().isContainment()) {
+					targetList.remove(expectedValue);
+				}
+				if (insertionIndex >= 0) {
+					targetList.add(insertionIndex, expectedValue);
+				} else {
+					targetList.add(expectedValue);
+				}
+			} else if (targetList instanceof EList<?>) {
 				((EList<EObject>)targetList).move(insertionIndex, expectedValue);
 			} else {
 				targetList.remove(expectedValue);
