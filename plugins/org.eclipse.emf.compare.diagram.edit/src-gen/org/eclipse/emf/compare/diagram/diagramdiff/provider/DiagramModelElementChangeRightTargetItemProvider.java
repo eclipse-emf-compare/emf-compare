@@ -17,7 +17,11 @@ import org.eclipse.emf.compare.diagram.diagramdiff.DiagramModelElementChangeRigh
 import org.eclipse.emf.compare.diagram.diagramdiff.DiagramdiffFactory;
 import org.eclipse.emf.compare.diagram.diagramdiff.DiagramdiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.provider.ModelElementChangeRightTargetItemProvider;
+import org.eclipse.emf.compare.util.AdapterUtils;
+import org.eclipse.emf.ecore.ENamedElement;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -27,6 +31,8 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * This is the item provider adapter for a {@link org.eclipse.emf.compare.diagram.diagramdiff.DiagramModelElementChangeRightTarget} object.
@@ -155,7 +161,36 @@ public class DiagramModelElementChangeRightTargetItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
+		if (object instanceof ModelElementChangeRightTarget) {
+			final ModelElementChangeRightTarget operation = (ModelElementChangeRightTarget)object;
+			final EObject view = operation.getRightElement();
+			
+			if (view instanceof View && ((View)view).getElement() != null) {
+				final String label = AdapterUtils.getItemProviderText(((View)view).getElement());
+
+				return buildMessage(operation, label);
+			}
+		}
 		return super.getText(object);
+	}
+	
+	/**
+	 * Constructs the label for the given operation.
+	 * 
+	 * @param operation The operation we need a message for.
+	 * @param label The precomputed label for this operation's target.
+	 * @return The constructed label. 
+	 */
+	private String buildMessage(ModelElementChangeRightTarget operation, String label) {
+		final String diffLabel;
+		if (operation.isRemote()) {
+			diffLabel = getString("_UI_RemoteAddModelElement_type", new Object[] { label }); //$NON-NLS-1$
+		} else if (operation.isConflicting()) {
+			diffLabel = getString("_UI_RemoveModelElement_conflicting", new Object[] { label }); //$NON-NLS-1$
+		} else {
+			diffLabel = getString("_UI_RemoveModelElement_type", new Object[] { label, }); //$NON-NLS-1$
+		}
+		return diffLabel;
 	}
 
 	/**
