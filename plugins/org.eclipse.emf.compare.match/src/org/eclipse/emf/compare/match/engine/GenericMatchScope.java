@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.engine;
 
+import com.google.common.collect.Sets;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,8 +24,6 @@ import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-
-import com.google.common.collect.Sets;
 
 /**
  * The default {@link IMatchScope} implementation, which can be constructed with a single {@link Resource} or
@@ -188,13 +188,13 @@ public class GenericMatchScope implements IMatchScope {
 		resolveAll(originalSet);
 
 		Set<Resource> newSet = new HashSet<Resource>(resourceSet.getResources());
-		Set<Resource> delta = Sets.difference(originalSet, newSet);
+		Set<Resource> delta = Sets.difference(newSet, originalSet);
 		while (delta.size() > 0) {
 			originalSet = newSet;
 			resolveAll(delta);
 
 			newSet = new HashSet<Resource>(resourceSet.getResources());
-			delta = Sets.difference(originalSet, newSet);
+			delta = Sets.difference(newSet, originalSet);
 		}
 	}
 
