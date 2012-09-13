@@ -7,7 +7,7 @@ Bundle-Activator: org.eclipse.emf.compare.rcp.ui.Activator
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
-Require-Bundle: com.google.guava;bundle-version="10.0.1",
+Require-Bundle: com.google.guava;version="[10.0.0,11.0.0)",
  org.eclipse.core.runtime;bundle-version="3.5.0",
  org.eclipse.emf.edit.ui;bundle-version="2.5.0",
  org.eclipse.emf.compare;bundle-version="2.0.0",
