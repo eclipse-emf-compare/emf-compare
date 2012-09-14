@@ -31,7 +31,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-// TODO this probably doesn't handle feature maps. Test with an XSD-based metamodel
 /**
  * The diff engine is in charge of actually computing the differences between the objects mapped by a
  * {@link Match} object.
