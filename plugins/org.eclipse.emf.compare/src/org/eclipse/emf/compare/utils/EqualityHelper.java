@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
  * EMF Compare needs its own rules for "equality", which are based on similarity instead of strict equality.
@@ -49,26 +50,28 @@ public class EqualityHelper {
 	 */
 	public boolean matchingValues(Comparison comparison, Object object1, Object object2) {
 		final boolean equal;
-		if (object1 == object2) {
+		final Object converted1 = internalFindActualObject(object1);
+		final Object converted2 = internalFindActualObject(object2);
+		if (converted1 == converted2) {
 			equal = true;
-		} else if (object1 instanceof EEnumLiteral && object2 instanceof EEnumLiteral) {
-			final EEnumLiteral literal1 = (EEnumLiteral)object1;
-			final EEnumLiteral literal2 = (EEnumLiteral)object2;
+		} else if (converted1 instanceof EEnumLiteral && converted2 instanceof EEnumLiteral) {
+			final EEnumLiteral literal1 = (EEnumLiteral)converted1;
+			final EEnumLiteral literal2 = (EEnumLiteral)converted2;
 			final String value1 = literal1.getLiteral() + literal1.getValue();
 			final String value2 = literal2.getLiteral() + literal2.getValue();
 			equal = value1.equals(value2);
-		} else if (object1 instanceof EObject && object2 instanceof EObject) {
+		} else if (converted1 instanceof EObject && converted2 instanceof EObject) {
 			// [248442] This will handle FeatureMapEntries detection
-			equal = matchingEObjects(comparison, (EObject)object1, (EObject)object2);
-		} else if (object1 != null && object1.getClass().isArray() && object2 != null
-				&& object2.getClass().isArray()) {
+			equal = matchingEObjects(comparison, (EObject)converted1, (EObject)converted2);
+		} else if (converted1 != null && converted1.getClass().isArray() && converted2 != null
+				&& converted2.getClass().isArray()) {
 			// [299641] compare arrays by their content instead of instance equality
-			equal = matchingArrays(comparison, object1, object2);
-		} else if (isNullOrEmptyString(object1) && isNullOrEmptyString(object2)) {
+			equal = matchingArrays(comparison, converted1, converted2);
+		} else if (isNullOrEmptyString(converted1) && isNullOrEmptyString(converted2)) {
 			// Special case, consider that the empty String is equal to null (unset attributes)
 			equal = true;
 		} else {
-			equal = object1 != null && object1.equals(object2);
+			equal = converted1 != null && converted1.equals(converted2);
 		}
 		return equal;
 	}
@@ -166,23 +169,25 @@ public class EqualityHelper {
 	 */
 	public boolean matchingAttributeValues(Object object1, Object object2) {
 		final boolean equal;
-		if (object1 == object2) {
+		final Object converted1 = internalFindActualObject(object1);
+		final Object converted2 = internalFindActualObject(object2);
+		if (converted1 == converted2) {
 			equal = true;
-		} else if (object1 instanceof EEnumLiteral && object2 instanceof EEnumLiteral) {
-			final EEnumLiteral literal1 = (EEnumLiteral)object1;
-			final EEnumLiteral literal2 = (EEnumLiteral)object2;
+		} else if (converted1 instanceof EEnumLiteral && converted2 instanceof EEnumLiteral) {
+			final EEnumLiteral literal1 = (EEnumLiteral)converted1;
+			final EEnumLiteral literal2 = (EEnumLiteral)converted2;
 			final String value1 = literal1.getLiteral() + literal1.getValue();
 			final String value2 = literal2.getLiteral() + literal2.getValue();
 			equal = value1.equals(value2);
-		} else if (object1 != null && object1.getClass().isArray() && object2 != null
-				&& object2.getClass().isArray()) {
+		} else if (converted1 != null && converted1.getClass().isArray() && converted2 != null
+				&& converted2.getClass().isArray()) {
 			// [299641] compare arrays by their content instead of instance equality
-			equal = matchingArrays(object1, object2);
-		} else if (isNullOrEmptyString(object1) && isNullOrEmptyString(object2)) {
+			equal = matchingArrays(converted1, converted2);
+		} else if (isNullOrEmptyString(converted1) && isNullOrEmptyString(converted2)) {
 			// Special case, consider that the empty String is equal to null (unset attributes)
 			equal = true;
 		} else {
-			equal = object1 != null && object1.equals(object2);
+			equal = converted1 != null && converted1.equals(converted2);
 		}
 		return equal;
 	}
@@ -226,6 +231,22 @@ public class EqualityHelper {
 		} catch (ExecutionException e) {
 			return null;
 		}
+	}
+
+	/**
+	 * This will convert any Feature map entry to its actual data value. Note that it will have no effect on
+	 * an object that is not a {@link FeatureMap.Entry}.
+	 * 
+	 * @param data
+	 *            The data we wish converted.
+	 * @return The first value under {@code data} that is not a {@link FeatureMap.Entry}, {@code data} itself
+	 *         if it is not a feature map entry.
+	 */
+	private Object internalFindActualObject(Object data) {
+		if (data instanceof FeatureMap.Entry) {
+			return internalFindActualObject(((FeatureMap.Entry)data).getValue());
+		}
+		return data;
 	}
 
 	/**
