@@ -77,7 +77,8 @@ public class UMLStereotypeApplicationChangeFactory extends UMLAbstractDiffExtens
 		final Iterator<Diff> changes = comparison.getMatch(discriminant).getDifferences().iterator();
 		while (changes.hasNext()) {
 			final Diff diff = changes.next();
-			if (diff instanceof AttributeChange || diff instanceof ResourceAttachmentChange) {
+			if (diff instanceof AttributeChange || diff instanceof ResourceAttachmentChange
+					&& diff.getKind() == DifferenceKind.DELETE) {
 				diffExtension.getRefinedBy().add(diff);
 			}
 		}
@@ -115,6 +116,11 @@ public class UMLStereotypeApplicationChangeFactory extends UMLAbstractDiffExtens
 
 	@Override
 	protected boolean isRelatedToAnExtensionChange(AttributeChange input) {
+		return UMLUtil.getBaseElement(MatchUtil.getContainer(input)) != null;
+	}
+
+	@Override
+	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
 		return UMLUtil.getBaseElement(MatchUtil.getContainer(input)) != null;
 	}
 

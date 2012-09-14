@@ -16,22 +16,6 @@ public class ProfileInputData extends ProfilesInputData {
 		return loadFromClassloader("a1/right.uml"); //$NON-NLS-1$
 	}
 
-	public Resource getA2Left() throws IOException {
-		return loadFromClassloader("a2/left.uml"); //$NON-NLS-1$
-	}
-
-	public Resource getA2Right() throws IOException {
-		return loadFromClassloader("a2/right.uml"); //$NON-NLS-1$
-	}
-
-	public Resource getA3Left() throws IOException {
-		return loadFromClassloader("a3/left.uml"); //$NON-NLS-1$
-	}
-
-	public Resource getA3Right() throws IOException {
-		return loadFromClassloader("a3/right.uml"); //$NON-NLS-1$
-	}
-
 	@Override
 	protected Resource loadFromClassloader(String string) throws IOException {
 		final Resource resource = super.loadFromClassloader(string);
