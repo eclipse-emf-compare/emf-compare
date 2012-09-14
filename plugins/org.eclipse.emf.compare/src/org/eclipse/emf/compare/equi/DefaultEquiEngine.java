@@ -18,6 +18,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.utils.MatchUtil;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 
@@ -132,7 +133,7 @@ public class DefaultEquiEngine implements IEquiEngine {
 				for (Diff referenceChange : comparison.getDifferences(originContainer)) {
 					if (referenceChange instanceof ReferenceChange
 							&& MatchUtil.getContainer(comparison, referenceChange).equals(
-									originContainer.eGet(diff.getReference(), false))) {
+									ReferenceUtil.safeEGet(originContainer, diff.getReference()))) {
 						equivalence.getDifferences().add(referenceChange);
 					}
 				}

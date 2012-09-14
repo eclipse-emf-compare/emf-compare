@@ -503,7 +503,11 @@ public final class EMFComparePredicates {
 				} else {
 					return false;
 				}
-				return value == expectedValue;
+				if (value == null) {
+					return expectedValue == null;
+				} else {
+					return value.equals(expectedValue);
+				}
 			}
 		};
 	}

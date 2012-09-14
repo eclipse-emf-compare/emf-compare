@@ -72,7 +72,7 @@ public final class MatchUtil {
 				&& difference.getKind().equals(DifferenceKind.CHANGE)) {
 			EObject originContainer = getOriginContainer(comparison, difference);
 			if (originContainer != null) {
-				Object originValue = originContainer.eGet(difference.getReference());
+				Object originValue = ReferenceUtil.safeEGet(originContainer, difference.getReference());
 				if (originValue instanceof EObject) {
 					return (EObject)originValue;
 				}

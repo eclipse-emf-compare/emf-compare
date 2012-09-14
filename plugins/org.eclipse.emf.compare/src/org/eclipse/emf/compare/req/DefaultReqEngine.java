@@ -23,6 +23,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.utils.MatchUtil;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 
@@ -164,7 +165,7 @@ public class DefaultReqEngine implements IReqEngine {
 		if (!reference.isMany()) {
 			EObject originContainer = MatchUtil.getOriginContainer(comparison, sourceDifference);
 			if (originContainer != null) {
-				Object originValue = originContainer.eGet(reference, false);
+				Object originValue = ReferenceUtil.safeEGet(originContainer, reference);
 				if (originValue instanceof EObject) {
 					result = getDifferenceOnGivenObject(comparison, (EObject)originValue,
 							DifferenceKind.DELETE);
@@ -292,11 +293,11 @@ public class DefaultReqEngine implements IReqEngine {
 			Match match = difference.getMatch();
 			if (comparison.isThreeWay()) {
 				final EObject origin = match.getOrigin();
-				result = origin == null || origin.eGet(reference, false) == null;
+				result = origin == null || ReferenceUtil.safeEGet(origin, reference) == null;
 			} else {
 				// two way can't have "remote" diffs. This is an addition if right is null
 				final EObject right = match.getRight();
-				result = right == null || right.eGet(reference, false) == null;
+				result = right == null || ReferenceUtil.safeEGet(right, reference) == null;
 			}
 		}
 		return result;
@@ -316,10 +317,10 @@ public class DefaultReqEngine implements IReqEngine {
 			Match match = difference.getMatch();
 			if (difference.getSource() == DifferenceSource.LEFT) {
 				final EObject left = match.getLeft();
-				result = left == null || left.eGet(reference, false) == null;
+				result = left == null || ReferenceUtil.safeEGet(left, reference) == null;
 			} else {
 				final EObject right = match.getRight();
-				result = right == null || right.eGet(reference, false) == null;
+				result = right == null || ReferenceUtil.safeEGet(right, reference) == null;
 			}
 		}
 		return result;
