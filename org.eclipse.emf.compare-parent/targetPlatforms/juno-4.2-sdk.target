@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.6"?>
+<?pde version="3.8"?>
 
-<target name="EMF Compare based on Juno with 4.2 Platform" sequenceNumber="34">
+<target name="EMF Compare based on Juno with 4.2 Platform" sequenceNumber="39">
 <locations>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.guava" version="10.0.1.v201203051515"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/"/>
 </location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.platform.sdk"	version="4.2.0.I20120608-1400"/>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.platform.sdk" version="4.2.0.I20120608-1400"/>
 <unit id="org.eclipse.jdt.feature.group" version="3.8.0.v20120525-1249-8-8nFqlFNOfwKDRGz-pXLdGxEM83"/>
 <unit id="org.eclipse.jdt.source.feature.group" version="3.8.0.v20120525-1249-8-8nFqlFNOfwKDRGz-pXLdGxEM83"/>
 <unit id="org.eclipse.emf.sdk.feature.group" version="2.8.0.v20120608-0554"/>
 <unit id="org.eclipse.uml2.sdk.feature.group" version="4.0.0.v20120604-0919"/>
 <unit id="org.junit" version="4.10.0.v4_10_0_v20120426-0900"/>
 <repository location="http://download.eclipse.org/releases/juno/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.egit.feature.group" version="2.0.0.201206130900-r"/>
+<repository location="http://mirror.update.eclipse.obeo.fr/release-juno/"/>
 </location>
 </locations>
 </target>
