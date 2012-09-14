@@ -341,7 +341,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			 */
 			final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(getReference());
 			final int currentIndex = targetList.indexOf(expectedValue);
-			if (insertionIndex > currentIndex) {
+			if (insertionIndex > currentIndex && currentIndex >= 0) {
 				insertionIndex--;
 			}
 
