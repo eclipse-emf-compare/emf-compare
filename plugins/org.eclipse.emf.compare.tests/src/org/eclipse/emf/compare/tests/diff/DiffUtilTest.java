@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.tests.diff;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertSame;
+import static junit.framework.Assert.fail;
 
 import com.google.common.collect.Lists;
 
@@ -365,6 +366,121 @@ public class DiffUtilTest {
 		expectedIndex = Integer.valueOf(right.indexOf(Integer.valueOf(3)) + 1);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
 		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+	}
+
+	/**
+	 * Tests {@link NameSimilarity#nameSimilarityMetric(String, String)}.
+	 * <p>
+	 * Expected results :
+	 * <table>
+	 * <tr>
+	 * <td>arg1</td>
+	 * <td>arg2</td>
+	 * <td>result</td>
+	 * </tr>
+	 * <tr>
+	 * <td>&quot;ceString&quot;</td>
+	 * <td>&quot;ceString&quot;</td>
+	 * <td><code>1</code></td>
+	 * </tr>
+	 * <tr>
+	 * <td>&quot;classe&quot;</td>
+	 * <td>&quot;Classe&quot;</td>
+	 * <td><code>0.8</code></td>
+	 * </tr>
+	 * <tr>
+	 * <td>&quot;Classe&quot;</td>
+	 * <td>&quot;UneClasse&quot;</td>
+	 * <td><code>10/13</code></td>
+	 * </tr>
+	 * <tr>
+	 * <td>&quot;package&quot;</td>
+	 * <td>&quot;packagedeux&quot;</td>
+	 * <td><code>12/16</code></td>
+	 * </tr>
+	 * <tr>
+	 * <td>&quot;&quot;</td>
+	 * <td>&quot;MaClasse&quot;</td>
+	 * <td><code>0</code></td>
+	 * </tr>
+	 * <tr>
+	 * <td>&quot;package&quot;</td>
+	 * <td>&quot;packageASupprimer&quot;</td>
+	 * <td><code>12/22</code></td>
+	 * </tr>
+	 * <tr>
+	 * <td>&quot;attribut&quot;</td>
+	 * <td>&quot;reference&quot;</td>
+	 * <td><code>0</code></td>
+	 * </tr>
+	 * <tr>
+	 * <td>&quot;aa&quot;</td>
+	 * <td>&quot;aaaa&quot;</td>
+	 * <td><code>1/3</code></td>
+	 * </tr>
+	 * <tr>
+	 * <td>&quot;v1&quot;</td>
+	 * <td>&quot;v2&quot;</td>
+	 * <td><code>2/4</code></td>
+	 * </tr>
+	 * <tr>
+	 * <td>&quot;v&quot;</td>
+	 * <td>&quot;v1&quot;</td>
+	 * <td><code>1/3</code></td>
+	 * </tr>
+	 * <tr>
+	 * <td>&quot;a&quot;</td>
+	 * <td>&quot;a&quot;</td>
+	 * <td><code>1</code></td>
+	 * </tr>
+	 * <tr>
+	 * <td>&quot;a&quot;</td>
+	 * <td>&quot;b&quot;</td>
+	 * <td><code>0</code></td>
+	 * </tr>
+	 * <tr>
+	 * <td>&quot;a&quot;</td>
+	 * <td>&quot;A&quot;</td>
+	 * <td><code>0</code></td>
+	 * </tr>
+	 * </table>
+	 * </p>
+	 */
+	@Test
+	public void diceCoefficient() {
+		final String[] data = new String[] {"ceString", "ceString", "classe", "Classe", "Classe",
+				"UneClasse", "package", "packagedeux", "", "MaClasse", "package", "packageASupprimer",
+				"attribut", "reference", "aa", "aaaa", "v1", "v2", "v", "v1", "a", "a", "a", "b", "a", "A" };
+		final double[] similarities = new double[] {1d, 0.8d, 10d / 13d, 3d / 4d, 0d, 6d / 11d, 0d, 1d / 3d,
+				1d / 2d, 1d / 3d, 1d, 0d, 0d, };
+		for (int i = 0; i < data.length; i += 2) {
+			assertEquals("Unexpected result of the dice coefficient for str1 = " + data[i] + " and str2 = "
+					+ data[i + 1], similarities[i / 2], DiffUtil.diceCoefficient(data[i], data[i + 1]));
+			// Make sure that the result is symmetric
+			assertEquals("Dice coefficient was not symmetric for str1 = " + data[i] + " and str2 = "
+					+ data[i + 1], similarities[i / 2], DiffUtil.diceCoefficient(data[i + 1], data[i]));
+		}
+	}
+
+	public void diceCoefficientFailure() {
+		try {
+			DiffUtil.diceCoefficient(null, null);
+			fail("Expected exception has not been thrown");
+		} catch (NullPointerException e) {
+			// expected
+		}
+		try {
+			DiffUtil.diceCoefficient(null, "aString");
+			fail("Expected exception has not been thrown");
+		} catch (NullPointerException e) {
+			// expected
+		}
+		try {
+			DiffUtil.diceCoefficient("aString", null);
+			fail("Expected exception has not been thrown");
+		} catch (NullPointerException e) {
+			// expected
+		}
 	}
 
 	/**

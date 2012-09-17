@@ -43,7 +43,7 @@ final class EObjectUtil {
 	 *            the object to get the label from.
 	 * @return the label.
 	 */
-	static String getLabel(EObject object) {
+	public static String getLabel(EObject object) {
 		String ret = null;
 		if (object == null) {
 			ret = "<null>"; //$NON-NLS-1$
