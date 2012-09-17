@@ -232,6 +232,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 				@Override
 				public void run() {
 					copyDiff(true);
+					// Select next diff
+					navigate(true);
 				}
 			};
 			Utilities.initAction(copyLeftToRight, getResourceBundle(), "action.CopyDiffLeftToRight."); //$NON-NLS-1$
@@ -247,6 +249,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 				@Override
 				public void run() {
 					copyDiff(false);
+					// Select next diff
+					navigate(true);
 				}
 			};
 			Utilities.initAction(copyRightToLeft, getResourceBundle(), "action.CopyDiffRightToLeft."); //$NON-NLS-1$
