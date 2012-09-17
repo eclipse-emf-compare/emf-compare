@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.unit;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
@@ -73,6 +74,57 @@ public class ConflictTest extends AbstractCompareTest {
 		assertSame(conflict.getDifferences(), conflict.eGet(feature, false));
 		assertTrue(conflict.eIsSet(feature));
 		assertTrue(differencesValue.getConflict() == conflict);
+	}
+
+	/**
+	 * Tests the behavior of attribute <code>kind</code>'s accessors.
+	 * 
+	 * @generated
+	 */
+	@Test
+	public void testKind() {
+		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE.getConflict_Kind();
+		Conflict conflict = CompareFactory.eINSTANCE.createConflict();
+		conflict.eAdapters().add(new MockEAdapter());
+		org.eclipse.emf.compare.ConflictKind kindValue = (org.eclipse.emf.compare.ConflictKind)feature
+				.getDefaultValue();
+		for (org.eclipse.emf.compare.ConflictKind aConflictKind : org.eclipse.emf.compare.ConflictKind.VALUES) {
+			if (kindValue.getValue() != aConflictKind.getValue()) {
+				kindValue = aConflictKind;
+				break;
+			}
+		}
+
+		assertFalse(conflict.eIsSet(feature));
+		assertEquals(feature.getDefaultValue(), conflict.getKind());
+
+		conflict.setKind(kindValue);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(kindValue, conflict.getKind());
+		assertEquals(conflict.getKind(), conflict.eGet(feature));
+		assertTrue(conflict.eIsSet(feature));
+
+		conflict.eUnset(feature);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(feature.getDefaultValue(), conflict.getKind());
+		assertEquals(conflict.getKind(), conflict.eGet(feature));
+		assertFalse(conflict.eIsSet(feature));
+
+		conflict.eSet(feature, kindValue);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(kindValue, conflict.getKind());
+		assertEquals(conflict.getKind(), conflict.eGet(feature));
+		assertTrue(conflict.eIsSet(feature));
+
+		conflict.setKind(null);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(feature.getDefaultValue(), conflict.getKind());
+		assertEquals(conflict.getKind(), conflict.eGet(feature));
+		assertFalse(conflict.eIsSet(feature));
 	}
 
 }

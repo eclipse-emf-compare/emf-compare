@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.unit;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
@@ -159,6 +160,103 @@ public class ComparisonTest extends AbstractCompareTest {
 		assertSame(comparison.getConflicts(), comparison.eGet(feature));
 		assertSame(comparison.getConflicts(), comparison.eGet(feature, false));
 		assertTrue(comparison.eIsSet(feature));
+	}
+
+	/**
+	 * Tests the behavior of reference <code>equivalences</code>'s accessors.
+	 * 
+	 * @generated
+	 */
+	@Test
+	public void testEquivalences() {
+		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE
+				.getComparison_Equivalences();
+		Comparison comparison = CompareFactory.eINSTANCE.createComparison();
+		comparison.eAdapters().add(new MockEAdapter());
+		org.eclipse.emf.compare.Equivalence equivalencesValue = org.eclipse.emf.compare.CompareFactory.eINSTANCE
+				.createEquivalence();
+		List<org.eclipse.emf.compare.Equivalence> listEquivalences = new ArrayList<org.eclipse.emf.compare.Equivalence>(
+				1);
+		listEquivalences.add(equivalencesValue);
+
+		assertFalse(comparison.eIsSet(feature));
+		assertTrue(comparison.getEquivalences().isEmpty());
+
+		comparison.getEquivalences().add(equivalencesValue);
+		assertTrue(notified);
+		notified = false;
+		assertTrue(comparison.getEquivalences().contains(equivalencesValue));
+		assertSame(comparison.getEquivalences(), comparison.eGet(feature));
+		assertSame(comparison.getEquivalences(), comparison.eGet(feature, false));
+		assertTrue(comparison.eIsSet(feature));
+
+		comparison.eUnset(feature);
+		assertTrue(notified);
+		notified = false;
+		assertTrue(comparison.getEquivalences().isEmpty());
+		assertSame(comparison.getEquivalences(), comparison.eGet(feature));
+		assertSame(comparison.getEquivalences(), comparison.eGet(feature, false));
+		assertFalse(comparison.eIsSet(feature));
+
+		comparison.eSet(feature, listEquivalences);
+		assertTrue(notified);
+		notified = false;
+		assertTrue(comparison.getEquivalences().contains(equivalencesValue));
+		assertSame(comparison.getEquivalences(), comparison.eGet(feature));
+		assertSame(comparison.getEquivalences(), comparison.eGet(feature, false));
+		assertTrue(comparison.eIsSet(feature));
+	}
+
+	/**
+	 * Tests the behavior of attribute <code>threeWay</code>'s accessors.
+	 * 
+	 * @generated
+	 */
+	@Test
+	public void testThreeWay() {
+		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE
+				.getComparison_ThreeWay();
+		Comparison comparison = CompareFactory.eINSTANCE.createComparison();
+		comparison.eAdapters().add(new MockEAdapter());
+		boolean threeWayValue = getBooleanDistinctFromDefault(feature);
+
+		assertFalse(comparison.eIsSet(feature));
+		assertEquals(((Boolean)feature.getDefaultValue()).booleanValue(), ((Boolean)comparison.isThreeWay())
+				.booleanValue());
+
+		comparison.setThreeWay(threeWayValue);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(threeWayValue, ((Boolean)comparison.isThreeWay()).booleanValue());
+		assertEquals(((Boolean)comparison.isThreeWay()).booleanValue(), ((Boolean)comparison.eGet(feature))
+				.booleanValue());
+		assertTrue(comparison.eIsSet(feature));
+
+		comparison.eUnset(feature);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(((Boolean)feature.getDefaultValue()).booleanValue(), ((Boolean)comparison.isThreeWay())
+				.booleanValue());
+		assertEquals(((Boolean)comparison.isThreeWay()).booleanValue(), ((Boolean)comparison.eGet(feature))
+				.booleanValue());
+		assertFalse(comparison.eIsSet(feature));
+
+		comparison.eSet(feature, threeWayValue);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(threeWayValue, ((Boolean)comparison.isThreeWay()).booleanValue());
+		assertEquals(((Boolean)comparison.isThreeWay()).booleanValue(), ((Boolean)comparison.eGet(feature))
+				.booleanValue());
+		assertTrue(comparison.eIsSet(feature));
+
+		comparison.setThreeWay(((Boolean)feature.getDefaultValue()).booleanValue());
+		assertTrue(notified);
+		notified = false;
+		assertEquals(((Boolean)feature.getDefaultValue()).booleanValue(), ((Boolean)comparison.isThreeWay())
+				.booleanValue());
+		assertEquals(((Boolean)comparison.isThreeWay()).booleanValue(), ((Boolean)comparison.eGet(feature))
+				.booleanValue());
+		assertFalse(comparison.eIsSet(feature));
 	}
 
 }

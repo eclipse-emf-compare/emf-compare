@@ -278,7 +278,7 @@ public class AttributeChangeTest extends AbstractCompareTest {
 	}
 
 	/**
-	 * Tests the behavior of reference <code>equivalentDiffs</code>'s accessors.
+	 * Tests the behavior of reference <code>equivalence</code>'s accessors.
 	 * 
 	 * @generated
 	 */
@@ -287,20 +287,20 @@ public class AttributeChangeTest extends AbstractCompareTest {
 		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE.getDiff_Equivalence();
 		AttributeChange attributeChange = CompareFactory.eINSTANCE.createAttributeChange();
 		attributeChange.eAdapters().add(new MockEAdapter());
-		org.eclipse.emf.compare.Equivalence equivalentDiffsValue = org.eclipse.emf.compare.CompareFactory.eINSTANCE
+		org.eclipse.emf.compare.Equivalence equivalenceValue = org.eclipse.emf.compare.CompareFactory.eINSTANCE
 				.createEquivalence();
 
 		assertFalse(attributeChange.eIsSet(feature));
 		assertNull(attributeChange.getEquivalence());
 
-		attributeChange.setEquivalence(equivalentDiffsValue);
+		attributeChange.setEquivalence(equivalenceValue);
 		assertTrue(notified);
 		notified = false;
-		assertSame(equivalentDiffsValue, attributeChange.getEquivalence());
+		assertSame(equivalenceValue, attributeChange.getEquivalence());
 		assertSame(attributeChange.getEquivalence(), attributeChange.eGet(feature));
 		assertSame(attributeChange.getEquivalence(), attributeChange.eGet(feature, false));
 		assertTrue(attributeChange.eIsSet(feature));
-		assertTrue(equivalentDiffsValue.getDifferences().contains(attributeChange));
+		assertTrue(equivalenceValue.getDifferences().contains(attributeChange));
 
 		attributeChange.eUnset(feature);
 		assertTrue(notified);
@@ -309,25 +309,25 @@ public class AttributeChangeTest extends AbstractCompareTest {
 		assertSame(attributeChange.getEquivalence(), attributeChange.eGet(feature));
 		assertSame(attributeChange.getEquivalence(), attributeChange.eGet(feature, false));
 		assertFalse(attributeChange.eIsSet(feature));
-		assertFalse(equivalentDiffsValue.getDifferences().contains(attributeChange));
+		assertFalse(equivalenceValue.getDifferences().contains(attributeChange));
 
-		attributeChange.setEquivalence(equivalentDiffsValue);
+		attributeChange.setEquivalence(equivalenceValue);
 		assertTrue(notified);
 		notified = false;
-		assertSame(equivalentDiffsValue, attributeChange.getEquivalence());
+		assertSame(equivalenceValue, attributeChange.getEquivalence());
 		assertSame(attributeChange.getEquivalence(), attributeChange.eGet(feature));
 		assertSame(attributeChange.getEquivalence(), attributeChange.eGet(feature, false));
 		assertTrue(attributeChange.eIsSet(feature));
-		assertTrue(equivalentDiffsValue.getDifferences().contains(attributeChange));
+		assertTrue(equivalenceValue.getDifferences().contains(attributeChange));
 
-		attributeChange.eSet(feature, equivalentDiffsValue);
+		attributeChange.eSet(feature, equivalenceValue);
 		assertTrue(notified);
 		notified = false;
-		assertSame(equivalentDiffsValue, attributeChange.getEquivalence());
+		assertSame(equivalenceValue, attributeChange.getEquivalence());
 		assertSame(attributeChange.getEquivalence(), attributeChange.eGet(feature));
 		assertSame(attributeChange.getEquivalence(), attributeChange.eGet(feature, false));
 		assertTrue(attributeChange.eIsSet(feature));
-		assertTrue(equivalentDiffsValue.getDifferences().contains(attributeChange));
+		assertTrue(equivalenceValue.getDifferences().contains(attributeChange));
 
 		attributeChange.setEquivalence(null);
 		assertTrue(notified);
@@ -337,7 +337,7 @@ public class AttributeChangeTest extends AbstractCompareTest {
 		assertSame(attributeChange.getEquivalence(), attributeChange.eGet(feature));
 		assertSame(attributeChange.getEquivalence(), attributeChange.eGet(feature, false));
 		assertFalse(attributeChange.eIsSet(feature));
-		assertFalse(equivalentDiffsValue.getDifferences().contains(attributeChange));
+		assertFalse(equivalenceValue.getDifferences().contains(attributeChange));
 	}
 
 	/**
@@ -510,6 +510,108 @@ public class AttributeChangeTest extends AbstractCompareTest {
 		notified = false;
 		assertEquals(feature.getDefaultValue(), attributeChange.getKind());
 		assertEquals(attributeChange.getKind(), attributeChange.eGet(feature));
+		assertFalse(attributeChange.eIsSet(feature));
+	}
+
+	/**
+	 * Tests the behavior of attribute <code>source</code>'s accessors.
+	 * 
+	 * @generated
+	 */
+	@Test
+	public void testSource() {
+		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE.getDiff_Source();
+		AttributeChange attributeChange = CompareFactory.eINSTANCE.createAttributeChange();
+		attributeChange.eAdapters().add(new MockEAdapter());
+		org.eclipse.emf.compare.DifferenceSource sourceValue = (org.eclipse.emf.compare.DifferenceSource)feature
+				.getDefaultValue();
+		for (org.eclipse.emf.compare.DifferenceSource aDifferenceSource : org.eclipse.emf.compare.DifferenceSource.VALUES) {
+			if (sourceValue.getValue() != aDifferenceSource.getValue()) {
+				sourceValue = aDifferenceSource;
+				break;
+			}
+		}
+
+		assertFalse(attributeChange.eIsSet(feature));
+		assertEquals(feature.getDefaultValue(), attributeChange.getSource());
+
+		attributeChange.setSource(sourceValue);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(sourceValue, attributeChange.getSource());
+		assertEquals(attributeChange.getSource(), attributeChange.eGet(feature));
+		assertTrue(attributeChange.eIsSet(feature));
+
+		attributeChange.eUnset(feature);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(feature.getDefaultValue(), attributeChange.getSource());
+		assertEquals(attributeChange.getSource(), attributeChange.eGet(feature));
+		assertFalse(attributeChange.eIsSet(feature));
+
+		attributeChange.eSet(feature, sourceValue);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(sourceValue, attributeChange.getSource());
+		assertEquals(attributeChange.getSource(), attributeChange.eGet(feature));
+		assertTrue(attributeChange.eIsSet(feature));
+
+		attributeChange.setSource(null);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(feature.getDefaultValue(), attributeChange.getSource());
+		assertEquals(attributeChange.getSource(), attributeChange.eGet(feature));
+		assertFalse(attributeChange.eIsSet(feature));
+	}
+
+	/**
+	 * Tests the behavior of attribute <code>state</code>'s accessors.
+	 * 
+	 * @generated
+	 */
+	@Test
+	public void testState() {
+		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE.getDiff_State();
+		AttributeChange attributeChange = CompareFactory.eINSTANCE.createAttributeChange();
+		attributeChange.eAdapters().add(new MockEAdapter());
+		org.eclipse.emf.compare.DifferenceState stateValue = (org.eclipse.emf.compare.DifferenceState)feature
+				.getDefaultValue();
+		for (org.eclipse.emf.compare.DifferenceState aDifferenceState : org.eclipse.emf.compare.DifferenceState.VALUES) {
+			if (stateValue.getValue() != aDifferenceState.getValue()) {
+				stateValue = aDifferenceState;
+				break;
+			}
+		}
+
+		assertFalse(attributeChange.eIsSet(feature));
+		assertEquals(feature.getDefaultValue(), attributeChange.getState());
+
+		attributeChange.setState(stateValue);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(stateValue, attributeChange.getState());
+		assertEquals(attributeChange.getState(), attributeChange.eGet(feature));
+		assertTrue(attributeChange.eIsSet(feature));
+
+		attributeChange.eUnset(feature);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(feature.getDefaultValue(), attributeChange.getState());
+		assertEquals(attributeChange.getState(), attributeChange.eGet(feature));
+		assertFalse(attributeChange.eIsSet(feature));
+
+		attributeChange.eSet(feature, stateValue);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(stateValue, attributeChange.getState());
+		assertEquals(attributeChange.getState(), attributeChange.eGet(feature));
+		assertTrue(attributeChange.eIsSet(feature));
+
+		attributeChange.setState(null);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(feature.getDefaultValue(), attributeChange.getState());
+		assertEquals(attributeChange.getState(), attributeChange.eGet(feature));
 		assertFalse(attributeChange.eIsSet(feature));
 	}
 

@@ -21,9 +21,11 @@ import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
@@ -234,6 +236,36 @@ public class CompareFactoryTest {
 	}
 
 	/**
+	 * Ensures that converting {@link DifferenceState} to String can be done through the factory.
+	 * 
+	 * @generated
+	 */
+	@Test
+	public void testConvertDifferenceStateToString() {
+		for (DifferenceState value : DifferenceState.VALUES) {
+			Object result = CompareFactory.eINSTANCE.convertToString(
+					ComparePackage.Literals.DIFFERENCE_STATE, value);
+			assertNotNull(result);
+			assertEquals(value.toString(), result);
+		}
+	}
+
+	/**
+	 * Ensures that converting {@link ConflictKind} to String can be done through the factory.
+	 * 
+	 * @generated
+	 */
+	@Test
+	public void testConvertConflictKindToString() {
+		for (ConflictKind value : ConflictKind.VALUES) {
+			Object result = CompareFactory.eINSTANCE.convertToString(ComparePackage.Literals.CONFLICT_KIND,
+					value);
+			assertNotNull(result);
+			assertEquals(value.toString(), result);
+		}
+	}
+
+	/**
 	 * Ensures that trying to convert an {@link EEnum} from another package to String yields the expected
 	 * exception.
 	 * 
@@ -289,6 +321,52 @@ public class CompareFactoryTest {
 
 			try {
 				CompareFactory.eINSTANCE.createFromString(ComparePackage.Literals.DIFFERENCE_SOURCE,
+						"ThisShouldntBeAKnownEEnumLiteral");
+				fail("Expected IllegalArgumentException hasn't been thrown");
+			} catch (IllegalArgumentException e) {
+				// Expected behavior
+			}
+		}
+	}
+
+	/**
+	 * Ensures that creating {@link DifferenceState} from String can be done through the factory.
+	 * 
+	 * @generated
+	 */
+	@Test
+	public void testCreateDifferenceStateFromString() {
+		for (DifferenceState value : DifferenceState.VALUES) {
+			Object result = CompareFactory.eINSTANCE.createFromString(
+					ComparePackage.Literals.DIFFERENCE_STATE, value.getLiteral());
+			assertNotNull(result);
+			assertSame(value, result);
+
+			try {
+				CompareFactory.eINSTANCE.createFromString(ComparePackage.Literals.DIFFERENCE_STATE,
+						"ThisShouldntBeAKnownEEnumLiteral");
+				fail("Expected IllegalArgumentException hasn't been thrown");
+			} catch (IllegalArgumentException e) {
+				// Expected behavior
+			}
+		}
+	}
+
+	/**
+	 * Ensures that creating {@link ConflictKind} from String can be done through the factory.
+	 * 
+	 * @generated
+	 */
+	@Test
+	public void testCreateConflictKindFromString() {
+		for (ConflictKind value : ConflictKind.VALUES) {
+			Object result = CompareFactory.eINSTANCE.createFromString(ComparePackage.Literals.CONFLICT_KIND,
+					value.getLiteral());
+			assertNotNull(result);
+			assertSame(value, result);
+
+			try {
+				CompareFactory.eINSTANCE.createFromString(ComparePackage.Literals.CONFLICT_KIND,
 						"ThisShouldntBeAKnownEEnumLiteral");
 				fail("Expected IllegalArgumentException hasn't been thrown");
 			} catch (IllegalArgumentException e) {

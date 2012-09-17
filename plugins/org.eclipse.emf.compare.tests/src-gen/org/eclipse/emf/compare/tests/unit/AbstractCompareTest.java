@@ -12,16 +12,15 @@ package org.eclipse.emf.compare.tests.unit;
 
 import java.util.Calendar;
 
-import junit.framework.TestCase;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 
 /**
- * This class defines utility methods and will be used as the superclass of all {@link TestCase} for
- * "class-related" tests.
+ * This class defines utility methods and will be used as the superclass of all test cases for "class-related"
+ * tests.
  * 
  * @generated
  */
@@ -229,6 +228,8 @@ public class AbstractCompareTest {
 			return Calendar.getInstance().getTime();
 		} else if (feature.getEType() == EcorePackage.Literals.EJAVA_OBJECT) {
 			return new Object();
+		} else if (feature.getEType() == EcorePackage.Literals.ERESOURCE) {
+			return new XMIResourceImpl();
 		} else {
 			throw new RuntimeException();
 		}

@@ -30,27 +30,27 @@ import org.junit.Test;
  */
 public class MatchTest extends AbstractCompareTest {
 	/**
-	 * Tests the behavior of reference <code>subMatches</code>'s accessors.
+	 * Tests the behavior of reference <code>submatches</code>'s accessors.
 	 * 
 	 * @generated
 	 */
 	@Test
-	public void testSubMatches() {
+	public void testSubmatches() {
 		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE.getMatch_Submatches();
 		Match match = CompareFactory.eINSTANCE.createMatch();
 		match.eAdapters().add(new MockEAdapter());
-		org.eclipse.emf.compare.Match subMatchesValue = org.eclipse.emf.compare.CompareFactory.eINSTANCE
+		org.eclipse.emf.compare.Match submatchesValue = org.eclipse.emf.compare.CompareFactory.eINSTANCE
 				.createMatch();
-		List<org.eclipse.emf.compare.Match> listSubMatches = new ArrayList<org.eclipse.emf.compare.Match>(1);
-		listSubMatches.add(subMatchesValue);
+		List<org.eclipse.emf.compare.Match> listSubmatches = new ArrayList<org.eclipse.emf.compare.Match>(1);
+		listSubmatches.add(submatchesValue);
 
 		assertFalse(match.eIsSet(feature));
 		assertTrue(match.getSubmatches().isEmpty());
 
-		match.getSubmatches().add(subMatchesValue);
+		match.getSubmatches().add(submatchesValue);
 		assertTrue(notified);
 		notified = false;
-		assertTrue(match.getSubmatches().contains(subMatchesValue));
+		assertTrue(match.getSubmatches().contains(submatchesValue));
 		assertSame(match.getSubmatches(), match.eGet(feature));
 		assertSame(match.getSubmatches(), match.eGet(feature, false));
 		assertTrue(match.eIsSet(feature));
@@ -63,10 +63,10 @@ public class MatchTest extends AbstractCompareTest {
 		assertSame(match.getSubmatches(), match.eGet(feature, false));
 		assertFalse(match.eIsSet(feature));
 
-		match.eSet(feature, listSubMatches);
+		match.eSet(feature, listSubmatches);
 		assertTrue(notified);
 		notified = false;
-		assertTrue(match.getSubmatches().contains(subMatchesValue));
+		assertTrue(match.getSubmatches().contains(submatchesValue));
 		assertSame(match.getSubmatches(), match.eGet(feature));
 		assertSame(match.getSubmatches(), match.eGet(feature, false));
 		assertTrue(match.eIsSet(feature));

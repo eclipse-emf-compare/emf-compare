@@ -278,7 +278,7 @@ public class DiffTest extends AbstractCompareTest {
 	}
 
 	/**
-	 * Tests the behavior of reference <code>equivalentDiffs</code>'s accessors.
+	 * Tests the behavior of reference <code>equivalence</code>'s accessors.
 	 * 
 	 * @generated
 	 */
@@ -287,20 +287,20 @@ public class DiffTest extends AbstractCompareTest {
 		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE.getDiff_Equivalence();
 		Diff diff = CompareFactory.eINSTANCE.createDiff();
 		diff.eAdapters().add(new MockEAdapter());
-		org.eclipse.emf.compare.Equivalence equivalentDiffsValue = org.eclipse.emf.compare.CompareFactory.eINSTANCE
+		org.eclipse.emf.compare.Equivalence equivalenceValue = org.eclipse.emf.compare.CompareFactory.eINSTANCE
 				.createEquivalence();
 
 		assertFalse(diff.eIsSet(feature));
 		assertNull(diff.getEquivalence());
 
-		diff.setEquivalence(equivalentDiffsValue);
+		diff.setEquivalence(equivalenceValue);
 		assertTrue(notified);
 		notified = false;
-		assertSame(equivalentDiffsValue, diff.getEquivalence());
+		assertSame(equivalenceValue, diff.getEquivalence());
 		assertSame(diff.getEquivalence(), diff.eGet(feature));
 		assertSame(diff.getEquivalence(), diff.eGet(feature, false));
 		assertTrue(diff.eIsSet(feature));
-		assertTrue(equivalentDiffsValue.getDifferences().contains(diff));
+		assertTrue(equivalenceValue.getDifferences().contains(diff));
 
 		diff.eUnset(feature);
 		assertTrue(notified);
@@ -309,25 +309,25 @@ public class DiffTest extends AbstractCompareTest {
 		assertSame(diff.getEquivalence(), diff.eGet(feature));
 		assertSame(diff.getEquivalence(), diff.eGet(feature, false));
 		assertFalse(diff.eIsSet(feature));
-		assertFalse(equivalentDiffsValue.getDifferences().contains(diff));
+		assertFalse(equivalenceValue.getDifferences().contains(diff));
 
-		diff.setEquivalence(equivalentDiffsValue);
+		diff.setEquivalence(equivalenceValue);
 		assertTrue(notified);
 		notified = false;
-		assertSame(equivalentDiffsValue, diff.getEquivalence());
+		assertSame(equivalenceValue, diff.getEquivalence());
 		assertSame(diff.getEquivalence(), diff.eGet(feature));
 		assertSame(diff.getEquivalence(), diff.eGet(feature, false));
 		assertTrue(diff.eIsSet(feature));
-		assertTrue(equivalentDiffsValue.getDifferences().contains(diff));
+		assertTrue(equivalenceValue.getDifferences().contains(diff));
 
-		diff.eSet(feature, equivalentDiffsValue);
+		diff.eSet(feature, equivalenceValue);
 		assertTrue(notified);
 		notified = false;
-		assertSame(equivalentDiffsValue, diff.getEquivalence());
+		assertSame(equivalenceValue, diff.getEquivalence());
 		assertSame(diff.getEquivalence(), diff.eGet(feature));
 		assertSame(diff.getEquivalence(), diff.eGet(feature, false));
 		assertTrue(diff.eIsSet(feature));
-		assertTrue(equivalentDiffsValue.getDifferences().contains(diff));
+		assertTrue(equivalenceValue.getDifferences().contains(diff));
 
 		diff.setEquivalence(null);
 		assertTrue(notified);
@@ -337,7 +337,7 @@ public class DiffTest extends AbstractCompareTest {
 		assertSame(diff.getEquivalence(), diff.eGet(feature));
 		assertSame(diff.getEquivalence(), diff.eGet(feature, false));
 		assertFalse(diff.eIsSet(feature));
-		assertFalse(equivalentDiffsValue.getDifferences().contains(diff));
+		assertFalse(equivalenceValue.getDifferences().contains(diff));
 	}
 
 	/**
@@ -451,6 +451,108 @@ public class DiffTest extends AbstractCompareTest {
 		notified = false;
 		assertEquals(feature.getDefaultValue(), diff.getKind());
 		assertEquals(diff.getKind(), diff.eGet(feature));
+		assertFalse(diff.eIsSet(feature));
+	}
+
+	/**
+	 * Tests the behavior of attribute <code>source</code>'s accessors.
+	 * 
+	 * @generated
+	 */
+	@Test
+	public void testSource() {
+		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE.getDiff_Source();
+		Diff diff = CompareFactory.eINSTANCE.createDiff();
+		diff.eAdapters().add(new MockEAdapter());
+		org.eclipse.emf.compare.DifferenceSource sourceValue = (org.eclipse.emf.compare.DifferenceSource)feature
+				.getDefaultValue();
+		for (org.eclipse.emf.compare.DifferenceSource aDifferenceSource : org.eclipse.emf.compare.DifferenceSource.VALUES) {
+			if (sourceValue.getValue() != aDifferenceSource.getValue()) {
+				sourceValue = aDifferenceSource;
+				break;
+			}
+		}
+
+		assertFalse(diff.eIsSet(feature));
+		assertEquals(feature.getDefaultValue(), diff.getSource());
+
+		diff.setSource(sourceValue);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(sourceValue, diff.getSource());
+		assertEquals(diff.getSource(), diff.eGet(feature));
+		assertTrue(diff.eIsSet(feature));
+
+		diff.eUnset(feature);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(feature.getDefaultValue(), diff.getSource());
+		assertEquals(diff.getSource(), diff.eGet(feature));
+		assertFalse(diff.eIsSet(feature));
+
+		diff.eSet(feature, sourceValue);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(sourceValue, diff.getSource());
+		assertEquals(diff.getSource(), diff.eGet(feature));
+		assertTrue(diff.eIsSet(feature));
+
+		diff.setSource(null);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(feature.getDefaultValue(), diff.getSource());
+		assertEquals(diff.getSource(), diff.eGet(feature));
+		assertFalse(diff.eIsSet(feature));
+	}
+
+	/**
+	 * Tests the behavior of attribute <code>state</code>'s accessors.
+	 * 
+	 * @generated
+	 */
+	@Test
+	public void testState() {
+		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE.getDiff_State();
+		Diff diff = CompareFactory.eINSTANCE.createDiff();
+		diff.eAdapters().add(new MockEAdapter());
+		org.eclipse.emf.compare.DifferenceState stateValue = (org.eclipse.emf.compare.DifferenceState)feature
+				.getDefaultValue();
+		for (org.eclipse.emf.compare.DifferenceState aDifferenceState : org.eclipse.emf.compare.DifferenceState.VALUES) {
+			if (stateValue.getValue() != aDifferenceState.getValue()) {
+				stateValue = aDifferenceState;
+				break;
+			}
+		}
+
+		assertFalse(diff.eIsSet(feature));
+		assertEquals(feature.getDefaultValue(), diff.getState());
+
+		diff.setState(stateValue);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(stateValue, diff.getState());
+		assertEquals(diff.getState(), diff.eGet(feature));
+		assertTrue(diff.eIsSet(feature));
+
+		diff.eUnset(feature);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(feature.getDefaultValue(), diff.getState());
+		assertEquals(diff.getState(), diff.eGet(feature));
+		assertFalse(diff.eIsSet(feature));
+
+		diff.eSet(feature, stateValue);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(stateValue, diff.getState());
+		assertEquals(diff.getState(), diff.eGet(feature));
+		assertTrue(diff.eIsSet(feature));
+
+		diff.setState(null);
+		assertTrue(notified);
+		notified = false;
+		assertEquals(feature.getDefaultValue(), diff.getState());
+		assertEquals(diff.getState(), diff.eGet(feature));
 		assertFalse(diff.eIsSet(feature));
 	}
 
