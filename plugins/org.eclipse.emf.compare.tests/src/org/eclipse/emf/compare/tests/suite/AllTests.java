@@ -23,7 +23,6 @@ import org.eclipse.emf.compare.tests.fullcomparison.ProximityComparisonTest;
 import org.eclipse.emf.compare.tests.merge.IndividualMergeOutOfScopeValuesTest;
 import org.eclipse.emf.compare.tests.merge.IndividualMergeTest;
 import org.eclipse.emf.compare.tests.merge.MultipleMergeTest;
-import org.eclipse.emf.compare.tests.model.CompareModelTestSuite;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
 import org.eclipse.emf.compare.tests.postprocess.PostProcessorTest;
@@ -42,10 +41,10 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({CompareModelTestSuite.class, DefaultComparisonScopeTest.class, IdentifierComparisonTest.class,
-		ConflictDetectionTest.class, ReqComputingTest.class, EquiComputingTest.class, DiffUtilTest.class,
-		MultipleMergeTest.class, PostProcessorTest.class, IndividualMergeTest.class,
-		IndividualMergeOutOfScopeValuesTest.class, ProximityComparisonTest.class })
+@SuiteClasses({DefaultComparisonScopeTest.class, IdentifierComparisonTest.class, ConflictDetectionTest.class,
+		ReqComputingTest.class, EquiComputingTest.class, DiffUtilTest.class, MultipleMergeTest.class,
+		PostProcessorTest.class, IndividualMergeTest.class, IndividualMergeOutOfScopeValuesTest.class,
+		ProximityComparisonTest.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.

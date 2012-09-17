@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.tests.model.mock.MockCompareModel;
+import org.eclipse.emf.compare.tests.fullcomparison.data.identifier.IdentifierMatchInputData;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -48,10 +48,10 @@ public class DefaultComparisonScopeTest {
 		assertNull(nullScope.getOrigin());
 
 		// These are only getters, they should return us the unchanged object
-		final MockCompareModel mockModel = new MockCompareModel();
-		final Resource leftResource = mockModel.getLeftModel();
-		final Resource rightResource = mockModel.getRightModel();
-		final Resource originResource = mockModel.getOriginModel();
+		final IdentifierMatchInputData mockModel = new IdentifierMatchInputData();
+		final Resource leftResource = mockModel.getExtlibraryLeft();
+		final Resource rightResource = mockModel.getExtlibraryRight();
+		final Resource originResource = mockModel.getExtlibraryOrigin();
 
 		assertNotNull(leftResource);
 		assertNotNull(rightResource);
@@ -230,10 +230,10 @@ public class DefaultComparisonScopeTest {
 	}
 
 	private static IComparisonScope createResourceScope() throws IOException {
-		final MockCompareModel mockModel = new MockCompareModel();
-		final Resource leftResource = mockModel.getLeftModel();
-		final Resource rightResource = mockModel.getRightModel();
-		final Resource originResource = mockModel.getOriginModel();
+		final IdentifierMatchInputData mockModel = new IdentifierMatchInputData();
+		final Resource leftResource = mockModel.getExtlibraryLeft();
+		final Resource rightResource = mockModel.getExtlibraryRight();
+		final Resource originResource = mockModel.getExtlibraryOrigin();
 
 		assertNotNull(leftResource);
 		assertNotNull(rightResource);
@@ -243,10 +243,10 @@ public class DefaultComparisonScopeTest {
 	}
 
 	private static IComparisonScope createResourceSetScope() throws IOException {
-		final MockCompareModel mockModel = new MockCompareModel();
-		final Resource leftResource = mockModel.getLeftModel();
-		final Resource rightResource = mockModel.getRightModel();
-		final Resource originResource = mockModel.getOriginModel();
+		final IdentifierMatchInputData mockModel = new IdentifierMatchInputData();
+		final Resource leftResource = mockModel.getExtlibraryLeft();
+		final Resource rightResource = mockModel.getExtlibraryRight();
+		final Resource originResource = mockModel.getExtlibraryOrigin();
 
 		assertNotNull(leftResource);
 		assertNotNull(rightResource);
