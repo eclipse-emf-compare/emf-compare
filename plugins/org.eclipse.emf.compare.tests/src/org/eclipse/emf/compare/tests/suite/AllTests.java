@@ -41,10 +41,10 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({DefaultComparisonScopeTest.class, IdentifierComparisonTest.class, ConflictDetectionTest.class,
-		ReqComputingTest.class, EquiComputingTest.class, DiffUtilTest.class, MultipleMergeTest.class,
-		PostProcessorTest.class, IndividualMergeTest.class, IndividualMergeOutOfScopeValuesTest.class,
-		ProximityComparisonTest.class })
+@SuiteClasses({CompareTestSuite.class, DefaultComparisonScopeTest.class, IdentifierComparisonTest.class,
+		ConflictDetectionTest.class, ReqComputingTest.class, EquiComputingTest.class, DiffUtilTest.class,
+		MultipleMergeTest.class, PostProcessorTest.class, IndividualMergeTest.class,
+		IndividualMergeOutOfScopeValuesTest.class, ProximityComparisonTest.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.
