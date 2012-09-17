@@ -68,7 +68,7 @@ public final class ReferenceUtil {
 	/**
 	 * In case of dynamic EObjects, the EClasses of both sides might be different, making "eget" fail in
 	 * "unknown feature". We assume that even if the EClasses are distinct instances, they are the same
-	 * nontheless, and thus we can use the feature name in order to retrieve the feature's value.
+	 * nonetheless, and thus we can use the feature name in order to retrieve the feature's value.
 	 * 
 	 * @param object
 	 *            The object for which feature we need a value.
