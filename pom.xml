@@ -266,7 +266,10 @@
       </activation>
       <repositories>
         <repository><id>juno</id><layout>p2</layout>
-	   <url>http://download.eclipse.org/releases/juno</url>          
+	      <url>http://download.eclipse.org/releases/juno</url>          
+        </repository>
+        <repository><id>orbit</id><layout>p2</layout>
+           <url>http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/</url>
         </repository>        
       </repositories>
     </profile>
@@ -279,6 +282,9 @@
       <repositories>
         <repository><id>indigo</id><layout>p2</layout>
 	   <url>http://download.eclipse.org/releases/indigo</url>          
+        </repository>
+        <repository><id>orbit</id><layout>p2</layout>
+           <url>http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/</url>
         </repository>        
       </repositories>
     </profile>
