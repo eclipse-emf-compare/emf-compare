@@ -261,9 +261,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		final Action nextDiff = new Action() {
 			@Override
 			public void run() {
-				if (navigate(true)) {
-					endOfContentReached(true);
-				}
+				navigate(true);
 			}
 		};
 		Utilities.initAction(nextDiff, getResourceBundle(), "action.NextDiff.");
@@ -274,9 +272,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		final Action previousDiff = new Action() {
 			@Override
 			public void run() {
-				if (navigate(false)) {
-					endOfContentReached(false);
-				}
+				navigate(false);
 			}
 		};
 		Utilities.initAction(previousDiff, getResourceBundle(), "action.PrevDiff.");
@@ -323,30 +319,14 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	}
 
 	/**
-	 * Called by the framework to navigate to the next (or previous) difference.
-	 * <p>
-	 * This is expected to return <code>true</code> if the last (or first) diff has been reached. In such a
-	 * case, we'll display the next difference found in the structure viewer, changing the content viewer as
-	 * needed.
-	 * </p>
-	 * 
-	 * @param next
-	 *            <code>true</code> if the user asked for the next difference, <code>false</code> for the
-	 *            previous difference.
-	 * @return <code>true</code> if we've reached the last (or first if {@code next} is <code>false</code>)
-	 *         diff of this content viewer.
-	 */
-	protected abstract boolean navigate(boolean next);
-
-	/**
-	 * Called by the framework when the last (or first) diff of the current content viewer has been reached.
-	 * This will open the content viewer for the next (or previous) diff displayed in the structure viewer.
+	 * Called by the framework to navigate to the next (or previous) difference. This will open the content
+	 * viewer for the next (or previous) diff displayed in the structure viewer.
 	 * 
 	 * @param next
 	 *            <code>true</code> if we are to open the next structure viewer's diff, <code>false</code> if
 	 *            we should go to the previous instead.
 	 */
-	protected void endOfContentReached(boolean next) {
+	protected void navigate(boolean next) {
 		final Control control = getControl();
 		if (control != null && !control.isDisposed()) {
 			final ICompareNavigator navigator = getCompareConfiguration().getContainer().getNavigator();

@@ -27,14 +27,11 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.TreeItem;
 
 /**
  * Specialized {@link org.eclipse.compare.contentmergeviewer.ContentMergeViewer} that uses
@@ -155,56 +152,6 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			setLeftDirty(true);
 		}
 		refresh();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#navigate(boolean)
-	 */
-	@Override
-	protected boolean navigate(boolean next) {
-		// Assume that searching/setting the selection in the left is always equivalent to do so in the right
-		final TreeMergeViewer viewer = getLeftMergeViewer();
-
-		final TreeItem[] selectedItems = viewer.getStructuredViewer().getTree().getSelection();
-		final TreeItem currentItem;
-		if (selectedItems.length > 0) {
-			// The order in which we retrieve is unspecified. Which we keep here is thus irrelevant.
-			currentItem = selectedItems[0];
-		} else {
-			currentItem = null;
-		}
-		final TreeItem[] candidates = viewer.getStructuredViewer().getTree().getItems();
-
-		int index = 0;
-		if (currentItem != null) {
-			for (int i = 0; i < candidates.length && index == 0; i++) {
-				if (candidates[i] == currentItem) {
-					index = i;
-				}
-			}
-		}
-
-		TreeItem nextItem = null;
-		for (int i = index; i < candidates.length && nextItem == null; i++) {
-			final TreeItem candidate = candidates[i];
-			if (candidate.getData() instanceof EObject) {
-				final List<Diff> differences = getComparison().getDifferences((EObject)candidate.getData());
-				if (!differences.isEmpty()) {
-					nextItem = candidate;
-				}
-			}
-		}
-
-		if (nextItem != null) {
-			final ISelection newSelection = new StructuredSelection(nextItem.getData());
-			viewer.setSelection(newSelection);
-		} else {
-			// There is no more diff in this viewer. Do the same lookup in the structure viewer now.
-			return true;
-		}
-		return false;
 	}
 
 	/**
