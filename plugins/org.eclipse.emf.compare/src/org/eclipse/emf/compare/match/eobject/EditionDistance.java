@@ -354,7 +354,8 @@ public class EditionDistance implements DistanceFunction {
 			URI bLocation = helper.getURI(b);
 			int changes = 0;
 			if (!aLocation.fragment().equals(bLocation.fragment())) {
-				int dist = new PairCharDistance().distance(aLocation.fragment(), bLocation.fragment());
+				int dist = new URIDistance(fakeComparison).proximity(aLocation.fragment(), bLocation
+						.fragment());
 				changes += dist * locationChangeCoef * 1;
 			}
 			if (changes <= maxDistance) {
