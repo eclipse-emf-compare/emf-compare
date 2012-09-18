@@ -66,10 +66,11 @@ public class URIDistance {
 		if (fragments1.size() == 0 && fragments2.size() == 0) {
 			return 0;
 		}
+		int frag2Size = fragments2.size();
 		int commonPart = 0;
 		for (int i = 0; i < fragments1.size(); i++) {
 			String f1 = fragments1.get(i);
-			if (f1.equals(fragments2.get(i))) {
+			if (i < frag2Size && f1.equals(fragments2.get(i))) {
 				commonPart++;
 			} else {
 				break;

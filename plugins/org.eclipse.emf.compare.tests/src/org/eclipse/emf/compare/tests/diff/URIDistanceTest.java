@@ -40,6 +40,8 @@ public class URIDistanceTest {
 		assertEquals(0, meter.proximity("", ""));
 		assertEquals(10, meter.proximity("",
 				"/a/very/long/path/just/to/check/we/wont/ends/up/with/a/weird/thing"));
+		assertEquals(10, meter.proximity(
+				"/a/very/long/path/just/to/check/we/wont/ends/up/with/a/weird/thing", ""));
 	}
 
 	@Test
