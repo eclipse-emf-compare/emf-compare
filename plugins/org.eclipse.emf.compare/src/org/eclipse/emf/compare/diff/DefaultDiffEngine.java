@@ -199,10 +199,17 @@ public class DefaultDiffEngine implements IDiffEngine {
 				final String uri = match.getOrigin().eResource().getURI().toString();
 				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
 						DifferenceSource.LEFT);
-			} else if (comparison.isThreeWay() && match.getRight() != null) {
-				final String uri = match.getRight().eResource().getURI().toString();
-				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
-						DifferenceSource.RIGHT);
+			} else if (comparison.isThreeWay()) {
+				if (match.getOrigin() != null) {
+					final String uri = match.getOrigin().eResource().getURI().toString();
+					getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
+							DifferenceSource.RIGHT);
+				} else {
+					final String uri = match.getLeft().eResource().getURI().toString();
+					getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.ADD,
+							DifferenceSource.LEFT);
+				}
+
 			} else if (match.getLeft() == null) {
 				final String uri = match.getRight().eResource().getURI().toString();
 				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,

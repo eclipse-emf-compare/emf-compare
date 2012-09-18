@@ -40,6 +40,45 @@ public class DiffCrossReferencer extends ECrossReferenceAdapter {
 
 	}
 
+	// @Override
+	// public Collection<EStructuralFeature.Setting> getInverseReferences(EObject eObject, boolean resolve) {
+	// Collection<EStructuralFeature.Setting> result = new ArrayList<EStructuralFeature.Setting>();
+	//
+	// if (resolve) {
+	// resolveAll(eObject);
+	// }
+	//
+	// EObject eContainer = eObject.eContainer();
+	// if (eContainer != null && eObject.eContainingFeature() != null) {
+	// result.add(((InternalEObject)eContainer).eSetting(eObject.eContainmentFeature()));
+	// }
+	//
+	// Collection<EStructuralFeature.Setting> nonNavigableInverseReferences = inverseCrossReferencer
+	// .get(eObject);
+	// if (nonNavigableInverseReferences != null) {
+	// result.addAll(nonNavigableInverseReferences);
+	// }
+	//
+	// for (EReference eReference : eObject.eClass().getEAllReferences()) {
+	// EReference eOpposite = eReference.getEOpposite();
+	// if (eOpposite != null && !eReference.isContainer() && eObject.eIsSet(eReference)) {
+	// if (eReference.isMany()) {
+	// Object collection = eObject.eGet(eReference);
+	// for (@SuppressWarnings("unchecked")
+	// Iterator<EObject> j = resolve() ? ((Collection<EObject>)collection).iterator()
+	// : ((InternalEList<EObject>)collection).basicIterator(); j.hasNext();) {
+	// InternalEObject referencingEObject = (InternalEObject)j.next();
+	// result.add(referencingEObject.eSetting(eOpposite));
+	// }
+	// } else {
+	// result.add(((InternalEObject)eObject.eGet(eReference, resolve())).eSetting(eOpposite));
+	// }
+	// }
+	// }
+	//
+	// return result;
+	// }
+
 	/**
 	 * {@inheritDoc}
 	 * 
