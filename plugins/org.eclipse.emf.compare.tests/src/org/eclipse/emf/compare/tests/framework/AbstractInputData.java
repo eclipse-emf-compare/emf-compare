@@ -14,9 +14,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 /**
@@ -25,6 +28,10 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public abstract class AbstractInputData {
+
+	/** Store the set of the resource sets of the input data. */
+	public Set<ResourceSet> sets = new LinkedHashSet<ResourceSet>();
+
 	/**
 	 * Tries and locate a model in the current class' classpath.
 	 * 
