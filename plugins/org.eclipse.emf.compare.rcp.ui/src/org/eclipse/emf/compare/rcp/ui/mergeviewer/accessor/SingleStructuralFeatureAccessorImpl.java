@@ -19,6 +19,7 @@ import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.InsertionPoint;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MatchedObject;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -68,7 +69,7 @@ public class SingleStructuralFeatureAccessorImpl extends BasicStructuralFeatureA
 		Object value = null;
 		EObject eObject = getEObject(side);
 		if (eObject != null) {
-			value = eObject.eGet(getStructuralFeature());
+			value = ReferenceUtil.safeEGet(eObject, getStructuralFeature());
 		}
 		return value;
 	}

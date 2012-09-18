@@ -26,6 +26,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.rcp.ui.Activator;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -243,7 +244,7 @@ public class EObjectNode implements IEObjectAccessor {
 			super(eObject, false);
 			// Calling super-constructor since we need to, but we'll override what it just did
 			@SuppressWarnings("unchecked")
-			final List<EObject> contents = (List<EObject>)eObject.eGet(eReference, false);
+			final List<EObject> contents = (List<EObject>)ReferenceUtil.safeEGet(eObject, eReference);
 			if (contents instanceof InternalEList<?>) {
 				this.iterator = ((InternalEList<EObject>)contents).basicIterator();
 			} else {

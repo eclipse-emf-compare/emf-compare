@@ -16,6 +16,7 @@ import java.io.InputStream;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -68,7 +69,7 @@ public class StringAttributeChangeAccessor {
 	 * @see org.eclipse.compare.IStreamContentAccessor#getContents()
 	 */
 	public InputStream getContents() throws CoreException {
-		Object value = getEObject().eGet(getEAtribute());
+		Object value = ReferenceUtil.safeEGet(getEObject(), getEAtribute());
 		String stringValue = EcoreUtil.convertToString(getEAtribute().getEAttributeType(), value);
 		// Assume that the platform locale is appropriate.
 		if (stringValue != null) {

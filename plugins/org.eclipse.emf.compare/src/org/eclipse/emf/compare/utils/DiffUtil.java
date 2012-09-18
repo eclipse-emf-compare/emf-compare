@@ -534,7 +534,7 @@ public final class DiffUtil {
 		final List<Object> targetList;
 
 		if (expectedContainer != null) {
-			final List<Object> temp = (List<Object>)expectedContainer.eGet(feature, false);
+			final List<Object> temp = (List<Object>)ReferenceUtil.safeEGet(expectedContainer, feature);
 			if (temp instanceof InternalEList<?>) {
 				// EMF ignores the "resolve" flag for containment lists...
 				targetList = ((InternalEList<Object>)temp).basicList();
@@ -611,7 +611,7 @@ public final class DiffUtil {
 		}
 
 		if (expectedContainer != null) {
-			final List<Object> temp = (List<Object>)expectedContainer.eGet(feature, false);
+			final List<Object> temp = (List<Object>)ReferenceUtil.safeEGet(expectedContainer, feature);
 			if (temp instanceof InternalEList<?>) {
 				// EMF ignores the "resolve" flag for containment lists...
 				sourceList = ((InternalEList<Object>)temp).basicList();

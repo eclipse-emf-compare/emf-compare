@@ -30,6 +30,7 @@ import org.eclipse.emf.compare.rcp.ui.mergeviewer.MatchedObject;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EqualityHelper;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -212,7 +213,7 @@ public class ManyStructuralFeatureAccessorImpl extends BasicStructuralFeatureAcc
 	private static List<?> getAsList(EObject object, EStructuralFeature feature) {
 		final List<?> asList;
 		if (object != null) {
-			Object value = object.eGet(feature, false);
+			Object value = ReferenceUtil.safeEGet(object, feature);
 			if (value instanceof InternalEList<?>) {
 				// EMF ignores the "resolve" flag for containment lists...
 				asList = newArrayList(((InternalEList<?>)value).basicList());

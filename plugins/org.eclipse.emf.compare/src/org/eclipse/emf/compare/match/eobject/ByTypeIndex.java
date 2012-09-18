@@ -35,7 +35,7 @@ class ByTypeIndex implements EObjectIndex {
 	/**
 	 * All the type specific indexes, created on demand.
 	 */
-	private Cache<EClass, EObjectIndex> allIndexes;
+	private Cache<String, EObjectIndex> allIndexes;
 
 	/**
 	 * The distance function to use to create the delegates indexes.
@@ -52,8 +52,8 @@ class ByTypeIndex implements EObjectIndex {
 	public ByTypeIndex(ProximityEObjectMatcher.DistanceFunction meter) {
 		this.meter = meter;
 		this.allIndexes = CacheBuilder.newBuilder().build(
-				CacheLoader.from(new Function<EClass, EObjectIndex>() {
-					public EObjectIndex apply(EClass input) {
+				CacheLoader.from(new Function<String, EObjectIndex>() {
+					public EObjectIndex apply(String input) {
 						return new ProximityIndex(ByTypeIndex.this.meter);
 					}
 				}));
@@ -80,11 +80,26 @@ class ByTypeIndex implements EObjectIndex {
 	 */
 	public Map<Side, EObject> findClosests(EObject obj, Side side, int maxDistance) {
 		try {
-			EObjectIndex typeSpecificIndex = allIndexes.get(obj.eClass());
+			EObjectIndex typeSpecificIndex = allIndexes.get(eClassKey(obj));
 			return typeSpecificIndex.findClosests(obj, side, maxDistance);
 		} catch (ExecutionException e) {
 			return Collections.emptyMap();
 		}
+	}
+
+	/**
+	 * Compute a key identifying the EClass of the given EObject.
+	 * 
+	 * @param obj
+	 *            any eObject.
+	 * @return a key for its EClass.
+	 */
+	private String eClassKey(EObject obj) {
+		EClass clazz = obj.eClass();
+		if (clazz.getEPackage() != null) {
+			return clazz.getEPackage().getNsURI() + ":" + clazz.getName(); //$NON-NLS-1$
+		}
+		return clazz.getName();
 	}
 
 	/**
@@ -95,7 +110,7 @@ class ByTypeIndex implements EObjectIndex {
 	 */
 	public void remove(EObject obj, Side side) {
 		try {
-			EObjectIndex typeSpecificIndex = allIndexes.get(obj.eClass());
+			EObjectIndex typeSpecificIndex = allIndexes.get(eClassKey(obj));
 			typeSpecificIndex.remove(obj, side);
 		} catch (ExecutionException e) {
 			// Computing the indices to remove failed. We'll have them as unmatch later on.
@@ -110,7 +125,7 @@ class ByTypeIndex implements EObjectIndex {
 	 */
 	public void index(EObject eObjs, Side side) {
 		try {
-			EObjectIndex typeSpecificIndex = allIndexes.get(eObjs.eClass());
+			EObjectIndex typeSpecificIndex = allIndexes.get(eClassKey(eObjs));
 			typeSpecificIndex.index(eObjs, side);
 		} catch (ExecutionException e) {
 			// Could not index this object.
