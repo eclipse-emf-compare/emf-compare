@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.DependencyChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.dependency.data.DependencyInputData;
@@ -50,6 +51,26 @@ public class AddAbstractionTest extends AbstractTest {
 		final Resource right = input.getA2Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB1(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testA20UseCase3way() throws IOException {
+		final Resource left = input.getA2Left();
+		final Resource right = input.getA2Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB1(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA21UseCase3way() throws IOException {
+		final Resource left = input.getA2Left();
+		final Resource right = input.getA2Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB1(TestKind.DELETE, comparison);
 	}
@@ -151,6 +172,11 @@ public class AddAbstractionTest extends AbstractTest {
 		assertTrue(addRefClass1InAbstraction.getEquivalence().getDifferences().contains(
 				addRefAbstractionInClass1));
 
+	}
+
+	@Override
+	protected AbstractInputData getInput() {
+		return input;
 	}
 
 }

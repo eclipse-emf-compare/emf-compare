@@ -2,7 +2,6 @@ package org.eclipse.emf.compare.uml2.tests.stereotypes;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.base.Predicates.not;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
@@ -27,6 +26,7 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
@@ -46,8 +46,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB1(TestKind.ADD, comparison);
 	}
@@ -57,8 +56,27 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(), left
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB1(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testA10UseCase3way() throws IOException {
+		final Resource left = input.getA1Left();
+		final Resource right = input.getA1Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB1(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA11UseCase3way() throws IOException {
+		final Resource left = input.getA1Left();
+		final Resource right = input.getA1Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB1(TestKind.DELETE, comparison);
 	}
@@ -68,8 +86,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB2(TestKind.ADD, comparison);
 	}
@@ -79,8 +96,27 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(), left
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB2(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testA20UseCase3way() throws IOException {
+		final Resource left = input.getA2Left();
+		final Resource right = input.getA2Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB2(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA21UseCase3way() throws IOException {
+		final Resource left = input.getA2Left();
+		final Resource right = input.getA2Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB2(TestKind.DELETE, comparison);
 	}
@@ -90,8 +126,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB3(TestKind.ADD, comparison);
 	}
@@ -101,8 +136,27 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(), left
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB3(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testA30UseCase3way() throws IOException {
+		final Resource left = input.getA3Left();
+		final Resource right = input.getA3Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB3(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA31UseCase3way() throws IOException {
+		final Resource left = input.getA3Left();
+		final Resource right = input.getA3Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB3(TestKind.DELETE, comparison);
 	}
@@ -112,8 +166,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA4Left();
 		final Resource right = input.getA4Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB4(TestKind.ADD, comparison);
 	}
@@ -123,8 +176,27 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA4Left();
 		final Resource right = input.getA4Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(), left
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB4(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testA40UseCase3way() throws IOException {
+		final Resource left = input.getA4Left();
+		final Resource right = input.getA4Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB4(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA41UseCase3way() throws IOException {
+		final Resource left = input.getA4Left();
+		final Resource right = input.getA4Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB4(TestKind.DELETE, comparison);
 	}
@@ -134,8 +206,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA5Left();
 		final Resource right = input.getA5Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB5(TestKind.ADD, comparison);
 	}
@@ -145,8 +216,27 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA5Left();
 		final Resource right = input.getA5Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(), left
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB5(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testA50UseCase3way() throws IOException {
+		final Resource left = input.getA5Left();
+		final Resource right = input.getA5Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB5(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA51UseCase3way() throws IOException {
+		final Resource left = input.getA5Left();
+		final Resource right = input.getA5Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB5(TestKind.DELETE, comparison);
 	}
@@ -156,8 +246,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA6Left();
 		final Resource right = input.getA6Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB6(TestKind.ADD, comparison);
 	}
@@ -167,8 +256,27 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA6Left();
 		final Resource right = input.getA6Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(), left
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB6(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testA60UseCase3way() throws IOException {
+		final Resource left = input.getA6Left();
+		final Resource right = input.getA6Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB6(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA61UseCase3way() throws IOException {
+		final Resource left = input.getA6Left();
+		final Resource right = input.getA6Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB6(TestKind.DELETE, comparison);
 	}
@@ -178,8 +286,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA7Left();
 		final Resource right = input.getA7Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB7(TestKind.ADD, comparison);
 	}
@@ -189,8 +296,27 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA7Left();
 		final Resource right = input.getA7Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(), left
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB7(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testA70UseCase3way() throws IOException {
+		final Resource left = input.getA7Left();
+		final Resource right = input.getA7Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB7(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA71UseCase3way() throws IOException {
+		final Resource left = input.getA7Left();
+		final Resource right = input.getA7Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB7(TestKind.DELETE, comparison);
 	}
@@ -200,8 +326,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA8Left();
 		final Resource right = input.getA8Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB8(TestKind.ADD, comparison);
 	}
@@ -211,8 +336,27 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA8Left();
 		final Resource right = input.getA8Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(), left
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB8(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testA80UseCase3way() throws IOException {
+		final Resource left = input.getA8Left();
+		final Resource right = input.getA8Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB8(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA81UseCase3way() throws IOException {
+		final Resource left = input.getA8Left();
+		final Resource right = input.getA8Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB8(TestKind.DELETE, comparison);
 	}
@@ -222,8 +366,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA9Left();
 		final Resource right = input.getA9Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB9(TestKind.ADD, comparison);
 	}
@@ -233,8 +376,27 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA9Left();
 		final Resource right = input.getA9Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(), left
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB9(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testA90UseCase3way() throws IOException {
+		final Resource left = input.getA9Left();
+		final Resource right = input.getA9Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB9(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA91UseCase3way() throws IOException {
+		final Resource left = input.getA9Left();
+		final Resource right = input.getA9Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB9(TestKind.DELETE, comparison);
 	}
@@ -244,8 +406,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA10Left();
 		final Resource right = input.getA10Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB10(TestKind.ADD, comparison);
 	}
@@ -255,8 +416,27 @@ public class StereotypeTest extends AbstractTest {
 		final Resource left = input.getA10Left();
 		final Resource right = input.getA10Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(), left
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB10(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testA100UseCase3way() throws IOException {
+		final Resource left = input.getA10Left();
+		final Resource right = input.getA10Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB10(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA101UseCase3way() throws IOException {
+		final Resource left = input.getA10Left();
+		final Resource right = input.getA10Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB10(TestKind.DELETE, comparison);
 	}
@@ -279,10 +459,10 @@ public class StereotypeTest extends AbstractTest {
 					ofKind(DifferenceKind.DELETE),
 					onRealFeature(UMLPackage.Literals.PACKAGE__PROFILE_APPLICATION));
 
-			addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
-					ofKind(DifferenceKind.CHANGE),
-					onRealFeature(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE),
-					not(isChangeAdd()));
+			// addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
+			// ofKind(DifferenceKind.CHANGE),
+			// onRealFeature(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE),
+			// not(isChangeAdd()));
 
 			addUMLAnnotationDescription = and(instanceOf(ReferenceChange.class),
 					ofKind(DifferenceKind.DELETE),
@@ -296,9 +476,9 @@ public class StereotypeTest extends AbstractTest {
 					ofKind(DifferenceKind.ADD),
 					onRealFeature(UMLPackage.Literals.PACKAGE__PROFILE_APPLICATION));
 
-			addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
-					ofKind(DifferenceKind.CHANGE),
-					onRealFeature(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE), isChangeAdd());
+			// addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
+			// ofKind(DifferenceKind.CHANGE),
+			// onRealFeature(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE), isChangeAdd());
 
 			addUMLAnnotationDescription = and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.ADD),
 					onRealFeature(EcorePackage.Literals.EMODEL_ELEMENT__EANNOTATIONS));
@@ -306,6 +486,9 @@ public class StereotypeTest extends AbstractTest {
 			addReferencesInUMLAnnotationDescription = and(instanceOf(ReferenceChange.class),
 					ofKind(DifferenceKind.ADD), onRealFeature(EcorePackage.Literals.EANNOTATION__REFERENCES));
 		}
+
+		addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
+				ofKind(DifferenceKind.CHANGE), onFeature("appliedProfile"));
 
 		addStereotypeApplicationDescription = instanceOf(ResourceAttachmentChange.class);
 		addRefBaseClassDescription = and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.CHANGE),
@@ -438,10 +621,10 @@ public class StereotypeTest extends AbstractTest {
 					ofKind(DifferenceKind.DELETE),
 					onRealFeature(UMLPackage.Literals.PACKAGE__PROFILE_APPLICATION));
 
-			addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
-					ofKind(DifferenceKind.CHANGE),
-					onRealFeature(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE),
-					not(isChangeAdd()));
+			// addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
+			// ofKind(DifferenceKind.CHANGE),
+			// onRealFeature(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE),
+			// not(isChangeAdd()));
 
 			addUMLAnnotationDescription = and(instanceOf(ReferenceChange.class),
 					ofKind(DifferenceKind.DELETE),
@@ -458,9 +641,9 @@ public class StereotypeTest extends AbstractTest {
 					ofKind(DifferenceKind.ADD),
 					onRealFeature(UMLPackage.Literals.PACKAGE__PROFILE_APPLICATION));
 
-			addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
-					ofKind(DifferenceKind.CHANGE),
-					onRealFeature(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE), isChangeAdd());
+			// addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
+			// ofKind(DifferenceKind.CHANGE),
+			// onRealFeature(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE), isChangeAdd());
 
 			addUMLAnnotationDescription = and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.ADD),
 					onRealFeature(EcorePackage.Literals.EMODEL_ELEMENT__EANNOTATIONS));
@@ -470,6 +653,9 @@ public class StereotypeTest extends AbstractTest {
 			addModelDescription = added("model.MyNiceModel");
 			addClassDescription = added("model.MyNiceModel.Class1");
 		}
+
+		addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
+				ofKind(DifferenceKind.CHANGE), onFeature("appliedProfile"));
 
 		addStereotypeApplicationDescription = instanceOf(ResourceAttachmentChange.class);
 		addRefBaseClassDescription = and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.CHANGE),
@@ -774,6 +960,11 @@ public class StereotypeTest extends AbstractTest {
 		assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLStereotype.getRefinedBy().size()));
 		assertTrue(changeUMLStereotype.getRefinedBy().contains(changeStereotypeRef));
 
+	}
+
+	@Override
+	protected AbstractInputData getInput() {
+		return input;
 	}
 
 }

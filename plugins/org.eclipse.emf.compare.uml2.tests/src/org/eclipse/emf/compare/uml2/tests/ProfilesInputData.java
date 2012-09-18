@@ -42,6 +42,7 @@ public class ProfilesInputData extends AbstractInputData {
 		final URI uri = URI.createURI(fileURL.toString());
 
 		ResourceSet resourceSet = new ResourceSetImpl();
+		sets.add(resourceSet);
 
 		if (!EMFPlugin.IS_RESOURCES_BUNDLE_AVAILABLE) {
 			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore",

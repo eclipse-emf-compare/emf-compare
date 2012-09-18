@@ -2,11 +2,11 @@ package org.eclipse.emf.compare.uml2.tests.profiles;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.base.Predicates.not;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.profiles.data.ProfileInputData;
@@ -38,8 +39,7 @@ public class ProfileTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB1(TestKind.ADD, comparison);
 	}
@@ -49,8 +49,27 @@ public class ProfileTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(), left
-				.getResourceSet());
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB1(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testA10UseCase3way() throws IOException {
+		final Resource left = input.getA1Left();
+		final Resource right = input.getA1Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB1(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA11UseCase3way() throws IOException {
+		final Resource left = input.getA1Left();
+		final Resource right = input.getA1Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB1(TestKind.DELETE, comparison);
 	}
@@ -71,10 +90,10 @@ public class ProfileTest extends AbstractTest {
 					ofKind(DifferenceKind.DELETE),
 					onRealFeature(UMLPackage.Literals.PACKAGE__PROFILE_APPLICATION));
 
-			addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
-					ofKind(DifferenceKind.CHANGE),
-					onRealFeature(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE),
-					not(isChangeAdd()));
+			// addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
+			// ofKind(DifferenceKind.CHANGE),
+			// onRealFeature(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE),
+			// not(isChangeAdd()));
 
 			addUMLAnnotationDescription = and(instanceOf(ReferenceChange.class),
 					ofKind(DifferenceKind.DELETE),
@@ -88,9 +107,9 @@ public class ProfileTest extends AbstractTest {
 					ofKind(DifferenceKind.ADD),
 					onRealFeature(UMLPackage.Literals.PACKAGE__PROFILE_APPLICATION));
 
-			addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
-					ofKind(DifferenceKind.CHANGE),
-					onRealFeature(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE), isChangeAdd());
+			// addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
+			// ofKind(DifferenceKind.CHANGE),
+			// onRealFeature(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE), isChangeAdd());
 
 			addUMLAnnotationDescription = and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.ADD),
 					onRealFeature(EcorePackage.Literals.EMODEL_ELEMENT__EANNOTATIONS));
@@ -98,6 +117,9 @@ public class ProfileTest extends AbstractTest {
 			addReferencesInUMLAnnotationDescription = and(instanceOf(ReferenceChange.class),
 					ofKind(DifferenceKind.ADD), onRealFeature(EcorePackage.Literals.EANNOTATION__REFERENCES));
 		}
+
+		addAppliedProfileInProfileApplicationDescription = and(instanceOf(ReferenceChange.class),
+				ofKind(DifferenceKind.CHANGE), onFeature("appliedProfile"));
 
 		final Diff addProfileApplication = Iterators.find(differences.iterator(),
 				addProfileApplicationDescription);
@@ -157,6 +179,11 @@ public class ProfileTest extends AbstractTest {
 		// CHECK EQUIVALENCE
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getEquivalences().size()));
 
+	}
+
+	@Override
+	protected AbstractInputData getInput() {
+		return input;
 	}
 
 }

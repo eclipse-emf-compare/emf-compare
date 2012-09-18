@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.GeneralizationSetChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.generalizationSet.data.GeneralizationSetInputData;
@@ -51,6 +52,26 @@ public class AddGeneralizationSetTest extends AbstractTest {
 		final Resource right = input.getA1Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB1(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testA10UseCase3way() throws IOException {
+		final Resource left = input.getA1Left();
+		final Resource right = input.getA1Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB1(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA11UseCase3way() throws IOException {
+		final Resource left = input.getA1Left();
+		final Resource right = input.getA1Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB1(TestKind.DELETE, comparison);
 	}
@@ -223,6 +244,11 @@ public class AddGeneralizationSetTest extends AbstractTest {
 		// This is only meant for multi-valued references
 		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), referenceValueMatch(referenceName,
 				removedQualifiedName, true, featureDelegate));
+	}
+
+	@Override
+	protected AbstractInputData getInput() {
+		return input;
 	}
 
 }

@@ -27,6 +27,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.MessageChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.message.data.MessageInputData;
@@ -59,6 +60,26 @@ public class AddMessageTest extends AbstractTest {
 	}
 
 	@Test
+	public void testA10UseCase3way() throws IOException {
+		final Resource left = input.getA1Left();
+		final Resource right = input.getA1Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB1(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA11UseCase3way() throws IOException {
+		final Resource left = input.getA1Left();
+		final Resource right = input.getA1Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB1(TestKind.DELETE, comparison);
+	}
+
+	@Test
 	public void testA20UseCase() throws IOException {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
@@ -74,6 +95,26 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA2Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB2(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testA20UseCase3way() throws IOException {
+		final Resource left = input.getA2Left();
+		final Resource right = input.getA2Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB2(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA21UseCase3way() throws IOException {
+		final Resource left = input.getA2Left();
+		final Resource right = input.getA2Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB2(TestKind.DELETE, comparison);
 	}
@@ -99,6 +140,26 @@ public class AddMessageTest extends AbstractTest {
 	}
 
 	@Test
+	public void testA30UseCase3way() throws IOException {
+		final Resource left = input.getA3Left();
+		final Resource right = input.getA3Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB3(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA31UseCase3way() throws IOException {
+		final Resource left = input.getA3Left();
+		final Resource right = input.getA3Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB3(TestKind.DELETE, comparison);
+	}
+
+	@Test
 	public void testA40UseCase() throws IOException {
 		final Resource left = input.getA4Left();
 		final Resource right = input.getA4Right();
@@ -114,6 +175,26 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA4Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB1(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testA40UseCase3way() throws IOException {
+		final Resource left = input.getA4Left();
+		final Resource right = input.getA4Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB1(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA41UseCase3way() throws IOException {
+		final Resource left = input.getA4Left();
+		final Resource right = input.getA4Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB1(TestKind.DELETE, comparison);
 	}
@@ -606,6 +687,11 @@ public class AddMessageTest extends AbstractTest {
 		assertFalse("No move expected", Iterators.filter(differences.iterator(), ofKind(DifferenceKind.MOVE))
 				.hasNext());
 
+	}
+
+	@Override
+	protected AbstractInputData getInput() {
+		return input;
 	}
 
 }

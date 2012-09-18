@@ -23,6 +23,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.IntervalConstraintChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.timeConstraint.data.TimeConstraintInputData;
@@ -52,6 +53,26 @@ public class AddTimeConstraintTest extends AbstractTest {
 		final Resource right = input.getA1Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB1(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testA10UseCase3way() throws IOException {
+		final Resource left = input.getA1Left();
+		final Resource right = input.getA1Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		testAB1(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testA11UseCase3way() throws IOException {
+		final Resource left = input.getA1Left();
+		final Resource right = input.getA1Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = EMFCompare.newComparator(scope).compare();
 		testAB1(TestKind.DELETE, comparison);
 	}
@@ -211,6 +232,11 @@ public class AddTimeConstraintTest extends AbstractTest {
 		// CHECK EQUIVALENCE
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getEquivalences().size()));
 
+	}
+
+	@Override
+	protected AbstractInputData getInput() {
+		return input;
 	}
 
 }
