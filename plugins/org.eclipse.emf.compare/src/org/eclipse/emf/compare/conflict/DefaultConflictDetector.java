@@ -222,9 +222,11 @@ public class DefaultConflictDetector implements IConflictDetector {
 		if (diff instanceof ReferenceChange) {
 			changedValue = ((ReferenceChange)diff).getValue();
 			feature = ((ReferenceChange)diff).getReference();
-		} else {
+		} else if (diff instanceof AttributeChange) {
 			changedValue = ((AttributeChange)diff).getValue();
 			feature = ((AttributeChange)diff).getAttribute();
+		} else {
+			return;
 		}
 
 		final Iterable<Diff> refinedCandidates = Iterables.filter(candidates, new Predicate<Diff>() {
@@ -281,9 +283,11 @@ public class DefaultConflictDetector implements IConflictDetector {
 		if (diff instanceof ReferenceChange) {
 			changedValue = ((ReferenceChange)diff).getValue();
 			feature = ((ReferenceChange)diff).getReference();
-		} else {
+		} else if (diff instanceof AttributeChange) {
 			changedValue = ((AttributeChange)diff).getValue();
 			feature = ((AttributeChange)diff).getAttribute();
+		} else {
+			return;
 		}
 
 		final Iterable<Diff> refinedCandidates = Iterables.filter(candidates, new Predicate<Diff>() {
@@ -341,9 +345,11 @@ public class DefaultConflictDetector implements IConflictDetector {
 		if (diff instanceof ReferenceChange) {
 			deletedValue = ((ReferenceChange)diff).getValue();
 			feature = ((ReferenceChange)diff).getReference();
-		} else {
+		} else if (diff instanceof AttributeChange) {
 			deletedValue = ((AttributeChange)diff).getValue();
 			feature = ((AttributeChange)diff).getAttribute();
+		} else {
+			return;
 		}
 
 		/*
@@ -407,9 +413,11 @@ public class DefaultConflictDetector implements IConflictDetector {
 		if (diff instanceof ReferenceChange) {
 			addedValue = ((ReferenceChange)diff).getValue();
 			feature = ((ReferenceChange)diff).getReference();
-		} else {
+		} else if (diff instanceof AttributeChange) {
 			addedValue = ((AttributeChange)diff).getValue();
 			feature = ((AttributeChange)diff).getAttribute();
+		} else {
+			return;
 		}
 
 		/*

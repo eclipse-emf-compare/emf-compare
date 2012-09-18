@@ -108,7 +108,7 @@ public class DefaultEquiEngine implements IEquiEngine {
 				}
 
 				// Add the change differences on the old references (origin)
-				addChangesFromOrigin(comparison, referenceChange, equivalence);
+				// addChangesFromOrigin(comparison, referenceChange, equivalence);
 			}
 
 		}
