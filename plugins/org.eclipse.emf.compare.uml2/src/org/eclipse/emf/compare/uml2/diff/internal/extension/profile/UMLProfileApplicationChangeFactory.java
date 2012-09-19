@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
@@ -162,6 +163,19 @@ public class UMLProfileApplicationChangeFactory extends UMLAbstractDiffExtension
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public Match getParentMatch(Diff input) {
+		final EObject discriminant = getDiscriminantFromDiff(input);
+		if (discriminant instanceof ProfileApplication) {
+			final org.eclipse.uml2.uml.Package p = ((ProfileApplication)discriminant).getApplyingPackage();
+			final Match match = input.getMatch().getComparison().getMatch(p);
+			if (match != null) {
+				return match;
+			}
+		}
+		return super.getParentMatch(input);
 	}
 
 }

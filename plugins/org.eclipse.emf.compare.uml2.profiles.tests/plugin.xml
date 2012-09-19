@@ -8,12 +8,5 @@
             target="platform:/plugin/org.eclipse.emf.compare.uml2.profiles.tests/profile/">
       </mapping>
    </extension>
-   <extension
-         point="org.eclipse.uml2.uml.dynamic_package">
-      <profile
-            location="pathmap://UML_COMPARE_TESTS_PROFILE/uml2.compare.testprofile.profile.uml#_0"
-            uri="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile">
-      </profile>
-   </extension>
 
 </plugin>

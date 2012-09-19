@@ -18,6 +18,7 @@ import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.uml2.ProfileApplicationChange;
@@ -33,6 +34,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.uml2.common.util.UML2Util;
+import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.ProfileApplication;
 import org.eclipse.uml2.uml.Stereotype;
@@ -162,6 +164,19 @@ public class UMLStereotypeApplicationChangeFactory extends UMLAbstractDiffExtens
 				}
 			}
 		}
+	}
+
+	@Override
+	public Match getParentMatch(Diff input) {
+		final EObject discriminant = getDiscriminantFromDiff(input);
+		if (discriminant != null) {
+			final Element element = UMLUtil.getBaseElement(discriminant);
+			final Match match = input.getMatch().getComparison().getMatch(element);
+			if (match != null) {
+				return match;
+			}
+		}
+		return super.getParentMatch(input);
 	}
 
 }
