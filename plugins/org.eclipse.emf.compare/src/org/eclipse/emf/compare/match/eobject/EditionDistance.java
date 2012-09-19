@@ -30,6 +30,7 @@ import org.eclipse.emf.compare.diff.FeatureFilter;
 import org.eclipse.emf.compare.diff.IDiffProcessor;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher.DistanceFunction;
 import org.eclipse.emf.compare.utils.EqualityHelper;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -236,8 +237,8 @@ public class EditionDistance implements DistanceFunction {
 		 */
 		public void attributeChange(Match match, EAttribute attribute, Object value, DifferenceKind kind,
 				DifferenceSource source) {
-			Object aValue = match.getLeft().eGet(attribute);
-			Object bValue = match.getRight().eGet(attribute);
+			Object aValue = ReferenceUtil.safeEGet(match.getLeft(), attribute);
+			Object bValue = ReferenceUtil.safeEGet(match.getRight(), attribute);
 			switch (kind) {
 				case MOVE:
 					distance += getWeight(attribute) * orderChangeCoef;
