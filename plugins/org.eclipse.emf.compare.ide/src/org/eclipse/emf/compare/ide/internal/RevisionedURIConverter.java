@@ -10,9 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.internal;
 
+import com.google.common.collect.Sets;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFileState;
@@ -45,6 +49,10 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 	/** The revision of the base resource. This revision's timestamp will be used to resolve proxies. */
 	private IFileRevision baseRevision;
 
+	/** Keeps references towards the revisions that we've loaded through this URI converter. */
+	private Set<IStorage> loadedRevisions;
+
+	// FIXME is this still needed?
 	/**
 	 * Instantiates our URI converter given its delegate.
 	 * 
@@ -59,6 +67,35 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 		super(delegate);
 
 		setStorage(storage);
+	}
+
+	/**
+	 * Instantiates our URI converter given its delegate.
+	 * 
+	 * @param delegate
+	 *            Our delegate URI converter.
+	 * @param baseRevision
+	 *            The base revision against which this URI converter should resolve URIs.
+	 */
+	public RevisionedURIConverter(URIConverter delegate, IFileRevision baseRevision) {
+		super(delegate);
+		this.baseRevision = baseRevision;
+		this.loadedRevisions = Sets.newLinkedHashSet();
+		try {
+			this.loadedRevisions.add(baseRevision.getStorage(new NullProgressMonitor()));
+		} catch (CoreException e) {
+			// We cannot find the storage of our base revision?
+		}
+	}
+
+	/**
+	 * Allows clients of this API to retrieve the set of revisions that were loaded while resolving the
+	 * resource set on which this converter is installed.
+	 * 
+	 * @return The set of revisions loaded through this converter.
+	 */
+	public Set<IStorage> getLoadedRevisions() {
+		return loadedRevisions;
 	}
 
 	/**
@@ -143,12 +180,18 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 	 */
 	@SuppressWarnings("resource")
 	private InputStream openRevisionStream(IResource targetFile) {
+		IResource actualFile = targetFile;
+		if (!actualFile.exists()) {
+			// Can we relativize its path according to the baseRevision?
+			actualFile = findFile(actualFile.getFullPath().toString());
+		}
+
 		InputStream stream = null;
-		final RepositoryProvider repositoryProvider = RepositoryProvider.getProvider(targetFile.getProject());
+		final RepositoryProvider repositoryProvider = RepositoryProvider.getProvider(actualFile.getProject());
 
 		if (repositoryProvider != null) {
 			final IFileHistoryProvider historyProvider = repositoryProvider.getFileHistoryProvider();
-			final IFileHistory history = historyProvider.getFileHistoryFor(targetFile,
+			final IFileHistory history = historyProvider.getFileHistoryFor(actualFile,
 					IFileHistoryProvider.NONE, new NullProgressMonitor());
 
 			if (history != null) {
@@ -169,7 +212,9 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 
 				if (soughtRevision != null) {
 					try {
-						stream = soughtRevision.getStorage(new NullProgressMonitor()).getContents();
+						IStorage storage = soughtRevision.getStorage(new NullProgressMonitor());
+						loadedRevisions.add(storage);
+						stream = storage.getContents();
 					} catch (CoreException e) {
 						// FIXME log this : failed to retrieve revision contents
 					}
@@ -177,12 +222,12 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 			}
 		}
 
-		if (stream == null && targetFile.exists()) {
+		if (stream == null && actualFile.exists()) {
 			// Either this file is not connected to a repository, or we failed to retrieve a revision.
 			// Search through local history.
 			try {
 				IFileState soughtState = null;
-				for (final IFileState state : ((IFile)targetFile).getHistory(new NullProgressMonitor())) {
+				for (final IFileState state : ((IFile)actualFile).getHistory(new NullProgressMonitor())) {
 					if (state.getModificationTime() <= baseRevision.getTimestamp()) {
 						soughtState = state;
 						break;
@@ -190,9 +235,11 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 				}
 
 				if (soughtState != null) {
+					loadedRevisions.add(soughtState);
 					stream = soughtState.getContents();
 				} else {
-					stream = ((IFile)targetFile).getContents();
+					loadedRevisions.add((IFile)actualFile);
+					stream = ((IFile)actualFile).getContents();
 				}
 			} catch (CoreException e) {
 				// FIXME log this : failed to retrieve local contents
@@ -200,5 +247,36 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 		}
 
 		return stream;
+	}
+
+	private IFile findFile(String path) {
+		final java.net.URI baseURI = baseRevision.getURI();
+		java.net.URI targetURI = convertToURI(path);
+		java.net.URI relativizedURI = baseURI.relativize(targetURI);
+		IFile file = null;
+		if (!relativizedURI.equals(targetURI)) {
+			file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(relativizedURI.toString()));
+		} else {
+			// git has a tendency to add the name of the repository before the name of the project, even for
+			// platform:/resource
+			final int indexOfSeparator = path.indexOf('/', 1);
+			if (indexOfSeparator > 0) {
+				targetURI = convertToURI(path.substring(indexOfSeparator));
+				relativizedURI = baseURI.relativize(targetURI);
+				file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(relativizedURI.toString()));
+			}
+		}
+		if (file != null && file.exists()) {
+			return file;
+		}
+		return null;
+	}
+
+	private java.net.URI convertToURI(String path) {
+		try {
+			return new java.net.URI(path);
+		} catch (URISyntaxException e) {
+			return null;
+		}
 	}
 }

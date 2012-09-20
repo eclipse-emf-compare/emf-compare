@@ -49,6 +49,7 @@ import org.eclipse.emf.compare.ide.ui.internal.actions.filter.FilterActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGrouper;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.GroupActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareConfigurationExtension;
+import org.eclipse.emf.compare.ide.ui.internal.logical.EMFSynchronizationModel;
 import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -173,28 +174,29 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		if (previousResult instanceof Comparison) {
 			compareInputChanged((Comparison)previousResult);
 		} else if (input != null) {
-			ResourceSet leftResourceSet = getResourceSetFrom(input.getLeft(), monitor);
-			ResourceSet rightResourceSet = getResourceSetFrom(input.getRight(), monitor);
-			final ResourceSet ancestorResourceSet = getResourceSetFrom(input.getAncestor(), monitor);
-			/*
-			 * TODO if any of the following ifs is true, we may want to display something in the error log or
-			 * structure viewer so that the user has a visual feedback of the failure.
-			 */
-			if (leftResourceSet == null) {
-				// Do not fail at opening the editor, allow user to switch to text compare
-				leftResourceSet = new ResourceSetImpl();
-			}
-			if (rightResourceSet == null) {
-				// Do not fail at opening the editor, allow user to switch to text compare
-				rightResourceSet = new ResourceSetImpl();
+			final ITypedElement left = input.getLeft();
+			final ITypedElement right = input.getRight();
+			final ITypedElement origin = input.getAncestor();
+			final EMFSynchronizationModel syncModel = EMFSynchronizationModel.createSynchronizationModel(
+					left, right, origin);
+			syncModel.minimize();
+
+			final ResourceSet leftResourceSet = syncModel.getLeftResourceSet();
+			final ResourceSet rightResourceSet = syncModel.getRightResourceSet();
+			final ResourceSet originResourceSet;
+			if (origin == null) {
+				// FIXME why would an empty resource set yield a different result ?
+				originResourceSet = null;
+			} else {
+				originResourceSet = syncModel.getOriginResourceSet();
 			}
 
 			final IComparisonScope scope = EMFCompare.createDefaultScope(leftResourceSet, rightResourceSet,
-					ancestorResourceSet);
+					originResourceSet);
 			final Comparison compareResult = EMFCompare.newComparator(scope).setMonitor(
 					BasicMonitor.toMonitor(monitor)).compare();
 			EMFCompareEditingDomain editingDomain = new EMFCompareEditingDomain(compareResult,
-					leftResourceSet, rightResourceSet, ancestorResourceSet);
+					leftResourceSet, rightResourceSet, originResourceSet);
 			getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);
 
 			editingDomain.getCommandStack().addCommandStackListener(this);
