@@ -40,18 +40,11 @@ import org.eclipse.emf.ecore.EObject;
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class ProximityEObjectMatcher implements IEObjectMatcher {
-	/** If the {@link #maxDistanceForMatching} is not specifically set, we'll use this. */
-	private static final int DEFAULT_DISTANCE = 500;
 
 	/**
 	 * The index which keep the EObjects.
 	 */
 	private EObjectIndex index;
-
-	/**
-	 * The maximum distance until we consider two objects are not the same.
-	 */
-	private int maxDistanceForMatching = DEFAULT_DISTANCE;
 
 	/**
 	 * The list of matches found.
@@ -64,12 +57,18 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 	private Map<EObject, Match> eObjectsToMatch = Maps.newHashMap();
 
 	/**
+	 * The function we are using to measure the distance between two eObjects.
+	 */
+	private DistanceFunction meter;
+
+	/**
 	 * Create the matcher using the given distance function.
 	 * 
 	 * @param meter
 	 *            a function to measure the distance between two {@link EObject}s.
 	 */
 	public ProximityEObjectMatcher(DistanceFunction meter) {
+		this.meter = meter;
 		this.index = new ByTypeIndex(meter);
 	}
 
@@ -97,16 +96,14 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 		}
 
 		for (EObject left : index.getValuesStillThere(Side.LEFT)) {
-			Map<Side, EObject> closests = index.findClosests(left, Side.LEFT, maxDistanceForMatching);
+			Map<Side, EObject> closests = index.findClosests(left, Side.LEFT, meter.getMaxDistance(left));
 			EObject right = closests.get(Side.RIGHT);
 			EObject ancestor = closests.get(Side.ORIGIN);
 			areMatching(left, right, ancestor);
 			if (right != null) {
 				index.remove(right, Side.RIGHT);
 			}
-			if (left != null) {
-				index.remove(left, Side.LEFT);
-			}
+			index.remove(left, Side.LEFT);
 			if (ancestor != null) {
 				index.remove(ancestor, Side.ORIGIN);
 			}
@@ -118,13 +115,12 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 		 * object.
 		 */
 		for (EObject rObj : index.getValuesStillThere(Side.RIGHT)) {
-			Map<Side, EObject> closests = index.findClosests(rObj, Side.RIGHT, maxDistanceForMatching);
+			Map<Side, EObject> closests = index.findClosests(rObj, Side.RIGHT, meter.getMaxDistance(rObj
+					.eClass()));
 			EObject lObj = closests.get(Side.LEFT);
 			EObject aObj = closests.get(Side.ORIGIN);
 			areMatching(lObj, rObj, aObj);
-			if (rObj != null) {
-				index.remove(rObj, Side.RIGHT);
-			}
+			index.remove(rObj, Side.RIGHT);
 			if (lObj != null) {
 				index.remove(lObj, Side.LEFT);
 			}
@@ -250,6 +246,16 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 		 * @return the distance between the two EObjects.
 		 */
 		int distance(EObject a, EObject b, int maxDistance);
+
+		/**
+		 * The distance we consider being the maximum above which two objects should be considered as not
+		 * matching.
+		 * 
+		 * @param left
+		 *            any EObject.
+		 * @return the maximum distance before we consider another object should not match with this one.
+		 */
+		int getMaxDistance(EObject left);
 	}
 
 	/**
@@ -281,19 +287,6 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 		 */
 		public Builder(DistanceFunction function) {
 			this.beingConfigured = new ProximityEObjectMatcher(function);
-		}
-
-		/**
-		 * Specify the maximum distance to look for. Objects which are farther than this distance will be
-		 * considered as "not matching".
-		 * 
-		 * @param max
-		 *            the maximum distance to say ' they match'.
-		 * @return the current builder so that one can chain calls.
-		 */
-		public Builder maxDistance(int max) {
-			this.beingConfigured.maxDistanceForMatching = max;
-			return this;
 		}
 
 		/**
