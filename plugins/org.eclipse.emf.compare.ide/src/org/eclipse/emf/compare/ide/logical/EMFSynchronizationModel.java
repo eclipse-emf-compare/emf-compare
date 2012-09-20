@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.logical;
+package org.eclipse.emf.compare.ide.logical;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.Sets;
@@ -26,7 +26,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.eclipse.compare.IResourceProvider;
-import org.eclipse.compare.ISharedDocumentAdapter;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -44,7 +43,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.team.core.history.IFileRevision;
-import org.eclipse.ui.IEditorInput;
 
 /**
  * This class will act as a logical model for EMF. It will hold the necessary logic to be able to determine
@@ -373,16 +371,6 @@ public class EMFSynchronizationModel {
 
 		// Can we adapt it directly?
 		IFileRevision revision = adaptAs(element, IFileRevision.class);
-		if (revision == null) {
-			// This is quite the workaround ... but we have no direct way to retrieve the IFileRevision.
-			final ISharedDocumentAdapter documentAdapter = adaptAs(element, ISharedDocumentAdapter.class);
-			if (documentAdapter != null) {
-				final IEditorInput input = documentAdapter.getDocumentKey(element);
-				if (input != null) {
-					revision = adaptAs(input, IFileRevision.class);
-				}
-			}
-		}
 		if (revision == null) {
 			// Couldn't do it the API way ...
 			try {

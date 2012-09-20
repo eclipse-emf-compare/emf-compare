@@ -10,38 +10,24 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
-import com.google.common.collect.Maps;
-import com.google.common.io.Closeables;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.EventObject;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareViewerSwitchingPane;
-import org.eclipse.compare.IResourceProvider;
-import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.DiffTreeViewer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.mapping.IModelProviderDescriptor;
-import org.eclipse.core.resources.mapping.ModelProvider;
-import org.eclipse.core.resources.mapping.ResourceMapping;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.util.BasicMonitor;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.ide.logical.EMFSynchronizationModel;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.actions.filter.DifferenceFilter;
@@ -49,12 +35,9 @@ import org.eclipse.emf.compare.ide.ui.internal.actions.filter.FilterActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGrouper;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.GroupActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareConfigurationExtension;
-import org.eclipse.emf.compare.ide.ui.internal.logical.EMFSynchronizationModel;
 import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
@@ -344,68 +327,6 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		}
 
 		super.handleDispose(event);
-	}
-
-	@SuppressWarnings("resource")
-	private static ResourceSet getResourceSetFrom(ITypedElement typedElement, IProgressMonitor monitor) {
-		ResourceSet resourceSet = null;
-		if (typedElement instanceof IResourceProvider) {
-			IResource resource = ((IResourceProvider)typedElement).getResource();
-			resourceSet = getResourceSet(resource, monitor);
-		} else if (typedElement instanceof IStreamContentAccessor) {
-			InputStream stream = null;
-			try {
-				stream = ((IStreamContentAccessor)typedElement).getContents();
-				String name = typedElement.getName();
-				resourceSet = getResourceSet(stream, name);
-			} catch (CoreException e) {
-				EMFCompareIDEUIPlugin.getDefault().log(e);
-			} finally {
-				Closeables.closeQuietly(stream);
-			}
-		}
-		return resourceSet;
-	}
-
-	private static ResourceSet getResourceSet(InputStream stream, String resourceName) {
-		ResourceSet resourceSet = new ResourceSetImpl();
-		Resource resource = resourceSet.createResource(URI.createURI(resourceName));
-		try {
-			resource.load(stream, Maps.newHashMap());
-		} catch (IOException e) {
-			EMFCompareIDEUIPlugin.getDefault().log(e);
-		}
-		return resourceSet;
-	}
-
-	private static ResourceSet getResourceSet(IResource resource, IProgressMonitor monitor) {
-		if (resource == null) {
-			return null;
-		}
-
-		IModelProviderDescriptor[] descriptors = ModelProvider.getModelProviderDescriptors();
-		for (int i = 0; i < descriptors.length; i++) {
-			IModelProviderDescriptor descriptor = descriptors[i];
-			try {
-				IResource[] resources = descriptor.getMatchingResources(new IResource[] {resource });
-				if (resources.length > 0) {
-					ModelProvider modelProvider = descriptor.getModelProvider();
-					// TODO MBA: see if a context is necessary
-					ResourceMapping[] mappings = modelProvider.getMappings(resource, null, monitor);
-					// FIXME: no need for returned value?
-					modelProvider.getTraversals(mappings, null, monitor);
-					for (ResourceMapping resourceMapping : mappings) {
-						if (resourceMapping.getModelObject() instanceof Resource) {
-							return ((Resource)resourceMapping.getModelObject()).getResourceSet();
-						}
-					}
-				}
-			} catch (CoreException e) {
-				EMFCompareIDEUIPlugin.getDefault().getLog().log(
-						new Status(IStatus.ERROR, "", e.getMessage(), e));
-			}
-		}
-		return null;
 	}
 
 	/**

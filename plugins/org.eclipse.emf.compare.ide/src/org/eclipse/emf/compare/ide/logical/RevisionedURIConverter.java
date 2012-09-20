@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.logical;
+package org.eclipse.emf.compare.ide.logical;
 
 import com.google.common.collect.Sets;
 
