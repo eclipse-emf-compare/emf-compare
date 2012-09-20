@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.internal;
+package org.eclipse.emf.compare.ide.ui.internal.logical;
 
 import com.google.common.collect.Sets;
 
@@ -24,14 +24,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.ide.EMFCompareIDEMessages;
-import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.utils.DelegatingURIConverter;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.team.core.RepositoryProvider;
@@ -51,23 +46,6 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 
 	/** Keeps references towards the revisions that we've loaded through this URI converter. */
 	private Set<IStorage> loadedRevisions;
-
-	// FIXME is this still needed?
-	/**
-	 * Instantiates our URI converter given its delegate.
-	 * 
-	 * @param delegate
-	 *            Our delegate URI converter.
-	 * @param storage
-	 *            IStorage of the base revision against which this URI converter should resolve URIs.
-	 * @throws CoreException
-	 *             This will be thrown if we couldn't adapt the given <em>storage</em> into a file revision.
-	 */
-	public RevisionedURIConverter(URIConverter delegate, IStorage storage) throws CoreException {
-		super(delegate);
-
-		setStorage(storage);
-	}
 
 	/**
 	 * Instantiates our URI converter given its delegate.
@@ -96,28 +74,6 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 	 */
 	public Set<IStorage> getLoadedRevisions() {
 		return loadedRevisions;
-	}
-
-	/**
-	 * Sets the storage of the base revision against which this URI converter is to resolve URIs.
-	 * 
-	 * @param storage
-	 *            IStorage of the base revision against which this URI converter should resolve URIs.
-	 * @throws CoreException
-	 *             This will be thrown if we couldn't adapt the given <em>storage</em> into a file revision.
-	 */
-	public void setStorage(IStorage storage) throws CoreException {
-		Object revision = storage.getAdapter(IFileRevision.class);
-		if (!(revision instanceof IFileRevision)) {
-			revision = Platform.getAdapterManager().getAdapter(storage, IFileRevision.class);
-		}
-
-		if (revision instanceof IFileRevision) {
-			baseRevision = (IFileRevision)revision;
-		} else {
-			throw new CoreException(new Status(IStatus.ERROR, EMFCompareIDEPlugin.PLUGIN_ID,
-					EMFCompareIDEMessages.getString("storage.adapt.failure", storage.getFullPath()))); //$NON-NLS-1$
-		}
 	}
 
 	/**
