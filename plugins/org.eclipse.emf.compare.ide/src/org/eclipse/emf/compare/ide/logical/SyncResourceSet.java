@@ -11,9 +11,11 @@
 package org.eclipse.emf.compare.ide.logical;
 
 import com.google.common.annotations.Beta;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -26,6 +28,8 @@ import org.eclipse.emf.compare.ide.internal.utils.PriorityExecutorService.Priori
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMLParserPoolImpl;
 
 /**
  * This implementation of a ResourceSet will avoid loading of any resource from any other mean than
@@ -90,6 +94,37 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	/**
 	 * {@inheritDoc}
 	 * <p>
+	 * Specialized in order to use a parser pool.
+	 * </p>
+	 * 
+	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#getLoadOptions()
+	 */
+	@Override
+	public Map<Object, Object> getLoadOptions() {
+		if (loadOptions == null) {
+			loadOptions = super.getLoadOptions();
+			/*
+			 * This resource set is specifically designed to resolve cross resources links, it thus spends a
+			 * lot of time loading resources. The following set of options is what seems to given me the most
+			 * significant boost in loading performances, though I did not fine-tune what's really needed
+			 * here. Using a parser pool and disabling the use of deprecated methods are a given, but the
+			 * name_to_feature map and disabling of notifications might not be needed.
+			 */
+			loadOptions.put(XMLResource.OPTION_USE_PARSER_POOL, new XMLParserPoolImpl());
+			loadOptions.put(XMLResource.OPTION_USE_DEPRECATED_METHODS, Boolean.FALSE);
+			loadOptions.put(XMLResource.OPTION_DEFER_IDREF_RESOLUTION, Boolean.TRUE);
+			loadOptions.put(XMLResource.OPTION_DISABLE_NOTIFY, Boolean.TRUE);
+
+			final int expectedFeatureNames = 256;
+			loadOptions.put(XMLResource.OPTION_USE_XML_NAME_TO_FEATURE_MAP, Maps
+					.newHashMapWithExpectedSize(expectedFeatureNames));
+		}
+		return loadOptions;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
 	 * Overridden as we need this synchronized : new resources are added through a call to this.
 	 * </p>
 	 * 
@@ -137,7 +172,6 @@ public final class SyncResourceSet extends ResourceSetImpl {
 				demandedURIs = Sets.newLinkedHashSet();
 			}
 		}
-		pool.shutdown();
 	}
 
 	/**
@@ -164,11 +198,7 @@ public final class SyncResourceSet extends ResourceSetImpl {
 			final TreeIterator<EObject> childContent = eObject.eAllContents();
 			while (childContent.hasNext()) {
 				final EObject child = childContent.next();
-				if (child.eResource() != resource) {
-					childContent.prune();
-				} else {
-					resolveCrossReferences(child);
-				}
+				resolveCrossReferences(child);
 			}
 		}
 	}
