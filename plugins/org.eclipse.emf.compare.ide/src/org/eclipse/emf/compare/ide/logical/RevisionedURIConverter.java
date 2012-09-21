@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.logical;
 
+import com.google.common.annotations.Beta;
 import com.google.common.collect.Sets;
 
 import java.io.IOException;
@@ -40,6 +41,7 @@ import org.eclipse.team.core.history.IFileRevision;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
+@Beta
 public final class RevisionedURIConverter extends DelegatingURIConverter {
 	/** The revision of the base resource. This revision's timestamp will be used to resolve proxies. */
 	private IFileRevision baseRevision;
@@ -140,6 +142,9 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 		if (!actualFile.exists()) {
 			// Can we relativize its path according to the baseRevision?
 			actualFile = findFile(actualFile.getFullPath().toString());
+			if (actualFile == null) {
+				actualFile = targetFile;
+			}
 		}
 
 		InputStream stream = null;
@@ -178,7 +183,7 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 			}
 		}
 
-		if (stream == null && actualFile.exists()) {
+		if (stream == null) {
 			// Either this file is not connected to a repository, or we failed to retrieve a revision.
 			// Search through local history.
 			try {
@@ -205,6 +210,13 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 		return stream;
 	}
 
+	/**
+	 * Tries and find an IFile corresponding to the given path.
+	 * 
+	 * @param path
+	 *            The path for which we need an IFile.
+	 * @return The IFile for the given path if we could find it, <code>null</code> otherwise.
+	 */
 	private IFile findFile(String path) {
 		final java.net.URI baseURI = baseRevision.getURI();
 		java.net.URI targetURI = convertToURI(path);
@@ -222,12 +234,19 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 				file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(relativizedURI.toString()));
 			}
 		}
-		if (file != null && file.exists()) {
+		if (file != null) {
 			return file;
 		}
 		return null;
 	}
 
+	/**
+	 * Silently converts the given {@code path} into an {@link java.net.URI}.
+	 * 
+	 * @param path
+	 *            The path for which we need a java URI.
+	 * @return The converted URI if the path could be parsed as a valid URI, <code>null</code> otherwise.
+	 */
 	private java.net.URI convertToURI(String path) {
 		try {
 			return new java.net.URI(path);

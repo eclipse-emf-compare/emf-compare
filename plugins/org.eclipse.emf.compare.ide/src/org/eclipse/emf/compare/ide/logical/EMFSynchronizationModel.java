@@ -10,20 +10,16 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.logical;
 
+import static org.eclipse.emf.compare.ide.internal.utils.ResourceUtil.binaryIdentical;
+import static org.eclipse.emf.compare.ide.internal.utils.ResourceUtil.findIResource;
+import static org.eclipse.emf.compare.ide.internal.utils.ResourceUtil.loadResource;
+
 import com.google.common.annotations.Beta;
 import com.google.common.collect.Sets;
-import com.google.common.io.Closeables;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.eclipse.compare.IResourceProvider;
 import org.eclipse.compare.ITypedElement;
@@ -35,10 +31,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.ide.internal.utils.ResourceUtil;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -53,7 +46,7 @@ import org.eclipse.team.core.history.IFileRevision;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @Beta
-public class EMFSynchronizationModel {
+public final class EMFSynchronizationModel {
 	/** The traversal corresponding to the left side. */
 	private ResourceTraversal leftTraversal;
 
@@ -174,72 +167,52 @@ public class EMFSynchronizationModel {
 	 */
 	public void minimize() {
 		final boolean threeWay = !originTraversal.getStorages().isEmpty();
-		if (threeWay) {
+		// Copy the sets to update them as we go.
+		final Set<IStorage> leftCopy = Sets.newLinkedHashSet(leftTraversal.getStorages());
+		final Set<IStorage> rightCopy = Sets.newLinkedHashSet(rightTraversal.getStorages());
+		final Set<IStorage> originCopy = Sets.newLinkedHashSet(originTraversal.getStorages());
 
-		} else {
-			// Copy the sets to update them as we go.
-			final Set<IStorage> leftCopy = Sets.newLinkedHashSet(leftTraversal.getStorages());
-			final Set<IStorage> rightCopy = Sets.newLinkedHashSet(rightTraversal.getStorages());
-			for (IStorage left : leftCopy) {
-				final IPath leftPath = left.getFullPath();
-				final Iterator<IStorage> rightIterator = rightCopy.iterator();
-				while (rightIterator.hasNext()) {
-					final IStorage right = rightIterator.next();
-					final IPath rightPath = right.getFullPath();
-					if (leftPath.lastSegment().equals(rightPath.lastSegment())) {
-						rightIterator.remove();
+		for (IStorage left : leftCopy) {
+			final IStorage right = removeLikeNamedStorageFrom(left, rightCopy);
+			if (right != null && threeWay) {
+				final IStorage origin = removeLikeNamedStorageFrom(left, originCopy);
 
-						if (binaryIdentical(left, right)) {
-							leftTraversal.getStorages().remove(left);
-							rightTraversal.getStorages().remove(right);
-						}
-					}
+				if (origin != null && binaryIdentical(left, right, origin)) {
+					leftTraversal.getStorages().remove(left);
+					rightTraversal.getStorages().remove(right);
+					originTraversal.getStorages().remove(origin);
 				}
+			} else if (right != null && binaryIdentical(left, right)) {
+				leftTraversal.getStorages().remove(left);
+				rightTraversal.getStorages().remove(right);
 			}
 		}
 	}
 
 	/**
-	 * Checks whether the two given storages point to binary identical data.
+	 * Looks up into the {@code candidates} set for a storage which name matches that of the {@code reference}
+	 * storage, removing it if there is one.
 	 * 
-	 * @param left
-	 *            First of the two storages which content we are testing.
-	 * @param right
-	 *            Second of the two storages which content we are testing.
-	 * @return <code>true</code> if {@code left} and {@code right} are binary identical.
+	 * @param reference
+	 *            The storage for which we'll seek a match into {@code candidates}.
+	 * @param candidates
+	 *            The set of candidates into which to look up for a match to {@code reference}.
+	 * @return The first storage from the set of candidates that matches the {@code reference}, if any.
+	 *         <code>null</code> if none match.
 	 */
-	private static boolean binaryIdentical(IStorage left, IStorage right) {
-		Reader leftReader = null;
-		Reader rightReader = null;
-		try {
-			leftReader = new BufferedReader(new InputStreamReader(left.getContents()));
-			rightReader = new BufferedReader(new InputStreamReader(right.getContents()));
+	private IStorage removeLikeNamedStorageFrom(IStorage reference, Set<IStorage> candidates) {
+		final IPath referencePath = reference.getFullPath();
+		final Iterator<IStorage> candidatesIterator = candidates.iterator();
+		while (candidatesIterator.hasNext()) {
+			final IStorage candidate = candidatesIterator.next();
+			final IPath candidatePath = candidate.getFullPath();
 
-			final char[] leftBuff = new char[8192];
-			final char[] rightBuff = new char[8192];
-			boolean identical = true;
-			int readLeft = leftReader.read(leftBuff);
-			int readRight = rightReader.read(rightBuff);
-			while (readLeft > 0 && readRight > 0 && readLeft == readRight && identical) {
-				identical = Arrays.equals(leftBuff, rightBuff);
-				readLeft = leftReader.read(leftBuff);
-				readRight = rightReader.read(rightBuff);
-			}
-			// One last check in case we've reached the end of one side but not of the other
-			return identical && readLeft == readRight && Arrays.equals(leftBuff, rightBuff);
-		} catch (CoreException e) {
-
-		} catch (IOException e) {
-
-		} finally {
-			if (leftReader != null) {
-				Closeables.closeQuietly(leftReader);
-			}
-			if (rightReader != null) {
-				Closeables.closeQuietly(rightReader);
+			if (referencePath.lastSegment().equals(candidatePath.lastSegment())) {
+				candidatesIterator.remove();
+				return candidate;
 			}
 		}
-		return false;
+		return null;
 	}
 
 	/**
@@ -287,12 +260,12 @@ public class EMFSynchronizationModel {
 		 * For now, we'll simply load the resource as an EMF model and resolve it all.
 		 */
 		final SyncResourceSet resourceSet = new SyncResourceSet();
-		ResourceUtil.loadResource((IFile)start, resourceSet);
+		loadResource((IFile)start, resourceSet);
 		resourceSet.resolveAll();
 
 		final Set<IFile> resources = Sets.newLinkedHashSet();
-		for (Resource resource : resourceSet.getResources()) {
-			resources.add(ResourceUtil.findIResource(resource));
+		for (URI uri : resourceSet.getLoadedURIs()) {
+			resources.add(findIResource(uri));
 		}
 		return new ResourceTraversal(resources);
 	}
@@ -317,7 +290,7 @@ public class EMFSynchronizationModel {
 				start);
 		resourceSet.setURIConverter(converter);
 		try {
-			ResourceUtil.loadResource(start.getStorage(new NullProgressMonitor()), resourceSet);
+			loadResource(start.getStorage(new NullProgressMonitor()), resourceSet);
 			resourceSet.resolveAll();
 
 			final Set<IStorage> storages = Sets.newLinkedHashSet(converter.getLoadedRevisions());
@@ -332,7 +305,7 @@ public class EMFSynchronizationModel {
 					}
 				}
 				if (!exists) {
-					storages.add(ResourceUtil.findIResource(resource));
+					storages.add(findIResource(resource.getURI()));
 				}
 			}
 			traversal = new ResourceTraversal(storages);
@@ -352,7 +325,7 @@ public class EMFSynchronizationModel {
 	private ResourceSet createResourceSet(ResourceTraversal traversal) {
 		final ResourceSet resourceSet = new ResourceSetImpl();
 		for (IStorage storage : traversal.getStorages()) {
-			ResourceUtil.loadResource(storage, resourceSet);
+			loadResource(storage, resourceSet);
 		}
 		return resourceSet;
 	}
@@ -442,94 +415,5 @@ public class EMFSynchronizationModel {
 		}
 
 		return result;
-	}
-
-	private static class SyncResourceSet extends ResourceSetImpl {
-		private Set<URI> demandedURIs = Sets.newLinkedHashSet();
-
-		private Set<URI> loadedURIs = Sets.newLinkedHashSet();
-
-		private final ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime()
-				.availableProcessors() * 2);
-
-		@Override
-		public Resource getResource(URI uri, boolean loadOnDemand) {
-			// Never load resources from here
-			if (!loadedURIs.contains(uri)) {
-				final Resource existing = super.getResource(uri, false);
-				if (existing == null) {
-					demandedURIs.add(uri);
-				}
-			}
-			return null;
-		}
-
-		public void resolveAll() {
-			for (Resource resource : Sets.newLinkedHashSet(getResources())) {
-				loadedURIs.add(resource.getURI());
-				resolveAndUnload(resource);
-			}
-
-			while (!demandedURIs.isEmpty()) {
-				// transform into function
-				final Set<URI> newURIs = demandedURIs;
-				loadedURIs.addAll(newURIs);
-				demandedURIs = Sets.newLinkedHashSet();
-				for (URI uri : newURIs) {
-					final Resource newResource = super.getResource(uri, true);
-					resolveAndUnload(newResource);
-				}
-			}
-		}
-
-		private void resolveAndUnload(Resource resource) {
-			final Iterator<EObject> resourceContent = resource.getContents().iterator();
-			while (resourceContent.hasNext()) {
-				final EObject eObject = resourceContent.next();
-				resolveCrossReferences(eObject);
-				final TreeIterator<EObject> childContent = eObject.eAllContents();
-				while (childContent.hasNext()) {
-					final EObject child = childContent.next();
-					if (child.eResource() != resource) {
-						childContent.prune();
-					} else {
-						resolveCrossReferences(child);
-					}
-				}
-			}
-
-			// Swap it with a new, unloaded resource with the same URI
-			getResources().remove(resource);
-			createResource(resource.getURI());
-			// We still need to unload what we loaded since some (like UML) cross reference everything...
-			/*
-			 * However, this unloading is not needed for the comparison or resolving, so we can thread it and
-			 * let it die alone in the background
-			 */
-			unload(resource);
-		}
-
-		private void unload(final Resource resource) {
-			final Runnable unloader = new Runnable() {
-				public void run() {
-					resource.unload();
-				}
-			};
-			pool.submit(unloader);
-		}
-
-		/**
-		 * Resolves the cross references of the given EObject.
-		 * 
-		 * @param eObject
-		 *            The EObject for which we are to resolve the cross references.
-		 */
-		private void resolveCrossReferences(EObject eObject) {
-			final Iterator<EObject> objectChildren = eObject.eCrossReferences().iterator();
-			while (objectChildren.hasNext()) {
-				// Resolves cross references by simply visiting them.
-				objectChildren.next();
-			}
-		}
 	}
 }

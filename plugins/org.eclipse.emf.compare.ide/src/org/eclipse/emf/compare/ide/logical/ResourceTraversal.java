@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.logical;
 
+import com.google.common.annotations.Beta;
+
 import java.util.Set;
 
 import org.eclipse.core.resources.IStorage;
@@ -20,6 +22,7 @@ import org.eclipse.core.resources.IStorage;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
+@Beta
 public class ResourceTraversal {
 	/** The set of storages that are part of this traversal. */
 	private Set<? extends IStorage> storages;
