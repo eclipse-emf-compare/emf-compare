@@ -288,6 +288,10 @@ public final class SyncResourceSet extends ResourceSetImpl {
 
 	/**
 	 * A synchronized implementation of {@link ResourcesEList}.
+	 * <p>
+	 * Note that this cannot be extracted out of the {@link SyncResourceSet} since the {@link ResourcesEList}
+	 * type is not visible.
+	 * </p>
 	 * 
 	 * @param <E>
 	 *            Type of this list's contents.

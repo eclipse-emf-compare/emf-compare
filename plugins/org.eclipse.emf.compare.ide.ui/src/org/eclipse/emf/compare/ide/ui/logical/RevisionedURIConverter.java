@@ -35,6 +35,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.utils.DelegatingURIConverter;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.URIHandler;
 import org.eclipse.team.core.RepositoryProvider;
@@ -99,7 +100,7 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 		final URI normalizedUri = normalize(uri);
 		// If this uri points to the plugins directory, load it directly
 		if (normalizedUri.isPlatformPlugin() || normalizedUri.toString().matches("(\\.\\./)+?plugins/.*")) { //$NON-NLS-1$
-			stream = super.createInputStream(normalizedUri, options);
+			stream = createDefaultInputStream(normalizedUri, options);
 		} else {
 			// Otherwise, load it from the repository (resource might not yet (or no longer) exist locally)
 			final IResource targetFile;
@@ -122,14 +123,27 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 			}
 
 			if (stream == null) {
-				return super.createInputStream(uri, options);
+				return createDefaultInputStream(uri, options);
 			}
 		}
 
 		return stream;
 	}
 
-	public InputStream createDefaultInpuStream(URI uri, Map<?, ?> options) throws IOException {
+	/**
+	 * This will be called instead of super.createInputStream when we need to create an input stream for a
+	 * file that is not versioned (i.e. : we're not using a given {@link IFileRevision}). This allows us to
+	 * keep a reference towards the loaded file within the {@link #loadedRevisions} set.
+	 * 
+	 * @param uri
+	 *            The uri for which we are trying to get an input stream.
+	 * @param options
+	 *            The options to pass to the {@link Resource#load(Map) resource loading}.
+	 * @return The created input stream if the target could be resolved.
+	 * @throws IOException
+	 *             Thrown if we could not read this uri's target.
+	 */
+	public InputStream createDefaultInputStream(URI uri, Map<?, ?> options) throws IOException {
 		final URI normalizedURI = normalize(uri);
 		final URIHandler handler = getURIHandler(normalizedURI);
 		loadedRevisions.add(new URIStorage(uri, handler));
@@ -272,20 +286,46 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 		}
 	}
 
+	/**
+	 * This implementation of an {@link IStorage} will allow us to keep track of the {@link URIHandler} that's
+	 * been used to load a given URI from this uri converter.
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
 	private class URIStorage implements IStorage {
+		/** The target URI of this storage. */
 		private final URI uri;
 
+		/** The URI Handler that's been used to retrieve this URI's contents. */
 		private final URIHandler handler;
 
+		/**
+		 * Creates an URIStorage for the given URI an its associated handler.
+		 * 
+		 * @param uri
+		 *            The target uri of this storage.
+		 * @param handler
+		 *            The URI handler that can be used to retrieve this URI's contents.
+		 */
 		public URIStorage(URI uri, URIHandler handler) {
 			this.uri = uri;
 			this.handler = handler;
 		}
 
-		public Object getAdapter(Class adapter) {
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+		 */
+		public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 			return null;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.core.resources.IStorage#getContents()
+		 */
 		public InputStream getContents() throws CoreException {
 			final Map<?, ?> options = Collections.singletonMap(URIConverter.OPTION_URI_CONVERTER,
 					RevisionedURIConverter.this);
@@ -297,20 +337,34 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 			}
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.core.resources.IStorage#getFullPath()
+		 */
 		public IPath getFullPath() {
 			return new Path(uri.toString());
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.core.resources.IStorage#getName()
+		 */
 		public String getName() {
 			return uri.lastSegment();
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.core.resources.IStorage#isReadOnly()
+		 */
 		public boolean isReadOnly() {
 			final Map<?, ?> options = Collections.singletonMap(URIConverter.OPTION_REQUESTED_ATTRIBUTES,
 					Collections.singleton(URIConverter.ATTRIBUTE_READ_ONLY));
 			final Map<String, ?> attributes = handler.getAttributes(uri, options);
 			return Boolean.TRUE.equals(attributes.get(URIConverter.ATTRIBUTE_READ_ONLY));
 		}
-
 	}
 }
