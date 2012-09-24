@@ -39,6 +39,20 @@ import org.eclipse.emf.ecore.xmi.impl.XMLParserPoolImpl;
  * This is used from our {@link EMFSynchronizationModel} in order to resolve the traversals without keeping
  * the whole model in-memory (and striving to never have it in-memory as a whole).
  * </p>
+ * <p>
+ * Since this class only aims at resolving cross-resource dependencies, its main bottleneck is the parsing of
+ * resources when loading (not even the I/O, but the time spent in the SAX parser). We're using a number of
+ * tricks to make this bottleneck less problematic. The main improvement in loading performance when compared
+ * with the usual resource sets is the threading of the load and unload operations. {@link ResourceLoader}
+ * threads are used to load the files and parse them as EMF models. When they're done, they spawn their own
+ * {@link #unload(Resource) sub-threads} to unload the models in separate threads.
+ * </p>
+ * <p>
+ * The second improvement of loading performance comes from the specialization of {@link #getLoadOptions()}
+ * that allows us to define a set of options that aims at speeding up the parsing process. Further profiling
+ * might be needed to isolate other options that would have an impact, such as parser features or XML
+ * options...
+ * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -94,7 +108,7 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Specialized in order to use a parser pool.
+	 * Specialized in order to define our own load options.
 	 * </p>
 	 * 
 	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#getLoadOptions()
@@ -105,7 +119,7 @@ public final class SyncResourceSet extends ResourceSetImpl {
 			loadOptions = super.getLoadOptions();
 			/*
 			 * This resource set is specifically designed to resolve cross resources links, it thus spends a
-			 * lot of time loading resources. The following set of options is what seems to given me the most
+			 * lot of time loading resources. The following set of options is what seems to give the most
 			 * significant boost in loading performances, though I did not fine-tune what's really needed
 			 * here. Using a parser pool and disabling the use of deprecated methods are a given, but the
 			 * name_to_feature map and disabling of notifications might not be needed.
