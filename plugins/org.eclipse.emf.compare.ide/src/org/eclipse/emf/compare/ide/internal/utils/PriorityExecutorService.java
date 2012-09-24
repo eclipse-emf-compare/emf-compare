@@ -22,9 +22,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This implementation of an Executor service delegate to a fixed thread pool executor, but prioritizes its
@@ -43,12 +45,24 @@ public final class PriorityExecutorService extends ForwardingObject implements E
 	/** The executor service to which we'll delegate all calls. */
 	private ExecutorService delegate;
 
-	/** Constructs our executor service. */
-	public PriorityExecutorService() {
+	/**
+	 * Constructs our executor service.
+	 * 
+	 * @param poolName
+	 *            Name of this thread pool. We'll use this to name the worker threads.
+	 */
+	public PriorityExecutorService(String poolName) {
 		final int threadCount = Runtime.getRuntime().availableProcessors() * 2;
 		final int initialCapacity = 16;
+		final String actualName;
+		if (poolName == null || poolName.length() == 0) {
+			actualName = "PrioritizedPool"; //$NON-NLS-1$
+		} else {
+			actualName = poolName;
+		}
+		final ThreadFactory factory = new NamedPoolThreadFactory(actualName);
 		delegate = new ThreadPoolExecutor(threadCount, threadCount, 0L, TimeUnit.MILLISECONDS,
-				new PriorityBlockingQueue<Runnable>(initialCapacity, new PriorityTaskComparable()));
+				new PriorityBlockingQueue<Runnable>(initialCapacity, new PriorityTaskComparable()), factory);
 	}
 
 	/**
@@ -316,6 +330,55 @@ public final class PriorityExecutorService extends ForwardingObject implements E
 						- ((PriorityFutureTask<?>)o2).getPriority().getValue();
 			}
 			return 0;
+		}
+	}
+
+	/**
+	 * This pool will use this factory to create its worker threads with an intelligible name.
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
+	private static class NamedPoolThreadFactory implements ThreadFactory {
+		/** Name of this pool. We'll use this to name our threads. */
+		private final String poolName;
+
+		/** All of our threads will be in this same group. */
+		private final ThreadGroup group;
+
+		/** We'll number the threads starting from '1'. */
+		private final AtomicInteger threadNumber = new AtomicInteger(1);
+
+		/**
+		 * Constructs this pool's thread factory given the pool name.
+		 * 
+		 * @param poolName
+		 *            Name of this thread pool.
+		 */
+		public NamedPoolThreadFactory(String poolName) {
+			this.poolName = poolName;
+			final SecurityManager manager = System.getSecurityManager();
+			if (manager == null) {
+				this.group = Thread.currentThread().getThreadGroup();
+			} else {
+				this.group = manager.getThreadGroup();
+			}
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see java.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
+		 */
+		public Thread newThread(Runnable r) {
+			final String prefix = poolName + "-thread-"; //$NON-NLS-1$
+			final Thread thread = new Thread(group, r, prefix + threadNumber.getAndIncrement(), 0);
+			if (thread.isDaemon()) {
+				thread.setDaemon(false);
+			}
+			if (thread.getPriority() != Thread.NORM_PRIORITY) {
+				thread.setPriority(Thread.NORM_PRIORITY);
+			}
+			return thread;
 		}
 	}
 }

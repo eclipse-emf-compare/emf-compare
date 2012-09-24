@@ -8,14 +8,16 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.logical;
+package org.eclipse.emf.compare.ide.ui.logical;
 
 import com.google.common.annotations.Beta;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,11 +27,16 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.utils.DelegatingURIConverter;
 import org.eclipse.emf.ecore.resource.URIConverter;
+import org.eclipse.emf.ecore.resource.URIHandler;
 import org.eclipse.team.core.RepositoryProvider;
 import org.eclipse.team.core.history.IFileHistory;
 import org.eclipse.team.core.history.IFileHistoryProvider;
@@ -90,7 +97,7 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 		InputStream stream = null;
 
 		final URI normalizedUri = normalize(uri);
-		// If this uri points to the plugins directory, load it locally
+		// If this uri points to the plugins directory, load it directly
 		if (normalizedUri.isPlatformPlugin() || normalizedUri.toString().matches("(\\.\\./)+?plugins/.*")) { //$NON-NLS-1$
 			stream = super.createInputStream(normalizedUri, options);
 		} else {
@@ -120,6 +127,16 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 		}
 
 		return stream;
+	}
+
+	public InputStream createDefaultInpuStream(URI uri, Map<?, ?> options) throws IOException {
+		final URI normalizedURI = normalize(uri);
+		final URIHandler handler = getURIHandler(normalizedURI);
+		loadedRevisions.add(new URIStorage(uri, handler));
+		final Map<Object, Object> actualOptions = Maps.newLinkedHashMap();
+		actualOptions.put(URIConverter.OPTION_URI_CONVERTER, RevisionedURIConverter.this);
+		actualOptions.putAll(options);
+		return handler.createInputStream(normalizedURI, actualOptions);
 	}
 
 	/**
@@ -253,5 +270,47 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 		} catch (URISyntaxException e) {
 			return null;
 		}
+	}
+
+	private class URIStorage implements IStorage {
+		private final URI uri;
+
+		private final URIHandler handler;
+
+		public URIStorage(URI uri, URIHandler handler) {
+			this.uri = uri;
+			this.handler = handler;
+		}
+
+		public Object getAdapter(Class adapter) {
+			return null;
+		}
+
+		public InputStream getContents() throws CoreException {
+			final Map<?, ?> options = Collections.singletonMap(URIConverter.OPTION_URI_CONVERTER,
+					RevisionedURIConverter.this);
+			try {
+				return handler.createInputStream(uri, options);
+			} catch (IOException e) {
+				throw new CoreException(new Status(IStatus.ERROR, EMFCompareIDEUIPlugin.PLUGIN_ID, e
+						.getMessage(), e));
+			}
+		}
+
+		public IPath getFullPath() {
+			return new Path(uri.toString());
+		}
+
+		public String getName() {
+			return uri.lastSegment();
+		}
+
+		public boolean isReadOnly() {
+			final Map<?, ?> options = Collections.singletonMap(URIConverter.OPTION_REQUESTED_ATTRIBUTES,
+					Collections.singleton(URIConverter.ATTRIBUTE_READ_ONLY));
+			final Map<String, ?> attributes = handler.getAttributes(uri, options);
+			return Boolean.TRUE.equals(attributes.get(URIConverter.ATTRIBUTE_READ_ONLY));
+		}
+
 	}
 }

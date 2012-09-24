@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.logical;
+package org.eclipse.emf.compare.ide.ui.logical;
 
 import com.google.common.annotations.Beta;
 

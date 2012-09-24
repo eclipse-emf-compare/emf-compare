@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.logical;
+package org.eclipse.emf.compare.ide.ui.logical;
 
 import static org.eclipse.emf.compare.ide.internal.utils.ResourceUtil.binaryIdentical;
 import static org.eclipse.emf.compare.ide.internal.utils.ResourceUtil.findIResource;
@@ -22,20 +22,20 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.compare.IResourceProvider;
+import org.eclipse.compare.ISharedDocumentAdapter;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.team.core.history.IFileRevision;
+import org.eclipse.ui.IEditorInput;
 
 /**
  * This class will act as a logical model for EMF. It will hold the necessary logic to be able to determine
@@ -201,13 +201,13 @@ public final class EMFSynchronizationModel {
 	 *         <code>null</code> if none match.
 	 */
 	private IStorage removeLikeNamedStorageFrom(IStorage reference, Set<IStorage> candidates) {
-		final IPath referencePath = reference.getFullPath();
+		final String referenceName = reference.getName();
 		final Iterator<IStorage> candidatesIterator = candidates.iterator();
 		while (candidatesIterator.hasNext()) {
 			final IStorage candidate = candidatesIterator.next();
-			final IPath candidatePath = candidate.getFullPath();
+			final String candidateName = candidate.getName();
 
-			if (referencePath.lastSegment().equals(candidatePath.lastSegment())) {
+			if (referenceName.equals(candidateName)) {
 				candidatesIterator.remove();
 				return candidate;
 			}
@@ -294,20 +294,6 @@ public final class EMFSynchronizationModel {
 			resourceSet.resolveAll();
 
 			final Set<IStorage> storages = Sets.newLinkedHashSet(converter.getLoadedRevisions());
-			// There might have been resources loaded through other means
-			for (Resource resource : resourceSet.getResources()) {
-				final String resourceURI = resource.getURI().toString();
-				boolean exists = false;
-				final Iterator<IStorage> storageIterator = storages.iterator();
-				while (storageIterator.hasNext() && !exists) {
-					if (resourceURI.endsWith(storageIterator.next().getFullPath().toString())) {
-						exists = true;
-					}
-				}
-				if (!exists) {
-					storages.add(findIResource(resource.getURI()));
-				}
-			}
 			traversal = new ResourceTraversal(storages);
 		} catch (CoreException e) {
 			// FIXME ignore for now
@@ -345,7 +331,20 @@ public final class EMFSynchronizationModel {
 		// Can we adapt it directly?
 		IFileRevision revision = adaptAs(element, IFileRevision.class);
 		if (revision == null) {
+			// Quite the workaround... but CVS does not offer us any other way.
+			// These few lines of code is what make us depend on org.eclipse.ui... Can we find another way?
+			final ISharedDocumentAdapter documentAdapter = adaptAs(element, ISharedDocumentAdapter.class);
+			if (documentAdapter != null) {
+				final IEditorInput editorInput = documentAdapter.getDocumentKey(element);
+				if (editorInput != null) {
+					revision = adaptAs(editorInput, IFileRevision.class);
+				}
+			}
+		}
+
+		if (revision == null) {
 			// Couldn't do it the API way ...
+			// At the time of writing, this was the case with EGit
 			try {
 				final Method method = element.getClass().getMethod("getFileRevision"); //$NON-NLS-1$
 				final Object value = method.invoke(element);

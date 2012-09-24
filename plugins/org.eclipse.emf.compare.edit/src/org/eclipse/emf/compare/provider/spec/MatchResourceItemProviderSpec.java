@@ -45,8 +45,14 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider {
 
 		final String commonBase = getCommonBase(leftURI, rightURI);
 
-		String text = leftURI.substring(commonBase.length()) + " <-> "
-				+ rightURI.substring(commonBase.length());
+		String text = ""; //$NON-NLS-1$
+		if (leftURI != null) {
+			text += leftURI.substring(commonBase.length());
+		}
+		text += " <-> "; //$NON-NLS-1$
+		if (rightURI != null) {
+			text += rightURI.substring(commonBase.length());
+		}
 		// TODO is that really useful info?
 		// if (matchResource.eContainer() instanceof Comparison
 		// && ((Comparison)matchResource.eContainer()).isThreeWay()) {
