@@ -68,8 +68,7 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	private Set<URI> loadedURIs = Sets.newLinkedHashSet();
 
 	/**
-	 * This thread pool will be used to launch the loading and unloading of resources in separate threads so
-	 * as not to block the resolution of new resources.
+	 * This thread pool will be used to launch the loading and unloading of resources in separate threads.
 	 * <p>
 	 * Take note that the unloading threads will take precedence over the loading threads : we need to free
 	 * the memory as soon as possible, and we expect "unload" threads to complete faster that "load" ones.
