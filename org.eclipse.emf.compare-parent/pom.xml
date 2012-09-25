@@ -156,8 +156,10 @@
           <configuration>
             <encoding>UTF-8</encoding>
             <!-- All of the following can be removed when switching to java 6 -->
-            <fork>true</fork>
-            <executable>/shared/common/jdk-1.5.0-22.x86_64/bin/javac</executable>
+            <compilerId>jdt</compilerId>
+            <compilerArguments>
+				<bootclasspath>/shared/common/jdk-1.5.0-22.x86_64/bin/rt.jar</bootclasspath>
+			</compilerArguments>
             <source>1.5</source>
             <target>1.5</target>
           </configuration>
