@@ -1,3 +1,4 @@
+// NOTE This class is _not_ source compatible with the JDK 6. It should only be compiled with the JDK 5, though the compiled ".class" will be binary compatible with 6 since the issues lies in type erasure.
 /*******************************************************************************
  * Copyright (c) 2011, 2012 Obeo.
  * All rights reserved. This program and the accompanying materials
