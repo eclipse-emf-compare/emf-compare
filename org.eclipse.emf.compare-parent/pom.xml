@@ -156,8 +156,7 @@
           <configuration>
             <encoding>UTF-8</encoding>
             <!-- All of the following can be removed when switching to java 6 -->
-            <fork>true</fork>
-            <compilerVersion>1.5</compilerVersion>
+            <useJDK>BREE</useJDK>
             <source>1.5</source>
             <target>1.5</target>
           </configuration>
