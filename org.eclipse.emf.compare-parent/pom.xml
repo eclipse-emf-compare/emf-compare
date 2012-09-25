@@ -56,7 +56,9 @@
     <module>../plugins/org.eclipse.emf.compare.ide</module>
     <module>../plugins/org.eclipse.emf.compare.ide.ui</module>
     <module>../plugins/org.eclipse.emf.compare.doc</module>
+    <!-- There are no longer any "ide" tests
     <module>../plugins/org.eclipse.emf.compare.ide.tests</module>
+    -->
     <module>../plugins/org.eclipse.emf.compare.ide.ui.tests</module>
     
     <!-- RCP UI -->
