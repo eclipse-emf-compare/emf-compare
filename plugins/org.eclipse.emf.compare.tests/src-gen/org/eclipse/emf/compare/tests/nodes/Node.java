@@ -76,7 +76,7 @@ public interface Node extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Containment Ref1</em>' containment reference list.
 	 * @see org.eclipse.emf.compare.tests.nodes.NodesPackage#getNode_ContainmentRef1()
-	 * @model containment="true"
+	 * @model containment="true" resolveProxies="true"
 	 * @generated
 	 */
 	EList<Node> getContainmentRef1();

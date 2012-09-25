@@ -48,7 +48,7 @@ public interface NodeMultipleContainment extends Node {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Containment Ref2</em>' containment reference list.
 	 * @see org.eclipse.emf.compare.tests.nodes.NodesPackage#getNodeMultipleContainment_ContainmentRef2()
-	 * @model containment="true"
+	 * @model containment="true" resolveProxies="true"
 	 * @generated
 	 */
 	EList<Node> getContainmentRef2();
@@ -64,7 +64,7 @@ public interface NodeMultipleContainment extends Node {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Containment Ref3</em>' containment reference list.
 	 * @see org.eclipse.emf.compare.tests.nodes.NodesPackage#getNodeMultipleContainment_ContainmentRef3()
-	 * @model containment="true"
+	 * @model containment="true" resolveProxies="true"
 	 * @generated
 	 */
 	EList<Node> getContainmentRef3();

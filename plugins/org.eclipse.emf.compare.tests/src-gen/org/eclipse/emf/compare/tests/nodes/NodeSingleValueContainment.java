@@ -46,7 +46,7 @@ public interface NodeSingleValueContainment extends Node {
 	 * @return the value of the '<em>Single Value Containment</em>' containment reference.
 	 * @see #setSingleValueContainment(Node)
 	 * @see org.eclipse.emf.compare.tests.nodes.NodesPackage#getNodeSingleValueContainment_SingleValueContainment()
-	 * @model containment="true"
+	 * @model containment="true" resolveProxies="true"
 	 * @generated
 	 */
 	Node getSingleValueContainment();

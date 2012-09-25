@@ -96,7 +96,7 @@ public class NodeMultipleContainmentImpl extends NodeImpl implements NodeMultipl
 	 */
 	public EList<Node> getContainmentRef2() {
 		if (containmentRef2 == null) {
-			containmentRef2 = new EObjectContainmentEList<Node>(Node.class, this, NodesPackage.NODE_MULTIPLE_CONTAINMENT__CONTAINMENT_REF2);
+			containmentRef2 = new EObjectContainmentEList.Resolving<Node>(Node.class, this, NodesPackage.NODE_MULTIPLE_CONTAINMENT__CONTAINMENT_REF2);
 		}
 		return containmentRef2;
 	}
@@ -108,7 +108,7 @@ public class NodeMultipleContainmentImpl extends NodeImpl implements NodeMultipl
 	 */
 	public EList<Node> getContainmentRef3() {
 		if (containmentRef3 == null) {
-			containmentRef3 = new EObjectContainmentEList<Node>(Node.class, this, NodesPackage.NODE_MULTIPLE_CONTAINMENT__CONTAINMENT_REF3);
+			containmentRef3 = new EObjectContainmentEList.Resolving<Node>(Node.class, this, NodesPackage.NODE_MULTIPLE_CONTAINMENT__CONTAINMENT_REF3);
 		}
 		return containmentRef3;
 	}

@@ -80,6 +80,29 @@ public class NodeSingleValueContainmentImpl extends NodeImpl implements NodeSing
 	 * @generated
 	 */
 	public Node getSingleValueContainment() {
+		if (singleValueContainment != null && singleValueContainment.eIsProxy()) {
+			InternalEObject oldSingleValueContainment = (InternalEObject)singleValueContainment;
+			singleValueContainment = (Node)eResolveProxy(oldSingleValueContainment);
+			if (singleValueContainment != oldSingleValueContainment) {
+				InternalEObject newSingleValueContainment = (InternalEObject)singleValueContainment;
+				NotificationChain msgs = oldSingleValueContainment.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - NodesPackage.NODE_SINGLE_VALUE_CONTAINMENT__SINGLE_VALUE_CONTAINMENT, null, null);
+				if (newSingleValueContainment.eInternalContainer() == null) {
+					msgs = newSingleValueContainment.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - NodesPackage.NODE_SINGLE_VALUE_CONTAINMENT__SINGLE_VALUE_CONTAINMENT, null, msgs);
+				}
+				if (msgs != null) msgs.dispatch();
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, NodesPackage.NODE_SINGLE_VALUE_CONTAINMENT__SINGLE_VALUE_CONTAINMENT, oldSingleValueContainment, singleValueContainment));
+			}
+		}
+		return singleValueContainment;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Node basicGetSingleValueContainment() {
 		return singleValueContainment;
 	}
 
@@ -140,7 +163,8 @@ public class NodeSingleValueContainmentImpl extends NodeImpl implements NodeSing
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case NodesPackage.NODE_SINGLE_VALUE_CONTAINMENT__SINGLE_VALUE_CONTAINMENT:
-				return getSingleValueContainment();
+				if (resolve) return getSingleValueContainment();
+				return basicGetSingleValueContainment();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}

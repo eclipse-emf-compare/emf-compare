@@ -128,7 +128,7 @@ public class NodeImpl extends EObjectImpl implements Node {
 	 */
 	public EList<Node> getContainmentRef1() {
 		if (containmentRef1 == null) {
-			containmentRef1 = new EObjectContainmentEList<Node>(Node.class, this, NodesPackage.NODE__CONTAINMENT_REF1);
+			containmentRef1 = new EObjectContainmentEList.Resolving<Node>(Node.class, this, NodesPackage.NODE__CONTAINMENT_REF1);
 		}
 		return containmentRef1;
 	}
