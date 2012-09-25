@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.EList;
@@ -30,6 +31,7 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.internal.utils.PriorityExecutorService;
 import org.eclipse.emf.compare.ide.internal.utils.PriorityExecutorService.Priority;
+import org.eclipse.emf.compare.ide.internal.utils.ResourceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -154,16 +156,22 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	}
 
 	/**
-	 * Resolve all cross references of the resources currently loaded in this resource set. Take note that
-	 * this resource set is only interested in the URIs of the resources, and that it will not keep the loaded
-	 * content in memory. No resource will be kept in the {@link #getResources() resources'} list of this set.
+	 * Resolve all cross resources links of the given starting point. Take note that this resource set is only
+	 * interested in the URIs of the resources, and that it will not keep the loaded content in memory. No
+	 * resource will be kept in the {@link #getResources() resources'} list of this set.
+	 * 
+	 * @param start
+	 *            The starting point from which we'll resolve cross resources references.
 	 */
-	public void resolveAll() {
-		for (Resource resource : Sets.newLinkedHashSet(getResources())) {
-			loadedURIs.add(resource.getURI());
-			resolve(resource);
-			unload(resource);
-		}
+	public void resolveAll(IStorage start) {
+		final Resource resource = ResourceUtil.loadResource(start, this);
+		// reset the demanded URI that was added by this first call
+		demandedURIs.clear();
+		// and make it "loaded" instead
+		loadedURIs.add(resource.getURI());
+
+		resolve(resource);
+		unload(resource);
 
 		Set<URI> newURIs;
 		synchronized(demandedURIs) {
