@@ -23,6 +23,7 @@
 	      </resource>
 	</resources>
     <plugins>
+    <!-- there are no longer any tests in this plugin
   	<plugin>
 		<groupId>org.eclipse.tycho</groupId>
 		<artifactId>tycho-surefire-plugin</artifactId>
@@ -37,6 +38,7 @@
 			<testFailureIgnore>true</testFailureIgnore>							
 		</configuration>
 	</plugin>
+	-->
     </plugins>
   </build>
 </project>
