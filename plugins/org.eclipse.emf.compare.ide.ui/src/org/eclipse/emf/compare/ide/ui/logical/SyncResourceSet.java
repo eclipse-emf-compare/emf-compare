@@ -597,8 +597,10 @@ public final class SyncResourceSet extends ResourceSetImpl {
 		 * 
 		 * @see org.eclipse.emf.common.util.BasicEList#clone()
 		 */
+		// CHECKSTYLE:OFF we're overriding...
 		@Override
 		public Object clone() {
+			// CHECKSTYLE:ON
 			synchronized(lock) {
 				return super.clone();
 			}
@@ -1087,7 +1089,7 @@ public final class SyncResourceSet extends ResourceSetImpl {
 			}
 
 			/**
-			 * Delegates to the super constructor
+			 * Delegates to the super constructor.
 			 * 
 			 * @param index
 			 *            Index at which this list iterator should start.

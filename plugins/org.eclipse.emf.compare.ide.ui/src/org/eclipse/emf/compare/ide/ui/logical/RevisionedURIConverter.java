@@ -35,7 +35,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.utils.DelegatingURIConverter;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.URIHandler;
 import org.eclipse.team.core.RepositoryProvider;
@@ -138,7 +137,8 @@ public final class RevisionedURIConverter extends DelegatingURIConverter {
 	 * @param uri
 	 *            The uri for which we are trying to get an input stream.
 	 * @param options
-	 *            The options to pass to the {@link Resource#load(Map) resource loading}.
+	 *            The options to pass to the {@link org.eclipse.emf.ecore.resource.Resource#load(Map) resource
+	 *            loading}.
 	 * @return The created input stream if the target could be resolved.
 	 * @throws IOException
 	 *             Thrown if we could not read this uri's target.
