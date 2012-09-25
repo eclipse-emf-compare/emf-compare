@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.compare.ide.ui.tests.unit.EMFCompareSyncAdapterTest;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -36,7 +35,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import org.osgi.framework.Bundle;
 
 @RunWith(Suite.class)
-@SuiteClasses({EMFCompareSyncAdapterTest.class, })
+@SuiteClasses({})
 public class AllTests {
 	private static final String TEST_PROJECT_NAME = "testProject"; //$NON-NLS-1$
 
