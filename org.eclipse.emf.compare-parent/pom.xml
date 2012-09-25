@@ -162,10 +162,7 @@
             	In short, one of the classes we compile has a source incompatibility with the JDK6 and thus cannot be
             	compiled with it. The compiled file is binary compatible with the jdk 6 though.
             -->
-            <compilerId>jdt</compilerId>
-            <compilerArguments>
-				<bootclasspath>/shared/common/jdk-1.5.0-22.x86_64/jre/lib/rt.jar</bootclasspath>
-			</compilerArguments>
+            <useJDK>BREE</useJDK>
             <source>1.5</source>
             <target>1.5</target>
           </configuration>
