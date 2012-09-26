@@ -8,11 +8,11 @@ import org.eclipse.emf.ecore.resource.Resource;
 public class ProfileInputData extends ProfilesInputData {
 
 	public Resource getA1Left() throws IOException {
-		return loadFromClassloader("a1/left.uml"); //$NON-NLS-1$
+		return loadFromClassLoader("a1/left.uml"); //$NON-NLS-1$
 	}
 
 	public Resource getA1Right() throws IOException {
-		return loadFromClassloader("a1/right.uml"); //$NON-NLS-1$
+		return loadFromClassLoader("a1/right.uml"); //$NON-NLS-1$
 	}
 
 }

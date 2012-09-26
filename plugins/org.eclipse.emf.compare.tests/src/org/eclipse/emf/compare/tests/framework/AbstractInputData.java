@@ -14,10 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
@@ -28,10 +27,6 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public abstract class AbstractInputData {
-
-	/** Store the set of the resource sets of the input data. */
-	public Set<ResourceSet> sets = new LinkedHashSet<ResourceSet>();
-
 	/**
 	 * Tries and locate a model in the current class' classpath.
 	 * 
@@ -42,7 +37,7 @@ public abstract class AbstractInputData {
 	 *             Thrown if we could not access either this class' resource, or the file towards which
 	 *             <code>string</code> points.
 	 */
-	protected Resource loadFromClassloader(String string) throws IOException {
+	protected Resource loadFromClassLoader(String string) throws IOException {
 		final URL fileURL = getClass().getResource(string);
 		final InputStream str = fileURL.openStream();
 		final URI uri = URI.createURI(fileURL.toString());
@@ -58,5 +53,51 @@ public abstract class AbstractInputData {
 		res.load(str, Collections.emptyMap());
 		str.close();
 		return res;
+	}
+
+	/**
+	 * Tries and locate a model in the current class' classpath.
+	 * 
+	 * @param string
+	 *            Relative path to the model we seek (relative to this class).
+	 * @param resourceSet
+	 *            the resource set in which to load the resource.
+	 * @return The loaded resource.
+	 * @throws IOException
+	 *             Thrown if we could not access either this class' resource, or the file towards which
+	 *             <code>path</code> points.
+	 */
+	// Suppressing the warning until bug 376938 is fixed
+	@SuppressWarnings("resource")
+	protected Resource loadFromClassLoader(String path, ResourceSet resourceSet) throws IOException {
+		final URL fileURL = getClass().getResource(path);
+		final URI uri = URI.createURI(fileURL.toString());
+
+		final Resource existing = resourceSet.getResource(uri, false);
+		if (existing != null) {
+			return existing;
+		}
+
+		InputStream stream = null;
+		Resource resource = null;
+		try {
+			resource = resourceSet.createResource(uri);
+			stream = fileURL.openStream();
+			resource.load(stream, Collections.emptyMap());
+		} catch (IOException e) {
+			// return null
+		} catch (WrappedException e) {
+			// return null
+		} finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (IOException e) {
+					// Should have been caught by the outer try
+				}
+			}
+		}
+
+		return resource;
 	}
 }

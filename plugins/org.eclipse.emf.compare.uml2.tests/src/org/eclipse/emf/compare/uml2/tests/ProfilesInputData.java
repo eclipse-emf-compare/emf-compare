@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -29,13 +31,20 @@ public class ProfilesInputData extends AbstractInputData {
 
 	private String testProfileJarLocation;
 
+	/** Store the set of the resource sets of the input data. */
+	private Set<ResourceSet> sets = new LinkedHashSet<ResourceSet>();
+
 	public ProfilesInputData() {
 		umlResourcesJarLocation = System.getenv(UML_RESOURCES_JAR_LOCATION_ENV);
 		testProfileJarLocation = System.getenv(TEST_PROFILE_JAR_LOCATION_ENV);
 	}
 
+	public Set<ResourceSet> getSets() {
+		return sets;
+	}
+
 	@Override
-	protected Resource loadFromClassloader(String string) throws IOException {
+	protected Resource loadFromClassLoader(String string) throws IOException {
 
 		final URL fileURL = getClass().getResource(string);
 		final InputStream str = fileURL.openStream();

@@ -307,9 +307,7 @@ public class EditionDistance implements DistanceFunction {
 	 * An implementation of a diff engine which count and measure the detected changes.
 	 */
 	class CountingDiffEngine extends DefaultDiffEngine {
-		/**
-		 * A fake comparison object required so that the diff engine does his job correctly.
-		 */
+		/** A fake comparison object required so that the diff engine does his job correctly. */
 		private Comparison fakeComparison;
 
 		/**
@@ -362,8 +360,7 @@ public class EditionDistance implements DistanceFunction {
 			URI bLocation = helper.getURI(b);
 			int changes = 0;
 			if (!aLocation.fragment().equals(bLocation.fragment())) {
-				int dist = new URIDistance(fakeComparison).proximity(aLocation.fragment(), bLocation
-						.fragment());
+				int dist = new URIDistance().proximity(aLocation.fragment(), bLocation.fragment());
 				changes += dist * locationChangeCoef;
 			}
 			if (changes <= maxDistance) {

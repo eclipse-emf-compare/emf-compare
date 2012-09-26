@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.match.eobject;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -40,7 +41,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 	 * This instance might have a delegate matcher. The delegate matcher will be called when no ID is found
 	 * and its results are aggregated with the current matcher.
 	 */
-	private Optional<IEObjectMatcher> delegate = Optional.absent();
+	private Optional<IEObjectMatcher> delegate;
 
 	/**
 	 * This will be used to determine what represents the "identifier" of an EObject. By default, we will use
@@ -87,12 +88,8 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 				rightEObjectsNoID, originEObjectsNoID);
 
 		if (delegate.isPresent()) {
-			/*
-			 * Let's ask the delegate matcher to match those non ID Elements.
-			 */
-
-			matches.addAll(Lists.newArrayList(delegate.get().createMatches(leftEObjectsNoID.iterator(),
-					rightEObjectsNoID.iterator(), originEObjectsNoID.iterator())));
+			Iterables.addAll(matches, delegate.get().createMatches(leftEObjectsNoID.iterator(),
+					rightEObjectsNoID.iterator(), originEObjectsNoID.iterator()));
 		} else {
 			for (EObject eObject : leftEObjectsNoID) {
 				Match match = CompareFactory.eINSTANCE.createMatch();

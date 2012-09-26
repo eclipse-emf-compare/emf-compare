@@ -18,31 +18,31 @@ import org.eclipse.emf.ecore.resource.Resource;
 public class DistanceMatchInputData extends AbstractInputData {
 
 	public Resource getCompareLeft() throws IOException {
-		return loadFromClassloader("compareLeft.ecore");
+		return loadFromClassLoader("compareLeft.ecore");
 	}
 
 	public Resource getCompareRight() throws IOException {
-		return loadFromClassloader("compareRight.ecore");
+		return loadFromClassLoader("compareRight.ecore");
 	}
 
 	public Resource getNominalUMLLeft() throws IOException {
-		return loadFromClassloader("agencyLeft.uml");
+		return loadFromClassLoader("agencyLeft.uml");
 	}
 
 	public Resource getNominalUMLRight() throws IOException {
-		return loadFromClassloader("agencyRight.uml");
+		return loadFromClassLoader("agencyRight.uml");
 	}
 
 	public Resource getNominalUMLOrigin() throws IOException {
-		return loadFromClassloader("agencyOrigin.uml");
+		return loadFromClassLoader("agencyOrigin.uml");
 	}
 
 	public Resource getVerySmallLeft() throws IOException {
-		return loadFromClassloader("verySmallLeft.ecore");
+		return loadFromClassLoader("verySmallLeft.ecore");
 	}
 
 	public Resource getVerySmallRight() throws IOException {
-		return loadFromClassloader("verySmallRight.ecore");
+		return loadFromClassLoader("verySmallRight.ecore");
 	}
 
 }

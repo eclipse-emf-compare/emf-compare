@@ -15,9 +15,6 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-import org.eclipse.emf.compare.CompareFactory;
-import org.eclipse.emf.compare.Comparison;
-
 /**
  * This class is able to measure similarity between "URI like" strings, basically strings separated by "/".
  * This is mainly intended to be used with EMF's fragments.
@@ -25,29 +22,6 @@ import org.eclipse.emf.compare.Comparison;
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class URIDistance {
-	/**
-	 * comparison we don't care bout, only used because we have to pass one to the LCS algorithm, it is going
-	 * to use the EqualityHelper instance from it.
-	 */
-	private Comparison comparison;
-
-	/**
-	 * Create the distance.
-	 */
-	public URIDistance() {
-		comparison = CompareFactory.eINSTANCE.createComparison();
-	}
-
-	/**
-	 * Create the distance.
-	 * 
-	 * @param comparison
-	 *            the current comparison.
-	 */
-	public URIDistance(Comparison comparison) {
-		this.comparison = comparison;
-	}
-
 	/**
 	 * Return a metric result URI similarities. It compares 2 strings splitting those by "/" and return an int
 	 * representing the level of similarity. 0 - they are exactly the same to 10 - they are completely

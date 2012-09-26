@@ -23,14 +23,14 @@ import org.eclipse.emf.ecore.resource.Resource;
 @SuppressWarnings("nls")
 public class IdentifierMatchInputData extends AbstractInputData {
 	public Resource getExtlibraryLeft() throws IOException {
-		return loadFromClassloader("extlibraryLeft.ecore");
+		return loadFromClassLoader("extlibraryLeft.ecore");
 	}
 
 	public Resource getExtlibraryRight() throws IOException {
-		return loadFromClassloader("extlibraryRight.ecore");
+		return loadFromClassLoader("extlibraryRight.ecore");
 	}
 
 	public Resource getExtlibraryOrigin() throws IOException {
-		return loadFromClassloader("extlibraryOrigin.ecore");
+		return loadFromClassLoader("extlibraryOrigin.ecore");
 	}
 }

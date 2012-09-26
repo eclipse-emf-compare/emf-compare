@@ -17,10 +17,10 @@ import org.eclipse.emf.ecore.resource.Resource;
 
 public class PostProcessInputData extends AbstractInputData {
 	public Resource getLeft() throws IOException {
-		return loadFromClassloader("left.nodes"); //$NON-NLS-1$
+		return loadFromClassLoader("left.nodes"); //$NON-NLS-1$
 	}
 
 	public Resource getRight() throws IOException {
-		return loadFromClassloader("right.nodes"); //$NON-NLS-1$
+		return loadFromClassLoader("right.nodes"); //$NON-NLS-1$
 	}
 }

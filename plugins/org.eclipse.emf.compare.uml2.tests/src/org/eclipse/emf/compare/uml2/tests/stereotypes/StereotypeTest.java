@@ -33,13 +33,25 @@ import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.data.StereotypeInputData;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.uml2.uml.UMLPackage;
+import org.junit.After;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
 public class StereotypeTest extends AbstractTest {
 
 	private StereotypeInputData input = new StereotypeInputData();
+
+	@After
+	public void cleanup() {
+		for (ResourceSet set : input.getSets()) {
+			for (Resource res : set.getResources()) {
+				res.unload();
+			}
+			set.getResources().clear();
+		}
+	}
 
 	@Test
 	public void testA10UseCase() throws IOException {

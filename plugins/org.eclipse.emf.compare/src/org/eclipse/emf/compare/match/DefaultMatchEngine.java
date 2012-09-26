@@ -135,11 +135,33 @@ public class DefaultMatchEngine implements IMatchEngine {
 		final Iterable<MatchResource> mappings = resourceMatcher.createMappings(leftChildren, rightChildren,
 				originChildren);
 
+		Iterator<? extends EObject> leftEObjects = Iterators.emptyIterator();
+		Iterator<? extends EObject> rightEObjects = Iterators.emptyIterator();
+		Iterator<? extends EObject> originEObjects = Iterators.emptyIterator();
+
 		for (MatchResource mapping : mappings) {
 			getComparison().getMatchedResources().add(mapping);
 
-			match(mapping.getLeft(), mapping.getRight(), mapping.getOrigin());
+			final Resource leftRes = mapping.getLeft();
+			final Resource rightRes = mapping.getRight();
+			final Resource originRes = mapping.getOrigin();
+
+			if (leftRes != null) {
+				leftEObjects = Iterators.concat(leftEObjects, getScope().getCoveredEObjects(leftRes));
+			}
+
+			if (rightRes != null) {
+				rightEObjects = Iterators.concat(rightEObjects, getScope().getCoveredEObjects(rightRes));
+			}
+
+			if (originRes != null) {
+				originEObjects = Iterators.concat(originEObjects, getScope().getCoveredEObjects(originRes));
+			}
 		}
+
+		final Iterable<Match> matches = getEObjectMatcher().createMatches(leftEObjects, rightEObjects,
+				originEObjects);
+		Iterables.addAll(getComparison().getMatches(), matches);
 	}
 
 	/**

@@ -15,8 +15,6 @@ import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.diff.UMLDiffExtensionPostProcessor;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.junit.After;
 import org.junit.Before;
 
@@ -34,18 +32,6 @@ public abstract class AbstractTest {
 	@After
 	public void after() {
 		EMFCompareExtensionRegistry.clearRegistry();
-		if (getInput() != null && getInput().sets != null) {
-			for (ResourceSet set : getInput().sets) {
-				cleanup(set);
-			}
-		}
-	}
-
-	private void cleanup(ResourceSet resourceSet) {
-		for (Resource res : resourceSet.getResources()) {
-			res.unload();
-		}
-		resourceSet.getResources().clear();
 	}
 
 	protected enum TestKind {
