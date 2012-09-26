@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.logical;
+package org.eclipse.emf.compare.ide.internal.utils;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.Maps;
@@ -26,25 +26,25 @@ import java.util.concurrent.Future;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.AbstractEList;
+import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.ide.internal.utils.PriorityExecutorService;
 import org.eclipse.emf.compare.ide.internal.utils.PriorityExecutorService.Priority;
-import org.eclipse.emf.compare.ide.internal.utils.ResourceUtil;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.emf.ecore.xmi.impl.XMLParserPoolImpl;
 
 /**
  * This implementation of a ResourceSet will avoid loading of any resource from any other mean than
  * {@link #resolveAll()}. Furthermore, it will unload any resource it has loaded as soon as its finished with
  * the cross reference links resolving.
  * <p>
- * This is used from our {@link EMFSynchronizationModel} in order to resolve the traversals without keeping
- * the whole model in-memory (and striving to never have it in-memory as a whole).
+ * This is used from our EMFSynchronizationModel in order to resolve the traversals without keeping the whole
+ * model in-memory (and striving to never have it in-memory as a whole).
  * </p>
  * <p>
  * Since this class only aims at resolving cross-resource dependencies, its main bottleneck is the parsing of
@@ -59,6 +59,18 @@ import org.eclipse.emf.ecore.xmi.impl.XMLParserPoolImpl;
  * that allows us to define a set of options that aims at speeding up the parsing process. Further profiling
  * might be needed to isolate other options that would have an impact, such as parser features or XML
  * options...
+ * </p>
+ * <p>
+ * Finally, the humongous CacheAdapter of UML was causing serious issues. Not only did it hinder the
+ * performance, but it also caused a random dead lock between our unloading and loading threads. We managed to
+ * totally disable it through three means.
+ * <ul>
+ * <li>The use of the {@link XMLResource#OPTION_DISABLE_NOTIFY} load option.</li>
+ * <li>The use of our own {@link NoNotificationParserPool parser pool} that does not re-enable notifications
+ * at the end of loading.</li>
+ * <li>The removal of all roots from their containing {@link Resource} during iteration when
+ * {@link #resolve(Resource) resolving}.</li>
+ * </ul>
  * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
@@ -140,14 +152,21 @@ public final class SyncResourceSet extends ResourceSetImpl {
 			 * This resource set is specifically designed to resolve cross resources links, it thus spends a
 			 * lot of time loading resources. The following set of options is what seems to give the most
 			 * significant boost in loading performances, though I did not fine-tune what's really needed
-			 * here. Using a parser pool and disabling the use of deprecated methods are a given, but the
-			 * name_to_feature map and disabling of notifications might not be needed.
+			 * here. Take note that the use of our own parser pool along with the disabling of notifications
+			 * is what allows us to bypass UML's CacheAdapter and the potential dead locks it causes.
 			 */
-			loadOptions.put(XMLResource.OPTION_USE_PARSER_POOL, new XMLParserPoolImpl());
+			loadOptions.put(XMLResource.OPTION_USE_PARSER_POOL, new NoNotificationParserPool());
 			loadOptions.put(XMLResource.OPTION_USE_DEPRECATED_METHODS, Boolean.FALSE);
-			loadOptions.put(XMLResource.OPTION_DEFER_IDREF_RESOLUTION, Boolean.TRUE);
 			loadOptions.put(XMLResource.OPTION_DISABLE_NOTIFY, Boolean.TRUE);
 
+			final int bufferSize = 16384;
+			final Map<String, Object> parserProperties = Maps.newHashMap();
+			parserProperties.put("http://apache.org/xml/properties/input-buffer-size", Integer //$NON-NLS-1$
+					.valueOf(bufferSize));
+			loadOptions.put(XMLResource.OPTION_PARSER_PROPERTIES, parserProperties);
+
+			// These two might be superfluous
+			loadOptions.put(XMLResource.OPTION_DEFER_IDREF_RESOLUTION, Boolean.TRUE);
 			final int expectedFeatureNames = 256;
 			loadOptions.put(XMLResource.OPTION_USE_XML_NAME_TO_FEATURE_MAP, Maps
 					.newHashMapWithExpectedSize(expectedFeatureNames));
@@ -164,7 +183,7 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 *            The starting point from which we'll resolve cross resources references.
 	 */
 	public void resolveAll(IStorage start) {
-		final Resource resource = ResourceUtil.loadResource(start, this);
+		final Resource resource = ResourceUtil.loadResource(start, this, getLoadOptions());
 		// reset the demanded URI that was added by this first call
 		demandedURIs.clear();
 		// and make it "loaded" instead
@@ -217,16 +236,44 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 *            The resource for which we are to resolve all cross references.
 	 */
 	private void resolve(Resource resource) {
-		final Iterator<EObject> resourceContent = resource.getContents().iterator();
+		resource.eSetDeliver(false);
+		final List<EObject> roots = ((InternalEList<EObject>)resource.getContents()).basicList();
+		final Iterator<EObject> resourceContent = roots.iterator();
+		resource.getContents().clear();
 		while (resourceContent.hasNext()) {
 			final EObject eObject = resourceContent.next();
 			resolveCrossReferences(eObject);
-			final TreeIterator<EObject> childContent = eObject.eAllContents();
+			final TreeIterator<EObject> childContent = basicEAllContents(eObject);
 			while (childContent.hasNext()) {
 				final EObject child = childContent.next();
 				resolveCrossReferences(child);
 			}
 		}
+		resource.getContents().addAll(roots);
+	}
+
+	/**
+	 * An implementation of {@link EObject#eAllContents()} that will not resolve its proxies.
+	 * 
+	 * @param eObject
+	 *            The eobject for which contents we need an iterator.
+	 * @return The created {@link TreeIterator}.
+	 */
+	private TreeIterator<EObject> basicEAllContents(final EObject eObject) {
+		return new AbstractTreeIterator<EObject>(eObject, false) {
+			/** Generated SUID. */
+			private static final long serialVersionUID = 6874121606163401152L;
+
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see org.eclipse.emf.common.util.AbstractTreeIterator#getChildren(java.lang.Object)
+			 */
+			@Override
+			public Iterator<EObject> getChildren(Object obj) {
+				return ((InternalEList<EObject>)((EObject)obj).eContents()).basicIterator();
+			}
+		};
 	}
 
 	/**
@@ -253,10 +300,14 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 *            The EObject for which we are to resolve the cross references.
 	 */
 	private void resolveCrossReferences(EObject eObject) {
-		final Iterator<EObject> objectChildren = eObject.eCrossReferences().iterator();
+		final Iterator<EObject> objectChildren = ((InternalEList<EObject>)eObject.eCrossReferences())
+				.basicIterator();
 		while (objectChildren.hasNext()) {
-			// Resolves cross references by simply visiting them.
-			objectChildren.next();
+			final EObject eObj = objectChildren.next();
+			if (eObj.eIsProxy()) {
+				final URI proxyURI = ((InternalEObject)eObj).eProxyURI();
+				getResource(proxyURI.trimFragment(), false);
+			}
 		}
 	}
 

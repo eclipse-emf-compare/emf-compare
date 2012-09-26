@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.Collections;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
@@ -75,11 +75,13 @@ public final class ResourceUtil {
 	 *            The file we need to try and load as a model.
 	 * @param resourceSet
 	 *            The resource set in which to load this Resource.
+	 * @param options
+	 *            The options to pass to {@link Resource#load(java.util.Map)}.
 	 * @return The loaded EMF Resource if {@code file} was a model, {@code null} otherwise.
 	 */
 	// Suppressing the warning until bug 376938 is fixed
 	@SuppressWarnings("resource")
-	public static Resource loadResource(IStorage storage, ResourceSet resourceSet) {
+	public static Resource loadResource(IStorage storage, ResourceSet resourceSet, Map<?, ?> options) {
 		final String resourceName = storage.getName();
 		String path = storage.getFullPath().toString();
 		if (!path.endsWith(resourceName)) {
@@ -97,7 +99,7 @@ public final class ResourceUtil {
 		try {
 			resource = resourceSet.createResource(uri);
 			stream = storage.getContents();
-			resource.load(stream, Collections.emptyMap());
+			resource.load(stream, options);
 		} catch (IOException e) {
 			// return null
 		} catch (CoreException e) {

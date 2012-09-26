@@ -7,12 +7,14 @@ Bundle-Activator: org.eclipse.emf.compare.ide.EMFCompareIDEPlugin
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.5.0",
- org.eclipse.emf.compare;bundle-version="2.0.0"
+ org.eclipse.emf.compare;bundle-version="2.0.0",
+ org.eclipse.emf.ecore.xmi;bundle-version="2.5.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Localization: plugin
 Import-Package: com.google.common.annotations;version="[10.0.0,11.0.0)", 
  com.google.common.base;version="[10.0.0,11.0.0)",
+ com.google.common.cache;version="[10.0.0,11.0.0)",
  com.google.common.collect;version="[10.0.0,11.0.0)",
  com.google.common.io;version="[10.0.0,11.0.0)",
  com.google.common.util.concurrent;version="[10.0.0,11.0.0)"

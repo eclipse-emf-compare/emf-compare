@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.ide.ui.logical;
 
 import static org.eclipse.emf.compare.ide.internal.utils.ResourceUtil.binaryIdentical;
 import static org.eclipse.emf.compare.ide.internal.utils.ResourceUtil.findIResource;
-import static org.eclipse.emf.compare.ide.internal.utils.ResourceUtil.loadResource;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.Sets;
@@ -32,8 +31,10 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.ide.internal.utils.NotLoadingResourceSet;
+import org.eclipse.emf.compare.ide.internal.utils.ResourceTraversal;
+import org.eclipse.emf.compare.ide.internal.utils.SyncResourceSet;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.ui.IEditorInput;
 
@@ -221,7 +222,7 @@ public final class EMFSynchronizationModel {
 	 * @return The resource set corresponding to the left logical model.
 	 */
 	public ResourceSet getLeftResourceSet() {
-		return createResourceSet(leftTraversal);
+		return new NotLoadingResourceSet(leftTraversal);
 	}
 
 	/**
@@ -230,7 +231,7 @@ public final class EMFSynchronizationModel {
 	 * @return The resource set corresponding to the right logical model.
 	 */
 	public ResourceSet getRightResourceSet() {
-		return createResourceSet(rightTraversal);
+		return new NotLoadingResourceSet(rightTraversal);
 	}
 
 	/**
@@ -239,7 +240,7 @@ public final class EMFSynchronizationModel {
 	 * @return The resource set corresponding to the origin logical model.
 	 */
 	public ResourceSet getOriginResourceSet() {
-		return createResourceSet(originTraversal);
+		return new NotLoadingResourceSet(originTraversal);
 	}
 
 	/**
@@ -260,8 +261,7 @@ public final class EMFSynchronizationModel {
 		 * For now, we'll simply load the resource as an EMF model and resolve it all.
 		 */
 		final SyncResourceSet resourceSet = new SyncResourceSet();
-		loadResource((IFile)start, resourceSet);
-		resourceSet.resolveAll();
+		resourceSet.resolveAll((IFile)start);
 
 		final Set<IFile> resources = Sets.newLinkedHashSet();
 		for (URI uri : resourceSet.getLoadedURIs()) {
@@ -290,8 +290,7 @@ public final class EMFSynchronizationModel {
 				start);
 		resourceSet.setURIConverter(converter);
 		try {
-			loadResource(start.getStorage(new NullProgressMonitor()), resourceSet);
-			resourceSet.resolveAll();
+			resourceSet.resolveAll(start.getStorage(new NullProgressMonitor()));
 
 			final Set<IStorage> storages = Sets.newLinkedHashSet(converter.getLoadedRevisions());
 			traversal = new ResourceTraversal(storages);
@@ -299,21 +298,6 @@ public final class EMFSynchronizationModel {
 			// FIXME ignore for now
 		}
 		return traversal;
-	}
-
-	/**
-	 * Create a resource set corresponding to the given traversal.
-	 * 
-	 * @param traversal
-	 *            The traversal from which we seek to create a new resource set.
-	 * @return A new resource set corresponding to the given traversal.
-	 */
-	private ResourceSet createResourceSet(ResourceTraversal traversal) {
-		final ResourceSet resourceSet = new ResourceSetImpl();
-		for (IStorage storage : traversal.getStorages()) {
-			loadResource(storage, resourceSet);
-		}
-		return resourceSet;
 	}
 
 	/**
