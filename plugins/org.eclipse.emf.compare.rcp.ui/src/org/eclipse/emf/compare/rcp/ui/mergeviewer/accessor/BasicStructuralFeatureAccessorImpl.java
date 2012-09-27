@@ -53,12 +53,7 @@ public abstract class BasicStructuralFeatureAccessorImpl implements IStructuralF
 		fSide = side;
 		fOwnerMatch = diff.getMatch();
 		fStructuralFeature = getAffectedFeature(diff);
-
-		List<Diff> siblingDifferences = fOwnerMatch.getDifferences();
-		// We'll display all diffs on the same reference, excluding the pseudo conflicts.
-		Predicate<? super Diff> diffFilter = and(onFeature(fStructuralFeature.getName()),
-				not(hasConflict(ConflictKind.PSEUDO)));
-		fDifferences = ImmutableList.copyOf(filter(siblingDifferences, diffFilter));
+		fDifferences = computeDifferences();
 	}
 
 	public Comparison getComparison() {
@@ -121,6 +116,14 @@ public abstract class BasicStructuralFeatureAccessorImpl implements IStructuralF
 		return fDifferences;
 	}
 
+	protected ImmutableList<Diff> computeDifferences() {
+		List<Diff> siblingDifferences = fOwnerMatch.getDifferences();
+		// We'll display all diffs on the same reference, excluding the pseudo conflicts.
+		Predicate<? super Diff> diffFilter = and(onFeature(fStructuralFeature.getName()),
+				not(hasConflict(ConflictKind.PSEUDO)));
+		return ImmutableList.copyOf(filter(siblingDifferences, diffFilter));
+	}
+
 	/**
 	 * Returns the structural feature affected by the given diff, if any.
 	 * 
@@ -128,7 +131,7 @@ public abstract class BasicStructuralFeatureAccessorImpl implements IStructuralF
 	 *            The diff from which we need to retrieve a feature.
 	 * @return The feature affected by this {@code diff}, if any. <code>null</code> if none.
 	 */
-	private static EStructuralFeature getAffectedFeature(Diff diff) {
+	protected EStructuralFeature getAffectedFeature(Diff diff) {
 		final EStructuralFeature feature;
 		if (diff instanceof ReferenceChange) {
 			feature = ((ReferenceChange)diff).getReference();
@@ -138,5 +141,12 @@ public abstract class BasicStructuralFeatureAccessorImpl implements IStructuralF
 			feature = null;
 		}
 		return feature;
+	}
+
+	/**
+	 * @return the fDiff
+	 */
+	protected final Diff getInitialDiff() {
+		return fDiff;
 	}
 }

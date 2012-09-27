@@ -102,18 +102,9 @@ public class ManyStructuralFeatureAccessorImpl extends BasicStructuralFeatureAcc
 
 					InsertionPoint insertionPoint = new InsertionPoint(diff, left, right, ancestor);
 
-					final int insertionIndex;
-					final int nbInsertionPointBefore;
-
-					if (featureIsMany(diff)) {
-						insertionIndex = Math.min(DiffUtil.findInsertionIndex(getComparison(), diff,
-								rightToLeft), ret.size());
-						List<IMergeViewerItem> subList = ret.subList(0, insertionIndex);
-						nbInsertionPointBefore = size(filter(subList, InsertionPoint.class));
-					} else {
-						insertionIndex = 0;
-						nbInsertionPointBefore = 0;
-					}
+					final int insertionIndex = Math.min(findInsertionIndex(diff, rightToLeft), ret.size());
+					List<IMergeViewerItem> subList = ret.subList(0, insertionIndex);
+					final int nbInsertionPointBefore = size(filter(subList, InsertionPoint.class));
 
 					int index = Math.min(insertionIndex + nbInsertionPointBefore, ret.size());
 					ret.add(index, insertionPoint);
@@ -121,6 +112,10 @@ public class ManyStructuralFeatureAccessorImpl extends BasicStructuralFeatureAcc
 			}
 		}
 		return ret;
+	}
+
+	protected int findInsertionIndex(Diff diff, boolean rightToLeft) {
+		return DiffUtil.findInsertionIndex(getComparison(), diff, rightToLeft);
 	}
 
 	/**
@@ -239,7 +234,7 @@ public class ManyStructuralFeatureAccessorImpl extends BasicStructuralFeatureAcc
 	 * @param diff
 	 * @return
 	 */
-	private static Object getDiffValue(Diff diff) {
+	protected Object getDiffValue(Diff diff) {
 		final Object ret;
 		if (diff instanceof ReferenceChange) {
 			ret = ((ReferenceChange)diff).getValue();
@@ -250,15 +245,4 @@ public class ManyStructuralFeatureAccessorImpl extends BasicStructuralFeatureAcc
 		}
 		return ret;
 	}
-
-	private static boolean featureIsMany(Diff diff) {
-		final EStructuralFeature eStructuralFeature;
-		if (diff instanceof ReferenceChange) {
-			eStructuralFeature = ((ReferenceChange)diff).getReference();
-		} else {
-			eStructuralFeature = ((AttributeChange)diff).getAttribute();
-		}
-		return eStructuralFeature.isMany();
-	}
-
 }
