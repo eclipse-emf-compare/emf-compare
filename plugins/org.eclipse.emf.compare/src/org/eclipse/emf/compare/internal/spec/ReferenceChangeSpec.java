@@ -32,7 +32,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 
 /**
- * This specialization of the {@link referenceChangeImpl} class allows us to define the derived features and
+ * This specialization of the {@link ReferenceChangeImpl} class allows us to define the derived features and
  * operations implementations.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>

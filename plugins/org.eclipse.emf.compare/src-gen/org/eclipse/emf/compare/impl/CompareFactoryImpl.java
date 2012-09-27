@@ -16,6 +16,7 @@ import org.eclipse.emf.compare.internal.spec.AttributeChangeSpec;
 import org.eclipse.emf.compare.internal.spec.ComparisonSpec;
 import org.eclipse.emf.compare.internal.spec.MatchSpec;
 import org.eclipse.emf.compare.internal.spec.ReferenceChangeSpec;
+import org.eclipse.emf.compare.internal.spec.ResourceAttachmentChangeSpec;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -180,11 +181,10 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public ResourceAttachmentChange createResourceAttachmentChange() {
-		ResourceAttachmentChangeImpl resourceAttachmentChange = new ResourceAttachmentChangeImpl();
-		return resourceAttachmentChange;
+		return new ResourceAttachmentChangeSpec();
 	}
 
 	/**

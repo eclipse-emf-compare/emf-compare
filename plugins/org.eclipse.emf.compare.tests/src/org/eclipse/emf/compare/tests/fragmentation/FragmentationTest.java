@@ -74,6 +74,128 @@ public class FragmentationTest {
 		assertNull(diff.getMatch().getLeft());
 		assertSame(diff.getSource(), DifferenceSource.LEFT);
 		assertSame(diff.getKind(), DifferenceKind.DELETE);
+	}
+
+	// This only tests the merge. Will fail if testDeletedRootResourceSet does.
+	@Test
+	public void testMergeDeletedRootResourceSetLtR() throws IOException {
+		final Resource left = input.getDeletedRootLeft();
+		final Resource origin = input.getDeletedRootOrigin();
+		final Resource right = input.getDeletedRootRight();
+
+		final ResourceSet leftSet = left.getResourceSet();
+		final ResourceSet originSet = origin.getResourceSet();
+		final ResourceSet rightSet = right.getResourceSet();
+
+		EcoreUtil.resolveAll(leftSet);
+		EcoreUtil.resolveAll(originSet);
+		EcoreUtil.resolveAll(rightSet);
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(leftSet, rightSet, originSet);
+		Comparison comparison = EMFCompare.newComparator(scope).compare();
+
+		final List<Diff> differences = comparison.getDifferences();
+		final Diff diff = differences.get(0);
+
+		diff.copyLeftToRight();
+		assertSame(Integer.valueOf(1), Integer.valueOf(left.getContents().size()));
+		assertSame(Integer.valueOf(1), Integer.valueOf(origin.getContents().size()));
+		assertSame(Integer.valueOf(1), Integer.valueOf(right.getContents().size()));
+
+		comparison = EMFCompare.newComparator(scope).compare();
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	// This only tests the merge. Will fail if testDeletedRootResourceSet does.
+	@Test
+	public void testMergeDeletedRootResourceSetRtL() throws IOException {
+		final Resource left = input.getDeletedRootLeft();
+		final Resource origin = input.getDeletedRootOrigin();
+		final Resource right = input.getDeletedRootRight();
+
+		final ResourceSet leftSet = left.getResourceSet();
+		final ResourceSet originSet = origin.getResourceSet();
+		final ResourceSet rightSet = right.getResourceSet();
+
+		EcoreUtil.resolveAll(leftSet);
+		EcoreUtil.resolveAll(originSet);
+		EcoreUtil.resolveAll(rightSet);
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(leftSet, rightSet, originSet);
+		Comparison comparison = EMFCompare.newComparator(scope).compare();
+
+		final List<Diff> differences = comparison.getDifferences();
+		final Diff diff = differences.get(0);
+
+		diff.copyRightToLeft();
+		assertSame(Integer.valueOf(2), Integer.valueOf(left.getContents().size()));
+		assertSame(Integer.valueOf(2), Integer.valueOf(origin.getContents().size()));
+		assertSame(Integer.valueOf(2), Integer.valueOf(right.getContents().size()));
+
+		comparison = EMFCompare.newComparator(scope).compare();
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testDeletedRootResource() throws IOException {
+		final Resource left = input.getDeletedRootLeft();
+		final Resource origin = input.getDeletedRootOrigin();
+		final Resource right = input.getDeletedRootRight();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		Comparison comparison = EMFCompare.newComparator(scope).compare();
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final Diff diff = differences.get(0);
+		assertTrue(diff instanceof ResourceAttachmentChange);
+		assertEquals(diff.getMatch().getRight(), getNodeNamed(right, "deletedRoot"));
+		assertEquals(diff.getMatch().getOrigin(), getNodeNamed(origin, "deletedRoot"));
+		assertNull(diff.getMatch().getLeft());
+		assertSame(diff.getSource(), DifferenceSource.LEFT);
+		assertSame(diff.getKind(), DifferenceKind.DELETE);
+	}
+
+	// This only tests the merge. Will fail if testDeletedRootResource does.
+	@Test
+	public void testMergeDeletedRootResourceLtR() throws IOException {
+		final Resource left = input.getDeletedRootLeft();
+		final Resource origin = input.getDeletedRootOrigin();
+		final Resource right = input.getDeletedRootRight();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		Comparison comparison = EMFCompare.newComparator(scope).compare();
+
+		final List<Diff> differences = comparison.getDifferences();
+		final Diff diff = differences.get(0);
+
+		diff.copyLeftToRight();
+		assertSame(Integer.valueOf(1), Integer.valueOf(left.getContents().size()));
+		assertSame(Integer.valueOf(1), Integer.valueOf(origin.getContents().size()));
+		assertSame(Integer.valueOf(1), Integer.valueOf(right.getContents().size()));
+
+		comparison = EMFCompare.newComparator(scope).compare();
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	// This only tests the merge. Will fail if testDeletedRootResource does.
+	@Test
+	public void testMergeDeletedRootResourceRtL() throws IOException {
+		final Resource left = input.getDeletedRootLeft();
+		final Resource origin = input.getDeletedRootOrigin();
+		final Resource right = input.getDeletedRootRight();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		Comparison comparison = EMFCompare.newComparator(scope).compare();
+
+		final List<Diff> differences = comparison.getDifferences();
+		final Diff diff = differences.get(0);
+
+		diff.copyRightToLeft();
+		assertSame(Integer.valueOf(2), Integer.valueOf(left.getContents().size()));
+		assertSame(Integer.valueOf(2), Integer.valueOf(origin.getContents().size()));
+		assertSame(Integer.valueOf(2), Integer.valueOf(right.getContents().size()));
 
 		comparison = EMFCompare.newComparator(scope).compare();
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
