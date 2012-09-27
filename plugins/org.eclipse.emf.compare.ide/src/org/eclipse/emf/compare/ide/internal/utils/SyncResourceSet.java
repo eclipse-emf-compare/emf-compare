@@ -30,7 +30,7 @@ import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.ide.internal.utils.PriorityExecutorService.Priority;
+import org.eclipse.emf.compare.ide.internal.utils.PriorityExecutor.Priority;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -93,7 +93,7 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 * the memory as soon as possible, and we expect "unload" threads to complete faster that "load" ones.
 	 * </p>
 	 */
-	private final PriorityExecutorService pool = new PriorityExecutorService("ModelResolver"); //$NON-NLS-1$
+	private final PriorityExecutor pool = new PriorityExecutor("ModelResolver"); //$NON-NLS-1$
 
 	/**
 	 * {@inheritDoc}

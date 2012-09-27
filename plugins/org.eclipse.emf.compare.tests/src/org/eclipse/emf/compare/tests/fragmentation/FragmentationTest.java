@@ -99,11 +99,18 @@ public class FragmentationTest {
 
 		diff.copyLeftToRight();
 		assertSame(Integer.valueOf(1), Integer.valueOf(left.getContents().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(origin.getContents().size()));
+		assertSame(Integer.valueOf(2), Integer.valueOf(origin.getContents().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(right.getContents().size()));
 
+		// there should be no diff between left and right
+		final Comparison lrCompare = EMFCompare.newComparator(
+				EMFCompare.createDefaultScope(leftSet, rightSet)).compare();
+		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
+
+		// but there should be two diffs (a pseudo conflict deletion) when compared with origin
 		comparison = EMFCompare.newComparator(scope).compare();
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getConflicts().size()));
 	}
 
 	// This only tests the merge. Will fail if testDeletedRootResourceSet does.
@@ -172,11 +179,18 @@ public class FragmentationTest {
 
 		diff.copyLeftToRight();
 		assertSame(Integer.valueOf(1), Integer.valueOf(left.getContents().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(origin.getContents().size()));
+		assertSame(Integer.valueOf(2), Integer.valueOf(origin.getContents().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(right.getContents().size()));
 
+		// there should be no diff between left and right
+		final Comparison lrCompare = EMFCompare.newComparator(EMFCompare.createDefaultScope(left, right))
+				.compare();
+		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
+
+		// but there should be two diffs (a pseudo conflict deletion) when compared with origin
 		comparison = EMFCompare.newComparator(scope).compare();
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getConflicts().size()));
 	}
 
 	// This only tests the merge. Will fail if testDeletedRootResource does.

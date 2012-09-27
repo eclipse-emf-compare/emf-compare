@@ -11,13 +11,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.internal.utils;
 
-import com.google.common.collect.ForwardingObject;
-
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -26,7 +22,6 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -42,9 +37,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public final class PriorityExecutorService extends ForwardingObject implements ExecutorService {
-	/** The executor service to which we'll delegate all calls. */
-	private ExecutorService delegate;
+public final class PriorityExecutor implements Executor {
+	/** The thread pool to which we'll delegate. */
+	private final ExecutorService pool;
 
 	/**
 	 * Constructs our executor service.
@@ -52,7 +47,7 @@ public final class PriorityExecutorService extends ForwardingObject implements E
 	 * @param poolName
 	 *            Name of this thread pool. We'll use this to name the worker threads.
 	 */
-	public PriorityExecutorService(String poolName) {
+	public PriorityExecutor(String poolName) {
 		final int threadCount = Runtime.getRuntime().availableProcessors() * 2;
 		final int initialCapacity = 16;
 		final String actualName;
@@ -62,46 +57,8 @@ public final class PriorityExecutorService extends ForwardingObject implements E
 			actualName = poolName;
 		}
 		final ThreadFactory factory = new NamedPoolThreadFactory(actualName);
-		delegate = new ThreadPoolExecutor(threadCount, threadCount, 0L, TimeUnit.MILLISECONDS,
+		pool = new ThreadPoolExecutor(threadCount, threadCount, 0L, TimeUnit.MILLISECONDS,
 				new PriorityBlockingQueue<Runnable>(initialCapacity, new PriorityTaskComparable()), factory);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see com.google.common.util.concurrent.ForwardingExecutorService#delegate()
-	 */
-	@Override
-	protected ExecutorService delegate() {
-		return delegate;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see com.google.common.util.concurrent.ForwardingExecutorService#submit(java.util.concurrent.Callable)
-	 */
-	public <T> Future<T> submit(Callable<T> task) {
-		return submit(task, Priority.NORMAL);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see com.google.common.util.concurrent.ForwardingExecutorService#submit(java.lang.Runnable)
-	 */
-	public Future<?> submit(Runnable task) {
-		return submit(Executors.callable(task), Priority.NORMAL);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see com.google.common.util.concurrent.ForwardingExecutorService#submit(java.lang.Runnable,
-	 *      java.lang.Object)
-	 */
-	public <T> Future<T> submit(Runnable task, T result) {
-		return submit(Executors.callable(task, result), Priority.NORMAL);
 	}
 
 	/**
@@ -147,95 +104,14 @@ public final class PriorityExecutorService extends ForwardingObject implements E
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see java.util.concurrent.ExecutorService#awaitTermination(long, java.util.concurrent.TimeUnit)
-	 */
-	public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
-		return delegate().awaitTermination(timeout, unit);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see java.util.concurrent.Executor#execute(java.lang.Runnable)
 	 */
 	public void execute(Runnable command) {
-		delegate().execute(command);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.util.concurrent.ExecutorService#invokeAll(java.util.Collection)
-	 */
-	public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks) throws InterruptedException {
-		return delegate().invokeAll(tasks);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.util.concurrent.ExecutorService#invokeAll(java.util.Collection, long,
-	 *      java.util.concurrent.TimeUnit)
-	 */
-	public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks, long timeout, TimeUnit unit)
-			throws InterruptedException {
-		return delegate().invokeAll(tasks, timeout, unit);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.util.concurrent.ExecutorService#invokeAny(java.util.Collection)
-	 */
-	public <T> T invokeAny(Collection<Callable<T>> tasks) throws InterruptedException, ExecutionException {
-		return delegate().invokeAny(tasks);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.util.concurrent.ExecutorService#invokeAny(java.util.Collection, long,
-	 *      java.util.concurrent.TimeUnit)
-	 */
-	public <T> T invokeAny(Collection<Callable<T>> tasks, long timeout, TimeUnit unit)
-			throws InterruptedException, ExecutionException, TimeoutException {
-		return delegate().invokeAny(tasks, timeout, unit);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.util.concurrent.ExecutorService#isShutdown()
-	 */
-	public boolean isShutdown() {
-		return delegate().isShutdown();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.util.concurrent.ExecutorService#isTerminated()
-	 */
-	public boolean isTerminated() {
-		return delegate().isTerminated();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.util.concurrent.ExecutorService#shutdown()
-	 */
-	public void shutdown() {
-		delegate().shutdown();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.util.concurrent.ExecutorService#shutdownNow()
-	 */
-	public List<Runnable> shutdownNow() {
-		return delegate().shutdownNow();
+		if (command instanceof PriorityFutureTask<?>) {
+			pool.execute(command);
+		} else {
+			pool.execute(new PriorityFutureTask<Object>(Executors.callable(command), Priority.NORMAL));
+		}
 	}
 
 	/**

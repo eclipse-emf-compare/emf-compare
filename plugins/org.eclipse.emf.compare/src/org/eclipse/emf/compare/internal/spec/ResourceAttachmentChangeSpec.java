@@ -383,6 +383,24 @@ public class ResourceAttachmentChangeSpec extends ResourceAttachmentChangeImpl {
 	 *            Tells us whether we are to add an object on the left or right side.
 	 */
 	protected void removeFromTarget(boolean rightToLeft) {
+		final Match valueMatch = getMatch();
+		final EObject expectedValue;
+		if (rightToLeft) {
+			expectedValue = valueMatch.getLeft();
+		} else {
+			expectedValue = valueMatch.getRight();
+		}
 
+		// if this is a pseudo conflict, we have no value to remove
+		if (expectedValue != null) {
+			EcoreUtil.remove(expectedValue);
+			if (rightToLeft) {
+				valueMatch.setLeft(null);
+			} else {
+				valueMatch.setRight(null);
+			}
+
+			// TODO what to do with empty resources?
+		}
 	}
 }
