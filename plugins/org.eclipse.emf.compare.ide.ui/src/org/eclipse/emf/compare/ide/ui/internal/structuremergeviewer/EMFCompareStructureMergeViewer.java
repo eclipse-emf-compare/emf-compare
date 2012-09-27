@@ -190,8 +190,8 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	}
 
 	void compareInputChanged(final Comparison comparison) {
+		getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, comparison);
 		fRoot = fAdapterFactory.adapt(comparison, IDiffElement.class);
-		getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, fRoot);
 
 		getCompareConfiguration().getContainer().runAsynchronously(new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {

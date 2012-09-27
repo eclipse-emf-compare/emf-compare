@@ -31,7 +31,6 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicOb
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
 import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColorProvider;
@@ -50,9 +49,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.GC;
@@ -109,7 +105,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		super(style, bundle, cc);
 		fDynamicObject = new DynamicObject(this);
 
-		fComparison = ((ComparisonNode)cc.getProperty(EMFCompareConstants.COMPARE_RESULT)).getTarget();
+		fComparison = (Comparison)cc.getProperty(EMFCompareConstants.COMPARE_RESULT);
 
 		fEditingDomain = (EMFCompareEditingDomain)getCompareConfiguration().getProperty(
 				EMFCompareConstants.EDITING_DOMAIN);
@@ -415,54 +411,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			}
 		});
 
-		new Resizer(ret);
-
 		return ret;
-	}
-
-	private class Resizer extends MouseAdapter implements MouseMoveListener {
-
-		Control fControl;
-
-		boolean fIsDown;
-
-		public Resizer(Control c) {
-			fControl = c;
-			fControl.addMouseListener(this);
-			fControl.addMouseMoveListener(this);
-			fControl.addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent e) {
-					fControl = null;
-				}
-			});
-		}
-
-		@Override
-		public void mouseDoubleClick(MouseEvent e) {
-			getControl().layout(true);
-		}
-
-		@Override
-		public void mouseDown(MouseEvent e) {
-			fIsDown = true;
-		}
-
-		@Override
-		public void mouseUp(MouseEvent e) {
-			fIsDown = false;
-			resize();
-		}
-
-		public void mouseMove(MouseEvent e) {
-			if (fIsDown) {
-				resize();
-			}
-		}
-
-		private void resize() {
-			getControl().layout(true);
-			fControl.getDisplay().update();
-		}
 	}
 
 	protected abstract void paintCenter(GC g);
