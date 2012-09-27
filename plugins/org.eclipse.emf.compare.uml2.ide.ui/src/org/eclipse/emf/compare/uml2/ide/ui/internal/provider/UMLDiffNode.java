@@ -10,19 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.ide.ui.internal.provider;
 
-import static com.google.common.collect.Iterables.filter;
-
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IDEManyStructuralFeatureAccessorImpl;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IDESingleStructuralFeatureAccessorImpl;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.DiffNode;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.uml2.UMLDiff;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.UMLIDEManyStructuralFeatureAccessorImpl;
+import org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.UMLIDESingleStructuralFeatureAccessorImpl;
 import org.eclipse.emf.ecore.EReference;
 
 /**
@@ -78,20 +72,11 @@ public class UMLDiffNode extends DiffNode {
 			case ADD:
 			case DELETE:
 			case MOVE:
-				EObject discriminant = diff.getDiscriminant();
-				EList<Diff> differences = diff.getMatch().getComparison().getDifferences(discriminant);
-				for (ReferenceChange referenceChange : filter(differences, ReferenceChange.class)) {
-					if (referenceChange.getKind() == diff.getKind()) {
-						EReference reference = referenceChange.getReference();
-						if (reference == diff.getEReference() && referenceChange.getValue() == discriminant) {
-							if (reference.isMany()) {
-								ret = new IDEManyStructuralFeatureAccessorImpl(referenceChange, side);
-							} else {
-								ret = new IDESingleStructuralFeatureAccessorImpl(referenceChange, side);
-							}
-							break;
-						}
-					}
+				EReference eReference = diff.getEReference();
+				if (eReference.isMany()) {
+					ret = new UMLIDEManyStructuralFeatureAccessorImpl(diff, side);
+				} else {
+					ret = new UMLIDESingleStructuralFeatureAccessorImpl(diff, side);
 				}
 				break;
 			case CHANGE:

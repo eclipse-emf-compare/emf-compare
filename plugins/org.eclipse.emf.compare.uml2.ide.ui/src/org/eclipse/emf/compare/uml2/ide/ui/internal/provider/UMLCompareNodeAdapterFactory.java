@@ -149,6 +149,136 @@ public class UMLCompareNodeAdapterFactory extends UMLCompareAdapterFactory imple
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.util.UMLCompareAdapterFactory#createProfileApplicationChangeAdapter()
+	 */
+	@Override
+	public Adapter createProfileApplicationChangeAdapter() {
+		return new UMLDiffNode(getRootAdapterFactory());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.util.UMLCompareAdapterFactory#createDependencyChangeAdapter()
+	 */
+	@Override
+	public Adapter createDependencyChangeAdapter() {
+		return new UMLDiffNode(getRootAdapterFactory());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.util.UMLCompareAdapterFactory#createInterfaceRealizationChangeAdapter()
+	 */
+	@Override
+	public Adapter createInterfaceRealizationChangeAdapter() {
+		return new UMLDiffNode(getRootAdapterFactory());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.util.UMLCompareAdapterFactory#createSubstitutionChangeAdapter()
+	 */
+	@Override
+	public Adapter createSubstitutionChangeAdapter() {
+		return new UMLDiffNode(getRootAdapterFactory());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.util.UMLCompareAdapterFactory#createExtendChangeAdapter()
+	 */
+	@Override
+	public Adapter createExtendChangeAdapter() {
+		return new UMLDiffNode(getRootAdapterFactory());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.util.UMLCompareAdapterFactory#createIncludeChangeAdapter()
+	 */
+	@Override
+	public Adapter createIncludeChangeAdapter() {
+		return new UMLDiffNode(getRootAdapterFactory());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.util.UMLCompareAdapterFactory#createGeneralizationSetChangeAdapter()
+	 */
+	@Override
+	public Adapter createGeneralizationSetChangeAdapter() {
+		return new UMLDiffNode(getRootAdapterFactory());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.util.UMLCompareAdapterFactory#createIntervalConstraintChangeAdapter()
+	 */
+	@Override
+	public Adapter createIntervalConstraintChangeAdapter() {
+		return new UMLDiffNode(getRootAdapterFactory());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.util.UMLCompareAdapterFactory#createMessageChangeAdapter()
+	 */
+	@Override
+	public Adapter createMessageChangeAdapter() {
+		return new UMLDiffNode(getRootAdapterFactory());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.util.UMLCompareAdapterFactory#createStereotypePropertyChangeAdapter()
+	 */
+	@Override
+	public Adapter createStereotypePropertyChangeAdapter() {
+		return new UMLDiffNode(getRootAdapterFactory());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.util.UMLCompareAdapterFactory#createStereotypeApplicationChangeAdapter()
+	 */
+	@Override
+	public Adapter createStereotypeApplicationChangeAdapter() {
+		return new UMLDiffNode(getRootAdapterFactory());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.util.UMLCompareAdapterFactory#createStereotypeReferenceChangeAdapter()
+	 */
+	@Override
+	public Adapter createStereotypeReferenceChangeAdapter() {
+		return new UMLDiffNode(getRootAdapterFactory());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.util.UMLCompareAdapterFactory#createUMLDiffAdapter()
+	 */
+	@Override
+	public Adapter createUMLDiffAdapter() {
+		return new UMLDiffNode(getRootAdapterFactory());
+	}
+
+	/**
 	 * This adds a listener.
 	 * 
 	 * @param notifyChangedListener
