@@ -214,12 +214,19 @@ public abstract class UMLAbstractDiffExtensionFactory extends AbstractDiffExtens
 
 	private boolean isChangeOnAddOrDelete(Diff input) {
 		if (getRelatedExtensionKind(input) == DifferenceKind.CHANGE) {
-			final List<Diff> differences = input.getMatch().getComparison().getDifferences();
-			differences.remove(input);
-			for (Diff diff : differences) {
-				if ((getRelatedExtensionKind(diff) == DifferenceKind.ADD || getRelatedExtensionKind(diff) == DifferenceKind.DELETE)
-						&& getDiscriminantFromDiff(diff) == getDiscriminantFromDiff(input)) {
-					return true;
+			final Comparison comparison = input.getMatch().getComparison();
+			final EObject discriminant = getDiscriminantFromDiff(input);
+			final List<Diff> candidates = comparison.getDifferences(discriminant);
+
+			for (Diff diff : candidates) {
+				if (diff == input) {
+					// ignore this one
+				} else {
+					DifferenceKind relatedExtensionKind = getRelatedExtensionKind(diff);
+					if ((relatedExtensionKind == DifferenceKind.ADD || relatedExtensionKind == DifferenceKind.DELETE)
+							&& getDiscriminantFromDiff(diff) == discriminant) {
+						return true;
+					}
 				}
 			}
 		}
