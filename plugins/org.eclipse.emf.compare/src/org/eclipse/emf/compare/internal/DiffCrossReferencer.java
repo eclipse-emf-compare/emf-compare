@@ -10,13 +10,21 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * This implementation of an {@link ECrossReferenceAdapter} will allow us to only attach ourselves to the Diff
@@ -40,44 +48,58 @@ public class DiffCrossReferencer extends ECrossReferenceAdapter {
 
 	}
 
-	// @Override
-	// public Collection<EStructuralFeature.Setting> getInverseReferences(EObject eObject, boolean resolve) {
-	// Collection<EStructuralFeature.Setting> result = new ArrayList<EStructuralFeature.Setting>();
-	//
-	// if (resolve) {
-	// resolveAll(eObject);
-	// }
-	//
-	// EObject eContainer = eObject.eContainer();
-	// if (eContainer != null && eObject.eContainingFeature() != null) {
-	// result.add(((InternalEObject)eContainer).eSetting(eObject.eContainmentFeature()));
-	// }
-	//
-	// Collection<EStructuralFeature.Setting> nonNavigableInverseReferences = inverseCrossReferencer
-	// .get(eObject);
-	// if (nonNavigableInverseReferences != null) {
-	// result.addAll(nonNavigableInverseReferences);
-	// }
-	//
-	// for (EReference eReference : eObject.eClass().getEAllReferences()) {
-	// EReference eOpposite = eReference.getEOpposite();
-	// if (eOpposite != null && !eReference.isContainer() && eObject.eIsSet(eReference)) {
-	// if (eReference.isMany()) {
-	// Object collection = eObject.eGet(eReference);
-	// for (@SuppressWarnings("unchecked")
-	// Iterator<EObject> j = resolve() ? ((Collection<EObject>)collection).iterator()
-	// : ((InternalEList<EObject>)collection).basicIterator(); j.hasNext();) {
-	// InternalEObject referencingEObject = (InternalEObject)j.next();
-	// result.add(referencingEObject.eSetting(eOpposite));
-	// }
-	// } else {
-	// result.add(((InternalEObject)eObject.eGet(eReference, resolve())).eSetting(eOpposite));
-	// }
-	// }
-	// }
-	//
-	// return result;
-	// }
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Overridden to prevent potential NPEs because of UML. In short, some elements from UML do not respect
+	 * the basic contract of EMF and we can have a state where <code>eObject.eContainer() != null</code> but
+	 * <code>eObject.eContainmentFeature() == null</code>.
+	 * </p>
+	 * 
+	 * @see org.eclipse.emf.ecore.util.ECrossReferenceAdapter#getInverseReferences(org.eclipse.emf.ecore.EObject,
+	 *      boolean)
+	 */
+	// CHECKSTYLE:OFF this is an exact copy/paste of the super class, with only one additional condition
+	@Override
+	public Collection<EStructuralFeature.Setting> getInverseReferences(EObject eObject, boolean resolve) {
+		Collection<EStructuralFeature.Setting> result = new ArrayList<EStructuralFeature.Setting>();
+
+		if (resolve) {
+			resolveAll(eObject);
+		}
+
+		EObject eContainer = eObject.eContainer();
+		if (eContainer != null && eObject.eContainingFeature() != null) {
+			result.add(((InternalEObject)eContainer).eSetting(eObject.eContainmentFeature()));
+		}
+
+		Collection<EStructuralFeature.Setting> nonNavigableInverseReferences = inverseCrossReferencer
+				.get(eObject);
+		if (nonNavigableInverseReferences != null) {
+			result.addAll(nonNavigableInverseReferences);
+		}
+
+		for (EReference eReference : eObject.eClass().getEAllReferences()) {
+			EReference eOpposite = eReference.getEOpposite();
+			if (eOpposite != null && !eReference.isContainer() && eObject.eIsSet(eReference)) {
+				if (eReference.isMany()) {
+					Object collection = eObject.eGet(eReference);
+					for (@SuppressWarnings("unchecked")
+					Iterator<EObject> j = resolve() ? ((Collection<EObject>)collection).iterator()
+							: ((InternalEList<EObject>)collection).basicIterator(); j.hasNext();) {
+						InternalEObject referencingEObject = (InternalEObject)j.next();
+						result.add(referencingEObject.eSetting(eOpposite));
+					}
+				} else {
+					result.add(((InternalEObject)eObject.eGet(eReference, resolve())).eSetting(eOpposite));
+				}
+			}
+		}
+
+		return result;
+	}
+
+	// CHECKSTYLE:ON
 
 	/**
 	 * {@inheritDoc}
