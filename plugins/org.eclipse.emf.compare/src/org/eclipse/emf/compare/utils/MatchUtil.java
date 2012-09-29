@@ -15,6 +15,7 @@ import static org.eclipse.emf.compare.utils.ReferenceUtil.getAsList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.ecore.EObject;
@@ -115,14 +116,38 @@ public final class MatchUtil {
 	 */
 	public static EObject getContainer(Comparison comparison, ReferenceChange difference) {
 		EObject result = null;
-		final EObject value = difference.getValue();
 		Match match = difference.getMatch();
-		if (getAsList(match.getLeft(), difference.getReference()).contains(value)) {
-			result = match.getLeft();
-		} else if (getAsList(match.getRight(), difference.getReference()).contains(value)) {
-			result = match.getRight();
-		} else if (getAsList(match.getOrigin(), difference.getReference()).contains(value)) {
-			result = match.getOrigin();
+		final DifferenceSource source = difference.getSource();
+		final DifferenceKind kind = difference.getKind();
+		switch (kind) {
+			case DELETE:
+				if (comparison.isThreeWay()) {
+					result = match.getOrigin();
+				} else {
+					result = match.getRight();
+				}
+				break;
+			case ADD:
+				// fall through
+			case MOVE:
+				if (source == DifferenceSource.LEFT) {
+					result = match.getLeft();
+				} else {
+					result = match.getRight();
+				}
+				break;
+			case CHANGE:
+				final EObject value = difference.getValue();
+				if (getAsList(match.getLeft(), difference.getReference()).contains(value)) {
+					result = match.getLeft();
+				} else if (getAsList(match.getRight(), difference.getReference()).contains(value)) {
+					result = match.getRight();
+				} else {
+					result = match.getOrigin();
+				}
+				break;
+			default:
+				// no other case for now.
 		}
 		return result;
 	}
