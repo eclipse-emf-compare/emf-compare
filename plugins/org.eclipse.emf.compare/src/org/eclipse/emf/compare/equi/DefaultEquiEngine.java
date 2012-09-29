@@ -12,10 +12,13 @@ package org.eclipse.emf.compare.equi;
 
 import static com.google.common.collect.Iterables.filter;
 
+import com.google.common.base.Predicate;
+
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Equivalence;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -73,7 +76,7 @@ public class DefaultEquiEngine implements IEquiEngine {
 	 * @param referenceChange
 	 *            The difference that is to be checked
 	 */
-	protected void checkForEquivalences(Comparison comparison, ReferenceChange referenceChange) {
+	protected void checkForEquivalences(final Comparison comparison, final ReferenceChange referenceChange) {
 		Equivalence equivalence = referenceChange.getEquivalence();
 		if (equivalence == null) {
 			// If no equivalence, create one
@@ -88,28 +91,28 @@ public class DefaultEquiEngine implements IEquiEngine {
 			 * contained by the value of the current difference, where the reference is linked to the opposite
 			 * one
 			 */
-			EObject container = MatchUtil.getContainer(comparison, referenceChange);
-			if (container != null) {
-				for (ReferenceChange diff : filter(comparison.getDifferences(container),
-						ReferenceChange.class)) {
-					EReference reference = diff.getReference();
-					EReference eOpposite = reference.getEOpposite();
-
-					EObject referenceChangeContainer = MatchUtil.getContainer(comparison, diff);
-					EObject value = referenceChange.getValue();
-
-					if (eOpposite != null && eOpposite.equals(referenceChange.getReference())
-							&& value.equals(referenceChangeContainer)) {
-						equivalence.getDifferences().add(diff);
-						break;
+			final Match valueMatch = comparison.getMatch(referenceChange.getValue());
+			final EReference eOpposite = referenceChange.getReference().getEOpposite();
+			if (eOpposite != null && valueMatch != null) {
+				final Predicate<? super Diff> candidateFilter = new Predicate<Diff>() {
+					public boolean apply(Diff input) {
+						if (input instanceof ReferenceChange
+								&& ((ReferenceChange)input).getReference() == eOpposite) {
+							final Match candidateMatch = comparison.getMatch(((ReferenceChange)input)
+									.getValue());
+							return candidateMatch == referenceChange.getMatch();
+						}
+						return false;
 					}
+				};
+				final Iterable<Diff> candidates = filter(valueMatch.getDifferences(), candidateFilter);
 
+				for (Diff candidate : candidates) {
+					equivalence.getDifferences().add(candidate);
 				}
 
-				// Add the change differences on the old references (origin)
 				addChangesFromOrigin(comparison, referenceChange, equivalence);
 			}
-
 		}
 	}
 
