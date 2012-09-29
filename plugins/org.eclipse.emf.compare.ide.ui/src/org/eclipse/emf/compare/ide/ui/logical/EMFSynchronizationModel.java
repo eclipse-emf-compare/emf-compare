@@ -11,12 +11,12 @@
 package org.eclipse.emf.compare.ide.ui.logical;
 
 import static org.eclipse.emf.compare.ide.internal.utils.ResourceUtil.binaryIdentical;
-import static org.eclipse.emf.compare.ide.internal.utils.ResourceUtil.findIResource;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.Sets;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -30,9 +30,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.internal.utils.NotLoadingResourceSet;
 import org.eclipse.emf.compare.ide.internal.utils.ResourceTraversal;
+import org.eclipse.emf.compare.ide.internal.utils.StorageURIConverter;
 import org.eclipse.emf.compare.ide.internal.utils.SyncResourceSet;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.team.core.history.IFileRevision;
@@ -261,13 +261,15 @@ public final class EMFSynchronizationModel {
 		 * For now, we'll simply load the resource as an EMF model and resolve it all.
 		 */
 		final SyncResourceSet resourceSet = new SyncResourceSet();
+		final StorageURIConverter converter = new StorageURIConverter(resourceSet.getURIConverter());
+		resourceSet.setURIConverter(converter);
+
 		resourceSet.resolveAll((IFile)start);
 
-		final Set<IFile> resources = Sets.newLinkedHashSet();
-		for (URI uri : resourceSet.getLoadedURIs()) {
-			resources.add(findIResource(uri));
-		}
-		return new ResourceTraversal(resources);
+		final Set<IStorage> storages = Sets.newLinkedHashSet(Sets.union(Collections.singleton((IFile)start),
+				converter.getLoadedRevisions()));
+		return new ResourceTraversal(storages);
+
 	}
 
 	/**
@@ -286,13 +288,14 @@ public final class EMFSynchronizationModel {
 		// TODO how could we make this extensible?
 		ResourceTraversal traversal = new ResourceTraversal(Sets.<IFile> newLinkedHashSet());
 		final SyncResourceSet resourceSet = new SyncResourceSet();
-		final RevisionedURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
-				start);
+		final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(), start);
 		resourceSet.setURIConverter(converter);
 		try {
-			resourceSet.resolveAll(start.getStorage(new NullProgressMonitor()));
+			final IStorage startStorage = start.getStorage(new NullProgressMonitor());
+			resourceSet.resolveAll(startStorage);
 
-			final Set<IStorage> storages = Sets.newLinkedHashSet(converter.getLoadedRevisions());
+			final Set<IStorage> storages = Sets.newLinkedHashSet(Sets.union(Collections
+					.singleton(startStorage), converter.getLoadedRevisions()));
 			traversal = new ResourceTraversal(storages);
 		} catch (CoreException e) {
 			// FIXME ignore for now

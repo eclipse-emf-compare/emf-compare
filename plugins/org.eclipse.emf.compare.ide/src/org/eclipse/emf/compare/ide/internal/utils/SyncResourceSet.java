@@ -104,12 +104,34 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	@Override
 	public Resource getResource(URI uri, boolean loadOnDemand) {
 		// Never load resources from here
-		if (!loadedURIs.contains(uri)) {
+		final Resource demanded = super.getResource(uri, false);
+		if (!loadedURIs.contains(uri) && demanded == null) {
 			synchronized(demandedURIs) {
 				demandedURIs.add(uri);
 			}
 		}
-		return null;
+		return demanded;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#createResource(org.eclipse.emf.common.util.URI)
+	 */
+	@Override
+	public synchronized Resource createResource(URI uri) {
+		return super.createResource(uri);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#createResource(org.eclipse.emf.common.util.URI,
+	 *      java.lang.String)
+	 */
+	@Override
+	public synchronized Resource createResource(URI uri, String contentType) {
+		return super.createResource(uri, contentType);
 	}
 
 	/**
@@ -283,14 +305,18 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 *            The resource we are to unload.
 	 */
 	private void unload(final Resource resource) {
-		getResources().remove(resource);
-		// We still need to unload what we loaded since some (like UML) cross reference everything...
-		final Runnable unloader = new Runnable() {
-			public void run() {
-				resource.unload();
-			}
-		};
-		pool.submit(unloader, Priority.NORMAL);
+		// only unload those resources that are located in the workspace
+		final URI uri = resource.getURI();
+		if (uri.isPlatformResource() || uri.isRelative()) {
+			getResources().remove(resource);
+			// We still need to unload what we loaded since some (like UML) cross reference everything...
+			final Runnable unloader = new Runnable() {
+				public void run() {
+					resource.unload();
+				}
+			};
+			pool.submit(unloader, Priority.NORMAL);
+		}
 	}
 
 	/**

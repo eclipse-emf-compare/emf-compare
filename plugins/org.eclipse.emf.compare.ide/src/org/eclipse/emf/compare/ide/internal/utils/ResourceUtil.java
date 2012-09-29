@@ -19,12 +19,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -41,30 +37,6 @@ public final class ResourceUtil {
 	 */
 	private ResourceUtil() {
 		// hides default constructor
-	}
-
-	/**
-	 * This will try and find the {@link IFile} containing the given EMF {@link Resource#getURI() uri}. Note
-	 * that the returned resource might not exist in the workspace if the EMF {@link Resource} had been loaded
-	 * from a repository.
-	 * 
-	 * @param uri
-	 *            The URI for which we need a physical resource.
-	 * @return The {@link IFile} that contains the given EMF {@link Resource}.
-	 */
-	public static IFile findIResource(URI uri) {
-		IFile iFile = null;
-		if (uri != null) {
-			if (uri.isPlatformResource()) {
-				final IPath path = new Path(uri.trimFragment().toPlatformString(true));
-				iFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-			} else {
-				// FIXME URI should be deresolved against the workspace root
-				final IPath path = new Path(uri.trimFragment().path());
-				iFile = (IFile)ResourcesPlugin.getWorkspace().getRoot().findMember(path);
-			}
-		}
-		return iFile;
 	}
 
 	/**
