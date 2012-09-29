@@ -65,6 +65,7 @@ public class DefaultReqEngine implements IReqEngine {
 			Set<ReferenceChange> requiredDifferences = new HashSet<ReferenceChange>();
 			Set<ReferenceChange> requiredByDifferences = new HashSet<ReferenceChange>();
 
+			Match match = difference.getMatch();
 			EReference reference = sourceDifference.getReference();
 			EObject value = sourceDifference.getValue();
 			DifferenceKind kind = sourceDifference.getKind();
@@ -88,7 +89,12 @@ public class DefaultReqEngine implements IReqEngine {
 				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, value, DifferenceKind.ADD));
 
 				// -> requires ADD of the object containing the reference
-				final EObject container = MatchUtil.getContainer(comparison, sourceDifference);
+				final EObject container;
+				if (sourceDifference.getSource() == DifferenceSource.LEFT) {
+					container = match.getLeft();
+				} else {
+					container = match.getRight();
+				}
 				if (container != null) {
 					requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, container,
 							DifferenceKind.ADD));
