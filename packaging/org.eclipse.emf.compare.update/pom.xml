@@ -32,6 +32,7 @@
                 <version>${tycho-version}</version>
                 <configuration>
                     <createArtifactRepository>true</createArtifactRepository>
+                    <finalName>${project.artifactId}</finalName>
                     <compress>true</compress>
                 </configuration>
             </plugin>
