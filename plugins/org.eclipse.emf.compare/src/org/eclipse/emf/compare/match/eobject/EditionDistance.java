@@ -367,7 +367,7 @@ public class EditionDistance implements DistanceFunction {
 				checkForDifferences(fakeMatch);
 				changes += getCounter().getComputedDistance();
 			}
-			// System.err.println(changes + ":max=>" + maxDistance + ":" + a + ":" + b);
+			System.err.println(changes + ":max=>" + maxDistance + ":" + a + ":" + b);
 			return changes;
 
 		}
@@ -434,10 +434,12 @@ public class EditionDistance implements DistanceFunction {
 			}
 		}
 		for (EAttribute feat : Iterables.filter(eObj.eClass().getEAllAttributes(), featureFilter)) {
-			max += getWeight(feat) * attributeChangeCoef;
+			if (eObj.eIsSet(feat)) {
+				max += getWeight(feat) * attributeChangeCoef;
+			}
 		}
-		max = max + locationChangeCoef * 5 - 1;
-		// System.out.println(eObj.eClass().getName() + ":" + eObj + ":" + max);
+		max = max + locationChangeCoef * 5 - 2;
+		System.out.println(eObj.eClass().getName() + ":" + eObj + ":" + max);
 		return max;
 	}
 }
