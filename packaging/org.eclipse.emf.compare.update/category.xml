@@ -3,6 +3,9 @@
    <feature id="org.eclipse.emf.compare" version="0.0.0">
       <category name="compare"/>
    </feature>
+   <feature id="org.eclipse.emf.compare.source" version="0.0.0">
+      <category name="compare"/>
+   </feature>
    <feature id="org.eclipse.emf.compare.ide.ui" version="0.0.0">
       <category name="compare"/>
    </feature>
