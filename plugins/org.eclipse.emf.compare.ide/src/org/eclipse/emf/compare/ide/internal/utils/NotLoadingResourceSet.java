@@ -56,6 +56,6 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 	 */
 	@Override
 	public Resource getResource(URI uri, boolean loadOnDemand) {
-		return super.getResource(uri, preventLoad && loadOnDemand);
+		return super.getResource(uri, !preventLoad && loadOnDemand);
 	}
 }

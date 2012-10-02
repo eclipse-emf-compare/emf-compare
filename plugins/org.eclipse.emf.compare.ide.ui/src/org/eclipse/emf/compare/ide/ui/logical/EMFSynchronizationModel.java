@@ -163,8 +163,9 @@ public final class EMFSynchronizationModel {
 	}
 
 	/**
-	 * This can be called in order to prune from all traversals the resource that can be seen as binary
-	 * identical. We'll use exact equality between the resources' names to 'match' them together there.
+	 * This can be called to reduce the number of resources in this model's traversals. Specifically, we'll
+	 * remove all resources that can be seen as binary identical (we match resources through exact equality of
+	 * thier names) or read-only.
 	 */
 	public void minimize() {
 		final boolean threeWay = !originTraversal.getStorages().isEmpty();
@@ -172,6 +173,11 @@ public final class EMFSynchronizationModel {
 		final Set<IStorage> leftCopy = Sets.newLinkedHashSet(leftTraversal.getStorages());
 		final Set<IStorage> rightCopy = Sets.newLinkedHashSet(rightTraversal.getStorages());
 		final Set<IStorage> originCopy = Sets.newLinkedHashSet(originTraversal.getStorages());
+
+		// TODO PERF We're iterating twice. Could probably be done in the latter loop
+		removeReadOnly(leftTraversal.getStorages());
+		removeReadOnly(rightTraversal.getStorages());
+		removeReadOnly(originTraversal.getStorages());
 
 		for (IStorage left : leftCopy) {
 			final IStorage right = removeLikeNamedStorageFrom(left, rightCopy);
@@ -186,6 +192,21 @@ public final class EMFSynchronizationModel {
 			} else if (right != null && binaryIdentical(left, right)) {
 				leftTraversal.getStorages().remove(left);
 				rightTraversal.getStorages().remove(right);
+			}
+		}
+	}
+
+	/**
+	 * This will iterate over the given set of storages and remove all "read-only" files from it.
+	 * 
+	 * @param storages
+	 *            The set of storages we are to filter.
+	 */
+	private void removeReadOnly(Set<? extends IStorage> storages) {
+		final Iterator<? extends IStorage> storageIt = storages.iterator();
+		while (storageIt.hasNext()) {
+			if (storageIt.next().isReadOnly()) {
+				storageIt.remove();
 			}
 		}
 	}
