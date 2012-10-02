@@ -4,9 +4,10 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Eike Stepper - (390845) Make the URIInitializingIterator a little more extensible
  *******************************************************************************/
 package org.eclipse.emf.compare.scope;
 
@@ -165,6 +166,47 @@ public class FilterComparisonScope extends AbstractComparisonScope {
 	}
 
 	/**
+	 * Tries and register the URI of the given object as one of this scope's resources. Note that we only
+	 * consider EObjects and Resources.
+	 * 
+	 * @param <T>
+	 *            Type of this object.
+	 * @param obj
+	 *            eObject for which we
+	 */
+	protected <T> void addUri(T obj) {
+		if (obj instanceof Resource) {
+			addUri((Resource)obj);
+		} else if (obj instanceof EObject) {
+			addUri((EObject)obj);
+		}
+	}
+
+	/**
+	 * Registers the namespace and resource URI from the given <code>eObject</code>.
+	 * 
+	 * @param eObject
+	 *            The given <code>eObject</code>.
+	 */
+	protected void addUri(EObject eObject) {
+		final Resource res = eObject.eResource();
+		if (res != null) {
+			getResourceURIs().add(res.getURI().toString());
+		}
+		getNsURIs().add(eObject.eClass().getEPackage().getNsURI());
+	}
+
+	/**
+	 * Registers the resource URI from the given <code>resource</code>.
+	 * 
+	 * @param resource
+	 *            The given <code>resource</code>.
+	 */
+	protected void addUri(Resource resource) {
+		getResourceURIs().add(resource.getURI().toString());
+	}
+
+	/**
 	 * This iterator enables to add in the iteration the initialization of the namespace and resource uris
 	 * set.
 	 * 
@@ -231,35 +273,8 @@ public class FilterComparisonScope extends AbstractComparisonScope {
 		@Override
 		public T next() {
 			T obj = super.next();
-			if (obj instanceof EObject) {
-				addUri((EObject)obj);
-			} else if (obj instanceof Resource) {
-				addUri((Resource)obj);
-			}
+			addUri(obj);
 			return obj;
-		}
-
-		/**
-		 * It registers the namespace and resource URI from the given <code>eObject</code>.
-		 * 
-		 * @param eObject
-		 *            The given <code>eObject</code>.
-		 */
-		private void addUri(EObject eObject) {
-			if (eObject.eResource() != null) {
-				getResourceURIs().add(eObject.eResource().getURI().toString());
-			}
-			getNsURIs().add(eObject.eClass().getEPackage().getNsURI());
-		}
-
-		/**
-		 * It registers the resource URI from the given <code>resource</code>.
-		 * 
-		 * @param resource
-		 *            The given <code>resource</code>.
-		 */
-		private void addUri(Resource resource) {
-			getResourceURIs().add(resource.getURI().toString());
 		}
 	}
 }
