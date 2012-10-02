@@ -4,9 +4,10 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Eike Stepper - (390846) Make the DefaultMatchEngine more extensible
  *******************************************************************************/
 package org.eclipse.emf.compare.match;
 
@@ -19,6 +20,7 @@ import java.util.Iterator;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompareConfiguration;
@@ -77,36 +79,33 @@ public class DefaultMatchEngine implements IMatchEngine {
 
 		getComparison().setThreeWay(origin != null);
 
+		match(left, right, origin);
+
+		return getComparison();
+	}
+
+	/**
+	 * This methods will delegate to the proper "match(T, T, T)" implementation according to the types of
+	 * {@code left}, {@code right} and {@code origin}.
+	 * 
+	 * @param left
+	 *            The left {@link Notifier}.
+	 * @param right
+	 *            The right {@link Notifier}.
+	 * @param origin
+	 *            The common ancestor of <code>left</code> and <code>right</code>. Can be <code>null</code>.
+	 */
+	protected void match(final Notifier left, final Notifier right, final Notifier origin) {
 		// FIXME side-effect coding
 		if (left instanceof ResourceSet || right instanceof ResourceSet) {
 			match((ResourceSet)left, (ResourceSet)right, (ResourceSet)origin);
 		} else if (left instanceof Resource || right instanceof Resource) {
-			// Our "roots" are Resources. Consider them matched
-			final MatchResource match = CompareFactory.eINSTANCE.createMatchResource();
-
-			match.setLeft((Resource)left);
-			match.setRight((Resource)right);
-			match.setOrigin((Resource)origin);
-
-			if (left != null && ((Resource)left).getURI() != null) {
-				match.setLeftURI(((Resource)left).getURI().toString());
-			}
-			if (right != null && ((Resource)right).getURI() != null) {
-				match.setRightURI(((Resource)right).getURI().toString());
-			}
-			if (origin != null && ((Resource)origin).getURI() != null) {
-				match.setOriginURI(((Resource)origin).getURI().toString());
-			}
-
-			getComparison().getMatchedResources().add(match);
 			match((Resource)left, (Resource)right, (Resource)origin);
 		} else if (left instanceof EObject || right instanceof EObject) {
 			match((EObject)left, (EObject)right, (EObject)origin);
 		} else {
 			// TODO Cannot happen ... for now. Should we log an exception?
 		}
-
-		return getComparison();
 	}
 
 	/**
@@ -117,7 +116,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * @param left
 	 *            The left {@link ResourceSet}.
 	 * @param right
-	 *            The common {@link ResourceSet}.
+	 *            The right {@link ResourceSet}.
 	 * @param origin
 	 *            The common ancestor of <code>left</code> and <code>right</code>. Can be <code>null</code>.
 	 */
@@ -179,6 +178,36 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 *            The common ancestor of <code>left</code> and <code>right</code>. Can be <code>null</code>.
 	 */
 	protected void match(Resource left, Resource right, Resource origin) {
+		// Our "roots" are Resources. Consider them matched
+		final MatchResource match = CompareFactory.eINSTANCE.createMatchResource();
+
+		match.setLeft(left);
+		match.setRight(right);
+		match.setOrigin(origin);
+
+		if (left != null) {
+			URI uri = left.getURI();
+			if (uri != null) {
+				match.setLeftURI(uri.toString());
+			}
+		}
+
+		if (right != null) {
+			URI uri = right.getURI();
+			if (uri != null) {
+				match.setRightURI(uri.toString());
+			}
+		}
+
+		if (origin != null) {
+			URI uri = origin.getURI();
+			if (uri != null) {
+				match.setOriginURI(uri.toString());
+			}
+		}
+
+		getComparison().getMatchedResources().add(match);
+
 		// We need at least two resources to match them
 		if (atLeastTwo(left == null, right == null, origin == null)) {
 			/*
