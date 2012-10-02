@@ -5,12 +5,12 @@
   <parent>
     <artifactId>emf.compare-parent</artifactId>
     <groupId>org.eclipse.emf.compare</groupId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.1-SNAPSHOT</version>
     <relativePath>../../org.eclipse.emf.compare-parent</relativePath>
   </parent>
   <groupId>org.eclipse.emf.compare</groupId>
   <artifactId>org.eclipse.emf.compare.uml2.tests</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
+  <version>2.0.1-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
  
   <build>
@@ -21,7 +21,7 @@
                 <version>${tycho-version}</version>
                 <configuration>
                         <includes>
-				<include>org/eclipse/emf/compare/uml2/diff/test/suite/AllUML2Tests.class</include>
+							<include>org/eclipse/emf/compare/uml2/test/suite/AllUML2Tests.class</include>
                         </includes>     
                         <useUIHarness>false</useUIHarness>
                         <useUIThread>false</useUIThread>
