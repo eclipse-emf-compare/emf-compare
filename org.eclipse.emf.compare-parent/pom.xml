@@ -283,7 +283,10 @@
         </repository>         
         <repository><id>swtbot</id><layout>p2</layout>
             <url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site</url>          
-        </repository>        
+        </repository>
+        <repository><id>UML</id><layout>p2</layout>
+            <url>http://download.eclipse.org/modeling/mdt/uml2/updates/4.1milestones/</url>          
+        </repository>
         <!--repository><id>ocl</id><layout>p2</layout>
           <url>http://download.eclipse.org/modeling/mdt/ocl/updates/milestones/4.0.0</url>
         </repository>
