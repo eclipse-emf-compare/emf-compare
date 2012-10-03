@@ -244,7 +244,7 @@ public final class ResourceUtil {
 			char[] array3) {
 		if (length1 == length2 && length1 == length3) {
 			boolean result = true;
-			if (array1 == array2 && array1 == array2) {
+			if (array1 == array2 && array1 == array3) {
 				result = true;
 			} else if (array1 == null || array2 == null || array3 == null) {
 				result = false;
