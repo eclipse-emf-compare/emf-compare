@@ -18,6 +18,9 @@
    <feature id="org.eclipse.emf.compare.rcp.ui.source" version="0.0.0">
       <category name="compare"/>
    </feature>
+   <feature id="org.eclipse.emf.compare.uml2" version="0.0.0">
+      <category name="compare_integration"/>
+   </feature>
    <category-def name="compare" label="EMF Compare">
       <description>
          EMF Compare features.
