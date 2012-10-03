@@ -16,6 +16,7 @@ import com.google.common.collect.Sets;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -81,10 +82,10 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 * Keeps track of the URIs that have been demanded by the resolving of a resource. This cache will be
 	 * invalidated when we start resolving this new set of resources.
 	 */
-	private Set<URI> demandedURIs = Sets.newLinkedHashSet();
+	private final Set<URI> demandedURIs = Sets.newLinkedHashSet();
 
 	/** Keeps track of the URIs of all resources that have been loaded by this resource set. */
-	private Set<URI> loadedURIs = Sets.newLinkedHashSet();
+	private final Set<URI> loadedURIs = Sets.newLinkedHashSet();
 
 	/**
 	 * This thread pool will be used to launch the loading and unloading of resources in separate threads.
@@ -216,8 +217,8 @@ public final class SyncResourceSet extends ResourceSetImpl {
 
 		Set<URI> newURIs;
 		synchronized(demandedURIs) {
-			newURIs = demandedURIs;
-			demandedURIs = Sets.newLinkedHashSet();
+			newURIs = new LinkedHashSet<URI>(demandedURIs);
+			demandedURIs.clear();
 		}
 		while (!newURIs.isEmpty()) {
 			loadedURIs.addAll(newURIs);
@@ -235,8 +236,8 @@ public final class SyncResourceSet extends ResourceSetImpl {
 				}
 			}
 			synchronized(demandedURIs) {
-				newURIs = demandedURIs;
-				demandedURIs = Sets.newLinkedHashSet();
+				newURIs = new LinkedHashSet<URI>(demandedURIs);
+				demandedURIs.clear();
 			}
 		}
 	}
