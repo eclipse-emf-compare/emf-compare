@@ -181,6 +181,9 @@ public final class ResourceUtil {
 			if (rightReader != null) {
 				Closeables.closeQuietly(rightReader);
 			}
+			if (originReader != null) {
+				Closeables.closeQuietly(originReader);
+			}
 		}
 		return false;
 	}
