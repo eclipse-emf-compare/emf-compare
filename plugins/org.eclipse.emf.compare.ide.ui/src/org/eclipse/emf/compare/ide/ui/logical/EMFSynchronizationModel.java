@@ -272,7 +272,7 @@ public final class EMFSynchronizationModel {
 	 *         starting point.
 	 */
 	private static ResourceTraversal resolveTraversal(IResource start) {
-		if (start == null || !(start instanceof IFile)) {
+		if (!(start instanceof IFile)) {
 			return new ResourceTraversal(Sets.<IFile> newLinkedHashSet());
 		}
 
