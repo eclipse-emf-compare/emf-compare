@@ -71,9 +71,7 @@
     <module>../plugins/org.eclipse.emf.compare.uml2</module>
     <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>
     <module>../plugins/org.eclipse.emf.compare.uml2.ide.ui</module>
-    <!-- no test yet (need a profile. How to do on hudson?)
     <module>../plugins/org.eclipse.emf.compare.uml2.tests</module>
-    -->
 
     <!-- SYSML -->
     <!-- Not compiling yet

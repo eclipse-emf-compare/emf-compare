@@ -21,7 +21,7 @@
                 <version>${tycho-version}</version>
                 <configuration>
                         <includes>
-							<include>org/eclipse/emf/compare/uml2/test/suite/AllUML2Tests.class</include>
+							<include>org/eclipse/emf/compare/uml2/tests/suite/AllTests.class</include>
                         </includes>     
                         <useUIHarness>false</useUIHarness>
                         <useUIThread>false</useUIThread>
