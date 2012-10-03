@@ -166,7 +166,7 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 		};
 	}
 
-	private final Predicate<? super Object> matchWithNoChildren() {
+	private Predicate<? super Object> matchWithNoChildren() {
 		return new Predicate<Object>() {
 			public boolean apply(Object input) {
 				boolean ret = false;
@@ -179,7 +179,7 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 		};
 	}
 
-	private static final Predicate<? super Object> emptyMatch() {
+	private static Predicate<? super Object> emptyMatch() {
 		return new Predicate<Object>() {
 			public boolean apply(Object input) {
 				if (input instanceof Match) {
