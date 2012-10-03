@@ -18,6 +18,8 @@ import com.google.common.collect.Maps;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -57,7 +59,15 @@ public class ForwardingXMLHandler extends XMLHandler {
 				 */
 				@Override
 				public Field load(String key) throws Exception {
-					return findField(key);
+					final Field field = findField(key);
+					// Make it accessible right off the bat
+					AccessController.doPrivileged(new PrivilegedAction<Object>() {
+						public Object run() {
+							field.setAccessible(true);
+							return null;
+						}
+					});
+					return field;
 				}
 			});
 
@@ -478,15 +488,22 @@ public class ForwardingXMLHandler extends XMLHandler {
 			for (int i = 0; i < params.length; i++) {
 				paramTypes[i] = params[i].getClass();
 			}
-			method = findMethod(methodName, paramTypes);
-			if (method != null) {
-				METHOD_CACHE.put(key, method);
+			final Method temp = findMethod(methodName, paramTypes);
+			if (temp != null) {
+				// We'll make it accessible right now
+				AccessController.doPrivileged(new PrivilegedAction<Object>() {
+					public Object run() {
+						temp.setAccessible(true);
+						return null;
+					}
+				});
+				METHOD_CACHE.put(key, temp);
 			}
+			method = temp;
 		}
 
 		try {
 			if (method != null) {
-				method.setAccessible(true);
 				return method.invoke(target, params);
 			} else {
 				throw new RuntimeException(new NoSuchMethodException("Could not find method " + methodName //$NON-NLS-1$
@@ -514,9 +531,8 @@ public class ForwardingXMLHandler extends XMLHandler {
 	 */
 	protected static void setField(String fieldName, Object target, Object value) {
 		try {
-			Field field = FIELD_CACHE.get(fieldName);
+			final Field field = FIELD_CACHE.get(fieldName);
 			if (field != null) {
-				field.setAccessible(true);
 				field.set(target, value);
 			} else {
 				throw new RuntimeException(new NoSuchFieldException("Could not find field " + fieldName //$NON-NLS-1$
