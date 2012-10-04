@@ -12,7 +12,9 @@ package org.eclipse.emf.compare;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicMonitor;
@@ -179,8 +181,8 @@ public final class EMFCompare {
 		final IMatchEngine matchEngine = new DefaultMatchEngine(matcher);
 		Comparison comparison = matchEngine.match(scope, configuration);
 
-		IPostProcessor postProcessor = getPostProcessor(scope);
-		if (postProcessor != null) {
+		final List<IPostProcessor> postProcessors = getPostProcessors(scope);
+		for (IPostProcessor postProcessor : postProcessors) {
 			postProcessor.postMatch(comparison);
 		}
 
@@ -190,21 +192,21 @@ public final class EMFCompare {
 		final IDiffEngine diffEngine = new DefaultDiffEngine(diffBuilder);
 		diffEngine.diff(comparison);
 
-		if (postProcessor != null) {
+		for (IPostProcessor postProcessor : postProcessors) {
 			postProcessor.postDiff(comparison);
 		}
 
 		final IReqEngine reqEngine = new DefaultReqEngine();
 		reqEngine.computeRequirements(comparison);
 
-		if (postProcessor != null) {
+		for (IPostProcessor postProcessor : postProcessors) {
 			postProcessor.postRequirements(comparison);
 		}
 
 		final IEquiEngine equiEngine = new DefaultEquiEngine();
 		equiEngine.computeEquivalences(comparison);
 
-		if (postProcessor != null) {
+		for (IPostProcessor postProcessor : postProcessors) {
 			postProcessor.postEquivalences(comparison);
 		}
 
@@ -212,7 +214,7 @@ public final class EMFCompare {
 			final IConflictDetector conflictDetector = new DefaultConflictDetector();
 			conflictDetector.detect(comparison);
 
-			if (postProcessor != null) {
+			for (IPostProcessor postProcessor : postProcessors) {
 				postProcessor.postConflicts(comparison);
 			}
 		}
@@ -221,40 +223,42 @@ public final class EMFCompare {
 	}
 
 	/**
-	 * Retrieve the post processor from a given <code>scope</code>. The scope provides the set of scanned
+	 * Retrieve the post processors from a given <code>scope</code>. The scope provides the set of scanned
 	 * namespaces and resource uris. If one of them matches with the regex of a
 	 * "org.eclipse.emf.compare.postProcessor" extension point, then the associated post processor is
 	 * returned.
 	 * 
 	 * @param scope
 	 *            The given scope.
-	 * @return The associated post processor if any.
+	 * @return The associated post processors if any.
 	 */
-	private static IPostProcessor getPostProcessor(IComparisonScope scope) {
-		IPostProcessor postProcessor = null;
+	private static List<IPostProcessor> getPostProcessors(IComparisonScope scope) {
+		final List<IPostProcessor> postProcessors = new ArrayList<IPostProcessor>();
 		final Iterator<PostProcessorDescriptor> postProcessorIterator = EMFCompareExtensionRegistry
 				.getRegisteredPostProcessors().iterator();
-		while (postProcessorIterator.hasNext() && postProcessor == null) {
+		while (postProcessorIterator.hasNext()) {
 			final PostProcessorDescriptor descriptor = postProcessorIterator.next();
 			if (descriptor.getNsURI() != null && descriptor.getNsURI().trim().length() != 0) {
 				final Iterator<String> nsUris = scope.getNsURIs().iterator();
-				while (nsUris.hasNext() && postProcessor == null) {
+				while (nsUris.hasNext()) {
 					if (nsUris.next().matches(descriptor.getNsURI())) {
-						postProcessor = descriptor.getPostProcessor();
+						postProcessors.add(descriptor.getPostProcessor());
+						break;
 					}
 				}
 			}
 			// Should probably use two loops here to prioritize NsURI matching
 			if (descriptor.getResourceURI() != null && descriptor.getResourceURI().trim().length() != 0) {
 				final Iterator<String> resourceUris = scope.getResourceURIs().iterator();
-				while (resourceUris.hasNext() && postProcessor == null) {
+				while (resourceUris.hasNext()) {
 					if (resourceUris.next().matches(descriptor.getResourceURI())) {
-						postProcessor = descriptor.getPostProcessor();
+						postProcessors.add(descriptor.getPostProcessor());
+						break;
 					}
 				}
 			}
 		}
-		return postProcessor;
+		return postProcessors;
 	}
 
 	/**

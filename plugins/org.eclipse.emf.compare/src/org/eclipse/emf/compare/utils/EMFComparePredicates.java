@@ -127,6 +127,34 @@ public final class EMFComparePredicates {
 	}
 
 	/**
+	 * This predicate can be used to check whether a given Diff represents the addition of a value in a
+	 * multi-valued reference going by {@code referenceName} on an EObject which name matches
+	 * {@code qualifiedName}.
+	 * <p>
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a String
+	 * for us to compare it with the given qualified name.
+	 * </p>
+	 * 
+	 * @param qualifiedName
+	 *            Qualified name of the EObject which we expect to present a ReferenceChange.
+	 * @param referenceName
+	 *            Name of the multi-valued reference on which we expect a change.
+	 * @param addedQualifiedName
+	 *            Qualified name of the EObject which we expect to have been added to this reference.
+	 * @param featureDelegateForAddedName
+	 *            The optional feature to define the name of the objects which we expect to have been added to
+	 *            this reference. May be null.
+	 * @return The created predicate.
+	 */
+	public static Predicate<? super Diff> addedToReference(final String qualifiedName,
+			final String referenceName, final String addedQualifiedName,
+			final EStructuralFeature featureDelegateForAddedName) {
+		// This is only meant for multi-valued references
+		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), referenceValueMatch(referenceName,
+				addedQualifiedName, true, featureDelegateForAddedName));
+	}
+
+	/**
 	 * This predicate can be used to check whether a given Diff represents the moving of a value within a
 	 * multi-valued attribute going by {@code attributeName} on an EObject which name matches
 	 * {@code qualifiedName}.
@@ -224,6 +252,34 @@ public final class EMFComparePredicates {
 		// This is only meant for multi-valued references
 		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), referenceValueMatch(
 				referenceName, removedQualifiedName, true));
+	}
+
+	/**
+	 * This predicate can be used to check whether a given Diff represents the deletion of a value from a
+	 * multi-valued reference going by {@code referenceName} on an EObject which name matches
+	 * {@code qualifiedName}.
+	 * <p>
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a String
+	 * for us to compare it with the given qualified name.
+	 * </p>
+	 * 
+	 * @param qualifiedName
+	 *            Qualified name of the EObject which we expect to present a ReferenceChange.
+	 * @param referenceName
+	 *            Name of the multi-valued reference on which we expect a change.
+	 * @param removedQualifiedName
+	 *            Qualified name of the EObject which we expect to have been removed from this reference.
+	 * @param featureDelegateForRemovedName
+	 *            The optional feature to define the name of the objects which we expect to have been removed
+	 *            from this reference. May be null.
+	 * @return The created predicate.
+	 */
+	public static Predicate<? super Diff> removedFromReference(final String qualifiedName,
+			final String referenceName, final String removedQualifiedName,
+			final EStructuralFeature featureDelegateForRemovedName) {
+		// This is only meant for multi-valued references
+		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), referenceValueMatch(
+				referenceName, removedQualifiedName, true, featureDelegateForRemovedName));
 	}
 
 	/**
