@@ -19,17 +19,27 @@ import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.req.IReqEngine;
 
 /**
+ * Specialized EMFCompare class to handle IDE specific behavior.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class EMFCompareIDE extends EMFCompare {
 
 	/**
+	 * Creates a new EMFCompareIDE object able to compare Notifier with the help of given engines.
+	 * 
 	 * @param matchEngine
+	 *            IMatchEngine to use to compute comparison
 	 * @param diffEngine
+	 *            IDiffEngine to use to compute comparison
 	 * @param reqEngine
+	 *            IReqEngine to use to compute comparison
 	 * @param equiEngine
+	 *            IEquiEngine to use to compute comparison
 	 * @param conflictDetector
+	 *            IConflictDetector to use to compute comparison
 	 * @param postProcessorRegistry
+	 *            PostProcessorRegistry to use to find an IPostProcessor
 	 */
 	protected EMFCompareIDE(IMatchEngine matchEngine, IDiffEngine diffEngine, IReqEngine reqEngine,
 			IEquiEngine equiEngine, IConflictDetector conflictDetector,
@@ -38,15 +48,25 @@ public class EMFCompareIDE extends EMFCompare {
 	}
 
 	/**
-	 * @return
+	 * Creates a new builder to configure the creation of a new EMFCompare object.
+	 * 
+	 * @return a new builder.
 	 */
 	public static Builder builder() {
 		return new Builder();
 	}
 
+	/**
+	 * A Builder pattern to instantiate EMFCompareIDE objects.
+	 * 
+	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+	 */
 	public static class Builder extends EMFCompare.Builder {
 
-		public Builder() {
+		/**
+		 * Creates a new builder object.
+		 */
+		protected Builder() {
 			this.registry = EMFCompareIDEPlugin.getDefault().getPostProcessorRegistry();
 		}
 

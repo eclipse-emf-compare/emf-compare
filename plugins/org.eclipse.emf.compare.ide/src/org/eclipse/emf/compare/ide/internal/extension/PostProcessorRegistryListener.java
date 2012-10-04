@@ -30,8 +30,16 @@ public class PostProcessorRegistryListener implements IRegistryEventListener {
 	/** Name of the extension point's "postProcessor" tag. */
 	private static final String POST_PROCESSOR_TAG = "postProcessor"; //$NON-NLS-1$
 
+	/** The post processor registry to which extension will be registered. */
 	private final PostProcessorRegistry registry;
 
+	/**
+	 * Creates a new registry listener with the given post processor registry to which extension will be
+	 * registered.
+	 * 
+	 * @param registry
+	 *            the post processor registry to which extension will be registered.
+	 */
 	public PostProcessorRegistryListener(PostProcessorRegistry registry) {
 		this.registry = registry;
 	}

@@ -31,18 +31,17 @@ import org.eclipse.emf.compare.req.DefaultReqEngine;
 import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
 
 /**
  * This class serves as the main entry point of a comparison. When all that is wanted is a basic comparison of
  * two or three notifiers, a comparison using all of the default configuration can be launched through
- * <code>EMFCompare.newComparator(EMFCompare.createDefaultScope(left, right, origin)).compare()</code>.
+ * <code>EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(left, right, origin))</code>.
  * <p>
  * When in need of a more customized comparison, the API can be used through chained calls. For example, if
  * you need to compare two notifiers ({@code left} and {@code right}) while ignoring their identifiers, with a
  * given progress monitor (call it {@code progress}), you can do so through : <code>
- * EMFCompare.newComparator(EMFCompare.createDefaultScope(left, right)).matchById(UseIdentifiers.NEVER).setMonitor(progress).compare()
+ * EMFCompare.builder().setMatchEngine(DefaultMatchEngine.create(UseIdentifiers.NEVER)).build().compare(EMFCompare.createDefaultScope(left, right), new BasicMonitor())
  * </code>.
  * </p>
  * 
@@ -50,19 +49,39 @@ import org.eclipse.emf.compare.utils.UseIdentifiers;
  */
 public class EMFCompare {
 
+	/** The IMatchEngine to use to compute comparison. */
 	private final IMatchEngine matchEngine;
 
+	/** The IDiffEngine to use to compute comparison. */
 	private final IDiffEngine diffEngine;
 
+	/** The IReqEngine to use to compute comparison. */
 	private final IReqEngine reqEngine;
 
+	/** The IEquiEngine to use to compute comparison. */
 	private final IEquiEngine equiEngine;
 
+	/** The IConflictDetector to use to compute comparison. */
 	private final IConflictDetector conflictDetector;
 
+	/** The PostProcessorRegistry to use to find an IPostProcessor. */
 	private final PostProcessorRegistry postProcessorRegistry;
 
 	/**
+	 * Creates a new EMFCompare object able to compare Notifier with the help of given engines.
+	 * 
+	 * @param matchEngine
+	 *            IMatchEngine to use to compute comparison
+	 * @param diffEngine
+	 *            IDiffEngine to use to compute comparison
+	 * @param reqEngine
+	 *            IReqEngine to use to compute comparison
+	 * @param equiEngine
+	 *            IEquiEngine to use to compute comparison
+	 * @param conflictDetector
+	 *            IConflictDetector to use to compute comparison
+	 * @param postProcessorRegistry
+	 *            PostProcessorRegistry to use to find an IPostProcessor
 	 */
 	protected EMFCompare(IMatchEngine matchEngine, IDiffEngine diffEngine, IReqEngine reqEngine,
 			IEquiEngine equiEngine, IConflictDetector conflictDetector,
@@ -78,8 +97,7 @@ public class EMFCompare {
 	/**
 	 * Creates a default EMF Compare Configuration.
 	 * <p>
-	 * This will use a basic monitor doing nothing to report progress, and the default implementation of an
-	 * {@link EqualityHelper}.
+	 * This will use a basic monitor doing nothing to report progress.
 	 * </p>
 	 * 
 	 * @return The default EMF Compare Configuration.
@@ -129,14 +147,26 @@ public class EMFCompare {
 		return new DefaultComparisonScope(left, right, origin);
 	}
 
+	/**
+	 * Computes and returns a new Comparison object representation the differences between Notifier in the
+	 * give {@code scope}.
+	 * 
+	 * @param scope
+	 *            the scope to compare.
+	 * @return the result of the comparison.
+	 */
 	public Comparison compare(IComparisonScope scope) {
 		return compare(scope, new BasicMonitor());
 	}
 
 	/**
-	 * Launches the comparison with the current configuration.
+	 * Launches the comparison with the given scope and reporting progress to the given {@code monitor}.
 	 * 
-	 * @return The result of this comparison.
+	 * @param scope
+	 *            the scope to compare.
+	 * @param monitor
+	 *            the monitor to report progress to.
+	 * @return the result of the comparison.
 	 */
 	public Comparison compare(IComparisonScope scope, final Monitor monitor) {
 		checkNotNull(scope);
@@ -183,56 +213,123 @@ public class EMFCompare {
 		return comparison;
 	}
 
+	/**
+	 * Creates a new builder to configure the creation of a new EMFCompare object.
+	 * 
+	 * @return a new builder.
+	 */
 	public static Builder builder() {
 		return new Builder();
 	}
 
+	/**
+	 * A Builder pattern to instantiate EMFCompare objects.
+	 * 
+	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+	 */
 	public static class Builder {
+
+		/** The IMatchEngine to use to compute comparison. */
 		protected IMatchEngine matchEngine;
 
+		/** The IReqEngine to use to compute comparison. */
 		protected IReqEngine reqEngine;
 
+		/** The IDiffEngine to use to compute comparison. */
 		protected IDiffEngine diffEngine;
 
+		/** The IEquiEngine to use to compute comparison. */
 		protected IEquiEngine equiEngine;
 
+		/** The IConflictDetector to use to compute conflicts. */
 		protected IConflictDetector conflictDetector;
 
+		/** The PostProcessorRegistry to use to find an IPostProcessor. */
 		protected PostProcessorRegistry registry;
 
+		/**
+		 * Creates a new builder object.
+		 */
 		protected Builder() {
 		}
 
-		public Builder setMatchEngine(IMatchEngine matchEngine) {
-			this.matchEngine = checkNotNull(matchEngine);
+		/**
+		 * Sets the IMatchEngine to be used to compute Match.
+		 * 
+		 * @param me
+		 *            the IMatchEngine to be used to compute comparison.
+		 * @return this same builder to allow chained call.
+		 */
+		public Builder setMatchEngine(IMatchEngine me) {
+			this.matchEngine = checkNotNull(me);
 			return this;
 		}
 
-		public Builder setDiffEngine(IDiffEngine diffEngine) {
-			this.diffEngine = checkNotNull(diffEngine);
+		/**
+		 * Sets the IDiffEngine to be used to compute Diff.
+		 * 
+		 * @param de
+		 *            the IDiffEngine to be used to compute Diff.
+		 * @return this same builder to allow chained call.
+		 */
+		public Builder setDiffEngine(IDiffEngine de) {
+			this.diffEngine = checkNotNull(de);
 			return this;
 		}
 
-		public Builder setRequirementEngine(IReqEngine reqEngine) {
-			this.reqEngine = checkNotNull(reqEngine);
+		/**
+		 * Sets the IReqEngine to be used to compute dependencies between Diff.
+		 * 
+		 * @param re
+		 *            the IReqEngine to be used to compute dependencies between Diff.
+		 * @return this same builder to allow chained call.
+		 */
+		public Builder setRequirementEngine(IReqEngine re) {
+			this.reqEngine = checkNotNull(re);
 			return this;
 		}
 
-		public Builder setEquivalenceEngine(IEquiEngine equiEngine) {
-			this.equiEngine = checkNotNull(equiEngine);
+		/**
+		 * Sets the IEquiEngine to be used to compute equivalences between Diff.
+		 * 
+		 * @param ee
+		 *            the IEquiEngine to be used to compute equivalences between Diff
+		 * @return this same builder to allow chained call.
+		 */
+		public Builder setEquivalenceEngine(IEquiEngine ee) {
+			this.equiEngine = checkNotNull(ee);
 			return this;
 		}
 
-		public Builder setConflictDetector(IConflictDetector conflictDetector) {
-			this.conflictDetector = checkNotNull(conflictDetector);
+		/**
+		 * Sets the IEquiEngine to be used to compute conflicts between Diff.
+		 * 
+		 * @param cd
+		 *            the IEquiEngine to be used to compute conflicts between Diff.
+		 * @return this same builder to allow chained call.
+		 */
+		public Builder setConflictDetector(IConflictDetector cd) {
+			this.conflictDetector = checkNotNull(cd);
 			return this;
 		}
 
-		public Builder setPostProcessorRegistry(PostProcessorRegistry registry) {
-			this.registry = checkNotNull(registry);
+		/**
+		 * Sets the PostProcessor to be used to find the post processor of each comparison steps.
+		 * 
+		 * @param r
+		 *            the PostProcessor to be used to find the post processor of each comparison steps.
+		 * @return this same builder to allow chained call.
+		 */
+		public Builder setPostProcessorRegistry(PostProcessorRegistry r) {
+			this.registry = checkNotNull(r);
 			return this;
 		}
 
+		/**
+		 * Instantiates and return an EMFCompare object configured with the previously given engines.
+		 * 
+		 * @return an EMFCompare object configured with the previously given engines
+		 */
 		public EMFCompare build() {
 			if (matchEngine == null) {
 				matchEngine = DefaultMatchEngine.create(UseIdentifiers.WHEN_AVAILABLE);

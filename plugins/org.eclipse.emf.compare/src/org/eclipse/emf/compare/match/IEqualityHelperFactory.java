@@ -13,6 +13,8 @@ package org.eclipse.emf.compare.match;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 
 /**
+ * A factory that instantiate IEqualityHelper.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public interface IEqualityHelperFactory {

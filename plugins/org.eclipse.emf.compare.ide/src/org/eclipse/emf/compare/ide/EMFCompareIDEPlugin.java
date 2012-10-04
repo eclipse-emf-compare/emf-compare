@@ -72,7 +72,9 @@ public class EMFCompareIDEPlugin extends Plugin {
 	}
 
 	/**
-	 * @return the postProcessorRegistry
+	 * Returns the post processor registry to which extension will be registered.
+	 * 
+	 * @return the post processor registry to which extension will be registered
 	 */
 	public PostProcessorRegistry getPostProcessorRegistry() {
 		return postProcessorRegistry;

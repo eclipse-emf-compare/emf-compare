@@ -27,7 +27,7 @@ public class PostProcessorRegistry {
 	private final List<PostProcessorDescriptor> postProcessors;
 
 	/**
-	 * Creates a new extension registry
+	 * Creates a new extension registry.
 	 */
 	public PostProcessorRegistry() {
 		postProcessors = new CopyOnWriteArrayList<PostProcessorDescriptor>();

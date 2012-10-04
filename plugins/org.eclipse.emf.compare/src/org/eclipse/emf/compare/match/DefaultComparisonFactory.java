@@ -24,8 +24,15 @@ import org.eclipse.emf.compare.utils.IEqualityHelper;
  */
 public class DefaultComparisonFactory implements IComparisonFactory {
 
+	/** The factory used to instantiate IEqualityHelper to associate with Comparison. */
 	private final IEqualityHelperFactory equalityHelperFactory;
 
+	/**
+	 * Creates a new DefaultComparisonFactory.
+	 * 
+	 * @param equalityHelperFactory
+	 *            The factory used to instantiate IEqualityHelper to associate with Comparison.
+	 */
 	public DefaultComparisonFactory(IEqualityHelperFactory equalityHelperFactory) {
 		this.equalityHelperFactory = checkNotNull(equalityHelperFactory);
 	}

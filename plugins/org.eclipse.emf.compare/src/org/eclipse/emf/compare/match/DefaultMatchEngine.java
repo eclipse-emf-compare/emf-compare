@@ -424,9 +424,14 @@ public class DefaultMatchEngine implements IMatchEngine {
 	}
 
 	/**
+	 * Creates and configures an {@link IEObjectMatcher} with the strategy given by {@code useIDs}. The
+	 * {@code cache} will be used to cache some expensive computation (should better a LoadingCache).
+	 * 
 	 * @param useIDs
+	 *            which strategy the return IEObjectMatcher must follow.
 	 * @param cache
-	 * @return
+	 *            will be used to cache some expensive computation (should better a LoadingCache).
+	 * @return a new IEObjectMatcher.
 	 */
 	public static IEObjectMatcher createDefaultEObjectMatcher(UseIdentifiers useIDs, Cache<EObject, URI> cache) {
 		final IEObjectMatcher matcher;
