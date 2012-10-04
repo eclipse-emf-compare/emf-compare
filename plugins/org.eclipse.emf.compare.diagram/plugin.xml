@@ -9,22 +9,12 @@
 -->
 
 <plugin>
-   <extension-point id="viewLabelProvider" name="org.eclipse.emf.compare.diagram.viewLabelProvider" schema="schema/viewLabelProvider.exsd"/>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://www.eclipse.org/emf/compare/diff/diagram/1.0"
-            class="org.eclipse.emf.compare.diagram.diagramdiff.DiagramdiffPackage"
+            class="org.eclipse.emf.compare.diagram.DiagramComparePackage"
             genModel="model/diagramdiff.genmodel"/>
-   </extension>
-   <extension
-         point="org.eclipse.emf.compare.diff.engine">
-      <diffengine
-            engineClass="org.eclipse.emf.compare.diagram.diff.DiagramDiffEngine"
-            namespacePattern="http://www.eclipse.org/gmf/runtime/\d.\d.\d/notation"
-            label="Diagram Diff Engine"
-            priority="highest">
-      </diffengine>
    </extension>
    
    
@@ -37,5 +27,14 @@
               priority="normal">
         </content-type>
      </extension>
+   <extension
+         point="org.eclipse.emf.compare.postProcessor">
+      <postProcessor
+            class="org.eclipse.emf.compare.diagram.diff.DiagramDiffExtensionPostProcessor">
+         <nsURI
+               value="http://www.eclipse.org/gmf/runtime/\d.\d.\d/notation">
+         </nsURI>
+      </postProcessor>
+   </extension>
 
 </plugin>

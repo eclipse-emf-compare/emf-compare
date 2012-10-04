@@ -10,10 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram;
 
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.compare.diagram.provider.internal.ViewLabelProviderExtensionRegistry;
-import org.eclipse.emf.compare.diagram.provider.internal.ViewLabelProviderRegistryListener;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -29,9 +25,6 @@ public class GMFCompare extends AbstractUIPlugin {
 	/** This plug-in's shared instance. */
 	private static GMFCompare plugin;
 
-	/** The registry listener that will be used to listen to extension changes. */
-	private ViewLabelProviderRegistryListener registryListener = new ViewLabelProviderRegistryListener();
-
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -41,10 +34,6 @@ public class GMFCompare extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		plugin = this;
 		super.start(context);
-
-		final IExtensionRegistry registry = Platform.getExtensionRegistry();
-		registry.addListener(registryListener, ViewLabelProviderRegistryListener.EXTENSION_ID);
-		registryListener.parseInitialContributions();
 	}
 
 	/**
@@ -54,10 +43,6 @@ public class GMFCompare extends AbstractUIPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		final IExtensionRegistry registry = Platform.getExtensionRegistry();
-		registry.removeListener(registryListener);
-		ViewLabelProviderExtensionRegistry.INSTANCE.clearRegistry();
-
 		super.stop(context);
 		plugin = null;
 	}

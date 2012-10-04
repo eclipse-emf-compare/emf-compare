@@ -25,7 +25,7 @@ public interface IViewLabelProvider {
 	 */
 	IViewLabelProvider DEFAULT_INSTANCE = new AbstractLabelProvider() {
 		public boolean isManaged(View view) {
-			return true;
+			return false;
 		}
 	};
 
