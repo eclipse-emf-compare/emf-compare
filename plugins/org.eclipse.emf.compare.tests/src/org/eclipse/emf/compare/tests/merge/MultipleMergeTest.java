@@ -60,7 +60,7 @@ public class MultipleMergeTest {
 		final Resource right = conflictInput.getComplexRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		/*
@@ -179,7 +179,7 @@ public class MultipleMergeTest {
 		final Resource right = conflictInput.getComplexRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -270,7 +270,7 @@ public class MultipleMergeTest {
 		final Resource right = conflictInput.getComplexRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -360,7 +360,7 @@ public class MultipleMergeTest {
 		final Resource right = conflictInput.getComplexRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -453,7 +453,7 @@ public class MultipleMergeTest {
 		final Resource right = equivalenceInput.getA1Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -495,7 +495,7 @@ public class MultipleMergeTest {
 		// And validate that diff6 got merged as an equivalent diff
 		assertMerged(comparison, diff6, false, false);
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -505,7 +505,7 @@ public class MultipleMergeTest {
 		final Resource right = equivalenceInput.getA1Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -543,7 +543,7 @@ public class MultipleMergeTest {
 		assertMerged(comparison, diff5, true, true);
 		assertMerged(comparison, diff6, true, true);
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -553,7 +553,7 @@ public class MultipleMergeTest {
 		final Resource right = equivalenceInput.getA4Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -580,7 +580,7 @@ public class MultipleMergeTest {
 		assertMerged(comparison, diff3, false, false);
 		assertMerged(comparison, diff4, false, false);
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -590,7 +590,7 @@ public class MultipleMergeTest {
 		final Resource right = equivalenceInput.getA4Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -617,7 +617,7 @@ public class MultipleMergeTest {
 		assertMerged(comparison, diff3, true, true);
 		assertMerged(comparison, diff4, true, true);
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -627,7 +627,7 @@ public class MultipleMergeTest {
 		final Resource right = equivalenceInput.getA5Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -686,7 +686,7 @@ public class MultipleMergeTest {
 		assertSame(DifferenceState.MERGED, diff11.getState());
 		assertSame(DifferenceState.MERGED, diff12.getState());
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -696,7 +696,7 @@ public class MultipleMergeTest {
 		final Resource right = equivalenceInput.getA5Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -765,7 +765,7 @@ public class MultipleMergeTest {
 		diff11.copyRightToLeft();
 		diff12.copyRightToLeft();
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -775,7 +775,7 @@ public class MultipleMergeTest {
 		final Resource right = equivalenceInput.getC2Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -803,7 +803,7 @@ public class MultipleMergeTest {
 		assertMerged(comparison, diff3, true, false);
 		assertMerged(comparison, diff4, false, false);
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -813,7 +813,7 @@ public class MultipleMergeTest {
 		final Resource right = equivalenceInput.getC2Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -846,7 +846,7 @@ public class MultipleMergeTest {
 		assertMerged(comparison, diff3, true, false);
 		assertMerged(comparison, diff4, false, false);
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -856,7 +856,7 @@ public class MultipleMergeTest {
 		final Resource right = equivalenceInput.getC2Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -894,7 +894,7 @@ public class MultipleMergeTest {
 
 		diff1.copyRightToLeft();
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -904,7 +904,7 @@ public class MultipleMergeTest {
 		final Resource right = equivalenceInput.getC4Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -949,7 +949,7 @@ public class MultipleMergeTest {
 		// 2 required 3, which is equivalent to 5. 5 should thus have been merged too
 		assertMerged(comparison, diff5, false, false);
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -959,7 +959,7 @@ public class MultipleMergeTest {
 		final Resource right = equivalenceInput.getC4Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -1003,7 +1003,7 @@ public class MultipleMergeTest {
 		assertNull(diff5.getMatch().getLeft());
 		assertNull(diff5.getMatch().getRight());
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 

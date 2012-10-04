@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.ide;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.emf.compare.extension.PostProcessorRegistry;
 import org.eclipse.emf.compare.ide.internal.extension.PostProcessorRegistryListener;
 import org.osgi.framework.BundleContext;
 
@@ -28,8 +29,13 @@ public class EMFCompareIDEPlugin extends Plugin {
 	/** This plugin's shared instance. */
 	private static EMFCompareIDEPlugin plugin;
 
+	/**
+	 * The registry that will hold references to all post processors.
+	 */
+	private PostProcessorRegistry postProcessorRegistry;
+
 	/** The registry listener that will be used to react to post processor changes. */
-	private PostProcessorRegistryListener postProcessorListener = new PostProcessorRegistryListener();
+	private PostProcessorRegistryListener postProcessorListener;
 
 	/**
 	 * {@inheritDoc}
@@ -40,6 +46,9 @@ public class EMFCompareIDEPlugin extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		plugin = this;
 		super.start(context);
+
+		this.postProcessorRegistry = new PostProcessorRegistry();
+		this.postProcessorListener = new PostProcessorRegistryListener(postProcessorRegistry);
 
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
@@ -60,6 +69,13 @@ public class EMFCompareIDEPlugin extends Plugin {
 
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
 		registry.removeListener(postProcessorListener);
+	}
+
+	/**
+	 * @return the postProcessorRegistry
+	 */
+	public PostProcessorRegistry getPostProcessorRegistry() {
+		return postProcessorRegistry;
 	}
 
 	/**

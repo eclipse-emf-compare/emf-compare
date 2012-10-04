@@ -57,7 +57,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getAttributeMonoChangeRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -74,7 +74,7 @@ public class IndividualMergeTest {
 
 		assertEquals("leftValue", originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -84,7 +84,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getAttributeMonoChangeRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -101,7 +101,7 @@ public class IndividualMergeTest {
 
 		assertEquals("originValue", originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -112,7 +112,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMonoChangeOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -131,7 +131,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -142,7 +142,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMonoChangeOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -159,7 +159,7 @@ public class IndividualMergeTest {
 
 		assertEquals("originValue", originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -171,7 +171,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMonoChangeOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -188,7 +188,7 @@ public class IndividualMergeTest {
 
 		assertEquals("originValue", originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -200,7 +200,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMonoChangeOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -219,7 +219,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -229,7 +229,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getAttributeMonoSetRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -246,7 +246,7 @@ public class IndividualMergeTest {
 
 		assertEquals("leftValue", originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -256,7 +256,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getAttributeMonoSetRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -273,7 +273,7 @@ public class IndividualMergeTest {
 
 		assertNull(originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -284,7 +284,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMonoSetOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -303,7 +303,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -314,7 +314,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMonoSetOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -331,7 +331,7 @@ public class IndividualMergeTest {
 
 		assertNull(originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -343,7 +343,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMonoSetOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -360,7 +360,7 @@ public class IndividualMergeTest {
 
 		assertNull(originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -372,7 +372,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMonoSetOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -391,7 +391,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -401,7 +401,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getAttributeMonoUnsetRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -418,7 +418,7 @@ public class IndividualMergeTest {
 
 		assertNull(originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -428,7 +428,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getAttributeMonoUnsetRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -445,7 +445,7 @@ public class IndividualMergeTest {
 
 		assertEquals("originValue", originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -456,7 +456,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMonoUnsetOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -475,7 +475,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -486,7 +486,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMonoUnsetOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -503,7 +503,7 @@ public class IndividualMergeTest {
 
 		assertEquals("originValue", originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -515,7 +515,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMonoUnsetOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -532,7 +532,7 @@ public class IndividualMergeTest {
 
 		assertEquals("originValue", originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -544,7 +544,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMonoUnsetOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -563,7 +563,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -573,7 +573,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getAttributeMultiAddRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -592,7 +592,7 @@ public class IndividualMergeTest {
 		assertTrue(featureValue instanceof Collection<?>);
 		assertTrue(((Collection<?>)featureValue).contains("value1"));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -602,7 +602,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getAttributeMultiAddRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -621,7 +621,7 @@ public class IndividualMergeTest {
 		assertTrue(featureValue instanceof Collection<?>);
 		assertFalse(((Collection<?>)featureValue).contains("value1"));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -632,7 +632,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMultiAddOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -653,7 +653,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -664,7 +664,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMultiAddOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -683,7 +683,7 @@ public class IndividualMergeTest {
 		assertTrue(featureValue instanceof Collection<?>);
 		assertFalse(((Collection<?>)featureValue).contains("value1"));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -695,7 +695,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMultiAddOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -714,7 +714,7 @@ public class IndividualMergeTest {
 		assertTrue(featureValue instanceof Collection<?>);
 		assertFalse(((Collection<?>)featureValue).contains("value1"));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -726,7 +726,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMultiAddOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -747,7 +747,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -757,7 +757,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getAttributeMultiDelRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -776,7 +776,7 @@ public class IndividualMergeTest {
 		assertTrue(featureValue instanceof Collection<?>);
 		assertFalse(((Collection<?>)featureValue).contains("value1"));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -786,7 +786,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getAttributeMultiDelRight();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -805,7 +805,7 @@ public class IndividualMergeTest {
 		assertTrue(featureValue instanceof Collection<?>);
 		assertTrue(((Collection<?>)featureValue).contains("value1"));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -816,7 +816,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMultiDelOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -837,7 +837,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -848,7 +848,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMultiDelOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -867,7 +867,7 @@ public class IndividualMergeTest {
 		assertTrue(featureValue instanceof Collection<?>);
 		assertTrue(((Collection<?>)featureValue).contains("value1"));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -879,7 +879,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMultiDelOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -898,7 +898,7 @@ public class IndividualMergeTest {
 		assertTrue(featureValue instanceof Collection<?>);
 		assertTrue(((Collection<?>)featureValue).contains("value1"));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -910,7 +910,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMultiDelOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -931,7 +931,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -942,7 +942,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getAttributeMultiMoveRight();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -965,7 +965,7 @@ public class IndividualMergeTest {
 		assertTrue(sourceFeatureValue instanceof List<?>);
 		assertEqualContents(((List<Object>)targetFeatureValue), ((List<Object>)sourceFeatureValue));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -976,7 +976,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getAttributeMultiMoveRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -999,7 +999,7 @@ public class IndividualMergeTest {
 		assertTrue(sourceFeatureValue instanceof List<?>);
 		assertEqualContents(((List<Object>)targetFeatureValue), ((List<Object>)sourceFeatureValue));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1011,7 +1011,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMultiMoveOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1036,7 +1036,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1048,7 +1048,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMultiMoveOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1071,7 +1071,7 @@ public class IndividualMergeTest {
 		assertTrue(sourceFeatureValue instanceof List<?>);
 		assertEqualContents(((List<Object>)targetFeatureValue), ((List<Object>)sourceFeatureValue));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1084,7 +1084,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMultiMoveOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1107,7 +1107,7 @@ public class IndividualMergeTest {
 		assertTrue(sourceFeatureValue instanceof List<?>);
 		assertEqualContents(((List<Object>)targetFeatureValue), ((List<Object>)sourceFeatureValue));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1120,7 +1120,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getAttributeMultiMoveOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1145,7 +1145,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1155,7 +1155,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getReferenceMonoChangeRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1174,7 +1174,7 @@ public class IndividualMergeTest {
 
 		assertSame(targetNode, originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1184,7 +1184,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getReferenceMonoChangeRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1203,7 +1203,7 @@ public class IndividualMergeTest {
 
 		assertSame(targetNode, originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1214,7 +1214,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMonoChangeOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1235,7 +1235,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1246,7 +1246,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMonoChangeOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1265,7 +1265,7 @@ public class IndividualMergeTest {
 
 		assertSame(targetNode, originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1277,7 +1277,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMonoChangeOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1296,7 +1296,7 @@ public class IndividualMergeTest {
 
 		assertSame(targetNode, originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1308,7 +1308,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMonoChangeOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1329,7 +1329,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1339,7 +1339,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getReferenceMonoSetRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1358,7 +1358,7 @@ public class IndividualMergeTest {
 
 		assertSame(targetNode, originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1368,7 +1368,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getReferenceMonoSetRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1385,7 +1385,7 @@ public class IndividualMergeTest {
 
 		assertNull(originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1396,7 +1396,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMonoSetOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1417,7 +1417,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1428,7 +1428,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMonoSetOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1445,7 +1445,7 @@ public class IndividualMergeTest {
 
 		assertNull(originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1457,7 +1457,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMonoSetOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1474,7 +1474,7 @@ public class IndividualMergeTest {
 
 		assertNull(originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1486,7 +1486,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMonoSetOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1507,7 +1507,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1517,7 +1517,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getReferenceMonoUnsetRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1534,7 +1534,7 @@ public class IndividualMergeTest {
 
 		assertNull(originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1544,7 +1544,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getReferenceMonoUnsetRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1563,7 +1563,7 @@ public class IndividualMergeTest {
 
 		assertSame(targetNode, originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1574,7 +1574,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMonoUnsetOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1593,7 +1593,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1604,7 +1604,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMonoUnsetOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1623,7 +1623,7 @@ public class IndividualMergeTest {
 
 		assertSame(targetNode, originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1635,7 +1635,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMonoUnsetOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1654,7 +1654,7 @@ public class IndividualMergeTest {
 
 		assertSame(targetNode, originNode.eGet(feature));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1666,7 +1666,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMonoUnsetOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1685,7 +1685,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1695,7 +1695,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getReferenceMultiAddRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1716,7 +1716,7 @@ public class IndividualMergeTest {
 		assertTrue(featureValue instanceof Collection<?>);
 		assertTrue(((Collection<?>)featureValue).contains(targetNode));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1726,7 +1726,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getReferenceMultiAddRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1747,7 +1747,7 @@ public class IndividualMergeTest {
 		assertTrue(featureValue instanceof Collection<?>);
 		assertFalse(((Collection<?>)featureValue).contains(targetNode));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1758,7 +1758,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMultiAddOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1781,7 +1781,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1792,7 +1792,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMultiAddOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1813,7 +1813,7 @@ public class IndividualMergeTest {
 		assertTrue(featureValue instanceof Collection<?>);
 		assertFalse(((Collection<?>)featureValue).contains(targetNode));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1825,7 +1825,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMultiAddOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1846,7 +1846,7 @@ public class IndividualMergeTest {
 		assertTrue(featureValue instanceof Collection<?>);
 		assertFalse(((Collection<?>)featureValue).contains(targetNode));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1858,7 +1858,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMultiAddOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1881,7 +1881,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1891,7 +1891,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getReferenceMultiDelRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1912,7 +1912,7 @@ public class IndividualMergeTest {
 		assertTrue(featureValue instanceof Collection<?>);
 		assertFalse(((Collection<?>)featureValue).contains(targetNode));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1922,7 +1922,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getReferenceMultiDelRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1943,7 +1943,7 @@ public class IndividualMergeTest {
 		assertTrue(featureValue instanceof Collection<?>);
 		assertTrue(((Collection<?>)featureValue).contains(targetNode));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1954,7 +1954,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMultiDelOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -1977,7 +1977,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -1988,7 +1988,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMultiDelOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -2009,7 +2009,7 @@ public class IndividualMergeTest {
 		assertTrue(featureValue instanceof Collection<?>);
 		assertTrue(((Collection<?>)featureValue).contains(targetNode));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -2021,7 +2021,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMultiDelOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -2042,7 +2042,7 @@ public class IndividualMergeTest {
 		assertTrue(featureValue instanceof Collection<?>);
 		assertTrue(((Collection<?>)featureValue).contains(targetNode));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -2054,7 +2054,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMultiDelOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -2077,7 +2077,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -2088,7 +2088,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getReferenceMultiMoveRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -2112,7 +2112,7 @@ public class IndividualMergeTest {
 		assertEqualContents(comparison, ((List<EObject>)targetFeatureValue),
 				((List<EObject>)sourceFeatureValue));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -2123,7 +2123,7 @@ public class IndividualMergeTest {
 		final Resource right = input.getReferenceMultiMoveRight();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -2147,7 +2147,7 @@ public class IndividualMergeTest {
 		assertEqualContents(comparison, ((List<EObject>)targetFeatureValue),
 				((List<EObject>)sourceFeatureValue));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -2159,7 +2159,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMultiMoveOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -2185,7 +2185,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -2197,7 +2197,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMultiMoveOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -2221,7 +2221,7 @@ public class IndividualMergeTest {
 		assertEqualContents(comparison, ((List<EObject>)targetFeatureValue),
 				((List<EObject>)sourceFeatureValue));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -2234,7 +2234,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMultiMoveOrigin();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -2258,7 +2258,7 @@ public class IndividualMergeTest {
 		assertEqualContents(comparison, ((List<EObject>)targetFeatureValue),
 				((List<EObject>)sourceFeatureValue));
 
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
@@ -2271,7 +2271,7 @@ public class IndividualMergeTest {
 		final Resource origin = input.getReferenceMultiMoveOrigin();
 
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		Comparison comparison = EMFCompare.newComparator(scope).compare();
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
@@ -2297,7 +2297,7 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = EMFCompare.createDefaultScope(left, right);
-		comparison = EMFCompare.newComparator(scope).compare();
+		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 

@@ -51,4 +51,5 @@ public interface IMatchEngine {
 	 * @return An initialized {@link Comparison} model with all matches determined.
 	 */
 	Comparison match(IComparisonScope scope, EMFCompareConfiguration configuration);
+
 }

@@ -29,7 +29,7 @@ import org.eclipse.emf.compare.rcp.ui.mergeviewer.InsertionPoint;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MatchedObject;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.utils.DiffUtil;
-import org.eclipse.emf.compare.utils.EqualityHelper;
+import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -173,11 +173,11 @@ public class ManyStructuralFeatureAccessorImpl extends BasicStructuralFeatureAcc
 
 	private Object matchingValue(Object value, List<?> in) {
 		Object ret = null;
-		EqualityHelper equalityHelper = getComparison().getConfiguration().getEqualityHelper();
+		IEqualityHelper equalityHelper = getComparison().getEqualityHelper();
 		Iterator<?> valuesIterator = in.iterator();
 		while (valuesIterator.hasNext() && ret == null) {
 			Object object = valuesIterator.next();
-			if (equalityHelper.matchingValues(getComparison(), object, value)) {
+			if (equalityHelper.matchingValues(object, value)) {
 				ret = object;
 			}
 		}

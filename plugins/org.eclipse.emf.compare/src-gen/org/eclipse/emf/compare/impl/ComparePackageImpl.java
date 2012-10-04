@@ -28,6 +28,8 @@ import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 
+import org.eclipse.emf.compare.utils.IEqualityHelper;
+import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -157,7 +159,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EDataType compareConfigurationEDataType = null;
+	private EDataType iEqualityHelperEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -662,8 +664,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EDataType getCompareConfiguration() {
-		return compareConfigurationEDataType;
+	public EDataType getIEqualityHelper() {
+		return iEqualityHelperEDataType;
 	}
 
 	/**
@@ -755,7 +757,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 		// Create data types
 		eIterableEDataType = createEDataType(EITERABLE);
-		compareConfigurationEDataType = createEDataType(COMPARE_CONFIGURATION);
+		iEqualityHelperEDataType = createEDataType(IEQUALITY_HELPER);
 	}
 
 	/**
@@ -833,8 +835,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		op = addEOperation(comparisonEClass, this.getMatch(), "getMatch", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 		addEParameter(op, theEcorePackage.getEObject(), "element", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
-		addEOperation(comparisonEClass, this.getCompareConfiguration(),
-				"getConfiguration", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		addEOperation(comparisonEClass, this.getIEqualityHelper(),
+				"getEqualityHelper", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(matchResourceEClass, MatchResource.class,
 				"MatchResource", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -1039,8 +1041,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		// Initialize data types
 		initEDataType(eIterableEDataType, Iterable.class,
 				"EIterable", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEDataType(compareConfigurationEDataType, EMFCompareConfiguration.class,
-				"CompareConfiguration", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEDataType(iEqualityHelperEDataType, IEqualityHelper.class,
+				"IEqualityHelper", !IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);

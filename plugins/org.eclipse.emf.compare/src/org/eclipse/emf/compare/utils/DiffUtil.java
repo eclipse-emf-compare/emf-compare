@@ -136,7 +136,7 @@ public final class DiffUtil {
 	 */
 	public static <E> List<E> longestCommonSubsequence(Comparison comparison, Iterable<E> ignoredElements,
 			List<E> sequence1, List<E> sequence2) {
-		final EqualityHelper equalityHelper = comparison.getConfiguration().getEqualityHelper();
+		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
 		final int size1 = sequence1.size();
 		final int size2 = sequence2.size();
 		final int[][] matrix = new int[size1 + 1][size2 + 1];
@@ -146,7 +146,7 @@ public final class DiffUtil {
 			for (int j = 1; j <= size2; j++) {
 				final E first = sequence1.get(i - 1);
 				final E second = sequence2.get(j - 1);
-				if (equalityHelper.matchingValues(comparison, first, second)
+				if (equalityHelper.matchingValues(first, second)
 						&& !contains(comparison, equalityHelper, ignoredElements, second)) {
 					matrix[i][j] = 1 + matrix[i - 1][j - 1];
 				} else {
@@ -175,7 +175,7 @@ public final class DiffUtil {
 		while (current1 > 0 && current2 > 0) {
 			final E first = sequence1.get(current1 - 1);
 			final E second = sequence2.get(current2 - 1);
-			if (equalityHelper.matchingValues(comparison, first, second)) {
+			if (equalityHelper.matchingValues(first, second)) {
 				result.add(first);
 				current1--;
 				current2--;
@@ -228,7 +228,7 @@ public final class DiffUtil {
 	 */
 	public static <E> List<E> longestCommonSubsequence(Comparison comparison, List<E> sequence1,
 			List<E> sequence2) {
-		final EqualityHelper equalityHelper = comparison.getConfiguration().getEqualityHelper();
+		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
 		final int size1 = sequence1.size();
 		final int size2 = sequence2.size();
 
@@ -239,7 +239,7 @@ public final class DiffUtil {
 			final E first = sequence1.get(i - 1);
 			for (int j = 1; j <= size2; j++) {
 				final E second = sequence2.get(j - 1);
-				if (equalityHelper.matchingValues(comparison, first, second)) {
+				if (equalityHelper.matchingValues(first, second)) {
 					matrix[i][j] = 1 + matrix[i - 1][j - 1];
 				} else {
 					matrix[i][j] = Math.max(matrix[i - 1][j], matrix[i][j - 1]);
@@ -267,7 +267,7 @@ public final class DiffUtil {
 		while (current1 > 0 && current2 > 0) {
 			final E first = sequence1.get(current1 - 1);
 			final E second = sequence2.get(current2 - 1);
-			if (equalityHelper.matchingValues(comparison, first, second)) {
+			if (equalityHelper.matchingValues(first, second)) {
 				result.add(first);
 				current1--;
 				current2--;
@@ -321,7 +321,7 @@ public final class DiffUtil {
 	 */
 	private static <E> int findInsertionIndex(Comparison comparison, Iterable<E> ignoredElements,
 			List<E> source, List<E> target, E newElement) {
-		EqualityHelper equalityHelper = comparison.getConfiguration().getEqualityHelper();
+		IEqualityHelper equalityHelper = comparison.getEqualityHelper();
 		// TODO split this into multiple sub-methods
 
 		// We assume that "newElement" is in source but not in the target yet
@@ -352,13 +352,13 @@ public final class DiffUtil {
 		final Iterator<E> sourceIterator = source.iterator();
 		for (int i = 0; sourceIterator.hasNext() && (currentIndex == -1 || lastLCSIndex == -1); i++) {
 			final E sourceElement = sourceIterator.next();
-			if (currentIndex == -1 && equalityHelper.matchingValues(comparison, sourceElement, newElement)) {
+			if (currentIndex == -1 && equalityHelper.matchingValues(sourceElement, newElement)) {
 				currentIndex = i;
 			}
-			if (firstLCSIndex == -1 && equalityHelper.matchingValues(comparison, sourceElement, firstLCS)) {
+			if (firstLCSIndex == -1 && equalityHelper.matchingValues(sourceElement, firstLCS)) {
 				firstLCSIndex = i;
 			}
-			if (lastLCSIndex == -1 && equalityHelper.matchingValues(comparison, sourceElement, lastLCS)) {
+			if (lastLCSIndex == -1 && equalityHelper.matchingValues(sourceElement, lastLCS)) {
 				lastLCSIndex = i;
 			}
 		}
@@ -377,7 +377,7 @@ public final class DiffUtil {
 			for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
 				final E targetElement = target.get(i);
 
-				if (equalityHelper.matchingValues(comparison, targetElement, firstLCS)) {
+				if (equalityHelper.matchingValues(targetElement, firstLCS)) {
 					// We've reached the first element from the LCS in target. Insert here
 					insertionIndex = i;
 				}
@@ -391,7 +391,7 @@ public final class DiffUtil {
 			 */
 			for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
 				final E targetElement = target.get(i);
-				if (equalityHelper.matchingValues(comparison, targetElement, lastLCS)) {
+				if (equalityHelper.matchingValues(targetElement, lastLCS)) {
 					// We've reached the last element of the LCS in target. insert after it.
 					insertionIndex = i + 1;
 				}
@@ -413,7 +413,7 @@ public final class DiffUtil {
 				for (int j = 0; j < lcs.size() && !isInLCS; j++) {
 					final E lcsElement = lcs.get(j);
 
-					if (equalityHelper.matchingValues(comparison, sourceElement, lcsElement)) {
+					if (equalityHelper.matchingValues(sourceElement, lcsElement)) {
 						isInLCS = true;
 					}
 				}
@@ -427,7 +427,7 @@ public final class DiffUtil {
 			for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
 				final E targetElement = target.get(i);
 
-				if (equalityHelper.matchingValues(comparison, targetElement, subsequenceStart)) {
+				if (equalityHelper.matchingValues(targetElement, subsequenceStart)) {
 					insertionIndex = i + 1;
 				}
 			}
@@ -643,12 +643,12 @@ public final class DiffUtil {
 	 *         {@code false} otherwise.
 	 * @see EqualityHelper#matchingValues(Comparison, Object, Object)
 	 */
-	private static <E> boolean contains(Comparison comparison, EqualityHelper equalityHelper,
+	private static <E> boolean contains(Comparison comparison, IEqualityHelper equalityHelper,
 			Iterable<E> sequence, E element) {
 		final Iterator<E> iterator = sequence.iterator();
 		while (iterator.hasNext()) {
 			E candidate = iterator.next();
-			if (equalityHelper.matchingValues(comparison, candidate, element)) {
+			if (equalityHelper.matchingValues(candidate, element)) {
 				return true;
 			}
 		}

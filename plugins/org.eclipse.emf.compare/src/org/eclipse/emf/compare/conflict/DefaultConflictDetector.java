@@ -21,6 +21,8 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
+import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
@@ -31,7 +33,6 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -49,18 +50,35 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class DefaultConflictDetector implements IConflictDetector {
-	/**
-	 * helper used to check for equality of values or EObjects.
-	 */
-	private EqualityHelper helper;
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.conflict.IConflictDetector#detect(org.eclipse.emf.compare.Comparison)
+	 * @see #detect(Comparison, Monitor)
 	 */
+	@Deprecated
 	public void detect(Comparison comparison) {
-		this.helper = comparison.getConfiguration().getEqualityHelper();
+		detect(comparison, new BasicMonitor());
+	}
+
+	/**
+	 * This is the entry point of the conflict detection process.
+	 * <p>
+	 * It is expected to complete the input <code>comparison</code> by iterating over the
+	 * {@link org.eclipse.emf.compare.Diff differences} it contain, filling in all conflicts it can detect
+	 * between those Diffs.
+	 * </p>
+	 * <p>
+	 * This method should be pull-up in the interface in next major version.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            The comparison this engine is expected to complete.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation
+	 */
+	public void detect(Comparison comparison, Monitor monitor) {
 		final List<Diff> differences = comparison.getDifferences();
 		final int diffCount = differences.size();
 
@@ -252,7 +270,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 			}
 
 			if (diff.getMatch() == candidate.getMatch()) {
-				if (helper.matchingValues(comparison, changedValue, candidateValue)) {
+				if (comparison.getEqualityHelper().matchingValues(changedValue, candidateValue)) {
 					// Same value added on both side in the same container
 					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
 				} else {
@@ -313,7 +331,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 			}
 
 			if (diff.getMatch() == candidate.getMatch()
-					&& helper.matchingValues(comparison, changedValue, candidateValue)) {
+					&& comparison.getEqualityHelper().matchingValues(changedValue, candidateValue)) {
 				// Same value moved in both side of the same container
 				if (matchingIndices(comparison, diff.getMatch(), feature, changedValue, candidateValue)) {
 					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
@@ -380,7 +398,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 				movedValue = ((AttributeChange)candidate).getValue();
 			}
 
-			if (helper.matchingValues(comparison, deletedValue, movedValue)) {
+			if (comparison.getEqualityHelper().matchingValues(deletedValue, movedValue)) {
 				if (candidate.getKind() == DifferenceKind.MOVE) {
 					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 				} else {
@@ -447,7 +465,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 				candidateValue = ((AttributeChange)candidate).getValue();
 			}
 			// No diff on non unique features : multiple same values can coexist
-			if (feature.isUnique() && helper.matchingValues(comparison, addedValue, candidateValue)) {
+			if (feature.isUnique()
+					&& comparison.getEqualityHelper().matchingValues(addedValue, candidateValue)) {
 				// This is a conflict. Is it real?
 				if (matchingIndices(comparison, diff.getMatch(), feature, addedValue, candidateValue)) {
 					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
@@ -534,7 +553,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 			int rightIndex = -1;
 			for (int i = 0; i < leftValues.size(); i++) {
 				final Object left = leftValues.get(i);
-				if (helper.matchingValues(comparison, left, value1)) {
+				if (comparison.getEqualityHelper().matchingValues(left, value1)) {
 					break;
 				} else if (hasDiff(match, feature, left) || hasDeleteDiff(match, feature, left)) {
 					// Do not increment.
@@ -544,7 +563,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 			}
 			for (int i = 0; i < rightValues.size(); i++) {
 				final Object right = rightValues.get(i);
-				if (helper.matchingValues(comparison, right, value2)) {
+				if (comparison.getEqualityHelper().matchingValues(right, value2)) {
 					break;
 				} else if (hasDiff(match, feature, right) || hasDeleteDiff(match, feature, right)) {
 					// Do not increment.

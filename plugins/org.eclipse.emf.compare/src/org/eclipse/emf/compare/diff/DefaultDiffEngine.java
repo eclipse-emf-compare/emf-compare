@@ -20,12 +20,14 @@ import com.google.common.collect.Iterables;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.utils.DiffUtil;
-import org.eclipse.emf.compare.utils.EqualityHelper;
+import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -51,17 +53,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 	protected static final Object UNMATCHED_VALUE = new Object();
 
 	/**
-	 * helper used to check for equality of values or EObjects.
-	 */
-	protected EqualityHelper helper;
-
-	/**
-	 * The comparison for which we are detecting differences. Should only be accessed through
-	 * {@link #getComparison()}.
-	 */
-	private Comparison currentComparison;
-
-	/**
 	 * The diff processor that will be used by this engine. Should be passed by the constructor and accessed
 	 * by {@link #getDiffProcessor()}.
 	 */
@@ -69,7 +60,10 @@ public class DefaultDiffEngine implements IDiffEngine {
 
 	/**
 	 * Create the diff engine setting up the default behavior.
+	 * 
+	 * @see #DefaultDiffEngine(IDiffProcessor).
 	 */
+	@Deprecated
 	public DefaultDiffEngine() {
 		this(new DiffBuilder());
 	}
@@ -86,8 +80,8 @@ public class DefaultDiffEngine implements IDiffEngine {
 
 	/**
 	 * This predicate can be used to check whether a given element is contained within the given iterable
-	 * according to the semantics of {@link EqualityHelper#matchingValues(Comparison, Object, Object)} before
-	 * returning it.
+	 * according to the semantics of {@link IEqualityHelper#matchingValues(Object, Object)} before returning
+	 * it.
 	 * 
 	 * @param comparison
 	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
@@ -107,7 +101,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 
 	/**
 	 * Checks whether the given {@code iterable} contains the given {@code element} according to the semantics
-	 * of {@link EqualityHelper#matchingValues(Comparison, Object, Object)}.
+	 * of {@link IEqualityHelper#matchingValues(Comparison, Object, Object)}.
 	 * 
 	 * @param comparison
 	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
@@ -121,7 +115,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 */
 	protected <E> boolean contains(Comparison comparison, Iterable<E> iterable, E element) {
 		for (E candidate : iterable) {
-			if (helper.matchingValues(comparison, candidate, element)) {
+			if (comparison.getEqualityHelper().matchingValues(candidate, element)) {
 				return true;
 			}
 		}
@@ -132,14 +126,33 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.diff.IDiffEngine#diff(org.eclipse.emf.compare.Comparison)
+	 * @see #diff(Comparison, Monitor)
 	 */
+	@Deprecated
 	public void diff(Comparison comparison) {
-		this.currentComparison = comparison;
-		this.helper = comparison.getConfiguration().getEqualityHelper();
+		diff(comparison, new BasicMonitor());
+	}
 
+	/**
+	 * This is the entry point of the differencing process.
+	 * <p>
+	 * It will complete the input <code>comparison</code> by iterating over the
+	 * {@link org.eclipse.emf.compare.Match matches} it contain, filling in the differences it can detect for
+	 * each distinct Match.
+	 * </p>
+	 * <p>
+	 * This should be pull-up in interface in the next major version.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            The comparison this engine is expected to complete.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation.
+	 */
+	public void diff(Comparison comparison, Monitor monitor) {
 		for (Match rootMatch : comparison.getMatches()) {
-			checkResourceAttachment(rootMatch);
-			checkForDifferences(rootMatch);
+			checkResourceAttachment(rootMatch, monitor);
+			checkForDifferences(rootMatch, monitor);
 		}
 	}
 
@@ -149,8 +162,10 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 * 
 	 * @param match
 	 *            The match that is to be checked.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation.
 	 */
-	protected void checkForDifferences(Match match) {
+	protected void checkForDifferences(Match match, Monitor monitor) {
 		final FeatureFilter featureFilter = createFeatureFilter();
 
 		final Iterator<EReference> references = featureFilter.getReferencesToCheck(match);
@@ -168,7 +183,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 		}
 
 		for (Match submatch : match.getSubmatches()) {
-			checkForDifferences(submatch);
+			checkForDifferences(submatch, monitor);
 		}
 	}
 
@@ -178,9 +193,12 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 * 
 	 * @param match
 	 *            The match that is to be checked.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation.
 	 */
-	protected void checkResourceAttachment(Match match) {
+	protected void checkResourceAttachment(Match match, Monitor monitor) {
 		final Comparison comparison = match.getComparison();
+
 		if (comparison.getMatchedResources().isEmpty()) {
 			// This is a comparison of EObjects, do not go up to the resources
 			return;
@@ -239,22 +257,24 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 */
 	protected void computeContainmentDifferencesThreeWay(Match match, EReference reference,
 			boolean checkOrdering) {
+		final Comparison comparison = match.getComparison();
+
 		// We won't use iterables here since we need random access collections for fast LCS.
 		final List<Object> leftValues = getAsList(match.getLeft(), reference);
 		final List<Object> rightValues = getAsList(match.getRight(), reference);
 		final List<Object> originValues = getAsList(match.getOrigin(), reference);
 
-		final List<Object> lcsOriginLeft = DiffUtil.longestCommonSubsequence(getComparison(), originValues,
+		final List<Object> lcsOriginLeft = DiffUtil.longestCommonSubsequence(comparison, originValues,
 				leftValues);
-		final List<Object> lcsOriginRight = DiffUtil.longestCommonSubsequence(getComparison(), originValues,
+		final List<Object> lcsOriginRight = DiffUtil.longestCommonSubsequence(comparison, originValues,
 				rightValues);
 
 		// TODO Can we shortcut in any way?
 
 		// Which values have "changed" in any way?
-		final Iterable<Object> changedLeft = Iterables.filter(leftValues, not(containedIn(getComparison(),
+		final Iterable<Object> changedLeft = Iterables.filter(leftValues, not(containedIn(comparison,
 				lcsOriginLeft)));
-		final Iterable<Object> changedRight = Iterables.filter(rightValues, not(containedIn(getComparison(),
+		final Iterable<Object> changedRight = Iterables.filter(rightValues, not(containedIn(comparison,
 				lcsOriginRight)));
 
 		// Added or moved in left
@@ -263,9 +283,9 @@ public class DefaultDiffEngine implements IDiffEngine {
 			 * This value is not in the LCS between origin and left, we thus know it has changed. We also know
 			 * that this is a containment reference.
 			 */
-			final Match candidateMatch = getComparison().getMatch((EObject)diffCandidate);
+			final Match candidateMatch = comparison.getMatch((EObject)diffCandidate);
 
-			if (contains(getComparison(), originValues, diffCandidate)) {
+			if (contains(comparison, originValues, diffCandidate)) {
 				// This object is contained in both the left and origin lists. It can only have moved
 				if (checkOrdering) {
 					featureChange(match, reference, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
@@ -288,9 +308,9 @@ public class DefaultDiffEngine implements IDiffEngine {
 			 * This value is not in the LCS between origin and right, we thus know it has changed. We also
 			 * know that this is a containment reference.
 			 */
-			final Match candidateMatch = getComparison().getMatch((EObject)diffCandidate);
+			final Match candidateMatch = comparison.getMatch((EObject)diffCandidate);
 
-			if (contains(getComparison(), originValues, diffCandidate)) {
+			if (contains(comparison, originValues, diffCandidate)) {
 				// This object is contained in both the right and origin lists. It can only have moved
 				if (checkOrdering) {
 					featureChange(match, reference, diffCandidate, DifferenceKind.MOVE,
@@ -315,7 +335,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 			 * A value that is in the origin but not in the left/right either has been deleted or is a moved
 			 * element which previously was in this reference. We'll detect the move on its new reference.
 			 */
-			final Match candidateMatch = getComparison().getMatch((EObject)diffCandidate);
+			final Match candidateMatch = comparison.getMatch((EObject)diffCandidate);
 			if (candidateMatch == null) {
 				// out of scope
 			} else {
@@ -348,15 +368,17 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 */
 	protected void computeContainmentDifferencesTwoWay(Match match, EReference reference,
 			boolean checkOrdering) {
+		final Comparison comparison = match.getComparison();
+
 		final List<Object> leftValues = getAsList(match.getLeft(), reference);
 		final List<Object> rightValues = getAsList(match.getRight(), reference);
 
-		final List<Object> lcs = DiffUtil.longestCommonSubsequence(getComparison(), rightValues, leftValues);
+		final List<Object> lcs = DiffUtil.longestCommonSubsequence(comparison, rightValues, leftValues);
 
 		// TODO Can we shortcut in any way?
 
 		// Which values have "changed" in any way?
-		final Iterable<Object> changed = Iterables.filter(leftValues, not(containedIn(getComparison(), lcs)));
+		final Iterable<Object> changed = Iterables.filter(leftValues, not(containedIn(comparison, lcs)));
 
 		// Added or moved
 		for (Object diffCandidate : changed) {
@@ -364,9 +386,9 @@ public class DefaultDiffEngine implements IDiffEngine {
 			 * This value is not in the LCS between right and left, we thus know it has changed. We also know
 			 * that this is a containment reference.
 			 */
-			final Match candidateMatch = getComparison().getMatch((EObject)diffCandidate);
+			final Match candidateMatch = comparison.getMatch((EObject)diffCandidate);
 
-			if (contains(getComparison(), rightValues, diffCandidate)) {
+			if (contains(comparison, rightValues, diffCandidate)) {
 				// This object is contained in both the left and right lists. It can only have moved
 				if (checkOrdering) {
 					featureChange(match, reference, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
@@ -389,7 +411,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 			 * A value that is in the right but not in the left either has been deleted or is a moved element
 			 * which previously was in this reference. We'll detect the move on its new reference.
 			 */
-			final Match candidateMatch = getComparison().getMatch((EObject)diffCandidate);
+			final Match candidateMatch = comparison.getMatch((EObject)diffCandidate);
 			if (candidateMatch == null) {
 				// out of scope
 			} else if (candidateMatch.getLeft() == null) {
@@ -411,9 +433,11 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 *            <code>false</code> otherwise.
 	 */
 	protected void computeDifferences(Match match, EAttribute attribute, boolean checkOrdering) {
+		final Comparison comparison = match.getComparison();
+
 		// This default implementation does not care about "attribute" changes on added/removed elements
 		boolean shortcut = false;
-		if (getComparison().isThreeWay()) {
+		if (comparison.isThreeWay()) {
 			shortcut = match.getOrigin() == null;
 		} else {
 			shortcut = match.getLeft() == null || match.getRight() == null;
@@ -423,7 +447,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 		}
 
 		if (attribute.isMany()) {
-			if (getComparison().isThreeWay()) {
+			if (comparison.isThreeWay()) {
 				computeMultiValuedFeatureDifferencesThreeWay(match, attribute, checkOrdering);
 			} else {
 				computeMultiValuedFeatureDifferencesTwoWay(match, attribute, checkOrdering);
@@ -446,20 +470,22 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 *            <code>false</code> otherwise.
 	 */
 	protected void computeDifferences(Match match, EReference reference, boolean checkOrdering) {
+		final Comparison comparison = match.getComparison();
+
 		if (reference.isContainment()) {
-			if (getComparison().isThreeWay()) {
+			if (comparison.isThreeWay()) {
 				computeContainmentDifferencesThreeWay(match, reference, checkOrdering);
 			} else {
 				computeContainmentDifferencesTwoWay(match, reference, checkOrdering);
 			}
 		} else if (reference.isMany()) {
-			if (getComparison().isThreeWay()) {
+			if (comparison.isThreeWay()) {
 				computeMultiValuedFeatureDifferencesThreeWay(match, reference, checkOrdering);
 			} else {
 				computeMultiValuedFeatureDifferencesTwoWay(match, reference, checkOrdering);
 			}
 		} else {
-			if (getComparison().isThreeWay()) {
+			if (comparison.isThreeWay()) {
 				computeSingleValuedReferenceDifferencesThreeWay(match, reference);
 			} else {
 				computeSingleValuedReferenceDifferencesTwoWay(match, reference);
@@ -487,20 +513,22 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 */
 	protected void computeMultiValuedFeatureDifferencesThreeWay(Match match, EStructuralFeature feature,
 			boolean checkOrdering) {
+		final Comparison comparison = match.getComparison();
+
 		// We won't use iterables here since we need random access collections for fast LCS.
 		final List<Object> leftValues = getAsList(match.getLeft(), feature);
 		final List<Object> rightValues = getAsList(match.getRight(), feature);
 		final List<Object> originValues = getAsList(match.getOrigin(), feature);
 
-		final List<Object> lcsOriginLeft = DiffUtil.longestCommonSubsequence(getComparison(), originValues,
+		final List<Object> lcsOriginLeft = DiffUtil.longestCommonSubsequence(comparison, originValues,
 				leftValues);
-		final List<Object> lcsOriginRight = DiffUtil.longestCommonSubsequence(getComparison(), originValues,
+		final List<Object> lcsOriginRight = DiffUtil.longestCommonSubsequence(comparison, originValues,
 				rightValues);
 
 		// Which values have "changed" in any way?
-		final Iterable<Object> changedLeft = Iterables.filter(leftValues, not(containedIn(getComparison(),
+		final Iterable<Object> changedLeft = Iterables.filter(leftValues, not(containedIn(comparison,
 				lcsOriginLeft)));
-		final Iterable<Object> changedRight = Iterables.filter(rightValues, not(containedIn(getComparison(),
+		final Iterable<Object> changedRight = Iterables.filter(rightValues, not(containedIn(comparison,
 				lcsOriginRight)));
 
 		// Added or moved in the left
@@ -509,7 +537,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 			 * This value is not in the LCS between origin and left, we thus know it has changed. If it is
 			 * present in the origin, this is a move. Otherwise, it has been added in the left list.
 			 */
-			if (contains(getComparison(), originValues, diffCandidate)) {
+			if (contains(comparison, originValues, diffCandidate)) {
 				if (checkOrdering) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
 				}
@@ -524,7 +552,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 			 * This value is not in the LCS between origin and right, we thus know it has changed. If it is
 			 * present in the origin, this is a move. Otherwise, it has been added in the right list.
 			 */
-			if (contains(getComparison(), originValues, diffCandidate)) {
+			if (contains(comparison, originValues, diffCandidate)) {
 				if (checkOrdering) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.RIGHT);
 				}
@@ -537,12 +565,12 @@ public class DefaultDiffEngine implements IDiffEngine {
 		for (Object diffCandidate : originValues) {
 			// A value that is in the origin but not in one of the side has been deleted.
 			// However, we do not want attribute changes on removed elements.
-			if (!contains(getComparison(), leftValues, diffCandidate)) {
+			if (!contains(comparison, leftValues, diffCandidate)) {
 				if (feature instanceof EReference || match.getLeft() != null) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.DELETE, DifferenceSource.LEFT);
 				}
 			}
-			if (!contains(getComparison(), rightValues, diffCandidate)) {
+			if (!contains(comparison, rightValues, diffCandidate)) {
 				if (feature instanceof EReference || match.getRight() != null) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.DELETE,
 							DifferenceSource.RIGHT);
@@ -571,14 +599,16 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 */
 	protected void computeMultiValuedFeatureDifferencesTwoWay(Match match, EStructuralFeature feature,
 			boolean checkOrdering) {
+		final Comparison comparison = match.getComparison();
+
 		// We won't use iterables here since we need random access collections for fast LCS.
 		final List<Object> leftValues = getAsList(match.getLeft(), feature);
 		final List<Object> rightValues = getAsList(match.getRight(), feature);
 
-		final List<Object> lcs = DiffUtil.longestCommonSubsequence(getComparison(), rightValues, leftValues);
+		final List<Object> lcs = DiffUtil.longestCommonSubsequence(comparison, rightValues, leftValues);
 
 		// Which values have "changed" in any way?
-		final Iterable<Object> changed = Iterables.filter(leftValues, not(containedIn(getComparison(), lcs)));
+		final Iterable<Object> changed = Iterables.filter(leftValues, not(containedIn(comparison, lcs)));
 
 		// Added or moved
 		for (Object diffCandidate : changed) {
@@ -586,7 +616,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 			 * This value is not in the LCS between right and left, we thus know it has changed. If it is
 			 * present in the right, this is a move. Otherwise, it has been added in the left list.
 			 */
-			if (contains(getComparison(), rightValues, diffCandidate)) {
+			if (contains(comparison, rightValues, diffCandidate)) {
 				if (checkOrdering) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
 				}
@@ -599,7 +629,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 		for (Object diffCandidate : rightValues) {
 			// A value that is in the right but not in the left has been deleted.
 			// However, we do not want attribute changes on removed elements.
-			if (!contains(getComparison(), leftValues, diffCandidate)) {
+			if (!contains(comparison, leftValues, diffCandidate)) {
 				if (feature instanceof EReference || match.getLeft() != null) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.DELETE, DifferenceSource.LEFT);
 				}
@@ -617,6 +647,8 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 *            The attribute which values are to be checked.
 	 */
 	protected void computeSingleValuedAttributeDifferences(Match match, EAttribute attribute) {
+		final Comparison comparison = match.getComparison();
+
 		Object leftValue = UNMATCHED_VALUE;
 		if (match.getLeft() != null) {
 			leftValue = safeEGet(match.getLeft(), attribute);
@@ -626,17 +658,18 @@ public class DefaultDiffEngine implements IDiffEngine {
 			rightValue = safeEGet(match.getRight(), attribute);
 		}
 
-		if (helper.matchingValues(getComparison(), leftValue, rightValue)) {
+		IEqualityHelper helper = comparison.getEqualityHelper();
+		if (helper.matchingValues(leftValue, rightValue)) {
 			// Identical values in left and right. The only problematic case is if they do not match the
 			// origin (and left and right are defined, i.e don't detect attribute change on unmatched)
-			if (leftValue != UNMATCHED_VALUE && getComparison().isThreeWay()) {
+			if (leftValue != UNMATCHED_VALUE && comparison.isThreeWay()) {
 				final Object originValue;
 				if (match.getOrigin() == null) {
 					originValue = null;
 				} else {
 					originValue = safeEGet(match.getOrigin(), attribute);
 				}
-				final boolean matchingLO = helper.matchingValues(getComparison(), leftValue, originValue);
+				final boolean matchingLO = helper.matchingValues(leftValue, originValue);
 
 				/*
 				 * if !matchingLO, the same change has been made on both side. This is actually a
@@ -659,7 +692,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 		} else if (match.getOrigin() != null) {
 			final Object originValue = safeEGet(match.getOrigin(), attribute);
 
-			if (helper.matchingValues(getComparison(), leftValue, originValue)) {
+			if (helper.matchingValues(leftValue, originValue)) {
 				Object changedValue = rightValue;
 				if (isNullOrEmptyString(rightValue)) {
 					changedValue = originValue;
@@ -673,7 +706,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 					// Right is unmatched, left is the same as in the origin. No diff here : the diff is on
 					// the match itself, not on one of its attributes.
 				}
-			} else if (helper.matchingValues(getComparison(), rightValue, originValue)) {
+			} else if (helper.matchingValues(rightValue, originValue)) {
 				Object changedValue = leftValue;
 				if (isNullOrEmptyString(leftValue)) {
 					changedValue = originValue;
@@ -721,7 +754,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 							DifferenceSource.LEFT);
 				}
 			}
-			if (getComparison().isThreeWay() && rightValue != UNMATCHED_VALUE) {
+			if (comparison.isThreeWay() && rightValue != UNMATCHED_VALUE) {
 				if (isNullOrEmptyString(rightValue)) {
 					getDiffProcessor().attributeChange(match, attribute, leftValue, DifferenceKind.CHANGE,
 							DifferenceSource.RIGHT);
@@ -771,6 +804,8 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 *            The reference which values are to be checked.
 	 */
 	protected void computeSingleValuedReferenceDifferencesThreeWay(Match match, EReference reference) {
+		final Comparison comparison = match.getComparison();
+
 		Object leftValue = UNMATCHED_VALUE;
 		if (match.getLeft() != null) {
 			leftValue = safeEGet(match.getLeft(), reference);
@@ -784,7 +819,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 			originValue = safeEGet(match.getOrigin(), reference);
 		}
 
-		boolean distinctValueLO = !helper.matchingValues(getComparison(), leftValue, originValue);
+		boolean distinctValueLO = !comparison.getEqualityHelper().matchingValues(leftValue, originValue);
 		// consider null and unmatched as the same
 		distinctValueLO = distinctValueLO
 				&& !(isNullOrUnmatched(leftValue) && isNullOrUnmatched(originValue));
@@ -802,7 +837,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 			}
 		}
 
-		boolean distinctValueRO = !helper.matchingValues(getComparison(), rightValue, originValue);
+		boolean distinctValueRO = !comparison.getEqualityHelper().matchingValues(rightValue, originValue);
 		// consider null and unmatched as the same
 		distinctValueRO = distinctValueRO
 				&& !(isNullOrUnmatched(rightValue) && isNullOrUnmatched(originValue));
@@ -837,6 +872,8 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 *            The reference which values are to be checked.
 	 */
 	protected void computeSingleValuedReferenceDifferencesTwoWay(Match match, EReference reference) {
+		final Comparison comparison = match.getComparison();
+
 		Object leftValue = UNMATCHED_VALUE;
 		if (match.getLeft() != null) {
 			leftValue = safeEGet(match.getLeft(), reference);
@@ -846,7 +883,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 			rightValue = safeEGet(match.getRight(), reference);
 		}
 
-		boolean distinctValue = !helper.matchingValues(getComparison(), leftValue, rightValue);
+		boolean distinctValue = !comparison.getEqualityHelper().matchingValues(leftValue, rightValue);
 		// consider null and unmatched as the same
 		distinctValue = distinctValue && !(isNullOrUnmatched(leftValue) && isNullOrUnmatched(rightValue));
 
@@ -894,15 +931,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 		} else if (value instanceof EObject) {
 			getDiffProcessor().referenceChange(match, (EReference)feature, (EObject)value, kind, source);
 		}
-	}
-
-	/**
-	 * Returns the comparison for which we are currently detecting differences.
-	 * 
-	 * @return The comparison for which we are currently detecting differences.
-	 */
-	protected Comparison getComparison() {
-		return currentComparison;
 	}
 
 	/**

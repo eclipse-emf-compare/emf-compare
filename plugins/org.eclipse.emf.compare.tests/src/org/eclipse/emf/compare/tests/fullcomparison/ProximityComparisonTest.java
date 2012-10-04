@@ -18,6 +18,7 @@ import com.google.common.collect.Lists;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.EMFCompareTestBase;
 import org.eclipse.emf.compare.tests.fullcomparison.data.distance.DistanceMatchInputData;
@@ -48,7 +49,7 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		v2.getEClassifiers().clear();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(v1, v2);
-		Comparison result = EMFCompare.newComparator(scope).compare();
+		Comparison result = EMFCompare.builder().build().compare(scope);
 		assertAllMatched(Lists.newArrayList(v1), result);
 		assertEquals("We are supposed to have zero diffs", 0, result.getDifferences().size());
 	}
@@ -58,7 +59,8 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		Resource left = inputData.getCompareLeft();
 		Resource right = inputData.getCompareRight();
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison result = EMFCompare.newComparator(scope).matchByID(UseIdentifiers.NEVER).compare();
+		Comparison result = EMFCompare.builder().setMatchEngine(
+				DefaultMatchEngine.create(UseIdentifiers.NEVER)).build().compare(scope);
 		assertEquals("We are supposed to have one rename diff", 1, result.getDifferences().size());
 	}
 
@@ -69,7 +71,7 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		EPackage v2 = EcoreUtil.copy(EcorePackage.eINSTANCE);
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(v1, v2);
-		Comparison result = EMFCompare.newComparator(scope).compare();
+		Comparison result = EMFCompare.builder().build().compare(scope);
 
 		assertAllMatched(Lists.newArrayList(v1), result);
 		assertEquals("We are supposed to have zero diffs", 0, result.getDifferences().size());
@@ -83,7 +85,8 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		v2.setName("renamed");
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(v1, v2);
-		Comparison result = EMFCompare.newComparator(scope).matchByID(UseIdentifiers.NEVER).compare();
+		Comparison result = EMFCompare.builder().setMatchEngine(
+				DefaultMatchEngine.create(UseIdentifiers.NEVER)).build().compare(scope);
 		assertAllMatched(Lists.newArrayList(v1), result);
 		assertEquals("We are supposed to have zero diffs", 1, result.getDifferences().size());
 	}
@@ -92,7 +95,8 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 	public void alwaysTakeTheClosestNoMatterTheIterationOrder() throws Exception {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData.getVerySmallLeft(), inputData
 				.getVerySmallRight());
-		Comparison result = EMFCompare.newComparator(scope).matchByID(UseIdentifiers.NEVER).compare();
+		Comparison result = EMFCompare.builder().setMatchEngine(
+				DefaultMatchEngine.create(UseIdentifiers.NEVER)).build().compare(scope);
 		assertEquals(
 				"The Match took on element which is close enough (in the limits) preventing the next iteration to take it (it was closest)",
 				1, result.getDifferences().size());

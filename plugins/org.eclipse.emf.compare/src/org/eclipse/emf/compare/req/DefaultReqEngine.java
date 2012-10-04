@@ -16,6 +16,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -43,8 +45,30 @@ public class DefaultReqEngine implements IReqEngine {
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.diff.IDiffEngine#computeRequirements(org.eclipse.emf.compare.Comparison)
+	 * @see #computeRequirements(Comparison, Monitor)
 	 */
+	@Deprecated
 	public void computeRequirements(Comparison comparison) {
+		computeRequirements(comparison, new BasicMonitor());
+	}
+
+	/**
+	 * This is the entry point of the requirements computing process.
+	 * <p>
+	 * It will complete the input <code>comparison</code> by iterating over the
+	 * {@link org.eclipse.emf.compare.Diff differences} it contain, filling in the requirements it can detect
+	 * for each distinct Diff.
+	 * </p>
+	 * <p>
+	 * This method should be pull-up in the interface in next major version.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            The comparison this engine is expected to complete.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation
+	 */
+	public void computeRequirements(Comparison comparison, Monitor monitor) {
 		for (Diff difference : comparison.getDifferences()) {
 			checkForRequiredDifferences(comparison, difference);
 		}

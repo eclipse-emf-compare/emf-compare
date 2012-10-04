@@ -176,8 +176,8 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 
 			final IComparisonScope scope = EMFCompare.createDefaultScope(leftResourceSet, rightResourceSet,
 					originResourceSet);
-			final Comparison compareResult = EMFCompare.newComparator(scope).setMonitor(
-					BasicMonitor.toMonitor(monitor)).compare();
+			final Comparison compareResult = EMFCompare.builder().build().compare(scope,
+					BasicMonitor.toMonitor(monitor));
 			EMFCompareEditingDomain editingDomain = new EMFCompareEditingDomain(compareResult,
 					leftResourceSet, rightResourceSet, originResourceSet);
 			getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);

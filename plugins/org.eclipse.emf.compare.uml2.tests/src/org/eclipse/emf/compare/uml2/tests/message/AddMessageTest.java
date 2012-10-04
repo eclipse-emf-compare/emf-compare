@@ -45,7 +45,7 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA1Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
 	}
 
@@ -55,7 +55,7 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA1Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
 	}
 
@@ -65,7 +65,7 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA1Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
 	}
 
@@ -75,7 +75,7 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA1Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
 	}
 
@@ -85,7 +85,7 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA2Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.ADD, comparison);
 	}
 
@@ -95,7 +95,7 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA2Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.DELETE, comparison);
 	}
 
@@ -105,7 +105,7 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA2Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.ADD, comparison);
 	}
 
@@ -115,7 +115,7 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA2Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.DELETE, comparison);
 	}
 
@@ -125,7 +125,7 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA3Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.ADD, comparison);
 	}
 
@@ -135,7 +135,7 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA3Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.DELETE, comparison);
 	}
 
@@ -145,7 +145,7 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA3Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.ADD, comparison);
 	}
 
@@ -155,7 +155,7 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA3Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.DELETE, comparison);
 	}
 
@@ -165,7 +165,7 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA4Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
 	}
 
@@ -175,7 +175,7 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA4Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
 	}
 
@@ -185,7 +185,7 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA4Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
 	}
 
@@ -195,7 +195,7 @@ public class AddMessageTest extends AbstractTest {
 		final Resource right = input.getA4Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
 	}
 

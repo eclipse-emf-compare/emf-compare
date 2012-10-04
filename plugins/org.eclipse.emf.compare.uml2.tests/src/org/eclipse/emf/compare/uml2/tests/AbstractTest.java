@@ -8,30 +8,32 @@ import java.util.List;
 
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.extension.EMFCompareExtensionRegistry;
 import org.eclipse.emf.compare.extension.PostProcessorDescriptor;
+import org.eclipse.emf.compare.extension.PostProcessorRegistry;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.diff.UMLDiffExtensionPostProcessor;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.junit.After;
 import org.junit.Before;
 
 @SuppressWarnings("nls")
 public abstract class AbstractTest {
 
+	private EMFCompare emfCompare;
+
 	@Before
 	public void before() {
-		EMFCompareExtensionRegistry.addPostProcessor(new PostProcessorDescriptor(
-				"http://www.eclipse.org/uml2/4.0.0/UML", null,
+		PostProcessorRegistry registry = new PostProcessorRegistry();
+		registry.addPostProcessor(new PostProcessorDescriptor("http://www.eclipse.org/uml2/4.0.0/UML", null,
 				"org.eclipse.emf.compare.uml2.diff.UMLDiffExtensionPostProcessor",
 				new UMLDiffExtensionPostProcessor()));
+		emfCompare = EMFCompare.builder().setPostProcessorRegistry(registry).build();
 	}
 
-	@After
-	public void after() {
-		EMFCompareExtensionRegistry.clearRegistry();
+	protected EMFCompare getCompare() {
+		return emfCompare;
 	}
 
 	protected enum TestKind {

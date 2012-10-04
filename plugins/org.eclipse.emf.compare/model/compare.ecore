@@ -30,7 +30,7 @@
         </eAnnotations>
       </eParameters>
     </eOperations>
-    <eOperations name="getConfiguration" eType="#//CompareConfiguration"/>
+    <eOperations name="getEqualityHelper" eType="#//IEqualityHelper"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="matchedResources" upperBound="-1"
         eType="#//MatchResource" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -386,5 +386,6 @@
   <eClassifiers xsi:type="ecore:EDataType" name="EIterable" instanceClassName="java.lang.Iterable">
     <eTypeParameters name="T"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="CompareConfiguration" instanceClassName="org.eclipse.emf.compare.EMFCompareConfiguration"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="IEqualityHelper" instanceClassName="org.eclipse.emf.compare.utils.IEqualityHelper"
+      serializable="false"/>
 </ecore:EPackage>

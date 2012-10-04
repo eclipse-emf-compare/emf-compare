@@ -12,6 +12,8 @@ package org.eclipse.emf.compare;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.emf.compare.utils.EqualityHelper;
+import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -109,14 +111,6 @@ public interface Comparison extends EObject {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model kind="operation" dataType="org.eclipse.emf.compare.CompareConfiguration"
-	 * @generated
-	 */
-	EMFCompareConfiguration getConfiguration();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * Returns all differences contained by this Comparison and its children.
 	 * <!-- end-model-doc -->
@@ -156,6 +150,14 @@ public interface Comparison extends EObject {
 	 * @generated
 	 */
 	Match getMatch(EObject element);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" dataType="org.eclipse.emf.compare.IEqualityHelper"
+	 * @generated
+	 */
+	IEqualityHelper getEqualityHelper();
 
 	/**
 	 * Returns the value of the '<em><b>Three Way</b></em>' attribute.

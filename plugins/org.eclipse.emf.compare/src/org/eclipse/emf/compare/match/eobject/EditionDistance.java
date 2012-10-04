@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.eobject;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
@@ -20,6 +24,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
@@ -32,11 +37,13 @@ import org.eclipse.emf.compare.diff.IDiffProcessor;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher.DistanceFunction;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EqualityHelper;
+import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * This distance function implementation will actually compare the given EObject.
@@ -75,20 +82,40 @@ public class EditionDistance implements DistanceFunction {
 	private Set<EStructuralFeature> toBeIgnored;
 
 	/**
-	 * The equality helper used to retrieve the URIs through its cache and to instanciate a specific diff
-	 * engine.
+	 * Cache of EObject's URI (EcoreUtil.getURI() is costly).
 	 */
-	private EqualityHelper helper;
+	private Cache<EObject, URI> cache;
 
 	/**
 	 * Instanciate a new Edition Distance using the given equality helper.
 	 * 
 	 * @param equalityHelper
-	 *            the equality helper to use.
+	 *            this will be ignored
+	 * @see #EditionDistance(Cache)
 	 */
-	public EditionDistance(EqualityHelper equalityHelper) {
-		weights = Maps.newHashMap();
-		this.helper = equalityHelper;
+	@Deprecated
+	public EditionDistance(IEqualityHelper equalityHelper) {
+		this(CacheBuilder.newBuilder().build(CacheLoader.from(new Function<EObject, URI>() {
+			public URI apply(EObject input) {
+				if (input == null) {
+					return null;
+				}
+				return EcoreUtil.getURI(input);
+			}
+		})));
+	}
+
+	/**
+	 * Instantiate a new Edition Distance function using the given cache to cache EObject's URI. The caller
+	 * should handle the lifecycle of the given cache. No manual eviction or clearance is handled by this
+	 * object.
+	 * 
+	 * @param cache
+	 *            the cache to be used.
+	 */
+	public EditionDistance(Cache<EObject, URI> cache) {
+		this.cache = cache;
+		this.weights = Maps.newHashMap();
 		this.toBeIgnored = Sets.newLinkedHashSet();
 	}
 
@@ -100,14 +127,26 @@ public class EditionDistance implements DistanceFunction {
 	}
 
 	/**
-	 * Create a new builder to instanciate and configure an EditionDistance.
+	 * Create a new builder to instantiate and configure an EditionDistance.
 	 * 
 	 * @param helper
-	 *            the equality helper (required to instanciate an EditionDistance).
+	 *            the equality helper (required to instantiate an EditionDistance).
 	 * @return a configuration builder.
 	 */
+	@Deprecated
 	public static Builder builder(EqualityHelper helper) {
 		return new Builder(helper);
+	}
+
+	/**
+	 * Creates a new builder to instantiate and configure an EditionDistance.
+	 * 
+	 * @param cache
+	 *            the cache to be used by this instance.
+	 * @return a configuration builder.
+	 */
+	public static Builder builder(Cache<EObject, URI> cache) {
+		return new Builder(cache);
 	}
 
 	/**
@@ -123,10 +162,21 @@ public class EditionDistance implements DistanceFunction {
 		 * Create the builder.
 		 * 
 		 * @param toBe
-		 *            the equality helper (required to instanciate an EditionDistance).
+		 *            the equality helper (required to instantiate an EditionDistance).
 		 */
-		public Builder(EqualityHelper toBe) {
-			this.toBeBuilt = new EditionDistance(toBe);
+		@Deprecated
+		protected Builder(EqualityHelper toBe) {
+			this(toBe.getCache());
+		}
+
+		/**
+		 * Create the builder.
+		 * 
+		 * @param cache
+		 *            the cache.
+		 */
+		protected Builder(Cache<EObject, URI> cache) {
+			this.toBeBuilt = new EditionDistance(cache);
 		}
 
 		/**
@@ -307,9 +357,6 @@ public class EditionDistance implements DistanceFunction {
 	 * An implementation of a diff engine which count and measure the detected changes.
 	 */
 	class CountingDiffEngine extends DefaultDiffEngine {
-		/** A fake comparison object required so that the diff engine does his job correctly. */
-		private Comparison fakeComparison;
-
 		/**
 		 * The maximum distance until which we just have to stop.
 		 */
@@ -324,8 +371,6 @@ public class EditionDistance implements DistanceFunction {
 		public CountingDiffEngine(int maxDistance) {
 			super(new CountingDiffProcessor());
 			this.maxDistance = maxDistance;
-			this.fakeComparison = CompareFactory.eINSTANCE.createComparison();
-			this.helper = EditionDistance.this.helper;
 
 		}
 
@@ -353,18 +398,22 @@ public class EditionDistance implements DistanceFunction {
 		 * @return the distance between them computed using the number of changes required to change a to b.
 		 */
 		public int measureDifferences(EObject a, EObject b) {
+			Comparison fakeComparison = CompareFactory.eINSTANCE.createComparison();
 			Match fakeMatch = CompareFactory.eINSTANCE.createMatch();
 			fakeMatch.setLeft(a);
 			fakeMatch.setRight(b);
-			URI aLocation = helper.getURI(a);
-			URI bLocation = helper.getURI(b);
+
+			fakeComparison.getMatches().add(fakeMatch);
+
+			URI aLocation = cache.getUnchecked(a);
+			URI bLocation = cache.getUnchecked(b);
 			int changes = 0;
 			if (!aLocation.fragment().equals(bLocation.fragment())) {
 				int dist = new URIDistance().proximity(aLocation.fragment(), bLocation.fragment());
 				changes += dist * locationChangeCoef;
 			}
 			if (changes <= maxDistance) {
-				checkForDifferences(fakeMatch);
+				checkForDifferences(fakeMatch, new BasicMonitor());
 				changes += getCounter().getComputedDistance();
 			}
 			// System.err.println(changes + ":max=>" + maxDistance + ":" + a + ":" + b);
@@ -374,11 +423,6 @@ public class EditionDistance implements DistanceFunction {
 
 		protected CountingDiffProcessor getCounter() {
 			return (CountingDiffProcessor)getDiffProcessor();
-		}
-
-		@Override
-		protected Comparison getComparison() {
-			return fakeComparison;
 		}
 
 		@Override

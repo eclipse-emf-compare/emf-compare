@@ -16,26 +16,27 @@ import static com.google.common.collect.Iterables.transform;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
 import java.util.Iterator;
 
-import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.impl.ComparisonImpl;
 import org.eclipse.emf.compare.internal.DiffCrossReferencer;
 import org.eclipse.emf.compare.internal.MatchCrossReferencer;
+import org.eclipse.emf.compare.utils.EqualityHelper;
+import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * This specialization of the {@link ComparisonImpl} class allows us to define the derived features and
@@ -167,19 +168,15 @@ public class ComparisonSpec extends ComparisonImpl {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.impl.ComparisonImpl#getConfiguration()
+	 * @see org.eclipse.emf.compare.impl.ComparisonImpl#getEqualityHelper()
 	 */
 	@Override
-	public EMFCompareConfiguration getConfiguration() {
-		EMFCompareConfiguration ret = null;
-		for (Adapter eAdapter : eAdapters()) {
-			if (eAdapter.isAdapterForType(EMFCompareConfiguration.class)) {
-				ret = (EMFCompareConfiguration)eAdapter;
-				break;
-			}
-		}
+	public IEqualityHelper getEqualityHelper() {
+		IEqualityHelper ret = (IEqualityHelper)EcoreUtil.getExistingAdapter(this, IEqualityHelper.class);
 		if (ret == null) {
-			ret = EMFCompare.createDefaultConfiguration();
+			ret = new EqualityHelper(EqualityHelper.createDefaultCache(CacheBuilder.newBuilder()));
+			this.eAdapters().add(ret);
+			ret.setTarget(this);
 		}
 		return ret;
 	}

@@ -12,7 +12,7 @@ package org.eclipse.emf.compare.extension;
 
 /**
  * Describes an extension to make post handling at each step of the comparison. This descriptor has to be
- * added in the EMFCompareExtensionRegistry in order that the contribution be effective.
+ * added in the PostProcessorRegistry in order that the contribution be effective.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */

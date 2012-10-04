@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IRegistryEventListener;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.compare.extension.EMFCompareExtensionRegistry;
+import org.eclipse.emf.compare.extension.PostProcessorRegistry;
 
 /**
  * This listener will allow us to be aware of contribution changes against the model resolver extension point.
@@ -29,6 +29,12 @@ public class PostProcessorRegistryListener implements IRegistryEventListener {
 
 	/** Name of the extension point's "postProcessor" tag. */
 	private static final String POST_PROCESSOR_TAG = "postProcessor"; //$NON-NLS-1$
+
+	private final PostProcessorRegistry registry;
+
+	public PostProcessorRegistryListener(PostProcessorRegistry registry) {
+		this.registry = registry;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -55,9 +61,9 @@ public class PostProcessorRegistryListener implements IRegistryEventListener {
 	 * it's been registered. This will parse these initial contributions.
 	 */
 	public void parseInitialContributions() {
-		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+		final IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 
-		for (IExtension extension : registry.getExtensionPoint(POST_PROCESSOR_EXTENSION_POINT)
+		for (IExtension extension : extensionRegistry.getExtensionPoint(POST_PROCESSOR_EXTENSION_POINT)
 				.getExtensions()) {
 			parseExtension(extension);
 		}
@@ -75,7 +81,7 @@ public class PostProcessorRegistryListener implements IRegistryEventListener {
 				if (POST_PROCESSOR_TAG.equals(elem.getName())) {
 					final String postProcessorClassName = elem
 							.getAttribute(PostProcessorIDEDescriptor.POST_PROCESSOR_CLASS_ATTRIBUTE);
-					EMFCompareExtensionRegistry.removePostProcessor(postProcessorClassName);
+					registry.removePostProcessor(postProcessorClassName);
 				}
 			}
 		}
@@ -96,11 +102,11 @@ public class PostProcessorRegistryListener implements IRegistryEventListener {
 	 * @param extension
 	 *            Parses the given extension and adds its contribution to the registry.
 	 */
-	private static void parseExtension(IExtension extension) {
+	private void parseExtension(IExtension extension) {
 		final IConfigurationElement[] configElements = extension.getConfigurationElements();
 		for (IConfigurationElement element : configElements) {
 			if (POST_PROCESSOR_TAG.equals(element.getName())) {
-				EMFCompareExtensionRegistry.addPostProcessor(new PostProcessorIDEDescriptor(element));
+				registry.addPostProcessor(new PostProcessorIDEDescriptor(element));
 			}
 		}
 	}

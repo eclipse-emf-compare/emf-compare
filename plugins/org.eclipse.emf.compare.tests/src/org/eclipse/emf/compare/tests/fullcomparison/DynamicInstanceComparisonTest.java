@@ -17,6 +17,7 @@ import java.io.IOException;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.fullcomparison.data.dynamic.DynamicInstancesInputData;
 import org.eclipse.emf.compare.tests.suite.AllTests;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -48,43 +49,43 @@ public class DynamicInstanceComparisonTest {
 
 	@Test
 	public void compare2Ways() throws IOException {
-		Comparison result = EMFCompare.newComparator(EMFCompare.createDefaultScope(left, right)).compare();
+		Comparison result = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(left, right));
 		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1, result
 				.getDifferences().size());
 	}
 
 	@Test
 	public void compare3Ways() throws IOException {
-		Comparison result = EMFCompare.newComparator(EMFCompare.createDefaultScope(left, right, origin))
-				.compare();
+		Comparison result = EMFCompare.builder().build().compare(
+				EMFCompare.createDefaultScope(left, right, origin));
 		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1, result
 				.getDifferences().size());
 	}
 
 	@Test
 	public void copyLeftToRight() throws IOException {
-		EMFCompare comparator = EMFCompare.newComparator(EMFCompare.createDefaultScope(left, right));
-		Comparison result = comparator.compare();
+		IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		Comparison result = EMFCompare.builder().build().compare(scope);
 		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1, result
 				.getDifferences().size());
 		for (Diff diff : result.getDifferences()) {
 			diff.copyLeftToRight();
 		}
-		assertEquals("We are supposed to have no difference as we merged everything", 0, comparator.compare()
-				.getDifferences().size());
+		assertEquals("We are supposed to have no difference as we merged everything", 0, EMFCompare.builder()
+				.build().compare(scope).getDifferences().size());
 	}
 
 	@Test
 	public void copyRightToLeft() throws IOException {
-		EMFCompare comparator = EMFCompare.newComparator(EMFCompare.createDefaultScope(left, right));
-		Comparison result = comparator.compare();
+		IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		Comparison result = EMFCompare.builder().build().compare(scope);
 		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1, result
 				.getDifferences().size());
 		for (Diff diff : result.getDifferences()) {
 			diff.copyRightToLeft();
 		}
-		assertEquals("We are supposed to have no difference as we merged everything", 0, comparator.compare()
-				.getDifferences().size());
+		assertEquals("We are supposed to have no difference as we merged everything", 0, EMFCompare.builder()
+				.build().compare(scope).getDifferences().size());
 	}
 
 }

@@ -10,6 +10,8 @@
  */
 package org.eclipse.emf.compare.tests.framework.junit.internal;
 
+import com.google.common.cache.CacheBuilder;
+
 import java.lang.reflect.Constructor;
 import java.util.List;
 
@@ -114,8 +116,8 @@ public class MatchStatement extends Statement {
 			// Swallow : we'll create a default engine instead.
 		}
 		if (engine == null) {
-			final IEObjectMatcher contentMatcher = ProximityEObjectMatcher.builder(
-					EditionDistance.builder(new EqualityHelper()).build()).build();
+			final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder(
+					EqualityHelper.createDefaultCache(CacheBuilder.newBuilder())).build());
 			final IEObjectMatcher matcher = new IdentifierEObjectMatcher(contentMatcher);
 			engine = new DefaultMatchEngine(matcher);
 		}

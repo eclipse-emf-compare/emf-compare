@@ -59,7 +59,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA1Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
 	}
 
@@ -69,7 +69,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA1Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
 	}
 
@@ -79,7 +79,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA1Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
 	}
 
@@ -89,7 +89,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA1Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
 	}
 
@@ -99,7 +99,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA2Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.ADD, comparison);
 	}
 
@@ -109,7 +109,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA2Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.DELETE, comparison);
 	}
 
@@ -119,7 +119,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA2Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.ADD, comparison);
 	}
 
@@ -129,7 +129,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA2Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.DELETE, comparison);
 	}
 
@@ -139,7 +139,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA3Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.ADD, comparison);
 	}
 
@@ -149,7 +149,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA3Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.DELETE, comparison);
 	}
 
@@ -159,7 +159,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA3Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.ADD, comparison);
 	}
 
@@ -169,7 +169,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA3Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.DELETE, comparison);
 	}
 
@@ -179,7 +179,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA4Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB4(TestKind.ADD, comparison);
 	}
 
@@ -189,7 +189,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA4Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB4(TestKind.DELETE, comparison);
 	}
 
@@ -199,7 +199,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA4Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB4(TestKind.ADD, comparison);
 	}
 
@@ -209,7 +209,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA4Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB4(TestKind.DELETE, comparison);
 	}
 
@@ -219,7 +219,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA5Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB5(TestKind.ADD, comparison);
 	}
 
@@ -229,7 +229,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA5Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB5(TestKind.DELETE, comparison);
 	}
 
@@ -239,7 +239,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA5Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB5(TestKind.ADD, comparison);
 	}
 
@@ -249,7 +249,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA5Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB5(TestKind.DELETE, comparison);
 	}
 
@@ -259,7 +259,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA6Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB6(TestKind.ADD, comparison);
 	}
 
@@ -269,7 +269,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA6Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB6(TestKind.DELETE, comparison);
 	}
 
@@ -279,7 +279,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA6Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB6(TestKind.ADD, comparison);
 	}
 
@@ -289,7 +289,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA6Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB6(TestKind.DELETE, comparison);
 	}
 
@@ -299,7 +299,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA7Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB7(TestKind.ADD, comparison);
 	}
 
@@ -309,7 +309,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA7Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB7(TestKind.DELETE, comparison);
 	}
 
@@ -319,7 +319,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA7Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB7(TestKind.ADD, comparison);
 	}
 
@@ -329,7 +329,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA7Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB7(TestKind.DELETE, comparison);
 	}
 
@@ -339,7 +339,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA8Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB8(TestKind.ADD, comparison);
 	}
 
@@ -349,7 +349,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA8Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB8(TestKind.DELETE, comparison);
 	}
 
@@ -359,7 +359,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA8Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB8(TestKind.ADD, comparison);
 	}
 
@@ -369,7 +369,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA8Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB8(TestKind.DELETE, comparison);
 	}
 
@@ -379,7 +379,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA9Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB9(TestKind.ADD, comparison);
 	}
 
@@ -389,7 +389,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA9Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB9(TestKind.DELETE, comparison);
 	}
 
@@ -399,7 +399,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA9Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB9(TestKind.ADD, comparison);
 	}
 
@@ -409,7 +409,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA9Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB9(TestKind.DELETE, comparison);
 	}
 
@@ -419,7 +419,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA10Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB10(TestKind.ADD, comparison);
 	}
 
@@ -429,7 +429,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA10Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB10(TestKind.DELETE, comparison);
 	}
 
@@ -439,7 +439,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA10Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB10(TestKind.ADD, comparison);
 	}
 
@@ -449,7 +449,7 @@ public class StereotypeTest extends AbstractTest {
 		final Resource right = input.getA10Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = getCompare().compare(scope);
 		testAB10(TestKind.DELETE, comparison);
 	}
 

@@ -870,14 +870,14 @@ public interface ComparePackage extends EPackage {
 	int EITERABLE = 13;
 
 	/**
-	 * The meta object id for the '<em>Configuration</em>' data type.
+	 * The meta object id for the '<em>IEquality Helper</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.EMFCompareConfiguration
-	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getCompareConfiguration()
+	 * @see org.eclipse.emf.compare.utils.IEqualityHelper
+	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getIEqualityHelper()
 	 * @generated
 	 */
-	int COMPARE_CONFIGURATION = 14;
+	int IEQUALITY_HELPER = 14;
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.Comparison <em>Comparison</em>}'.
@@ -1395,15 +1395,15 @@ public interface ComparePackage extends EPackage {
 	EDataType getEIterable();
 
 	/**
-	 * Returns the meta object for data type '{@link org.eclipse.emf.compare.EMFCompareConfiguration <em>Configuration</em>}'.
+	 * Returns the meta object for data type '{@link org.eclipse.emf.compare.utils.IEqualityHelper <em>IEquality Helper</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>Configuration</em>'.
-	 * @see org.eclipse.emf.compare.EMFCompareConfiguration
-	 * @model instanceClass="org.eclipse.emf.compare.EMFCompareConfiguration"
+	 * @return the meta object for data type '<em>IEquality Helper</em>'.
+	 * @see org.eclipse.emf.compare.utils.IEqualityHelper
+	 * @model instanceClass="org.eclipse.emf.compare.utils.IEqualityHelper" serializeable="false"
 	 * @generated
 	 */
-	EDataType getCompareConfiguration();
+	EDataType getIEqualityHelper();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -1843,14 +1843,14 @@ public interface ComparePackage extends EPackage {
 		EDataType EITERABLE = eINSTANCE.getEIterable();
 
 		/**
-		 * The meta object literal for the '<em>Configuration</em>' data type.
+		 * The meta object literal for the '<em>IEquality Helper</em>' data type.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.emf.compare.EMFCompareConfiguration
-		 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getCompareConfiguration()
+		 * @see org.eclipse.emf.compare.utils.IEqualityHelper
+		 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getIEqualityHelper()
 		 * @generated
 		 */
-		EDataType COMPARE_CONFIGURATION = eINSTANCE.getCompareConfiguration();
+		EDataType IEQUALITY_HELPER = eINSTANCE.getIEqualityHelper();
 
 	}
 

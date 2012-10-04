@@ -10,9 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.Monitor;
-import org.eclipse.emf.compare.utils.EqualityHelper;
+import org.eclipse.emf.compare.utils.IEqualityHelper;
 
 /**
  * Object used to configure the engines of EMFCompare (match, diff, requirement, equivalence, merge).
@@ -27,12 +29,10 @@ import org.eclipse.emf.compare.utils.EqualityHelper;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
+@Deprecated
 public class EMFCompareConfiguration extends AdapterImpl {
 	/** The monitor to report progress during the math/diff operation. */
 	private final Monitor fMonitor;
-
-	/** The equality helper used to compare object during match & merge process. */
-	private final EqualityHelper fEqualityHelper;
 
 	/**
 	 * Constructs a configuration to be used by EMF Compare.
@@ -42,9 +42,9 @@ public class EMFCompareConfiguration extends AdapterImpl {
 	 * @param helper
 	 *            The equality helper that should ne used by the comparison engine.
 	 */
-	public EMFCompareConfiguration(Monitor monitor, EqualityHelper helper) {
-		this.fMonitor = monitor;
-		this.fEqualityHelper = helper;
+	@Deprecated
+	public EMFCompareConfiguration(Monitor monitor, IEqualityHelper helper) {
+		this.fMonitor = checkNotNull(monitor);
 	}
 
 	/**
@@ -52,17 +52,20 @@ public class EMFCompareConfiguration extends AdapterImpl {
 	 * 
 	 * @return the Monitor (never null).
 	 */
+	@Deprecated
 	public Monitor getMonitor() {
 		return fMonitor;
 	}
 
 	/**
-	 * Returns the {@link EqualityHelper}.
+	 * Returns the {@link IEqualityHelper}.
 	 * 
 	 * @return the EqualityHelper (never null).
+	 * @see Comparison#getEqualityHelper()
 	 */
-	public EqualityHelper getEqualityHelper() {
-		return fEqualityHelper;
+	@Deprecated
+	public IEqualityHelper getEqualityHelper() {
+		return null;
 	}
 
 	/**

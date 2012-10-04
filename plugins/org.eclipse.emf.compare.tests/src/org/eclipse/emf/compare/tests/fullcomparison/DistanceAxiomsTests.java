@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.tests.fullcomparison;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
 
 import org.eclipse.emf.compare.match.eobject.EditionDistance;
@@ -48,7 +49,7 @@ public class DistanceAxiomsTests {
 	@Before
 	public void setUp() throws Exception {
 		AllTests.fillEMFRegistries();
-		this.meter = new EditionDistance(new EqualityHelper());
+		this.meter = new EditionDistance(EqualityHelper.createDefaultCache(CacheBuilder.newBuilder()));
 	}
 
 	@DataPoints

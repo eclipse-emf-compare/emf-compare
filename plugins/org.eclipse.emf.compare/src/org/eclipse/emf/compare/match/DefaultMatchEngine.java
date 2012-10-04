@@ -13,23 +13,32 @@ package org.eclipse.emf.compare.match;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
 import java.util.Iterator;
 
-import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
+import org.eclipse.emf.compare.match.eobject.EditionDistance;
 import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
+import org.eclipse.emf.compare.match.eobject.IdentifierEObjectMatcher;
+import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher;
 import org.eclipse.emf.compare.match.resource.IResourceMatcher;
 import org.eclipse.emf.compare.match.resource.StrategyResourceMatcher;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.utils.EqualityHelper;
+import org.eclipse.emf.compare.utils.IEqualityHelper;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -43,66 +52,111 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class DefaultMatchEngine implements IMatchEngine {
-	/** Root of this comparison, should only be accessed or instantiated through {@link #getComparison()}. */
-	private Comparison comparison;
-
-	/** The comparison scope that will be used by this engine. Should be accessed through {@link #getScope()}. */
-	private IComparisonScope comparisonScope;
 
 	/** The delegate {@link IEObjectMatcher matcher} that will actually pair EObjects together. */
-	private IEObjectMatcher eObjectMatcher;
+	private final IEObjectMatcher eObjectMatcher;
+
+	/** The factory that will be use to instantiate Comparison as return by match() methods. */
+	private final IComparisonFactory comparisonFactory;
 
 	/**
-	 * This default engine delegates the pairing of EObjects to an {@link IEObjectMatcher}.This constructor
-	 * allows initialization of this matcher.
+	 * This default engine delegates the pairing of EObjects to an {@link IEObjectMatcher}.
 	 * 
 	 * @param matcher
 	 *            The matcher that will be in charge of pairing EObjects together for this comparison process.
+	 * @see #DefaultMatchEngine(IEObjectMatcher, IComparisonFactory)
 	 */
+	@Deprecated
 	public DefaultMatchEngine(IEObjectMatcher matcher) {
-		checkNotNull(matcher);
-		this.eObjectMatcher = matcher;
+		this(matcher, new DefaultComparisonFactory(new DefaultEqualityHelperFactory()));
+	}
+
+	/**
+	 * This default engine delegates the pairing of EObjects to an {@link IEObjectMatcher}.
+	 * 
+	 * @param matcher
+	 *            The matcher that will be in charge of pairing EObjects together for this comparison process.
+	 * @param comparisonFactory
+	 *            factory that will be use to instantiate Comparison as return by match() methods.
+	 */
+	public DefaultMatchEngine(IEObjectMatcher matcher, IComparisonFactory comparisonFactory) {
+		this.eObjectMatcher = checkNotNull(matcher);
+		this.comparisonFactory = checkNotNull(comparisonFactory);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.IMatchEngine#match(IComparisonScope, EMFCompareConfiguration)
+	 * @see org.eclipse.emf.compare.match.IMatchEngine#match(IComparisonScope, Monitor)
 	 */
+	@Deprecated
 	public Comparison match(IComparisonScope scope, EMFCompareConfiguration configuration) {
-		this.comparisonScope = scope;
-		associate(getComparison(), configuration);
+		final Monitor monitor;
+		if (configuration != null) {
+			monitor = configuration.getMonitor();
+		} else {
+			monitor = new BasicMonitor();
+		}
+		return match(scope, monitor);
+	}
 
-		final Notifier left = getScope().getLeft();
-		final Notifier right = getScope().getRight();
-		final Notifier origin = getScope().getOrigin();
+	/**
+	 * This is the entry point of a Comparison process. It is expected to use the provided scope in order to
+	 * determine all objects that need to be matched.
+	 * <p>
+	 * The returned Comparison should include both matched an unmatched objects. It is not the match engine's
+	 * responsibility to determine differences between objects, only to match them together.
+	 * </p>
+	 * <p>
+	 * Should be pull-up to interface in next major revision.
+	 * </p>
+	 * 
+	 * @param scope
+	 *            The comparison scope that should be used by this engine to determine the objects to match.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation
+	 * @return An initialized {@link Comparison} model with all matches determined.
+	 */
+	public Comparison match(IComparisonScope scope, Monitor monitor) {
+		Comparison comparison = comparisonFactory.createComparison();
 
-		getComparison().setThreeWay(origin != null);
+		final Notifier left = scope.getLeft();
+		final Notifier right = scope.getRight();
+		final Notifier origin = scope.getOrigin();
 
-		match(left, right, origin);
+		comparison.setThreeWay(origin != null);
 
-		return getComparison();
+		match(comparison, scope, left, right, origin, monitor);
+
+		return comparison;
 	}
 
 	/**
 	 * This methods will delegate to the proper "match(T, T, T)" implementation according to the types of
 	 * {@code left}, {@code right} and {@code origin}.
 	 * 
+	 * @param comparison
+	 *            The comparison to which will be added detected matches.
+	 * @param scope
+	 *            The comparison scope that should be used by this engine to determine the objects to match.
 	 * @param left
 	 *            The left {@link Notifier}.
 	 * @param right
 	 *            The right {@link Notifier}.
 	 * @param origin
 	 *            The common ancestor of <code>left</code> and <code>right</code>. Can be <code>null</code>.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation
 	 */
-	protected void match(final Notifier left, final Notifier right, final Notifier origin) {
+	protected void match(Comparison comparison, IComparisonScope scope, final Notifier left,
+			final Notifier right, final Notifier origin, Monitor monitor) {
 		// FIXME side-effect coding
 		if (left instanceof ResourceSet || right instanceof ResourceSet) {
-			match((ResourceSet)left, (ResourceSet)right, (ResourceSet)origin);
+			match(comparison, scope, (ResourceSet)left, (ResourceSet)right, (ResourceSet)origin, monitor);
 		} else if (left instanceof Resource || right instanceof Resource) {
-			match((Resource)left, (Resource)right, (Resource)origin);
+			match(comparison, scope, (Resource)left, (Resource)right, (Resource)origin, monitor);
 		} else if (left instanceof EObject || right instanceof EObject) {
-			match((EObject)left, (EObject)right, (EObject)origin);
+			match(comparison, scope, (EObject)left, (EObject)right, (EObject)origin, monitor);
 		} else {
 			// TODO Cannot happen ... for now. Should we log an exception?
 		}
@@ -113,24 +167,31 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * comparison scope for these resource sets children, then delegate to an {@link IResourceMatcher} to
 	 * determine the resource mappings.
 	 * 
+	 * @param comparison
+	 *            The comparison to which will be added detected matches.
+	 * @param scope
+	 *            The comparison scope that should be used by this engine to determine the objects to match.
 	 * @param left
 	 *            The left {@link ResourceSet}.
 	 * @param right
 	 *            The right {@link ResourceSet}.
 	 * @param origin
 	 *            The common ancestor of <code>left</code> and <code>right</code>. Can be <code>null</code>.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation
 	 */
-	protected void match(ResourceSet left, ResourceSet right, ResourceSet origin) {
-		final Iterator<? extends Resource> leftChildren = getScope().getCoveredResources(left);
-		final Iterator<? extends Resource> rightChildren = getScope().getCoveredResources(right);
+	protected void match(Comparison comparison, IComparisonScope scope, ResourceSet left, ResourceSet right,
+			ResourceSet origin, Monitor monitor) {
+		final Iterator<? extends Resource> leftChildren = scope.getCoveredResources(left);
+		final Iterator<? extends Resource> rightChildren = scope.getCoveredResources(right);
 		final Iterator<? extends Resource> originChildren;
 		if (origin != null) {
-			originChildren = getScope().getCoveredResources(origin);
+			originChildren = scope.getCoveredResources(origin);
 		} else {
 			originChildren = Iterators.emptyIterator();
 		}
 
-		final IResourceMatcher resourceMatcher = getResourceMatcher();
+		final IResourceMatcher resourceMatcher = createResourceMatcher();
 		final Iterable<MatchResource> mappings = resourceMatcher.createMappings(leftChildren, rightChildren,
 				originChildren);
 
@@ -139,28 +200,28 @@ public class DefaultMatchEngine implements IMatchEngine {
 		Iterator<? extends EObject> originEObjects = Iterators.emptyIterator();
 
 		for (MatchResource mapping : mappings) {
-			getComparison().getMatchedResources().add(mapping);
+			comparison.getMatchedResources().add(mapping);
 
 			final Resource leftRes = mapping.getLeft();
 			final Resource rightRes = mapping.getRight();
 			final Resource originRes = mapping.getOrigin();
 
 			if (leftRes != null) {
-				leftEObjects = Iterators.concat(leftEObjects, getScope().getCoveredEObjects(leftRes));
+				leftEObjects = Iterators.concat(leftEObjects, scope.getCoveredEObjects(leftRes));
 			}
 
 			if (rightRes != null) {
-				rightEObjects = Iterators.concat(rightEObjects, getScope().getCoveredEObjects(rightRes));
+				rightEObjects = Iterators.concat(rightEObjects, scope.getCoveredEObjects(rightRes));
 			}
 
 			if (originRes != null) {
-				originEObjects = Iterators.concat(originEObjects, getScope().getCoveredEObjects(originRes));
+				originEObjects = Iterators.concat(originEObjects, scope.getCoveredEObjects(originRes));
 			}
 		}
 
 		final Iterable<Match> matches = getEObjectMatcher().createMatches(leftEObjects, rightEObjects,
 				originEObjects);
-		Iterables.addAll(getComparison().getMatches(), matches);
+		Iterables.addAll(comparison.getMatches(), matches);
 	}
 
 	/**
@@ -170,14 +231,21 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * We expect at least two of the given resources not to be <code>null</code>.
 	 * </p>
 	 * 
+	 * @param comparison
+	 *            The comparison to which will be added detected matches.
+	 * @param scope
+	 *            The comparison scope that should be used by this engine to determine the objects to match.
 	 * @param left
 	 *            The left {@link Resource}. Can be <code>null</code>.
 	 * @param right
 	 *            The right {@link Resource}. Can be <code>null</code>.
 	 * @param origin
 	 *            The common ancestor of <code>left</code> and <code>right</code>. Can be <code>null</code>.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation
 	 */
-	protected void match(Resource left, Resource right, Resource origin) {
+	protected void match(Comparison comparison, IComparisonScope scope, Resource left, Resource right,
+			Resource origin, Monitor monitor) {
 		// Our "roots" are Resources. Consider them matched
 		final MatchResource match = CompareFactory.eINSTANCE.createMatchResource();
 
@@ -206,7 +274,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 			}
 		}
 
-		getComparison().getMatchedResources().add(match);
+		comparison.getMatchedResources().add(match);
 
 		// We need at least two resources to match them
 		if (atLeastTwo(left == null, right == null, origin == null)) {
@@ -219,19 +287,19 @@ public class DefaultMatchEngine implements IMatchEngine {
 
 		final Iterator<? extends EObject> leftEObjects;
 		if (left != null) {
-			leftEObjects = getScope().getCoveredEObjects(left);
+			leftEObjects = scope.getCoveredEObjects(left);
 		} else {
 			leftEObjects = Iterators.emptyIterator();
 		}
 		final Iterator<? extends EObject> rightEObjects;
 		if (right != null) {
-			rightEObjects = getScope().getCoveredEObjects(right);
+			rightEObjects = scope.getCoveredEObjects(right);
 		} else {
 			rightEObjects = Iterators.emptyIterator();
 		}
 		final Iterator<? extends EObject> originEObjects;
 		if (origin != null) {
-			originEObjects = getScope().getCoveredEObjects(origin);
+			originEObjects = scope.getCoveredEObjects(origin);
 		} else {
 			originEObjects = Iterators.emptyIterator();
 		}
@@ -239,7 +307,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 		final Iterable<Match> matches = getEObjectMatcher().createMatches(leftEObjects, rightEObjects,
 				originEObjects);
 
-		Iterables.addAll(getComparison().getMatches(), matches);
+		Iterables.addAll(comparison.getMatches(), matches);
 	}
 
 	/**
@@ -249,27 +317,33 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * We expect at least the <code>left</code> and <code>right</code> EObjects not to be <code>null</code>.
 	 * </p>
 	 * 
+	 * @param comparison
+	 *            The comparison to which will be added detected matches.
+	 * @param scope
+	 *            The comparison scope that should be used by this engine to determine the objects to match.
 	 * @param left
 	 *            The left {@link EObject}.
 	 * @param right
 	 *            The right {@link EObject}.
 	 * @param origin
 	 *            The common ancestor of <code>left</code> and <code>right</code>.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation.
 	 */
-	protected void match(EObject left, EObject right, EObject origin) {
+	protected void match(Comparison comparison, IComparisonScope scope, EObject left, EObject right,
+			EObject origin, Monitor monitor) {
 		if (left == null || right == null) {
 			// FIXME IAE or NPE?
 			throw new IllegalArgumentException();
 		}
 
 		final Iterator<? extends EObject> leftEObjects = Iterators.concat(Iterators.singletonIterator(left),
-				getScope().getChildren(left));
+				scope.getChildren(left));
 		final Iterator<? extends EObject> rightEObjects = Iterators.concat(
-				Iterators.singletonIterator(right), getScope().getChildren(right));
+				Iterators.singletonIterator(right), scope.getChildren(right));
 		final Iterator<? extends EObject> originEObjects;
 		if (origin != null) {
-			originEObjects = Iterators.concat(Iterators.singletonIterator(origin), getScope().getChildren(
-					origin));
+			originEObjects = Iterators.concat(Iterators.singletonIterator(origin), scope.getChildren(origin));
 		} else {
 			originEObjects = Iterators.emptyIterator();
 		}
@@ -277,7 +351,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 		final Iterable<Match> matches = getEObjectMatcher().createMatches(leftEObjects, rightEObjects,
 				originEObjects);
 
-		Iterables.addAll(getComparison().getMatches(), matches);
+		Iterables.addAll(comparison.getMatches(), matches);
 	}
 
 	/**
@@ -286,7 +360,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * @return An {@link IResourceMatcher} that can be used to retrieve the {@link MatchResource}s for this
 	 *         comparison.
 	 */
-	protected IResourceMatcher getResourceMatcher() {
+	protected IResourceMatcher createResourceMatcher() {
 		return new StrategyResourceMatcher();
 	}
 
@@ -295,30 +369,8 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * 
 	 * @return The EObject matcher associated with this match engine.
 	 */
-	protected IEObjectMatcher getEObjectMatcher() {
+	protected final IEObjectMatcher getEObjectMatcher() {
 		return eObjectMatcher;
-	}
-
-	/**
-	 * Returns the root of this Comparison. This default implementation will instantiate a Comparison model
-	 * through the factory if needed.
-	 * 
-	 * @return The root of this Comparison.
-	 */
-	protected Comparison getComparison() {
-		if (comparison == null) {
-			comparison = CompareFactory.eINSTANCE.createComparison();
-		}
-		return comparison;
-	}
-
-	/**
-	 * Returns the comparison scope associated with this engine.
-	 * 
-	 * @return The comparison scope associated with this engine.
-	 */
-	protected IComparisonScope getScope() {
-		return comparisonScope;
 	}
 
 	/**
@@ -333,34 +385,69 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * @return <code>true</code> if at least two of the three given booleans are <code>true</code>,
 	 *         <code>false</code> otherwise.
 	 */
-	protected static boolean atLeastTwo(boolean condition1, boolean condition2, boolean condition3) {
+	static boolean atLeastTwo(boolean condition1, boolean condition2, boolean condition3) {
 		// CHECKSTYLE:OFF This expression is alone in its method, and documented.
 		return condition1 && (condition2 || condition3) || (condition2 && condition3);
 		// CHECKSTYLE:ON
 	}
 
 	/**
-	 * Removes any already existing {@link EMFCompareConfiguration} adapter on the given
-	 * <code>comparison</code> object. Then it associates the given <code>configuration</code> with the
-	 * <code>comparison</code>.
+	 * Helper creator method that instantiate a {@link DefaultMatchEngine} that will use identifiers as
+	 * specified by the given {@code useIDs} enumeration.
 	 * 
-	 * @param comparison
-	 *            the comparison receiver of the Adapter
-	 * @param configuration
-	 *            the Adapter to associtate to the comparison.
+	 * @param useIDs
+	 *            the kinds of matcher to use.
+	 * @return a new {@link DefaultMatchEngine} instance.
 	 */
-	private static void associate(Comparison comparison, EMFCompareConfiguration configuration) {
-		Iterator<Adapter> eAdapters = comparison.eAdapters().iterator();
-		while (eAdapters.hasNext()) {
-			Adapter eAdapter = eAdapters.next();
-			if (eAdapter.isAdapterForType(EMFCompareConfiguration.class)) {
-				eAdapters.remove();
-				if (eAdapter instanceof Adapter.Internal) {
-					((Adapter.Internal)eAdapter).unsetTarget(comparison);
-				}
+	public static DefaultMatchEngine create(UseIdentifiers useIDs) {
+		final Cache<EObject, URI> defaultCache = EqualityHelper.createDefaultCache(CacheBuilder.newBuilder());
+
+		IEqualityHelperFactory helperFactory = new DefaultEqualityHelperFactory() {
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see org.eclipse.emf.compare.match.DefaultEqualityHelperFactory#createEqualityHelper()
+			 */
+			@Override
+			public IEqualityHelper createEqualityHelper() {
+				IEqualityHelper equalityHelper = new EqualityHelper(defaultCache);
+				return equalityHelper;
 			}
+		};
+
+		IComparisonFactory comparisonFactory = new DefaultComparisonFactory(helperFactory);
+
+		IEObjectMatcher matcher = createDefaultEObjectMatcher(useIDs, defaultCache);
+
+		final DefaultMatchEngine matchEngine = new DefaultMatchEngine(matcher, comparisonFactory);
+		return matchEngine;
+	}
+
+	/**
+	 * @param useIDs
+	 * @param cache
+	 * @return
+	 */
+	public static IEObjectMatcher createDefaultEObjectMatcher(UseIdentifiers useIDs, Cache<EObject, URI> cache) {
+		final IEObjectMatcher matcher;
+		final EditionDistance editionDistance = EditionDistance.builder(cache).build();
+		switch (useIDs) {
+			case NEVER:
+				matcher = new ProximityEObjectMatcher(editionDistance);
+				break;
+			case ONLY:
+				matcher = new IdentifierEObjectMatcher();
+				break;
+			case WHEN_AVAILABLE:
+				// fall through to default
+			default:
+				// Use an ID matcher, delegating to proximity when no ID is available
+				final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(editionDistance);
+				matcher = new IdentifierEObjectMatcher(contentMatcher);
+				break;
+
 		}
-		comparison.eAdapters().add(configuration);
-		configuration.setTarget(comparison);
+
+		return matcher;
 	}
 }

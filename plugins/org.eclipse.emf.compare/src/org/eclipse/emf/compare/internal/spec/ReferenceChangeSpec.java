@@ -24,7 +24,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.impl.ReferenceChangeImpl;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EMFCompareCopier;
-import org.eclipse.emf.compare.utils.EqualityHelper;
+import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -619,11 +619,11 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	 */
 	private EObject findMatchIn(List<EObject> list, EObject element) {
 		final Comparison comparison = getMatch().getComparison();
-		final EqualityHelper helper = comparison.getConfiguration().getEqualityHelper();
+		final IEqualityHelper helper = comparison.getEqualityHelper();
 		final Iterator<EObject> it = list.iterator();
 		while (it.hasNext()) {
 			final EObject next = it.next();
-			if (helper.matchingValues(comparison, next, element)) {
+			if (helper.matchingValues(next, element)) {
 				return next;
 			}
 		}
