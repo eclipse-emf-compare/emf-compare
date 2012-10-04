@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.IncludeChange;
 import org.eclipse.emf.compare.uml2.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.UMLDiff;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.UMLAbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.Include;
@@ -28,7 +28,7 @@ import org.eclipse.uml2.uml.UMLPackage;
 /**
  * Factory for UMLExtendChangeLeftTarget.
  */
-public class UMLIncludeChangeFactory extends UMLAbstractDiffExtensionFactory {
+public class UMLIncludeChangeFactory extends AbstractDiffExtensionFactory {
 
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return IncludeChange.class;
@@ -46,7 +46,7 @@ public class UMLIncludeChangeFactory extends UMLAbstractDiffExtensionFactory {
 		if (kind == DifferenceKind.ADD || kind == DifferenceKind.DELETE) {
 			result = ((ReferenceChange)input).getValue();
 		} else if (kind == DifferenceKind.CHANGE) {
-			final EObject container = MatchUtil.getContainer(input.getMatch().getComparison(), input);
+			final EObject container = MatchUtil.getContainer(input);
 			if (container instanceof Include) {
 				result = container;
 			}

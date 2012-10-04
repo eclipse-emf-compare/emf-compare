@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.GeneralizationSetChange;
 import org.eclipse.emf.compare.uml2.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.UMLDiff;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.UMLAbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.GeneralizationSet;
@@ -28,7 +28,7 @@ import org.eclipse.uml2.uml.UMLPackage;
 /**
  * Factory for UMLGeneralizationSetChangeLeftTarget.
  */
-public class UMLGeneralizationSetChangeFactory extends UMLAbstractDiffExtensionFactory {
+public class UMLGeneralizationSetChangeFactory extends AbstractDiffExtensionFactory {
 
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return GeneralizationSetChange.class;
@@ -46,7 +46,7 @@ public class UMLGeneralizationSetChangeFactory extends UMLAbstractDiffExtensionF
 		if (kind == DifferenceKind.ADD || kind == DifferenceKind.DELETE) {
 			result = ((ReferenceChange)input).getValue();
 		} else if (kind == DifferenceKind.CHANGE) {
-			final EObject container = MatchUtil.getContainer(input.getMatch().getComparison(), input);
+			final EObject container = MatchUtil.getContainer(input);
 			if (container instanceof GeneralizationSet) {
 				result = container;
 			}

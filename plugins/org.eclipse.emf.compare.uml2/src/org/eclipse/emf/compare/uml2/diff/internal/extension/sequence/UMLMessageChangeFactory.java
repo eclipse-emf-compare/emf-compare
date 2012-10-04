@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.MessageChange;
 import org.eclipse.emf.compare.uml2.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.UMLDiff;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.UMLAbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -32,7 +32,7 @@ import org.eclipse.uml2.uml.UMLPackage;
 /**
  * Factory for UMLGeneralizationSetChangeLeftTarget.
  */
-public class UMLMessageChangeFactory extends UMLAbstractDiffExtensionFactory {
+public class UMLMessageChangeFactory extends AbstractDiffExtensionFactory {
 
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return MessageChange.class;
@@ -50,7 +50,7 @@ public class UMLMessageChangeFactory extends UMLAbstractDiffExtensionFactory {
 		if (kind == DifferenceKind.ADD || kind == DifferenceKind.DELETE) {
 			result = ((ReferenceChange)input).getValue();
 		} else if (kind == DifferenceKind.CHANGE) {
-			final EObject container = MatchUtil.getContainer(input.getMatch().getComparison(), input);
+			final EObject container = MatchUtil.getContainer(input);
 			if (container instanceof Message) {
 				result = container;
 			} else if (container instanceof MessageOccurrenceSpecification) {
@@ -90,8 +90,7 @@ public class UMLMessageChangeFactory extends UMLAbstractDiffExtensionFactory {
 		return (input.getReference().equals(UMLPackage.Literals.MESSAGE__RECEIVE_EVENT)
 				|| input.getReference().equals(UMLPackage.Literals.MESSAGE__SEND_EVENT) || input
 				.getReference().equals(UMLPackage.Literals.INTERACTION_FRAGMENT__COVERED))
-				&& getManagedConcreteDiscriminantKind().contains(
-						MatchUtil.getContainer(input.getMatch().getComparison(), input).eClass());
+				&& getManagedConcreteDiscriminantKind().contains(MatchUtil.getContainer(input).eClass());
 	}
 
 	@Override

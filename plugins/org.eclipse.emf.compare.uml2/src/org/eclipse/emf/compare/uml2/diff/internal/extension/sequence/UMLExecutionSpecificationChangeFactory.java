@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.ExecutionSpecificationChange;
 import org.eclipse.emf.compare.uml2.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.UMLDiff;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.UMLAbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -30,7 +30,7 @@ import org.eclipse.uml2.uml.UMLPackage;
 /**
  * Factory for UMLExecutionSpecificationChangeLeft.
  */
-public class UMLExecutionSpecificationChangeFactory extends UMLAbstractDiffExtensionFactory {
+public class UMLExecutionSpecificationChangeFactory extends AbstractDiffExtensionFactory {
 
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return ExecutionSpecificationChange.class;
@@ -48,7 +48,7 @@ public class UMLExecutionSpecificationChangeFactory extends UMLAbstractDiffExten
 		if (kind == DifferenceKind.ADD || kind == DifferenceKind.DELETE) {
 			result = ((ReferenceChange)input).getValue();
 		} else if (kind == DifferenceKind.CHANGE) {
-			final EObject container = MatchUtil.getContainer(input.getMatch().getComparison(), input);
+			final EObject container = MatchUtil.getContainer(input);
 			if (container instanceof ExecutionSpecification) {
 				result = container;
 			} else if (container instanceof ExecutionOccurrenceSpecification) {
@@ -82,7 +82,7 @@ public class UMLExecutionSpecificationChangeFactory extends UMLAbstractDiffExten
 		return ((input.getReference().equals(UMLPackage.Literals.EXECUTION_SPECIFICATION__START)
 				|| input.getReference().equals(UMLPackage.Literals.EXECUTION_SPECIFICATION__FINISH) || input
 				.getReference().equals(UMLPackage.Literals.INTERACTION_FRAGMENT__COVERED)) && getManagedConcreteDiscriminantKind()
-				.contains(MatchUtil.getContainer(input.getMatch().getComparison(), input).eClass()));
+				.contains(MatchUtil.getContainer(input).eClass()));
 	}
 
 	@Override
