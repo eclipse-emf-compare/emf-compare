@@ -64,7 +64,7 @@
                   Fully qualified name of a class that implements org.eclipse.emf.compare.logical.extension.IPostProcessor.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.logical.extension.IPostProcessor"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.extension.IPostProcessor"/>
                </appinfo>
             </annotation>
          </attribute>
