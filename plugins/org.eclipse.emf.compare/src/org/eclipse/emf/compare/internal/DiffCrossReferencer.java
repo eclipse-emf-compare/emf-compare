@@ -60,6 +60,7 @@ public class DiffCrossReferencer extends ECrossReferenceAdapter {
 	 *      boolean)
 	 */
 	// CHECKSTYLE:OFF this is an exact copy/paste of the super class, with only one additional condition
+	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<EStructuralFeature.Setting> getInverseReferences(EObject eObject, boolean resolve) {
 		Collection<EStructuralFeature.Setting> result = new ArrayList<EStructuralFeature.Setting>();
@@ -84,8 +85,7 @@ public class DiffCrossReferencer extends ECrossReferenceAdapter {
 			if (eOpposite != null && !eReference.isContainer() && eObject.eIsSet(eReference)) {
 				if (eReference.isMany()) {
 					Object collection = eObject.eGet(eReference);
-					for (@SuppressWarnings("unchecked")
-					Iterator<EObject> j = resolve() ? ((Collection<EObject>)collection).iterator()
+					for (Iterator<EObject> j = resolve() ? ((Collection<EObject>)collection).iterator()
 							: ((InternalEList<EObject>)collection).basicIterator(); j.hasNext();) {
 						InternalEObject referencingEObject = (InternalEObject)j.next();
 						result.add(referencingEObject.eSetting(eOpposite));

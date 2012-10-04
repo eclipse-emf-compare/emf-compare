@@ -174,11 +174,6 @@ public final class EMFSynchronizationModel {
 		final Set<IStorage> rightCopy = Sets.newLinkedHashSet(rightTraversal.getStorages());
 		final Set<IStorage> originCopy = Sets.newLinkedHashSet(originTraversal.getStorages());
 
-		// TODO PERF We're iterating twice. Could probably be done in the latter loop
-		removeReadOnly(leftTraversal.getStorages());
-		removeReadOnly(rightTraversal.getStorages());
-		removeReadOnly(originTraversal.getStorages());
-
 		for (IStorage left : leftCopy) {
 			final IStorage right = removeLikeNamedStorageFrom(left, rightCopy);
 			if (right != null && threeWay) {
@@ -192,21 +187,25 @@ public final class EMFSynchronizationModel {
 			} else if (right != null && binaryIdentical(left, right)) {
 				leftTraversal.getStorages().remove(left);
 				rightTraversal.getStorages().remove(right);
+			} else if (right == null) {
+				// This file has no match. remove it if read only
+				if (left.isReadOnly()) {
+					leftTraversal.getStorages().remove(left);
+				}
 			}
 		}
-	}
 
-	/**
-	 * This will iterate over the given set of storages and remove all "read-only" files from it.
-	 * 
-	 * @param storages
-	 *            The set of storages we are to filter.
-	 */
-	private void removeReadOnly(Set<? extends IStorage> storages) {
-		final Iterator<? extends IStorage> storageIt = storages.iterator();
-		while (storageIt.hasNext()) {
-			if (storageIt.next().isReadOnly()) {
-				storageIt.remove();
+		for (IStorage right : rightCopy) {
+			// These have no match on left. Remove if read only
+			if (right.isReadOnly()) {
+				rightTraversal.getStorages().remove(right);
+			}
+		}
+
+		for (IStorage origin : originCopy) {
+			// These have no match on left and right. Remove if read only
+			if (origin.isReadOnly()) {
+				originTraversal.getStorages().remove(origin);
 			}
 		}
 	}
@@ -273,7 +272,7 @@ public final class EMFSynchronizationModel {
 	 *         starting point.
 	 */
 	private static ResourceTraversal resolveTraversal(IResource start) {
-		if (start == null || !(start instanceof IFile)) {
+		if (!(start instanceof IFile)) {
 			return new ResourceTraversal(Sets.<IFile> newLinkedHashSet());
 		}
 

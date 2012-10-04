@@ -16,6 +16,7 @@ import com.google.common.collect.Sets;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -34,6 +35,7 @@ import org.eclipse.emf.compare.ide.internal.utils.PriorityExecutor.Priority;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -81,10 +83,13 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 * Keeps track of the URIs that have been demanded by the resolving of a resource. This cache will be
 	 * invalidated when we start resolving this new set of resources.
 	 */
-	private Set<URI> demandedURIs = Sets.newLinkedHashSet();
+	private final Set<URI> demandedURIs = Sets.newLinkedHashSet();
 
 	/** Keeps track of the URIs of all resources that have been loaded by this resource set. */
-	private Set<URI> loadedURIs = Sets.newLinkedHashSet();
+	private final Set<URI> loadedURIs = Sets.newLinkedHashSet();
+
+	/** Associates URIs with their resources. */
+	private final Map<URI, Resource> uriCache = Maps.newConcurrentMap();
 
 	/**
 	 * This thread pool will be used to launch the loading and unloading of resources in separate threads.
@@ -96,6 +101,37 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	private final PriorityExecutor pool = new PriorityExecutor("ModelResolver"); //$NON-NLS-1$
 
 	/**
+	 * Default constructor.
+	 */
+	public SyncResourceSet() {
+		// initialize from here to avoid synchronization
+		resources = new SynchronizedResourcesEList<Resource>();
+		loadOptions = super.getLoadOptions();
+		/*
+		 * This resource set is specifically designed to resolve cross resources links, it thus spends a lot
+		 * of time loading resources. The following set of options is what seems to give the most significant
+		 * boost in loading performances, though I did not fine-tune what's really needed here. Take note that
+		 * the use of our own parser pool along with the disabling of notifications is what allows us to
+		 * bypass UML's CacheAdapter and the potential dead locks it causes.
+		 */
+		loadOptions.put(XMLResource.OPTION_USE_PARSER_POOL, new NoNotificationParserPool());
+		loadOptions.put(XMLResource.OPTION_USE_DEPRECATED_METHODS, Boolean.FALSE);
+		loadOptions.put(XMLResource.OPTION_DISABLE_NOTIFY, Boolean.TRUE);
+
+		final int bufferSize = 16384;
+		final Map<String, Object> parserProperties = Maps.newHashMap();
+		parserProperties.put("http://apache.org/xml/properties/input-buffer-size", Integer //$NON-NLS-1$
+				.valueOf(bufferSize));
+		loadOptions.put(XMLResource.OPTION_PARSER_PROPERTIES, parserProperties);
+
+		// These two might be superfluous
+		loadOptions.put(XMLResource.OPTION_DEFER_IDREF_RESOLUTION, Boolean.TRUE);
+		final int expectedFeatureNames = 256;
+		loadOptions.put(XMLResource.OPTION_USE_XML_NAME_TO_FEATURE_MAP, Maps
+				.newHashMapWithExpectedSize(expectedFeatureNames));
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#getResource(org.eclipse.emf.common.util.URI,
@@ -104,10 +140,12 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	@Override
 	public Resource getResource(URI uri, boolean loadOnDemand) {
 		// Never load resources from here
-		final Resource demanded = super.getResource(uri, false);
-		if (!loadedURIs.contains(uri) && demanded == null) {
-			synchronized(demandedURIs) {
-				demandedURIs.add(uri);
+		final Resource demanded = uriCache.get(uri);
+		if (!loadedURIs.contains(uri)) {
+			if (demanded == null) {
+				synchronized(demandedURIs) {
+					demandedURIs.add(uri);
+				}
 			}
 		}
 		return demanded;
@@ -120,7 +158,9 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 */
 	@Override
 	public synchronized Resource createResource(URI uri) {
-		return super.createResource(uri);
+		Resource created = super.createResource(uri);
+		uriCache.put(uri, created);
+		return created;
 	}
 
 	/**
@@ -131,7 +171,9 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 */
 	@Override
 	public synchronized Resource createResource(URI uri, String contentType) {
-		return super.createResource(uri, contentType);
+		Resource created = super.createResource(uri, contentType);
+		uriCache.put(uri, created);
+		return created;
 	}
 
 	/**
@@ -140,10 +182,7 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#getResources()
 	 */
 	@Override
-	public synchronized EList<Resource> getResources() {
-		if (resources == null) {
-			resources = new SynchronizedResourcesEList<Resource>();
-		}
+	public EList<Resource> getResources() {
 		return resources;
 	}
 
@@ -155,44 +194,42 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 * @return The loaded Resource.
 	 */
 	public Resource loadResource(URI uri) {
-		return super.getResource(uri, true);
+		/*
+		 * Don't use super.getResource : we know the resource does not exist yet as there will only be one
+		 * "load" call for each given URI. The super implementation iterates over loaded resources before
+		 * doing any actual work. That causes some minimal overhead but, more importantly, it can generate
+		 * concurrent modification exceptions.
+		 */
+		final URIConverter theURIConverter = getURIConverter();
+		final URI normalizedURI = theURIConverter.normalize(uri);
+
+		Resource result = uriCache.get(normalizedURI);
+		if (result == null) {
+			result = delegatedGetResource(uri, true);
+			if (result != null) {
+				uriCache.put(uri, result);
+			}
+		}
+
+		if (result == null) {
+			result = demandCreateResource(uri);
+			if (result == null) {
+				// copy/pasted from super.getResource
+				throw new RuntimeException(
+						"Cannot create a resource for '" + uri + "'; a registered resource factory is needed"); //$NON-NLS-1$//$NON-NLS-2$
+			}
+			demandLoadHelper(result);
+		}
+		return result;
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * <p>
-	 * Specialized in order to define our own load options.
-	 * </p>
 	 * 
 	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#getLoadOptions()
 	 */
 	@Override
-	public synchronized Map<Object, Object> getLoadOptions() {
-		if (loadOptions == null) {
-			loadOptions = super.getLoadOptions();
-			/*
-			 * This resource set is specifically designed to resolve cross resources links, it thus spends a
-			 * lot of time loading resources. The following set of options is what seems to give the most
-			 * significant boost in loading performances, though I did not fine-tune what's really needed
-			 * here. Take note that the use of our own parser pool along with the disabling of notifications
-			 * is what allows us to bypass UML's CacheAdapter and the potential dead locks it causes.
-			 */
-			loadOptions.put(XMLResource.OPTION_USE_PARSER_POOL, new NoNotificationParserPool());
-			loadOptions.put(XMLResource.OPTION_USE_DEPRECATED_METHODS, Boolean.FALSE);
-			loadOptions.put(XMLResource.OPTION_DISABLE_NOTIFY, Boolean.TRUE);
-
-			final int bufferSize = 16384;
-			final Map<String, Object> parserProperties = Maps.newHashMap();
-			parserProperties.put("http://apache.org/xml/properties/input-buffer-size", Integer //$NON-NLS-1$
-					.valueOf(bufferSize));
-			loadOptions.put(XMLResource.OPTION_PARSER_PROPERTIES, parserProperties);
-
-			// These two might be superfluous
-			loadOptions.put(XMLResource.OPTION_DEFER_IDREF_RESOLUTION, Boolean.TRUE);
-			final int expectedFeatureNames = 256;
-			loadOptions.put(XMLResource.OPTION_USE_XML_NAME_TO_FEATURE_MAP, Maps
-					.newHashMapWithExpectedSize(expectedFeatureNames));
-		}
+	public Map<Object, Object> getLoadOptions() {
 		return loadOptions;
 	}
 
@@ -216,8 +253,8 @@ public final class SyncResourceSet extends ResourceSetImpl {
 
 		Set<URI> newURIs;
 		synchronized(demandedURIs) {
-			newURIs = demandedURIs;
-			demandedURIs = Sets.newLinkedHashSet();
+			newURIs = new LinkedHashSet<URI>(demandedURIs);
+			demandedURIs.clear();
 		}
 		while (!newURIs.isEmpty()) {
 			loadedURIs.addAll(newURIs);
@@ -235,8 +272,8 @@ public final class SyncResourceSet extends ResourceSetImpl {
 				}
 			}
 			synchronized(demandedURIs) {
-				newURIs = demandedURIs;
-				demandedURIs = Sets.newLinkedHashSet();
+				newURIs = new LinkedHashSet<URI>(demandedURIs);
+				demandedURIs.clear();
 			}
 		}
 	}
@@ -386,8 +423,8 @@ public final class SyncResourceSet extends ResourceSetImpl {
 		/** Generated SUID. */
 		private static final long serialVersionUID = 7371376112881960414L;
 
-		/** The lock we'll use for synchronization. */
-		private Object lock = new Object();
+		/** The lock we'll use for synchronization of the resources list. */
+		private final Object lock = new Object();
 
 		/**
 		 * {@inheritDoc}
