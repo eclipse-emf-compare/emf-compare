@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.AssociationChange;
 import org.eclipse.emf.compare.uml2.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.UMLDiff;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.UMLAbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.Association;
@@ -29,7 +29,7 @@ import org.eclipse.uml2.uml.UMLPackage;
 /**
  * Factory for UMLAssociationChangeLeftTarget.
  */
-public class UMLAssociationChangeFactory extends UMLAbstractDiffExtensionFactory {
+public class UMLAssociationChangeFactory extends AbstractDiffExtensionFactory {
 
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return AssociationChange.class;

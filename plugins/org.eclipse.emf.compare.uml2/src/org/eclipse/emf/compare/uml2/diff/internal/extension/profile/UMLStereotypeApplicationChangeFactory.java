@@ -25,7 +25,7 @@ import org.eclipse.emf.compare.uml2.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.UMLDiff;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.UMLAbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -46,7 +46,7 @@ import org.eclipse.uml2.uml.util.UMLUtil;
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class UMLStereotypeApplicationChangeFactory extends UMLAbstractDiffExtensionFactory {
+public class UMLStereotypeApplicationChangeFactory extends AbstractDiffExtensionFactory {
 
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return StereotypeApplicationChange.class;
@@ -65,7 +65,7 @@ public class UMLStereotypeApplicationChangeFactory extends UMLAbstractDiffExtens
 			if (input instanceof ReferenceChange) {
 				return ((ReferenceChange)input).getValue();
 			} else if (input instanceof ResourceAttachmentChange) {
-				return MatchUtil.getContainer(input);
+				return MatchUtil.getContainer(input.getMatch().getComparison(), input);
 			}
 		} else if (kind == DifferenceKind.CHANGE) {
 			return MatchUtil.getContainer(input.getMatch().getComparison(), input);
@@ -118,24 +118,24 @@ public class UMLStereotypeApplicationChangeFactory extends UMLAbstractDiffExtens
 
 	@Override
 	protected boolean isRelatedToAnExtensionChange(AttributeChange input) {
-		return UMLUtil.getBaseElement(MatchUtil.getContainer(input)) != null;
+		return UMLUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
 	@Override
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
-		return UMLUtil.getBaseElement(MatchUtil.getContainer(input)) != null;
+		return UMLUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
 	@Override
 	protected boolean isRelatedToAnExtensionAdd(ResourceAttachmentChange input) {
 		return input.getKind() == DifferenceKind.ADD
-				&& UMLUtil.getBaseElement(MatchUtil.getContainer(input)) != null;
+				&& UMLUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
 	@Override
 	protected boolean isRelatedToAnExtensionDelete(ResourceAttachmentChange input) {
 		return input.getKind() == DifferenceKind.DELETE
-				&& UMLUtil.getBaseElement(MatchUtil.getContainer(input)) != null;
+				&& UMLUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
 	@Override

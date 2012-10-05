@@ -11,20 +11,11 @@
 package org.eclipse.emf.compare.uml2.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.compare.impl.ReferenceChangeImpl;
-
 import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.UMLComparePackage;
-import org.eclipse.emf.compare.uml2.UMLDiff;
-
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.uml2.uml.Stereotype;
 
 /**

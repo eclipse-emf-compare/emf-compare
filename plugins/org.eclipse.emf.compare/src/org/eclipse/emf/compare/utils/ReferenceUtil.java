@@ -45,7 +45,7 @@ public final class ReferenceUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static List<Object> getAsList(EObject object, EStructuralFeature feature) {
-		if (object != null) {
+		if (object != null && feature != null) {
 			Object value = safeEGet(object, feature);
 			final List<Object> asList;
 			if (value instanceof InternalEList<?>) {

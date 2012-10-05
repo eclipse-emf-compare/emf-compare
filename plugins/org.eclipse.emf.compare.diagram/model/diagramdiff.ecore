@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="diagramdiff"
-    nsURI="http://www.eclipse.org/emf/compare/diff/diagram/1.0" nsPrefix="diagramdiff">
-  <eClassifiers xsi:type="ecore:EClass" name="DiagramDiffExtension" abstract="true"
-      interface="true" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//DiffElement platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//AbstractDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="DiagramShowElement" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateModelElement #//DiagramDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="DiagramHideElement" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateModelElement #//DiagramDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="DiagramMoveNode" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//MoveModelElement #//DiagramDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="DiagramEdgeChange" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateModelElement #//DiagramDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="DiagramLabelChange" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateModelElement #//DiagramDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="DiagramModelElementChangeLeftTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeLeftTarget #//DiagramModelElementChange #//DiagramDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="DiagramModelElementChangeRightTarget"
-      eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeRightTarget #//DiagramModelElementChange #//DiagramDiffExtension"/>
-  <eClassifiers xsi:type="ecore:EClass" name="DiagramModelElementChange" abstract="true"
-      interface="true">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="semanticDiff" eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChange"/>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="diagram" nsURI="http://www.eclipse.org/emf/compare/diagram/2.0"
+    nsPrefix="diagramcompare">
+  <eClassifiers xsi:type="ecore:EClass" name="Show" eSuperTypes="#//DiagramDiff"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Hide" eSuperTypes="#//DiagramDiff"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NodeChange" eSuperTypes="#//DiagramDiff"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EdgeChange" eSuperTypes="#//DiagramDiff"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LabelChange" eSuperTypes="#//DiagramDiff">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="left" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="right" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="origin" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DiagramDiff" abstract="true" eSuperTypes="../../org.eclipse.emf.compare/model/compare.ecore#//Diff">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="semanticDiff" eType="ecore:EClass ../../org.eclipse.emf.compare/model/compare.ecore#//Diff"/>
   </eClassifiers>
 </ecore:EPackage>

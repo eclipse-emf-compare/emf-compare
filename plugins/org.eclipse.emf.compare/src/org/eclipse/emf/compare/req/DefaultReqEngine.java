@@ -113,12 +113,7 @@ public class DefaultReqEngine implements IReqEngine {
 				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, value, DifferenceKind.ADD));
 
 				// -> requires ADD of the object containing the reference
-				final EObject container;
-				if (sourceDifference.getSource() == DifferenceSource.LEFT) {
-					container = match.getLeft();
-				} else {
-					container = match.getRight();
-				}
+				final EObject container = MatchUtil.getContainer(comparison, sourceDifference);
 				if (container != null) {
 					requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, container,
 							DifferenceKind.ADD));

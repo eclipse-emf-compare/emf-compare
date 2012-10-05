@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.MessageChange;
 import org.eclipse.emf.compare.uml2.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.UMLDiff;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.UMLAbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -32,7 +32,7 @@ import org.eclipse.uml2.uml.UMLPackage;
 /**
  * Factory for UMLGeneralizationSetChangeLeftTarget.
  */
-public class UMLMessageChangeFactory extends UMLAbstractDiffExtensionFactory {
+public class UMLMessageChangeFactory extends AbstractDiffExtensionFactory {
 
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return MessageChange.class;

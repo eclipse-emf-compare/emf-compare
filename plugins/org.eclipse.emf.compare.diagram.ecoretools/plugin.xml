@@ -2,11 +2,11 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.emf.compare.diagram.viewLabelProvider">
-      <provider
+         point="org.eclipse.emf.compare.diagram.ide.viewLabelProvider">
+      <viewLabelProvider
             class="org.eclipse.emf.compare.diagram.ecoretools.EcoreToolsViewLabelProvider"
             diagramType="EcoreTools">
-      </provider>
+      </viewLabelProvider>
    </extension>
 
    <extension 

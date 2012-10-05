@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.uml2.impl;
 
 import org.eclipse.emf.compare.uml2.ExecutionSpecificationChange;
 import org.eclipse.emf.compare.uml2.UMLComparePackage;
-
 import org.eclipse.emf.ecore.EClass;
 
 /**

@@ -23,7 +23,7 @@ import org.eclipse.emf.compare.uml2.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.UMLDiff;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.UMLAbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAnnotation;
@@ -40,7 +40,7 @@ import org.eclipse.uml2.uml.internal.impl.ProfileApplicationImpl;
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class UMLProfileApplicationChangeFactory extends UMLAbstractDiffExtensionFactory {
+public class UMLProfileApplicationChangeFactory extends AbstractDiffExtensionFactory {
 
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return ProfileApplicationChange.class;

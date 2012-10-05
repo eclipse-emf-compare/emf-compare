@@ -12,13 +12,17 @@ package org.eclipse.emf.compare.utils;
 
 import static org.eclipse.emf.compare.utils.ReferenceUtil.getAsList;
 
+import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.util.CompareSwitch;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * This utility class holds methods that will be used by the diff and merge processes.
@@ -69,11 +73,12 @@ public final class MatchUtil {
 	 * @return The origin value.
 	 */
 	public static EObject getOriginValue(Comparison comparison, ReferenceChange difference) {
-		if (!difference.getReference().isContainment() && !difference.getReference().isMany()
+		final EReference reference = difference.getReference();
+		if (!reference.isContainment() && !reference.isMany()
 				&& difference.getKind().equals(DifferenceKind.CHANGE)) {
 			EObject originContainer = getOriginContainer(comparison, difference);
 			if (originContainer != null) {
-				Object originValue = ReferenceUtil.safeEGet(originContainer, difference.getReference());
+				Object originValue = ReferenceUtil.safeEGet(originContainer, reference);
 				if (originValue instanceof EObject) {
 					return (EObject)originValue;
 				}
@@ -91,7 +96,7 @@ public final class MatchUtil {
 	 *            The difference.
 	 * @return The object.
 	 */
-	public static EObject getOriginContainer(Comparison comparison, ReferenceChange difference) {
+	public static EObject getOriginContainer(Comparison comparison, Diff difference) {
 		final EObject diffContainer;
 		if (comparison.isThreeWay()) {
 			diffContainer = difference.getMatch().getOrigin();
@@ -114,7 +119,7 @@ public final class MatchUtil {
 	 *            The difference.
 	 * @return The object.
 	 */
-	public static EObject getContainer(Comparison comparison, ReferenceChange difference) {
+	public static EObject getContainer(Comparison comparison, Diff difference) {
 		EObject result = null;
 		Match match = difference.getMatch();
 		final DifferenceSource source = difference.getSource();
@@ -137,13 +142,29 @@ public final class MatchUtil {
 				}
 				break;
 			case CHANGE:
-				final EObject value = difference.getValue();
-				if (getAsList(match.getLeft(), difference.getReference()).contains(value)) {
-					result = match.getLeft();
-				} else if (getAsList(match.getRight(), difference.getReference()).contains(value)) {
-					result = match.getRight();
+				final Object value = getValue(difference);
+				final EStructuralFeature feature = getStructuralFeature(difference);
+				if (value == null || feature == null) {
+					// TODO ?
+					throw new IllegalArgumentException();
+				}
+				if (source == DifferenceSource.LEFT) {
+					if (getAsList(match.getLeft(), feature).contains(value)) {
+						result = match.getLeft();
+					} else if (comparison.isThreeWay()) {
+						result = match.getOrigin();
+					} else {
+						result = match.getRight();
+					}
 				} else {
-					result = match.getOrigin();
+					if (getAsList(match.getRight(), feature).contains(value)) {
+						result = match.getRight();
+					} else if (comparison.isThreeWay()) {
+						result = match.getOrigin();
+					} else {
+						// Cannot happen ... for now
+						result = match.getLeft();
+					}
 				}
 				break;
 			default:
@@ -153,39 +174,49 @@ public final class MatchUtil {
 	}
 
 	/**
-	 * Get the business model object containing the given <code>difference</code>.
+	 * Get the value of any difference.
 	 * 
-	 * @param difference
-	 *            The detected difference for which we need the actually modified object.
-	 * @return The object which presents the given difference.
+	 * @param input
+	 *            The difference.
+	 * @return the value of the difference.
 	 */
-	public static EObject getContainer(Diff difference) {
-		EObject result = difference.getMatch().getLeft();
-		if (result == null) {
-			result = difference.getMatch().getRight();
-		}
-		if (result == null) {
-			result = difference.getMatch().getOrigin();
-		}
-		return result;
+	public static Object getValue(Diff input) {
+		final CompareSwitch<Object> customSwitch = new CompareSwitch<Object>() {
+			@Override
+			public Object caseAttributeChange(AttributeChange object) {
+				return object.getValue();
+			}
+
+			@Override
+			public Object caseReferenceChange(ReferenceChange object) {
+				return object.getValue();
+			}
+
+		};
+		return customSwitch.doSwitch(input);
 	}
 
 	/**
-	 * Get the business model object containing the given <code>difference</code>.
+	 * Get the structural feature of any difference.
 	 * 
-	 * @param comparison
-	 *            The current comparison.
-	 * @param difference
-	 *            The detected difference for which we need the actually modified object.
-	 * @return The object which presents the given difference.
+	 * @param input
+	 *            The difference.
+	 * @return the structural feature.
 	 */
-	public static EObject getContainer(Comparison comparison, Diff difference) {
-		EObject result = null;
-		if (difference instanceof ReferenceChange) {
-			result = getContainer(comparison, (ReferenceChange)difference);
-		} else {
-			result = getContainer(difference);
-		}
-		return result;
+	public static EStructuralFeature getStructuralFeature(Diff input) {
+		final CompareSwitch<EStructuralFeature> customSwitch = new CompareSwitch<EStructuralFeature>() {
+			@Override
+			public EStructuralFeature caseAttributeChange(AttributeChange object) {
+				return object.getAttribute();
+			}
+
+			@Override
+			public EStructuralFeature caseReferenceChange(ReferenceChange object) {
+				return object.getReference();
+			}
+
+		};
+		return customSwitch.doSwitch(input);
 	}
+
 }

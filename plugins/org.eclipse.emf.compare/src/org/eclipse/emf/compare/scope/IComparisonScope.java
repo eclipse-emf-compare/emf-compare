@@ -92,7 +92,7 @@ public interface IComparisonScope {
 	 * This will be used by EMF Compare in order to know which EObjects should be considered to be part of the
 	 * comparison scope when it is launched on the given EObject.
 	 * <p>
-	 * Do note that his will only be called once per comparison on EObjects, and never for comparisons
+	 * Do note that this will only be called once per comparison on EObjects, and never for comparisons
 	 * launched on {@link ResourceSet}s or {@link Resource}s. EMF Compare expects the whole set of EObject
 	 * that should be covered by the comparison to be returned by this.
 	 * </p>

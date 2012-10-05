@@ -3,11 +3,13 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Ecoretools Diagram Comparison Support
 Bundle-SymbolicName: org.eclipse.emf.compare.diagram.ecoretools;singleton:=true
 Bundle-Version: 2.0.0.qualifier
-Bundle-Activator: org.eclipse.emf.compare.diagram.ecoretools.Activator
+Bundle-Activator: org.eclipse.emf.compare.diagram.ecoretools.EcoreToolsCompare
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.emf.compare.diagram,
  org.eclipse.gmf.runtime.notation,
  org.eclipse.emf.ecoretools.diagram,
- org.eclipse.gmf.runtime.diagram.ui
+ org.eclipse.gmf.runtime.diagram.ui,
+ org.eclipse.emf.compare.diagram.ide;bundle-version="2.0.0",
+ org.eclipse.emf.compare.diagram;bundle-version="2.0.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Eclipse Modeling Project
+Export-Package: org.eclipse.emf.compare.diagram.ecoretools

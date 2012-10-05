@@ -10,8 +10,6 @@
  */
 package org.eclipse.emf.compare.uml2;
 
-import org.eclipse.emf.compare.ReferenceChange;
-
 import org.eclipse.uml2.uml.Stereotype;
 
 /**

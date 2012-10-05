@@ -19,14 +19,14 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.DependencyChange;
 import org.eclipse.emf.compare.uml2.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.UMLDiff;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.UMLAbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.Dependency;
 import org.eclipse.uml2.uml.UMLPackage;
 
-public class UMLDependencyChangeFactory extends UMLAbstractDiffExtensionFactory {
+public class UMLDependencyChangeFactory extends AbstractDiffExtensionFactory {
 
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return DependencyChange.class;
