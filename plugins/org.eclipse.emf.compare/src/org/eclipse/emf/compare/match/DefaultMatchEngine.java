@@ -15,8 +15,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -134,9 +136,9 @@ public class DefaultMatchEngine implements IMatchEngine {
 		final Iterable<MatchResource> mappings = resourceMatcher.createMappings(leftChildren, rightChildren,
 				originChildren);
 
-		Iterator<? extends EObject> leftEObjects = Iterators.emptyIterator();
-		Iterator<? extends EObject> rightEObjects = Iterators.emptyIterator();
-		Iterator<? extends EObject> originEObjects = Iterators.emptyIterator();
+		final List<Iterator<? extends EObject>> leftIterators = Lists.newLinkedList();
+		final List<Iterator<? extends EObject>> rightIterators = Lists.newLinkedList();
+		final List<Iterator<? extends EObject>> originIterators = Lists.newLinkedList();
 
 		for (MatchResource mapping : mappings) {
 			getComparison().getMatchedResources().add(mapping);
@@ -146,17 +148,21 @@ public class DefaultMatchEngine implements IMatchEngine {
 			final Resource originRes = mapping.getOrigin();
 
 			if (leftRes != null) {
-				leftEObjects = Iterators.concat(leftEObjects, getScope().getCoveredEObjects(leftRes));
+				leftIterators.add(getScope().getCoveredEObjects(leftRes));
 			}
 
 			if (rightRes != null) {
-				rightEObjects = Iterators.concat(rightEObjects, getScope().getCoveredEObjects(rightRes));
+				rightIterators.add(getScope().getCoveredEObjects(rightRes));
 			}
 
 			if (originRes != null) {
-				originEObjects = Iterators.concat(originEObjects, getScope().getCoveredEObjects(originRes));
+				originIterators.add(getScope().getCoveredEObjects(originRes));
 			}
 		}
+
+		final Iterator<? extends EObject> leftEObjects = Iterators.concat(leftIterators.iterator());
+		final Iterator<? extends EObject> rightEObjects = Iterators.concat(rightIterators.iterator());
+		final Iterator<? extends EObject> originEObjects = Iterators.concat(originIterators.iterator());
 
 		final Iterable<Match> matches = getEObjectMatcher().createMatches(leftEObjects, rightEObjects,
 				originEObjects);
