@@ -130,7 +130,8 @@ public class DefaultEquiEngine implements IEquiEngine {
 	 */
 	private void addChangesFromOrigin(Comparison comparison, ReferenceChange diff, Equivalence equivalence) {
 		if (!diff.getReference().isMany()) {
-			final EObject originContainer = MatchUtil.getOriginContainer(diff);
+			final EObject originContainer = MatchUtil.getOriginContainer(diff.getMatch().getComparison(),
+					diff);
 			if (originContainer != null) {
 				for (Diff referenceChange : comparison.getDifferences(originContainer)) {
 					if (referenceChange instanceof ReferenceChange

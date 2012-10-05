@@ -48,7 +48,7 @@ public class UMLExecutionSpecificationChangeFactory extends AbstractDiffExtensio
 		if (kind == DifferenceKind.ADD || kind == DifferenceKind.DELETE) {
 			result = ((ReferenceChange)input).getValue();
 		} else if (kind == DifferenceKind.CHANGE) {
-			final EObject container = MatchUtil.getContainer(input);
+			final EObject container = MatchUtil.getContainer(input.getMatch().getComparison(), input);
 			if (container instanceof ExecutionSpecification) {
 				result = container;
 			} else if (container instanceof ExecutionOccurrenceSpecification) {
@@ -82,7 +82,7 @@ public class UMLExecutionSpecificationChangeFactory extends AbstractDiffExtensio
 		return ((input.getReference().equals(UMLPackage.Literals.EXECUTION_SPECIFICATION__START)
 				|| input.getReference().equals(UMLPackage.Literals.EXECUTION_SPECIFICATION__FINISH) || input
 				.getReference().equals(UMLPackage.Literals.INTERACTION_FRAGMENT__COVERED)) && getManagedConcreteDiscriminantKind()
-				.contains(MatchUtil.getContainer(input).eClass()));
+				.contains(MatchUtil.getContainer(input.getMatch().getComparison(), input).eClass()));
 	}
 
 	@Override

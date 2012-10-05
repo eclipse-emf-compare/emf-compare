@@ -50,7 +50,7 @@ public class UMLMessageChangeFactory extends AbstractDiffExtensionFactory {
 		if (kind == DifferenceKind.ADD || kind == DifferenceKind.DELETE) {
 			result = ((ReferenceChange)input).getValue();
 		} else if (kind == DifferenceKind.CHANGE) {
-			final EObject container = MatchUtil.getContainer(input);
+			final EObject container = MatchUtil.getContainer(input.getMatch().getComparison(), input);
 			if (container instanceof Message) {
 				result = container;
 			} else if (container instanceof MessageOccurrenceSpecification) {
@@ -90,7 +90,8 @@ public class UMLMessageChangeFactory extends AbstractDiffExtensionFactory {
 		return (input.getReference().equals(UMLPackage.Literals.MESSAGE__RECEIVE_EVENT)
 				|| input.getReference().equals(UMLPackage.Literals.MESSAGE__SEND_EVENT) || input
 				.getReference().equals(UMLPackage.Literals.INTERACTION_FRAGMENT__COVERED))
-				&& getManagedConcreteDiscriminantKind().contains(MatchUtil.getContainer(input).eClass());
+				&& getManagedConcreteDiscriminantKind().contains(
+						MatchUtil.getContainer(input.getMatch().getComparison(), input).eClass());
 	}
 
 	@Override

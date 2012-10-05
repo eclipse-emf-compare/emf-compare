@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.compare.AttributeChange;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ReferenceChange;
@@ -93,8 +94,9 @@ public class NodeChangeFactory extends AbstractDiffExtensionFactory {
 	 * @return True if it is over the threshold.
 	 */
 	private static boolean isOverThreshold(AttributeChange diff) {
-		final EObject left = MatchUtil.getContainer(diff);
-		final EObject right = MatchUtil.getOriginContainer(diff);
+		final Comparison comparison = diff.getMatch().getComparison();
+		final EObject left = MatchUtil.getContainer(comparison, diff);
+		final EObject right = MatchUtil.getOriginContainer(comparison, diff);
 		if (left instanceof Bounds && right instanceof Bounds) {
 			final int leftX = ((Bounds)left).getX();
 			final int leftY = ((Bounds)left).getY();

@@ -65,10 +65,10 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractDiffExtension
 			if (input instanceof ReferenceChange) {
 				return ((ReferenceChange)input).getValue();
 			} else if (input instanceof ResourceAttachmentChange) {
-				return MatchUtil.getContainer(input);
+				return MatchUtil.getContainer(input.getMatch().getComparison(), input);
 			}
 		} else if (kind == DifferenceKind.CHANGE) {
-			return MatchUtil.getContainer(input);
+			return MatchUtil.getContainer(input.getMatch().getComparison(), input);
 		}
 		return result;
 	}
@@ -118,24 +118,24 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractDiffExtension
 
 	@Override
 	protected boolean isRelatedToAnExtensionChange(AttributeChange input) {
-		return UMLUtil.getBaseElement(MatchUtil.getContainer(input)) != null;
+		return UMLUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
 	@Override
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
-		return UMLUtil.getBaseElement(MatchUtil.getContainer(input)) != null;
+		return UMLUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
 	@Override
 	protected boolean isRelatedToAnExtensionAdd(ResourceAttachmentChange input) {
 		return input.getKind() == DifferenceKind.ADD
-				&& UMLUtil.getBaseElement(MatchUtil.getContainer(input)) != null;
+				&& UMLUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
 	@Override
 	protected boolean isRelatedToAnExtensionDelete(ResourceAttachmentChange input) {
 		return input.getKind() == DifferenceKind.DELETE
-				&& UMLUtil.getBaseElement(MatchUtil.getContainer(input)) != null;
+				&& UMLUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
 	@Override

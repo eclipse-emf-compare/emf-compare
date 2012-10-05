@@ -53,7 +53,7 @@ public class UMLIntervalConstraintChangeFactory extends AbstractDiffExtensionFac
 		if (kind == DifferenceKind.ADD || kind == DifferenceKind.DELETE) {
 			result = ((ReferenceChange)input).getValue();
 		} else if (kind == DifferenceKind.CHANGE) {
-			final EObject container = MatchUtil.getContainer(input);
+			final EObject container = MatchUtil.getContainer(input.getMatch().getComparison(), input);
 			result = getIntervalContraint(container);
 		}
 		return result;
@@ -106,7 +106,8 @@ public class UMLIntervalConstraintChangeFactory extends AbstractDiffExtensionFac
 				|| input.getReference().equals(UMLPackage.Literals.INTERVAL__MIN)
 				|| input.getReference().equals(UMLPackage.Literals.INTERVAL__MAX) || input.getReference()
 				.equals(UMLPackage.Literals.TIME_EXPRESSION__EXPR))
-				&& getManagedConcreteDiscriminantKind().contains(MatchUtil.getContainer(input).eClass());
+				&& getManagedConcreteDiscriminantKind().contains(
+						MatchUtil.getContainer(input.getMatch().getComparison(), input).eClass());
 	}
 
 	@Override

@@ -46,7 +46,7 @@ public class UMLGeneralizationSetChangeFactory extends AbstractDiffExtensionFact
 		if (kind == DifferenceKind.ADD || kind == DifferenceKind.DELETE) {
 			result = ((ReferenceChange)input).getValue();
 		} else if (kind == DifferenceKind.CHANGE) {
-			final EObject container = MatchUtil.getContainer(input);
+			final EObject container = MatchUtil.getContainer(input.getMatch().getComparison(), input);
 			if (container instanceof GeneralizationSet) {
 				result = container;
 			}

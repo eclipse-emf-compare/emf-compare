@@ -89,7 +89,7 @@ public class DefaultReqEngine implements IReqEngine {
 				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, value, DifferenceKind.ADD));
 
 				// -> requires ADD of the object containing the reference
-				final EObject container = MatchUtil.getContainer(sourceDifference);
+				final EObject container = MatchUtil.getContainer(comparison, sourceDifference);
 				if (container != null) {
 					requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, container,
 							DifferenceKind.ADD));
@@ -135,8 +135,8 @@ public class DefaultReqEngine implements IReqEngine {
 					&& !isChangeDelete(sourceDifference)) {
 
 				// -> is required by DELETE of the origin target object
-				requiredByDifferences.addAll(getDifferenceOnGivenObject(comparison, MatchUtil
-						.getOriginValue(sourceDifference), DifferenceKind.DELETE));
+				requiredByDifferences.addAll(getDifferenceOnGivenObject(comparison, MatchUtil.getOriginValue(
+						comparison, sourceDifference), DifferenceKind.DELETE));
 
 				// -> requires ADD of the value of the reference (target object) if required
 				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, value, DifferenceKind.ADD));
@@ -164,7 +164,7 @@ public class DefaultReqEngine implements IReqEngine {
 		Set<ReferenceChange> result = new HashSet<ReferenceChange>();
 		EReference reference = sourceDifference.getReference();
 		if (!reference.isMany()) {
-			EObject originContainer = MatchUtil.getOriginContainer(sourceDifference);
+			EObject originContainer = MatchUtil.getOriginContainer(comparison, sourceDifference);
 			if (originContainer != null) {
 				Object originValue = ReferenceUtil.safeEGet(originContainer, reference);
 				if (originValue instanceof EObject) {

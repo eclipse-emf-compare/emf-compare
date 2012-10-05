@@ -54,7 +54,7 @@ public class UMLDependencyChangeFactory extends AbstractDiffExtensionFactory {
 		if (kind == DifferenceKind.ADD || kind == DifferenceKind.DELETE) {
 			result = ((ReferenceChange)input).getValue();
 		} else if (kind == DifferenceKind.CHANGE) {
-			final EObject container = MatchUtil.getContainer(input);
+			final EObject container = MatchUtil.getContainer(input.getMatch().getComparison(), input);
 			if (container instanceof Dependency) {
 				result = container;
 			}
@@ -75,7 +75,8 @@ public class UMLDependencyChangeFactory extends AbstractDiffExtensionFactory {
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
 		return (input.getReference().equals(UMLPackage.Literals.DEPENDENCY__CLIENT) || input.getReference()
 				.equals(UMLPackage.Literals.DEPENDENCY__SUPPLIER))
-				&& getManagedConcreteDiscriminantKind().contains(MatchUtil.getContainer(input).eClass());
+				&& getManagedConcreteDiscriminantKind().contains(
+						MatchUtil.getContainer(input.getMatch().getComparison(), input).eClass());
 	}
 
 	@Override
