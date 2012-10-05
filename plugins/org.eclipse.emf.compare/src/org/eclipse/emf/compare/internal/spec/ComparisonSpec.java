@@ -174,7 +174,7 @@ public class ComparisonSpec extends ComparisonImpl {
 	public IEqualityHelper getEqualityHelper() {
 		IEqualityHelper ret = (IEqualityHelper)EcoreUtil.getExistingAdapter(this, IEqualityHelper.class);
 		if (ret == null) {
-			ret = new EqualityHelper(EqualityHelper.createDefaultCache(CacheBuilder.newBuilder()));
+			ret = new EqualityHelper(EqualityHelper.createDefaultCache(CacheBuilder.newBuilder().weakKeys()));
 			this.eAdapters().add(ret);
 			ret.setTarget(this);
 		}

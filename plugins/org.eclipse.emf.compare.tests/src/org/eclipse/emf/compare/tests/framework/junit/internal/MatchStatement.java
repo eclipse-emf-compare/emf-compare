@@ -117,7 +117,7 @@ public class MatchStatement extends Statement {
 		}
 		if (engine == null) {
 			final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder(
-					EqualityHelper.createDefaultCache(CacheBuilder.newBuilder())).build());
+					EqualityHelper.createDefaultCache(CacheBuilder.newBuilder().weakKeys())).build());
 			final IEObjectMatcher matcher = new IdentifierEObjectMatcher(contentMatcher);
 			engine = new DefaultMatchEngine(matcher);
 		}

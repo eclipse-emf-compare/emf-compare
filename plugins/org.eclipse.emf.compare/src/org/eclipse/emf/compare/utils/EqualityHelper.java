@@ -43,7 +43,7 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	@Deprecated
 	public EqualityHelper() {
 		// TODO: use weak keys ? be careful of the use of identity == instead of .equals()
-		this(createDefaultCache(CacheBuilder.newBuilder()));
+		this(createDefaultCache(CacheBuilder.newBuilder().weakKeys()));
 	}
 
 	/**

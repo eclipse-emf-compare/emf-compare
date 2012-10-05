@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.eobject;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
@@ -43,7 +41,6 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * This distance function implementation will actually compare the given EObject.
@@ -95,14 +92,7 @@ public class EditionDistance implements DistanceFunction {
 	 */
 	@Deprecated
 	public EditionDistance(IEqualityHelper equalityHelper) {
-		this(CacheBuilder.newBuilder().build(CacheLoader.from(new Function<EObject, URI>() {
-			public URI apply(EObject input) {
-				if (input == null) {
-					return null;
-				}
-				return EcoreUtil.getURI(input);
-			}
-		})));
+		this(EqualityHelper.createDefaultCache(CacheBuilder.newBuilder().weakKeys()));
 	}
 
 	/**

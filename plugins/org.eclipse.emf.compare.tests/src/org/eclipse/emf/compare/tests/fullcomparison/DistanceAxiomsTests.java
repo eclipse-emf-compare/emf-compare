@@ -49,7 +49,8 @@ public class DistanceAxiomsTests {
 	@Before
 	public void setUp() throws Exception {
 		AllTests.fillEMFRegistries();
-		this.meter = new EditionDistance(EqualityHelper.createDefaultCache(CacheBuilder.newBuilder()));
+		this.meter = new EditionDistance(EqualityHelper.createDefaultCache(CacheBuilder.newBuilder()
+				.weakKeys()));
 	}
 
 	@DataPoints

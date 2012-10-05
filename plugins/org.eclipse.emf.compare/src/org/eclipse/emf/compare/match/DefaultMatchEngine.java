@@ -400,7 +400,8 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * @return a new {@link DefaultMatchEngine} instance.
 	 */
 	public static DefaultMatchEngine create(UseIdentifiers useIDs) {
-		final Cache<EObject, URI> defaultCache = EqualityHelper.createDefaultCache(CacheBuilder.newBuilder());
+		final Cache<EObject, URI> defaultCache = EqualityHelper.createDefaultCache(CacheBuilder.newBuilder()
+				.weakKeys());
 
 		IEqualityHelperFactory helperFactory = new DefaultEqualityHelperFactory() {
 			/**
