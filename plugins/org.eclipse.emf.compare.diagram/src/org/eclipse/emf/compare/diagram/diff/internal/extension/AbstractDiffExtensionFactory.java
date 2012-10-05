@@ -178,7 +178,7 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 		return diff instanceof ReferenceChange && getRelatedExtensionKind(diff) == DifferenceKind.CHANGE;
 	}
 
-	private boolean isExtensionAlreadyExist(Diff input) {
+	protected boolean isExtensionAlreadyExist(Diff input) {
 		return false;
 	}
 

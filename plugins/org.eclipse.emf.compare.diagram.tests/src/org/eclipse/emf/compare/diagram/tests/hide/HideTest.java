@@ -17,9 +17,9 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.diagram.Hide;
 import org.eclipse.emf.compare.diagram.tests.AbstractTest;
+import org.eclipse.emf.compare.diagram.tests.DiagramInputData;
 import org.eclipse.emf.compare.diagram.tests.hide.data.HideInputData;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.junit.Test;
@@ -62,8 +62,8 @@ public class HideTest extends AbstractTest {
 	}
 
 	@Override
-	protected AbstractInputData getInput() {
-		return input;
+	protected DiagramInputData getInput() {
+		return null;
 	}
 
 }

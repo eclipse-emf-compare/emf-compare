@@ -10,7 +10,6 @@
  */
 package org.eclipse.emf.compare.uml2;
 
-import org.eclipse.uml2.uml.Extend;
 
 /**
  * <!-- begin-user-doc -->

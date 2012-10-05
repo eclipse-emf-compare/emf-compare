@@ -10,17 +10,9 @@
  */
 package org.eclipse.emf.compare.uml2.impl;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.compare.uml2.DependencyChange;
 import org.eclipse.emf.compare.uml2.UMLComparePackage;
-
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
-import org.eclipse.uml2.uml.Dependency;
 
 /**
  * <!-- begin-user-doc -->

@@ -5,9 +5,9 @@ import static com.google.common.base.Predicates.instanceOf;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedAttribute;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedAttribute;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,14 +19,14 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.diagram.GMFCompare;
 import org.eclipse.emf.compare.diagram.LabelChange;
 import org.eclipse.emf.compare.diagram.NodeChange;
-import org.eclipse.emf.compare.diagram.ide.diff.DiagramDiffExtensionPostProcessor;
 import org.eclipse.emf.compare.diagram.diff.util.DiagramCompareConstants;
+import org.eclipse.emf.compare.diagram.ide.diff.DiagramDiffExtensionPostProcessor;
 import org.eclipse.emf.compare.diagram.ide.tests.nodechanges.data.NodeChangesInputData;
 import org.eclipse.emf.compare.diagram.tests.AbstractTest;
+import org.eclipse.emf.compare.diagram.tests.DiagramInputData;
 import org.eclipse.emf.compare.extension.EMFCompareExtensionRegistry;
 import org.eclipse.emf.compare.extension.PostProcessorDescriptor;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Before;
 import org.junit.Test;
@@ -118,7 +118,7 @@ public class NodechangesTest extends AbstractTest {
 	}
 
 	@Override
-	protected AbstractInputData getInput() {
+	protected DiagramInputData getInput() {
 		return input;
 	}
 	

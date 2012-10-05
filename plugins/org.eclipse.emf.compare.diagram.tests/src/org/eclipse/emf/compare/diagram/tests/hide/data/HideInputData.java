@@ -7,11 +7,11 @@ import org.eclipse.emf.ecore.resource.Resource;
 
 public class HideInputData extends AbstractInputData {
 	public Resource getA1Left() throws IOException {
-		return loadFromClassloader("a1/TC01.ecorediag"); //$NON-NLS-1$
+		return loadFromClassLoader("a1/TC01.ecorediag"); //$NON-NLS-1$
 	}
 
 	public Resource getA1Right() throws IOException {
-		return loadFromClassloader("a1/TC02.ecorediag"); //$NON-NLS-1$
+		return loadFromClassLoader("a1/TC02.ecorediag"); //$NON-NLS-1$
 	}
 
 }
