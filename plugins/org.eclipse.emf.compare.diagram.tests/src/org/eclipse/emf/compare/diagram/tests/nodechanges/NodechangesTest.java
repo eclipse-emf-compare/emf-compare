@@ -292,7 +292,7 @@ public class NodechangesTest extends AbstractTest {
 					if (diff.getReference().isContainment()) {
 						return diff.getValue() == MatchUtil.getValue(container);
 					} else {
-						return MatchUtil.getContainer(diff) == MatchUtil.getValue(container);
+						return MatchUtil.getContainer(diff.getMatch().getComparison(), diff) == MatchUtil.getValue(container);
 					}
 				}
 				return false;
