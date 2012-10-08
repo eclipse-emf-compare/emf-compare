@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.diff.internal.extension;
 
+import static com.google.common.base.Predicates.instanceOf;
+
 import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterators;
 
 import java.util.ArrayList;
@@ -128,6 +131,9 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 
 		final DifferenceKind extensionKind = getRelatedExtensionKind(input);
 
+		ret.setDiscriminant(discriminant);
+		ret.setKind(extensionKind);
+
 		if (discriminant != null) {
 			if (extensionKind == DifferenceKind.DELETE) {
 				ret.getRefinedBy().add(input);
@@ -136,8 +142,6 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 			}
 		}
 
-		ret.setDiscriminant(discriminant);
-		ret.setKind(extensionKind);
 		if (extensionKind == DifferenceKind.ADD || extensionKind == DifferenceKind.DELETE) {
 			if (input instanceof ReferenceChange) {
 				ret.setEReference(((ReferenceChange)input).getReference());
@@ -207,6 +211,12 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 		if (getRelatedExtensionKind(input) == DifferenceKind.CHANGE) {
 			final Comparison comparison = input.getMatch().getComparison();
 			final EObject discriminant = getDiscriminantFromDiff(input);
+
+			if (!Collections2.filter(comparison.getMatch(discriminant).getDifferences(),
+					instanceOf(ResourceAttachmentChange.class)).isEmpty()) {
+				return true;
+			}
+
 			final List<Diff> candidates = comparison.getDifferences(discriminant);
 
 			for (Diff diff : candidates) {
