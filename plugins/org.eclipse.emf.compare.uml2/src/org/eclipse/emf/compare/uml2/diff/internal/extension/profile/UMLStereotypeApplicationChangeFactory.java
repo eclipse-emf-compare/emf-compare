@@ -76,6 +76,7 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractDiffExtension
 	@Override
 	protected void fillRefiningDifferences(Comparison comparison, UMLDiff diffExtension, EObject discriminant) {
 		super.fillRefiningDifferences(comparison, diffExtension, discriminant);
+
 		final Iterator<Diff> changes = comparison.getMatch(discriminant).getDifferences().iterator();
 		while (changes.hasNext()) {
 			final Diff diff = changes.next();
@@ -102,18 +103,6 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractDiffExtension
 			}
 		}
 		return result;
-	}
-
-	@Override
-	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
-		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.ADD)
-				&& UMLUtil.getBaseElement(input.getValue()) != null;
-	}
-
-	@Override
-	protected boolean isRelatedToAnExtensionDelete(ReferenceChange input) {
-		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.DELETE)
-				&& UMLUtil.getBaseElement(input.getValue()) != null;
 	}
 
 	@Override
