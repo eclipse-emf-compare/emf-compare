@@ -109,7 +109,7 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 		} else if (converted1 != null && converted1.getClass().isArray() && converted2 != null
 				&& converted2.getClass().isArray()) {
 			// [299641] compare arrays by their content instead of instance equality
-			equal = matchingArrays2(converted1, converted2);
+			equal = matchingArrays(converted1, converted2);
 		} else if (isNullOrEmptyString(converted1) && isNullOrEmptyString(converted2)) {
 			// Special case, consider that the empty String is equal to null (unset attributes)
 			equal = true;
@@ -128,30 +128,6 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	 */
 	private boolean isNullOrEmptyString(Object object) {
 		return object == null || object instanceof String && ((String)object).length() == 0;
-	}
-
-	/**
-	 * Compares two values as arrays, checking that their length and content match each other.
-	 * 
-	 * @param object1
-	 *            First of the two objects to compare here.
-	 * @param object2
-	 *            Second of the two objects to compare here.
-	 * @return <code>true</code> if these two arrays are to be considered equal, <code>false</code> otherwise.
-	 */
-	private boolean matchingArrays2(Object object1, Object object2) {
-		boolean equal = true;
-		final int length1 = Array.getLength(object1);
-		if (length1 != Array.getLength(object2)) {
-			equal = true;
-		} else {
-			for (int i = 0; i < length1 && equal; i++) {
-				final Object element1 = Array.get(object1, i);
-				final Object element2 = Array.get(object2, i);
-				equal = matchingValues(getTarget(), element1, element2);
-			}
-		}
-		return equal;
 	}
 
 	/**
@@ -216,7 +192,7 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 		} else if (converted1 != null && converted1.getClass().isArray() && converted2 != null
 				&& converted2.getClass().isArray()) {
 			// [299641] compare arrays by their content instead of instance equality
-			equal = matchingArrays(converted1, converted2);
+			equal = matchingAttributeValuesArrays(converted1, converted2);
 		} else if (isNullOrEmptyString(converted1) && isNullOrEmptyString(converted2)) {
 			// Special case, consider that the empty String is equal to null (unset attributes)
 			equal = true;
@@ -236,7 +212,7 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	 *            Second of the two objects to compare here.
 	 * @return <code>true</code> if these two arrays are to be considered equal, <code>false</code> otherwise.
 	 */
-	private boolean matchingArrays(Object object1, Object object2) {
+	private boolean matchingAttributeValuesArrays(Object object1, Object object2) {
 		boolean equal = true;
 		final int length1 = Array.getLength(object1);
 		if (length1 != Array.getLength(object2)) {
@@ -246,6 +222,30 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 				final Object element1 = Array.get(object1, i);
 				final Object element2 = Array.get(object2, i);
 				equal = matchingAttributeValues(element1, element2);
+			}
+		}
+		return equal;
+	}
+
+	/**
+	 * Compares two values as arrays, checking that their length and content match each other.
+	 * 
+	 * @param object1
+	 *            First of the two objects to compare here.
+	 * @param object2
+	 *            Second of the two objects to compare here.
+	 * @return <code>true</code> if these two arrays are to be considered equal, <code>false</code> otherwise.
+	 */
+	private boolean matchingArrays(Object object1, Object object2) {
+		boolean equal = true;
+		final int length1 = Array.getLength(object1);
+		if (length1 != Array.getLength(object2)) {
+			equal = true;
+		} else {
+			for (int i = 0; i < length1 && equal; i++) {
+				final Object element1 = Array.get(object1, i);
+				final Object element2 = Array.get(object2, i);
+				equal = matchingValues(element1, element2);
 			}
 		}
 		return equal;
