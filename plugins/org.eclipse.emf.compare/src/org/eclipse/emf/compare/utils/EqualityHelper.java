@@ -22,6 +22,7 @@ import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -34,6 +35,7 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
+
 	/** A cache keeping track of the URIs for EObjects. */
 	private final Cache<EObject, URI> uriCache;
 
@@ -43,7 +45,8 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	@Deprecated
 	public EqualityHelper() {
 		// TODO: use weak keys ? be careful of the use of identity == instead of .equals()
-		this(createDefaultCache(CacheBuilder.newBuilder().weakKeys()));
+		this(createDefaultCache(CacheBuilder.newBuilder().maximumSize(
+				DefaultMatchEngine.DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE)));
 	}
 
 	/**

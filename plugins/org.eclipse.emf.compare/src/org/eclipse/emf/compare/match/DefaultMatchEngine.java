@@ -55,6 +55,11 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  */
 public class DefaultMatchEngine implements IMatchEngine {
 
+	/**
+	 * Default max size of the EObject's URI loading cache.
+	 */
+	public static final int DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE = 1024;
+
 	/** The delegate {@link IEObjectMatcher matcher} that will actually pair EObjects together. */
 	private final IEObjectMatcher eObjectMatcher;
 
@@ -407,7 +412,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 */
 	public static DefaultMatchEngine create(UseIdentifiers useIDs) {
 		final Cache<EObject, URI> defaultCache = EqualityHelper.createDefaultCache(CacheBuilder.newBuilder()
-				.weakKeys());
+				.maximumSize(DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE));
 
 		IEqualityHelperFactory helperFactory = new DefaultEqualityHelperFactory() {
 			/**

@@ -32,6 +32,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.diff.DefaultDiffEngine;
 import org.eclipse.emf.compare.diff.FeatureFilter;
 import org.eclipse.emf.compare.diff.IDiffProcessor;
+import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher.DistanceFunction;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EqualityHelper;
@@ -48,6 +49,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class EditionDistance implements DistanceFunction {
+
 	/**
 	 * Weight coefficient of a change on a reference.
 	 */
@@ -92,7 +94,8 @@ public class EditionDistance implements DistanceFunction {
 	 */
 	@Deprecated
 	public EditionDistance(IEqualityHelper equalityHelper) {
-		this(EqualityHelper.createDefaultCache(CacheBuilder.newBuilder().weakKeys()));
+		this(EqualityHelper.createDefaultCache(CacheBuilder.newBuilder().maximumSize(
+				DefaultMatchEngine.DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE)));
 	}
 
 	/**

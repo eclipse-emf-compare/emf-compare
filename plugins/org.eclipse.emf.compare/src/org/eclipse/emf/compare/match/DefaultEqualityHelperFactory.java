@@ -32,7 +32,7 @@ public class DefaultEqualityHelperFactory implements IEqualityHelperFactory {
 	 * Default constructor.
 	 */
 	public DefaultEqualityHelperFactory() {
-		this(CacheBuilder.newBuilder().weakKeys());
+		this(CacheBuilder.newBuilder().maximumSize(DefaultMatchEngine.DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE));
 	}
 
 	/**

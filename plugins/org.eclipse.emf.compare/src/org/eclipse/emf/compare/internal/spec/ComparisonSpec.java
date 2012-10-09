@@ -30,6 +30,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.impl.ComparisonImpl;
 import org.eclipse.emf.compare.internal.DiffCrossReferencer;
 import org.eclipse.emf.compare.internal.MatchCrossReferencer;
+import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.ecore.EObject;
@@ -174,7 +175,8 @@ public class ComparisonSpec extends ComparisonImpl {
 	public IEqualityHelper getEqualityHelper() {
 		IEqualityHelper ret = (IEqualityHelper)EcoreUtil.getExistingAdapter(this, IEqualityHelper.class);
 		if (ret == null) {
-			ret = new EqualityHelper(EqualityHelper.createDefaultCache(CacheBuilder.newBuilder().weakKeys()));
+			ret = new EqualityHelper(EqualityHelper.createDefaultCache(CacheBuilder.newBuilder().maximumSize(
+					DefaultMatchEngine.DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE)));
 			this.eAdapters().add(ret);
 			ret.setTarget(this);
 		}

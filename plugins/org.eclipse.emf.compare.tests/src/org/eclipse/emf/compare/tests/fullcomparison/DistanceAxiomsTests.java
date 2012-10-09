@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
 
+import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.eobject.EditionDistance;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher.DistanceFunction;
 import org.eclipse.emf.compare.tests.suite.AllTests;
@@ -50,7 +51,7 @@ public class DistanceAxiomsTests {
 	public void setUp() throws Exception {
 		AllTests.fillEMFRegistries();
 		this.meter = new EditionDistance(EqualityHelper.createDefaultCache(CacheBuilder.newBuilder()
-				.weakKeys()));
+				.maximumSize(DefaultMatchEngine.DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE)));
 	}
 
 	@DataPoints

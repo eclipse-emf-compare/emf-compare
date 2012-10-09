@@ -65,7 +65,8 @@ public class MatchPerformanceComparisonTest {
 	@Test
 	public void warmup() throws IOException {
 		final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder(
-				EqualityHelper.createDefaultCache(CacheBuilder.newBuilder().weakKeys())).build());
+				EqualityHelper.createDefaultCache(CacheBuilder.newBuilder().maximumSize(
+						DefaultMatchEngine.DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE))).build());
 		final IEObjectMatcher matcher = new IdentifierEObjectMatcher(contentMatcher);
 		IMatchEngine matchEngine = new DefaultMatchEngine(matcher);
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
@@ -85,7 +86,8 @@ public class MatchPerformanceComparisonTest {
 	@Test
 	public void matchPerContentAlmostIdenticalModels() throws IOException {
 		final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder(
-				EqualityHelper.createDefaultCache(CacheBuilder.newBuilder().weakKeys())).build());
+				EqualityHelper.createDefaultCache(CacheBuilder.newBuilder().maximumSize(
+						DefaultMatchEngine.DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE))).build());
 		IMatchEngine matchEngine = new DefaultMatchEngine(contentMatcher);
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		for (int i = 0; i < nbIterations; i++) {
