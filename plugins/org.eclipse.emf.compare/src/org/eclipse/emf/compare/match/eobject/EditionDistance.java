@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -73,6 +72,11 @@ public class EditionDistance implements DistanceFunction {
 	 * The list of features to ignore during the distance computation.
 	 */
 	private Set<EStructuralFeature> toBeIgnored;
+
+	/**
+	 * The instance used to compare location of EObjects.
+	 */
+	private URIDistance uriDistance = new URIDistance();
 
 	/**
 	 * The equality helper used to retrieve the URIs through its cache and to instanciate a specific diff
@@ -356,13 +360,9 @@ public class EditionDistance implements DistanceFunction {
 			Match fakeMatch = CompareFactory.eINSTANCE.createMatch();
 			fakeMatch.setLeft(a);
 			fakeMatch.setRight(b);
-			URI aLocation = helper.getURI(a);
-			URI bLocation = helper.getURI(b);
 			int changes = 0;
-			if (!aLocation.fragment().equals(bLocation.fragment())) {
-				int dist = new URIDistance().proximity(aLocation.fragment(), bLocation.fragment());
-				changes += dist * locationChangeCoef;
-			}
+			int dist = uriDistance.proximity(a, b);
+			changes += dist * locationChangeCoef;
 			if (changes <= maxDistance) {
 				checkForDifferences(fakeMatch);
 				changes += getCounter().getComputedDistance();

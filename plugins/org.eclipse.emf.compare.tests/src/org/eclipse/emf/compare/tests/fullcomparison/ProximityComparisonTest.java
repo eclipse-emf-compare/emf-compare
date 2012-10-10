@@ -15,13 +15,19 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.common.collect.Lists;
 
+import java.util.List;
+
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.EMFCompareAssert;
 import org.eclipse.emf.compare.tests.framework.EMFCompareTestBase;
 import org.eclipse.emf.compare.tests.fullcomparison.data.distance.DistanceMatchInputData;
 import org.eclipse.emf.compare.tests.suite.AllTests;
+import org.eclipse.emf.compare.utils.EMFComparePrettyPrinter;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -85,7 +91,35 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(v1, v2);
 		Comparison result = EMFCompare.newComparator(scope).matchByID(UseIdentifiers.NEVER).compare();
 		assertAllMatched(Lists.newArrayList(v1), result);
-		assertEquals("We are supposed to have zero diffs", 1, result.getDifferences().size());
+		assertEquals("We are supposed to have a rename", 1, result.getDifferences().size());
+	}
+
+	@Test
+	public void packageAddDelete() throws Exception {
+		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData.getPackageAddDeleteLeft(),
+				inputData.getPackageAddDeleteRight());
+		Comparison result = EMFCompare.newComparator(scope).matchByID(UseIdentifiers.NEVER).compare();
+		EMFComparePrettyPrinter.printComparison(result, System.out);
+		final List<Diff> differences = result.getDifferences();
+		EMFCompareAssert.assertAddedToReference(differences, "p1.p2", "eSubpackages", "p1.p2.subPackage",
+				DifferenceSource.LEFT);
+		EMFCompareAssert.assertRemovedFromReference(differences, "p1", "eSubpackages", "p1.another",
+				DifferenceSource.LEFT);
+		assertEquals("We are supposed to have zero diffs", 2, result.getDifferences().size());
+	}
+
+	@Test
+	public void packageAddRemoveNoRename() throws Exception {
+		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData
+				.getPackageAddRemoveNoRenameLeft(), inputData.getPackageAddRemoveNoRenameRight());
+		Comparison result = EMFCompare.newComparator(scope).matchByID(UseIdentifiers.NEVER).compare();
+		EMFComparePrettyPrinter.printComparison(result, System.out);
+		final List<Diff> differences = result.getDifferences();
+		// EMFCompareAssert.assertAddedToReference(differences, "p1.p2", "eSubpackages", "p1.p2.subPackage",
+		// DifferenceSource.LEFT);
+		// EMFCompareAssert.assertRemovedFromReference(differences, "p1", "eSubpackages", "p1.another",
+		// DifferenceSource.LEFT);
+		assertEquals("We are supposed to have zero diffs", 2, result.getDifferences().size());
 	}
 
 	@Test

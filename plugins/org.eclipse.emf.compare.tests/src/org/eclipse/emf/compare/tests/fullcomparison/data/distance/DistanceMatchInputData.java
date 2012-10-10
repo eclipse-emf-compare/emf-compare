@@ -45,4 +45,36 @@ public class DistanceMatchInputData extends AbstractInputData {
 		return loadFromClassLoader("verySmallRight.ecore");
 	}
 
+	public Resource getPackageAddDeleteLeft() throws IOException {
+		return loadFromClassLoader("package-add-delete.ecore");
+	}
+
+	public Resource getPackageAddDeleteRight() throws IOException {
+		return loadFromClassLoader("package-add-deletev2.ecore");
+	}
+
+	public Resource getAbstractAndSuperLeft() throws IOException {
+		return loadFromClassLoader("abstract-and-super.ecore");
+	}
+
+	public Resource getAbstractAndSuperRight() throws IOException {
+		return loadFromClassLoader("abstract-and-superv2.ecore");
+	}
+
+	public Resource getFeatureUpdateDeleteLeft() throws IOException {
+		return loadFromClassLoader("feature-update-delete.ecore");
+	}
+
+	public Resource getFeatureUpdateDeleteRight() throws IOException {
+		return loadFromClassLoader("feature-update-deletev2.ecore");
+	}
+
+	public Resource getPackageAddRemoveNoRenameLeft() throws IOException {
+		return loadFromClassLoader("add-remove-norename.ecore");
+	}
+
+	public Resource getPackageAddRemoveNoRenameRight() throws IOException {
+		return loadFromClassLoader("add-remove-norenamev2.ecore");
+	}
+
 }
