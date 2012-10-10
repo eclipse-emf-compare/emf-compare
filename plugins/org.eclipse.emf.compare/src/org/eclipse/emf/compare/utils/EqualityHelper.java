@@ -70,6 +70,16 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#isAdapterForType(java.lang.Object)
+	 */
+	@Override
+	public boolean isAdapterForType(Object type) {
+		return type == IEqualityHelper.class;
+	}
+
+	/**
 	 * Check that the two given values are "equal", considering the specifics of EMF.
 	 * 
 	 * @param comparison
