@@ -30,6 +30,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.provider.ReferenceChangeItemProvider;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -113,11 +114,11 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 			EObject otherSide) {
 		String changeText;
 		if (sourceSide != null) {
-			Object leftValue = sourceSide.eGet(eStructuralFeature);
+			Object leftValue = ReferenceUtil.safeEGet(sourceSide, eStructuralFeature);
 			if (leftValue == null || isStringAndNullOrEmpty(leftValue)) {
 				changeText = "unset"; //$NON-NLS-1$
 			} else if (otherSide != null) {
-				Object otherValue = otherSide.eGet(eStructuralFeature);
+				Object otherValue = ReferenceUtil.safeEGet(otherSide, eStructuralFeature);
 				if (otherValue == null || isStringAndNullOrEmpty(otherValue)) {
 					changeText = "set"; //$NON-NLS-1$
 				} else {
