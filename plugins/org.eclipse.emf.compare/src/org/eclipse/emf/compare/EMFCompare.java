@@ -374,7 +374,7 @@ public final class EMFCompare {
 		final IEObjectMatcher matcher;
 		switch (useIDs) {
 			case NEVER:
-				matcher = ProximityEObjectMatcher.builder(EditionDistance.builder(helper).build()).build();
+				matcher = ProximityEObjectMatcher.builder(EditionDistance.builder().build()).build();
 				break;
 			case ONLY:
 				matcher = new IdentifierEObjectMatcher();
@@ -384,7 +384,7 @@ public final class EMFCompare {
 			default:
 				// Use an ID matcher, delegating to proximity when no ID is available
 				final IEObjectMatcher contentMatcher = ProximityEObjectMatcher.builder(
-						EditionDistance.builder(helper).build()).build();
+						EditionDistance.builder().build()).build();
 				matcher = new IdentifierEObjectMatcher(contentMatcher);
 				break;
 

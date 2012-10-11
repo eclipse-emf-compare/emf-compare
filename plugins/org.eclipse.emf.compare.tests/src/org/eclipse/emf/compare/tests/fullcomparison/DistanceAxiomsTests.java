@@ -18,7 +18,6 @@ import com.google.common.collect.Lists;
 import org.eclipse.emf.compare.match.eobject.EditionDistance;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher.DistanceFunction;
 import org.eclipse.emf.compare.tests.suite.AllTests;
-import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.junit.Assume;
@@ -48,7 +47,7 @@ public class DistanceAxiomsTests {
 	@Before
 	public void setUp() throws Exception {
 		AllTests.fillEMFRegistries();
-		this.meter = new EditionDistance(new EqualityHelper());
+		this.meter = new EditionDistance();
 	}
 
 	@DataPoints

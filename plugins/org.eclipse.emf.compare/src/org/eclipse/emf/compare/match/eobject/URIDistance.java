@@ -34,84 +34,73 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
-public class URIDistance {
-	/**
-	 * Function computing the location of each EObject.
-	 */
-	private EObjectToLocation eObjToLoc = new EObjectToLocation();
+public class URIDistance implements Function<EObject, List<String>> {
 
 	/**
-	 * This is the function that will be used by our {@link #uriCache} to compute its values.
+	 * A computing cache for the locations.
+	 */
+	private Cache<EObject, List<String>> locationCache = CacheBuilder.newBuilder().maximumSize(1000).build(
+			CacheLoader.from(this));
+
+	/**
+	 * {@inheritDoc}
 	 * 
-	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 * @see com.google.common.base.Function#apply(java.lang.Object)
 	 */
-	private static class EObjectToLocation implements Function<EObject, List<String>> {
-		/**
-		 * A computing cache for the locations.
-		 */
-		private Cache<EObject, List<String>> locationCache = CacheBuilder.newBuilder().maximumSize(1000)
-				.build(CacheLoader.from(this));
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see com.google.common.base.Function#apply(java.lang.Object)
-		 */
-		public List<String> apply(EObject input) {
-			if (input == null) {
-				return null;
-			}
-			EObject cur = input;
-			EObject container = input.eContainer();
-			Builder<String> builder = ImmutableList.builder();
-			if (container != null) {
-				builder.addAll(locationCache.getUnchecked(container));
-				EStructuralFeature feat = cur.eContainingFeature();
-				if (feat != null) {
-					if (feat instanceof EAttribute) {
-						featureMapLocation(builder, cur, container, feat);
+	public List<String> apply(EObject input) {
+		if (input == null) {
+			return null;
+		}
+		EObject cur = input;
+		EObject container = input.eContainer();
+		Builder<String> builder = ImmutableList.builder();
+		if (container != null) {
+			builder.addAll(locationCache.getUnchecked(container));
+			EStructuralFeature feat = cur.eContainingFeature();
+			if (feat != null) {
+				if (feat instanceof EAttribute) {
+					featureMapLocation(builder, cur, container, feat);
+				} else {
+					if (feat.isMany()) {
+						EList<?> eList = (EList<?>)container.eGet(feat, false);
+						int index = eList.indexOf(cur);
+						builder.add(feat.getName());
+						builder.add(Integer.valueOf(index).toString());
 					} else {
-						if (feat.isMany()) {
-							EList<?> eList = (EList<?>)container.eGet(feat, false);
-							int index = eList.indexOf(cur);
-							builder.add(feat.getName());
-							builder.add(Integer.valueOf(index).toString());
-						} else {
-							builder.add(feat.getName());
-							builder.add("0");
-						}
+						builder.add(feat.getName());
+						builder.add("0");
 					}
-
 				}
-			} else {
-				builder.add("0");
-			}
 
-			return builder.build();
+			}
+		} else {
+			builder.add("0");
 		}
 
-		/**
-		 * Update the builder with location hints for a feature map.
-		 * 
-		 * @param builder
-		 *            the list builder to update.
-		 * @param cur
-		 *            the current object.
-		 * @param container
-		 *            the current object container.
-		 * @param feat
-		 *            the containing feature of the current object.
-		 */
-		protected void featureMapLocation(Builder<String> builder, EObject cur, EObject container,
-				EStructuralFeature feat) {
-			FeatureMap featureMap = (FeatureMap)container.eGet(feat, false);
-			for (int i = 0, size = featureMap.size(); i < size; ++i) {
-				if (featureMap.getValue(i) == cur) {
-					EStructuralFeature entryFeature = featureMap.getEStructuralFeature(i);
-					if (entryFeature instanceof EReference && ((EReference)entryFeature).isContainment()) {
-						builder.add(feat.getName());
-						builder.add(Integer.valueOf(i).toString());
-					}
+		return builder.build();
+	}
+
+	/**
+	 * Update the builder with location hints for a feature map.
+	 * 
+	 * @param builder
+	 *            the list builder to update.
+	 * @param cur
+	 *            the current object.
+	 * @param container
+	 *            the current object container.
+	 * @param feat
+	 *            the containing feature of the current object.
+	 */
+	protected void featureMapLocation(Builder<String> builder, EObject cur, EObject container,
+			EStructuralFeature feat) {
+		FeatureMap featureMap = (FeatureMap)container.eGet(feat, false);
+		for (int i = 0, size = featureMap.size(); i < size; ++i) {
+			if (featureMap.getValue(i) == cur) {
+				EStructuralFeature entryFeature = featureMap.getEStructuralFeature(i);
+				if (entryFeature instanceof EReference && ((EReference)entryFeature).isContainment()) {
+					builder.add(feat.getName());
+					builder.add(Integer.valueOf(i).toString());
 				}
 			}
 		}
@@ -180,7 +169,7 @@ public class URIDistance {
 	 * @return The number of changes to transform one uri to another one.
 	 */
 	public int proximity(EObject a, EObject b) {
-		return proximity(eObjToLoc.apply(a), eObjToLoc.apply(b));
+		return proximity(apply(a), apply(b));
 	}
 
 }

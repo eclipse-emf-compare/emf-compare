@@ -86,13 +86,32 @@ public class EditionDistance implements DistanceFunction {
 
 	/**
 	 * Instanciate a new Edition Distance using the given equality helper.
-	 * 
-	 * @param equalityHelper
-	 *            the equality helper to use.
 	 */
-	public EditionDistance(EqualityHelper equalityHelper) {
+	public EditionDistance() {
 		weights = Maps.newHashMap();
-		this.helper = equalityHelper;
+		this.helper = new EqualityHelper() {
+
+			@Override
+			protected boolean matchingEObjects(Comparison comparison, EObject object1, EObject object2) {
+				final Match match = comparison.getMatch(object1);
+
+				final boolean equal;
+				// Match could be null if the value is out of the scope
+				if (match != null) {
+					equal = match.getLeft() == object2 || match.getRight() == object2
+							|| match.getOrigin() == object2;
+				} else {
+					/*
+					 * use a temporary variable as buffer for the "equal" boolean. We know that the following
+					 * try/catch block can, and will, only initialize it once ... but the compiler does not.
+					 */
+					equal = uriDistance.proximity(object1, object2) == 0;
+				}
+
+				return equal;
+			}
+
+		};
 		this.toBeIgnored = Sets.newLinkedHashSet();
 	}
 
@@ -106,12 +125,10 @@ public class EditionDistance implements DistanceFunction {
 	/**
 	 * Create a new builder to instanciate and configure an EditionDistance.
 	 * 
-	 * @param helper
-	 *            the equality helper (required to instanciate an EditionDistance).
 	 * @return a configuration builder.
 	 */
-	public static Builder builder(EqualityHelper helper) {
-		return new Builder(helper);
+	public static Builder builder() {
+		return new Builder();
 	}
 
 	/**
@@ -125,12 +142,9 @@ public class EditionDistance implements DistanceFunction {
 
 		/**
 		 * Create the builder.
-		 * 
-		 * @param toBe
-		 *            the equality helper (required to instanciate an EditionDistance).
 		 */
-		public Builder(EqualityHelper toBe) {
-			this.toBeBuilt = new EditionDistance(toBe);
+		public Builder() {
+			this.toBeBuilt = new EditionDistance();
 		}
 
 		/**

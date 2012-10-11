@@ -126,7 +126,7 @@ public class EqualityHelper {
 	 * @return <code>true</code> if these two EObjects are to be considered equal, <code>false</code>
 	 *         otherwise.
 	 */
-	private boolean matchingEObjects(Comparison comparison, EObject object1, EObject object2) {
+	protected boolean matchingEObjects(Comparison comparison, EObject object1, EObject object2) {
 		final Match match = comparison.getMatch(object1);
 
 		final boolean equal;

@@ -27,7 +27,6 @@ import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.NotifierTuple;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.DiffTest;
-import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 
@@ -109,7 +108,7 @@ public class DiffStatement extends Statement {
 		}
 		if (engine == null) {
 			final IEObjectMatcher contentMatcher = ProximityEObjectMatcher.builder(
-					EditionDistance.builder(new EqualityHelper()).build()).build();
+					EditionDistance.builder().build()).build();
 			final IEObjectMatcher matcher = new IdentifierEObjectMatcher(contentMatcher);
 			engine = new DefaultMatchEngine(matcher);
 		}
