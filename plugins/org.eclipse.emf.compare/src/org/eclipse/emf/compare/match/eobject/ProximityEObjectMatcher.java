@@ -96,7 +96,7 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 		}
 
 		for (EObject left : index.getValuesStillThere(Side.LEFT)) {
-			Map<Side, EObject> closests = index.findClosests(left, Side.LEFT, meter.getMaxDistance(left));
+			Map<Side, EObject> closests = index.findClosests(left, Side.LEFT);
 			EObject right = closests.get(Side.RIGHT);
 			EObject ancestor = closests.get(Side.ORIGIN);
 			areMatching(left, right, ancestor);
@@ -115,8 +115,7 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 		 * object.
 		 */
 		for (EObject rObj : index.getValuesStillThere(Side.RIGHT)) {
-			Map<Side, EObject> closests = index.findClosests(rObj, Side.RIGHT, meter.getMaxDistance(rObj
-					.eClass()));
+			Map<Side, EObject> closests = index.findClosests(rObj, Side.RIGHT);
 			EObject lObj = closests.get(Side.LEFT);
 			EObject aObj = closests.get(Side.ORIGIN);
 			areMatching(lObj, rObj, aObj);
@@ -232,30 +231,30 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 	 */
 	public interface DistanceFunction {
 		/**
-		 * Return the distance between two EObjects.
+		 * Return the distance between two EObjects. When the two objects should considered as completely
+		 * different the implementation is expected to return Integer.MAX_VALUE.
 		 * 
 		 * @param a
 		 *            first object.
 		 * @param b
 		 *            second object.
-		 * @param maxDistance
-		 *            the max distance we are looking for. We are not expecting to have a distance value
-		 *            higher than this one, it allow the implementation to take shortcuts and stop computing
-		 *            the distance if they are at the maximum already. You should expect to have a maximum
-		 *            which is equal to 0, and it is a good idea to be fast in this case.
-		 * @return the distance between the two EObjects.
+		 * @return the distance between the two EObjects or Integer.MAX_VALUE when the objects are considered
+		 *         too different to be the same.
 		 */
-		int distance(EObject a, EObject b, int maxDistance);
+		int distance(EObject a, EObject b);
 
 		/**
-		 * The distance we consider being the maximum above which two objects should be considered as not
-		 * matching.
+		 * Check that two objects are equals from the distance function point of view (distance should be 0)
+		 * You should prefer this method when you just want to check objects are not equals enabling the
+		 * distance to stop sooner.
 		 * 
-		 * @param left
-		 *            any EObject.
-		 * @return the maximum distance before we consider another object should not match with this one.
+		 * @param a
+		 *            first object.
+		 * @param b
+		 *            second object.
+		 * @return true of the two objects are equals, false otherwise.
 		 */
-		int getMaxDistance(EObject left);
+		boolean areIdentic(EObject a, EObject b);
 	}
 
 	/**

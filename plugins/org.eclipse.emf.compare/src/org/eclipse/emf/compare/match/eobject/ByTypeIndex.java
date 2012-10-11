@@ -78,10 +78,10 @@ class ByTypeIndex implements EObjectIndex {
 	 * @see org.eclipse.emf.compare.match.eobject.EObjectIndex#findClosests(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.compare.match.eobject.EObjectIndex.Side, int)
 	 */
-	public Map<Side, EObject> findClosests(EObject obj, Side side, int maxDistance) {
+	public Map<Side, EObject> findClosests(EObject obj, Side side) {
 		try {
 			EObjectIndex typeSpecificIndex = allIndexes.get(eClassKey(obj));
-			return typeSpecificIndex.findClosests(obj, side, maxDistance);
+			return typeSpecificIndex.findClosests(obj, side);
 		} catch (ExecutionException e) {
 			return Collections.emptyMap();
 		}

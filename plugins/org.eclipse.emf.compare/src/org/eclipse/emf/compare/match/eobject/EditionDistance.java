@@ -118,8 +118,20 @@ public class EditionDistance implements DistanceFunction {
 	/**
 	 * {@inheritDoc}
 	 */
-	public int distance(EObject a, EObject b, int maxDistance) {
-		return new CountingDiffEngine(maxDistance).measureDifferences(a, b);
+	public int distance(EObject a, EObject b) {
+		int maxDist = Math.max(getMaxDistance(a), getMaxDistance(b));
+		int measuredDist = new CountingDiffEngine(maxDist).measureDifferences(a, b);
+		if (measuredDist >= maxDist) {
+			return Integer.MAX_VALUE;
+		}
+		return measuredDist;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean areIdentic(EObject a, EObject b) {
+		return new CountingDiffEngine(0).measureDifferences(a, b) == 0;
 	}
 
 	/**
@@ -404,7 +416,7 @@ public class EditionDistance implements DistanceFunction {
 					return Iterators.filter(super.getReferencesToCheck(match), new Predicate<EReference>() {
 
 						public boolean apply(EReference input) {
-							return toBeIgnored.contains(input) && !input.isContainment();
+							return !toBeIgnored.contains(input) && !input.isContainment();
 						}
 					});
 				}
@@ -443,7 +455,7 @@ public class EditionDistance implements DistanceFunction {
 		// assess the quality of further changes.
 		int max = 0;
 		for (EReference feat : Iterables.filter(eObj.eClass().getEAllReferences(), featureFilter)) {
-			if (!feat.isContainer() && eObj.eIsSet(feat)) {
+			if (!feat.isContainer() && !feat.isContainment() && eObj.eIsSet(feat)) {
 				max += getWeight(feat) * referenceChangeCoef;
 			}
 		}
@@ -452,8 +464,8 @@ public class EditionDistance implements DistanceFunction {
 				max += getWeight(feat) * attributeChangeCoef;
 			}
 		}
-		max = max + locationChangeCoef * 5 - 2;
-		// System.out.println(eObj.eClass().getName() + ":" + eObj + ":" + max);
-		return max;
+		max = max + locationChangeCoef * 5;
+		return max / 2;
 	}
+
 }
