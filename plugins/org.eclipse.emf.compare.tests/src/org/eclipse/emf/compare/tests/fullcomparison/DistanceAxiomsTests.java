@@ -56,8 +56,8 @@ public class DistanceAxiomsTests {
 	@Theory
 	public void symetry(EObject a, EObject b) {
 		Assume.assumeTrue(a.eClass() == b.eClass());
-		int aTob = meter.distance(a, b, MAX_DISTANCE);
-		int bToa = meter.distance(b, a, MAX_DISTANCE);
+		int aTob = meter.distance(a, b);
+		int bToa = meter.distance(b, a);
 		assertEquals(aTob, bToa);
 	}
 
@@ -67,15 +67,15 @@ public class DistanceAxiomsTests {
 
 	@Theory
 	public void separation(EObject a) {
-		assertEquals(0, meter.distance(a, a, MAX_DISTANCE));
+		assertEquals(0, meter.distance(a, a));
 	}
 
 	@Theory
 	public void triangularInequality(EObject x, EObject y, EObject z) {
 		Assume.assumeTrue(x.eClass() == y.eClass() && x.eClass() == z.eClass());
-		int xToz = meter.distance(x, z, MAX_DISTANCE);
-		int xToy = meter.distance(x, y, MAX_DISTANCE);
-		int yToz = meter.distance(y, z, MAX_DISTANCE);
+		int xToz = meter.distance(x, z);
+		int xToy = meter.distance(x, y);
+		int yToz = meter.distance(y, z);
 		assertTrue("Triangular inequality (x-z <= x-y + y-z ) failed (" + xToz + "<=" + xToy + " + " + yToz
 				+ ")for \nx:" + x.toString() + "\n|y:" + y.toString() + "\n|z:" + z.toString(), xToz <= xToy
 				+ yToz);
