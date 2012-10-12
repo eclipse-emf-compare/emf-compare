@@ -28,7 +28,6 @@ import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.NotifierTuple;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.MatchTest;
-import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 
@@ -116,9 +115,7 @@ public class MatchStatement extends Statement {
 			// Swallow : we'll create a default engine instead.
 		}
 		if (engine == null) {
-			final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder(
-					EqualityHelper.createDefaultCache(CacheBuilder.newBuilder().maximumSize(
-							DefaultMatchEngine.DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE))).build());
+			final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder().build());
 			final IEObjectMatcher matcher = new IdentifierEObjectMatcher(contentMatcher);
 			engine = new DefaultMatchEngine(matcher);
 		}

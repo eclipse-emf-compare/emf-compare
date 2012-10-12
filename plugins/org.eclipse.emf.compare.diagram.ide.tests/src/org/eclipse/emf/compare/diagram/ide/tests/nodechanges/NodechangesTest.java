@@ -1,14 +1,5 @@
 package org.eclipse.emf.compare.diagram.ide.tests.nodechanges;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.instanceOf;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedAttribute;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -24,7 +15,6 @@ import org.eclipse.emf.compare.diagram.ide.diff.DiagramDiffExtensionPostProcesso
 import org.eclipse.emf.compare.diagram.ide.tests.nodechanges.data.NodeChangesInputData;
 import org.eclipse.emf.compare.diagram.tests.AbstractTest;
 import org.eclipse.emf.compare.diagram.tests.DiagramInputData;
-import org.eclipse.emf.compare.extension.EMFCompareExtensionRegistry;
 import org.eclipse.emf.compare.extension.PostProcessorDescriptor;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -32,6 +22,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Iterators;
+
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.instanceOf;
+
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertSame;
+import static junit.framework.Assert.assertTrue;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedAttribute;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 
 @SuppressWarnings("nls")
 public class NodechangesTest extends AbstractTest {
@@ -42,7 +42,7 @@ public class NodechangesTest extends AbstractTest {
 	@Before
 	public void before() {
 		super.before();
-		EMFCompareExtensionRegistry.addPostProcessor(new PostProcessorDescriptor(
+		getPostProcessorRegistry().addPostProcessor(new PostProcessorDescriptor(
 				"http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation", null,
 				"org.eclipse.emf.compare.diagram.ide.diff.DiagramDiffExtensionPostProcessor",
 				new DiagramDiffExtensionPostProcessor()));
@@ -73,7 +73,7 @@ public class NodechangesTest extends AbstractTest {
 		final Resource right = input.getA2Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right.getResourceSet());
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
 		
 		final List<Diff> differences = comparison.getDifferences();
 		
@@ -93,7 +93,7 @@ public class NodechangesTest extends AbstractTest {
 		final Resource right = input.getA1Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right.getResourceSet());
-		final Comparison comparison = EMFCompare.newComparator(scope).compare();
+		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
 		
 		final List<Diff> differences = comparison.getDifferences();
 

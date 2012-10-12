@@ -76,7 +76,9 @@ public class StorageURIConverter extends DelegatingURIConverter {
 
 		final Map<Object, Object> actualOptions = Maps.newLinkedHashMap();
 		actualOptions.put(URIConverter.OPTION_URI_CONVERTER, this);
-		actualOptions.putAll(options);
+		if (options != null) {
+			actualOptions.putAll(options);
+		}
 		return handler.createInputStream(normalizedURI, actualOptions);
 	}
 

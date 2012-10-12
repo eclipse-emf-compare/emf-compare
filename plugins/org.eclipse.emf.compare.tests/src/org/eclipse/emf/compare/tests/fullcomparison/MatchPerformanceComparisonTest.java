@@ -25,7 +25,6 @@ import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.fullcomparison.data.distance.DistanceMatchInputData;
 import org.eclipse.emf.compare.tests.suite.AllTests;
-import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.UMLPackage;
@@ -64,9 +63,7 @@ public class MatchPerformanceComparisonTest {
 
 	@Test
 	public void warmup() throws IOException {
-		final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder(
-				EqualityHelper.createDefaultCache(CacheBuilder.newBuilder().maximumSize(
-						DefaultMatchEngine.DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE))).build());
+		final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder().build());
 		final IEObjectMatcher matcher = new IdentifierEObjectMatcher(contentMatcher);
 		IMatchEngine matchEngine = new DefaultMatchEngine(matcher);
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
@@ -85,9 +82,7 @@ public class MatchPerformanceComparisonTest {
 
 	@Test
 	public void matchPerContentAlmostIdenticalModels() throws IOException {
-		final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder(
-				EqualityHelper.createDefaultCache(CacheBuilder.newBuilder().maximumSize(
-						DefaultMatchEngine.DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE))).build());
+		final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder().build());
 		IMatchEngine matchEngine = new DefaultMatchEngine(contentMatcher);
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		for (int i = 0; i < nbIterations; i++) {

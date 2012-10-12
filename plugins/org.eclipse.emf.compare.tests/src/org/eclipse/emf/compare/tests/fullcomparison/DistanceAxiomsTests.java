@@ -20,7 +20,6 @@ import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.eobject.EditionDistance;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher.DistanceFunction;
 import org.eclipse.emf.compare.tests.suite.AllTests;
-import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.junit.Assume;
@@ -50,8 +49,7 @@ public class DistanceAxiomsTests {
 	@Before
 	public void setUp() throws Exception {
 		AllTests.fillEMFRegistries();
-		this.meter = new EditionDistance(EqualityHelper.createDefaultCache(CacheBuilder.newBuilder()
-				.maximumSize(DefaultMatchEngine.DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE)));
+		this.meter = new EditionDistance();
 	}
 
 	@DataPoints
@@ -60,8 +58,8 @@ public class DistanceAxiomsTests {
 	@Theory
 	public void symetry(EObject a, EObject b) {
 		Assume.assumeTrue(a.eClass() == b.eClass());
-		int aTob = meter.distance(a, b, MAX_DISTANCE);
-		int bToa = meter.distance(b, a, MAX_DISTANCE);
+		int aTob = meter.distance(a, b);
+		int bToa = meter.distance(b, a);
 		assertEquals(aTob, bToa);
 	}
 
@@ -71,15 +69,15 @@ public class DistanceAxiomsTests {
 
 	@Theory
 	public void separation(EObject a) {
-		assertEquals(0, meter.distance(a, a, MAX_DISTANCE));
+		assertEquals(0, meter.distance(a, a));
 	}
 
 	@Theory
 	public void triangularInequality(EObject x, EObject y, EObject z) {
 		Assume.assumeTrue(x.eClass() == y.eClass() && x.eClass() == z.eClass());
-		int xToz = meter.distance(x, z, MAX_DISTANCE);
-		int xToy = meter.distance(x, y, MAX_DISTANCE);
-		int yToz = meter.distance(y, z, MAX_DISTANCE);
+		int xToz = meter.distance(x, z);
+		int xToy = meter.distance(x, y);
+		int yToz = meter.distance(y, z);
 		assertTrue("Triangular inequality (x-z <= x-y + y-z ) failed (" + xToz + "<=" + xToy + " + " + yToz
 				+ ")for \nx:" + x.toString() + "\n|y:" + y.toString() + "\n|z:" + z.toString(), xToz <= xToy
 				+ yToz);

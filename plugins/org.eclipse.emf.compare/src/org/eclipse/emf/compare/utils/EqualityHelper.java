@@ -151,7 +151,7 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	 * @return <code>true</code> if these two EObjects are to be considered equal, <code>false</code>
 	 *         otherwise.
 	 */
-	private boolean matchingEObjects(EObject object1, EObject object2) {
+	protected boolean matchingEObjects(EObject object1, EObject object2) {
 		final Match match = getTarget().getMatch(object1);
 
 		final boolean equal;

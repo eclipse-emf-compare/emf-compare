@@ -33,6 +33,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -507,7 +508,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 				expectedContainer = diff.getMatch().getRight();
 			}
 
-			final Object value = expectedContainer.eGet(attribute);
+			final Object value = ReferenceUtil.safeEGet(expectedContainer, attribute);
 			// Though not the "default value", we consider that an empty string is an unset attribute.
 			final Object defaultValue = attribute.getDefaultValue();
 			deleteOrUnset = value == null || value.equals(defaultValue)
@@ -545,8 +546,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 			Object value1, Object value2) {
 		boolean matching = false;
 		if (feature.isMany()) {
-			final List<Object> leftValues = (List<Object>)match.getLeft().eGet(feature);
-			final List<Object> rightValues = (List<Object>)match.getRight().eGet(feature);
+			final List<Object> leftValues = (List<Object>)ReferenceUtil.safeEGet(match.getLeft(), feature);
+			final List<Object> rightValues = (List<Object>)ReferenceUtil.safeEGet(match.getRight(), feature);
 
 			// FIXME the detection _will_ fail for non-unique lists with multiple identical values...
 			int leftIndex = -1;

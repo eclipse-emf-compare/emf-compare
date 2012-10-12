@@ -74,25 +74,25 @@ public class ProximityIndex implements EObjectIndex {
 	 * {@inheritDoc}
 	 */
 
-	public Map<Side, EObject> findClosests(EObject eObj, Side passedObjectSide, int maxDistance) {
+	public Map<Side, EObject> findClosests(EObject eObj, Side passedObjectSide) {
 
 		Map<Side, EObject> result = new HashMap<EObjectIndex.Side, EObject>(3);
 
 		result.put(passedObjectSide, eObj);
 		if (passedObjectSide == Side.LEFT) {
-			EObject closestRight = findTheClosest(eObj, Side.LEFT, Side.RIGHT, maxDistance, true);
-			EObject closestOrigin = findTheClosest(eObj, Side.LEFT, Side.ORIGIN, maxDistance, true);
+			EObject closestRight = findTheClosest(eObj, Side.LEFT, Side.RIGHT, true);
+			EObject closestOrigin = findTheClosest(eObj, Side.LEFT, Side.ORIGIN, true);
 			result.put(Side.RIGHT, closestRight);
 			result.put(Side.ORIGIN, closestOrigin);
 		} else if (passedObjectSide == Side.RIGHT) {
-			EObject closestLeft = findTheClosest(eObj, Side.RIGHT, Side.LEFT, maxDistance, true);
-			EObject closestOrigin = findTheClosest(eObj, Side.RIGHT, Side.ORIGIN, maxDistance, true);
+			EObject closestLeft = findTheClosest(eObj, Side.RIGHT, Side.LEFT, true);
+			EObject closestOrigin = findTheClosest(eObj, Side.RIGHT, Side.ORIGIN, true);
 			result.put(Side.LEFT, closestLeft);
 			result.put(Side.ORIGIN, closestOrigin);
 
 		} else if (passedObjectSide == Side.ORIGIN) {
-			EObject closestLeft = findTheClosest(eObj, Side.ORIGIN, Side.LEFT, maxDistance, true);
-			EObject closestRight = findTheClosest(eObj, Side.ORIGIN, Side.RIGHT, maxDistance, true);
+			EObject closestLeft = findTheClosest(eObj, Side.ORIGIN, Side.LEFT, true);
+			EObject closestRight = findTheClosest(eObj, Side.ORIGIN, Side.RIGHT, true);
 			result.put(Side.LEFT, closestLeft);
 			result.put(Side.RIGHT, closestRight);
 		}
@@ -110,15 +110,13 @@ public class ProximityIndex implements EObjectIndex {
 	 *            the side of the base EObject.
 	 * @param sideToFind
 	 *            the side to search in.
-	 * @param maxDistance
-	 *            the maximum distance to search.
 	 * @param shouldDoubleCheck
 	 *            true if we should make sure that the found EObject has the inverse relationship with the
 	 *            base one.
 	 * @return the closest EObject of the passed one found in the sideToFind storage.
 	 */
 	private EObject findTheClosest(final EObject eObj, final Side originalSide, final Side sideToFind,
-			final int maxDistance, boolean shouldDoubleCheck) {
+			boolean shouldDoubleCheck) {
 		List<EObject> storageToSearchFor = lefts;
 		switch (sideToFind) {
 			case RIGHT:
@@ -145,8 +143,7 @@ public class ProximityIndex implements EObjectIndex {
 		Iterator<EObject> it = storageToSearchFor.iterator();
 		while (it.hasNext() && best == null) {
 			EObject fastCheck = it.next();
-			int dist = meter.distance(eObj, fastCheck, 0);
-			if (dist == 0) {
+			if (meter.areIdentic(eObj, fastCheck)) {
 				best = fastCheck;
 				bestDist = 0;
 			}
@@ -162,13 +159,12 @@ public class ProximityIndex implements EObjectIndex {
 		it = storageToSearchFor.iterator();
 		while (bestDist != 0 && it.hasNext()) {
 			EObject potentialClosest = it.next();
-			int dist = meter.distance(eObj, potentialClosest, maxDistance);
+			int dist = meter.distance(eObj, potentialClosest);
 			if (dist < bestDist) {
 				if (shouldDoubleCheck) {
 					// We need to double check the currentlyDigging has the same object as the closest !
 
-					EObject doubleCheck = findTheClosest(potentialClosest, sideToFind, originalSide,
-							maxDistance, false);
+					EObject doubleCheck = findTheClosest(potentialClosest, sideToFind, originalSide, false);
 					if (doubleCheck == eObj) {
 						bestDist = dist;
 						best = potentialClosest;
@@ -180,9 +176,6 @@ public class ProximityIndex implements EObjectIndex {
 			}
 		}
 
-		if (bestDist > maxDistance) {
-			best = null;
-		}
 		return best;
 	}
 

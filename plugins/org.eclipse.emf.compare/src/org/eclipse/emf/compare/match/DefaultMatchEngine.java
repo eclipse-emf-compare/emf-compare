@@ -13,8 +13,6 @@ package org.eclipse.emf.compare.match;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
@@ -38,8 +36,6 @@ import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher;
 import org.eclipse.emf.compare.match.resource.IResourceMatcher;
 import org.eclipse.emf.compare.match.resource.StrategyResourceMatcher;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.utils.EqualityHelper;
-import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -411,25 +407,9 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * @return a new {@link DefaultMatchEngine} instance.
 	 */
 	public static DefaultMatchEngine create(UseIdentifiers useIDs) {
-		final Cache<EObject, URI> defaultCache = EqualityHelper.createDefaultCache(CacheBuilder.newBuilder()
-				.maximumSize(DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE));
-
-		IEqualityHelperFactory helperFactory = new DefaultEqualityHelperFactory() {
-			/**
-			 * {@inheritDoc}
-			 * 
-			 * @see org.eclipse.emf.compare.match.DefaultEqualityHelperFactory#createEqualityHelper()
-			 */
-			@Override
-			public IEqualityHelper createEqualityHelper() {
-				IEqualityHelper equalityHelper = new EqualityHelper(defaultCache);
-				return equalityHelper;
-			}
-		};
-
-		IComparisonFactory comparisonFactory = new DefaultComparisonFactory(helperFactory);
-
-		IEObjectMatcher matcher = createDefaultEObjectMatcher(useIDs, defaultCache);
+		final IComparisonFactory comparisonFactory = new DefaultComparisonFactory(
+				new DefaultEqualityHelperFactory());
+		final IEObjectMatcher matcher = createDefaultEObjectMatcher(useIDs);
 
 		final DefaultMatchEngine matchEngine = new DefaultMatchEngine(matcher, comparisonFactory);
 		return matchEngine;
@@ -441,13 +421,11 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * 
 	 * @param useIDs
 	 *            which strategy the return IEObjectMatcher must follow.
-	 * @param cache
-	 *            will be used to cache some expensive computation (should better a LoadingCache).
 	 * @return a new IEObjectMatcher.
 	 */
-	public static IEObjectMatcher createDefaultEObjectMatcher(UseIdentifiers useIDs, Cache<EObject, URI> cache) {
+	public static IEObjectMatcher createDefaultEObjectMatcher(UseIdentifiers useIDs) {
 		final IEObjectMatcher matcher;
-		final EditionDistance editionDistance = EditionDistance.builder(cache).build();
+		final EditionDistance editionDistance = EditionDistance.builder().build();
 		switch (useIDs) {
 			case NEVER:
 				matcher = new ProximityEObjectMatcher(editionDistance);

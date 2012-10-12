@@ -38,12 +38,10 @@ public interface EObjectIndex {
 	 *            the base EObject used to lookup similar ones.
 	 * @param side
 	 *            the side of the passed EObject.
-	 * @param maxDistance
-	 *            an hint so that the index don't look further than this distance.
 	 * @return a map of Side, EObjects, returning all the found objects (and the passed one) which are the
 	 *         closests.
 	 */
-	Map<Side, EObject> findClosests(EObject eObj, Side side, int maxDistance);
+	Map<Side, EObject> findClosests(EObject eObj, Side side);
 
 	/**
 	 * Remove an object from the index.

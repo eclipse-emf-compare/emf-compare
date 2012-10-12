@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.EventObject;
+import java.util.Iterator;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareViewerSwitchingPane;
@@ -24,9 +25,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.emf.common.command.CommandStackListener;
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.actions.filter.DifferenceFilter;
@@ -37,6 +40,8 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareCo
 import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
@@ -114,7 +119,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	void compareInputChanged(ICompareInput input) {
 		if (input == null) {
 			// When closing, we don't need a progress monitor to handle the input change
-			compareInputChanged(null, null);
+			compareInputChanged(null, new NullProgressMonitor());
 			return;
 		}
 		CompareConfiguration cc = getCompareConfiguration();
@@ -187,6 +192,25 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		} else {
 			fRoot = null;
 		}
+	}
+
+	private static void unload(ResourceSet resourceSet) {
+		if (resourceSet != null) {
+			for (Resource resource : resourceSet.getResources()) {
+				resource.unload();
+			}
+			resourceSet.getResources().clear();
+		}
+	}
+
+	private static ResourceSet getResourceSet(EObject eObject) {
+		if (eObject != null) {
+			Resource eResource = eObject.eResource();
+			if (eResource != null) {
+				return eResource.getResourceSet();
+			}
+		}
+		return null;
 	}
 
 	void compareInputChanged(final Comparison comparison) {
@@ -313,6 +337,41 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
+		Comparison comparison = (Comparison)((Adapter)fRoot).getTarget();
+		ResourceSet leftResourceSet = null;
+		ResourceSet rightResourceSet = null;
+		Iterator<Match> matchIt = comparison.getMatches().iterator();
+		if (comparison.isThreeWay()) {
+			ResourceSet originResourceSet = null;
+			while (matchIt.hasNext()
+					&& (leftResourceSet == null || rightResourceSet == null || originResourceSet == null)) {
+				Match match = matchIt.next();
+				if (leftResourceSet == null) {
+					leftResourceSet = getResourceSet(match.getLeft());
+				}
+				if (rightResourceSet == null) {
+					rightResourceSet = getResourceSet(match.getRight());
+				}
+				if (originResourceSet == null) {
+					originResourceSet = getResourceSet(match.getOrigin());
+				}
+			}
+			unload(originResourceSet);
+		} else {
+			while (matchIt.hasNext() && (leftResourceSet == null || rightResourceSet == null)) {
+				Match match = matchIt.next();
+				if (leftResourceSet == null) {
+					leftResourceSet = getResourceSet(match.getLeft());
+				}
+				if (rightResourceSet == null) {
+					rightResourceSet = getResourceSet(match.getRight());
+				}
+			}
+		}
+
+		unload(leftResourceSet);
+		unload(rightResourceSet);
+
 		Object input = getInput();
 		if (input instanceof ICompareInput) {
 			ICompareInput ci = (ICompareInput)input;

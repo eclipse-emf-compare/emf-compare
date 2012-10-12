@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.diagram.diff.DiagramDiffExtensionPostProcessor;
-import org.eclipse.emf.compare.extension.EMFCompareExtensionRegistry;
 import org.eclipse.emf.compare.extension.PostProcessorDescriptor;
+import org.eclipse.emf.compare.extension.PostProcessorRegistry;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.junit.After;
@@ -18,17 +18,26 @@ import com.google.common.collect.Iterators;
 @SuppressWarnings("nls")
 public abstract class AbstractTest {
 
+	private PostProcessorRegistry postProcessorRegistry;
+
 	@Before
 	public void before() {
-		EMFCompareExtensionRegistry.addPostProcessor(new PostProcessorDescriptor(
+		postProcessorRegistry = new PostProcessorRegistry();
+		postProcessorRegistry.addPostProcessor(new PostProcessorDescriptor(
 				"http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation", null,
 				"org.eclipse.emf.compare.diagram.diff.DiagramDiffExtensionPostProcessor",
 				new DiagramDiffExtensionPostProcessor()));
 	}
 
+	/**
+	 * @return the postProcessorRegistry
+	 */
+	protected PostProcessorRegistry getPostProcessorRegistry() {
+		return postProcessorRegistry;
+	}
+	
 	@After
 	public void after() {
-		EMFCompareExtensionRegistry.clearRegistry();
 		if (getInput() != null && getInput().getSets() != null) {
 			for (ResourceSet set : getInput().getSets()) {
 				cleanup(set);
