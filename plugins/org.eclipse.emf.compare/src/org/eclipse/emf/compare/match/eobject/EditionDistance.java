@@ -465,7 +465,7 @@ public class EditionDistance implements DistanceFunction {
 			}
 		}
 		max = max + locationChangeCoef * 5;
-		return max / 2;
+		return Double.valueOf(max / 3 * 2).intValue();
 	}
 
 }
