@@ -57,21 +57,18 @@ public class URIDistance implements Function<EObject, List<String>> {
 		if (container != null) {
 			builder.addAll(locationCache.getUnchecked(container));
 			EStructuralFeature feat = cur.eContainingFeature();
-			if (feat != null) {
-				if (feat instanceof EAttribute) {
-					featureMapLocation(builder, cur, container, feat);
+			if (feat instanceof EAttribute) {
+				featureMapLocation(builder, cur, container, feat);
+			} else if (feat != null) {
+				if (feat.isMany()) {
+					EList<?> eList = (EList<?>)container.eGet(feat, false);
+					int index = eList.indexOf(cur);
+					builder.add(feat.getName());
+					builder.add(Integer.valueOf(index).toString());
 				} else {
-					if (feat.isMany()) {
-						EList<?> eList = (EList<?>)container.eGet(feat, false);
-						int index = eList.indexOf(cur);
-						builder.add(feat.getName());
-						builder.add(Integer.valueOf(index).toString());
-					} else {
-						builder.add(feat.getName());
-						builder.add("0"); //$NON-NLS-1$
-					}
+					builder.add(feat.getName());
+					builder.add("0"); //$NON-NLS-1$
 				}
-
 			}
 		} else {
 			builder.add("0"); //$NON-NLS-1$
