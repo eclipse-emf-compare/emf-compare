@@ -49,6 +49,10 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class EditionDistance implements DistanceFunction {
+	/**
+	 * The ratio we apply on the raw maxdistance to determine whether an element should match or not.
+	 */
+	private static final double MAX_DIST_RATIO = 3 * 2.5;
 
 	/**
 	 * Weight coefficient of a change on a reference.
@@ -258,6 +262,12 @@ public class EditionDistance implements DistanceFunction {
 	 */
 	class CountingDiffProcessor implements IDiffProcessor {
 		/**
+		 * Keeps track of features which have already been detected as changed so that we can apply different
+		 * weight in those cases.
+		 */
+		private Set<EStructuralFeature> alreadyChanged = Sets.newLinkedHashSet();
+
+		/**
 		 * The current distance.
 		 */
 		private int distance;
@@ -267,17 +277,22 @@ public class EditionDistance implements DistanceFunction {
 		 */
 		public void referenceChange(Match match, EReference reference, EObject value, DifferenceKind kind,
 				DifferenceSource source) {
-			switch (kind) {
-				case MOVE:
-					distance += getWeight(reference) * orderChangeCoef;
-					break;
-				case ADD:
-				case DELETE:
-				case CHANGE:
-					distance += getWeight(reference) * referenceChangeCoef;
-					break;
-				default:
-					break;
+			if (!alreadyChanged.contains(reference)) {
+				switch (kind) {
+					case MOVE:
+						distance += getWeight(reference) * orderChangeCoef;
+						break;
+					case ADD:
+					case DELETE:
+					case CHANGE:
+						distance += getWeight(reference) * referenceChangeCoef;
+						break;
+					default:
+						break;
+				}
+				alreadyChanged.add(reference);
+			} else {
+				distance += 1;
 			}
 		}
 
@@ -286,25 +301,30 @@ public class EditionDistance implements DistanceFunction {
 		 */
 		public void attributeChange(Match match, EAttribute attribute, Object value, DifferenceKind kind,
 				DifferenceSource source) {
-			Object aValue = ReferenceUtil.safeEGet(match.getLeft(), attribute);
-			Object bValue = ReferenceUtil.safeEGet(match.getRight(), attribute);
-			switch (kind) {
-				case MOVE:
-					distance += getWeight(attribute) * orderChangeCoef;
-					break;
-				case ADD:
-				case DELETE:
-				case CHANGE:
-					if (aValue instanceof String && bValue instanceof String) {
-						distance += getWeight(attribute)
-								* (1 - DiffUtil.diceCoefficient((String)aValue, (String)bValue))
-								* attributeChangeCoef;
-					} else {
-						distance += getWeight(attribute) * attributeChangeCoef;
-					}
-					break;
-				default:
-					break;
+			if (!alreadyChanged.contains(attribute)) {
+				Object aValue = ReferenceUtil.safeEGet(match.getLeft(), attribute);
+				Object bValue = ReferenceUtil.safeEGet(match.getRight(), attribute);
+				switch (kind) {
+					case MOVE:
+						distance += getWeight(attribute) * orderChangeCoef;
+						break;
+					case ADD:
+					case DELETE:
+					case CHANGE:
+						if (aValue instanceof String && bValue instanceof String) {
+							distance += getWeight(attribute)
+									* (1 - DiffUtil.diceCoefficient((String)aValue, (String)bValue))
+									* attributeChangeCoef;
+						} else {
+							distance += getWeight(attribute) * attributeChangeCoef;
+						}
+						break;
+					default:
+						break;
+				}
+				alreadyChanged.add(attribute);
+			} else {
+				distance += 1;
 			}
 		}
 
@@ -329,6 +349,13 @@ public class EditionDistance implements DistanceFunction {
 			return distance;
 		}
 
+		/**
+		 * Clear the diff processor state so that it's ready for the next computation.
+		 */
+		public void reset() {
+			this.alreadyChanged.clear();
+		}
+
 	}
 
 	/**
@@ -341,8 +368,13 @@ public class EditionDistance implements DistanceFunction {
 	private int getWeight(EStructuralFeature attribute) {
 		Integer found = weights.get(attribute);
 		if (found == null) {
+			/*
+			 * This is worst than empirical but it works in many cases, if your feature is a "name" its likely
+			 * that it's important for matching the element. At some point I'll have to come up with something
+			 * which is more extensible..
+			 */
 			if ("name".equals(attribute.getName())) { //$NON-NLS-1$
-				found = Integer.valueOf(3);
+				found = Integer.valueOf(4);
 			} else {
 				found = Integer.valueOf(1);
 			}
@@ -406,7 +438,8 @@ public class EditionDistance implements DistanceFunction {
 		 * @return the distance between them computed using the number of changes required to change a to b.
 		 */
 		public int measureDifferences(EObject a, EObject b) {
-			Match fakeMatch = createMockMatch(a, b);
+			Match fakeMatch = createFakeMatch(a, b);
+			getCounter().reset();
 			int changes = 0;
 			int dist = uriDistance.proximity(a, b);
 			changes += dist * locationChangeCoef;
@@ -430,7 +463,7 @@ public class EditionDistance implements DistanceFunction {
 		 *            Second of the two EObjects for which we want to force a comparison.
 		 * @return The created Match.
 		 */
-		private Match createMockMatch(EObject a, EObject b) {
+		private Match createFakeMatch(EObject a, EObject b) {
 			Comparison fakeComparison = fakeComparisonFactory.createComparison();
 			Match fakeMatch = CompareFactory.eINSTANCE.createMatch();
 			((InternalEList<Match>)fakeComparison.getMatches()).addUnique(fakeMatch);
@@ -501,7 +534,7 @@ public class EditionDistance implements DistanceFunction {
 			}
 		}
 		max = max + locationChangeCoef * 5;
-		return Double.valueOf(max / 3 * 2.5).intValue();
+		return Double.valueOf(max / MAX_DIST_RATIO).intValue();
 	}
 
 }

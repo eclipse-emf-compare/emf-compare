@@ -39,7 +39,7 @@ public class URIDistance implements Function<EObject, List<String>> {
 	/**
 	 * A computing cache for the locations.
 	 */
-	private Cache<EObject, List<String>> locationCache = CacheBuilder.newBuilder().maximumSize(1000).build(
+	private Cache<EObject, List<String>> locationCache = CacheBuilder.newBuilder().maximumSize(10000).build(
 			CacheLoader.from(this));
 
 	/**
@@ -166,7 +166,7 @@ public class URIDistance implements Function<EObject, List<String>> {
 	 * @return The number of changes to transform one uri to another one.
 	 */
 	public int proximity(EObject a, EObject b) {
-		return proximity(apply(a), apply(b));
+		return proximity(locationCache.getUnchecked(a), locationCache.getUnchecked(b));
 	}
 
 }
