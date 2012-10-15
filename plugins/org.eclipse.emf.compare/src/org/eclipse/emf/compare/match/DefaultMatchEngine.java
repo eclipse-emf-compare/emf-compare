@@ -67,7 +67,6 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 *            The matcher that will be in charge of pairing EObjects together for this comparison process.
 	 * @param comparisonFactory
 	 *            factory that will be use to instantiate Comparison as return by match() methods.
-	 * @since 3.0
 	 */
 	public DefaultMatchEngine(IEObjectMatcher matcher, IComparisonFactory comparisonFactory) {
 		this.eObjectMatcher = checkNotNull(matcher);
@@ -79,7 +78,6 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * 
 	 * @see org.eclipse.emf.compare.match.IMatchEngine#match(org.eclipse.emf.compare.scope.IComparisonScope,
 	 *      org.eclipse.emf.common.util.Monitor)
-	 * @since 3.0
 	 */
 	public Comparison match(IComparisonScope scope, Monitor monitor) {
 		Comparison comparison = comparisonFactory.createComparison();

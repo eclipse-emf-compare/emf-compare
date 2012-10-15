@@ -42,7 +42,6 @@ public class DefaultEquiEngine implements IEquiEngine {
 	 * 
 	 * @see org.eclipse.emf.compare.equi.IEquiEngine#computeEquivalences(org.eclipse.emf.compare.Comparison,
 	 *      org.eclipse.emf.common.util.Monitor)
-	 * @since 3.0
 	 */
 	public void computeEquivalences(Comparison comparison, Monitor monitor) {
 		for (Diff difference : comparison.getDifferences()) {

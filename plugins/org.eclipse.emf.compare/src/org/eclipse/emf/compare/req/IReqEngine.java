@@ -42,7 +42,6 @@ public interface IReqEngine {
 	 *            The comparison this engine is expected to complete.
 	 * @param monitor
 	 *            The monitor to report progress or to check for cancellation
-	 * @since 3.0
 	 */
 	void computeRequirements(Comparison comparison, Monitor monitor);
 }

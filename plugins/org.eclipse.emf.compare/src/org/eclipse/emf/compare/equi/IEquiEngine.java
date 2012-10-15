@@ -32,7 +32,6 @@ public interface IEquiEngine {
 	 *            The comparison this engine is expected to complete.
 	 * @param monitor
 	 *            The monitor to report progress or to check for cancellation
-	 * @since 3.0
 	 */
 	void computeEquivalences(Comparison comparison, Monitor monitor);
 }
