@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
@@ -34,27 +35,27 @@ public class DiagramDiffExtensionPostProcessor implements IPostProcessor {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void postMatch(Comparison comparison) {
+	public void postMatch(Comparison comparison, Monitor monitor) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void postDiff(Comparison comparison) {
+	public void postDiff(Comparison comparison, Monitor monitor) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void postRequirements(Comparison comparison) {
+	public void postRequirements(Comparison comparison, Monitor monitor) {
 		// computeLabels
 		computeLabels(comparison);
 	}
 
-	public void postEquivalences(Comparison comparison) {
+	public void postEquivalences(Comparison comparison, Monitor monitor) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void postConflicts(Comparison comparison) {
+	public void postConflicts(Comparison comparison, Monitor monitor) {
 		// TODO Auto-generated method stub
 
 	}

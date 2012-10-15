@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.conflict;
 
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 
 /**
@@ -38,6 +39,8 @@ public interface IConflictDetector {
 	 * 
 	 * @param comparison
 	 *            The comparison this engine is expected to complete.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation
 	 */
-	void detect(Comparison comparison);
+	void detect(Comparison comparison, Monitor monitor);
 }

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.equi;
 
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 
 /**
@@ -29,6 +30,9 @@ public interface IEquiEngine {
 	 * 
 	 * @param comparison
 	 *            The comparison this engine is expected to complete.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation
+	 * @since 3.0
 	 */
-	void computeEquivalences(Comparison comparison);
+	void computeEquivalences(Comparison comparison, Monitor monitor);
 }

@@ -20,7 +20,6 @@ import com.google.common.collect.Iterables;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -57,16 +56,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 * by {@link #getDiffProcessor()}.
 	 */
 	private IDiffProcessor diffProcessor;
-
-	/**
-	 * Create the diff engine setting up the default behavior.
-	 * 
-	 * @see #DefaultDiffEngine(IDiffProcessor).
-	 */
-	@Deprecated
-	public DefaultDiffEngine() {
-		this(new DiffBuilder());
-	}
 
 	/**
 	 * Create the diff engine.
@@ -125,29 +114,8 @@ public class DefaultDiffEngine implements IDiffEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.IDiffEngine#diff(org.eclipse.emf.compare.Comparison)
-	 * @see #diff(Comparison, Monitor)
-	 */
-	@Deprecated
-	public void diff(Comparison comparison) {
-		diff(comparison, new BasicMonitor());
-	}
-
-	/**
-	 * This is the entry point of the differencing process.
-	 * <p>
-	 * It will complete the input <code>comparison</code> by iterating over the
-	 * {@link org.eclipse.emf.compare.Match matches} it contain, filling in the differences it can detect for
-	 * each distinct Match.
-	 * </p>
-	 * <p>
-	 * This should be pull-up in interface in the next major version.
-	 * </p>
-	 * 
-	 * @param comparison
-	 *            The comparison this engine is expected to complete.
-	 * @param monitor
-	 *            The monitor to report progress or to check for cancellation.
+	 * @see org.eclipse.emf.compare.diff.IDiffEngine#diff(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void diff(Comparison comparison, Monitor monitor) {
 		for (Match rootMatch : comparison.getMatches()) {

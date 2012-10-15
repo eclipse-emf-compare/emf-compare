@@ -21,7 +21,6 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.CompareFactory;
@@ -55,29 +54,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.conflict.IConflictDetector#detect(org.eclipse.emf.compare.Comparison)
-	 * @see #detect(Comparison, Monitor)
-	 */
-	@Deprecated
-	public void detect(Comparison comparison) {
-		detect(comparison, new BasicMonitor());
-	}
-
-	/**
-	 * This is the entry point of the conflict detection process.
-	 * <p>
-	 * It is expected to complete the input <code>comparison</code> by iterating over the
-	 * {@link org.eclipse.emf.compare.Diff differences} it contain, filling in all conflicts it can detect
-	 * between those Diffs.
-	 * </p>
-	 * <p>
-	 * This method should be pull-up in the interface in next major version.
-	 * </p>
-	 * 
-	 * @param comparison
-	 *            The comparison this engine is expected to complete.
-	 * @param monitor
-	 *            The monitor to report progress or to check for cancellation
+	 * @see org.eclipse.emf.compare.conflict.IConflictDetector#detect(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void detect(Comparison comparison, Monitor monitor) {
 		final List<Diff> differences = comparison.getDifferences();

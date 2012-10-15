@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match;
 
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 
 /**
@@ -36,6 +36,7 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
  * @see DefaultMatchEngine
  */
 public interface IMatchEngine {
+
 	/**
 	 * This is the entry point of a Comparison process. It is expected to use the provided scope in order to
 	 * determine all objects that need to be matched.
@@ -46,10 +47,10 @@ public interface IMatchEngine {
 	 * 
 	 * @param scope
 	 *            The comparison scope that should be used by this engine to determine the objects to match.
-	 * @param configuration
-	 *            The configuration object from which the engine will be configured.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation
 	 * @return An initialized {@link Comparison} model with all matches determined.
 	 */
-	Comparison match(IComparisonScope scope, EMFCompareConfiguration configuration);
+	Comparison match(IComparisonScope scope, Monitor monitor);
 
 }

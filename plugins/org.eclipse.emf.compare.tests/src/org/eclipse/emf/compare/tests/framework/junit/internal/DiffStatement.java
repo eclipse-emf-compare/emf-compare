@@ -10,15 +10,16 @@
  */
 package org.eclipse.emf.compare.tests.framework.junit.internal;
 
-import com.google.common.cache.CacheBuilder;
-
 import java.lang.reflect.Constructor;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.diff.DefaultDiffEngine;
+import org.eclipse.emf.compare.diff.DiffBuilder;
 import org.eclipse.emf.compare.diff.IDiffEngine;
+import org.eclipse.emf.compare.match.DefaultComparisonFactory;
+import org.eclipse.emf.compare.match.DefaultEqualityHelperFactory;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.eobject.EditionDistance;
@@ -82,8 +83,8 @@ public class DiffStatement extends Statement {
 		final IComparisonScope scope = createComparisonScope(tuple, annotation);
 		final IMatchEngine matchEngine = createMatchEngine(annotation);
 		final IDiffEngine diffEngine = createDiffEngine(annotation);
-		final Comparison comparison = matchEngine.match(scope, EMFCompare.createDefaultConfiguration());
-		diffEngine.diff(comparison);
+		final Comparison comparison = matchEngine.match(scope, new BasicMonitor());
+		diffEngine.diff(comparison, new BasicMonitor());
 
 		test.invokeExplosively(testObject, scope, comparison);
 	}
@@ -109,9 +110,11 @@ public class DiffStatement extends Statement {
 			// Swallow : we'll create a default engine instead.
 		}
 		if (engine == null) {
-			final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder().build());
+			final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder()
+					.build());
 			final IEObjectMatcher matcher = new IdentifierEObjectMatcher(contentMatcher);
-			engine = new DefaultMatchEngine(matcher);
+			engine = new DefaultMatchEngine(matcher, new DefaultComparisonFactory(
+					new DefaultEqualityHelperFactory()));
 		}
 		return engine;
 	}
@@ -137,7 +140,7 @@ public class DiffStatement extends Statement {
 			// Swallow : we'll create a default engine instead.
 		}
 		if (engine == null) {
-			engine = new DefaultDiffEngine();
+			engine = new DefaultDiffEngine(new DiffBuilder());
 		}
 		return engine;
 	}

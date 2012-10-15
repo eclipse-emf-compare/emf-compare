@@ -55,21 +55,44 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 	private Function<EObject, String> idComputation = new DefaultIDFunction();
 
 	/**
-	 * Create an ID based matcher without any delegate.
+	 * Creates an ID based matcher without any delegate.
 	 */
 	public IdentifierEObjectMatcher() {
-		this.delegate = Optional.absent();
+		this(null, new DefaultIDFunction());
+	}
+
+	/**
+	 * Creates an ID based matcher with the given delegate when no ID can be found.
+	 * 
+	 * @param delegateWhenNoID
+	 *            the matcher to delegate to when no ID is found.
+	 */
+	public IdentifierEObjectMatcher(IEObjectMatcher delegateWhenNoID) {
+		this(delegateWhenNoID, new DefaultIDFunction());
+	}
+
+	/**
+	 * Creates an ID based matcher computing the ID with the given function.
+	 * 
+	 * @param idComputation
+	 *            the function used to compute the ID.
+	 */
+	public IdentifierEObjectMatcher(Function<EObject, String> idComputation) {
+		this(null, idComputation);
 	}
 
 	/**
 	 * Create an ID based matcher with a delegate which is going to be called when no ID is found for a given
-	 * EObject.
+	 * EObject. It is computing the ID with the given function
 	 * 
 	 * @param delegateWhenNoID
 	 *            the delegate matcher to use when no ID is found.
+	 * @param idComputation
+	 *            the function used to compute the ID.
 	 */
-	public IdentifierEObjectMatcher(IEObjectMatcher delegateWhenNoID) {
-		this.delegate = Optional.of(delegateWhenNoID);
+	public IdentifierEObjectMatcher(IEObjectMatcher delegateWhenNoID, Function<EObject, String> idComputation) {
+		this.delegate = Optional.fromNullable(delegateWhenNoID);
+		this.idComputation = idComputation;
 	}
 
 	/**
@@ -272,65 +295,5 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 			}
 			return identifier;
 		}
-	}
-
-	/**
-	 * Returns a new Builder to construct an {@link IdentifierEObjectMatcher}.
-	 * 
-	 * @return the new Builder instance.
-	 */
-	public static Builder builder() {
-		return new Builder();
-	}
-
-	/**
-	 * An utility class to configure an instance of {@link IdentifierEObjectMatcher}.
-	 */
-	public static class Builder {
-		/**
-		 * The instance under construction.
-		 */
-		private IdentifierEObjectMatcher toBe;
-
-		/**
-		 * Create the builder.
-		 */
-		public Builder() {
-			this.toBe = new IdentifierEObjectMatcher();
-		}
-
-		/**
-		 * Specify the function to use to compute the ID of an EObject.
-		 * 
-		 * @param idFunction
-		 *            the function to use to compute the IDs.
-		 * @return the current builder to ease chain calls.
-		 */
-		public Builder idFunction(Function<EObject, String> idFunction) {
-			this.toBe.idComputation = idFunction;
-			return this;
-		}
-
-		/**
-		 * Specify the delegate to call when no ID is found.
-		 * 
-		 * @param delegateWhenNoID
-		 *            the matcher to call when no id is found.
-		 * @return the current builder to ease chain calls.
-		 */
-		public Builder delegateWhenNoId(IEObjectMatcher delegateWhenNoID) {
-			this.toBe.delegate = Optional.of(delegateWhenNoID);
-			return this;
-		}
-
-		/**
-		 * return the instance under construction.
-		 * 
-		 * @return the instance under construction.
-		 */
-		public IdentifierEObjectMatcher build() {
-			return this.toBe;
-		}
-
 	}
 }

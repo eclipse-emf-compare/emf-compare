@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -28,25 +27,8 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postMatch(org.eclipse.emf.compare.Comparison)
-	 * @see #postMatch(Comparison, Monitor)
-	 */
-	@Deprecated
-	public void postMatch(Comparison comparison) {
-		postMatch(comparison, new BasicMonitor());
-	}
-
-	/**
-	 * This will be called by EMF Compare in order to execute the specified behavior after the match step,
-	 * from a <code>comparison</code>.
-	 * <p>
-	 * This method should be pull-up to the interface in the next major version.
-	 * </p>
-	 * 
-	 * @param comparison
-	 *            The comparison after the match step.
-	 * @param monitor
-	 *            The monitor to report progress or to check for cancellation
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postMatch(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postMatch(Comparison comparison, Monitor monitor) {
 
@@ -55,25 +37,8 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postDiff(org.eclipse.emf.compare.Comparison)
-	 * @se {@link #postDiff(Comparison, BasicMonitor)}
-	 */
-	@Deprecated
-	public void postDiff(Comparison comparison) {
-		postDiff(comparison, new BasicMonitor());
-	}
-
-	/**
-	 * This will be called by EMF Compare in order to execute the specified behavior after the difference
-	 * step, from a <code>comparison</code>.
-	 * <p>
-	 * This method should be pull-up to the interface in the next major version.
-	 * </p>
-	 * 
-	 * @param comparison
-	 *            The comparison after the difference step.
-	 * @param monitor
-	 *            The monitor to report progress or to check for cancellation
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postDiff(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postDiff(Comparison comparison, Monitor monitor) {
 
@@ -82,25 +47,8 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postRequirements(org.eclipse.emf.compare.Comparison)
-	 * @see #postRequirements(Comparison, Monitor)
-	 */
-	@Deprecated
-	public void postRequirements(Comparison comparison) {
-		postRequirements(comparison, new BasicMonitor());
-	}
-
-	/**
-	 * This will be called by EMF Compare in order to execute the specified behavior after the requirements
-	 * step, from a <code>comparison</code>.
-	 * <p>
-	 * This method should be pull-up to the interface in the next major version.
-	 * </p>
-	 * 
-	 * @param comparison
-	 *            The comparison after the requirements step.
-	 * @param monitor
-	 *            The monitor to report progress or to check for cancellation
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postRequirements(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postRequirements(Comparison comparison, Monitor monitor) {
 		final Map<Class<? extends Diff>, IDiffExtensionFactory> mapUml2ExtensionFactories = DiffExtensionFactoryRegistry
@@ -127,25 +75,8 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postEquivalences(org.eclipse.emf.compare.Comparison)
-	 * @see #postEquivalences(Comparison, Monitor)
-	 */
-	@Deprecated
-	public void postEquivalences(Comparison comparison) {
-		postEquivalences(comparison, new BasicMonitor());
-	}
-
-	/**
-	 * This will be called by EMF Compare in order to execute the specified behavior after the equivalences
-	 * step, from a <code>comparison</code>.
-	 * <p>
-	 * This method should be pull-up to the interface in the next major version.
-	 * </p>
-	 * 
-	 * @param comparison
-	 *            The comparison after the equivalences step.
-	 * @param monitor
-	 *            The monitor to report progress or to check for cancellation
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postEquivalences(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postEquivalences(Comparison comparison, Monitor monitor) {
 
@@ -154,25 +85,8 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postConflicts(org.eclipse.emf.compare.Comparison)
-	 * @see #postConflicts(Comparison, Monitor)
-	 */
-	@Deprecated
-	public void postConflicts(Comparison comparison) {
-		postConflicts(comparison, new BasicMonitor());
-	}
-
-	/**
-	 * This will be called by EMF Compare in order to execute the specified behavior after the conflicts step,
-	 * from a <code>comparison</code>.
-	 * <p>
-	 * This method should be pull-up to the interface in the next major version.
-	 * </p>
-	 * 
-	 * @param comparison
-	 *            The comparison after the conflicts step.
-	 * @param monitor
-	 *            The monitor to report progress or to check for cancellation
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postConflicts(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postConflicts(Comparison comparison, Monitor monitor) {
 

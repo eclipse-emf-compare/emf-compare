@@ -10,11 +10,11 @@
  */
 package org.eclipse.emf.compare.tests.fullcomparison;
 
-import com.google.common.cache.CacheBuilder;
-
 import java.io.IOException;
 
-import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.compare.match.DefaultComparisonFactory;
+import org.eclipse.emf.compare.match.DefaultEqualityHelperFactory;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.eobject.EditionDistance;
@@ -65,28 +65,31 @@ public class MatchPerformanceComparisonTest {
 	public void warmup() throws IOException {
 		final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder().build());
 		final IEObjectMatcher matcher = new IdentifierEObjectMatcher(contentMatcher);
-		IMatchEngine matchEngine = new DefaultMatchEngine(matcher);
+		IMatchEngine matchEngine = new DefaultMatchEngine(matcher, new DefaultComparisonFactory(
+				new DefaultEqualityHelperFactory()));
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		matchEngine.match(scope, EMFCompare.createDefaultConfiguration());
+		matchEngine.match(scope, new BasicMonitor());
 	}
 
 	@Test
 	public void matchPerIdAlmostIdenticalModels() throws IOException {
 		final IEObjectMatcher matcher = new IdentifierEObjectMatcher();
-		IMatchEngine matchEngine = new DefaultMatchEngine(matcher);
+		IMatchEngine matchEngine = new DefaultMatchEngine(matcher, new DefaultComparisonFactory(
+				new DefaultEqualityHelperFactory()));
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		for (int i = 0; i < nbIterations; i++) {
-			matchEngine.match(scope, EMFCompare.createDefaultConfiguration());
+			matchEngine.match(scope, new BasicMonitor());
 		}
 	}
 
 	@Test
 	public void matchPerContentAlmostIdenticalModels() throws IOException {
 		final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder().build());
-		IMatchEngine matchEngine = new DefaultMatchEngine(contentMatcher);
+		IMatchEngine matchEngine = new DefaultMatchEngine(contentMatcher, new DefaultComparisonFactory(
+				new DefaultEqualityHelperFactory()));
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		for (int i = 0; i < nbIterations; i++) {
-			matchEngine.match(scope, EMFCompare.createDefaultConfiguration());
+			matchEngine.match(scope, new BasicMonitor());
 		}
 	}
 }

@@ -10,14 +10,14 @@
  */
 package org.eclipse.emf.compare.tests.framework.junit.internal;
 
-import com.google.common.cache.CacheBuilder;
-
 import java.lang.reflect.Constructor;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.match.DefaultComparisonFactory;
+import org.eclipse.emf.compare.match.DefaultEqualityHelperFactory;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.eobject.EditionDistance;
@@ -89,7 +89,7 @@ public class MatchStatement extends Statement {
 		final MatchTest annotation = test.getAnnotation(MatchTest.class);
 		final IMatchEngine engine = createMatchEngine(annotation);
 		final IComparisonScope scope = createComparisonScope(tuple, annotation);
-		final Comparison comparison = engine.match(scope, EMFCompare.createDefaultConfiguration());
+		final Comparison comparison = engine.match(scope, new BasicMonitor());
 
 		test.invokeExplosively(testObject, scope, comparison);
 	}
@@ -115,9 +115,11 @@ public class MatchStatement extends Statement {
 			// Swallow : we'll create a default engine instead.
 		}
 		if (engine == null) {
-			final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder().build());
+			final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder()
+					.build());
 			final IEObjectMatcher matcher = new IdentifierEObjectMatcher(contentMatcher);
-			engine = new DefaultMatchEngine(matcher);
+			engine = new DefaultMatchEngine(matcher, new DefaultComparisonFactory(
+					new DefaultEqualityHelperFactory()));
 		}
 		return engine;
 	}

@@ -14,7 +14,6 @@ import static com.google.common.collect.Iterables.filter;
 
 import com.google.common.base.Predicate;
 
-import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
@@ -41,28 +40,9 @@ public class DefaultEquiEngine implements IEquiEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.equi.IEquiEngine#computeEquivalences(org.eclipse.emf.compare.Comparison)
-	 */
-	@Deprecated
-	public void computeEquivalences(Comparison comparison) {
-		computeEquivalences(comparison, new BasicMonitor());
-	}
-
-	/**
-	 * This is the entry point of the equivalence computing process.
-	 * <p>
-	 * It will complete the input <code>comparison</code> by iterating over the
-	 * {@link org.eclipse.emf.compare.Diff differences} it contain, filling in the equivalence it can detect
-	 * for each distinct Diff.
-	 * </p>
-	 * <p>
-	 * This method should be pull-up in the interface in next major version.
-	 * </p>
-	 * 
-	 * @param comparison
-	 *            The comparison this engine is expected to complete.
-	 * @param monitor
-	 *            The monitor to report progress or to check for cancellation
+	 * @see org.eclipse.emf.compare.equi.IEquiEngine#computeEquivalences(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.common.util.Monitor)
+	 * @since 3.0
 	 */
 	public void computeEquivalences(Comparison comparison, Monitor monitor) {
 		for (Diff difference : comparison.getDifferences()) {

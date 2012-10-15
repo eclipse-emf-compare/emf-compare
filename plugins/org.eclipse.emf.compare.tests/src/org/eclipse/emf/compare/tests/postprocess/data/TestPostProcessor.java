@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.tests.postprocess.data;
 
 import java.util.List;
 
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
@@ -25,12 +26,7 @@ import org.eclipse.emf.compare.extension.IPostProcessor;
  */
 public class TestPostProcessor implements IPostProcessor {
 
-	/**
-	 * {@inheritDoc}.
-	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postMatch(org.eclipse.emf.compare.Comparison)
-	 */
-	public void postMatch(Comparison comparison) {
+	public void postMatch(Comparison comparison, Monitor monitor) {
 		final List<Match> matches = comparison.getMatches();
 		final Match lastMatch = matches.get(matches.size() - 1);
 		final Match copyLastMatch = CompareFactory.eINSTANCE.createMatch();
@@ -41,38 +37,46 @@ public class TestPostProcessor implements IPostProcessor {
 	}
 
 	/**
-	 * {@inheritDoc}.
+	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postDiff(org.eclipse.emf.compare.Comparison)
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postConflicts(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.common.util.Monitor)
 	 */
-	public void postDiff(Comparison comparison) {
+	public void postConflicts(Comparison comparison, Monitor monitor) {
+		// TODO Auto-generated method stub
 
 	}
 
 	/**
-	 * {@inheritDoc}.
+	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postRequirements(org.eclipse.emf.compare.Comparison)
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postEquivalences(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.common.util.Monitor)
 	 */
-	public void postRequirements(Comparison comparison) {
+	public void postEquivalences(Comparison comparison, Monitor monitor) {
+		// TODO Auto-generated method stub
 
 	}
 
 	/**
-	 * {@inheritDoc}.
+	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postEquivalences(org.eclipse.emf.compare.Comparison)
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postRequirements(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.common.util.Monitor)
 	 */
-	public void postEquivalences(Comparison comparison) {
+	public void postRequirements(Comparison comparison, Monitor monitor) {
+		// TODO Auto-generated method stub
 
 	}
 
 	/**
-	 * {@inheritDoc}.
+	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postConflicts(org.eclipse.emf.compare.Comparison)
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postDiff(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.common.util.Monitor)
 	 */
-	public void postConflicts(Comparison comparison) {
+	public void postDiff(Comparison comparison, Monitor monitor) {
+		// TODO Auto-generated method stub
 
 	}
 

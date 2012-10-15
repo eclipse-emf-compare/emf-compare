@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.req;
 
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 
 /**
@@ -28,16 +29,20 @@ import org.eclipse.emf.compare.Comparison;
  * @see DefaultReqEngine
  */
 public interface IReqEngine {
+
 	/**
 	 * This is the entry point of the requirements computing process.
 	 * <p>
 	 * It will complete the input <code>comparison</code> by iterating over the
-	 * {@link org.eclipse.emf.compare.Diff differences} it contain, filling in the requirements it can detect
+	 * {@link org.eclipse.emf.compare.Diff differences} it contains, filling in the requirements it can detect
 	 * for each distinct Diff.
 	 * </p>
 	 * 
 	 * @param comparison
 	 *            The comparison this engine is expected to complete.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation
+	 * @since 3.0
 	 */
-	void computeRequirements(Comparison comparison);
+	void computeRequirements(Comparison comparison, Monitor monitor);
 }

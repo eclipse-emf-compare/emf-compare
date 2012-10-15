@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.extension;
 
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 
 /**
@@ -26,8 +27,10 @@ public interface IPostProcessor {
 	 * 
 	 * @param comparison
 	 *            The comparison after the match step.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation
 	 */
-	void postMatch(Comparison comparison);
+	void postMatch(Comparison comparison, Monitor monitor);
 
 	/**
 	 * This will be called by EMF Compare in order to execute the specified behavior after the difference
@@ -35,8 +38,10 @@ public interface IPostProcessor {
 	 * 
 	 * @param comparison
 	 *            The comparison after the difference step.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation
 	 */
-	void postDiff(Comparison comparison);
+	void postDiff(Comparison comparison, Monitor monitor);
 
 	/**
 	 * This will be called by EMF Compare in order to execute the specified behavior after the requirements
@@ -44,8 +49,10 @@ public interface IPostProcessor {
 	 * 
 	 * @param comparison
 	 *            The comparison after the requirements step.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation
 	 */
-	void postRequirements(Comparison comparison);
+	void postRequirements(Comparison comparison, Monitor monitor);
 
 	/**
 	 * This will be called by EMF Compare in order to execute the specified behavior after the equivalences
@@ -53,8 +60,10 @@ public interface IPostProcessor {
 	 * 
 	 * @param comparison
 	 *            The comparison after the equivalences step.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation
 	 */
-	void postEquivalences(Comparison comparison);
+	void postEquivalences(Comparison comparison, Monitor monitor);
 
 	/**
 	 * This will be called by EMF Compare in order to execute the specified behavior after the conflicts step,
@@ -62,7 +71,9 @@ public interface IPostProcessor {
 	 * 
 	 * @param comparison
 	 *            The comparison after the conflicts step.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation
 	 */
-	void postConflicts(Comparison comparison);
+	void postConflicts(Comparison comparison, Monitor monitor);
 
 }

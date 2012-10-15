@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff;
 
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 
 /**
@@ -29,6 +30,7 @@ import org.eclipse.emf.compare.Comparison;
  * @see DefaultDiffEngine
  */
 public interface IDiffEngine {
+
 	/**
 	 * This is the entry point of the differencing process.
 	 * <p>
@@ -39,6 +41,8 @@ public interface IDiffEngine {
 	 * 
 	 * @param comparison
 	 *            The comparison this engine is expected to complete.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation.
 	 */
-	void diff(Comparison comparison);
+	void diff(Comparison comparison, Monitor monitor);
 }

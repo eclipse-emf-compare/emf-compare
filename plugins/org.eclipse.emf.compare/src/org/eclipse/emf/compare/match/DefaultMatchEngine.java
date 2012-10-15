@@ -21,12 +21,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.EMFCompareConfiguration;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.match.eobject.EditionDistance;
@@ -67,20 +65,9 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * 
 	 * @param matcher
 	 *            The matcher that will be in charge of pairing EObjects together for this comparison process.
-	 * @see #DefaultMatchEngine(IEObjectMatcher, IComparisonFactory)
-	 */
-	@Deprecated
-	public DefaultMatchEngine(IEObjectMatcher matcher) {
-		this(matcher, new DefaultComparisonFactory(new DefaultEqualityHelperFactory()));
-	}
-
-	/**
-	 * This default engine delegates the pairing of EObjects to an {@link IEObjectMatcher}.
-	 * 
-	 * @param matcher
-	 *            The matcher that will be in charge of pairing EObjects together for this comparison process.
 	 * @param comparisonFactory
 	 *            factory that will be use to instantiate Comparison as return by match() methods.
+	 * @since 3.0
 	 */
 	public DefaultMatchEngine(IEObjectMatcher matcher, IComparisonFactory comparisonFactory) {
 		this.eObjectMatcher = checkNotNull(matcher);
@@ -90,35 +77,9 @@ public class DefaultMatchEngine implements IMatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.IMatchEngine#match(IComparisonScope, Monitor)
-	 */
-	@Deprecated
-	public Comparison match(IComparisonScope scope, EMFCompareConfiguration configuration) {
-		final Monitor monitor;
-		if (configuration != null) {
-			monitor = configuration.getMonitor();
-		} else {
-			monitor = new BasicMonitor();
-		}
-		return match(scope, monitor);
-	}
-
-	/**
-	 * This is the entry point of a Comparison process. It is expected to use the provided scope in order to
-	 * determine all objects that need to be matched.
-	 * <p>
-	 * The returned Comparison should include both matched an unmatched objects. It is not the match engine's
-	 * responsibility to determine differences between objects, only to match them together.
-	 * </p>
-	 * <p>
-	 * Should be pull-up to interface in next major revision.
-	 * </p>
-	 * 
-	 * @param scope
-	 *            The comparison scope that should be used by this engine to determine the objects to match.
-	 * @param monitor
-	 *            The monitor to report progress or to check for cancellation
-	 * @return An initialized {@link Comparison} model with all matches determined.
+	 * @see org.eclipse.emf.compare.match.IMatchEngine#match(org.eclipse.emf.compare.scope.IComparisonScope,
+	 *      org.eclipse.emf.common.util.Monitor)
+	 * @since 3.0
 	 */
 	public Comparison match(IComparisonScope scope, Monitor monitor) {
 		Comparison comparison = comparisonFactory.createComparison();
@@ -406,12 +367,12 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 *            the kinds of matcher to use.
 	 * @return a new {@link DefaultMatchEngine} instance.
 	 */
-	public static DefaultMatchEngine create(UseIdentifiers useIDs) {
+	public static IMatchEngine create(UseIdentifiers useIDs) {
 		final IComparisonFactory comparisonFactory = new DefaultComparisonFactory(
 				new DefaultEqualityHelperFactory());
 		final IEObjectMatcher matcher = createDefaultEObjectMatcher(useIDs);
 
-		final DefaultMatchEngine matchEngine = new DefaultMatchEngine(matcher, comparisonFactory);
+		final IMatchEngine matchEngine = new DefaultMatchEngine(matcher, comparisonFactory);
 		return matchEngine;
 	}
 

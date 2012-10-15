@@ -176,37 +176,37 @@ public class EMFCompare {
 					"ConflictDetector must not be null to compute a 3-way comparison");
 		}
 
-		final Comparison comparison = matchEngine.match(scope, null/* monitor */);
+		final Comparison comparison = matchEngine.match(scope, monitor);
 
 		IPostProcessor postProcessor = postProcessorRegistry.getPostProcessor(scope);
 
 		if (postProcessor != null) {
-			postProcessor.postMatch(comparison/* , monitor */);
+			postProcessor.postMatch(comparison, monitor);
 		}
 
-		diffEngine.diff(comparison/* , monitor */);
+		diffEngine.diff(comparison, monitor);
 
 		if (postProcessor != null) {
-			postProcessor.postDiff(comparison/* , monitor */);
+			postProcessor.postDiff(comparison, monitor);
 		}
 
-		reqEngine.computeRequirements(comparison/* , monitor */);
+		reqEngine.computeRequirements(comparison, monitor);
 
 		if (postProcessor != null) {
-			postProcessor.postRequirements(comparison/* , monitor */);
+			postProcessor.postRequirements(comparison, monitor);
 		}
 
-		equiEngine.computeEquivalences(comparison/* , monitor */);
+		equiEngine.computeEquivalences(comparison, monitor);
 
 		if (postProcessor != null) {
-			postProcessor.postEquivalences(comparison/* , monitor */);
+			postProcessor.postEquivalences(comparison, monitor);
 		}
 
 		if (comparison.isThreeWay()) {
-			conflictDetector.detect(comparison/* , monitor */);
+			conflictDetector.detect(comparison, monitor);
 
 			if (postProcessor != null) {
-				postProcessor.postConflicts(comparison/* , monitor */);
+				postProcessor.postConflicts(comparison, monitor);
 			}
 		}
 
