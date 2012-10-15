@@ -267,7 +267,18 @@ public class EditionDistance implements DistanceFunction {
 		 */
 		public void referenceChange(Match match, EReference reference, EObject value, DifferenceKind kind,
 				DifferenceSource source) {
-			distance += getWeight(reference) * referenceChangeCoef;
+			switch (kind) {
+				case MOVE:
+					distance += getWeight(reference) * orderChangeCoef;
+					break;
+				case ADD:
+				case DELETE:
+				case CHANGE:
+					distance += getWeight(reference) * referenceChangeCoef;
+					break;
+				default:
+					break;
+			}
 		}
 
 		/**
@@ -490,7 +501,7 @@ public class EditionDistance implements DistanceFunction {
 			}
 		}
 		max = max + locationChangeCoef * 5;
-		return Double.valueOf(max / 3 * 2).intValue();
+		return Double.valueOf(max / 3 * 2.5).intValue();
 	}
 
 }
