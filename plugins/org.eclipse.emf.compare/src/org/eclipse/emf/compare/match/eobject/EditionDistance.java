@@ -97,7 +97,6 @@ public class EditionDistance implements DistanceFunction {
 	public EditionDistance() {
 		weights = Maps.newHashMap();
 		this.helper = new EqualityHelper() {
-
 			@Override
 			protected boolean matchingEObjects(EObject object1, EObject object2) {
 				final Match match = getTarget().getMatch(object1);
@@ -396,7 +395,7 @@ public class EditionDistance implements DistanceFunction {
 		 * @return the distance between them computed using the number of changes required to change a to b.
 		 */
 		public int measureDifferences(EObject a, EObject b) {
-			Match fakeMatch = createFakeMatch(a, b);
+			Match fakeMatch = createMockMatch(a, b);
 			int changes = 0;
 			int dist = uriDistance.proximity(a, b);
 			changes += dist * locationChangeCoef;
@@ -409,7 +408,18 @@ public class EditionDistance implements DistanceFunction {
 
 		}
 
-		private Match createFakeMatch(EObject a, EObject b) {
+		/**
+		 * Create a mock {@link Match} between the two given EObjects so that we can use the exposed
+		 * {@link #checkForDifferences(Match, org.eclipse.emf.common.util.Monitor)} method to check for
+		 * differences.
+		 * 
+		 * @param a
+		 *            First of the two EObjects for which we want to force a comparison.
+		 * @param b
+		 *            Second of the two EObjects for which we want to force a comparison.
+		 * @return The created Match.
+		 */
+		private Match createMockMatch(EObject a, EObject b) {
 			Comparison fakeComparison = fakeComparisonFactory.createComparison();
 			Match fakeMatch = CompareFactory.eINSTANCE.createMatch();
 			((InternalEList<Match>)fakeComparison.getMatches()).addUnique(fakeMatch);
