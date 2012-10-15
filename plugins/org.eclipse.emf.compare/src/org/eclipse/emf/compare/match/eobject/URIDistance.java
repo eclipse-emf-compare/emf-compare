@@ -68,13 +68,13 @@ public class URIDistance implements Function<EObject, List<String>> {
 						builder.add(Integer.valueOf(index).toString());
 					} else {
 						builder.add(feat.getName());
-						builder.add("0");
+						builder.add("0"); //$NON-NLS-1$
 					}
 				}
 
 			}
 		} else {
-			builder.add("0");
+			builder.add("0"); //$NON-NLS-1$
 		}
 
 		return builder.build();
