@@ -167,16 +167,17 @@ public class DefaultReqEngine implements IReqEngine {
 	private Set<ReferenceChange> getDELOriginValueOnContainmentRefSingle(Comparison comparison,
 			Diff sourceDifference) {
 		Set<ReferenceChange> result = new HashSet<ReferenceChange>();
-		if (sourceDifference instanceof ReferenceChange) {
-			EReference reference = ((ReferenceChange)sourceDifference).getReference();
-			if (!reference.isMany()) {
-				EObject originContainer = MatchUtil.getOriginContainer(comparison, sourceDifference);
-				if (originContainer != null) {
-					Object originValue = ReferenceUtil.safeEGet(originContainer, reference);
-					if (originValue instanceof EObject) {
-						result = getDifferenceOnGivenObject(comparison, (EObject)originValue,
-								DifferenceKind.DELETE);
-					}
+		if (!(sourceDifference instanceof ReferenceChange)) {
+			return result;
+		}
+		EReference reference = ((ReferenceChange)sourceDifference).getReference();
+		if (!reference.isMany()) {
+			EObject originContainer = MatchUtil.getOriginContainer(comparison, sourceDifference);
+			if (originContainer != null) {
+				Object originValue = ReferenceUtil.safeEGet(originContainer, reference);
+				if (originValue instanceof EObject) {
+					result = getDifferenceOnGivenObject(comparison, (EObject)originValue,
+							DifferenceKind.DELETE);
 				}
 			}
 		}
@@ -341,11 +342,30 @@ public class DefaultReqEngine implements IReqEngine {
 		return result;
 	}
 
+	/**
+	 * Checks whether the given diff corresponds to a containment change. This holds true for differences on
+	 * containment references' values, but also for resource attachment changes.
+	 * 
+	 * @param diff
+	 *            The diff to consider.
+	 * @return <code>true</code> if the given {@code diff} is to be considered a containment change,
+	 *         <code>false</code> otherwise.
+	 */
 	private static boolean isContainment(Diff diff) {
 		return diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment()
 				|| diff instanceof ResourceAttachmentChange;
 	}
 
+	/**
+	 * Retrieves the "value" of the given containment change. This will be either the "value" field of a
+	 * ReferenceChange, or the side of the parent match for a resource attachment change.
+	 * 
+	 * @param comparison
+	 *            The comparison during which this {@code diff} was detected.
+	 * @param diff
+	 *            The diff which value we are to retrieve.
+	 * @return The "value" of the given containment change.
+	 */
 	private static EObject getValue(Comparison comparison, Diff diff) {
 		EObject value = null;
 		if (diff instanceof ReferenceChange) {
