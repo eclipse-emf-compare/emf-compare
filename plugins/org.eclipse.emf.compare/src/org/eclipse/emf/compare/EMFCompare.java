@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicMonitor;
@@ -171,10 +170,6 @@ public class EMFCompare {
 	public Comparison compare(IComparisonScope scope, final Monitor monitor) {
 		checkNotNull(scope);
 		checkNotNull(monitor);
-		if (scope.getOrigin() != null) {
-			checkState(conflictDetector != null,
-					"ConflictDetector must not be null to compute a 3-way comparison");
-		}
 
 		final Comparison comparison = matchEngine.match(scope, monitor);
 
@@ -202,7 +197,7 @@ public class EMFCompare {
 			postProcessor.postEquivalences(comparison, monitor);
 		}
 
-		if (comparison.isThreeWay()) {
+		if (comparison.isThreeWay() && conflictDetector != null) {
 			conflictDetector.detect(comparison, monitor);
 
 			if (postProcessor != null) {
