@@ -57,18 +57,12 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 	private Map<EObject, Match> eObjectsToMatch = Maps.newHashMap();
 
 	/**
-	 * The function we are using to measure the distance between two eObjects.
-	 */
-	private DistanceFunction meter;
-
-	/**
 	 * Create the matcher using the given distance function.
 	 * 
 	 * @param meter
 	 *            a function to measure the distance between two {@link EObject}s.
 	 */
 	public ProximityEObjectMatcher(DistanceFunction meter) {
-		this.meter = meter;
 		this.index = new ByTypeIndex(meter);
 	}
 
