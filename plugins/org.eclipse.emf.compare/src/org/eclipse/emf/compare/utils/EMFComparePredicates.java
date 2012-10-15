@@ -146,6 +146,7 @@ public final class EMFComparePredicates {
 	 *            this reference. May be null.
 	 * @return The created predicate.
 	 */
+	@SuppressWarnings("unchecked")
 	public static Predicate<? super Diff> addedToReference(final String qualifiedName,
 			final String referenceName, final String addedQualifiedName,
 			final EStructuralFeature featureDelegateForAddedName) {
@@ -274,6 +275,7 @@ public final class EMFComparePredicates {
 	 *            from this reference. May be null.
 	 * @return The created predicate.
 	 */
+	@SuppressWarnings("unchecked")
 	public static Predicate<? super Diff> removedFromReference(final String qualifiedName,
 			final String referenceName, final String removedQualifiedName,
 			final EStructuralFeature featureDelegateForRemovedName) {
