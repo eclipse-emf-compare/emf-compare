@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.extension;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -76,39 +77,40 @@ public class PostProcessorRegistry {
 	}
 
 	/**
-	 * Retrieve the post processor from a given <code>scope</code>. The scope provides the set of scanned
-	 * namespaces and resource uris. If one of them matches with the regex of a
-	 * "org.eclipse.emf.compare.postProcessor" extension point, then the associated post processor is
-	 * returned.
+	 * Retrieve the post processors from a given <code>scope</code>. The scope provides the set of scanned
+	 * namespaces and resource uris. If they match with the regex of a "org.eclipse.emf.compare.postProcessor"
+	 * extension point, then the associated post processors are returned.
 	 * 
 	 * @param scope
 	 *            The given scope.
-	 * @return The associated post processor if any.
+	 * @return The associated post processors if any.
 	 */
-	public IPostProcessor getPostProcessor(IComparisonScope scope) {
-		IPostProcessor postProcessor = null;
+	public List<IPostProcessor> getPostProcessors(IComparisonScope scope) {
+		final List<IPostProcessor> processors = new ArrayList<IPostProcessor>();
 		final Iterator<PostProcessorDescriptor> postProcessorIterator = postProcessors.iterator();
-		while (postProcessorIterator.hasNext() && postProcessor == null) {
+		while (postProcessorIterator.hasNext()) {
 			final PostProcessorDescriptor descriptor = postProcessorIterator.next();
 			if (descriptor.getNsURI() != null && descriptor.getNsURI().trim().length() != 0) {
 				final Iterator<String> nsUris = scope.getNsURIs().iterator();
-				while (nsUris.hasNext() && postProcessor == null) {
+				while (nsUris.hasNext()) {
 					if (nsUris.next().matches(descriptor.getNsURI())) {
-						postProcessor = descriptor.getPostProcessor();
+						processors.add(descriptor.getPostProcessor());
+						break;
 					}
 				}
 			}
 			// Should probably use two loops here to prioritize NsURI matching
 			if (descriptor.getResourceURI() != null && descriptor.getResourceURI().trim().length() != 0) {
 				final Iterator<String> resourceUris = scope.getResourceURIs().iterator();
-				while (resourceUris.hasNext() && postProcessor == null) {
+				while (resourceUris.hasNext()) {
 					if (resourceUris.next().matches(descriptor.getResourceURI())) {
-						postProcessor = descriptor.getPostProcessor();
+						processors.add(descriptor.getPostProcessor());
+						break;
 					}
 				}
 			}
 		}
-		return postProcessor;
+		return processors;
 	}
 
 }

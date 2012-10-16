@@ -12,6 +12,8 @@ package org.eclipse.emf.compare;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.List;
+
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
@@ -173,35 +175,35 @@ public class EMFCompare {
 
 		final Comparison comparison = matchEngine.match(scope, monitor);
 
-		IPostProcessor postProcessor = postProcessorRegistry.getPostProcessor(scope);
+		List<IPostProcessor> postProcessors = postProcessorRegistry.getPostProcessors(scope);
 
-		if (postProcessor != null) {
-			postProcessor.postMatch(comparison, monitor);
+		for (IPostProcessor iPostProcessor : postProcessors) {
+			iPostProcessor.postMatch(comparison, monitor);
 		}
 
 		diffEngine.diff(comparison, monitor);
 
-		if (postProcessor != null) {
-			postProcessor.postDiff(comparison, monitor);
+		for (IPostProcessor iPostProcessor : postProcessors) {
+			iPostProcessor.postDiff(comparison, monitor);
 		}
 
 		reqEngine.computeRequirements(comparison, monitor);
 
-		if (postProcessor != null) {
-			postProcessor.postRequirements(comparison, monitor);
+		for (IPostProcessor iPostProcessor : postProcessors) {
+			iPostProcessor.postRequirements(comparison, monitor);
 		}
 
 		equiEngine.computeEquivalences(comparison, monitor);
 
-		if (postProcessor != null) {
-			postProcessor.postEquivalences(comparison, monitor);
+		for (IPostProcessor iPostProcessor : postProcessors) {
+			iPostProcessor.postEquivalences(comparison, monitor);
 		}
 
 		if (comparison.isThreeWay() && conflictDetector != null) {
 			conflictDetector.detect(comparison, monitor);
 
-			if (postProcessor != null) {
-				postProcessor.postConflicts(comparison, monitor);
+			for (IPostProcessor iPostProcessor : postProcessors) {
+				iPostProcessor.postConflicts(comparison, monitor);
 			}
 		}
 
