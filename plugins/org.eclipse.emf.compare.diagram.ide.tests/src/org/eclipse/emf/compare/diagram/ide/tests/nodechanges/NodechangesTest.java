@@ -1,37 +1,35 @@
 package org.eclipse.emf.compare.diagram.ide.tests.nodechanges;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.diagram.GMFCompare;
-import org.eclipse.emf.compare.diagram.LabelChange;
-import org.eclipse.emf.compare.diagram.NodeChange;
-import org.eclipse.emf.compare.diagram.diff.util.DiagramCompareConstants;
-import org.eclipse.emf.compare.diagram.ide.diff.DiagramDiffExtensionPostProcessor;
-import org.eclipse.emf.compare.diagram.ide.tests.nodechanges.data.NodeChangesInputData;
-import org.eclipse.emf.compare.diagram.tests.AbstractTest;
-import org.eclipse.emf.compare.diagram.tests.DiagramInputData;
-import org.eclipse.emf.compare.extension.PostProcessorDescriptor;
-import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.google.common.collect.Iterators;
-
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
-
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedAttribute;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.diagram.LabelChange;
+import org.eclipse.emf.compare.diagram.NodeChange;
+import org.eclipse.emf.compare.diagram.diff.util.DiagramCompareConstants;
+import org.eclipse.emf.compare.diagram.ide.GMFCompareIDEPlugin;
+import org.eclipse.emf.compare.diagram.ide.tests.nodechanges.data.NodeChangesInputData;
+import org.eclipse.emf.compare.diagram.tests.AbstractTest;
+import org.eclipse.emf.compare.diagram.tests.DiagramInputData;
+import org.eclipse.emf.compare.extension.PostProcessorRegistry;
+import org.eclipse.emf.compare.ide.EMFCompareIDE;
+import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.google.common.collect.Iterators;
 
 @SuppressWarnings("nls")
 public class NodechangesTest extends AbstractTest {
@@ -41,17 +39,18 @@ public class NodechangesTest extends AbstractTest {
 	@Override
 	@Before
 	public void before() {
-		super.before();
-		getPostProcessorRegistry().addPostProcessor(new PostProcessorDescriptor(
-				"http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation", null,
-				"org.eclipse.emf.compare.diagram.ide.diff.DiagramDiffExtensionPostProcessor",
-				new DiagramDiffExtensionPostProcessor()));
+				
+	}
+	
+	@Override
+	protected PostProcessorRegistry getPostProcessorRegistry() {
+		throw new UnsupportedOperationException("do not call this in IDE context");
 	}
 	
 	@Test
 	public void testA10UseCase() throws IOException {
 		
-		GMFCompare.getDefault().getPreferenceStore().setValue(DiagramCompareConstants.PREFERENCES_KEY_MOVE_THRESHOLD, 0);
+		GMFCompareIDEPlugin.getDefault().getPreferenceStore().setValue(DiagramCompareConstants.PREFERENCES_KEY_MOVE_THRESHOLD, 0);
 		
 		testMove(true);
 		
@@ -60,7 +59,7 @@ public class NodechangesTest extends AbstractTest {
 	@Test
 	public void testA11UseCase() throws IOException {
 		
-		GMFCompare.getDefault().getPreferenceStore().setValue(DiagramCompareConstants.PREFERENCES_KEY_MOVE_THRESHOLD, 200);
+		GMFCompareIDEPlugin.getDefault().getPreferenceStore().setValue(DiagramCompareConstants.PREFERENCES_KEY_MOVE_THRESHOLD, 200);
 		
 		testMove(false);
 		
@@ -72,8 +71,8 @@ public class NodechangesTest extends AbstractTest {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right.getResourceSet());
-		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
+		final IComparisonScope scope = EMFCompareIDE.createDefaultScope(left.getResourceSet(), right.getResourceSet());
+		final Comparison comparison = EMFCompareIDE.builder().build().compare(scope);
 		
 		final List<Diff> differences = comparison.getDifferences();
 		
@@ -92,8 +91,8 @@ public class NodechangesTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right.getResourceSet());
-		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
+		final IComparisonScope scope = EMFCompareIDE.createDefaultScope(left.getResourceSet(), right.getResourceSet());
+		final Comparison comparison = EMFCompareIDE.builder().build().compare(scope);
 		
 		final List<Diff> differences = comparison.getDifferences();
 

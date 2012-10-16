@@ -31,7 +31,6 @@ public class ShowFactory extends AbstractDiffExtensionFactory {
 		return Show.class;
 	}
 
-	@Override
 	public Diff create(Diff input) {
 		final Show ret = DiagramCompareFactory.eINSTANCE.createShow();
 

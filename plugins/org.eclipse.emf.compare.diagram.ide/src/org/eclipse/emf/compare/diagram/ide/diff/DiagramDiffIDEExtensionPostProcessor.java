@@ -15,9 +15,9 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.diagram.DiagramCompareFactory;
-import org.eclipse.emf.compare.diagram.GMFCompare;
 import org.eclipse.emf.compare.diagram.LabelChange;
 import org.eclipse.emf.compare.diagram.diff.util.DiffUtil;
+import org.eclipse.emf.compare.diagram.ide.GMFCompareIDEPlugin;
 import org.eclipse.emf.compare.diagram.ide.diff.internal.extension.IDiffExtensionFactory;
 import org.eclipse.emf.compare.diagram.provider.IViewLabelProvider;
 import org.eclipse.emf.compare.diagram.provider.ViewLabelProviderExtensionRegistry;
@@ -27,11 +27,11 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 
-public class DiagramDiffExtensionPostProcessor implements IPostProcessor {
+public class DiagramDiffIDEExtensionPostProcessor implements IPostProcessor {
 
 	private Set<IDiffExtensionFactory> diagramExtensionFactories;
 
-	public DiagramDiffExtensionPostProcessor() {
+	public DiagramDiffIDEExtensionPostProcessor() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -81,8 +81,8 @@ public class DiagramDiffExtensionPostProcessor implements IPostProcessor {
 					if (extensionForType == null) { // no extension registered for handling label in this
 													// diagram,
 						// use the default one
-						GMFCompare.getDefault().getLog().log(
-								new Status(IStatus.INFO, GMFCompare.PLUGIN_ID,
+						GMFCompareIDEPlugin.getDefault().getLog().log(
+								new Status(IStatus.INFO, GMFCompareIDEPlugin.PLUGIN_ID,
 										"No IViewLabelProvider registered for diagram " + diagramType)); //$NON-NLS-1$
 						extensionForType = IViewLabelProvider.DEFAULT_INSTANCE;
 					}

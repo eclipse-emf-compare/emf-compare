@@ -17,8 +17,18 @@ public class DiagramDiffExtensionPostProcessor implements IPostProcessor {
 
 	private Set<IDiffExtensionFactory> diagramExtensionFactories;
 
+	private DiagramComparisonConfiguration configuration;
+
 	public DiagramDiffExtensionPostProcessor() {
-		// TODO Auto-generated constructor stub
+
+	}
+
+	public DiagramDiffExtensionPostProcessor(DiagramComparisonConfiguration configuration) {
+		this.configuration = configuration;
+	}
+
+	public void setConfiguration(DiagramComparisonConfiguration configuration) {
+		this.configuration = configuration;
 	}
 
 	public void postMatch(Comparison comparison, Monitor monitor) {
@@ -33,7 +43,7 @@ public class DiagramDiffExtensionPostProcessor implements IPostProcessor {
 
 	public void postRequirements(Comparison comparison, Monitor monitor) {
 		final Map<Class<? extends Diff>, IDiffExtensionFactory> mapUml2ExtensionFactories = DiffExtensionFactoryRegistry
-				.createExtensionFactories();
+				.createExtensionFactories(configuration);
 		diagramExtensionFactories = new HashSet<IDiffExtensionFactory>(mapUml2ExtensionFactories.values());
 
 		// Creation of the UML difference extensions

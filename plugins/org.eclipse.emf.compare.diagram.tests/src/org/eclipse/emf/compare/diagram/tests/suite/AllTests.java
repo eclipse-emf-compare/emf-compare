@@ -16,6 +16,7 @@ import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.diagram.DiagramComparePackage;
+import org.eclipse.emf.compare.diagram.tests.edgechanges.EdgechangesTest;
 import org.eclipse.emf.compare.diagram.tests.hide.HideTest;
 import org.eclipse.emf.compare.diagram.tests.nodechanges.NodechangesTest;
 import org.eclipse.emf.compare.diagram.tests.show.ShowTest;
@@ -37,7 +38,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({HideTest.class, ShowTest.class, NodechangesTest.class})
+@SuiteClasses({HideTest.class, ShowTest.class, NodechangesTest.class, EdgechangesTest.class})
 public class AllTests {
 
 	/**

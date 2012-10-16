@@ -31,7 +31,6 @@ public class HideFactory extends AbstractDiffExtensionFactory {
 		return Hide.class;
 	}
 
-	@Override
 	public Diff create(Diff input) {
 		final Hide ret = DiagramCompareFactory.eINSTANCE.createHide();
 

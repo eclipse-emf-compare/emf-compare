@@ -5,7 +5,7 @@
    <extension
          point="org.eclipse.emf.compare.postProcessor">
       <postProcessor
-            class="org.eclipse.emf.compare.diagram.ide.diff.DiagramDiffExtensionPostProcessor">
+            class="org.eclipse.emf.compare.diagram.ide.diff.DiagramDiffIDEExtensionPostProcessor">
          <nsURI
                value="http://www.eclipse.org/gmf/runtime/\d.\d.\d/notation">
          </nsURI>

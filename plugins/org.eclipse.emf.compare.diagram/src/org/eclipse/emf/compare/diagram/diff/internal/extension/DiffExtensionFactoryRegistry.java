@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.diagram.diff.DiagramComparisonConfiguration;
+import org.eclipse.emf.compare.diagram.diff.internal.extension.factories.EdgeChangeFactory;
 import org.eclipse.emf.compare.diagram.diff.internal.extension.factories.HideFactory;
 import org.eclipse.emf.compare.diagram.diff.internal.extension.factories.NodeChangeFactory;
 import org.eclipse.emf.compare.diagram.diff.internal.extension.factories.ShowFactory;
@@ -37,17 +39,20 @@ public final class DiffExtensionFactoryRegistry {
 	 * Creates and returns all {@link IDiffExtensionFactory} available in this plugin. The returned Set in
 	 * unmodifiable.
 	 * 
+	 * @param configuration
 	 * @param engine
 	 *            The UML2 difference engine.
 	 * @return an unmodifiable set of all {@link IDiffExtensionFactory}.
 	 */
-	public static Map<Class<? extends Diff>, IDiffExtensionFactory> createExtensionFactories() {
+	public static Map<Class<? extends Diff>, IDiffExtensionFactory> createExtensionFactories(
+			DiagramComparisonConfiguration configuration) {
 		final Map<Class<? extends Diff>, IDiffExtensionFactory> dataset = new HashMap<Class<? extends Diff>, IDiffExtensionFactory>();
 
 		List<IDiffExtensionFactory> factories = new ArrayList<IDiffExtensionFactory>();
 		factories.add(new HideFactory());
 		factories.add(new ShowFactory());
-		factories.add(new NodeChangeFactory());
+		factories.add(new NodeChangeFactory(configuration));
+		factories.add(new EdgeChangeFactory());
 
 		for (IDiffExtensionFactory iDiffExtensionFactory : factories) {
 			dataset.put(iDiffExtensionFactory.getExtensionKind(), iDiffExtensionFactory);

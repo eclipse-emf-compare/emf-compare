@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmi:id="_Nqp_AKfZEeC72LEP7ZDw-A" type="EcoreTools" name="TC" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="_D1nMgKfZEeC72LEP7ZDw-A" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_D1oaoKfZEeC72LEP7ZDw-A" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_D1oaoafZEeC72LEP7ZDw-A" type="5001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_D1oaoqfZEeC72LEP7ZDw-A"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_D1oao6fZEeC72LEP7ZDw-A"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_D1oapKfZEeC72LEP7ZDw-A"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_D1pBsKfZEeC72LEP7ZDw-A" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_D1pBsafZEeC72LEP7ZDw-A"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_D1pBsqfZEeC72LEP7ZDw-A"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_D1pBs6fZEeC72LEP7ZDw-A"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_D1nMgafZEeC72LEP7ZDw-A" fontColor="4210752" fontName="Sans" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="TC01.ecore#//EClass1"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_D1nMgqfZEeC72LEP7ZDw-A" x="205" y="210"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_hmMz8KxZEeC1NpjEWCMbYQ" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_hmUIsKxZEeC1NpjEWCMbYQ" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_hmVW0KxZEeC1NpjEWCMbYQ" type="5001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_hmVW0axZEeC1NpjEWCMbYQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_hmVW0qxZEeC1NpjEWCMbYQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_hmVW06xZEeC1NpjEWCMbYQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_hmV94KxZEeC1NpjEWCMbYQ" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_hmV94axZEeC1NpjEWCMbYQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_hmV94qxZEeC1NpjEWCMbYQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_hmV946xZEeC1NpjEWCMbYQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_hmMz8axZEeC1NpjEWCMbYQ" fontColor="4210752" fontName="Sans" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="TC01.ecore#//EClass0"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_hmMz8qxZEeC1NpjEWCMbYQ" x="482" y="226"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_Oj9pwafSEeC9XpxpghrSZA-A"/>
+  <element xmi:type="ecore:EPackage" href="TC01.ecore#/"/>
+  <edges xmi:type="notation:Edge" xmi:id="_5KFZcBd4EeKPmNxRCsbUQw" type="3002" source="_D1nMgKfZEeC72LEP7ZDw-A" target="_hmMz8KxZEeC1NpjEWCMbYQ">
+    <children xmi:type="notation:Node" xmi:id="_5KFZdBd4EeKPmNxRCsbUQw" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_5KFZdRd4EeKPmNxRCsbUQw" x="-10" y="-10"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_5KFZdhd4EeKPmNxRCsbUQw" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_5KFZdxd4EeKPmNxRCsbUQw" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_5KFZcRd4EeKPmNxRCsbUQw" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_5KFZchd4EeKPmNxRCsbUQw" fontColor="4210752" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="TC01.ecore#//EClass1/EReference1"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_5KFZcxd4EeKPmNxRCsbUQw" points="[21, 2, -227, -14]$[298, 25, 50, 9]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_5KLgEBd4EeKPmNxRCsbUQw" id="(0.7941176470588235,0.5238095238095238)"/>
+  </edges>
+</notation:Diagram>

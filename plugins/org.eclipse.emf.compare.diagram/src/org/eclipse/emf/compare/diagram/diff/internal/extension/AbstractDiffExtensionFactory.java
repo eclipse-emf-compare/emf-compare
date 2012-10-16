@@ -10,14 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.diff.internal.extension;
 
-import com.google.common.base.Predicate;
-
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.compare.AttributeChange;
-import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -31,24 +28,6 @@ import org.eclipse.emf.ecore.EObject;
  * Factory for the difference extensions.
  */
 public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFactory {
-
-	private final Predicate<Diff> REFINING_PREDICATE = new Predicate<Diff>() {
-		public boolean apply(Diff diff) {
-			return isPartOfRefiningDifference(diff);
-		}
-	};
-
-	private final Predicate<Diff> REQUIRES_ADD_DISCRIMINANT_PREDICATE = new Predicate<Diff>() {
-		public boolean apply(Diff diff) {
-			return getExtensionKind().isInstance(diff) && diff.getKind().equals(DifferenceKind.ADD);
-		}
-	};
-
-	private final Predicate<Diff> REQUIRES_CHANGE_DISCRIMINANT_PREDICATE = new Predicate<Diff>() {
-		public boolean apply(Diff diff) {
-			return getExtensionKind().isInstance(diff) && diff.getKind().equals(DifferenceKind.CHANGE);
-		}
-	};
 
 	private CompareSwitch<DifferenceKind> differenceKindCompareSwitch = new CompareSwitch<DifferenceKind>() {
 
@@ -104,111 +83,27 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#handles(org.eclipse.emf.compare.diff.metamodel.DiffElement)
 	 */
 	public boolean handles(Diff input) {
-		return getRelatedExtensionKind(input) != null && !isExtensionAlreadyExist(input)
-				&& !isChangeOnAddOrDelete(input);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.
-	 *      compare.diff.metamodel.DiffElement)
-	 */
-	public Diff create(Diff input) {
-
-		final Diff ret = createExtension();
-
-		final EObject discriminant = getDiscriminantFromDiff(input);
-
-		final DifferenceKind extensionKind = getRelatedExtensionKind(input);
-
-		if (discriminant != null) {
-			if (extensionKind == DifferenceKind.DELETE) {
-				ret.getRefinedBy().add(input);
-			} else {
-				fillRefiningDifferences(input.getMatch().getComparison(), ret, discriminant);
-			}
-		}
-
-		// ret.setDiscriminant(discriminant);
-		ret.setKind(extensionKind);
-		if (extensionKind == DifferenceKind.ADD || extensionKind == DifferenceKind.DELETE) {
-			if (input instanceof ReferenceChange) {
-				// ret.setEReference(((ReferenceChange)input).getReference());
-			}
-		}
-
-		return ret;
-	}
-
-	protected void fillRefiningDifferences(final Comparison comparison, final Diff diffExtension,
-			final EObject discriminant) {
-		// Find Diffs through ComparePackage.Literals.REFERENCE_CHANGE__VALUE
-		for (EObject elt : getPotentialChangedValuesFromDiscriminant(discriminant)) {
-			beRefinedByCrossReferences(comparison, elt, diffExtension, REFINING_PREDICATE);
-		}
-	}
-
-	public void fillRequiredDifferences(Comparison comparison, Diff extension) {
-		if (getExtensionKind().isInstance(extension)) {
-			// final EObject discriminant = extension.getDiscriminant();
-			// if (discriminant != null) {
-			// if (extension.getKind().equals(DifferenceKind.CHANGE)) {
-			// extension.getRequires()
-			// .addAll(findCrossReferences(comparison, discriminant,
-			// REQUIRES_ADD_DISCRIMINANT_PREDICATE));
-			// } else if (extension.getKind().equals(DifferenceKind.DELETE)) {
-			// extension.getRequires().addAll(
-			// findCrossReferences(comparison, discriminant,
-			// REQUIRES_CHANGE_DISCRIMINANT_PREDICATE));
-			// }
-			// }
-		}
+		return getRelatedExtensionKind(input) != null && !isDiffOnAddOrDelete(input);
 	}
 
 	public Match getParentMatch(Diff input) {
 		return input.getMatch();
 	}
 
-	protected Diff createExtension() {
-		return CompareFactory.eINSTANCE.createDiff();
-	}
-
-	protected boolean isPartOfRefiningDifference(Diff diff) {
-		return diff instanceof ReferenceChange && getRelatedExtensionKind(diff) == DifferenceKind.CHANGE;
-	}
-
-	protected boolean isExtensionAlreadyExist(Diff input) {
-		return false;
-	}
-
-	private boolean isChangeOnAddOrDelete(Diff input) {
-		if (getRelatedExtensionKind(input) == DifferenceKind.CHANGE) {
-			final Comparison comparison = input.getMatch().getComparison();
-			final EObject discriminant = getDiscriminantFromDiff(input);
-			final List<Diff> candidates = comparison.getDifferences(discriminant);
-
-			for (Diff diff : candidates) {
-				if (diff == input) {
-					// ignore this one
-				} else {
-					DifferenceKind relatedExtensionKind = getRelatedExtensionKind(diff);
-					if ((relatedExtensionKind == DifferenceKind.ADD || relatedExtensionKind == DifferenceKind.DELETE)
-							&& getDiscriminantFromDiff(diff) == discriminant) {
-						return true;
-					}
+	protected boolean isDiffOnAddOrDelete(Diff input) {
+		final Match match = input.getMatch();
+		final EObject container = match.eContainer();
+		if (container instanceof Match) {
+			final Iterator<Diff> diffs = ((Match)container).getAllDifferences().iterator();
+			while (diffs.hasNext()) {
+				final Diff diff = (Diff)diffs.next();
+				if (diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment()
+						&& match.getComparison().getMatch(((ReferenceChange)diff).getValue()) == match) {
+					return true;
 				}
 			}
 		}
 		return false;
-	}
-
-	protected EObject getDiscriminantFromDiff(Diff input) {
-		return null;
-	}
-
-	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
-		return Collections.EMPTY_LIST;
 	}
 
 	protected DifferenceKind getRelatedExtensionKind(Diff input) {
@@ -263,56 +158,24 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 		return false;
 	}
 
-	/**
-	 * Find the cross references of the given model object, through the specified feature, with a cross
-	 * referencer and a predicate.
-	 * 
-	 * @param comparison
-	 *            The comparison.
-	 * @param lookup
-	 *            The model object.
-	 * @param inFeature
-	 *            The feature.
-	 * @param p
-	 *            The predicate.
-	 * @param crossReferencer
-	 *            The cross referencer.
-	 * @return The cross references.
-	 */
-	protected final List<Diff> findCrossReferences(Comparison comparison, EObject lookup, Predicate<Diff> p) {
+	public Class<? extends Diff> getExtensionKind() {
+		return Diff.class;
+	}
+
+	protected List<Diff> getAllContainedDifferences(ReferenceChange input) {
 		final List<Diff> result = new ArrayList<Diff>();
-		for (Diff diff : comparison.getDifferences(lookup)) {
-			if (p.apply(diff)) {
-				result.add(diff);
-			}
+		final Iterator<Diff> diffs = input.getMatch().getComparison().getMatch(input.getValue())
+				.getAllDifferences().iterator();
+		while (diffs.hasNext()) {
+			Diff diff = (Diff)diffs.next();
+			result.add(diff);
 		}
 		return result;
 	}
 
-	/**
-	 * Hide the difference elements from the given extension, from the specified model object, the feature and
-	 * cross referencer, with a predicate.
-	 * 
-	 * @param lookup
-	 *            The model object.
-	 * @param inFeature
-	 *            The feature.
-	 * @param hiddingExtension
-	 *            The extension
-	 * @param p
-	 *            The predicate
-	 * @param crossReferencer
-	 *            The cross referencer.
-	 */
-	protected final void beRefinedByCrossReferences(Comparison comparison, EObject lookup,
-			Diff refinedExtension, Predicate<Diff> p) {
-		for (Diff diffElement : findCrossReferences(comparison, lookup, p)) {
-			refinedExtension.getRefinedBy().add(diffElement);
-		}
-	}
+	public void fillRequiredDifferences(Comparison comparison, Diff extension) {
+		// TODO Auto-generated method stub
 
-	public Class<? extends Diff> getExtensionKind() {
-		return Diff.class;
 	}
 
 }

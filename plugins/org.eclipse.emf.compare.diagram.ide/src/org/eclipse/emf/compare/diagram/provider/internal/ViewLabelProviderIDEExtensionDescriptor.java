@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.compare.diagram.GMFCompare;
+import org.eclipse.emf.compare.diagram.ide.GMFCompareIDEPlugin;
 import org.eclipse.emf.compare.diagram.provider.IViewLabelProvider;
 import org.eclipse.emf.compare.diagram.provider.ViewLabelProviderExtensionDescriptor;
 
@@ -69,8 +69,8 @@ public class ViewLabelProviderIDEExtensionDescriptor extends ViewLabelProviderEx
 			try {
 				extension = (IViewLabelProvider)element.createExecutableExtension(ATTRIBUTE_CLASS);
 			} catch (CoreException e) {
-				GMFCompare.getDefault().getLog()
-						.log(new Status(IStatus.ERROR, GMFCompare.PLUGIN_ID, e.getMessage(), e));
+				GMFCompareIDEPlugin.getDefault().getLog()
+						.log(new Status(IStatus.ERROR, GMFCompareIDEPlugin.PLUGIN_ID, e.getMessage(), e));
 			}
 		}
 		return extension;
