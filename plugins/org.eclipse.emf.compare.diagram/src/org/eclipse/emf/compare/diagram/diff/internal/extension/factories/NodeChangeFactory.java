@@ -13,10 +13,13 @@ package org.eclipse.emf.compare.diagram.diff.internal.extension.factories;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
+import java.util.List;
+
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.diagram.DiagramCompareFactory;
 import org.eclipse.emf.compare.diagram.NodeChange;
@@ -28,6 +31,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.notation.Bounds;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Factory for UMLAssociationChangeLeftTarget.
@@ -61,7 +65,15 @@ public class NodeChangeFactory extends AbstractDiffExtensionFactory {
 			ret.getRefinedBy().addAll(input.getMatch().getDifferences());
 		}
 
+		ret.setSource(input.getSource());
+		ret.setSemanticDiff(getSemanticDiff(input));
+
 		return ret;
+	}
+
+	@Override
+	public Match getParentMatch(Diff input) {
+		return input.getMatch().getComparison().getMatch(getViewContainer(input));
 	}
 
 	@Override
@@ -110,25 +122,25 @@ public class NodeChangeFactory extends AbstractDiffExtensionFactory {
 		return false;
 	}
 
-	// private Diff getSemanticDiff(Diff input) {
-	// if (input instanceof ReferenceChange && ((ReferenceChange)input).getValue() instanceof View) {
-	// final View view = (View)((ReferenceChange)input).getValue();
-	// final Object element = ReferenceUtil.safeEGet(view, NotationPackage.Literals.VIEW__ELEMENT);
-	// if (element instanceof EObject) {
-	// final List<Diff> diffs = findCrossReferences(input.getMatch().getComparison(),
-	// (EObject)element, new Predicate<Diff>() {
-	// public boolean apply(Diff diff) {
-	// return diff instanceof ReferenceChange
-	// && ((ReferenceChange)diff).getReference().isContainment();
-	// }
-	// });
-	// if (diffs.size() > 0) {
-	// return diffs.get(0);
-	// }
-	// }
-	// }
-	// return null;
-	// }
+	private Diff getSemanticDiff(Diff input) {
+		if (input instanceof ReferenceChange && ((ReferenceChange)input).getValue() instanceof View) {
+			final View view = (View)((ReferenceChange)input).getValue();
+			final Object element = ReferenceUtil.safeEGet(view, NotationPackage.Literals.VIEW__ELEMENT);
+			if (element instanceof EObject) {
+				final List<Diff> diffs = findCrossReferences(input.getMatch().getComparison(),
+						(EObject)element, new Predicate<Diff>() {
+							public boolean apply(Diff diff) {
+								return diff instanceof ReferenceChange
+										&& ((ReferenceChange)diff).getReference().isContainment();
+							}
+						});
+				if (diffs.size() > 0) {
+					return diffs.get(0);
+				}
+			}
+		}
+		return null;
+	}
 
 	private static Predicate<? super Diff> isMoveNodeExtension() {
 		return new Predicate<Diff>() {

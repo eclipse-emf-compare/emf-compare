@@ -53,7 +53,14 @@ public class EdgeChangeFactory extends AbstractDiffExtensionFactory {
 			ret.getRefinedBy().add(input);
 		}
 
+		ret.setSource(input.getSource());
+
 		return ret;
+	}
+
+	@Override
+	public Match getParentMatch(Diff input) {
+		return input.getMatch().getComparison().getMatch(getViewContainer(input));
 	}
 
 	@Override

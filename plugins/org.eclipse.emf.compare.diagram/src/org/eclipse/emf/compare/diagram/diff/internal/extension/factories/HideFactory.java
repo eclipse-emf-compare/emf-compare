@@ -40,6 +40,8 @@ public class HideFactory extends AbstractDiffExtensionFactory {
 
 		ret.getRefinedBy().add(input);
 
+		ret.setSource(input.getSource());
+
 		return ret;
 	}
 

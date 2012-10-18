@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.emf.compare.diagram.ide.viewLabelProvider">
+      <viewLabelProvider
+            class="org.eclipse.emf.compare.diagram.ide.ecoretools.EcoreToolsViewLabelProvider"
+            diagramType="EcoreTools">
+      </viewLabelProvider>
+   </extension>
+
+   <extension 
+           point="org.eclipse.core.contenttype.contentTypes">
+        <content-type
+            base-type="org.eclipse.emf.compare.diagram.gmfcontenttype"
+            file-extensions="ecorediag"
+            id="org.eclipse.emf.compare.papyrus.ecoretoolscontenttype"
+            name="Ecore Tools Content Type"
+            priority="normal">
+      </content-type>
+     </extension>
+
+</plugin>
