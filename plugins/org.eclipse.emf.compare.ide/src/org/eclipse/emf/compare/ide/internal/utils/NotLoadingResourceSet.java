@@ -40,9 +40,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 @Beta
 public final class NotLoadingResourceSet extends ResourceSetImpl {
-	/** This will be set to <code>true</code> once we are done loading our {@link ResourceTraversal}. */
-	private boolean preventLoad;
-
 	/**
 	 * Constructs a resource set to contain the resources described by the given traversal.
 	 * 
@@ -55,8 +52,6 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 		for (IStorage storage : storages) {
 			loadResource(storage, this, getLoadOptions());
 		}
-		// Prevent the loading of further resources
-		preventLoad = true;
 		// Then resolve all proxies between our "loaded" resources
 		for (Resource res : getResources()) {
 			resolve(res);
@@ -71,7 +66,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 	 */
 	@Override
 	public Resource getResource(URI uri, boolean loadOnDemand) {
-		return super.getResource(uri, !preventLoad && loadOnDemand);
+		return super.getResource(uri, false);
 	}
 
 	/**
