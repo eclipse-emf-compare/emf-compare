@@ -351,7 +351,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * @return <code>true</code> if at least two of the three given booleans are <code>true</code>,
 	 *         <code>false</code> otherwise.
 	 */
-	static boolean atLeastTwo(boolean condition1, boolean condition2, boolean condition3) {
+	private static boolean atLeastTwo(boolean condition1, boolean condition2, boolean condition3) {
 		// CHECKSTYLE:OFF This expression is alone in its method, and documented.
 		return condition1 && (condition2 || condition3) || (condition2 && condition3);
 		// CHECKSTYLE:ON
