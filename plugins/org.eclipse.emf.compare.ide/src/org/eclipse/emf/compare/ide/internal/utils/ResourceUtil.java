@@ -60,7 +60,10 @@ public final class ResourceUtil {
 			final int endIndex = path.indexOf(resourceName) + resourceName.length();
 			path = path.substring(0, endIndex);
 		}
-		final URI uri = URI.createPlatformResourceURI(path, true);
+		URI uri = URI.createURI(path, true);
+		if (!uri.isPlatformResource()) {
+			uri = URI.createPlatformResourceURI(path, true);
+		}
 		final Resource existing = resourceSet.getResource(uri, false);
 		if (existing != null) {
 			return existing;
