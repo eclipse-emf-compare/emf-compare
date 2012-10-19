@@ -30,6 +30,7 @@ import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ide.EMFCompareIDE;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.actions.filter.DifferenceFilter;
@@ -181,7 +182,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 
 			final IComparisonScope scope = EMFCompare.createDefaultScope(leftResourceSet, rightResourceSet,
 					originResourceSet);
-			final Comparison compareResult = EMFCompare.builder().build().compare(scope,
+			final Comparison compareResult = EMFCompareIDE.builder().build().compare(scope,
 					BasicMonitor.toMonitor(monitor));
 			EMFCompareEditingDomain editingDomain = new EMFCompareEditingDomain(compareResult,
 					leftResourceSet, rightResourceSet, originResourceSet);
