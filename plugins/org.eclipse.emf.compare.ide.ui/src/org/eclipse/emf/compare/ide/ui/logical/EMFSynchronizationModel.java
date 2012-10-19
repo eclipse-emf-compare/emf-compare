@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.internal.utils.NotLoadingResourceSet;
 import org.eclipse.emf.compare.ide.internal.utils.ResourceTraversal;
 import org.eclipse.emf.compare.ide.internal.utils.StorageURIConverter;
@@ -155,6 +156,14 @@ public final class EMFSynchronizationModel {
 	 */
 	public static EMFSynchronizationModel createSynchronizationModel(IResource left, IResource right,
 			IResource origin) {
+		final ResourceTraversal leftTraversal = resolveTraversal(left);
+		final ResourceTraversal rightTraversal = resolveTraversal(right);
+		final ResourceTraversal originTraversal = resolveTraversal(origin);
+
+		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal);
+	}
+
+	public static EMFSynchronizationModel createSynchronizationModel(URI left, URI right, URI origin) {
 		final ResourceTraversal leftTraversal = resolveTraversal(left);
 		final ResourceTraversal rightTraversal = resolveTraversal(right);
 		final ResourceTraversal originTraversal = resolveTraversal(origin);
@@ -288,6 +297,21 @@ public final class EMFSynchronizationModel {
 
 		final Set<IStorage> storages = Sets.newLinkedHashSet(Sets.union(Collections.singleton((IFile)start),
 				converter.getLoadedRevisions()));
+		return new ResourceTraversal(storages);
+
+	}
+
+	private static ResourceTraversal resolveTraversal(URI start) {
+		if (!(start instanceof URI)) {
+			return new ResourceTraversal(Sets.<IFile> newLinkedHashSet());
+		}
+
+		final SyncResourceSet rset = new SyncResourceSet();
+		final StorageURIConverter converter = new StorageURIConverter(rset.getURIConverter());
+		rset.setURIConverter(converter);
+		rset.resolveAll(start);
+
+		final Set<IStorage> storages = Sets.newLinkedHashSet(converter.getLoadedRevisions());
 		return new ResourceTraversal(storages);
 
 	}

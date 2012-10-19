@@ -251,6 +251,27 @@ public final class SyncResourceSet extends ResourceSetImpl {
 		resolve(resource);
 		unload(resource);
 
+		resolveAll();
+	}
+
+	public void resolveAll(URI resourceUri) {
+		doLoad(resourceUri);
+		resolveAll();
+	}
+
+	private void doLoad(URI resourceUri) {
+		Resource resource = super.getResource(resourceUri, true);
+
+		// reset the demanded URI that was added by this first call
+		demandedURIs.clear();
+		// and make it "loaded" instead
+		loadedURIs.add(resource.getURI());
+
+		resolve(resource);
+		unload(resource);
+	}
+
+	private void resolveAll() {
 		Set<URI> newURIs;
 		synchronized(demandedURIs) {
 			newURIs = new LinkedHashSet<URI>(demandedURIs);
@@ -344,15 +365,18 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	private void unload(final Resource resource) {
 		// only unload those resources that are located in the workspace
 		final URI uri = resource.getURI();
-		if (uri.isPlatformResource() || uri.isRelative()) {
+		if (uri.isPlatformResource() || uri.isRelative() || uri.isFile()) {
 			getResources().remove(resource);
-			// We still need to unload what we loaded since some (like UML) cross reference everything...
-			final Runnable unloader = new Runnable() {
-				public void run() {
-					resource.unload();
-				}
-			};
-			pool.submit(unloader, Priority.NORMAL);
+			uriCache.remove(uri);
+			if (resource.getClass().getSimpleName().startsWith("UMLResource")) {
+				// We still need to unload what we loaded since some (like UML) cross reference everything...
+				final Runnable unloader = new Runnable() {
+					public void run() {
+						resource.unload();
+					}
+				};
+				pool.submit(unloader, Priority.NORMAL);
+			}
 		}
 	}
 
