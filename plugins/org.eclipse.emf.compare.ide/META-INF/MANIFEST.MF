@@ -20,4 +20,5 @@ Import-Package: com.google.common.annotations;version="[10.0.0,11.0.0)",
  com.google.common.util.concurrent;version="[10.0.0,11.0.0)"
 Export-Package: org.eclipse.emf.compare.ide,
  org.eclipse.emf.compare.ide.internal.extension;x-internal:=true,
- org.eclipse.emf.compare.ide.internal.utils;x-friends:="org.eclipse.emf.compare.ide.ui"
+ org.eclipse.emf.compare.ide.internal.utils;x-friends:="org.eclipse.emf.compare.ide.ui",
+ org.eclipse.emf.compare.ide.utils

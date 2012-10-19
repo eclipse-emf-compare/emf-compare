@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.logical;
 
-import static org.eclipse.emf.compare.ide.internal.utils.ResourceUtil.binaryIdentical;
+import static org.eclipse.emf.compare.ide.utils.ResourceUtil.binaryIdentical;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.Sets;
@@ -32,9 +32,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.internal.utils.NotLoadingResourceSet;
-import org.eclipse.emf.compare.ide.internal.utils.ResourceTraversal;
-import org.eclipse.emf.compare.ide.internal.utils.StorageURIConverter;
 import org.eclipse.emf.compare.ide.internal.utils.SyncResourceSet;
+import org.eclipse.emf.compare.ide.utils.ResourceTraversal;
+import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.ui.IEditorInput;
@@ -163,6 +163,19 @@ public final class EMFSynchronizationModel {
 		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal);
 	}
 
+	/**
+	 * Creates a synchronization model by resolving the full logical model from the three given starting
+	 * points. We'll consider all of this URIs as pointing towards "local" resources.
+	 * 
+	 * @param left
+	 *            The left URI, starting point of the left logical model we are to resolve.
+	 * @param right
+	 *            The right URI, starting point of the right logical model we are to resolve.
+	 * @param origin
+	 *            The origin URI, starting point of the logical model we are to resolve as the origin one. Can
+	 *            be <code>null</code>.
+	 * @return The created synchronization model.
+	 */
 	public static EMFSynchronizationModel createSynchronizationModel(URI left, URI right, URI origin) {
 		final ResourceTraversal leftTraversal = resolveTraversal(left);
 		final ResourceTraversal rightTraversal = resolveTraversal(right);
@@ -301,15 +314,24 @@ public final class EMFSynchronizationModel {
 
 	}
 
+	/**
+	 * Tries and resolve the resource traversal corresponding to the given starting point.
+	 * 
+	 * @param start
+	 *            The URI of the resource that will be considered as the "starting point" of the traversal to
+	 *            resolve.
+	 * @return The resource traversal corresponding to the logical model that's been computed from the given
+	 *         starting point.
+	 */
 	private static ResourceTraversal resolveTraversal(URI start) {
-		if (!(start instanceof URI)) {
+		if (start == null) {
 			return new ResourceTraversal(Sets.<IFile> newLinkedHashSet());
 		}
 
-		final SyncResourceSet rset = new SyncResourceSet();
-		final StorageURIConverter converter = new StorageURIConverter(rset.getURIConverter());
-		rset.setURIConverter(converter);
-		rset.resolveAll(start);
+		final SyncResourceSet resourceSet = new SyncResourceSet();
+		final StorageURIConverter converter = new StorageURIConverter(resourceSet.getURIConverter());
+		resourceSet.setURIConverter(converter);
+		resourceSet.resolveAll(start);
 
 		final Set<IStorage> storages = Sets.newLinkedHashSet(converter.getLoadedRevisions());
 		return new ResourceTraversal(storages);

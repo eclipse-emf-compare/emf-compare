@@ -32,10 +32,10 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.internal.utils.PriorityExecutor.Priority;
+import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -88,9 +88,6 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	/** Keeps track of the URIs of all resources that have been loaded by this resource set. */
 	private final Set<URI> loadedURIs = Sets.newLinkedHashSet();
 
-	/** Associates URIs with their resources. */
-	private final Map<URI, Resource> uriCache = Maps.newConcurrentMap();
-
 	/**
 	 * This thread pool will be used to launch the loading and unloading of resources in separate threads.
 	 * <p>
@@ -140,40 +137,39 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	@Override
 	public Resource getResource(URI uri, boolean loadOnDemand) {
 		// Never load resources from here
-		final Resource demanded = uriCache.get(uri);
 		if (!loadedURIs.contains(uri)) {
-			if (demanded == null) {
-				synchronized(demandedURIs) {
-					demandedURIs.add(uri);
-				}
+			synchronized(demandedURIs) {
+				demandedURIs.add(uri);
 			}
 		}
-		return demanded;
+		return null;
 	}
 
 	/**
 	 * {@inheritDoc}
+	 * <p>
+	 * Overridden for synchronization.
+	 * </p>
 	 * 
 	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#createResource(org.eclipse.emf.common.util.URI)
 	 */
 	@Override
 	public synchronized Resource createResource(URI uri) {
-		Resource created = super.createResource(uri);
-		uriCache.put(uri, created);
-		return created;
+		return super.createResource(uri);
 	}
 
 	/**
 	 * {@inheritDoc}
+	 * <p>
+	 * Overridden for synchronization.
+	 * </p>
 	 * 
 	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#createResource(org.eclipse.emf.common.util.URI,
 	 *      java.lang.String)
 	 */
 	@Override
 	public synchronized Resource createResource(URI uri, String contentType) {
-		Resource created = super.createResource(uri, contentType);
-		uriCache.put(uri, created);
-		return created;
+		return super.createResource(uri, contentType);
 	}
 
 	/**
@@ -200,23 +196,14 @@ public final class SyncResourceSet extends ResourceSetImpl {
 		 * doing any actual work. That causes some minimal overhead but, more importantly, it can generate
 		 * concurrent modification exceptions.
 		 */
-		final URIConverter theURIConverter = getURIConverter();
-		final URI normalizedURI = theURIConverter.normalize(uri);
-
-		Resource result = uriCache.get(normalizedURI);
-		if (result == null) {
-			result = delegatedGetResource(uri, true);
-			if (result != null) {
-				uriCache.put(uri, result);
-			}
-		}
+		Resource result = delegatedGetResource(uri, true);
 
 		if (result == null) {
 			result = demandCreateResource(uri);
 			if (result == null) {
 				// copy/pasted from super.getResource
-				throw new RuntimeException(
-						"Cannot create a resource for '" + uri + "'; a registered resource factory is needed"); //$NON-NLS-1$//$NON-NLS-2$
+				throw new RuntimeException("Cannot create a resource for '" + uri //$NON-NLS-1$
+						+ "'; a registered resource factory is needed"); //$NON-NLS-1$
 			}
 			demandLoadHelper(result);
 		}
@@ -254,23 +241,32 @@ public final class SyncResourceSet extends ResourceSetImpl {
 		resolveAll();
 	}
 
+	/**
+	 * Resolve all cross resources links of the resource located at the given URI. Take note that this
+	 * resource set is only interested in the URIs of the resource, and that it will not keep the loaded
+	 * content in memory. No resource will be kept in the {@link #getResources() resources'} list of this set.
+	 * 
+	 * @param resourceUri
+	 *            The URI of the "starting" resource from which we'll resolve all cross resources references.
+	 */
 	public void resolveAll(URI resourceUri) {
-		doLoad(resourceUri);
-		resolveAll();
-	}
-
-	private void doLoad(URI resourceUri) {
 		Resource resource = super.getResource(resourceUri, true);
-
 		// reset the demanded URI that was added by this first call
 		demandedURIs.clear();
 		// and make it "loaded" instead
-		loadedURIs.add(resource.getURI());
+		loadedURIs.add(resourceUri);
 
 		resolve(resource);
 		unload(resource);
+
+		resolveAll();
 	}
 
+	/**
+	 * We've loaded a first resource (from one of the {@link #resolveAll(IStorage)} or
+	 * {@link #resolveAll(URI)} calls). We will now resolve all of this starting point's cross resources
+	 * references.
+	 */
 	private void resolveAll() {
 		Set<URI> newURIs;
 		synchronized(demandedURIs) {
@@ -367,8 +363,9 @@ public final class SyncResourceSet extends ResourceSetImpl {
 		final URI uri = resource.getURI();
 		if (uri.isPlatformResource() || uri.isRelative() || uri.isFile()) {
 			getResources().remove(resource);
-			uriCache.remove(uri);
-			if (resource.getClass().getSimpleName().startsWith("UMLResource")) {
+
+			// Only "unload()" when needed... The one we know of is UML
+			if (resource.getClass().getSimpleName().startsWith("UMLResource")) { //$NON-NLS-1$
 				// We still need to unload what we loaded since some (like UML) cross reference everything...
 				final Runnable unloader = new Runnable() {
 					public void run() {

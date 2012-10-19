@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.internal.utils;
 
-import static org.eclipse.emf.compare.ide.internal.utils.ResourceUtil.loadResource;
+import static org.eclipse.emf.compare.ide.utils.ResourceUtil.loadResource;
 
 import com.google.common.annotations.Beta;
 
@@ -25,6 +25,7 @@ import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.ide.utils.ResourceTraversal;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
