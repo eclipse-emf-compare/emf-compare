@@ -141,7 +141,7 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 	}
 
 	/**
-	 * Process all the matches and re-attache them to their parent if one is found.
+	 * Process all the matches and re-attach them to their parent if one is found.
 	 */
 	private void restructureMatchModel() {
 		Iterator<Match> it = matches.iterator();
@@ -152,10 +152,10 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 			if (cur.getLeft() != null) {
 				possibleContainer = cur.getLeft().eContainer();
 			}
-			if (possibleContainer != null && cur.getRight() != null) {
+			if (possibleContainer == null && cur.getRight() != null) {
 				possibleContainer = cur.getRight().eContainer();
 			}
-			if (possibleContainer != null && cur.getOrigin() != null) {
+			if (possibleContainer == null && cur.getOrigin() != null) {
 				possibleContainer = cur.getOrigin().eContainer();
 			}
 			Match possibleContainerMatch = eObjectsToMatch.get(possibleContainer);
@@ -163,16 +163,6 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 				((BasicEList<Match>)possibleContainerMatch.getSubmatches()).addUnique(cur);
 				it.remove();
 			}
-		}
-
-		Iterator<Match> it2 = matches.iterator();
-		if (it2.hasNext()) {
-			Match root = it2.next();
-			while (it2.hasNext()) {
-				((BasicEList<Match>)root.getSubmatches()).addUnique(it2.next());
-				it2.remove();
-			}
-
 		}
 	}
 
