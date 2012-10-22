@@ -48,7 +48,7 @@ public final class PriorityExecutor implements Executor {
 	 *            Name of this thread pool. We'll use this to name the worker threads.
 	 */
 	public PriorityExecutor(String poolName) {
-		final int threadCount = Runtime.getRuntime().availableProcessors() * 2;
+		final int threadCount = Runtime.getRuntime().availableProcessors();
 		final int initialCapacity = 16;
 		final String actualName;
 		if (poolName == null || poolName.length() == 0) {
