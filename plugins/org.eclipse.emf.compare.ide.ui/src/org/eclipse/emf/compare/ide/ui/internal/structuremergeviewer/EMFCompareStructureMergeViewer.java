@@ -170,6 +170,15 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 					left, right, origin);
 			syncModel.minimize();
 
+			// Double check : git allows modification of the index file ... but we cannot
+			final CompareConfiguration config = getCompareConfiguration();
+			if (!syncModel.isLeftEditable()) {
+				config.setLeftEditable(false);
+			}
+			if (!syncModel.isRightEditable()) {
+				config.setRightEditable(false);
+			}
+
 			final ResourceSet leftResourceSet = syncModel.getLeftResourceSet();
 			final ResourceSet rightResourceSet = syncModel.getRightResourceSet();
 			final ResourceSet originResourceSet;

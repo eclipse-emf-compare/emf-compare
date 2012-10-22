@@ -50,13 +50,29 @@ import org.eclipse.ui.IEditorInput;
 @Beta
 public final class EMFSynchronizationModel {
 	/** The traversal corresponding to the left side. */
-	private ResourceTraversal leftTraversal;
+	private final ResourceTraversal leftTraversal;
 
 	/** The traversal corresponding to the right side. */
-	private ResourceTraversal rightTraversal;
+	private final ResourceTraversal rightTraversal;
 
 	/** The traversal corresponding to the common ancestor of both other side. */
-	private ResourceTraversal originTraversal;
+	private final ResourceTraversal originTraversal;
+
+	/**
+	 * While loading this model, we might find that the left side cannot be edited (i.e. we could not save it
+	 * even if we were to edit it). This might notably be the case for comparison with the Git Index : Git
+	 * allows modification of the index, but we would not be able to save these modifications (cannot open an
+	 * output stream towards the 'index' revisions of all files composing the logical model). This will be
+	 * used to alter the compare configuration.
+	 */
+	private final boolean leftEditable;
+
+	/**
+	 * See {@link #leftEditable}.
+	 * 
+	 * @see #leftEditable
+	 */
+	private final boolean rightEditable;
 
 	/**
 	 * Constructs our logical model given the three traversal for our sides.
@@ -70,7 +86,7 @@ public final class EMFSynchronizationModel {
 	 *            <code>null</code>.
 	 */
 	private EMFSynchronizationModel(ResourceTraversal leftTraversal, ResourceTraversal rightTraversal,
-			ResourceTraversal originTraversal) {
+			ResourceTraversal originTraversal, boolean leftEditable, boolean rightEditable) {
 		if (leftTraversal == null) {
 			this.leftTraversal = new ResourceTraversal(Sets.<IStorage> newHashSet());
 		} else {
@@ -88,6 +104,9 @@ public final class EMFSynchronizationModel {
 		} else {
 			this.originTraversal = originTraversal;
 		}
+
+		this.leftEditable = leftEditable;
+		this.rightEditable = rightEditable;
 	}
 
 	// TODO comment supported ITypedElements
@@ -114,6 +133,9 @@ public final class EMFSynchronizationModel {
 		final IFileRevision rightRevision = findFileRevision(right);
 		final IFileRevision originRevision = findFileRevision(origin);
 
+		boolean canEditLeft = true;
+		boolean canEditRight = true;
+
 		final ResourceTraversal leftTraversal;
 		final ResourceTraversal rightTraversal;
 		final ResourceTraversal originTraversal;
@@ -122,6 +144,7 @@ public final class EMFSynchronizationModel {
 			final IResource leftRes = findResource(left);
 			leftTraversal = resolveTraversal(leftRes);
 		} else {
+			canEditLeft = false;
 			leftTraversal = resolveTraversal(leftRevision);
 		}
 		if (rightRevision == null) {
@@ -129,6 +152,7 @@ public final class EMFSynchronizationModel {
 			final IResource rightRes = findResource(right);
 			rightTraversal = resolveTraversal(rightRes);
 		} else {
+			canEditRight = false;
 			rightTraversal = resolveTraversal(rightRevision);
 		}
 		if (originRevision == null) {
@@ -139,7 +163,8 @@ public final class EMFSynchronizationModel {
 			originTraversal = resolveTraversal(originRevision);
 		}
 
-		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal);
+		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal, canEditLeft,
+				canEditRight);
 	}
 
 	/**
@@ -160,7 +185,7 @@ public final class EMFSynchronizationModel {
 		final ResourceTraversal rightTraversal = resolveTraversal(right);
 		final ResourceTraversal originTraversal = resolveTraversal(origin);
 
-		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal);
+		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal, true, true);
 	}
 
 	/**
@@ -181,7 +206,7 @@ public final class EMFSynchronizationModel {
 		final ResourceTraversal rightTraversal = resolveTraversal(right);
 		final ResourceTraversal originTraversal = resolveTraversal(origin);
 
-		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal);
+		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal, true, true);
 	}
 
 	/**
@@ -283,6 +308,28 @@ public final class EMFSynchronizationModel {
 	 */
 	public ResourceSet getOriginResourceSet() {
 		return new NotLoadingResourceSet(originTraversal);
+	}
+
+	/**
+	 * Clients may call this in order to determine whether the left logical model can be edited.
+	 * 
+	 * @return <code>true</code> if modifications to the left model should be allowed, <code>false</code>
+	 *         otherwise.
+	 * @see #leftEditable
+	 */
+	public boolean isLeftEditable() {
+		return leftEditable;
+	}
+
+	/**
+	 * Clients may call this in order to determine whether the right logical model can be edited.
+	 * 
+	 * @return <code>true</code> if modifications to the right model should be allowed, <code>false</code>
+	 *         otherwise.
+	 * @see #leftEditable
+	 */
+	public boolean isRightEditable() {
+		return rightEditable;
 	}
 
 	/**
