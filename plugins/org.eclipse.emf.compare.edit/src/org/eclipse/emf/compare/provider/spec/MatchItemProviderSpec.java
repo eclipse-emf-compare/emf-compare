@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
@@ -193,16 +194,31 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 
 	static final Predicate<? super Object> REFINED_OR_REQUIRED_BY_REFINED_DIFF = new Predicate<Object>() {
 		public boolean apply(Object input) {
+			// FIXME Can we simplify this?
+			// Create a Class A
+			// Create an Interface I
+			// add an interfaceRealization from A to I
+			/*
+			 * We must hide the addition of the InterfaceRealization ... but we must not hide the addition of
+			 * the class itself.
+			 */
+
 			boolean ret = false;
 			if (input instanceof Diff) {
 				Diff diff = (Diff)input;
 				if (diff.getRefines().isEmpty()) {
-					for (Diff requiredBy : diff.getRequiredBy()) {
-						if (!requiredBy.getRefines().isEmpty()) {
-							ret = true;
-							break;
+					if (diff instanceof ReferenceChange) {
+						final Match valueMatch = diff.getMatch().getComparison().getMatch(
+								((ReferenceChange)diff).getValue());
+						final Iterator<Diff> requiredByDiffs = diff.getRequiredBy().iterator();
+						while (requiredByDiffs.hasNext() && !ret) {
+							final Diff requiredBy = requiredByDiffs.next();
+							ret = requiredBy.getMatch() == valueMatch && !requiredBy.getRefines().isEmpty();
 						}
+					} else {
+						ret = false;
 					}
+
 				} else {
 					ret = true;
 				}
