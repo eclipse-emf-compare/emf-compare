@@ -105,7 +105,7 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 		if (value == null) {
 			value = "<null>"; //$NON-NLS-1$
 		} else {
-			value = Strings.elide(value, 32, "..."); //$NON-NLS-1$
+			value = Strings.elide(value, 50, "..."); //$NON-NLS-1$
 		}
 		return value;
 	}

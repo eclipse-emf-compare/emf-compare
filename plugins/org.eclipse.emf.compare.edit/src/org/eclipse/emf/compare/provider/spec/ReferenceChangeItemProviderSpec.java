@@ -151,7 +151,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		if (value == null) {
 			value = "<null>"; //$NON-NLS-1$
 		} else {
-			value = org.eclipse.emf.compare.provider.spec.Strings.elide(value, 32, "..."); //$NON-NLS-1$
+			value = org.eclipse.emf.compare.provider.spec.Strings.elide(value, 50, "..."); //$NON-NLS-1$
 		}
 		return value;
 	}
