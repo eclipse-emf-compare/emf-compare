@@ -9,15 +9,5 @@
       </viewLabelProvider>
    </extension>
 
-   <extension 
-           point="org.eclipse.core.contenttype.contentTypes">
-        <content-type
-            base-type="org.eclipse.emf.compare.diagram.gmfcontenttype"
-            file-extensions="ecorediag"
-            id="org.eclipse.emf.compare.papyrus.ecoretoolscontenttype"
-            name="Ecore Tools Content Type"
-            priority="normal">
-      </content-type>
-     </extension>
 
 </plugin>

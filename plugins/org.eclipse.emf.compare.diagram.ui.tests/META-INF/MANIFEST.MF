@@ -5,12 +5,12 @@ Bundle-SymbolicName: org.eclipse.emf.compare.diagram.ui.tests
 Bundle-Version: 2.0.0.qualifier
 Require-Bundle: org.eclipse.emf.ecore;bundle-version="2.7.0",
  org.eclipse.emf.compare.diff;bundle-version="2.0.0",
- org.eclipse.emf.compare.diagram.ui;bundle-version="2.0.0",
+ org.eclipse.emf.compare.diagram.ide.ui;bundle-version="2.0.0",
  org.eclipse.emf.transaction;bundle-version="1.4.0",
  org.eclipse.emf.compare.match;bundle-version="2.0.0",
  org.eclipse.emf.compare;bundle-version="2.0.0",
  org.eclipse.gmf.runtime.emf.core;bundle-version="1.4.1",
- org.eclipse.emf.compare.diagram.ecoretools;bundle-version="2.0.0"
+ org.eclipse.emf.compare.diagram.ide.ecoretools;bundle-version="2.0.0"
 Import-Package: org.junit;version="4.8.0",
  org.junit.runner;version="4.8.1",
  org.junit.runners;version="4.8.1"

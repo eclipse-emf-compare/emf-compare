@@ -86,7 +86,7 @@ public class DiagramDiffIDEExtensionPostProcessor implements IPostProcessor {
 										"No IViewLabelProvider registered for diagram " + diagramType)); //$NON-NLS-1$
 						extensionForType = IViewLabelProvider.DEFAULT_INSTANCE;
 					}
-					if (extensionForType.isManaged(view) && DiffUtil.isVisible(view)
+					if (rightElement instanceof View && extensionForType.isManaged(view) && DiffUtil.isVisible(view)
 							&& DiffUtil.isVisible((View)rightElement)) {
 						final String leftLabel = extensionForType.elementLabel(view);
 						final String rightLabel = extensionForType.elementLabel((View)rightElement);

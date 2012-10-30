@@ -12,21 +12,12 @@
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
-            uri="http://www.eclipse.org/emf/compare/diff/diagram/1.0"
+            uri="http://www.eclipse.org/emf/compare/diagram/2.0"
             class="org.eclipse.emf.compare.diagram.DiagramComparePackage"
             genModel="model/diagramdiff.genmodel"/>
    </extension>
    
    
-   <extension
-           point="org.eclipse.core.contenttype.contentTypes">
-        <content-type
-              base-type="org.eclipse.emf.compare.ui.contenttype.ModelContentType"
-              id="org.eclipse.emf.compare.diagram.gmfcontenttype"
-              name="Base Content Type for Diagram comparison"
-              priority="normal">
-        </content-type>
-     </extension>
    <extension
          point="org.eclipse.emf.compare.postProcessor">
       <postProcessor

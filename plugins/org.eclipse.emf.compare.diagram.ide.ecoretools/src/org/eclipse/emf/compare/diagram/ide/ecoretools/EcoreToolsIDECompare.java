@@ -18,15 +18,15 @@ import org.osgi.framework.BundleContext;
  * 
  * @author Cedric Notot <a href="mailto:cedric.notot@obeo.fr">cedric.notot@obeo.fr</a>
  */
-public class EcoreToolsCompare extends Plugin {
+public class EcoreToolsIDECompare extends Plugin {
 
 	/** The plug-in ID. */
-	public static final String PLUGIN_ID = "org.eclipse.emf.compare.diagram.ecoretools"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.emf.compare.diagram.ide.ecoretools"; //$NON-NLS-1$
 
 	/**
 	 * Context.
 	 */
-	private static EcoreToolsCompare plugin;
+	private static EcoreToolsIDECompare plugin;
 
 	/**
 	 * {@inheritDoc}
