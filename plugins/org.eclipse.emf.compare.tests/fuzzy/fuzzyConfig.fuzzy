@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.emfstore.fuzzy.emf.config="http://org/eclipse/emf/emfstore/fuzzy/emf/config">
+  <org.eclipse.emf.emfstore.fuzzy.emf.config:TestConfig seed="1" count="500" testClass="org.eclipse.emf.compare.tests.FuzzyTest" id="_r78GhIvSEeGC3oFJZ-5HoM">
+    <mutatorConfig minObjectsCount="100">
+      <ePackages href="http://www.eclipse.org/emf/2002/Ecore#/"/>
+    </mutatorConfig>
+  </org.eclipse.emf.emfstore.fuzzy.emf.config:TestConfig>
+</xmi:XMI>
