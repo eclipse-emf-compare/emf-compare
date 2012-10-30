@@ -24,7 +24,6 @@ import org.eclipse.emf.emfstore.fuzzy.emf.EMFDataProvider;
 import org.eclipse.emf.emfstore.fuzzy.emf.MutateUtil;
 import org.eclipse.emf.emfstore.modelmutator.api.ModelMutatorConfiguration;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -58,7 +57,6 @@ public class FuzzyTest {
 	 * Test to check if the {@link FuzzyRunner} is working.
 	 */
 	@Test
-	@Ignore
 	public void copyAllRightToLeft() {
 		Assert.assertNotNull(root);
 		EObject backup = EcoreUtil.copy(root);
@@ -84,7 +82,6 @@ public class FuzzyTest {
 	 * Test to check if the {@link FuzzyRunner} is working.
 	 */
 	@Test
-	@Ignore
 	public void copyAllLeftToRight() {
 		Assert.assertNotNull(root);
 		EObject backup = EcoreUtil.copy(root);
