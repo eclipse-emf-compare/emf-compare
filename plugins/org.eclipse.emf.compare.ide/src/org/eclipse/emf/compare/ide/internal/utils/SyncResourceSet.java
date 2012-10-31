@@ -227,9 +227,15 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 * 
 	 * @param start
 	 *            The starting point from which we'll resolve cross resources references.
+	 * @return <code>true</code> if we could resolve the model, <code>false</code> if there was an error
+	 *         loading the starting point.
 	 */
-	public void resolveAll(IStorage start) {
+	public boolean resolveAll(IStorage start) {
 		final Resource resource = ResourceUtil.loadResource(start, this, getLoadOptions());
+		if (resource == null || !resource.getErrors().isEmpty()) {
+			return false;
+		}
+
 		// reset the demanded URI that was added by this first call
 		demandedURIs.clear();
 		// and make it "loaded" instead
@@ -239,6 +245,7 @@ public final class SyncResourceSet extends ResourceSetImpl {
 		unload(resource);
 
 		resolveAll();
+		return true;
 	}
 
 	/**
