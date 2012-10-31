@@ -63,4 +63,41 @@
             uri="http://www.eclipse.org/emf/compare">
       </factory>
    </extension>
+   <extension
+         id="org.eclipse.emf.compare.model.provider"
+         name="EMF Compare"
+         point="org.eclipse.core.resources.modelProviders">
+      <modelProvider
+            class="org.eclipse.emf.compare.ide.ui.logical.EMFModelProvider">
+      </modelProvider>
+      <enablement>
+         <and>
+            <adapt
+                  type="org.eclipse.core.resources.IFile">
+            </adapt>
+            <or>
+               <test
+                     args="kindOf"
+                     property="org.eclipse.core.resources.contentTypeId"
+                     value="org.eclipse.emf.ecore">
+               </test>
+               <test
+                     args="kindOf"
+                     property="org.eclipse.core.resources.contentTypeId"
+                     value="org.eclipse.emf.ecore.xmi">
+               </test>
+            </or>
+         </and>
+      </enablement>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.emf.compare.ide.ui.logical.EMFModelProvider"
+            class="org.eclipse.emf.compare.ide.ui.logical.EMFCompareAdapterFactory">
+         <adapter
+               type="org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter">
+         </adapter>
+      </factory>
+   </extension>
 </plugin>
