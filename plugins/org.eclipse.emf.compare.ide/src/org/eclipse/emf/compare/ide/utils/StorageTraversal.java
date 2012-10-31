@@ -11,10 +11,16 @@
 package org.eclipse.emf.compare.ide.utils;
 
 import com.google.common.annotations.Beta;
+import com.google.common.collect.Lists;
 
+import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IAdaptable;
 
 /**
  * A Resource Traversal is no more than a set of resources used by the synchronization model to determine
@@ -23,7 +29,7 @@ import org.eclipse.core.resources.IStorage;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @Beta
-public class ResourceTraversal {
+public class StorageTraversal implements IAdaptable {
 	/** The set of storages that are part of this traversal. */
 	private Set<? extends IStorage> storages;
 
@@ -33,7 +39,7 @@ public class ResourceTraversal {
 	 * @param storages
 	 *            The set of resources that are part of this traversal.
 	 */
-	public ResourceTraversal(Set<? extends IStorage> storages) {
+	public StorageTraversal(Set<? extends IStorage> storages) {
 		this.storages = storages;
 	}
 
@@ -48,5 +54,34 @@ public class ResourceTraversal {
 	 */
 	public Set<? extends IStorage> getStorages() {
 		return storages;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+	 */
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+		if (adapter == org.eclipse.core.resources.mapping.ResourceTraversal.class) {
+			// Team's resource traversal only knows about IResources.
+			final List<IResource> resources = Lists.newArrayListWithCapacity(storages.size());
+			for (IStorage storage : storages) {
+				if (storage instanceof IFile) {
+					resources.add((IFile)storage);
+				} else {
+					/*
+					 * Use a file handle. Since files can be both local and remote, they might not even exist
+					 * in the current workspace. It will be the responsibility of the user to either get the
+					 * remote or local content. The traversal itself only tells "all" potential resources
+					 * linked to the current.
+					 */
+					resources.add(ResourcesPlugin.getWorkspace().getRoot().getFile(storage.getFullPath()));
+				}
+			}
+			final IResource[] resourceArray = resources.toArray(new IResource[resources.size()]);
+			return new org.eclipse.core.resources.mapping.ResourceTraversal(resourceArray,
+					IResource.DEPTH_ONE, IResource.NONE);
+		}
+		return null;
 	}
 }

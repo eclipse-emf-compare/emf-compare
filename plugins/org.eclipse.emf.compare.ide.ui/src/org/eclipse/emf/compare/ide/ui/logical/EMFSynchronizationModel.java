@@ -26,14 +26,17 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.mapping.RemoteResourceMappingContext;
+import org.eclipse.core.resources.mapping.ResourceMappingContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.internal.utils.NotLoadingResourceSet;
 import org.eclipse.emf.compare.ide.internal.utils.SyncResourceSet;
-import org.eclipse.emf.compare.ide.utils.ResourceTraversal;
+import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.team.core.history.IFileRevision;
@@ -50,13 +53,13 @@ import org.eclipse.ui.IEditorInput;
 @Beta
 public final class EMFSynchronizationModel {
 	/** The traversal corresponding to the left side. */
-	private final ResourceTraversal leftTraversal;
+	private final StorageTraversal leftTraversal;
 
 	/** The traversal corresponding to the right side. */
-	private final ResourceTraversal rightTraversal;
+	private final StorageTraversal rightTraversal;
 
 	/** The traversal corresponding to the common ancestor of both other side. */
-	private final ResourceTraversal originTraversal;
+	private final StorageTraversal originTraversal;
 
 	/**
 	 * While loading this model, we might find that the left side cannot be edited (i.e. we could not save it
@@ -85,22 +88,22 @@ public final class EMFSynchronizationModel {
 	 *            The traversal corresponding to the common ancestor of both other side. Can be
 	 *            <code>null</code>.
 	 */
-	private EMFSynchronizationModel(ResourceTraversal leftTraversal, ResourceTraversal rightTraversal,
-			ResourceTraversal originTraversal, boolean leftEditable, boolean rightEditable) {
+	private EMFSynchronizationModel(StorageTraversal leftTraversal, StorageTraversal rightTraversal,
+			StorageTraversal originTraversal, boolean leftEditable, boolean rightEditable) {
 		if (leftTraversal == null) {
-			this.leftTraversal = new ResourceTraversal(Sets.<IStorage> newHashSet());
+			this.leftTraversal = new StorageTraversal(Sets.<IStorage> newHashSet());
 		} else {
 			this.leftTraversal = leftTraversal;
 		}
 
 		if (rightTraversal == null) {
-			this.rightTraversal = new ResourceTraversal(Sets.<IStorage> newHashSet());
+			this.rightTraversal = new StorageTraversal(Sets.<IStorage> newHashSet());
 		} else {
 			this.rightTraversal = rightTraversal;
 		}
 
 		if (originTraversal == null) {
-			this.originTraversal = new ResourceTraversal(Sets.<IStorage> newHashSet());
+			this.originTraversal = new StorageTraversal(Sets.<IStorage> newHashSet());
 		} else {
 			this.originTraversal = originTraversal;
 		}
@@ -136,9 +139,9 @@ public final class EMFSynchronizationModel {
 		boolean canEditLeft = true;
 		boolean canEditRight = true;
 
-		final ResourceTraversal leftTraversal;
-		final ResourceTraversal rightTraversal;
-		final ResourceTraversal originTraversal;
+		final StorageTraversal leftTraversal;
+		final StorageTraversal rightTraversal;
+		final StorageTraversal originTraversal;
 		if (leftRevision == null) {
 			// Load it as a local model
 			final IResource leftRes = findResource(left);
@@ -168,6 +171,42 @@ public final class EMFSynchronizationModel {
 	}
 
 	/**
+	 * Creates a synchronization model by resolving the full logical model of the given local resource,
+	 * retrieving remote content through the given {@link ResourceMappingContext context}.
+	 * 
+	 * @param local
+	 *            The local file, will be considered "left" side of this model.
+	 * @param context
+	 *            The context from which we are to retrieve remote content.
+	 * @param monitor
+	 *            Will be used to report progress to the user.
+	 * @return The created synchronization model.
+	 */
+	public static EMFSynchronizationModel createSynchronizationModel(IFile local,
+			RemoteResourceMappingContext context, IProgressMonitor monitor) {
+		final StorageTraversal leftTraversal = resolveTraversal(local);
+		StorageTraversal rightTraversal = null;
+		StorageTraversal originTraversal = null;
+
+		try {
+			final IStorage right = context.fetchRemoteContents(local, monitor);
+			System.out.println("here");
+		} catch (CoreException e) {
+			// FIXME log, fail?
+			rightTraversal = new StorageTraversal(Sets.<IFile> newLinkedHashSet());
+		}
+
+		try {
+			final IStorage origin = context.fetchBaseContents(local, monitor);
+		} catch (CoreException e) {
+			// FIXME log
+			originTraversal = new StorageTraversal(Sets.<IFile> newLinkedHashSet());
+		}
+		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal, local.exists()
+				&& !local.isReadOnly(), false);
+	}
+
+	/**
 	 * Creates a synchronization model by resolving the full logical model of the given local resources.
 	 * 
 	 * @param left
@@ -181,9 +220,9 @@ public final class EMFSynchronizationModel {
 	 */
 	public static EMFSynchronizationModel createSynchronizationModel(IResource left, IResource right,
 			IResource origin) {
-		final ResourceTraversal leftTraversal = resolveTraversal(left);
-		final ResourceTraversal rightTraversal = resolveTraversal(right);
-		final ResourceTraversal originTraversal = resolveTraversal(origin);
+		final StorageTraversal leftTraversal = resolveTraversal(left);
+		final StorageTraversal rightTraversal = resolveTraversal(right);
+		final StorageTraversal originTraversal = resolveTraversal(origin);
 
 		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal, true, true);
 	}
@@ -202,9 +241,9 @@ public final class EMFSynchronizationModel {
 	 * @return The created synchronization model.
 	 */
 	public static EMFSynchronizationModel createSynchronizationModel(URI left, URI right, URI origin) {
-		final ResourceTraversal leftTraversal = resolveTraversal(left);
-		final ResourceTraversal rightTraversal = resolveTraversal(right);
-		final ResourceTraversal originTraversal = resolveTraversal(origin);
+		final StorageTraversal leftTraversal = resolveTraversal(left);
+		final StorageTraversal rightTraversal = resolveTraversal(right);
+		final StorageTraversal originTraversal = resolveTraversal(origin);
 
 		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal, true, true);
 	}
@@ -293,6 +332,15 @@ public final class EMFSynchronizationModel {
 	}
 
 	/**
+	 * This is only meant for internal usage.
+	 * 
+	 * @return The left traversal of this model.
+	 */
+	/* package */StorageTraversal getLeftTraversal() {
+		return leftTraversal;
+	}
+
+	/**
 	 * Create the resource set corresponding to the right logical model.
 	 * 
 	 * @return The resource set corresponding to the right logical model.
@@ -340,9 +388,10 @@ public final class EMFSynchronizationModel {
 	 * @return The resource traversal corresponding to the logical model that's been computed from the given
 	 *         starting point.
 	 */
-	private static ResourceTraversal resolveTraversal(IResource start) {
+	// package visibility as this will be used by our model provider
+	/* package */static StorageTraversal resolveTraversal(IResource start) {
 		if (!(start instanceof IFile)) {
-			return new ResourceTraversal(Sets.<IFile> newLinkedHashSet());
+			return new StorageTraversal(Sets.<IFile> newLinkedHashSet());
 		}
 
 		/*
@@ -353,12 +402,13 @@ public final class EMFSynchronizationModel {
 		final StorageURIConverter converter = new StorageURIConverter(resourceSet.getURIConverter());
 		resourceSet.setURIConverter(converter);
 
-		resourceSet.resolveAll((IFile)start);
+		if (resourceSet.resolveAll((IFile)start)) {
+			final Set<IStorage> storages = Sets.newLinkedHashSet(Sets.union(Collections
+					.singleton((IFile)start), converter.getLoadedRevisions()));
+			return new StorageTraversal(storages);
+		}
 
-		final Set<IStorage> storages = Sets.newLinkedHashSet(Sets.union(Collections.singleton((IFile)start),
-				converter.getLoadedRevisions()));
-		return new ResourceTraversal(storages);
-
+		return new StorageTraversal(Collections.singleton((IFile)start));
 	}
 
 	/**
@@ -370,9 +420,9 @@ public final class EMFSynchronizationModel {
 	 * @return The resource traversal corresponding to the logical model that's been computed from the given
 	 *         starting point.
 	 */
-	private static ResourceTraversal resolveTraversal(URI start) {
+	private static StorageTraversal resolveTraversal(URI start) {
 		if (start == null) {
-			return new ResourceTraversal(Sets.<IFile> newLinkedHashSet());
+			return new StorageTraversal(Sets.<IFile> newLinkedHashSet());
 		}
 
 		final SyncResourceSet resourceSet = new SyncResourceSet();
@@ -381,7 +431,7 @@ public final class EMFSynchronizationModel {
 		resourceSet.resolveAll(start);
 
 		final Set<IStorage> storages = Sets.newLinkedHashSet(converter.getLoadedRevisions());
-		return new ResourceTraversal(storages);
+		return new StorageTraversal(storages);
 
 	}
 
@@ -393,23 +443,26 @@ public final class EMFSynchronizationModel {
 	 * @return The resource traversal corresponding to the logical model that's been computed from the given
 	 *         starting point.
 	 */
-	private static ResourceTraversal resolveTraversal(IFileRevision start) {
+	private static StorageTraversal resolveTraversal(IFileRevision start) {
 		if (start == null) {
-			return new ResourceTraversal(Sets.<IFile> newLinkedHashSet());
+			return new StorageTraversal(Sets.<IFile> newLinkedHashSet());
 		}
 
 		// TODO how could we make this extensible?
-		ResourceTraversal traversal = new ResourceTraversal(Sets.<IFile> newLinkedHashSet());
+		StorageTraversal traversal = new StorageTraversal(Sets.<IFile> newLinkedHashSet());
 		final SyncResourceSet resourceSet = new SyncResourceSet();
 		final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(), start);
 		resourceSet.setURIConverter(converter);
 		try {
 			final IStorage startStorage = start.getStorage(new NullProgressMonitor());
-			resourceSet.resolveAll(startStorage);
-
-			final Set<IStorage> storages = Sets.newLinkedHashSet(Sets.union(Collections
-					.singleton(startStorage), converter.getLoadedRevisions()));
-			traversal = new ResourceTraversal(storages);
+			if (resourceSet.resolveAll(startStorage)) {
+				final Set<IStorage> storages = Sets.newLinkedHashSet(Sets.union(Collections
+						.singleton(startStorage), converter.getLoadedRevisions()));
+				traversal = new StorageTraversal(storages);
+			} else {
+				// FIXME log
+				// We failed to load the starting point. simply return an empty traversal.
+			}
 		} catch (CoreException e) {
 			// FIXME ignore for now
 		}

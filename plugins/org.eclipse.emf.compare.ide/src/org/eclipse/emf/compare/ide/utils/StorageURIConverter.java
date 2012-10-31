@@ -159,7 +159,15 @@ public class StorageURIConverter extends DelegatingURIConverter {
 		 * @see org.eclipse.core.resources.IStorage#getFullPath()
 		 */
 		public IPath getFullPath() {
-			return new Path(uri.toString());
+			final String path;
+			if (uri.isRelative()) {
+				path = uri.toString();
+			} else if (uri.isPlatform()) {
+				path = uri.toPlatformString(true);
+			} else {
+				path = uri.toFileString();
+			}
+			return new Path(path);
 		}
 
 		/**

@@ -25,7 +25,7 @@ import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.ide.utils.ResourceTraversal;
+import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -33,7 +33,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
- * This implementation of a resource set will be created from a {@link ResourceTraversal}, and only those
+ * This implementation of a resource set will be created from a {@link StorageTraversal}, and only those
  * resources that are part of the traversal will be loaded. This will allow us to resolve the proxies between
  * these "traversed" resources.
  * 
@@ -47,7 +47,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 	 * @param traversal
 	 *            The traversal containing all resources we are to load.
 	 */
-	public NotLoadingResourceSet(ResourceTraversal traversal) {
+	public NotLoadingResourceSet(StorageTraversal traversal) {
 		final Set<? extends IStorage> storages = traversal.getStorages();
 		setURIResourceMap(new HashMap<URI, Resource>(storages.size() << 1));
 		for (IStorage storage : storages) {
