@@ -37,6 +37,7 @@ import org.eclipse.emf.compare.ide.ui.internal.actions.filter.DifferenceFilter;
 import org.eclipse.emf.compare.ide.ui.internal.actions.filter.FilterActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGrouper;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.GroupActionMenu;
+import org.eclipse.emf.compare.ide.ui.internal.actions.save.SaveComparisonModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareConfigurationExtension;
 import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel;
@@ -280,6 +281,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	protected void createToolItems(ToolBarManager toolbarManager) {
 		super.createToolItems(toolbarManager);
 
+		toolbarManager.add(new SaveComparisonModelAction(getCompareConfiguration()));
 		toolbarManager.add(new GroupActionMenu(getDifferenceGrouper()));
 		toolbarManager.add(new FilterActionMenu(getDifferenceFilter()));
 	}
