@@ -15,12 +15,8 @@ import com.google.common.base.Preconditions;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.AttributeChange;
-import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.compare.uml2.internal.utils.ForwardingItemProvider;
 import org.eclipse.emf.compare.uml2.internal.utils.Strings;
@@ -123,7 +119,7 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 		if (value == null) {
 			value = "<null>";
 		} else {
-			value = Strings.elide(value, 25, "...");
+			value = Strings.elide(value, 50, "...");
 		}
 		return value;
 	}
@@ -135,16 +131,7 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 			case DELETE:
 			case MOVE:
 				EObject discriminant = umlDiff.getDiscriminant();
-				EList<Diff> refinedBy = umlDiff.getRefinedBy();
-				for (Diff diff : refinedBy) {
-					if (diff instanceof ReferenceChange) {
-						if (((ReferenceChange)diff).getValue() == discriminant) {
-							ret = ((ReferenceChange)diff).getReference().getName();
-						}
-					} else if (diff instanceof AttributeChange) {
-
-					}
-				}
+				ret = discriminant.eContainingFeature().getName();
 				break;
 			case CHANGE:
 				break;
