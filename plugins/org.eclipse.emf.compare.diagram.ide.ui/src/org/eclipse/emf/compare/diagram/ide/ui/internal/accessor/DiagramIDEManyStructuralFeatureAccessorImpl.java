@@ -18,19 +18,27 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IEObjectAccessor;
+import org.eclipse.emf.compare.utils.MatchUtil;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class DiagramIDEManyStructuralFeatureAccessorImpl /* extends ManyStructuralFeatureAccessorImpl */implements ITypedElement, IStreamContentAccessor {
+public class DiagramIDEManyStructuralFeatureAccessorImpl /* extends ManyStructuralFeatureAccessorImpl */implements IEObjectAccessor, ITypedElement, IStreamContentAccessor {
+
+	private Diff fDiff;
+
+	private MergeViewerSide fSide;
 
 	/**
 	 * @param diff
 	 * @param side
 	 */
 	public DiagramIDEManyStructuralFeatureAccessorImpl(Diff diff, MergeViewerSide side) {
-		// super(diff, side);
+		this.fDiff = diff;
+		this.fSide = side;
 	}
 
 	/**
@@ -80,5 +88,9 @@ public class DiagramIDEManyStructuralFeatureAccessorImpl /* extends ManyStructur
 		 * 3.6.
 		 */
 		return new ByteArrayInputStream(new byte[] {' ' });
+	}
+
+	public EObject getEObject() {
+		return MatchUtil.getContainer(fDiff.getMatch().getComparison(), fDiff);
 	}
 }

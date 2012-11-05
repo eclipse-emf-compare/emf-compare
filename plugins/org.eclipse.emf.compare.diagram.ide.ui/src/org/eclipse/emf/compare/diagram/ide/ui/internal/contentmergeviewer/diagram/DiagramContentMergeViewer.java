@@ -69,12 +69,13 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	 *            the {@link CompareConfiguration}
 	 */
 	public DiagramContentMergeViewer(Composite parent, CompareConfiguration config) {
-		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
+		super(parent, SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
 		fAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 
 		buildControl(parent);
+		setContentProvider(new GMFModelContentMergeContentProvider(config, fComparison));
 	}
 
 	/**

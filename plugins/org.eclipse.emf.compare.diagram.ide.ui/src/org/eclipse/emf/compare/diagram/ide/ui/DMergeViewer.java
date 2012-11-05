@@ -27,6 +27,8 @@ public abstract class DMergeViewer extends AbstractEditPartViewer {
 		fSide = side;
 	}
 
+	public abstract void setInput(Object object);
+
 	/**
 	 * Returns the wrapped {@link AbstractEditPartViewer}.
 	 * 

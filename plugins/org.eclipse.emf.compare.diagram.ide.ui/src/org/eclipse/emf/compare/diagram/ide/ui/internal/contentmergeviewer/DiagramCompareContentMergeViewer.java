@@ -26,10 +26,8 @@ import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.diagram.ide.ui.DMergeViewer;
 import org.eclipse.emf.compare.diagram.ide.ui.DMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.diagram.ui.mergeviewer.EditingDomainUtils;
 import org.eclipse.emf.compare.diagram.ui.viewmodel.NotationDiffCreator;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeMergeViewerContentProvider;
@@ -42,8 +40,6 @@ import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColorProvider;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor;
-import org.eclipse.emf.transaction.RecordingCommand;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
@@ -85,15 +81,6 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	/** the modelcreator used to annotate models. */
 	protected final NotationDiffCreator gmfModelCreator = new NotationDiffCreator();
 
-	/** The transactionnal Editing Domain used to annotate/deannotate left diagrams. */
-	private TransactionalEditingDomain leftTED;
-
-	/** The transactionnal Editing Domain used to annotate/deannotate right diagrams. */
-	private TransactionalEditingDomain rightTED;
-
-	/** The transactionnal Editing Domain used to display ancestor diagrams. */
-	private TransactionalEditingDomain ancestorTED;
-
 	private DMergeViewer fAncestor;
 
 	private DMergeViewer fLeft;
@@ -104,7 +91,7 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 
 	private ActionContributionItem fCopyDiffRightToLeftItem;
 
-	private final Comparison fComparison;
+	protected final Comparison fComparison;
 
 	private final AtomicBoolean fSyncingSelections = new AtomicBoolean(false);
 
@@ -119,7 +106,8 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	 * @param bundle
 	 * @param cc
 	 */
-	protected DiagramCompareContentMergeViewer(int style, ResourceBundle bundle, CompareConfiguration cc) {
+	protected DiagramCompareContentMergeViewer(Composite parent, int style, ResourceBundle bundle,
+			CompareConfiguration cc) {
 		super(style, bundle, cc);
 		fDynamicObject = new DynamicObject(this);
 
@@ -127,8 +115,6 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 
 		fEditingDomain = (EMFCompareEditingDomain)getCompareConfiguration().getProperty(
 				EMFCompareConstants.EDITING_DOMAIN);
-
-		setContentProvider(new GMFModelContentMergeContentProvider(cc, fComparison));
 	}
 
 	/**
@@ -176,9 +162,10 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	 */
 	@Override
 	protected void updateContent(Object ancestor, Object left, Object right) {
-		// fAncestor.setInput(ancestor);
-		// fLeft.setInput(left);
-		// fRight.setInput(right);
+
+		fAncestor.setInput(ancestor);
+		fLeft.setInput(left);
+		fRight.setInput(right);
 
 		// must update selection after the three viewers input has been set
 		// to avoid some NPE/AssertionError (they are calling each other on selectionChanged event to
@@ -194,76 +181,76 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 
 		// getCenterControl().redraw();
 
-		if (ancestor != null) {
-			ancestorTED = EditingDomainUtils.getOrCreateEditingDomain(ancestor);
-		}
-		if (left != null) {
-			leftTED = EditingDomainUtils.getOrCreateEditingDomain(left);
-			annotateSide(DifferenceSource.LEFT);
-		}
-
-		if (right != null) {
-			rightTED = EditingDomainUtils.getOrCreateEditingDomain(right);
-			annotateSide(DifferenceSource.RIGHT);
-		}
+		// if (ancestor != null) {
+		// ancestorTED = EditingDomainUtils.getOrCreateEditingDomain(ancestor);
+		// }
+		// if (left != null) {
+		// leftTED = EditingDomainUtils.getOrCreateEditingDomain(left);
+		// annotateSide(DifferenceSource.LEFT);
+		// }
+		//
+		// if (right != null) {
+		// rightTED = EditingDomainUtils.getOrCreateEditingDomain(right);
+		// annotateSide(DifferenceSource.RIGHT);
+		// }
 
 	}
 
-	/**
-	 * Execute a RecordingCommand to annotate the {@link #getInput() input} of this viewer. Only the given
-	 * <code>side</code> is annotated.
-	 * 
-	 * @param side
-	 *            The side to annotate.
-	 */
-	private void annotateSide(final DifferenceSource side) {
-		TransactionalEditingDomain ted = null;
-		if (side == DifferenceSource.LEFT) {
-			ted = leftTED;
-		} else {
-			ted = rightTED;
-		}
-
-		// annotate models
-		final RecordingCommand command = new RecordingCommand(ted) {
-			@Override
-			protected void doExecute() {
-				if (gmfModelCreator != null) {
-					gmfModelCreator.setInput(getInput());
-					gmfModelCreator.addEAnnotations(side);
-				}
-			}
-		};
-		ted.getCommandStack().execute(command);
-	}
-
-	/**
-	 * Execute a RecordingCommand to annotate the {@link #getInput() input} of this viewer. Only the given
-	 * <code>side</code> is annotated.
-	 * 
-	 * @param side
-	 *            The side to annotate.
-	 */
-	protected void unnannotateSide(final DifferenceSource side) {
-		TransactionalEditingDomain ted = null;
-		if (side == DifferenceSource.LEFT) {
-			ted = leftTED;
-		} else {
-			ted = rightTED;
-		}
-
-		// de-annotate models
-		final RecordingCommand command = new RecordingCommand(ted) {
-			@Override
-			protected void doExecute() {
-				if (gmfModelCreator != null) {
-					gmfModelCreator.setInput(getInput());
-					gmfModelCreator.removeEAnnotations(side);
-				}
-			}
-		};
-		ted.getCommandStack().execute(command);
-	}
+	// /**
+	// * Execute a RecordingCommand to annotate the {@link #getInput() input} of this viewer. Only the given
+	// * <code>side</code> is annotated.
+	// *
+	// * @param side
+	// * The side to annotate.
+	// */
+	// private void annotateSide(final DifferenceSource side) {
+	// TransactionalEditingDomain ted = null;
+	// if (side == DifferenceSource.LEFT) {
+	// ted = leftTED;
+	// } else {
+	// ted = rightTED;
+	// }
+	//
+	// // annotate models
+	// final RecordingCommand command = new RecordingCommand(ted) {
+	// @Override
+	// protected void doExecute() {
+	// if (gmfModelCreator != null) {
+	// gmfModelCreator.setInput(getInput());
+	// gmfModelCreator.addEAnnotations(side);
+	// }
+	// }
+	// };
+	// ted.getCommandStack().execute(command);
+	// }
+	//
+	// /**
+	// * Execute a RecordingCommand to annotate the {@link #getInput() input} of this viewer. Only the given
+	// * <code>side</code> is annotated.
+	// *
+	// * @param side
+	// * The side to annotate.
+	// */
+	// protected void unnannotateSide(final DifferenceSource side) {
+	// TransactionalEditingDomain ted = null;
+	// if (side == DifferenceSource.LEFT) {
+	// ted = leftTED;
+	// } else {
+	// ted = rightTED;
+	// }
+	//
+	// // de-annotate models
+	// final RecordingCommand command = new RecordingCommand(ted) {
+	// @Override
+	// protected void doExecute() {
+	// if (gmfModelCreator != null) {
+	// gmfModelCreator.setInput(getInput());
+	// gmfModelCreator.removeEAnnotations(side);
+	// }
+	// }
+	// };
+	// ted.getCommandStack().execute(command);
+	// }
 
 	private ISelection createSelectionOrEmpty(final Object o) {
 		final ISelection selection;
@@ -621,15 +608,15 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 
 		@Override
 		public void saveLeftContent(Object input, byte[] bytes) {
-			unnannotateSide(DifferenceSource.LEFT);
-			unnannotateSide(DifferenceSource.RIGHT);
+			// unnannotateSide(DifferenceSource.LEFT);
+			// unnannotateSide(DifferenceSource.RIGHT);
 			super.saveLeftContent(input, bytes);
 		}
 
 		@Override
 		public void saveRightContent(Object input, byte[] bytes) {
-			unnannotateSide(DifferenceSource.LEFT);
-			unnannotateSide(DifferenceSource.RIGHT);
+			// unnannotateSide(DifferenceSource.LEFT);
+			// unnannotateSide(DifferenceSource.RIGHT);
 			super.saveRightContent(input, bytes);
 		}
 
