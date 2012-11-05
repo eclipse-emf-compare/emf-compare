@@ -20,7 +20,7 @@ import org.eclipse.uml2.uml.Property;
 
 /**
  * View label provider for Class.
- * @author Mickael Barbero <a href="mailto:mickael.barbero@obeo.fr">mickael.barbero@obeo.fr</a>
+ * @author Mikael Barbero <a href="mailto:mikael.barbero@obeo.fr">Mikael.barbero@obeo.fr</a>
  */
 public class ClazzViewLabelProvider extends AbstractUMLViewLabelProvider {
 
@@ -50,7 +50,7 @@ public class ClazzViewLabelProvider extends AbstractUMLViewLabelProvider {
 	
 	/**
 	 * Switch to return the label in relation to the kind of model object.
-	 * @author Mickael Barbero <a href="mailto:mickael.barbero@obeo.fr">mickael.barbero@obeo.fr</a>
+	 * @author Mikael Barbero <a href="mailto:mikael.barbero@obeo.fr">Mikael.barbero@obeo.fr</a>
 	 */
 	class ClassLabelSwitch extends LabelSwitch {
 

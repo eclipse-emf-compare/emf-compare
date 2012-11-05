@@ -16,7 +16,7 @@ import org.eclipse.papyrus.uml.diagram.deployment.edit.parts.UMLEditPartFactory;
 
 /**
  * View label provider for Deployment.
- * @author Mickael Barbero <a href="mailto:mickael.barbero@obeo.fr">mickael.barbero@obeo.fr</a>
+ * @author Mikael Barbero <a href="mailto:mikael.barbero@obeo.fr">Mikael.barbero@obeo.fr</a>
  */
 public class DeploymentViewLabelProvider extends AbstractUMLViewLabelProvider {
 
