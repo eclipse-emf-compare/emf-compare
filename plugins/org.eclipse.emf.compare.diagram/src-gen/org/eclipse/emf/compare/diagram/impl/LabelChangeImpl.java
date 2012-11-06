@@ -25,19 +25,19 @@ import org.eclipse.gmf.runtime.notation.View;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diagram.impl.LabelChangeImpl#getLeft <em>Left</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diagram.impl.LabelChangeImpl#getRight <em>Right</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diagram.impl.LabelChangeImpl#getOrigin <em>Origin</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diagram.impl.LabelChangeImpl#getLeft <em>Left</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diagram.impl.LabelChangeImpl#getRight <em>Right</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diagram.impl.LabelChangeImpl#getOrigin <em>Origin</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class LabelChangeImpl extends DiagramDiffImpl implements LabelChange {
 	/**
-	 * The default value of the '{@link #getLeft() <em>Left</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getLeft() <em>Left</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getLeft()
 	 * @generated
 	 * @ordered
@@ -45,9 +45,9 @@ public class LabelChangeImpl extends DiagramDiffImpl implements LabelChange {
 	protected static final String LEFT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getLeft() <em>Left</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getLeft() <em>Left</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getLeft()
 	 * @generated
 	 * @ordered
@@ -55,9 +55,9 @@ public class LabelChangeImpl extends DiagramDiffImpl implements LabelChange {
 	protected String left = LEFT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRight() <em>Right</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getRight() <em>Right</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getRight()
 	 * @generated
 	 * @ordered
@@ -65,9 +65,9 @@ public class LabelChangeImpl extends DiagramDiffImpl implements LabelChange {
 	protected static final String RIGHT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRight() <em>Right</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getRight() <em>Right</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getRight()
 	 * @generated
 	 * @ordered
@@ -75,9 +75,9 @@ public class LabelChangeImpl extends DiagramDiffImpl implements LabelChange {
 	protected String right = RIGHT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getOrigin() <em>Origin</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getOrigin() <em>Origin</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getOrigin()
 	 * @generated
 	 * @ordered
@@ -85,9 +85,9 @@ public class LabelChangeImpl extends DiagramDiffImpl implements LabelChange {
 	protected static final String ORIGIN_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getOrigin() <em>Origin</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getOrigin() <em>Origin</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getOrigin()
 	 * @generated
 	 * @ordered
@@ -96,7 +96,6 @@ public class LabelChangeImpl extends DiagramDiffImpl implements LabelChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected LabelChangeImpl() {
@@ -105,7 +104,6 @@ public class LabelChangeImpl extends DiagramDiffImpl implements LabelChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -115,7 +113,6 @@ public class LabelChangeImpl extends DiagramDiffImpl implements LabelChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getLeft() {
@@ -124,21 +121,17 @@ public class LabelChangeImpl extends DiagramDiffImpl implements LabelChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setLeft(String newLeft) {
 		String oldLeft = left;
 		left = newLeft;
-		if (eNotificationRequired()) {
-			eNotify(new ENotificationImpl(this, Notification.SET, DiagramComparePackage.LABEL_CHANGE__LEFT,
-					oldLeft, left));
-		}
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DiagramComparePackage.LABEL_CHANGE__LEFT, oldLeft, left));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getRight() {
@@ -147,21 +140,17 @@ public class LabelChangeImpl extends DiagramDiffImpl implements LabelChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRight(String newRight) {
 		String oldRight = right;
 		right = newRight;
-		if (eNotificationRequired()) {
-			eNotify(new ENotificationImpl(this, Notification.SET, DiagramComparePackage.LABEL_CHANGE__RIGHT,
-					oldRight, right));
-		}
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DiagramComparePackage.LABEL_CHANGE__RIGHT, oldRight, right));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getOrigin() {
@@ -170,21 +159,17 @@ public class LabelChangeImpl extends DiagramDiffImpl implements LabelChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setOrigin(String newOrigin) {
 		String oldOrigin = origin;
 		origin = newOrigin;
-		if (eNotificationRequired()) {
-			eNotify(new ENotificationImpl(this, Notification.SET, DiagramComparePackage.LABEL_CHANGE__ORIGIN,
-					oldOrigin, origin));
-		}
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DiagramComparePackage.LABEL_CHANGE__ORIGIN, oldOrigin, origin));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -202,7 +187,6 @@ public class LabelChangeImpl extends DiagramDiffImpl implements LabelChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -223,7 +207,6 @@ public class LabelChangeImpl extends DiagramDiffImpl implements LabelChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -244,7 +227,6 @@ public class LabelChangeImpl extends DiagramDiffImpl implements LabelChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -262,14 +244,11 @@ public class LabelChangeImpl extends DiagramDiffImpl implements LabelChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) {
-			return super.toString();
-		}
+		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (left: ");

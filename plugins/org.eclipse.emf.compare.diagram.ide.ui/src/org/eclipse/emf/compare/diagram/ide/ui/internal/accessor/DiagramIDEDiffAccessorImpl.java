@@ -16,29 +16,37 @@ import java.io.InputStream;
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.diagram.DiagramDiff;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IEObjectAccessor;
-import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class DiagramIDEManyStructuralFeatureAccessorImpl /* extends ManyStructuralFeatureAccessorImpl */implements IEObjectAccessor, ITypedElement, IStreamContentAccessor {
+public class DiagramIDEDiffAccessorImpl implements IDiagramDiffAccessor, ITypedElement, IStreamContentAccessor {
 
-	private Diff fDiff;
+	private DiagramDiff fDiff;
 
 	private MergeViewerSide fSide;
+
+	private Comparison fComparison;
+
+	private Match fOwnerMatch;
 
 	/**
 	 * @param diff
 	 * @param side
 	 */
-	public DiagramIDEManyStructuralFeatureAccessorImpl(Diff diff, MergeViewerSide side) {
+	public DiagramIDEDiffAccessorImpl(DiagramDiff diff, MergeViewerSide side) {
 		this.fDiff = diff;
 		this.fSide = side;
+		this.fOwnerMatch = fDiff.getMatch();
+		this.fComparison = fOwnerMatch.getComparison();
 	}
 
 	/**
@@ -91,6 +99,85 @@ public class DiagramIDEManyStructuralFeatureAccessorImpl /* extends ManyStructur
 	}
 
 	public EObject getEObject() {
-		return MatchUtil.getContainer(fDiff.getMatch().getComparison(), fDiff);
+		if (fDiff instanceof DiagramDiff) {
+			return ((DiagramDiff)fDiff).getView();
+		}
+		return null;
 	}
+
+	public EObject getEObject(MergeViewerSide side) {
+		EObject obj = getEObject();
+		Match eObjectMatch = fComparison.getMatch(obj);
+		if (obj instanceof View) {
+			switch (side) {
+				case LEFT:
+					return eObjectMatch.getLeft();
+				case RIGHT:
+					return eObjectMatch.getRight();
+				case ANCESTOR:
+					return eObjectMatch.getOrigin();
+				default:
+					break;
+			}
+		}
+		return null;
+	}
+
+	public Comparison getComparison() {
+		return fComparison;
+	}
+
+	public DiagramDiff getDiff() {
+		return fDiff;
+	}
+
+	public Diagram getDiagram(MergeViewerSide side) {
+		EObject obj = getEObject(side);
+		if (obj != null) {
+			return getDiagram(obj);
+		} else {
+			Diagram diagram = getDiagram();
+			if (diagram != null) {
+				Match diagramMatch = fComparison.getMatch(diagram);
+				switch (side) {
+					case LEFT:
+						return (Diagram)diagramMatch.getLeft();
+					case RIGHT:
+						return (Diagram)diagramMatch.getRight();
+					case ANCESTOR:
+						return (Diagram)diagramMatch.getOrigin();
+					default:
+						break;
+				}
+			}
+		}
+		return null;
+	}
+
+	public Diagram getDiagram() {
+		EObject obj = getEObject();
+		return getDiagram(obj);
+	}
+
+	private Diagram getDiagram(EObject obj) {
+		if (obj instanceof Diagram) {
+			return (Diagram)obj;
+		} else if (obj instanceof View) {
+			return ((View)obj).getDiagram();
+		}
+		return null;
+	}
+
+	public Diagram getOwnedDiagram() {
+		return getDiagram(fSide);
+	}
+
+	public View getOwnedView() {
+		View result = (View)getEObject(fSide);
+		if (result == null) {
+			result = getDiagram(fSide);
+		}
+		return result;
+	}
+
 }

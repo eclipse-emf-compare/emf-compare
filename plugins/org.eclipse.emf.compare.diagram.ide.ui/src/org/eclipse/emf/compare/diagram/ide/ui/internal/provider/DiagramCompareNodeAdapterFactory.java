@@ -86,7 +86,7 @@ public class DiagramCompareNodeAdapterFactory extends DiagramCompareAdapterFacto
 
 	@Override
 	public Adapter createLabelChangeAdapter() {
-		return new DiagramLabelChangeNode(getRootAdapterFactory());
+		return new DiagramDiffNode(getRootAdapterFactory());
 	}
 
 	@Override

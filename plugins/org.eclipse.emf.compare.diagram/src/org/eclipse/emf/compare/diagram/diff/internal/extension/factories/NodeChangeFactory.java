@@ -65,6 +65,17 @@ public class NodeChangeFactory extends AbstractDiffExtensionFactory {
 			ret.getRefinedBy().addAll(input.getMatch().getDifferences());
 		}
 
+		if (input instanceof ReferenceChange) {
+			ret.setView(((ReferenceChange)input).getValue());
+		} else if (input instanceof AttributeChange) {
+			Comparison comparison = input.getMatch().getComparison();
+			EObject container = MatchUtil.getContainer(comparison, input);
+			while (container != null && !(container instanceof View)) {
+				container = container.eContainer();
+			}
+			ret.setView(container);
+		}
+
 		ret.setSource(input.getSource());
 		ret.setSemanticDiff(getSemanticDiff(input));
 

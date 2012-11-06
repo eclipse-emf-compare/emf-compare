@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer;
 
-import java.util.EventObject;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -22,7 +21,6 @@ import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.Utilities;
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -33,8 +31,6 @@ import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeMergeViewerContentProvider;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColorProvider;
@@ -56,7 +52,6 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.actions.ActionFactory;
 
 /**
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
@@ -359,19 +354,19 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 		toolBarManager.appendToGroup("navigation", contributionPreviousDiff);
 
 		// Undo/Redo
-		final UndoAction undoAction = new UndoAction(fEditingDomain);
-		final RedoAction redoAction = new RedoAction(fEditingDomain);
-
-		fEditingDomain.getCommandStack().addCommandStackListener(new CommandStackListener() {
-			public void commandStackChanged(EventObject event) {
-				undoAction.update();
-				redoAction.update();
-				refresh();
-			}
-		});
-
-		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
-		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
+		// final UndoAction undoAction = new UndoAction(fEditingDomain);
+		// final RedoAction redoAction = new RedoAction(fEditingDomain);
+		//
+		// fEditingDomain.getCommandStack().addCommandStackListener(new CommandStackListener() {
+		// public void commandStackChanged(EventObject event) {
+		// undoAction.update();
+		// redoAction.update();
+		// refresh();
+		// }
+		// });
+		//
+		// getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
+		// getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
 	}
 
 	/**

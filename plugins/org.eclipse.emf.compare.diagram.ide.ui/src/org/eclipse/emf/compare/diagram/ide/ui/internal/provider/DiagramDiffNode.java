@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.diagram.ide.ui.internal.provider;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.diagram.DiagramDiff;
-import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.DiagramIDEManyStructuralFeatureAccessorImpl;
+import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.DiagramIDEDiffAccessorImpl;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.DiffNode;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 
@@ -70,10 +70,11 @@ public class DiagramDiffNode extends DiffNode {
 			case ADD:
 			case DELETE:
 			case MOVE:
-				ret = new DiagramIDEManyStructuralFeatureAccessorImpl(diff, side);
+				ret = new DiagramIDEDiffAccessorImpl(diff, side);
 				break;
 			case CHANGE:
 				// TODO: what to do in change ?
+				ret = new DiagramIDEDiffAccessorImpl(diff, side);
 				break;
 			default:
 				throw new IllegalStateException();

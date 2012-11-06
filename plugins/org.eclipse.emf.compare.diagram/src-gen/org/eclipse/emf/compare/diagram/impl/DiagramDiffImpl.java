@@ -16,6 +16,7 @@ import org.eclipse.emf.compare.diagram.DiagramComparePackage;
 import org.eclipse.emf.compare.diagram.DiagramDiff;
 import org.eclipse.emf.compare.impl.DiffImpl;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
@@ -26,6 +27,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.diagram.impl.DiagramDiffImpl#getSemanticDiff <em>Semantic Diff</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diagram.impl.DiagramDiffImpl#getView <em>View</em>}</li>
  * </ul>
  * </p>
  *
@@ -41,6 +43,16 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 	 * @ordered
 	 */
 	protected Diff semanticDiff;
+
+	/**
+	 * The cached value of the '{@link #getView() <em>View</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getView()
+	 * @generated
+	 * @ordered
+	 */
+	protected EObject view;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -95,6 +107,44 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 	}
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EObject getView() {
+		if (view != null && view.eIsProxy()) {
+			InternalEObject oldView = (InternalEObject)view;
+			view = eResolveProxy(oldView);
+			if (view != oldView) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiagramComparePackage.DIAGRAM_DIFF__VIEW, oldView, view));
+			}
+		}
+		return view;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EObject basicGetView() {
+		return view;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setView(EObject newView) {
+		EObject oldView = view;
+		view = newView;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DiagramComparePackage.DIAGRAM_DIFF__VIEW, oldView, view));
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -104,6 +154,9 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 			case DiagramComparePackage.DIAGRAM_DIFF__SEMANTIC_DIFF:
 				if (resolve) return getSemanticDiff();
 				return basicGetSemanticDiff();
+			case DiagramComparePackage.DIAGRAM_DIFF__VIEW:
+				if (resolve) return getView();
+				return basicGetView();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -117,6 +170,9 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 		switch (featureID) {
 			case DiagramComparePackage.DIAGRAM_DIFF__SEMANTIC_DIFF:
 				setSemanticDiff((Diff)newValue);
+				return;
+			case DiagramComparePackage.DIAGRAM_DIFF__VIEW:
+				setView((EObject)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -132,6 +188,9 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 			case DiagramComparePackage.DIAGRAM_DIFF__SEMANTIC_DIFF:
 				setSemanticDiff((Diff)null);
 				return;
+			case DiagramComparePackage.DIAGRAM_DIFF__VIEW:
+				setView((EObject)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -145,6 +204,8 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 		switch (featureID) {
 			case DiagramComparePackage.DIAGRAM_DIFF__SEMANTIC_DIFF:
 				return semanticDiff != null;
+			case DiagramComparePackage.DIAGRAM_DIFF__VIEW:
+				return view != null;
 		}
 		return super.eIsSet(featureID);
 	}

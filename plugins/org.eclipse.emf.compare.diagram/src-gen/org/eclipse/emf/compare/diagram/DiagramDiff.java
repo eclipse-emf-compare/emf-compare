@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.diagram;
 
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Diagram Diff</b></em>'. <!--
@@ -20,6 +21,7 @@ import org.eclipse.emf.compare.Diff;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.diagram.DiagramDiff#getSemanticDiff <em>Semantic Diff</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diagram.DiagramDiff#getView <em>View</em>}</li>
  * </ul>
  * </p>
  *
@@ -52,5 +54,31 @@ public interface DiagramDiff extends Diff {
 	 * @generated
 	 */
 	void setSemanticDiff(Diff value);
+
+	/**
+	 * Returns the value of the '<em><b>View</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>View</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>View</em>' reference.
+	 * @see #setView(EObject)
+	 * @see org.eclipse.emf.compare.diagram.DiagramComparePackage#getDiagramDiff_View()
+	 * @model
+	 * @generated
+	 */
+	EObject getView();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diagram.DiagramDiff#getView <em>View</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>View</em>' reference.
+	 * @see #getView()
+	 * @generated
+	 */
+	void setView(EObject value);
 
 } // DiagramDiff

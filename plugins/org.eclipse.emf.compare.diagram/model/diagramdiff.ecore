@@ -13,5 +13,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DiagramDiff" abstract="true" eSuperTypes="../../org.eclipse.emf.compare/model/compare.ecore#//Diff">
     <eStructuralFeatures xsi:type="ecore:EReference" name="semanticDiff" eType="ecore:EClass ../../org.eclipse.emf.compare/model/compare.ecore#//Diff"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="view" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
   </eClassifiers>
 </ecore:EPackage>

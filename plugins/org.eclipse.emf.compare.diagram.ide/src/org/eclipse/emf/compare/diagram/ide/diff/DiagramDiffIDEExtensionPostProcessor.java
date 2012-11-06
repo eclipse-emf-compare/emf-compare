@@ -95,6 +95,7 @@ public class DiagramDiffIDEExtensionPostProcessor implements IPostProcessor {
 							diff.setKind(DifferenceKind.CHANGE);
 							diff.setLeft(leftLabel);
 							diff.setRight(rightLabel);
+							diff.setView(leftElement);
 							match.getDifferences().add(diff);
 						}
 					}
@@ -110,7 +111,9 @@ public class DiagramDiffIDEExtensionPostProcessor implements IPostProcessor {
 							final String rightLabel = diff.getRight();
 							if (ancestorLabel.equals(leftLabel)) {
 								diff.setSource(DifferenceSource.RIGHT);
+								diff.setView(rightElement);
 							} else if (!ancestorLabel.equals(rightLabel)) {
+								diff.setView(leftElement);
 								final Conflict conflict = CompareFactory.eINSTANCE.createConflict();
 								conflict.getDifferences().add(diff);
 								comparison.getConflicts().add(conflict);

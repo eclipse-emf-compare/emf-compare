@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.diagram.DiagramCompareFactory;
 import org.eclipse.emf.compare.diagram.EdgeChange;
 import org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.IdentityAnchor;
@@ -52,6 +53,17 @@ public class EdgeChangeFactory extends AbstractDiffExtensionFactory {
 		} else if (extensionKind == DifferenceKind.DELETE) {
 			ret.getRefinedBy().add(input);
 		}
+
+		EObject view = null;
+		if (input instanceof ReferenceChange) {
+			view = ((ReferenceChange)input).getValue();
+		} else if (input instanceof AttributeChange) {
+			view = MatchUtil.getContainer(input.getMatch().getComparison(), input);
+		}
+		while (view != null && !(view instanceof Edge)) {
+			view = view.eContainer();
+		}
+		ret.setView(view);
 
 		ret.setSource(input.getSource());
 
