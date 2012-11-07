@@ -158,6 +158,10 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 		// Match could be null if the value is out of the scope
 		if (match != null) {
 			equal = match.getLeft() == object2 || match.getRight() == object2 || match.getOrigin() == object2;
+		} else if (getTarget().getMatch(object2) != null) {
+			equal = false;
+		} else if (object1.eClass() != object2.eClass()) {
+			equal = false;
 		} else {
 			/*
 			 * use a temporary variable as buffer for the "equal" boolean. We know that the following
