@@ -96,7 +96,7 @@ public class EditionDistance implements DistanceFunction {
 	private EqualityHelper helper;
 
 	/**
-	 * Instanciate a new Edition Distance.
+	 * Instantiate a new Edition Distance.
 	 */
 	public EditionDistance() {
 		weights = Maps.newHashMap();
