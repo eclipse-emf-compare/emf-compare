@@ -21,12 +21,12 @@ Contributors:
             genModel="model/UML2CompareTestProfile.genmodel"/>
    </extension>
    
-   <extension point="org.eclipse.uml2.uml.generated_package">
+   <!--extension point="org.eclipse.uml2.uml.generated_package">
 	   <profile
 	         uri="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile"
 	         location="platform:/plugin/org.eclipse.emf.compare.uml2.tests/model/uml2.compare.testprofile.profile.uml#_hZFTgIwkEeC_FYHMbTTxXw">
 	   </profile>
-   </extension>
+   </extension-->
    <extension
          point="org.eclipse.emf.ecore.uri_mapping">
       <mapping
