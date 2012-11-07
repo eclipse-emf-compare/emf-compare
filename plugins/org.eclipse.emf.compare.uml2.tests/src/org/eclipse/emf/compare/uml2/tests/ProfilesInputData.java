@@ -2,6 +2,7 @@ package org.eclipse.emf.compare.uml2.tests;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -25,6 +26,8 @@ public class ProfilesInputData extends AbstractInputData {
 
 	/** Store the set of the resource sets of the input data. */
 	private Set<ResourceSet> sets = new LinkedHashSet<ResourceSet>();
+
+	private static boolean doOnce;
 
 	public Set<ResourceSet> getSets() {
 		return sets;
@@ -59,6 +62,15 @@ public class ProfilesInputData extends AbstractInputData {
 					+ thisNamespace.length());
 			staticProfilePath += "/model/";
 
+			if (!doOnce) {
+				doOnce = true;
+				System.out.println("Path to UML jar : " + UMLJarPath);
+				debugPathResolution(UMLJarPath + "!/profiles/Ecore.profile.uml");
+				System.out.println("Path to test profile : " + staticProfilePath
+						+ "/uml2.compare.testprofile.profile.uml");
+				debugPathResolution(staticProfilePath + "/uml2.compare.testprofile.profile.uml");
+			}
+
 			final Map<URI, URI> uriMap = resourceSet.getURIConverter().getURIMap();
 			uriMap.put(URI.createURI(UMLResource.LIBRARIES_PATHMAP), URI.createURI(UMLJarPath
 					+ "!/libraries/"));
@@ -76,5 +88,17 @@ public class ProfilesInputData extends AbstractInputData {
 		str.close();
 
 		return resource;
+	}
+
+	private void debugPathResolution(String path) {
+		System.out.println("Trying to resolve \"" + path + "\" on file system.");
+		try {
+			new URL(path).openConnection();
+			System.out.println("resolution success!");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
