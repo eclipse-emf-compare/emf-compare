@@ -43,7 +43,7 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	 * Set this to <code>true</code> to activate checking the merge state through
 	 * {@link #checkMergeState(boolean)}.
 	 */
-	private static final boolean DEBUG_MERGE = true;
+	private static final boolean DEBUG_MERGE = false;
 
 	/**
 	 * {@inheritDoc}
