@@ -32,6 +32,7 @@ import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -524,7 +525,28 @@ public final class DiffUtil {
 		final Match match = diff.getMatch();
 
 		final EObject expectedContainer;
-		if (rightToLeft) {
+		if (feature instanceof EReference && ((EReference)feature).isContainment()
+				&& diff.getKind() == DifferenceKind.MOVE) {
+			// The value can only be an EObject, and its match cannot be null.
+			// If any of these two assumptions is wrong, something went horribly awry beforehand.
+			final Match valueMatch = comparison.getMatch((EObject)value);
+
+			final Match targetContainerMatch;
+			// If it exists, use the source side's container as reference
+			if (rightToLeft && valueMatch.getRight() != null) {
+				targetContainerMatch = comparison.getMatch(valueMatch.getRight().eContainer());
+			} else if (!rightToLeft && valueMatch.getLeft() != null) {
+				targetContainerMatch = comparison.getMatch(valueMatch.getLeft().eContainer());
+			} else {
+				// Otherwise, the value we're moving on one side has been removed from its source side.
+				targetContainerMatch = comparison.getMatch(valueMatch.getOrigin().eContainer());
+			}
+			if (rightToLeft) {
+				expectedContainer = targetContainerMatch.getLeft();
+			} else {
+				expectedContainer = targetContainerMatch.getRight();
+			}
+		} else if (rightToLeft) {
 			expectedContainer = match.getLeft();
 		} else {
 			expectedContainer = match.getRight();
