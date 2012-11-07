@@ -60,10 +60,8 @@ public class FuzzyTest {
 	public void copyAllRightToLeft() {
 		Assert.assertNotNull(root);
 		EObject backup = EcoreUtil.copy(root);
-		ModelMutatorConfiguration conf = new ModelMutatorConfiguration(EcorePackage.eINSTANCE, root, 1L);
-		conf.setMaxDeleteCount(20);
 
-		util.mutate(conf);
+		util.mutate(createConfig());
 
 		Comparison result = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(root, backup));
 		int nbDiffs = result.getDifferences().size();
@@ -85,10 +83,8 @@ public class FuzzyTest {
 	public void copyAllLeftToRight() {
 		Assert.assertNotNull(root);
 		EObject backup = EcoreUtil.copy(root);
-		ModelMutatorConfiguration conf = new ModelMutatorConfiguration(EcorePackage.eINSTANCE, root, 1L);
-		conf.setMaxDeleteCount(20);
 
-		util.mutate(conf);
+		util.mutate(createConfig());
 
 		Comparison result = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(root, backup));
 		int nbDiffs = result.getDifferences().size();
@@ -100,4 +96,11 @@ public class FuzzyTest {
 		Assert.assertEquals("We still have differences after merging all of them (had " + nbDiffs
 				+ " to merge in the beginning)", 0, valid.getDifferences().size());
 	}
+
+	private ModelMutatorConfiguration createConfig() {
+		ModelMutatorConfiguration conf = new ModelMutatorConfiguration(EcorePackage.eINSTANCE, root, 1L);
+		conf.setMaxDeleteCount(0);
+		return conf;
+	}
+
 }
