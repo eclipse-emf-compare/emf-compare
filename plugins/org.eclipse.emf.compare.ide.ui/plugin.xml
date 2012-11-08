@@ -13,6 +13,7 @@
 -->
 
 <plugin>
+   <extension-point id="accessor_factory" name="Accessor Factory" schema="schema/accessor_factory.exsd"/>
    <extension
          point="org.eclipse.compare.structureMergeViewers">
       <viewer
@@ -61,6 +62,25 @@
              org.eclipse.compare.structuremergeviewer.ITypedElement
              org.eclipse.compare.structuremergeviewer.ICompareInput"
             uri="http://www.eclipse.org/emf/compare">
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.ide.ui.accessor_factory">
+      <factory
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.factory.IDEEObjectAccessorFactory"
+            ranking="10">
+      </factory>
+      <factory
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.factory.IDEManyStructuralFeatureAccessorFactory"
+            ranking="10">
+      </factory>
+      <factory
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.factory.IDESingleStructuralFeatureAccessorFactory"
+            ranking="10">
+      </factory>
+      <factory
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.factory.IDEStringAttributeChangeAccessorFactory"
+            ranking="10">
       </factory>
    </extension>
 </plugin>

@@ -42,7 +42,7 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class EObjectNode implements IEObjectAccessor {
+public class EObjectAccessor implements IEObjectAccessor {
 
 	/**
 	 * The wrapped {@link EObject}.
@@ -62,7 +62,7 @@ public class EObjectNode implements IEObjectAccessor {
 	 * @param eObject
 	 *            the {@link EObject} to wrap.
 	 */
-	public EObjectNode(AdapterFactory adapterFactory, EObject eObject) {
+	public EObjectAccessor(AdapterFactory adapterFactory, EObject eObject) {
 		fAdapterFactory = adapterFactory;
 		fEObject = eObject;
 	}

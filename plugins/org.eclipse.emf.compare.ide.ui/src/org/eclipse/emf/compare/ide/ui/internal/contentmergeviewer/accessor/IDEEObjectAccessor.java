@@ -13,19 +13,19 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor;
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.EObjectNode;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.EObjectAccessor;
 import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class IDEEObjectNode extends EObjectNode implements ITypedElement, IStreamContentAccessor {
+public class IDEEObjectAccessor extends EObjectAccessor implements ITypedElement, IStreamContentAccessor {
 
 	/**
 	 * @param adapterFactory
 	 * @param eObject
 	 */
-	public IDEEObjectNode(AdapterFactory adapterFactory, EObject eObject) {
+	public IDEEObjectAccessor(AdapterFactory adapterFactory, EObject eObject) {
 		super(adapterFactory, eObject);
 	}
 

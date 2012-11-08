@@ -14,13 +14,13 @@ import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.DiagramContentMergeViewerConstants;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.EObjectNode;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.EObjectAccessor;
 import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class DiagramIDEEObjectNode extends EObjectNode implements ITypedElement, IStreamContentAccessor {
+public class DiagramIDEEObjectNode extends EObjectAccessor implements ITypedElement, IStreamContentAccessor {
 
 	/**
 	 * @param adapterFactory

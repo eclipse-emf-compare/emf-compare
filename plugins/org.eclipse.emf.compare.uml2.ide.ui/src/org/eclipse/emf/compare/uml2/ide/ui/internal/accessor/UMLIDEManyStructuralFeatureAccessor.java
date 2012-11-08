@@ -27,13 +27,13 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class UMLIDEManyStructuralFeatureAccessorImpl extends IDEManyStructuralFeatureAccessorImpl {
+public class UMLIDEManyStructuralFeatureAccessor extends IDEManyStructuralFeatureAccessorImpl {
 
 	/**
 	 * @param diff
 	 * @param side
 	 */
-	public UMLIDEManyStructuralFeatureAccessorImpl(Diff diff, MergeViewerSide side) {
+	public UMLIDEManyStructuralFeatureAccessor(Diff diff, MergeViewerSide side) {
 		super(diff, side);
 	}
 

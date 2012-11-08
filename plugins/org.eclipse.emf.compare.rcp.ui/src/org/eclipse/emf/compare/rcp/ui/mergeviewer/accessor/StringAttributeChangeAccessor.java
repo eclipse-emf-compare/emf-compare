@@ -37,7 +37,7 @@ public class StringAttributeChangeAccessor {
 	/**
 	 * The EAttribute to retrieve from the wrapped EObject.
 	 */
-	private final EAttribute fEAttribute;
+	private final EAttribute fAttribute;
 
 	private final Comparison fComparison;
 
@@ -46,13 +46,10 @@ public class StringAttributeChangeAccessor {
 	 * 
 	 * @param eObject
 	 *            The EObject to get the value of the EAttribute from
-	 * @param eAttribute
-	 *            The EAttribute to retrieve from the wrapped EObject
 	 */
-	public StringAttributeChangeAccessor(EObject eObject, EAttribute eAttribute,
-			AttributeChange attributeChange) {
+	public StringAttributeChangeAccessor(EObject eObject, AttributeChange attributeChange) {
 		this.fEObject = eObject;
-		this.fEAttribute = eAttribute;
+		this.fAttribute = attributeChange.getAttribute();
 		this.fComparison = attributeChange.getMatch().getComparison();
 	}
 
@@ -90,7 +87,7 @@ public class StringAttributeChangeAccessor {
 	 * @return the fEAttribute
 	 */
 	protected final EAttribute getEAtribute() {
-		return fEAttribute;
+		return fAttribute;
 	}
 
 }
