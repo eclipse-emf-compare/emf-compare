@@ -11,8 +11,10 @@
 package org.eclipse.emf.compare.ide.ui.logical;
 
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.binaryIdentical;
+import static org.eclipse.emf.compare.ide.utils.ResourceUtil.createURIFor;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 
 import java.lang.reflect.Method;
@@ -38,6 +40,10 @@ import org.eclipse.emf.compare.ide.internal.utils.NotLoadingResourceSet;
 import org.eclipse.emf.compare.ide.internal.utils.SyncResourceSet;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
+import org.eclipse.emf.compare.scope.FilterComparisonScope;
+import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.ui.IEditorInput;
@@ -248,6 +254,38 @@ public final class EMFSynchronizationModel {
 		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal, true, true);
 	}
 
+	public IComparisonScope createMinimizedScope() {
+		// Minimize the traversals to non-read-only resources with no binary identical counterparts.
+		minimize();
+
+		// Create the left, right and origin resource sets.
+		final ResourceSet leftResourceSet = new NotLoadingResourceSet(leftTraversal);
+		final ResourceSet rightResourceSet = new NotLoadingResourceSet(rightTraversal);
+		final ResourceSet originResourceSet;
+		if (originTraversal == null || originTraversal.getStorages().isEmpty()) {
+			// FIXME why would an empty resource set yield a different result ?
+			originResourceSet = null;
+		} else {
+			originResourceSet = new NotLoadingResourceSet(originTraversal);
+		}
+
+		final Set<URI> urisInScope = Sets.newLinkedHashSet();
+		for (IStorage left : leftTraversal.getStorages()) {
+			urisInScope.add(createURIFor(left));
+		}
+		for (IStorage right : rightTraversal.getStorages()) {
+			urisInScope.add(createURIFor(right));
+		}
+		for (IStorage origin : leftTraversal.getStorages()) {
+			urisInScope.add(createURIFor(origin));
+		}
+
+		final FilterComparisonScope scope = new DefaultComparisonScope(leftResourceSet, rightResourceSet,
+				originResourceSet);
+		scope.setResourceSetContentFilter(isInScope(urisInScope));
+		return scope;
+	}
+
 	/**
 	 * This can be called to reduce the number of resources in this model's traversals. Specifically, we'll
 	 * remove all resources that can be seen as binary identical (we match resources through exact equality of
@@ -323,39 +361,12 @@ public final class EMFSynchronizationModel {
 	}
 
 	/**
-	 * Create the resource set corresponding to the left logical model.
-	 * 
-	 * @return The resource set corresponding to the left logical model.
-	 */
-	public ResourceSet getLeftResourceSet() {
-		return new NotLoadingResourceSet(leftTraversal);
-	}
-
-	/**
 	 * This is only meant for internal usage.
 	 * 
 	 * @return The left traversal of this model.
 	 */
 	/* package */StorageTraversal getLeftTraversal() {
 		return leftTraversal;
-	}
-
-	/**
-	 * Create the resource set corresponding to the right logical model.
-	 * 
-	 * @return The resource set corresponding to the right logical model.
-	 */
-	public ResourceSet getRightResourceSet() {
-		return new NotLoadingResourceSet(rightTraversal);
-	}
-
-	/**
-	 * Create the resource set corresponding to the origin logical model.
-	 * 
-	 * @return The resource set corresponding to the origin logical model.
-	 */
-	public ResourceSet getOriginResourceSet() {
-		return new NotLoadingResourceSet(originTraversal);
 	}
 
 	/**
@@ -567,5 +578,21 @@ public final class EMFSynchronizationModel {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Returns a predicate that can be applied to {@link Resource}s in order to check if their URI is
+	 * contained in the given set.
+	 * 
+	 * @param uris
+	 *            URIs that we consider to be in this scope.
+	 * @return A useable Predicate.
+	 */
+	private static Predicate<Resource> isInScope(final Set<URI> uris) {
+		return new Predicate<Resource>() {
+			public boolean apply(Resource input) {
+				return input != null && uris.contains(input.getURI());
+			}
+		};
 	}
 }

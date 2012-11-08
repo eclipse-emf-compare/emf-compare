@@ -192,6 +192,27 @@ public final class ResourceUtil {
 	}
 
 	/**
+	 * Create the URI with which we'll load the given IStorage as an EMF resource.
+	 * 
+	 * @param storage
+	 *            The storage for which we need an EMF URI.
+	 * @return The created URI.
+	 */
+	public static URI createURIFor(IStorage storage) {
+		final String resourceName = storage.getName();
+		String path = storage.getFullPath().toString();
+		if (!path.endsWith(resourceName)) {
+			final int endIndex = path.indexOf(resourceName) + resourceName.length();
+			path = path.substring(0, endIndex);
+		}
+		URI uri = URI.createURI(path, true);
+		if (!uri.isPlatformResource()) {
+			uri = URI.createPlatformResourceURI(path, true);
+		}
+		return uri;
+	}
+
+	/**
 	 * Checks whether the two arrays contain identical data in the {@code [0:length]} range. Note that we
 	 * won't even check the arrays' contents if {@code length1} is not equal to {@code length2}.
 	 * 

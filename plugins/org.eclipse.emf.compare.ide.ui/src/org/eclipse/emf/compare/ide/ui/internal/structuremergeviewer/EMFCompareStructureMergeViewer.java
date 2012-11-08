@@ -28,7 +28,6 @@ import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.EMFCompareIDE;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
@@ -180,20 +179,14 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				config.setRightEditable(false);
 			}
 
-			final ResourceSet leftResourceSet = syncModel.getLeftResourceSet();
-			final ResourceSet rightResourceSet = syncModel.getRightResourceSet();
-			final ResourceSet originResourceSet;
-			if (origin == null) {
-				// FIXME why would an empty resource set yield a different result ?
-				originResourceSet = null;
-			} else {
-				originResourceSet = syncModel.getOriginResourceSet();
-			}
-
-			final IComparisonScope scope = EMFCompare.createDefaultScope(leftResourceSet, rightResourceSet,
-					originResourceSet);
+			final IComparisonScope scope = syncModel.createMinimizedScope();
 			final Comparison compareResult = EMFCompareIDE.builder().build().compare(scope,
 					BasicMonitor.toMonitor(monitor));
+
+			final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
+			final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();
+			final ResourceSet originResourceSet = (ResourceSet)scope.getOrigin();
+
 			EMFCompareEditingDomain editingDomain = new EMFCompareEditingDomain(compareResult,
 					leftResourceSet, rightResourceSet, originResourceSet);
 			getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);
