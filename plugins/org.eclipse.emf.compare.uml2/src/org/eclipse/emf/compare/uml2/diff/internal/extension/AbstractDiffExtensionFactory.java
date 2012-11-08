@@ -27,6 +27,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.compare.util.CompareSwitch;
 import org.eclipse.emf.ecore.EObject;
@@ -134,9 +135,16 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 		ret.setDiscriminant(discriminant);
 		ret.setKind(extensionKind);
 
+		// FIXME we should strive to remove these instanceof ... 
+		
 		if (discriminant != null) {
 			if (extensionKind == DifferenceKind.DELETE) {
-				ret.getRefinedBy().add(input);
+				if (input instanceof ResourceAttachmentChange && ret instanceof StereotypeApplicationChange) {
+					// Below the stereotype application lies the reference change for 'base_class'
+					ret.getRefinedBy().addAll(input.getMatch().getDifferences());
+				} else {
+					ret.getRefinedBy().add(input);
+				}
 			} else {
 				fillRefiningDifferences(input.getMatch().getComparison(), ret, discriminant);
 			}
@@ -145,6 +153,17 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 		if (extensionKind == DifferenceKind.ADD || extensionKind == DifferenceKind.DELETE) {
 			if (input instanceof ReferenceChange) {
 				ret.setEReference(((ReferenceChange)input).getReference());
+			} else if (input instanceof ResourceAttachmentChange
+					&& ret instanceof StereotypeApplicationChange) {
+				// the resource attachment concerns the stereotype application itself.
+				// The reference is located "below" that.
+				final List<Diff> candidates = input.getMatch().getDifferences();
+				// Little chance that there is more is that the input ... and what we seek.
+				for (Diff candidate : candidates) {
+					if (candidate instanceof ReferenceChange) {
+						ret.setEReference(((ReferenceChange)candidate).getReference());
+					}
+				}
 			}
 		}
 
