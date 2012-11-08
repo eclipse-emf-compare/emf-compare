@@ -19,10 +19,12 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.provider.ForwardingItemProvider;
 import org.eclipse.emf.compare.provider.spec.Strings;
+import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
+import org.eclipse.uml2.uml.util.UMLUtil;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -131,7 +133,12 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 			case DELETE:
 			case MOVE:
 				EObject discriminant = umlDiff.getDiscriminant();
-				ret = discriminant.eContainingFeature().getName();
+				// FIXME create a specific item provider for each diff ... this is not maintainable.
+				if (umlDiff instanceof StereotypeApplicationChange) {
+					ret = UMLUtil.getBaseElement(discriminant).eContainingFeature().getName();
+				} else {
+					ret = discriminant.eContainingFeature().getName();
+				}
 				break;
 			case CHANGE:
 				break;
