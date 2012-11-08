@@ -551,8 +551,9 @@ public class StereotypeTest extends AbstractTest {
 			addUMLStereotypeApplication = Iterators.find(differences.iterator(), and(
 					instanceOf(StereotypeApplicationChange.class), ofKind(DifferenceKind.DELETE)));
 			assertNotNull(addUMLProfileApplication);
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLStereotypeApplication.getRefinedBy().size()));
+			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLStereotypeApplication.getRefinedBy().size()));
 			assertTrue(addUMLStereotypeApplication.getRefinedBy().contains(addStereotypeApplication));
+			assertTrue(addUMLStereotypeApplication.getRefinedBy().contains(addRefBaseClass));
 		}
 
 		// CHECK REQUIREMENT
@@ -722,8 +723,9 @@ public class StereotypeTest extends AbstractTest {
 			addUMLStereotypeApplication = Iterators.find(differences.iterator(), and(
 					instanceOf(StereotypeApplicationChange.class), ofKind(DifferenceKind.DELETE)));
 			assertNotNull(addUMLProfileApplication);
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLStereotypeApplication.getRefinedBy().size()));
+			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLStereotypeApplication.getRefinedBy().size()));
 			assertTrue(addUMLStereotypeApplication.getRefinedBy().contains(addStereotypeApplication));
+			assertTrue(addUMLStereotypeApplication.getRefinedBy().contains(addRefBaseClass));
 		}
 
 		// CHECK REQUIREMENT
