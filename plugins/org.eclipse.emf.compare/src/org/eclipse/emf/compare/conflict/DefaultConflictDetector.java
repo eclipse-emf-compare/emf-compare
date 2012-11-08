@@ -32,6 +32,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
@@ -93,6 +94,10 @@ public class DefaultConflictDetector implements IConflictDetector {
 		if (diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment()) {
 			checkContainmentConflict(comparison, (ReferenceChange)diff, Iterables.filter(candidates,
 					ReferenceChange.class));
+		} else if (diff instanceof ResourceAttachmentChange) {
+			// These will be handled about the same way as containment deletions
+			checkResourceAttachmentConflict(comparison, (ResourceAttachmentChange)diff, Iterables.filter(
+					candidates, ReferenceChange.class));
 		} else {
 			switch (diff.getKind()) {
 				case DELETE:
@@ -457,6 +462,72 @@ public class DefaultConflictDetector implements IConflictDetector {
 	}
 
 	/**
+	 * This will be called once for each ResourceAttachmentChange in the comparison model.
+	 * 
+	 * @param comparison
+	 *            The originating comparison of those diffs.
+	 * @param diff
+	 *            The "root" difference for which we are to try and determine conflicts.
+	 * @param candidates
+	 *            An iterable over the ReferenceChanges that are possible candidates for conflicts.
+	 */
+	protected void checkResourceAttachmentConflict(Comparison comparison, ResourceAttachmentChange diff,
+			Iterable<ReferenceChange> candidates) {
+		// Any diff that references the affect root is a possible conflict
+		final EObject leftVal = diff.getMatch().getLeft();
+		final EObject rightVal = diff.getMatch().getRight();
+		final EObject originVal = diff.getMatch().getOrigin();
+		for (ReferenceChange candidate : candidates) {
+			final EObject candidateValue = candidate.getValue();
+			if (candidateValue == leftVal || candidateValue == rightVal || candidateValue == originVal) {
+				checkResourceAttachmentConflict(comparison, diff, candidate);
+			}
+		}
+
+		// Every Diff "under" a root deletion conflicts with it.
+		if (diff.getKind() == DifferenceKind.DELETE) {
+			final Predicate<? super Diff> candidateFilter = new ConflictCandidateFilter(diff);
+			for (Diff extendedCandidate : Iterables.filter(diff.getMatch().getAllDifferences(),
+					candidateFilter)) {
+				if (isDeleteOrUnsetDiff(comparison, extendedCandidate)) {
+					conflictOn(comparison, diff, extendedCandidate, ConflictKind.PSEUDO);
+				} else {
+					conflictOn(comparison, diff, extendedCandidate, ConflictKind.REAL);
+				}
+			}
+		}
+	}
+
+	/**
+	 * This will be called from
+	 * {@link #checkResourceAttachmentConflict(Comparison, ResourceAttachmentChange, Iterable)} for each
+	 * ReferenceChange in the comparison model that is on the other side and that impacts the changed root.
+	 * 
+	 * @param comparison
+	 *            The originating comparison of those diffs.
+	 * @param diff
+	 *            Resource attachment change for which we need to check possible conflicts.
+	 * @param candidate
+	 *            A reference change that point to the same value as {@code diff}.
+	 */
+	protected void checkResourceAttachmentConflict(Comparison comparison, ResourceAttachmentChange diff,
+			ReferenceChange candidate) {
+		if (candidate.getReference().isContainment()) {
+			// The element is a new root on one side, but it has been moved to an EObject container on the
+			// other
+			conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+		} else if (diff.getKind() == DifferenceKind.DELETE) {
+			// The root has been deleted.
+			// Anything other than a delete of this value in a reference is a conflict.
+			if (candidate.getKind() == DifferenceKind.DELETE) {
+				// No conflict here
+			} else {
+				conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+			}
+		}
+	}
+
+	/**
 	 * This will be called in order to check whether the given diff represents a DELETE or "CHANGE to default"
 	 * diff. This serves the purpose of determining whether we are in th presence of a real or pseudo
 	 * conflict.
@@ -477,6 +548,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 			final Match valueMatch = comparison.getMatch(value);
 
 			deleteOrUnset = valueMatch != null && valueMatch.getOrigin() == value;
+			// } else if (diff instanceof ResourceAttachmentChange) {
+
 		} else if (diff.getKind() == DifferenceKind.CHANGE && diff instanceof AttributeChange) {
 			final EAttribute attribute = ((AttributeChange)diff).getAttribute();
 			final EObject expectedContainer;

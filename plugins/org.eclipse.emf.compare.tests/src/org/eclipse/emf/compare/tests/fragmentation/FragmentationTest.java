@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -111,6 +112,7 @@ public class FragmentationTest {
 		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getConflicts().size()));
+		assertSame(ConflictKind.PSEUDO, comparison.getConflicts().get(0).getKind());
 	}
 
 	// This only tests the merge. Will fail if testDeletedRootResourceSet does.
@@ -191,6 +193,7 @@ public class FragmentationTest {
 		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getConflicts().size()));
+		assertSame(ConflictKind.PSEUDO, comparison.getConflicts().get(0).getKind());
 	}
 
 	// This only tests the merge. Will fail if testDeletedRootResource does.
