@@ -342,40 +342,43 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
-		Comparison comparison = (Comparison)((Adapter)fRoot).getTarget();
 		ResourceSet leftResourceSet = null;
 		ResourceSet rightResourceSet = null;
-		Iterator<Match> matchIt = comparison.getMatches().iterator();
-		if (comparison.isThreeWay()) {
-			ResourceSet originResourceSet = null;
-			while (matchIt.hasNext()
-					&& (leftResourceSet == null || rightResourceSet == null || originResourceSet == null)) {
-				Match match = matchIt.next();
-				if (leftResourceSet == null) {
-					leftResourceSet = getResourceSet(match.getLeft());
+		ResourceSet originResourceSet = null;
+
+		if (fRoot != null) {
+			Comparison comparison = (Comparison)((Adapter)fRoot).getTarget();
+			Iterator<Match> matchIt = comparison.getMatches().iterator();
+			if (comparison.isThreeWay()) {
+				while (matchIt.hasNext()
+						&& (leftResourceSet == null || rightResourceSet == null || originResourceSet == null)) {
+					Match match = matchIt.next();
+					if (leftResourceSet == null) {
+						leftResourceSet = getResourceSet(match.getLeft());
+					}
+					if (rightResourceSet == null) {
+						rightResourceSet = getResourceSet(match.getRight());
+					}
+					if (originResourceSet == null) {
+						originResourceSet = getResourceSet(match.getOrigin());
+					}
 				}
-				if (rightResourceSet == null) {
-					rightResourceSet = getResourceSet(match.getRight());
-				}
-				if (originResourceSet == null) {
-					originResourceSet = getResourceSet(match.getOrigin());
-				}
-			}
-			unload(originResourceSet);
-		} else {
-			while (matchIt.hasNext() && (leftResourceSet == null || rightResourceSet == null)) {
-				Match match = matchIt.next();
-				if (leftResourceSet == null) {
-					leftResourceSet = getResourceSet(match.getLeft());
-				}
-				if (rightResourceSet == null) {
-					rightResourceSet = getResourceSet(match.getRight());
+			} else {
+				while (matchIt.hasNext() && (leftResourceSet == null || rightResourceSet == null)) {
+					Match match = matchIt.next();
+					if (leftResourceSet == null) {
+						leftResourceSet = getResourceSet(match.getLeft());
+					}
+					if (rightResourceSet == null) {
+						rightResourceSet = getResourceSet(match.getRight());
+					}
 				}
 			}
 		}
 
 		unload(leftResourceSet);
 		unload(rightResourceSet);
+		unload(originResourceSet);
 
 		Object input = getInput();
 		if (input instanceof ICompareInput) {
