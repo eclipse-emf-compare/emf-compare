@@ -29,15 +29,14 @@
       </page>
    </extension>
      <extension
-           point="org.eclipse.emf.edit.itemProviderAdapterFactories">
+           point="org.eclipse.emf.compare.ide.ui.accessor_factory">
         <factory
-              class="org.eclipse.emf.compare.diagram.ide.ui.internal.provider.DiagramCompareNodeAdapterFactory"
-              supportedTypes=
-            "org.eclipse.compare.structuremergeviewer.IDiffElement
-             org.eclipse.compare.structuremergeviewer.IDiffContainer
-             org.eclipse.compare.structuremergeviewer.ITypedElement
-             org.eclipse.compare.structuremergeviewer.ICompareInput"
-              uri="http://www.eclipse.org/emf/compare/diagram/2.0">
+              class="org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.factory.DiagramIDEDiffAccessorFactory"
+              ranking="40">
+        </factory>
+        <factory
+              class="org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.factory.DiagramIDEMatchAccessorFactory"
+              ranking="40">
         </factory>
      </extension>
 

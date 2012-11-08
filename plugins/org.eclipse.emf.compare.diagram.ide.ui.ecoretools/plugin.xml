@@ -5,7 +5,7 @@
          point="org.eclipse.compare.contentMergeViewers">
       <viewer
             class="org.eclipse.emf.compare.diagram.ide.ui.ecoretools.DiagramContentMergeViewerCreator"
-            extensions="view, ecorediag"
+            extensions="diagramcompare_match, ecorediag"
             id="org.eclipse.emf.compare.ide.ui.internal.ViewContentMergeViewer"
             label="Diagram Compare Content Merge Viewer">
       </viewer>

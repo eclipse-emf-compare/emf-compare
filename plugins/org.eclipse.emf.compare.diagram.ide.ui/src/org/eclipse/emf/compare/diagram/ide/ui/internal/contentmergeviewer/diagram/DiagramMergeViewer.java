@@ -15,7 +15,8 @@ import java.util.Collection;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.compare.diagram.ide.ui.GraphicalMergeViewer;
-import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramDiffAccessor;
+import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.transaction.TransactionalEditingDomain.Factory;
@@ -37,7 +38,7 @@ import org.eclipse.swt.widgets.Control;
 
 class DiagramMergeViewer extends GraphicalMergeViewer {
 
-	private IDiagramDiffAccessor fInput;
+	private IDiagramNodeAccessor fInput;
 
 	private DiagramGraphicalViewer fGraphicalViewer;
 
@@ -82,9 +83,9 @@ class DiagramMergeViewer extends GraphicalMergeViewer {
 
 	@Override
 	public void setInput(Object input) {
-		if (input instanceof IDiagramDiffAccessor) {
-			fInput = ((IDiagramDiffAccessor)input);
-			View eObject = ((IDiagramDiffAccessor)input).getOwnedView();
+		if (input instanceof IDiagramNodeAccessor) {
+			fInput = ((IDiagramNodeAccessor)input);
+			View eObject = ((IDiagramNodeAccessor)input).getOwnedView();
 
 			// FIXME
 			ResourceSet resourceSet = null;
