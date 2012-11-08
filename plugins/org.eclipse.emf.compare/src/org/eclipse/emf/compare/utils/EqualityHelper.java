@@ -163,25 +163,30 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 		} else if (object1.eClass() != object2.eClass()) {
 			equal = false;
 		} else {
-			/*
-			 * use a temporary variable as buffer for the "equal" boolean. We know that the following
-			 * try/catch block can, and will, only initialize it once ... but the compiler does not.
-			 */
-			boolean temp = false;
-			try {
-				final URI uri1 = uriCache.get(object1);
-				final URI uri2 = uriCache.get(object2);
-				if (uri1.hasFragment() && uri2.hasFragment()) {
-					temp = uri1.fragment().equals(uri2.fragment());
-				} else {
-					temp = uri1.equals(uri2);
-				}
-			} catch (ExecutionException e) {
-				// Could not compute the URIs of these objects, assume not equal
-			}
-			equal = temp;
+			equal = matchingURIs(object1, object2);
 		}
 
+		return equal;
+	}
+
+	/**
+	 * Compare the URIs (of similar concept) of EObjects.
+	 * 
+	 * @param object1
+	 *            First of the two objects to compare here.
+	 * @param object2
+	 *            Second of the two objects to compare here.
+	 * @return <code>true</code> if these two EObjects have the same URIs, <code>false</code> otherwise.
+	 */
+	protected boolean matchingURIs(EObject object1, EObject object2) {
+		final boolean equal;
+		final URI uri1 = uriCache.getUnchecked(object1);
+		final URI uri2 = uriCache.getUnchecked(object2);
+		if (uri1.hasFragment() && uri2.hasFragment()) {
+			equal = uri1.fragment().equals(uri2.fragment());
+		} else {
+			equal = uri1.equals(uri2);
+		}
 		return equal;
 	}
 

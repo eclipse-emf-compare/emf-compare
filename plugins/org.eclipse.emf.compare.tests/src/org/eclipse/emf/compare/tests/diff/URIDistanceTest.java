@@ -21,11 +21,11 @@ public class URIDistanceTest {
 
 	@Test
 	public void sameNumberOfFragments() throws Exception {
-		assertEquals(3, meter.proximity("/root/a/b", "/root/a/b/c"));
-		assertEquals(3, meter.proximity("/root/a/b/", "/root/a/b/c/"));
+		assertEquals(10, meter.proximity("/root/a/b", "/root/a/b/c"));
+		assertEquals(10, meter.proximity("/root/a/b/", "/root/a/b/c/"));
 		assertEquals(0, meter.proximity("/root/a/b", "/root/a/b"));
-		assertEquals(8, meter.proximity("/root/a/a2/a3", "/root/b/b2/a3"));
-		assertEquals(8, meter.proximity("/root/a/a2/a3", "/root/b/b2/b3"));
+		assertEquals(10, meter.proximity("/root/a/a2/a3", "/root/b/b2/a3"));
+		assertEquals(10, meter.proximity("/root/a/a2/a3", "/root/b/b2/b3"));
 	}
 
 	@Test
@@ -61,15 +61,15 @@ public class URIDistanceTest {
 	@Test
 	public void idLikeURIs() throws Exception {
 		assertEquals(10, meter.proximity("#131233", "#azeazezae"));
-		assertEquals(3, meter.proximity("/c/d/e/f", "/c/d/e/f?#azeaze"));
+		assertEquals(10, meter.proximity("/c/d/e/f", "/c/d/e/f?#azeaze"));
 	}
 
 	@Test
 	public void traillingSlashes() throws Exception {
-		assertEquals(3, meter.proximity("/root/a/b/", "/root/a/b/c/"));
-		assertEquals(3, meter.proximity("root/a/b/", "/root/a/b/c/"));
-		assertEquals(3, meter.proximity("/root/a/b/", "/root/a/b/c"));
-		assertEquals(3, meter.proximity("///root/a/b/", "/root/a/b/c"));
+		assertEquals(10, meter.proximity("/root/a/b/", "/root/a/b/c/"));
+		assertEquals(10, meter.proximity("root/a/b/", "/root/a/b/c/"));
+		assertEquals(10, meter.proximity("/root/a/b/", "/root/a/b/c"));
+		assertEquals(10, meter.proximity("///root/a/b/", "/root/a/b/c"));
 	}
 
 }

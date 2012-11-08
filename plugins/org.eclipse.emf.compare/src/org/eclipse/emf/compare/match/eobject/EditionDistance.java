@@ -13,11 +13,9 @@ package org.eclipse.emf.compare.match.eobject;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.BasicMonitor;
@@ -50,19 +48,19 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class EditionDistance implements DistanceFunction {
 	/**
-	 * The ratio we apply on the raw maxdistance to determine whether an element should match or not.
+	 * It's the percentage of similarity we consider as being the limit on a maximum potential distance of 1.
 	 */
-	private static final double MAX_DIST_RATIO = 3 * 2.5;
+	private static final double MAX_DIST_RATIO = 0.75d;
 
 	/**
 	 * Weight coefficient of a change on a reference.
 	 */
-	private int referenceChangeCoef = 10;
+	private int referenceChangeCoef = 3;
 
 	/**
 	 * Weight coefficient of a change on an attribute.
 	 */
-	private int attributeChangeCoef = 10 + 10;
+	private int attributeChangeCoef = 10;
 
 	/**
 	 * Weight coefficient of a change of location (uri).
@@ -72,17 +70,7 @@ public class EditionDistance implements DistanceFunction {
 	/**
 	 * Weight coefficient of a change of order within a reference.
 	 */
-	private int orderChangeCoef = 5;
-
-	/**
-	 * The list of specific weight to apply on specific Features.
-	 */
-	private Map<EStructuralFeature, Integer> weights;
-
-	/**
-	 * The list of features to ignore during the distance computation.
-	 */
-	private Set<EStructuralFeature> toBeIgnored;
+	private int orderChangeCoef = 2;
 
 	/**
 	 * The instance used to compare location of EObjects.
@@ -96,33 +84,22 @@ public class EditionDistance implements DistanceFunction {
 	private EqualityHelper helper;
 
 	/**
+	 * instance providing the weight for each feature.
+	 */
+	private WeightProvider weights = new ReflectiveWeightProvider();
+
+	/**
 	 * Instantiate a new Edition Distance.
 	 */
 	public EditionDistance() {
-		weights = Maps.newHashMap();
 		this.helper = new EqualityHelper() {
+
 			@Override
-			protected boolean matchingEObjects(EObject object1, EObject object2) {
-				final Match match = getTarget().getMatch(object1);
-
-				final boolean equal;
-				// Match could be null if the value is out of the scope
-				if (match != null) {
-					equal = match.getLeft() == object2 || match.getRight() == object2
-							|| match.getOrigin() == object2;
-				} else {
-					/*
-					 * use a temporary variable as buffer for the "equal" boolean. We know that the following
-					 * try/catch block can, and will, only initialize it once ... but the compiler does not.
-					 */
-					equal = uriDistance.proximity(object1, object2) == 0;
-				}
-
-				return equal;
+			protected boolean matchingURIs(EObject object1, EObject object2) {
+				return uriDistance.proximity(object1, object2) == 0;
 			}
 
 		};
-		this.toBeIgnored = Sets.newLinkedHashSet();
 	}
 
 	/**
@@ -167,32 +144,6 @@ public class EditionDistance implements DistanceFunction {
 		 */
 		protected Builder() {
 			this.toBeBuilt = new EditionDistance();
-		}
-
-		/**
-		 * Specify a weight for a given feature.
-		 * 
-		 * @param feat
-		 *            the feature to customize.
-		 * @param weight
-		 *            the weight, it will be multiplied by the type of change coefficient.
-		 * @return the current builder instance.
-		 */
-		public Builder weight(EStructuralFeature feat, Integer weight) {
-			this.toBeBuilt.weights.put(feat, weight);
-			return this;
-		}
-
-		/**
-		 * Specify a feature to ignore during the measure.
-		 * 
-		 * @param featToIgnore
-		 *            the feature to ignore.
-		 * @return the current builder instance.
-		 */
-		public Builder ignore(EStructuralFeature featToIgnore) {
-			this.toBeBuilt.toBeIgnored.add(featToIgnore);
-			return this;
 		}
 
 		/**
@@ -247,6 +198,18 @@ public class EditionDistance implements DistanceFunction {
 		}
 
 		/**
+		 * Configure custom weight provider.
+		 * 
+		 * @param provider
+		 *            the weight provider to use.
+		 * @return the current builder instance.
+		 */
+		public Builder weightProvider(WeightProvider provider) {
+			this.toBeBuilt.weights = provider;
+			return this;
+		}
+
+		/**
 		 * return the configured instance.
 		 * 
 		 * @return the configured instance.
@@ -280,12 +243,12 @@ public class EditionDistance implements DistanceFunction {
 			if (!alreadyChanged.contains(reference)) {
 				switch (kind) {
 					case MOVE:
-						distance += getWeight(reference) * orderChangeCoef;
+						distance += weights.getWeight(reference) * orderChangeCoef;
 						break;
 					case ADD:
 					case DELETE:
 					case CHANGE:
-						distance += getWeight(reference) * referenceChangeCoef;
+						distance += weights.getWeight(reference) * referenceChangeCoef;
 						break;
 					default:
 						break;
@@ -306,17 +269,17 @@ public class EditionDistance implements DistanceFunction {
 				Object bValue = ReferenceUtil.safeEGet(match.getRight(), attribute);
 				switch (kind) {
 					case MOVE:
-						distance += getWeight(attribute) * orderChangeCoef;
+						distance += weights.getWeight(attribute) * orderChangeCoef;
 						break;
 					case ADD:
 					case DELETE:
 					case CHANGE:
 						if (aValue instanceof String && bValue instanceof String) {
-							distance += getWeight(attribute)
+							distance += weights.getWeight(attribute)
 									* (1 - DiffUtil.diceCoefficient((String)aValue, (String)bValue))
 									* attributeChangeCoef;
 						} else {
-							distance += getWeight(attribute) * attributeChangeCoef;
+							distance += weights.getWeight(attribute) * attributeChangeCoef;
 						}
 						break;
 					default:
@@ -356,30 +319,6 @@ public class EditionDistance implements DistanceFunction {
 			this.alreadyChanged.clear();
 		}
 
-	}
-
-	/**
-	 * Return the weight for the given feature.
-	 * 
-	 * @param attribute
-	 *            any {@link EStructuralFeature}.
-	 * @return the weight for the given feature.
-	 */
-	private int getWeight(EStructuralFeature attribute) {
-		Integer found = weights.get(attribute);
-		if (found == null) {
-			/*
-			 * This is worst than empirical but it works in many cases, if your feature is a "name" its likely
-			 * that it's important for matching the element. At some point I'll have to come up with something
-			 * which is more extensible..
-			 */
-			if ("name".equals(attribute.getName())) { //$NON-NLS-1$
-				found = Integer.valueOf(4);
-			} else {
-				found = Integer.valueOf(1);
-			}
-		}
-		return found.intValue();
 	}
 
 	/**
@@ -485,7 +424,8 @@ public class EditionDistance implements DistanceFunction {
 					return Iterators.filter(super.getReferencesToCheck(match), new Predicate<EReference>() {
 
 						public boolean apply(EReference input) {
-							return !toBeIgnored.contains(input) && !input.isContainment();
+							return weights.getWeight(input) != 0;
+
 						}
 					});
 				}
@@ -495,7 +435,7 @@ public class EditionDistance implements DistanceFunction {
 					return Iterators.filter(super.getAttributesToCheck(match), new Predicate<EAttribute>() {
 
 						public boolean apply(EAttribute input) {
-							return !toBeIgnored.contains(input);
+							return weights.getWeight(input) != 0;
 						}
 					});
 				}
@@ -513,7 +453,7 @@ public class EditionDistance implements DistanceFunction {
 		Predicate<EStructuralFeature> featureFilter = new Predicate<EStructuralFeature>() {
 
 			public boolean apply(EStructuralFeature feat) {
-				return !feat.isDerived() && !feat.isTransient() && !toBeIgnored.contains(feat);
+				return weights.getWeight(feat) != 0;
 			}
 		};
 		// When can you safely says these are not the same EObjects *at all* ?
@@ -524,17 +464,17 @@ public class EditionDistance implements DistanceFunction {
 		// assess the quality of further changes.
 		int max = 0;
 		for (EReference feat : Iterables.filter(eObj.eClass().getEAllReferences(), featureFilter)) {
-			if (!feat.isContainer() && !feat.isContainment() && eObj.eIsSet(feat)) {
-				max += getWeight(feat) * referenceChangeCoef;
+			if (eObj.eIsSet(feat)) {
+				max += weights.getWeight(feat) * referenceChangeCoef;
 			}
 		}
 		for (EAttribute feat : Iterables.filter(eObj.eClass().getEAllAttributes(), featureFilter)) {
 			if (eObj.eIsSet(feat)) {
-				max += getWeight(feat) * attributeChangeCoef;
+				max += weights.getWeight(feat) * attributeChangeCoef;
 			}
 		}
 		max = max + locationChangeCoef * 5;
-		return Double.valueOf(max / MAX_DIST_RATIO).intValue();
+		return Double.valueOf(max * MAX_DIST_RATIO).intValue();
 	}
 
 }
