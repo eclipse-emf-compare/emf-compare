@@ -33,6 +33,14 @@ public class NodeChangesInputData extends DiagramInputData {
 	public Resource getA2Right() throws IOException {
 		return loadFromClassLoader("a2/TC02.ecorediag"); //$NON-NLS-1$
 	}
+	
+	public Resource getA3Left() throws IOException {
+		return loadFromClassLoader("a3/TC1.ecorediag"); //$NON-NLS-1$
+	}
+
+	public Resource getA3Right() throws IOException {
+		return loadFromClassLoader("a3/TC2.ecorediag"); //$NON-NLS-1$
+	}
 
 	
 	@Override

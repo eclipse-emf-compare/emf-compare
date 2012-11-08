@@ -70,8 +70,7 @@ public class DiagramCompareNodeAdapterFactory extends DiagramCompareAdapterFacto
 
 	@Override
 	public Adapter createDiagramDiffAdapter() {
-		// TODO Auto-generated method stub
-		return super.createDiagramDiffAdapter();
+		return new DiagramDiffNode(getRootAdapterFactory());
 	}
 
 	@Override

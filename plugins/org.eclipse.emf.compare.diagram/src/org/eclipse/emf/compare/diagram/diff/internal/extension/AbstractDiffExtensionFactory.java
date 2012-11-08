@@ -103,7 +103,8 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 			final Iterator<Diff> diffs = ((Match)container).getAllDifferences().iterator();
 			while (diffs.hasNext()) {
 				final Diff diff = (Diff)diffs.next();
-				if (diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment()
+				if (diff instanceof ReferenceChange
+						&& (isRelatedToAnExtensionAdd((ReferenceChange)diff) || isRelatedToAnExtensionDelete((ReferenceChange)diff))
 						&& match.getComparison().getMatch(((ReferenceChange)diff).getValue()) == match) {
 					return true;
 				}
@@ -174,7 +175,10 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 				.getAllDifferences().iterator();
 		while (diffs.hasNext()) {
 			Diff diff = (Diff)diffs.next();
-			result.add(diff);
+			if (!getExtensionKind().isInstance(diff)
+					&& !(diff instanceof ReferenceChange && (isRelatedToAnExtensionAdd((ReferenceChange)diff) || isRelatedToAnExtensionDelete((ReferenceChange)diff)))) {
+				result.add(diff);
+			}
 		}
 		return result;
 	}

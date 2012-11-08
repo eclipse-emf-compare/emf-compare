@@ -42,6 +42,8 @@ import org.eclipse.uml2.uml.internal.impl.ProfileApplicationImpl;
  */
 public class UMLProfileApplicationChangeFactory extends AbstractDiffExtensionFactory {
 
+	private static final String UML_VERSIONS = "http://www.eclipse.org/uml2/\\d.0.0/UML";
+
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return ProfileApplicationChange.class;
 	}
@@ -122,8 +124,11 @@ public class UMLProfileApplicationChangeFactory extends AbstractDiffExtensionFac
 	@Override
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
 		return (input.getReference().equals(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE)
-				|| input.getReference().equals(EcorePackage.Literals.EANNOTATION__REFERENCES) || input
-				.getReference().equals(EcorePackage.Literals.EMODEL_ELEMENT__EANNOTATIONS));
+				|| (input.getReference().equals(EcorePackage.Literals.EANNOTATION__REFERENCES) && ((EAnnotation)MatchUtil
+						.getContainer(input.getMatch().getComparison(), input)).getSource().matches(
+						UML_VERSIONS)) || (input.getReference().equals(
+				EcorePackage.Literals.EMODEL_ELEMENT__EANNOTATIONS) && ((EAnnotation)input.getValue())
+				.getSource().matches(UML_VERSIONS)));
 	}
 
 	@Override

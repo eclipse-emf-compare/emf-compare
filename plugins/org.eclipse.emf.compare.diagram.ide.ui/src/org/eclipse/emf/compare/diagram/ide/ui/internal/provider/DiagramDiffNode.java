@@ -64,22 +64,8 @@ public class DiagramDiffNode extends DiffNode {
 	}
 
 	private ITypedElement getAccessor(MergeViewerSide side) {
-		ITypedElement ret = null;
 		DiagramDiff diff = getTarget();
-		switch (diff.getKind()) {
-			case ADD:
-			case DELETE:
-			case MOVE:
-				ret = new DiagramIDEDiffAccessorImpl(diff, side);
-				break;
-			case CHANGE:
-				// TODO: what to do in change ?
-				ret = new DiagramIDEDiffAccessorImpl(diff, side);
-				break;
-			default:
-				throw new IllegalStateException();
-		}
-		return ret;
+		return new DiagramIDEDiffAccessorImpl(diff, side);
 	}
 
 }

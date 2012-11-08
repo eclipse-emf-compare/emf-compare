@@ -96,7 +96,11 @@ public class DiagramDiffIDEExtensionPostProcessor implements IPostProcessor {
 							diff.setLeft(leftLabel);
 							diff.setRight(rightLabel);
 							diff.setView(leftElement);
-							match.getDifferences().add(diff);
+							if (match.eContainer() instanceof Match) {
+								((Match) match.eContainer()).getDifferences().add(diff);
+							} else {
+								match.getDifferences().add(diff);
+							}
 						}
 					}
 				}

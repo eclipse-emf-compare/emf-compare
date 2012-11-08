@@ -3,49 +3,49 @@
 <plugin>
    <extension
          point="org.eclipse.emf.compare.diagram.ide.viewLabelProvider">
-      <provider
-            class="org.eclipse.emf.compare.diagram.papyrus.ActivityViewLabelProvider"
+      <viewLabelProvider
+            class="org.eclipse.emf.compare.diagram.ide.papyrus.ActivityViewLabelProvider"
             diagramType="PapyrusUMLActivityDiagram">
-      </provider>
-      <provider
-            class="org.eclipse.emf.compare.diagram.papyrus.ClazzViewLabelProvider"
+      </viewLabelProvider>
+      <viewLabelProvider
+            class="org.eclipse.emf.compare.diagram.ide.papyrus.ClazzViewLabelProvider"
             diagramType="PapyrusUMLClassDiagram">
-      </provider>
-      <provider
-            class="org.eclipse.emf.compare.diagram.papyrus.CommunicationViewLabelProvider"
+      </viewLabelProvider>
+      <viewLabelProvider
+            class="org.eclipse.emf.compare.diagram.ide.papyrus.CommunicationViewLabelProvider"
             diagramType="PapyrusUMLCommunicationDiagram">
-      </provider>
-      <provider
-            class="org.eclipse.emf.compare.diagram.papyrus.ComponentViewLabelProvider"
+      </viewLabelProvider>
+      <viewLabelProvider
+            class="org.eclipse.emf.compare.diagram.ide.papyrus.ComponentViewLabelProvider"
             diagramType="PapyrusUMLComponentDiagram">
-      </provider>
-      <provider
-            class="org.eclipse.emf.compare.diagram.papyrus.CompositeViewLabelProvider"
+      </viewLabelProvider>
+      <viewLabelProvider
+            class="org.eclipse.emf.compare.diagram.ide.papyrus.CompositeViewLabelProvider"
             diagramType="CompositeStructure">
-      </provider>
-      <provider
-            class="org.eclipse.emf.compare.diagram.papyrus.DeploymentViewLabelProvider"
+      </viewLabelProvider>
+      <viewLabelProvider
+            class="org.eclipse.emf.compare.diagram.ide.papyrus.DeploymentViewLabelProvider"
             diagramType="PapyrusUMLDeploymentDiagram">
-      </provider>
-      <provider
-            class="org.eclipse.emf.compare.diagram.papyrus.ProfileViewLabelProvider"
+      </viewLabelProvider>
+      <viewLabelProvider
+            class="org.eclipse.emf.compare.diagram.ide.papyrus.ProfileViewLabelProvider"
             diagramType="PapyrusUMLProfileDiagram">
-      </provider>
-      <provider
-            class="org.eclipse.emf.compare.diagram.papyrus.SequenceViewLabelProvider"
+      </viewLabelProvider>
+      <viewLabelProvider
+            class="org.eclipse.emf.compare.diagram.ide.papyrus.SequenceViewLabelProvider"
             diagramType="PapyrusUMLSequenceDiagram">
-      </provider>
-      <provider
-            class="org.eclipse.emf.compare.diagram.papyrus.StateMachineViewLabelProvider"
+      </viewLabelProvider>
+      <viewLabelProvider
+            class="org.eclipse.emf.compare.diagram.ide.papyrus.StateMachineViewLabelProvider"
             diagramType="PapyrusUMLStateMachineDiagram">
-      </provider>
-      <provider
-            class="org.eclipse.emf.compare.diagram.papyrus.UseCaseViewLabelProvider"
+      </viewLabelProvider>
+      <viewLabelProvider
+            class="org.eclipse.emf.compare.diagram.ide.papyrus.UseCaseViewLabelProvider"
             diagramType="UseCase">
-      </provider>
-      <provider
-            class="org.eclipse.emf.compare.diagram.papyrus.PackageViewLabelProvider"
+      </viewLabelProvider>
+      <viewLabelProvider
+            class="org.eclipse.emf.compare.diagram.ide.papyrus.PackageViewLabelProvider"
             diagramType="Package">
-      </provider>
+      </viewLabelProvider>
    </extension>
 </plugin>
