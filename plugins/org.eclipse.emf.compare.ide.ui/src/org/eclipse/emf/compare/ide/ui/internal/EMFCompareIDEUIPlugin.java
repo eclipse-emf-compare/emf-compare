@@ -223,6 +223,7 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 							registry.remove(element.getAttribute(ATT_CLASS));
 							break;
 					}
+					return true;
 				}
 			}
 			return false;
