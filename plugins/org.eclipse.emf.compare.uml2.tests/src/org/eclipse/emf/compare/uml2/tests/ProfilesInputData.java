@@ -12,11 +12,13 @@ import java.util.Set;
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
+import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
+import org.eclipse.uml2.uml.UMLPlugin;
 import org.eclipse.uml2.uml.resource.UMLResource;
 import org.eclipse.uml2.uml.resources.ResourcesPlugin;
 import org.eclipse.uml2.uml.resources.util.UMLResourcesUtil;
@@ -47,8 +49,17 @@ public class ProfilesInputData extends AbstractInputData {
 			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore",
 					new EcoreResourceFactoryImpl());
 			resourceSet.getPackageRegistry().put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
+			resourceSet.getPackageRegistry().put(UML2CompareTestProfilePackage.eNS_URI,
+					UML2CompareTestProfilePackage.eINSTANCE);
 
 			UMLResourcesUtil.init(resourceSet);
+
+			Map<String, URI> ePackageNsURIToProfileLocationMap = UMLPlugin
+					.getEPackageNsURIToProfileLocationMap();
+
+			ePackageNsURIToProfileLocationMap
+					.put(UML2CompareTestProfilePackage.eNS_URI,
+							URI.createURI("pathmap://UML_COMPARE_TESTS_PROFILE/uml2.compare.testprofile.profile.uml#_hZFTgIwkEeC_FYHMbTTxXw")); //$NON-NLS-1$
 
 			final URL UMLJarredFileLocation = ResourcesPlugin.class.getResource("ResourcesPlugin.class");
 			String UMLJarPath = UMLJarredFileLocation.toString();
