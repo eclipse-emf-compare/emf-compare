@@ -23,7 +23,8 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
-import org.eclipse.emf.compare.uml2.tests.profiles.data.ProfileInputData;
+import org.eclipse.emf.compare.uml2.tests.profiles.data.dynamic.DynamicProfileInputData;
+import org.eclipse.emf.compare.uml2.tests.profiles.data.static_.StaticProfileInputData;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -34,11 +35,13 @@ import org.junit.Test;
 @SuppressWarnings("nls")
 public class ProfileTest extends AbstractTest {
 
-	private ProfileInputData input = new ProfileInputData();
+	private StaticProfileInputData staticInput = new StaticProfileInputData();
+
+	private DynamicProfileInputData dynamicInput = new DynamicProfileInputData();
 
 	@After
 	public void cleanup() {
-		for (ResourceSet set : input.getSets()) {
+		for (ResourceSet set : staticInput.getSets()) {
 			for (Resource res : set.getResources()) {
 				res.unload();
 			}
@@ -47,9 +50,9 @@ public class ProfileTest extends AbstractTest {
 	}
 
 	@Test
-	public void testA10UseCase() throws IOException {
-		final Resource left = input.getA1Left();
-		final Resource right = input.getA1Right();
+	public void testStaticA10UseCase() throws IOException {
+		final Resource left = staticInput.getA1Left();
+		final Resource right = staticInput.getA1Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
@@ -57,9 +60,9 @@ public class ProfileTest extends AbstractTest {
 	}
 
 	@Test
-	public void testA11UseCase() throws IOException {
-		final Resource left = input.getA1Left();
-		final Resource right = input.getA1Right();
+	public void testStaticA11UseCase() throws IOException {
+		final Resource left = staticInput.getA1Left();
+		final Resource right = staticInput.getA1Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
@@ -67,9 +70,9 @@ public class ProfileTest extends AbstractTest {
 	}
 
 	@Test
-	public void testA10UseCase3way() throws IOException {
-		final Resource left = input.getA1Left();
-		final Resource right = input.getA1Right();
+	public void testStaticA10UseCase3way() throws IOException {
+		final Resource left = staticInput.getA1Left();
+		final Resource right = staticInput.getA1Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
@@ -77,9 +80,49 @@ public class ProfileTest extends AbstractTest {
 	}
 
 	@Test
-	public void testA11UseCase3way() throws IOException {
-		final Resource left = input.getA1Left();
-		final Resource right = input.getA1Right();
+	public void testStaticA11UseCase3way() throws IOException {
+		final Resource left = staticInput.getA1Left();
+		final Resource right = staticInput.getA1Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
+		final Comparison comparison = getCompare().compare(scope);
+		testAB1(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testDynamicA10UseCase() throws IOException {
+		final Resource left = dynamicInput.getA1Left();
+		final Resource right = dynamicInput.getA1Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final Comparison comparison = getCompare().compare(scope);
+		testAB1(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testDynamicA11UseCase() throws IOException {
+		final Resource left = dynamicInput.getA1Left();
+		final Resource right = dynamicInput.getA1Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final Comparison comparison = getCompare().compare(scope);
+		testAB1(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testDynamicA10UseCase3way() throws IOException {
+		final Resource left = dynamicInput.getA1Left();
+		final Resource right = dynamicInput.getA1Right();
+
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
+		final Comparison comparison = getCompare().compare(scope);
+		testAB1(TestKind.ADD, comparison);
+	}
+
+	@Test
+	public void testDynamicA11UseCase3way() throws IOException {
+		final Resource left = dynamicInput.getA1Left();
+		final Resource right = dynamicInput.getA1Right();
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
@@ -195,7 +238,7 @@ public class ProfileTest extends AbstractTest {
 
 	@Override
 	protected AbstractInputData getInput() {
-		return input;
+		return staticInput;
 	}
 
 }
