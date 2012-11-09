@@ -42,6 +42,10 @@ public class SingleStructuralFeatureAccessorImpl extends BasicStructuralFeatureA
 	 */
 	public ImmutableList<? extends IMergeViewerItem> getItems() {
 		Object thisSideValue = getValue(getSide());
+		if (thisSideValue == null && getSide() == MergeViewerSide.ANCESTOR) {
+			// No use retrieving all sides ...
+			return ImmutableList.of();
+		}
 
 		Object leftValue = getValue(MergeViewerSide.LEFT);
 		Object rightValue = getValue(MergeViewerSide.RIGHT);
@@ -51,12 +55,8 @@ public class SingleStructuralFeatureAccessorImpl extends BasicStructuralFeatureA
 		Diff diff = getFirst(getDifferences(), null);
 		final ImmutableList<? extends IMergeViewerItem> ret;
 		if (thisSideValue == null) {
-			if (getSide() != MergeViewerSide.ANCESTOR) {
-				InsertionPoint insertionPoint = new InsertionPoint(diff, leftValue, rightValue, ancestorValue);
-				ret = ImmutableList.of(insertionPoint);
-			} else {
-				ret = ImmutableList.of();
-			}
+			InsertionPoint insertionPoint = new InsertionPoint(diff, leftValue, rightValue, ancestorValue);
+			ret = ImmutableList.of(insertionPoint);
 		} else {
 			MatchedObject matchedObject = new MatchedObject(diff, leftValue, rightValue, ancestorValue);
 			ret = ImmutableList.of(matchedObject);
