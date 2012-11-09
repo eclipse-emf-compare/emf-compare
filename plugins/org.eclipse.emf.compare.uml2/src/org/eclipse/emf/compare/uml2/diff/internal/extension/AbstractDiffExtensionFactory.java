@@ -135,16 +135,14 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 		ret.setDiscriminant(discriminant);
 		ret.setKind(extensionKind);
 
-		// FIXME we should strive to remove these instanceof ... 
-		
+		// FIXME we should strive to remove these instanceof ...
+
 		if (discriminant != null) {
-			if (extensionKind == DifferenceKind.DELETE) {
-				if (input instanceof ResourceAttachmentChange && ret instanceof StereotypeApplicationChange) {
-					// Below the stereotype application lies the reference change for 'base_class'
-					ret.getRefinedBy().addAll(input.getMatch().getDifferences());
-				} else {
-					ret.getRefinedBy().add(input);
-				}
+			if (input instanceof ResourceAttachmentChange && ret instanceof StereotypeApplicationChange) {
+				// Below the stereotype application lies the reference change for 'base_class'
+				ret.getRefinedBy().addAll(input.getMatch().getDifferences());
+			} else if (extensionKind == DifferenceKind.DELETE) {
+				ret.getRefinedBy().add(input);
 			} else {
 				fillRefiningDifferences(input.getMatch().getComparison(), ret, discriminant);
 			}
