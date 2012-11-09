@@ -75,6 +75,25 @@ public class UMLStereotypeApplicationChangeFeatureAccessor extends UMLIDEManyStr
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.ManyStructuralFeatureAccessorImpl#getValueFromDiff(org.eclipse.emf.compare.Diff,
+	 *      org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide)
+	 */
+	@Override
+	protected Object getValueFromDiff(Diff diff, MergeViewerSide side) {
+		// super should give us a stereotype application. If not, we have a problem :).
+		final Object superValue = super.getValueFromDiff(diff, side);
+		if (superValue instanceof EObject) {
+			return UMLUtil.getStereotype((EObject)superValue);
+		} else {
+			// superValue is "null"... or we have yet another problem.
+			// return it anyway.
+		}
+		return superValue;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.UMLIDEManyStructuralFeatureAccessor#findInsertionIndex(org.eclipse.emf.compare.Diff,
 	 *      boolean)
 	 */

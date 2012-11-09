@@ -138,7 +138,7 @@ public class ManyStructuralFeatureAccessorImpl extends BasicStructuralFeatureAcc
 	 * @param side
 	 * @return
 	 */
-	private Object getValueFromDiff(final Diff diff, MergeViewerSide side) {
+	protected Object getValueFromDiff(final Diff diff, MergeViewerSide side) {
 		Object diffValue = getDiffValue(diff);
 		Object ret = matchingValue(diffValue, side);
 		return ret;
