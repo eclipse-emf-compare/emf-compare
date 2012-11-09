@@ -276,7 +276,7 @@ public final class EMFSynchronizationModel {
 		for (IStorage right : rightTraversal.getStorages()) {
 			urisInScope.add(createURIFor(right));
 		}
-		for (IStorage origin : leftTraversal.getStorages()) {
+		for (IStorage origin : originTraversal.getStorages()) {
 			urisInScope.add(createURIFor(origin));
 		}
 
