@@ -190,7 +190,7 @@ public class ManyStructuralFeatureAccessorImpl extends BasicStructuralFeatureAcc
 	 * @param side
 	 * @return
 	 */
-	private List<?> getFeatureValues(MergeViewerSide side) {
+	protected List<?> getFeatureValues(MergeViewerSide side) {
 		final EObject eObject = getEObject(side);
 		return getAsList(eObject, getStructuralFeature());
 	}

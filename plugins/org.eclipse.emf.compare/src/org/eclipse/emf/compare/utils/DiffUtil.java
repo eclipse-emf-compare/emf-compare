@@ -319,8 +319,9 @@ public final class DiffUtil {
 	 *            Type of the sequences content.
 	 * @return The index at which {@code newElement} should be inserted in {@code target}.
 	 * @see #longestCommonSubsequence(Comparison, List, List)
+	 * @noreference This method is not intended to be referenced by clients.
 	 */
-	private static <E> int findInsertionIndex(Comparison comparison, Iterable<E> ignoredElements,
+	public static <E> int findInsertionIndex(Comparison comparison, Iterable<E> ignoredElements,
 			List<E> source, List<E> target, E newElement) {
 		IEqualityHelper equalityHelper = comparison.getEqualityHelper();
 		// TODO split this into multiple sub-methods

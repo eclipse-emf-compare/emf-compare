@@ -88,17 +88,16 @@ public class UMLIDEManyStructuralFeatureAccessor extends IDEManyStructuralFeatur
 	}
 
 	private static Diff getDiffFromUMLDiff(UMLDiff diff) {
-		Diff ret = null;
 		EObject discriminant = diff.getDiscriminant();
 		EList<Diff> differences = diff.getMatch().getComparison().getDifferences(discriminant);
 		for (ReferenceChange referenceChange : filter(differences, ReferenceChange.class)) {
 			if (referenceChange.getKind() == diff.getKind()) {
 				EReference reference = referenceChange.getReference();
 				if (reference == diff.getEReference() && referenceChange.getValue() == discriminant) {
-					ret = referenceChange;
+					return referenceChange;
 				}
 			}
 		}
-		return ret;
+		return null;
 	}
 }

@@ -11,5 +11,9 @@
             class="org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.factory.UMLIDESingleStructuralFeatureAccessorFactory"
             ranking="20">
       </factory>
+      <factory
+            class="org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.factory.UMLStereotypeApplicationChangeFeatureAccessorFactory"
+            ranking="21">
+      </factory>
    </extension>
 </plugin>
