@@ -1,11 +1,11 @@
-package org.eclipse.emf.compare.uml2.tests.stereotypes.data;
+package org.eclipse.emf.compare.uml2.tests.stereotypes.data.dynamic;
 
 import java.io.IOException;
 
 import org.eclipse.emf.compare.uml2.tests.ProfilesInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 
-public class StereotypeInputData extends ProfilesInputData {
+public class DynamicStereotypeInputData extends ProfilesInputData {
 
 	public Resource getA1Left() throws IOException {
 		return loadFromClassLoader("a1/left.uml"); //$NON-NLS-1$

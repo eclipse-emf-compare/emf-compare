@@ -30,7 +30,7 @@ import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
-import org.eclipse.emf.compare.uml2.tests.stereotypes.data.StaticStereotypeInputData;
+import org.eclipse.emf.compare.uml2.tests.stereotypes.data.static_.StaticStereotypeInputData;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;

@@ -30,7 +30,7 @@ import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
-import org.eclipse.emf.compare.uml2.tests.stereotypes.data.StereotypeInputData;
+import org.eclipse.emf.compare.uml2.tests.stereotypes.data.dynamic.DynamicStereotypeInputData;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -39,9 +39,9 @@ import org.junit.After;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class StereotypeTest extends AbstractTest {
+public class DynamicStereotypeTest extends AbstractTest {
 
-	private StereotypeInputData input = new StereotypeInputData();
+	private DynamicStereotypeInputData input = new DynamicStereotypeInputData();
 
 	@After
 	public void cleanup() {

@@ -35,8 +35,8 @@ import org.eclipse.emf.compare.uml2.tests.generalizationSet.AddGeneralizationSet
 import org.eclipse.emf.compare.uml2.tests.include.AddIncludeTest;
 import org.eclipse.emf.compare.uml2.tests.message.AddMessageTest;
 import org.eclipse.emf.compare.uml2.tests.profiles.ProfileTest;
+import org.eclipse.emf.compare.uml2.tests.stereotypes.DynamicStereotypeTest;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.StaticStereotypeTest;
-import org.eclipse.emf.compare.uml2.tests.stereotypes.StereotypeTest;
 import org.eclipse.emf.compare.uml2.tests.timeConstraint.AddTimeConstraintTest;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -59,7 +59,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		AddGeneralizationSetTest.class, AddInterfaceRealizationTest.class, AddRealizationTest.class,
 		AddSubstitutionTest.class, AddUsageTest.class, AddMessageTest.class,
 		AddActionExecutionSpecificationTest.class, AddBehaviorExecutionSpecificationTest.class,
-		AddIncludeTest.class, AddTimeConstraintTest.class, ProfileTest.class, StereotypeTest.class,
+		AddIncludeTest.class, AddTimeConstraintTest.class, ProfileTest.class, DynamicStereotypeTest.class,
 		StaticStereotypeTest.class })
 public class AllTests {
 

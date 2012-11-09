@@ -1,4 +1,4 @@
-package org.eclipse.emf.compare.uml2.tests.stereotypes.data;
+package org.eclipse.emf.compare.uml2.tests.stereotypes.data.static_;
 
 import java.io.IOException;
 
