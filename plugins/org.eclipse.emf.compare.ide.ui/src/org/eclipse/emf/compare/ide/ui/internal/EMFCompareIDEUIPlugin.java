@@ -66,10 +66,9 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 
 		registry = new IAccessorFactory.RegistryImpl();
 
-		listener = new AccessorFactoryExtensionRegistryListener(extensionRegistry, PLUGIN_ID,
-				ACCESSOR_FACTORY_PPID);
+		listener = new AccessorFactoryExtensionRegistryListener(PLUGIN_ID, ACCESSOR_FACTORY_PPID);
 		extensionRegistry.addListener(listener, ACCESSOR_FACTORY_PPID);
-		listener.readRegistry();
+		listener.readRegistry(extensionRegistry);
 	}
 
 	/**
@@ -80,10 +79,13 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		Platform.getExtensionRegistry().removeListener(listener);
-		plugin = null;
+		registry = null;
+
 		if (fResourceManager != null) {
 			fResourceManager.dispose();
 		}
+
+		plugin = null;
 		super.stop(context);
 	}
 
@@ -177,9 +179,8 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		 * @param extensionPointID
 		 * @param registry
 		 */
-		public AccessorFactoryExtensionRegistryListener(IExtensionRegistry extensionRegistry,
-				String pluginID, String extensionPointID) {
-			super(extensionRegistry, pluginID, extensionPointID);
+		public AccessorFactoryExtensionRegistryListener(String pluginID, String extensionPointID) {
+			super(pluginID, extensionPointID);
 		}
 
 		/**
