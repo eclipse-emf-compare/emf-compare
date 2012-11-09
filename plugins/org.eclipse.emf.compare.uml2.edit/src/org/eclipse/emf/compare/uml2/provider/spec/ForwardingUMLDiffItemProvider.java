@@ -21,10 +21,10 @@ import org.eclipse.emf.compare.provider.ForwardingItemProvider;
 import org.eclipse.emf.compare.provider.spec.Strings;
 import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.UMLDiff;
+import org.eclipse.emf.compare.uml2.diff.internal.util.UMLCompareUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
-import org.eclipse.uml2.uml.util.UMLUtil;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -135,7 +135,7 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 				EObject discriminant = umlDiff.getDiscriminant();
 				// FIXME create a specific item provider for each diff ... this is not maintainable.
 				if (umlDiff instanceof StereotypeApplicationChange) {
-					ret = UMLUtil.getBaseElement(discriminant).eContainingFeature().getName();
+					ret = UMLCompareUtil.getBaseElement(discriminant).eContainingFeature().getName();
 				} else {
 					ret = discriminant.eContainingFeature().getName();
 				}
