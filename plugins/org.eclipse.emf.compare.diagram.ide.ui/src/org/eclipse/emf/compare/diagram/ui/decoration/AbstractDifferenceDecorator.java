@@ -13,12 +13,16 @@ package org.eclipse.emf.compare.diagram.ui.decoration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.diagram.DiagramDiff;
+import org.eclipse.emf.compare.diagram.Hide;
+import org.eclipse.emf.compare.diagram.LabelChange;
+import org.eclipse.emf.compare.diagram.Show;
 import org.eclipse.emf.compare.diagram.ui.decoration.provider.DiffDecoratorProvider;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -72,8 +76,9 @@ public abstract class AbstractDifferenceDecorator implements IDecorator {
 	 * @return true if add has been correctly done.
 	 */
 	private boolean addDecorations(List<IDecoration> decorations) {
-		if (decorationsTarget == null)
+		if (decorationsTarget == null) {
 			decorationsTarget = new ArrayList<IDecoration>(decorations.size());
+		}
 		return decorationsTarget.addAll(decorations);
 	}
 
@@ -112,23 +117,21 @@ public abstract class AbstractDifferenceDecorator implements IDecorator {
 		if (DiffDecoratorProvider.shouldDecorate(getTarget())) {
 			final IGraphicalEditPart gep = getTargetEditPart();
 			final View view = gep.getNotationView();
-			for (Map.Entry<String, String> detail : view.getEAnnotation(DiffDecoratorProvider.DIFF)
-					.getDetails()) {
-				if (detail.getKey().equals(DiffDecoratorProvider.DIFF_MOVED)) {
-					addDecorations(getMovedDecorations());
-				} else if (detail.getKey().equals(DiffDecoratorProvider.DIFF_MODIFIED)) {
-					addDecorations(getModifiedDecorations());
-				} else if (detail.getKey().equals(DiffDecoratorProvider.DIFF_ADDED)) {
-					addDecorations(getAddedDecorations());
-				} else if (detail.getKey().equals(DiffDecoratorProvider.DIFF_REMOVED)) {
-					addDecorations(getRemovedDecorations());
-				} else if (detail.getKey().equals(DiffDecoratorProvider.DIFF_HIDED)) {
-					addDecorations(getHidedDecorations());
-				} else if (detail.getKey().equals(DiffDecoratorProvider.DIFF_SHOWED)) {
-					addDecorations(getShowedDecorations());
-				} else if (detail.getKey().equals(DiffDecoratorProvider.DIFF_LABEL_MODIFIED)) {
-					addDecorations(getLabelModifiedDecorations());
-				}
+			final DiagramDiff diff = DiffDecoratorProvider.getRelatedSelectedDifference(view);
+			if (diff instanceof Hide) {
+				addDecorations(getHidedDecorations());
+			} else if (diff instanceof Show) {
+				addDecorations(getShowedDecorations());
+			} else if (diff instanceof LabelChange) {
+				addDecorations(getLabelModifiedDecorations());
+			} else if (diff.getKind() == DifferenceKind.MOVE) {
+				addDecorations(getMovedDecorations());
+			} else if (diff.getKind() == DifferenceKind.CHANGE) {
+				addDecorations(getModifiedDecorations());
+			} else if (diff.getKind() == DifferenceKind.ADD) {
+				addDecorations(getAddedDecorations());
+			} else if (diff.getKind() == DifferenceKind.DELETE) {
+				addDecorations(getRemovedDecorations());
 			}
 		}
 	}

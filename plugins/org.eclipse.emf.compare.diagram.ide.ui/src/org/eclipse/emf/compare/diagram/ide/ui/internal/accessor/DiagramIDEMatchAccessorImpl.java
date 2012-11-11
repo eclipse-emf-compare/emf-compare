@@ -138,4 +138,8 @@ public class DiagramIDEMatchAccessorImpl implements IDiagramNodeAccessor, ITyped
 		return null;
 	}
 
+	public Comparison getComparison() {
+		return fComparison;
+	}
+
 }

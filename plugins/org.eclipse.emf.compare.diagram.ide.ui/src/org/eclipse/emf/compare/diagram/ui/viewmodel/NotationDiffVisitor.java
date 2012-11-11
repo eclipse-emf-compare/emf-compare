@@ -151,7 +151,7 @@ public class NotationDiffVisitor {
 	}
 
 	/** the diagram diff visitor. */
-	private DiagramdiffSwitchVisitor diagramdiffSwitch = new DiagramdiffSwitchVisitor();
+	public DiagramdiffSwitchVisitor diagramdiffSwitch = new DiagramdiffSwitchVisitor();
 
 	/** used to add or remove eannotation diffs when visiting. */
 	private boolean annote;

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.internal.accessor;
 
-import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.diagram.DiagramDiff;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
@@ -41,10 +40,6 @@ public class DiagramIDEDiffAccessorImpl extends DiagramIDEMatchAccessorImpl impl
 	@Override
 	public String getType() {
 		return DiagramContentMergeViewerConstants.DIFF_NODE_TYPE;
-	}
-
-	public Comparison getComparison() {
-		return fComparison;
 	}
 
 	public DiagramDiff getDiff() {

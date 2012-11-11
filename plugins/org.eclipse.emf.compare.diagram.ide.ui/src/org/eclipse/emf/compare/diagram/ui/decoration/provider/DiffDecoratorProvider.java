@@ -11,6 +11,11 @@
 
 package org.eclipse.emf.compare.diagram.ui.decoration.provider;
 
+import java.util.Iterator;
+
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.compare.diagram.DiagramDiff;
 import org.eclipse.emf.compare.diagram.ui.decoration.DiffEdgeDecorator;
 import org.eclipse.emf.compare.diagram.ui.decoration.DiffLabelDecorator;
 import org.eclipse.emf.compare.diagram.ui.decoration.DiffNodeDecorator;
@@ -114,7 +119,7 @@ public class DiffDecoratorProvider extends AbstractProvider implements IDecorato
 	 * @return true if view should be decorated ( diff EAnnotation is set )
 	 */
 	public static boolean shouldDecorate(final View view) {
-		return !(view instanceof Diagram) && (view.getEAnnotation(DIFF) != null);
+		return !(view instanceof Diagram) && getRelatedSelectedDifference(view) != null;
 	}
 
 	/**
@@ -137,6 +142,28 @@ public class DiffDecoratorProvider extends AbstractProvider implements IDecorato
 	 */
 	private static boolean isNode(View view) {
 		return view != null && (view instanceof Node);
+	}
+
+	public static DiagramDiff getRelatedSelectedDifference(View view) {
+		SelectedDiffAdapter adapter = getSelectedDiffAdapter(view);
+		if (adapter != null) {
+			Notifier notifier = adapter.getTarget();
+			if (notifier instanceof DiagramDiff) {
+				return (DiagramDiff)notifier;
+			}
+		}
+		return null;
+	}
+
+	private static SelectedDiffAdapter getSelectedDiffAdapter(View view) {
+		Iterator<Adapter> adapters = view.eAdapters().iterator();
+		while (adapters.hasNext()) {
+			Adapter adapter = adapters.next();
+			if (adapter.isAdapterForType(DiagramDiff.class)) {
+				return (SelectedDiffAdapter)adapter;
+			}
+		}
+		return null;
 	}
 
 }

@@ -9,13 +9,6 @@
            <Priority
                  name="Lowest">
            </Priority>
-           <object
-                 class="org.eclipse.gmf.runtime.notation.Node"
-                 id="NODE">
-           </object>
-           <context
-                 decoratorTargets="NODE">
-           </context>
         </decoratorProvider>
      </extension>
      
