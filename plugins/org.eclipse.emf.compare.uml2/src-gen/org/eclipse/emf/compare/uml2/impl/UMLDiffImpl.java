@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.uml2.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.impl.DiffImpl;
 import org.eclipse.emf.compare.uml2.UMLComparePackage;
 import org.eclipse.emf.compare.uml2.UMLDiff;
@@ -46,9 +47,9 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 	protected EObject discriminant;
 
 	/**
-	 * The cached value of the '{@link #getEReference() <em>EReference</em>}' reference.
-	 * <!-- begin-user-doc
+	 * The cached value of the '{@link #getEReference() <em>EReference</em>}' reference. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @see #getEReference()
 	 * @generated
 	 * @ordered
@@ -57,6 +58,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected UMLDiffImpl() {
@@ -65,6 +67,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -74,6 +77,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getDiscriminant() {
@@ -81,8 +85,10 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 			InternalEObject oldDiscriminant = (InternalEObject)discriminant;
 			discriminant = eResolveProxy(oldDiscriminant);
 			if (discriminant != oldDiscriminant) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, UMLComparePackage.UML_DIFF__DISCRIMINANT, oldDiscriminant, discriminant));
+				if (eNotificationRequired()) {
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							UMLComparePackage.UML_DIFF__DISCRIMINANT, oldDiscriminant, discriminant));
+				}
 			}
 		}
 		return discriminant;
@@ -90,6 +96,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetDiscriminant() {
@@ -98,17 +105,21 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setDiscriminant(EObject newDiscriminant) {
 		EObject oldDiscriminant = discriminant;
 		discriminant = newDiscriminant;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, UMLComparePackage.UML_DIFF__DISCRIMINANT, oldDiscriminant, discriminant));
+		if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET, UMLComparePackage.UML_DIFF__DISCRIMINANT,
+					oldDiscriminant, discriminant));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getEReference() {
@@ -116,8 +127,10 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 			InternalEObject oldEReference = (InternalEObject)eReference;
 			eReference = (EReference)eResolveProxy(oldEReference);
 			if (eReference != oldEReference) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, UMLComparePackage.UML_DIFF__EREFERENCE, oldEReference, eReference));
+				if (eNotificationRequired()) {
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							UMLComparePackage.UML_DIFF__EREFERENCE, oldEReference, eReference));
+				}
 			}
 		}
 		return eReference;
@@ -125,6 +138,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference basicGetEReference() {
@@ -133,27 +147,35 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setEReference(EReference newEReference) {
 		EReference oldEReference = eReference;
 		eReference = newEReference;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, UMLComparePackage.UML_DIFF__EREFERENCE, oldEReference, eReference));
+		if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET, UMLComparePackage.UML_DIFF__EREFERENCE,
+					oldEReference, eReference));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case UMLComparePackage.UML_DIFF__DISCRIMINANT:
-				if (resolve) return getDiscriminant();
+				if (resolve) {
+					return getDiscriminant();
+				}
 				return basicGetDiscriminant();
 			case UMLComparePackage.UML_DIFF__EREFERENCE:
-				if (resolve) return getEReference();
+				if (resolve) {
+					return getEReference();
+				}
 				return basicGetEReference();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -161,6 +183,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -178,6 +201,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -195,6 +219,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -210,6 +235,13 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 
 	@Override
 	public void copyLeftToRight() {
+		// Don't merge an already merged (or discarded) diff
+		if (getState() != DifferenceState.UNRESOLVED) {
+			return;
+		}
+
+		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
+		setState(DifferenceState.MERGED);
 		for (Diff diff : getRefinedBy()) {
 			diff.copyLeftToRight();
 		}
@@ -217,6 +249,13 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 
 	@Override
 	public void copyRightToLeft() {
+		// Don't merge an already merged (or discarded) diff
+		if (getState() != DifferenceState.UNRESOLVED) {
+			return;
+		}
+
+		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
+		setState(DifferenceState.MERGED);
 		for (Diff diff : getRefinedBy()) {
 			diff.copyRightToLeft();
 		}
