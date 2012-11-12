@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -210,6 +211,43 @@ public final class ResourceUtil {
 			uri = URI.createPlatformResourceURI(path, true);
 		}
 		return uri;
+	}
+
+	/**
+	 * This can be called to save all resources contained by the resource set. This will not try and save
+	 * resources that do not support output.
+	 * 
+	 * @param resourceSet
+	 *            The resource set to save.
+	 * @param options
+	 *            The options we are to pass on to {@link Resource#save(Map)}.
+	 */
+	public static void saveAllResources(ResourceSet resourceSet, Map<?, ?> options) {
+		EList<Resource> resources = resourceSet.getResources();
+		for (Resource resource : resources) {
+			if (supportsOutput(resource)) {
+				try {
+					resource.save(options);
+				} catch (IOException e) {
+					// FIXME log
+				}
+			}
+		}
+	}
+
+	/**
+	 * Disable saving for resources that cannot support it.
+	 * 
+	 * @param resource
+	 *            The resource we are to check.
+	 * @return <code>true</code> if we can save this <code>resource</code>, <code>false</code> otherwise.
+	 */
+	private static boolean supportsOutput(Resource resource) {
+		final URI uri = resource.getURI();
+		if (uri.isPlatformResource() || uri.isRelative() || uri.isFile()) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

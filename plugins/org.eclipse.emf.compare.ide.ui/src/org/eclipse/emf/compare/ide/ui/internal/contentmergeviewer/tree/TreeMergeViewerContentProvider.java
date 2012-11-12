@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;
 
-import com.google.common.collect.ImmutableMap;
+import static org.eclipse.emf.compare.ide.utils.ResourceUtil.saveAllResources;
 
-import java.io.IOException;
+import com.google.common.collect.ImmutableMap;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IEditableContent;
@@ -23,7 +23,6 @@ import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.MatchNode;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -207,18 +206,8 @@ public class TreeMergeViewerContentProvider implements IMergeViewerContentProvid
 		if (leftEObject != null) {
 			Resource eResource = leftEObject.eResource();
 			ResourceSet resourceSet = eResource.getResourceSet();
-			saveAllResources(resourceSet);
-		}
-	}
-
-	private void saveAllResources(ResourceSet resourceSet) {
-		EList<Resource> resources = resourceSet.getResources();
-		for (Resource resource : resources) {
-			try {
-				resource.save(ImmutableMap.of());
-			} catch (IOException e) {
-				EMFCompareIDEUIPlugin.getDefault().log(e);
-			}
+			saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+					Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
 		}
 	}
 
@@ -301,7 +290,8 @@ public class TreeMergeViewerContentProvider implements IMergeViewerContentProvid
 		if (rightEObject != null) {
 			Resource eResource = rightEObject.eResource();
 			ResourceSet resourceSet = eResource.getResourceSet();
-			saveAllResources(resourceSet);
+			saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+					Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
 		}
 	}
 
