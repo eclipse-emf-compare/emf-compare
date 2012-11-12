@@ -70,6 +70,9 @@ public class IDEStringAttributeChangeAccessorFactory extends AbstractAccessorFac
 	public ITypedElement createAncestor(AdapterFactory adapterFactory, Object target) {
 		AttributeChange attributeChange = (AttributeChange)target;
 		EObject ancestor = attributeChange.getMatch().getOrigin();
-		return new IDEStringAttributeChangeAccessor(ancestor, (AttributeChange)target);
+		if (ancestor != null) {
+			return new IDEStringAttributeChangeAccessor(ancestor, (AttributeChange)target);
+		}
+		return null;
 	}
 }
