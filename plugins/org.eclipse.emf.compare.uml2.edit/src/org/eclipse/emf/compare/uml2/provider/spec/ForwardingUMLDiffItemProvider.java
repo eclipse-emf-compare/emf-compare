@@ -15,20 +15,16 @@ import com.google.common.base.Preconditions;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.provider.ForwardingItemProvider;
 import org.eclipse.emf.compare.provider.spec.Strings;
-import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.UMLDiff;
-import org.eclipse.emf.compare.uml2.diff.internal.util.UMLCompareUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
-import org.eclipse.uml2.uml.NamedElement;
-import org.eclipse.uml2.uml.Stereotype;
-import org.eclipse.uml2.uml.util.UMLUtil;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -81,58 +77,6 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 		String remotely = "";
 		if (umlDiff.getSource() == DifferenceSource.RIGHT) {
 			remotely = "remotely ";
-		}
-
-		// FIXME extract this to its own ItemProvider. instanceof in getReferenceText can be deleted as well.
-		if (umlDiff instanceof StereotypeApplicationChange) {
-			Stereotype stereotype = ((StereotypeApplicationChange)umlDiff).getStereotype();
-			if (stereotype == null) {
-				stereotype = UMLUtil.getStereotype(umlDiff.getDiscriminant());
-			}
-			final String stereotypeName;
-			if (stereotype != null) {
-				stereotypeName = stereotype.getName() + ' ';
-			} else if (umlDiff.getDiscriminant() instanceof NamedElement) {
-				stereotypeName = ((NamedElement)umlDiff.getDiscriminant()).getName() + ' ';
-			} else {
-				// Can't really do more
-				stereotypeName = "";
-			}
-
-			final Match targetMatch = umlDiff.getMatch();
-			final EObject target = findNonNullSide(targetMatch);
-			String targetLabel = null;
-
-			final String action;
-			switch (umlDiff.getKind()) {
-				case ADD:
-					action = "applied";
-					targetLabel = " to ";
-					break;
-				case DELETE:
-					action = "removed";
-					targetLabel = " from ";
-					break;
-				case CHANGE:
-					action = "changed";
-					targetLabel = " on ";
-					break;
-				case MOVE:
-					action = "moved";
-					targetLabel = " to ";
-					break;
-				default:
-					throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName()
-							+ " value: " + umlDiff.getKind());
-			}
-
-			if (target != null) {
-				targetLabel += getText(getRootAdapterFactory(), target) + '.';
-			} else {
-				targetLabel = ".";
-			}
-
-			return "Stereotype " + stereotypeName + "has been " + remotely + action + targetLabel;
 		}
 
 		final String valueText = getValueText(umlDiff);
@@ -209,12 +153,7 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 			case DELETE:
 			case MOVE:
 				EObject discriminant = umlDiff.getDiscriminant();
-				// FIXME create a specific item provider for each diff ... this is not maintainable.
-				if (umlDiff instanceof StereotypeApplicationChange) {
-					ret = UMLCompareUtil.getBaseElement(discriminant).eContainingFeature().getName();
-				} else {
-					ret = discriminant.eContainingFeature().getName();
-				}
+				ret = discriminant.eContainingFeature().getName();
 				break;
 			case CHANGE:
 				break;
@@ -238,7 +177,7 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 	 * @throws NullPointerException
 	 *             if <code>adapterFactory</code> is null.
 	 */
-	private static String getText(AdapterFactory adapterFactory, Object object) {
+	static String getText(AdapterFactory adapterFactory, Object object) {
 		Preconditions.checkNotNull(adapterFactory);
 		if (object != null) {
 			Object adapter = adapterFactory.adapt(object, IItemLabelProvider.class);
@@ -262,7 +201,7 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 	 * @throws NullPointerException
 	 *             if <code>adapterFactory</code> is null.
 	 */
-	private static Object getImage(AdapterFactory adapterFactory, Object object) {
+	static Object getImage(AdapterFactory adapterFactory, Object object) {
 		Preconditions.checkNotNull(adapterFactory);
 		if (object != null) {
 			Object adapter = adapterFactory.adapt(object, IItemLabelProvider.class);
@@ -271,5 +210,22 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getForeground(java.lang.Object)
+	 */
+	@Override
+	public Object getForeground(Object object) {
+		UMLDiff referenceChange = (UMLDiff)object;
+		switch (referenceChange.getState()) {
+			case MERGED:
+			case DISCARDED:
+				return URI.createURI("color://rgb/156/156/156"); //$NON-NLS-1$
+			default:
+				return super.getForeground(object);
+		}
 	}
 }
