@@ -22,7 +22,7 @@ import org.eclipse.uml2.uml.util.UMLUtil;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class UMLCompareUtil extends UMLUtil {
+public class UMLCompareUtil {
 	/**
 	 * Retrieves the base element for the specified stereotype application, i.e. the element to which the
 	 * stereotype is applied.

@@ -17,6 +17,7 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.provider.ForwardingItemProvider;
 import org.eclipse.emf.compare.provider.spec.Strings;
 import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
@@ -25,6 +26,9 @@ import org.eclipse.emf.compare.uml2.diff.internal.util.UMLCompareUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
+import org.eclipse.uml2.uml.NamedElement;
+import org.eclipse.uml2.uml.Stereotype;
+import org.eclipse.uml2.uml.util.UMLUtil;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -74,13 +78,65 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 	public String getText(Object object) {
 		final UMLDiff umlDiff = (UMLDiff)object;
 
-		final String valueText = getValueText(umlDiff);
-		final String referenceText = getReferenceText(umlDiff);
-
 		String remotely = "";
 		if (umlDiff.getSource() == DifferenceSource.RIGHT) {
 			remotely = "remotely ";
 		}
+
+		// FIXME extract this to its own ItemProvider. instanceof in getReferenceText can be deleted as well.
+		if (umlDiff instanceof StereotypeApplicationChange) {
+			Stereotype stereotype = ((StereotypeApplicationChange)umlDiff).getStereotype();
+			if (stereotype == null) {
+				stereotype = UMLUtil.getStereotype(umlDiff.getDiscriminant());
+			}
+			final String stereotypeName;
+			if (stereotype != null) {
+				stereotypeName = stereotype.getName() + ' ';
+			} else if (umlDiff.getDiscriminant() != null) {
+				stereotypeName = ((NamedElement)umlDiff.getDiscriminant()).getName() + ' ';
+			} else {
+				// Can't really do more
+				stereotypeName = "";
+			}
+
+			final Match targetMatch = umlDiff.getMatch();
+			final EObject target = findNonNullSide(targetMatch);
+			String targetLabel = null;
+
+			final String action;
+			switch (umlDiff.getKind()) {
+				case ADD:
+					action = "applied";
+					targetLabel = " to ";
+					break;
+				case DELETE:
+					action = "removed";
+					targetLabel = " from ";
+					break;
+				case CHANGE:
+					action = "changed";
+					targetLabel = " on ";
+					break;
+				case MOVE:
+					action = "moved";
+					targetLabel = " to ";
+					break;
+				default:
+					throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName()
+							+ " value: " + umlDiff.getKind());
+			}
+
+			if (target != null) {
+				targetLabel += getText(getRootAdapterFactory(), target) + '.';
+			} else {
+				targetLabel = ".";
+			}
+
+			return "Stereotype " + stereotypeName + "has been " + remotely + action + targetLabel;
+		}
+
+		final String valueText = getValueText(umlDiff);
+		final String referenceText = getReferenceText(umlDiff);
 
 		String ret = "";
 		switch (umlDiff.getKind()) {
@@ -102,6 +158,26 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 		}
 
 		return ret;
+	}
+
+	/**
+	 * Tries and find a non-<code>null</code> side for the given match. Still returns <code>null</code> if all
+	 * three sides are <code>null</code> though.
+	 * 
+	 * @param match
+	 *            The match for which we need a non-<code>null</code> side.
+	 * @return The first side (in order : left, right or origin) that was not <code>null</code>.
+	 */
+	private EObject findNonNullSide(Match match) {
+		final EObject side;
+		if (match.getLeft() != null) {
+			side = match.getLeft();
+		} else if (match.getRight() != null) {
+			side = match.getRight();
+		} else {
+			side = match.getOrigin();
+		}
+		return side;
 	}
 
 	/**

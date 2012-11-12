@@ -34,11 +34,13 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.uml2.common.util.UML2Util;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.ProfileApplication;
 import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.UMLPackage;
+import org.eclipse.uml2.uml.util.UMLUtil;
 
 /**
  * Factory for UMLStereotypeApplicationRemoval.
@@ -53,7 +55,11 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractDiffExtension
 
 	@Override
 	protected UMLDiff createExtension() {
-		return UMLCompareFactory.eINSTANCE.createStereotypeApplicationChange();
+		final StereotypeApplicationChange stereotypeApplicationChange = UMLCompareFactory.eINSTANCE
+				.createStereotypeApplicationChange();
+		final Stereotype stereotype = UMLUtil.getStereotype(stereotypeApplicationChange.getDiscriminant());
+		stereotypeApplicationChange.setStereotype(stereotype);
+		return stereotypeApplicationChange;
 	}
 
 	@Override
@@ -133,12 +139,12 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractDiffExtension
 		if (extension instanceof StereotypeApplicationChange) {
 			final StereotypeApplicationChange stereotypeApplicationChange = (StereotypeApplicationChange)extension;
 			if (stereotypeApplicationChange.getKind() == DifferenceKind.ADD) {
-				final Stereotype stereotype = UMLCompareUtil.getStereotype(stereotypeApplicationChange
-						.getDiscriminant());
+				final Stereotype stereotype = stereotypeApplicationChange.getStereotype();
 				if (stereotype != null) {
+					// FIXME this is not the place to set this, it should be done at creation time.
+					stereotypeApplicationChange.setStereotype(stereotype);
 					final Profile profile = stereotype.getProfile();
-					final Iterator<Setting> settings = UMLCompareUtil.getInverseReferences(profile)
-							.iterator();
+					final Iterator<Setting> settings = UML2Util.getInverseReferences(profile).iterator();
 					while (settings.hasNext()) {
 						final Setting setting = settings.next();
 						if (setting.getEStructuralFeature() == UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE) {
