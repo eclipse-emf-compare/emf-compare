@@ -289,7 +289,7 @@ public final class EMFSynchronizationModel {
 	/**
 	 * This can be called to reduce the number of resources in this model's traversals. Specifically, we'll
 	 * remove all resources that can be seen as binary identical (we match resources through exact equality of
-	 * thier names) or read-only.
+	 * their names) or read-only.
 	 */
 	public void minimize() {
 		final boolean threeWay = !originTraversal.getStorages().isEmpty();
