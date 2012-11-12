@@ -92,7 +92,7 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 			final String stereotypeName;
 			if (stereotype != null) {
 				stereotypeName = stereotype.getName() + ' ';
-			} else if (umlDiff.getDiscriminant() != null) {
+			} else if (umlDiff.getDiscriminant() instanceof NamedElement) {
 				stereotypeName = ((NamedElement)umlDiff.getDiscriminant()).getName() + ' ';
 			} else {
 				// Can't really do more
