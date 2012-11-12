@@ -46,10 +46,6 @@ public class EMFCompareEditingDomain {
 
 		fChangeRecorder = new ChangeRecorder();
 		fChangeRecorder.setResolveProxies(false);
-
-		for (Notifier notifier : fNotifiers) {
-			notifier.eAdapters().add(fChangeRecorder);
-		}
 	}
 
 	public void dispose() {
