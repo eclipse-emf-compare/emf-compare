@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.internal.utils;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.createURIFor;
 
 import com.google.common.annotations.Beta;
@@ -59,20 +60,10 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 			loadResource(storage, getLoadOptions());
 		}
 		// Then resolve all proxies between our "loaded" resources
-		for (Resource res : getResources()) {
+		List<Resource> resourcesList = newArrayList(getResources());
+		for (Resource res : resourcesList) {
 			resolve(res);
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#getResource(org.eclipse.emf.common.util.URI,
-	 *      boolean)
-	 */
-	@Override
-	public Resource getResource(URI uri, boolean loadOnDemand) {
-		return super.getResource(uri, false);
 	}
 
 	/**
