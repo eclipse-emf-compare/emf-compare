@@ -17,8 +17,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.ecore.EClass;
@@ -198,5 +200,96 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 				magazineSuperTypeChange).isEmpty());
 	}
 
-	// still to add: Periodical, Person, TitleItem
+	@Test
+	public void testGetChildren_Periodical() throws IOException {
+		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
+
+		Collection<?> ePackage_MatchChildren = adaptAsITreItemContentProvider(ePackageMatch).getChildren(
+				ePackageMatch);
+		ReferenceChange periodical_ReferenceChange = getReferenceChangeWithFeatureValue(
+				ePackage_MatchChildren, "name", "Periodical");
+		Collection<?> periodical_ReferenceChangeChildren = adaptAsITreItemContentProvider(
+				periodical_ReferenceChange).getChildren(periodical_ReferenceChange);
+
+		assertEquals(3, periodical_ReferenceChangeChildren.size());
+
+		ReferenceChange issuesPerYearChange = getReferenceChangeWithFeatureValue(
+				periodical_ReferenceChangeChildren, "name", "issuesPerYear");
+
+		ReferenceChange itemChange = getReferenceChangeWithFeatureValue(periodical_ReferenceChangeChildren,
+				"name", "Item");
+		ReferenceChange titledItemChange = getReferenceChangeWithFeatureValue(
+				periodical_ReferenceChangeChildren, "name", "TitledItem");
+
+		Collection<?> issuesPerYearChildren = adaptAsITreItemContentProvider(issuesPerYearChange)
+				.getChildren(issuesPerYearChange);
+		assertEquals(1, issuesPerYearChildren.size());
+		ReferenceChange issuePerYearChild = (ReferenceChange)issuesPerYearChildren.iterator().next();
+		assertEquals(EcorePackage.Literals.ETYPED_ELEMENT__ETYPE, issuePerYearChild.getReference());
+
+		assertTrue(adaptAsITreItemContentProvider(itemChange).getChildren(itemChange).isEmpty());
+		assertTrue(adaptAsITreItemContentProvider(titledItemChange).getChildren(titledItemChange).isEmpty());
+	}
+
+	@Test
+	public void testGetChildren_Person() throws IOException {
+		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
+
+		Collection<?> ePackage_MatchChildren = adaptAsITreItemContentProvider(ePackageMatch).getChildren(
+				ePackageMatch);
+		Match person_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "Person");
+		Collection<?> person_MatchChildren = adaptAsITreItemContentProvider(person_Match).getChildren(
+				person_Match);
+
+		assertEquals(3, person_MatchChildren.size());
+
+		ReferenceChange issuesPerYearChange = getReferenceChangeWithFeatureValue(person_MatchChildren,
+				"name", "firstName");
+		Collection<?> firstNameChildren = adaptAsITreItemContentProvider(issuesPerYearChange).getChildren(
+				issuesPerYearChange);
+		assertEquals(1, firstNameChildren.size());
+		ReferenceChange firstNameChild = (ReferenceChange)firstNameChildren.iterator().next();
+		assertEquals(EcorePackage.Literals.ETYPED_ELEMENT__ETYPE, firstNameChild.getReference());
+
+		ReferenceChange fullNameChange = getReferenceChangeWithFeatureValue(person_MatchChildren, "name",
+				"fullName");
+		Collection<?> fullNameChildren = adaptAsITreItemContentProvider(fullNameChange).getChildren(
+				fullNameChange);
+		assertEquals(1, fullNameChildren.size());
+		ReferenceChange fullNameChild = (ReferenceChange)fullNameChildren.iterator().next();
+		assertEquals(EcorePackage.Literals.ETYPED_ELEMENT__ETYPE, fullNameChild.getReference());
+
+		ReferenceChange lastNameChange = getReferenceChangeWithFeatureValue(person_MatchChildren, "name",
+				"lastName");
+		Collection<?> lastNameChildren = adaptAsITreItemContentProvider(lastNameChange).getChildren(
+				lastNameChange);
+		assertEquals(2, lastNameChildren.size());
+		Iterator<?> lastNameiterator = lastNameChildren.iterator();
+		ReferenceChange lastName1stChild = (ReferenceChange)lastNameiterator.next();
+		AttributeChange lastName2ndChild = (AttributeChange)lastNameiterator.next();
+		assertEquals(EcorePackage.Literals.ETYPED_ELEMENT__ETYPE, lastName1stChild.getReference());
+		assertEquals(EcorePackage.Literals.ENAMED_ELEMENT__NAME, lastName2ndChild.getAttribute());
+	}
+
+	@Test
+	public void testGetChildren_TitledItem() throws IOException {
+		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
+
+		Collection<?> ePackage_MatchChildren = adaptAsITreItemContentProvider(ePackageMatch).getChildren(
+				ePackageMatch);
+
+		ReferenceChange titledItem_ReferenceChange = getReferenceChangeWithFeatureValue(
+				ePackage_MatchChildren, "name", "TitledItem");
+		Collection<?> titledItem_ReferenceChangeChildren = adaptAsITreItemContentProvider(
+				titledItem_ReferenceChange).getChildren(titledItem_ReferenceChange);
+		assertEquals(1, titledItem_ReferenceChangeChildren.size());
+
+		ReferenceChange title_Change = (ReferenceChange)titledItem_ReferenceChangeChildren.iterator().next();
+		Collection<?> title_ChangeChildren = adaptAsITreItemContentProvider(title_Change).getChildren(
+				title_Change);
+		assertEquals(1, title_ChangeChildren.size());
+
+		ReferenceChange eType_Change = (ReferenceChange)title_ChangeChildren.iterator().next();
+		assertTrue(adaptAsITreItemContentProvider(eType_Change).getChildren(eType_Change).isEmpty());
+	}
 }
