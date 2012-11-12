@@ -61,12 +61,12 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 		}
 
 		// Filling of the requirements link of the UML difference extensions
-		for (Diff UMLDiff : comparison.getDifferences()) {
-			if (UMLDiff instanceof UMLDiff) {
-				final Class<?> classDiffElement = UMLDiff.eClass().getInstanceClass();
+		for (Diff umlDiff : comparison.getDifferences()) {
+			if (umlDiff instanceof UMLDiff) {
+				final Class<?> classDiffElement = umlDiff.eClass().getInstanceClass();
 				final IDiffExtensionFactory diffFactory = mapUml2ExtensionFactories.get(classDiffElement);
 				if (diffFactory != null) {
-					diffFactory.fillRequiredDifferences(comparison, (UMLDiff)UMLDiff);
+					diffFactory.fillRequiredDifferences(comparison, (UMLDiff)umlDiff);
 				}
 			}
 		}
