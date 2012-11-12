@@ -55,11 +55,7 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractDiffExtension
 
 	@Override
 	protected UMLDiff createExtension() {
-		final StereotypeApplicationChange stereotypeApplicationChange = UMLCompareFactory.eINSTANCE
-				.createStereotypeApplicationChange();
-		final Stereotype stereotype = UMLUtil.getStereotype(stereotypeApplicationChange.getDiscriminant());
-		stereotypeApplicationChange.setStereotype(stereotype);
-		return stereotypeApplicationChange;
+		return UMLCompareFactory.eINSTANCE.createStereotypeApplicationChange();
 	}
 
 	@Override
@@ -136,25 +132,27 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractDiffExtension
 
 	@Override
 	public void fillRequiredDifferences(Comparison comparison, UMLDiff extension) {
-		if (extension instanceof StereotypeApplicationChange) {
-			final StereotypeApplicationChange stereotypeApplicationChange = (StereotypeApplicationChange)extension;
-			if (stereotypeApplicationChange.getKind() == DifferenceKind.ADD) {
-				final Stereotype stereotype = stereotypeApplicationChange.getStereotype();
-				if (stereotype != null) {
-					// FIXME this is not the place to set this, it should be done at creation time.
-					stereotypeApplicationChange.setStereotype(stereotype);
-					final Profile profile = stereotype.getProfile();
-					final Iterator<Setting> settings = UML2Util.getInverseReferences(profile).iterator();
-					while (settings.hasNext()) {
-						final Setting setting = settings.next();
-						if (setting.getEStructuralFeature() == UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE) {
-							final ProfileApplication profileApplication = (ProfileApplication)setting
-									.getEObject();
-							for (Diff diff : comparison.getDifferences(profileApplication)) {
-								if (diff instanceof ProfileApplicationChange
-										&& diff.getKind() == DifferenceKind.ADD) {
-									stereotypeApplicationChange.getRequires().add(diff);
-								}
+		if (!(extension instanceof StereotypeApplicationChange)) {
+			return;
+		}
+		final StereotypeApplicationChange stereotypeApplicationChange = (StereotypeApplicationChange)extension;
+		if (stereotypeApplicationChange.getKind() == DifferenceKind.ADD) {
+			final Stereotype stereotype = UMLUtil
+					.getStereotype(stereotypeApplicationChange.getDiscriminant());
+			if (stereotype != null) {
+				// FIXME this is not the place to set this, it should be done at creation time.
+				stereotypeApplicationChange.setStereotype(stereotype);
+				final Profile profile = stereotype.getProfile();
+				final Iterator<Setting> settings = UML2Util.getInverseReferences(profile).iterator();
+				while (settings.hasNext()) {
+					final Setting setting = settings.next();
+					if (setting.getEStructuralFeature() == UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE) {
+						final ProfileApplication profileApplication = (ProfileApplication)setting
+								.getEObject();
+						for (Diff diff : comparison.getDifferences(profileApplication)) {
+							if (diff instanceof ProfileApplicationChange
+									&& diff.getKind() == DifferenceKind.ADD) {
+								stereotypeApplicationChange.getRequires().add(diff);
 							}
 						}
 					}
