@@ -27,6 +27,8 @@ import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IChangeNotifier;
 import org.eclipse.emf.edit.provider.IDisposable;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
+import org.eclipse.emf.edit.provider.IItemColorProvider;
+import org.eclipse.emf.edit.provider.IItemFontProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
@@ -37,7 +39,7 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class ForwardingItemProvider implements Adapter.Internal, IChangeNotifier, IDisposable, CreateChildCommand.Helper, ResourceLocator, IEditingDomainItemProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class ForwardingItemProvider implements Adapter.Internal, IChangeNotifier, IDisposable, CreateChildCommand.Helper, ResourceLocator, IEditingDomainItemProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource, IItemColorProvider, IItemFontProvider {
 
 	private ItemProviderAdapter fDelegate;
 
@@ -359,6 +361,33 @@ public class ForwardingItemProvider implements Adapter.Internal, IChangeNotifier
 	 */
 	public void unsetTarget(Notifier oldTarget) {
 		delegate().unsetTarget(oldTarget);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.IItemFontProvider#getFont(java.lang.Object)
+	 */
+	public Object getFont(Object object) {
+		return delegate().getFont(object);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.IItemColorProvider#getForeground(java.lang.Object)
+	 */
+	public Object getForeground(Object object) {
+		return delegate().getForeground(object);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.IItemColorProvider#getBackground(java.lang.Object)
+	 */
+	public Object getBackground(Object object) {
+		return delegate().getBackground(object);
 	}
 
 }
