@@ -19,6 +19,7 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
@@ -207,12 +208,29 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 	private void saveAllResources(ResourceSet resourceSet) {
 		EList<Resource> resources = resourceSet.getResources();
 		for (Resource resource : resources) {
-			try {
-				resource.save(ImmutableMap.of());
-			} catch (IOException e) {
-				EMFCompareIDEUIPlugin.getDefault().log(e);
+			if (supportsOutput(resource)) {
+				try {
+					resource.save(ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
+				} catch (IOException e) {
+					EMFCompareIDEUIPlugin.getDefault().log(e);
+				}
 			}
 		}
 	}
 
+	/**
+	 * Disable saving for resources that cannot support it.
+	 * 
+	 * @param resource
+	 *            The resource we are to check.
+	 * @return <code>true</code> if we can save this <code>resource</code>, <code>false</code> otherwise.
+	 */
+	private boolean supportsOutput(Resource resource) {
+		final URI uri = resource.getURI();
+		if (uri.isPlatformResource() || uri.isRelative() || uri.isFile()) {
+			return true;
+		}
+		return false;
+	}
 }
