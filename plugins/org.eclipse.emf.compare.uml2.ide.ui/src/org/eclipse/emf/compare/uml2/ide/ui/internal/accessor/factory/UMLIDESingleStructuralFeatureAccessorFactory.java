@@ -28,7 +28,8 @@ public class UMLIDESingleStructuralFeatureAccessorFactory extends AbstractAccess
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory#isFactoryFor(java.lang.Object)
 	 */
 	public boolean isFactoryFor(Object target) {
-		return target instanceof UMLDiff && !((UMLDiff)target).getEReference().isMany();
+		return target instanceof UMLDiff && ((UMLDiff)target).getEReference() != null
+				&& !((UMLDiff)target).getEReference().isMany();
 	}
 
 	private ITypedElement createAccessor(UMLDiff diff, MergeViewerSide side) {
