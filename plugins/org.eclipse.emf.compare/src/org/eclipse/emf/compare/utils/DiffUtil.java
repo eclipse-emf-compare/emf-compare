@@ -568,25 +568,8 @@ public final class DiffUtil {
 			targetList = ImmutableList.of();
 		}
 
-		final Iterable<Object> ignoredElements;
-		if (diff.getKind() == DifferenceKind.MOVE) {
-			final boolean undoingLeft = rightToLeft && diff.getSource() == DifferenceSource.LEFT;
-			final boolean undoingRight = !rightToLeft && diff.getSource() == DifferenceSource.RIGHT;
-
-			if (undoingLeft || undoingRight) {
-				ignoredElements = Lists.newArrayList();
-			} else if (!(diff instanceof AttributeChange) && comparison.isThreeWay()
-					&& match.getOrigin() != null) {
-				ignoredElements = Iterables.concat(computeIgnoredElements(targetList, diff), Collections
-						.singleton(value));
-			} else {
-				ignoredElements = Collections.singleton(value);
-			}
-		} else if (comparison.isThreeWay() && diff.getKind() == DifferenceKind.DELETE) {
-			ignoredElements = computeIgnoredElements(targetList, diff);
-		} else {
-			ignoredElements = Lists.newArrayList();
-		}
+		final Iterable<Object> ignoredElements = Iterables.concat(computeIgnoredElements(targetList, diff),
+				Collections.singleton(value));
 
 		return DiffUtil.findInsertionIndex(comparison, ignoredElements, sourceList, targetList, value);
 	}
@@ -706,41 +689,98 @@ public final class DiffUtil {
 
 				final Iterable<? extends Diff> filteredCandidates = Iterables.filter(match.getDifferences(),
 						diff.getClass());
-				return Iterables.any(filteredCandidates, unresolvedDiffMatching(feature, element));
+				final Predicate<Diff> unresolvedDiff = new UnresolvedDiffMatching(feature, element);
+				return Iterables.any(filteredCandidates, unresolvedDiff);
 			}
 		});
 	}
 
 	/**
-	 * Constructs a predicate that can be used to retrieve all unresolved diffs that apply to the given
-	 * {@code feature} and {@code element}.
+	 * This can be used to check whether a given Diff affects a value for which we can find another,
+	 * unresolved Diff on a given Feature.
 	 * 
-	 * @param feature
-	 *            The feature which our diffs must concern.
-	 * @param element
-	 *            The element which must be our diffs' target.
-	 * @param <E>
+	 * @param <T>
 	 *            Type of the element that must be the value of our matchin diffs.
-	 * @return The newly built predicate.
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
-	private static <E> Predicate<? super Diff> unresolvedDiffMatching(final EStructuralFeature feature,
-			final E element) {
-		return new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				boolean apply = false;
-				if (input instanceof AttributeChange) {
-					apply = input.getState() == DifferenceState.UNRESOLVED
-							&& ((AttributeChange)input).getAttribute() == feature
-							&& ((AttributeChange)input).getValue() == element;
-				} else if (input instanceof ReferenceChange) {
-					apply = input.getState() == DifferenceState.UNRESOLVED
-							&& ((ReferenceChange)input).getReference() == feature
-							&& ((ReferenceChange)input).getValue() == element;
-				} else {
-					apply = false;
-				}
-				return apply;
+	private static class UnresolvedDiffMatching<T> implements Predicate<Diff> {
+		/** Feature on which we expect an unresolved diff. */
+		private final EStructuralFeature feature;
+
+		/** Element for which we expect an unresolved diff. */
+		private final T element;
+
+		/**
+		 * Constructs a predicate that can be used to retrieve all unresolved diffs that apply to the given
+		 * {@code feature} and {@code element}.
+		 * 
+		 * @param feature
+		 *            The feature which our diffs must concern.
+		 * @param element
+		 *            The element which must be our diffs' target.
+		 */
+		public UnresolvedDiffMatching(EStructuralFeature feature, T element) {
+			this.feature = feature;
+			this.element = element;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see com.google.common.base.Predicate#apply(java.lang.Object)
+		 */
+		public boolean apply(Diff input) {
+			boolean apply = false;
+			if (input instanceof AttributeChange) {
+				apply = input.getState() == DifferenceState.UNRESOLVED
+						&& ((AttributeChange)input).getAttribute() == feature
+						&& matchingValues((AttributeChange)input, element);
+			} else if (input instanceof ReferenceChange) {
+				apply = input.getState() == DifferenceState.UNRESOLVED
+						&& ((ReferenceChange)input).getReference() == feature
+						&& matchingValues((ReferenceChange)input, element);
+			} else {
+				apply = false;
 			}
-		};
+			return apply;
+		}
+
+		/**
+		 * Checks that the value of the given diff matches <code>value</code>, resorting to the equality
+		 * helper if needed.
+		 * 
+		 * @param diff
+		 *            The diff which value we need to check.
+		 * @param value
+		 *            The expected value of <code>diff</code>
+		 * @return <code>true</code> if the value matches.
+		 */
+		private boolean matchingValues(AttributeChange diff, T value) {
+			if (diff.getValue() == value) {
+				return true;
+			}
+			// Only resort to the equality helper as "last resort"
+			final IEqualityHelper helper = diff.getMatch().getComparison().getEqualityHelper();
+			return helper.matchingAttributeValues(diff.getValue(), value);
+		}
+
+		/**
+		 * Checks that the value of the given diff matches <code>value</code>, resorting to the equality
+		 * helper if needed.
+		 * 
+		 * @param diff
+		 *            The diff which value we need to check.
+		 * @param value
+		 *            The expected value of <code>diff</code>
+		 * @return <code>true</code> if the value matches.
+		 */
+		private boolean matchingValues(ReferenceChange diff, T value) {
+			if (diff.getValue() == value) {
+				return true;
+			}
+			// Only resort to the equality helper as "last resort"
+			final IEqualityHelper helper = diff.getMatch().getComparison().getEqualityHelper();
+			return helper.matchingValues(diff.getValue(), value);
+		}
 	}
 }
