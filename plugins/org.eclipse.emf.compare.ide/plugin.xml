@@ -14,4 +14,5 @@
 
 <plugin>
    <extension-point id="org.eclipse.emf.compare.postProcessor" name="Post Processor" schema="schema/PostProcess.exsd"/>
+   <extension-point id="load_on_demand_policy" name="Load on Demand Policy" schema="schema/load_on_demand_policy.exsd"/>
 </plugin>

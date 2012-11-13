@@ -31,6 +31,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
+import org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -60,10 +62,26 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 			loadResource(storage, getLoadOptions());
 		}
 		// Then resolve all proxies between our "loaded" resources
-		List<Resource> resourcesList = newArrayList(getResources());
-		for (Resource res : resourcesList) {
+		List<Resource> resourcesCopy = newArrayList(getResources());
+		for (Resource res : resourcesCopy) {
 			resolve(res);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#getResource(org.eclipse.emf.common.util.URI,
+	 *      boolean)
+	 */
+	@Override
+	public Resource getResource(URI uri, boolean loadOnDemand) {
+		ILoadOnDemandPolicy.Registry registry = EMFCompareIDEPlugin.getDefault()
+				.getLoadOnDemandPolicyRegistry();
+		if (registry.hasAnyAuthorizingPolicy(uri)) {
+			return super.getResource(uri, true);
+		}
+		return super.getResource(uri, false);
 	}
 
 	/**
