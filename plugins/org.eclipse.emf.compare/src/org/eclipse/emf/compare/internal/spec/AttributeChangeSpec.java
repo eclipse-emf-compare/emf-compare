@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
 
+import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEGet;
+import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEIsSet;
+
 import com.google.common.base.Objects;
 
 import java.util.List;
@@ -213,7 +216,7 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 			expectedContainer = getMatch().getRight();
 		}
 
-		final Object currentValue = expectedContainer.eGet(getAttribute());
+		final Object currentValue = safeEGet(expectedContainer, getAttribute());
 		// Though not the "default value", we consider that an empty string is an unset attribute.
 		final Object defaultValue = getAttribute().getDefaultValue();
 		return currentValue == null || currentValue.equals(defaultValue)
@@ -453,8 +456,8 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 			originContainer = getMatch().getLeft();
 		}
 
-		if (originContainer == null || !targetContainer.eIsSet(getAttribute())
-				|| !originContainer.eIsSet(getAttribute())) {
+		if (originContainer == null || !safeEIsSet(targetContainer, getAttribute())
+				|| !safeEIsSet(originContainer, getAttribute())) {
 			targetContainer.eUnset(getAttribute());
 		} else {
 			final Object expectedValue = originContainer.eGet(getAttribute());

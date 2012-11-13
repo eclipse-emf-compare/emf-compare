@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
 
+import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEIsSet;
+
 import com.google.common.base.Objects;
 
 import java.util.Iterator;
@@ -629,8 +631,8 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			originContainer = getMatch().getLeft();
 		}
 
-		if (originContainer == null || !targetContainer.eIsSet(getReference())
-				|| !originContainer.eIsSet(getReference())) {
+		if (originContainer == null || !safeEIsSet(targetContainer, getReference())
+				|| !safeEIsSet(originContainer, getReference())) {
 			targetContainer.eUnset(getReference());
 		} else {
 			final EObject originalValue = (EObject)originContainer.eGet(getReference());
