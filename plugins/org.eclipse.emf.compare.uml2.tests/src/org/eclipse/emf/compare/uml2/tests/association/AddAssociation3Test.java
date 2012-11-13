@@ -48,6 +48,22 @@ public class AddAssociation3Test extends AbstractTest {
 	}
 
 	@Test
+	public void testMergeRtLA40UseCase() throws IOException {
+		final Resource left = input.getA4Left();
+		final Resource right = input.getA4Left();
+
+		testMergeRightToLeft(left, right, null);
+	}
+
+	@Test
+	public void testMergeLtRA40UseCase() throws IOException {
+		final Resource left = input.getA4Left();
+		final Resource right = input.getA4Left();
+
+		testMergeLeftToRight(left, right, null);
+	}
+
+	@Test
 	public void testA41UseCase() throws IOException {
 		final Resource left = input.getA4Left();
 		final Resource right = input.getA4Right();
@@ -55,6 +71,22 @@ public class AddAssociation3Test extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testMergeRtLA41UseCase() throws IOException {
+		final Resource left = input.getA4Left();
+		final Resource right = input.getA4Left();
+
+		testMergeRightToLeft(right, left, null);
+	}
+
+	@Test
+	public void testMergeLtRA41UseCase() throws IOException {
+		final Resource left = input.getA4Left();
+		final Resource right = input.getA4Left();
+
+		testMergeLeftToRight(right, left, null);
 	}
 
 	@Test
@@ -68,6 +100,22 @@ public class AddAssociation3Test extends AbstractTest {
 	}
 
 	@Test
+	public void testMergeRtLA40UseCase3way() throws IOException {
+		final Resource left = input.getA4Left();
+		final Resource right = input.getA4Left();
+
+		testMergeRightToLeft(left, right, right);
+	}
+
+	@Test
+	public void testMergeLtRA40UseCase3way() throws IOException {
+		final Resource left = input.getA4Left();
+		final Resource right = input.getA4Left();
+
+		testMergeLeftToRight(left, right, right);
+	}
+
+	@Test
 	public void testA41UseCase3way() throws IOException {
 		final Resource left = input.getA4Left();
 		final Resource right = input.getA4Right();
@@ -75,6 +123,22 @@ public class AddAssociation3Test extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testMergeRtLA41UseCase3way() throws IOException {
+		final Resource left = input.getA4Left();
+		final Resource right = input.getA4Left();
+
+		testMergeRightToLeft(left, right, left);
+	}
+
+	@Test
+	public void testMergeLtRA41UseCase3way() throws IOException {
+		final Resource left = input.getA4Left();
+		final Resource right = input.getA4Left();
+
+		testMergeLeftToRight(left, right, left);
 	}
 
 	private void testAB1(TestKind kind, final Comparison comparison) {

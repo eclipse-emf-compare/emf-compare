@@ -47,6 +47,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, null);
+		testMergeRightToLeft(left, right, null);
 	}
 
 	@Test
@@ -57,6 +60,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(right, left, null);
+		testMergeRightToLeft(right, left, null);
 	}
 
 	@Test
@@ -67,6 +73,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, right);
+		testMergeRightToLeft(left, right, right);
 	}
 
 	@Test
@@ -77,6 +86,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(left, right, left);
+		testMergeRightToLeft(left, right, left);
 	}
 
 	@Test
@@ -87,6 +99,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, null);
+		testMergeRightToLeft(left, right, null);
 	}
 
 	@Test
@@ -97,6 +112,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(right, left, null);
+		testMergeRightToLeft(right, left, null);
 	}
 
 	@Test
@@ -107,6 +125,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, right);
+		testMergeRightToLeft(left, right, right);
 	}
 
 	@Test
@@ -117,6 +138,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(left, right, left);
+		testMergeRightToLeft(left, right, left);
 	}
 
 	@Test
@@ -127,6 +151,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, null);
+		testMergeRightToLeft(left, right, null);
 	}
 
 	@Test
@@ -137,6 +164,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(right, left, null);
+		testMergeRightToLeft(right, left, null);
 	}
 
 	@Test
@@ -147,6 +177,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, right);
+		testMergeRightToLeft(left, right, right);
 	}
 
 	@Test
@@ -157,6 +190,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(left, right, left);
+		testMergeRightToLeft(left, right, left);
 	}
 
 	@Test
@@ -167,6 +203,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, null);
+		testMergeRightToLeft(left, right, null);
 	}
 
 	@Test
@@ -177,6 +216,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(right, left, null);
+		testMergeRightToLeft(right, left, null);
 	}
 
 	@Test
@@ -187,6 +229,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, right);
+		testMergeRightToLeft(left, right, right);
 	}
 
 	@Test
@@ -197,6 +242,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(left, right, left);
+		testMergeRightToLeft(left, right, left);
 	}
 
 	private void testAB1(TestKind kind, final Comparison comparison) {

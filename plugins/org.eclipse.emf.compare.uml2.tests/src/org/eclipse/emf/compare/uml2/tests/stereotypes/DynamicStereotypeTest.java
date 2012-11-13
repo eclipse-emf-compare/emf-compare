@@ -61,6 +61,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, null);
+		testMergeLeftToRight(left, right, null);
 	}
 
 	@Test
@@ -71,6 +74,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(right, left, null);
+		testMergeLeftToRight(right, left, null);
 	}
 
 	@Test
@@ -81,6 +87,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, right);
+		testMergeLeftToRight(left, right, right);
 	}
 
 	@Test
@@ -91,6 +100,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(left, right, left);
+		testMergeLeftToRight(left, right, left);
 	}
 
 	@Test
@@ -101,6 +113,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, null);
+		testMergeLeftToRight(left, right, null);
 	}
 
 	@Test
@@ -111,6 +126,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(right, left, null);
+		testMergeLeftToRight(right, left, null);
 	}
 
 	@Test
@@ -121,6 +139,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, right);
+		testMergeLeftToRight(left, right, right);
 	}
 
 	@Test
@@ -131,6 +152,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(left, right, left);
+		testMergeLeftToRight(left, right, left);
 	}
 
 	@Test
@@ -141,6 +165,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, null);
+		testMergeLeftToRight(left, right, null);
 	}
 
 	@Test
@@ -151,6 +178,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(right, left, null);
+		testMergeLeftToRight(right, left, null);
 	}
 
 	@Test
@@ -161,6 +191,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, right);
+		testMergeLeftToRight(left, right, right);
 	}
 
 	@Test
@@ -171,6 +204,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(left, right, left);
+		testMergeLeftToRight(left, right, left);
 	}
 
 	@Test
@@ -181,6 +217,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB4(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, null);
+		testMergeLeftToRight(left, right, null);
 	}
 
 	@Test
@@ -191,6 +230,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB4(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(right, left, null);
+		testMergeLeftToRight(right, left, null);
 	}
 
 	@Test
@@ -201,6 +243,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB4(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, right);
+		testMergeLeftToRight(left, right, right);
 	}
 
 	@Test
@@ -211,6 +256,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB4(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(left, right, left);
+		testMergeLeftToRight(left, right, left);
 	}
 
 	@Test
@@ -221,6 +269,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB5(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, null);
+		testMergeLeftToRight(left, right, null);
 	}
 
 	@Test
@@ -231,6 +282,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB5(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(right, left, null);
+		testMergeLeftToRight(right, left, null);
 	}
 
 	@Test
@@ -241,6 +295,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB5(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, right);
+		testMergeLeftToRight(left, right, right);
 	}
 
 	@Test
@@ -251,6 +308,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB5(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(left, right, left);
+		testMergeLeftToRight(left, right, left);
 	}
 
 	@Test
@@ -261,6 +321,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB6(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, null);
+		testMergeLeftToRight(left, right, null);
 	}
 
 	@Test
@@ -271,6 +334,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB6(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(right, left, null);
+		testMergeLeftToRight(right, left, null);
 	}
 
 	@Test
@@ -281,6 +347,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB6(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, right);
+		testMergeLeftToRight(left, right, right);
 	}
 
 	@Test
@@ -291,6 +360,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB6(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(left, right, left);
+		testMergeLeftToRight(left, right, left);
 	}
 
 	@Test
@@ -301,6 +373,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB7(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, null);
+		testMergeLeftToRight(left, right, null);
 	}
 
 	@Test
@@ -311,6 +386,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB7(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(right, left, null);
+		testMergeLeftToRight(right, left, null);
 	}
 
 	@Test
@@ -321,6 +399,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB7(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, right);
+		testMergeLeftToRight(left, right, right);
 	}
 
 	@Test
@@ -331,6 +412,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB7(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(left, right, left);
+		testMergeLeftToRight(left, right, left);
 	}
 
 	@Test
@@ -341,6 +425,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB8(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, null);
+		testMergeLeftToRight(left, right, null);
 	}
 
 	@Test
@@ -351,6 +438,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB8(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(right, left, null);
+		testMergeLeftToRight(right, left, null);
 	}
 
 	@Test
@@ -361,6 +451,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB8(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, right);
+		testMergeLeftToRight(left, right, right);
 	}
 
 	@Test
@@ -371,6 +464,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB8(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(left, right, left);
+		testMergeLeftToRight(left, right, left);
 	}
 
 	@Test
@@ -381,6 +477,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB9(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, null);
+		testMergeLeftToRight(left, right, null);
 	}
 
 	@Test
@@ -391,6 +490,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB9(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(right, left, null);
+		testMergeLeftToRight(right, left, null);
 	}
 
 	@Test
@@ -401,6 +503,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB9(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, right);
+		testMergeLeftToRight(left, right, right);
 	}
 
 	@Test
@@ -411,6 +516,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB9(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(left, right, left);
+		testMergeLeftToRight(left, right, left);
 	}
 
 	@Test
@@ -421,6 +529,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB10(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, null);
+		testMergeLeftToRight(left, right, null);
 	}
 
 	@Test
@@ -431,6 +542,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB10(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(right, left, null);
+		testMergeLeftToRight(right, left, null);
 	}
 
 	@Test
@@ -441,6 +555,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB10(TestKind.ADD, comparison);
+
+		testMergeRightToLeft(left, right, right);
+		testMergeLeftToRight(left, right, right);
 	}
 
 	@Test
@@ -451,6 +568,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB10(TestKind.DELETE, comparison);
+
+		testMergeRightToLeft(left, right, left);
+		testMergeLeftToRight(left, right, left);
 	}
 
 	private void testAB1(TestKind kind, final Comparison comparison) {

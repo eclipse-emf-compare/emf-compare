@@ -47,6 +47,12 @@ public class ProfileTest extends AbstractTest {
 			}
 			set.getResources().clear();
 		}
+		for (ResourceSet set : dynamicInput.getSets()) {
+			for (Resource res : set.getResources()) {
+				res.unload();
+			}
+			set.getResources().clear();
+		}
 	}
 
 	@Test
@@ -60,6 +66,22 @@ public class ProfileTest extends AbstractTest {
 	}
 
 	@Test
+	public void testMergeRtLStaticA10UseCase() throws IOException {
+		final Resource left = staticInput.getA1Left();
+		final Resource right = staticInput.getA1Left();
+
+		testMergeRightToLeft(left, right, null);
+	}
+
+	@Test
+	public void testMergeLtRStaticA10UseCase() throws IOException {
+		final Resource left = staticInput.getA1Left();
+		final Resource right = staticInput.getA1Left();
+
+		testMergeLeftToRight(left, right, null);
+	}
+
+	@Test
 	public void testStaticA11UseCase() throws IOException {
 		final Resource left = staticInput.getA1Left();
 		final Resource right = staticInput.getA1Right();
@@ -67,6 +89,22 @@ public class ProfileTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testMergeRtLStaticA11UseCase() throws IOException {
+		final Resource left = staticInput.getA1Left();
+		final Resource right = staticInput.getA1Left();
+
+		testMergeRightToLeft(right, left, null);
+	}
+
+	@Test
+	public void testMergeLtRStaticA11UseCase() throws IOException {
+		final Resource left = staticInput.getA1Left();
+		final Resource right = staticInput.getA1Left();
+
+		testMergeLeftToRight(right, left, null);
 	}
 
 	@Test
@@ -80,6 +118,22 @@ public class ProfileTest extends AbstractTest {
 	}
 
 	@Test
+	public void testMergeRtLStaticA10UseCase3way() throws IOException {
+		final Resource left = staticInput.getA1Left();
+		final Resource right = staticInput.getA1Left();
+
+		testMergeRightToLeft(left, right, right);
+	}
+
+	@Test
+	public void testMergeLtRStaticA10UseCase3way() throws IOException {
+		final Resource left = staticInput.getA1Left();
+		final Resource right = staticInput.getA1Left();
+
+		testMergeLeftToRight(left, right, right);
+	}
+
+	@Test
 	public void testStaticA11UseCase3way() throws IOException {
 		final Resource left = staticInput.getA1Left();
 		final Resource right = staticInput.getA1Right();
@@ -87,6 +141,22 @@ public class ProfileTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testMergeRtLStaticA11UseCase3way() throws IOException {
+		final Resource left = staticInput.getA1Left();
+		final Resource right = staticInput.getA1Left();
+
+		testMergeRightToLeft(left, right, right);
+	}
+
+	@Test
+	public void testMergeLtRStaticA11UseCase3way() throws IOException {
+		final Resource left = staticInput.getA1Left();
+		final Resource right = staticInput.getA1Left();
+
+		testMergeLeftToRight(left, right, right);
 	}
 
 	@Test
@@ -100,6 +170,22 @@ public class ProfileTest extends AbstractTest {
 	}
 
 	@Test
+	public void testMergeRtLDynamicA10UseCase() throws IOException {
+		final Resource left = dynamicInput.getA1Left();
+		final Resource right = dynamicInput.getA1Left();
+
+		testMergeRightToLeft(left, right, null);
+	}
+
+	@Test
+	public void testMergeLtRDynamicA10UseCase() throws IOException {
+		final Resource left = dynamicInput.getA1Left();
+		final Resource right = dynamicInput.getA1Left();
+
+		testMergeLeftToRight(left, right, null);
+	}
+
+	@Test
 	public void testDynamicA11UseCase() throws IOException {
 		final Resource left = dynamicInput.getA1Left();
 		final Resource right = dynamicInput.getA1Right();
@@ -107,6 +193,22 @@ public class ProfileTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testMergeRtLDynamicA11UseCase() throws IOException {
+		final Resource left = dynamicInput.getA1Left();
+		final Resource right = dynamicInput.getA1Left();
+
+		testMergeRightToLeft(right, left, null);
+	}
+
+	@Test
+	public void testMergeLtRDynamicA11UseCase() throws IOException {
+		final Resource left = dynamicInput.getA1Left();
+		final Resource right = dynamicInput.getA1Left();
+
+		testMergeLeftToRight(right, left, null);
 	}
 
 	@Test
@@ -120,6 +222,22 @@ public class ProfileTest extends AbstractTest {
 	}
 
 	@Test
+	public void testMergeRtLDynamicA10UseCase3way() throws IOException {
+		final Resource left = dynamicInput.getA1Left();
+		final Resource right = dynamicInput.getA1Left();
+
+		testMergeRightToLeft(left, right, right);
+	}
+
+	@Test
+	public void testMergeLtRDynamicA10UseCase3way() throws IOException {
+		final Resource left = dynamicInput.getA1Left();
+		final Resource right = dynamicInput.getA1Left();
+
+		testMergeLeftToRight(left, right, right);
+	}
+
+	@Test
 	public void testDynamicA11UseCase3way() throws IOException {
 		final Resource left = dynamicInput.getA1Left();
 		final Resource right = dynamicInput.getA1Right();
@@ -127,6 +245,22 @@ public class ProfileTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testMergeRtLDynamicA11UseCase3way() throws IOException {
+		final Resource left = dynamicInput.getA1Left();
+		final Resource right = dynamicInput.getA1Left();
+
+		testMergeRightToLeft(left, right, left);
+	}
+
+	@Test
+	public void testMergeLtRDynamicA11UseCase3way() throws IOException {
+		final Resource left = dynamicInput.getA1Left();
+		final Resource right = dynamicInput.getA1Left();
+
+		testMergeLeftToRight(left, right, left);
 	}
 
 	private void testAB1(TestKind kind, final Comparison comparison) {
