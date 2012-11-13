@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.uml2.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.impl.DiffImpl;
 import org.eclipse.emf.compare.uml2.UMLComparePackage;
@@ -240,10 +241,20 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 			return;
 		}
 
+		setEquivalentDiffAsMerged();
+
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		setState(DifferenceState.MERGED);
 		for (Diff diff : getRefinedBy()) {
 			diff.copyLeftToRight();
+		}
+
+		if (getSource() == DifferenceSource.LEFT) {
+			// merge all "requires" diffs
+			mergeRequires(false);
+		} else {
+			// merge all "required by" diffs
+			mergeRequiredBy(false);
 		}
 	}
 
@@ -254,11 +265,65 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 			return;
 		}
 
+		setEquivalentDiffAsMerged();
+
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		setState(DifferenceState.MERGED);
 		for (Diff diff : getRefinedBy()) {
 			diff.copyRightToLeft();
 		}
+
+		if (getSource() == DifferenceSource.LEFT) {
+			// merge all "required by" diffs
+			mergeRequiredBy(true);
+		} else {
+			mergeRequires(true);
+		}
 	}
 
+	private void setEquivalentDiffAsMerged() {
+		if (getEquivalence() != null) {
+			for (Diff equivalent : getEquivalence().getDifferences()) {
+				equivalent.setState(DifferenceState.MERGED);
+			}
+		}
+	}
+
+	/**
+	 * This will merge all {@link #getRequiredBy() differences that require us} in the given direction.
+	 * 
+	 * @param rightToLeft
+	 *            If {@code true}, {@link #copyRightToLeft() apply} all {@link #getRequiredBy() differences
+	 *            that require us}. Otherwise, {@link #copyLeftToRight() revert} them.
+	 */
+	protected void mergeRequiredBy(boolean rightToLeft) {
+		// TODO log back to the user what we will merge along?
+		for (Diff dependency : getRequiredBy()) {
+			// TODO: what to do when state = Discarded but is required?
+			if (rightToLeft) {
+				dependency.copyRightToLeft();
+			} else {
+				dependency.copyLeftToRight();
+			}
+		}
+	}
+
+	/**
+	 * This will merge all {@link #getRequires() required differences} in the given direction.
+	 * 
+	 * @param rightToLeft
+	 *            If {@code true}, {@link #copyRightToLeft() apply} all {@link #getRequires() required
+	 *            differences}. Otherwise, {@link #copyLeftToRight() revert} them.
+	 */
+	protected void mergeRequires(boolean rightToLeft) {
+		// TODO log back to the user what we will merge along?
+		for (Diff dependency : getRequires()) {
+			// TODO: what to do when state = Discarded but is required?
+			if (rightToLeft) {
+				dependency.copyRightToLeft();
+			} else {
+				dependency.copyLeftToRight();
+			}
+		}
+	}
 } // UMLDiffImpl
