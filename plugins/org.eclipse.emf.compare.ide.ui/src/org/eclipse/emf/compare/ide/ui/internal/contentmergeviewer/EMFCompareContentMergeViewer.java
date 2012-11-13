@@ -21,6 +21,7 @@ import org.eclipse.compare.ICompareNavigator;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.Utilities;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.util.EList;
@@ -59,7 +60,7 @@ import org.eclipse.ui.actions.ActionFactory;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer implements ISelectionChangedListener, ICompareColorProvider {
+public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer implements ISelectionChangedListener, ICompareColorProvider, IAdaptable {
 
 	private static final String HANDLER_SERVICE = "fHandlerService";
 
@@ -415,6 +416,16 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	}
 
 	protected abstract void paintCenter(GC g);
+
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+		if (adapter == CompareHandlerService.class) {
+			return getHandlerService();
+		}
+		if (adapter == CompareHandlerService[].class) {
+			return new CompareHandlerService[] {getHandlerService(), };
+		}
+		return null;
+	}
 
 	/**
 	 * @return the fAncestor
