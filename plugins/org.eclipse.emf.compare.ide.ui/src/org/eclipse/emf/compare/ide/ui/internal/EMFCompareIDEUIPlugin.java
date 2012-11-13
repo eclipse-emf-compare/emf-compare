@@ -67,7 +67,7 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		registry = new IAccessorFactory.RegistryImpl();
 
 		listener = new AccessorFactoryExtensionRegistryListener(PLUGIN_ID, ACCESSOR_FACTORY_PPID);
-		extensionRegistry.addListener(listener, ACCESSOR_FACTORY_PPID);
+		extensionRegistry.addListener(listener, PLUGIN_ID + "." + ACCESSOR_FACTORY_PPID);
 		listener.readRegistry(extensionRegistry);
 	}
 
