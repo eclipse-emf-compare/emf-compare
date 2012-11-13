@@ -26,7 +26,7 @@
          EMF Compare features.
       </description>
    </category-def>
-   <category-def name="compare_integration" label="EMF Compare Integrations">
+   <category-def name="compare_integration" label="EMF Compare Tools Integration">
       <description>
          Features to integrate EMF Compare with other tools.
       </description>
