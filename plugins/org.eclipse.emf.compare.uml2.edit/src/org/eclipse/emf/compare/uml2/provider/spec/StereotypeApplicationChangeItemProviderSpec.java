@@ -95,7 +95,7 @@ public class StereotypeApplicationChangeItemProviderSpec extends StereotypeAppli
 			stereotypeText = "Stereotype " + ((NamedElement)umlDiff.getDiscriminant()).getName() + ' ';
 		} else {
 			// Can't really do more
-			stereotypeText = "Stereotype";
+			stereotypeText = "Stereotype ";
 		}
 
 		final Match targetMatch = umlDiff.getMatch();
