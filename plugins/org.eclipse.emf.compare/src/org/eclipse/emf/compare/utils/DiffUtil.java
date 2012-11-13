@@ -689,8 +689,7 @@ public final class DiffUtil {
 
 				final Iterable<? extends Diff> filteredCandidates = Iterables.filter(match.getDifferences(),
 						diff.getClass());
-				final Predicate<Diff> unresolvedDiff = new UnresolvedDiffMatching(feature, element);
-				return Iterables.any(filteredCandidates, unresolvedDiff);
+				return Iterables.any(filteredCandidates, new UnresolvedDiffMatching(feature, element));
 			}
 		});
 	}
@@ -699,16 +698,14 @@ public final class DiffUtil {
 	 * This can be used to check whether a given Diff affects a value for which we can find another,
 	 * unresolved Diff on a given Feature.
 	 * 
-	 * @param <T>
-	 *            Type of the element that must be the value of our matchin diffs.
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
-	private static class UnresolvedDiffMatching<T> implements Predicate<Diff> {
+	private static class UnresolvedDiffMatching implements Predicate<Diff> {
 		/** Feature on which we expect an unresolved diff. */
 		private final EStructuralFeature feature;
 
 		/** Element for which we expect an unresolved diff. */
-		private final T element;
+		private final Object element;
 
 		/**
 		 * Constructs a predicate that can be used to retrieve all unresolved diffs that apply to the given
@@ -719,7 +716,7 @@ public final class DiffUtil {
 		 * @param element
 		 *            The element which must be our diffs' target.
 		 */
-		public UnresolvedDiffMatching(EStructuralFeature feature, T element) {
+		public UnresolvedDiffMatching(EStructuralFeature feature, Object element) {
 			this.feature = feature;
 			this.element = element;
 		}
@@ -755,7 +752,7 @@ public final class DiffUtil {
 		 *            The expected value of <code>diff</code>
 		 * @return <code>true</code> if the value matches.
 		 */
-		private boolean matchingValues(AttributeChange diff, T value) {
+		private boolean matchingValues(AttributeChange diff, Object value) {
 			if (diff.getValue() == value) {
 				return true;
 			}
@@ -774,7 +771,7 @@ public final class DiffUtil {
 		 *            The expected value of <code>diff</code>
 		 * @return <code>true</code> if the value matches.
 		 */
-		private boolean matchingValues(ReferenceChange diff, T value) {
+		private boolean matchingValues(ReferenceChange diff, Object value) {
 			if (diff.getValue() == value) {
 				return true;
 			}
