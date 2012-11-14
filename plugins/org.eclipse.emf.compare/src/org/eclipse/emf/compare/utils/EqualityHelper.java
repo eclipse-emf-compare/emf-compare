@@ -24,7 +24,6 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
 
@@ -119,9 +118,6 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 		} else {
 			equal = converted1 != null && converted1.equals(converted2);
 		}
-		if (converted1 instanceof EOperation || converted2 instanceof EOperation) {
-			System.out.println();
-		}
 		return equal;
 	}
 
@@ -175,10 +171,9 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	 * @return <code>true</code> if these two EObjects have the same URIs, <code>false</code> otherwise.
 	 */
 	protected boolean matchingURIs(EObject object1, EObject object2) {
-		if (object1.eContainer() == null && object2.eContainer() == null) {
-			if (object1.eResource() == null && object2.eResource() == null) {
-				return false;
-			}
+		// An object that is uncontained and is not a proxy has no URI. bypass them.
+		if (!object1.eIsProxy() && isUncontained(object1) || !object2.eIsProxy() && isUncontained(object2)) {
+			return false;
 		}
 
 		final boolean equal;
@@ -190,6 +185,17 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 			equal = uri1.equals(uri2);
 		}
 		return equal;
+	}
+
+	/**
+	 * Checks whether the given object is contained anywhere.
+	 * 
+	 * @param object
+	 *            The object whose container we are to check.
+	 * @return <code>true</code> if the object has no reachable container, <code>false</code> otherwise.
+	 */
+	private boolean isUncontained(EObject object) {
+		return object.eContainer() == null && object.eResource() == null;
 	}
 
 	/**
