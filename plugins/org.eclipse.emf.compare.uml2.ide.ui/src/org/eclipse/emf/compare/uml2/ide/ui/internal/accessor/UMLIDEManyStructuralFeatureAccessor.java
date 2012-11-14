@@ -29,11 +29,21 @@ import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EcoreFactory;
+import org.eclipse.uml2.uml.UMLPackage;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class UMLIDEManyStructuralFeatureAccessor extends IDEManyStructuralFeatureAccessorImpl {
+
+	private final static EReference STEREOTYPE_APPLICATION = EcoreFactory.eINSTANCE.createEReference();
+
+	static {
+		STEREOTYPE_APPLICATION.setName("stereotypeApplications");
+		STEREOTYPE_APPLICATION.setUpperBound(EStructuralFeature.UNBOUNDED_MULTIPLICITY);
+		STEREOTYPE_APPLICATION.setEType(UMLPackage.Literals.STEREOTYPE);
+	}
 
 	/**
 	 * @param diff
@@ -72,12 +82,22 @@ public class UMLIDEManyStructuralFeatureAccessor extends IDEManyStructuralFeatur
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.BasicStructuralFeatureAccessorImpl#getStructuralFeature()
+	 */
+	@Override
+	public EStructuralFeature getStructuralFeature() {
+		return STEREOTYPE_APPLICATION;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.BasicStructuralFeatureAccessorImpl#computeDifferences()
 	 */
 	@Override
 	protected ImmutableList<Diff> computeDifferences() {
 		List<Diff> siblingDifferences = getInitialDiff().getMatch().getDifferences();
-		// We'll display all diffs on the same reference, excluding the pseudo conflicts.
+		// We'll display all diffs of the same type, excluding the pseudo conflicts.
 		Predicate<? super Diff> diffFilter = not(hasConflict(ConflictKind.PSEUDO));
 
 		return ImmutableList.copyOf(filter(filter(siblingDifferences, diffFilter), getInitialDiff()
