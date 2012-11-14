@@ -28,7 +28,6 @@ import org.eclipse.emf.compare.diff.DefaultDiffEngine;
 import org.eclipse.emf.compare.diff.FeatureFilter;
 import org.eclipse.emf.compare.diff.IDiffProcessor;
 import org.eclipse.emf.compare.match.DefaultComparisonFactory;
-import org.eclipse.emf.compare.match.IComparisonFactory;
 import org.eclipse.emf.compare.match.IEqualityHelperFactory;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher.DistanceFunction;
 import org.eclipse.emf.compare.utils.DiffUtil;
@@ -78,10 +77,12 @@ public class EditionDistance implements DistanceFunction {
 	private URIDistance uriDistance = new URIDistance();
 
 	/**
-	 * The equality helper used to retrieve the URIs through its cache and to instanciate a specific diff
-	 * engine.
+	 * The fake comparison is used to make the diff engine super class happy. We are reusing the same instance
+	 * which we are updating because of the cost of adding even a single Match in it (and subsequent growing
+	 * of list) which gets very significant considering how much we are calling this during a single
+	 * comparison.
 	 */
-	private EqualityHelper helper;
+	private Comparison fakeComparison;
 
 	/**
 	 * instance providing the weight for each feature.
@@ -92,14 +93,19 @@ public class EditionDistance implements DistanceFunction {
 	 * Instantiate a new Edition Distance.
 	 */
 	public EditionDistance() {
-		this.helper = new EqualityHelper() {
+		IEqualityHelperFactory fakeEqualityHelperFactory = new IEqualityHelperFactory() {
+			public IEqualityHelper createEqualityHelper() {
+				return new EqualityHelper() {
 
-			@Override
-			protected boolean matchingURIs(EObject object1, EObject object2) {
-				return uriDistance.proximity(object1, object2) == 0;
+					@Override
+					protected boolean matchingURIs(EObject object1, EObject object2) {
+						return uriDistance.proximity(object1, object2) == 0;
+					}
+
+				};
 			}
-
 		};
+		this.fakeComparison = new DefaultComparisonFactory(fakeEqualityHelperFactory).createComparison();
 	}
 
 	/**
@@ -107,7 +113,7 @@ public class EditionDistance implements DistanceFunction {
 	 */
 	public int distance(EObject a, EObject b) {
 		int maxDist = Math.max(getMaxDistance(a), getMaxDistance(b));
-		int measuredDist = new CountingDiffEngine(maxDist).measureDifferences(a, b);
+		int measuredDist = new CountingDiffEngine(maxDist, this.fakeComparison).measureDifferences(a, b);
 		if (measuredDist >= maxDist) {
 			return Integer.MAX_VALUE;
 		}
@@ -118,7 +124,7 @@ public class EditionDistance implements DistanceFunction {
 	 * {@inheritDoc}
 	 */
 	public boolean areIdentic(EObject a, EObject b) {
-		return new CountingDiffEngine(0).measureDifferences(a, b) == 0;
+		return new CountingDiffEngine(0, this.fakeComparison).measureDifferences(a, b) == 0;
 	}
 
 	/**
@@ -333,24 +339,23 @@ public class EditionDistance implements DistanceFunction {
 		/**
 		 * The comparison factory to create fake comparison.
 		 */
-		private final IComparisonFactory fakeComparisonFactory;
+		private final Comparison fakeComparison;
 
 		/**
 		 * Create the diff engine.
 		 * 
 		 * @param maxDistance
 		 *            the maximum distance we might reach.
+		 * @param fakeComparison
+		 *            the comparison instance to use while measuring the differences between the two objects.
 		 */
-		public CountingDiffEngine(int maxDistance) {
+		public CountingDiffEngine(int maxDistance, Comparison fakeComparison) {
 			super(new CountingDiffProcessor());
 			this.maxDistance = maxDistance;
 			// will always return the same instance.
-			IEqualityHelperFactory fakeEqualityHelperFactory = new IEqualityHelperFactory() {
-				public IEqualityHelper createEqualityHelper() {
-					return EditionDistance.this.helper;
-				}
-			};
-			fakeComparisonFactory = new DefaultComparisonFactory(fakeEqualityHelperFactory);
+
+			this.fakeComparison = fakeComparison;
+
 		}
 
 		@Override
@@ -377,7 +382,7 @@ public class EditionDistance implements DistanceFunction {
 		 * @return the distance between them computed using the number of changes required to change a to b.
 		 */
 		public int measureDifferences(EObject a, EObject b) {
-			Match fakeMatch = createFakeMatch(a, b);
+			Match fakeMatch = createOrUpdateFakeMatch(a, b);
 			getCounter().reset();
 			int changes = 0;
 			int dist = uriDistance.proximity(a, b);
@@ -402,10 +407,12 @@ public class EditionDistance implements DistanceFunction {
 		 *            Second of the two EObjects for which we want to force a comparison.
 		 * @return The created Match.
 		 */
-		private Match createFakeMatch(EObject a, EObject b) {
-			Comparison fakeComparison = fakeComparisonFactory.createComparison();
-			Match fakeMatch = CompareFactory.eINSTANCE.createMatch();
-			((InternalEList<Match>)fakeComparison.getMatches()).addUnique(fakeMatch);
+		private Match createOrUpdateFakeMatch(EObject a, EObject b) {
+			if (!fakeComparison.getMatches().iterator().hasNext()) {
+				Match fakeMatch = CompareFactory.eINSTANCE.createMatch();
+				((InternalEList<Match>)fakeComparison.getMatches()).addUnique(fakeMatch);
+			}
+			Match fakeMatch = fakeComparison.getMatches().get(0);
 			fakeMatch.setLeft(a);
 			fakeMatch.setRight(b);
 			return fakeMatch;
