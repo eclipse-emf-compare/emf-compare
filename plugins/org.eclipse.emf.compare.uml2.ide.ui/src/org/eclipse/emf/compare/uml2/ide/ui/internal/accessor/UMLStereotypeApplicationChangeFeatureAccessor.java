@@ -30,8 +30,12 @@ import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Stereotype;
+import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.util.UMLUtil;
 
 /**
@@ -43,6 +47,15 @@ import org.eclipse.uml2.uml.util.UMLUtil;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class UMLStereotypeApplicationChangeFeatureAccessor extends UMLIDEManyStructuralFeatureAccessor {
+
+	private final static EReference STEREOTYPE_APPLICATION = EcoreFactory.eINSTANCE.createEReference();
+
+	static {
+		STEREOTYPE_APPLICATION.setName("stereotypeApplications");
+		STEREOTYPE_APPLICATION.setUpperBound(EStructuralFeature.UNBOUNDED_MULTIPLICITY);
+		STEREOTYPE_APPLICATION.setEType(UMLPackage.Literals.STEREOTYPE);
+	}
+
 	/**
 	 * Creates a specialized accessor for the stereotype application differences.
 	 * 
@@ -70,6 +83,16 @@ public class UMLStereotypeApplicationChangeFeatureAccessor extends UMLIDEManyStr
 			return ((Element)eObject).getAppliedStereotypes();
 		}
 		return ImmutableList.of();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.BasicStructuralFeatureAccessorImpl#getStructuralFeature()
+	 */
+	@Override
+	public EStructuralFeature getStructuralFeature() {
+		return STEREOTYPE_APPLICATION;
 	}
 
 	/**
