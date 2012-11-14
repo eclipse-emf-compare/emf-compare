@@ -133,9 +133,10 @@ public class AddExtendTest extends AbstractTest {
 			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(ExtendChange.class),
 					ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLExtend);
-			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLExtend.getRefinedBy().size()));
+			assertSame(Integer.valueOf(3), Integer.valueOf(addUMLExtend.getRefinedBy().size()));
 			assertTrue(addUMLExtend.getRefinedBy().contains(addRefExtendedCaseInExtend));
 			assertTrue(addUMLExtend.getRefinedBy().contains(addRefExtensionLocationInExtend));
+			assertTrue(addUMLExtend.getRefinedBy().contains(addExtensionPoint));
 		} else {
 			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(ExtendChange.class),
 					ofKind(DifferenceKind.DELETE)));

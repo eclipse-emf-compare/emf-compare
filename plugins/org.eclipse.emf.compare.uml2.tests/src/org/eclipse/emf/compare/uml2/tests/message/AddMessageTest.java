@@ -346,11 +346,16 @@ public class AddMessageTest extends AbstractTest {
 			addUMLMessage = Iterators.find(differences.iterator(), and(instanceOf(MessageChange.class),
 					ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLMessage);
-			assertSame(Integer.valueOf(4), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
+			assertSame(Integer.valueOf(8), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addReceiveEventInMessage));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addSendEventInMessage));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInMessage0Recv0));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInMessage0Send0));
+
+			assertTrue(addUMLMessage.getRefinedBy().contains(addMessageSend));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addMessageRecv));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredByInLifeline0));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredByInLifeline1));
 		} else {
 			addUMLMessage = Iterators.find(differences.iterator(), and(instanceOf(MessageChange.class),
 					ofKind(DifferenceKind.DELETE)));
@@ -525,9 +530,11 @@ public class AddMessageTest extends AbstractTest {
 			addUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
 					ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLMessage);
-			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
+			assertSame(Integer.valueOf(4), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addReceiveEventInMessage));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInMessage0Recv0));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addMessageRecv));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredByInLifeline0));
 		} else {
 			addUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
 					ofKind(DifferenceKind.DELETE)));
@@ -666,9 +673,11 @@ public class AddMessageTest extends AbstractTest {
 			addUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
 					ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLMessage);
-			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
+			assertSame(Integer.valueOf(4), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addReceiveEventInMessage));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInMessage0Recv0));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addMessageRecv));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredByInLifeline0));
 		} else {
 			addUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
 					ofKind(DifferenceKind.DELETE)));

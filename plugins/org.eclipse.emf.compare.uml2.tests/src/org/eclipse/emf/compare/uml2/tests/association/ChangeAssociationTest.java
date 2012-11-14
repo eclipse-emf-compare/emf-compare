@@ -200,11 +200,13 @@ public class ChangeAssociationTest extends AbstractTest {
 		Diff changeUMLAssociation = Iterators.find(differences.iterator(), and(
 				instanceOf(AssociationChange.class), ofKind(DifferenceKind.CHANGE)));
 		assertNotNull(changeUMLAssociation);
-		assertSame(Integer.valueOf(4), Integer.valueOf(changeUMLAssociation.getRefinedBy().size()));
+		assertSame(Integer.valueOf(6), Integer.valueOf(changeUMLAssociation.getRefinedBy().size()));
 		assertTrue(changeUMLAssociation.getRefinedBy().contains(addRefTypeInPropertyClass2));
 		assertTrue(changeUMLAssociation.getRefinedBy().contains(addLiteralIntegerInClass2));
 		assertTrue(changeUMLAssociation.getRefinedBy().contains(addUnlimitedNaturalInClass2));
 		assertTrue(changeUMLAssociation.getRefinedBy().contains(addRefAssociationInPropertyClass2));
+		assertTrue(changeUMLAssociation.getRefinedBy().contains(addMemberEndClass2InAssociation));
+		assertTrue(changeUMLAssociation.getRefinedBy().contains(addPropertyClass2));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {

@@ -167,13 +167,15 @@ public class AddTimeConstraintTest extends AbstractTest {
 			addUMLMessage = Iterators.find(differences.iterator(), and(
 					instanceOf(IntervalConstraintChange.class), ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLMessage);
-			assertSame(Integer.valueOf(6), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
+			assertSame(Integer.valueOf(8), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addConstrainedElementInTimeConstraint));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addTimeInterval));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addMinInTimeInterval));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addMaxInTimeInterval));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addMinValue));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addMaxValue));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addTimeExpressionMin));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addTimeExpressionMax));
 
 		} else {
 			addUMLMessage = Iterators.find(differences.iterator(), and(

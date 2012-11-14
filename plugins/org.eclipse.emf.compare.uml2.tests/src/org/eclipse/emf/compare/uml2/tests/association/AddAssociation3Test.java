@@ -252,7 +252,7 @@ public class AddAssociation3Test extends AbstractTest {
 			addUMLAssociation = Iterators.find(differences.iterator(), and(
 					instanceOf(AssociationChange.class), ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLAssociation);
-			assertSame(Integer.valueOf(8), Integer.valueOf(addUMLAssociation.getRefinedBy().size()));
+			assertSame(Integer.valueOf(13), Integer.valueOf(addUMLAssociation.getRefinedBy().size()));
 			assertTrue(addUMLAssociation.getRefinedBy().contains(addRefTypeInPropertyClass1));
 			assertTrue(addUMLAssociation.getRefinedBy().contains(addLiteralIntegerInClass1));
 			assertTrue(addUMLAssociation.getRefinedBy().contains(addUnlimitedNaturalInClass1));
@@ -261,6 +261,11 @@ public class AddAssociation3Test extends AbstractTest {
 			assertTrue(addUMLAssociation.getRefinedBy().contains(addLiteralIntegerInClass0));
 			assertTrue(addUMLAssociation.getRefinedBy().contains(addUnlimitedNaturalInClass0));
 			assertTrue(addUMLAssociation.getRefinedBy().contains(addRefAssociationInPropertyClass0));
+			assertTrue(addUMLAssociation.getRefinedBy().contains(addMemberEndClass1InAssociation));
+			assertTrue(addUMLAssociation.getRefinedBy().contains(addMemberEndClass0InAssociation));
+			assertTrue(addUMLAssociation.getRefinedBy().contains(addAssociation));
+			assertTrue(addUMLAssociation.getRefinedBy().contains(addPropertyClass0));
+			assertTrue(addUMLAssociation.getRefinedBy().contains(addPropertyClass1));
 		} else {
 			addUMLAssociation = Iterators.find(differences.iterator(), and(
 					instanceOf(AssociationChange.class), ofKind(DifferenceKind.DELETE)));

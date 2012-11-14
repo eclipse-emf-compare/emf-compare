@@ -200,12 +200,16 @@ public class AddBehaviorExecutionSpecificationTest extends AbstractTest {
 			addUMLMessage = Iterators.find(differences.iterator(), and(
 					instanceOf(ExecutionSpecificationChange.class), ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLMessage);
-			assertSame(Integer.valueOf(5), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
+			assertSame(Integer.valueOf(9), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addFinishInActionExecSpec));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addStartInActionExecSpec));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInFinish));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInStart));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInActionExecSpec));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredByInLifeline1_1));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredByInLifeline1_2));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addStart));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addFinish));
 		} else {
 			addUMLMessage = Iterators.find(differences.iterator(), and(
 					instanceOf(ExecutionSpecificationChange.class), ofKind(DifferenceKind.DELETE)));

@@ -68,7 +68,6 @@ public class UMLExtendChangeFactory extends AbstractDiffExtensionFactory {
 	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
 		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.ADD)
 				&& input.getValue() instanceof Extend && ((Extend)input.getValue()).getExtendedCase() != null
-				&& ((Extend)input.getValue()).getExtensionLocations() != null
 				&& !((Extend)input.getValue()).getExtensionLocations().isEmpty();
 	}
 
