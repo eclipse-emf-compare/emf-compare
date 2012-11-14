@@ -107,12 +107,6 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 		final Object converted2 = internalFindActualObject(object2);
 		if (converted1 == converted2) {
 			equal = true;
-		} else if (converted1 instanceof EEnumLiteral && converted2 instanceof EEnumLiteral) {
-			final EEnumLiteral literal1 = (EEnumLiteral)converted1;
-			final EEnumLiteral literal2 = (EEnumLiteral)converted2;
-			final String value1 = literal1.getLiteral() + literal1.getValue();
-			final String value2 = literal2.getLiteral() + literal2.getValue();
-			equal = value1.equals(value2);
 		} else if (converted1 instanceof EObject && converted2 instanceof EObject) {
 			// [248442] This will handle FeatureMapEntries detection
 			equal = matchingEObjects((EObject)converted1, (EObject)converted2);
