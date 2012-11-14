@@ -10,11 +10,17 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.ide.ui.internal.accessor;
 
+import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.filter;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 
+import java.util.List;
+
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IDEManyStructuralFeatureAccessorImpl;
@@ -70,7 +76,12 @@ public class UMLIDEManyStructuralFeatureAccessor extends IDEManyStructuralFeatur
 	 */
 	@Override
 	protected ImmutableList<Diff> computeDifferences() {
-		return ImmutableList.of(getInitialDiff());
+		List<Diff> siblingDifferences = getInitialDiff().getMatch().getDifferences();
+		// We'll display all diffs on the same reference, excluding the pseudo conflicts.
+		Predicate<? super Diff> diffFilter = not(hasConflict(ConflictKind.PSEUDO));
+
+		return ImmutableList.copyOf(filter(filter(siblingDifferences, diffFilter), getInitialDiff()
+				.getClass()));
 	}
 
 	/**
