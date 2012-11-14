@@ -23,8 +23,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
-import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
 
@@ -35,7 +35,6 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
-
 	/** A cache keeping track of the URIs for EObjects. */
 	private final Cache<EObject, URI> uriCache;
 
@@ -120,6 +119,9 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 		} else {
 			equal = converted1 != null && converted1.equals(converted2);
 		}
+		if (converted1 instanceof EOperation || converted2 instanceof EOperation) {
+			System.out.println();
+		}
 		return equal;
 	}
 
@@ -173,6 +175,12 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	 * @return <code>true</code> if these two EObjects have the same URIs, <code>false</code> otherwise.
 	 */
 	protected boolean matchingURIs(EObject object1, EObject object2) {
+		if (object1.eContainer() == null && object2.eContainer() == null) {
+			if (object1.eResource() == null && object2.eResource() == null) {
+				return false;
+			}
+		}
+
 		final boolean equal;
 		final URI uri1 = uriCache.getUnchecked(object1);
 		final URI uri2 = uriCache.getUnchecked(object2);
@@ -190,54 +198,10 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	 * @see org.eclipse.emf.compare.utils.IEqualityHelper#matchingAttributeValues(java.lang.Object,
 	 *      java.lang.Object)
 	 */
-	public boolean matchingAttributeValues(Object object1, Object object2) {
-		final boolean equal;
-		final Object converted1 = internalFindActualObject(object1);
-		final Object converted2 = internalFindActualObject(object2);
-		if (converted1 == converted2) {
-			equal = true;
-		} else if (converted1 instanceof EEnumLiteral && converted2 instanceof EEnumLiteral) {
-			final EEnumLiteral literal1 = (EEnumLiteral)converted1;
-			final EEnumLiteral literal2 = (EEnumLiteral)converted2;
-			final String value1 = literal1.getLiteral() + literal1.getValue();
-			final String value2 = literal2.getLiteral() + literal2.getValue();
-			equal = value1.equals(value2);
-		} else if (converted1 != null && converted1.getClass().isArray() && converted2 != null
-				&& converted2.getClass().isArray()) {
-			// [299641] compare arrays by their content instead of instance equality
-			equal = matchingAttributeValuesArrays(converted1, converted2);
-		} else if (isNullOrEmptyString(converted1) && isNullOrEmptyString(converted2)) {
-			// Special case, consider that the empty String is equal to null (unset attributes)
-			equal = true;
-		} else {
-			equal = converted1 != null && converted1.equals(converted2);
-		}
-		return equal;
-	}
 
-	/**
-	 * Compares two values as arrays, checking that their length and content match each other. Note that this
-	 * should only be used when no {@link Comparison} is available.
-	 * 
-	 * @param object1
-	 *            First of the two objects to compare here.
-	 * @param object2
-	 *            Second of the two objects to compare here.
-	 * @return <code>true</code> if these two arrays are to be considered equal, <code>false</code> otherwise.
-	 */
-	private boolean matchingAttributeValuesArrays(Object object1, Object object2) {
-		boolean equal = true;
-		final int length1 = Array.getLength(object1);
-		if (length1 != Array.getLength(object2)) {
-			equal = true;
-		} else {
-			for (int i = 0; i < length1 && equal; i++) {
-				final Object element1 = Array.get(object1, i);
-				final Object element2 = Array.get(object2, i);
-				equal = matchingAttributeValues(element1, element2);
-			}
-		}
-		return equal;
+	public boolean matchingAttributeValues(Object object1, Object object2) {
+		// The default equality helper handles attributes and references the same.
+		return matchingValues(object1, object2);
 	}
 
 	/**
