@@ -10,6 +10,8 @@
  */
 package org.eclipse.emf.compare.tests;
 
+import java.util.List;
+
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
@@ -71,8 +73,9 @@ public class FuzzyTest {
 		}
 
 		Comparison valid = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(root, backup));
+		List<Diff> differences = valid.getDifferences();
 		Assert.assertEquals("We still have differences after merging all of them (had " + nbDiffs
-				+ " to merge in the beginning)", 0, valid.getDifferences().size());
+				+ " to merge in the beginning)", 0, differences.size());
 
 	}
 
@@ -93,8 +96,9 @@ public class FuzzyTest {
 		}
 
 		Comparison valid = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(root, backup));
+		List<Diff> differences = valid.getDifferences();
 		Assert.assertEquals("We still have differences after merging all of them (had " + nbDiffs
-				+ " to merge in the beginning)", 0, valid.getDifferences().size());
+				+ " to merge in the beginning)", 0, differences.size());
 	}
 
 	private ModelMutatorConfiguration createConfig() {
@@ -102,5 +106,4 @@ public class FuzzyTest {
 		conf.setMaxDeleteCount(0);
 		return conf;
 	}
-
 }
