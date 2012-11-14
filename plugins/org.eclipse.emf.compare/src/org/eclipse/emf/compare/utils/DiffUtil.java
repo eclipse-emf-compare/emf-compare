@@ -34,6 +34,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -558,7 +559,11 @@ public final class DiffUtil {
 
 		if (expectedContainer != null) {
 			final List<Object> temp = (List<Object>)ReferenceUtil.safeEGet(expectedContainer, feature);
-			if (temp instanceof InternalEList<?>) {
+			if (feature == EcorePackage.Literals.ECLASS__ESUPER_TYPES
+					|| feature == EcorePackage.Literals.EOPERATION__EEXCEPTIONS) {
+				// workaround 394286
+				targetList = temp;
+			} else if (temp instanceof InternalEList<?>) {
 				// EMF ignores the "resolve" flag for containment lists...
 				targetList = ((InternalEList<Object>)temp).basicList();
 			} else {
@@ -618,7 +623,11 @@ public final class DiffUtil {
 
 		if (expectedContainer != null) {
 			final List<Object> temp = (List<Object>)ReferenceUtil.safeEGet(expectedContainer, feature);
-			if (temp instanceof InternalEList<?>) {
+			if (feature == EcorePackage.Literals.ECLASS__ESUPER_TYPES
+					|| feature == EcorePackage.Literals.EOPERATION__EEXCEPTIONS) {
+				// workaround 394286
+				sourceList = temp;
+			} else if (temp instanceof InternalEList<?>) {
 				// EMF ignores the "resolve" flag for containment lists...
 				sourceList = ((InternalEList<Object>)temp).basicList();
 			} else {
