@@ -1,5 +1,10 @@
 package org.eclipse.emf.compare.uml2.diff;
 
+import static com.google.common.collect.Iterables.filter;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -8,12 +13,18 @@ import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.extension.IPostProcessor;
 import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.DiffExtensionFactoryRegistry;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.uml2.uml.UMLPackage;
 
 public class UMLDiffExtensionPostProcessor implements IPostProcessor {
+	/** Some references will be ignored as they are derived, but not marked as such. */
+	private static final Set<EReference> IGNORED_REFERENCES = ignoredReference();
 
 	/**
 	 * UML2 extensions factories.
@@ -41,7 +52,20 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postDiff(Comparison comparison, Monitor monitor) {
+		for (Diff ignore : filter(comparison.getDifferences(), diffOnIgnoredReference())) {
+			EcoreUtil.delete(ignore);
+		}
+	}
 
+	private static Predicate<? super Diff> diffOnIgnoredReference() {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				if (input instanceof ReferenceChange) {
+					return IGNORED_REFERENCES.contains(((ReferenceChange)input).getReference());
+				}
+				return false;
+			}
+		};
 	}
 
 	/**
@@ -110,4 +134,30 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 		}
 	}
 
+	private static Set<EReference> ignoredReference() {
+		// @formatter:off
+		// FIXME test each of the following thoroughly to
+		// 1 - check that they indeed cause trouble with merging
+		// 2 - check that they can indeed be ignored without breaking anything
+		return ImmutableSet.of(
+//				UMLPackage.Literals.ACTION__INPUT,
+//				UMLPackage.Literals.ACTION__OUTPUT,
+//				UMLPackage.Literals.ACTIVITY_GROUP__CONTAINED_EDGE,
+//				UMLPackage.Literals.ACTIVITY_GROUP__CONTAINED_NODE,
+//				UMLPackage.Literals.ACTIVITY_GROUP__SUBGROUP,
+				UMLPackage.Literals.ASSOCIATION__MEMBER_END
+//				UMLPackage.Literals.CLASSIFIER__ATTRIBUTE,
+//				UMLPackage.Literals.CLASSIFIER__FEATURE,
+//				UMLPackage.Literals.ELEMENT__OWNED_ELEMENT,
+//				UMLPackage.Literals.NAMED_ELEMENT__CLIENT_DEPENDENCY,
+//				UMLPackage.Literals.NAMESPACE__MEMBER,
+//				UMLPackage.Literals.NAMESPACE__OWNED_MEMBER,
+//				UMLPackage.Literals.STRUCTURED_CLASSIFIER__ROLE,
+//				UMLPackage.Literals.TEMPLATE_PARAMETER_SUBSTITUTION__ACTUAL,
+//				UMLPackage.Literals.TEMPLATE_PARAMETER__PARAMETERED_ELEMENT,
+//				UMLPackage.Literals.TEMPLATE_PARAMETER__DEFAULT,
+//				UMLPackage.Literals.TEMPLATE_SIGNATURE__PARAMETER
+				);
+		// @formatter:on
+	}
 }
