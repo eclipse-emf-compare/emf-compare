@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.commands;
 
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
 import java.util.Collection;
@@ -54,8 +55,18 @@ public class CopyCommand extends ChangeCommand {
 	public CopyCommand(ChangeRecorder changeRecorder, Collection<Notifier> notifiers, List<Diff> differences,
 			boolean leftToRight) {
 		super(changeRecorder, notifiers);
-		this.differences = differences;
+		this.differences = ImmutableList.copyOf(differences);
 		this.leftToRight = leftToRight;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.command.AbstractCommand#getAffectedObjects()
+	 */
+	@Override
+	public Collection<?> getAffectedObjects() {
+		return differences;
 	}
 
 	/**
