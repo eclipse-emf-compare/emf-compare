@@ -674,7 +674,8 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 		boolean continueMerge = true;
 		for (Diff equivalent : getEquivalence().getDifferences()) {
 			if (equivalent instanceof ReferenceChange
-					&& getReference().getEOpposite() == ((ReferenceChange)equivalent).getReference()) {
+					&& getReference().getEOpposite() == ((ReferenceChange)equivalent).getReference()
+					&& equivalent.getState() == DifferenceState.UNRESOLVED) {
 				// This equivalence is on our eOpposite. Should we merge it instead of 'this'?
 				final boolean mergeEquivalence = !getReference().isMany()
 						&& ((ReferenceChange)equivalent).getReference().isMany();
