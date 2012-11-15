@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.impl.ReferenceChangeImpl;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EMFCompareCopier;
@@ -62,8 +63,9 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		setState(DifferenceState.MERGED);
 		if (getEquivalence() != null) {
-			for (Diff equivalent : getEquivalence().getDifferences()) {
-				equivalent.setState(DifferenceState.MERGED);
+			boolean continueMerge = handleEquivalences(false);
+			if (!continueMerge) {
+				return;
 			}
 		}
 
@@ -158,8 +160,9 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		setState(DifferenceState.MERGED);
 		if (getEquivalence() != null) {
-			for (Diff equivalent : getEquivalence().getDifferences()) {
-				equivalent.setState(DifferenceState.MERGED);
+			boolean continueMerge = handleEquivalences(true);
+			if (!continueMerge) {
+				return;
 			}
 		}
 
@@ -648,6 +651,44 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			}
 			targetContainer.eSet(getReference(), expectedValue);
 		}
+	}
+
+	/**
+	 * Handles the equivalences of this difference.
+	 * <p>
+	 * Note that in certain cases, we'll merge our opposite instead of merging this diff. Specifically, we'll
+	 * do that for one-to-many eOpposites : we'll merge the 'many' side instead of the 'unique' one. This
+	 * allows us not to worry about the order of the references on that 'many' side.
+	 * </p>
+	 * <p>
+	 * This is called before the merge of <code>this</code>. In short, if this returns <code>false</code>, we
+	 * won't carry on merging <code>this</code> after returning.
+	 * </p>
+	 * 
+	 * @param rightToLeft
+	 *            Direction of the merge.
+	 * @return <code>true</code> if the current difference should still be merged after handling its
+	 *         equivalences, <code>false</code> if it should be considered "already merged".
+	 */
+	protected boolean handleEquivalences(boolean rightToLeft) {
+		boolean continueMerge = true;
+		for (Diff equivalent : getEquivalence().getDifferences()) {
+			if (equivalent instanceof ReferenceChange
+					&& getReference().getEOpposite() == ((ReferenceChange)equivalent).getReference()) {
+				// This equivalence is on our eOpposite. Should we merge it instead of 'this'?
+				final boolean mergeEquivalence = !getReference().isMany()
+						&& ((ReferenceChange)equivalent).getReference().isMany();
+				if (mergeEquivalence && rightToLeft) {
+					equivalent.copyRightToLeft();
+					continueMerge = false;
+				} else if (mergeEquivalence) {
+					equivalent.copyLeftToRight();
+					continueMerge = false;
+				}
+			}
+			equivalent.setState(DifferenceState.MERGED);
+		}
+		return continueMerge;
 	}
 
 	/**
