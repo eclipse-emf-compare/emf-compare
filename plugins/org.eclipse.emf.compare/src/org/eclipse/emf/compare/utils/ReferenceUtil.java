@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -48,7 +49,11 @@ public final class ReferenceUtil {
 		if (object != null && feature != null) {
 			Object value = safeEGet(object, feature);
 			final List<Object> asList;
-			if (value instanceof InternalEList<?>) {
+			if (feature == EcorePackage.Literals.ECLASS__ESUPER_TYPES
+					|| feature == EcorePackage.Literals.EOPERATION__EEXCEPTIONS) {
+				// workaround 394286. Use the normal list, resolution is not much of a problem on these.
+				asList = (List<Object>)value;
+			} else if (value instanceof InternalEList<?>) {
 				// EMF ignores the "resolve" flag for containment lists...
 				asList = ((InternalEList<Object>)value).basicList();
 			} else if (value instanceof List) {
