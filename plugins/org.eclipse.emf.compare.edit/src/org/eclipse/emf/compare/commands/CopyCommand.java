@@ -33,7 +33,7 @@ import org.eclipse.emf.edit.command.ChangeCommand;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class CopyCommand extends ChangeCommand {
+public class CopyCommand extends ChangeCommand implements ICompareCopyCommand {
 	/** The list of differences we are to merge. */
 	private final List<Diff> differences;
 
@@ -57,6 +57,15 @@ public class CopyCommand extends ChangeCommand {
 		super(changeRecorder, notifiers);
 		this.differences = ImmutableList.copyOf(differences);
 		this.leftToRight = leftToRight;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.commands.ICompareCopyCommand#isLeftToRight()
+	 */
+	public boolean isLeftToRight() {
+		return leftToRight;
 	}
 
 	/**
