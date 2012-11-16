@@ -146,11 +146,6 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 				leftToRight);
 		getEditingDomain().getCommandStack().execute(command);
 
-		if (leftToRight) {
-			setRightDirty(true);
-		} else {
-			setLeftDirty(true);
-		}
 		refresh();
 	}
 

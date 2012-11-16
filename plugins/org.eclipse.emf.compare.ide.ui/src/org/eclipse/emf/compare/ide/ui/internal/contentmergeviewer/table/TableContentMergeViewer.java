@@ -114,11 +114,6 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			Command copyCommand = getEditingDomain().createCopyCommand(diffToCopy, leftToRight);
 			getEditingDomain().getCommandStack().execute(copyCommand);
 
-			if (leftToRight) {
-				setRightDirty(true);
-			} else {
-				setLeftDirty(true);
-			}
 			refresh();
 		}
 	}

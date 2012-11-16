@@ -289,6 +289,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			public void commandStackChanged(EventObject event) {
 				undoAction.update();
 				redoAction.update();
+				setLeftDirty(fEditingDomain.getCommandStack().isLeftSaveNeeded());
+				setRightDirty(fEditingDomain.getCommandStack().isRightSaveNeeded());
 				refresh();
 			}
 		});
@@ -311,11 +313,11 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 		getEditingDomain().getCommandStack().execute(copyCommand);
 
-		if (leftToRight) {
-			setRightDirty(true);
-		} else {
-			setLeftDirty(true);
-		}
+		// if (leftToRight) {
+		// setRightDirty(true);
+		// } else {
+		// setLeftDirty(true);
+		// }
 		refresh();
 	}
 

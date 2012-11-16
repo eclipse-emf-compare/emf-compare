@@ -82,12 +82,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 					.getDifferences(), leftToRight);
 			fEditingDomain.getCommandStack().execute(copyCommand);
 
-			if (leftToRight) {
-				setRightDirty(true);
-			} else {
-				setLeftDirty(true);
-			}
-
 			refresh();
 		}
 	}
@@ -100,11 +94,11 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 			final Command copyCommand = fEditingDomain.createCopyCommand(attributeChange, leftToRight);
 			fEditingDomain.getCommandStack().execute(copyCommand);
 
-			if (leftToRight) {
-				setRightDirty(true);
-			} else {
-				setLeftDirty(true);
-			}
+			// if (leftToRight) {
+			// setRightDirty(true);
+			// } else {
+			// setLeftDirty(true);
+			// }
 
 			refresh();
 		}
