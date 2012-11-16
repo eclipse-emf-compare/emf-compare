@@ -11,15 +11,18 @@
 package org.eclipse.emf.compare.utils;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 import org.eclipse.emf.compare.AttributeChange;
@@ -177,7 +180,8 @@ public final class DiffUtil {
 		while (current1 > 0 && current2 > 0) {
 			final E first = sequence1.get(current1 - 1);
 			final E second = sequence2.get(current2 - 1);
-			if (equalityHelper.matchingValues(first, second)) {
+			if (equalityHelper.matchingValues(first, second)
+					&& !contains(comparison, equalityHelper, ignoredElements, second)) {
 				result.add(first);
 				current1--;
 				current2--;
@@ -324,8 +328,7 @@ public final class DiffUtil {
 	 */
 	public static <E> int findInsertionIndex(Comparison comparison, Iterable<E> ignoredElements,
 			List<E> source, List<E> target, E newElement) {
-		IEqualityHelper equalityHelper = comparison.getEqualityHelper();
-		// TODO split this into multiple sub-methods
+		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
 
 		// We assume that "newElement" is in source but not in the target yet
 		final List<E> lcs;
@@ -352,8 +355,8 @@ public final class DiffUtil {
 			lastLCSIndex = noLCS;
 		}
 
-		final Iterator<E> sourceIterator = source.iterator();
-		for (int i = 0; sourceIterator.hasNext() && (currentIndex == -1 || lastLCSIndex == -1); i++) {
+		ListIterator<E> sourceIterator = source.listIterator();
+		for (int i = 0; sourceIterator.hasNext() && (currentIndex == -1 || firstLCSIndex == -1); i++) {
 			final E sourceElement = sourceIterator.next();
 			if (currentIndex == -1 && equalityHelper.matchingValues(sourceElement, newElement)) {
 				currentIndex = i;
@@ -361,6 +364,12 @@ public final class DiffUtil {
 			if (firstLCSIndex == -1 && equalityHelper.matchingValues(sourceElement, firstLCS)) {
 				firstLCSIndex = i;
 			}
+		}
+		// The list may contain duplicates, use a reverse iteration to find the last from LCS.
+		final int sourceSize = source.size();
+		sourceIterator = source.listIterator(sourceSize);
+		for (int i = sourceSize - 1; sourceIterator.hasPrevious() && lastLCSIndex == -1; i--) {
+			final E sourceElement = sourceIterator.previous();
 			if (lastLCSIndex == -1 && equalityHelper.matchingValues(sourceElement, lastLCS)) {
 				lastLCSIndex = i;
 			}
@@ -372,68 +381,13 @@ public final class DiffUtil {
 			insertionIndex = target.size();
 		} else if (currentIndex < firstLCSIndex) {
 			// The object we are to insert is before the LCS in source.
-			// The insertion index will be inside the subsequence {0, <LCS start>} in target
-			/*
-			 * We'll insert it just before the LCS start : there cannot be any common element between the two
-			 * lists "before" the LCS since it would be part of the LCS itself.
-			 */
-			for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
-				final E targetElement = target.get(i);
-
-				if (equalityHelper.matchingValues(targetElement, firstLCS)) {
-					// We've reached the first element from the LCS in target. Insert here
-					insertionIndex = i;
-				}
-			}
+			insertionIndex = insertBeforeLCS(target, equalityHelper, firstLCS);
 		} else if (currentIndex > lastLCSIndex) {
 			// The object we are to insert is after the LCS in source.
-			// The insertion index will be inside the subsequence {<LCS end>, <list.size()>} in target.
-			/*
-			 * We'll insert it just after the LCS end : there cannot be any common element between the two
-			 * lists "after" the LCS since it would be part of the LCS itself.
-			 */
-			for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
-				final E targetElement = target.get(i);
-				if (equalityHelper.matchingValues(targetElement, lastLCS)) {
-					// We've reached the last element of the LCS in target. insert after it.
-					insertionIndex = i + 1;
-				}
-			}
+			insertionIndex = findInsertionIndexAfterLCS(target, equalityHelper, lastLCS);
 		} else {
 			// Our object is in-between two elements A and B of the LCS in source
-			/*
-			 * If any element of the subsequence {<index of A>, <index of B>} from source had been in the same
-			 * subsequence in target, it would have been part of the LCS. We thus know none is.
-			 */
-			// The insertion index will be just after A in target
-
-			// First, find which element of the LCS is "A"
-			E subsequenceStart = null;
-			for (int i = 0; i < currentIndex; i++) {
-				final E sourceElement = source.get(i);
-
-				boolean isInLCS = false;
-				for (int j = 0; j < lcs.size() && !isInLCS; j++) {
-					final E lcsElement = lcs.get(j);
-
-					if (equalityHelper.matchingValues(sourceElement, lcsElement)) {
-						isInLCS = true;
-					}
-				}
-
-				if (isInLCS) {
-					subsequenceStart = sourceElement;
-				}
-			}
-
-			// Then, find the index of "A" in target
-			for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
-				final E targetElement = target.get(i);
-
-				if (equalityHelper.matchingValues(targetElement, subsequenceStart)) {
-					insertionIndex = i + 1;
-				}
-			}
+			insertionIndex = findInsertionIndexWithinLCS(source, target, equalityHelper, lcs, currentIndex);
 		}
 
 		// We somehow failed to determine the insertion index. Insert at the very end.
@@ -441,6 +395,134 @@ public final class DiffUtil {
 			insertionIndex = target.size();
 		}
 
+		return insertionIndex;
+	}
+
+	/**
+	 * This will be called to try and find the insertion index for an element that is located in-between two
+	 * elements of the LCS between {@code source} and {@code target}.
+	 * 
+	 * @param source
+	 *            The List from which one element has to be added to the {@code target} list.
+	 * @param target
+	 *            The List into which one element from {@code source} has to be added.
+	 * @param equalityHelper
+	 *            The equality helper to use for this computation.
+	 * @param lcs
+	 *            The lcs between {@code source} and {@code target}.
+	 * @param currentIndex
+	 *            Current index (in {@code source} of the element we are to insert into {@code target}.
+	 * @param <E>
+	 *            Type of the sequences content.
+	 * @return The index in the target list in which should be inserted that element.
+	 */
+	private static <E> int findInsertionIndexWithinLCS(List<E> source, List<E> target,
+			final IEqualityHelper equalityHelper, final List<E> lcs, int currentIndex) {
+		int insertionIndex = -1;
+		/*
+		 * If any element of the subsequence {<index of A>, <index of B>} from source had been in the same
+		 * subsequence in target, it would have been part of the LCS. We thus know none is.
+		 */
+		// The insertion index will be just after A in target
+
+		// First, find which element of the LCS is "A"
+		int lcsIndexOfSubsequenceStart = -1;
+		for (int i = 0; i < currentIndex; i++) {
+			final E sourceElement = source.get(i);
+
+			boolean isInLCS = false;
+			for (int j = lcsIndexOfSubsequenceStart + 1; j < lcs.size() && !isInLCS; j++) {
+				final E lcsElement = lcs.get(j);
+
+				if (equalityHelper.matchingValues(sourceElement, lcsElement)) {
+					isInLCS = true;
+					lcsIndexOfSubsequenceStart++;
+				}
+			}
+		}
+
+		// Do we have duplicates before A in the lcs?
+		final Multiset<E> dupesLCS = HashMultiset.create(lcs.subList(0, lcsIndexOfSubsequenceStart + 1));
+		final E subsequenceStart = lcs.get(lcsIndexOfSubsequenceStart);
+		int duplicatesToGo = dupesLCS.count(subsequenceStart) - 1;
+
+		// Then, find the index of "A" in target
+		for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
+			final E targetElement = target.get(i);
+
+			if (equalityHelper.matchingValues(targetElement, subsequenceStart)) {
+				if (duplicatesToGo > 0) {
+					duplicatesToGo--;
+				} else {
+					insertionIndex = i + 1;
+				}
+			}
+		}
+
+		return insertionIndex;
+	}
+
+	/**
+	 * This will be called when we are to insert an element after the LCS in the {@code target} list.
+	 * 
+	 * @param target
+	 *            The List into which one element has to be added.
+	 * @param equalityHelper
+	 *            The equality helper to use for this computation.
+	 * @param lastLCS
+	 *            The last element of the LCS.
+	 * @param <E>
+	 *            Type of the sequences content.
+	 * @return The index to use for insertion into {@code target} in order to add an element just after the
+	 *         LCS.
+	 */
+	private static <E> int findInsertionIndexAfterLCS(List<E> target, IEqualityHelper equalityHelper,
+			E lastLCS) {
+		int insertionIndex = -1;
+		// The insertion index will be inside the subsequence {<LCS end>, <list.size()>} in target.
+		/*
+		 * We'll insert it just after the LCS end : there cannot be any common element between the two lists
+		 * "after" the LCS since it would be part of the LCS itself.
+		 */
+		for (int i = target.size() - 1; i >= 0 && insertionIndex == -1; i--) {
+			final E targetElement = target.get(i);
+			if (equalityHelper.matchingValues(targetElement, lastLCS)) {
+				// We've reached the last element of the LCS in target. insert after it.
+				insertionIndex = i + 1;
+			}
+		}
+		return insertionIndex;
+	}
+
+	/**
+	 * This will be called when we are to insert an element before the LCS in the {@code target} list.
+	 * 
+	 * @param target
+	 *            The List into which one element has to be added.
+	 * @param equalityHelper
+	 *            The equality helper to use for this computation.
+	 * @param firstLCS
+	 *            The first element of the LCS.
+	 * @param <E>
+	 *            Type of the sequences content.
+	 * @return The index to use for insertion into {@code target} in order to add an element just before the
+	 *         LCS.
+	 */
+	private static <E> int insertBeforeLCS(List<E> target, IEqualityHelper equalityHelper, E firstLCS) {
+		int insertionIndex = -1;
+		// The insertion index will be inside the subsequence {0, <LCS start>} in target
+		/*
+		 * We'll insert it just before the LCS start : there cannot be any common element between the two
+		 * lists "before" the LCS since it would be part of the LCS itself.
+		 */
+		for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
+			final E targetElement = target.get(i);
+
+			if (equalityHelper.matchingValues(targetElement, firstLCS)) {
+				// We've reached the first element from the LCS in target. Insert here
+				insertionIndex = i;
+			}
+		}
 		return insertionIndex;
 	}
 
