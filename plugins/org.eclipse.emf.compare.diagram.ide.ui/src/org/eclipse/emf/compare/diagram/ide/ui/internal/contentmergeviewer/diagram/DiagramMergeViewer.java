@@ -38,7 +38,7 @@ import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.transaction.TransactionalEditingDomain.Factory;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.MouseWheelZoomHandler;
@@ -106,7 +106,7 @@ class DiagramMergeViewer extends GraphicalMergeViewer {
 	@Override
 	public void setInput(final Object input) {
 		if (input instanceof IDiagramNodeAccessor) {
-			fInput = ((IDiagramNodeAccessor)input);
+			fInput = (IDiagramNodeAccessor)input;
 			View eObject = ((IDiagramNodeAccessor)input).getOwnedView();
 
 			// FIXME
@@ -114,8 +114,9 @@ class DiagramMergeViewer extends GraphicalMergeViewer {
 			if (eObject != null) {
 				resourceSet = eObject.eResource().getResourceSet();
 			}
-			if (resourceSet != null && Factory.INSTANCE.getEditingDomain(resourceSet) == null) {
-				Factory.INSTANCE.createEditingDomain(resourceSet);
+			if (resourceSet != null
+					&& TransactionalEditingDomain.Factory.INSTANCE.getEditingDomain(resourceSet) == null) {
+				TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(resourceSet);
 			}
 
 			Diagram diagram = ((IDiagramNodeAccessor)input).getOwnedDiagram();
