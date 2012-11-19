@@ -185,7 +185,6 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				final ITypedElement origin = input.getAncestor();
 				final EMFSynchronizationModel syncModel = EMFSynchronizationModel.createSynchronizationModel(
 						left, right, origin);
-				syncModel.minimize();
 
 				// Double check : git allows modification of the index file ... but we cannot
 				final CompareConfiguration config = getCompareConfiguration();
