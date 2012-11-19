@@ -34,8 +34,10 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.commands.CopyAllNonConflictingCommand;
-import org.eclipse.emf.compare.commands.CopyCommand;
+import org.eclipse.emf.compare.command.impl.CopyAllNonConflictingCommand;
+import org.eclipse.emf.compare.command.impl.CopyCommand;
+import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.EMFCompareIDE;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
@@ -46,7 +48,6 @@ import org.eclipse.emf.compare.ide.ui.internal.actions.group.GroupActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.actions.save.SaveComparisonModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareConfigurationExtension;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
-import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
@@ -77,7 +78,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 
 	private Object fRoot;
 
-	private EMFCompareEditingDomain editingDomain;
+	private ICompareEditingDomain editingDomain;
 
 	/**
 	 * The difference filter that will be applied to the structure viewer. Note that this will be initialized
@@ -174,7 +175,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			if (input instanceof ComparisonNode) {
 				// FIXME: should not get ComparisonNode here. Should prepare a ICompareInpupt in EditorInput
 				// and compute here the diff (see SaveablesCompareEditorInput)
-				editingDomain = (EMFCompareEditingDomain)getCompareConfiguration().getProperty(
+				editingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
 						EMFCompareConstants.EDITING_DOMAIN);
 				editingDomain.getCommandStack().addCommandStackListener(this);
 
@@ -203,10 +204,10 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();
 				final ResourceSet originResourceSet = (ResourceSet)scope.getOrigin();
 
-				editingDomain = (EMFCompareEditingDomain)getCompareConfiguration().getProperty(
+				editingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
 						EMFCompareConstants.EDITING_DOMAIN);
 				if (editingDomain == null) {
-					editingDomain = new EMFCompareEditingDomain(leftResourceSet, rightResourceSet,
+					editingDomain = EMFCompareEditingDomain.create(leftResourceSet, rightResourceSet,
 							originResourceSet);
 					getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);
 				}

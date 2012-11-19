@@ -8,27 +8,26 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.util;
+package org.eclipse.emf.compare.domain;
 
-import org.eclipse.emf.common.command.CommandStack;
+import java.util.List;
+
+import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.command.ICompareCommandStack;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ *
  */
-public interface ICompareCommandStack extends CommandStack {
+public interface ICompareEditingDomain {
 
-	/**
-	 * @return
-	 */
-	boolean isLeftSaveNeeded();
+	void dispose();
 
-	/**
-	 * @return
-	 */
-	boolean isRightSaveNeeded();
+	ICompareCommandStack getCommandStack();
 
-	void leftSaveIsDone();
+	Command createCopyCommand(Diff diff, boolean leftToRight);
 
-	void rightSaveIsDone();
+	Command createCopyAllNonConflictingCommand(List<? extends Diff> differences, boolean leftToRight);
 
 }

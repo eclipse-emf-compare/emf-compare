@@ -24,12 +24,12 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.AttributeChangeNode;
-import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
@@ -46,7 +46,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 	private static final String BUNDLE_NAME = EMFCompareTextMergeViewer.class.getName();
 
-	private final EMFCompareEditingDomain fEditingDomain;
+	private final ICompareEditingDomain fEditingDomain;
 
 	private DynamicObject fDynamicObject;
 
@@ -60,7 +60,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	 */
 	public EMFCompareTextMergeViewer(Composite parent, CompareConfiguration configuration) {
 		super(parent, configuration);
-		fEditingDomain = (EMFCompareEditingDomain)getCompareConfiguration().getProperty(
+		fEditingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
 				EMFCompareConstants.EDITING_DOMAIN);
 		fEditingDomain.getCommandStack().addCommandStackListener(this);
 		setContentProvider(new EMFCompareTextMergeViewerContentProvider(configuration));
@@ -217,7 +217,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		toolBarManager.appendToGroup("navigation", contributionPreviousDiff);
 
 		// This is called from the super-constructor, fEditingDomain is not set yet.
-		final EMFCompareEditingDomain domain = (EMFCompareEditingDomain)getCompareConfiguration()
+		final ICompareEditingDomain domain = (ICompareEditingDomain)getCompareConfiguration()
 				.getProperty(EMFCompareConstants.EDITING_DOMAIN);
 
 		final UndoAction undoAction = new UndoAction(domain);

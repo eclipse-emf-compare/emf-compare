@@ -8,21 +8,18 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.commands;
+package org.eclipse.emf.compare.tests.command;
 
-import org.eclipse.emf.common.command.Command;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
- * Interface of compare copy (merge) command. It knows on which side of the copy will be applied.
- * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public interface ICompareCopyCommand extends Command {
+@RunWith(Suite.class)
+@SuiteClasses(value = {TestCompareCommandStack.class, TestCompareSideCommandStack.class,
+		TestDualCompareCommandStack.class, })
+public class CommandStackTestSuite {
 
-	/**
-	 * Returns true if the command will be applied from left to right side, false otherwise.
-	 * 
-	 * @return true if the command will be applied from left to right side, false otherwise.
-	 */
-	boolean isLeftToRight();
 }

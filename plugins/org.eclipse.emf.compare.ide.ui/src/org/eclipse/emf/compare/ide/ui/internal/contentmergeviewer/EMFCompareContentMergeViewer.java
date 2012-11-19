@@ -27,12 +27,12 @@ import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
-import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColorProvider;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
@@ -93,7 +93,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	private EMFCompareColor fColors;
 
-	private final EMFCompareEditingDomain fEditingDomain;
+	private final ICompareEditingDomain fEditingDomain;
 
 	private final DynamicObject fDynamicObject;
 
@@ -108,7 +108,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 		fComparison = (Comparison)cc.getProperty(EMFCompareConstants.COMPARE_RESULT);
 
-		fEditingDomain = (EMFCompareEditingDomain)getCompareConfiguration().getProperty(
+		fEditingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
 				EMFCompareConstants.EDITING_DOMAIN);
 	}
 
@@ -124,7 +124,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	/**
 	 * @return the fEditingDomain
 	 */
-	protected final EMFCompareEditingDomain getEditingDomain() {
+	protected final ICompareEditingDomain getEditingDomain() {
 		return fEditingDomain;
 	}
 

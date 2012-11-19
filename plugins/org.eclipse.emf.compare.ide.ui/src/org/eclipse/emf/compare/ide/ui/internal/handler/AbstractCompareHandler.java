@@ -31,10 +31,11 @@ import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.EMFCompareIDE;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewer;
-import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.match.DefaultComparisonFactory;
 import org.eclipse.emf.compare.match.DefaultEqualityHelperFactory;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
@@ -61,7 +62,7 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 			Notifier left, Notifier right, Notifier origin) {
 		CompareEditorInput input = null;
 
-		EMFCompareEditingDomain editingDomain = createEMFCompareEditingDomain(part, left, right, origin);
+		ICompareEditingDomain editingDomain = createEMFCompareEditingDomain(part, left, right, origin);
 
 		final CompareConfiguration configuration = new CompareConfiguration();
 		// never use id in EObjects comparison
@@ -90,7 +91,7 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 		return text;
 	}
 
-	private EMFCompareEditingDomain createEMFCompareEditingDomain(final IWorkbenchPart activePart,
+	private ICompareEditingDomain createEMFCompareEditingDomain(final IWorkbenchPart activePart,
 			final Notifier left, final Notifier right, Notifier origin) {
 
 		EditingDomain delegatingEditingDomain = getDelegatingEditingDomain(activePart, left, right);
@@ -99,7 +100,7 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 			delegatingCommandStack = delegatingEditingDomain.getCommandStack();
 		}
 
-		return new EMFCompareEditingDomain(left, right, origin, delegatingCommandStack);
+		return EMFCompareEditingDomain.create(left, right, origin, delegatingCommandStack);
 	}
 
 	private EditingDomain getDelegatingEditingDomain(final IWorkbenchPart activePart, Notifier left,
@@ -169,13 +170,13 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 
 		private AdapterFactory adapterFactory;
 
-		private EMFCompareEditingDomain editingDomain;
+		private ICompareEditingDomain editingDomain;
 
 		/**
 		 * @param configuration
 		 */
 		public EMFCompareEditorInput(CompareConfiguration configuration, EMFCompare comparator,
-				EMFCompareEditingDomain editingDomain, AdapterFactory adapterFactory, Notifier left,
+				ICompareEditingDomain editingDomain, AdapterFactory adapterFactory, Notifier left,
 				Notifier right, Notifier origin) {
 			super(configuration);
 			this.comparator = comparator;

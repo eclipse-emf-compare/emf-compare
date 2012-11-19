@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.commands;
+package org.eclipse.emf.compare.command.impl;
 
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
@@ -21,6 +21,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.edit.command.ChangeCommand;
 
@@ -62,7 +63,7 @@ public class CopyCommand extends ChangeCommand implements ICompareCopyCommand {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.commands.ICompareCopyCommand#isLeftToRight()
+	 * @see org.eclipse.emf.compare.command.ICompareCopyCommand#isLeftToRight()
 	 */
 	public boolean isLeftToRight() {
 		return leftToRight;

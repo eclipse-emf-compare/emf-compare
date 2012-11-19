@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.tests.command.CommandStackTestSuite;
 import org.eclipse.emf.compare.tests.conflict.ConflictDetectionTest;
 import org.eclipse.emf.compare.tests.diff.DiffUtilTest;
 import org.eclipse.emf.compare.tests.diff.URIDistanceTest;
@@ -50,7 +51,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		MultipleMergeTest.class, PostProcessorTest.class, IndividualMergeTest.class,
 		IndividualMergeOutOfScopeValuesTest.class, ProximityComparisonTest.class,
 		DynamicInstanceComparisonTest.class, URIDistanceTest.class, FragmentationTest.class,
-		AllEditTests.class })
+		AllEditTests.class, CommandStackTestSuite.class, })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.
