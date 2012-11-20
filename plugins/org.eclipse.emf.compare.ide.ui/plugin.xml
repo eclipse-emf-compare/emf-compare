@@ -215,16 +215,4 @@
          </menu>
       </menuContribution>
    </extension>
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            id="org.eclipse.emf.compare.ide.ui.actionSet1"
-            label="label">
-         <action
-               id="org.eclipse.emf.compare.ide.ui.action1"
-               label="label"
-               style="push">
-         </action>
-      </actionSet>
-   </extension>
 </plugin>
