@@ -1,9 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Ecoretools
+Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.diagram.ide.ui.ecoretools;singleton:=true
 Bundle-Version: 2.1.0.qualifier
 Bundle-Activator: org.eclipse.emf.compare.diagram.ide.ui.ecoretools.EcoreToolsIDEUICompare
+Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.compare,
  org.eclipse.emf.compare.diagram.ide.ecoretools;bundle-version="2.1.0",
@@ -17,3 +18,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.gef;bundle-version="3.8.1",
  org.eclipse.gmf.runtime.diagram.ui;bundle-version="1.6.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Vendor: %providerName

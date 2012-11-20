@@ -42,22 +42,22 @@
     </properties>
 
 
-    <modules>
-        <!-- Update Site -->
-        <module>../packaging/org.eclipse.emf.compare.update</module>
+  <modules>
+    <!-- Update Site -->
+    <module>../packaging/org.eclipse.emf.compare.update</module>
 
-        <!-- Core -->
-        <module>../packaging/org.eclipse.emf.compare-feature</module>
-        <module>../plugins/org.eclipse.emf.compare</module>
-        <module>../plugins/org.eclipse.emf.compare.tests</module>
+    <!-- Core -->
+    <module>../packaging/org.eclipse.emf.compare-feature</module>
+    <module>../plugins/org.eclipse.emf.compare</module>
+    <module>../plugins/org.eclipse.emf.compare.tests</module>
 
-        <!-- IDE UI -->
-        <module>../packaging/org.eclipse.emf.compare.ide.ui-feature</module>
-        <module>../plugins/org.eclipse.emf.compare.edit</module>
-        <module>../plugins/org.eclipse.emf.compare.ide</module>
-        <module>../plugins/org.eclipse.emf.compare.ide.ui</module>
-        <module>../plugins/org.eclipse.emf.compare.doc</module>
-        <!-- There are no longer any "ide" tests
+    <!-- IDE UI -->
+    <module>../packaging/org.eclipse.emf.compare.ide.ui-feature</module>
+    <module>../plugins/org.eclipse.emf.compare.edit</module>
+    <module>../plugins/org.eclipse.emf.compare.ide</module>
+    <module>../plugins/org.eclipse.emf.compare.ide.ui</module>
+    <module>../plugins/org.eclipse.emf.compare.doc</module>
+    <!-- There are no longer any "ide" tests
     <module>../plugins/org.eclipse.emf.compare.ide.tests</module>
     <module>../plugins/org.eclipse.emf.compare.ide.ui.tests</module>
     -->
@@ -83,25 +83,23 @@
     -->
 
     <!-- GMF -->
-    <!-- Not compiling yet
     <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
     <module>../plugins/org.eclipse.emf.compare.diagram</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ui</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ui.tests</module>
-    -->
+    <module>../plugins/org.eclipse.emf.compare.diagram.ide</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui</module>
 
     <!-- Ecore Tools -->
-    <!-- Not compiling yet
     <module>../packaging/org.eclipse.emf.compare.diagram.ecoretools-feature</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools</module>
-    -->
+    <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools.tests</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.ecoretools</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools.tests</module>
 
     <!-- Papyrus -->
-    <!-- Not compiling yet
     <module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.papyrus</module>
-    -->
+    <module>../plugins/org.eclipse.emf.compare.diagram.ide.papyrus</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
   </modules>
 
   <build>
