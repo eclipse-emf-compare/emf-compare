@@ -89,6 +89,7 @@ public class EMFCompareIDEPlugin extends Plugin {
 		plugin = null;
 
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+		registry.removeListener(loadOnDemandRegistryListener);
 		registry.removeListener(postProcessorListener);
 	}
 
