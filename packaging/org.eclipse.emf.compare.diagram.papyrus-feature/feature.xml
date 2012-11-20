@@ -19,13 +19,20 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.emf.compare" version="2.1.0.qualifier"/>
       <import feature="org.eclipse.emf.compare.ide.ui" version="2.1.0.qualifier"/>
-      <import feature="org.eclipse.papyrus.uml.diagram.feature" version="0.8.0"/>
+      <import feature="org.eclipse.emf.compare" version="2.1.0.qualifier"/>
+      <import feature="org.eclipse.papyrus.uml.diagram.feature" version="0.9.1.v201209190809"/>
    </requires>
 
    <plugin
-         id="org.eclipse.emf.compare.diagram.papyrus"
+         id="org.eclipse.emf.compare.diagram.ide.papyrus"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.compare.diagram.ide.ui.papyrus"
          download-size="0"
          install-size="0"
          version="0.0.0"

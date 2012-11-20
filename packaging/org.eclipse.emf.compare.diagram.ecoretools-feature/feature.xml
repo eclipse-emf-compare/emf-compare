@@ -25,7 +25,14 @@
    </requires>
 
    <plugin
-         id="org.eclipse.emf.compare.diagram.ecoretools"
+         id="org.eclipse.emf.compare.diagram.ide.ecoretools"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.compare.diagram.ide.ui.ecoretools"
          download-size="0"
          install-size="0"
          version="0.0.0"
