@@ -35,9 +35,9 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoActio
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColorProvider;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -77,11 +77,11 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 */
 	protected static final int CENTER_WIDTH = 34;
 
-	private MergeViewer fAncestor;
+	private IMergeViewer fAncestor;
 
-	private MergeViewer fLeft;
+	private IMergeViewer fLeft;
 
-	private MergeViewer fRight;
+	private IMergeViewer fRight;
 
 	private ActionContributionItem fCopyDiffLeftToRightItem;
 
@@ -371,7 +371,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		fRight.getControl().setBounds(x + width1 + centerWidth, y, width2, height);
 	}
 
-	protected abstract MergeViewer createMergeViewer(Composite parent, MergeViewerSide side);
+	protected abstract IMergeViewer createMergeViewer(Composite parent, MergeViewerSide side);
 
 	@Override
 	protected final int getCenterWidth() {
@@ -432,21 +432,21 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	/**
 	 * @return the fAncestor
 	 */
-	protected MergeViewer getAncestorMergeViewer() {
+	protected IMergeViewer getAncestorMergeViewer() {
 		return fAncestor;
 	}
 
 	/**
 	 * @return the fLeft
 	 */
-	protected MergeViewer getLeftMergeViewer() {
+	protected IMergeViewer getLeftMergeViewer() {
 		return fLeft;
 	}
 
 	/**
 	 * @return the fRight
 	 */
-	protected MergeViewer getRightMergeViewer() {
+	protected IMergeViewer getRightMergeViewer() {
 		return fRight;
 	}
 
@@ -502,7 +502,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 *            The viewer which selection is to be checked.
 	 * @return The first of the Diffs selected in the given viewer, if any.
 	 */
-	protected Diff getDiffFrom(MergeViewer viewer) {
+	protected Diff getDiffFrom(IMergeViewer viewer) {
 		Diff diff = null;
 		final ISelection selection = viewer.getSelection();
 		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {

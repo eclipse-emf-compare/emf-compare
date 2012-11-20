@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-class TreeMergeViewer extends StructuredMergeViewer {
+public class TreeMergeViewer extends StructuredMergeViewer {
 
 	private IEObjectAccessor fInput;
 
@@ -54,10 +54,10 @@ class TreeMergeViewer extends StructuredMergeViewer {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer#setInput(java.lang.Object)
+	 * @see org.eclipse.jface.viewers.Viewer#inputChanged(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public void setInput(Object input) {
+	protected void inputChanged(Object input, Object oldInput) {
 		if (input instanceof IEObjectAccessor) {
 			fInput = ((IEObjectAccessor)input);
 			EObject eObject = ((IEObjectAccessor)input).getEObject();

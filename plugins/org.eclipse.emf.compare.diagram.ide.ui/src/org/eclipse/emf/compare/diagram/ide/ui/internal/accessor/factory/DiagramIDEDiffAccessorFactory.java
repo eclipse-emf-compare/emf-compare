@@ -5,7 +5,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.diagram.DiagramDiff;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.DiagramIDEDiffAccessorImpl;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory.AbstractAccessorFactory;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 
 /**
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>

@@ -25,7 +25,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.rcp.ui.Activator;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -47,12 +49,16 @@ public class EObjectAccessor implements IEObjectAccessor {
 	/**
 	 * The wrapped {@link EObject}.
 	 */
-	private final EObject fEObject;
+	// private final EObject fEObject;
 
 	/**
 	 * The adapter factory that will be used to get the name and the image of the wrapped EObject.
 	 */
 	private final AdapterFactory fAdapterFactory;
+
+	private final Match fOwnerMatch;
+
+	private final MergeViewerSide fSide;
 
 	/**
 	 * Creates a new object wrapping the given <code>eObject</code>.
@@ -62,9 +68,35 @@ public class EObjectAccessor implements IEObjectAccessor {
 	 * @param eObject
 	 *            the {@link EObject} to wrap.
 	 */
-	public EObjectAccessor(AdapterFactory adapterFactory, EObject eObject) {
+	public EObjectAccessor(AdapterFactory adapterFactory, Match match, MergeViewerSide side) {
 		fAdapterFactory = adapterFactory;
-		fEObject = eObject;
+		fOwnerMatch = match;
+		fSide = side;
+	}
+
+	/**
+	 * @return the fSide
+	 */
+	protected final MergeViewerSide getSide() {
+		return fSide;
+	}
+
+	protected EObject getEObject(MergeViewerSide side) {
+		final EObject eObject;
+		switch (side) {
+			case ANCESTOR:
+				eObject = fOwnerMatch.getOrigin();
+				break;
+			case LEFT:
+				eObject = fOwnerMatch.getLeft();
+				break;
+			case RIGHT:
+				eObject = fOwnerMatch.getRight();
+				break;
+			default:
+				throw new IllegalStateException();
+		}
+		return eObject;
 	}
 
 	/**
@@ -73,7 +105,7 @@ public class EObjectAccessor implements IEObjectAccessor {
 	 * @see org.eclipse.compare.ITypedElement#getName()
 	 */
 	public String getName() {
-		return fEObject.eClass().getName();
+		return getEObject(getSide()).eClass().getName();
 	}
 
 	/**
@@ -82,9 +114,9 @@ public class EObjectAccessor implements IEObjectAccessor {
 	 * @see org.eclipse.compare.ITypedElement#getImage()
 	 */
 	public Image getImage() {
-		Adapter adapter = fAdapterFactory.adapt(fEObject, IItemLabelProvider.class);
+		Adapter adapter = fAdapterFactory.adapt(getEObject(), IItemLabelProvider.class);
 		if (adapter instanceof IItemLabelProvider) {
-			Object image = ((IItemLabelProvider)adapter).getImage(fEObject);
+			Object image = ((IItemLabelProvider)adapter).getImage(getEObject());
 			return ExtendedImageRegistry.getInstance().getImage(image);
 		}
 		return null;
@@ -96,14 +128,14 @@ public class EObjectAccessor implements IEObjectAccessor {
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IEObjectAccessor#getEObject()
 	 */
 	public EObject getEObject() {
-		return fEObject;
+		return getEObject(getSide());
 	}
 
 	public InputStream getContents() throws CoreException {
 		XMIResourceImpl r = new XMIResourceImpl(URI.createURI("dummy.xmi")); //$NON-NLS-1$
 
 		final ProperContentCopier copier = new ProperContentCopier();
-		final EObject copy = copier.copy(fEObject);
+		final EObject copy = copier.copy(getEObject());
 		copier.copyReferences();
 
 		r.getContents().add(copy);

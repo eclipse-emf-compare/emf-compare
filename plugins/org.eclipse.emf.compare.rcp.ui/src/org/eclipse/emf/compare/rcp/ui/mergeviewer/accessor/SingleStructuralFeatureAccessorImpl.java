@@ -15,10 +15,10 @@ import static com.google.common.collect.Iterables.getFirst;
 import com.google.common.collect.ImmutableList;
 
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.InsertionPoint;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MatchedObject;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 

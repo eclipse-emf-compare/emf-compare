@@ -33,7 +33,7 @@ import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAcce
 import org.eclipse.emf.compare.diagram.ui.decoration.provider.DiffDecoratorProvider;
 import org.eclipse.emf.compare.diagram.ui.decoration.provider.SelectedDiffAdapter;
 import org.eclipse.emf.compare.diagram.util.DiagramCompareSwitch;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
