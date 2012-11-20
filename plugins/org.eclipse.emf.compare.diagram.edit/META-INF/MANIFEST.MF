@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.diagram.edit;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 2.1.0.qualifier
 Bundle-ClassPath: .
 Bundle-Activator: org.eclipse.emf.compare.diagram.provider.DiagramEditPlugin$Implementation
 Bundle-Vendor: %providerName
@@ -18,4 +18,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.edit;visibility:=reexport,
  org.eclipse.gmf.runtime.notation;bundle-version="1.5.0"
 Bundle-ActivationPolicy: lazy
-Import-Package: com.google.common.base;version="10.0.1"
+Import-Package: com.google.common.base;version="10.0.1",
+ com.google.common.collect;version="10.0.1"

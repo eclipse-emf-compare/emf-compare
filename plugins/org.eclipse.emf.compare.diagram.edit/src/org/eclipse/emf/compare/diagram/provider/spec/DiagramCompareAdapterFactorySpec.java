@@ -50,7 +50,7 @@ public class DiagramCompareAdapterFactorySpec extends DiagramCompareItemProvider
 	@Override
 	public Adapter createLabelChangeAdapter() {
 		if (fLabelChangeItemProvider == null) {
-			fLabelChangeItemProvider = new ForwardingDiagramDiffItemProvider((ItemProviderAdapter)super
+			fLabelChangeItemProvider = new LabelChangeItemProviderSpec((ItemProviderAdapter)super
 					.createLabelChangeAdapter());
 		}
 		return fLabelChangeItemProvider;
@@ -59,9 +59,10 @@ public class DiagramCompareAdapterFactorySpec extends DiagramCompareItemProvider
 	@Override
 	public Adapter createNodeChangeAdapter() {
 		if (fNodeChangeItemProvider == null) {
-			fNodeChangeItemProvider = new ForwardingDiagramDiffItemProvider((ItemProviderAdapter)super
+			fNodeChangeItemProvider = new NodeChangeItemProviderSpec((ItemProviderAdapter)super
 					.createNodeChangeAdapter());
 		}
+
 		return fNodeChangeItemProvider;
 	}
 

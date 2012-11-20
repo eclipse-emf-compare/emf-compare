@@ -71,10 +71,7 @@ public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider {
 
 		final String valueText = getValueText(diagramDiff);
 
-		String remotely = "";
-		if (diagramDiff.getSource() == DifferenceSource.RIGHT) {
-			remotely = "remotely ";
-		}
+		final String remotely = getRemoteText(diagramDiff);
 
 		String ret = "";
 		switch (diagramDiff.getKind()) {
@@ -96,6 +93,14 @@ public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider {
 		}
 
 		return ret;
+	}
+
+	protected String getRemoteText(DiagramDiff diagramDiff) {
+		String remotely = "";
+		if (diagramDiff.getSource() == DifferenceSource.RIGHT) {
+			remotely = "remotely ";
+		}
+		return remotely;
 	}
 
 	/**
@@ -139,7 +144,7 @@ public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider {
 		return null;
 	}
 
-	private String getValueText(final DiagramDiff diagramDiff) {
+	protected String getValueText(final DiagramDiff diagramDiff) {
 		String value = "<null>";
 		if (diagramDiff.getView() instanceof View) {
 			value = diagramDiff.getView().eClass().getName() + " "
