@@ -59,7 +59,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	 * <p>
 	 * It calls {@link #buildControl(Composite)} as stated in its javadoc.
 	 * <p>
-	 * It sets a {@link TreeMergeViewerContentProvider specific}
+	 * It sets a {@link TreeContentMergeViewerContentProvider specific}
 	 * {@link #setContentProvider(org.eclipse.jface.viewers.IContentProvider) content provider} to properly
 	 * display ancestor, left and right parts.
 	 * 
@@ -75,7 +75,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 
 		buildControl(parent);
-		setContentProvider(new TreeMergeViewerContentProvider(config, getComparison()));
+		setContentProvider(new TreeContentMergeViewerContentProvider(config, getComparison()));
 	}
 
 	/**

@@ -28,7 +28,7 @@ import org.eclipse.emf.compare.diagram.ide.ui.DMergeViewer;
 import org.eclipse.emf.compare.diagram.ui.viewmodel.NotationDiffCreator;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeMergeViewerContentProvider;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
@@ -595,7 +595,7 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	 * 
 	 * @author <a href="mailto:stephane.bouchet@obeo.fr">Stephane Bouchet</a>
 	 */
-	protected class GMFModelContentMergeContentProvider extends TreeMergeViewerContentProvider {
+	protected class GMFModelContentMergeContentProvider extends TreeContentMergeViewerContentProvider {
 
 		public GMFModelContentMergeContentProvider(CompareConfiguration cc, Comparison comparison) {
 			super(cc, comparison);

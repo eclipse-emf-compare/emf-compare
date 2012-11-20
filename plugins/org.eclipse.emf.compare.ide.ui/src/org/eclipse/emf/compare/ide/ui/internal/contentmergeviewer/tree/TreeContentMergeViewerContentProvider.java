@@ -39,7 +39,7 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class TreeMergeViewerContentProvider implements IMergeViewerContentProvider {
+public class TreeContentMergeViewerContentProvider implements IMergeViewerContentProvider {
 
 	/**
 	 * The stored {@link CompareConfiguration} to delegates most methods of this object.
@@ -50,7 +50,7 @@ public class TreeMergeViewerContentProvider implements IMergeViewerContentProvid
 	private final Comparison fComparison;
 
 	/**
-	 * Creates a new {@link TreeMergeViewerContentProvider} and stored the given {@link CompareConfiguration}.
+	 * Creates a new {@link TreeContentMergeViewerContentProvider} and stored the given {@link CompareConfiguration}.
 	 * 
 	 * @param cc
 	 *            the {@link CompareConfiguration} that will be used to get label and image of left, right and
@@ -58,7 +58,7 @@ public class TreeMergeViewerContentProvider implements IMergeViewerContentProvid
 	 * @param comparison
 	 *            the comparison that is to be displayed by this viewer.
 	 */
-	public TreeMergeViewerContentProvider(CompareConfiguration cc, Comparison comparison) {
+	public TreeContentMergeViewerContentProvider(CompareConfiguration cc, Comparison comparison) {
 		this.fCompareConfiguration = cc;
 		this.fComparison = comparison;
 	}

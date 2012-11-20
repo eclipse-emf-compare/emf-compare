@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.diagram.ide.ui.DMergeViewer;
 import org.eclipse.emf.compare.diagram.ide.ui.GraphicalMergeViewer;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.DiagramCompareContentMergeViewer;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeMergeViewerContentProvider;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -59,7 +59,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	 * <p>
 	 * It calls {@link #buildControl(Composite)} as stated in its javadoc.
 	 * <p>
-	 * It sets a {@link TreeMergeViewerContentProvider specific}
+	 * It sets a {@link TreeContentMergeViewerContentProvider specific}
 	 * {@link #setContentProvider(org.eclipse.jface.viewers.IContentProvider) content provider} to properly
 	 * display ancestor, left and right parts.
 	 * 
