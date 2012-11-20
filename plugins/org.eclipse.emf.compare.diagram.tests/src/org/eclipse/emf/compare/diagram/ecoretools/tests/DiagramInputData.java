@@ -1,4 +1,4 @@
-package org.eclipse.emf.compare.diagram.tests;
+package org.eclipse.emf.compare.diagram.ecoretools.tests;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

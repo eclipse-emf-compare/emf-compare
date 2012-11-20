@@ -1,4 +1,4 @@
-package org.eclipse.emf.compare.diagram.tests.show;
+package org.eclipse.emf.compare.diagram.ecoretools.tests.show;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
@@ -16,9 +16,9 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.diagram.Show;
-import org.eclipse.emf.compare.diagram.tests.AbstractTest;
-import org.eclipse.emf.compare.diagram.tests.DiagramInputData;
-import org.eclipse.emf.compare.diagram.tests.show.data.ShowInputData;
+import org.eclipse.emf.compare.diagram.ecoretools.tests.AbstractTest;
+import org.eclipse.emf.compare.diagram.ecoretools.tests.DiagramInputData;
+import org.eclipse.emf.compare.diagram.ecoretools.tests.show.data.ShowInputData;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.notation.NotationPackage;

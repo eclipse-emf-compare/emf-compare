@@ -1,4 +1,4 @@
-package org.eclipse.emf.compare.diagram.ide.tests.nodechanges.data;
+package org.eclipse.emf.compare.diagram.ecoretools.tests.nodechanges.data;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,7 +7,7 @@ import java.util.Collections;
 
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.diagram.tests.DiagramInputData;
+import org.eclipse.emf.compare.diagram.ecoretools.tests.DiagramInputData;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -18,13 +18,12 @@ import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 public class NodeChangesInputData extends DiagramInputData {
-	
 	public Resource getA1Left() throws IOException {
-		return loadFromClassLoader("a1/TC01.ecorediag"); //$NON-NLS-1$
+		return loadFromClassLoader("a1/TC1.ecorediag"); //$NON-NLS-1$
 	}
 
 	public Resource getA1Right() throws IOException {
-		return loadFromClassLoader("a1/TC02.ecorediag"); //$NON-NLS-1$
+		return loadFromClassLoader("a1/TC2.ecorediag"); //$NON-NLS-1$
 	}
 	
 	public Resource getA2Left() throws IOException {
@@ -33,6 +32,14 @@ public class NodeChangesInputData extends DiagramInputData {
 
 	public Resource getA2Right() throws IOException {
 		return loadFromClassLoader("a2/TC02.ecorediag"); //$NON-NLS-1$
+	}
+	
+	public Resource getA3Left() throws IOException {
+		return loadFromClassLoader("a3/TC1.ecorediag"); //$NON-NLS-1$
+	}
+
+	public Resource getA3Right() throws IOException {
+		return loadFromClassLoader("a3/TC2.ecorediag"); //$NON-NLS-1$
 	}
 
 	
@@ -43,7 +50,7 @@ public class NodeChangesInputData extends DiagramInputData {
 		final URI uri = URI.createURI(fileURL.toString());
 
 		ResourceSet resourceSet = new ResourceSetImpl();
-		//sets.add(resourceSet);
+		getSets().add(resourceSet);
 
 		if (!EMFPlugin.IS_RESOURCES_BUNDLE_AVAILABLE) {
 			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore",
@@ -59,7 +66,7 @@ public class NodeChangesInputData extends DiagramInputData {
 		resource.load(str, Collections.emptyMap());
 		str.close();
 		
-		EcoreUtil.resolveAll(resource.getResourceSet());
+		EcoreUtil.resolveAll(resourceSet);
 
 		return resource;
 	}

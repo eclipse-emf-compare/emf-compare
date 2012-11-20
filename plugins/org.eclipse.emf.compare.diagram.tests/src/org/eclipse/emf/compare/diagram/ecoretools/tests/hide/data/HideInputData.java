@@ -1,11 +1,11 @@
-package org.eclipse.emf.compare.diagram.tests.show.data;
+package org.eclipse.emf.compare.diagram.ecoretools.tests.hide.data;
 
 import java.io.IOException;
 
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 
-public class ShowInputData extends AbstractInputData {
+public class HideInputData extends AbstractInputData {
 	public Resource getA1Left() throws IOException {
 		return loadFromClassLoader("a1/TC01.ecorediag"); //$NON-NLS-1$
 	}

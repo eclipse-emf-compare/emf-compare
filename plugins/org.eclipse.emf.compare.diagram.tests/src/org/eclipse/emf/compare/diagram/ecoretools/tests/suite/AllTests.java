@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diagram.tests.suite;
+package org.eclipse.emf.compare.diagram.ecoretools.tests.suite;
 
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
@@ -16,10 +16,10 @@ import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.diagram.DiagramComparePackage;
-import org.eclipse.emf.compare.diagram.tests.edgechanges.EdgechangesTest;
-import org.eclipse.emf.compare.diagram.tests.hide.HideTest;
-import org.eclipse.emf.compare.diagram.tests.nodechanges.NodechangesTest;
-import org.eclipse.emf.compare.diagram.tests.show.ShowTest;
+import org.eclipse.emf.compare.diagram.ecoretools.tests.edgechanges.EdgechangesTest;
+import org.eclipse.emf.compare.diagram.ecoretools.tests.hide.HideTest;
+import org.eclipse.emf.compare.diagram.ecoretools.tests.nodechanges.NodechangesTest;
+import org.eclipse.emf.compare.diagram.ecoretools.tests.show.ShowTest;
 import org.eclipse.emf.compare.tests.suite.CompareTestSuite;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;

@@ -1,4 +1,4 @@
-package org.eclipse.emf.compare.diagram.ide.tests.nodechanges;
+package org.eclipse.emf.compare.diagram.ide.ecoretools.tests.nodechanges;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
@@ -18,10 +18,10 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.diagram.LabelChange;
 import org.eclipse.emf.compare.diagram.NodeChange;
 import org.eclipse.emf.compare.diagram.diff.util.DiagramCompareConstants;
+import org.eclipse.emf.compare.diagram.ecoretools.tests.AbstractTest;
+import org.eclipse.emf.compare.diagram.ecoretools.tests.DiagramInputData;
 import org.eclipse.emf.compare.diagram.ide.GMFCompareIDEPlugin;
-import org.eclipse.emf.compare.diagram.ide.tests.nodechanges.data.NodeChangesInputData;
-import org.eclipse.emf.compare.diagram.tests.AbstractTest;
-import org.eclipse.emf.compare.diagram.tests.DiagramInputData;
+import org.eclipse.emf.compare.diagram.ide.ecoretools.tests.nodechanges.data.NodeChangesInputData;
 import org.eclipse.emf.compare.extension.PostProcessorRegistry;
 import org.eclipse.emf.compare.ide.EMFCompareIDE;
 import org.eclipse.emf.compare.scope.IComparisonScope;

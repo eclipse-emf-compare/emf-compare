@@ -1,4 +1,4 @@
-package org.eclipse.emf.compare.diagram.tests.edgechanges.data;
+package org.eclipse.emf.compare.diagram.ide.ecoretools.tests.nodechanges.data;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,7 +7,7 @@ import java.util.Collections;
 
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.diagram.tests.DiagramInputData;
+import org.eclipse.emf.compare.diagram.ecoretools.tests.DiagramInputData;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -17,7 +17,8 @@ import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 
-public class EdgeChangesInputData extends DiagramInputData {
+public class NodeChangesInputData extends DiagramInputData {
+	
 	public Resource getA1Left() throws IOException {
 		return loadFromClassLoader("a1/TC01.ecorediag"); //$NON-NLS-1$
 	}
@@ -33,22 +34,7 @@ public class EdgeChangesInputData extends DiagramInputData {
 	public Resource getA2Right() throws IOException {
 		return loadFromClassLoader("a2/TC02.ecorediag"); //$NON-NLS-1$
 	}
-	
-	public Resource getA3Left() throws IOException {
-		return loadFromClassLoader("a3/TC01.ecorediag"); //$NON-NLS-1$
-	}
 
-	public Resource getA3Right() throws IOException {
-		return loadFromClassLoader("a3/TC02.ecorediag"); //$NON-NLS-1$
-	}
-	
-	public Resource getA4Left() throws IOException {
-		return loadFromClassLoader("a4/TC01.ecorediag"); //$NON-NLS-1$
-	}
-
-	public Resource getA4Right() throws IOException {
-		return loadFromClassLoader("a4/TC02.ecorediag"); //$NON-NLS-1$
-	}
 	
 	@Override
 	protected Resource loadFromClassLoader(String string) throws IOException {
@@ -57,7 +43,7 @@ public class EdgeChangesInputData extends DiagramInputData {
 		final URI uri = URI.createURI(fileURL.toString());
 
 		ResourceSet resourceSet = new ResourceSetImpl();
-		getSets().add(resourceSet);
+		//sets.add(resourceSet);
 
 		if (!EMFPlugin.IS_RESOURCES_BUNDLE_AVAILABLE) {
 			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore",
@@ -73,7 +59,7 @@ public class EdgeChangesInputData extends DiagramInputData {
 		resource.load(str, Collections.emptyMap());
 		str.close();
 		
-		EcoreUtil.resolveAll(resourceSet);
+		EcoreUtil.resolveAll(resource.getResourceSet());
 
 		return resource;
 	}

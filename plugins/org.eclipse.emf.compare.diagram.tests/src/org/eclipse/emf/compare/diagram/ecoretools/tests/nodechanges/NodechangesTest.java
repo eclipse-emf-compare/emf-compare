@@ -1,4 +1,4 @@
-package org.eclipse.emf.compare.diagram.tests.nodechanges;
+package org.eclipse.emf.compare.diagram.ecoretools.tests.nodechanges;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
@@ -25,9 +25,9 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.diagram.NodeChange;
-import org.eclipse.emf.compare.diagram.tests.AbstractTest;
-import org.eclipse.emf.compare.diagram.tests.DiagramInputData;
-import org.eclipse.emf.compare.diagram.tests.nodechanges.data.NodeChangesInputData;
+import org.eclipse.emf.compare.diagram.ecoretools.tests.AbstractTest;
+import org.eclipse.emf.compare.diagram.ecoretools.tests.DiagramInputData;
+import org.eclipse.emf.compare.diagram.ecoretools.tests.nodechanges.data.NodeChangesInputData;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
