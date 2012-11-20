@@ -30,6 +30,10 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class URIDistance implements Function<EObject, String> {
+	/**
+	 * The upper bound distance we can get using this function.
+	 */
+	private static final int MAX_DISTANCE = 10;
 
 	/**
 	 * A computing cache for the locations.
@@ -75,7 +79,7 @@ public class URIDistance implements Function<EObject, String> {
 		if (aPath.equals(bPath)) {
 			return 0;
 		}
-		return 10;
+		return MAX_DISTANCE;
 	}
 
 	/**
@@ -158,6 +162,15 @@ public class URIDistance implements Function<EObject, String> {
 			}
 		}
 		throw new RuntimeException();
+	}
+
+	/**
+	 * return the maximum value we can get for this distance.
+	 * 
+	 * @return the maximum value we can get for this distance.
+	 */
+	public int getUpperBoundDistance() {
+		return MAX_DISTANCE;
 	}
 
 }

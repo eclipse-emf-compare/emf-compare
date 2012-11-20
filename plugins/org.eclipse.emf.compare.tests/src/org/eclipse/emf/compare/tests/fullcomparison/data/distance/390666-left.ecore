@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="testPackage" nsURI="testPackageURI" nsPrefix="testPackagePrefix">
+    <eClassifiers xsi:type="ecore:EClass" name="A"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="toDelete" nsURI="toDelete" nsPrefix="toDelete"/>
+</xmi:XMI>

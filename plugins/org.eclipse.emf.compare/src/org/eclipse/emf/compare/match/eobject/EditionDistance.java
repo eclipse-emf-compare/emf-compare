@@ -64,7 +64,7 @@ public class EditionDistance implements DistanceFunction {
 	/**
 	 * Weight coefficient of a change of location (uri).
 	 */
-	private int locationChangeCoef = 4;
+	private int locationChangeCoef = 1;
 
 	/**
 	 * Weight coefficient of a change of order within a reference.
@@ -480,7 +480,8 @@ public class EditionDistance implements DistanceFunction {
 				max += weights.getWeight(feat) * attributeChangeCoef;
 			}
 		}
-		max = max + locationChangeCoef * 5;
+		// 10 is the maximum distance for an URIDistance.
+		max = max + locationChangeCoef * uriDistance.getUpperBoundDistance();
 		return Double.valueOf(max * MAX_DIST_RATIO).intValue();
 	}
 
