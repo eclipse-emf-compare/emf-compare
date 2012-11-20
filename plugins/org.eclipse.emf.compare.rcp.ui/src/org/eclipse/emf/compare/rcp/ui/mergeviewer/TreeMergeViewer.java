@@ -8,9 +8,8 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;
+package org.eclipse.emf.compare.rcp.ui.mergeviewer;
 
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.StructuredMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IEObjectAccessor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.StructuredSelection;
