@@ -12,7 +12,7 @@ package org.eclipse.emf.compare.tests.command;
 
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
-import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain.DualCompareCommandStack;
+import org.eclipse.emf.compare.command.impl.DualCompareCommandStack;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>

@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain.CompareSideCommandStack;
+import org.eclipse.emf.compare.command.impl.CompareCommandStack.CompareSideCommandStack;
 import org.junit.Before;
 import org.junit.Test;
 

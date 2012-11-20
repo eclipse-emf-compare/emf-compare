@@ -10,29 +10,23 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.domain.impl;
 
-import static com.google.common.collect.Lists.newArrayList;
-
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.emf.common.command.AbstractCommand;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
-import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.command.DelagatingCommandStack;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
-import org.eclipse.emf.compare.command.ICompareCopyCommand;
+import org.eclipse.emf.compare.command.impl.CompareCommandStack;
 import org.eclipse.emf.compare.command.impl.CopyAllNonConflictingCommand;
 import org.eclipse.emf.compare.command.impl.CopyCommand;
+import org.eclipse.emf.compare.command.impl.DualCompareCommandStack;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 
@@ -90,25 +84,29 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 		return new EMFCompareEditingDomain(left, right, ancestor, commandStack);
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.domain.ICompareEditingDomain#dispose()
 	 */
 	public void dispose() {
 		fChangeRecorder.dispose();
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.domain.ICompareEditingDomain#getCommandStack()
 	 */
 	public ICompareCommandStack getCommandStack() {
 		return fCommandStack;
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
-	 * @see org.eclipse.emf.compare.domain.ICompareEditingDomain#createCopyCommand(org.eclipse.emf.compare.Diff, boolean)
+	 * 
+	 * @see org.eclipse.emf.compare.domain.ICompareEditingDomain#createCopyCommand(org.eclipse.emf.compare.Diff,
+	 *      boolean)
 	 */
 	public Command createCopyCommand(Diff diff, boolean leftToRight) {
 		ImmutableSet<Notifier> notifiers = ImmutableSet.<Notifier> builder().add(
@@ -116,9 +114,11 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 		return new CopyCommand(fChangeRecorder, notifiers, Collections.singletonList(diff), leftToRight);
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
-	 * @see org.eclipse.emf.compare.domain.ICompareEditingDomain#createCopyAllNonConflictingCommand(java.util.List, boolean)
+	 * 
+	 * @see org.eclipse.emf.compare.domain.ICompareEditingDomain#createCopyAllNonConflictingCommand(java.util.List,
+	 *      boolean)
 	 */
 	public Command createCopyAllNonConflictingCommand(List<? extends Diff> differences, boolean leftToRight) {
 		ImmutableSet.Builder<Notifier> notifiersBuilder = ImmutableSet.builder();
@@ -128,484 +128,6 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 		ImmutableSet<Notifier> notifiers = notifiersBuilder.addAll(fNotifiers).build();
 
 		return new CopyAllNonConflictingCommand(fChangeRecorder, notifiers, differences, leftToRight);
-	}
-
-	public static class DualCompareCommandStack implements ICompareCommandStack {
-
-		private final BasicCommandStack leftCommandStack;
-
-		private final BasicCommandStack rightCommandStack;
-
-		private final List<BasicCommandStack> commandStackStack;
-
-		private int top;
-
-		private BasicCommandStack mostRecentCommandStack;
-
-		private int saveIndex = -1;
-
-		public DualCompareCommandStack(BasicCommandStack leftCommandStack, BasicCommandStack rightCommandStack) {
-			this.leftCommandStack = Preconditions.checkNotNull(leftCommandStack);
-			this.rightCommandStack = Preconditions.checkNotNull(rightCommandStack);
-			this.commandStackStack = newArrayList();
-			this.top = -1;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.common.command.CommandStack#execute(org.eclipse.emf.common.command.Command)
-		 */
-		public void execute(Command command) {
-			// should do that AFTER delegate.execute, but in this this case, notifiers will not see change in
-			// side lists.
-			if (command instanceof ICompareCopyCommand) {
-				final BasicCommandStack commandStack;
-				final ICompareCopyCommand compareCommand = (ICompareCopyCommand)command;
-				if (compareCommand.isLeftToRight()) {
-					commandStack = rightCommandStack;
-				} else {
-					commandStack = leftCommandStack;
-				}
-				commandStack.execute(compareCommand);
-
-				// Clear the list past the top.
-				//
-				Iterator<BasicCommandStack> commandStacks = commandStackStack.listIterator(top + 1);
-				while (commandStacks.hasNext()) {
-					commandStacks.next();
-					commandStacks.remove();
-				}
-
-				// Record the successfully executed command.
-				//
-				mostRecentCommandStack = commandStack;
-				commandStackStack.add(commandStack);
-				++top;
-
-				// This is kind of tricky.
-				// If the saveIndex was in the redo part of the command list which has now been wiped out,
-				// then we can never reach a point where a save is not necessary, not even if we undo all the
-				// way back to the beginning.
-				//
-				if (saveIndex >= top) {
-					// This forces isSaveNeded to always be true.
-					//
-					saveIndex = -2;
-				}
-			}
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.common.command.CommandStack#canUndo()
-		 */
-		public boolean canUndo() {
-			return top != -1 && commandStackStack.get(top).canUndo();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.common.command.CommandStack#undo()
-		 */
-		public void undo() {
-			if (canUndo()) {
-				BasicCommandStack commandStack = commandStackStack.get(top--);
-				commandStack.undo();
-				mostRecentCommandStack = commandStack;
-			}
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.common.command.CommandStack#canRedo()
-		 */
-		public boolean canRedo() {
-			return top < commandStackStack.size() - 1;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.common.command.CommandStack#getUndoCommand()
-		 */
-		public Command getUndoCommand() {
-			return top == -1 || top == commandStackStack.size() ? null : commandStackStack.get(top)
-					.getUndoCommand();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.common.command.CommandStack#getRedoCommand()
-		 */
-		public Command getRedoCommand() {
-			return top + 1 >= commandStackStack.size() ? null : commandStackStack.get(top + 1)
-					.getRedoCommand();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.common.command.CommandStack#getMostRecentCommand()
-		 */
-		public Command getMostRecentCommand() {
-			if (mostRecentCommandStack != null) {
-				return mostRecentCommandStack.getMostRecentCommand();
-			}
-			return null;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.common.command.CommandStack#redo()
-		 */
-		public void redo() {
-			if (canRedo()) {
-				BasicCommandStack commandStack = commandStackStack.get(++top);
-				commandStack.redo();
-				mostRecentCommandStack = commandStack;
-			}
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.common.command.CommandStack#flush()
-		 */
-		public void flush() {
-			Iterator<BasicCommandStack> commands = commandStackStack.listIterator();
-			while (commands.hasNext()) {
-				commands.next();
-				commands.remove();
-			}
-			commandStackStack.clear();
-			top = -1;
-			saveIndex = -1;
-			mostRecentCommandStack = null;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.common.command.CommandStack#addCommandStackListener(org.eclipse.emf.common.command.CommandStackListener)
-		 */
-		public void addCommandStackListener(CommandStackListener listener) {
-			leftCommandStack.addCommandStackListener(listener);
-			rightCommandStack.addCommandStackListener(listener);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.common.command.CommandStack#removeCommandStackListener(org.eclipse.emf.common.command.CommandStackListener)
-		 */
-		public void removeCommandStackListener(CommandStackListener listener) {
-			leftCommandStack.removeCommandStackListener(listener);
-			rightCommandStack.removeCommandStackListener(listener);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.command.ICompareCommandStack#isLeftSaveNeeded()
-		 */
-		public boolean isLeftSaveNeeded() {
-			return leftCommandStack.isSaveNeeded();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.command.ICompareCommandStack#isRightSaveNeeded()
-		 */
-		public boolean isRightSaveNeeded() {
-			return rightCommandStack.isSaveNeeded();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.command.ICompareCommandStack#leftSaveIsDone()
-		 */
-		public void leftSaveIsDone() {
-			leftCommandStack.saveIsDone();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.command.ICompareCommandStack#rightSaveIsDone()
-		 */
-		public void rightSaveIsDone() {
-			rightCommandStack.saveIsDone();
-		}
-
-	}
-
-	public static class CompareCommandStack extends DelagatingCommandStack implements ICompareCommandStack {
-
-		private final CompareSideCommandStack rightCommandStack;
-
-		private final CompareSideCommandStack leftCommandStack;
-
-		private final CommandStack delegate;
-
-		public CompareCommandStack(CommandStack delegate) {
-			this.delegate = delegate;
-			this.rightCommandStack = new CompareSideCommandStack();
-			this.leftCommandStack = new CompareSideCommandStack();
-		}
-
-		/**
-		 * @return the delegate
-		 */
-		@Override
-		protected CommandStack delegate() {
-			return delegate;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.common.command.BasicCommandStack#execute(org.eclipse.emf.common.command.Command)
-		 */
-		@Override
-		public void execute(Command command) {
-			// should do that AFTER delegate.execute, but in this this case, notifiers will not see change in
-			// side lists.
-			if (command instanceof ICompareCopyCommand) {
-				ICompareCopyCommand compareCommand = (ICompareCopyCommand)command;
-				if (compareCommand.isLeftToRight()) {
-					rightCommandStack.executed(compareCommand);
-				} else {
-					leftCommandStack.executed(compareCommand);
-				}
-			}
-			super.execute(command);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.common.command.BasicCommandStack#undo()
-		 */
-		@Override
-		public void undo() {
-			// should do that AFTER delegate.execute, but in this this case, notifiers will not see change in
-			// side lists.
-			if (canUndo()) {
-				if (getUndoCommand() instanceof ICompareCopyCommand) {
-					ICompareCopyCommand compareCommand = (ICompareCopyCommand)getUndoCommand();
-					if (compareCommand.isLeftToRight()) {
-						rightCommandStack.undone();
-					} else {
-						leftCommandStack.undone();
-					}
-				}
-			}
-			super.undo();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.common.command.BasicCommandStack#redo()
-		 */
-		@Override
-		public void redo() {
-			// should do that AFTER delegate.execute, but in this this case, notifiers will not see change in
-			// side lists.
-			if (canRedo()) {
-				if (getRedoCommand() instanceof ICompareCopyCommand) {
-					ICompareCopyCommand compareCommand = (ICompareCopyCommand)getRedoCommand();
-					if (compareCommand.isLeftToRight()) {
-						rightCommandStack.redone();
-					} else {
-						leftCommandStack.redone();
-					}
-				}
-			}
-			super.redo();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.common.command.CommandStack#flush()
-		 */
-		@Override
-		public void flush() {
-			rightCommandStack.flushed();
-			leftCommandStack.flushed();
-			super.flush();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.command.ICompareCommandStack#isLeftSaveNeeded()
-		 */
-		public boolean isLeftSaveNeeded() {
-			return leftCommandStack.isSaveNeeded();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.command.ICompareCommandStack#isRightSaveNeeded()
-		 */
-		public boolean isRightSaveNeeded() {
-			return rightCommandStack.isSaveNeeded();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.command.ICompareCommandStack#leftSaveIsDone()
-		 */
-		public void leftSaveIsDone() {
-			leftCommandStack.saveIsDone();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.command.ICompareCommandStack#rightSaveIsDone()
-		 */
-		public void rightSaveIsDone() {
-			rightCommandStack.saveIsDone();
-		}
-	}
-
-	public static class CompareSideCommandStack {
-
-		private final List<ICompareCopyCommand> commandList;
-
-		private int top;
-
-		private Command mostRecentCommand;
-
-		private int saveIndex = -1;
-
-		public CompareSideCommandStack() {
-			commandList = newArrayList();
-			top = -1;
-		}
-
-		public void executed(ICompareCopyCommand command) {
-			// If the command is executable, record and execute it.
-			//
-			if (command != null) {
-				if (command.canExecute()) {
-					// Clear the list past the top.
-					//
-					Iterator<ICompareCopyCommand> commands = commandList.listIterator(top + 1);
-					while (commands.hasNext()) {
-						commands.next();
-						commands.remove();
-					}
-
-					// Record the successfully executed command.
-					//
-					mostRecentCommand = command;
-					commandList.add(command);
-					++top;
-
-					// This is kind of tricky.
-					// If the saveIndex was in the redo part of the command list which has now been wiped
-					// out,
-					// then we can never reach a point where a save is not necessary, not even if we undo
-					// all the way back to the beginning.
-					//
-					if (saveIndex >= top) {
-						// This forces isSaveNeded to always be true.
-						//
-						saveIndex = -2;
-					}
-				}
-			}
-		}
-
-		public void undone() {
-			Command command = commandList.get(top--);
-			mostRecentCommand = command;
-		}
-
-		public void redone() {
-			Command command = commandList.get(++top);
-			mostRecentCommand = command;
-		}
-
-		public void flushed() {
-			// Clear the list.
-			//
-			Iterator<ICompareCopyCommand> commands = commandList.listIterator();
-			while (commands.hasNext()) {
-				commands.next();
-				commands.remove();
-			}
-			commandList.clear();
-			top = -1;
-			saveIndex = -1;
-			mostRecentCommand = null;
-		}
-
-		/**
-		 * Called after a save has been successfully performed.
-		 */
-		public void saveIsDone() {
-			// Remember where we are now.
-			//
-			saveIndex = top;
-		}
-
-		/**
-		 * Returns whether the model has changes since {@link #saveIsDone} was call the last.
-		 * 
-		 * @return whether the model has changes since <code>saveIsDone</code> was call the last.
-		 */
-		public boolean isSaveNeeded() {
-			// Only if we are at the remembered index do we NOT need to save.
-			//
-			// return top != saveIndex;
-
-			if (saveIndex < -1) {
-				return true;
-			}
-
-			if (top > saveIndex) {
-				for (int i = top; i > saveIndex; --i) {
-					if (!(commandList.get(i) instanceof AbstractCommand.NonDirtying)) {
-						return true;
-					}
-				}
-			} else {
-				for (int i = saveIndex; i > top; --i) {
-					if (!(commandList.get(i) instanceof AbstractCommand.NonDirtying)) {
-						return true;
-					}
-				}
-			}
-
-			return false;
-		}
-
-		public Command getUndoCommand() {
-			return top == -1 || top == commandList.size() ? null : (Command)commandList.get(top);
-		}
-
-		public Command getRedoCommand() {
-			return top + 1 >= commandList.size() ? null : (Command)commandList.get(top + 1);
-		}
-
-		public Command getMostRecentCommand() {
-			return mostRecentCommand;
-		}
 	}
 
 }

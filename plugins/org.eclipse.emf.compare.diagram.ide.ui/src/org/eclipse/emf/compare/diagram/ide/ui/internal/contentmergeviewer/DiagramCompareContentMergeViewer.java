@@ -26,7 +26,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.diagram.ide.ui.DMergeViewer;
 import org.eclipse.emf.compare.diagram.ui.viewmodel.NotationDiffCreator;
-import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
+import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeMergeViewerContentProvider;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
@@ -92,7 +92,7 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 
 	private EMFCompareColor fColors;
 
-	private final EMFCompareEditingDomain fEditingDomain;
+	private final ICompareEditingDomain fEditingDomain;
 
 	private final DynamicObject fDynamicObject;
 
@@ -108,7 +108,7 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 
 		fComparison = (Comparison)cc.getProperty(EMFCompareConstants.COMPARE_RESULT);
 
-		fEditingDomain = (EMFCompareEditingDomain)getCompareConfiguration().getProperty(
+		fEditingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
 				EMFCompareConstants.EDITING_DOMAIN);
 	}
 
@@ -124,7 +124,7 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	/**
 	 * @return the fEditingDomain
 	 */
-	protected final EMFCompareEditingDomain getEditingDomain() {
+	protected final ICompareEditingDomain getEditingDomain() {
 		return fEditingDomain;
 	}
 
