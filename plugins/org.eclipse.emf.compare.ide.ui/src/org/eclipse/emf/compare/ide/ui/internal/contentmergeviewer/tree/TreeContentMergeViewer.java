@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareCont
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.TreeMergeViewer;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IEObjectAccessor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
@@ -168,27 +169,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	@Override
 	protected MergeViewer createMergeViewer(final Composite parent, MergeViewerSide side) {
 		final TreeMergeViewer mergeTreeViewer = new TreeMergeViewer(parent, side);
-		IContentProvider contentProvider = new AdapterFactoryContentProvider(fAdapterFactory) {
-			/**
-			 * {@inheritDoc}
-			 * 
-			 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider#getElements(java.lang.Object)
-			 */
-			@Override
-			public Object[] getElements(Object object) {
-				return super.getElements(object);
-			}
-
-			/**
-			 * {@inheritDoc}
-			 * 
-			 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider#getChildren(java.lang.Object)
-			 */
-			@Override
-			public Object[] getChildren(Object object) {
-				return super.getChildren(object);
-			}
-		};
+		IContentProvider contentProvider = new AdapterFactoryContentProvider(fAdapterFactory);
 		mergeTreeViewer.setContentProvider(contentProvider);
 		ILabelProvider labelProvider = new AdapterFactoryLabelProvider(fAdapterFactory);
 		mergeTreeViewer.setLabelProvider(labelProvider);
