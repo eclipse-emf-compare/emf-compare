@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.tests.fullcomparison;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
@@ -25,9 +26,11 @@ import java.util.List;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -168,6 +171,26 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		Iterator<ResourceAttachmentChange> attrChanges = Iterators.filter(result.getDifferences().iterator(),
 				ResourceAttachmentChange.class);
 		assertTrue("We are supposed to detect a new attachment to a resource", attrChanges.hasNext());
+
+	}
+
+	@Test
+	public void moveInAReferenceShouldNotAffectMatch() throws Exception {
+		/*
+		 * See bug #391798 : moving elements a lot in a reference (like in changing index) should not affect
+		 * the matching very much.
+		 */
+		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData.get391798Left(), inputData
+				.get391798Right());
+		Comparison result = EMFCompare.builder().setMatchEngine(
+				DefaultMatchEngine.create(UseIdentifiers.NEVER)).build().compare(scope);
+		for (Diff dif : result.getDifferences()) {
+			if (dif instanceof ReferenceChange && dif.getKind() == DifferenceKind.MOVE) {
+
+			} else {
+				fail("We should only detect moves in the reference.");
+			}
+		}
 
 	}
 

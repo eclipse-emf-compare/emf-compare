@@ -97,4 +97,12 @@ public class DistanceMatchInputData extends AbstractInputData {
 		return loadFromClassLoader("390666-ancestor.ecore");
 	}
 
+	public Resource get391798Left() throws IOException {
+		return loadFromClassLoader("391798-left.ecore");
+	}
+
+	public Resource get391798Right() throws IOException {
+		return loadFromClassLoader("391798-right.ecore");
+	}
+
 }
