@@ -12,6 +12,11 @@
 <unit id="org.eclipse.platform.ide" version="3.8.0.I20111027-1800"/>
 <repository location="http://download.eclipse.org/eclipse/updates/4.2-I-builds"/>
 </location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.emfstore.fuzzy.feature.feature.group" version="0.9.3.M5"/>
+<unit id="org.eclipse.emf.emfstore.modelmutator.feature.feature.group" version="0.9.3.M5"/>
+<repository location="http://download.eclipse.org/emf-store/milestones/archive/0.9.3.M5"/>
+</location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.papyrus.feature.group" version="0.8.2.v201111301839"/>
 <repository location="http://download.eclipse.org/modeling/mdt/papyrus/updates/nightly/indigo/"/>

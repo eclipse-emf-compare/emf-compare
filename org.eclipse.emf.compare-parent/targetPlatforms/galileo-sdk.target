@@ -8,6 +8,11 @@
 <unit id="org.junit" version="4.8.1.v4_8_1_v20100427-1100"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/updateSite"/>
 </location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.emfstore.fuzzy.feature.feature.group" version="0.9.3.M5"/>
+<unit id="org.eclipse.emf.emfstore.modelmutator.feature.feature.group" version="0.9.3.M5"/>
+<repository location="http://download.eclipse.org/emf-store/milestones/archive/0.9.3.M5"/>
+</location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="false" type="InstallableUnit">
 <unit id="org.eclipse.platform.sdk" version="3.5.2.M20100211-1343"/>
 <repository location="http://download.eclipse.org/eclipse/updates/3.5"/>

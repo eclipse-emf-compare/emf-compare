@@ -7,6 +7,11 @@
 <unit id="org.eclipse.platform.sdk" version="3.7.0.I20110613-1736"/>
 <repository location="http://mirror.update.eclipse.obeo.fr/update-indigo-3.7"/>
 </location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.emfstore.fuzzy.feature.feature.group" version="0.9.3.M5"/>
+<unit id="org.eclipse.emf.emfstore.modelmutator.feature.feature.group" version="0.9.3.M5"/>
+<repository location="http://download.eclipse.org/emf-store/milestones/archive/0.9.3.M5"/>
+</location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="false" type="InstallableUnit">
 <unit id="com.google.collect" version="1.0.0.v201003051000"/>
 <unit id="org.junit" version="4.8.1.v4_8_1_v20100427-1100"/>
