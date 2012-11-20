@@ -287,22 +287,26 @@
         <repository><id>emfstore-fuzzy</id><layout>p2</layout>
             <url>http://download.eclipse.org/emf-store/milestones/latest</url>
         </repository>
+		<repository><id>gmf</id><layout>p2</layout>
+          <url>http://download.eclipse.org/modeling/gmp/updates/milestones</url>
+        </repository>
+    	<repository><id>ecoretools</id><layout>p2</layout>
+          <url>http://download.eclipse.org/modeling/amalgam/temp/ecoretools-1.0.0</url>
+        </repository>
+	    <repository><id>gef</id><layout>p2</layout>
+          <url>http://download.eclipse.org/tools/gef/updates/milestones</url>
+        </repository>
+        <repository><id>papyrus</id><layout>p2</layout>
+          <url>http://download.eclipse.org/modeling/mdt/papyrus/updates/releases/maintenance/juno</url>
+        </repository>
+        
         <!--repository><id>ocl</id><layout>p2</layout>
           <url>http://download.eclipse.org/modeling/mdt/ocl/updates/milestones/4.0.0</url>
         </repository>
-    <repository><id>gmf</id><layout>p2</layout>
-          <url>http://download.eclipse.org/modeling/gmp/updates/milestones</url>
-        </repository>
-    <repository><id>validation-transaction</id><layout>p2</layout>
+    	<repository><id>validation-transaction</id><layout>p2</layout>
           <url>http://download.eclipse.org/modeling/emf/updates/milestones/</url>
         </repository>
-    <repository><id>ecoretools</id><layout>p2</layout>
-          <url>http://download.eclipse.org/modeling/amalgam/temp/ecoretools-1.0.0</url>
-        </repository>
-    <repository><id>gef</id><layout>p2</layout>
-          <url>http://download.eclipse.org/tools/gef/updates/milestones</url>
-        </repository>	
-    <repository><id>facet</id><layout>p2</layout>
+    	<repository><id>facet</id><layout>p2</layout>
           <url>http://download.eclipse.org/facet/updates/milestones/0.2/M4</url>
         </repository-->	
       </repositories>
