@@ -19,6 +19,7 @@ import org.eclipse.compare.ICompareNavigator;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.Utilities;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
@@ -52,7 +53,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewer implements ISelectionChangedListener, ICompareColorProvider {
+public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewer implements ISelectionChangedListener, ICompareColorProvider, IAdaptable {
 
 	private static final String HANDLER_SERVICE = "fHandlerService";
 
@@ -579,5 +580,15 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 			super.saveRightContent(input, bytes);
 		}
 
+	}
+
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+		if (adapter == CompareHandlerService.class) {
+			return getHandlerService();
+		}
+		if (adapter == CompareHandlerService[].class) {
+			return new CompareHandlerService[] {getHandlerService(), };
+		}
+		return null;
 	}
 }
