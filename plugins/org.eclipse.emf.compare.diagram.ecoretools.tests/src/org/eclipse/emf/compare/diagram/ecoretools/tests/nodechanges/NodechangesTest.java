@@ -186,6 +186,38 @@ public class NodechangesTest extends AbstractTest {
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addRefElementInEAnnotationView));
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addBoundsInEAnnotationView));
 		
+		// requires tests
+		assertSame(Integer.valueOf(0), addEPackageView.getRequires().size());
+		
+		assertSame(Integer.valueOf(1), addNodeInEPackageView1.getRequires().size());
+		assertTrue(addNodeInEPackageView1.getRequires().contains(addEPackageView));
+		
+		assertSame(Integer.valueOf(1), addNodeInEPackageView2.getRequires().size());
+		assertTrue(addNodeInEPackageView2.getRequires().contains(addEPackageView));
+		
+		assertSame(Integer.valueOf(1), addDrawerStyleInNodeInEPackageView2.getRequires().size());
+		assertTrue(addDrawerStyleInNodeInEPackageView2.getRequires().contains(addNodeInEPackageView2));
+		
+		assertSame(Integer.valueOf(1), addSortingStyleInNodeInEPackageView2.getRequires().size());
+		assertTrue(addSortingStyleInNodeInEPackageView2.getRequires().contains(addNodeInEPackageView2));
+		
+		assertSame(Integer.valueOf(1), addFilteringStyleInNodeInEPackageView2.getRequires().size());
+		assertTrue(addFilteringStyleInNodeInEPackageView2.getRequires().contains(addNodeInEPackageView2));
+		
+		assertSame(Integer.valueOf(1), addShapeStyleInEPackageView.getRequires().size());
+		assertTrue(addShapeStyleInEPackageView.getRequires().contains(addEPackageView));
+		
+		assertSame(Integer.valueOf(1), addMultiDiagramLinkStyleInEPackageView.getRequires().size());
+		assertTrue(addMultiDiagramLinkStyleInEPackageView.getRequires().contains(addEPackageView));
+		
+		assertSame(Integer.valueOf(1), addBoundsInEPackageView.getRequires().size());
+		assertTrue(addBoundsInEPackageView.getRequires().contains(addEPackageView));
+		
+		assertSame(Integer.valueOf(2), addRefElementInEPackageView.getRequires().size());
+		assertTrue(addRefElementInEPackageView.getRequires().contains(addEPackage));
+		assertTrue(addRefElementInEPackageView.getRequires().contains(addEPackageView));
+		
+		
 		// FIXME
 		assertFalse("No resource attachment changes expected", Iterators.filter(differences.iterator(), instanceOf(ResourceAttachmentChange.class)).hasNext());
 		
