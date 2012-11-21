@@ -49,7 +49,7 @@
     <!-- Core -->
     <module>../packaging/org.eclipse.emf.compare-feature</module>
     <module>../plugins/org.eclipse.emf.compare</module>
-    <!--<module>../plugins/org.eclipse.emf.compare.tests</module>-->
+    <module>../plugins/org.eclipse.emf.compare.tests</module>
 
     <!-- IDE UI -->
     <module>../packaging/org.eclipse.emf.compare.ide.ui-feature</module>
@@ -72,7 +72,7 @@
     <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>
     <module>../plugins/org.eclipse.emf.compare.uml2.ide</module>
     <module>../plugins/org.eclipse.emf.compare.uml2.ide.ui</module>
-    <!--<module>../plugins/org.eclipse.emf.compare.uml2.tests</module>-->
+    <module>../plugins/org.eclipse.emf.compare.uml2.tests</module>
 
     <!-- SYSML -->
     <!-- Not compiling yet
@@ -93,8 +93,8 @@
     <module>../packaging/org.eclipse.emf.compare.diagram.ecoretools-feature</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.ecoretools</module>
-    <!--<module>../plugins/org.eclipse.emf.compare.diagram.ecoretools.tests</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools.tests</module>-->
+    <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools.tests</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools.tests</module>
 
     <!-- Papyrus -->
     <module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
