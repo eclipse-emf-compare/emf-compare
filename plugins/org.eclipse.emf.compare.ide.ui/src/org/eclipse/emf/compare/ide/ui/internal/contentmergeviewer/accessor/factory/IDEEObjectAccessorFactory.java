@@ -16,6 +16,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory.AbstractAccessorFactory;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IDEEObjectAccessor;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -38,7 +39,11 @@ public class IDEEObjectAccessorFactory extends AbstractAccessorFactory {
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createLeft(AdapterFactory adapterFactory, Object target) {
-		return new IDEEObjectAccessor(adapterFactory, ((Match)target), MergeViewerSide.LEFT);
+		EObject o = ((Match)target).getLeft();
+		if (o != null) {
+			return new IDEEObjectAccessor(adapterFactory, (Match)target, MergeViewerSide.LEFT);
+		}
+		return null;
 	}
 
 	/**
@@ -48,7 +53,11 @@ public class IDEEObjectAccessorFactory extends AbstractAccessorFactory {
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createRight(AdapterFactory adapterFactory, Object target) {
-		return new IDEEObjectAccessor(adapterFactory, ((Match)target), MergeViewerSide.RIGHT);
+		EObject o = ((Match)target).getRight();
+		if (o != null) {
+			return new IDEEObjectAccessor(adapterFactory, (Match)target, MergeViewerSide.RIGHT);
+		}
+		return null;
 	}
 
 	/**
@@ -58,7 +67,11 @@ public class IDEEObjectAccessorFactory extends AbstractAccessorFactory {
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createAncestor(AdapterFactory adapterFactory, Object target) {
-		return new IDEEObjectAccessor(adapterFactory, ((Match)target), MergeViewerSide.ANCESTOR);
+		EObject o = ((Match)target).getOrigin();
+		if (o != null) {
+			return new IDEEObjectAccessor(adapterFactory, (Match)target, MergeViewerSide.ANCESTOR);
+		}
+		return null;
 	}
 
 }
