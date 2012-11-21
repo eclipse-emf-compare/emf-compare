@@ -51,6 +51,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -62,7 +63,7 @@ class DiagramMergeViewer extends GraphicalMergeViewer {
 	private DiagramGraphicalViewer fGraphicalViewer;
 
 	/** the zoom factor of displayed diagrams. */
-	private static final double ZOOM_FACTOR = 0.7;
+	private static final double ZOOM_FACTOR = 1;
 
 	/** the current diagram used. */
 	private Diagram currentDiag;
@@ -127,7 +128,14 @@ class DiagramMergeViewer extends GraphicalMergeViewer {
 					EObject obj = contents.next();
 					for (Diff diff : ((IDiagramNodeAccessor)input).getComparison().getDifferences(obj)) {
 						if (diff instanceof DiagramDiff) {
-							obj.eAdapters().add(new SelectedDiffAdapter((DiagramDiff)diff));
+							if (diff.getKind() != DifferenceKind.DELETE) {
+								obj.eAdapters().add(new SelectedDiffAdapter((DiagramDiff)diff));
+							} else {
+								if (((IDiagramNodeAccessor)input).getOwnedView() == null) {
+									// add phantom
+
+								}
+							}
 						}
 					}
 				}
@@ -142,8 +150,18 @@ class DiagramMergeViewer extends GraphicalMergeViewer {
 					while (!part.isSelectable()) {
 						part = part.getParent();
 					}
-					select(part);
+
+					// if (getSide() == MergeViewerSide.LEFT) {
+					setSelection(new StructuredSelection(part));
+					// }
+					// select(part);
+
 				}
+
+			} else {
+
+				// IFigure layer =
+				// LayerManager.Helper.find(getHost()).getLayer(LayerConstants.FEEDBACK_LAYER);
 
 			}
 		}

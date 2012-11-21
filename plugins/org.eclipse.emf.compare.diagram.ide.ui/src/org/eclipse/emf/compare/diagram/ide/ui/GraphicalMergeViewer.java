@@ -43,12 +43,12 @@ public abstract class GraphicalMergeViewer extends DMergeViewer {
 		hookControl();
 
 		fForwardingSelectionListener = new ForwardingViewerSelectionListener();
-		getGraphicalViewer().addSelectionChangedListener(fForwardingSelectionListener);
+		// getGraphicalViewer().addSelectionChangedListener(fForwardingSelectionListener);
 	}
 
 	@Override
 	protected void handleDispose(DisposeEvent event) {
-		getGraphicalViewer().removeSelectionChangedListener(fForwardingSelectionListener);
+		// getGraphicalViewer().removeSelectionChangedListener(fForwardingSelectionListener);
 		super.handleDispose(event);
 	}
 

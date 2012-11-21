@@ -27,6 +27,7 @@ import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -140,18 +141,25 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		}
 
 		Object firstElement = selection.getFirstElement();
-		List<Diff> differences = getComparison().getDifferences((EObject)firstElement);
 
-		final Command command = getEditingDomain().createCopyAllNonConflictingCommand(differences,
-				leftToRight);
-		getEditingDomain().getCommandStack().execute(command);
+		if (firstElement instanceof GraphicalEditPart) {
+			Object elt = ((GraphicalEditPart)firstElement).getModel();
+			if (elt instanceof EObject) {
+				List<Diff> differences = getComparison().getDifferences((EObject)elt);
 
-		if (leftToRight) {
-			setRightDirty(true);
-		} else {
-			setLeftDirty(true);
+				final Command command = getEditingDomain().createCopyAllNonConflictingCommand(differences,
+						leftToRight);
+				getEditingDomain().getCommandStack().execute(command);
+
+				if (leftToRight) {
+					setRightDirty(true);
+				} else {
+					setLeftDirty(true);
+				}
+				refresh();
+			}
 		}
-		refresh();
+
 	}
 
 	/**
