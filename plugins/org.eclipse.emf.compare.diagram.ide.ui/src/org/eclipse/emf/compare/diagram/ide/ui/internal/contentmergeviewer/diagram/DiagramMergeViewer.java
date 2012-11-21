@@ -154,7 +154,10 @@ class DiagramMergeViewer extends GraphicalMergeViewer {
 					// if (getSide() == MergeViewerSide.LEFT) {
 					setSelection(new StructuredSelection(part));
 					// }
+					getGraphicalViewer().reveal(part);
+
 					// select(part);
+					// reveal(part);
 
 				}
 
