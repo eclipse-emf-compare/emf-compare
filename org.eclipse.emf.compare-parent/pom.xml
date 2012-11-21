@@ -49,7 +49,7 @@
     <!-- Core -->
     <module>../packaging/org.eclipse.emf.compare-feature</module>
     <module>../plugins/org.eclipse.emf.compare</module>
-    <module>../plugins/org.eclipse.emf.compare.tests</module>
+    <!--<module>../plugins/org.eclipse.emf.compare.tests</module>-->
 
     <!-- IDE UI -->
     <module>../packaging/org.eclipse.emf.compare.ide.ui-feature</module>
