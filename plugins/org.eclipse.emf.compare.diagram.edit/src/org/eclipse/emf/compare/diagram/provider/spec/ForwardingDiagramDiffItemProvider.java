@@ -15,6 +15,7 @@ import com.google.common.base.Preconditions;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.diagram.DiagramDiff;
@@ -178,4 +179,20 @@ public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider {
 		return null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getForeground(java.lang.Object)
+	 */
+	@Override
+	public Object getForeground(Object object) {
+		DiagramDiff referenceChange = (DiagramDiff)object;
+		switch (referenceChange.getState()) {
+			case MERGED:
+			case DISCARDED:
+				return URI.createURI("color://rgb/156/156/156"); //$NON-NLS-1$
+			default:
+				return super.getForeground(object);
+		}
+	}
 }
