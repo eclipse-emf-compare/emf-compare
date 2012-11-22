@@ -57,7 +57,7 @@ public interface IMergeViewer extends IInputSelectionProvider {
 	 */
 	void setSelection(ISelection selection, boolean reveal);
 
-	public static enum MergeViewerSide {
+	enum MergeViewerSide {
 		LEFT, RIGHT, ANCESTOR;
 
 		public MergeViewerSide opposite() {
