@@ -28,7 +28,11 @@ import org.eclipse.emf.compare.command.impl.CopyAllNonConflictingCommand;
 import org.eclipse.emf.compare.command.impl.CopyCommand;
 import org.eclipse.emf.compare.command.impl.DualCompareCommandStack;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -49,10 +53,42 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 			fNotifiers = ImmutableList.of(left, right, ancestor);
 		}
 
-		fCommandStack = commandStack;
+		final ResourceSet leftRS = getResourceSet(left);
+		final ResourceSet rightRS = getResourceSet(right);
+
+		if (leftRS != null && rightRS != null) {
+			TransactionalEditingDomain leftTED = TransactionalEditingDomain.Factory.INSTANCE
+					.getEditingDomain(leftRS);
+			TransactionalEditingDomain rightTED = TransactionalEditingDomain.Factory.INSTANCE
+					.getEditingDomain(rightRS);
+			if (leftTED == null) {
+				leftTED = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(leftRS);
+			}
+			if (rightTED == null) {
+				rightTED = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(rightRS);
+			}
+			fCommandStack = new DualCompareCommandStack((BasicCommandStack)leftTED.getCommandStack(),
+					(BasicCommandStack)rightTED.getCommandStack());
+		} else {
+			fCommandStack = commandStack;
+		}
 
 		fChangeRecorder = new ChangeRecorder();
 		fChangeRecorder.setResolveProxies(false);
+	}
+
+	public ResourceSet getResourceSet(Notifier notifier) {
+		ResourceSet resourceSet = null;
+		if (notifier instanceof ResourceSet) {
+			resourceSet = (ResourceSet)notifier;
+		} else if (notifier instanceof Resource) {
+			resourceSet = ((Resource)notifier).getResourceSet();
+		} else if (notifier instanceof EObject) {
+			resourceSet = ((EObject)notifier).eResource().getResourceSet();
+		} else {
+			// impossible as yet
+		}
+		return resourceSet;
 	}
 
 	public static ICompareEditingDomain create(Notifier left, Notifier right, Notifier ancestor) {
