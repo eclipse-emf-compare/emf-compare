@@ -60,7 +60,6 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 			} else {
 				commandStack = leftCommandStack;
 			}
-			commandStack.execute(compareCommand);
 
 			// Clear the list past the top.
 			//
@@ -86,6 +85,8 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 				//
 				saveIndex = -2;
 			}
+
+			commandStack.execute(compareCommand);
 		}
 	}
 
