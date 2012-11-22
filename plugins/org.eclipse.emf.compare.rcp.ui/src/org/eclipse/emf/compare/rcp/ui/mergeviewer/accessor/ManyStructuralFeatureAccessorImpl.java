@@ -32,8 +32,6 @@ import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -192,39 +190,7 @@ public class ManyStructuralFeatureAccessorImpl extends BasicStructuralFeatureAcc
 	 */
 	protected List<?> getFeatureValues(MergeViewerSide side) {
 		final EObject eObject = getEObject(side);
-		return getAsList(eObject, getStructuralFeature());
-	}
-
-	/**
-	 * This utility simply allows us to retrieve the value of a given feature as a List.
-	 * 
-	 * @param object
-	 *            The object for which feature we need a value.
-	 * @param feature
-	 *            The actual feature of which we need the value.
-	 * @return The value of the given <code>feature</code> for the given <code>object</code> as a list. An
-	 *         empty list if this object has no value for that feature or if the object is <code>null</code>.
-	 */
-	private static List<?> getAsList(EObject object, EStructuralFeature feature) {
-		final List<?> asList;
-		if (object != null) {
-			Object value = ReferenceUtil.safeEGet(object, feature);
-			if (value instanceof InternalEList<?>) {
-				// EMF ignores the "resolve" flag for containment lists...
-				asList = newArrayList(((InternalEList<?>)value).basicList());
-			} else if (value instanceof List) {
-				asList = newArrayList((List<?>)value);
-			} else if (value instanceof Iterable) {
-				asList = newArrayList((Iterable<?>)value);
-			} else if (value != null) {
-				asList = newArrayList(value);
-			} else {
-				asList = newArrayList();
-			}
-		} else {
-			asList = newArrayList();
-		}
-		return asList;
+		return ReferenceUtil.getAsList(eObject, getStructuralFeature());
 	}
 
 	/**
