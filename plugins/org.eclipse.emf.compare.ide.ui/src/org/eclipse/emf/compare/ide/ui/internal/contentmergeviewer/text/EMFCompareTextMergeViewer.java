@@ -34,7 +34,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.actions.ActionFactory;
@@ -42,7 +41,7 @@ import org.eclipse.ui.actions.ActionFactory;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class EMFCompareTextMergeViewer extends TextMergeViewer implements CommandStackListener {
+public class EMFCompareTextMergeViewer extends TextMergeViewer {
 
 	private static final String BUNDLE_NAME = EMFCompareTextMergeViewer.class.getName();
 
@@ -62,7 +61,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		super(parent, configuration);
 		fEditingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
 				EMFCompareConstants.EDITING_DOMAIN);
-		fEditingDomain.getCommandStack().addCommandStackListener(this);
 		setContentProvider(new EMFCompareTextMergeViewerContentProvider(configuration));
 	}
 
@@ -94,12 +92,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 			final Command copyCommand = fEditingDomain.createCopyCommand(attributeChange, leftToRight);
 			fEditingDomain.getCommandStack().execute(copyCommand);
 
-			// if (leftToRight) {
-			// setRightDirty(true);
-			// } else {
-			// setLeftDirty(true);
-			// }
-
 			refresh();
 		}
 	}
@@ -113,17 +105,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	@Override
 	protected boolean doSave(Object newInput, Object oldInput) {
 		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
-	 */
-	@Override
-	protected void handleDispose(DisposeEvent event) {
-		fEditingDomain.getCommandStack().removeCommandStackListener(this);
-		super.handleDispose(event);
 	}
 
 	/**
@@ -170,6 +151,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 				@Override
 				public void run() {
 					copyDiff(true);
+					navigate(true);
 				}
 			};
 			Utilities.initAction(copyLeftToRight, getResourceBundle(), "action.CopyDiffLeftToRight."); //$NON-NLS-1$
@@ -184,6 +166,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 				@Override
 				public void run() {
 					copyDiff(false);
+					navigate(true);
 				}
 			};
 			Utilities.initAction(copyRightToLeft, getResourceBundle(), "action.CopyDiffRightToLeft."); //$NON-NLS-1$
@@ -217,8 +200,8 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		toolBarManager.appendToGroup("navigation", contributionPreviousDiff);
 
 		// This is called from the super-constructor, fEditingDomain is not set yet.
-		final ICompareEditingDomain domain = (ICompareEditingDomain)getCompareConfiguration()
-				.getProperty(EMFCompareConstants.EDITING_DOMAIN);
+		final ICompareEditingDomain domain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
+				EMFCompareConstants.EDITING_DOMAIN);
 
 		final UndoAction undoAction = new UndoAction(domain);
 		final RedoAction redoAction = new RedoAction(domain);
@@ -227,6 +210,8 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 			public void commandStackChanged(EventObject event) {
 				undoAction.update();
 				redoAction.update();
+				setLeftDirty(fEditingDomain.getCommandStack().isLeftSaveNeeded());
+				setRightDirty(fEditingDomain.getCommandStack().isRightSaveNeeded());
 				refresh();
 			}
 		});
@@ -254,6 +239,24 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	}
 
 	/**
+	 * Called by the framework to navigate to the next (or previous) difference. This will open the content
+	 * viewer for the next (or previous) diff displayed in the structure viewer.
+	 * 
+	 * @param next
+	 *            <code>true</code> if we are to open the next structure viewer's diff, <code>false</code> if
+	 *            we should go to the previous instead.
+	 */
+	protected void navigate(boolean next) {
+		final Control control = getControl();
+		if (control != null && !control.isDisposed()) {
+			final ICompareNavigator navigator = getCompareConfiguration().getContainer().getNavigator();
+			if (navigator instanceof CompareNavigator && ((CompareNavigator)navigator).hasChange(next)) {
+				navigator.selectChange(next);
+			}
+		}
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#setEditable(org.eclipse.jface.text.source.ISourceViewer,
@@ -267,14 +270,5 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	@Override
 	protected ResourceBundle getResourceBundle() {
 		return ResourceBundle.getBundle(BUNDLE_NAME);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.common.command.CommandStackListener#commandStackChanged(java.util.EventObject)
-	 */
-	public void commandStackChanged(EventObject event) {
-		refresh();
 	}
 }
