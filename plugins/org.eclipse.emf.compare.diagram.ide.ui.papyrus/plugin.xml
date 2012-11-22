@@ -13,11 +13,14 @@
             contentMergeViewerId="org.eclipse.emf.compare.ui.papyrus.contentviewer"
             contentTypeId="org.eclipse.emf.compare.papyrus.ui.papyruscontenttype">
       </contentTypeBinding>
+      <contentTypeBinding
+            contentMergeViewerId="org.eclipse.emf.compare.ui.papyrus.contentviewer"
+            contentTypeId="org.eclipse.emf.compare.papyrus.ui.papyruscontenttype.notation">
+      </contentTypeBinding>
    </extension>
    <extension
          point="org.eclipse.core.contenttype.contentTypes">
       <content-type
-            base-type="org.eclipse.emf.compare.diagram.gmfcontenttype"
             describer="org.eclipse.emf.compare.diagram.ide.papyrus.DiContentDescriptor"
             file-extensions="di"
             id="org.eclipse.emf.compare.papyrus.ui.papyruscontenttype"
@@ -25,7 +28,6 @@
             priority="normal">
       </content-type>
       <content-type
-            base-type="org.eclipse.emf.compare.diagram.gmfcontenttype"
             file-extensions="notation"
             id="org.eclipse.emf.compare.papyrus.ui.papyruscontenttype.notation"
             name="Papyrus Notation Content Type"
