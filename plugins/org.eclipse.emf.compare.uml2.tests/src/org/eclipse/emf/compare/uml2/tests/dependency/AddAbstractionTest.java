@@ -91,25 +91,20 @@ public class AddAbstractionTest extends AbstractTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
-		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
 
 		Predicate<? super Diff> addAbstractionDescription = null;
-		Predicate<? super Diff> addRefAbstractionInClass1Description = null;
 		Predicate<? super Diff> addRefClass1InAbstractionDescription = null;
 		Predicate<? super Diff> addRefClass0InAbstractionDescription = null;
 
 		if (kind.equals(TestKind.DELETE)) {
 			addAbstractionDescription = removed("model.Abstraction0"); //$NON-NLS-1$
-			addRefAbstractionInClass1Description = removedFromReference("model.Class1", "clientDependency",
-					"model.Abstraction0");
 			addRefClass1InAbstractionDescription = removedFromReference("model.Abstraction0", "client",
 					"model.Class1");
 			addRefClass0InAbstractionDescription = removedFromReference("model.Abstraction0", "supplier",
 					"model.Class0");
 		} else {
 			addAbstractionDescription = added("model.Abstraction0"); //$NON-NLS-1$
-			addRefAbstractionInClass1Description = addedToReference("model.Class1", "clientDependency",
-					"model.Abstraction0");
 			addRefClass1InAbstractionDescription = addedToReference("model.Abstraction0", "client",
 					"model.Class1");
 			addRefClass0InAbstractionDescription = addedToReference("model.Abstraction0", "supplier",
@@ -117,15 +112,12 @@ public class AddAbstractionTest extends AbstractTest {
 		}
 
 		final Diff addAbstraction = Iterators.find(differences.iterator(), addAbstractionDescription);
-		final Diff addRefAbstractionInClass1 = Iterators.find(differences.iterator(),
-				addRefAbstractionInClass1Description);
 		final Diff addRefClass1InAbstraction = Iterators.find(differences.iterator(),
 				addRefClass1InAbstractionDescription);
 		final Diff addRefClass0InAbstraction = Iterators.find(differences.iterator(),
 				addRefClass0InAbstractionDescription);
 
 		assertNotNull(addAbstraction);
-		assertNotNull(addRefAbstractionInClass1);
 		assertNotNull(addRefClass1InAbstraction);
 		assertNotNull(addRefClass0InAbstraction);
 
@@ -155,9 +147,6 @@ public class AddAbstractionTest extends AbstractTest {
 			assertSame(Integer.valueOf(1), Integer.valueOf(addRefClass0InAbstraction.getRequires().size()));
 			assertTrue(addRefClass0InAbstraction.getRequires().contains(addAbstraction));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addRefAbstractionInClass1.getRequires().size()));
-			assertTrue(addRefAbstractionInClass1.getRequires().contains(addAbstraction));
-
 			assertSame(Integer.valueOf(0), Integer.valueOf(addAbstraction.getRequires().size()));
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
 		} else {
@@ -165,12 +154,9 @@ public class AddAbstractionTest extends AbstractTest {
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addRefClass0InAbstraction.getRequires().size()));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefAbstractionInClass1.getRequires().size()));
-
-			assertSame(Integer.valueOf(3), Integer.valueOf(addAbstraction.getRequires().size()));
+			assertSame(Integer.valueOf(2), Integer.valueOf(addAbstraction.getRequires().size()));
 			assertTrue(addAbstraction.getRequires().contains(addRefClass1InAbstraction));
 			assertTrue(addAbstraction.getRequires().contains(addRefClass0InAbstraction));
-			assertTrue(addAbstraction.getRequires().contains(addRefAbstractionInClass1));
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
 		}
@@ -178,11 +164,10 @@ public class AddAbstractionTest extends AbstractTest {
 		// CHECK EQUIVALENCE
 		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getEquivalences().size()));
 
+		// opposite of an ignored reference
 		assertNotNull(addRefClass1InAbstraction.getEquivalence());
-		assertSame(Integer.valueOf(2), Integer.valueOf(addRefClass1InAbstraction.getEquivalence()
+		assertSame(Integer.valueOf(1), Integer.valueOf(addRefClass1InAbstraction.getEquivalence()
 				.getDifferences().size()));
-		assertTrue(addRefClass1InAbstraction.getEquivalence().getDifferences().contains(
-				addRefAbstractionInClass1));
 
 	}
 

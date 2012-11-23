@@ -90,25 +90,20 @@ public class AddDependencyTest extends AbstractTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
-		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
 
 		Predicate<? super Diff> addDependencyDescription = null;
-		Predicate<? super Diff> addRefDependencyInClass0Description = null;
 		Predicate<? super Diff> addRefClass1InDependencyDescription = null;
 		Predicate<? super Diff> addRefClass0InDependencyDescription = null;
 
 		if (kind.equals(TestKind.DELETE)) {
 			addDependencyDescription = removed("model.Dependency0"); //$NON-NLS-1$
-			addRefDependencyInClass0Description = removedFromReference("model.Class0", "clientDependency",
-					"model.Dependency0");
 			addRefClass0InDependencyDescription = removedFromReference("model.Dependency0", "client",
 					"model.Class0");
 			addRefClass1InDependencyDescription = removedFromReference("model.Dependency0", "supplier",
 					"model.Class1");
 		} else {
 			addDependencyDescription = added("model.Dependency0"); //$NON-NLS-1$
-			addRefDependencyInClass0Description = addedToReference("model.Class0", "clientDependency",
-					"model.Dependency0");
 			addRefClass0InDependencyDescription = addedToReference("model.Dependency0", "client",
 					"model.Class0");
 			addRefClass1InDependencyDescription = addedToReference("model.Dependency0", "supplier",
@@ -116,15 +111,12 @@ public class AddDependencyTest extends AbstractTest {
 		}
 
 		final Diff addDependency = Iterators.find(differences.iterator(), addDependencyDescription);
-		final Diff addRefDependencyInClass0 = Iterators.find(differences.iterator(),
-				addRefDependencyInClass0Description);
 		final Diff addRefClass0InDependency = Iterators.find(differences.iterator(),
 				addRefClass0InDependencyDescription);
 		final Diff addRefClass1InDependency = Iterators.find(differences.iterator(),
 				addRefClass1InDependencyDescription);
 
 		assertNotNull(addDependency);
-		assertNotNull(addRefDependencyInClass0);
 		assertNotNull(addRefClass0InDependency);
 		assertNotNull(addRefClass1InDependency);
 
@@ -154,9 +146,6 @@ public class AddDependencyTest extends AbstractTest {
 			assertSame(Integer.valueOf(1), Integer.valueOf(addRefClass1InDependency.getRequires().size()));
 			assertTrue(addRefClass1InDependency.getRequires().contains(addDependency));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addRefDependencyInClass0.getRequires().size()));
-			assertTrue(addRefDependencyInClass0.getRequires().contains(addDependency));
-
 			assertSame(Integer.valueOf(0), Integer.valueOf(addDependency.getRequires().size()));
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
 		} else {
@@ -164,12 +153,9 @@ public class AddDependencyTest extends AbstractTest {
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addRefClass1InDependency.getRequires().size()));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefDependencyInClass0.getRequires().size()));
-
-			assertSame(Integer.valueOf(3), Integer.valueOf(addDependency.getRequires().size()));
+			assertSame(Integer.valueOf(2), Integer.valueOf(addDependency.getRequires().size()));
 			assertTrue(addDependency.getRequires().contains(addRefClass0InDependency));
 			assertTrue(addDependency.getRequires().contains(addRefClass1InDependency));
-			assertTrue(addDependency.getRequires().contains(addRefDependencyInClass0));
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
 		}
@@ -177,11 +163,10 @@ public class AddDependencyTest extends AbstractTest {
 		// CHECK EQUIVALENCE
 		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getEquivalences().size()));
 
+		// This one is an eopposite of an ignored reference (a subset-superset...)
 		assertNotNull(addRefClass0InDependency.getEquivalence());
-		assertSame(Integer.valueOf(2), Integer.valueOf(addRefClass0InDependency.getEquivalence()
+		assertSame(Integer.valueOf(1), Integer.valueOf(addRefClass0InDependency.getEquivalence()
 				.getDifferences().size()));
-		assertTrue(addRefClass0InDependency.getEquivalence().getDifferences().contains(
-				addRefDependencyInClass0));
 
 	}
 

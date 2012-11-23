@@ -16,10 +16,12 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
@@ -28,6 +30,8 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.uml2.AssociationChange;
+import org.eclipse.emf.compare.uml2.InterfaceRealizationChange;
 import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.compare.util.CompareSwitch;
@@ -35,6 +39,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.uml2.common.util.UML2Util;
+import org.eclipse.uml2.uml.Association;
+import org.eclipse.uml2.uml.InterfaceRealization;
+import org.eclipse.uml2.uml.Property;
 
 /**
  * Factory for the difference extensions.
@@ -130,14 +137,47 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 		ret.setDiscriminant(discriminant);
 		ret.setKind(extensionKind);
 
-		// FIXME we should strive to remove these instanceof ...
-
+		// FIXME pull down all of these in their own respective sub-class. This is unreadable.
+		final Comparison comparison = input.getMatch().getComparison();
 		if (discriminant != null) {
 			if (input instanceof ResourceAttachmentChange && ret instanceof StereotypeApplicationChange) {
 				// Below the stereotype application lies the reference change for 'base_class'
 				ret.getRefinedBy().addAll(input.getMatch().getDifferences());
 			} else if (extensionKind == DifferenceKind.DELETE) {
 				ret.getRefinedBy().add(input);
+			} else if (ret instanceof InterfaceRealizationChange) {
+				// What should we "really" refine with an interface realization?
+				// 1 - all diffs on and under the realization itself
+				// ... nothing more
+				final InterfaceRealization realization = (InterfaceRealization)discriminant;
+				final Set<Diff> refines = Sets.newLinkedHashSet();
+				for (Diff candidate : comparison.getDifferences(realization)) {
+					if (candidate instanceof ReferenceChange
+							&& ((ReferenceChange)candidate).getReference().isContainment()) {
+						refines.add(candidate);
+					}
+				}
+				refines.addAll(comparison.getMatch(realization).getDifferences());
+				ret.getRefinedBy().addAll(refines);
+			} else if (ret instanceof AssociationChange) {
+				// What should we "really" refine with an assocation change?
+				// 1 - all diffs on and under the association itself
+				// 2 - any diff on and under the properties of this association
+				// And... that's all folks
+				final Association association = (Association)discriminant;
+				final Set<Diff> refines = Sets.newLinkedHashSet();
+				for (Diff candidate : comparison.getDifferences(association)) {
+					if (candidate instanceof ReferenceChange
+							&& ((ReferenceChange)candidate).getReference().isContainment()) {
+						refines.add(candidate);
+					}
+				}
+				refines.addAll(comparison.getMatch(association).getDifferences());
+				for (Property property : association.getMemberEnds()) {
+					refines.addAll(comparison.getDifferences(property));
+					refines.addAll(comparison.getMatch(property).getDifferences());
+				}
+				ret.getRefinedBy().addAll(refines);
 			} else {
 				fillRefiningDifferences(input.getMatch().getComparison(), ret, discriminant);
 			}

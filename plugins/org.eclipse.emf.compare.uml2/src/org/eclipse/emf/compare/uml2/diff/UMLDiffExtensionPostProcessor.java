@@ -145,11 +145,11 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 //				UMLPackage.Literals.ACTIVITY_GROUP__CONTAINED_EDGE,
 //				UMLPackage.Literals.ACTIVITY_GROUP__CONTAINED_NODE,
 //				UMLPackage.Literals.ACTIVITY_GROUP__SUBGROUP,
-				UMLPackage.Literals.ASSOCIATION__MEMBER_END
+				UMLPackage.Literals.ASSOCIATION__MEMBER_END,
 //				UMLPackage.Literals.CLASSIFIER__ATTRIBUTE,
 //				UMLPackage.Literals.CLASSIFIER__FEATURE,
 //				UMLPackage.Literals.ELEMENT__OWNED_ELEMENT,
-//				UMLPackage.Literals.NAMED_ELEMENT__CLIENT_DEPENDENCY,
+				UMLPackage.Literals.NAMED_ELEMENT__CLIENT_DEPENDENCY
 //				UMLPackage.Literals.NAMESPACE__MEMBER,
 //				UMLPackage.Literals.NAMESPACE__OWNED_MEMBER,
 //				UMLPackage.Literals.STRUCTURED_CLASSIFIER__ROLE,
