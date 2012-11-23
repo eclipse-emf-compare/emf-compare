@@ -195,7 +195,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		}
 
 		return ImmutableList.copyOf(filter(ret,
-				not(MatchItemProviderSpec.REFINED_OR_REQUIRED_BY_REFINED_DIFF)));
+				not(MatchItemProviderSpec.REFINED_DIFF)));
 
 	}
 
