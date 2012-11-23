@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.diff.util;
 
+import com.google.common.collect.Maps;
+
+import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -30,75 +34,19 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Utility Class for differences requests.
+ * This utility class will be used to request and set labels on GMF views.
  * 
  * @author Cedric Notot <a href="mailto:cedric.notot@obeo.fr">cedric.notot@obeo.fr</a>
  */
-public final class DiffUtil {
+public final class GMFLabelUtil {
+	// FIXME
+	private static Map<Diagram, DiagramEditPart> DIAGRAM_EDIT_PARTS = Maps.newHashMap();
 
 	/**
 	 * Constructor.
 	 */
-	private DiffUtil() {
+	private GMFLabelUtil() {
 		// Hides default constructor
-	}
-
-	/**
-	 * Enumerated type to specify which side from a difference we wish to address.
-	 * 
-	 * @author Cedric Notot <a href="mailto:cedric.notot@obeo.fr">cedric.notot@obeo.fr</a>
-	 */
-	public enum Side {
-		/**
-		 * Any side.
-		 */
-		ANY,
-		/**
-		 * Left side.
-		 */
-		LEFT,
-		/**
-		 * Right side.
-		 */
-		RIGHT;
-	}
-
-	/**
-	 * Checks if the view is visible.
-	 * 
-	 * @param view
-	 *            The tested view.
-	 * @return True if visible.
-	 */
-	public static boolean isVisible(View view) {
-		boolean result = view.isVisible();
-		if (result) {
-			final View container = getNextParent(view);
-			if (container != null) {
-				result = isVisible(container);
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Get the closest parent view.
-	 * 
-	 * @param obj
-	 *            The current view.
-	 * @return The parent view.
-	 */
-	private static View getNextParent(EObject obj) {
-		View result = null;
-		if (obj != null) {
-			final EObject parent = obj.eContainer();
-			if (parent instanceof View) {
-				result = (View)parent;
-			} else {
-				result = getNextParent(parent);
-			}
-		}
-		return result;
 	}
 
 	/**
@@ -112,19 +60,6 @@ public final class DiffUtil {
 		final LabelRequestor labelRequestor = new LabelRequestor(view);
 		Display.getDefault().syncExec(labelRequestor);
 		return labelRequestor.getTextEditPart();
-	}
-
-	/**
-	 * Retrieve the GMF label of the specified view.
-	 * 
-	 * @param view
-	 *            The view.
-	 * @return The label.
-	 */
-	public static String getLabel(View view) {
-		final LabelRequestor labelRequestor = new LabelRequestor(view);
-		Display.getDefault().syncExec(labelRequestor);
-		return labelRequestor.getLabel();
 	}
 
 	/**
@@ -153,6 +88,13 @@ public final class DiffUtil {
 		Display.getDefault().syncExec(labelSetter);
 	}
 
+	public static void cleanup() {
+		for (Map.Entry<Diagram, DiagramEditPart> entry : DIAGRAM_EDIT_PARTS.entrySet()) {
+			entry.getValue().deactivate();
+		}
+		DIAGRAM_EDIT_PARTS.clear();
+	}
+
 	/**
 	 * Retrieve the {@link ITextAwareEditPart} related to the specified {@link IGraphicalEditPart}.
 	 * 
@@ -174,32 +116,6 @@ public final class DiffUtil {
 					result = (ITextAwareEditPart)obj;
 					break;
 				}
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Retrieve the first ancestor of the specified obj where the type is an instance of clazz.
-	 * 
-	 * @param obj
-	 *            The object from which the scan is processed.
-	 * @param clazz
-	 *            The type to check.
-	 * @param <T>
-	 *            The type specified by clazz.
-	 * @return The ancestor or null if not found.
-	 */
-	public static <T> T eContainer(EObject obj, Class<T> clazz) {
-		T result = null;
-		if (obj != null) {
-			if (clazz.isAssignableFrom(obj.getClass())) {
-				return (T)obj;
-			}
-			if (obj.eContainer() != null && clazz.isAssignableFrom(obj.eContainer().getClass())) {
-				result = (T)obj.eContainer();
-			} else {
-				result = eContainer(obj.eContainer(), clazz);
 			}
 		}
 		return result;
@@ -260,37 +176,37 @@ public final class DiffUtil {
 
 			final ResourceSet resourceSet = diagram.eResource().getResourceSet();
 			final TransactionalEditingDomain ted = TransactionalEditingDomain.Factory.INSTANCE
-					.createEditingDomain(resourceSet);
+					.getEditingDomain(resourceSet);
+			if (ted == null) {
+				TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(resourceSet);
+			}
 
-			Shell shell = null;
-			try {
-				shell = new Shell();
-				final DiagramEditPart diagEp = OffscreenEditPartFactory.getInstance().createDiagramEditPart(
-						diagram, shell);
-				if (diagEp != null) {
-
-					final Object viewEp = diagEp.getViewer().getEditPartRegistry().get(view);
-					if (viewEp != null) {
-						if (viewEp instanceof IGraphicalEditPart) {
-
-							final ITextAwareEditPart textEp = findTextAwareEditPart((IGraphicalEditPart)viewEp);
-							if (textEp != null) {
-								this.mTextEp = textEp;
-								handle(textEp);
-								textEp.deactivate();
-							}
-							((IGraphicalEditPart)viewEp).deactivate();
-						}
+			DiagramEditPart diagramEditPart = DIAGRAM_EDIT_PARTS.get(diagram);
+			if (diagramEditPart == null) {
+				Shell shell = null;
+				try {
+					shell = new Shell();
+					diagramEditPart = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagram,
+							shell);
+					DIAGRAM_EDIT_PARTS.put(diagram, diagramEditPart);
+				} finally {
+					if (shell != null) {
+						shell.dispose();
 					}
+				}
+			}
 
-					diagEp.deactivate();
+			if (diagramEditPart != null) {
+				final Object viewEp = diagramEditPart.getViewer().getEditPartRegistry().get(view);
+
+				if (viewEp instanceof IGraphicalEditPart) {
+					final ITextAwareEditPart textEp = findTextAwareEditPart((IGraphicalEditPart)viewEp);
+
+					if (textEp != null) {
+						this.mTextEp = textEp;
+						handle(textEp);
+					}
 				}
-			} finally {
-				if (shell != null) {
-					shell.dispose();
-				}
-				ted.dispose();
-				resourceSet.eAdapters().remove(ted);
 			}
 		}
 
@@ -337,7 +253,7 @@ public final class DiffUtil {
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.diagram.diff.util.DiffUtil.LabelHandling#handle(org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart)
+		 * @see org.eclipse.emf.compare.diagram.diff.util.GMFLabelUtil.LabelHandling#handle(org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart)
 		 */
 		@Override
 		void handle(ITextAwareEditPart editPart) {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.provider;
 
-import org.eclipse.emf.compare.diagram.diff.util.DiffUtil;
+import org.eclipse.emf.compare.diagram.diff.util.GMFLabelUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
@@ -35,12 +35,12 @@ public abstract class AbstractLabelProvider implements IViewLabelProvider {
 		if (view == null) {
 			throw new IllegalArgumentException("view"); //$NON-NLS-1$
 		}
-		final ITextAwareEditPart editPart = DiffUtil.getTextEditPart(view);
+		final ITextAwareEditPart editPart = GMFLabelUtil.getTextEditPart(view);
 
 		final EObject semanticElement = getSemanticElement(editPart);
 		final EObjectAdapter semanticAdapter = new EObjectAdapter(semanticElement);
 
-		final IParser parser = DiffUtil.getParser(view);
+		final IParser parser = GMFLabelUtil.getParser(view);
 		final ParserOptions parserOptions = editPart.getParserOptions();
 
 		final String ret = parser.getPrintString(semanticAdapter, parserOptions.intValue());

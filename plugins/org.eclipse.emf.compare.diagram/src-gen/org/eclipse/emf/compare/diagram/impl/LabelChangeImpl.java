@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.diagram.impl;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.compare.diagram.DiagramComparePackage;
 import org.eclipse.emf.compare.diagram.LabelChange;
-import org.eclipse.emf.compare.diagram.diff.util.DiffUtil;
+import org.eclipse.emf.compare.diagram.diff.util.GMFLabelUtil;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -288,9 +288,9 @@ public class LabelChangeImpl extends DiagramDiffImpl implements LabelChange {
 			final View vElement = (View)element;
 			final View vOrigin = (View)origin;
 			if (inOrigin) {
-				DiffUtil.setLabel(vOrigin, pDiff.getRight());
+				GMFLabelUtil.setLabel(vOrigin, pDiff.getRight());
 			} else {
-				DiffUtil.setLabel(vElement, pDiff.getLeft());
+				GMFLabelUtil.setLabel(vElement, pDiff.getLeft());
 			}
 		}
 	}
