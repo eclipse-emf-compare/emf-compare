@@ -262,29 +262,36 @@ public final class DiffUtil {
 			final TransactionalEditingDomain ted = TransactionalEditingDomain.Factory.INSTANCE
 					.createEditingDomain(resourceSet);
 
-			final DiagramEditPart diagEp = OffscreenEditPartFactory.getInstance().createDiagramEditPart(
-					diagram, new Shell());
+			Shell shell = null;
+			try {
+				shell = new Shell();
+				final DiagramEditPart diagEp = OffscreenEditPartFactory.getInstance().createDiagramEditPart(
+						diagram, shell);
+				if (diagEp != null) {
 
-			if (diagEp != null) {
+					final Object viewEp = diagEp.getViewer().getEditPartRegistry().get(view);
+					if (viewEp != null) {
+						if (viewEp instanceof IGraphicalEditPart) {
 
-				final Object viewEp = diagEp.getViewer().getEditPartRegistry().get(view);
-				if (viewEp != null) {
-					if (viewEp instanceof IGraphicalEditPart) {
-
-						final ITextAwareEditPart textEp = findTextAwareEditPart((IGraphicalEditPart)viewEp);
-						if (textEp != null) {
-							this.mTextEp = textEp;
-							handle(textEp);
-							textEp.deactivate();
+							final ITextAwareEditPart textEp = findTextAwareEditPart((IGraphicalEditPart)viewEp);
+							if (textEp != null) {
+								this.mTextEp = textEp;
+								handle(textEp);
+								textEp.deactivate();
+							}
+							((IGraphicalEditPart)viewEp).deactivate();
 						}
-						((IGraphicalEditPart)viewEp).deactivate();
 					}
-				}
 
-				diagEp.deactivate();
+					diagEp.deactivate();
+				}
+			} finally {
+				if (shell != null) {
+					shell.dispose();
+				}
+				ted.dispose();
+				resourceSet.eAdapters().remove(ted);
 			}
-			ted.dispose();
-			resourceSet.eAdapters().remove(ted);
 		}
 
 		/**
