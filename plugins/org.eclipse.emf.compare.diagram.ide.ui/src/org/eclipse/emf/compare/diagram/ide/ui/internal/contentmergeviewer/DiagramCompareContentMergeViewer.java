@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -34,12 +36,15 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompar
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColorProvider;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.events.DisposeEvent;
@@ -534,12 +539,49 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	protected void updateToolItems() {
 		super.updateToolItems();
 
+		Diff diff = getDiffFrom(getRightMergeViewer());
+		if (diff == null) {
+			diff = getDiffFrom(getLeftMergeViewer());
+		}
+		boolean enableCopy = false;
+		if (diff != null) {
+			enableCopy = true;
+		}
+
 		if (fCopyDiffLeftToRightItem != null) {
-			fCopyDiffLeftToRightItem.getAction().setEnabled(getCompareConfiguration().isLeftEditable());
+			fCopyDiffLeftToRightItem.getAction().setEnabled(enableCopy);
 		}
 		if (fCopyDiffRightToLeftItem != null) {
-			fCopyDiffRightToLeftItem.getAction().setEnabled(getCompareConfiguration().isRightEditable());
+			fCopyDiffRightToLeftItem.getAction().setEnabled(enableCopy);
 		}
+	}
+
+	/**
+	 * Checks the element selected in the given viewer in order to determine whether it can be adapted into a
+	 * Diff.
+	 * 
+	 * @param viewer
+	 *            The viewer which selection is to be checked.
+	 * @return The first of the Diffs selected in the given viewer, if any.
+	 */
+	protected Diff getDiffFrom(DMergeViewer viewer) {
+		Diff diff = null;
+		final ISelection selection = viewer.getSelection();
+		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
+			final Iterator<?> selectedElements = ((IStructuredSelection)selection).iterator();
+			while (diff == null && selectedElements.hasNext()) {
+				final Object element = selectedElements.next();
+				if (element instanceof GraphicalEditPart
+						&& ((GraphicalEditPart)element).getModel() instanceof EObject) {
+					final List<Diff> diffs = getComparison().getDifferences(
+							(EObject)((GraphicalEditPart)element).getModel());
+					if (!diffs.isEmpty()) {
+						diff = diffs.get(0);
+					}
+				}
+			}
+		}
+		return diff;
 	}
 
 	private void synchronizeSelection(final ISelectionProvider selectionProvider, final ISelection selection) {
