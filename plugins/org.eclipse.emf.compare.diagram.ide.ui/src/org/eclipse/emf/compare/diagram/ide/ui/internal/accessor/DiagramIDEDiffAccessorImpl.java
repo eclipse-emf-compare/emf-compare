@@ -14,7 +14,6 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.diagram.DiagramDiff;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
@@ -53,31 +52,11 @@ public class DiagramIDEDiffAccessorImpl extends DiagramIDEMatchAccessorImpl impl
 		return null;
 	}
 
-	public Diagram getDiagram() {
-		EObject obj = getEObject();
-		return getDiagram(obj);
-	}
-
 	@Override
 	public EObject getEObject(MergeViewerSide side) {
 		EObject obj = getEObject();
 		Match eObjectMatch = fComparison.getMatch(obj);
 		return getEObject(eObjectMatch, side);
-	}
-
-	@Override
-	public Diagram getDiagram(MergeViewerSide side) {
-		EObject obj = getEObject(side);
-		if (obj != null) {
-			return getDiagram(obj);
-		} else {
-			Diagram diagram = getDiagram();
-			if (diagram != null) {
-				Match diagramMatch = fComparison.getMatch(diagram);
-				return (Diagram)getEObject(diagramMatch, side);
-			}
-		}
-		return null;
 	}
 
 }

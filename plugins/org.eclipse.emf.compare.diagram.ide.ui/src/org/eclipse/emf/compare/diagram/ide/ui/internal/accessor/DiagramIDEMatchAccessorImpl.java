@@ -12,11 +12,13 @@ package org.eclipse.emf.compare.diagram.ide.ui.internal.accessor;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.List;
 
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
@@ -114,7 +116,19 @@ public class DiagramIDEMatchAccessorImpl implements IDiagramNodeAccessor, ITyped
 
 	public Diagram getDiagram(MergeViewerSide side) {
 		EObject obj = getEObject(side);
-		return getDiagram(obj);
+		if (obj != null) {
+			return getDiagram(obj);
+		} else {
+			obj = getEObject(getOpposite(side));
+			if (obj != null) {
+				Diagram diagram = getDiagram(obj);
+				if (diagram != null) {
+					Match diagramMatch = fComparison.getMatch(diagram);
+					return (Diagram)getEObject(diagramMatch, side);
+				}
+			}
+		}
+		return null;
 	}
 
 	public Diagram getOwnedDiagram() {
@@ -122,11 +136,7 @@ public class DiagramIDEMatchAccessorImpl implements IDiagramNodeAccessor, ITyped
 	}
 
 	public View getOwnedView() {
-		View result = (View)getEObject(fSide);
-		if (result == null) {
-			result = getDiagram(fSide);
-		}
-		return result;
+		return (View)getEObject(fSide);
 	}
 
 	protected Diagram getDiagram(EObject obj) {
@@ -140,6 +150,31 @@ public class DiagramIDEMatchAccessorImpl implements IDiagramNodeAccessor, ITyped
 
 	public Comparison getComparison() {
 		return fComparison;
+	}
+
+	public MergeViewerSide getOriginSide() {
+		EObject origin = getEObject(MergeViewerSide.ANCESTOR);
+		if (origin == null) {
+			return getOpposite(fSide);
+		} else {
+			return MergeViewerSide.ANCESTOR;
+		}
+	}
+
+	public MergeViewerSide getSide() {
+		return fSide;
+	}
+
+	public List<Diff> getAllDiffs() {
+		return fComparison.getDifferences();
+	}
+
+	private MergeViewerSide getOpposite(MergeViewerSide side) {
+		if (side == MergeViewerSide.LEFT) {
+			return MergeViewerSide.RIGHT;
+		} else {
+			return MergeViewerSide.LEFT;
+		}
 	}
 
 }

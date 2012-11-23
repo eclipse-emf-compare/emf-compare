@@ -10,10 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -30,6 +28,7 @@ import org.eclipse.emf.compare.diagram.NodeChange;
 import org.eclipse.emf.compare.diagram.Show;
 import org.eclipse.emf.compare.diagram.ide.ui.GraphicalMergeViewer;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
+import org.eclipse.emf.compare.diagram.ui.decoration.DiffDecorationEditPolicy;
 import org.eclipse.emf.compare.diagram.ui.decoration.provider.DiffDecoratorProvider;
 import org.eclipse.emf.compare.diagram.ui.decoration.provider.SelectedDiffAdapter;
 import org.eclipse.emf.compare.diagram.util.DiagramCompareSwitch;
@@ -68,14 +67,14 @@ class DiagramMergeViewer extends GraphicalMergeViewer {
 	/** the current diagram used. */
 	private Diagram currentDiag;
 
-	/** the current diff selected. */
-	private List<Diagram> openedDiags = new ArrayList<Diagram>();
+	private DiagramContentMergeViewer master;
 
 	/**
 	 * @param parent
 	 */
-	public DiagramMergeViewer(Composite parent, MergeViewerSide side) {
+	public DiagramMergeViewer(Composite parent, MergeViewerSide side, DiagramContentMergeViewer master) {
 		super(parent, side);
+		this.master = master;
 	}
 
 	/**
@@ -100,39 +99,98 @@ class DiagramMergeViewer extends GraphicalMergeViewer {
 	}
 
 	@Override
-	protected DiagramGraphicalViewer getGraphicalViewer() {
+	public DiagramGraphicalViewer getGraphicalViewer() {
 		return fGraphicalViewer;
 	}
+
+	private void installDecoratorPolicy(EditPart editPart) {
+		editPart.removeEditPolicy(EditPolicyRoles.DECORATION_ROLE);
+		editPart.installEditPolicy(EditPolicyRoles.DECORATION_ROLE, new DiffDecorationEditPolicy());
+	}
+
+	// private void addPhantom(IDiagramNodeAccessor accessor, MergeViewerSide side) {
+	// DiagramMergeViewer viewer = getViewer(side);
+	// IFigure layer = LayerManager.Helper.find(viewer.getEditPart(accessor.getDiagram(side))).getLayer(
+	// LayerConstants.FEEDBACK_LAYER);
+	// EObject origin = accessor.getEObject(accessor.getOriginSide());
+	//
+	// if (origin instanceof View) {
+	//
+	// GraphicalEditPart originGe = (GraphicalEditPart)getViewer(accessor.getOriginSide()).getEditPart(
+	// ((View)origin));
+	//
+	// IFigure ref = originGe.getFigure();
+	// if (ref.getBounds().width > 0 && ref.getBounds().height > 0) {
+	// // IFigure ghost = new GhostImageFigure(ref, 100, null);
+	// // ghost.setBackgroundColor(new Color(Display.getCurrent(), new RGB(255, 0, 0)));
+	// // ghost.setForegroundColor(new Color(Display.getCurrent(), new RGB(255, 0, 0)));
+	// // ghost.setOpaque(true);
+	//
+	// IFigure ghost = new RectangleFigure();
+	// Rectangle rect = ref.getBounds().getCopy();
+	// // rect.performScale(((DiagramRootEditPart)fGraphicalViewer.getRootEditPart())
+	// // .getZoomManager().getZoom());
+	// ghost.setBounds(rect);
+	// ghost.setBackgroundColor(new Color(Display.getCurrent(), new RGB(255, 0, 0)));
+	// layer.add(ghost);
+	//
+	// // layer.repaint();
+	// // viewer.getEditPart(accessor.getDiagram(side)).getRoot().refresh();
+	// setSelection(new StructuredSelection(viewer.getEditPart(accessor.getDiagram(side))));
+	// }
+	// }
+	// }
 
 	@Override
 	public void setInput(final Object input) {
 		if (input instanceof IDiagramNodeAccessor) {
 			fInput = (IDiagramNodeAccessor)input;
-			View eObject = ((IDiagramNodeAccessor)input).getOwnedView();
+			Diagram diagram = ((IDiagramNodeAccessor)input).getOwnedDiagram();
+			View view = ((IDiagramNodeAccessor)input).getOwnedView();
 
 			// FIXME
-			ResourceSet resourceSet = null;
-			if (eObject != null) {
-				resourceSet = eObject.eResource().getResourceSet();
-			}
-			if (resourceSet != null
-					&& TransactionalEditingDomain.Factory.INSTANCE.getEditingDomain(resourceSet) == null) {
-				TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(resourceSet);
-			}
+			initEditingDomain(diagram);
 
-			Diagram diagram = ((IDiagramNodeAccessor)input).getOwnedDiagram();
-			if (diagram != null && !openedDiags.contains(diagram)) {
-				openedDiags.add(diagram);
+			if (diagram != null) {
 				Iterator<EObject> contents = diagram.eAllContents();
 				while (contents.hasNext()) {
 					EObject obj = contents.next();
-					for (Diff diff : ((IDiagramNodeAccessor)input).getComparison().getDifferences(obj)) {
-						if (diff instanceof DiagramDiff) {
-							if (diff.getKind() != DifferenceKind.DELETE) {
-								obj.eAdapters().add(new SelectedDiffAdapter((DiagramDiff)diff));
-							} else {
-								if (((IDiagramNodeAccessor)input).getOwnedView() == null) {
-									// add phantom
+					if (obj instanceof View) {
+						for (Diff diff : ((IDiagramNodeAccessor)input).getComparison().getDifferences(obj)) {
+							if (diff instanceof DiagramDiff) {
+								if (diff.getKind() != DifferenceKind.DELETE) {
+									obj.eAdapters().add(new SelectedDiffAdapter((DiagramDiff)diff));
+									EditPart editPart = getEditPart((View)obj);
+									if (editPart != null) {
+										installDecoratorPolicy(editPart);
+										editPart.refresh();
+									}
+								} else {
+
+									// if (((IDiagramNodeAccessor)input).getSide() == MergeViewerSide.LEFT) {
+									// initEditingDomain(((IDiagramNodeAccessor)input)
+									// .getDiagram(MergeViewerSide.RIGHT));
+									// addPhantom((IDiagramNodeAccessor)input, MergeViewerSide.RIGHT);
+									// } else if (((IDiagramNodeAccessor)input).getSide() ==
+									// MergeViewerSide.RIGHT) {
+									// initEditingDomain(((IDiagramNodeAccessor)input)
+									// .getDiagram(MergeViewerSide.LEFT));
+									// addPhantom((IDiagramNodeAccessor)input, MergeViewerSide.LEFT);
+									// } else {
+									//
+									// if (((IDiagramNodeAccessor)input).getEObject(MergeViewerSide.LEFT) ==
+									// null) {
+									// initEditingDomain(((IDiagramNodeAccessor)input)
+									// .getDiagram(MergeViewerSide.LEFT));
+									// addPhantom((IDiagramNodeAccessor)input, MergeViewerSide.LEFT);
+									// } else if (((IDiagramNodeAccessor)input)
+									// .getEObject(MergeViewerSide.RIGHT) == null) {
+									// initEditingDomain(((IDiagramNodeAccessor)input)
+									// .getDiagram(MergeViewerSide.RIGHT));
+									// addPhantom((IDiagramNodeAccessor)input, MergeViewerSide.RIGHT);
+									// }
+									//
+									// }
 
 								}
 							}
@@ -141,32 +199,70 @@ class DiagramMergeViewer extends GraphicalMergeViewer {
 				}
 			}
 
-			if (eObject != null) {
-				EditPart part = findEditPart(eObject);
+			if (view != null) {
+
+				EditPart viewPart = getEditPart(view);
 
 				// Selection
 				fGraphicalViewer.deselectAll();
-				if (part != null) {
-					while (!part.isSelectable()) {
-						part = part.getParent();
+				if (viewPart != null) {
+
+					while (!viewPart.isSelectable()) {
+						viewPart = viewPart.getParent();
 					}
 
 					// if (getSide() == MergeViewerSide.LEFT) {
-					setSelection(new StructuredSelection(part));
+					setSelection(new StructuredSelection(viewPart));
 					// }
-					getGraphicalViewer().reveal(part);
+					getGraphicalViewer().reveal(viewPart);
 
 					// select(part);
 					// reveal(part);
 
 				}
 
-			} else {
+			} else if (diagram != null) {
 
-				// IFigure layer =
-				// LayerManager.Helper.find(getHost()).getLayer(LayerConstants.FEEDBACK_LAYER);
+				// IFigure layer = LayerManager.Helper.find(getEditPart(diagram)).getLayer(
+				// LayerConstants.FEEDBACK_LAYER);
+				//
+				// EObject origin = ((IDiagramNodeAccessor)input).getEObject(((IDiagramNodeAccessor)input)
+				// .getOriginSide());
+				//
+				// if (origin instanceof View) {
+				//
+				// GraphicalEditPart originGe = (GraphicalEditPart)getViewer(
+				// ((IDiagramNodeAccessor)input).getOriginSide()).getEditPart(((View)origin));
+				//
+				// IFigure ref = originGe.getFigure();
+				// if (ref.getBounds().width > 0 && ref.getBounds().height > 0) {
+				// // IFigure ghost = new GhostImageFigure(ref, 100, null);
+				// // ghost.setBackgroundColor(new Color(Display.getCurrent(), new RGB(255, 0, 0)));
+				// // ghost.setForegroundColor(new Color(Display.getCurrent(), new RGB(255, 0, 0)));
+				// // ghost.setOpaque(true);
+				//
+				// IFigure ghost = new RectangleFigure();
+				// Rectangle rect = ref.getBounds().getCopy();
+				// // rect.performScale(((DiagramRootEditPart)fGraphicalViewer.getRootEditPart())
+				// // .getZoomManager().getZoom());
+				// ghost.setBounds(rect);
+				// ghost.setBackgroundColor(new Color(Display.getCurrent(), new RGB(255, 0, 0)));
+				// layer.add(ghost);
+				// }
+				// }
 
 			}
+		}
+	}
+
+	private void initEditingDomain(Diagram diagram) {
+		ResourceSet resourceSet = null;
+		if (diagram != null) {
+			resourceSet = diagram.eResource().getResourceSet();
+		}
+		if (resourceSet != null
+				&& TransactionalEditingDomain.Factory.INSTANCE.getEditingDomain(resourceSet) == null) {
+			TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(resourceSet);
 		}
 	}
 
@@ -177,6 +273,29 @@ class DiagramMergeViewer extends GraphicalMergeViewer {
 	public EditPart findObjectAtExcluding(Point location, Collection exclusionSet, Conditional conditional) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public EditPart getEditPart(final View view) {
+		final EditPart editPart = (EditPart)fGraphicalViewer.getEditPartRegistry().get(view);
+		if (editPart == null) {
+			Diagram diagram = null;
+			if (view instanceof Diagram) {
+				diagram = (Diagram)view;
+			} else {
+				diagram = view.getDiagram();
+			}
+			if (diagram != null && !diagram.equals(currentDiag)) {
+				currentDiag = diagram;
+				fGraphicalViewer.getEditPartRegistry().clear();
+				final DiagramRootEditPart rootEditPart = new DiagramRootEditPart(diagram.getMeasurementUnit());
+				fGraphicalViewer.setRootEditPart(rootEditPart);
+				fGraphicalViewer.setContents(diagram);
+				disableEditMode((DiagramEditPart)fGraphicalViewer.getContents());
+				rootEditPart.getZoomManager().setZoomAnimationStyle(ZoomManager.ANIMATE_NEVER);
+				rootEditPart.getZoomManager().setZoom(ZOOM_FACTOR);
+			}
+		}
+		return (EditPart)fGraphicalViewer.getEditPartRegistry().get(view);
 	}
 
 	public EditPart findEditPart(final EObject eobj) {

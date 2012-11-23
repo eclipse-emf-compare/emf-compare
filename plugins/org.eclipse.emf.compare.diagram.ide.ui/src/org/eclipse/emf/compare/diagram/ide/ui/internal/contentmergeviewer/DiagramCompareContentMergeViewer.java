@@ -78,11 +78,11 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	/** the modelcreator used to annotate models. */
 	protected final NotationDiffCreator gmfModelCreator = new NotationDiffCreator();
 
-	private DMergeViewer fAncestor;
+	protected DMergeViewer fAncestor;
 
-	private DMergeViewer fLeft;
+	protected DMergeViewer fLeft;
 
-	private DMergeViewer fRight;
+	protected DMergeViewer fRight;
 
 	private ActionContributionItem fCopyDiffLeftToRightItem;
 
@@ -277,13 +277,13 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	 */
 	@Override
 	protected void createControls(Composite composite) {
-		fAncestor = createMergeViewer(composite, MergeViewerSide.ANCESTOR);
+		fAncestor = createMergeViewer(composite, MergeViewerSide.ANCESTOR, this);
 		fAncestor.addSelectionChangedListener(this);
 
-		fLeft = createMergeViewer(composite, MergeViewerSide.LEFT);
+		fLeft = createMergeViewer(composite, MergeViewerSide.LEFT, this);
 		fLeft.addSelectionChangedListener(this);
 
-		fRight = createMergeViewer(composite, MergeViewerSide.RIGHT);
+		fRight = createMergeViewer(composite, MergeViewerSide.RIGHT, this);
 		fRight.addSelectionChangedListener(this);
 
 		fColors = new EMFCompareColor(this, null, getCompareConfiguration());
@@ -443,7 +443,8 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 		fRight.getControl().setBounds(x + width1 + centerWidth, y, width2, height);
 	}
 
-	protected abstract DMergeViewer createMergeViewer(Composite parent, MergeViewerSide side);
+	protected abstract DMergeViewer createMergeViewer(Composite parent, MergeViewerSide side,
+			DiagramCompareContentMergeViewer master);
 
 	@Override
 	protected final int getCenterWidth() {
@@ -494,21 +495,21 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	/**
 	 * @return the fAncestor
 	 */
-	protected DMergeViewer getAncestorMergeViewer() {
+	public DMergeViewer getAncestorMergeViewer() {
 		return fAncestor;
 	}
 
 	/**
 	 * @return the fLeft
 	 */
-	protected DMergeViewer getLeftMergeViewer() {
+	public DMergeViewer getLeftMergeViewer() {
 		return fLeft;
 	}
 
 	/**
 	 * @return the fRight
 	 */
-	protected DMergeViewer getRightMergeViewer() {
+	public DMergeViewer getRightMergeViewer() {
 		return fRight;
 	}
 
