@@ -49,6 +49,7 @@ public class EdgeChangeFactory extends AbstractDiffExtensionFactory {
 		if (extensionKind == DifferenceKind.MOVE) {
 			ret.getRefinedBy().addAll(getAllDifferencesForMove(input));
 		} else if (extensionKind == DifferenceKind.ADD) {
+			ret.getRefinedBy().add(input);
 			ret.getRefinedBy().addAll(getAllContainedDifferences((ReferenceChange)input));
 		} else if (extensionKind == DifferenceKind.DELETE) {
 			ret.getRefinedBy().add(input);

@@ -60,6 +60,7 @@ public class NodeChangeFactory extends AbstractDiffExtensionFactory {
 		if (extensionKind == DifferenceKind.DELETE) {
 			ret.getRefinedBy().add(input);
 		} else if (extensionKind == DifferenceKind.ADD) {
+			ret.getRefinedBy().add(input);
 			ret.getRefinedBy().addAll(getAllContainedDifferences((ReferenceChange)input));
 		} else if (extensionKind == DifferenceKind.MOVE) {
 			ret.getRefinedBy().addAll(input.getMatch().getDifferences());
