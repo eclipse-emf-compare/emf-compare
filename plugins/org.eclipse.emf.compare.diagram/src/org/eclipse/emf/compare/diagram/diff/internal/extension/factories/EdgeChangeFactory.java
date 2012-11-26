@@ -10,23 +10,31 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.diff.internal.extension.factories;
 
+import static com.google.common.collect.Iterables.filter;
+
+import com.google.common.base.Predicate;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.compare.AttributeChange;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.diagram.DiagramCompareFactory;
+import org.eclipse.emf.compare.diagram.DiagramDiff;
 import org.eclipse.emf.compare.diagram.EdgeChange;
 import org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.IdentityAnchor;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Factory for UMLAssociationChangeLeftTarget.
@@ -67,8 +75,32 @@ public class EdgeChangeFactory extends AbstractDiffExtensionFactory {
 		ret.setView(view);
 
 		ret.setSource(input.getSource());
+		ret.setSemanticDiff(getSemanticDiff(input));
 
 		return ret;
+	}
+
+	@Override
+	public void fillRequiredDifferences(Comparison comparison, Diff extension) {
+		final DiagramDiff diff = (DiagramDiff)extension;
+		final Diff semanticDiff = diff.getSemanticDiff();
+
+		for (Diff semanticRequired : semanticDiff.getRequires()) {
+			final List<Diff> candidates = comparison.getDifferences(semanticRequired);
+			for (DiagramDiff diagramDiff : filter(candidates, DiagramDiff.class)) {
+				if (diagramDiff.getSemanticDiff() == semanticRequired) {
+					diff.getRequires().add(diagramDiff);
+				}
+			}
+		}
+		for (Diff semanticRequiredBy : semanticDiff.getRequiredBy()) {
+			final List<Diff> candidates = comparison.getDifferences(semanticRequiredBy);
+			for (DiagramDiff diagramDiff : filter(candidates, DiagramDiff.class)) {
+				if (diagramDiff.getSemanticDiff() == semanticRequiredBy) {
+					diff.getRequiredBy().add(diagramDiff);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -116,4 +148,23 @@ public class EdgeChangeFactory extends AbstractDiffExtensionFactory {
 		return result;
 	}
 
+	private Diff getSemanticDiff(Diff input) {
+		if (input instanceof ReferenceChange && ((ReferenceChange)input).getValue() instanceof View) {
+			final View view = (View)((ReferenceChange)input).getValue();
+			final Object element = ReferenceUtil.safeEGet(view, NotationPackage.Literals.VIEW__ELEMENT);
+			if (element instanceof EObject) {
+				final List<Diff> diffs = findCrossReferences(input.getMatch().getComparison(),
+						(EObject)element, new Predicate<Diff>() {
+							public boolean apply(Diff diff) {
+								return diff instanceof ReferenceChange
+										&& ((ReferenceChange)diff).getReference().isContainment();
+							}
+						});
+				if (diffs.size() > 0) {
+					return diffs.get(0);
+				}
+			}
+		}
+		return null;
+	}
 }

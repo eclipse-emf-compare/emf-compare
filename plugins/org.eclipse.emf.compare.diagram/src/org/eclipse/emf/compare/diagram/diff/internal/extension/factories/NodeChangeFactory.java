@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.diff.internal.extension.factories;
 
+import static com.google.common.collect.Iterables.filter;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
@@ -22,6 +24,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.diagram.DiagramCompareFactory;
+import org.eclipse.emf.compare.diagram.DiagramDiff;
 import org.eclipse.emf.compare.diagram.NodeChange;
 import org.eclipse.emf.compare.diagram.diff.DiagramComparisonConfiguration;
 import org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory;
@@ -81,6 +84,29 @@ public class NodeChangeFactory extends AbstractDiffExtensionFactory {
 		ret.setSemanticDiff(getSemanticDiff(input));
 
 		return ret;
+	}
+
+	@Override
+	public void fillRequiredDifferences(Comparison comparison, Diff extension) {
+		final DiagramDiff diff = (DiagramDiff)extension;
+		final Diff semanticDiff = diff.getSemanticDiff();
+
+		for (Diff semanticRequired : semanticDiff.getRequires()) {
+			final List<Diff> candidates = comparison.getDifferences(semanticRequired);
+			for (DiagramDiff diagramDiff : filter(candidates, DiagramDiff.class)) {
+				if (diagramDiff.getSemanticDiff() == semanticRequired) {
+					diff.getRequires().add(diagramDiff);
+				}
+			}
+		}
+		for (Diff semanticRequiredBy : semanticDiff.getRequiredBy()) {
+			final List<Diff> candidates = comparison.getDifferences(semanticRequiredBy);
+			for (DiagramDiff diagramDiff : filter(candidates, DiagramDiff.class)) {
+				if (diagramDiff.getSemanticDiff() == semanticRequiredBy) {
+					diff.getRequiredBy().add(diagramDiff);
+				}
+			}
+		}
 	}
 
 	@Override
