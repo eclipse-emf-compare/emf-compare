@@ -91,6 +91,11 @@ public class NodeChangeFactory extends AbstractDiffExtensionFactory {
 		final DiagramDiff diff = (DiagramDiff)extension;
 		final Diff semanticDiff = diff.getSemanticDiff();
 
+		if (semanticDiff == null) {
+			// no requires here
+			return;
+		}
+
 		for (Diff semanticRequired : semanticDiff.getRequires()) {
 			final List<Diff> candidates = comparison.getDifferences(semanticRequired);
 			for (DiagramDiff diagramDiff : filter(candidates, DiagramDiff.class)) {
