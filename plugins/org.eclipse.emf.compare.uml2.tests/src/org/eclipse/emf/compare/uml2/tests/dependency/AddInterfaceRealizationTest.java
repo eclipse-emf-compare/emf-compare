@@ -92,7 +92,7 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
 
 		Predicate<? super Diff> addInterfaceRealizationDescription = null;
-		Predicate<? super Diff> addClientInInterfaceRealizationDescription = null;
+		Predicate<? super Diff> addClientDependencyInClass0Description = null;
 		Predicate<? super Diff> addSupplierInInterfaceRealizationDescription = null;
 		Predicate<? super Diff> addContractInInterfaceRealizationDescription = null;
 
@@ -100,8 +100,8 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 			//addInterfaceRealizationDescription = removed("model.Class0.InterfaceRealization0"); //$NON-NLS-1$
 			addInterfaceRealizationDescription = removedFromReference("model.Class0", "interfaceRealization",
 					"model.Class0.InterfaceRealization0");
-			addClientInInterfaceRealizationDescription = removedFromReference(
-					"model.Class0.InterfaceRealization0", "client", "model.Class0");
+			addClientDependencyInClass0Description = removedFromReference("model.Class0", "clientDependency",
+					"model.Class0.InterfaceRealization0");
 			addSupplierInInterfaceRealizationDescription = removedFromReference(
 					"model.Class0.InterfaceRealization0", "supplier", "model.Interface0");
 			addContractInInterfaceRealizationDescription = changedReference(
@@ -110,8 +110,8 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 			//addInterfaceRealizationDescription = added("model.Class0.InterfaceRealization0"); //$NON-NLS-1$
 			addInterfaceRealizationDescription = addedToReference(
 					"model.Class0", "interfaceRealization", "model.Class0.InterfaceRealization0"); //$NON-NLS-1$
-			addClientInInterfaceRealizationDescription = addedToReference(
-					"model.Class0.InterfaceRealization0", "client", "model.Class0");
+			addClientDependencyInClass0Description = addedToReference("model.Class0", "clientDependency",
+					"model.Class0.InterfaceRealization0");
 			addSupplierInInterfaceRealizationDescription = addedToReference(
 					"model.Class0.InterfaceRealization0", "supplier", "model.Interface0");
 			addContractInInterfaceRealizationDescription = changedReference(
@@ -120,15 +120,15 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 
 		final Diff addInterfaceRealization = Iterators.find(differences.iterator(),
 				addInterfaceRealizationDescription);
-		final Diff addClientInInterfaceRealization = Iterators.find(differences.iterator(),
-				addClientInInterfaceRealizationDescription);
+		final Diff addClientDependencyInClass0 = Iterators.find(differences.iterator(),
+				addClientDependencyInClass0Description);
 		final Diff addSupplierInInterfaceRealization = Iterators.find(differences.iterator(),
 				addSupplierInInterfaceRealizationDescription);
 		final Diff addContractInInterfaceRealization = Iterators.find(differences.iterator(),
 				addContractInInterfaceRealizationDescription);
 
 		assertNotNull(addInterfaceRealization);
-		assertNotNull(addClientInInterfaceRealization);
+		assertNotNull(addClientDependencyInClass0);
 		assertNotNull(addSupplierInInterfaceRealization);
 		assertNotNull(addContractInInterfaceRealization);
 
@@ -139,9 +139,8 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 			addUMLDependency = Iterators.find(differences.iterator(), and(
 					instanceOf(InterfaceRealizationChange.class), ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLDependency);
-			assertSame(Integer.valueOf(4), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
+			assertSame(Integer.valueOf(3), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
 			assertTrue(addUMLDependency.getRefinedBy().contains(addInterfaceRealization));
-			assertTrue(addUMLDependency.getRefinedBy().contains(addClientInInterfaceRealization));
 			assertTrue(addUMLDependency.getRefinedBy().contains(addSupplierInInterfaceRealization));
 			assertTrue(addUMLDependency.getRefinedBy().contains(addContractInInterfaceRealization));
 		} else {
@@ -154,9 +153,6 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(1), Integer.valueOf(addClientInInterfaceRealization.getRequires()
-					.size()));
-			assertTrue(addClientInInterfaceRealization.getRequires().contains(addInterfaceRealization));
 			assertSame(Integer.valueOf(1), Integer.valueOf(addSupplierInInterfaceRealization.getRequires()
 					.size()));
 			assertTrue(addSupplierInInterfaceRealization.getRequires().contains(addInterfaceRealization));
@@ -164,20 +160,22 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 					.size()));
 			assertTrue(addContractInInterfaceRealization.getRequires().contains(addInterfaceRealization));
 
+			assertSame(Integer.valueOf(1), Integer.valueOf(addClientDependencyInClass0.getRequires().size()));
+			assertTrue(addClientDependencyInClass0.getRequires().contains(addInterfaceRealization));
+
 			assertSame(Integer.valueOf(0), Integer.valueOf(addInterfaceRealization.getRequires().size()));
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
 		} else {
-			assertSame(Integer.valueOf(0), Integer.valueOf(addClientInInterfaceRealization.getRequires()
-					.size()));
 			assertSame(Integer.valueOf(0), Integer.valueOf(addSupplierInInterfaceRealization.getRequires()
 					.size()));
 			assertSame(Integer.valueOf(0), Integer.valueOf(addContractInInterfaceRealization.getRequires()
 					.size()));
+			assertSame(Integer.valueOf(0), Integer.valueOf(addClientDependencyInClass0.getRequires().size()));
 
 			assertSame(Integer.valueOf(3), Integer.valueOf(addInterfaceRealization.getRequires().size()));
-			assertTrue(addInterfaceRealization.getRequires().contains(addClientInInterfaceRealization));
 			assertTrue(addInterfaceRealization.getRequires().contains(addSupplierInInterfaceRealization));
 			assertTrue(addInterfaceRealization.getRequires().contains(addContractInInterfaceRealization));
+			assertTrue(addInterfaceRealization.getRequires().contains(addClientDependencyInClass0));
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
 		}
@@ -185,13 +183,9 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 		// CHECK EQUIVALENCE
 		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getEquivalences().size()));
 
-		assertNotNull(addClientInInterfaceRealization.getEquivalence());
-		// This one is an opposite of an ignored reference, thus the "1"
-		assertSame(Integer.valueOf(1), Integer.valueOf(addClientInInterfaceRealization.getEquivalence()
+		assertNotNull(addClientDependencyInClass0.getEquivalence());
+		assertSame(Integer.valueOf(1), Integer.valueOf(addClientDependencyInClass0.getEquivalence()
 				.getDifferences().size()));
-		assertTrue(addClientInInterfaceRealization.getEquivalence().getDifferences().contains(
-				addClientInInterfaceRealization));
-
 	}
 
 	@Override

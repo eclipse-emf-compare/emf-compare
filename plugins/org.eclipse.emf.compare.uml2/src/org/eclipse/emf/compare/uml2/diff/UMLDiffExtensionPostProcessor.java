@@ -140,16 +140,16 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 		// 1 - check that they indeed cause trouble with merging
 		// 2 - check that they can indeed be ignored without breaking anything
 		return ImmutableSet.of(
+				UMLPackage.Literals.ASSOCIATION__MEMBER_END,
+				UMLPackage.Literals.DEPENDENCY__CLIENT
 //				UMLPackage.Literals.ACTION__INPUT,
 //				UMLPackage.Literals.ACTION__OUTPUT,
 //				UMLPackage.Literals.ACTIVITY_GROUP__CONTAINED_EDGE,
 //				UMLPackage.Literals.ACTIVITY_GROUP__CONTAINED_NODE,
 //				UMLPackage.Literals.ACTIVITY_GROUP__SUBGROUP,
-				UMLPackage.Literals.ASSOCIATION__MEMBER_END,
 //				UMLPackage.Literals.CLASSIFIER__ATTRIBUTE,
 //				UMLPackage.Literals.CLASSIFIER__FEATURE,
 //				UMLPackage.Literals.ELEMENT__OWNED_ELEMENT,
-				UMLPackage.Literals.NAMED_ELEMENT__CLIENT_DEPENDENCY
 //				UMLPackage.Literals.NAMESPACE__MEMBER,
 //				UMLPackage.Literals.NAMESPACE__OWNED_MEMBER,
 //				UMLPackage.Literals.STRUCTURED_CLASSIFIER__ROLE,

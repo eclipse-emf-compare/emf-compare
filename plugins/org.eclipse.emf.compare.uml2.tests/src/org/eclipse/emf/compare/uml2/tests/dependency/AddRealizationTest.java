@@ -94,31 +94,31 @@ public class AddRealizationTest extends AbstractTest {
 		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
 
 		Predicate<? super Diff> addRealizationDescription = null;
+		Predicate<? super Diff> addRefRealizationInClass0Description = null;
 		Predicate<? super Diff> addRefClass1InRealizationDescription = null;
-		Predicate<? super Diff> addRefClass0InRealizationDescription = null;
 
 		if (kind.equals(TestKind.DELETE)) {
 			addRealizationDescription = removed("model.Realization0"); //$NON-NLS-1$
-			addRefClass0InRealizationDescription = removedFromReference("model.Realization0", "client",
-					"model.Class0");
+			addRefRealizationInClass0Description = removedFromReference("model.Class0", "clientDependency",
+					"model.Realization0");
 			addRefClass1InRealizationDescription = removedFromReference("model.Realization0", "supplier",
 					"model.Class1");
 		} else {
 			addRealizationDescription = added("model.Realization0"); //$NON-NLS-1$
-			addRefClass0InRealizationDescription = addedToReference("model.Realization0", "client",
-					"model.Class0");
+			addRefRealizationInClass0Description = addedToReference("model.Class0", "clientDependency",
+					"model.Realization0");
 			addRefClass1InRealizationDescription = addedToReference("model.Realization0", "supplier",
 					"model.Class1");
 		}
 
 		final Diff addDependency = Iterators.find(differences.iterator(), addRealizationDescription);
-		final Diff addRefClass0InDependency = Iterators.find(differences.iterator(),
-				addRefClass0InRealizationDescription);
+		final Diff addRefDependencyInClass0 = Iterators.find(differences.iterator(),
+				addRefRealizationInClass0Description);
 		final Diff addRefClass1InDependency = Iterators.find(differences.iterator(),
 				addRefClass1InRealizationDescription);
 
 		assertNotNull(addDependency);
-		assertNotNull(addRefClass0InDependency);
+		assertNotNull(addRefDependencyInClass0);
 		assertNotNull(addRefClass1InDependency);
 
 		// CHECK EXTENSION
@@ -128,8 +128,7 @@ public class AddRealizationTest extends AbstractTest {
 			addUMLDependency = Iterators.find(differences.iterator(), and(instanceOf(DependencyChange.class),
 					ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLDependency);
-			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
-			assertTrue(addUMLDependency.getRefinedBy().contains(addRefClass0InDependency));
+			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
 			assertTrue(addUMLDependency.getRefinedBy().contains(addRefClass1InDependency));
 		} else {
 			addUMLDependency = Iterators.find(differences.iterator(), and(instanceOf(DependencyChange.class),
@@ -141,22 +140,22 @@ public class AddRealizationTest extends AbstractTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(1), Integer.valueOf(addRefClass0InDependency.getRequires().size()));
-			assertTrue(addRefClass0InDependency.getRequires().contains(addDependency));
-
 			assertSame(Integer.valueOf(1), Integer.valueOf(addRefClass1InDependency.getRequires().size()));
 			assertTrue(addRefClass1InDependency.getRequires().contains(addDependency));
+
+			assertSame(Integer.valueOf(1), Integer.valueOf(addRefDependencyInClass0.getRequires().size()));
+			assertTrue(addRefDependencyInClass0.getRequires().contains(addDependency));
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addDependency.getRequires().size()));
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
 		} else {
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefClass0InDependency.getRequires().size()));
-
 			assertSame(Integer.valueOf(0), Integer.valueOf(addRefClass1InDependency.getRequires().size()));
 
+			assertSame(Integer.valueOf(0), Integer.valueOf(addRefDependencyInClass0.getRequires().size()));
+
 			assertSame(Integer.valueOf(2), Integer.valueOf(addDependency.getRequires().size()));
-			assertTrue(addDependency.getRequires().contains(addRefClass0InDependency));
 			assertTrue(addDependency.getRequires().contains(addRefClass1InDependency));
+			assertTrue(addDependency.getRequires().contains(addRefDependencyInClass0));
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
 		}
@@ -164,9 +163,8 @@ public class AddRealizationTest extends AbstractTest {
 		// CHECK EQUIVALENCE
 		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getEquivalences().size()));
 
-		// Opposite of an ignored reference
-		assertNotNull(addRefClass0InDependency.getEquivalence());
-		assertSame(Integer.valueOf(1), Integer.valueOf(addRefClass0InDependency.getEquivalence()
+		assertNotNull(addRefDependencyInClass0.getEquivalence());
+		assertSame(Integer.valueOf(1), Integer.valueOf(addRefDependencyInClass0.getEquivalence()
 				.getDifferences().size()));
 	}
 
