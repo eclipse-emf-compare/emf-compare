@@ -244,8 +244,11 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		setState(DifferenceState.MERGED);
-		for (Diff diff : getRefinedBy()) {
-			diff.copyLeftToRight();
+		if (getSemanticDiff() != null) {
+			for (Diff semanticRefines : getSemanticDiff().getRefines()) {
+				semanticRefines.copyLeftToRight();
+			}
+			getSemanticDiff().copyLeftToRight();
 		}
 
 		if (getSource() == DifferenceSource.LEFT) {
@@ -254,6 +257,10 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 		} else {
 			// merge all "required by" diffs
 			mergeRequiredBy(false);
+		}
+
+		for (Diff diff : getRefinedBy()) {
+			diff.copyLeftToRight();
 		}
 	}
 
@@ -268,8 +275,11 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		setState(DifferenceState.MERGED);
-		for (Diff diff : getRefinedBy()) {
-			diff.copyRightToLeft();
+		if (getSemanticDiff() != null) {
+			for (Diff semanticRefines : getSemanticDiff().getRefines()) {
+				semanticRefines.copyRightToLeft();
+			}
+			getSemanticDiff().copyRightToLeft();
 		}
 
 		if (getSource() == DifferenceSource.LEFT) {
@@ -277,6 +287,10 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 			mergeRequiredBy(true);
 		} else {
 			mergeRequires(true);
+		}
+
+		for (Diff diff : getRefinedBy()) {
+			diff.copyRightToLeft();
 		}
 	}
 
