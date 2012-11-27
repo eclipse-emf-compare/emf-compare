@@ -67,14 +67,11 @@ class DiagramMergeViewer extends GraphicalMergeViewer {
 	/** the current diagram used. */
 	private Diagram currentDiag;
 
-	private DiagramContentMergeViewer master;
-
 	/**
 	 * @param parent
 	 */
-	public DiagramMergeViewer(Composite parent, MergeViewerSide side, DiagramContentMergeViewer master) {
+	public DiagramMergeViewer(Composite parent, MergeViewerSide side) {
 		super(parent, side);
-		this.master = master;
 	}
 
 	/**
@@ -108,39 +105,6 @@ class DiagramMergeViewer extends GraphicalMergeViewer {
 		editPart.installEditPolicy(EditPolicyRoles.DECORATION_ROLE, new DiffDecorationEditPolicy());
 	}
 
-	// private void addPhantom(IDiagramNodeAccessor accessor, MergeViewerSide side) {
-	// DiagramMergeViewer viewer = getViewer(side);
-	// IFigure layer = LayerManager.Helper.find(viewer.getEditPart(accessor.getDiagram(side))).getLayer(
-	// LayerConstants.FEEDBACK_LAYER);
-	// EObject origin = accessor.getEObject(accessor.getOriginSide());
-	//
-	// if (origin instanceof View) {
-	//
-	// GraphicalEditPart originGe = (GraphicalEditPart)getViewer(accessor.getOriginSide()).getEditPart(
-	// ((View)origin));
-	//
-	// IFigure ref = originGe.getFigure();
-	// if (ref.getBounds().width > 0 && ref.getBounds().height > 0) {
-	// // IFigure ghost = new GhostImageFigure(ref, 100, null);
-	// // ghost.setBackgroundColor(new Color(Display.getCurrent(), new RGB(255, 0, 0)));
-	// // ghost.setForegroundColor(new Color(Display.getCurrent(), new RGB(255, 0, 0)));
-	// // ghost.setOpaque(true);
-	//
-	// IFigure ghost = new RectangleFigure();
-	// Rectangle rect = ref.getBounds().getCopy();
-	// // rect.performScale(((DiagramRootEditPart)fGraphicalViewer.getRootEditPart())
-	// // .getZoomManager().getZoom());
-	// ghost.setBounds(rect);
-	// ghost.setBackgroundColor(new Color(Display.getCurrent(), new RGB(255, 0, 0)));
-	// layer.add(ghost);
-	//
-	// // layer.repaint();
-	// // viewer.getEditPart(accessor.getDiagram(side)).getRoot().refresh();
-	// setSelection(new StructuredSelection(viewer.getEditPart(accessor.getDiagram(side))));
-	// }
-	// }
-	// }
-
 	@Override
 	public void setInput(final Object input) {
 		if (input instanceof IDiagramNodeAccessor) {
@@ -165,33 +129,6 @@ class DiagramMergeViewer extends GraphicalMergeViewer {
 										installDecoratorPolicy(editPart);
 										editPart.refresh();
 									}
-								} else {
-
-									// if (((IDiagramNodeAccessor)input).getSide() == MergeViewerSide.LEFT) {
-									// initEditingDomain(((IDiagramNodeAccessor)input)
-									// .getDiagram(MergeViewerSide.RIGHT));
-									// addPhantom((IDiagramNodeAccessor)input, MergeViewerSide.RIGHT);
-									// } else if (((IDiagramNodeAccessor)input).getSide() ==
-									// MergeViewerSide.RIGHT) {
-									// initEditingDomain(((IDiagramNodeAccessor)input)
-									// .getDiagram(MergeViewerSide.LEFT));
-									// addPhantom((IDiagramNodeAccessor)input, MergeViewerSide.LEFT);
-									// } else {
-									//
-									// if (((IDiagramNodeAccessor)input).getEObject(MergeViewerSide.LEFT) ==
-									// null) {
-									// initEditingDomain(((IDiagramNodeAccessor)input)
-									// .getDiagram(MergeViewerSide.LEFT));
-									// addPhantom((IDiagramNodeAccessor)input, MergeViewerSide.LEFT);
-									// } else if (((IDiagramNodeAccessor)input)
-									// .getEObject(MergeViewerSide.RIGHT) == null) {
-									// initEditingDomain(((IDiagramNodeAccessor)input)
-									// .getDiagram(MergeViewerSide.RIGHT));
-									// addPhantom((IDiagramNodeAccessor)input, MergeViewerSide.RIGHT);
-									// }
-									//
-									// }
-
 								}
 							}
 						}
@@ -211,45 +148,10 @@ class DiagramMergeViewer extends GraphicalMergeViewer {
 						viewPart = viewPart.getParent();
 					}
 
-					// if (getSide() == MergeViewerSide.LEFT) {
 					setSelection(new StructuredSelection(viewPart));
-					// }
 					getGraphicalViewer().reveal(viewPart);
 
-					// select(part);
-					// reveal(part);
-
 				}
-
-			} else if (diagram != null) {
-
-				// IFigure layer = LayerManager.Helper.find(getEditPart(diagram)).getLayer(
-				// LayerConstants.FEEDBACK_LAYER);
-				//
-				// EObject origin = ((IDiagramNodeAccessor)input).getEObject(((IDiagramNodeAccessor)input)
-				// .getOriginSide());
-				//
-				// if (origin instanceof View) {
-				//
-				// GraphicalEditPart originGe = (GraphicalEditPart)getViewer(
-				// ((IDiagramNodeAccessor)input).getOriginSide()).getEditPart(((View)origin));
-				//
-				// IFigure ref = originGe.getFigure();
-				// if (ref.getBounds().width > 0 && ref.getBounds().height > 0) {
-				// // IFigure ghost = new GhostImageFigure(ref, 100, null);
-				// // ghost.setBackgroundColor(new Color(Display.getCurrent(), new RGB(255, 0, 0)));
-				// // ghost.setForegroundColor(new Color(Display.getCurrent(), new RGB(255, 0, 0)));
-				// // ghost.setOpaque(true);
-				//
-				// IFigure ghost = new RectangleFigure();
-				// Rectangle rect = ref.getBounds().getCopy();
-				// // rect.performScale(((DiagramRootEditPart)fGraphicalViewer.getRootEditPart())
-				// // .getZoomManager().getZoom());
-				// ghost.setBounds(rect);
-				// ghost.setBackgroundColor(new Color(Display.getCurrent(), new RGB(255, 0, 0)));
-				// layer.add(ghost);
-				// }
-				// }
 
 			}
 		}

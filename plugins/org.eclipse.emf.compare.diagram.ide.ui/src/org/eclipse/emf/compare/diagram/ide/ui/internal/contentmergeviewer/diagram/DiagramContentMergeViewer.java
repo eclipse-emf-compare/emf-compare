@@ -14,8 +14,11 @@ import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +27,8 @@ import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.draw2d.FreeformLayeredPane;
+import org.eclipse.draw2d.FreeformViewport;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.command.Command;
@@ -32,8 +37,10 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.diagram.DiagramDiff;
+import org.eclipse.emf.compare.diagram.NodeChange;
 import org.eclipse.emf.compare.diagram.ide.ui.DMergeViewer;
 import org.eclipse.emf.compare.diagram.ide.ui.GraphicalMergeViewer;
+import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramDiffAccessor;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.DiagramCompareContentMergeViewer;
 import org.eclipse.emf.compare.diagram.ui.decoration.DeleteGhostImageFigure;
@@ -48,6 +55,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editparts.LayerManager;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -67,7 +75,9 @@ import org.eclipse.swt.widgets.Display;
  */
 public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer {
 
-	private Map<IFigure, Target> figures = new HashMap<IFigure, Target>();
+	private Map<IFigure, Phantom> phantomsMap = new HashMap<IFigure, Phantom>();
+
+	private Map<IFigure, Integer> phantomSelection = new HashMap<IFigure, Integer>();
 
 	/**
 	 * Bundle name of the property file containing all displayed strings.
@@ -207,8 +217,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	@Override
 	protected DMergeViewer createMergeViewer(final Composite parent, MergeViewerSide side,
 			DiagramCompareContentMergeViewer master) {
-		final DiagramMergeViewer mergeTreeViewer = new DiagramMergeViewer(parent, side,
-				(DiagramContentMergeViewer)master);
+		final DiagramMergeViewer mergeTreeViewer = new DiagramMergeViewer(parent, side);
 		return mergeTreeViewer;
 	}
 
@@ -223,16 +232,19 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 
 	}
 
-	private class Target {
+	private class Phantom {
 		public IFigure figure;
 
 		public IFigure layer;
 
-		public Target(IFigure figure, IFigure layer) {
+		public Phantom(IFigure figure, IFigure layer) {
 			this.figure = figure;
 			this.layer = layer;
 		}
 	}
+
+	private Predicate<Diff> diffsForPhantoms = and(ofKind(DifferenceKind.DELETE),
+			instanceOf(NodeChange.class));
 
 	@Override
 	protected void updateContent(Object ancestor, Object left, Object right) {
@@ -241,72 +253,134 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 
 		if (left instanceof IDiagramNodeAccessor) {
 			IDiagramNodeAccessor input = (IDiagramNodeAccessor)left;
-			Iterator<Diff> deleteDiffs = Collections2.filter(input.getAllDiffs(),
-					and(ofKind(DifferenceKind.DELETE), instanceOf(DiagramDiff.class))).iterator();
-			while (deleteDiffs.hasNext()) {
-				DiagramDiff diff = (DiagramDiff)deleteDiffs.next();
-				Match match = input.getComparison().getMatch(diff.getView());
-				// looking for null side
-				MergeViewerSide side = null;
-				if (match.getLeft() == null) {
-					side = MergeViewerSide.LEFT;
-				} else {
-					side = MergeViewerSide.RIGHT;
+
+			Collection<Diff> deleteDiffs = Collections2.filter(input.getAllDiffs(), diffsForPhantoms);
+
+			if (phantomsMap.isEmpty()) {
+				Iterator<Diff> itDeleteDiffs = deleteDiffs.iterator();
+				while (itDeleteDiffs.hasNext()) {
+
+					DiagramDiff diff = (DiagramDiff)itDeleteDiffs.next();
+
+					View viewRef = (View)diff.getView();
+					IFigure ref = getFigureValue(input.getComparison(), diff);
+					Diagram diagram = viewRef.getDiagram();
+
+					MergeViewerSide targetSide = getTargetSide(input.getComparison(), viewRef);
+					Diagram targetDiagram = (Diagram)getMatchView(input.getComparison(), diagram, targetSide);
+					DiagramMergeViewer targetViewer = getViewer(targetSide);
+
+					targetViewer.getGraphicalViewer().flush();
+					targetViewer.flush();
+
+					IFigure targetLayer = LayerManager.Helper.find(targetViewer.getEditPart(targetDiagram))
+							.getLayer(LayerConstants.SCALABLE_LAYERS);
+
+					IFigure ghost = createGhostFigure(ref, targetSide);
+					phantomsMap.put(ref, new Phantom(ghost, targetLayer));
+
+					// IFigure parentGhost = findMatchingParent(ref);
+					// if (parentGhost != null) {
+					// parentGhost.add(ghost);
+					// Rectangle copyRef = ref.getBounds().getCopy();
+					// ref.getParent().translateToAbsolute(copyRef);
+					// ghost.setBounds(copyRef);
+					// } else {
+					// targetLayer.add(ghost);
+					// }
+
 				}
 
-				IFigure ref = getReference(((IDiagramNodeAccessor)left).getComparison(), (View)diff.getView());
+				for (Entry<IFigure, Phantom> entry : phantomsMap.entrySet()) {
+					IFigure ref = entry.getKey();
 
-				Diagram diagram = ((View)diff.getView()).getDiagram();
-				Diagram targetDiagram = (Diagram)getMatchView(((IDiagramNodeAccessor)left).getComparison(),
-						diagram, side);
+					Phantom target = entry.getValue();
+					IFigure ghost = target.figure;
+					IFigure targetLayer = target.layer;
 
-				DiagramMergeViewer targetViewer = getViewer(side);
-
-				targetViewer.getGraphicalViewer().flush();
-				targetViewer.flush();
-
-				IFigure targetLayer = LayerManager.Helper.find(targetViewer.getEditPart(targetDiagram))
-						.getLayer(LayerConstants.FEEDBACK_LAYER);
-
-				figures.put(ref, new Target(createGhost(ref), targetLayer));
-
-			}
-
-			for (Entry<IFigure, Target> entry : figures.entrySet()) {
-				IFigure ref = entry.getKey();
-
-				Target target = entry.getValue();
-				IFigure ghost = target.figure;
-				IFigure targetLayer = target.layer;
-
-				IFigure parentGhost = findMatchingParent(ref);
-				if (parentGhost != null) {
-					parentGhost.add(ghost);
-					// ghost.setParent(parentGhost);
-				} else {
-					targetLayer.add(ghost);
-					// ghost.setParent(targetLayer);
+					IFigure parentGhost = findMatchingParent(ref);
+					if (parentGhost != null) {
+						parentGhost.add(ghost);
+						Rectangle copyRef = ref.getBounds().getCopy();
+						ref.getParent().translateToAbsolute(copyRef);
+						ghost.setBounds(copyRef);
+					} else {
+						targetLayer.add(ghost);
+					}
+					// List<IFigure> ancestors = getAncestorGhosts(ref, targetLayer);
+					// for (int i = 0; i < ancestors.size(); i++) {
+					// IFigure parentGhost = ancestors.get(i);
+					// if (i == 0) {
+					// parentGhost.add(ghost);
+					// } else {
+					// parentGhost.add(ancestors.get(i - 1));
+					// }
+					// }
 				}
 
+				// ((DiagramMergeViewer)getAncestorMergeViewer()).getGraphicalViewer().flush();
+				// ((DiagramMergeViewer)getLeftMergeViewer()).getGraphicalViewer().flush();
+				// ((DiagramMergeViewer)getRightMergeViewer()).getGraphicalViewer().flush();
+				// getAncestorMergeViewer().flush();
+				// getLeftMergeViewer().flush();
+				// getRightMergeViewer().flush();
 			}
 
-			// getAncestorMergeViewer().flush();
-			// getLeftMergeViewer().flush();
-			// getRightMergeViewer().flush();
-			// ((DiagramMergeViewer)getAncestorMergeViewer()).getGraphicalViewer().flush();
-			// ((DiagramMergeViewer)getLeftMergeViewer()).getGraphicalViewer().flush();
-			// ((DiagramMergeViewer)getRightMergeViewer()).getGraphicalViewer().flush();
+			if (deleteDiffs.size() > 0) {
+				if (left instanceof IDiagramDiffAccessor) {
+					IFigure figure = getFigure(((IDiagramNodeAccessor)left).getComparison(),
+							((IDiagramNodeAccessor)left).getOwnedView());
+					Phantom target = phantomsMap.get(figure);
 
-			figures.clear();
+					// reset
+					for (Entry<IFigure, Integer> entry : phantomSelection.entrySet()) {
+						IFigure fig = entry.getKey();
+						int oldValue = entry.getValue();
+						((DeleteGhostImageFigure)fig).setLineWidth(oldValue);
+					}
+					phantomSelection.clear();
+
+					phantomSelection.put(target.figure, ((DeleteGhostImageFigure)target.figure)
+							.getLineWidth());
+					((DeleteGhostImageFigure)target.figure)
+							.setLineWidth(((DeleteGhostImageFigure)target.figure).getLineWidth() + 2);
+				} else {
+					// reset
+					for (Entry<IFigure, Integer> entry : phantomSelection.entrySet()) {
+						IFigure figure = entry.getKey();
+						int oldValue = entry.getValue();
+						((DeleteGhostImageFigure)figure).setLineWidth(oldValue);
+					}
+					phantomSelection.clear();
+				}
+			}
 
 		}
 
 	}
 
+	private IFigure getFigureValue(Comparison comparison, DiagramDiff diff) {
+		View viewRef = (View)diff.getView();
+		return getFigure(comparison, viewRef);
+	}
+
+	private MergeViewerSide getTargetSide(Comparison comparison, View viewRef) {
+		Match matchViewRef = comparison.getMatch(viewRef);
+		// looking for null side
+		MergeViewerSide side = null;
+		if (matchViewRef.getLeft() == null) {
+			side = MergeViewerSide.LEFT;
+		} else {
+			side = MergeViewerSide.RIGHT;
+		}
+
+		return side;
+	}
+
 	private IFigure findMatchingParent(IFigure figure) {
 		IFigure parent = figure.getParent();
 		if (parent != null) {
-			Target parentTarget = figures.get(parent);
+			Phantom parentTarget = phantomsMap.get(parent);
 			if (parentTarget == null) {
 				return findMatchingParent(parent);
 			} else {
@@ -314,6 +388,31 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 			}
 		}
 		return parent;
+	}
+
+	private boolean isRootLayer(IFigure figure) {
+		return figure instanceof FreeformLayeredPane && figure.getParent() instanceof FreeformViewport
+				&& figure.getParent().getParent() instanceof IFigure
+				&& figure.getParent().getParent().getParent() == null;
+	}
+
+	private List<IFigure> getAncestorGhosts(IFigure figure, IFigure targetLayer) {
+		List<IFigure> result = new ArrayList<IFigure>();
+		IFigure parent = figure.getParent();
+		if (parent != null) {
+			Phantom parentTarget = phantomsMap.get(parent);
+			if (parentTarget == null) {
+				if (isRootLayer(parent)) {
+					result.add(targetLayer);
+				} else {
+					result.add(createTransparentGhost(parent));
+					result.addAll(getAncestorGhosts(parent, targetLayer));
+				}
+			} else {
+				result.add(parentTarget.figure);
+			}
+		}
+		return result;
 	}
 
 	private DiagramMergeViewer getViewer(MergeViewerSide side) {
@@ -331,6 +430,10 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 
 	private EObject getMatchView(Comparison comparison, View view, MergeViewerSide side) {
 		Match match = comparison.getMatch(view);
+		return getMatchView(match, side);
+	}
+
+	private EObject getMatchView(Match match, MergeViewerSide side) {
 		switch (side) {
 			case LEFT:
 				return match.getLeft();
@@ -343,7 +446,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		}
 	}
 
-	private IFigure getReference(Comparison comparison, View view) {
+	private IFigure getFigure(Comparison comparison, View view) {
 		MergeViewerSide originSide = null;
 		if (getMatchView(comparison, view, MergeViewerSide.ANCESTOR) != null) {
 			originSide = MergeViewerSide.ANCESTOR;
@@ -366,7 +469,22 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		return null;
 	}
 
-	private IFigure createGhost(IFigure ref) {
+	private IFigure createGhostFigure(IFigure ref, MergeViewerSide side) {
+		// IFigure ghost = new DeleteGhostImageFigure();
+		IFigure ghost = new DeleteGhostImageFigure();
+
+		Rectangle rect = ref.getBounds().getCopy();
+
+		rect.performScale(((DiagramRootEditPart)getViewer(side).getGraphicalViewer().getRootEditPart())
+				.getZoomManager().getZoom());
+		ghost.setBounds(rect);
+		// ghost.setBackgroundColor(new Color(Display.getCurrent(), new RGB(255, 0, 0)));
+		ghost.setForegroundColor(new Color(Display.getCurrent(), new RGB(255, 0, 0)));
+		((DeleteGhostImageFigure)ghost).setAlpha(150);
+		return ghost;
+	}
+
+	private IFigure createTransparentGhost(IFigure ref) {
 		IFigure ghost = new DeleteGhostImageFigure();
 
 		Rectangle rect = ref.getBounds().getCopy();
@@ -375,7 +493,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		// .getRootEditPart()).getZoomManager().getZoom());
 		ghost.setBounds(rect);
 		// ghost.setBackgroundColor(new Color(Display.getCurrent(), new RGB(255, 255, 255)));
-		ghost.setForegroundColor(new Color(Display.getCurrent(), new RGB(255, 0, 0)));
+		ghost.setForegroundColor(new Color(Display.getCurrent(), new RGB(0, 0, 255)));
 		((DeleteGhostImageFigure)ghost).setAlpha(150);
 		return ghost;
 	}

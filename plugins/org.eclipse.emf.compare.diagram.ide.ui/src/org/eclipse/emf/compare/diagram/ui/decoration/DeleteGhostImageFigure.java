@@ -9,6 +9,10 @@ public class DeleteGhostImageFigure extends RectangleFigure {
 		super();
 	}
 
+	// public DeleteGhostImageFigure(IFigure figure, int alpha, RGB transparency) {
+	// super(figure, alpha, transparency);
+	// }
+
 	@Override
 	public void paintFigure(Graphics graphics) {
 		super.paintFigure(graphics);
