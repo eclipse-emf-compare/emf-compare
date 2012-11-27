@@ -13,10 +13,10 @@ package org.eclipse.emf.compare.diagram.diff.internal.extension.factories;
 import static com.google.common.collect.Iterables.filter;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Sets;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
@@ -85,6 +85,66 @@ public class EdgeChangeFactory extends AbstractDiffExtensionFactory {
 		final DiagramDiff diff = (DiagramDiff)extension;
 		final Diff semanticDiff = diff.getSemanticDiff();
 
+		final View view = (View)diff.getView();
+		final Match viewMatch = comparison.getMatch(view);
+		if (view instanceof Edge) {
+			final List<Diff> sourceCandidates = comparison.getDifferences(((Edge)view).getSource());
+			for (Diff sourceDiff : sourceCandidates) {
+				if (sourceDiff instanceof ReferenceChange
+						&& ((ReferenceChange)sourceDiff).getReference() == NotationPackage.Literals.EDGE__SOURCE
+						&& ((ReferenceChange)sourceDiff).getMatch() == viewMatch) {
+					// This is the diff for the source reference of the underlying edge.
+					// Check its requires/requiredBy.
+					for (Diff sourceRequired : sourceDiff.getRequires()) {
+						final List<Diff> candidates = comparison.getDifferences(sourceRequired);
+						for (DiagramDiff diagramDiff : filter(candidates, DiagramDiff.class)) {
+							if (diff != diagramDiff) {
+								diff.getRequires().add(diagramDiff);
+							}
+						}
+					}
+					for (Diff sourceRequiredBy : sourceDiff.getRequiredBy()) {
+						final List<Diff> candidates = comparison.getDifferences(sourceRequiredBy);
+						for (DiagramDiff diagramDiff : filter(candidates, DiagramDiff.class)) {
+							if (diff != diagramDiff) {
+								diff.getRequiredBy().add(diagramDiff);
+							}
+						}
+					}
+				}
+			}
+			final List<Diff> targetCandidates = comparison.getDifferences(((Edge)view).getTarget());
+			for (Diff targetDiff : targetCandidates) {
+				if (targetDiff instanceof ReferenceChange
+						&& ((ReferenceChange)targetDiff).getReference() == NotationPackage.Literals.EDGE__TARGET
+						&& ((ReferenceChange)targetDiff).getMatch() == viewMatch) {
+					// This is the diff for the target reference of the underlying edge.
+					// Check its requires/requiredBy.
+					for (Diff targetRequired : targetDiff.getRequires()) {
+						final List<Diff> candidates = comparison.getDifferences(targetRequired);
+						for (DiagramDiff diagramDiff : filter(candidates, DiagramDiff.class)) {
+							if (diff != diagramDiff) {
+								diff.getRequires().add(diagramDiff);
+							}
+						}
+					}
+					for (Diff targetRequiredBy : targetDiff.getRequiredBy()) {
+						final List<Diff> candidates = comparison.getDifferences(targetRequiredBy);
+						for (DiagramDiff diagramDiff : filter(candidates, DiagramDiff.class)) {
+							if (diff != diagramDiff) {
+								diff.getRequiredBy().add(diagramDiff);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if (semanticDiff == null) {
+			// no requires here
+			return;
+		}
+
 		for (Diff semanticRequired : semanticDiff.getRequires()) {
 			final List<Diff> candidates = comparison.getDifferences(semanticRequired);
 			for (DiagramDiff diagramDiff : filter(candidates, DiagramDiff.class)) {
@@ -133,18 +193,34 @@ public class EdgeChangeFactory extends AbstractDiffExtensionFactory {
 				&& input.getRefines().isEmpty();
 	}
 
-	private List<Diff> getAllDifferencesForMove(Diff input) {
-		final List<Diff> result = new ArrayList<Diff>();
-		final EObject container = input.getMatch().eContainer();
-		if (container instanceof Match) {
-			final Iterator<Diff> diffs = ((Match)container).getAllDifferences().iterator();
-			while (diffs.hasNext()) {
-				final Diff diff = (Diff)diffs.next();
-				if (getRelatedExtensionKind(input) != null) {
-					result.add(diff);
-				}
+	private Set<Diff> getAllDifferencesForMove(Diff input) {
+		// FIXME we're not taking enough diffs into account here
+		final Comparison comparison = input.getMatch().getComparison();
+		final Match match = input.getMatch();
+		final Set<Diff> result = getAllNonExtendedDifferences(comparison, match);
+
+		return result;
+	}
+
+	private Set<Diff> getAllNonExtendedDifferences(Comparison comparison, Match match) {
+		final Set<Diff> result = Sets.newLinkedHashSet();
+
+		final Set<Match> prune = Sets.newLinkedHashSet();
+		for (Diff candidate : match.getDifferences()) {
+			if (getRelatedExtensionKind(candidate) != null) {
+				result.add(candidate);
+			} else if (candidate instanceof ReferenceChange
+					&& ((ReferenceChange)candidate).getReference().isContainment()) {
+				prune.add(comparison.getMatch(((ReferenceChange)candidate).getValue()));
 			}
 		}
+
+		for (Match submatch : match.getSubmatches()) {
+			if (!prune.contains(submatch)) {
+				result.addAll(getAllNonExtendedDifferences(comparison, submatch));
+			}
+		}
+
 		return result;
 	}
 
