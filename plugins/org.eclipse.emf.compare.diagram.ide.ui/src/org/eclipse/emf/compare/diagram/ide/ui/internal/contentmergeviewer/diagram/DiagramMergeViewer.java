@@ -136,12 +136,12 @@ class DiagramMergeViewer extends GraphicalMergeViewer {
 				}
 			}
 
+			// Selection
+			fGraphicalViewer.deselectAll();
 			if (view != null) {
 
 				EditPart viewPart = getEditPart(view);
 
-				// Selection
-				fGraphicalViewer.deselectAll();
 				if (viewPart != null) {
 
 					while (!viewPart.isSelectable()) {
