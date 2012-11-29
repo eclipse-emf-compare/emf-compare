@@ -46,7 +46,11 @@ public class IDEStringAttributeChangeAccessorFactory extends AbstractAccessorFac
 	public ITypedElement createLeft(AdapterFactory adapterFactory, Object target) {
 		AttributeChange attributeChange = (AttributeChange)target;
 		EObject left = attributeChange.getMatch().getLeft();
-		return new IDEStringAttributeChangeAccessor(left, (AttributeChange)target);
+		if (left != null) {
+			return new IDEStringAttributeChangeAccessor(left, (AttributeChange)target);
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -58,7 +62,11 @@ public class IDEStringAttributeChangeAccessorFactory extends AbstractAccessorFac
 	public ITypedElement createRight(AdapterFactory adapterFactory, Object target) {
 		AttributeChange attributeChange = (AttributeChange)target;
 		EObject right = attributeChange.getMatch().getRight();
-		return new IDEStringAttributeChangeAccessor(right, (AttributeChange)target);
+		if (right != null) {
+			return new IDEStringAttributeChangeAccessor(right, (AttributeChange)target);
+		} else {
+			return null;
+		}
 	}
 
 	/**
