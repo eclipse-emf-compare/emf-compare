@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Diff;
@@ -23,6 +24,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -100,6 +102,28 @@ public class DiffCrossReferencer extends ECrossReferenceAdapter {
 	}
 
 	// CHECKSTYLE:ON
+
+	@Override
+	protected void handleContainment(Notification notification) {
+		super.handleContainment(notification);
+
+		// "super" does not take remove events into account, we'll handle it ourselves
+		switch (notification.getEventType()) {
+			case Notification.REMOVE:
+				Notifier oldValue = (Notifier)notification.getOldValue();
+				if (oldValue instanceof InternalEObject) {
+					Resource eDirectResource = ((InternalEObject)oldValue).eDirectResource();
+					if (eDirectResource == null || !eDirectResource.eAdapters().contains(this)) {
+						removeAdapter(oldValue);
+					}
+				} else if (oldValue != null) {
+					removeAdapter(oldValue);
+				}
+				break;
+			default:
+				break;
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
