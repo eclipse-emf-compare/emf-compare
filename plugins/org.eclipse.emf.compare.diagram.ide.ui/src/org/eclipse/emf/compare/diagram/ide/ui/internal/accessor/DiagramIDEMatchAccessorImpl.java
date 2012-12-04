@@ -136,7 +136,11 @@ public class DiagramIDEMatchAccessorImpl implements IDiagramNodeAccessor, ITyped
 	}
 
 	public View getOwnedView() {
-		return (View)getEObject(fSide);
+		View result = (View)getEObject(fSide);
+		if (result == null) {
+			result = getDiagram(fSide);
+		}
+		return result;
 	}
 
 	protected Diagram getDiagram(EObject obj) {
