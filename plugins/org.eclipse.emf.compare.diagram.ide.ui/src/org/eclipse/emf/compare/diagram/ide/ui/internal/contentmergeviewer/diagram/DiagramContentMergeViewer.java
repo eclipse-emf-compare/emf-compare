@@ -49,6 +49,7 @@ import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAcce
 import org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.DiagramCompareContentMergeViewer;
 import org.eclipse.emf.compare.diagram.ui.decoration.DeleteGhostImageFigure;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.DiffNode;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -177,6 +178,24 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	 */
 	@Override
 	protected void copyDiff(boolean leftToRight) {
+		/*
+		 * FIXME change this! For the moment we always do a new setInput() on the content viewer whenever we
+		 * select a Diagram Difference. This is meant to change so that we use selection synchronization
+		 * instead. This code will break whenever we implement that change.
+		 */
+		if (getInput() instanceof DiffNode) {
+			final Command command = getEditingDomain().createCopyCommand(((DiffNode)getInput()).getTarget(),
+					leftToRight);
+			getEditingDomain().getCommandStack().execute(command);
+
+			if (leftToRight) {
+				setRightDirty(true);
+			} else {
+				setLeftDirty(true);
+			}
+			refresh();
+			return;
+		}
 		final IStructuredSelection selection;
 		if (leftToRight) {
 			selection = (IStructuredSelection)getLeftMergeViewer().getSelection();
