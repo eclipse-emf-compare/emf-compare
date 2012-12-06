@@ -126,6 +126,9 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 				target.getRequires().add(requires);
 			}
 		}
+		if (source.getEquivalence() != null) {
+			source.getEquivalence().getDifferences().add(target);
+		}
 	}
 
 	private Diff findDuplicatedDiffOnLowestSubset(Diff input, EObject matchSide, int[] subsetsFeatures) {
@@ -179,6 +182,16 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postRequirements(Comparison comparison, Monitor monitor) {
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postEquivalences(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.common.util.Monitor)
+	 */
+	public void postEquivalences(Comparison comparison, Monitor monitor) {
 		removeDuplicateDiffs(comparison);
 
 		final Map<Class<? extends Diff>, IDiffExtensionFactory> mapUml2ExtensionFactories = DiffExtensionFactoryRegistry
@@ -200,16 +213,6 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 				}
 			}
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postEquivalences(org.eclipse.emf.compare.Comparison,
-	 *      org.eclipse.emf.common.util.Monitor)
-	 */
-	public void postEquivalences(Comparison comparison, Monitor monitor) {
-
 	}
 
 	/**
