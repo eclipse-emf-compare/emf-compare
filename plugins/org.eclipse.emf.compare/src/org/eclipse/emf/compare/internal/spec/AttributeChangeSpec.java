@@ -466,6 +466,7 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 	 * 
 	 * @see org.eclipse.emf.compare.impl.AttributeChangeImpl#toString()
 	 */
+	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
 		EDataType eAttributeType = getAttribute().getEAttributeType();
@@ -476,9 +477,9 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 			valueString = getValue().toString();
 		}
 
-		return Objects.toStringHelper(this).add("attribute", //$NON-NLS-1$
-				getAttribute().getEContainingClass().getName() + "." + getAttribute().getName()).add("value", //$NON-NLS-1$ //$NON-NLS-2$
-				valueString)
-				.add("kind", getKind()).add("source", getSource()).add("state", getState()).toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return Objects.toStringHelper(this).add("attribute",
+				getAttribute().getEContainingClass().getName() + "." + getAttribute().getName()).add("value",
+				valueString).add("kind", getKind()).add("source", getSource()).add("state", getState())
+				.toString();
 	}
 }

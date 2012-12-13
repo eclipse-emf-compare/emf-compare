@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
@@ -72,6 +73,10 @@ final class EObjectUtil {
 	 * @return the label feature.
 	 */
 	private static EStructuralFeature getLabelFeature(EClass eClass) {
+		if (eClass == EcorePackage.Literals.ENAMED_ELEMENT) {
+			return EcorePackage.Literals.ENAMED_ELEMENT__NAME;
+		}
+
 		EAttribute result = null;
 		for (EAttribute eAttribute : eClass.getEAllAttributes()) {
 			if (!eAttribute.isMany() && eAttribute.getEType().getInstanceClass() != FeatureMap.Entry.class) {
