@@ -299,7 +299,6 @@ public class DefaultMatchEngine implements IMatchEngine {
 	protected void match(Comparison comparison, IComparisonScope scope, EObject left, EObject right,
 			EObject origin, Monitor monitor) {
 		if (left == null || right == null) {
-			// FIXME IAE or NPE?
 			throw new IllegalArgumentException();
 		}
 
