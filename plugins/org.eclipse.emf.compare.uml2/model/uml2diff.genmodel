@@ -6,7 +6,7 @@
     modelPluginID="org.eclipse.emf.compare.uml2" modelName="Uml2" editPluginClass="org.eclipse.emf.compare.uml2.provider.UMLCompareEditPlugin"
     nonNLSMarkers="true" testSuiteClass="org.eclipse.emf.compare.uml2diff.tests.UML2DiffAllTests"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
-    colorProviders="true" fontProviders="true" usedGenPackages="platform:/plugin/org.eclipse.emf.compare/model/compare.genmodel#//compare platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore platform:/plugin/org.eclipse.uml2.uml/model/UML.genmodel#//uml platform:/plugin/org.eclipse.uml2.types/model/Types.genmodel#//types">
+    colorProviders="true" fontProviders="true" runtimeVersion="2.5" usedGenPackages="platform:/plugin/org.eclipse.emf.compare/model/compare.genmodel#//compare platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore platform:/plugin/org.eclipse.uml2.uml/model/UML.genmodel#//uml platform:/plugin/org.eclipse.uml2.types/model/Types.genmodel#//types">
   <foreignModel>uml2diff.ecore</foreignModel>
   <genPackages xsi:type="genmodel:GenPackage" prefix="UMLCompare" basePackage="org.eclipse.emf.compare"
       disposableProviderFactory="true" ecorePackage="uml2diff.ecore#/">
