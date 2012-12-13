@@ -196,7 +196,6 @@ public final class EMFSynchronizationModel {
 
 		try {
 			final IStorage right = context.fetchRemoteContents(local, monitor);
-			System.out.println("here");
 		} catch (CoreException e) {
 			// FIXME log, fail?
 			rightTraversal = new StorageTraversal(Sets.<IFile> newLinkedHashSet());

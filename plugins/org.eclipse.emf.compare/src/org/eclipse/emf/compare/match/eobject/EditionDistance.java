@@ -393,7 +393,6 @@ public class EditionDistance implements DistanceFunction {
 				checkForDifferences(fakeMatch, new BasicMonitor());
 				changes += getCounter().getComputedDistance();
 			}
-			// System.err.println(changes + ":max=>" + maxDistance + ":" + a + ":" + b);
 			return changes;
 
 		}

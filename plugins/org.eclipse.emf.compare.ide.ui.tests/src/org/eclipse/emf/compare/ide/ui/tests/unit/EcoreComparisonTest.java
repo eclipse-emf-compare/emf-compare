@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.ide.ui.tests.unit;
 
 import org.eclipse.emf.compare.ide.ui.tests.automation.CompareBot;
-import org.eclipse.swtbot.swt.finder.SWTBotTestCase;
 
 public class EcoreComparisonTest extends SWTBotTestCase {
 
@@ -24,7 +23,6 @@ public class EcoreComparisonTest extends SWTBotTestCase {
 		// bot.createGITRepository("UMLComparison");
 
 		// bot.commit("UMLComparison", "v1Refv2.uml");
-		// System.out.println("WorkspaceComparisonTest.test()");
 	}
 
 }
