@@ -92,7 +92,7 @@ public final class EMFComparePrettyPrinter {
 	 *            The {@link PrintStream} on which we should print the matched elements of this comparison.
 	 */
 	public static void printMatch(Comparison comparison, PrintStream stream) {
-		final String separator = "+----------------------------------------+----------------------------------------+----------------------------------------+"; //$NON-NLS-1$
+		final String separator = "+----------------------------------------+----------------------------------------+----------------------------------------+";
 		final String leftLabel = "Left";
 		final String rightLabel = "Right";
 		final String originLabel = "Origin";

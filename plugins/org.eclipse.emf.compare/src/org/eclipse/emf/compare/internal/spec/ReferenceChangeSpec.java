@@ -720,18 +720,18 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	 * 
 	 * @see org.eclipse.emf.compare.impl.DiffImpl#toString()
 	 */
+	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
 		// @formatter:off
-		// Formatting these would make them unreadable
 		return Objects.toStringHelper(this)
-					.add("reference", getReference().getEContainingClass().getName() + "." + getReference().getName()) //$NON-NLS-1$ //$NON-NLS-2$
-					.add("value", EObjectUtil.getLabel(getValue())) //$NON-NLS-1$
-					.add("parentMatch", getMatch().toString()) //$NON-NLS-1$
-					.add("match of value", getMatch().getComparison().getMatch(getValue())) //$NON-NLS-1$
-					.add("kind", getKind()) //$NON-NLS-1$
-					.add("source", getSource()) //$NON-NLS-1$
-					.add("state", getState()).toString(); //$NON-NLS-1$
+					.add("reference", getReference().getEContainingClass().getName() + "." + getReference().getName())
+					.add("value", EObjectUtil.getLabel(getValue()))
+					.add("parentMatch", getMatch().toString())
+					.add("match of value", getMatch().getComparison().getMatch(getValue()))
+					.add("kind", getKind())
+					.add("source", getSource())
+					.add("state", getState()).toString();
 		// @formatter:on
 	}
 

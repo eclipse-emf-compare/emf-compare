@@ -113,7 +113,8 @@ class ByTypeIndex implements EObjectIndex {
 			EObjectIndex typeSpecificIndex = allIndexes.get(eClassKey(obj));
 			typeSpecificIndex.remove(obj, side);
 		} catch (ExecutionException e) {
-			// Computing the indices to remove failed. We'll have them as unmatch later on.
+			// We could not compute the indices to remove.
+			// They'll remain as 'unmatch' later on.
 		}
 	}
 
