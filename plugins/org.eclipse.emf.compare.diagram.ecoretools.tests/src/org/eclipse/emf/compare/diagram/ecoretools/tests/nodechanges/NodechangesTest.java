@@ -217,10 +217,7 @@ public class NodechangesTest extends AbstractTest {
 		assertTrue(addRefElementInEPackageView.getRequires().contains(addEPackage));
 		assertTrue(addRefElementInEPackageView.getRequires().contains(addEPackageView));
 		
-		
-		// FIXME
 		assertFalse("No resource attachment changes expected", Iterators.filter(differences.iterator(), instanceOf(ResourceAttachmentChange.class)).hasNext());
-		
 	}
 	
 	@Test
@@ -398,9 +395,7 @@ public class NodechangesTest extends AbstractTest {
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addRefElementInEClassView));
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addBoundsInEClassView));
 		
-		// FIXME
 		assertFalse("No resource attachment changes expected", Iterators.filter(differences.iterator(), instanceOf(ResourceAttachmentChange.class)).hasNext());
-		
 	}
 	
 	@Override

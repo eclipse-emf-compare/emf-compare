@@ -597,10 +597,8 @@ public class AddMessageTest extends AbstractTest {
 		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
 				addCoveredByInLifeline0));
 
-		// FIXME
 		assertFalse("No move expected", Iterators.filter(differences.iterator(), ofKind(DifferenceKind.MOVE))
 				.hasNext());
-
 	}
 
 	private void testAB3(TestKind kind, final Comparison comparison) {
@@ -740,10 +738,8 @@ public class AddMessageTest extends AbstractTest {
 		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
 				addCoveredByInLifeline0));
 
-		// FIXME
 		assertFalse("No move expected", Iterators.filter(differences.iterator(), ofKind(DifferenceKind.MOVE))
 				.hasNext());
-
 	}
 
 	@Override
