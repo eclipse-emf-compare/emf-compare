@@ -16,6 +16,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.impl.ResourceAttachmentChangeImpl;
@@ -296,8 +297,8 @@ public class ResourceAttachmentChangeSpec extends ResourceAttachmentChangeImpl {
 
 		if (soughtMatch == null) {
 			// This should never happen
-			throw new RuntimeException("Could not locate resource match for "
-					+ reference.getURI().lastSegment());
+			throw new RuntimeException(EMFCompareMessages.getString(
+					"ResourceAttachmentChangeSpec.MissingMatch", reference.getURI().lastSegment())); //$NON-NLS-1$
 		}
 
 		// Is the resource already existing or do we need to create it?
@@ -320,8 +321,8 @@ public class ResourceAttachmentChangeSpec extends ResourceAttachmentChangeImpl {
 
 			if (targetSet == null) {
 				// Cannot create the target
-				throw new RuntimeException("Could not locate resource set to create "
-						+ reference.getURI().lastSegment());
+				throw new RuntimeException(EMFCompareMessages.getString(
+						"ResourceAttachmentChangeSpec.MissingRS", reference.getURI().lastSegment())); //$NON-NLS-1$
 			}
 
 			target = targetSet.createResource(reference.getURI());
