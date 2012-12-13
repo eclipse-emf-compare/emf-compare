@@ -19,7 +19,6 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.emf.common.command.CommandStack;
-import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.Monitor;
@@ -37,13 +36,13 @@ import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IComparisonFactory;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
+import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
-import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -66,22 +65,11 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
 		input = new EMFCompareEditorInput(configuration, comparator, scope, editingDomain, adapterFactory);
 
-		input.setTitle("Compare ('" + getText(adapterFactory, left) + "' - '"
-				+ getText(adapterFactory, right) + "')");
+		input.setTitle("Compare ('" + AdapterFactoryUtil.getText(adapterFactory, left) + "' - '"
+				+ AdapterFactoryUtil.getText(adapterFactory, right) + "')");
 
 		configuration.setContainer(input);
 		return input;
-	}
-
-	static String getText(final AdapterFactory adapterFactory, Notifier notifier) {
-		final String text;
-		Adapter itemLabelProvider = adapterFactory.adapt(notifier, IItemLabelProvider.class);
-		if (itemLabelProvider instanceof IItemLabelProvider) {
-			text = ((IItemLabelProvider)itemLabelProvider).getText(notifier);
-		} else {
-			text = notifier.toString();
-		}
-		return text;
 	}
 
 	private static ICompareEditingDomain createEMFCompareEditingDomain(final IWorkbenchPart activePart,

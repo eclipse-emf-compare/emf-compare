@@ -10,20 +10,17 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.provider.spec;
 
-import com.google.common.base.Preconditions;
-
 import java.util.Collection;
 
-import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.ForwardingItemProvider;
 import org.eclipse.emf.compare.provider.spec.Strings;
 import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 
 /**
@@ -132,12 +129,12 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 	@Override
 	public Object getImage(Object object) {
 		final UMLDiff umlDiff = (UMLDiff)object;
-		Object image = getImage(getRootAdapterFactory(), umlDiff.getDiscriminant());
+		Object image = AdapterFactoryUtil.getImage(getRootAdapterFactory(), umlDiff.getDiscriminant());
 		return image;
 	}
 
 	private String getValueText(final UMLDiff umlDiff) {
-		String value = getText(getRootAdapterFactory(), umlDiff.getDiscriminant());
+		String value = AdapterFactoryUtil.getText(getRootAdapterFactory(), umlDiff.getDiscriminant());
 		if (value == null) {
 			value = "<null>";
 		} else {
@@ -162,54 +159,6 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 						+ " value: " + umlDiff.getKind());
 		}
 		return ret;
-	}
-
-	/**
-	 * Returns the text of the given <code>object</code> by adapting it to {@link IItemLabelProvider} and
-	 * asking for its {@link IItemLabelProvider#getText(Object) text}. Returns null if <code>object</code> is
-	 * null.
-	 * 
-	 * @param adapterFactory
-	 *            the adapter factory to adapt from
-	 * @param object
-	 *            the object from which we want a text
-	 * @return the text, or null if object is null.
-	 * @throws NullPointerException
-	 *             if <code>adapterFactory</code> is null.
-	 */
-	static String getText(AdapterFactory adapterFactory, Object object) {
-		Preconditions.checkNotNull(adapterFactory);
-		if (object != null) {
-			Object adapter = adapterFactory.adapt(object, IItemLabelProvider.class);
-			if (adapter instanceof IItemLabelProvider) {
-				return ((IItemLabelProvider)adapter).getText(object);
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Returns the image of the given <code>object</code> by adapting it to {@link IItemLabelProvider} and
-	 * asking for its {@link IItemLabelProvider#getImage(Object) text}. Returns null if <code>object</code> is
-	 * null.
-	 * 
-	 * @param adapterFactory
-	 *            the adapter factory to adapt from
-	 * @param object
-	 *            the object from which we want a image
-	 * @return the image, or null if object is null.
-	 * @throws NullPointerException
-	 *             if <code>adapterFactory</code> is null.
-	 */
-	static Object getImage(AdapterFactory adapterFactory, Object object) {
-		Preconditions.checkNotNull(adapterFactory);
-		if (object != null) {
-			Object adapter = adapterFactory.adapt(object, IItemLabelProvider.class);
-			if (adapter instanceof IItemLabelProvider) {
-				return ((IItemLabelProvider)adapter).getImage(object);
-			}
-		}
-		return null;
 	}
 
 	/**

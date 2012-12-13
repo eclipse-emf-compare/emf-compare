@@ -3,6 +3,7 @@ package org.eclipse.emf.compare.ide.ui.internal.handler;
 import org.eclipse.compare.internal.CompareMessages;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -46,7 +47,7 @@ public class SelectAncestorDialog extends MessageDialog {
 		for (int i = 0; i < 3; i++) {
 			buttons[i] = new Button(composite, SWT.RADIO);
 			buttons[i].addSelectionListener(selectionListener);
-			String text = "'" + AbstractCompareHandler.getText(adapterFactory, notifiers[i]) + "'";
+			String text = "'" + AdapterFactoryUtil.getText(adapterFactory, notifiers[i]) + "'";
 			if (notifiers[i] instanceof EObject) {
 				text = text + " (" + EcoreUtil.getURI(((EObject)notifiers[i])) + ")";
 			}

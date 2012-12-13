@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
-import com.google.common.base.Preconditions;
-
 import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.provider.CompareItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 
@@ -106,53 +103,5 @@ public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAd
 		}
 
 		return conflictItemProvider;
-	}
-
-	/**
-	 * Returns the text of the given <code>object</code> by adapting it to {@link IItemLabelProvider} and
-	 * asking for its {@link IItemLabelProvider#getText(Object) text}. Returns null if <code>object</code> is
-	 * null.
-	 * 
-	 * @param adapterFactory
-	 *            the adapter factory to adapt from
-	 * @param object
-	 *            the object from which we want a text
-	 * @return the text, or null if object is null.
-	 * @throws NullPointerException
-	 *             if <code>adapterFactory</code> is null.
-	 */
-	static String getText(AdapterFactory adapterFactory, Object object) {
-		Preconditions.checkNotNull(adapterFactory);
-		if (object != null) {
-			Object adapter = adapterFactory.adapt(object, IItemLabelProvider.class);
-			if (adapter instanceof IItemLabelProvider) {
-				return ((IItemLabelProvider)adapter).getText(object);
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Returns the image of the given <code>object</code> by adapting it to {@link IItemLabelProvider} and
-	 * asking for its {@link IItemLabelProvider#getImage(Object) text}. Returns null if <code>object</code> is
-	 * null.
-	 * 
-	 * @param adapterFactory
-	 *            the adapter factory to adapt from
-	 * @param object
-	 *            the object from which we want a image
-	 * @return the image, or null if object is null.
-	 * @throws NullPointerException
-	 *             if <code>adapterFactory</code> is null.
-	 */
-	static Object getImage(AdapterFactory adapterFactory, Object object) {
-		Preconditions.checkNotNull(adapterFactory);
-		if (object != null) {
-			Object adapter = adapterFactory.adapt(object, IItemLabelProvider.class);
-			if (adapter instanceof IItemLabelProvider) {
-				return ((IItemLabelProvider)adapter).getImage(object);
-			}
-		}
-		return null;
 	}
 }

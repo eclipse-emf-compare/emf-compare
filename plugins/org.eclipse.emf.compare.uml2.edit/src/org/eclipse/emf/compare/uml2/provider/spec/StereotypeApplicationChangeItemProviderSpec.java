@@ -17,6 +17,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.compare.uml2.provider.StereotypeApplicationChangeItemProvider;
@@ -90,7 +91,7 @@ public class StereotypeApplicationChangeItemProviderSpec extends StereotypeAppli
 
 		final String stereotypeText;
 		if (stereotype != null) {
-			stereotypeText = ForwardingUMLDiffItemProvider.getText(getRootAdapterFactory(), stereotype) + ' ';
+			stereotypeText = AdapterFactoryUtil.getText(getRootAdapterFactory(), stereotype) + ' ';
 		} else if (umlDiff.getDiscriminant() instanceof NamedElement) {
 			stereotypeText = "Stereotype " + ((NamedElement)umlDiff.getDiscriminant()).getName() + ' ';
 		} else {
@@ -126,7 +127,7 @@ public class StereotypeApplicationChangeItemProviderSpec extends StereotypeAppli
 		}
 
 		if (target != null) {
-			targetLabel += ForwardingUMLDiffItemProvider.getText(getRootAdapterFactory(), target);
+			targetLabel += AdapterFactoryUtil.getText(getRootAdapterFactory(), target);
 		}
 
 		return stereotypeText + "has been " + remotely + action + targetLabel;
@@ -166,7 +167,7 @@ public class StereotypeApplicationChangeItemProviderSpec extends StereotypeAppli
 			stereotype = UMLUtil.getStereotype(umlDiff.getDiscriminant());
 		}
 
-		Object image = ForwardingUMLDiffItemProvider.getImage(getRootAdapterFactory(), stereotype);
+		Object image = AdapterFactoryUtil.getImage(getRootAdapterFactory(), stereotype);
 		return image;
 	}
 

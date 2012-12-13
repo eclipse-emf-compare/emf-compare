@@ -29,6 +29,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.ReferenceChangeItemProvider;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -146,8 +147,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	}
 
 	protected String getValueText(final ReferenceChange refChange) {
-		String value = CompareItemProviderAdapterFactorySpec.getText(getRootAdapterFactory(), refChange
-				.getValue());
+		String value = AdapterFactoryUtil.getText(getRootAdapterFactory(), refChange.getValue());
 		if (value == null) {
 			value = "<null>"; //$NON-NLS-1$
 		} else {
@@ -165,8 +165,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	public Object getImage(Object object) {
 		ReferenceChange refChange = (ReferenceChange)object;
 
-		Object image = CompareItemProviderAdapterFactorySpec.getImage(getRootAdapterFactory(), refChange
-				.getValue());
+		Object image = AdapterFactoryUtil.getImage(getRootAdapterFactory(), refChange.getValue());
 
 		return image;
 	}
@@ -194,8 +193,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 			}
 		}
 
-		return ImmutableList.copyOf(filter(ret,
-				not(MatchItemProviderSpec.REFINED_DIFF)));
+		return ImmutableList.copyOf(filter(ret, not(MatchItemProviderSpec.REFINED_DIFF)));
 
 	}
 

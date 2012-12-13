@@ -31,6 +31,7 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -73,14 +74,14 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	@Override
 	public Object getImage(Object object) {
 		Match match = (Match)object;
-		Object ret = CompareItemProviderAdapterFactorySpec.getImage(getRootAdapterFactory(), match.getLeft());
+		Object ret = AdapterFactoryUtil.getImage(getRootAdapterFactory(), match.getLeft());
 
 		if (ret == null) {
-			ret = CompareItemProviderAdapterFactorySpec.getImage(getRootAdapterFactory(), match.getRight());
+			ret = AdapterFactoryUtil.getImage(getRootAdapterFactory(), match.getRight());
 		}
 
 		if (ret == null) {
-			ret = CompareItemProviderAdapterFactorySpec.getImage(getRootAdapterFactory(), match.getOrigin());
+			ret = AdapterFactoryUtil.getImage(getRootAdapterFactory(), match.getOrigin());
 		}
 
 		if (ret == null) {
@@ -98,14 +99,14 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	@Override
 	public String getText(Object object) {
 		Match match = (Match)object;
-		String ret = CompareItemProviderAdapterFactorySpec.getText(getRootAdapterFactory(), match.getLeft());
+		String ret = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getLeft());
 
 		if (ret == null) {
-			ret = CompareItemProviderAdapterFactorySpec.getText(getRootAdapterFactory(), match.getRight());
+			ret = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getRight());
 		}
 
 		if (ret == null) {
-			ret = CompareItemProviderAdapterFactorySpec.getText(getRootAdapterFactory(), match.getOrigin());
+			ret = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getOrigin());
 		}
 
 		if (ret == null) {
@@ -132,8 +133,8 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 
 		@SuppressWarnings("unchecked")
 		Predicate<Object> childrenFilter = not(or(matchOfContainmentDiff(containementDifferenceValues),
-				matchWithNoChildren(), emptyMatch(), PSEUDO_CONFLICT_DIFF,
-				REFINED_DIFF, PSEUDO_DELETE_CONFLICT));
+				matchWithNoChildren(), emptyMatch(), PSEUDO_CONFLICT_DIFF, REFINED_DIFF,
+				PSEUDO_DELETE_CONFLICT));
 
 		Iterable<?> filteredChildren = filter(super.getChildren(match), childrenFilter);
 		return filteredChildren;

@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.diagram.DiagramDiff;
+import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.ForwardingItemProvider;
 import org.eclipse.emf.compare.provider.spec.Strings;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -149,34 +150,11 @@ public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider {
 		String value = "<null>";
 		if (diagramDiff.getView() instanceof View) {
 			value = diagramDiff.getView().eClass().getName() + " "
-					+ getText(getRootAdapterFactory(), ((View)diagramDiff.getView()).getElement());
+					+ AdapterFactoryUtil.getText(getRootAdapterFactory(), ((View)diagramDiff.getView())
+							.getElement());
 		}
 		value = Strings.elide(value, 50, "...");
 		return value;
-	}
-
-	/**
-	 * Returns the text of the given <code>object</code> by adapting it to {@link IItemLabelProvider} and
-	 * asking for its {@link IItemLabelProvider#getText(Object) text}. Returns null if <code>object</code> is
-	 * null.
-	 * 
-	 * @param adapterFactory
-	 *            the adapter factory to adapt from
-	 * @param object
-	 *            the object from which we want a text
-	 * @return the text, or null if object is null.
-	 * @throws NullPointerException
-	 *             if <code>adapterFactory</code> is null.
-	 */
-	private static String getText(AdapterFactory adapterFactory, Object object) {
-		Preconditions.checkNotNull(adapterFactory);
-		if (object != null) {
-			Object adapter = adapterFactory.adapt(object, IItemLabelProvider.class);
-			if (adapter instanceof IItemLabelProvider) {
-				return ((IItemLabelProvider)adapter).getText(object);
-			}
-		}
-		return null;
 	}
 
 	/**
