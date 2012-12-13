@@ -25,12 +25,15 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.internal.utils.PriorityExecutor.Priority;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -313,7 +316,9 @@ public final class SyncResourceSet extends ResourceSetImpl {
 				} catch (InterruptedException e) {
 					// Ignore
 				} catch (ExecutionException e) {
-					// FIXME log
+					final IStatus status = new Status(IStatus.ERROR, EMFCompareIDEPlugin.PLUGIN_ID, e
+							.getMessage(), e);
+					EMFCompareIDEPlugin.getDefault().getLog().log(status);
 				}
 			}
 			synchronized(demandedURIs) {

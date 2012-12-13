@@ -12,8 +12,11 @@ package org.eclipse.emf.compare.ide.internal.extension;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.extension.IPostProcessor;
 import org.eclipse.emf.compare.extension.PostProcessorDescriptor;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 
 /**
  * Describes an extension as contributed to the "org.eclipse.emf.compare.postProcessor" extension point.
@@ -79,7 +82,9 @@ public class PostProcessorIDEDescriptor extends PostProcessorDescriptor {
 				postProcessor = (IPostProcessor)element
 						.createExecutableExtension(POST_PROCESSOR_CLASS_ATTRIBUTE);
 			} catch (CoreException e) {
-				// FIXME log this!
+				final IStatus status = new Status(IStatus.ERROR, EMFCompareIDEPlugin.PLUGIN_ID, e
+						.getMessage(), e);
+				EMFCompareIDEPlugin.getDefault().getLog().log(status);
 			}
 		}
 		return postProcessor;

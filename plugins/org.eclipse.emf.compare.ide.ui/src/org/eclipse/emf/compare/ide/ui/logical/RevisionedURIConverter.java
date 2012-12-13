@@ -26,9 +26,12 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.team.core.RepositoryProvider;
@@ -221,7 +224,8 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 						getLoadedRevisions().add(storage);
 						stream = storage.getContents();
 					} catch (CoreException e) {
-						// FIXME log this : failed to retrieve revision contents
+						// failed to retrieve revision contents
+						logError(e);
 					}
 				}
 			}
@@ -248,7 +252,8 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 					stream = ((IFile)actualFile).getContents();
 				}
 			} catch (CoreException e) {
-				// FIXME log this : failed to retrieve local contents
+				// failed to retrieve local contents
+				logError(e);
 			}
 		}
 
@@ -318,9 +323,9 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 
 			result = new java.net.URI(path.toString());
 		} catch (CoreException e) {
-			// FIXME log
+			logError(e);
 		} catch (URISyntaxException e) {
-			// FIXME log
+			logError(e);
 		}
 		return result;
 	}
@@ -338,5 +343,16 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 		} catch (URISyntaxException e) {
 			return null;
 		}
+	}
+
+	/**
+	 * Logs the given exception as an error.
+	 * 
+	 * @param e
+	 *            The exception we need to log.
+	 */
+	private static void logError(Exception e) {
+		final IStatus status = new Status(IStatus.ERROR, EMFCompareIDEUIPlugin.PLUGIN_ID, e.getMessage(), e);
+		EMFCompareIDEUIPlugin.getDefault().getLog().log(status);
 	}
 }

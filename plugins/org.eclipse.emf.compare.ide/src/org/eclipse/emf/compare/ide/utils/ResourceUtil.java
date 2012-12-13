@@ -21,9 +21,12 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
@@ -123,9 +126,9 @@ public final class ResourceUtil {
 			// One last check in case we've reached the end of one side but not of the other
 			return equalArrays(readLeft, readRight, leftBuff, rightBuff);
 		} catch (CoreException e) {
-			// FIXME log
+			logError(e);
 		} catch (IOException e) {
-			// FIXME log
+			logError(e);
 		} finally {
 			if (leftReader != null) {
 				Closeables.closeQuietly(leftReader);
@@ -175,9 +178,9 @@ public final class ResourceUtil {
 			// One last check in case we've reached the end of one side but not of the other
 			return equalArrays(readLeft, readRight, readOrigin, leftBuff, rightBuff, originBuff);
 		} catch (CoreException e) {
-			// FIXME log
+			logError(e);
 		} catch (IOException e) {
-			// FIXME log
+			logError(e);
 		} finally {
 			if (leftReader != null) {
 				Closeables.closeQuietly(leftReader);
@@ -229,7 +232,7 @@ public final class ResourceUtil {
 				try {
 					resource.save(options);
 				} catch (IOException e) {
-					// FIXME log
+					logError(e);
 				}
 			}
 		}
@@ -318,5 +321,16 @@ public final class ResourceUtil {
 			return result;
 		}
 		return false;
+	}
+
+	/**
+	 * Logs the given exception as an error.
+	 * 
+	 * @param e
+	 *            The exception we need to log.
+	 */
+	private static void logError(Exception e) {
+		final IStatus status = new Status(IStatus.ERROR, EMFCompareIDEPlugin.PLUGIN_ID, e.getMessage(), e);
+		EMFCompareIDEPlugin.getDefault().getLog().log(status);
 	}
 }
