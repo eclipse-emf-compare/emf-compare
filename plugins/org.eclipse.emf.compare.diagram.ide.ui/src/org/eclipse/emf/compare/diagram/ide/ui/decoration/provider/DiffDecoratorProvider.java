@@ -9,16 +9,16 @@
  *   Obeo - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.emf.compare.diagram.ui.decoration.provider;
+package org.eclipse.emf.compare.diagram.ide.ui.decoration.provider;
 
 import java.util.Iterator;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.diagram.DiagramDiff;
-import org.eclipse.emf.compare.diagram.ui.decoration.DiffEdgeDecorator;
-import org.eclipse.emf.compare.diagram.ui.decoration.DiffLabelDecorator;
-import org.eclipse.emf.compare.diagram.ui.decoration.DiffNodeDecorator;
+import org.eclipse.emf.compare.diagram.ide.ui.decoration.DiffEdgeDecorator;
+import org.eclipse.emf.compare.diagram.ide.ui.decoration.DiffLabelDecorator;
+import org.eclipse.emf.compare.diagram.ide.ui.decoration.DiffNodeDecorator;
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;

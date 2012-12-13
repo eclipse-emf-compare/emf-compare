@@ -27,7 +27,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.diagram.ide.ui.DMergeViewer;
-import org.eclipse.emf.compare.diagram.ui.viewmodel.NotationDiffCreator;
+import org.eclipse.emf.compare.diagram.ide.ui.viewmodel.NotationDiffCreator;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;

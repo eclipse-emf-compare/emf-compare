@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diagram.ui.preferences.internal;
+package org.eclipse.emf.compare.diagram.ide.ui.internal.preferences;
 
 import org.eclipse.emf.compare.diagram.diff.util.DiagramCompareConstants;
 import org.eclipse.emf.compare.diagram.diff.util.DiagramCompareUIMessages;

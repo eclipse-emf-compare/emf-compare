@@ -8,7 +8,7 @@
  * Contributors:
  *   Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diagram.ui.mergeviewer;
+package org.eclipse.emf.compare.diagram.ide.ui.mergeviewer;
 
 import java.util.List;
 

@@ -8,7 +8,7 @@
  * Contributors:
  *   Obeo - rework on generic gmf comparison
  *******************************************************************************/
-package org.eclipse.emf.compare.diagram.ui.viewmodel;
+package org.eclipse.emf.compare.diagram.ide.ui.viewmodel;
 
 import java.util.List;
 
@@ -24,8 +24,8 @@ import org.eclipse.emf.compare.diagram.Hide;
 import org.eclipse.emf.compare.diagram.LabelChange;
 import org.eclipse.emf.compare.diagram.NodeChange;
 import org.eclipse.emf.compare.diagram.Show;
-import org.eclipse.emf.compare.diagram.ui.GMFCompareUIPlugin;
-import org.eclipse.emf.compare.diagram.ui.decoration.provider.DiffDecoratorProvider;
+import org.eclipse.emf.compare.diagram.ide.ui.GMFCompareUIPlugin;
+import org.eclipse.emf.compare.diagram.ide.ui.decoration.provider.DiffDecoratorProvider;
 import org.eclipse.emf.compare.diagram.util.DiagramCompareSwitch;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EAnnotation;

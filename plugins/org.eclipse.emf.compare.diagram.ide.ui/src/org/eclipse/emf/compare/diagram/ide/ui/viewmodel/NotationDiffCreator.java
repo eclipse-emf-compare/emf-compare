@@ -8,7 +8,7 @@
  * Contributors:
  *   Obeo - rework on generic gmf comparison
  *******************************************************************************/
-package org.eclipse.emf.compare.diagram.ui.viewmodel;
+package org.eclipse.emf.compare.diagram.ide.ui.viewmodel;
 
 import java.util.List;
 

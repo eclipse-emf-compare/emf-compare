@@ -9,14 +9,14 @@
  *   Obeo - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.emf.compare.diagram.ui.decoration;
+package org.eclipse.emf.compare.diagram.ide.ui.decoration;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.emf.compare.diagram.ui.GMFCompareUIPlugin;
+import org.eclipse.emf.compare.diagram.ide.ui.GMFCompareUIPlugin;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoration;
@@ -69,7 +69,7 @@ public class DiffNodeDecorator extends AbstractDifferenceDecorator {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.ui.decoration.AbstractDifferenceDecorator#getMovedDecorations()
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.decoration.AbstractDifferenceDecorator#getMovedDecorations()
 	 */
 	@Override
 	protected List<IDecoration> getMovedDecorations() {
@@ -83,7 +83,7 @@ public class DiffNodeDecorator extends AbstractDifferenceDecorator {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.ui.decoration.AbstractDifferenceDecorator#getModifiedDecorations()
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.decoration.AbstractDifferenceDecorator#getModifiedDecorations()
 	 */
 	@Override
 	protected List<IDecoration> getModifiedDecorations() {
@@ -94,7 +94,7 @@ public class DiffNodeDecorator extends AbstractDifferenceDecorator {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.ui.decoration.AbstractDifferenceDecorator#getAddedDecorations()
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.decoration.AbstractDifferenceDecorator#getAddedDecorations()
 	 */
 	@Override
 	protected List<IDecoration> getAddedDecorations() {
@@ -109,7 +109,7 @@ public class DiffNodeDecorator extends AbstractDifferenceDecorator {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.ui.decoration.AbstractDifferenceDecorator#getHidedDecorations()
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.decoration.AbstractDifferenceDecorator#getHidedDecorations()
 	 */
 	@Override
 	protected List<IDecoration> getHidedDecorations() {
@@ -120,7 +120,7 @@ public class DiffNodeDecorator extends AbstractDifferenceDecorator {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.ui.decoration.AbstractDifferenceDecorator#getLabelModifiedDecorations()
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.decoration.AbstractDifferenceDecorator#getLabelModifiedDecorations()
 	 */
 	@Override
 	protected List<IDecoration> getLabelModifiedDecorations() {
@@ -131,7 +131,7 @@ public class DiffNodeDecorator extends AbstractDifferenceDecorator {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.ui.decoration.AbstractDifferenceDecorator#getRemovedDecorations()
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.decoration.AbstractDifferenceDecorator#getRemovedDecorations()
 	 */
 	@Override
 	protected List<IDecoration> getRemovedDecorations() {
@@ -147,7 +147,7 @@ public class DiffNodeDecorator extends AbstractDifferenceDecorator {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.ui.decoration.AbstractDifferenceDecorator#getShowedDecorations()
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.decoration.AbstractDifferenceDecorator#getShowedDecorations()
 	 */
 	@Override
 	protected List<IDecoration> getShowedDecorations() {

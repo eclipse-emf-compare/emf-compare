@@ -5,7 +5,7 @@
      <extension
            point="org.eclipse.gmf.runtime.diagram.ui.decoratorProviders">
         <decoratorProvider
-              class="org.eclipse.emf.compare.diagram.ui.decoration.provider.DiffDecoratorProvider">
+              class="org.eclipse.emf.compare.diagram.ide.ui.decoration.provider.DiffDecoratorProvider">
            <Priority
                  name="Lowest">
            </Priority>
@@ -16,7 +16,7 @@
          point="org.eclipse.ui.preferencePages">
       <page
             category="org.eclipse.emf.compare.diagram.internal.preferences.DiagramComparePreferencesPage"
-            class="org.eclipse.emf.compare.diagram.ui.preferences.internal.DiagramComparePreferencesPage"
+            class="org.eclipse.emf.compare.diagram.ide.ui.internal.preferences.DiagramComparePreferencesPage"
             id="org.eclipse.emf.compare.diagram.internal.preferences.DiagramComparePreferencesPage"
             name="%preferencePageName">
       </page>

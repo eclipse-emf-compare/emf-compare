@@ -1,4 +1,4 @@
-package org.eclipse.emf.compare.diagram.ui.decoration.provider;
+package org.eclipse.emf.compare.diagram.ide.ui.decoration.provider;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;

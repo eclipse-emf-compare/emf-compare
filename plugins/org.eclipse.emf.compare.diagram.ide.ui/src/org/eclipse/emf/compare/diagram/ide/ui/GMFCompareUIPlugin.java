@@ -9,7 +9,7 @@
  *   Tobias Jaehnel - Bug#241385
  *   Obeo - rework on generic gmf comparison
  *******************************************************************************/
-package org.eclipse.emf.compare.diagram.ui;
+package org.eclipse.emf.compare.diagram.ide.ui;
 
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;

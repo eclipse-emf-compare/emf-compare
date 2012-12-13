@@ -1,4 +1,4 @@
-package org.eclipse.emf.compare.diagram.ui.decoration;
+package org.eclipse.emf.compare.diagram.ide.ui.decoration;
 
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DecorationEditPolicy;
 
