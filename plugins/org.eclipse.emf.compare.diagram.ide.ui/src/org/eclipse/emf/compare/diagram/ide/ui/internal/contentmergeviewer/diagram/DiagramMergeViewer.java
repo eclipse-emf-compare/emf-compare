@@ -112,7 +112,6 @@ class DiagramMergeViewer extends GraphicalMergeViewer {
 			Diagram diagram = ((IDiagramNodeAccessor)input).getOwnedDiagram();
 			View view = ((IDiagramNodeAccessor)input).getOwnedView();
 
-			// FIXME
 			initEditingDomain(diagram);
 
 			if (diagram != null) {
