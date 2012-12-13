@@ -29,7 +29,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.EMFCompareIDE;
-import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditorInput;
+import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeEditorInput;
 import org.eclipse.emf.compare.match.DefaultComparisonFactory;
 import org.eclipse.emf.compare.match.DefaultEqualityHelperFactory;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
@@ -63,7 +63,8 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 				new DefaultEqualityHelperFactory()));
 		EMFCompare comparator = EMFCompareIDE.builder().setMatchEngine(matchEngine).build();
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
-		input = new EMFCompareEditorInput(configuration, comparator, scope, editingDomain, adapterFactory);
+		input = new ComparisonScopeEditorInput(configuration, editingDomain, adapterFactory, comparator,
+				scope);
 
 		input.setTitle("Compare ('" + AdapterFactoryUtil.getText(adapterFactory, left) + "' - '"
 				+ AdapterFactoryUtil.getText(adapterFactory, right) + "')");

@@ -33,6 +33,7 @@ import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.impl.CopyAllNonConflictingCommand;
 import org.eclipse.emf.compare.command.impl.CopyCommand;
@@ -47,6 +48,7 @@ import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGrouper;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.GroupActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.actions.save.SaveComparisonModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareConfigurationExtension;
+import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
 import org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -132,7 +134,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	void compareInputChanged(ICompareInput input) {
 		if (input == null) {
 			// When closing, we don't need a progress monitor to handle the input change
-			compareInputChanged(null, new NullProgressMonitor());
+			compareInputChanged((ICompareInput)null, new NullProgressMonitor());
 			return;
 		}
 		CompareConfiguration cc = getCompareConfiguration();
@@ -173,13 +175,9 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	void compareInputChanged(ICompareInput input, IProgressMonitor monitor) {
 		if (input != null) {
 			if (input instanceof ComparisonNode) {
-				// FIXME: should not get ComparisonNode here. Should prepare a ICompareInpupt in EditorInput
-				// and compute here the diff (see SaveablesCompareEditorInput)
-				editingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
-						EMFCompareConstants.EDITING_DOMAIN);
-				editingDomain.getCommandStack().addCommandStackListener(this);
-
-				compareInputChanged(((ComparisonNode)input).getTarget());
+				compareInputChanged((ComparisonNode)input, monitor);
+			} else if (input instanceof ComparisonScopeInput) {
+				compareInputChanged((ComparisonScopeInput)input, monitor);
 			} else {
 				final ITypedElement left = input.getLeft();
 				final ITypedElement right = input.getRight();
@@ -262,8 +260,30 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			unload(leftResourceSet);
 			unload(rightResourceSet);
 			unload(originResourceSet);
+
+			getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, null);
 			fRoot = null;
 		}
+	}
+
+	void compareInputChanged(ComparisonNode input, IProgressMonitor monitor) {
+		editingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
+				EMFCompareConstants.EDITING_DOMAIN);
+		editingDomain.getCommandStack().addCommandStackListener(this);
+
+		compareInputChanged(input.getTarget());
+	}
+
+	void compareInputChanged(ComparisonScopeInput input, IProgressMonitor monitor) {
+		editingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
+				EMFCompareConstants.EDITING_DOMAIN);
+		editingDomain.getCommandStack().addCommandStackListener(this);
+
+		EMFCompare comparator = (EMFCompare)getCompareConfiguration().getProperty(
+				EMFCompareConstants.COMPARATOR);
+		Comparison comparison = comparator.compare(input.getComparisonScope(), BasicMonitor
+				.toMonitor(monitor));
+		compareInputChanged(comparison);
 	}
 
 	private static void unload(ResourceSet resourceSet) {
