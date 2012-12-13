@@ -13,9 +13,13 @@ package org.eclipse.emf.compare.diagram.ide.ui.decoration.provider;
 
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.diagram.DiagramDiff;
+import org.eclipse.emf.compare.diagram.ide.ui.EMFCompareDiagramIDEUIMessages;
+import org.eclipse.emf.compare.diagram.ide.ui.GMFCompareUIPlugin;
 import org.eclipse.emf.compare.diagram.ide.ui.decoration.DiffEdgeDecorator;
 import org.eclipse.emf.compare.diagram.ide.ui.decoration.DiffLabelDecorator;
 import org.eclipse.emf.compare.diagram.ide.ui.decoration.DiffNodeDecorator;
@@ -94,8 +98,10 @@ public class DiffDecoratorProvider extends AbstractProvider implements IDecorato
 			} else if (isNode(view)) {
 				decoratorTarget.installDecorator(DIFF, new DiffNodeDecorator(decoratorTarget));
 			} else {
-				// FIXME externalize this
-				//EMFComparePlugin.log("Unable to decorate target " + view, false); //$NON-NLS-1$
+				final String errorMsg = EMFCompareDiagramIDEUIMessages.getString(
+						"DiffDecoratorProvider.UnknownView", view); //$NON-NLS-1$
+				final IStatus status = new Status(IStatus.WARNING, GMFCompareUIPlugin.PLUGIN_ID, errorMsg);
+				GMFCompareUIPlugin.getDefault().getLog().log(status);
 			}
 		}
 	}

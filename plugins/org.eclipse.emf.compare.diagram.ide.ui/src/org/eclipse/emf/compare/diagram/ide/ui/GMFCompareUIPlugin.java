@@ -29,15 +29,15 @@ import org.osgi.framework.BundleContext;
 public class GMFCompareUIPlugin extends AbstractUIPlugin {
 
 	/** The plug-in ID. */
-	public static final String PLUGIN_ID = "org.eclipse.emf.compare.diagram.ui"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.emf.compare.diagram.ide.ui"; //$NON-NLS-1$
 
-	/** The contant for the moved icon. */
+	/** The constant for the moved icon. */
 	public static final String ICON_MOVED = "EMFCompareGMF.icon.moved"; //$NON-NLS-1$
 
-	/** The contant for the added icon. */
+	/** The constant for the added icon. */
 	public static final String ICON_ADDED = "EMFCompareGMF.icon.added"; //$NON-NLS-1$
 
-	/** The contant for the deleted icon. */
+	/** The constant for the deleted icon. */
 	public static final String ICON_DELETED = "EMFCompareGMF.icon.deleted"; //$NON-NLS-1$
 
 	/** The shared instance. */
