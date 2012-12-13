@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.match.eobject;
 
 import com.google.common.base.Predicate;
+import com.google.common.cache.Cache;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Sets;
@@ -19,6 +20,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -28,6 +30,7 @@ import org.eclipse.emf.compare.diff.DefaultDiffEngine;
 import org.eclipse.emf.compare.diff.FeatureFilter;
 import org.eclipse.emf.compare.diff.IDiffProcessor;
 import org.eclipse.emf.compare.match.DefaultComparisonFactory;
+import org.eclipse.emf.compare.match.DefaultEqualityHelperFactory;
 import org.eclipse.emf.compare.match.IEqualityHelperFactory;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher.DistanceFunction;
 import org.eclipse.emf.compare.utils.DiffUtil;
@@ -93,10 +96,11 @@ public class EditionDistance implements DistanceFunction {
 	 * Instantiate a new Edition Distance.
 	 */
 	public EditionDistance() {
-		IEqualityHelperFactory fakeEqualityHelperFactory = new IEqualityHelperFactory() {
+		IEqualityHelperFactory fakeEqualityHelperFactory = new DefaultEqualityHelperFactory() {
+			@Override
 			public IEqualityHelper createEqualityHelper() {
-				return new EqualityHelper() {
-
+				final Cache<EObject, URI> cache = EqualityHelper.createDefaultCache(getCacheBuilder());
+				return new EqualityHelper(cache) {
 					@Override
 					protected boolean matchingURIs(EObject object1, EObject object2) {
 						return uriDistance.proximity(object1, object2) == 0;
@@ -336,10 +340,8 @@ public class EditionDistance implements DistanceFunction {
 		 */
 		private int maxDistance;
 
-		/**
-		 * The comparison factory to create fake comparison.
-		 */
-		private final Comparison fakeComparison;
+		/** The comparison for which this engine will detect differences. */
+		private final Comparison comparison;
 
 		/**
 		 * Create the diff engine.
@@ -354,7 +356,7 @@ public class EditionDistance implements DistanceFunction {
 			this.maxDistance = maxDistance;
 			// will always return the same instance.
 
-			this.fakeComparison = fakeComparison;
+			this.comparison = fakeComparison;
 
 		}
 
@@ -408,11 +410,11 @@ public class EditionDistance implements DistanceFunction {
 		 * @return The created Match.
 		 */
 		private Match createOrUpdateFakeMatch(EObject a, EObject b) {
-			if (!fakeComparison.getMatches().iterator().hasNext()) {
+			if (!comparison.getMatches().iterator().hasNext()) {
 				Match fakeMatch = CompareFactory.eINSTANCE.createMatch();
-				((InternalEList<Match>)fakeComparison.getMatches()).addUnique(fakeMatch);
+				((InternalEList<Match>)comparison.getMatches()).addUnique(fakeMatch);
 			}
-			Match fakeMatch = fakeComparison.getMatches().get(0);
+			Match fakeMatch = comparison.getMatches().get(0);
 			fakeMatch.setLeft(a);
 			fakeMatch.setRight(b);
 			return fakeMatch;

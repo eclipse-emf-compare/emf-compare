@@ -39,10 +39,11 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 
 	/**
 	 * Creates a new EqualityHelper.
+	 * 
+	 * @deprecated use the EqualityHelper(Cache) constructor instead.
 	 */
 	@Deprecated
 	public EqualityHelper() {
-		// TODO: use weak keys ? be careful of the use of identity == instead of .equals()
 		this(createDefaultCache(CacheBuilder.newBuilder().maximumSize(
 				DefaultMatchEngine.DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE)));
 	}
