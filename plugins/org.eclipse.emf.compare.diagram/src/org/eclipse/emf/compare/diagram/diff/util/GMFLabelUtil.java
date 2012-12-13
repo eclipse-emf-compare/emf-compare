@@ -39,7 +39,8 @@ import org.eclipse.swt.widgets.Shell;
  * @author Cedric Notot <a href="mailto:cedric.notot@obeo.fr">cedric.notot@obeo.fr</a>
  */
 public final class GMFLabelUtil {
-	// FIXME
+	// FIXME this is dangerous (potential memory leaks) and crappy (singleton), but was made to avoid creating
+	// thousands of Diagrams.
 	private static Map<Diagram, DiagramEditPart> DIAGRAM_EDIT_PARTS = Maps.newHashMap();
 
 	/**
