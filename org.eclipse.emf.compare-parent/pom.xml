@@ -264,7 +264,7 @@
 
 <profiles>
   <profile>
-    <id>Kepler</id>
+    <id>kepler</id>
     <activation>
       <activeByDefault>true</activeByDefault>
     </activation>
@@ -290,7 +290,7 @@
   </profile>
 
   <profile>
-    <id>Juno</id>
+    <id>juno</id>
     <activation>
       <activeByDefault>false</activeByDefault>
     </activation>
