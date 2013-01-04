@@ -31,6 +31,8 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.resource.Resource;
 
 /**
  * The diff engine is in charge of actually computing the differences between the objects mapped by a
@@ -119,7 +121,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 */
 	public void diff(Comparison comparison, Monitor monitor) {
 		for (Match rootMatch : comparison.getMatches()) {
-			checkResourceAttachment(rootMatch, monitor);
 			checkForDifferences(rootMatch, monitor);
 		}
 	}
@@ -134,6 +135,8 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 *            The monitor to report progress or to check for cancellation.
 	 */
 	protected void checkForDifferences(Match match, Monitor monitor) {
+		checkResourceAttachment(match, monitor);
+
 		final FeatureFilter featureFilter = createFeatureFilter();
 
 		final Iterator<EReference> references = featureFilter.getReferencesToCheck(match);
@@ -172,40 +175,71 @@ public class DefaultDiffEngine implements IDiffEngine {
 			return;
 		}
 
-		if (match.getLeft() == null && match.getRight() == null) {
-			// PSEUDO conflict : root removed on both sides
-			final String uri = match.getOrigin().eResource().getURI().toString();
-			getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
-					DifferenceSource.LEFT);
-			getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
-					DifferenceSource.RIGHT);
-		} else if (match.getLeft() == null || match.getRight() == null) {
-			// Unmatched root, it can only be a change
-			if (comparison.isThreeWay() && match.getLeft() == null) {
-				final String uri = match.getOrigin().eResource().getURI().toString();
-				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
-						DifferenceSource.LEFT);
-			} else if (comparison.isThreeWay()) {
-				if (match.getOrigin() != null) {
+		final boolean originIsRoot = isRoot(match.getOrigin());
+
+		if (comparison.isThreeWay()) {
+			if (originIsRoot) {
+				// Uncontrol or delete, the "resource attachment" is a deletion
+				if (!isRoot(match.getLeft())) {
+					final String uri = match.getOrigin().eResource().getURI().toString();
+					getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
+							DifferenceSource.LEFT);
+				}
+				if (!isRoot(match.getRight())) {
 					final String uri = match.getOrigin().eResource().getURI().toString();
 					getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
 							DifferenceSource.RIGHT);
-				} else {
+				}
+			} else {
+				// Control or add, the "resource attachment" is an addition
+				if (isRoot(match.getLeft())) {
 					final String uri = match.getLeft().eResource().getURI().toString();
 					getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.ADD,
 							DifferenceSource.LEFT);
 				}
-
-			} else if (match.getLeft() == null) {
-				final String uri = match.getRight().eResource().getURI().toString();
-				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
-						DifferenceSource.LEFT);
-			} else {
+				if (isRoot(match.getRight())) {
+					final String uri = match.getRight().eResource().getURI().toString();
+					getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.ADD,
+							DifferenceSource.RIGHT);
+				}
+			}
+		} else {
+			final boolean leftIsRoot = isRoot(match.getLeft());
+			final boolean rightIsRoot = isRoot(match.getRight());
+			if (leftIsRoot && !rightIsRoot) {
 				final String uri = match.getLeft().eResource().getURI().toString();
 				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.ADD,
 						DifferenceSource.LEFT);
+			} else if (!leftIsRoot && rightIsRoot) {
+				final String uri = match.getRight().eResource().getURI().toString();
+				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
+						DifferenceSource.LEFT);
 			}
 		}
+	}
+
+	/**
+	 * Checks whether the given EObject is a root of its resource or not.
+	 * 
+	 * @param eObj
+	 *            The EObject to check.
+	 * @return <code>true</code> if this object is a root of its containing resource, <code>false</code>
+	 *         otherwise.
+	 */
+	protected static boolean isRoot(EObject eObj) {
+		if (eObj instanceof InternalEObject) {
+			return ((InternalEObject)eObj).eDirectResource() != null;
+		}
+
+		boolean isRoot = false;
+		if (eObj != null) {
+			final Resource res = eObj.eResource();
+			final EObject container = eObj.eContainer();
+			// <root of containment tree> || <root of fragment>
+			isRoot = (container == null && res != null)
+					|| (container != null && container.eResource() != res);
+		}
+		return isRoot;
 	}
 
 	/**

@@ -30,13 +30,16 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -95,9 +98,9 @@ public class DefaultConflictDetector implements IConflictDetector {
 			checkContainmentConflict(comparison, (ReferenceChange)diff, Iterables.filter(candidates,
 					ReferenceChange.class));
 		} else if (diff instanceof ResourceAttachmentChange) {
-			// These will be handled about the same way as containment deletions
-			checkResourceAttachmentConflict(comparison, (ResourceAttachmentChange)diff, Iterables.filter(
-					candidates, ReferenceChange.class));
+			// These will be handled about the same way as containment deletions,
+			// Though they can also conflict with themselves
+			checkResourceAttachmentConflict(comparison, (ResourceAttachmentChange)diff, candidates);
 		} else {
 			switch (diff.getKind()) {
 				case DELETE:
@@ -469,26 +472,48 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 * @param diff
 	 *            The "root" difference for which we are to try and determine conflicts.
 	 * @param candidates
-	 *            An iterable over the ReferenceChanges that are possible candidates for conflicts.
+	 *            An iterable over the Diffs that are possible candidates for conflicts.
 	 */
 	protected void checkResourceAttachmentConflict(Comparison comparison, ResourceAttachmentChange diff,
-			Iterable<ReferenceChange> candidates) {
-		// Any diff that references the affect root is a possible conflict
-		final EObject leftVal = diff.getMatch().getLeft();
-		final EObject rightVal = diff.getMatch().getRight();
-		final EObject originVal = diff.getMatch().getOrigin();
-		for (ReferenceChange candidate : candidates) {
-			final EObject candidateValue = candidate.getValue();
-			if (candidateValue == leftVal || candidateValue == rightVal || candidateValue == originVal) {
-				checkResourceAttachmentConflict(comparison, diff, candidate);
+			Iterable<Diff> candidates) {
+		final Match match = diff.getMatch();
+		final EObject leftVal = match.getLeft();
+		final EObject rightVal = match.getRight();
+		final EObject originVal = match.getOrigin();
+		for (Diff candidate : candidates) {
+			if (candidate instanceof ReferenceChange) {
+				// Any ReferenceChange that references the affected root is a possible conflict
+				final EObject candidateValue = ((ReferenceChange)candidate).getValue();
+				if (candidateValue == leftVal || candidateValue == rightVal || candidateValue == originVal) {
+					checkResourceAttachmentConflict(comparison, diff, (ReferenceChange)candidate);
+				}
+			} else if (candidate instanceof ResourceAttachmentChange && match == candidate.getMatch()) {
+				// This can only be a conflict. All we need to know is its kind.
+				ConflictKind kind = ConflictKind.REAL;
+				if (candidate.getKind() == DifferenceKind.DELETE && diff.getKind() == DifferenceKind.DELETE) {
+					kind = ConflictKind.PSEUDO;
+				} else if (candidate.getKind() == DifferenceKind.ADD && diff.getKind() == DifferenceKind.ADD) {
+					final Resource diffRes;
+					final Resource candidateRes;
+					if (diff.getSource() == DifferenceSource.LEFT) {
+						diffRes = match.getLeft().eResource();
+						candidateRes = match.getRight().eResource();
+					} else {
+						diffRes = match.getRight().eResource();
+						candidateRes = match.getLeft().eResource();
+					}
+					if (getMatchResource(comparison, diffRes) == getMatchResource(comparison, candidateRes)) {
+						kind = ConflictKind.PSEUDO;
+					}
+				}
+				conflictOn(comparison, diff, candidate, kind);
 			}
 		}
 
 		// Every Diff "under" a root deletion conflicts with it.
 		if (diff.getKind() == DifferenceKind.DELETE) {
 			final Predicate<? super Diff> candidateFilter = new ConflictCandidateFilter(diff);
-			for (Diff extendedCandidate : Iterables.filter(diff.getMatch().getAllDifferences(),
-					candidateFilter)) {
+			for (Diff extendedCandidate : Iterables.filter(match.getAllDifferences(), candidateFilter)) {
 				if (isDeleteOrUnsetDiff(comparison, extendedCandidate)) {
 					conflictOn(comparison, diff, extendedCandidate, ConflictKind.PSEUDO);
 				} else {
@@ -496,6 +521,36 @@ public class DefaultConflictDetector implements IConflictDetector {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Returns the MatchResource corresponding to the given <code>resource</code>.
+	 * 
+	 * @param comparison
+	 *            the comparison to search for a MatchResource.
+	 * @param resource
+	 *            Resource for which we need a MatchResource.
+	 * @return The MatchResource corresponding to the given <code>resource</code>.
+	 */
+	protected MatchResource getMatchResource(Comparison comparison, Resource resource) {
+		final List<MatchResource> matchedResources = comparison.getMatchedResources();
+		final int size = matchedResources.size();
+		MatchResource soughtMatch = null;
+		for (int i = 0; i < size && soughtMatch == null; i++) {
+			final MatchResource matchRes = matchedResources.get(i);
+			if (matchRes.getRight() == resource || matchRes.getLeft() == resource
+					|| matchRes.getOrigin() == resource) {
+				soughtMatch = matchRes;
+			}
+		}
+
+		if (soughtMatch == null) {
+			// This should never happen
+			throw new RuntimeException(EMFCompareMessages.getString(
+					"ResourceAttachmentChangeSpec.MissingMatch", resource.getURI().lastSegment())); //$NON-NLS-1$
+		}
+
+		return soughtMatch;
 	}
 
 	/**
