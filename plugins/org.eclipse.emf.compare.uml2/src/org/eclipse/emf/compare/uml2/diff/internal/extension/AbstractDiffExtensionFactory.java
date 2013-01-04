@@ -136,6 +136,7 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 
 		ret.setDiscriminant(discriminant);
 		ret.setKind(extensionKind);
+		ret.setSource(input.getSource());
 
 		// FIXME pull down all of these in their own respective sub-class. This is unreadable.
 		final Comparison comparison = input.getMatch().getComparison();
