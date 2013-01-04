@@ -831,10 +831,18 @@ public class ReferencesCheck extends AbstractCheck {
 			while (addedIterator.hasNext()) {
 				final EObject added = addedIterator.next();
 				final Iterator<EObject> deletedIterator = deletedReferences.iterator();
+				/*
+				 * We must avoid a second call to addedIterator.remove() in case of duplicates in the deleted
+				 * references.
+				 */
+				boolean addedRemoved = false;
 				while (deletedIterator.hasNext()) {
 					final EObject deleted = deletedIterator.next();
 					if (!areDistinct(added, deleted)) {
-						addedIterator.remove();
+						if (!addedRemoved) {
+							addedIterator.remove();
+							addedRemoved = true;
+						}
 						deletedIterator.remove();
 					}
 				}
