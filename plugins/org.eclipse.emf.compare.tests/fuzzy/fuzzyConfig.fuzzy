@@ -5,4 +5,9 @@
       <ePackages href="http://www.eclipse.org/emf/2002/Ecore#/"/>
     </mutatorConfig>
   </org.eclipse.emf.emfstore.fuzzy.emf.config:TestConfig>
+  <org.eclipse.emf.emfstore.fuzzy.emf.config:TestConfig seed="1" count="500" testClass="org.eclipse.emf.compare.tests.NodesFuzzyTest" id="_r78GhIvSEeGC3oFJZ-5HoM">
+    <mutatorConfig minObjectsCount="100">
+      <ePackages href="http://www.eclipse.org/emf/compare/tests/nodes#/"/>
+    </mutatorConfig>
+  </org.eclipse.emf.emfstore.fuzzy.emf.config:TestConfig>
 </xmi:XMI>

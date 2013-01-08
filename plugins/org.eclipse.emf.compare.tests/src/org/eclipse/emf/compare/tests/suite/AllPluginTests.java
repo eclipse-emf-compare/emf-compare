@@ -14,6 +14,7 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 
 import org.eclipse.emf.compare.tests.FuzzyTest;
+import org.eclipse.emf.compare.tests.NodesFuzzyTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -26,7 +27,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({FuzzyTest.class, })
+@SuiteClasses({FuzzyTest.class, NodesFuzzyTest.class })
 public class AllPluginTests {
 	/**
 	 * This will return a suite populated with all tests available through this class.

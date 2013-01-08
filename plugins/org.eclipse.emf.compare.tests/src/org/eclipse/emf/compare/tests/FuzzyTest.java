@@ -10,6 +10,9 @@
  */
 package org.eclipse.emf.compare.tests;
 
+import static org.junit.Assert.assertSame;
+
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
 import java.util.Iterator;
@@ -18,7 +21,10 @@ import java.util.Set;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.match.eobject.URIDistance;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -70,6 +76,7 @@ public class FuzzyTest {
 		EObject backup = EcoreUtil.copy(root);
 
 		util.mutate(createConfig());
+		EObject mutated = EcoreUtil.copy(root);
 		removeAllDuplicateCrossReferencesFrom(root);
 
 		Comparison result = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(root, backup));
@@ -79,8 +86,37 @@ public class FuzzyTest {
 			delta.copyRightToLeft();
 		}
 
+		for (Diff delta : result.getDifferences()) {
+			assertSame(delta.getState(), DifferenceState.MERGED);
+		}
+
 		Comparison valid = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(root, backup));
 		List<Diff> differences = valid.getDifferences();
+
+		Set<String> urisToDebug = Sets.newLinkedHashSet();
+		for (ReferenceChange diff : Iterables.filter(differences, ReferenceChange.class)) {
+			if (diff.getMatch().getRight() != null) {
+				urisToDebug.add(new URIDistance().apply(diff.getMatch().getRight()).toString());
+			}
+
+		}
+
+		if (urisToDebug.size() > 0) {
+			/*
+			 * restart
+			 */
+			root = EcoreUtil.copy(mutated);
+			result = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(root, backup));
+			for (Diff diff : result.getDifferences()) {
+				if (diff.getMatch().getRight() != null) {
+					String uri = new URIDistance().apply(diff.getMatch().getRight()).toString();
+					if (urisToDebug.contains(uri)) {
+						diff.copyRightToLeft();
+					}
+				}
+			}
+		}
+
 		Assert.assertEquals("We still have differences after merging all of them (had " + nbDiffs
 				+ " to merge in the beginning)", 0, differences.size());
 
