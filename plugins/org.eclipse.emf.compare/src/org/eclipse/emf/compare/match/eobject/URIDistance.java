@@ -14,14 +14,15 @@ import com.google.common.base.Function;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
-import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EAttribute;
+import java.util.Iterator;
+
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.FeatureMap;
+import org.eclipse.emf.ecore.InternalEObject;
 
 /**
  * This class is able to measure similarity between "URI like" strings, basically strings separated by "/".
@@ -29,7 +30,7 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
-public class URIDistance implements Function<EObject, String> {
+public class URIDistance implements Function<EObject, Iterable<String>> {
 	/**
 	 * The upper bound distance we can get using this function.
 	 */
@@ -38,7 +39,7 @@ public class URIDistance implements Function<EObject, String> {
 	/**
 	 * A computing cache for the locations.
 	 */
-	private Cache<EObject, String> locationCache;
+	private Cache<EObject, Iterable<String>> locationCache;
 
 	/**
 	 * Create a new {@link URIDistance}.
@@ -59,53 +60,51 @@ public class URIDistance implements Function<EObject, String> {
 	 * @return The number of changes to transform one uri to another one.
 	 */
 	public int proximity(EObject a, EObject b) {
-		String aPath = locationCache.getUnchecked(a);
-		String bPath = locationCache.getUnchecked(b);
+		Iterable<String> aPath = locationCache.getUnchecked(a);
+		Iterable<String> bPath = locationCache.getUnchecked(b);
 		return proximity(aPath, bPath);
 	}
 
 	/**
-	 * Return a metric result URI similarities. It compares 2 strings splitting those by "/" and return an int
+	 * Return a metric result URI similarities. It compares 2 lists of fragments and return an int
 	 * representing the level of similarity. 0 - they are exactly the same to 10 - they are completely
 	 * different. "adding a fragment", "removing a fragment".
 	 * 
 	 * @param aPath
-	 *            First of the two {@link String}s to compare.
+	 *            First of the two list of {@link String}s to compare.
 	 * @param bPath
-	 *            Second of the two {@link String}s to compare.
+	 *            Second of the two list of {@link String}s to compare.
 	 * @return The number of changes to transform one uri to another one.
 	 */
-	public int proximity(String aPath, String bPath) {
-		if (aPath.equals(bPath)) {
-			return 0;
-		}
-		return MAX_DISTANCE;
-	}
-
-	/**
-	 * Update the builder with location hints for a feature map.
-	 * 
-	 * @param builder
-	 *            the list builder to update.
-	 * @param cur
-	 *            the current object.
-	 * @param container
-	 *            the current object container.
-	 * @param feat
-	 *            the containing feature of the current object.
-	 */
-	protected void featureMapLocation(Builder<String> builder, EObject cur, EObject container,
-			EStructuralFeature feat) {
-		FeatureMap featureMap = (FeatureMap)container.eGet(feat, false);
-		for (int i = 0, size = featureMap.size(); i < size; ++i) {
-			if (featureMap.getValue(i) == cur) {
-				EStructuralFeature entryFeature = featureMap.getEStructuralFeature(i);
-				if (entryFeature instanceof EReference && ((EReference)entryFeature).isContainment()) {
-					builder.add(feat.getName());
-					builder.add(Integer.valueOf(i).toString());
-				}
+	public int proximity(Iterable<String> aPath, Iterable<String> bPath) {
+		int aSize = 0;
+		int bSize = 0;
+		Iterator<String> itA = aPath.iterator();
+		Iterator<String> itB = bPath.iterator();
+		boolean areSame = true;
+		int commonSegments = 0;
+		int remainingASegments = 0;
+		int remainingBSegments = 0;
+		while (itA.hasNext() && itB.hasNext() && areSame) {
+			String a = itA.next();
+			String b = itB.next();
+			if (a.equals(b)) {
+				commonSegments++;
+			} else {
+				areSame = false;
 			}
+			aSize++;
+			bSize++;
+
 		}
+		if (commonSegments == 0) {
+			return MAX_DISTANCE;
+		}
+		remainingASegments = aSize + Iterators.size(itA) - commonSegments;
+		remainingBSegments = bSize + Iterators.size(itB) - commonSegments;
+
+		int nbSegmentsToGoFromAToB = remainingASegments + remainingBSegments;
+		return (nbSegmentsToGoFromAToB * 10) / (commonSegments * 2 + nbSegmentsToGoFromAToB);
 	}
 
 	/**
@@ -113,55 +112,25 @@ public class URIDistance implements Function<EObject, String> {
 	 * 
 	 * @see com.google.common.base.Function#apply(java.lang.Object)
 	 */
-	public String apply(EObject input) {
+	public Iterable<String> apply(EObject input) {
 		EObject cur = input;
 		String result = ""; //$NON-NLS-1$
 		EObject container = input.eContainer();
 		if (container != null) {
 			EStructuralFeature feat = cur.eContainingFeature();
-			if (feat instanceof EAttribute) {
-				result = featureMapLocation(cur, container, feat);
-			} else if (feat != null) {
-				if (feat.isMany()) {
-					EList<?> eList = (EList<?>)container.eGet(feat, false);
-					int index = eList.indexOf(cur);
-					result = feat.getName() + Integer.valueOf(index).toString();
-				} else {
-					result = feat.getName() + "0"; //$NON-NLS-1$
-				}
+			if (input instanceof InternalEObject) {
+				String frag = ((InternalEObject)container).eURIFragmentSegment(feat, cur);
+				result = frag;
 			}
 		} else {
 			result = "0"; //$NON-NLS-1$
 		}
 
 		if (input.eContainer() != null) {
-			return result + locationCache.getUnchecked(input.eContainer());
+			return Iterables.concat(Lists.newArrayList(result), locationCache
+					.getUnchecked(input.eContainer()));
 		}
-		return result;
-	}
-
-	/**
-	 * Update the builder with location hints for a feature map.
-	 * 
-	 * @param cur
-	 *            the current object.
-	 * @param container
-	 *            the current object container.
-	 * @param feat
-	 *            the containing feature of the current object.
-	 * @return a path segment : featureName + position
-	 */
-	protected String featureMapLocation(EObject cur, EObject container, EStructuralFeature feat) {
-		FeatureMap featureMap = (FeatureMap)container.eGet(feat, false);
-		for (int i = 0, size = featureMap.size(); i < size; ++i) {
-			if (featureMap.getValue(i) == cur) {
-				EStructuralFeature entryFeature = featureMap.getEStructuralFeature(i);
-				if (entryFeature instanceof EReference && ((EReference)entryFeature).isContainment()) {
-					return feat.getName() + Integer.valueOf(i).toString();
-				}
-			}
-		}
-		throw new RuntimeException();
+		return Lists.newArrayList(result);
 	}
 
 	/**
