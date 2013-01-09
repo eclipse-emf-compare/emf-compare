@@ -84,7 +84,10 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 		} else if (notifier instanceof Resource) {
 			resourceSet = ((Resource)notifier).getResourceSet();
 		} else if (notifier instanceof EObject) {
-			resourceSet = ((EObject)notifier).eResource().getResourceSet();
+			Resource eResource = ((EObject)notifier).eResource();
+			if (eResource != null) {
+				resourceSet = eResource.getResourceSet();
+			}
 		} else {
 			// impossible as yet
 		}
