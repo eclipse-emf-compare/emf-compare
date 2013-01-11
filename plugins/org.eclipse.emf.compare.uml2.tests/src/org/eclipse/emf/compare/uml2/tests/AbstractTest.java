@@ -47,8 +47,8 @@ public abstract class AbstractTest {
 	@Before
 	public void before() {
 		PostProcessorRegistry registry = new PostProcessorRegistry();
-		registry.addPostProcessor(new PostProcessorDescriptor("http://www.eclipse.org/uml2/4.0.0/UML", null,
-				"org.eclipse.emf.compare.uml2.diff.UMLDiffExtensionPostProcessor",
+		registry.addPostProcessor(new PostProcessorDescriptor("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML",
+				null, "org.eclipse.emf.compare.uml2.diff.UMLDiffExtensionPostProcessor",
 				new UMLDiffExtensionPostProcessor()));
 		emfCompare = EMFCompare.builder().setPostProcessorRegistry(registry).build();
 	}
