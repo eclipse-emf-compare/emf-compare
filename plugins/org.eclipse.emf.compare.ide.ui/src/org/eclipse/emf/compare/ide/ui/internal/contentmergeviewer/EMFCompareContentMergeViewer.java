@@ -170,7 +170,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		}
 
 		ISelection leftSelection = createSelectionOrEmpty(leftInitialItem);
-		fLeft.setSelection(leftSelection); // others will synchronize on this one :)
+		fLeft.setSelection(leftSelection, true); // others will synchronize on this one :)
 
 		getCenterControl().redraw();
 	}
@@ -519,14 +519,14 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	private void synchronizeSelection(final ISelectionProvider selectionProvider, final ISelection selection) {
 		if (selectionProvider == fLeft) {
-			fRight.setSelection(selection);
-			fAncestor.setSelection(selection);
+			fRight.setSelection(selection, true);
+			fAncestor.setSelection(selection, true);
 		} else if (selectionProvider == fRight) {
-			fLeft.setSelection(selection);
-			fAncestor.setSelection(selection);
+			fLeft.setSelection(selection, true);
+			fAncestor.setSelection(selection, true);
 		} else { // selectionProvider == fAncestor
-			fLeft.setSelection(selection);
-			fRight.setSelection(selection);
+			fLeft.setSelection(selection, true);
+			fRight.setSelection(selection, true);
 		}
 	}
 }
