@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.ide.ui.tests.unit;
 
 import org.eclipse.emf.compare.ide.ui.tests.automation.CompareBot;
+import org.eclipse.swtbot.swt.finder.SWTBotTestCase;
 
 public class EcoreComparisonTest extends SWTBotTestCase {
 
