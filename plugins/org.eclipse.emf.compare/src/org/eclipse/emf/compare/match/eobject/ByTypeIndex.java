@@ -14,13 +14,15 @@ import com.google.common.base.Function;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher.DistanceFunction;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -48,13 +50,15 @@ class ByTypeIndex implements EObjectIndex {
 	 * 
 	 * @param meter
 	 *            the function passed when instantiating delegate indexes.
+	 * @param scope
+	 *            an instance
 	 */
-	public ByTypeIndex(ProximityEObjectMatcher.DistanceFunction meter) {
+	public ByTypeIndex(ProximityEObjectMatcher.DistanceFunction meter, final ScopeQuery scope) {
 		this.meter = meter;
 		this.allIndexes = CacheBuilder.newBuilder().build(
 				CacheLoader.from(new Function<String, EObjectIndex>() {
 					public EObjectIndex apply(String input) {
-						return new ProximityIndex(ByTypeIndex.this.meter);
+						return new ProximityIndex(ByTypeIndex.this.meter, scope);
 					}
 				}));
 	}
@@ -64,12 +68,12 @@ class ByTypeIndex implements EObjectIndex {
 	 * 
 	 * @see org.eclipse.emf.compare.match.eobject.EObjectIndex#getValuesStillThere(org.eclipse.emf.compare.match.eobject.EObjectIndex.Side)
 	 */
-	public Collection<EObject> getValuesStillThere(Side side) {
-		LinkedHashSet<EObject> values = new LinkedHashSet<EObject>();
+	public Iterable<EObject> getValuesStillThere(Side side) {
+		List<Iterable<EObject>> allLists = Lists.newArrayList();
 		for (EObjectIndex typeSpecificIndex : allIndexes.asMap().values()) {
-			values.addAll(typeSpecificIndex.getValuesStillThere(side));
+			allLists.add(typeSpecificIndex.getValuesStillThere(side));
 		}
-		return values;
+		return Iterables.concat(allLists);
 	}
 
 	/**
@@ -78,10 +82,10 @@ class ByTypeIndex implements EObjectIndex {
 	 * @see org.eclipse.emf.compare.match.eobject.EObjectIndex#findClosests(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.compare.match.eobject.EObjectIndex.Side, int)
 	 */
-	public Map<Side, EObject> findClosests(EObject obj, Side side) {
+	public Map<Side, EObject> findClosests(Comparison inProgress, EObject obj, Side side) {
 		try {
 			EObjectIndex typeSpecificIndex = allIndexes.get(eClassKey(obj));
-			return typeSpecificIndex.findClosests(obj, side);
+			return typeSpecificIndex.findClosests(inProgress, obj, side);
 		} catch (ExecutionException e) {
 			return Collections.emptyMap();
 		}

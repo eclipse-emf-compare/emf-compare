@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
@@ -29,7 +31,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.diff.DefaultDiffEngine;
 import org.eclipse.emf.compare.diff.FeatureFilter;
 import org.eclipse.emf.compare.diff.IDiffProcessor;
-import org.eclipse.emf.compare.match.DefaultComparisonFactory;
+import org.eclipse.emf.compare.internal.spec.ComparisonSpec;
 import org.eclipse.emf.compare.match.DefaultEqualityHelperFactory;
 import org.eclipse.emf.compare.match.IEqualityHelperFactory;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher.DistanceFunction;
@@ -41,6 +43,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -49,20 +52,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class EditionDistance implements DistanceFunction {
-	/**
-	 * It's the percentage of similarity we consider as being the limit on a maximum potential distance of 1.
-	 */
-	private static final double MAX_DIST_RATIO = 0.75d;
-
-	/**
-	 * Weight coefficient of a change on a reference.
-	 */
-	private int referenceChangeCoef = 3;
-
-	/**
-	 * Weight coefficient of a change on an attribute.
-	 */
-	private int attributeChangeCoef = 10;
 
 	/**
 	 * Weight coefficient of a change of location (uri).
@@ -72,13 +61,21 @@ public class EditionDistance implements DistanceFunction {
 	/**
 	 * Weight coefficient of a change of order within a reference.
 	 */
-	private int orderChangeCoef = 2;
+	private int orderChangeCoef = 1;
 
 	/**
 	 * The instance used to compare location of EObjects.
 	 */
 	private URIDistance uriDistance = new URIDistance();
 
+	/**
+	 * a thresholds ratio discrete function per the number of features.
+	 */
+	// CHECKSTYLE:OFF we know these are magic numbers, so be it, they happens to have the same value but there
+	// is no semantic.
+	private double[] thresholds = {0, 0.6, 0.6, 0.55, 0.465 };
+
+	// CHECKSTYLE:ON
 	/**
 	 * The fake comparison is used to make the diff engine super class happy. We are reusing the same instance
 	 * which we are updating because of the cost of adding even a single Match in it (and subsequent growing
@@ -103,23 +100,62 @@ public class EditionDistance implements DistanceFunction {
 				return new EqualityHelper(cache) {
 					@Override
 					protected boolean matchingURIs(EObject object1, EObject object2) {
+						/*
+						 * we might trying to compare children of the objects under scrutinity right now, it
+						 * might happen if a containment reference is seen as "relevant" for the matching
+						 * process. In those cases, we don't want to compare the whole uris and instead want
+						 * to compare just the current fragment. This has very important performance
+						 * implications.
+						 */
+						if (object1.eContainer() != null && object2.eContainer() != null
+								&& fakeComparison.getMatch(object1.eContainer()) != null) {
+							return uriDistance.retrieveFragment(object1).equals(
+									uriDistance.retrieveFragment(object2));
+						}
 						return uriDistance.proximity(object1, object2) == 0;
 					}
 
 				};
 			}
 		};
-		this.fakeComparison = new DefaultComparisonFactory(fakeEqualityHelperFactory).createComparison();
+
+		this.fakeComparison = new ComparisonSpec() {
+
+			/*
+			 * We did override this method to avoid the extra cost of maintaining a cross referencer for such
+			 * a fake comparison.
+			 */
+			@Override
+			public Match getMatch(EObject element) {
+				for (Match m : getMatches()) {
+					if (m.getLeft() == element || m.getRight() == element || m.getOrigin() == element) {
+						return m;
+					}
+				}
+				return null;
+			}
+
+		};
+		Match fakeMatch = CompareFactory.eINSTANCE.createMatch();
+		((InternalEList<Match>)fakeComparison.getMatches()).addUnique(fakeMatch);
+
+		IEqualityHelper equalityHelper = fakeEqualityHelperFactory.createEqualityHelper();
+
+		fakeComparison.eAdapters().add(equalityHelper);
+		equalityHelper.setTarget(fakeComparison);
+
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public int distance(EObject a, EObject b) {
-		int maxDist = Math.max(getMaxDistance(a), getMaxDistance(b));
-		int measuredDist = new CountingDiffEngine(maxDist, this.fakeComparison).measureDifferences(a, b);
-		if (measuredDist >= maxDist) {
-			return Integer.MAX_VALUE;
+	public double distance(Comparison inProgress, EObject a, EObject b) {
+		this.uriDistance.setComparison(inProgress);
+		double maxDist = Math.max(getThresholdAmount(a), getThresholdAmount(b));
+		double measuredDist = new CountingDiffEngine(maxDist, this.fakeComparison).measureDifferences(
+				inProgress, a, b);
+		if (measuredDist > maxDist) {
+			return Double.MAX_VALUE;
 		}
 		return measuredDist;
 	}
@@ -127,8 +163,8 @@ public class EditionDistance implements DistanceFunction {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean areIdentic(EObject a, EObject b) {
-		return new CountingDiffEngine(0, this.fakeComparison).measureDifferences(a, b) == 0;
+	public boolean areIdentic(Comparison inProgress, EObject a, EObject b) {
+		return new CountingDiffEngine(0, this.fakeComparison).measureDifferences(inProgress, a, b) == 0;
 	}
 
 	/**
@@ -182,32 +218,6 @@ public class EditionDistance implements DistanceFunction {
 		}
 
 		/**
-		 * Specify the weight of any change of attribute value between two instances.
-		 * 
-		 * @param weight
-		 *            the new weight.
-		 * @return the current builder instance.
-		 */
-
-		public Builder attribute(int weight) {
-			this.toBeBuilt.attributeChangeCoef = weight;
-			return this;
-		}
-
-		/**
-		 * Specify the weight of any change of reference between two instances.
-		 * 
-		 * @param weight
-		 *            the new weight.
-		 * @return the current builder instance.
-		 */
-
-		public Builder reference(int weight) {
-			this.toBeBuilt.referenceChangeCoef = weight;
-			return this;
-		}
-
-		/**
 		 * Configure custom weight provider.
 		 * 
 		 * @param provider
@@ -243,7 +253,7 @@ public class EditionDistance implements DistanceFunction {
 		/**
 		 * The current distance.
 		 */
-		private int distance;
+		private double distance;
 
 		/**
 		 * {@inheritDoc}
@@ -258,7 +268,7 @@ public class EditionDistance implements DistanceFunction {
 					case ADD:
 					case DELETE:
 					case CHANGE:
-						distance += weights.getWeight(reference) * referenceChangeCoef;
+						distance += weights.getWeight(reference);
 						break;
 					default:
 						break;
@@ -286,10 +296,9 @@ public class EditionDistance implements DistanceFunction {
 					case CHANGE:
 						if (aValue instanceof String && bValue instanceof String) {
 							distance += weights.getWeight(attribute)
-									* (1 - DiffUtil.diceCoefficient((String)aValue, (String)bValue))
-									* attributeChangeCoef;
+									* (1 - DiffUtil.diceCoefficient((String)aValue, (String)bValue));
 						} else {
-							distance += weights.getWeight(attribute) * attributeChangeCoef;
+							distance += weights.getWeight(attribute);
 						}
 						break;
 					default:
@@ -318,7 +327,7 @@ public class EditionDistance implements DistanceFunction {
 		 * 
 		 * @return the computed distance.
 		 */
-		public int getComputedDistance() {
+		public double getComputedDistance() {
 			return distance;
 		}
 
@@ -338,7 +347,7 @@ public class EditionDistance implements DistanceFunction {
 		/**
 		 * The maximum distance until which we just have to stop.
 		 */
-		private int maxDistance;
+		private double maxDistance;
 
 		/** The comparison for which this engine will detect differences. */
 		private final Comparison comparison;
@@ -351,13 +360,20 @@ public class EditionDistance implements DistanceFunction {
 		 * @param fakeComparison
 		 *            the comparison instance to use while measuring the differences between the two objects.
 		 */
-		public CountingDiffEngine(int maxDistance, Comparison fakeComparison) {
+		public CountingDiffEngine(double maxDistance, Comparison fakeComparison) {
 			super(new CountingDiffProcessor());
 			this.maxDistance = maxDistance;
 			// will always return the same instance.
 
 			this.comparison = fakeComparison;
 
+		}
+
+		@Override
+		protected void checkResourceAttachment(Match match, Monitor monitor) {
+			/*
+			 * we really don't want to check that...
+			 */
 		}
 
 		@Override
@@ -377,24 +393,144 @@ public class EditionDistance implements DistanceFunction {
 		/**
 		 * Measure the difference between two objects and return a distance value.
 		 * 
+		 * @param comparisonInProgress
+		 *            the comparison which is currently being matched.
 		 * @param a
 		 *            first object.
 		 * @param b
 		 *            second object.
 		 * @return the distance between them computed using the number of changes required to change a to b.
 		 */
-		public int measureDifferences(EObject a, EObject b) {
+		public double measureDifferences(Comparison comparisonInProgress, EObject a, EObject b) {
 			Match fakeMatch = createOrUpdateFakeMatch(a, b);
 			getCounter().reset();
-			int changes = 0;
-			int dist = uriDistance.proximity(a, b);
-			changes += dist * locationChangeCoef;
+			double changes = 0;
+			if (!haveSameContainer(comparisonInProgress, a, b)) {
+				changes += locationChangeCoef * weights.getParentWeight(a);
+			} else {
+				int aIndex = getContainmentIndex(a);
+				int bIndex = getContainmentIndex(b);
+				if (aIndex != bIndex) {
+					/*
+					 * we just want to pick the same positioned object if two exactly similar objects are
+					 * candidates in the same container.
+					 */
+					changes += 1;
+				}
+
+			}
+			if (a.eContainingFeature() != b.eContainingFeature()) {
+				changes += Math.max(weights.getContainingFeatureWeight(a), weights
+						.getContainingFeatureWeight(b));
+			}
 			if (changes <= maxDistance) {
 				checkForDifferences(fakeMatch, new BasicMonitor());
 				changes += getCounter().getComputedDistance();
 			}
 			return changes;
 
+		}
+
+		/**
+		 * return the position in which an Object is contained in its parent list.
+		 * 
+		 * @param a
+		 *            any EObject
+		 * @return the position in which an Object is contained in its parent list, 0 if there is no container
+		 *         or if the reference is single valued.
+		 */
+		private int getContainmentIndex(EObject a) {
+			EStructuralFeature feat = a.eContainingFeature();
+			EObject container = a.eContainer();
+			int position = 0;
+			if (container != null) {
+				if (feat instanceof EAttribute) {
+					position = indexFromFeatureMap(a, feat, container);
+				} else if (feat != null) {
+					if (feat.isMany()) {
+						EList<?> eList = (EList<?>)container.eGet(feat, false);
+						position = eList.indexOf(a);
+					}
+				}
+			}
+			return position;
+		}
+
+		/**
+		 * the position of the {@link EObject} a in its container featureMap.
+		 * 
+		 * @param a
+		 *            the {@link EObject}.
+		 * @param feat
+		 *            the containing feature.
+		 * @param container
+		 *            the containing EObject.
+		 * @return the position of the {@link EObject} a in its container featureMap.
+		 */
+		private int indexFromFeatureMap(EObject a, EStructuralFeature feat, EObject container) {
+			FeatureMap featureMap = (FeatureMap)container.eGet(feat, false);
+			for (int i = 0, size = featureMap.size(); i < size; ++i) {
+				if (featureMap.getValue(i) == a) {
+					EStructuralFeature entryFeature = featureMap.getEStructuralFeature(i);
+					if (entryFeature instanceof EReference && ((EReference)entryFeature).isContainment()) {
+						return i;
+					}
+				}
+			}
+			return 0;
+		}
+
+		/**
+		 * Check whether two {@link EObject} have the same containers or not.
+		 * 
+		 * @param inProgress
+		 *            the comparison currently being matched.
+		 * @param a
+		 *            any {@link EObject}
+		 * @param b
+		 *            any other {@link EObject}
+		 * @return true if they have the same container. If the containers have been matched their match will
+		 *         be used, on the contrary the URI will be indirectly use through the EqualityHelper.
+		 */
+		private boolean haveSameContainer(Comparison inProgress, EObject a, EObject b) {
+			EObject aContainer = a.eContainer();
+			EObject bContainer = b.eContainer();
+			if ((aContainer == null && bContainer != null) || (aContainer != null && bContainer == null)) {
+				return false;
+			}
+			/*
+			 * we consider two null containers as being the "same".
+			 */
+			boolean matching = aContainer == null && bContainer == null;
+			Match mA = inProgress.getMatch(aContainer);
+			Match mB = inProgress.getMatch(bContainer);
+			if (!matching) {
+				if (mA == null && mB == null) {
+					/*
+					 * The Objects have to be out of scope then.
+					 */
+					matching = fakeComparison.getEqualityHelper().matchingValues(aContainer, bContainer);
+				} else {
+					matching = isReferencedByTheMatch(bContainer, mA)
+							|| isReferencedByTheMatch(aContainer, mB);
+				}
+			}
+			return matching;
+		}
+
+		/**
+		 * Return true if the given {@link EObject} is referenced by the left/right or origin match reference.
+		 * 
+		 * @param eObj
+		 *            any {@link EObject}.
+		 * @param match
+		 *            any Match.
+		 * @return true if the given {@link EObject} is referenced by the left/right or origin match
+		 *         reference.
+		 */
+		private boolean isReferencedByTheMatch(EObject eObj, Match match) {
+			return match != null
+					&& (match.getRight() == eObj || match.getLeft() == eObj || match.getOrigin() == eObj);
 		}
 
 		/**
@@ -409,10 +545,6 @@ public class EditionDistance implements DistanceFunction {
 		 * @return The created Match.
 		 */
 		private Match createOrUpdateFakeMatch(EObject a, EObject b) {
-			if (!comparison.getMatches().iterator().hasNext()) {
-				Match fakeMatch = CompareFactory.eINSTANCE.createMatch();
-				((InternalEList<Match>)comparison.getMatches()).addUnique(fakeMatch);
-			}
 			Match fakeMatch = comparison.getMatches().get(0);
 			fakeMatch.setLeft(a);
 			fakeMatch.setRight(b);
@@ -456,7 +588,7 @@ public class EditionDistance implements DistanceFunction {
 	/**
 	 * {@inheritDoc}
 	 */
-	public int getMaxDistance(EObject eObj) {
+	public double getThresholdAmount(EObject eObj) {
 
 		Predicate<EStructuralFeature> featureFilter = new Predicate<EStructuralFeature>() {
 
@@ -471,19 +603,41 @@ public class EditionDistance implements DistanceFunction {
 		// Ecore so I'll try to gather as much as test data I can and add the corresponding test to be able to
 		// assess the quality of further changes.
 		int max = 0;
+		int nbFeatures = 0;
 		for (EReference feat : Iterables.filter(eObj.eClass().getEAllReferences(), featureFilter)) {
 			if (eObj.eIsSet(feat)) {
-				max += weights.getWeight(feat) * referenceChangeCoef;
+				max += weights.getWeight(feat);
+				nbFeatures++;
 			}
 		}
 		for (EAttribute feat : Iterables.filter(eObj.eClass().getEAllAttributes(), featureFilter)) {
 			if (eObj.eIsSet(feat)) {
-				max += weights.getWeight(feat) * attributeChangeCoef;
+				max += weights.getWeight(feat);
+				nbFeatures++;
 			}
 		}
-		// 10 is the maximum distance for an URIDistance.
-		max = max + locationChangeCoef * uriDistance.getUpperBoundDistance();
-		return Double.valueOf(max * MAX_DIST_RATIO).intValue();
+		// max = max + (locationChangeCoef * weights.getParentWeight(eObj));
+		max = max + weights.getContainingFeatureWeight(eObj);
+
+		return max * getThresholdRatio(nbFeatures);
+	}
+
+	/**
+	 * return a ratio to appli on the amount of maximum un-similarity amount depending on the number of
+	 * features which are considered.
+	 * 
+	 * @param nbFeatures
+	 *            the nb of features which should be considerd to compute the amount.
+	 * @return a ratio to appli on the amount of maximum un-similarity amount depending on the number of
+	 *         features which are considered.
+	 */
+	private double getThresholdRatio(int nbFeatures) {
+		if (nbFeatures >= thresholds.length) {
+			// CHECKSTYLE:OFF
+			return 0.465d;
+			// CHECKSTYLE:ON
+		}
+		return thresholds[nbFeatures];
 	}
 
 }

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.eobject;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -18,7 +20,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.CompareFactory;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.match.eobject.EObjectIndex.Side;
 import org.eclipse.emf.ecore.EObject;
@@ -39,7 +44,7 @@ import org.eclipse.emf.ecore.EObject;
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
-public class ProximityEObjectMatcher implements IEObjectMatcher {
+public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 
 	/**
 	 * The index which keep the EObjects.
@@ -47,14 +52,9 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 	private EObjectIndex index;
 
 	/**
-	 * The list of matches found.
+	 * Keeps track of which side was the EObject from.
 	 */
-	private List<Match> matches = Lists.newArrayList();
-
-	/**
-	 * A map cross referencing the eObject to their match.
-	 */
-	private Map<EObject, Match> eObjectsToMatch = Maps.newHashMap();
+	private Map<EObject, Side> eObjectsToSide = Maps.newHashMap();
 
 	/**
 	 * Create the matcher using the given distance function.
@@ -63,88 +63,166 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 	 *            a function to measure the distance between two {@link EObject}s.
 	 */
 	public ProximityEObjectMatcher(DistanceFunction meter) {
-		this.index = new ByTypeIndex(meter);
+		this.index = new ByTypeIndex(meter, this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 
-	public Iterable<Match> createMatches(Iterator<? extends EObject> leftEObjects,
+	public void createMatches(Comparison comparison, Iterator<? extends EObject> leftEObjects,
 			Iterator<? extends EObject> rightEObjects, Iterator<? extends EObject> originEObjects) {
 
+		// TODO use the monitor we have been passed on as soon as we have one.
+		Monitor monitor = new BasicMonitor();
+		monitor.beginTask("indexing objects", 1);
+		int nbElements = 0;
 		/*
 		 * We are iterating through the three sides of the scope at the same time so that index might apply
 		 * pre-matching strategies elements if they wish.
 		 */
 		while (leftEObjects.hasNext() || rightEObjects.hasNext() || leftEObjects.hasNext()) {
+
 			if (leftEObjects.hasNext()) {
-				index.index(leftEObjects.next(), Side.LEFT);
+				EObject next = leftEObjects.next();
+				nbElements++;
+				index.index(next, Side.LEFT);
+				eObjectsToSide.put(next, Side.LEFT);
 			}
+
 			if (rightEObjects.hasNext()) {
-				index.index(rightEObjects.next(), Side.RIGHT);
+				EObject next = rightEObjects.next();
+				nbElements++;
+				index.index(next, Side.RIGHT);
+				eObjectsToSide.put(next, Side.RIGHT);
 			}
+
 			if (originEObjects.hasNext()) {
-				index.index(originEObjects.next(), Side.ORIGIN);
+				EObject next = originEObjects.next();
+				nbElements++;
+				index.index(next, Side.ORIGIN);
+				eObjectsToSide.put(next, Side.ORIGIN);
 			}
 		}
+		monitor.done();
+		monitor.beginTask("matching objects", nbElements);
 
-		for (EObject left : index.getValuesStillThere(Side.LEFT)) {
-			Map<Side, EObject> closests = index.findClosests(left, Side.LEFT);
-			EObject right = closests.get(Side.RIGHT);
-			EObject ancestor = closests.get(Side.ORIGIN);
-			areMatching(left, right, ancestor);
-			if (right != null) {
-				index.remove(right, Side.RIGHT);
-			}
-			index.remove(left, Side.LEFT);
-			if (ancestor != null) {
-				index.remove(ancestor, Side.ORIGIN);
-			}
+		Iterator<EObject> todo = index.getValuesStillThere(Side.LEFT).iterator();
+		while (todo.hasNext()) {
+			Iterator<EObject> remainingResult = matchList(comparison, todo, monitor).iterator();
+			todo = remainingResult;
 
 		}
+		todo = index.getValuesStillThere(Side.RIGHT).iterator();
+		while (todo.hasNext()) {
+			Iterator<EObject> remainingResult = matchList(comparison, todo, monitor).iterator();
+			todo = remainingResult;
+		}
 
-		/*
-		 * now we have to process the remaining objects starting from the right index and trying to match an l
-		 * object.
-		 */
-		for (EObject rObj : index.getValuesStillThere(Side.RIGHT)) {
-			Map<Side, EObject> closests = index.findClosests(rObj, Side.RIGHT);
-			EObject lObj = closests.get(Side.LEFT);
-			EObject aObj = closests.get(Side.ORIGIN);
-			areMatching(lObj, rObj, aObj);
-			index.remove(rObj, Side.RIGHT);
+		for (EObject notFound : index.getValuesStillThere(Side.RIGHT)) {
+			areMatching(comparison, null, notFound, null);
+		}
+		for (EObject notFound : index.getValuesStillThere(Side.LEFT)) {
+			areMatching(comparison, notFound, null, null);
+		}
+		for (EObject notFound : index.getValuesStillThere(Side.ORIGIN)) {
+			areMatching(comparison, null, null, notFound);
+		}
+
+		monitor.done();
+		restructureMatchModel(comparison);
+
+	}
+
+	/**
+	 * Process the list of objects matching them. This method might not be able to process all the EObjects if
+	 * - for instance, their container has not been matched already. Every object which could not be matched
+	 * is returned in the list.
+	 * 
+	 * @param comparison
+	 *            the comparison being built.
+	 * @param todo
+	 *            the list of objects to process.
+	 * @param monitor
+	 *            a monitor to track progress.
+	 * @return the list of
+	 */
+	private Iterable<EObject> matchList(Comparison comparison, Iterator<EObject> todo, Monitor monitor) {
+		List<EObject> remainingResult = Lists.newArrayList();
+		while (todo.hasNext()) {
+			EObject next = todo.next();
+			if (next.eContainer() == null || comparison.getMatch(next.eContainer()) != null
+					|| !isInScope(next.eContainer())) {
+				if (!tryToMatch(comparison, next)) {
+					remainingResult.add(next);
+				}
+				monitor.worked(1);
+			} else {
+				remainingResult.add(next);
+			}
+		}
+		return remainingResult;
+	}
+
+	/**
+	 * Try to create a Match. If the match got created, register it (having actual left/right/origin matches
+	 * or not), if not, then return false. Cases where it might not create the match : if some required data
+	 * has not been computed yet (for instance if the container of an object has not been matched and if the
+	 * distance need to know if it's match to find the children matches).
+	 * 
+	 * @param comparison
+	 *            the comparison under construction, it will be updated with the new match.
+	 * @param a
+	 *            object to match.
+	 * @return false if the conditions are not fulfilled to create the match, true otherwhise.
+	 */
+	private boolean tryToMatch(Comparison comparison, EObject a) {
+		Side aSide = eObjectsToSide.get(a);
+		assert aSide != null;
+		Side bSide = Side.LEFT;
+		Side cSide = Side.RIGHT;
+		if (aSide == Side.RIGHT) {
+			bSide = Side.LEFT;
+			cSide = Side.ORIGIN;
+		} else if (aSide == Side.LEFT) {
+			bSide = Side.RIGHT;
+			cSide = Side.ORIGIN;
+		} else if (aSide == Side.ORIGIN) {
+			bSide = Side.LEFT;
+			cSide = Side.RIGHT;
+		}
+		assert aSide != bSide;
+		assert bSide != cSide;
+		assert cSide != aSide;
+		Map<Side, EObject> closests = index.findClosests(comparison, a, aSide);
+		if (closests != null) {
+			EObject lObj = closests.get(bSide);
+			EObject aObj = closests.get(cSide);
+			areMatching(comparison, closests.get(Side.LEFT), closests.get(Side.RIGHT), closests
+					.get(Side.ORIGIN));
 			if (lObj != null) {
 				index.remove(lObj, Side.LEFT);
 			}
 			if (aObj != null) {
 				index.remove(aObj, Side.ORIGIN);
 			}
+			if (a != null) {
+				index.remove(a, Side.RIGHT);
+			}
+			return true;
 		}
-
-		for (EObject notFound : index.getValuesStillThere(Side.RIGHT)) {
-			areMatching(null, notFound, null);
-			index.remove(notFound, Side.RIGHT);
-		}
-		for (EObject notFound : index.getValuesStillThere(Side.LEFT)) {
-			areMatching(notFound, null, null);
-			index.remove(notFound, Side.LEFT);
-		}
-		for (EObject notFound : index.getValuesStillThere(Side.ORIGIN)) {
-			areMatching(null, null, notFound);
-			index.remove(notFound, Side.ORIGIN);
-		}
-
-		restructureMatchModel();
-
-		return matches;
+		return false;
 	}
 
 	/**
-	 * Process all the matches and re-attach them to their parent if one is found.
+	 * Process all the matches of the given comparison and re-attach them to their parent if one is found.
+	 * 
+	 * @param comparison
+	 *            the comparison to restructure.
 	 */
-	private void restructureMatchModel() {
-		Iterator<Match> it = matches.iterator();
+	private void restructureMatchModel(Comparison comparison) {
+		Iterator<Match> it = ImmutableList.copyOf(Iterators.filter(comparison.eAllContents(), Match.class))
+				.iterator();
 
 		while (it.hasNext()) {
 			Match cur = it.next();
@@ -158,17 +236,18 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 			if (possibleContainer == null && cur.getOrigin() != null) {
 				possibleContainer = cur.getOrigin().eContainer();
 			}
-			Match possibleContainerMatch = eObjectsToMatch.get(possibleContainer);
+			Match possibleContainerMatch = comparison.getMatch(possibleContainer);
 			if (possibleContainerMatch != null) {
 				((BasicEList<Match>)possibleContainerMatch.getSubmatches()).addUnique(cur);
-				it.remove();
 			}
 		}
 	}
 
 	/**
-	 * Register the given object as a match.
+	 * Register the given object as a match and add it in the comparison.
 	 * 
+	 * @param comparison
+	 *            container for the Match.
 	 * @param left
 	 *            left element.
 	 * @param right
@@ -177,22 +256,19 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 	 *            origin element.
 	 * @return the created match.
 	 */
-	private Match areMatching(EObject left, EObject right, EObject origin) {
+	private Match areMatching(Comparison comparison, EObject left, EObject right, EObject origin) {
 		Match result = CompareFactory.eINSTANCE.createMatch();
 		result.setLeft(left);
 		result.setRight(right);
 		result.setOrigin(origin);
-		matches.add(result);
+		((BasicEList<Match>)comparison.getMatches()).addUnique(result);
 		if (left != null) {
-			eObjectsToMatch.put(left, result);
 			index.remove(left, Side.LEFT);
 		}
 		if (right != null) {
-			eObjectsToMatch.put(right, result);
 			index.remove(right, Side.RIGHT);
 		}
 		if (origin != null) {
-			eObjectsToMatch.put(origin, result);
 			index.remove(origin, Side.ORIGIN);
 		}
 		return result;
@@ -218,6 +294,9 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 		 * Return the distance between two EObjects. When the two objects should considered as completely
 		 * different the implementation is expected to return Integer.MAX_VALUE.
 		 * 
+		 * @param inProgress
+		 *            the comparison being processed right now. This might be used for the distance to
+		 *            retrieve other matches for instance.
 		 * @param a
 		 *            first object.
 		 * @param b
@@ -225,19 +304,30 @@ public class ProximityEObjectMatcher implements IEObjectMatcher {
 		 * @return the distance between the two EObjects or Integer.MAX_VALUE when the objects are considered
 		 *         too different to be the same.
 		 */
-		int distance(EObject a, EObject b);
+		double distance(Comparison inProgress, EObject a, EObject b);
 
 		/**
 		 * Check that two objects are equals from the distance function point of view (distance should be 0)
 		 * You should prefer this method when you just want to check objects are not equals enabling the
 		 * distance to stop sooner.
 		 * 
+		 * @param inProgress
+		 *            the comparison being processed right now. This might be used for the distance to
+		 *            retrieve other matches for instance.
 		 * @param a
 		 *            first object.
 		 * @param b
 		 *            second object.
 		 * @return true of the two objects are equals, false otherwise.
 		 */
-		boolean areIdentic(EObject a, EObject b);
+		boolean areIdentic(Comparison inProgress, EObject a, EObject b);
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isInScope(EObject eContainer) {
+		return eObjectsToSide.get(eContainer) != null;
 	}
 }

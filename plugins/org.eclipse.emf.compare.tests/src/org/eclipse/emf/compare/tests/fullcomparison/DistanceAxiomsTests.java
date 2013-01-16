@@ -13,10 +13,10 @@ package org.eclipse.emf.compare.tests.fullcomparison;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
 
-import org.eclipse.emf.compare.match.DefaultMatchEngine;
+import org.eclipse.emf.compare.CompareFactory;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.match.eobject.EditionDistance;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher.DistanceFunction;
 import org.eclipse.emf.compare.tests.suite.AllTests;
@@ -46,9 +46,12 @@ public class DistanceAxiomsTests {
 
 	private int MAX_DISTANCE = Integer.MAX_VALUE;
 
+	private Comparison comparison;
+
 	@Before
 	public void setUp() throws Exception {
 		AllTests.fillEMFRegistries();
+		this.comparison = CompareFactory.eINSTANCE.createComparison();
 		this.meter = new EditionDistance();
 	}
 
@@ -58,8 +61,8 @@ public class DistanceAxiomsTests {
 	@Theory
 	public void symetry(EObject a, EObject b) {
 		Assume.assumeTrue(a.eClass() == b.eClass());
-		int aTob = meter.distance(a, b);
-		int bToa = meter.distance(b, a);
+		double aTob = meter.distance(comparison, a, b);
+		double bToa = meter.distance(comparison, b, a);
 		assertEquals(aTob, bToa);
 	}
 
@@ -69,15 +72,15 @@ public class DistanceAxiomsTests {
 
 	@Theory
 	public void separation(EObject a) {
-		assertEquals(0, meter.distance(a, a));
+		assertEquals(0, meter.distance(comparison, a, a));
 	}
 
 	@Theory
 	public void triangularInequality(EObject x, EObject y, EObject z) {
 		Assume.assumeTrue(x.eClass() == y.eClass() && x.eClass() == z.eClass());
-		int xToz = meter.distance(x, z);
-		int xToy = meter.distance(x, y);
-		int yToz = meter.distance(y, z);
+		double xToz = meter.distance(comparison, x, z);
+		double xToy = meter.distance(comparison, x, y);
+		double yToz = meter.distance(comparison, y, z);
 		assertTrue("Triangular inequality (x-z <= x-y + y-z ) failed (" + xToz + "<=" + xToy + " + " + yToz
 				+ ")for \nx:" + x.toString() + "\n|y:" + y.toString() + "\n|z:" + z.toString(), xToz <= xToy
 				+ yToz);

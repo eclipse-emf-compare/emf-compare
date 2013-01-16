@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.eobject;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
@@ -27,5 +28,23 @@ public interface WeightProvider {
 	 * @return the weight for the given feature. 0 meaning no effects.
 	 */
 	int getWeight(EStructuralFeature attribute);
+
+	/**
+	 * Return the weight associated with the fact some Object has changed it's container.
+	 * 
+	 * @param a
+	 *            any instance.
+	 * @return a weight representing the importance of the change of container to compute matches.
+	 */
+	int getParentWeight(EObject a);
+
+	/**
+	 * Return the weight associated with the fact some Object has changed it's containing reference.
+	 * 
+	 * @param a
+	 *            any instance.
+	 * @return a weight representing the importance of the change of containing reference to compute matches.
+	 */
+	int getContainingFeatureWeight(EObject a);
 
 }

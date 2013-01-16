@@ -13,7 +13,6 @@ package org.eclipse.emf.compare.match;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
@@ -25,7 +24,6 @@ import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.match.eobject.EditionDistance;
 import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
@@ -185,9 +183,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 		final Iterator<? extends EObject> rightEObjects = Iterators.concat(rightIterators.iterator());
 		final Iterator<? extends EObject> originEObjects = Iterators.concat(originIterators.iterator());
 
-		final Iterable<Match> matches = getEObjectMatcher().createMatches(leftEObjects, rightEObjects,
-				originEObjects);
-		Iterables.addAll(comparison.getMatches(), matches);
+		getEObjectMatcher().createMatches(comparison, leftEObjects, rightEObjects, originEObjects);
 	}
 
 	/**
@@ -270,15 +266,13 @@ public class DefaultMatchEngine implements IMatchEngine {
 			originEObjects = Iterators.emptyIterator();
 		}
 
-		final Iterable<Match> matches = getEObjectMatcher().createMatches(leftEObjects, rightEObjects,
-				originEObjects);
+		getEObjectMatcher().createMatches(comparison, leftEObjects, rightEObjects, originEObjects);
 
-		Iterables.addAll(comparison.getMatches(), matches);
 	}
 
 	/**
 	 * This will query the scope for the given {@link EObject}s' children, then delegate to an
-	 * {@link IEObjectMatcher} to compute the {@link Match}es.
+	 * {@link IEObjectMatcher} to compute the Matches.
 	 * <p>
 	 * We expect at least the <code>left</code> and <code>right</code> EObjects not to be <code>null</code>.
 	 * </p>
@@ -313,10 +307,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 			originEObjects = Iterators.emptyIterator();
 		}
 
-		final Iterable<Match> matches = getEObjectMatcher().createMatches(leftEObjects, rightEObjects,
-				originEObjects);
-
-		Iterables.addAll(comparison.getMatches(), matches);
+		getEObjectMatcher().createMatches(comparison, leftEObjects, rightEObjects, originEObjects);
 	}
 
 	/**
@@ -383,7 +374,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 */
 	public static IEObjectMatcher createDefaultEObjectMatcher(UseIdentifiers useIDs) {
 		final IEObjectMatcher matcher;
-		final EditionDistance editionDistance = EditionDistance.builder().build();
+		final EditionDistance editionDistance = new EditionDistance();
 		switch (useIDs) {
 			case NEVER:
 				matcher = new ProximityEObjectMatcher(editionDistance);
