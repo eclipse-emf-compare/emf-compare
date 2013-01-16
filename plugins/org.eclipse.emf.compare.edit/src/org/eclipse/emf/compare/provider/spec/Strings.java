@@ -39,7 +39,7 @@ public final class Strings {
 	 */
 	public static String elide(String original, int max, String suffix) {
 		if (original.length() > max) {
-			String elided = original.substring(0, original.length() - suffix.length());
+			String elided = original.substring(0, max - suffix.length());
 			return elided + suffix;
 		}
 		return original;
