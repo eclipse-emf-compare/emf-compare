@@ -169,4 +169,11 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 		return new CopyAllNonConflictingCommand(fChangeRecorder, notifiers, differences, leftToRight);
 	}
 
+	/**
+	 * @since 3.0
+	 */
+	public ChangeRecorder getChangeRecorder() {
+		return fChangeRecorder;
+	}
+
 }

@@ -15,16 +15,21 @@ import java.util.List;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
+import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
- *
  */
 public interface ICompareEditingDomain {
 
 	void dispose();
 
 	ICompareCommandStack getCommandStack();
+
+	/**
+	 * @since 3.0
+	 */
+	ChangeRecorder getChangeRecorder();
 
 	Command createCopyCommand(Diff diff, boolean leftToRight);
 
