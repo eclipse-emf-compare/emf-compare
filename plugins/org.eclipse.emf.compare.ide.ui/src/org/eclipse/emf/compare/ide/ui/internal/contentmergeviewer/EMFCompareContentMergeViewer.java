@@ -97,6 +97,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	private final DynamicObject fDynamicObject;
 
+	private CommandStackListener fCommandStackListener;
+
 	/**
 	 * @param style
 	 * @param bundle
@@ -285,15 +287,18 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		final UndoAction undoAction = new UndoAction(fEditingDomain);
 		final RedoAction redoAction = new RedoAction(fEditingDomain);
 
-		fEditingDomain.getCommandStack().addCommandStackListener(new CommandStackListener() {
-			public void commandStackChanged(EventObject event) {
-				undoAction.update();
-				redoAction.update();
-				setLeftDirty(fEditingDomain.getCommandStack().isLeftSaveNeeded());
-				setRightDirty(fEditingDomain.getCommandStack().isRightSaveNeeded());
-				refresh();
-			}
-		});
+		if (fCommandStackListener == null) {
+			fCommandStackListener = new CommandStackListener() {
+				public void commandStackChanged(EventObject event) {
+					undoAction.update();
+					redoAction.update();
+					setLeftDirty(fEditingDomain.getCommandStack().isLeftSaveNeeded());
+					setRightDirty(fEditingDomain.getCommandStack().isRightSaveNeeded());
+					refresh();
+				}
+			};
+		}
+		fEditingDomain.getCommandStack().addCommandStackListener(fCommandStackListener);
 
 		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
 		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
@@ -528,5 +533,18 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			fLeft.setSelection(selection, true);
 			fRight.setSelection(selection, true);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
+	 */
+	@Override
+	protected void handleDispose(DisposeEvent event) {
+		if (fCommandStackListener != null) {
+			fEditingDomain.getCommandStack().removeCommandStackListener(fCommandStackListener);
+		}
+		super.handleDispose(event);
 	}
 }
