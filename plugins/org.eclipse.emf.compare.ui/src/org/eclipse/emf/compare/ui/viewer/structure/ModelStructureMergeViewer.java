@@ -177,6 +177,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	 */
 	protected void createToolItems() {
 		final ToolBarManager tbm = CompareViewerPane.getToolBarManager(getControl().getParent());
+		tbm.removeAll();
 		if (exportMenu == null) {
 			exportMenu = new ExportMenu(tbm.getControl(), this);
 		}
