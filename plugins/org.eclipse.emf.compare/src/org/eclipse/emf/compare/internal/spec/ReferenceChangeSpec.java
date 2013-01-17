@@ -686,6 +686,32 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					equivalent.copyLeftToRight();
 					continueMerge = false;
 				}
+			} else if (getSource() == DifferenceSource.LEFT) {
+				// This can happen when merging subset/supersets... see AddInterfaceTest#testA50UseCase
+				/*
+				 * This should be removed (or we should make sure that we can never be here) when bug 398402
+				 * is fixed.
+				 */
+				if (rightToLeft && getRequiredBy().contains(equivalent)) {
+					equivalent.copyRightToLeft();
+					continueMerge = false;
+				} else if (!rightToLeft && getRequires().contains(equivalent)) {
+					equivalent.copyLeftToRight();
+					continueMerge = false;
+				}
+			} else if (getSource() == DifferenceSource.RIGHT) {
+				// This can happen when merging subset/supersets... see AddInterfaceTest#testA50UseCase
+				/*
+				 * This should be removed (or we should make sure that we can never be here) when bug 398402
+				 * is fixed.
+				 */
+				if (rightToLeft && getRequires().contains(equivalent)) {
+					equivalent.copyRightToLeft();
+					continueMerge = false;
+				} else if (!rightToLeft && getRequiredBy().contains(equivalent)) {
+					equivalent.copyLeftToRight();
+					continueMerge = false;
+				}
 			}
 			equivalent.setState(DifferenceState.MERGED);
 		}

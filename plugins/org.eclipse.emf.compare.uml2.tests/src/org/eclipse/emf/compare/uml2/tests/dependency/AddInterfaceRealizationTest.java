@@ -186,8 +186,10 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getEquivalences().size()));
 
 		assertNotNull(addClientInInterfaceRealization.getEquivalence());
-		assertSame(Integer.valueOf(1), Integer.valueOf(addClientInInterfaceRealization.getEquivalence()
+		assertSame(Integer.valueOf(2), Integer.valueOf(addClientInInterfaceRealization.getEquivalence()
 				.getDifferences().size()));
+		assertTrue(addClientInInterfaceRealization.getEquivalence().getDifferences().contains(
+				addInterfaceRealization));
 	}
 
 	@Override
