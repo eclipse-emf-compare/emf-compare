@@ -19,10 +19,12 @@ import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.ForwardingItemProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.spec.Strings;
+import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
-import org.eclipse.jface.viewers.StyledString;
 
 /**
  * Specialized ForwardingItemProvider for UML.
@@ -179,32 +181,32 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider implem
 	 * 
 	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
 	 */
-	public StyledString getStyledText(Object object) {
+	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		final UMLDiff umlDiff = (UMLDiff)object;
 
 		final String valueText = getValueText(umlDiff);
 		final String referenceText = getReferenceText(umlDiff);
 
-		StyledString ret = new StyledString(valueText);
-		ret.append(" [" + referenceText, StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+		ComposedStyledString ret = new ComposedStyledString(valueText);
+		ret.append(" [" + referenceText, Style.DECORATIONS_STYLER); //$NON-NLS-1$
 		switch (umlDiff.getKind()) {
 			case ADD:
-				ret.append(" add", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$ 
+				ret.append(" add", Style.DECORATIONS_STYLER); //$NON-NLS-1$ 
 				break;
 			case DELETE:
-				ret.append(" delete", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$ 
+				ret.append(" delete", Style.DECORATIONS_STYLER); //$NON-NLS-1$ 
 				break;
 			case CHANGE:
-				ret.append(" change", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$ 
+				ret.append(" change", Style.DECORATIONS_STYLER); //$NON-NLS-1$ 
 				break;
 			case MOVE:
-				ret.append(" move", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$ 
+				ret.append(" move", Style.DECORATIONS_STYLER); //$NON-NLS-1$ 
 				break;
 			default:
 				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
 						+ " value: " + umlDiff.getKind()); //$NON-NLS-1$
 		}
-		ret.append("]", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+		ret.append("]", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 
 		return ret;
 	}

@@ -34,9 +34,10 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
+import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.jface.viewers.StyledString;
 
 /**
  * Specialized {@link MatchItemProvider} returning nice output for {@link #getText(Object)} and
@@ -259,7 +260,7 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 	 * 
 	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
 	 */
-	public StyledString getStyledText(Object object) {
-		return new StyledString(getText(object));
+	public IStyledString.IComposedStyledString getStyledText(Object object) {
+		return new ComposedStyledString(getText(object));
 	}
 }

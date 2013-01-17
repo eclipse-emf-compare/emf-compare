@@ -32,12 +32,14 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.ReferenceChangeItemProvider;
+import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import org.eclipse.jface.viewers.StyledString;
 
 /**
  * Specialized {@link ReferenceChangeItemProvider} returning nice output for {@link #getText(Object)} and
@@ -219,35 +221,35 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	 * 
 	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
 	 */
-	public StyledString getStyledText(Object object) {
+	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		final ReferenceChange refChange = (ReferenceChange)object;
 
 		final String valueText = getValueText(refChange);
 
 		final String referenceText = getReferenceText(refChange);
 
-		StyledString ret = new StyledString(valueText);
-		ret.append(" [" + referenceText, StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+		ComposedStyledString ret = new ComposedStyledString(valueText);
+		ret.append(" [" + referenceText, Style.DECORATIONS_STYLER); //$NON-NLS-1$
 
 		switch (refChange.getKind()) {
 			case ADD:
-				ret.append(" add", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+				ret.append(" add", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 				break;
 			case DELETE:
-				ret.append(" delete", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+				ret.append(" delete", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 				break;
 			case CHANGE:
 				ret.append(" " + changeText(refChange, refChange.getReference()), //$NON-NLS-1$
-						StyledString.DECORATIONS_STYLER);
+						Style.DECORATIONS_STYLER);
 				break;
 			case MOVE:
-				ret.append(" move", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+				ret.append(" move", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 				break;
 			default:
 				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
 						+ " value: " + refChange.getKind()); //$NON-NLS-1$
 		}
-		ret.append("]", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+		ret.append("]", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 
 		return ret;
 	}

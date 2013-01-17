@@ -18,11 +18,13 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
+import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.compare.uml2.provider.StereotypeApplicationChangeItemProvider;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.util.UMLUtil;
@@ -141,7 +143,7 @@ public class StereotypeApplicationChangeItemProviderSpec extends StereotypeAppli
 	 * 
 	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
 	 */
-	public StyledString getStyledText(Object object) {
+	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		final UMLDiff umlDiff = (UMLDiff)object;
 
 		Stereotype stereotype = ((StereotypeApplicationChange)umlDiff).getStereotype();
@@ -149,7 +151,7 @@ public class StereotypeApplicationChangeItemProviderSpec extends StereotypeAppli
 			stereotype = UMLUtil.getStereotype(umlDiff.getDiscriminant());
 		}
 
-		final StyledString stereotypeText = new StyledString();
+		final ComposedStyledString stereotypeText = new ComposedStyledString();
 		if (stereotype != null) {
 			stereotypeText.append(AdapterFactoryUtil.getText(getRootAdapterFactory(), stereotype) + ' ');
 		} else if (umlDiff.getDiscriminant() instanceof NamedElement) {
@@ -186,7 +188,6 @@ public class StereotypeApplicationChangeItemProviderSpec extends StereotypeAppli
 			targetLabel += AdapterFactoryUtil.getText(getRootAdapterFactory(), target);
 		}
 
-		return stereotypeText
-				.append(" [" + targetLabel + " " + action + "]", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return stereotypeText.append(" [" + targetLabel + " " + action + "]", Style.DECORATIONS_STYLER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }

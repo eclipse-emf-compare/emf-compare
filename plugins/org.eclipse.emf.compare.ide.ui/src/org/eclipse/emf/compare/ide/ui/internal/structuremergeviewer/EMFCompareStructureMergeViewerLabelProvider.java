@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.Dif
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ImageProvider;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.MatchNode;
 import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareCompositeImageDescriptor;
+import org.eclipse.emf.compare.ide.ui.internal.util.StyledStringConverter;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -132,7 +133,9 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 			target = ((Adapter)element).getTarget();
 			adapter = adapterFactory.adapt(target, IItemStyledLabelProvider.class);
 			if (adapter instanceof IItemStyledLabelProvider) {
-				return ((IItemStyledLabelProvider)adapter).getStyledText(target);
+				StyledStringConverter stringConverter = new StyledStringConverter();
+				return stringConverter.toJFaceStyledString(((IItemStyledLabelProvider)adapter)
+						.getStyledText(target));
 			}
 		}
 

@@ -1,6 +1,6 @@
 package org.eclipse.emf.compare.provider;
 
-import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
@@ -14,5 +14,5 @@ public interface IItemStyledLabelProvider {
 	 *            the object to evaluate the styled string for.
 	 * @return the styled string.
 	 */
-	public StyledString getStyledText(Object object);
+	public IComposedStyledString getStyledText(Object object);
 }

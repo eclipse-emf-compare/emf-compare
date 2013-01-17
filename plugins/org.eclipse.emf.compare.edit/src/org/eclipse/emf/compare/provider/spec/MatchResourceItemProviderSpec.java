@@ -14,7 +14,8 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.MatchResourceItemProvider;
-import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString;
 
 /**
  * Specialized {@link MatchResourceItemProvider} returning nice output for {@link #getText(Object)} and
@@ -98,7 +99,7 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider imp
 	 * 
 	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
 	 */
-	public StyledString getStyledText(Object object) {
-		return new StyledString(getText(object));
+	public IStyledString.IComposedStyledString getStyledText(Object object) {
+		return new ComposedStyledString(getText(object));
 	}
 }

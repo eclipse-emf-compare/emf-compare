@@ -18,7 +18,8 @@ import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.provider.ConflictItemProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
-import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -59,10 +60,11 @@ public class ConflictItemProviderSpec extends ConflictItemProvider implements II
 	 * 
 	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
 	 */
-	public StyledString getStyledText(Object object) {
+	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		Conflict conflict = (Conflict)object;
 		int size = conflict.getDifferences().size() - 1;
-		return new StyledString(conflict.getKind().getName() + " conflict with " + size + " other difference" //$NON-NLS-1$ //$NON-NLS-2$
+		return new ComposedStyledString(conflict.getKind().getName()
+				+ " conflict with " + size + " other difference" //$NON-NLS-1$ //$NON-NLS-2$
 				+ (size > 1 ? "s" : "")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

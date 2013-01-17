@@ -23,8 +23,10 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.AttributeChangeItemProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
+import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jface.viewers.StyledString;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -120,36 +122,36 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 	 * 
 	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
 	 */
-	public StyledString getStyledText(Object object) {
+	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		final AttributeChange attChange = (AttributeChange)object;
 
 		final String valueText = getValueText(attChange);
 
 		final String attributeText = getAttributeText(attChange);
 
-		StyledString ret = new StyledString(valueText);
-		ret.append(" [" + attributeText, StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+		ComposedStyledString ret = new ComposedStyledString(valueText);
+		ret.append(" [" + attributeText, Style.DECORATIONS_STYLER); //$NON-NLS-1$
 
 		switch (attChange.getKind()) {
 			case ADD:
-				ret.append(" add", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+				ret.append(" add", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 				break;
 			case DELETE:
-				ret.append(" delete", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+				ret.append(" delete", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 				break;
 			case CHANGE:
 				ret.append(
 						" " + ReferenceChangeItemProviderSpec.changeText(attChange, attChange.getAttribute()), //$NON-NLS-1$
-						StyledString.DECORATIONS_STYLER);
+						Style.DECORATIONS_STYLER);
 				break;
 			case MOVE:
-				ret.append(" move", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+				ret.append(" move", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 				break;
 			default:
 				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
 						+ " value: " + attChange.getKind()); //$NON-NLS-1$
 		}
-		ret.append("]", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+		ret.append("]", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 
 		return ret;
 	}
