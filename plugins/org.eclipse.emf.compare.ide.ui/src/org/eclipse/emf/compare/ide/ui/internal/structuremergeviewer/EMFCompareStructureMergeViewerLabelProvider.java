@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
@@ -21,14 +22,17 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.Dif
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ImageProvider;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.MatchNode;
 import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareCompositeImageDescriptor;
+import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
-class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelProvider.FontAndColorProvider {
+class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelProvider.FontAndColorProvider implements IStyledLabelProvider {
 
 	private final boolean fLeftIsLocal;
 
@@ -46,15 +50,7 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 
 	@Override
 	public String getText(Object element) {
-		final String ret;
-		if (element instanceof IDiffElement) {
-			ret = ((IDiffElement)element).getName();
-		} else if (element instanceof DifferenceGroup) {
-			ret = ((DifferenceGroup)element).getName();
-		} else {
-			ret = super.getText(element);
-		}
-		return ret;
+		return getStyledText(element).getString();
 	}
 
 	/**
@@ -127,5 +123,28 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 		}
 
 		return ret;
+	}
+
+	public StyledString getStyledText(Object element) {
+		Object target = null;
+		Object adapter = null;
+		if (element instanceof Adapter) {
+			target = ((Adapter)element).getTarget();
+			adapter = adapterFactory.adapt(target, IItemStyledLabelProvider.class);
+			if (adapter instanceof IItemStyledLabelProvider) {
+				return ((IItemStyledLabelProvider)adapter).getStyledText(target);
+			}
+		}
+
+		final String ret;
+		if (element instanceof IDiffElement) {
+			ret = ((IDiffElement)element).getName();
+		} else if (element instanceof DifferenceGroup) {
+			ret = ((DifferenceGroup)element).getName();
+		} else {
+			ret = super.getText(element);
+		}
+		return new StyledString(ret);
+
 	}
 }

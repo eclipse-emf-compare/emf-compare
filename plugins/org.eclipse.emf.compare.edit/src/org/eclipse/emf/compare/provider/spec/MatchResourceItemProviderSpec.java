@@ -12,7 +12,9 @@ package org.eclipse.emf.compare.provider.spec;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.MatchResource;
+import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.MatchResourceItemProvider;
+import org.eclipse.jface.viewers.StyledString;
 
 /**
  * Specialized {@link MatchResourceItemProvider} returning nice output for {@link #getText(Object)} and
@@ -20,7 +22,7 @@ import org.eclipse.emf.compare.provider.MatchResourceItemProvider;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class MatchResourceItemProviderSpec extends MatchResourceItemProvider {
+public class MatchResourceItemProviderSpec extends MatchResourceItemProvider implements IItemStyledLabelProvider {
 
 	/**
 	 * Constructor calling super {@link #MatchResourceItemProviderSpec(AdapterFactory)}.
@@ -89,5 +91,14 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider {
 		}
 
 		return buffer.toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
+	 */
+	public StyledString getStyledText(Object object) {
+		return new StyledString(getText(object));
 	}
 }

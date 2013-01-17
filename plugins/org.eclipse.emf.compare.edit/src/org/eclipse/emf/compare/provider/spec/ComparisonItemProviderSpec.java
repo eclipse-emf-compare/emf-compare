@@ -23,13 +23,15 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.provider.ComparisonItemProvider;
+import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
+import org.eclipse.jface.viewers.StyledString;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class ComparisonItemProviderSpec extends ComparisonItemProvider {
+public class ComparisonItemProviderSpec extends ComparisonItemProvider implements IItemStyledLabelProvider {
 
 	/**
 	 * @param adapterFactory
@@ -85,5 +87,14 @@ public class ComparisonItemProviderSpec extends ComparisonItemProvider {
 			}
 		});
 		return match;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
+	 */
+	public StyledString getStyledText(Object object) {
+		return new StyledString(getText(object));
 	}
 }

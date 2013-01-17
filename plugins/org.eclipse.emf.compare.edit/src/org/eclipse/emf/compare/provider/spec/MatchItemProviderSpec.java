@@ -32,9 +32,11 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
+import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.jface.viewers.StyledString;
 
 /**
  * Specialized {@link MatchItemProvider} returning nice output for {@link #getText(Object)} and
@@ -42,7 +44,7 @@ import org.eclipse.emf.ecore.EReference;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class MatchItemProviderSpec extends MatchItemProvider {
+public class MatchItemProviderSpec extends MatchItemProvider implements IItemStyledLabelProvider {
 
 	private static final Predicate<ReferenceChange> CONTAINMENT_REFERENCE_CHANGE = new Predicate<ReferenceChange>() {
 		public boolean apply(ReferenceChange input) {
@@ -250,5 +252,14 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	public boolean hasChildren(Object object) {
 		Match match = (Match)object;
 		return !isEmpty(getChildrenIterable(match));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
+	 */
+	public StyledString getStyledText(Object object) {
+		return new StyledString(getText(object));
 	}
 }

@@ -29,7 +29,6 @@ public final class EMFCompareEditPlugin extends EMFPlugin {
 	public static final String PLUGIN_ID = "org.eclipse.emf.compare.edit"; //$NON-NLS-1$
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

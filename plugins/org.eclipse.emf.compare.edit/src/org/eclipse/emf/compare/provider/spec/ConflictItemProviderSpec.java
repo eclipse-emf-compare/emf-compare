@@ -17,11 +17,13 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.provider.ConflictItemProvider;
+import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class ConflictItemProviderSpec extends ConflictItemProvider {
+public class ConflictItemProviderSpec extends ConflictItemProvider implements IItemStyledLabelProvider {
 
 	/**
 	 * @param adapterFactory
@@ -37,10 +39,7 @@ public class ConflictItemProviderSpec extends ConflictItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		Conflict conflict = (Conflict)object;
-		int size = conflict.getDifferences().size() - 1;
-		return conflict.getKind().getName() + " conflict with " + size + " other difference"
-				+ (size > 1 ? "s" : "");
+		return getStyledText(object).getString();
 	}
 
 	/**
@@ -53,5 +52,17 @@ public class ConflictItemProviderSpec extends ConflictItemProvider {
 		Conflict conflict = (Conflict)object;
 		EList<Diff> differences = conflict.getDifferences();
 		return differences;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
+	 */
+	public StyledString getStyledText(Object object) {
+		Conflict conflict = (Conflict)object;
+		int size = conflict.getDifferences().size() - 1;
+		return new StyledString(conflict.getKind().getName() + " conflict with " + size + " other difference" //$NON-NLS-1$ //$NON-NLS-2$
+				+ (size > 1 ? "s" : "")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

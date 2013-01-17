@@ -59,6 +59,7 @@ import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -107,7 +108,8 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 
 		boolean leftIsLocal = CompareConfigurationExtension.getBoolean(configuration, "LEFT_IS_LOCAL", false); //$NON-NLS-1$
-		setLabelProvider(new EMFCompareStructureMergeViewerLabelProvider(fAdapterFactory, this, leftIsLocal));
+		setLabelProvider(new DelegatingStyledCellLabelProvider(
+				new EMFCompareStructureMergeViewerLabelProvider(fAdapterFactory, this, leftIsLocal)));
 		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(fAdapterFactory,
 				differenceGrouper));
 

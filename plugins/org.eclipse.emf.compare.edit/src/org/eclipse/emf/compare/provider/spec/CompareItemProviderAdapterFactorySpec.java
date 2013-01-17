@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.provider.spec;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.provider.CompareItemProviderAdapterFactory;
+import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 
 /**
@@ -21,6 +22,11 @@ import org.eclipse.emf.edit.provider.IItemLabelProvider;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAdapterFactory {
+
+	public CompareItemProviderAdapterFactorySpec() {
+		super();
+		supportedTypes.add(IItemStyledLabelProvider.class);
+	}
 
 	/**
 	 * {@inheritDoc}

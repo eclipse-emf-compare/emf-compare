@@ -14,22 +14,33 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.ForwardingItemProvider;
+import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.spec.Strings;
 import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
+import org.eclipse.jface.viewers.StyledString;
 
 /**
+ * Specialized ForwardingItemProvider for UML.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
+public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider implements IItemStyledLabelProvider {
 
 	/**
+	 * The maximum length of displayed text.
+	 */
+	private static final int MAX_LENGTH = 50;
+
+	/**
+	 * This constructs an instance from an adapter.
+	 * 
 	 * @param delegate
+	 *            the adapter to delegate to.
 	 */
 	public ForwardingUMLDiffItemProvider(ItemProviderAdapter delegate) {
 		super(delegate);
@@ -69,36 +80,7 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		final UMLDiff umlDiff = (UMLDiff)object;
-
-		String remotely = "";
-		if (umlDiff.getSource() == DifferenceSource.RIGHT) {
-			remotely = "remotely ";
-		}
-
-		final String valueText = getValueText(umlDiff);
-		final String referenceText = getReferenceText(umlDiff);
-
-		String ret = "";
-		switch (umlDiff.getKind()) {
-			case ADD:
-				ret = valueText + " has been " + remotely + "added to " + referenceText;
-				break;
-			case DELETE:
-				ret = valueText + " has been " + remotely + "deleted from " + referenceText;
-				break;
-			case CHANGE:
-				ret = valueText + " has been " + remotely + "changed";
-				break;
-			case MOVE:
-				ret = valueText + " has been " + remotely + "moved in " + referenceText;
-				break;
-			default:
-				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName()
-						+ " value: " + umlDiff.getKind());
-		}
-
-		return ret;
+		return getStyledText(object).getString();
 	}
 
 	/**
@@ -133,16 +115,30 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 		return image;
 	}
 
+	/**
+	 * Returns the value text for the given umlDiff.
+	 * 
+	 * @param umlDiff
+	 *            the given {@link UMLDiff}.
+	 * @return the value text.
+	 */
 	private String getValueText(final UMLDiff umlDiff) {
 		String value = AdapterFactoryUtil.getText(getRootAdapterFactory(), umlDiff.getDiscriminant());
 		if (value == null) {
 			value = "<null>";
 		} else {
-			value = Strings.elide(value, 50, "...");
+			value = Strings.elide(value, MAX_LENGTH, "...");
 		}
 		return value;
 	}
 
+	/**
+	 * Returns the reference text for the given umlDiff.
+	 * 
+	 * @param umlDiff
+	 *            the given {@link UMLDiff}.
+	 * @return the reference text.
+	 */
 	private String getReferenceText(final UMLDiff umlDiff) {
 		String ret = "";
 		switch (umlDiff.getKind()) {
@@ -176,5 +172,40 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 			default:
 				return super.getForeground(object);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
+	 */
+	public StyledString getStyledText(Object object) {
+		final UMLDiff umlDiff = (UMLDiff)object;
+
+		final String valueText = getValueText(umlDiff);
+		final String referenceText = getReferenceText(umlDiff);
+
+		StyledString ret = new StyledString(valueText);
+		ret.append(" [" + referenceText, StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+		switch (umlDiff.getKind()) {
+			case ADD:
+				ret.append(" add", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$ 
+				break;
+			case DELETE:
+				ret.append(" delete", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$ 
+				break;
+			case CHANGE:
+				ret.append(" change", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$ 
+				break;
+			case MOVE:
+				ret.append(" move", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$ 
+				break;
+			default:
+				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
+						+ " value: " + umlDiff.getKind()); //$NON-NLS-1$
+		}
+		ret.append("]", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+
+		return ret;
 	}
 }

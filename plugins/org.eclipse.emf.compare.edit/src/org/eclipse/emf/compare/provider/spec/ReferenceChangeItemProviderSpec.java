@@ -30,12 +30,14 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
+import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.ReferenceChangeItemProvider;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
+import org.eclipse.jface.viewers.StyledString;
 
 /**
  * Specialized {@link ReferenceChangeItemProvider} returning nice output for {@link #getText(Object)} and
@@ -43,7 +45,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider {
+public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider implements IItemStyledLabelProvider {
 
 	/**
 	 * Constructor calling super {@link #ReferenceChangeItemProvider(AdapterFactory)}.
@@ -62,37 +64,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		final ReferenceChange refChange = (ReferenceChange)object;
-
-		final String valueText = getValueText(refChange);
-		final String referenceText = getReferenceText(refChange);
-
-		String remotely = ""; //$NON-NLS-1$
-		if (refChange.getSource() == DifferenceSource.RIGHT) {
-			remotely = "remotely "; //$NON-NLS-1$
-		}
-
-		String ret = ""; //$NON-NLS-1$
-		switch (refChange.getKind()) {
-			case ADD:
-				ret = valueText + " has been " + remotely + "added to " + referenceText; //$NON-NLS-1$ //$NON-NLS-2$
-				break;
-			case DELETE:
-				ret = valueText + " has been " + remotely + "deleted from " + referenceText; //$NON-NLS-1$ //$NON-NLS-2$
-				break;
-			case CHANGE:
-				String changeText = changeText(refChange, refChange.getReference());
-				ret = referenceText + " " + valueText + " has been " + remotely + changeText; //$NON-NLS-1$ //$NON-NLS-2$
-				break;
-			case MOVE:
-				ret = valueText + " has been " + remotely + "moved in " + referenceText; //$NON-NLS-1$ //$NON-NLS-2$
-				break;
-			default:
-				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
-						+ " value: " + refChange.getKind()); //$NON-NLS-1$
-		}
-
-		return ret;
+		return getStyledText(object).getString();
 	}
 
 	static String changeText(final Diff diff, EStructuralFeature feature) {
@@ -242,4 +214,41 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
+	 */
+	public StyledString getStyledText(Object object) {
+		final ReferenceChange refChange = (ReferenceChange)object;
+
+		final String valueText = getValueText(refChange);
+
+		final String referenceText = getReferenceText(refChange);
+
+		StyledString ret = new StyledString(valueText);
+		ret.append(" [" + referenceText, StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+
+		switch (refChange.getKind()) {
+			case ADD:
+				ret.append(" add", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+				break;
+			case DELETE:
+				ret.append(" delete", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+				break;
+			case CHANGE:
+				ret.append(" " + changeText(refChange, refChange.getReference()), //$NON-NLS-1$
+						StyledString.DECORATIONS_STYLER);
+				break;
+			case MOVE:
+				ret.append(" move", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+				break;
+			default:
+				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
+						+ " value: " + refChange.getKind()); //$NON-NLS-1$
+		}
+		ret.append("]", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+
+		return ret;
+	}
 }
