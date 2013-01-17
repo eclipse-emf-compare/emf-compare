@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
 
-import java.util.EventObject;
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
@@ -21,22 +20,27 @@ import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.MergeSourceViewer;
 import org.eclipse.compare.internal.Utilities;
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.AttributeChangeNode;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.change.util.ChangeRecorder;
+import org.eclipse.emf.edit.command.ChangeCommand;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.actions.ActionFactory;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -105,6 +109,45 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 	@Override
 	protected boolean doSave(Object newInput, Object oldInput) {
 		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.ContentViewer#setInput(java.lang.Object)
+	 */
+	@Override
+	public void setInput(Object newInput) {
+		if (newInput == null) {
+			// When we leave the current input
+			Object oldInput = getInput();
+			if (oldInput instanceof AttributeChangeNode) {
+				final AttributeChange diff = ((AttributeChangeNode)oldInput).getTarget();
+				final EAttribute eAttribute = diff.getAttribute();
+				Match match = diff.getMatch();
+				final EObject left = match.getLeft();
+				final EObject right = match.getRight();
+				Object oldLeftValue = ReferenceUtil.safeEGet(left, eAttribute);
+				Object oldRightValue = ReferenceUtil.safeEGet(right, eAttribute);
+				final String newLeftValue = new String(getContents(true));
+				final Object newRightValue = new String(getContents(false));
+				if (!newLeftValue.equals(oldLeftValue) && getCompareConfiguration().isLeftEditable()) {
+					// Save the change on left side
+					fEditingDomain.getCommandStack().execute(
+							new UpdateModelAndRejectDiffCommand(fEditingDomain.getChangeRecorder(), left,
+									eAttribute, newLeftValue, diff, true));
+				}
+				if (!newRightValue.equals(oldRightValue) && getCompareConfiguration().isRightEditable()) {
+					// Save the change on right side
+					fEditingDomain.getCommandStack().execute(
+							new UpdateModelAndRejectDiffCommand(fEditingDomain.getChangeRecorder(), right,
+									eAttribute, newRightValue, diff, false));
+
+				}
+
+			}
+		}
+		super.setInput(newInput);
 	}
 
 	/**
@@ -198,26 +241,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 		ActionContributionItem contributionPreviousDiff = new ActionContributionItem(previousDiff);
 		contributionPreviousDiff.setVisible(true);
 		toolBarManager.appendToGroup("navigation", contributionPreviousDiff);
-
-		// This is called from the super-constructor, fEditingDomain is not set yet.
-		final ICompareEditingDomain domain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
-				EMFCompareConstants.EDITING_DOMAIN);
-
-		final UndoAction undoAction = new UndoAction(domain);
-		final RedoAction redoAction = new RedoAction(domain);
-
-		domain.getCommandStack().addCommandStackListener(new CommandStackListener() {
-			public void commandStackChanged(EventObject event) {
-				undoAction.update();
-				redoAction.update();
-				setLeftDirty(fEditingDomain.getCommandStack().isLeftSaveNeeded());
-				setRightDirty(fEditingDomain.getCommandStack().isRightSaveNeeded());
-				refresh();
-			}
-		});
-
-		handlerService.setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
-		handlerService.setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
 	}
 
 	/**
@@ -255,20 +278,49 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 			}
 		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#setEditable(org.eclipse.jface.text.source.ISourceViewer,
-	 *      boolean)
-	 */
-	@Override
-	protected void setEditable(ISourceViewer sourceViewer, boolean state) {
-		sourceViewer.setEditable(false);
-	}
 
 	@Override
 	protected ResourceBundle getResourceBundle() {
 		return ResourceBundle.getBundle(BUNDLE_NAME);
 	}
+
+	/**
+	 * Command to directly modify the business model and reject the related difference.
+	 * 
+	 * @author cnotot
+	 */
+	private class UpdateModelAndRejectDiffCommand extends ChangeCommand implements ICompareCopyCommand {
+
+		private boolean isLeft;
+
+		private Diff difference;
+
+		private Object value;
+
+		private EStructuralFeature feature;
+
+		private EObject owner;
+
+		public UpdateModelAndRejectDiffCommand(ChangeRecorder changeRecorder, EObject owner,
+				EStructuralFeature feature, Object value, Diff difference, boolean isLeft) {
+			super(changeRecorder, owner);
+			this.owner = owner;
+			this.feature = feature;
+			this.value = value;
+			this.difference = difference;
+			this.isLeft = isLeft;
+		}
+
+		@Override
+		public void doExecute() {
+			owner.eSet(feature, value);
+			difference.setState(DifferenceState.DISCARDED);
+		}
+
+		public boolean isLeftToRight() {
+			return !isLeft;
+		}
+
+	}
+
 }
