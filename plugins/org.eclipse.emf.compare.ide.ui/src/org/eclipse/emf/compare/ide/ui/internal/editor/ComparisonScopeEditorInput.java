@@ -20,6 +20,12 @@ import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 
+/**
+ * CompareEditorInput that will compute the result of the comparison of the given scope with the given
+ * comparator.
+ * 
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ */
 public class ComparisonScopeEditorInput extends AbstractEMFCompareEditorInput {
 
 	private final IComparisonScope scope;
@@ -45,6 +51,8 @@ public class ComparisonScopeEditorInput extends AbstractEMFCompareEditorInput {
 	@Override
 	protected Object doPrepareInput(IProgressMonitor monitor) throws InvocationTargetException,
 			InterruptedException {
+		// FIXME: should not we compute the Comparison here and return the adaptation of the result as an
+		// ICompareInput
 		getCompareConfiguration().setProperty(EMFCompareConstants.COMPARATOR, comparator);
 		return new ComparisonScopeInput(scope, getAdapterFactory());
 	}
@@ -56,8 +64,8 @@ public class ComparisonScopeEditorInput extends AbstractEMFCompareEditorInput {
 	 */
 	@Override
 	public void cancelPressed() {
-		while (editingDomain.getCommandStack().canUndo()) {
-			editingDomain.getCommandStack().undo();
+		while (getEditingDomain().getCommandStack().canUndo()) {
+			getEditingDomain().getCommandStack().undo();
 		}
 		super.cancelPressed();
 	}
