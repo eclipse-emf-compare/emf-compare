@@ -419,7 +419,6 @@ public class GMFContentMergeViewerTab implements IModelContentMergeViewerTab {
 		}
 		currentDiag = diag;
 		// be sure the viewer will be correctly refreshed ( connections )
-		viewer.getEditPartRegistry().clear();
 		final DiagramRootEditPart rootEditPart = new DiagramRootEditPart(diag.getMeasurementUnit());
 		viewer.setRootEditPart(rootEditPart);
 		viewer.setContents(diag);
