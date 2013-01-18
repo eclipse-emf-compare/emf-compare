@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+
+<!--
+ Copyright (c) 2013 Obeo.
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ 
+ Contributors:
+     Obeo - initial API and implementation
+-->
+
+<plugin>
+   <extension-point id="groups" name="EMF Compare Groups" schema="schema/groups.exsd"/>
+   <extension-point id="filters" name="EMF Compare Filters" schema="schema/filters.exsd"/>
+   <extension
+         point="org.eclipse.emf.compare.rcp.ui.groups">
+      <group
+            activeByDefault="false"
+            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.KindGroupProvider"
+            label="By Kind">
+      </group>
+      <group
+            activeByDefault="false"
+            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.MetamodelGroupProvider"
+            label="By Metaclass">
+      </group>
+      <group
+            activeByDefault="false"
+            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.ThreeWayComparisonGroupProvider"
+            label="By Side">
+      </group>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.rcp.ui.filters">
+      <filter
+            activeByDefault="false"
+            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.ChangedElementsFilter"
+            label="Changed elements">
+      </filter>
+      <filter
+            activeByDefault="false"
+            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.AddedElementsFilter"
+            label="Added elements">
+      </filter>
+      <filter
+            activeByDefault="false"
+            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.RemovedElementsFilter"
+            label="Removed elements">
+      </filter>
+      <filter
+            activeByDefault="false"
+            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.MovedElementsFilter"
+            label="Moved elements">
+      </filter>
+      <filter
+            activeByDefault="true"
+            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.MatchedResourcesFilter"
+            label="Resource Mappings">
+      </filter>
+   </extension>
+</plugin>

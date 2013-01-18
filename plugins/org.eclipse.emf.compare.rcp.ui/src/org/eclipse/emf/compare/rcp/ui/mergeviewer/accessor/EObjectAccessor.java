@@ -26,7 +26,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.rcp.ui.Activator;
+import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -143,7 +143,7 @@ public class EObjectAccessor implements IEObjectAccessor {
 		try {
 			r.save(sw, Maps.newHashMap());
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
+			throw new CoreException(new Status(IStatus.ERROR, EMFCompareRCPUIPlugin.PLUGIN_ID, e.getMessage(), e));
 		}
 		// Assume that the platform locale is appropriate.
 		return new ByteArrayInputStream(sw.toString().getBytes());
