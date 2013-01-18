@@ -149,8 +149,19 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 			// Otherwise, load it from the repository (resource might not yet (or no longer) exist locally)
 			final IResource targetFile;
 			if (normalizedUri.isPlatform()) {
-				targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
-						new Path(normalizedUri.trimFragment().toPlatformString(true)));
+				IPath platformString = new Path(normalizedUri.trimFragment().toPlatformString(true));
+				IResource temp = ResourcesPlugin.getWorkspace().getRoot().getFile(platformString);
+				if (!temp.exists() && normalizedUri.isPlatformResource() && platformString.segmentCount() > 1) {
+					// We tend to get here with unresolvable URIs with git; as it tends to give URIs of the
+					// form
+					// platform:/resource/<repository name>/<workspace relative path> instead of the
+					// resolvable
+					// platform:/resource/<workspace relative path> . We'll try for this case
+					targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
+							platformString.removeFirstSegments(1));
+				} else {
+					targetFile = temp;
+				}
 			} else {
 				/*
 				 * FIXME Deresolve the URI against the workspace root, if it cannot be done, delegate to
