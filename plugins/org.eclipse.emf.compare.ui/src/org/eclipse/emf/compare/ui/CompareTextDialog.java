@@ -509,7 +509,7 @@ public class CompareTextDialog extends TrayDialog {
 		 */
 		@Override
 		public void saveRightContent(Object element, byte[] bytes) {
-			final EObject obj = changeCompare.getLeftElement();
+			final EObject obj = changeCompare.getRightElement();
 			try {
 				EFactory.eSet(obj, attribute.getName(), new String(bytes));
 				obj.eResource().save(Collections.EMPTY_MAP);
