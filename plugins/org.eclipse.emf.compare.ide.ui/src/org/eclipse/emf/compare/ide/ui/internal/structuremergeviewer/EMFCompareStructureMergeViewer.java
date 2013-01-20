@@ -35,8 +35,7 @@ import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.command.impl.CopyAllNonConflictingCommand;
-import org.eclipse.emf.compare.command.impl.CopyCommand;
+import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.EMFCompareIDE;
@@ -448,8 +447,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	 */
 	public void commandStackChanged(EventObject event) {
 		Command mostRecentCommand = editingDomain.getCommandStack().getMostRecentCommand();
-		if (mostRecentCommand instanceof CopyCommand
-				|| mostRecentCommand instanceof CopyAllNonConflictingCommand) {
+		if (mostRecentCommand instanceof ICompareCopyCommand) {
 			Collection<?> affectedObjects = mostRecentCommand.getAffectedObjects();
 			refresh(true);
 			if (!affectedObjects.isEmpty()) {
