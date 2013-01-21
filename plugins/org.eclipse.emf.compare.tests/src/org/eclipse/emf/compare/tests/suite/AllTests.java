@@ -23,6 +23,7 @@ import org.eclipse.emf.compare.tests.edit.AllEditTests;
 import org.eclipse.emf.compare.tests.equi.EquiComputingTest;
 import org.eclipse.emf.compare.tests.fragmentation.FragmentationTest;
 import org.eclipse.emf.compare.tests.fullcomparison.DynamicInstanceComparisonTest;
+import org.eclipse.emf.compare.tests.fullcomparison.ExtLibraryTest;
 import org.eclipse.emf.compare.tests.fullcomparison.IdentifierComparisonTest;
 import org.eclipse.emf.compare.tests.fullcomparison.ProximityComparisonTest;
 import org.eclipse.emf.compare.tests.merge.IndividualMergeOutOfScopeValuesTest;
@@ -47,8 +48,8 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({CompareTestSuite.class, DefaultComparisonScopeTest.class, IdentifierComparisonTest.class,
-		ConflictDetectionTest.class, ReqComputingTest.class, EquiComputingTest.class, DiffUtilTest.class,
-		MultipleMergeTest.class, PostProcessorTest.class, IndividualMergeTest.class,
+		ExtLibraryTest.class, ConflictDetectionTest.class, ReqComputingTest.class, EquiComputingTest.class,
+		DiffUtilTest.class, MultipleMergeTest.class, PostProcessorTest.class, IndividualMergeTest.class,
 		IndividualMergeOutOfScopeValuesTest.class, ProximityComparisonTest.class,
 		DynamicInstanceComparisonTest.class, URIDistanceTest.class, FragmentationTest.class,
 		AllEditTests.class, CommandStackTestSuite.class, })

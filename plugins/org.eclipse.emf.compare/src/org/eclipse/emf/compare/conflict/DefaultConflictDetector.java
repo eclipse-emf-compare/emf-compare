@@ -142,7 +142,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 			}
 		}
 
-		// Every Diff "under" a containment deletion conflicts with it.
+		// [381143] Every Diff "under" a containment deletion conflicts with it.
 		if (diff.getKind() == DifferenceKind.DELETE) {
 			final Predicate<? super Diff> candidateFilter = new ConflictCandidateFilter(diff);
 			for (Diff extendedCandidate : Iterables.filter(valueMatch.getAllDifferences(), candidateFilter)) {
@@ -510,7 +510,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 			}
 		}
 
-		// Every Diff "under" a root deletion conflicts with it.
+		// [381143] Every Diff "under" a root deletion conflicts with it.
 		if (diff.getKind() == DifferenceKind.DELETE) {
 			final Predicate<? super Diff> candidateFilter = new ConflictCandidateFilter(diff);
 			for (Diff extendedCandidate : Iterables.filter(match.getAllDifferences(), candidateFilter)) {
