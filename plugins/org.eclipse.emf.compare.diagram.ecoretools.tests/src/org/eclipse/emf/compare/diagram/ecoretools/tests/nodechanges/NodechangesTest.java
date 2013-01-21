@@ -41,6 +41,7 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.ShapeStyle;
 import org.eclipse.gmf.runtime.notation.SortingStyle;
 import org.eclipse.gmf.runtime.notation.View;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicate;
@@ -52,6 +53,7 @@ public class NodechangesTest extends AbstractTest {
 	private NodeChangesInputData input = new NodeChangesInputData();
 
 	@Test
+	@Ignore
 	public void testA10UseCase() throws IOException {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
@@ -312,6 +314,7 @@ public class NodechangesTest extends AbstractTest {
 	}
 
 	@Test
+	@Ignore
 	public void testA30UseCase() throws IOException {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();

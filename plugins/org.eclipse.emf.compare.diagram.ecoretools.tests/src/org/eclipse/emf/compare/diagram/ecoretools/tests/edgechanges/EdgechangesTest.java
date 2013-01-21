@@ -27,6 +27,7 @@ import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.View;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicate;
@@ -85,6 +86,7 @@ public class EdgechangesTest extends AbstractTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testA20UseCase() throws IOException {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
@@ -110,6 +112,7 @@ public class EdgechangesTest extends AbstractTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testA21UseCase() throws IOException {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
@@ -181,6 +184,7 @@ public class EdgechangesTest extends AbstractTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testA40UseCase() throws IOException {
 		final Resource left = input.getA4Left();
 		final Resource right = input.getA4Right();
