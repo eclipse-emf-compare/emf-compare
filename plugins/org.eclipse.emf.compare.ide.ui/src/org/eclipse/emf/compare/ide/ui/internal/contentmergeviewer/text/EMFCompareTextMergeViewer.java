@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
 
+import com.google.common.collect.ImmutableSet;
+
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
@@ -20,6 +22,7 @@ import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.MergeSourceViewer;
 import org.eclipse.compare.internal.Utilities;
 import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -303,7 +306,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 
 		public UpdateModelAndRejectDiffCommand(ChangeRecorder changeRecorder, EObject owner,
 				EStructuralFeature feature, Object value, Diff difference, boolean isLeft) {
-			super(changeRecorder, owner);
+			super(changeRecorder, ImmutableSet.<Notifier> of(owner, difference));
 			this.owner = owner;
 			this.feature = feature;
 			this.value = value;
