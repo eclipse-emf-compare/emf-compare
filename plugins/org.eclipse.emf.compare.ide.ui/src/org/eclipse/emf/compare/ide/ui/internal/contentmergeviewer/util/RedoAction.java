@@ -13,8 +13,7 @@ public class RedoAction extends Action {
 
 	public RedoAction(ICompareEditingDomain domain) {
 		super(EMFEditUIPlugin.INSTANCE.getString("_UI_Redo_menu_item", new Object[] {"" })); //$NON-NLS-1$ //$NON-NLS-2$
-		this.domain = domain;
-		update();
+		setEditingDomain(domain);
 	}
 
 	public RedoAction() {
@@ -24,6 +23,13 @@ public class RedoAction extends Action {
 	@Override
 	public void run() {
 		domain.getCommandStack().redo();
+	}
+
+	public void setEditingDomain(ICompareEditingDomain domain) {
+		this.domain = domain;
+		if (domain != null) {
+			update();
+		}
 	}
 
 	public void update() {

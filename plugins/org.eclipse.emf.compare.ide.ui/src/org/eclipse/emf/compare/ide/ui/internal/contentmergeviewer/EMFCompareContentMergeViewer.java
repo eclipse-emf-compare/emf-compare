@@ -87,17 +87,17 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	private ActionContributionItem fCopyDiffRightToLeftItem;
 
-	private final Comparison fComparison;
-
 	private final AtomicBoolean fSyncingSelections = new AtomicBoolean(false);
 
 	private EMFCompareColor fColors;
 
-	private final ICompareEditingDomain fEditingDomain;
-
 	private final DynamicObject fDynamicObject;
 
 	private CommandStackListener fCommandStackListener;
+
+	private UndoAction undoAction;
+
+	private RedoAction redoAction;
 
 	/**
 	 * @param style
@@ -107,11 +107,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	protected EMFCompareContentMergeViewer(int style, ResourceBundle bundle, CompareConfiguration cc) {
 		super(style, bundle, cc);
 		fDynamicObject = new DynamicObject(this);
-
-		fComparison = (Comparison)cc.getProperty(EMFCompareConstants.COMPARE_RESULT);
-
-		fEditingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
-				EMFCompareConstants.EDITING_DOMAIN);
 	}
 
 	/**
@@ -127,14 +122,15 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 * @return the fEditingDomain
 	 */
 	protected final ICompareEditingDomain getEditingDomain() {
-		return fEditingDomain;
+		return (ICompareEditingDomain)getCompareConfiguration().getProperty(
+				EMFCompareConstants.EDITING_DOMAIN);
 	}
 
 	/**
 	 * @return the fComparison
 	 */
 	protected final Comparison getComparison() {
-		return fComparison;
+		return (Comparison)getCompareConfiguration().getProperty(EMFCompareConstants.COMPARE_RESULT);
 	}
 
 	/**
@@ -159,6 +155,13 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 */
 	@Override
 	protected void updateContent(Object ancestor, Object left, Object right) {
+		undoAction.setEditingDomain(getEditingDomain());
+		redoAction.setEditingDomain(getEditingDomain());
+
+		if (getEditingDomain() != null && fCommandStackListener == null) {
+			fCommandStackListener = installCommandStackListener(undoAction, redoAction);
+		}
+
 		fAncestor.setInput(ancestor);
 		fLeft.setInput(left);
 		fRight.setInput(right);
@@ -283,25 +286,30 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		contributionPreviousDiff.setVisible(true);
 		toolBarManager.appendToGroup("navigation", contributionPreviousDiff);
 
-		// Undo/Redo
-		final UndoAction undoAction = new UndoAction(fEditingDomain);
-		final RedoAction redoAction = new RedoAction(fEditingDomain);
+		undoAction = new UndoAction(getEditingDomain());
+		redoAction = new RedoAction(getEditingDomain());
 
-		if (fCommandStackListener == null) {
-			fCommandStackListener = new CommandStackListener() {
-				public void commandStackChanged(EventObject event) {
-					undoAction.update();
-					redoAction.update();
-					setLeftDirty(fEditingDomain.getCommandStack().isLeftSaveNeeded());
-					setRightDirty(fEditingDomain.getCommandStack().isRightSaveNeeded());
-					refresh();
-				}
-			};
+		if (getEditingDomain() != null && fCommandStackListener == null) {
+			fCommandStackListener = installCommandStackListener(undoAction, redoAction);
 		}
-		fEditingDomain.getCommandStack().addCommandStackListener(fCommandStackListener);
 
 		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
 		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
+	}
+
+	private CommandStackListener installCommandStackListener(final UndoAction undoAction,
+			final RedoAction redoAction) {
+		CommandStackListener commandStackListener = new CommandStackListener() {
+			public void commandStackChanged(EventObject event) {
+				undoAction.update();
+				redoAction.update();
+				setLeftDirty(getEditingDomain().getCommandStack().isLeftSaveNeeded());
+				setRightDirty(getEditingDomain().getCommandStack().isRightSaveNeeded());
+				refresh();
+			}
+		};
+		getEditingDomain().getCommandStack().addCommandStackListener(commandStackListener);
+		return commandStackListener;
 	}
 
 	/**
@@ -542,8 +550,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
-		if (fCommandStackListener != null) {
-			fEditingDomain.getCommandStack().removeCommandStackListener(fCommandStackListener);
+		if (fCommandStackListener != null && getEditingDomain() != null) {
+			getEditingDomain().getCommandStack().removeCommandStackListener(fCommandStackListener);
 		}
 		super.handleDispose(event);
 	}

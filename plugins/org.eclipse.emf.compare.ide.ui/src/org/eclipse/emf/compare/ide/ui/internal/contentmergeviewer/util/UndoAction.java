@@ -13,8 +13,7 @@ public class UndoAction extends Action {
 
 	public UndoAction(ICompareEditingDomain domain) {
 		super(EMFEditUIPlugin.INSTANCE.getString("_UI_Undo_menu_item", new Object[] {"" })); //$NON-NLS-1$ //$NON-NLS-2$
-		this.domain = domain;
-		update();
+		setEditingDomain(domain);
 	}
 
 	public UndoAction() {
@@ -24,6 +23,13 @@ public class UndoAction extends Action {
 	@Override
 	public void run() {
 		domain.getCommandStack().undo();
+	}
+
+	public void setEditingDomain(ICompareEditingDomain domain) {
+		this.domain = domain;
+		if (domain != null) {
+			update();
+		}
 	}
 
 	public void update() {
