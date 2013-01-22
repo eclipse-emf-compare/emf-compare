@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareNavigator;
@@ -23,8 +24,10 @@ import org.eclipse.compare.internal.MergeSourceViewer;
 import org.eclipse.compare.internal.Utilities;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
@@ -288,11 +291,11 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 	}
 
 	/**
-	 * Command to directly modify the business model and reject the related difference.
+	 * Command to directly modify the semantic model and reject the related difference.
 	 * 
 	 * @author cnotot
 	 */
-	private class UpdateModelAndRejectDiffCommand extends ChangeCommand implements ICompareCopyCommand {
+	private static class UpdateModelAndRejectDiffCommand extends ChangeCommand implements ICompareCopyCommand {
 
 		private boolean isLeft;
 
@@ -306,7 +309,8 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 
 		public UpdateModelAndRejectDiffCommand(ChangeRecorder changeRecorder, EObject owner,
 				EStructuralFeature feature, Object value, Diff difference, boolean isLeft) {
-			super(changeRecorder, ImmutableSet.<Notifier> of(owner, difference));
+			super(changeRecorder, ImmutableSet.<Notifier> builder().add(owner).addAll(
+					getAffectedDiff(difference)).build());
 			this.owner = owner;
 			this.feature = feature;
 			this.value = value;
@@ -317,7 +321,20 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 		@Override
 		public void doExecute() {
 			owner.eSet(feature, value);
-			difference.setState(DifferenceState.DISCARDED);
+			for (Diff affectedDiff : getAffectedDiff(difference)) {
+				affectedDiff.setState(DifferenceState.DISCARDED);
+			}
+		}
+
+		private static Set<Diff> getAffectedDiff(Diff diff) {
+			EList<Conflict> conflicts = diff.getMatch().getComparison().getConflicts();
+			for (Conflict conflict : conflicts) {
+				EList<Diff> conflictualDifferences = conflict.getDifferences();
+				if (conflictualDifferences.contains(diff)) {
+					return ImmutableSet.copyOf(conflictualDifferences);
+				}
+			}
+			return ImmutableSet.of(diff);
 		}
 
 		public boolean isLeftToRight() {
