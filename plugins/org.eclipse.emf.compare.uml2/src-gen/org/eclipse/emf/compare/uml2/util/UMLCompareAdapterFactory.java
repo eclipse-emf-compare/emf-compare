@@ -12,24 +12,13 @@ package org.eclipse.emf.compare.uml2.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
+
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
+
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.uml2.AssociationChange;
-import org.eclipse.emf.compare.uml2.DependencyChange;
-import org.eclipse.emf.compare.uml2.ExecutionSpecificationChange;
-import org.eclipse.emf.compare.uml2.ExtendChange;
-import org.eclipse.emf.compare.uml2.GeneralizationSetChange;
-import org.eclipse.emf.compare.uml2.IncludeChange;
-import org.eclipse.emf.compare.uml2.InterfaceRealizationChange;
-import org.eclipse.emf.compare.uml2.IntervalConstraintChange;
-import org.eclipse.emf.compare.uml2.MessageChange;
-import org.eclipse.emf.compare.uml2.ProfileApplicationChange;
-import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
-import org.eclipse.emf.compare.uml2.StereotypePropertyChange;
-import org.eclipse.emf.compare.uml2.StereotypeReferenceChange;
-import org.eclipse.emf.compare.uml2.SubstitutionChange;
-import org.eclipse.emf.compare.uml2.UMLComparePackage;
-import org.eclipse.emf.compare.uml2.UMLDiff;
+
+import org.eclipse.emf.compare.uml2.*;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**

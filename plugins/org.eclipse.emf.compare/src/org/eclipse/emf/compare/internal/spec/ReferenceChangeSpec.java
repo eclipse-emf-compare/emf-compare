@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
 
+import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEIsSet;
+
 import com.google.common.base.Objects;
 
 import java.util.Iterator;
@@ -18,9 +20,11 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.impl.ReferenceChangeImpl;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EMFCompareCopier;
@@ -39,6 +43,12 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
  */
 public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	/**
+	 * Set this to <code>true</code> to activate checking the merge state through
+	 * {@link #checkMergeState(boolean)}.
+	 */
+	private static final boolean DEBUG_MERGE = false;
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.impl.DiffImpl#copyLeftToRight()
@@ -53,8 +63,9 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		setState(DifferenceState.MERGED);
 		if (getEquivalence() != null) {
-			for (Diff equivalent : getEquivalence().getDifferences()) {
-				equivalent.setState(DifferenceState.MERGED);
+			boolean continueMerge = handleEquivalences(false);
+			if (!continueMerge) {
+				return;
 			}
 		}
 
@@ -128,6 +139,10 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					break;
 			}
 		}
+
+		if (DEBUG_MERGE) {
+			checkMergeState(false);
+		}
 	}
 
 	/**
@@ -145,8 +160,9 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		setState(DifferenceState.MERGED);
 		if (getEquivalence() != null) {
-			for (Diff equivalent : getEquivalence().getDifferences()) {
-				equivalent.setState(DifferenceState.MERGED);
+			boolean continueMerge = handleEquivalences(true);
+			if (!continueMerge) {
+				return;
 			}
 		}
 
@@ -218,6 +234,10 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 					break;
 			}
 		}
+
+		if (DEBUG_MERGE) {
+			checkMergeState(true);
+		}
 	}
 
 	/**
@@ -276,15 +296,36 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	 *            Whether we should move the value in the left or right side.
 	 */
 	protected void moveElement(boolean rightToLeft) {
+		final Comparison comparison = getMatch().getComparison();
+		final Match valueMatch = comparison.getMatch(getValue());
+
 		final EObject expectedContainer;
-		if (rightToLeft) {
+		if (getReference().isContainment()) {
+			/*
+			 * We cannot "trust" the holding match (getMatch) in this case. However, "valueMatch" cannot be
+			 * null : we cannot have detected a move if the moved element is not matched on both sides. Use
+			 * that information to retrieve the proper "target" container.
+			 */
+			final Match targetContainerMatch;
+			// If it exists, use the source side's container as reference
+			if (rightToLeft && valueMatch.getRight() != null) {
+				targetContainerMatch = comparison.getMatch(valueMatch.getRight().eContainer());
+			} else if (!rightToLeft && valueMatch.getLeft() != null) {
+				targetContainerMatch = comparison.getMatch(valueMatch.getLeft().eContainer());
+			} else {
+				// Otherwise, the value we're moving on one side has been removed from its source side.
+				targetContainerMatch = comparison.getMatch(valueMatch.getOrigin().eContainer());
+			}
+			if (rightToLeft) {
+				expectedContainer = targetContainerMatch.getLeft();
+			} else {
+				expectedContainer = targetContainerMatch.getRight();
+			}
+		} else if (rightToLeft) {
 			expectedContainer = getMatch().getLeft();
 		} else {
 			expectedContainer = getMatch().getRight();
 		}
-		final Comparison comparison = getMatch().getComparison();
-		final Match valueMatch = comparison.getMatch(getValue());
-
 		if (expectedContainer == null) {
 			// FIXME throw exception? log? re-try to merge our requirements?
 			// one of the "required" diffs should have created our container.
@@ -294,6 +335,11 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 		final EObject expectedValue;
 		if (valueMatch == null) {
 			// The value being moved is out of the scope
+			/*
+			 * Note : there should not be a way to end up with a "move" for an out of scope value : a move can
+			 * only be detected if the object is matched on both sides, otherwise all we can see is "add" and
+			 * "delete"... Is this "fallback" code even reachable? If so, how?
+			 */
 			// We need to look it up
 			if (getReference().isMany()) {
 				@SuppressWarnings("unchecked")
@@ -588,8 +634,8 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			originContainer = getMatch().getLeft();
 		}
 
-		if (originContainer == null || !targetContainer.eIsSet(getReference())
-				|| !originContainer.eIsSet(getReference())) {
+		if (originContainer == null || !safeEIsSet(targetContainer, getReference())
+				|| !safeEIsSet(originContainer, getReference())) {
 			targetContainer.eUnset(getReference());
 		} else {
 			final EObject originalValue = (EObject)originContainer.eGet(getReference());
@@ -605,6 +651,71 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 			}
 			targetContainer.eSet(getReference(), expectedValue);
 		}
+	}
+
+	/**
+	 * Handles the equivalences of this difference.
+	 * <p>
+	 * Note that in certain cases, we'll merge our opposite instead of merging this diff. Specifically, we'll
+	 * do that for one-to-many eOpposites : we'll merge the 'many' side instead of the 'unique' one. This
+	 * allows us not to worry about the order of the references on that 'many' side.
+	 * </p>
+	 * <p>
+	 * This is called before the merge of <code>this</code>. In short, if this returns <code>false</code>, we
+	 * won't carry on merging <code>this</code> after returning.
+	 * </p>
+	 * 
+	 * @param rightToLeft
+	 *            Direction of the merge.
+	 * @return <code>true</code> if the current difference should still be merged after handling its
+	 *         equivalences, <code>false</code> if it should be considered "already merged".
+	 */
+	protected boolean handleEquivalences(boolean rightToLeft) {
+		boolean continueMerge = true;
+		for (Diff equivalent : getEquivalence().getDifferences()) {
+			if (equivalent instanceof ReferenceChange
+					&& getReference().getEOpposite() == ((ReferenceChange)equivalent).getReference()
+					&& equivalent.getState() == DifferenceState.UNRESOLVED) {
+				// This equivalence is on our eOpposite. Should we merge it instead of 'this'?
+				final boolean mergeEquivalence = !getReference().isMany()
+						&& ((ReferenceChange)equivalent).getReference().isMany();
+				if (mergeEquivalence && rightToLeft) {
+					equivalent.copyRightToLeft();
+					continueMerge = false;
+				} else if (mergeEquivalence) {
+					equivalent.copyLeftToRight();
+					continueMerge = false;
+				}
+			} else if (getSource() == DifferenceSource.LEFT) {
+				// This can happen when merging subset/supersets... see AddInterfaceTest#testA50UseCase
+				/*
+				 * This should be removed (or we should make sure that we can never be here) when bug 398402
+				 * is fixed.
+				 */
+				if (rightToLeft && getRequiredBy().contains(equivalent)) {
+					equivalent.copyRightToLeft();
+					continueMerge = false;
+				} else if (!rightToLeft && getRequires().contains(equivalent)) {
+					equivalent.copyLeftToRight();
+					continueMerge = false;
+				}
+			} else if (getSource() == DifferenceSource.RIGHT) {
+				// This can happen when merging subset/supersets... see AddInterfaceTest#testA50UseCase
+				/*
+				 * This should be removed (or we should make sure that we can never be here) when bug 398402
+				 * is fixed.
+				 */
+				if (rightToLeft && getRequires().contains(equivalent)) {
+					equivalent.copyRightToLeft();
+					continueMerge = false;
+				} else if (!rightToLeft && getRequiredBy().contains(equivalent)) {
+					equivalent.copyLeftToRight();
+					continueMerge = false;
+				}
+			}
+			equivalent.setState(DifferenceState.MERGED);
+		}
+		return continueMerge;
 	}
 
 	/**
@@ -635,18 +746,182 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	 * 
 	 * @see org.eclipse.emf.compare.impl.DiffImpl#toString()
 	 */
+	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
 		// @formatter:off
-		// Formatting these would make them unreadable
 		return Objects.toStringHelper(this)
-					.add("reference", getReference().getEContainingClass().getName() + "." + getReference().getName()) //$NON-NLS-1$ //$NON-NLS-2$
-					.add("value", EObjectUtil.getLabel(getValue())) //$NON-NLS-1$
-					.add("parentMatch", getMatch().toString()) //$NON-NLS-1$
-					.add("match of value", getMatch().getComparison().getMatch(getValue())) //$NON-NLS-1$
-					.add("kind", getKind()) //$NON-NLS-1$
-					.add("source", getSource()) //$NON-NLS-1$
-					.add("state", getState()).toString(); //$NON-NLS-1$
+					.add("reference", getReference().getEContainingClass().getName() + "." + getReference().getName())
+					.add("value", EObjectUtil.getLabel(getValue()))
+					.add("parentMatch", getMatch().toString())
+					.add("match of value", getMatch().getComparison().getMatch(getValue()))
+					.add("kind", getKind())
+					.add("source", getSource())
+					.add("state", getState()).toString();
 		// @formatter:on
 	}
+
+	/**
+	 * This should only be activated when debugging. Not only may this long list of assertions not cover every
+	 * possible case, but it would impair performance. Even when debugging, take these with a grain of salt :
+	 * we've covered the known cases, but the assertions here could still fail on some cases where the merge
+	 * worked.
+	 * <p>
+	 * Set {@link #DEBUG_MERGE} to <code>true</code> to activate checking the merge state through here.
+	 * </p>
+	 * 
+	 * @param rightToLeft
+	 *            Direction of the merge.
+	 */
+	// This is a long list of assertions ... disable formatting and style checking.
+	// @formatter:off
+	// CHECKSTYLE:OFF
+	@SuppressWarnings("nls")
+	private void checkMergeState(boolean rightToLeft) {
+		final Match containerMatch = getMatch();
+		final Comparison comparison = containerMatch.getComparison();
+		final Match valueMatch = comparison.getMatch(getValue());
+
+		Object leftValue = null;
+		if (containerMatch.getLeft() != null) {
+			leftValue = containerMatch.getLeft().eGet(getReference());
+		}
+		Object rightValue = null;
+		if (containerMatch.getRight() != null) {
+			rightValue = containerMatch.getRight().eGet(getReference());
+		}
+
+		final boolean mergeTowardsSource = rightToLeft && getSource() == DifferenceSource.LEFT
+				|| !rightToLeft && getSource() == DifferenceSource.RIGHT;
+		final boolean wasDeleteMerge = getKind() == DifferenceKind.ADD && mergeTowardsSource
+				|| getKind() == DifferenceKind.DELETE && !mergeTowardsSource;
+
+		assert getState() == DifferenceState.MERGED : "Difference has not been set as MERGED.";
+		if (mergeTowardsSource) {
+			for (Diff diff : getRequiredBy()) {
+				assert diff.getState() == DifferenceState.MERGED : "Requirement has not been merged.";
+			}
+		} else {
+			for (Diff diff : getRequires()) {
+				assert diff.getState() == DifferenceState.MERGED : "Requirement has not been merged.";
+			}
+		}
+		if (getEquivalence() != null) {
+			for (Diff diff : getEquivalence().getDifferences()) {
+				assert diff.getState() == DifferenceState.MERGED : "Equivalence has not been set as MERGED.";
+			}
+		}
+		
+		assert getReference() != null : "Cannot have an empty reference";
+		
+		if (getReference().isContainment()) {
+			if (valueMatch == null) {
+				// Value was out of the scope. This could only be an "ADD" or "DELETE" diff. Whatever the direction, both sides now point towards the very same instance
+				if (getReference().isMany()) {
+					if (wasDeleteMerge) {
+						if (leftValue != null) {
+							assert leftValue instanceof List<?>;
+							assert !((List<?>)leftValue).contains(getValue()) : "None of the sides should contain the value";
+						}
+						if (rightValue != null) {
+							assert rightValue instanceof List<?>;
+							assert !((List<?>)rightValue).contains(getValue()) : "None of the sides should contain the value";
+						}
+					} else {
+						if (leftValue != null) {
+							assert leftValue instanceof List<?>;
+							assert ((List<?>)leftValue).contains(getValue()) : "Both sides shoulds point towards the same instance";
+						}
+						if (rightValue != null) {
+							assert rightValue instanceof List<?>;
+							assert ((List<?>)rightValue).contains(getValue()) : "Both sides shoulds point towards the same instance";
+						}
+					}
+				} else {
+					// EObject or null, but same instance anyway
+					assert leftValue == rightValue : "Both sides should point towards the same instance";
+				}
+			} else {
+				if (getKind() == DifferenceKind.MOVE && valueMatch.getLeft() != null && valueMatch.getRight() != null) {
+					// We can only trust the value match here.
+					final EObject leftContainer = valueMatch.getLeft().eContainer();
+					final EObject rightContainer = valueMatch.getRight().eContainer();
+					// The "values" we computed beforehand are thus wrong.
+					leftValue = leftContainer.eGet(getReference());
+					rightValue = rightContainer.eGet(getReference());
+				}
+				
+				if (getReference().isMany()) {
+					if (wasDeleteMerge) {
+						if (leftValue != null) {
+							assert leftValue instanceof List<?>;
+							assert !((List<?>)leftValue).contains(valueMatch.getLeft()) : "None of the sides should contain the matched value";
+						}
+						if (rightValue != null) {
+							assert rightValue instanceof List<?>;
+							assert !((List<?>)rightValue).contains(valueMatch.getRight()) : "None of the sides should contain the matched value";
+						}
+					} else  {
+						if (leftValue != null) {
+							assert leftValue instanceof List<?>;
+							assert ((List<?>)leftValue).contains(valueMatch.getLeft()) : "Both sides shoulds point towards the matched value";
+						}
+						if (rightValue != null) {
+							assert rightValue instanceof List<?>;
+							assert ((List<?>)rightValue).contains(valueMatch.getRight()) : "Both sides shoulds point towards the matchedValue";
+						}
+					}
+				} else if (wasDeleteMerge) {
+					assert leftValue == null && rightValue == null : "Both values should be 'null'.";
+				} else {
+					assert leftValue == valueMatch.getLeft() && rightValue == valueMatch.getRight() : "The value should be the matched one on both sides.";
+				}
+			}
+		} else {
+			if (leftValue instanceof EObject) {
+				final Match leftValueMatch = comparison.getMatch((EObject)leftValue);
+				if (leftValueMatch == null) {
+					assert leftValue == rightValue : "Merging an out-of-scope element should leave both sides pointing towards the instance.";
+				} else {
+					assert leftValueMatch.getRight() == rightValue : "Merging should leave both sides pointing towards the same matched value";
+				}
+			} else {
+				if (valueMatch == null) {
+					if (wasDeleteMerge) {
+						if (leftValue instanceof List<?>) {
+							assert !((List<?>)leftValue).contains(getValue()) : "Value should have been deleted from both sides.";
+						}
+						if (rightValue instanceof List<?>) {
+							assert !((List<?>)rightValue).contains(getValue()) : "Value should have been deleted from both sides.";
+						}
+					} else {
+						if (leftValue instanceof List<?>) {
+							assert ((List<?>)leftValue).contains(getValue()) : "Merging an out-of-scope element should leave both sides pointing towards the instance.";
+						}
+						if (rightValue instanceof List<?>) {
+							assert ((List<?>)rightValue).contains(getValue()) : "Merging an out-of-scope element should leave both sides pointing towards the instance.";
+						}
+					}
+				} else {
+					if (wasDeleteMerge) {
+						if (leftValue instanceof List<?>) {
+							assert !((List<?>)leftValue).contains(valueMatch.getLeft()) : "None of the sides should contain the matched value";
+						}
+						if (rightValue instanceof List<?>) {
+							assert !((List<?>)rightValue).contains(valueMatch.getRight()) : "None of the sides should contain the matched value";
+						}
+					} else  {
+						if (leftValue instanceof List<?>) {
+							assert ((List<?>)leftValue).contains(valueMatch.getLeft()) : "Both sides shoulds point towards the matched value";
+						}
+						if (rightValue instanceof List<?>) {
+							assert ((List<?>)rightValue).contains(valueMatch.getRight()) : "Both sides shoulds point towards the matchedValue";
+						}
+					}
+				}
+			}
+		}
+	}
+	// @formatter:on
+	// CHECKSTYLE:ON
 }

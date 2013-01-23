@@ -17,7 +17,7 @@ public final class DiagramContentMergeViewerConstants {
 
 	public static final String DIFF_NODE_TYPE = "diagramcompare_diff"; //$NON-NLS-1$
 
-	public static final String EOBJECT_NODE_TYPE = "view"; //$NON-NLS-1$
+	public static final String MATCH_NODE_TYPE = "diagramcompare_match"; //$NON-NLS-1$
 
 	private DiagramContentMergeViewerConstants() {
 	}

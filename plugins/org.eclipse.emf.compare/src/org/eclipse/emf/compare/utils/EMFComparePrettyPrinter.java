@@ -92,7 +92,7 @@ public final class EMFComparePrettyPrinter {
 	 *            The {@link PrintStream} on which we should print the matched elements of this comparison.
 	 */
 	public static void printMatch(Comparison comparison, PrintStream stream) {
-		final String separator = "+----------------------------------------+----------------------------------------+----------------------------------------+"; //$NON-NLS-1$
+		final String separator = "+----------------------------------------+----------------------------------------+----------------------------------------+";
 		final String leftLabel = "Left";
 		final String rightLabel = "Right";
 		final String originLabel = "Origin";
@@ -259,7 +259,7 @@ public final class EMFComparePrettyPrinter {
 
 		// Ignore this match if it is not a Named element
 		if (isNullOrNamedElement(left) && isNullOrNamedElement(right) && isNullOrNamedElement(origin)) {
-			if (left != null) {
+			if (left != null && ((ENamedElement)left).getName() != null) {
 				leftName = formatName((ENamedElement)left);
 			} else {
 				int level = 0;
@@ -274,7 +274,7 @@ public final class EMFComparePrettyPrinter {
 				leftName = getEmptyLine(level);
 			}
 
-			if (right != null) {
+			if (right != null && ((ENamedElement)right).getName() != null) {
 				rightName = formatName((ENamedElement)right);
 			} else {
 				int level = 0;
@@ -289,7 +289,7 @@ public final class EMFComparePrettyPrinter {
 				rightName = getEmptyLine(level);
 			}
 
-			if (origin != null) {
+			if (origin != null && ((ENamedElement)origin).getName() != null) {
 				originName = formatName((ENamedElement)origin);
 			} else {
 				int level = 0;

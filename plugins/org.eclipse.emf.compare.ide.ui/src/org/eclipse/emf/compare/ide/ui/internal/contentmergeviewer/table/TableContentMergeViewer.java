@@ -17,10 +17,10 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MatchedObject;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.TableMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor;
 import org.eclipse.emf.ecore.EObject;
@@ -114,11 +114,6 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			Command copyCommand = getEditingDomain().createCopyCommand(diffToCopy, leftToRight);
 			getEditingDomain().getCommandStack().execute(copyCommand);
 
-			if (leftToRight) {
-				setRightDirty(true);
-			} else {
-				setLeftDirty(true);
-			}
 			refresh();
 		}
 	}

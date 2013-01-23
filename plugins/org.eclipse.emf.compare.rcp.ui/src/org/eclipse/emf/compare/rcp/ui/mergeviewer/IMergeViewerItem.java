@@ -11,7 +11,7 @@
 package org.eclipse.emf.compare.rcp.ui.mergeviewer;
 
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>

@@ -11,15 +11,18 @@
 package org.eclipse.emf.compare.utils;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 import org.eclipse.emf.compare.AttributeChange;
@@ -32,7 +35,9 @@ import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -175,7 +180,8 @@ public final class DiffUtil {
 		while (current1 > 0 && current2 > 0) {
 			final E first = sequence1.get(current1 - 1);
 			final E second = sequence2.get(current2 - 1);
-			if (equalityHelper.matchingValues(first, second)) {
+			if (equalityHelper.matchingValues(first, second)
+					&& !contains(comparison, equalityHelper, ignoredElements, second)) {
 				result.add(first);
 				current1--;
 				current2--;
@@ -318,11 +324,11 @@ public final class DiffUtil {
 	 *            Type of the sequences content.
 	 * @return The index at which {@code newElement} should be inserted in {@code target}.
 	 * @see #longestCommonSubsequence(Comparison, List, List)
+	 * @noreference This method is not intended to be referenced by clients.
 	 */
-	private static <E> int findInsertionIndex(Comparison comparison, Iterable<E> ignoredElements,
+	public static <E> int findInsertionIndex(Comparison comparison, Iterable<E> ignoredElements,
 			List<E> source, List<E> target, E newElement) {
-		IEqualityHelper equalityHelper = comparison.getEqualityHelper();
-		// TODO split this into multiple sub-methods
+		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
 
 		// We assume that "newElement" is in source but not in the target yet
 		final List<E> lcs;
@@ -349,8 +355,8 @@ public final class DiffUtil {
 			lastLCSIndex = noLCS;
 		}
 
-		final Iterator<E> sourceIterator = source.iterator();
-		for (int i = 0; sourceIterator.hasNext() && (currentIndex == -1 || lastLCSIndex == -1); i++) {
+		ListIterator<E> sourceIterator = source.listIterator();
+		for (int i = 0; sourceIterator.hasNext() && (currentIndex == -1 || firstLCSIndex == -1); i++) {
 			final E sourceElement = sourceIterator.next();
 			if (currentIndex == -1 && equalityHelper.matchingValues(sourceElement, newElement)) {
 				currentIndex = i;
@@ -358,6 +364,12 @@ public final class DiffUtil {
 			if (firstLCSIndex == -1 && equalityHelper.matchingValues(sourceElement, firstLCS)) {
 				firstLCSIndex = i;
 			}
+		}
+		// The list may contain duplicates, use a reverse iteration to find the last from LCS.
+		final int sourceSize = source.size();
+		sourceIterator = source.listIterator(sourceSize);
+		for (int i = sourceSize - 1; sourceIterator.hasPrevious() && lastLCSIndex == -1; i--) {
+			final E sourceElement = sourceIterator.previous();
 			if (lastLCSIndex == -1 && equalityHelper.matchingValues(sourceElement, lastLCS)) {
 				lastLCSIndex = i;
 			}
@@ -369,68 +381,13 @@ public final class DiffUtil {
 			insertionIndex = target.size();
 		} else if (currentIndex < firstLCSIndex) {
 			// The object we are to insert is before the LCS in source.
-			// The insertion index will be inside the subsequence {0, <LCS start>} in target
-			/*
-			 * We'll insert it just before the LCS start : there cannot be any common element between the two
-			 * lists "before" the LCS since it would be part of the LCS itself.
-			 */
-			for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
-				final E targetElement = target.get(i);
-
-				if (equalityHelper.matchingValues(targetElement, firstLCS)) {
-					// We've reached the first element from the LCS in target. Insert here
-					insertionIndex = i;
-				}
-			}
+			insertionIndex = insertBeforeLCS(target, equalityHelper, firstLCS);
 		} else if (currentIndex > lastLCSIndex) {
 			// The object we are to insert is after the LCS in source.
-			// The insertion index will be inside the subsequence {<LCS end>, <list.size()>} in target.
-			/*
-			 * We'll insert it just after the LCS end : there cannot be any common element between the two
-			 * lists "after" the LCS since it would be part of the LCS itself.
-			 */
-			for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
-				final E targetElement = target.get(i);
-				if (equalityHelper.matchingValues(targetElement, lastLCS)) {
-					// We've reached the last element of the LCS in target. insert after it.
-					insertionIndex = i + 1;
-				}
-			}
+			insertionIndex = findInsertionIndexAfterLCS(target, equalityHelper, lastLCS);
 		} else {
 			// Our object is in-between two elements A and B of the LCS in source
-			/*
-			 * If any element of the subsequence {<index of A>, <index of B>} from source had been in the same
-			 * subsequence in target, it would have been part of the LCS. We thus know none is.
-			 */
-			// The insertion index will be just after A in target
-
-			// First, find which element of the LCS is "A"
-			E subsequenceStart = null;
-			for (int i = 0; i < currentIndex; i++) {
-				final E sourceElement = source.get(i);
-
-				boolean isInLCS = false;
-				for (int j = 0; j < lcs.size() && !isInLCS; j++) {
-					final E lcsElement = lcs.get(j);
-
-					if (equalityHelper.matchingValues(sourceElement, lcsElement)) {
-						isInLCS = true;
-					}
-				}
-
-				if (isInLCS) {
-					subsequenceStart = sourceElement;
-				}
-			}
-
-			// Then, find the index of "A" in target
-			for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
-				final E targetElement = target.get(i);
-
-				if (equalityHelper.matchingValues(targetElement, subsequenceStart)) {
-					insertionIndex = i + 1;
-				}
-			}
+			insertionIndex = findInsertionIndexWithinLCS(source, target, equalityHelper, lcs, currentIndex);
 		}
 
 		// We somehow failed to determine the insertion index. Insert at the very end.
@@ -438,6 +395,134 @@ public final class DiffUtil {
 			insertionIndex = target.size();
 		}
 
+		return insertionIndex;
+	}
+
+	/**
+	 * This will be called to try and find the insertion index for an element that is located in-between two
+	 * elements of the LCS between {@code source} and {@code target}.
+	 * 
+	 * @param source
+	 *            The List from which one element has to be added to the {@code target} list.
+	 * @param target
+	 *            The List into which one element from {@code source} has to be added.
+	 * @param equalityHelper
+	 *            The equality helper to use for this computation.
+	 * @param lcs
+	 *            The lcs between {@code source} and {@code target}.
+	 * @param currentIndex
+	 *            Current index (in {@code source} of the element we are to insert into {@code target}.
+	 * @param <E>
+	 *            Type of the sequences content.
+	 * @return The index in the target list in which should be inserted that element.
+	 */
+	private static <E> int findInsertionIndexWithinLCS(List<E> source, List<E> target,
+			final IEqualityHelper equalityHelper, final List<E> lcs, int currentIndex) {
+		int insertionIndex = -1;
+		/*
+		 * If any element of the subsequence {<index of A>, <index of B>} from source had been in the same
+		 * subsequence in target, it would have been part of the LCS. We thus know none is.
+		 */
+		// The insertion index will be just after A in target
+
+		// First, find which element of the LCS is "A"
+		int lcsIndexOfSubsequenceStart = -1;
+		for (int i = 0; i < currentIndex; i++) {
+			final E sourceElement = source.get(i);
+
+			boolean isInLCS = false;
+			for (int j = lcsIndexOfSubsequenceStart + 1; j < lcs.size() && !isInLCS; j++) {
+				final E lcsElement = lcs.get(j);
+
+				if (equalityHelper.matchingValues(sourceElement, lcsElement)) {
+					isInLCS = true;
+					lcsIndexOfSubsequenceStart++;
+				}
+			}
+		}
+
+		// Do we have duplicates before A in the lcs?
+		final Multiset<E> dupesLCS = HashMultiset.create(lcs.subList(0, lcsIndexOfSubsequenceStart + 1));
+		final E subsequenceStart = lcs.get(lcsIndexOfSubsequenceStart);
+		int duplicatesToGo = dupesLCS.count(subsequenceStart) - 1;
+
+		// Then, find the index of "A" in target
+		for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
+			final E targetElement = target.get(i);
+
+			if (equalityHelper.matchingValues(targetElement, subsequenceStart)) {
+				if (duplicatesToGo > 0) {
+					duplicatesToGo--;
+				} else {
+					insertionIndex = i + 1;
+				}
+			}
+		}
+
+		return insertionIndex;
+	}
+
+	/**
+	 * This will be called when we are to insert an element after the LCS in the {@code target} list.
+	 * 
+	 * @param target
+	 *            The List into which one element has to be added.
+	 * @param equalityHelper
+	 *            The equality helper to use for this computation.
+	 * @param lastLCS
+	 *            The last element of the LCS.
+	 * @param <E>
+	 *            Type of the sequences content.
+	 * @return The index to use for insertion into {@code target} in order to add an element just after the
+	 *         LCS.
+	 */
+	private static <E> int findInsertionIndexAfterLCS(List<E> target, IEqualityHelper equalityHelper,
+			E lastLCS) {
+		int insertionIndex = -1;
+		// The insertion index will be inside the subsequence {<LCS end>, <list.size()>} in target.
+		/*
+		 * We'll insert it just after the LCS end : there cannot be any common element between the two lists
+		 * "after" the LCS since it would be part of the LCS itself.
+		 */
+		for (int i = target.size() - 1; i >= 0 && insertionIndex == -1; i--) {
+			final E targetElement = target.get(i);
+			if (equalityHelper.matchingValues(targetElement, lastLCS)) {
+				// We've reached the last element of the LCS in target. insert after it.
+				insertionIndex = i + 1;
+			}
+		}
+		return insertionIndex;
+	}
+
+	/**
+	 * This will be called when we are to insert an element before the LCS in the {@code target} list.
+	 * 
+	 * @param target
+	 *            The List into which one element has to be added.
+	 * @param equalityHelper
+	 *            The equality helper to use for this computation.
+	 * @param firstLCS
+	 *            The first element of the LCS.
+	 * @param <E>
+	 *            Type of the sequences content.
+	 * @return The index to use for insertion into {@code target} in order to add an element just before the
+	 *         LCS.
+	 */
+	private static <E> int insertBeforeLCS(List<E> target, IEqualityHelper equalityHelper, E firstLCS) {
+		int insertionIndex = -1;
+		// The insertion index will be inside the subsequence {0, <LCS start>} in target
+		/*
+		 * We'll insert it just before the LCS start : there cannot be any common element between the two
+		 * lists "before" the LCS since it would be part of the LCS itself.
+		 */
+		for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
+			final E targetElement = target.get(i);
+
+			if (equalityHelper.matchingValues(targetElement, firstLCS)) {
+				// We've reached the first element from the LCS in target. Insert here
+				insertionIndex = i;
+			}
+		}
 		return insertionIndex;
 	}
 
@@ -524,7 +609,28 @@ public final class DiffUtil {
 		final Match match = diff.getMatch();
 
 		final EObject expectedContainer;
-		if (rightToLeft) {
+		if (feature instanceof EReference && ((EReference)feature).isContainment()
+				&& diff.getKind() == DifferenceKind.MOVE) {
+			// The value can only be an EObject, and its match cannot be null.
+			// If any of these two assumptions is wrong, something went horribly awry beforehand.
+			final Match valueMatch = comparison.getMatch((EObject)value);
+
+			final Match targetContainerMatch;
+			// If it exists, use the source side's container as reference
+			if (rightToLeft && valueMatch.getRight() != null) {
+				targetContainerMatch = comparison.getMatch(valueMatch.getRight().eContainer());
+			} else if (!rightToLeft && valueMatch.getLeft() != null) {
+				targetContainerMatch = comparison.getMatch(valueMatch.getLeft().eContainer());
+			} else {
+				// Otherwise, the value we're moving on one side has been removed from its source side.
+				targetContainerMatch = comparison.getMatch(valueMatch.getOrigin().eContainer());
+			}
+			if (rightToLeft) {
+				expectedContainer = targetContainerMatch.getLeft();
+			} else {
+				expectedContainer = targetContainerMatch.getRight();
+			}
+		} else if (rightToLeft) {
 			expectedContainer = match.getLeft();
 		} else {
 			expectedContainer = match.getRight();
@@ -535,7 +641,11 @@ public final class DiffUtil {
 
 		if (expectedContainer != null) {
 			final List<Object> temp = (List<Object>)ReferenceUtil.safeEGet(expectedContainer, feature);
-			if (temp instanceof InternalEList<?>) {
+			if (feature == EcorePackage.Literals.ECLASS__ESUPER_TYPES
+					|| feature == EcorePackage.Literals.EOPERATION__EEXCEPTIONS) {
+				// workaround 394286
+				targetList = temp;
+			} else if (temp instanceof InternalEList<?>) {
 				// EMF ignores the "resolve" flag for containment lists...
 				targetList = ((InternalEList<Object>)temp).basicList();
 			} else {
@@ -545,25 +655,8 @@ public final class DiffUtil {
 			targetList = ImmutableList.of();
 		}
 
-		final Iterable<Object> ignoredElements;
-		if (diff.getKind() == DifferenceKind.MOVE) {
-			final boolean undoingLeft = rightToLeft && diff.getSource() == DifferenceSource.LEFT;
-			final boolean undoingRight = !rightToLeft && diff.getSource() == DifferenceSource.RIGHT;
-
-			if (undoingLeft || undoingRight) {
-				ignoredElements = Lists.newArrayList();
-			} else if (!(diff instanceof AttributeChange) && comparison.isThreeWay()
-					&& match.getOrigin() != null) {
-				ignoredElements = Iterables.concat(computeIgnoredElements(targetList, diff), Collections
-						.singleton(value));
-			} else {
-				ignoredElements = Collections.singleton(value);
-			}
-		} else if (comparison.isThreeWay() && diff.getKind() == DifferenceKind.DELETE) {
-			ignoredElements = computeIgnoredElements(targetList, diff);
-		} else {
-			ignoredElements = Lists.newArrayList();
-		}
+		final Iterable<Object> ignoredElements = Iterables.concat(computeIgnoredElements(targetList, diff),
+				Collections.singleton(value));
 
 		return DiffUtil.findInsertionIndex(comparison, ignoredElements, sourceList, targetList, value);
 	}
@@ -612,7 +705,11 @@ public final class DiffUtil {
 
 		if (expectedContainer != null) {
 			final List<Object> temp = (List<Object>)ReferenceUtil.safeEGet(expectedContainer, feature);
-			if (temp instanceof InternalEList<?>) {
+			if (feature == EcorePackage.Literals.ECLASS__ESUPER_TYPES
+					|| feature == EcorePackage.Literals.EOPERATION__EEXCEPTIONS) {
+				// workaround 394286
+				sourceList = temp;
+			} else if (temp instanceof InternalEList<?>) {
 				// EMF ignores the "resolve" flag for containment lists...
 				sourceList = ((InternalEList<Object>)temp).basicList();
 			} else {
@@ -683,41 +780,95 @@ public final class DiffUtil {
 
 				final Iterable<? extends Diff> filteredCandidates = Iterables.filter(match.getDifferences(),
 						diff.getClass());
-				return Iterables.any(filteredCandidates, unresolvedDiffMatching(feature, element));
+				return Iterables.any(filteredCandidates, new UnresolvedDiffMatching(feature, element));
 			}
 		});
 	}
 
 	/**
-	 * Constructs a predicate that can be used to retrieve all unresolved diffs that apply to the given
-	 * {@code feature} and {@code element}.
+	 * This can be used to check whether a given Diff affects a value for which we can find another,
+	 * unresolved Diff on a given Feature.
 	 * 
-	 * @param feature
-	 *            The feature which our diffs must concern.
-	 * @param element
-	 *            The element which must be our diffs' target.
-	 * @param <E>
-	 *            Type of the element that must be the value of our matchin diffs.
-	 * @return The newly built predicate.
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
-	private static <E> Predicate<? super Diff> unresolvedDiffMatching(final EStructuralFeature feature,
-			final E element) {
-		return new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				boolean apply = false;
-				if (input instanceof AttributeChange) {
-					apply = input.getState() == DifferenceState.UNRESOLVED
-							&& ((AttributeChange)input).getAttribute() == feature
-							&& ((AttributeChange)input).getValue() == element;
-				} else if (input instanceof ReferenceChange) {
-					apply = input.getState() == DifferenceState.UNRESOLVED
-							&& ((ReferenceChange)input).getReference() == feature
-							&& ((ReferenceChange)input).getValue() == element;
-				} else {
-					apply = false;
-				}
-				return apply;
+	private static class UnresolvedDiffMatching implements Predicate<Diff> {
+		/** Feature on which we expect an unresolved diff. */
+		private final EStructuralFeature feature;
+
+		/** Element for which we expect an unresolved diff. */
+		private final Object element;
+
+		/**
+		 * Constructs a predicate that can be used to retrieve all unresolved diffs that apply to the given
+		 * {@code feature} and {@code element}.
+		 * 
+		 * @param feature
+		 *            The feature which our diffs must concern.
+		 * @param element
+		 *            The element which must be our diffs' target.
+		 */
+		public UnresolvedDiffMatching(EStructuralFeature feature, Object element) {
+			this.feature = feature;
+			this.element = element;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see com.google.common.base.Predicate#apply(java.lang.Object)
+		 */
+		public boolean apply(Diff input) {
+			boolean apply = false;
+			if (input instanceof AttributeChange) {
+				apply = input.getState() == DifferenceState.UNRESOLVED
+						&& ((AttributeChange)input).getAttribute() == feature
+						&& matchingValues((AttributeChange)input, element);
+			} else if (input instanceof ReferenceChange) {
+				apply = input.getState() == DifferenceState.UNRESOLVED
+						&& ((ReferenceChange)input).getReference() == feature
+						&& matchingValues((ReferenceChange)input, element);
+			} else {
+				apply = false;
 			}
-		};
+			return apply;
+		}
+
+		/**
+		 * Checks that the value of the given diff matches <code>value</code>, resorting to the equality
+		 * helper if needed.
+		 * 
+		 * @param diff
+		 *            The diff which value we need to check.
+		 * @param value
+		 *            The expected value of <code>diff</code>
+		 * @return <code>true</code> if the value matches.
+		 */
+		private boolean matchingValues(AttributeChange diff, Object value) {
+			if (diff.getValue() == value) {
+				return true;
+			}
+			// Only resort to the equality helper as "last resort"
+			final IEqualityHelper helper = diff.getMatch().getComparison().getEqualityHelper();
+			return helper.matchingAttributeValues(diff.getValue(), value);
+		}
+
+		/**
+		 * Checks that the value of the given diff matches <code>value</code>, resorting to the equality
+		 * helper if needed.
+		 * 
+		 * @param diff
+		 *            The diff which value we need to check.
+		 * @param value
+		 *            The expected value of <code>diff</code>
+		 * @return <code>true</code> if the value matches.
+		 */
+		private boolean matchingValues(ReferenceChange diff, Object value) {
+			if (diff.getValue() == value) {
+				return true;
+			}
+			// Only resort to the equality helper as "last resort"
+			final IEqualityHelper helper = diff.getMatch().getComparison().getEqualityHelper();
+			return helper.matchingValues(diff.getValue(), value);
+		}
 	}
 }

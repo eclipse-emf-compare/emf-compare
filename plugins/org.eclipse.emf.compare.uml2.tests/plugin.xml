@@ -27,5 +27,12 @@ Contributors:
 	         location="platform:/plugin/org.eclipse.emf.compare.uml2.tests/model/uml2.compare.testprofile.profile.uml#_hZFTgIwkEeC_FYHMbTTxXw">
 	   </profile>
    </extension>
+   <extension
+         point="org.eclipse.emf.ecore.uri_mapping">
+      <mapping
+            source="pathmap://UML_COMPARE_TESTS_PROFILE/"
+            target="platform:/plugin/org.eclipse.emf.compare.uml2.tests/model/">
+      </mapping>
+   </extension>
 
 </plugin>

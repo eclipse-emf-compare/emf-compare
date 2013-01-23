@@ -1,0 +1,109 @@
+Origin == extended library example from emf.
+
+Left
+	Added
+		BookCategory.Encyclopedia - enum literal of value "3"
+		BookCategory.Dictionary - enum literal of value "4"
+		
+		Magazine, subclass of CirculatingItem
+		
+		Person.fullName
+
+	Removed
+		Periodical
+		
+		BookOnTape.reader
+		
+		Person.firstName
+		Person.lastName
+
+	Renamed
+		Lendable -> Borrowable
+		
+		AudioVisualItem.minutesLength -> AudioVisualItem.length
+
+Right
+	Added
+		BookCategory.Manga - enum literal of value "3"
+		BookCategory.Manhwa - enum literal of value "5"
+		
+		Book.subtitle - attribute of type EString
+		
+		Magazine, subclass of Periodical
+		
+		TitledItem	- EClassifier
+					- superclass of Book
+					- superclass of Periodical
+					- superclass of AudioVisualItem
+
+	Removed
+		Book.title
+		Periodical.title
+		AudioVisualItem.title
+		
+		BookOnTape.reader
+
+	Renamed
+		Person.lastName -> Person.familyName
+		
+		AudioVisualItem.minutesLength -> AudioVisualItem.minutes
+
+Expected Differences
+	1 - Added Encyclopedia to BookCategory
+	2 - Added Dictionary to BookCategory
+	3 - Added Magazine to extlibrary
+	4 - Added title to Magazine
+	5 - Added pages to Magazine
+	6 - Added CirculatingItem to reference eSuperTypes of Magazine
+	7 - Added fullName to Person
+	8 - Removed Periodical
+	9 - Removed issuesPerYear from Periodical
+	10 - Removed Item from reference eSuperTypes of Periodical
+	11 - Removed firstName from Person
+	12 - Removed lastName from Person
+	13 - Attribute name of Lendable has been changed from Lendable to Borrowable
+	14 - Attribute name of minutesLength has been changed from minutesLength to length
+	15 - Remotely added Manga to BookCategory
+	16 - Remotely added Manhwa to BookCategory
+	17 - Remotely added subtitle to Book
+	18 - Remotely added Magazine
+	19 - Remotely added Periodical to reference eSuperTypes of Magazine
+	20 - Remotely added TitledItem
+	21 - Remotely added title to TitledItem
+	22 - Remotely added TitledItem to reference eSuperTypes of Book
+	23 - Remotely added TitledItem to reference eSuperTypes of Periodical
+	24 - Remotely added TitledItem to reference eSuperTypes of AudioVisualItem
+	25 - Remotely removed title from Book
+	26 - Remotely removed title from AudioVisualItem
+	27 - Attribute name of lastName has been remotely changed from lastName to familyName
+	28 - Attribute name of minutesLength has been remotely changed from minutesLength to minutes
+	29 - Removed reader from BookOnTape
+	30 - Remotely removed reader from BookOnTape
+	31 - Removed title from Periodical
+	32 - Remotely removed title from Periodical
+	33 - Changed reference eType of BookOnTape.reader from Person to null
+	34 - Remotely Changed reference eType of BookOnTape.reader from Person to null
+	35 - Remotely changed reference eType of TitledItem.title from null to EString
+	36 - Changed reference eType of Periodical.issuesPerYear from EInt to null
+	37 - Changed reference eType of Person.firstName from EString to null
+	38 - Remotely changed reference eType of Book.subtitle from null to EString
+	39 - Remotely changed reference eType of Book.title from EString to null
+	40 - Remotely changed reference eType of AudioVisualItem.title from EString to null
+	41 - Changed reference eType of Person.fullName from null to EString
+	42 - Changed reference eType of Person.lastName from EString to null
+	43 - Changed reference eType of Magazine.title from null to EString
+	44 - Changed reference eType of Magazine.pages from null to EInt
+	45 - Changed reference eType of Periodical.title from EString to null
+	45 - Remotely changed reference eType of Periodical.title from EString to null
+	
+	Two diffs on BookOnTape.reader : has been removed from both local and remote copies (pseudo-conflict).
+	Two diffs on Periodical.title : it has been removed in right, and its container (Periodical) has been entirely removed from left.
+	
+	No equivalences.
+	
+	Conflicts on :
+	1 and 15 : Not a generic conflict, relies on ecore-specific business rules : enum literals of the same enum with the same 'value'.
+	8, 31, 45, 19, 32 and 46 : REAL : locally deleted Periodical. However, we've remotely set "Periodical" as the super-type of Magazine. REAL conflict. We've removed title both locally and remotely, which is a PSEUDO conflict, but "nested" within the REAL one since it depends on it. 
+	12 and 27 : REAL : remote renaming of a locally deleted attribute
+	14 and 28 : REAL : renaming to different values
+	29, 30, 33 and 34 : PSEUDO : BookOnTape.reader removed from both sides, and thus its type unset on both sides.

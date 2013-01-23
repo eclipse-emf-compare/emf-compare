@@ -43,6 +43,9 @@ public class AddBehaviorExecutionSpecificationTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, null);
+		testMergeRightToLeft(left, right, null);
 	}
 
 	@Test
@@ -53,6 +56,9 @@ public class AddBehaviorExecutionSpecificationTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(right, left, null);
+		testMergeRightToLeft(right, left, null);
 	}
 
 	@Test
@@ -63,6 +69,9 @@ public class AddBehaviorExecutionSpecificationTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, right);
+		testMergeRightToLeft(left, right, right);
 	}
 
 	@Test
@@ -73,6 +82,9 @@ public class AddBehaviorExecutionSpecificationTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(left, right, left);
+		testMergeRightToLeft(left, right, left);
 	}
 
 	private void testAB1(TestKind kind, final Comparison comparison) {
@@ -188,12 +200,16 @@ public class AddBehaviorExecutionSpecificationTest extends AbstractTest {
 			addUMLMessage = Iterators.find(differences.iterator(), and(
 					instanceOf(ExecutionSpecificationChange.class), ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLMessage);
-			assertSame(Integer.valueOf(5), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
+			assertSame(Integer.valueOf(9), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addFinishInActionExecSpec));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addStartInActionExecSpec));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInFinish));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInStart));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInActionExecSpec));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredByInLifeline1_1));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredByInLifeline1_2));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addStart));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addFinish));
 		} else {
 			addUMLMessage = Iterators.find(differences.iterator(), and(
 					instanceOf(ExecutionSpecificationChange.class), ofKind(DifferenceKind.DELETE)));

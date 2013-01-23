@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:testProfile="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xsi:schemaLocation="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile#//uml2comparetestprofile">
+  <uml:Model xmi:id="_94mkoHxsEeCJOrA24Ue2iw" name="aModel">
+    <packagedElement xmi:type="uml:Package" xmi:id="_BYEVIHxtEeCJOrA24Ue2iw" name="aPack">
+      <packagedElement xmi:type="uml:Class" xmi:id="_C4IZsHxtEeCJOrA24Ue2iw" name="aClass">
+        <ownedAttribute xmi:id="_mxkQcHyUEeCw7raschXiNQ" name="aProperty"/>
+      </packagedElement>
+      <profileApplication xmi:id="_ff5hsPNyEeG0ipjyqWM1zA">
+        <eAnnotations xmi:id="_ff5hsfNyEeG0ipjyqWM1zA" source="http://www.eclipse.org/uml2/2.0.0/UML">
+          <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile#//uml2comparetestprofile"/>
+        </eAnnotations>
+        <appliedProfile href="pathmap://UML_COMPARE_TESTS_PROFILE/uml2.compare.testprofile.profile.uml#_hZFTgIwkEeC_FYHMbTTxXw"/>
+      </profileApplication>
+    </packagedElement>
+  </uml:Model>
+  <testProfile:ACliche xmi:id="_0r4XQPNyEeG0ipjyqWM1zA" base_Class="_C4IZsHxtEeCJOrA24Ue2iw">
+    <manyValuedAttribute>fr</manyValuedAttribute>
+    <manyValuedAttribute>en</manyValuedAttribute>
+    <manyValuedAttribute>us</manyValuedAttribute>
+    <manyValuedAttribute>de</manyValuedAttribute>
+  </testProfile:ACliche>
+</xmi:XMI>

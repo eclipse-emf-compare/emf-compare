@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="org.eclipse.emf.compare.edit" version="2">
+    <resource path="src/org/eclipse/emf/compare/domain/ICompareEditingDomain.java" type="org.eclipse.emf.compare.domain.ICompareEditingDomain">
+        <filter comment="Enable to retrieve a change recorder" id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.emf.compare.domain.ICompareEditingDomain"/>
+                <message_argument value="getChangeRecorder()"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>

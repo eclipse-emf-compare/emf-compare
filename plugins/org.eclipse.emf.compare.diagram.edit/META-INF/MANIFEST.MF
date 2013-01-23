@@ -2,21 +2,21 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.diagram.edit;singleton:=true
-Bundle-Version: 2.0.0.qualifier
+Bundle-Version: 2.1.0.qualifier
 Bundle-ClassPath: .
-Bundle-Activator: org.eclipse.emf.compare.diagram.diagramdiff.provider.DiagramdiffEditPlugin$Implementation
+Bundle-Activator: org.eclipse.emf.compare.diagram.provider.DiagramEditPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.eclipse.emf.compare.diagram.diagramdiff.provider
+Export-Package: org.eclipse.emf.compare.diagram.provider
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare.diagram;visibility:=reexport,
  org.eclipse.emf.edit;visibility:=reexport,
- org.eclipse.emf.compare.diff;visibility:=reexport,
- org.eclipse.emf.compare.diff.edit;visibility:=reexport,
+ org.eclipse.emf.compare;visibility:=reexport,
+ org.eclipse.emf.compare.edit;visibility:=reexport,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.ecore.edit;visibility:=reexport,
- org.eclipse.emf.compare.match;visibility:=reexport,
- org.eclipse.gmf.runtime.notation,
- org.eclipse.emf.compare
+ org.eclipse.gmf.runtime.notation;bundle-version="1.2.0"
 Bundle-ActivationPolicy: lazy
+Import-Package: com.google.common.base;version="10.0.1",
+ com.google.common.collect;version="10.0.1"

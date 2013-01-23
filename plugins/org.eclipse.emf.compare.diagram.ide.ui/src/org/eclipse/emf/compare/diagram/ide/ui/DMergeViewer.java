@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui;
 
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
 import org.eclipse.jface.viewers.ISelection;
 
@@ -26,6 +27,8 @@ public abstract class DMergeViewer extends AbstractEditPartViewer {
 	public DMergeViewer(MergeViewerSide side) {
 		fSide = side;
 	}
+
+	public abstract void setInput(Object object);
 
 	/**
 	 * Returns the wrapped {@link AbstractEditPartViewer}.
@@ -59,23 +62,6 @@ public abstract class DMergeViewer extends AbstractEditPartViewer {
 	@Override
 	public void setSelection(ISelection selection) {
 		getGraphicalViewer().setSelection(selection);
-	}
-
-	public static enum MergeViewerSide {
-		LEFT, RIGHT, ANCESTOR;
-
-		public MergeViewerSide opposite() {
-			switch (this) {
-				case LEFT:
-					return RIGHT;
-				case RIGHT:
-					return LEFT;
-				case ANCESTOR:
-					return ANCESTOR;
-				default:
-					throw new IllegalStateException(); // happy compiler :)
-			}
-		}
 	}
 
 }

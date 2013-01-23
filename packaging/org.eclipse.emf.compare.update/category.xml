@@ -21,12 +21,21 @@
    <feature id="org.eclipse.emf.compare.uml2" version="0.0.0">
       <category name="compare_integration"/>
    </feature>
+   <feature id="org.eclipse.emf.compare.diagram.gmf" version="0.0.0">
+      <category name="compare_integration"/>
+   </feature>
+   <feature id="org.eclipse.emf.compare.diagram.ecoretools" version="0.0.0">
+      <category name="compare_integration"/>
+   </feature>
+   <feature id="org.eclipse.emf.compare.diagram.papyrus" version="0.0.0">
+      <category name="compare_integration"/>
+   </feature>
    <category-def name="compare" label="EMF Compare">
       <description>
          EMF Compare features.
       </description>
    </category-def>
-   <category-def name="compare_integration" label="EMF Compare Integrations">
+   <category-def name="compare_integration" label="EMF Compare Tools Integration">
       <description>
          Features to integrate EMF Compare with other tools.
       </description>

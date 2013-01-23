@@ -16,7 +16,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.diagram.DiagramCompareFactory;
 import org.eclipse.emf.compare.diagram.LabelChange;
-import org.eclipse.emf.compare.diagram.diff.util.DiffUtil;
+import org.eclipse.emf.compare.diagram.diff.util.GMFLabelUtil;
 import org.eclipse.emf.compare.diagram.ide.GMFCompareIDEPlugin;
 import org.eclipse.emf.compare.diagram.ide.diff.internal.extension.IDiffExtensionFactory;
 import org.eclipse.emf.compare.diagram.provider.IViewLabelProvider;
@@ -65,11 +65,11 @@ public class DiagramDiffIDEExtensionPostProcessor implements IPostProcessor {
 		while (matches.hasNext()) {
 			final Match match = (Match)matches.next();
 
-			LabelChange diff = null;
 			final EObject leftElement = match.getLeft();
-			final EObject rightElement = match.getRight();
 
 			if (leftElement instanceof View) {
+				LabelChange diff = null;
+				final EObject rightElement = match.getRight();
 				final View view = (View)leftElement;
 				final Diagram diagram = view.getDiagram();
 
@@ -86,8 +86,8 @@ public class DiagramDiffIDEExtensionPostProcessor implements IPostProcessor {
 										"No IViewLabelProvider registered for diagram " + diagramType)); //$NON-NLS-1$
 						extensionForType = IViewLabelProvider.DEFAULT_INSTANCE;
 					}
-					if (rightElement instanceof View && extensionForType.isManaged(view) && DiffUtil.isVisible(view)
-							&& DiffUtil.isVisible((View)rightElement)) {
+					if (rightElement instanceof View && extensionForType.isManaged(view) && isVisible(view)
+							&& isVisible((View)rightElement)) {
 						final String leftLabel = extensionForType.elementLabel(view);
 						final String rightLabel = extensionForType.elementLabel((View)rightElement);
 						if (!leftLabel.equals(rightLabel)) {
@@ -95,7 +95,12 @@ public class DiagramDiffIDEExtensionPostProcessor implements IPostProcessor {
 							diff.setKind(DifferenceKind.CHANGE);
 							diff.setLeft(leftLabel);
 							diff.setRight(rightLabel);
-							match.getDifferences().add(diff);
+							diff.setView(leftElement);
+							if (match.eContainer() instanceof Match) {
+								((Match) match.eContainer()).getDifferences().add(diff);
+							} else {
+								match.getDifferences().add(diff);
+							}
 						}
 					}
 				}
@@ -103,14 +108,16 @@ public class DiagramDiffIDEExtensionPostProcessor implements IPostProcessor {
 				if (comparison.isThreeWay() && diff != null) {
 					final EObject ancestor = match.getOrigin();
 					if (ancestor instanceof View) {
-						final ITextAwareEditPart ancestorEp = DiffUtil.getTextEditPart((View)ancestor);
+						final ITextAwareEditPart ancestorEp = GMFLabelUtil.getTextEditPart((View)ancestor);
 						if (ancestorEp != null) {
 							final String ancestorLabel = ancestorEp.getEditText();
 							final String leftLabel = diff.getLeft();
 							final String rightLabel = diff.getRight();
 							if (ancestorLabel.equals(leftLabel)) {
 								diff.setSource(DifferenceSource.RIGHT);
+								diff.setView(rightElement);
 							} else if (!ancestorLabel.equals(rightLabel)) {
+								diff.setView(leftElement);
 								final Conflict conflict = CompareFactory.eINSTANCE.createConflict();
 								conflict.getDifferences().add(diff);
 								comparison.getConflicts().add(conflict);
@@ -119,9 +126,47 @@ public class DiagramDiffIDEExtensionPostProcessor implements IPostProcessor {
 
 					}
 				}
-
 			}
 		}
+		GMFLabelUtil.cleanup();
+	}
+	
+	/**
+	 * Checks if the view is visible.
+	 * 
+	 * @param view
+	 *            The tested view.
+	 * @return True if visible.
+	 */
+	public static boolean isVisible(View view) {
+		boolean result = view.isVisible();
+		if (result) {
+			final View container = getNextParent(view);
+			if (container != null) {
+				result = isVisible(container);
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Get the closest parent view.
+	 * 
+	 * @param obj
+	 *            The current view.
+	 * @return The parent view.
+	 */
+	private static View getNextParent(EObject obj) {
+		View result = null;
+		if (obj != null) {
+			final EObject parent = obj.eContainer();
+			if (parent instanceof View) {
+				result = (View)parent;
+			} else {
+				result = getNextParent(parent);
+			}
+		}
+		return result;
 	}
 
 	private List<Match> getAllMatches(Comparison comparison) {

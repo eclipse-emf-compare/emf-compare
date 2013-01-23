@@ -13,8 +13,13 @@ package org.eclipse.emf.compare.ide;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.extension.PostProcessorRegistry;
 import org.eclipse.emf.compare.ide.internal.extension.PostProcessorRegistryListener;
+import org.eclipse.emf.compare.ide.internal.policy.LoadOnDemandPolicyRegistryImpl;
+import org.eclipse.emf.compare.ide.internal.policy.LoadOnDemandPolicyRegistryListener;
+import org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy;
+import org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy.Registry;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -25,6 +30,9 @@ import org.osgi.framework.BundleContext;
 public class EMFCompareIDEPlugin extends Plugin {
 	/** The plug-in ID. */
 	public static final String PLUGIN_ID = "org.eclipse.emf.compare.ide"; //$NON-NLS-1$
+
+	/** The id of the load on demand policy extension point. */
+	public static final String LOAD_ON_DEMAND_POLICY_PPID = "load_on_demand_policy"; //$NON-NLS-1$
 
 	/** This plugin's shared instance. */
 	private static EMFCompareIDEPlugin plugin;
@@ -37,6 +45,12 @@ public class EMFCompareIDEPlugin extends Plugin {
 	/** The registry listener that will be used to react to post processor changes. */
 	private PostProcessorRegistryListener postProcessorListener;
 
+	/** The registry that will hold references to all {@link ILoadOnDemandPolicy}. **/
+	private Registry loadOnDemandRegistry;
+
+	/** The registry listener that will be used to react to load on demand policy changes. */
+	private LoadOnDemandPolicyRegistryListener loadOnDemandRegistryListener;
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -47,14 +61,21 @@ public class EMFCompareIDEPlugin extends Plugin {
 		plugin = this;
 		super.start(context);
 
+		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
 		this.postProcessorRegistry = new PostProcessorRegistry();
 		this.postProcessorListener = new PostProcessorRegistryListener(postProcessorRegistry);
-
-		final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
 		registry.addListener(postProcessorListener,
 				PostProcessorRegistryListener.POST_PROCESSOR_EXTENSION_POINT);
 		postProcessorListener.parseInitialContributions();
+
+		this.loadOnDemandRegistry = new LoadOnDemandPolicyRegistryImpl();
+		this.loadOnDemandRegistryListener = new LoadOnDemandPolicyRegistryListener(loadOnDemandRegistry,
+				PLUGIN_ID, LOAD_ON_DEMAND_POLICY_PPID);
+
+		registry.addListener(loadOnDemandRegistryListener, PLUGIN_ID + "." + LOAD_ON_DEMAND_POLICY_PPID);
+		loadOnDemandRegistryListener.readRegistry(registry);
 	}
 
 	/**
@@ -68,6 +89,7 @@ public class EMFCompareIDEPlugin extends Plugin {
 		plugin = null;
 
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+		registry.removeListener(loadOnDemandRegistryListener);
 		registry.removeListener(postProcessorListener);
 	}
 
@@ -78,6 +100,27 @@ public class EMFCompareIDEPlugin extends Plugin {
 	 */
 	public PostProcessorRegistry getPostProcessorRegistry() {
 		return postProcessorRegistry;
+	}
+
+	/**
+	 * Log the given message with the given severity to the logger of this plugin.
+	 * 
+	 * @param severity
+	 *            the severity of the message.
+	 * @param message
+	 *            the message to log.
+	 */
+	public void log(int severity, String message) {
+		getLog().log(new Status(severity, PLUGIN_ID, message));
+	}
+
+	/**
+	 * Returns the registry of load on demand policies.
+	 * 
+	 * @return the registry of load on demand policies.
+	 */
+	public ILoadOnDemandPolicy.Registry getLoadOnDemandPolicyRegistry() {
+		return loadOnDemandRegistry;
 	}
 
 	/**

@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.uml2.provider.spec;
 
 import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.compare.uml2.provider.StereotypeApplicationChangeItemProvider;
 import org.eclipse.emf.compare.uml2.provider.UMLCompareItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 
@@ -39,7 +40,7 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 
 	ForwardingUMLDiffItemProvider fProfileApplicationChangeItemProvider;
 
-	ForwardingUMLDiffItemProvider fStereotypeApplicationChangeItemProvider;
+	StereotypeApplicationChangeItemProvider fStereotypeApplicationChangeItemProvider;
 
 	ForwardingUMLDiffItemProvider fStereotypePropertyChangeItemProvider;
 
@@ -195,8 +196,7 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 	@Override
 	public Adapter createStereotypeApplicationChangeAdapter() {
 		if (fStereotypeApplicationChangeItemProvider == null) {
-			fStereotypeApplicationChangeItemProvider = new ForwardingUMLDiffItemProvider(
-					(ItemProviderAdapter)super.createStereotypeApplicationChangeAdapter());
+			fStereotypeApplicationChangeItemProvider = new StereotypeApplicationChangeItemProviderSpec(this);
 		}
 		return fStereotypeApplicationChangeItemProvider;
 	}

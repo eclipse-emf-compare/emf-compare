@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.papyrus;
 
-import org.eclipse.emf.compare.diagram.diff.util.DiffUtil;
+import org.eclipse.emf.compare.diagram.diff.util.GMFLabelUtil;
 import org.eclipse.emf.compare.diagram.provider.AbstractLabelProvider;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
@@ -35,7 +35,6 @@ import org.eclipse.uml2.uml.util.UMLSwitch;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public abstract class AbstractUMLViewLabelProvider extends AbstractLabelProvider {
-
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -46,7 +45,7 @@ public abstract class AbstractUMLViewLabelProvider extends AbstractLabelProvider
 		if (view == null) {
 			throw new IllegalArgumentException("view"); //$NON-NLS-1$
 		}
-		final ITextAwareEditPart editPart = DiffUtil.getTextEditPart(view);
+		final ITextAwareEditPart editPart = GMFLabelUtil.getTextEditPart(view);
 		final EObject semanticElement = getSemanticElement(editPart);
 
 		final IMaskManagedLabelEditPolicy policy = (IMaskManagedLabelEditPolicy)editPart
@@ -75,7 +74,7 @@ public abstract class AbstractUMLViewLabelProvider extends AbstractLabelProvider
 	/**
 	 * Switch to return the label in relation to the kind of model object.
 	 * 
-	 * @author Mickael Barbero <a href="mailto:mickael.barbero@obeo.fr">mickael.barbero@obeo.fr</a>
+	 * @author Mikael Barbero <a href="mailto:mikael.barbero@obeo.fr">Mikael.barbero@obeo.fr</a>
 	 */
 	static class LabelSwitch extends UMLSwitch<String> {
 

@@ -17,6 +17,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.diagram.DiagramCompareFactory;
 import org.eclipse.emf.compare.diagram.Hide;
 import org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -40,6 +41,9 @@ public class HideFactory extends AbstractDiffExtensionFactory {
 
 		ret.getRefinedBy().add(input);
 
+		if (input instanceof AttributeChange) {
+			ret.setView(MatchUtil.getContainer(input.getMatch().getComparison(), input));
+		}
 		ret.setSource(input.getSource());
 
 		return ret;

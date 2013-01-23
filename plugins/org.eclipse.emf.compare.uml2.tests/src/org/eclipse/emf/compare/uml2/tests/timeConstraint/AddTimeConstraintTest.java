@@ -45,6 +45,9 @@ public class AddTimeConstraintTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, null);
+		testMergeRightToLeft(left, right, null);
 	}
 
 	@Test
@@ -55,6 +58,9 @@ public class AddTimeConstraintTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(right, left, null);
+		testMergeRightToLeft(right, left, null);
 	}
 
 	@Test
@@ -65,6 +71,9 @@ public class AddTimeConstraintTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, right);
+		testMergeRightToLeft(left, right, right);
 	}
 
 	@Test
@@ -75,6 +84,9 @@ public class AddTimeConstraintTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(left, right, left);
+		testMergeRightToLeft(left, right, left);
 	}
 
 	private void testAB1(TestKind kind, final Comparison comparison) {
@@ -155,13 +167,15 @@ public class AddTimeConstraintTest extends AbstractTest {
 			addUMLMessage = Iterators.find(differences.iterator(), and(
 					instanceOf(IntervalConstraintChange.class), ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLMessage);
-			assertSame(Integer.valueOf(6), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
+			assertSame(Integer.valueOf(8), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addConstrainedElementInTimeConstraint));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addTimeInterval));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addMinInTimeInterval));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addMaxInTimeInterval));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addMinValue));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addMaxValue));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addTimeExpressionMin));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addTimeExpressionMax));
 
 		} else {
 			addUMLMessage = Iterators.find(differences.iterator(), and(

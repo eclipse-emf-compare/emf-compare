@@ -42,22 +42,22 @@ public class DiagramDiffExtensionPostProcessor implements IPostProcessor {
 	}
 
 	public void postRequirements(Comparison comparison, Monitor monitor) {
-		final Map<Class<? extends Diff>, IDiffExtensionFactory> mapUml2ExtensionFactories = DiffExtensionFactoryRegistry
+		final Map<Class<? extends Diff>, IDiffExtensionFactory> mapDiagramExtensionFactories = DiffExtensionFactoryRegistry
 				.createExtensionFactories(configuration);
-		diagramExtensionFactories = new HashSet<IDiffExtensionFactory>(mapUml2ExtensionFactories.values());
+		diagramExtensionFactories = new HashSet<IDiffExtensionFactory>(mapDiagramExtensionFactories.values());
 
 		// Creation of the UML difference extensions
 		for (Diff diff : comparison.getDifferences()) {
 			applyManagedTypes(diff);
 		}
 
-		// Filling of the requirements link of the UML difference extensions
+		// Filling of the requirements link of the difference extensions
 		for (Diff diff : comparison.getDifferences()) {
 			if (diff instanceof DiagramDiff) {
 				final Class<?> classDiffElement = diff.eClass().getInstanceClass();
-				final IDiffExtensionFactory diffFactory = mapUml2ExtensionFactories.get(classDiffElement);
+				final IDiffExtensionFactory diffFactory = mapDiagramExtensionFactories.get(classDiffElement);
 				if (diffFactory != null) {
-					diffFactory.fillRequiredDifferences(comparison, (DiagramDiff)diff);
+					diffFactory.fillRequiredDifferences(comparison, diff);
 				}
 			}
 		}

@@ -36,6 +36,9 @@
 		<configuration>
 			<includes>
 				<include>org/eclipse/emf/compare/tests/suite/AllTests.class</include>
+                <!--
+                <include>org/eclipse/emf/compare/tests/suite/AllPluginTests.class</include>
+                -->
 			</includes>	
 			<useUIHarness>false</useUIHarness>
 			<useUIThread>false</useUIThread>

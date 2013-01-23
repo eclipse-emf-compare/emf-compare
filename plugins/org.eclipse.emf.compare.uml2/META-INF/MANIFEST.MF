@@ -9,7 +9,7 @@ Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
- org.eclipse.uml2.uml,
+ org.eclipse.uml2.uml;bundle-version="4.0.0",
  org.eclipse.emf.compare,
  org.eclipse.emf.compare.ide
 Bundle-ActivationPolicy: lazy
@@ -20,8 +20,10 @@ Export-Package: org.eclipse.emf.compare.uml2,
  org.eclipse.emf.compare.uml2.diff.internal.extension.profile;x-internal:=true,
  org.eclipse.emf.compare.uml2.diff.internal.extension.sequence;x-internal:=true,
  org.eclipse.emf.compare.uml2.diff.internal.extension.usecase;x-internal:=true,
+ org.eclipse.emf.compare.uml2.diff.internal.util;x-friends:="org.eclipse.emf.compare.uml2.edit",
  org.eclipse.emf.compare.uml2.impl,
  org.eclipse.emf.compare.uml2.util
 Bundle-Activator: org.eclipse.emf.compare.uml2.UMLDiffEnginePlugin
 Import-Package: com.google.common.base;version="[10.0.0,11.0.0)",
- com.google.common.collect;version="[10.0.0,11.0.0)"
+ com.google.common.collect;version="[10.0.0,11.0.0)",
+ com.google.common.primitives;version="[10.0.0,11.0.0)"

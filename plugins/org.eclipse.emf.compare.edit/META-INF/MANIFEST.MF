@@ -8,14 +8,18 @@ Bundle-Activator: org.eclipse.emf.compare.provider.EMFCompareEditPlugin$Implemen
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.eclipse.emf.compare.commands,
+Export-Package: org.eclipse.emf.compare.command,
+ org.eclipse.emf.compare.command.impl,
+ org.eclipse.emf.compare.domain,
+ org.eclipse.emf.compare.domain.impl,
  org.eclipse.emf.compare.provider,
  org.eclipse.emf.compare.provider.spec
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare;visibility:=reexport,
  org.eclipse.emf.edit;visibility:=reexport,
  org.eclipse.emf.ecore;visibility:=reexport,
- org.eclipse.emf.ecore.edit;visibility:=reexport
+ org.eclipse.emf.ecore.edit;visibility:=reexport,
+ org.eclipse.emf.transaction;bundle-version="1.3.0"
 Bundle-ActivationPolicy: lazy
 Import-Package: com.google.common.base;version="[10.0.0,11.0.0)",
  com.google.common.collect;version="[10.0.0,11.0.0)"

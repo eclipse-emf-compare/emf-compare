@@ -17,6 +17,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.diagram.DiagramCompareFactory;
 import org.eclipse.emf.compare.diagram.Show;
 import org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -39,6 +40,10 @@ public class ShowFactory extends AbstractDiffExtensionFactory {
 		ret.setKind(extensionKind);
 
 		ret.getRefinedBy().add(input);
+
+		if (input instanceof AttributeChange) {
+			ret.setView(MatchUtil.getContainer(input.getMatch().getComparison(), input));
+		}
 
 		return ret;
 	}

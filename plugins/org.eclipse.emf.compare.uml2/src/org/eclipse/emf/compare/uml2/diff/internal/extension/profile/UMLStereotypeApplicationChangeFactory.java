@@ -26,6 +26,7 @@ import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.diff.internal.util.UMLCompareUtil;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -107,46 +108,51 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractDiffExtension
 
 	@Override
 	protected boolean isRelatedToAnExtensionChange(AttributeChange input) {
-		return UMLUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
+		return UMLCompareUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
 	@Override
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
-		return UMLUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
+		return UMLCompareUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
 	@Override
 	protected boolean isRelatedToAnExtensionAdd(ResourceAttachmentChange input) {
 		return input.getKind() == DifferenceKind.ADD
-				&& UMLUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
+				&& UMLCompareUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(),
+						input)) != null;
 	}
 
 	@Override
 	protected boolean isRelatedToAnExtensionDelete(ResourceAttachmentChange input) {
 		return input.getKind() == DifferenceKind.DELETE
-				&& UMLUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
+				&& UMLCompareUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(),
+						input)) != null;
 	}
 
 	@Override
 	public void fillRequiredDifferences(Comparison comparison, UMLDiff extension) {
-		if (extension instanceof StereotypeApplicationChange) {
-			final StereotypeApplicationChange stereotypeApplicationChange = (StereotypeApplicationChange)extension;
-			if (stereotypeApplicationChange.getKind() == DifferenceKind.ADD) {
-				final Stereotype stereotype = UMLUtil.getStereotype(stereotypeApplicationChange
-						.getDiscriminant());
-				if (stereotype != null) {
-					final Profile profile = stereotype.getProfile();
-					final Iterator<Setting> settings = UML2Util.getInverseReferences(profile).iterator();
-					while (settings.hasNext()) {
-						final Setting setting = settings.next();
-						if (setting.getEStructuralFeature() == UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE) {
-							final ProfileApplication profileApplication = (ProfileApplication)setting
-									.getEObject();
-							for (Diff diff : comparison.getDifferences(profileApplication)) {
-								if (diff instanceof ProfileApplicationChange
-										&& diff.getKind() == DifferenceKind.ADD) {
-									stereotypeApplicationChange.getRequires().add(diff);
-								}
+		if (!(extension instanceof StereotypeApplicationChange)) {
+			return;
+		}
+		final StereotypeApplicationChange stereotypeApplicationChange = (StereotypeApplicationChange)extension;
+		if (stereotypeApplicationChange.getKind() == DifferenceKind.ADD) {
+			final Stereotype stereotype = UMLUtil
+					.getStereotype(stereotypeApplicationChange.getDiscriminant());
+			if (stereotype != null) {
+				// FIXME this is not the place to set this, it should be done at creation time.
+				stereotypeApplicationChange.setStereotype(stereotype);
+				final Profile profile = stereotype.getProfile();
+				final Iterator<Setting> settings = UML2Util.getInverseReferences(profile).iterator();
+				while (settings.hasNext()) {
+					final Setting setting = settings.next();
+					if (setting.getEStructuralFeature() == UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE) {
+						final ProfileApplication profileApplication = (ProfileApplication)setting
+								.getEObject();
+						for (Diff diff : comparison.getDifferences(profileApplication)) {
+							if (diff instanceof ProfileApplicationChange
+									&& diff.getKind() == DifferenceKind.ADD) {
+								stereotypeApplicationChange.getRequires().add(diff);
 							}
 						}
 					}
@@ -159,7 +165,7 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractDiffExtension
 	public Match getParentMatch(Diff input) {
 		final EObject discriminant = getDiscriminantFromDiff(input);
 		if (discriminant != null) {
-			final Element element = UMLUtil.getBaseElement(discriminant);
+			final Element element = UMLCompareUtil.getBaseElement(discriminant);
 			final Match match = input.getMatch().getComparison().getMatch(element);
 			if (match != null) {
 				return match;

@@ -15,7 +15,7 @@ import org.osgi.framework.BundleContext;
 
 /**
  * Activator.
- * @author Mickael Barbero <a href="mailto:mickael.barbero@obeo.fr">mickael.barbero@obeo.fr</a>
+ * @author Mikael Barbero <a href="mailto:mikael.barbero@obeo.fr">Mikael.barbero@obeo.fr</a>
  */
 public class Activator implements BundleActivator {
 

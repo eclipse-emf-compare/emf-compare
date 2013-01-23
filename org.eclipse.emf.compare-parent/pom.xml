@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (C) 2011, Obeo
+   Copyright (C) 2011, 2012 Obeo
 
    All rights reserved. This program and the accompanying materials
    are made available under the terms of the Eclipse Public License v1.0
@@ -37,27 +37,27 @@
     </licenses>
 
     <properties>
-        <tycho-version>0.15.0</tycho-version>
-        <tycho-extras-version>0.15.0</tycho-extras-version>
+        <tycho-version>0.16.0</tycho-version>
+        <tycho-extras-version>0.16.0</tycho-extras-version>
     </properties>
 
 
-    <modules>
-        <!-- Update Site -->
-        <module>../packaging/org.eclipse.emf.compare.update</module>
+  <modules>
+    <!-- Update Site -->
+    <module>../packaging/org.eclipse.emf.compare.update</module>
 
-        <!-- Core -->
-        <module>../packaging/org.eclipse.emf.compare-feature</module>
-        <module>../plugins/org.eclipse.emf.compare</module>
-        <module>../plugins/org.eclipse.emf.compare.tests</module>
+    <!-- Core -->
+    <module>../packaging/org.eclipse.emf.compare-feature</module>
+    <module>../plugins/org.eclipse.emf.compare</module>
+    <module>../plugins/org.eclipse.emf.compare.tests</module>
 
-        <!-- IDE UI -->
-        <module>../packaging/org.eclipse.emf.compare.ide.ui-feature</module>
-        <module>../plugins/org.eclipse.emf.compare.edit</module>
-        <module>../plugins/org.eclipse.emf.compare.ide</module>
-        <module>../plugins/org.eclipse.emf.compare.ide.ui</module>
-        <module>../plugins/org.eclipse.emf.compare.doc</module>
-        <!-- There are no longer any "ide" tests
+    <!-- IDE UI -->
+    <module>../packaging/org.eclipse.emf.compare.ide.ui-feature</module>
+    <module>../plugins/org.eclipse.emf.compare.edit</module>
+    <module>../plugins/org.eclipse.emf.compare.ide</module>
+    <module>../plugins/org.eclipse.emf.compare.ide.ui</module>
+    <module>../plugins/org.eclipse.emf.compare.doc</module>
+    <!-- There are no longer any "ide" tests
     <module>../plugins/org.eclipse.emf.compare.ide.tests</module>
     <module>../plugins/org.eclipse.emf.compare.ide.ui.tests</module>
     -->
@@ -70,6 +70,7 @@
     <module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
     <module>../plugins/org.eclipse.emf.compare.uml2</module>
     <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>
+    <module>../plugins/org.eclipse.emf.compare.uml2.ide</module>
     <module>../plugins/org.eclipse.emf.compare.uml2.ide.ui</module>
     <module>../plugins/org.eclipse.emf.compare.uml2.tests</module>
 
@@ -82,25 +83,23 @@
     -->
 
     <!-- GMF -->
-    <!-- Not compiling yet
     <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
     <module>../plugins/org.eclipse.emf.compare.diagram</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ui</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ui.tests</module>
-    -->
+    <module>../plugins/org.eclipse.emf.compare.diagram.ide</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui</module>
 
     <!-- Ecore Tools -->
-    <!-- Not compiling yet
     <module>../packaging/org.eclipse.emf.compare.diagram.ecoretools-feature</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools</module>
-    -->
+    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.ecoretools</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools.tests</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools.tests</module>
 
     <!-- Papyrus -->
-    <!-- Not compiling yet
     <module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.papyrus</module>
-    -->
+    <module>../plugins/org.eclipse.emf.compare.diagram.ide.papyrus</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
   </modules>
 
   <build>
@@ -176,18 +175,27 @@
               </executions>
           </plugin>
           <plugin>
-              <groupId>org.eclipse.tycho</groupId>
-              <artifactId>tycho-p2-plugin</artifactId>
-              <version>${tycho-version}</version>
-              <executions>
-                  <execution>
-                      <id>attached-p2-metadata</id>
-                      <phase>package</phase>
-                      <goals>
-                          <goal>p2-metadata</goal>
-                      </goals>
-                  </execution>
-              </executions>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>tycho-p2-plugin</artifactId>
+            <version>${tycho-version}</version>
+            <executions>
+              <!-- These two should allow us not to get "duplicate artifact" warnings during the build. -->
+              <execution>
+                <!-- Don't attach (default) metadata before the source-feature execution.-->
+                <id>default-p2-metadata-default</id>
+                <configuration>
+                  <attachP2Metadata>false</attachP2Metadata>
+                </configuration>
+              </execution>
+              <execution>
+                <!-- Do attach metadata after the source-feature execution.-->
+                <id>attach-p2-metadata</id>
+                <goals>
+                  <goal>p2-metadata</goal>
+                </goals>
+                <phase>package</phase>
+              </execution>
+            </executions>
           </plugin>
       </plugins>
       <pluginManagement>
@@ -254,59 +262,57 @@
     </pluginManagement>
 </build>
 
-<profiles>    
-    <profile>
-        <id>juno</id>
-        <activation>
-            <activeByDefault>true</activeByDefault>
-        </activation>
-        <repositories>
-            <!--repository><id>emf</id><layout>p2</layout>
-           <url>http://download.eclipse.org/modeling/emf/emf/updates/2.8-I-builds</url>          
-        </repository>
-        <repository><id>uml2</id><layout>p2</layout>
-          <url>http://download.eclipse.org/modeling/mdt/uml2/updates/4.0milestones/</url>
-        </repository>
-        <repository><id>papyrus</id><layout>p2</layout>
-          <url>http://download.eclipse.org/modeling/mdt/papyrus/updates/nightly/juno/main/</url>
-        </repository>
-        <repository><id>subversive</id><layout>p2</layout>
-          <url>http://download.eclipse.org/technology/subversive/0.7/juno-site/</url>
-        </repository-->
-        <repository><id>platform</id><layout>p2</layout>
-            <url>http://download.eclipse.org/releases/juno</url>
-        </repository>
-        <repository><id>orbit</id><layout>p2</layout>
-            <url>http://download.eclipse.org/tools/orbit/downloads/drops/updateSite</url>
-        </repository>         
-        <repository><id>swtbot</id><layout>p2</layout>
-            <url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site</url>          
-        </repository>
-        <repository><id>UML</id><layout>p2</layout>
-            <url>http://download.eclipse.org/modeling/mdt/uml2/updates/4.1milestones/</url>          
-        </repository>
-        <repository><id>emfstore-fuzzy</id><layout>p2</layout>
-            <url>http://download.eclipse.org/emf-store/milestones/latest</url>
-        </repository>
-        <!--repository><id>ocl</id><layout>p2</layout>
-          <url>http://download.eclipse.org/modeling/mdt/ocl/updates/milestones/4.0.0</url>
-        </repository>
-    <repository><id>gmf</id><layout>p2</layout>
-          <url>http://download.eclipse.org/modeling/gmp/updates/milestones</url>
-        </repository>
-    <repository><id>validation-transaction</id><layout>p2</layout>
-          <url>http://download.eclipse.org/modeling/emf/updates/milestones/</url>
-        </repository>
-    <repository><id>ecoretools</id><layout>p2</layout>
-          <url>http://download.eclipse.org/modeling/amalgam/temp/ecoretools-1.0.0</url>
-        </repository>
-    <repository><id>gef</id><layout>p2</layout>
-          <url>http://download.eclipse.org/tools/gef/updates/milestones</url>
-        </repository>	
-    <repository><id>facet</id><layout>p2</layout>
-          <url>http://download.eclipse.org/facet/updates/milestones/0.2/M4</url>
-        </repository-->	
-      </repositories>
+<profiles>
+  <profile>
+    <id>kepler</id>
+    <activation>
+      <activeByDefault>true</activeByDefault>
+    </activation>
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>target-platform-configuration</artifactId>
+          <version>${tycho-version}</version>
+          <configuration>
+            <target>
+              <artifact>
+                <groupId>org.eclipse.emf.compare</groupId>
+                <artifactId>emf.compare-parent</artifactId>
+                <version>2.1.0-SNAPSHOT</version>
+                <classifier>targetPlatforms/kepler-m4-sdk</classifier>
+              </artifact>
+            </target>
+          </configuration>
+        </plugin>
+      </plugins>
+    </build>
+  </profile>
+
+  <profile>
+    <id>juno</id>
+    <activation>
+      <activeByDefault>false</activeByDefault>
+    </activation>
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>target-platform-configuration</artifactId>
+          <version>${tycho-version}</version>
+          <configuration>
+            <target>
+              <artifact>
+                <groupId>org.eclipse.emf.compare</groupId>
+                <artifactId>emf.compare-parent</artifactId>
+                <version>2.1.0-SNAPSHOT</version>
+                <classifier>targetPlatforms/juno-4.2-sdk</classifier>
+              </artifact>
+            </target>
+          </configuration>
+        </plugin>
+      </plugins>
+    </build>
   </profile>
 
   <profile>

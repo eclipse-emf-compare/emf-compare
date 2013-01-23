@@ -105,12 +105,16 @@ public class MatchSpec extends MatchImpl {
 	 * 
 	 * @see org.eclipse.emf.ecore.impl.BasicEObjectImpl#toString()
 	 */
-	@SuppressWarnings("boxing")
+	@SuppressWarnings({"boxing", "nls" })
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("left", EObjectUtil.getLabel(getLeft())).add("right", //$NON-NLS-1$ //$NON-NLS-2$
-				EObjectUtil.getLabel(getRight())).add("origin", EObjectUtil.getLabel(getOrigin())).add(//$NON-NLS-1$
-				"#differences", getDifferences().size()).add("#submatches", getSubmatches().size()) //$NON-NLS-1$ //$NON-NLS-2$
-				.toString();
+		// @formatter:off
+		return Objects.toStringHelper(this)
+				.add("left", EObjectUtil.getLabel(getLeft()))
+				.add("right", EObjectUtil.getLabel(getRight()))
+				.add("origin", EObjectUtil.getLabel(getOrigin()))
+				.add("#differences", getDifferences().size())
+				.add("#submatches", getSubmatches().size()).toString();
+		// @formatter:on
 	}
 }

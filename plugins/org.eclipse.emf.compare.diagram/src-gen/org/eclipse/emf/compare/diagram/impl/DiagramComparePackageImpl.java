@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
@@ -213,6 +214,15 @@ public class DiagramComparePackageImpl extends EPackageImpl implements DiagramCo
 	}
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDiagramDiff_View() {
+		return (EReference)diagramDiffEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -252,6 +262,7 @@ public class DiagramComparePackageImpl extends EPackageImpl implements DiagramCo
 
 		diagramDiffEClass = createEClass(DIAGRAM_DIFF);
 		createEReference(diagramDiffEClass, DIAGRAM_DIFF__SEMANTIC_DIFF);
+		createEReference(diagramDiffEClass, DIAGRAM_DIFF__VIEW);
 	}
 
 	/**
@@ -277,6 +288,7 @@ public class DiagramComparePackageImpl extends EPackageImpl implements DiagramCo
 
 		// Obtain other dependent packages
 		ComparePackage theComparePackage = (ComparePackage)EPackage.Registry.INSTANCE.getEPackage(ComparePackage.eNS_URI);
+		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 
 		// Create type parameters
 
@@ -306,6 +318,7 @@ public class DiagramComparePackageImpl extends EPackageImpl implements DiagramCo
 
 		initEClass(diagramDiffEClass, DiagramDiff.class, "DiagramDiff", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDiagramDiff_SemanticDiff(), theComparePackage.getDiff(), null, "semanticDiff", null, 0, 1, DiagramDiff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagramDiff_View(), theEcorePackage.getEObject(), null, "view", null, 0, 1, DiagramDiff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

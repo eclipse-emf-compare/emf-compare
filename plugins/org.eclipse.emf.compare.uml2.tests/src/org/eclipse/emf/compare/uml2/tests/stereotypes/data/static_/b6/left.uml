@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:testProfile="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xsi:schemaLocation="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile#//uml2comparetestprofile">
+  <uml:Model xmi:id="_K4q9cYwrEeCIzv0DzikA6A" name="aModel">
+    <packagedElement xmi:type="uml:Package" xmi:id="_MtslYIwrEeCIzv0DzikA6A" name="data">
+      <packagedElement xmi:type="uml:Class" xmi:id="_ON4lwIwrEeCIzv0DzikA6A" name="class0"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_PSh5oIwrEeCIzv0DzikA6A" name="class1"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_PdwSMIwrEeCIzv0DzikA6A" name="class2"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_QNMLEIwrEeCIzv0DzikA6A" name="class3"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_QNMLEYwrEeCIzv0DzikA6A" name="class4"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_QNMLEowrEeCIzv0DzikA6A" name="class5"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_TydBkIwrEeCIzv0DzikA6A" name="underTest">
+      <packagedElement xmi:type="uml:Class" xmi:id="_VGFMoIwrEeCIzv0DzikA6A" name="TheClassToTest"/>
+      <profileApplication xmi:id="_z2wzEP24EeGEdImiEXpPEw">
+        <eAnnotations xmi:id="_z24H0P24EeGEdImiEXpPEw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+          <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile#//uml2comparetestprofile"/>
+        </eAnnotations>
+        <appliedProfile href="pathmap://UML_COMPARE_TESTS_PROFILE/uml2.compare.testprofile.profile.uml#_hZFTgIwkEeC_FYHMbTTxXw"/>
+      </profileApplication>
+    </packagedElement>
+  </uml:Model>
+  <testProfile:ACliche xmi:id="_4fWu0P24EeGEdImiEXpPEw" manyValuedReference="_ON4lwIwrEeCIzv0DzikA6A _PSh5oIwrEeCIzv0DzikA6A _PdwSMIwrEeCIzv0DzikA6A _QNMLEIwrEeCIzv0DzikA6A _QNMLEYwrEeCIzv0DzikA6A" base_Class="_VGFMoIwrEeCIzv0DzikA6A"/>
+</xmi:XMI>

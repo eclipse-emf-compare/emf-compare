@@ -11,16 +11,16 @@
 package org.eclipse.emf.compare.match.eobject;
 
 import com.google.common.base.Predicate;
+import com.google.common.cache.Cache;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -30,7 +30,7 @@ import org.eclipse.emf.compare.diff.DefaultDiffEngine;
 import org.eclipse.emf.compare.diff.FeatureFilter;
 import org.eclipse.emf.compare.diff.IDiffProcessor;
 import org.eclipse.emf.compare.match.DefaultComparisonFactory;
-import org.eclipse.emf.compare.match.IComparisonFactory;
+import org.eclipse.emf.compare.match.DefaultEqualityHelperFactory;
 import org.eclipse.emf.compare.match.IEqualityHelperFactory;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher.DistanceFunction;
 import org.eclipse.emf.compare.utils.DiffUtil;
@@ -50,39 +50,29 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class EditionDistance implements DistanceFunction {
 	/**
-	 * The ratio we apply on the raw maxdistance to determine whether an element should match or not.
+	 * It's the percentage of similarity we consider as being the limit on a maximum potential distance of 1.
 	 */
-	private static final double MAX_DIST_RATIO = 3 * 2.5;
+	private static final double MAX_DIST_RATIO = 0.75d;
 
 	/**
 	 * Weight coefficient of a change on a reference.
 	 */
-	private int referenceChangeCoef = 10;
+	private int referenceChangeCoef = 3;
 
 	/**
 	 * Weight coefficient of a change on an attribute.
 	 */
-	private int attributeChangeCoef = 10 + 10;
+	private int attributeChangeCoef = 10;
 
 	/**
 	 * Weight coefficient of a change of location (uri).
 	 */
-	private int locationChangeCoef = 4;
+	private int locationChangeCoef = 1;
 
 	/**
 	 * Weight coefficient of a change of order within a reference.
 	 */
-	private int orderChangeCoef = 5;
-
-	/**
-	 * The list of specific weight to apply on specific Features.
-	 */
-	private Map<EStructuralFeature, Integer> weights;
-
-	/**
-	 * The list of features to ignore during the distance computation.
-	 */
-	private Set<EStructuralFeature> toBeIgnored;
+	private int orderChangeCoef = 2;
 
 	/**
 	 * The instance used to compare location of EObjects.
@@ -90,39 +80,36 @@ public class EditionDistance implements DistanceFunction {
 	private URIDistance uriDistance = new URIDistance();
 
 	/**
-	 * The equality helper used to retrieve the URIs through its cache and to instanciate a specific diff
-	 * engine.
+	 * The fake comparison is used to make the diff engine super class happy. We are reusing the same instance
+	 * which we are updating because of the cost of adding even a single Match in it (and subsequent growing
+	 * of list) which gets very significant considering how much we are calling this during a single
+	 * comparison.
 	 */
-	private EqualityHelper helper;
+	private Comparison fakeComparison;
 
 	/**
-	 * Instanciate a new Edition Distance.
+	 * instance providing the weight for each feature.
+	 */
+	private WeightProvider weights = new ReflectiveWeightProvider();
+
+	/**
+	 * Instantiate a new Edition Distance.
 	 */
 	public EditionDistance() {
-		weights = Maps.newHashMap();
-		this.helper = new EqualityHelper() {
+		IEqualityHelperFactory fakeEqualityHelperFactory = new DefaultEqualityHelperFactory() {
 			@Override
-			protected boolean matchingEObjects(EObject object1, EObject object2) {
-				final Match match = getTarget().getMatch(object1);
+			public IEqualityHelper createEqualityHelper() {
+				final Cache<EObject, URI> cache = EqualityHelper.createDefaultCache(getCacheBuilder());
+				return new EqualityHelper(cache) {
+					@Override
+					protected boolean matchingURIs(EObject object1, EObject object2) {
+						return uriDistance.proximity(object1, object2) == 0;
+					}
 
-				final boolean equal;
-				// Match could be null if the value is out of the scope
-				if (match != null) {
-					equal = match.getLeft() == object2 || match.getRight() == object2
-							|| match.getOrigin() == object2;
-				} else {
-					/*
-					 * use a temporary variable as buffer for the "equal" boolean. We know that the following
-					 * try/catch block can, and will, only initialize it once ... but the compiler does not.
-					 */
-					equal = uriDistance.proximity(object1, object2) == 0;
-				}
-
-				return equal;
+				};
 			}
-
 		};
-		this.toBeIgnored = Sets.newLinkedHashSet();
+		this.fakeComparison = new DefaultComparisonFactory(fakeEqualityHelperFactory).createComparison();
 	}
 
 	/**
@@ -130,7 +117,7 @@ public class EditionDistance implements DistanceFunction {
 	 */
 	public int distance(EObject a, EObject b) {
 		int maxDist = Math.max(getMaxDistance(a), getMaxDistance(b));
-		int measuredDist = new CountingDiffEngine(maxDist).measureDifferences(a, b);
+		int measuredDist = new CountingDiffEngine(maxDist, this.fakeComparison).measureDifferences(a, b);
 		if (measuredDist >= maxDist) {
 			return Integer.MAX_VALUE;
 		}
@@ -141,7 +128,7 @@ public class EditionDistance implements DistanceFunction {
 	 * {@inheritDoc}
 	 */
 	public boolean areIdentic(EObject a, EObject b) {
-		return new CountingDiffEngine(0).measureDifferences(a, b) == 0;
+		return new CountingDiffEngine(0, this.fakeComparison).measureDifferences(a, b) == 0;
 	}
 
 	/**
@@ -167,32 +154,6 @@ public class EditionDistance implements DistanceFunction {
 		 */
 		protected Builder() {
 			this.toBeBuilt = new EditionDistance();
-		}
-
-		/**
-		 * Specify a weight for a given feature.
-		 * 
-		 * @param feat
-		 *            the feature to customize.
-		 * @param weight
-		 *            the weight, it will be multiplied by the type of change coefficient.
-		 * @return the current builder instance.
-		 */
-		public Builder weight(EStructuralFeature feat, Integer weight) {
-			this.toBeBuilt.weights.put(feat, weight);
-			return this;
-		}
-
-		/**
-		 * Specify a feature to ignore during the measure.
-		 * 
-		 * @param featToIgnore
-		 *            the feature to ignore.
-		 * @return the current builder instance.
-		 */
-		public Builder ignore(EStructuralFeature featToIgnore) {
-			this.toBeBuilt.toBeIgnored.add(featToIgnore);
-			return this;
 		}
 
 		/**
@@ -247,6 +208,18 @@ public class EditionDistance implements DistanceFunction {
 		}
 
 		/**
+		 * Configure custom weight provider.
+		 * 
+		 * @param provider
+		 *            the weight provider to use.
+		 * @return the current builder instance.
+		 */
+		public Builder weightProvider(WeightProvider provider) {
+			this.toBeBuilt.weights = provider;
+			return this;
+		}
+
+		/**
 		 * return the configured instance.
 		 * 
 		 * @return the configured instance.
@@ -280,12 +253,12 @@ public class EditionDistance implements DistanceFunction {
 			if (!alreadyChanged.contains(reference)) {
 				switch (kind) {
 					case MOVE:
-						distance += getWeight(reference) * orderChangeCoef;
+						distance += weights.getWeight(reference) * orderChangeCoef;
 						break;
 					case ADD:
 					case DELETE:
 					case CHANGE:
-						distance += getWeight(reference) * referenceChangeCoef;
+						distance += weights.getWeight(reference) * referenceChangeCoef;
 						break;
 					default:
 						break;
@@ -306,17 +279,17 @@ public class EditionDistance implements DistanceFunction {
 				Object bValue = ReferenceUtil.safeEGet(match.getRight(), attribute);
 				switch (kind) {
 					case MOVE:
-						distance += getWeight(attribute) * orderChangeCoef;
+						distance += weights.getWeight(attribute) * orderChangeCoef;
 						break;
 					case ADD:
 					case DELETE:
 					case CHANGE:
 						if (aValue instanceof String && bValue instanceof String) {
-							distance += getWeight(attribute)
+							distance += weights.getWeight(attribute)
 									* (1 - DiffUtil.diceCoefficient((String)aValue, (String)bValue))
 									* attributeChangeCoef;
 						} else {
-							distance += getWeight(attribute) * attributeChangeCoef;
+							distance += weights.getWeight(attribute) * attributeChangeCoef;
 						}
 						break;
 					default:
@@ -359,30 +332,6 @@ public class EditionDistance implements DistanceFunction {
 	}
 
 	/**
-	 * Return the weight for the given feature.
-	 * 
-	 * @param attribute
-	 *            any {@link EStructuralFeature}.
-	 * @return the weight for the given feature.
-	 */
-	private int getWeight(EStructuralFeature attribute) {
-		Integer found = weights.get(attribute);
-		if (found == null) {
-			/*
-			 * This is worst than empirical but it works in many cases, if your feature is a "name" its likely
-			 * that it's important for matching the element. At some point I'll have to come up with something
-			 * which is more extensible..
-			 */
-			if ("name".equals(attribute.getName())) { //$NON-NLS-1$
-				found = Integer.valueOf(4);
-			} else {
-				found = Integer.valueOf(1);
-			}
-		}
-		return found.intValue();
-	}
-
-	/**
 	 * An implementation of a diff engine which count and measure the detected changes.
 	 */
 	class CountingDiffEngine extends DefaultDiffEngine {
@@ -391,27 +340,24 @@ public class EditionDistance implements DistanceFunction {
 		 */
 		private int maxDistance;
 
-		/**
-		 * The comparison factory to create fake comparison.
-		 */
-		private final IComparisonFactory fakeComparisonFactory;
+		/** The comparison for which this engine will detect differences. */
+		private final Comparison comparison;
 
 		/**
 		 * Create the diff engine.
 		 * 
 		 * @param maxDistance
 		 *            the maximum distance we might reach.
+		 * @param fakeComparison
+		 *            the comparison instance to use while measuring the differences between the two objects.
 		 */
-		public CountingDiffEngine(int maxDistance) {
+		public CountingDiffEngine(int maxDistance, Comparison fakeComparison) {
 			super(new CountingDiffProcessor());
 			this.maxDistance = maxDistance;
 			// will always return the same instance.
-			IEqualityHelperFactory fakeEqualityHelperFactory = new IEqualityHelperFactory() {
-				public IEqualityHelper createEqualityHelper() {
-					return EditionDistance.this.helper;
-				}
-			};
-			fakeComparisonFactory = new DefaultComparisonFactory(fakeEqualityHelperFactory);
+
+			this.comparison = fakeComparison;
+
 		}
 
 		@Override
@@ -438,7 +384,7 @@ public class EditionDistance implements DistanceFunction {
 		 * @return the distance between them computed using the number of changes required to change a to b.
 		 */
 		public int measureDifferences(EObject a, EObject b) {
-			Match fakeMatch = createFakeMatch(a, b);
+			Match fakeMatch = createOrUpdateFakeMatch(a, b);
 			getCounter().reset();
 			int changes = 0;
 			int dist = uriDistance.proximity(a, b);
@@ -447,7 +393,6 @@ public class EditionDistance implements DistanceFunction {
 				checkForDifferences(fakeMatch, new BasicMonitor());
 				changes += getCounter().getComputedDistance();
 			}
-			// System.err.println(changes + ":max=>" + maxDistance + ":" + a + ":" + b);
 			return changes;
 
 		}
@@ -463,10 +408,12 @@ public class EditionDistance implements DistanceFunction {
 		 *            Second of the two EObjects for which we want to force a comparison.
 		 * @return The created Match.
 		 */
-		private Match createFakeMatch(EObject a, EObject b) {
-			Comparison fakeComparison = fakeComparisonFactory.createComparison();
-			Match fakeMatch = CompareFactory.eINSTANCE.createMatch();
-			((InternalEList<Match>)fakeComparison.getMatches()).addUnique(fakeMatch);
+		private Match createOrUpdateFakeMatch(EObject a, EObject b) {
+			if (!comparison.getMatches().iterator().hasNext()) {
+				Match fakeMatch = CompareFactory.eINSTANCE.createMatch();
+				((InternalEList<Match>)comparison.getMatches()).addUnique(fakeMatch);
+			}
+			Match fakeMatch = comparison.getMatches().get(0);
 			fakeMatch.setLeft(a);
 			fakeMatch.setRight(b);
 			return fakeMatch;
@@ -485,7 +432,8 @@ public class EditionDistance implements DistanceFunction {
 					return Iterators.filter(super.getReferencesToCheck(match), new Predicate<EReference>() {
 
 						public boolean apply(EReference input) {
-							return !toBeIgnored.contains(input) && !input.isContainment();
+							return weights.getWeight(input) != 0;
+
 						}
 					});
 				}
@@ -495,7 +443,7 @@ public class EditionDistance implements DistanceFunction {
 					return Iterators.filter(super.getAttributesToCheck(match), new Predicate<EAttribute>() {
 
 						public boolean apply(EAttribute input) {
-							return !toBeIgnored.contains(input);
+							return weights.getWeight(input) != 0;
 						}
 					});
 				}
@@ -513,7 +461,7 @@ public class EditionDistance implements DistanceFunction {
 		Predicate<EStructuralFeature> featureFilter = new Predicate<EStructuralFeature>() {
 
 			public boolean apply(EStructuralFeature feat) {
-				return !feat.isDerived() && !feat.isTransient() && !toBeIgnored.contains(feat);
+				return weights.getWeight(feat) != 0;
 			}
 		};
 		// When can you safely says these are not the same EObjects *at all* ?
@@ -524,17 +472,18 @@ public class EditionDistance implements DistanceFunction {
 		// assess the quality of further changes.
 		int max = 0;
 		for (EReference feat : Iterables.filter(eObj.eClass().getEAllReferences(), featureFilter)) {
-			if (!feat.isContainer() && !feat.isContainment() && eObj.eIsSet(feat)) {
-				max += getWeight(feat) * referenceChangeCoef;
+			if (eObj.eIsSet(feat)) {
+				max += weights.getWeight(feat) * referenceChangeCoef;
 			}
 		}
 		for (EAttribute feat : Iterables.filter(eObj.eClass().getEAllAttributes(), featureFilter)) {
 			if (eObj.eIsSet(feat)) {
-				max += getWeight(feat) * attributeChangeCoef;
+				max += weights.getWeight(feat) * attributeChangeCoef;
 			}
 		}
-		max = max + locationChangeCoef * 5;
-		return Double.valueOf(max / MAX_DIST_RATIO).intValue();
+		// 10 is the maximum distance for an URIDistance.
+		max = max + locationChangeCoef * uriDistance.getUpperBoundDistance();
+		return Double.valueOf(max * MAX_DIST_RATIO).intValue();
 	}
 
 }

@@ -16,7 +16,7 @@ import org.eclipse.papyrus.uml.diagram.sequence.edit.parts.UMLEditPartFactory;
 
 /**
  * View label provider for Sequence.
- * @author Mickael Barbero <a href="mailto:mickael.barbero@obeo.fr">mickael.barbero@obeo.fr</a>
+ * @author Mikael Barbero <a href="mailto:mikael.barbero@obeo.fr">Mikael.barbero@obeo.fr</a>
  */
 public class SequenceViewLabelProvider extends AbstractUMLViewLabelProvider {
 

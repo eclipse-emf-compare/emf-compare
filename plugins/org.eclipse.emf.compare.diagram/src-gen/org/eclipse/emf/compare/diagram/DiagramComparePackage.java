@@ -175,13 +175,22 @@ public interface DiagramComparePackage extends EPackage {
 	int DIAGRAM_DIFF__SEMANTIC_DIFF = ComparePackage.DIFF_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>View</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_DIFF__VIEW = ComparePackage.DIFF_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Diagram Diff</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_DIFF_FEATURE_COUNT = ComparePackage.DIFF_FEATURE_COUNT + 1;
+	int DIAGRAM_DIFF_FEATURE_COUNT = ComparePackage.DIFF_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diagram.impl.ShowImpl <em>Show</em>}' class.
@@ -291,6 +300,15 @@ public interface DiagramComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int SHOW__SEMANTIC_DIFF = DIAGRAM_DIFF__SEMANTIC_DIFF;
+
+	/**
+	 * The feature id for the '<em><b>View</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SHOW__VIEW = DIAGRAM_DIFF__VIEW;
 
 	/**
 	 * The number of structural features of the '<em>Show</em>' class.
@@ -411,6 +429,15 @@ public interface DiagramComparePackage extends EPackage {
 	int HIDE__SEMANTIC_DIFF = DIAGRAM_DIFF__SEMANTIC_DIFF;
 
 	/**
+	 * The feature id for the '<em><b>View</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HIDE__VIEW = DIAGRAM_DIFF__VIEW;
+
+	/**
 	 * The number of structural features of the '<em>Hide</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -527,6 +554,15 @@ public interface DiagramComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int NODE_CHANGE__SEMANTIC_DIFF = DIAGRAM_DIFF__SEMANTIC_DIFF;
+
+	/**
+	 * The feature id for the '<em><b>View</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_CHANGE__VIEW = DIAGRAM_DIFF__VIEW;
 
 	/**
 	 * The number of structural features of the '<em>Node Change</em>' class.
@@ -647,6 +683,15 @@ public interface DiagramComparePackage extends EPackage {
 	int EDGE_CHANGE__SEMANTIC_DIFF = DIAGRAM_DIFF__SEMANTIC_DIFF;
 
 	/**
+	 * The feature id for the '<em><b>View</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE_CHANGE__VIEW = DIAGRAM_DIFF__VIEW;
+
+	/**
 	 * The number of structural features of the '<em>Edge Change</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -764,6 +809,15 @@ public interface DiagramComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int LABEL_CHANGE__SEMANTIC_DIFF = DIAGRAM_DIFF__SEMANTIC_DIFF;
+
+	/**
+	 * The feature id for the '<em><b>View</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LABEL_CHANGE__VIEW = DIAGRAM_DIFF__VIEW;
 
 	/**
 	 * The feature id for the '<em><b>Left</b></em>' attribute.
@@ -907,6 +961,17 @@ public interface DiagramComparePackage extends EPackage {
 	EReference getDiagramDiff_SemanticDiff();
 
 	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diagram.DiagramDiff#getView <em>View</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>View</em>'.
+	 * @see org.eclipse.emf.compare.diagram.DiagramDiff#getView()
+	 * @see #getDiagramDiff()
+	 * @generated
+	 */
+	EReference getDiagramDiff_View();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1019,6 +1084,14 @@ public interface DiagramComparePackage extends EPackage {
 		 * @generated
 		 */
 		EReference DIAGRAM_DIFF__SEMANTIC_DIFF = eINSTANCE.getDiagramDiff_SemanticDiff();
+
+		/**
+		 * The meta object literal for the '<em><b>View</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIAGRAM_DIFF__VIEW = eINSTANCE.getDiagramDiff_View();
 
 	}
 

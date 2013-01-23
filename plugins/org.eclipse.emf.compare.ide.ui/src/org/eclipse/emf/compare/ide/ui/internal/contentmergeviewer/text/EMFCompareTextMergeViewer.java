@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
 
-import java.util.EventObject;
+import com.google.common.collect.ImmutableSet;
+
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareNavigator;
@@ -21,32 +23,39 @@ import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.MergeSourceViewer;
 import org.eclipse.compare.internal.Utilities;
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.common.command.CommandStackListener;
+import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.command.ICompareCopyCommand;
+import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.AttributeChangeNode;
-import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.change.util.ChangeRecorder;
+import org.eclipse.emf.edit.command.ChangeCommand;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.actions.ActionFactory;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class EMFCompareTextMergeViewer extends TextMergeViewer implements CommandStackListener {
+public class EMFCompareTextMergeViewer extends TextMergeViewer {
 
 	private static final String BUNDLE_NAME = EMFCompareTextMergeViewer.class.getName();
 
-	private final EMFCompareEditingDomain fEditingDomain;
+	private final ICompareEditingDomain fEditingDomain;
 
 	private DynamicObject fDynamicObject;
 
@@ -60,9 +69,8 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	 */
 	public EMFCompareTextMergeViewer(Composite parent, CompareConfiguration configuration) {
 		super(parent, configuration);
-		fEditingDomain = (EMFCompareEditingDomain)getCompareConfiguration().getProperty(
+		fEditingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
 				EMFCompareConstants.EDITING_DOMAIN);
-		fEditingDomain.getCommandStack().addCommandStackListener(this);
 		setContentProvider(new EMFCompareTextMergeViewerContentProvider(configuration));
 	}
 
@@ -82,12 +90,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 					.getDifferences(), leftToRight);
 			fEditingDomain.getCommandStack().execute(copyCommand);
 
-			if (leftToRight) {
-				setRightDirty(true);
-			} else {
-				setLeftDirty(true);
-			}
-
 			refresh();
 		}
 	}
@@ -99,12 +101,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 			final Command copyCommand = fEditingDomain.createCopyCommand(attributeChange, leftToRight);
 			fEditingDomain.getCommandStack().execute(copyCommand);
-
-			if (leftToRight) {
-				setRightDirty(true);
-			} else {
-				setLeftDirty(true);
-			}
 
 			refresh();
 		}
@@ -124,12 +120,40 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
+	 * @see org.eclipse.jface.viewers.ContentViewer#setInput(java.lang.Object)
 	 */
 	@Override
-	protected void handleDispose(DisposeEvent event) {
-		fEditingDomain.getCommandStack().removeCommandStackListener(this);
-		super.handleDispose(event);
+	public void setInput(Object newInput) {
+		if (newInput == null) {
+			// When we leave the current input
+			Object oldInput = getInput();
+			if (oldInput instanceof AttributeChangeNode) {
+				final AttributeChange diff = ((AttributeChangeNode)oldInput).getTarget();
+				final EAttribute eAttribute = diff.getAttribute();
+				Match match = diff.getMatch();
+				final EObject left = match.getLeft();
+				final EObject right = match.getRight();
+				Object oldLeftValue = ReferenceUtil.safeEGet(left, eAttribute);
+				Object oldRightValue = ReferenceUtil.safeEGet(right, eAttribute);
+				final String newLeftValue = new String(getContents(true));
+				final Object newRightValue = new String(getContents(false));
+				if (!newLeftValue.equals(oldLeftValue) && getCompareConfiguration().isLeftEditable()) {
+					// Save the change on left side
+					fEditingDomain.getCommandStack().execute(
+							new UpdateModelAndRejectDiffCommand(fEditingDomain.getChangeRecorder(), left,
+									eAttribute, newLeftValue, diff, true));
+				}
+				if (!newRightValue.equals(oldRightValue) && getCompareConfiguration().isRightEditable()) {
+					// Save the change on right side
+					fEditingDomain.getCommandStack().execute(
+							new UpdateModelAndRejectDiffCommand(fEditingDomain.getChangeRecorder(), right,
+									eAttribute, newRightValue, diff, false));
+
+				}
+
+			}
+		}
+		super.setInput(newInput);
 	}
 
 	/**
@@ -176,6 +200,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 				@Override
 				public void run() {
 					copyDiff(true);
+					navigate(true);
 				}
 			};
 			Utilities.initAction(copyLeftToRight, getResourceBundle(), "action.CopyDiffLeftToRight."); //$NON-NLS-1$
@@ -190,6 +215,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 				@Override
 				public void run() {
 					copyDiff(false);
+					navigate(true);
 				}
 			};
 			Utilities.initAction(copyRightToLeft, getResourceBundle(), "action.CopyDiffRightToLeft."); //$NON-NLS-1$
@@ -221,24 +247,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		ActionContributionItem contributionPreviousDiff = new ActionContributionItem(previousDiff);
 		contributionPreviousDiff.setVisible(true);
 		toolBarManager.appendToGroup("navigation", contributionPreviousDiff);
-
-		// This is called from the super-constructor, fEditingDomain is not set yet.
-		final EMFCompareEditingDomain domain = (EMFCompareEditingDomain)getCompareConfiguration()
-				.getProperty(EMFCompareConstants.EDITING_DOMAIN);
-
-		final UndoAction undoAction = new UndoAction(domain);
-		final RedoAction redoAction = new RedoAction(domain);
-
-		domain.getCommandStack().addCommandStackListener(new CommandStackListener() {
-			public void commandStackChanged(EventObject event) {
-				undoAction.update();
-				redoAction.update();
-				refresh();
-			}
-		});
-
-		handlerService.setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
-		handlerService.setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
 	}
 
 	/**
@@ -260,14 +268,21 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Called by the framework to navigate to the next (or previous) difference. This will open the content
+	 * viewer for the next (or previous) diff displayed in the structure viewer.
 	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#setEditable(org.eclipse.jface.text.source.ISourceViewer,
-	 *      boolean)
+	 * @param next
+	 *            <code>true</code> if we are to open the next structure viewer's diff, <code>false</code> if
+	 *            we should go to the previous instead.
 	 */
-	@Override
-	protected void setEditable(ISourceViewer sourceViewer, boolean state) {
-		sourceViewer.setEditable(false);
+	protected void navigate(boolean next) {
+		final Control control = getControl();
+		if (control != null && !control.isDisposed()) {
+			final ICompareNavigator navigator = getCompareConfiguration().getContainer().getNavigator();
+			if (navigator instanceof CompareNavigator && ((CompareNavigator)navigator).hasChange(next)) {
+				navigator.selectChange(next);
+			}
+		}
 	}
 
 	@Override
@@ -276,11 +291,56 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Command to directly modify the semantic model and reject the related difference.
 	 * 
-	 * @see org.eclipse.emf.common.command.CommandStackListener#commandStackChanged(java.util.EventObject)
+	 * @author cnotot
 	 */
-	public void commandStackChanged(EventObject event) {
-		refresh();
+	private static class UpdateModelAndRejectDiffCommand extends ChangeCommand implements ICompareCopyCommand {
+
+		private boolean isLeft;
+
+		private Diff difference;
+
+		private Object value;
+
+		private EStructuralFeature feature;
+
+		private EObject owner;
+
+		public UpdateModelAndRejectDiffCommand(ChangeRecorder changeRecorder, EObject owner,
+				EStructuralFeature feature, Object value, Diff difference, boolean isLeft) {
+			super(changeRecorder, ImmutableSet.<Notifier> builder().add(owner).addAll(
+					getAffectedDiff(difference)).build());
+			this.owner = owner;
+			this.feature = feature;
+			this.value = value;
+			this.difference = difference;
+			this.isLeft = isLeft;
+		}
+
+		@Override
+		public void doExecute() {
+			owner.eSet(feature, value);
+			for (Diff affectedDiff : getAffectedDiff(difference)) {
+				affectedDiff.setState(DifferenceState.DISCARDED);
+			}
+		}
+
+		private static Set<Diff> getAffectedDiff(Diff diff) {
+			EList<Conflict> conflicts = diff.getMatch().getComparison().getConflicts();
+			for (Conflict conflict : conflicts) {
+				EList<Diff> conflictualDifferences = conflict.getDifferences();
+				if (conflictualDifferences.contains(diff)) {
+					return ImmutableSet.copyOf(conflictualDifferences);
+				}
+			}
+			return ImmutableSet.of(diff);
+		}
+
+		public boolean isLeftToRight() {
+			return !isLeft;
+		}
+
 	}
+
 }

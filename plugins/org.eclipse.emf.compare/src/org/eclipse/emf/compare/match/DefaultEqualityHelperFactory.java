@@ -24,7 +24,6 @@ import org.eclipse.emf.ecore.EObject;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class DefaultEqualityHelperFactory implements IEqualityHelperFactory {
-
 	/** CacheBuilder that will be used to instantiate a cache. */
 	private final CacheBuilder<Object, Object> cacheBuilder;
 
@@ -51,8 +50,17 @@ public class DefaultEqualityHelperFactory implements IEqualityHelperFactory {
 	 * @see org.eclipse.emf.compare.match.IEqualityHelperFactory#createEqualityHelper()
 	 */
 	public IEqualityHelper createEqualityHelper() {
-		Cache<EObject, URI> cache = EqualityHelper.createDefaultCache(cacheBuilder);
+		Cache<EObject, URI> cache = EqualityHelper.createDefaultCache(getCacheBuilder());
 		IEqualityHelper equalityHelper = new EqualityHelper(cache);
 		return equalityHelper;
+	}
+
+	/**
+	 * Returns the cache builder that should be used by this factory to create its equality helpers.
+	 * 
+	 * @return The cache builder that should be used by this factory to create its equality helpers.
+	 */
+	protected CacheBuilder<Object, Object> getCacheBuilder() {
+		return cacheBuilder;
 	}
 }

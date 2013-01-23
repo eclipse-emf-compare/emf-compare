@@ -10,13 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
-import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IDEManyStructuralFeatureAccessorImpl;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IDESingleStructuralFeatureAccessorImpl;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
-import org.eclipse.emf.ecore.EReference;
 
 /**
  * Specific AbstractEDiffNode for {@link ReferenceChange} objects.
@@ -43,50 +38,5 @@ public class ReferenceChangeNode extends DiffNode {
 	@Override
 	public ReferenceChange getTarget() {
 		return (ReferenceChange)super.getTarget();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode#getAncestor()
-	 */
-	@Override
-	public ITypedElement getAncestor() {
-		EReference reference = getTarget().getReference();
-		if (reference.isMany()) {
-			return new IDEManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.ANCESTOR);
-		} else {
-			return new IDESingleStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.ANCESTOR);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode#getLeft()
-	 */
-	@Override
-	public ITypedElement getLeft() {
-		EReference reference = getTarget().getReference();
-		if (reference.isMany()) {
-			return new IDEManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.LEFT);
-		} else {
-			return new IDESingleStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.LEFT);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode#getRight()
-	 */
-	@Override
-	public ITypedElement getRight() {
-		EReference reference = getTarget().getReference();
-		if (reference.isMany()) {
-			return new IDEManyStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.RIGHT);
-		} else {
-			return new IDESingleStructuralFeatureAccessorImpl(getTarget(), MergeViewerSide.RIGHT);
-		}
 	}
 }

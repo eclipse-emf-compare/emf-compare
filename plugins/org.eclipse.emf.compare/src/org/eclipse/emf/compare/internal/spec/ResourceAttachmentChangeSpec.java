@@ -10,18 +10,22 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
 
+import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.impl.ResourceAttachmentChangeImpl;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EMFCompareCopier;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -236,11 +240,44 @@ public class ResourceAttachmentChangeSpec extends ResourceAttachmentChangeImpl {
 		final EObject expectedValue;
 		final Match valueMatch = getMatch();
 		if (rightToLeft) {
-			expectedValue = createTarget(sourceValue);
-			valueMatch.setLeft(expectedValue);
+			if (valueMatch.getLeft() != null) {
+				expectedValue = valueMatch.getLeft();
+			} else {
+				expectedValue = createTarget(sourceValue);
+				valueMatch.setLeft(expectedValue);
+			}
+		} else if (valueMatch.getRight() != null) {
+			expectedValue = valueMatch.getRight();
 		} else {
 			expectedValue = createTarget(sourceValue);
 			valueMatch.setRight(expectedValue);
+		}
+
+		// double-check : is our target already present in the target resource?
+		final URI sourceURI = EcoreUtil.getURI(sourceValue);
+		if (expectedContainer.getEObject(sourceURI.fragment()) != null) {
+			/*
+			 * The only way for this use case to kick in is if we have both (or "all three") compared models
+			 * side-by-side during a local comparison. In such an event, the "new" resource can only be an
+			 * existing one (since relative paths will always resolve to the same location whatever the side),
+			 * and it will obviously already contain the object since we detected the resource change. In such
+			 * a case, we do not want to erase the already existing object or copy a duplicate in the target
+			 * resource. We'll simply change the "to-be-modified" object to point to that already existing one
+			 * through proxification and re-resolution. This is costly and clumsy, but this use case should be
+			 * sufficiently rare to not be noticed, we only want it to be functional.
+			 */
+			((InternalEObject)expectedValue).eSetProxyURI(sourceURI);
+			if (expectedContainer.getResourceSet() != null) {
+				EcoreUtil.resolveAll(expectedContainer.getResourceSet());
+			} else {
+				EcoreUtil.resolveAll(expectedContainer);
+			}
+			if (rightToLeft) {
+				valueMatch.setLeft(expectedContainer.getEObject(sourceURI.fragment()));
+			} else {
+				valueMatch.setRight(expectedContainer.getEObject(sourceURI.fragment()));
+			}
+			return;
 		}
 
 		// We have the container, reference and value. We need to know the insertion index.
@@ -271,34 +308,22 @@ public class ResourceAttachmentChangeSpec extends ResourceAttachmentChangeImpl {
 	 * @param rightToLeft
 	 *            Direction of the merge. This will tell us which side we are to look up for the target
 	 *            resource.
-	 * @return The resource we could find in the current comparison if any, a newly created one otherwise.
+	 * @return The resource we could find in the current comparison if any. Otherwise, we'll return either a
+	 *         newly created resource that can serve as a target of this merge, or <code>null</code> if no
+	 *         valid target resource can be created.
 	 */
 	private Resource findOrCreateTargetResource(boolean rightToLeft) {
 		final Comparison comparison = getMatch().getComparison();
-		final Resource reference;
+		final Resource sourceRes;
 		if (rightToLeft) {
-			reference = getMatch().getRight().eResource();
+			sourceRes = getMatch().getRight().eResource();
 		} else {
-			reference = getMatch().getLeft().eResource();
+			sourceRes = getMatch().getLeft().eResource();
 		}
 
 		final List<MatchResource> matchedResources = comparison.getMatchedResources();
 		final int size = matchedResources.size();
-		MatchResource soughtMatch = null;
-		for (int i = 0; i < size && soughtMatch == null; i++) {
-			final MatchResource matchRes = matchedResources.get(i);
-			if (rightToLeft && matchRes.getRight() == reference) {
-				soughtMatch = matchRes;
-			} else if (!rightToLeft && matchRes.getLeft() == reference) {
-				soughtMatch = matchRes;
-			}
-		}
-
-		if (soughtMatch == null) {
-			// This should never happen
-			throw new RuntimeException("Could not locate resource match for "
-					+ reference.getURI().lastSegment());
-		}
+		final MatchResource soughtMatch = getMatchResource(sourceRes);
 
 		// Is the resource already existing or do we need to create it?
 		final Resource target;
@@ -308,6 +333,13 @@ public class ResourceAttachmentChangeSpec extends ResourceAttachmentChangeImpl {
 			target = soughtMatch.getRight();
 		} else {
 			// we need to create it.
+			final URI targetURI = computeTargetURI(rightToLeft);
+			// FIXME this will most likely fail with remote URIs : we'll need to make it local afterwards
+			if (targetURI == null) {
+				// We treat null as "no valid target". We'll cancel the merge operation.
+				return null;
+			}
+
 			ResourceSet targetSet = null;
 			for (int i = 0; i < size && targetSet == null; i++) {
 				final MatchResource matchRes = matchedResources.get(i);
@@ -320,19 +352,91 @@ public class ResourceAttachmentChangeSpec extends ResourceAttachmentChangeImpl {
 
 			if (targetSet == null) {
 				// Cannot create the target
-				throw new RuntimeException("Could not locate resource set to create "
-						+ reference.getURI().lastSegment());
+				throw new RuntimeException(EMFCompareMessages.getString(
+						"ResourceAttachmentChangeSpec.MissingRS", targetURI.lastSegment())); //$NON-NLS-1$
 			}
 
-			target = targetSet.createResource(reference.getURI());
+			// This resource might already exists
+			if (targetSet.getURIConverter().exists(targetURI, Collections.emptyMap())) {
+				target = targetSet.getResource(targetURI, true);
+			} else {
+				target = targetSet.createResource(targetURI);
+			}
+
 			if (rightToLeft) {
 				soughtMatch.setLeft(target);
 			} else {
 				soughtMatch.setRight(target);
 			}
+
 		}
 
 		return target;
+	}
+
+	/**
+	 * Computes the URI of the "target" resource. Will be used if we need to create or "find" it.
+	 * 
+	 * @param rightToLeft
+	 *            Direction of the merge.
+	 * @return The URI that is to be used for our target resource. <code>null</code> if we cannot compute a
+	 *         valid target URI.
+	 */
+	protected URI computeTargetURI(boolean rightToLeft) {
+		final EObject sourceObject;
+		final EObject targetObject;
+		if (rightToLeft) {
+			sourceObject = getMatch().getRight();
+			targetObject = getMatch().getLeft();
+		} else {
+			sourceObject = getMatch().getLeft();
+			targetObject = getMatch().getRight();
+		}
+		final Resource sourceResource = sourceObject.eResource();
+		// This is the resource that will change through this merge.
+		// We will only use it to determine a relative path for the real target resource.
+		final Resource currentResource = targetObject.eResource();
+
+		final MatchResource matchCurrent = getMatchResource(currentResource);
+		final Resource currentFromSourceSide;
+		if (rightToLeft) {
+			currentFromSourceSide = matchCurrent.getRight();
+		} else {
+			currentFromSourceSide = matchCurrent.getLeft();
+		}
+
+		// Case of control/uncontrol
+		final URI relativeTargetURI = sourceResource.getURI().deresolve(currentFromSourceSide.getURI());
+
+		return relativeTargetURI.resolve(currentResource.getURI());
+	}
+
+	/**
+	 * Returns the MatchResource corresponding to the given <code>resource</code>.
+	 * 
+	 * @param resource
+	 *            Resource for which we need a MatchResource.
+	 * @return The MatchResource corresponding to the given <code>resource</code>.
+	 */
+	protected MatchResource getMatchResource(Resource resource) {
+		final List<MatchResource> matchedResources = getMatch().getComparison().getMatchedResources();
+		final int size = matchedResources.size();
+		MatchResource soughtMatch = null;
+		for (int i = 0; i < size && soughtMatch == null; i++) {
+			final MatchResource matchRes = matchedResources.get(i);
+			if (matchRes.getRight() == resource || matchRes.getLeft() == resource
+					|| matchRes.getOrigin() == resource) {
+				soughtMatch = matchRes;
+			}
+		}
+
+		if (soughtMatch == null) {
+			// This should never happen
+			throw new RuntimeException(EMFCompareMessages.getString(
+					"ResourceAttachmentChangeSpec.MissingMatch", resource.getURI().lastSegment())); //$NON-NLS-1$
+		}
+
+		return soughtMatch;
 	}
 
 	/**
@@ -393,14 +497,10 @@ public class ResourceAttachmentChangeSpec extends ResourceAttachmentChangeImpl {
 
 		// if this is a pseudo conflict, we have no value to remove
 		if (expectedValue != null) {
-			EcoreUtil.remove(expectedValue);
-			if (rightToLeft) {
-				valueMatch.setLeft(null);
-			} else {
-				valueMatch.setRight(null);
-			}
-
-			// TODO what to do with empty resources?
+			// We only wish to remove the element from its containing resource, not from its container.
+			// This will not affect the match.
+			final Resource resource = ((InternalEObject)expectedValue).eDirectResource();
+			resource.getContents().remove(expectedValue);
 		}
 	}
 }

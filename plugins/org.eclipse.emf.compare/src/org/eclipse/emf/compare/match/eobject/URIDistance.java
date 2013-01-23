@@ -11,22 +11,18 @@
 package org.eclipse.emf.compare.match.eobject;
 
 import com.google.common.base.Function;
-import com.google.common.base.Splitter;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
-import java.util.List;
+import java.util.Iterator;
 
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.FeatureMap;
+import org.eclipse.emf.ecore.InternalEObject;
 
 /**
  * This class is able to measure similarity between "URI like" strings, basically strings separated by "/".
@@ -34,130 +30,28 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
-public class URIDistance implements Function<EObject, List<String>> {
+public class URIDistance implements Function<EObject, Iterable<String>> {
+	/**
+	 * The upper bound distance we can get using this function.
+	 */
+	private static final int MAX_DISTANCE = 10;
 
 	/**
 	 * A computing cache for the locations.
 	 */
-	private Cache<EObject, List<String>> locationCache = CacheBuilder.newBuilder().maximumSize(10000).build(
-			CacheLoader.from(this));
+	private Cache<EObject, Iterable<String>> locationCache;
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see com.google.common.base.Function#apply(java.lang.Object)
+	 * Create a new {@link URIDistance}.
 	 */
-	public List<String> apply(EObject input) {
-		if (input == null) {
-			return null;
-		}
-		EObject cur = input;
-		EObject container = input.eContainer();
-		Builder<String> builder = ImmutableList.builder();
-		if (container != null) {
-			builder.addAll(locationCache.getUnchecked(container));
-			EStructuralFeature feat = cur.eContainingFeature();
-			if (feat instanceof EAttribute) {
-				featureMapLocation(builder, cur, container, feat);
-			} else if (feat != null) {
-				if (feat.isMany()) {
-					EList<?> eList = (EList<?>)container.eGet(feat, false);
-					int index = eList.indexOf(cur);
-					builder.add(feat.getName());
-					builder.add(Integer.valueOf(index).toString());
-				} else {
-					builder.add(feat.getName());
-					builder.add("0"); //$NON-NLS-1$
-				}
-			}
-		} else {
-			builder.add("0"); //$NON-NLS-1$
-		}
-
-		return builder.build();
-	}
-
-	/**
-	 * Update the builder with location hints for a feature map.
-	 * 
-	 * @param builder
-	 *            the list builder to update.
-	 * @param cur
-	 *            the current object.
-	 * @param container
-	 *            the current object container.
-	 * @param feat
-	 *            the containing feature of the current object.
-	 */
-	protected void featureMapLocation(Builder<String> builder, EObject cur, EObject container,
-			EStructuralFeature feat) {
-		FeatureMap featureMap = (FeatureMap)container.eGet(feat, false);
-		for (int i = 0, size = featureMap.size(); i < size; ++i) {
-			if (featureMap.getValue(i) == cur) {
-				EStructuralFeature entryFeature = featureMap.getEStructuralFeature(i);
-				if (entryFeature instanceof EReference && ((EReference)entryFeature).isContainment()) {
-					builder.add(feat.getName());
-					builder.add(Integer.valueOf(i).toString());
-				}
-			}
-		}
+	public URIDistance() {
+		locationCache = CacheBuilder.newBuilder().maximumSize(10000).build(CacheLoader.from(this));
 	}
 
 	/**
 	 * Return a metric result URI similarities. It compares 2 strings splitting those by "/" and return an int
 	 * representing the level of similarity. 0 - they are exactly the same to 10 - they are completely
 	 * different. "adding a fragment", "removing a fragment".
-	 * 
-	 * @param str1
-	 *            First of the two {@link String}s to compare.
-	 * @param str2
-	 *            Second of the two {@link String}s to compare.
-	 * @return The number of changes to transform one uri to another one.
-	 */
-	public int proximity(String str1, String str2) {
-		Splitter splitter = Splitter.on('/').trimResults().omitEmptyStrings();
-		List<String> fragments1 = Lists.newArrayList(splitter.split(str1));
-		List<String> fragments2 = Lists.newArrayList(splitter.split(str2));
-		return proximity(fragments1, fragments2);
-	}
-
-	/**
-	 * Return a metric result URI similarities. It compares 2 list of fragments and return an int representing
-	 * the level of similarity. 0 - they are exactly the same to 10 - they are completely different.
-	 * "adding a fragment", "removing a fragment".
-	 * 
-	 * @param fragments1
-	 *            First list of fragments to compare.
-	 * @param fragments2
-	 *            Second list of fragments to compare.
-	 * @return The number of changes to transform one uri to another one.
-	 */
-	public int proximity(List<String> fragments1, List<String> fragments2) {
-		if (fragments1.size() == 0 && fragments2.size() == 0) {
-			return 0;
-		}
-		int frag2Size = fragments2.size();
-		int commonPart = 0;
-		for (int i = 0; i < fragments1.size(); i++) {
-			String f1 = fragments1.get(i);
-			if (i < frag2Size && f1.equals(fragments2.get(i))) {
-				commonPart++;
-			} else {
-				break;
-			}
-		}
-
-		int totalFrag = Math.max(fragments2.size(), fragments1.size());
-		double similarity = commonPart * 10d / totalFrag;
-		return 10 - (int)similarity;
-	}
-
-	/**
-	 * Return a metric result location similarities. A location might be seen as an URI except it does not
-	 * depend on the referencing scheme of EObjects related to a given resource (with intrinsic IDs, with
-	 * eKeys..). It the location of 2 EObjects and return an int representing the level of similarity. 0 -
-	 * they are exactly the same to 10 - they are completely different. "adding a fragment",
-	 * "removing a fragment".
 	 * 
 	 * @param a
 	 *            First of the two {@link EObject}s to compare.
@@ -166,7 +60,86 @@ public class URIDistance implements Function<EObject, List<String>> {
 	 * @return The number of changes to transform one uri to another one.
 	 */
 	public int proximity(EObject a, EObject b) {
-		return proximity(locationCache.getUnchecked(a), locationCache.getUnchecked(b));
+		Iterable<String> aPath = locationCache.getUnchecked(a);
+		Iterable<String> bPath = locationCache.getUnchecked(b);
+		return proximity(aPath, bPath);
+	}
+
+	/**
+	 * Return a metric result URI similarities. It compares 2 lists of fragments and return an int
+	 * representing the level of similarity. 0 - they are exactly the same to 10 - they are completely
+	 * different. "adding a fragment", "removing a fragment".
+	 * 
+	 * @param aPath
+	 *            First of the two list of {@link String}s to compare.
+	 * @param bPath
+	 *            Second of the two list of {@link String}s to compare.
+	 * @return The number of changes to transform one uri to another one.
+	 */
+	public int proximity(Iterable<String> aPath, Iterable<String> bPath) {
+		int aSize = 0;
+		int bSize = 0;
+		Iterator<String> itA = aPath.iterator();
+		Iterator<String> itB = bPath.iterator();
+		boolean areSame = true;
+		int commonSegments = 0;
+		int remainingASegments = 0;
+		int remainingBSegments = 0;
+		while (itA.hasNext() && itB.hasNext() && areSame) {
+			String a = itA.next();
+			String b = itB.next();
+			if (a.equals(b)) {
+				commonSegments++;
+			} else {
+				areSame = false;
+			}
+			aSize++;
+			bSize++;
+
+		}
+		if (commonSegments == 0) {
+			return MAX_DISTANCE;
+		}
+		remainingASegments = aSize + Iterators.size(itA) - commonSegments;
+		remainingBSegments = bSize + Iterators.size(itB) - commonSegments;
+
+		int nbSegmentsToGoFromAToB = remainingASegments + remainingBSegments;
+		return (nbSegmentsToGoFromAToB * 10) / (commonSegments * 2 + nbSegmentsToGoFromAToB);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see com.google.common.base.Function#apply(java.lang.Object)
+	 */
+	public Iterable<String> apply(EObject input) {
+		EObject cur = input;
+		String result = ""; //$NON-NLS-1$
+		EObject container = input.eContainer();
+		if (container != null) {
+			EStructuralFeature feat = cur.eContainingFeature();
+			if (input instanceof InternalEObject) {
+				String frag = ((InternalEObject)container).eURIFragmentSegment(feat, cur);
+				result = frag;
+			}
+		} else {
+			result = "0"; //$NON-NLS-1$
+		}
+
+		if (input.eContainer() != null) {
+			return Iterables.concat(Lists.newArrayList(result), locationCache
+					.getUnchecked(input.eContainer()));
+		}
+		return Lists.newArrayList(result);
+	}
+
+	/**
+	 * return the maximum value we can get for this distance.
+	 * 
+	 * @return the maximum value we can get for this distance.
+	 */
+	public int getUpperBoundDistance() {
+		return MAX_DISTANCE;
 	}
 
 }

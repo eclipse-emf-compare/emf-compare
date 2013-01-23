@@ -11,10 +11,12 @@
 package org.eclipse.emf.compare.diagram.diff.internal.extension;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
@@ -103,7 +105,8 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 			final Iterator<Diff> diffs = ((Match)container).getAllDifferences().iterator();
 			while (diffs.hasNext()) {
 				final Diff diff = (Diff)diffs.next();
-				if (diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment()
+				if (diff instanceof ReferenceChange
+						&& (isRelatedToAnExtensionAdd((ReferenceChange)diff) || isRelatedToAnExtensionDelete((ReferenceChange)diff))
 						&& match.getComparison().getMatch(((ReferenceChange)diff).getValue()) == match) {
 					return true;
 				}
@@ -168,14 +171,35 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 		return Diff.class;
 	}
 
-	protected List<Diff> getAllContainedDifferences(ReferenceChange input) {
-		final List<Diff> result = new ArrayList<Diff>();
-		final Iterator<Diff> diffs = input.getMatch().getComparison().getMatch(input.getValue())
-				.getAllDifferences().iterator();
-		while (diffs.hasNext()) {
-			Diff diff = (Diff)diffs.next();
-			result.add(diff);
+	protected Set<Diff> getAllContainedDifferences(ReferenceChange input) {
+		final Comparison comparison = input.getMatch().getComparison();
+		final Match match = comparison.getMatch(input.getValue());
+		final Set<Diff> result = getAllContainedDifferences(comparison, match);
+
+		return result;
+	}
+
+	private Set<Diff> getAllContainedDifferences(Comparison comparison, Match match) {
+		final Set<Diff> result = Sets.newLinkedHashSet();
+
+		final Set<Match> prune = Sets.newLinkedHashSet();
+		for (Diff candidate : match.getDifferences()) {
+			if (!getExtensionKind().isInstance(candidate)) {
+				if (!(candidate instanceof ReferenceChange && (isRelatedToAnExtensionAdd((ReferenceChange)candidate) || isRelatedToAnExtensionDelete((ReferenceChange)candidate)))) {
+					result.add(candidate);
+				} else if (candidate instanceof ReferenceChange
+						&& ((ReferenceChange)candidate).getReference().isContainment()) {
+					prune.add(comparison.getMatch(((ReferenceChange)candidate).getValue()));
+				}
+			}
 		}
+
+		for (Match submatch : match.getSubmatches()) {
+			if (!prune.contains(submatch)) {
+				result.addAll(getAllContainedDifferences(comparison, submatch));
+			}
+		}
+
 		return result;
 	}
 

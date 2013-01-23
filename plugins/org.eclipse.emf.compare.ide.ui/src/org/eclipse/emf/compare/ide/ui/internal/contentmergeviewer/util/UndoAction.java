@@ -1,7 +1,7 @@
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util;
 
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
+import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.edit.ui.EMFEditUIPlugin;
 import org.eclipse.jface.action.Action;
 
@@ -9,12 +9,11 @@ import org.eclipse.jface.action.Action;
  * An undo action is implemented by using the {@link org.eclipse.emf.common.command.CommandStack}.
  */
 public class UndoAction extends Action {
-	protected EMFCompareEditingDomain domain;
+	protected ICompareEditingDomain domain;
 
-	public UndoAction(EMFCompareEditingDomain domain) {
+	public UndoAction(ICompareEditingDomain domain) {
 		super(EMFEditUIPlugin.INSTANCE.getString("_UI_Undo_menu_item", new Object[] {"" })); //$NON-NLS-1$ //$NON-NLS-2$
-		this.domain = domain;
-		update();
+		setEditingDomain(domain);
 	}
 
 	public UndoAction() {
@@ -24,6 +23,13 @@ public class UndoAction extends Action {
 	@Override
 	public void run() {
 		domain.getCommandStack().undo();
+	}
+
+	public void setEditingDomain(ICompareEditingDomain domain) {
+		this.domain = domain;
+		if (domain != null) {
+			update();
+		}
 	}
 
 	public void update() {

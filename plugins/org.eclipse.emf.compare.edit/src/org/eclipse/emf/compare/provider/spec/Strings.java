@@ -15,7 +15,7 @@ package org.eclipse.emf.compare.provider.spec;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-final class Strings {
+public final class Strings {
 
 	/**
 	 * Private constructor to avoid instantiation.
@@ -37,9 +37,9 @@ final class Strings {
 	 *            the suffix to append in case the original String is too long.
 	 * @return the elided string or the original string.
 	 */
-	static String elide(String original, int max, String suffix) {
+	public static String elide(String original, int max, String suffix) {
 		if (original.length() > max) {
-			String elided = original.substring(0, original.length() - suffix.length());
+			String elided = original.substring(0, max - suffix.length());
 			return elided + suffix;
 		}
 		return original;

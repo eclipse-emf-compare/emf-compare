@@ -125,6 +125,8 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 				// ret.setEReference(((ReferenceChange)input).getReference());
 			}
 		}
+		
+		ret.setSource(input.getSource());
 
 		return ret;
 	}

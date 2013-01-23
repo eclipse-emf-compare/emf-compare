@@ -1,7 +1,7 @@
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util;
 
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
+import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.edit.ui.EMFEditUIPlugin;
 import org.eclipse.jface.action.Action;
 
@@ -9,12 +9,11 @@ import org.eclipse.jface.action.Action;
  * An redo action is implemented by using the {@link org.eclipse.emf.common.command.CommandStack}.
  */
 public class RedoAction extends Action {
-	protected EMFCompareEditingDomain domain;
+	protected ICompareEditingDomain domain;
 
-	public RedoAction(EMFCompareEditingDomain domain) {
+	public RedoAction(ICompareEditingDomain domain) {
 		super(EMFEditUIPlugin.INSTANCE.getString("_UI_Redo_menu_item", new Object[] {"" })); //$NON-NLS-1$ //$NON-NLS-2$
-		this.domain = domain;
-		update();
+		setEditingDomain(domain);
 	}
 
 	public RedoAction() {
@@ -24,6 +23,13 @@ public class RedoAction extends Action {
 	@Override
 	public void run() {
 		domain.getCommandStack().redo();
+	}
+
+	public void setEditingDomain(ICompareEditingDomain domain) {
+		this.domain = domain;
+		if (domain != null) {
+			update();
+		}
 	}
 
 	public void update() {

@@ -12,16 +12,26 @@ package org.eclipse.emf.compare.tests.fullcomparison;
 
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.EMFCompareAssert;
@@ -137,6 +147,58 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 				"The Match took on element which is close enough (in the limits) preventing the next iteration to take it (it was closest)",
 				1, result.getDifferences().size());
 
+	}
+
+	@Test
+	public void addRemoveAndNotRename() throws Exception {
+		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData.get391657Left(), inputData
+				.get391657Right());
+		Comparison result = EMFCompare.builder().setMatchEngine(
+				DefaultMatchEngine.create(UseIdentifiers.NEVER)).build().compare(scope);
+		Iterator<AttributeChange> attrChanges = Iterators.filter(result.getDifferences().iterator(),
+				AttributeChange.class);
+		assertFalse("We are supposed to detect an addition/remove (and not a rename if that's what we get)",
+				attrChanges.hasNext());
+
+	}
+
+	@Test
+	public void resourceRootChange() throws Exception {
+		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData.get390666Left(), inputData
+				.get390666Right(), inputData.get390666Ancestor());
+		Comparison result = EMFCompare.builder().setMatchEngine(
+				DefaultMatchEngine.create(UseIdentifiers.NEVER)).build().compare(scope);
+		Iterator<ResourceAttachmentChange> attrChanges = Iterators.filter(result.getDifferences().iterator(),
+				ResourceAttachmentChange.class);
+		assertTrue("We are supposed to detect a new attachment to a resource", attrChanges.hasNext());
+
+	}
+
+	@Test
+	public void moveInAReferenceShouldNotAffectMatch() throws Exception {
+		/*
+		 * See bug #391798 : moving elements a lot in a reference (like in changing index) should not affect
+		 * the matching very much.
+		 */
+		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData.get391798Left(), inputData
+				.get391798Right());
+		Comparison result = EMFCompare.builder().setMatchEngine(
+				DefaultMatchEngine.create(UseIdentifiers.NEVER)).build().compare(scope);
+		for (Diff dif : result.getDifferences()) {
+			if (dif instanceof ReferenceChange && dif.getKind() == DifferenceKind.MOVE) {
+
+			} else {
+				fail("We should only detect moves in the reference.");
+			}
+		}
+
+	}
+
+	private String print(Comparison result) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(baos);
+		EMFComparePrettyPrinter.printDifferences(result, ps);
+		return baos.toString();
 	}
 
 	private void assertAllMatched(Iterable<? extends EObject> eObjects, Comparison comparison) {

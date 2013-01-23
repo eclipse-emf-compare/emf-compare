@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.StringAttributeChangeAccessor;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -37,9 +36,8 @@ public class IDEStringAttributeChangeAccessor extends StringAttributeChangeAcces
 	 * @param eAtribute
 	 * @param attributeChange
 	 */
-	public IDEStringAttributeChangeAccessor(EObject eObject, EAttribute eAtribute,
-			AttributeChange attributeChange) {
-		super(eObject, eAtribute, attributeChange);
+	public IDEStringAttributeChangeAccessor(EObject eObject, AttributeChange attributeChange) {
+		super(eObject, attributeChange);
 	}
 
 	/**

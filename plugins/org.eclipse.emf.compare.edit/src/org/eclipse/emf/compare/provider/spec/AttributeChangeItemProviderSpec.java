@@ -21,6 +21,7 @@ import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.AttributeChangeItemProvider;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -44,8 +45,7 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 	@Override
 	public Object getImage(Object object) {
 		AttributeChange attributeChange = (AttributeChange)object;
-		Object ret = CompareItemProviderAdapterFactorySpec.getImage(getRootAdapterFactory(), attributeChange
-				.getValue());
+		Object ret = AdapterFactoryUtil.getImage(getRootAdapterFactory(), attributeChange.getValue());
 
 		if (ret == null) {
 			ret = super.getImage(object);

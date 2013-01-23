@@ -5,17 +5,10 @@
      <extension
            point="org.eclipse.gmf.runtime.diagram.ui.decoratorProviders">
         <decoratorProvider
-              class="org.eclipse.emf.compare.diagram.ui.decoration.provider.DiffDecoratorProvider">
+              class="org.eclipse.emf.compare.diagram.ide.ui.decoration.provider.DiffDecoratorProvider">
            <Priority
                  name="Lowest">
            </Priority>
-           <object
-                 class="org.eclipse.gmf.runtime.notation.Node"
-                 id="NODE">
-           </object>
-           <context
-                 decoratorTargets="NODE">
-           </context>
         </decoratorProvider>
      </extension>
      
@@ -23,21 +16,20 @@
          point="org.eclipse.ui.preferencePages">
       <page
             category="org.eclipse.emf.compare.diagram.internal.preferences.DiagramComparePreferencesPage"
-            class="org.eclipse.emf.compare.diagram.ui.preferences.internal.DiagramComparePreferencesPage"
+            class="org.eclipse.emf.compare.diagram.ide.ui.internal.preferences.DiagramComparePreferencesPage"
             id="org.eclipse.emf.compare.diagram.internal.preferences.DiagramComparePreferencesPage"
             name="%preferencePageName">
       </page>
    </extension>
      <extension
-           point="org.eclipse.emf.edit.itemProviderAdapterFactories">
+           point="org.eclipse.emf.compare.ide.ui.accessor_factory">
         <factory
-              class="org.eclipse.emf.compare.diagram.ide.ui.internal.provider.DiagramCompareNodeAdapterFactory"
-              supportedTypes=
-            "org.eclipse.compare.structuremergeviewer.IDiffElement
-             org.eclipse.compare.structuremergeviewer.IDiffContainer
-             org.eclipse.compare.structuremergeviewer.ITypedElement
-             org.eclipse.compare.structuremergeviewer.ICompareInput"
-              uri="http://www.eclipse.org/emf/compare/diagram/2.0">
+              class="org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.factory.DiagramIDEDiffAccessorFactory"
+              ranking="40">
+        </factory>
+        <factory
+              class="org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.factory.DiagramIDEMatchAccessorFactory"
+              ranking="40">
         </factory>
      </extension>
 

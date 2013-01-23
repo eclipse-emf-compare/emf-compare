@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Tests
-Bundle-SymbolicName: org.eclipse.emf.compare.uml2.profiles.tests;singleton:=true
-Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.emf.ecore,
- org.eclipse.uml2.uml
-Bundle-RequiredExecutionEnvironment: J2SE-1.5

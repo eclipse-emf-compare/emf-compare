@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.diff.internal.extension.factories;
 
+import static com.google.common.collect.Iterables.filter;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
@@ -22,6 +24,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.diagram.DiagramCompareFactory;
+import org.eclipse.emf.compare.diagram.DiagramDiff;
 import org.eclipse.emf.compare.diagram.NodeChange;
 import org.eclipse.emf.compare.diagram.diff.DiagramComparisonConfiguration;
 import org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory;
@@ -60,15 +63,55 @@ public class NodeChangeFactory extends AbstractDiffExtensionFactory {
 		if (extensionKind == DifferenceKind.DELETE) {
 			ret.getRefinedBy().add(input);
 		} else if (extensionKind == DifferenceKind.ADD) {
+			ret.getRefinedBy().add(input);
 			ret.getRefinedBy().addAll(getAllContainedDifferences((ReferenceChange)input));
 		} else if (extensionKind == DifferenceKind.MOVE) {
 			ret.getRefinedBy().addAll(input.getMatch().getDifferences());
+		}
+
+		if (input instanceof ReferenceChange) {
+			ret.setView(((ReferenceChange)input).getValue());
+		} else if (input instanceof AttributeChange) {
+			Comparison comparison = input.getMatch().getComparison();
+			EObject container = MatchUtil.getContainer(comparison, input);
+			while (container != null && !(container instanceof View)) {
+				container = container.eContainer();
+			}
+			ret.setView(container);
 		}
 
 		ret.setSource(input.getSource());
 		ret.setSemanticDiff(getSemanticDiff(input));
 
 		return ret;
+	}
+
+	@Override
+	public void fillRequiredDifferences(Comparison comparison, Diff extension) {
+		final DiagramDiff diff = (DiagramDiff)extension;
+		final Diff semanticDiff = diff.getSemanticDiff();
+
+		if (semanticDiff == null) {
+			// no requires here
+			return;
+		}
+
+		for (Diff semanticRequired : semanticDiff.getRequires()) {
+			final List<Diff> candidates = comparison.getDifferences(semanticRequired);
+			for (DiagramDiff diagramDiff : filter(candidates, DiagramDiff.class)) {
+				if (diagramDiff.getSemanticDiff() == semanticRequired) {
+					diff.getRequires().add(diagramDiff);
+				}
+			}
+		}
+		for (Diff semanticRequiredBy : semanticDiff.getRequiredBy()) {
+			final List<Diff> candidates = comparison.getDifferences(semanticRequiredBy);
+			for (DiagramDiff diagramDiff : filter(candidates, DiagramDiff.class)) {
+				if (diagramDiff.getSemanticDiff() == semanticRequiredBy) {
+					diff.getRequiredBy().add(diagramDiff);
+				}
+			}
+		}
 	}
 
 	@Override

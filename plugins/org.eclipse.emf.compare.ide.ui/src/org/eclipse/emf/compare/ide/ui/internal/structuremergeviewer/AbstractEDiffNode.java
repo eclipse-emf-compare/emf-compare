@@ -16,6 +16,9 @@ import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory.Registry;
 import org.eclipse.jface.util.SafeRunnable;
 
 /**
@@ -81,12 +84,21 @@ public abstract class AbstractEDiffNode extends AbstractEDiffContainer implement
 
 	}
 
+	protected IAccessorFactory getAccessorFactoryForTarget() {
+		Registry factoryRegistry = EMFCompareIDEUIPlugin.getDefault().getAccessorFactoryRegistry();
+		return factoryRegistry.getHighestRankingFactory(getTarget());
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getAncestor()
 	 */
 	public ITypedElement getAncestor() {
+		IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
+		if (accessorFactory != null) {
+			return accessorFactory.createAncestor(getAdapterFactory(), getTarget());
+		}
 		return null;
 	}
 
@@ -96,6 +108,10 @@ public abstract class AbstractEDiffNode extends AbstractEDiffContainer implement
 	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getLeft()
 	 */
 	public ITypedElement getLeft() {
+		IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
+		if (accessorFactory != null) {
+			return accessorFactory.createLeft(getAdapterFactory(), getTarget());
+		}
 		return null;
 	}
 
@@ -105,6 +121,10 @@ public abstract class AbstractEDiffNode extends AbstractEDiffContainer implement
 	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getRight()
 	 */
 	public ITypedElement getRight() {
+		IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
+		if (accessorFactory != null) {
+			return accessorFactory.createRight(getAdapterFactory(), getTarget());
+		}
 		return null;
 	}
 }

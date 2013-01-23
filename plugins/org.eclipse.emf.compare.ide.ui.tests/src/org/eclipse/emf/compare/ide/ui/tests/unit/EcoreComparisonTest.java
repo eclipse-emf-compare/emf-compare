@@ -24,7 +24,6 @@ public class EcoreComparisonTest extends SWTBotTestCase {
 		// bot.createGITRepository("UMLComparison");
 
 		// bot.commit("UMLComparison", "v1Refv2.uml");
-		// System.out.println("WorkspaceComparisonTest.test()");
 	}
 
 }

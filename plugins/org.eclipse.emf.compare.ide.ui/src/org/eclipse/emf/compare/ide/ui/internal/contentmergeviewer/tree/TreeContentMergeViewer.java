@@ -17,8 +17,10 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.TreeMergeViewer;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IEObjectAccessor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
@@ -59,7 +61,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	 * <p>
 	 * It calls {@link #buildControl(Composite)} as stated in its javadoc.
 	 * <p>
-	 * It sets a {@link TreeMergeViewerContentProvider specific}
+	 * It sets a {@link TreeContentMergeViewerContentProvider specific}
 	 * {@link #setContentProvider(org.eclipse.jface.viewers.IContentProvider) content provider} to properly
 	 * display ancestor, left and right parts.
 	 * 
@@ -75,7 +77,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 
 		buildControl(parent);
-		setContentProvider(new TreeMergeViewerContentProvider(config, getComparison()));
+		setContentProvider(new TreeContentMergeViewerContentProvider(config, getComparison()));
 	}
 
 	/**
@@ -146,11 +148,6 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 				leftToRight);
 		getEditingDomain().getCommandStack().execute(command);
 
-		if (leftToRight) {
-			setRightDirty(true);
-		} else {
-			setLeftDirty(true);
-		}
 		refresh();
 	}
 

@@ -21,8 +21,12 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
@@ -122,9 +126,9 @@ public final class ResourceUtil {
 			// One last check in case we've reached the end of one side but not of the other
 			return equalArrays(readLeft, readRight, leftBuff, rightBuff);
 		} catch (CoreException e) {
-			// FIXME log
+			logError(e);
 		} catch (IOException e) {
-			// FIXME log
+			logError(e);
 		} finally {
 			if (leftReader != null) {
 				Closeables.closeQuietly(leftReader);
@@ -174,9 +178,9 @@ public final class ResourceUtil {
 			// One last check in case we've reached the end of one side but not of the other
 			return equalArrays(readLeft, readRight, readOrigin, leftBuff, rightBuff, originBuff);
 		} catch (CoreException e) {
-			// FIXME log
+			logError(e);
 		} catch (IOException e) {
-			// FIXME log
+			logError(e);
 		} finally {
 			if (leftReader != null) {
 				Closeables.closeQuietly(leftReader);
@@ -187,6 +191,64 @@ public final class ResourceUtil {
 			if (originReader != null) {
 				Closeables.closeQuietly(originReader);
 			}
+		}
+		return false;
+	}
+
+	/**
+	 * Create the URI with which we'll load the given IStorage as an EMF resource.
+	 * 
+	 * @param storage
+	 *            The storage for which we need an EMF URI.
+	 * @return The created URI.
+	 */
+	public static URI createURIFor(IStorage storage) {
+		final String resourceName = storage.getName();
+		String path = storage.getFullPath().toString();
+		if (!path.endsWith(resourceName)) {
+			final int endIndex = path.indexOf(resourceName) + resourceName.length();
+			path = path.substring(0, endIndex);
+		}
+		URI uri = URI.createURI(path, true);
+		if (!uri.isPlatformResource()) {
+			uri = URI.createPlatformResourceURI(path, true);
+		}
+		return uri;
+	}
+
+	/**
+	 * This can be called to save all resources contained by the resource set. This will not try and save
+	 * resources that do not support output.
+	 * 
+	 * @param resourceSet
+	 *            The resource set to save.
+	 * @param options
+	 *            The options we are to pass on to {@link Resource#save(Map)}.
+	 */
+	public static void saveAllResources(ResourceSet resourceSet, Map<?, ?> options) {
+		EList<Resource> resources = resourceSet.getResources();
+		for (Resource resource : resources) {
+			if (supportsOutput(resource)) {
+				try {
+					resource.save(options);
+				} catch (IOException e) {
+					logError(e);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Disable saving for resources that cannot support it.
+	 * 
+	 * @param resource
+	 *            The resource we are to check.
+	 * @return <code>true</code> if we can save this <code>resource</code>, <code>false</code> otherwise.
+	 */
+	private static boolean supportsOutput(Resource resource) {
+		final URI uri = resource.getURI();
+		if (uri.isPlatformResource() || uri.isRelative() || uri.isFile()) {
+			return true;
 		}
 		return false;
 	}
@@ -259,5 +321,16 @@ public final class ResourceUtil {
 			return result;
 		}
 		return false;
+	}
+
+	/**
+	 * Logs the given exception as an error.
+	 * 
+	 * @param e
+	 *            The exception we need to log.
+	 */
+	private static void logError(Exception e) {
+		final IStatus status = new Status(IStatus.ERROR, EMFCompareIDEPlugin.PLUGIN_ID, e.getMessage(), e);
+		EMFCompareIDEPlugin.getDefault().getLog().log(status);
 	}
 }

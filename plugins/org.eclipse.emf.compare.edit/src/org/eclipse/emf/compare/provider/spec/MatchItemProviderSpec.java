@@ -23,7 +23,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
@@ -32,6 +31,7 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -74,14 +74,14 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	@Override
 	public Object getImage(Object object) {
 		Match match = (Match)object;
-		Object ret = CompareItemProviderAdapterFactorySpec.getImage(getRootAdapterFactory(), match.getLeft());
+		Object ret = AdapterFactoryUtil.getImage(getRootAdapterFactory(), match.getLeft());
 
 		if (ret == null) {
-			ret = CompareItemProviderAdapterFactorySpec.getImage(getRootAdapterFactory(), match.getRight());
+			ret = AdapterFactoryUtil.getImage(getRootAdapterFactory(), match.getRight());
 		}
 
 		if (ret == null) {
-			ret = CompareItemProviderAdapterFactorySpec.getImage(getRootAdapterFactory(), match.getOrigin());
+			ret = AdapterFactoryUtil.getImage(getRootAdapterFactory(), match.getOrigin());
 		}
 
 		if (ret == null) {
@@ -99,14 +99,14 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	@Override
 	public String getText(Object object) {
 		Match match = (Match)object;
-		String ret = CompareItemProviderAdapterFactorySpec.getText(getRootAdapterFactory(), match.getLeft());
+		String ret = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getLeft());
 
 		if (ret == null) {
-			ret = CompareItemProviderAdapterFactorySpec.getText(getRootAdapterFactory(), match.getRight());
+			ret = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getRight());
 		}
 
 		if (ret == null) {
-			ret = CompareItemProviderAdapterFactorySpec.getText(getRootAdapterFactory(), match.getOrigin());
+			ret = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getOrigin());
 		}
 
 		if (ret == null) {
@@ -133,8 +133,8 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 
 		@SuppressWarnings("unchecked")
 		Predicate<Object> childrenFilter = not(or(matchOfContainmentDiff(containementDifferenceValues),
-				matchWithNoChildren(), emptyMatch(), PSEUDO_CONFLICT_DIFF,
-				REFINED_OR_REQUIRED_BY_REFINED_DIFF, PSEUDO_DELETE_CONFLICT));
+				matchWithNoChildren(), emptyMatch(), PSEUDO_CONFLICT_DIFF, REFINED_DIFF,
+				PSEUDO_DELETE_CONFLICT));
 
 		Iterable<?> filteredChildren = filter(super.getChildren(match), childrenFilter);
 		return filteredChildren;
@@ -192,36 +192,12 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 		};
 	}
 
-	static final Predicate<? super Object> REFINED_OR_REQUIRED_BY_REFINED_DIFF = new Predicate<Object>() {
+	static final Predicate<? super Object> REFINED_DIFF = new Predicate<Object>() {
 		public boolean apply(Object input) {
-			// FIXME Can we simplify this?
-			// Create a Class A
-			// Create an Interface I
-			// add an interfaceRealization from A to I
-			/*
-			 * We must hide the addition of the InterfaceRealization ... but we must not hide the addition of
-			 * the class itself.
-			 */
-
 			boolean ret = false;
 			if (input instanceof Diff) {
 				Diff diff = (Diff)input;
-				if (diff.getRefines().isEmpty()) {
-					if (diff instanceof ReferenceChange) {
-						final Match valueMatch = diff.getMatch().getComparison().getMatch(
-								((ReferenceChange)diff).getValue());
-						final Iterator<Diff> requiredByDiffs = diff.getRequiredBy().iterator();
-						while (requiredByDiffs.hasNext() && !ret) {
-							final Diff requiredBy = requiredByDiffs.next();
-							ret = requiredBy.getMatch() == valueMatch && !requiredBy.getRefines().isEmpty();
-						}
-					} else {
-						ret = false;
-					}
-
-				} else {
-					ret = true;
-				}
+				ret = !diff.getRefines().isEmpty();
 			}
 			return ret;
 		}

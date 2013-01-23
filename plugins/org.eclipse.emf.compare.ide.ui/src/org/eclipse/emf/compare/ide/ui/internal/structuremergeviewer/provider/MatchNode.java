@@ -16,7 +16,6 @@ import static com.google.common.collect.Iterables.isEmpty;
 
 import com.google.common.base.Predicate;
 
-import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -24,7 +23,7 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IDEEObjectNode;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.ContentMergeViewerConstants;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode;
 import org.eclipse.emf.ecore.EObject;
 
@@ -89,49 +88,7 @@ public class MatchNode extends AbstractEDiffNode {
 	 */
 	@Override
 	public String getType() {
-		return "eobject";
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode#getAncestor()
-	 */
-	@Override
-	public ITypedElement getAncestor() {
-		EObject o = getTarget().getOrigin();
-		if (o != null) {
-			return new IDEEObjectNode(getAdapterFactory(), o);
-		}
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode#getLeft()
-	 */
-	@Override
-	public ITypedElement getLeft() {
-		EObject o = getTarget().getLeft();
-		if (o != null) {
-			return new IDEEObjectNode(getAdapterFactory(), o);
-		}
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode#getRight()
-	 */
-	@Override
-	public ITypedElement getRight() {
-		EObject o = getTarget().getRight();
-		if (o != null) {
-			return new IDEEObjectNode(getAdapterFactory(), o);
-		}
-		return null;
+		return ContentMergeViewerConstants.EOBJECT_NODE_TYPE;
 	}
 
 	/**

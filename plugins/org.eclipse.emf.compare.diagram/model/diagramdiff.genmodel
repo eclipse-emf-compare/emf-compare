@@ -4,15 +4,22 @@
     modelDirectory="/org.eclipse.emf.compare.diagram/src-gen" editDirectory="/org.eclipse.emf.compare.diagram.edit/src-gen"
     editorDirectory="/org.eclipse.emf.compare.diagram.editor/src-gen" modelPluginID="org.eclipse.emf.compare.diagram"
     modelName="Diagram" importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0"
-    copyrightFields="false" usedGenPackages="../../org.eclipse.emf.compare/model/compare.genmodel#//compare platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
+    copyrightFields="false" colorProviders="true" fontProviders="true" usedGenPackages="../../org.eclipse.emf.compare/model/compare.genmodel#//compare platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
   <foreignModel>diagramdiff.ecore</foreignModel>
   <genPackages prefix="DiagramCompare" basePackage="org.eclipse.emf.compare" disposableProviderFactory="true"
       ecorePackage="diagramdiff.ecore#/">
-    <genClasses ecoreClass="diagramdiff.ecore#//VisibilityChange"/>
+    <genClasses ecoreClass="diagramdiff.ecore#//Show"/>
+    <genClasses ecoreClass="diagramdiff.ecore#//Hide"/>
     <genClasses ecoreClass="diagramdiff.ecore#//NodeChange"/>
     <genClasses ecoreClass="diagramdiff.ecore#//EdgeChange"/>
+    <genClasses ecoreClass="diagramdiff.ecore#//LabelChange">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diagramdiff.ecore#//LabelChange/left"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diagramdiff.ecore#//LabelChange/right"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diagramdiff.ecore#//LabelChange/origin"/>
+    </genClasses>
     <genClasses image="false" ecoreClass="diagramdiff.ecore#//DiagramDiff">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diagramdiff.ecore#//DiagramDiff/semanticDiff"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diagramdiff.ecore#//DiagramDiff/view"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

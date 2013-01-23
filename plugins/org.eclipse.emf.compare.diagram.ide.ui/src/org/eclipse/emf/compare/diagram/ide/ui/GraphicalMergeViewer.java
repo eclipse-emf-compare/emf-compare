@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui;
 
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.events.DisposeEvent;
@@ -23,6 +26,9 @@ public abstract class GraphicalMergeViewer extends DMergeViewer {
 
 	private final ISelectionChangedListener fForwardingSelectionListener;
 
+	/** the diagram edit domain. */
+	protected DiagramEditDomain editDomain;
+
 	/**
 	 * @param parent
 	 * @param side
@@ -30,23 +36,26 @@ public abstract class GraphicalMergeViewer extends DMergeViewer {
 	public GraphicalMergeViewer(Composite parent, MergeViewerSide side) {
 		super(side);
 
-		createControl(parent);
+		editDomain = new DiagramEditDomain(null);
+		editDomain.setCommandStack(new DiagramCommandStack(editDomain));
+
+		setControl(createControl(parent));
 		hookControl();
 
 		fForwardingSelectionListener = new ForwardingViewerSelectionListener();
-		getGraphicalViewer().addSelectionChangedListener(fForwardingSelectionListener);
+		// getGraphicalViewer().addSelectionChangedListener(fForwardingSelectionListener);
 	}
 
 	@Override
 	protected void handleDispose(DisposeEvent event) {
-		getGraphicalViewer().removeSelectionChangedListener(fForwardingSelectionListener);
+		// getGraphicalViewer().removeSelectionChangedListener(fForwardingSelectionListener);
 		super.handleDispose(event);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.ide.ui#getGraphicalViewer()
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.DMergeViewer#getGraphicalViewer()
 	 */
 	@Override
 	protected abstract AbstractEditPartViewer getGraphicalViewer();

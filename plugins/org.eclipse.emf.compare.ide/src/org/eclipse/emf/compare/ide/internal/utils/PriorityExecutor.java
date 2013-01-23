@@ -73,9 +73,6 @@ public final class PriorityExecutor implements Executor {
 	 * @return The wrapped task.
 	 */
 	public <T> Future<T> submit(Runnable task, Priority priority) {
-		if (task == null) {
-			throw new NullPointerException();
-		}
 		FutureTask<T> ftask = new PriorityFutureTask<T>(Executors.callable(task, (T)null), priority);
 		execute(ftask);
 		return ftask;
@@ -93,9 +90,6 @@ public final class PriorityExecutor implements Executor {
 	 * @return The wrapped task.
 	 */
 	public <T> Future<T> submit(Callable<T> task, Priority priority) {
-		if (task == null) {
-			throw new NullPointerException();
-		}
 		FutureTask<T> ftask = new PriorityFutureTask<T>(task, priority);
 		execute(ftask);
 		return ftask;

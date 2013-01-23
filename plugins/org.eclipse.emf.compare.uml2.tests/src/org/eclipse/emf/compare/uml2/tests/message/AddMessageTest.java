@@ -47,6 +47,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, null);
+		testMergeRightToLeft(left, right, null);
 	}
 
 	@Test
@@ -57,6 +60,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(right, left, null);
+		testMergeRightToLeft(right, left, null);
 	}
 
 	@Test
@@ -67,6 +73,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, right);
+		testMergeRightToLeft(left, right, right);
 	}
 
 	@Test
@@ -77,6 +86,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(left, right, left);
+		testMergeRightToLeft(left, right, left);
 	}
 
 	@Test
@@ -87,6 +99,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, null);
+		testMergeRightToLeft(left, right, null);
 	}
 
 	@Test
@@ -97,6 +112,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(right, left, null);
+		testMergeRightToLeft(right, left, null);
 	}
 
 	@Test
@@ -107,6 +125,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, right);
+		testMergeRightToLeft(left, right, right);
 	}
 
 	@Test
@@ -117,6 +138,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB2(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(left, right, left);
+		testMergeRightToLeft(left, right, left);
 	}
 
 	@Test
@@ -127,6 +151,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, null);
+		testMergeRightToLeft(left, right, null);
 	}
 
 	@Test
@@ -137,6 +164,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(right, left, null);
+		testMergeRightToLeft(right, left, null);
 	}
 
 	@Test
@@ -147,6 +177,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, right);
+		testMergeRightToLeft(left, right, right);
 	}
 
 	@Test
@@ -157,6 +190,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB3(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(left, right, left);
+		testMergeRightToLeft(left, right, left);
 	}
 
 	@Test
@@ -167,6 +203,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, null);
+		testMergeRightToLeft(left, right, null);
 	}
 
 	@Test
@@ -177,6 +216,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(right, left, null);
+		testMergeRightToLeft(right, left, null);
 	}
 
 	@Test
@@ -187,6 +229,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, right);
+		testMergeRightToLeft(left, right, right);
 	}
 
 	@Test
@@ -197,6 +242,9 @@ public class AddMessageTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(left, right, left);
+		testMergeRightToLeft(left, right, left);
 	}
 
 	private void testAB1(TestKind kind, final Comparison comparison) {
@@ -298,11 +346,16 @@ public class AddMessageTest extends AbstractTest {
 			addUMLMessage = Iterators.find(differences.iterator(), and(instanceOf(MessageChange.class),
 					ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLMessage);
-			assertSame(Integer.valueOf(4), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
+			assertSame(Integer.valueOf(8), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addReceiveEventInMessage));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addSendEventInMessage));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInMessage0Recv0));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInMessage0Send0));
+
+			assertTrue(addUMLMessage.getRefinedBy().contains(addMessageSend));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addMessageRecv));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredByInLifeline0));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredByInLifeline1));
 		} else {
 			addUMLMessage = Iterators.find(differences.iterator(), and(instanceOf(MessageChange.class),
 					ofKind(DifferenceKind.DELETE)));
@@ -477,9 +530,11 @@ public class AddMessageTest extends AbstractTest {
 			addUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
 					ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLMessage);
-			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
+			assertSame(Integer.valueOf(4), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addReceiveEventInMessage));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInMessage0Recv0));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addMessageRecv));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredByInLifeline0));
 		} else {
 			addUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
 					ofKind(DifferenceKind.DELETE)));
@@ -542,10 +597,8 @@ public class AddMessageTest extends AbstractTest {
 		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
 				addCoveredByInLifeline0));
 
-		// FIXME
 		assertFalse("No move expected", Iterators.filter(differences.iterator(), ofKind(DifferenceKind.MOVE))
 				.hasNext());
-
 	}
 
 	private void testAB3(TestKind kind, final Comparison comparison) {
@@ -618,9 +671,11 @@ public class AddMessageTest extends AbstractTest {
 			addUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
 					ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLMessage);
-			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
+			assertSame(Integer.valueOf(4), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addReceiveEventInMessage));
 			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInMessage0Recv0));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addMessageRecv));
+			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredByInLifeline0));
 		} else {
 			addUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
 					ofKind(DifferenceKind.DELETE)));
@@ -683,10 +738,8 @@ public class AddMessageTest extends AbstractTest {
 		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
 				addCoveredByInLifeline0));
 
-		// FIXME
 		assertFalse("No move expected", Iterators.filter(differences.iterator(), ofKind(DifferenceKind.MOVE))
 				.hasNext());
-
 	}
 
 	@Override

@@ -10,9 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.EventObject;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareViewerSwitchingPane;
@@ -24,12 +28,16 @@ import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.command.ICompareCopyCommand;
+import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.EMFCompareIDE;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
@@ -37,8 +45,10 @@ import org.eclipse.emf.compare.ide.ui.internal.actions.filter.DifferenceFilter;
 import org.eclipse.emf.compare.ide.ui.internal.actions.filter.FilterActionMenu;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGrouper;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.GroupActionMenu;
+import org.eclipse.emf.compare.ide.ui.internal.actions.save.SaveComparisonModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareConfigurationExtension;
-import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
+import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
 import org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
@@ -50,6 +60,7 @@ import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IElementComparer;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -67,6 +78,8 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	private final CompareViewerSwitchingPane fParent;
 
 	private Object fRoot;
+
+	private ICompareEditingDomain editingDomain;
 
 	/**
 	 * The difference filter that will be applied to the structure viewer. Note that this will be initialized
@@ -120,7 +133,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	void compareInputChanged(ICompareInput input) {
 		if (input == null) {
 			// When closing, we don't need a progress monitor to handle the input change
-			compareInputChanged(null, new NullProgressMonitor());
+			compareInputChanged((ICompareInput)null, new NullProgressMonitor());
 			return;
 		}
 		CompareConfiguration cc = getCompareConfiguration();
@@ -159,49 +172,117 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	};
 
 	void compareInputChanged(ICompareInput input, IProgressMonitor monitor) {
-		Object previousResult = getCompareConfiguration().getProperty(EMFCompareConstants.COMPARE_RESULT);
-		if (previousResult instanceof Comparison) {
-			compareInputChanged((Comparison)previousResult);
-		} else if (input != null) {
-			final ITypedElement left = input.getLeft();
-			final ITypedElement right = input.getRight();
-			final ITypedElement origin = input.getAncestor();
-			final EMFSynchronizationModel syncModel = EMFSynchronizationModel.createSynchronizationModel(
-					left, right, origin);
-			syncModel.minimize();
-
-			// Double check : git allows modification of the index file ... but we cannot
-			final CompareConfiguration config = getCompareConfiguration();
-			if (!syncModel.isLeftEditable()) {
-				config.setLeftEditable(false);
-			}
-			if (!syncModel.isRightEditable()) {
-				config.setRightEditable(false);
-			}
-
-			final ResourceSet leftResourceSet = syncModel.getLeftResourceSet();
-			final ResourceSet rightResourceSet = syncModel.getRightResourceSet();
-			final ResourceSet originResourceSet;
-			if (origin == null) {
-				// FIXME why would an empty resource set yield a different result ?
-				originResourceSet = null;
+		if (input != null) {
+			if (input instanceof ComparisonNode) {
+				compareInputChanged((ComparisonNode)input, monitor);
+			} else if (input instanceof ComparisonScopeInput) {
+				compareInputChanged((ComparisonScopeInput)input, monitor);
 			} else {
-				originResourceSet = syncModel.getOriginResourceSet();
+				final ITypedElement left = input.getLeft();
+				final ITypedElement right = input.getRight();
+				final ITypedElement origin = input.getAncestor();
+				final EMFSynchronizationModel syncModel = EMFSynchronizationModel.createSynchronizationModel(
+						left, right, origin);
+
+				// Double check : git allows modification of the index file ... but we cannot
+				final CompareConfiguration config = getCompareConfiguration();
+				if (!syncModel.isLeftEditable()) {
+					config.setLeftEditable(false);
+				}
+				if (!syncModel.isRightEditable()) {
+					config.setRightEditable(false);
+				}
+
+				final IComparisonScope scope = syncModel.createMinimizedScope();
+				final Comparison compareResult = EMFCompareIDE.builder().build().compare(scope,
+						BasicMonitor.toMonitor(monitor));
+
+				final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
+				final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();
+				final ResourceSet originResourceSet = (ResourceSet)scope.getOrigin();
+
+				editingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
+						EMFCompareConstants.EDITING_DOMAIN);
+				if (editingDomain == null) {
+					editingDomain = EMFCompareEditingDomain.create(leftResourceSet, rightResourceSet,
+							originResourceSet);
+					getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);
+				}
+
+				editingDomain.getCommandStack().addCommandStackListener(this);
+
+				compareInputChanged(compareResult);
+			}
+		} else {
+			ResourceSet leftResourceSet = null;
+			ResourceSet rightResourceSet = null;
+			ResourceSet originResourceSet = null;
+
+			if (fRoot != null) {
+				Comparison comparison = (Comparison)((Adapter)fRoot).getTarget();
+				Iterator<Match> matchIt = comparison.getMatches().iterator();
+				if (comparison.isThreeWay()) {
+					while (matchIt.hasNext()
+							&& (leftResourceSet == null || rightResourceSet == null || originResourceSet == null)) {
+						Match match = matchIt.next();
+						if (leftResourceSet == null) {
+							leftResourceSet = getResourceSet(match.getLeft());
+						}
+						if (rightResourceSet == null) {
+							rightResourceSet = getResourceSet(match.getRight());
+						}
+						if (originResourceSet == null) {
+							originResourceSet = getResourceSet(match.getOrigin());
+						}
+					}
+				} else {
+					while (matchIt.hasNext() && (leftResourceSet == null || rightResourceSet == null)) {
+						Match match = matchIt.next();
+						if (leftResourceSet == null) {
+							leftResourceSet = getResourceSet(match.getLeft());
+						}
+						if (rightResourceSet == null) {
+							rightResourceSet = getResourceSet(match.getRight());
+						}
+					}
+				}
 			}
 
-			final IComparisonScope scope = EMFCompare.createDefaultScope(leftResourceSet, rightResourceSet,
-					originResourceSet);
-			final Comparison compareResult = EMFCompareIDE.builder().build().compare(scope,
-					BasicMonitor.toMonitor(monitor));
-			EMFCompareEditingDomain editingDomain = new EMFCompareEditingDomain(compareResult,
-					leftResourceSet, rightResourceSet, originResourceSet);
-			getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);
+			if (editingDomain != null) {
+				editingDomain.getCommandStack().removeCommandStackListener(this);
+				getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, null);
+				editingDomain = null;
+			}
 
-			editingDomain.getCommandStack().addCommandStackListener(this);
-			compareInputChanged(compareResult);
-		} else {
+			// FIXME: should unload only if input.getLeft/Right/Ancestor (previously stored in field) are
+			// instanceof ResourceNode
+			unload(leftResourceSet);
+			unload(rightResourceSet);
+			unload(originResourceSet);
+
+			getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, null);
 			fRoot = null;
 		}
+	}
+
+	void compareInputChanged(ComparisonNode input, IProgressMonitor monitor) {
+		editingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
+				EMFCompareConstants.EDITING_DOMAIN);
+		editingDomain.getCommandStack().addCommandStackListener(this);
+
+		compareInputChanged(input.getTarget());
+	}
+
+	void compareInputChanged(ComparisonScopeInput input, IProgressMonitor monitor) {
+		editingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
+				EMFCompareConstants.EDITING_DOMAIN);
+		editingDomain.getCommandStack().addCommandStackListener(this);
+
+		EMFCompare comparator = (EMFCompare)getCompareConfiguration().getProperty(
+				EMFCompareConstants.COMPARATOR);
+		Comparison comparison = comparator.compare(input.getComparisonScope(), BasicMonitor
+				.toMonitor(monitor));
+		compareInputChanged(comparison);
 	}
 
 	private static void unload(ResourceSet resourceSet) {
@@ -280,6 +361,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	protected void createToolItems(ToolBarManager toolbarManager) {
 		super.createToolItems(toolbarManager);
 
+		toolbarManager.add(new SaveComparisonModelAction(getCompareConfiguration()));
 		toolbarManager.add(new GroupActionMenu(getDifferenceGrouper()));
 		toolbarManager.add(new FilterActionMenu(getDifferenceFilter()));
 	}
@@ -347,53 +429,13 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
-		Comparison comparison = (Comparison)((Adapter)fRoot).getTarget();
-		ResourceSet leftResourceSet = null;
-		ResourceSet rightResourceSet = null;
-		Iterator<Match> matchIt = comparison.getMatches().iterator();
-		if (comparison.isThreeWay()) {
-			ResourceSet originResourceSet = null;
-			while (matchIt.hasNext()
-					&& (leftResourceSet == null || rightResourceSet == null || originResourceSet == null)) {
-				Match match = matchIt.next();
-				if (leftResourceSet == null) {
-					leftResourceSet = getResourceSet(match.getLeft());
-				}
-				if (rightResourceSet == null) {
-					rightResourceSet = getResourceSet(match.getRight());
-				}
-				if (originResourceSet == null) {
-					originResourceSet = getResourceSet(match.getOrigin());
-				}
-			}
-			unload(originResourceSet);
-		} else {
-			while (matchIt.hasNext() && (leftResourceSet == null || rightResourceSet == null)) {
-				Match match = matchIt.next();
-				if (leftResourceSet == null) {
-					leftResourceSet = getResourceSet(match.getLeft());
-				}
-				if (rightResourceSet == null) {
-					rightResourceSet = getResourceSet(match.getRight());
-				}
-			}
-		}
-
-		unload(leftResourceSet);
-		unload(rightResourceSet);
-
 		Object input = getInput();
 		if (input instanceof ICompareInput) {
 			ICompareInput ci = (ICompareInput)input;
 			ci.removeCompareInputChangeListener(fCompareInputChangeListener);
 		}
 		compareInputChanged((ICompareInput)null);
-
-		EMFCompareEditingDomain editingDomain = (EMFCompareEditingDomain)getCompareConfiguration()
-				.getProperty(EMFCompareConstants.EDITING_DOMAIN);
-		if (editingDomain != null) {
-			editingDomain.getCommandStack().removeCommandStackListener(this);
-		}
+		fAdapterFactory.dispose();
 
 		super.handleDispose(event);
 	}
@@ -404,6 +446,19 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	 * @see org.eclipse.emf.common.command.CommandStackListener#commandStackChanged(java.util.EventObject)
 	 */
 	public void commandStackChanged(EventObject event) {
-		refresh();
+		Command mostRecentCommand = editingDomain.getCommandStack().getMostRecentCommand();
+		if (mostRecentCommand instanceof ICompareCopyCommand) {
+			Collection<?> affectedObjects = mostRecentCommand.getAffectedObjects();
+			refresh(true);
+			if (!affectedObjects.isEmpty()) {
+				List<Object> adaptedAffectedObject = newArrayList();
+				for (Object affectedObject : affectedObjects) {
+					adaptedAffectedObject.add(fAdapterFactory.adapt(affectedObject, IDiffElement.class));
+				}
+				setSelection(new StructuredSelection(adaptedAffectedObject), true);
+			}
+		} else {
+			// FIXME, should recompute the difference, something happened outside of this compare editor
+		}
 	}
 }

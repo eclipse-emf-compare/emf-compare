@@ -16,21 +16,25 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.filesystem,
  org.eclipse.team.core;bundle-version="3.5.0",
  org.eclipse.emf.ecore.xmi;bundle-version="2.5.0",
- org.eclipse.team.ui;bundle-version="3.5.300"
+ org.eclipse.team.ui;bundle-version="3.5.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Export-Package: org.eclipse.emf.compare.ide.ui.internal;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.actions.filter;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.actions.group;x-internal:=true,
- org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer,
- org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor,
+ org.eclipse.emf.compare.ide.ui.internal.actions.save;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.factory;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.editor;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.handler;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;x-internal:=true,
- org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider,
+ org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.util;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.logical
 Import-Package: com.google.common.annotations;version="[10.0.0,11.0.0)",

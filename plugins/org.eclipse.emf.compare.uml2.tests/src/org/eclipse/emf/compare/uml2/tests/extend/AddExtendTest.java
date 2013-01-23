@@ -43,6 +43,9 @@ public class AddExtendTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, null);
+		testMergeRightToLeft(left, right, null);
 	}
 
 	@Test
@@ -53,6 +56,9 @@ public class AddExtendTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(right, left, null);
+		testMergeRightToLeft(right, left, null);
 	}
 
 	@Test
@@ -63,6 +69,9 @@ public class AddExtendTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.ADD, comparison);
+
+		testMergeLeftToRight(left, right, right);
+		testMergeRightToLeft(left, right, right);
 	}
 
 	@Test
@@ -73,6 +82,9 @@ public class AddExtendTest extends AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
+
+		testMergeLeftToRight(left, right, left);
+		testMergeRightToLeft(left, right, left);
 	}
 
 	private void testAB1(TestKind kind, final Comparison comparison) {
@@ -121,9 +133,10 @@ public class AddExtendTest extends AbstractTest {
 			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(ExtendChange.class),
 					ofKind(DifferenceKind.ADD)));
 			assertNotNull(addUMLExtend);
-			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLExtend.getRefinedBy().size()));
+			assertSame(Integer.valueOf(3), Integer.valueOf(addUMLExtend.getRefinedBy().size()));
 			assertTrue(addUMLExtend.getRefinedBy().contains(addRefExtendedCaseInExtend));
 			assertTrue(addUMLExtend.getRefinedBy().contains(addRefExtensionLocationInExtend));
+			assertTrue(addUMLExtend.getRefinedBy().contains(addExtensionPoint));
 		} else {
 			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(ExtendChange.class),
 					ofKind(DifferenceKind.DELETE)));

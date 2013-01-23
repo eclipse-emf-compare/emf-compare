@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer;
 
-import java.util.EventObject;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -21,29 +21,22 @@ import org.eclipse.compare.ICompareNavigator;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.Utilities;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.diagram.ide.ui.DMergeViewer;
-import org.eclipse.emf.compare.diagram.ide.ui.DMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.diagram.ui.mergeviewer.EditingDomainUtils;
-import org.eclipse.emf.compare.diagram.ui.viewmodel.NotationDiffCreator;
+import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeMergeViewerContentProvider;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
-import org.eclipse.emf.compare.ide.ui.internal.util.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColorProvider;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor;
-import org.eclipse.emf.transaction.RecordingCommand;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
@@ -60,12 +53,11 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.actions.ActionFactory;
 
 /**
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewer implements ISelectionChangedListener, ICompareColorProvider {
+public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewer implements ISelectionChangedListener, ICompareColorProvider, IAdaptable {
 
 	private static final String HANDLER_SERVICE = "fHandlerService";
 
@@ -82,35 +74,23 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	 */
 	protected static final int CENTER_WIDTH = 34;
 
-	/** the modelcreator used to annotate models. */
-	protected final NotationDiffCreator gmfModelCreator = new NotationDiffCreator();
+	protected DMergeViewer fAncestor;
 
-	/** The transactionnal Editing Domain used to annotate/deannotate left diagrams. */
-	private TransactionalEditingDomain leftTED;
+	protected DMergeViewer fLeft;
 
-	/** The transactionnal Editing Domain used to annotate/deannotate right diagrams. */
-	private TransactionalEditingDomain rightTED;
-
-	/** The transactionnal Editing Domain used to display ancestor diagrams. */
-	private TransactionalEditingDomain ancestorTED;
-
-	private DMergeViewer fAncestor;
-
-	private DMergeViewer fLeft;
-
-	private DMergeViewer fRight;
+	protected DMergeViewer fRight;
 
 	private ActionContributionItem fCopyDiffLeftToRightItem;
 
 	private ActionContributionItem fCopyDiffRightToLeftItem;
 
-	private final Comparison fComparison;
+	protected final Comparison fComparison;
 
 	private final AtomicBoolean fSyncingSelections = new AtomicBoolean(false);
 
 	private EMFCompareColor fColors;
 
-	private final EMFCompareEditingDomain fEditingDomain;
+	private final ICompareEditingDomain fEditingDomain;
 
 	private final DynamicObject fDynamicObject;
 
@@ -119,16 +99,15 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	 * @param bundle
 	 * @param cc
 	 */
-	protected DiagramCompareContentMergeViewer(int style, ResourceBundle bundle, CompareConfiguration cc) {
+	protected DiagramCompareContentMergeViewer(Composite parent, int style, ResourceBundle bundle,
+			CompareConfiguration cc) {
 		super(style, bundle, cc);
 		fDynamicObject = new DynamicObject(this);
 
 		fComparison = (Comparison)cc.getProperty(EMFCompareConstants.COMPARE_RESULT);
 
-		fEditingDomain = (EMFCompareEditingDomain)getCompareConfiguration().getProperty(
+		fEditingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
 				EMFCompareConstants.EDITING_DOMAIN);
-
-		setContentProvider(new GMFModelContentMergeContentProvider(cc, fComparison));
 	}
 
 	/**
@@ -143,7 +122,7 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	/**
 	 * @return the fEditingDomain
 	 */
-	protected final EMFCompareEditingDomain getEditingDomain() {
+	protected final ICompareEditingDomain getEditingDomain() {
 		return fEditingDomain;
 	}
 
@@ -176,94 +155,95 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	 */
 	@Override
 	protected void updateContent(Object ancestor, Object left, Object right) {
-		// fAncestor.setInput(ancestor);
-		// fLeft.setInput(left);
-		// fRight.setInput(right);
+
+		fAncestor.setInput(ancestor);
+		fLeft.setInput(left);
+		fRight.setInput(right);
 
 		// must update selection after the three viewers input has been set
 		// to avoid some NPE/AssertionError (they are calling each other on selectionChanged event to
 		// synchronize their selection)
 
-		IMergeViewerItem leftInitialItem = null;
-		if (left instanceof IStructuralFeatureAccessor) {
-			leftInitialItem = ((IStructuralFeatureAccessor)left).getInitialItem();
-		}
-
-		ISelection leftSelection = createSelectionOrEmpty(leftInitialItem);
-		fLeft.setSelection(leftSelection); // others will synchronize on this one :)
+		// EObject leftInitialItem = null;
+		// if (left instanceof IDiagramNodeAccessor) {
+		// leftInitialItem = ((IDiagramNodeAccessor)left).getEObject(MergeViewerSide.LEFT);
+		// }
+		//
+		// ISelection leftSelection = createSelectionOrEmpty(leftInitialItem);
+		// fLeft.setSelection(leftSelection); // others will synchronize on this one :)
 
 		// getCenterControl().redraw();
 
-		if (ancestor != null) {
-			ancestorTED = EditingDomainUtils.getOrCreateEditingDomain(ancestor);
-		}
-		if (left != null) {
-			leftTED = EditingDomainUtils.getOrCreateEditingDomain(left);
-			annotateSide(DifferenceSource.LEFT);
-		}
-
-		if (right != null) {
-			rightTED = EditingDomainUtils.getOrCreateEditingDomain(right);
-			annotateSide(DifferenceSource.RIGHT);
-		}
+		// if (ancestor != null) {
+		// ancestorTED = EditingDomainUtils.getOrCreateEditingDomain(ancestor);
+		// }
+		// if (left != null) {
+		// leftTED = EditingDomainUtils.getOrCreateEditingDomain(left);
+		// annotateSide(DifferenceSource.LEFT);
+		// }
+		//
+		// if (right != null) {
+		// rightTED = EditingDomainUtils.getOrCreateEditingDomain(right);
+		// annotateSide(DifferenceSource.RIGHT);
+		// }
 
 	}
 
-	/**
-	 * Execute a RecordingCommand to annotate the {@link #getInput() input} of this viewer. Only the given
-	 * <code>side</code> is annotated.
-	 * 
-	 * @param side
-	 *            The side to annotate.
-	 */
-	private void annotateSide(final DifferenceSource side) {
-		TransactionalEditingDomain ted = null;
-		if (side == DifferenceSource.LEFT) {
-			ted = leftTED;
-		} else {
-			ted = rightTED;
-		}
-
-		// annotate models
-		final RecordingCommand command = new RecordingCommand(ted) {
-			@Override
-			protected void doExecute() {
-				if (gmfModelCreator != null) {
-					gmfModelCreator.setInput(getInput());
-					gmfModelCreator.addEAnnotations(side);
-				}
-			}
-		};
-		ted.getCommandStack().execute(command);
-	}
-
-	/**
-	 * Execute a RecordingCommand to annotate the {@link #getInput() input} of this viewer. Only the given
-	 * <code>side</code> is annotated.
-	 * 
-	 * @param side
-	 *            The side to annotate.
-	 */
-	protected void unnannotateSide(final DifferenceSource side) {
-		TransactionalEditingDomain ted = null;
-		if (side == DifferenceSource.LEFT) {
-			ted = leftTED;
-		} else {
-			ted = rightTED;
-		}
-
-		// de-annotate models
-		final RecordingCommand command = new RecordingCommand(ted) {
-			@Override
-			protected void doExecute() {
-				if (gmfModelCreator != null) {
-					gmfModelCreator.setInput(getInput());
-					gmfModelCreator.removeEAnnotations(side);
-				}
-			}
-		};
-		ted.getCommandStack().execute(command);
-	}
+	// /**
+	// * Execute a RecordingCommand to annotate the {@link #getInput() input} of this viewer. Only the given
+	// * <code>side</code> is annotated.
+	// *
+	// * @param side
+	// * The side to annotate.
+	// */
+	// private void annotateSide(final DifferenceSource side) {
+	// TransactionalEditingDomain ted = null;
+	// if (side == DifferenceSource.LEFT) {
+	// ted = leftTED;
+	// } else {
+	// ted = rightTED;
+	// }
+	//
+	// // annotate models
+	// final RecordingCommand command = new RecordingCommand(ted) {
+	// @Override
+	// protected void doExecute() {
+	// if (gmfModelCreator != null) {
+	// gmfModelCreator.setInput(getInput());
+	// gmfModelCreator.addEAnnotations(side);
+	// }
+	// }
+	// };
+	// ted.getCommandStack().execute(command);
+	// }
+	//
+	// /**
+	// * Execute a RecordingCommand to annotate the {@link #getInput() input} of this viewer. Only the given
+	// * <code>side</code> is annotated.
+	// *
+	// * @param side
+	// * The side to annotate.
+	// */
+	// protected void unnannotateSide(final DifferenceSource side) {
+	// TransactionalEditingDomain ted = null;
+	// if (side == DifferenceSource.LEFT) {
+	// ted = leftTED;
+	// } else {
+	// ted = rightTED;
+	// }
+	//
+	// // de-annotate models
+	// final RecordingCommand command = new RecordingCommand(ted) {
+	// @Override
+	// protected void doExecute() {
+	// if (gmfModelCreator != null) {
+	// gmfModelCreator.setInput(getInput());
+	// gmfModelCreator.removeEAnnotations(side);
+	// }
+	// }
+	// };
+	// ted.getCommandStack().execute(command);
+	// }
 
 	private ISelection createSelectionOrEmpty(final Object o) {
 		final ISelection selection;
@@ -293,13 +273,13 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	 */
 	@Override
 	protected void createControls(Composite composite) {
-		fAncestor = createMergeViewer(composite, MergeViewerSide.ANCESTOR);
+		fAncestor = createMergeViewer(composite, MergeViewerSide.ANCESTOR, this);
 		fAncestor.addSelectionChangedListener(this);
 
-		fLeft = createMergeViewer(composite, MergeViewerSide.LEFT);
+		fLeft = createMergeViewer(composite, MergeViewerSide.LEFT, this);
 		fLeft.addSelectionChangedListener(this);
 
-		fRight = createMergeViewer(composite, MergeViewerSide.RIGHT);
+		fRight = createMergeViewer(composite, MergeViewerSide.RIGHT, this);
 		fRight.addSelectionChangedListener(this);
 
 		fColors = new EMFCompareColor(this, null, getCompareConfiguration());
@@ -372,19 +352,19 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 		toolBarManager.appendToGroup("navigation", contributionPreviousDiff);
 
 		// Undo/Redo
-		final UndoAction undoAction = new UndoAction(fEditingDomain);
-		final RedoAction redoAction = new RedoAction(fEditingDomain);
-
-		fEditingDomain.getCommandStack().addCommandStackListener(new CommandStackListener() {
-			public void commandStackChanged(EventObject event) {
-				undoAction.update();
-				redoAction.update();
-				refresh();
-			}
-		});
-
-		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
-		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
+		// final UndoAction undoAction = new UndoAction(fEditingDomain);
+		// final RedoAction redoAction = new RedoAction(fEditingDomain);
+		//
+		// fEditingDomain.getCommandStack().addCommandStackListener(new CommandStackListener() {
+		// public void commandStackChanged(EventObject event) {
+		// undoAction.update();
+		// redoAction.update();
+		// refresh();
+		// }
+		// });
+		//
+		// getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
+		// getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
 	}
 
 	/**
@@ -459,7 +439,8 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 		fRight.getControl().setBounds(x + width1 + centerWidth, y, width2, height);
 	}
 
-	protected abstract DMergeViewer createMergeViewer(Composite parent, MergeViewerSide side);
+	protected abstract DMergeViewer createMergeViewer(Composite parent, MergeViewerSide side,
+			DiagramCompareContentMergeViewer master);
 
 	@Override
 	protected final int getCenterWidth() {
@@ -510,21 +491,21 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	/**
 	 * @return the fAncestor
 	 */
-	protected DMergeViewer getAncestorMergeViewer() {
+	public DMergeViewer getAncestorMergeViewer() {
 		return fAncestor;
 	}
 
 	/**
 	 * @return the fLeft
 	 */
-	protected DMergeViewer getLeftMergeViewer() {
+	public DMergeViewer getLeftMergeViewer() {
 		return fLeft;
 	}
 
 	/**
 	 * @return the fRight
 	 */
-	protected DMergeViewer getRightMergeViewer() {
+	public DMergeViewer getRightMergeViewer() {
 		return fRight;
 	}
 
@@ -587,8 +568,13 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 			final Iterator<?> selectedElements = ((IStructuredSelection)selection).iterator();
 			while (diff == null && selectedElements.hasNext()) {
 				final Object element = selectedElements.next();
-				if (element instanceof IMergeViewerItem) {
-					diff = ((IMergeViewerItem)element).getDiff();
+				if (element instanceof GraphicalEditPart
+						&& ((GraphicalEditPart)element).getModel() instanceof EObject) {
+					final List<Diff> diffs = getComparison().getDifferences(
+							(EObject)((GraphicalEditPart)element).getModel());
+					if (!diffs.isEmpty()) {
+						diff = diffs.get(0);
+					}
 				}
 			}
 		}
@@ -613,7 +599,7 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	 * 
 	 * @author <a href="mailto:stephane.bouchet@obeo.fr">Stephane Bouchet</a>
 	 */
-	protected class GMFModelContentMergeContentProvider extends TreeMergeViewerContentProvider {
+	protected class GMFModelContentMergeContentProvider extends TreeContentMergeViewerContentProvider {
 
 		public GMFModelContentMergeContentProvider(CompareConfiguration cc, Comparison comparison) {
 			super(cc, comparison);
@@ -621,17 +607,27 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 
 		@Override
 		public void saveLeftContent(Object input, byte[] bytes) {
-			unnannotateSide(DifferenceSource.LEFT);
-			unnannotateSide(DifferenceSource.RIGHT);
+			// unnannotateSide(DifferenceSource.LEFT);
+			// unnannotateSide(DifferenceSource.RIGHT);
 			super.saveLeftContent(input, bytes);
 		}
 
 		@Override
 		public void saveRightContent(Object input, byte[] bytes) {
-			unnannotateSide(DifferenceSource.LEFT);
-			unnannotateSide(DifferenceSource.RIGHT);
+			// unnannotateSide(DifferenceSource.LEFT);
+			// unnannotateSide(DifferenceSource.RIGHT);
 			super.saveRightContent(input, bytes);
 		}
 
+	}
+
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+		if (adapter == CompareHandlerService.class) {
+			return getHandlerService();
+		}
+		if (adapter == CompareHandlerService[].class) {
+			return new CompareHandlerService[] {getHandlerService(), };
+		}
+		return null;
 	}
 }

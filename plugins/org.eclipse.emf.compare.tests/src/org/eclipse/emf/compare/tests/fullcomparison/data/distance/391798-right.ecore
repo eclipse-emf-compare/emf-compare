@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="root">
+  <eSubpackages name="lib" nsURI="">
+    <eClassifiers xsi:type="ecore:EClass" name="A"/>
+    <eClassifiers xsi:type="ecore:EClass" name="B"/>
+    <eClassifiers xsi:type="ecore:EClass" name="C"/>
+    <eClassifiers xsi:type="ecore:EClass" name="D"/>
+    <eClassifiers xsi:type="ecore:EClass" name="E"/>
+    <eClassifiers xsi:type="ecore:EClass" name="F"/>
+    <eClassifiers xsi:type="ecore:EClass" name="G"/>
+    <eClassifiers xsi:type="ecore:EClass" name="H"/>
+    <eClassifiers xsi:type="ecore:EClass" name="I"/>
+    <eClassifiers xsi:type="ecore:EClass" name="J"/>
+    <eClassifiers xsi:type="ecore:EClass" name="K"/>
+    <eClassifiers xsi:type="ecore:EClass" name="L"/>
+    <eClassifiers xsi:type="ecore:EClass" name="M"/>
+    <eClassifiers xsi:type="ecore:EClass" name="N"/>
+  </eSubpackages>
+  <eSubpackages name="application">
+    <eClassifiers xsi:type="ecore:EClass" name="TheReferencer" eSuperTypes="#//lib/G #//lib/F #//lib/I #//lib/H #//lib/M #//lib/E #//lib/N #//lib/C #//lib/L #//lib/B #//lib/K #//lib/A #//lib/J #//lib/D"/>
+  </eSubpackages>
+</ecore:EPackage>

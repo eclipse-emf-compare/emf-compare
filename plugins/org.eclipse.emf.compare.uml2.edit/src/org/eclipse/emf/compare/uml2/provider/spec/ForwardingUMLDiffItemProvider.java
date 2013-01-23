@@ -10,18 +10,17 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.provider.spec;
 
-import com.google.common.base.Preconditions;
-
 import java.util.Collection;
 
-import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
+import org.eclipse.emf.compare.provider.ForwardingItemProvider;
+import org.eclipse.emf.compare.provider.spec.Strings;
 import org.eclipse.emf.compare.uml2.UMLDiff;
-import org.eclipse.emf.compare.uml2.internal.utils.ForwardingItemProvider;
-import org.eclipse.emf.compare.uml2.internal.utils.Strings;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 
 /**
@@ -72,13 +71,13 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 	public String getText(Object object) {
 		final UMLDiff umlDiff = (UMLDiff)object;
 
-		final String valueText = getValueText(umlDiff);
-		final String referenceText = getReferenceText(umlDiff);
-
 		String remotely = "";
 		if (umlDiff.getSource() == DifferenceSource.RIGHT) {
 			remotely = "remotely ";
 		}
+
+		final String valueText = getValueText(umlDiff);
+		final String referenceText = getReferenceText(umlDiff);
 
 		String ret = "";
 		switch (umlDiff.getKind()) {
@@ -103,6 +102,26 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 	}
 
 	/**
+	 * Tries and find a non-<code>null</code> side for the given match. Still returns <code>null</code> if all
+	 * three sides are <code>null</code> though.
+	 * 
+	 * @param match
+	 *            The match for which we need a non-<code>null</code> side.
+	 * @return The first side (in order : left, right or origin) that was not <code>null</code>.
+	 */
+	private EObject findNonNullSide(Match match) {
+		final EObject side;
+		if (match.getLeft() != null) {
+			side = match.getLeft();
+		} else if (match.getRight() != null) {
+			side = match.getRight();
+		} else {
+			side = match.getOrigin();
+		}
+		return side;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.provider.ReferenceChangeItemProvider#getImage(java.lang.Object)
@@ -110,12 +129,12 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 	@Override
 	public Object getImage(Object object) {
 		final UMLDiff umlDiff = (UMLDiff)object;
-		Object image = getImage(getRootAdapterFactory(), umlDiff.getDiscriminant());
+		Object image = AdapterFactoryUtil.getImage(getRootAdapterFactory(), umlDiff.getDiscriminant());
 		return image;
 	}
 
 	private String getValueText(final UMLDiff umlDiff) {
-		String value = getText(getRootAdapterFactory(), umlDiff.getDiscriminant());
+		String value = AdapterFactoryUtil.getText(getRootAdapterFactory(), umlDiff.getDiscriminant());
 		if (value == null) {
 			value = "<null>";
 		} else {
@@ -143,50 +162,19 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider {
 	}
 
 	/**
-	 * Returns the text of the given <code>object</code> by adapting it to {@link IItemLabelProvider} and
-	 * asking for its {@link IItemLabelProvider#getText(Object) text}. Returns null if <code>object</code> is
-	 * null.
+	 * {@inheritDoc}
 	 * 
-	 * @param adapterFactory
-	 *            the adapter factory to adapt from
-	 * @param object
-	 *            the object from which we want a text
-	 * @return the text, or null if object is null.
-	 * @throws NullPointerException
-	 *             if <code>adapterFactory</code> is null.
+	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getForeground(java.lang.Object)
 	 */
-	private static String getText(AdapterFactory adapterFactory, Object object) {
-		Preconditions.checkNotNull(adapterFactory);
-		if (object != null) {
-			Object adapter = adapterFactory.adapt(object, IItemLabelProvider.class);
-			if (adapter instanceof IItemLabelProvider) {
-				return ((IItemLabelProvider)adapter).getText(object);
-			}
+	@Override
+	public Object getForeground(Object object) {
+		UMLDiff referenceChange = (UMLDiff)object;
+		switch (referenceChange.getState()) {
+			case MERGED:
+			case DISCARDED:
+				return URI.createURI("color://rgb/156/156/156"); //$NON-NLS-1$
+			default:
+				return super.getForeground(object);
 		}
-		return null;
-	}
-
-	/**
-	 * Returns the image of the given <code>object</code> by adapting it to {@link IItemLabelProvider} and
-	 * asking for its {@link IItemLabelProvider#getImage(Object) text}. Returns null if <code>object</code> is
-	 * null.
-	 * 
-	 * @param adapterFactory
-	 *            the adapter factory to adapt from
-	 * @param object
-	 *            the object from which we want a image
-	 * @return the image, or null if object is null.
-	 * @throws NullPointerException
-	 *             if <code>adapterFactory</code> is null.
-	 */
-	private static Object getImage(AdapterFactory adapterFactory, Object object) {
-		Preconditions.checkNotNull(adapterFactory);
-		if (object != null) {
-			Object adapter = adapterFactory.adapt(object, IItemLabelProvider.class);
-			if (adapter instanceof IItemLabelProvider) {
-				return ((IItemLabelProvider)adapter).getImage(object);
-			}
-		}
-		return null;
 	}
 }

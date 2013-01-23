@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.mergeviewer;
 
+import org.eclipse.jface.viewers.IBaseLabelProvider;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -59,12 +62,49 @@ public abstract class StructuredMergeViewer extends MergeViewer {
 	protected abstract Control createControl(Composite parent);
 
 	/**
+	 * Returns the wrapped {@link StructuredViewer}.
+	 * 
+	 * @return
+	 */
+	protected abstract StructuredViewer getStructuredViewer();
+
+	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer#getStructuredViewer()
+	 * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
 	 */
 	@Override
-	protected abstract StructuredViewer getStructuredViewer();
+	public ISelection getSelection() {
+		return getStructuredViewer().getSelection();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.Viewer#setSelection(org.eclipse.jface.viewers.ISelection, boolean)
+	 */
+	@Override
+	public void setSelection(ISelection selection, boolean reveal) {
+		getStructuredViewer().setSelection(selection, reveal);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setContentProvider(IContentProvider contentProvider) {
+		super.setContentProvider(contentProvider);
+		getStructuredViewer().setContentProvider(contentProvider);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setLabelProvider(IBaseLabelProvider labelProvider) {
+		super.setLabelProvider(labelProvider);
+		getStructuredViewer().setLabelProvider(labelProvider);
+	}
 
 	private class ForwardingViewerSelectionListener implements ISelectionChangedListener {
 		/**

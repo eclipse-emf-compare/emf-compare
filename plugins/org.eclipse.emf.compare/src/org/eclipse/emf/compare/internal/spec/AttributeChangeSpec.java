@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
 
+import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEGet;
+import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEIsSet;
+
 import com.google.common.base.Objects;
 
 import java.util.List;
@@ -71,11 +74,7 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 					moveElement(false);
 					break;
 				case CHANGE:
-					if (isUnset()) {
-						removeFromTarget(false);
-					} else {
-						addInTarget(false);
-					}
+					changeValue(false);
 					break;
 				default:
 					break;
@@ -97,14 +96,7 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 					moveElement(false);
 					break;
 				case CHANGE:
-					if (isUnset()) {
-						// Value has been unset in the right, and we are merging towards right.
-						// We need to re-add this element
-						addInTarget(false);
-					} else {
-						// We'll actually need to "reset" this reference to its original value
-						resetInTarget(false);
-					}
+					changeValue(false);
 					break;
 				default:
 					break;
@@ -149,14 +141,7 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 					moveElement(true);
 					break;
 				case CHANGE:
-					if (isUnset()) {
-						// Value has been unset in the left, and we're copying towards the left.
-						// We need to re-create the element.
-						addInTarget(true);
-					} else {
-						// We'll actually need to "reset" this reference to its original value
-						resetInTarget(true);
-					}
+					changeValue(true);
 					break;
 				default:
 					break;
@@ -176,11 +161,7 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 					moveElement(true);
 					break;
 				case CHANGE:
-					if (isUnset()) {
-						removeFromTarget(true);
-					} else {
-						addInTarget(true);
-					}
+					changeValue(true);
 					break;
 				default:
 					break;
@@ -197,27 +178,6 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 	public void discard() {
 		setState(DifferenceState.DISCARDED);
 		// Should we also discard equivalent diffs? And diffs that require this one?
-	}
-
-	/**
-	 * Checks whether this Diff represents the unsetting of an attribute value. Only meant for mono-valued
-	 * attributes.
-	 * 
-	 * @return {@code true} if this Diff represents the unsetting of an attribute.
-	 */
-	protected boolean isUnset() {
-		final EObject expectedContainer;
-		if (getSource() == DifferenceSource.LEFT) {
-			expectedContainer = getMatch().getLeft();
-		} else {
-			expectedContainer = getMatch().getRight();
-		}
-
-		final Object currentValue = expectedContainer.eGet(getAttribute());
-		// Though not the "default value", we consider that an empty string is an unset attribute.
-		final Object defaultValue = getAttribute().getDefaultValue();
-		return currentValue == null || currentValue.equals(defaultValue)
-				|| (defaultValue == null && "".equals(currentValue)); //$NON-NLS-1$
 	}
 
 	/**
@@ -453,8 +413,8 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 			originContainer = getMatch().getLeft();
 		}
 
-		if (originContainer == null || !targetContainer.eIsSet(getAttribute())
-				|| !originContainer.eIsSet(getAttribute())) {
+		if (originContainer == null || !safeEIsSet(targetContainer, getAttribute())
+				|| !safeEIsSet(originContainer, getAttribute())) {
 			targetContainer.eUnset(getAttribute());
 		} else {
 			final Object expectedValue = originContainer.eGet(getAttribute());
@@ -462,6 +422,51 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 		}
 	}
 
+	/**
+	 * This will be called by the merge operations in order to change single-valued attributes.
+	 * 
+	 * @param rightToLeft
+	 *            Direction of the merge.
+	 */
+	protected void changeValue(boolean rightToLeft) {
+		final EObject expectedContainer;
+		if (rightToLeft) {
+			expectedContainer = getMatch().getLeft();
+		} else {
+			expectedContainer = getMatch().getRight();
+		}
+
+		final EObject originContainer;
+		final boolean resetToOrigin = getSource() == DifferenceSource.LEFT && rightToLeft
+				|| getSource() == DifferenceSource.RIGHT && !rightToLeft;
+		if (resetToOrigin && getMatch().getComparison().isThreeWay()) {
+			originContainer = getMatch().getOrigin();
+		} else if (rightToLeft) {
+			originContainer = getMatch().getRight();
+		} else {
+			originContainer = getMatch().getLeft();
+		}
+
+		final Object targetValue = safeEGet(originContainer, getAttribute());
+
+		// Though not the "default value", we consider that an empty string is an unset attribute.
+		final Object defaultValue = getAttribute().getDefaultValue();
+		boolean isUnset = targetValue == null || targetValue.equals(defaultValue)
+				|| (defaultValue == null && "".equals(targetValue)); //$NON-NLS-1$
+
+		if (isUnset) {
+			expectedContainer.eUnset(attribute);
+		} else {
+			expectedContainer.eSet(attribute, targetValue);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.impl.AttributeChangeImpl#toString()
+	 */
+	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
 		EDataType eAttributeType = getAttribute().getEAttributeType();
@@ -472,9 +477,9 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 			valueString = getValue().toString();
 		}
 
-		return Objects.toStringHelper(this).add("attribute", //$NON-NLS-1$
-				getAttribute().getEContainingClass().getName() + "." + getAttribute().getName()).add("value", //$NON-NLS-1$ //$NON-NLS-2$
-				valueString)
-				.add("kind", getKind()).add("source", getSource()).add("state", getState()).toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return Objects.toStringHelper(this).add("attribute",
+				getAttribute().getEContainingClass().getName() + "." + getAttribute().getName()).add("value",
+				valueString).add("kind", getKind()).add("source", getSource()).add("state", getState())
+				.toString();
 	}
 }

@@ -22,7 +22,7 @@ import org.eclipse.papyrus.infra.core.sashwindows.di.DiPackage;
 /**
  * Content XML for Papyrus diagrams.
  * 
- * @author Mickael Barbero <a href="mailto:mickael.barbero@obeo.fr">mickael.barbero@obeo.fr</a>
+ * @author Mikael Barbero <a href="mailto:mikael.barbero@obeo.fr">Mikael.barbero@obeo.fr</a>
  */
 @SuppressWarnings("restriction")
 public class DiContentDescriptor extends XMLContentDescriber {

@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;
 
-import com.google.common.collect.ImmutableMap;
+import static org.eclipse.emf.compare.ide.utils.ResourceUtil.saveAllResources;
 
-import java.io.IOException;
+import com.google.common.collect.ImmutableMap;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.ITypedElement;
@@ -21,7 +21,6 @@ import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -144,7 +143,8 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 				if (leftEObject != null) {
 					Resource eResource = leftEObject.eResource();
 					ResourceSet resourceSet = eResource.getResourceSet();
-					saveAllResources(resourceSet);
+					saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
 				}
 			}
 		}
@@ -198,21 +198,10 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 				if (rightEObject != null) {
 					Resource eResource = rightEObject.eResource();
 					ResourceSet resourceSet = eResource.getResourceSet();
-					saveAllResources(resourceSet);
+					saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
 				}
 			}
 		}
 	}
-
-	private void saveAllResources(ResourceSet resourceSet) {
-		EList<Resource> resources = resourceSet.getResources();
-		for (Resource resource : resources) {
-			try {
-				resource.save(ImmutableMap.of());
-			} catch (IOException e) {
-				EMFCompareIDEUIPlugin.getDefault().log(e);
-			}
-		}
-	}
-
 }

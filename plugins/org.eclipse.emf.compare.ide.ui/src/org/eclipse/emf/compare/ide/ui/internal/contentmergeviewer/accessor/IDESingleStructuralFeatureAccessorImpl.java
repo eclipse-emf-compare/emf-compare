@@ -17,7 +17,7 @@ import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.SingleStructuralFeatureAccessorImpl;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.provider.EcoreEditPlugin;

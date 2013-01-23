@@ -62,6 +62,7 @@ public class UMLAssociationChangeFactory extends AbstractDiffExtensionFactory {
 			result.add(discriminant);
 			result.addAll(((Association)discriminant).getEndTypes());
 			for (Property property : ((Association)discriminant).getMemberEnds()) {
+				result.add(property);
 				if (property.getLowerValue() != null) {
 					result.add(property.getLowerValue());
 				}

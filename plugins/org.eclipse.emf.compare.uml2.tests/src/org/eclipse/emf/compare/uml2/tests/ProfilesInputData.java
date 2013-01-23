@@ -8,36 +8,25 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Assert;
-
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
+import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
+import org.eclipse.uml2.uml.UMLPlugin;
 import org.eclipse.uml2.uml.resource.UMLResource;
+import org.eclipse.uml2.uml.resources.ResourcesPlugin;
 import org.eclipse.uml2.uml.resources.util.UMLResourcesUtil;
 
+@SuppressWarnings("nls")
 public class ProfilesInputData extends AbstractInputData {
-
-	private final static String UML_RESOURCES_JAR_LOCATION_ENV = "UML_RESOURCES_JAR_LOCATION";
-
-	private final static String TEST_PROFILE_JAR_LOCATION_ENV = "TEST_PROFILE_JAR_LOCATION";
-
-	private String umlResourcesJarLocation;
-
-	private String testProfileJarLocation;
 
 	/** Store the set of the resource sets of the input data. */
 	private Set<ResourceSet> sets = new LinkedHashSet<ResourceSet>();
-
-	public ProfilesInputData() {
-		umlResourcesJarLocation = System.getenv(UML_RESOURCES_JAR_LOCATION_ENV);
-		testProfileJarLocation = System.getenv(TEST_PROFILE_JAR_LOCATION_ENV);
-	}
 
 	public Set<ResourceSet> getSets() {
 		return sets;
@@ -57,23 +46,38 @@ public class ProfilesInputData extends AbstractInputData {
 			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore",
 					new EcoreResourceFactoryImpl());
 			resourceSet.getPackageRegistry().put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
-
-			Assert.assertTrue("Environment variables (jar:file:/D:/xxx.jar): "
-					+ UML_RESOURCES_JAR_LOCATION_ENV + " and " + TEST_PROFILE_JAR_LOCATION_ENV
-					+ " have to be defined.", umlResourcesJarLocation != null
-					&& testProfileJarLocation != null);
+			resourceSet.getPackageRegistry().put(UML2CompareTestProfilePackage.eNS_URI,
+					UML2CompareTestProfilePackage.eINSTANCE);
 
 			UMLResourcesUtil.init(resourceSet);
 
-			final Map uriMap = resourceSet.getURIConverter().getURIMap();
-			uriMap.put(URI.createURI(UMLResource.LIBRARIES_PATHMAP), URI.createURI(umlResourcesJarLocation
+			Map<String, URI> ePackageNsURIToProfileLocationMap = UMLPlugin
+					.getEPackageNsURIToProfileLocationMap();
+
+			ePackageNsURIToProfileLocationMap
+					.put(UML2CompareTestProfilePackage.eNS_URI,
+							URI.createURI("pathmap://UML_COMPARE_TESTS_PROFILE/uml2.compare.testprofile.profile.uml#_hZFTgIwkEeC_FYHMbTTxXw")); //$NON-NLS-1$
+
+			final URL UMLJarredFileLocation = ResourcesPlugin.class.getResource("ResourcesPlugin.class");
+			String UMLJarPath = UMLJarredFileLocation.toString();
+			UMLJarPath = UMLJarPath.substring(0, UMLJarPath.indexOf('!'));
+
+			final String thisNamespace = "org.eclipse.emf.compare.uml2.tests";
+			final URL thisClassLocation = this.getClass().getResource(
+					this.getClass().getSimpleName() + ".class");
+			String staticProfilePath = thisClassLocation.toString();
+			staticProfilePath = staticProfilePath.substring(0, staticProfilePath.indexOf(thisNamespace)
+					+ thisNamespace.length());
+			staticProfilePath += "/model/";
+
+			final Map<URI, URI> uriMap = resourceSet.getURIConverter().getURIMap();
+			uriMap.put(URI.createURI(UMLResource.LIBRARIES_PATHMAP), URI.createURI(UMLJarPath
 					+ "!/libraries/"));
-			uriMap.put(URI.createURI(UMLResource.METAMODELS_PATHMAP), URI.createURI(umlResourcesJarLocation
+			uriMap.put(URI.createURI(UMLResource.METAMODELS_PATHMAP), URI.createURI(UMLJarPath
 					+ "!/metamodels/"));
-			uriMap.put(URI.createURI(UMLResource.PROFILES_PATHMAP), URI.createURI(umlResourcesJarLocation
-					+ "!/profiles/"));
+			uriMap.put(URI.createURI(UMLResource.PROFILES_PATHMAP), URI.createURI(UMLJarPath + "!/profiles/"));
 			uriMap.put(URI.createURI("pathmap://UML_COMPARE_TESTS_PROFILE/"), URI
-					.createURI(testProfileJarLocation + "!/profile/"));
+					.createURI(staticProfilePath));
 
 		}
 
@@ -84,5 +88,4 @@ public class ProfilesInputData extends AbstractInputData {
 
 		return resource;
 	}
-
 }

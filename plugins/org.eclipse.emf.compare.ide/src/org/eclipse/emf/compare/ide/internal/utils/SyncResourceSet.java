@@ -25,17 +25,22 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.internal.utils.PriorityExecutor.Priority;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -88,6 +93,9 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	/** Keeps track of the URIs of all resources that have been loaded by this resource set. */
 	private final Set<URI> loadedURIs = Sets.newLinkedHashSet();
 
+	/** Associates URIs with their resources. */
+	private final Map<URI, Resource> uriCache = Maps.newConcurrentMap();
+
 	/**
 	 * This thread pool will be used to launch the loading and unloading of resources in separate threads.
 	 * <p>
@@ -136,40 +144,47 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 */
 	@Override
 	public Resource getResource(URI uri, boolean loadOnDemand) {
-		// Never load resources from here
-		if (!loadedURIs.contains(uri)) {
-			synchronized(demandedURIs) {
-				demandedURIs.add(uri);
+		// Never load resources from here... But we can't simply return "null" if the resource has already
+		// been loaded once,
+		// since the XMLHandler would recursively call this till the stack overflow otherwise.
+		Resource demanded = uriCache.get(uri);
+		if (!loadedURIs.contains(uri) && demanded == null) {
+			final EPackage ePackage = getPackageRegistry().getEPackage(uri.toString());
+			if (ePackage != null) {
+				demanded = ePackage.eResource();
+				uriCache.put(uri, demanded);
+			} else {
+				synchronized(demandedURIs) {
+					demandedURIs.add(uri);
+				}
 			}
 		}
-		return null;
+		return demanded;
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * <p>
-	 * Overridden for synchronization.
-	 * </p>
 	 * 
 	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#createResource(org.eclipse.emf.common.util.URI)
 	 */
 	@Override
 	public synchronized Resource createResource(URI uri) {
-		return super.createResource(uri);
+		final Resource created = super.createResource(uri);
+		uriCache.put(uri, created);
+		return created;
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * <p>
-	 * Overridden for synchronization.
-	 * </p>
 	 * 
 	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#createResource(org.eclipse.emf.common.util.URI,
 	 *      java.lang.String)
 	 */
 	@Override
 	public synchronized Resource createResource(URI uri, String contentType) {
-		return super.createResource(uri, contentType);
+		final Resource created = super.createResource(uri, contentType);
+		uriCache.put(uri, created);
+		return created;
 	}
 
 	/**
@@ -196,7 +211,16 @@ public final class SyncResourceSet extends ResourceSetImpl {
 		 * doing any actual work. That causes some minimal overhead but, more importantly, it can generate
 		 * concurrent modification exceptions.
 		 */
-		Resource result = delegatedGetResource(uri, true);
+		final URIConverter theURIConverter = getURIConverter();
+		final URI normalizedURI = theURIConverter.normalize(uri);
+
+		Resource result = uriCache.get(normalizedURI);
+		if (result == null) {
+			result = delegatedGetResource(uri, true);
+			if (result != null) {
+				uriCache.put(uri, result);
+			}
+		}
 
 		if (result == null) {
 			result = demandCreateResource(uri);
@@ -292,7 +316,9 @@ public final class SyncResourceSet extends ResourceSetImpl {
 				} catch (InterruptedException e) {
 					// Ignore
 				} catch (ExecutionException e) {
-					// FIXME log
+					final IStatus status = new Status(IStatus.ERROR, EMFCompareIDEPlugin.PLUGIN_ID, e
+							.getMessage(), e);
+					EMFCompareIDEPlugin.getDefault().getLog().log(status);
 				}
 			}
 			synchronized(demandedURIs) {
@@ -369,6 +395,7 @@ public final class SyncResourceSet extends ResourceSetImpl {
 		// only unload those resources that are located in the workspace
 		final URI uri = resource.getURI();
 		if (uri.isPlatformResource() || uri.isRelative() || uri.isFile()) {
+			uriCache.remove(uri);
 			getResources().remove(resource);
 
 			// Only "unload()" when needed... The one we know of is UML

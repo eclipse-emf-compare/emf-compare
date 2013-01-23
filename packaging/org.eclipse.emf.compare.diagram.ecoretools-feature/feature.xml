@@ -22,10 +22,18 @@
       <import feature="org.eclipse.emf.compare" version="2.1.0.qualifier"/>
       <import feature="org.eclipse.emf.compare.ide.ui" version="2.1.0.qualifier"/>
       <import feature="org.eclipse.emf.ecoretools" version="1.0.0"/>
+      <import feature="org.eclipse.emf.compare.diagram.gmf" version="2.1.0.qualifier"/>
    </requires>
 
    <plugin
-         id="org.eclipse.emf.compare.diagram.ecoretools"
+         id="org.eclipse.emf.compare.diagram.ide.ecoretools"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.compare.diagram.ide.ui.ecoretools"
          download-size="0"
          install-size="0"
          version="0.0.0"
