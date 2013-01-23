@@ -16,11 +16,11 @@ import java.util.ResourceBundle;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.TreeMergeViewer;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IEObjectAccessor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
@@ -145,7 +145,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 		List<Diff> differences = getComparison().getDifferences((EObject)firstElement);
 
 		final Command command = getEditingDomain().createCopyAllNonConflictingCommand(differences,
-				leftToRight);
+				leftToRight, EMFCompareIDEPlugin.getDefault().getMergerRegistry());
 		getEditingDomain().getCommandStack().execute(command);
 
 		refresh();

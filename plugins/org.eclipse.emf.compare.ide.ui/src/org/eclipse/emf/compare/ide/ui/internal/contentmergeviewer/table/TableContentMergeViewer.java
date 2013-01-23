@@ -16,6 +16,7 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
@@ -111,7 +112,8 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	protected void copyDiff(boolean leftToRight) {
 		final Diff diffToCopy = getDiffToCopy(getRightMergeViewer());
 		if (diffToCopy != null) {
-			Command copyCommand = getEditingDomain().createCopyCommand(diffToCopy, leftToRight);
+			Command copyCommand = getEditingDomain().createCopyCommand(diffToCopy, leftToRight,
+					EMFCompareIDEPlugin.getDefault().getMergerRegistry());
 			getEditingDomain().getCommandStack().execute(copyCommand);
 
 			refresh();

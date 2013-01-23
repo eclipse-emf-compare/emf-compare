@@ -28,6 +28,7 @@ import org.eclipse.emf.compare.command.impl.CopyAllNonConflictingCommand;
 import org.eclipse.emf.compare.command.impl.CopyCommand;
 import org.eclipse.emf.compare.command.impl.DualCompareCommandStack;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.extension.merge.IMerger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -145,28 +146,33 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.domain.ICompareEditingDomain#createCopyCommand(org.eclipse.emf.compare.Diff,
-	 *      boolean)
+	 *      boolean, org.eclipse.emf.compare.extension.merge.IMerger.Registry)
+	 * @since 3.0
 	 */
-	public Command createCopyCommand(Diff diff, boolean leftToRight) {
+	public Command createCopyCommand(Diff diff, boolean leftToRight, IMerger.Registry mergerRegistry) {
 		ImmutableSet<Notifier> notifiers = ImmutableSet.<Notifier> builder().add(
 				diff.getMatch().getComparison()).addAll(fNotifiers).build();
-		return new CopyCommand(fChangeRecorder, notifiers, Collections.singletonList(diff), leftToRight);
+		return new CopyCommand(fChangeRecorder, notifiers, Collections.singletonList(diff), leftToRight,
+				mergerRegistry);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.domain.ICompareEditingDomain#createCopyAllNonConflictingCommand(java.util.List,
-	 *      boolean)
+	 *      boolean, org.eclipse.emf.compare.extension.merge.IMerger.Registry)
+	 * @since 3.0
 	 */
-	public Command createCopyAllNonConflictingCommand(List<? extends Diff> differences, boolean leftToRight) {
+	public Command createCopyAllNonConflictingCommand(List<? extends Diff> differences, boolean leftToRight,
+			IMerger.Registry mergerRegistry) {
 		ImmutableSet.Builder<Notifier> notifiersBuilder = ImmutableSet.builder();
 		for (Diff diff : differences) {
 			notifiersBuilder.add(diff.getMatch().getComparison());
 		}
 		ImmutableSet<Notifier> notifiers = notifiersBuilder.addAll(fNotifiers).build();
 
-		return new CopyAllNonConflictingCommand(fChangeRecorder, notifiers, differences, leftToRight);
+		return new CopyAllNonConflictingCommand(fChangeRecorder, notifiers, differences, leftToRight,
+				mergerRegistry);
 	}
 
 	/**

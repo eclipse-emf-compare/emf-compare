@@ -10,20 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.command.impl;
 
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceState;
-import org.eclipse.emf.compare.command.ICompareCopyCommand;
+import org.eclipse.emf.compare.extension.merge.IMerger;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
-import org.eclipse.emf.edit.command.ChangeCommand;
 
 /**
  * This command can be used to copy a number of diffs (or a single one) in a given direction.
@@ -34,12 +27,7 @@ import org.eclipse.emf.edit.command.ChangeCommand;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class CopyCommand extends ChangeCommand implements ICompareCopyCommand {
-	/** The list of differences we are to merge. */
-	private final List<Diff> differences;
-
-	/** Direction of the merge operation. */
-	private final boolean leftToRight;
+public class CopyCommand extends AbstractCopyCommand {
 
 	/**
 	 * Constructs an instance of this command given the list of differences that it needs to merge.
@@ -52,41 +40,13 @@ public class CopyCommand extends ChangeCommand implements ICompareCopyCommand {
 	 *            The list of differences that this command should merge.
 	 * @param leftToRight
 	 *            The direction in which {@code differences} should be merged.
+	 * @param mergerRegistry
+	 *            The registry of mergers.
+	 * @since 3.0
 	 */
 	public CopyCommand(ChangeRecorder changeRecorder, Collection<Notifier> notifiers, List<Diff> differences,
-			boolean leftToRight) {
-		super(changeRecorder, notifiers);
-		this.differences = ImmutableList.copyOf(differences);
-		this.leftToRight = leftToRight;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.command.ICompareCopyCommand#isLeftToRight()
-	 */
-	public boolean isLeftToRight() {
-		return leftToRight;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.common.command.AbstractCommand#getAffectedObjects()
-	 */
-	@Override
-	public Collection<?> getAffectedObjects() {
-		return differences;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.common.command.AbstractCommand#canExecute()
-	 */
-	@Override
-	public boolean canExecute() {
-		return super.canExecute() && Iterables.any(differences, hasState(DifferenceState.UNRESOLVED));
+			boolean leftToRight, IMerger.Registry mergerRegistry) {
+		super(changeRecorder, notifiers, differences, leftToRight, mergerRegistry);
 	}
 
 	/**
@@ -96,14 +56,8 @@ public class CopyCommand extends ChangeCommand implements ICompareCopyCommand {
 	 */
 	@Override
 	protected void doExecute() {
-		if (leftToRight) {
-			for (Diff diff : differences) {
-				diff.copyLeftToRight();
-			}
-		} else {
-			for (Diff diff : differences) {
-				diff.copyRightToLeft();
-			}
+		for (Diff diff : differences) {
+			copy(diff);
 		}
 	}
 }

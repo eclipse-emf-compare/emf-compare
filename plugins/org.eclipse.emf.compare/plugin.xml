@@ -13,12 +13,20 @@
 -->
 
 <plugin>
+   <extension-point id="mergerExtension" name="Merger Extension" schema="schema/mergerExtension.exsd"/>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://www.eclipse.org/emf/compare"
             class="org.eclipse.emf.compare.ComparePackage"
             genModel="model/compare.genmodel"/>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.mergerExtension">
+      <merger
+            class="org.eclipse.emf.compare.extension.merge.DefaultMerger"
+            ranking="0">
+      </merger>
    </extension>
 
 </plugin>

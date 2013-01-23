@@ -48,6 +48,7 @@ import org.eclipse.emf.compare.diagram.ide.ui.decoration.DeleteGhostImageFigure;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramDiffAccessor;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.DiagramCompareContentMergeViewer;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.DiffNode;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
@@ -185,7 +186,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		 */
 		if (getInput() instanceof DiffNode) {
 			final Command command = getEditingDomain().createCopyCommand(((DiffNode)getInput()).getTarget(),
-					leftToRight);
+					leftToRight, EMFCompareIDEPlugin.getDefault().getMergerRegistry());
 			getEditingDomain().getCommandStack().execute(command);
 
 			if (leftToRight) {
@@ -211,7 +212,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 				List<Diff> differences = getComparison().getDifferences((EObject)elt);
 
 				final Command command = getEditingDomain().createCopyAllNonConflictingCommand(differences,
-						leftToRight);
+						leftToRight, EMFCompareIDEPlugin.getDefault().getMergerRegistry());
 				getEditingDomain().getCommandStack().execute(command);
 
 				if (leftToRight) {

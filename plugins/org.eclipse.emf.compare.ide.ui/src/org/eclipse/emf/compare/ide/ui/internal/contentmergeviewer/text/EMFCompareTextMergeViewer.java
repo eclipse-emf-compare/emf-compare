@@ -33,6 +33,7 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.AttributeChangeNode;
@@ -87,7 +88,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 			final Comparison comparison = attributeChange.getMatch().getComparison();
 
 			final Command copyCommand = fEditingDomain.createCopyAllNonConflictingCommand(comparison
-					.getDifferences(), leftToRight);
+					.getDifferences(), leftToRight, EMFCompareIDEPlugin.getDefault().getMergerRegistry());
 			fEditingDomain.getCommandStack().execute(copyCommand);
 
 			refresh();
@@ -99,7 +100,8 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 		if (input instanceof AttributeChangeNode) {
 			final AttributeChange attributeChange = ((AttributeChangeNode)input).getTarget();
 
-			final Command copyCommand = fEditingDomain.createCopyCommand(attributeChange, leftToRight);
+			final Command copyCommand = fEditingDomain.createCopyCommand(attributeChange, leftToRight,
+					EMFCompareIDEPlugin.getDefault().getMergerRegistry());
 			fEditingDomain.getCommandStack().execute(copyCommand);
 
 			refresh();
