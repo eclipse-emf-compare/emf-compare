@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.diagram.diff.DiagramDiffExtensionPostProcessor;
 import org.eclipse.emf.compare.extension.PostProcessorDescriptor;
 import org.eclipse.emf.compare.extension.PostProcessorRegistry;
@@ -18,6 +19,8 @@ import com.google.common.collect.Iterators;
 @SuppressWarnings("nls")
 public abstract class AbstractTest {
 
+	private EMFCompare emfCompare;
+	
 	private PostProcessorRegistry postProcessorRegistry;
 
 	@Before
@@ -27,8 +30,13 @@ public abstract class AbstractTest {
 				"http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation", null,
 				"org.eclipse.emf.compare.diagram.diff.DiagramDiffExtensionPostProcessor",
 				new DiagramDiffExtensionPostProcessor()));
+		emfCompare = EMFCompare.builder().setPostProcessorRegistry(postProcessorRegistry).build();
 	}
 
+	protected EMFCompare getCompare() {
+		return emfCompare;
+	}
+	
 	/**
 	 * @return the postProcessorRegistry
 	 */

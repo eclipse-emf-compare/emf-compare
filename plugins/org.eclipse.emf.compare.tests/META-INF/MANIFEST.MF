@@ -20,6 +20,7 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.emf.compare.tests.framework,
+ org.eclipse.emf.compare.tests.merge,
  org.eclipse.emf.compare.tests.nodes,
  org.eclipse.emf.compare.tests.nodes.impl,
  org.eclipse.emf.compare.tests.nodes.util,

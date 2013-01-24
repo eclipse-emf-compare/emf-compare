@@ -18,6 +18,7 @@ import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.diagram.DiagramComparePackage;
 import org.eclipse.emf.compare.diagram.ecoretools.tests.edgechanges.EdgechangesTest;
 import org.eclipse.emf.compare.diagram.ecoretools.tests.hide.HideTest;
+import org.eclipse.emf.compare.diagram.ecoretools.tests.merge.ExtensionMergeTest;
 import org.eclipse.emf.compare.diagram.ecoretools.tests.nodechanges.NodechangesTest;
 import org.eclipse.emf.compare.diagram.ecoretools.tests.show.ShowTest;
 import org.eclipse.emf.compare.tests.suite.CompareTestSuite;
@@ -38,7 +39,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({HideTest.class, ShowTest.class, NodechangesTest.class, EdgechangesTest.class})
+@SuiteClasses({HideTest.class, ShowTest.class, NodechangesTest.class, EdgechangesTest.class, ExtensionMergeTest.class})
 public class AllTests {
 
 	/**
