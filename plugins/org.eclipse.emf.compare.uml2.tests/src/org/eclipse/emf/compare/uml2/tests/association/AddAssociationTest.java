@@ -50,7 +50,7 @@ public class AddAssociationTest extends AbstractTest {
 	@Test
 	public void testMergeRtLA10UseCase() throws IOException {
 		final Resource left = input.getA1Left();
-		final Resource right = input.getA1Left();
+		final Resource right = input.getA1Right();
 
 		testMergeRightToLeft(left, right, null);
 	}
@@ -58,35 +58,35 @@ public class AddAssociationTest extends AbstractTest {
 	@Test
 	public void testMergeLtRA10UseCase() throws IOException {
 		final Resource left = input.getA1Left();
-		final Resource right = input.getA1Left();
+		final Resource right = input.getA1Right();
 
 		testMergeLeftToRight(left, right, null);
 	}
 
 	@Test
 	public void testA11UseCase() throws IOException {
-		final Resource left = input.getA1Left();
-		final Resource right = input.getA1Right();
+		final Resource left = input.getA1Right();
+		final Resource right = input.getA1Left();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = getCompare().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
 	}
 
 	@Test
 	public void testMergeRtLA11UseCase() throws IOException {
-		final Resource left = input.getA1Left();
+		final Resource left = input.getA1Right();
 		final Resource right = input.getA1Left();
 
-		testMergeRightToLeft(right, left, null);
+		testMergeRightToLeft(left, right, null);
 	}
 
 	@Test
 	public void testMergeLtRA11UseCase() throws IOException {
-		final Resource left = input.getA1Left();
+		final Resource left = input.getA1Right();
 		final Resource right = input.getA1Left();
 
-		testMergeLeftToRight(right, left, null);
+		testMergeLeftToRight(left, right, null);
 	}
 
 	@Test
@@ -102,7 +102,7 @@ public class AddAssociationTest extends AbstractTest {
 	@Test
 	public void testMergeRtLA10UseCase3way() throws IOException {
 		final Resource left = input.getA1Left();
-		final Resource right = input.getA1Left();
+		final Resource right = input.getA1Right();
 
 		testMergeRightToLeft(left, right, right);
 	}
@@ -110,7 +110,7 @@ public class AddAssociationTest extends AbstractTest {
 	@Test
 	public void testMergeLtRA10UseCase3way() throws IOException {
 		final Resource left = input.getA1Left();
-		final Resource right = input.getA1Left();
+		final Resource right = input.getA1Right();
 
 		testMergeLeftToRight(left, right, right);
 	}
@@ -128,7 +128,7 @@ public class AddAssociationTest extends AbstractTest {
 	@Test
 	public void testMergeRtLA11UseCase3way() throws IOException {
 		final Resource left = input.getA1Left();
-		final Resource right = input.getA1Left();
+		final Resource right = input.getA1Right();
 
 		testMergeRightToLeft(left, right, left);
 	}
@@ -136,7 +136,7 @@ public class AddAssociationTest extends AbstractTest {
 	@Test
 	public void testMergeLtRA11UseCase3way() throws IOException {
 		final Resource left = input.getA1Left();
-		final Resource right = input.getA1Left();
+		final Resource right = input.getA1Right();
 
 		testMergeLeftToRight(left, right, left);
 	}
