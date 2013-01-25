@@ -28,6 +28,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.diagram.ide.ui.DMergeViewer;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
@@ -377,7 +378,7 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 		EList<Diff> differences = getComparison().getDifferences();
 
 		final Command copyCommand = getEditingDomain().createCopyAllNonConflictingCommand(differences,
-				leftToRight);
+				leftToRight, EMFCompareIDEPlugin.getDefault().getMergerRegistry());
 
 		getEditingDomain().getCommandStack().execute(copyCommand);
 
