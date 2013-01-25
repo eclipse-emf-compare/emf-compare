@@ -56,6 +56,11 @@ public abstract class BasicStructuralFeatureAccessorImpl implements IStructuralF
 		fDifferences = computeDifferences();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor#getComparison()
+	 */
 	public Comparison getComparison() {
 		return fOwnerMatch.getComparison();
 	}
@@ -63,7 +68,7 @@ public abstract class BasicStructuralFeatureAccessorImpl implements IStructuralF
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.IStructuralFeatureAccessor#getInitialItem()
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor#getInitialItem()
 	 */
 	public IMergeViewerItem getInitialItem() {
 		IMergeViewerItem ret = null;
@@ -77,6 +82,11 @@ public abstract class BasicStructuralFeatureAccessorImpl implements IStructuralF
 		return ret;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor#getInitialItem()
+	 */
 	public EObject getEObject(MergeViewerSide side) {
 		final EObject eObject;
 		switch (side) {
@@ -96,7 +106,9 @@ public abstract class BasicStructuralFeatureAccessorImpl implements IStructuralF
 	}
 
 	/**
-	 * @return the fStructuralFeature
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor#getStructuralFeature()
 	 */
 	public EStructuralFeature getStructuralFeature() {
 		return fStructuralFeature;

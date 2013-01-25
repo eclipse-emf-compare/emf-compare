@@ -23,7 +23,7 @@ import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MatchedObject;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.TableMergeViewer;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -181,8 +181,8 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			 */
 			@Override
 			public Object[] getElements(Object inputElement) {
-				if (inputElement instanceof IStructuralFeatureAccessor) {
-					return super.getElements(((IStructuralFeatureAccessor)inputElement).getItems());
+				if (inputElement instanceof ICompareAccessor) {
+					return super.getElements(((ICompareAccessor)inputElement).getItems());
 				}
 				return super.getElements(inputElement);
 			}

@@ -10,17 +10,19 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor;
 
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import com.google.common.collect.ImmutableList;
+
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
 
 /**
- * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
-public interface IStructuralFeatureAccessor extends ICompareAccessor {
+public interface ICompareAccessor {
 
-	EStructuralFeature getStructuralFeature();
+	Comparison getComparison();
 
-	EObject getEObject(MergeViewerSide side);
+	IMergeViewerItem getInitialItem();
 
+	ImmutableList<? extends IMergeViewerItem> getItems();
 }

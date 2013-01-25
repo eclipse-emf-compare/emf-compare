@@ -2,7 +2,7 @@
 <?eclipse version="3.4"?>
 
 <!--
- Copyright (c) 2012 Obeo.
+ Copyright (c) 2012, 2013 Obeo.
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
  which accompanies this distribution, and is available at
@@ -51,6 +51,12 @@
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text.EMFCompareTextContentMergeViewer"
             label="EMFCompare Text Merge Viewer">
       </viewer>
+      <viewer
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table.TableContentMergeViewerCreator"
+            extensions="resource_contents"
+            id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text.EMFCompareResourceContentsContentMergeViewer"
+            label="EMFCompare Resource Contents Merge Viewer">
+      </viewer>
    </extension>
    <extension
          point="org.eclipse.emf.edit.itemProviderAdapterFactories">
@@ -76,6 +82,10 @@
       </factory>
       <factory
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.factory.IDEStringAttributeChangeAccessorFactory"
+            ranking="10">
+      </factory>
+      <factory
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.factory.IDEResourceContentsAccessorFactory"
             ranking="10">
       </factory>
    </extension>

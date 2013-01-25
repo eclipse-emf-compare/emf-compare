@@ -11,16 +11,12 @@
 package org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor;
 
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
 
 /**
- * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
-public interface IStructuralFeatureAccessor extends ICompareAccessor {
+public interface IResourceContentsAccessor extends ICompareAccessor {
 
-	EStructuralFeature getStructuralFeature();
-
-	EObject getEObject(MergeViewerSide side);
-
+	Resource getResource(MergeViewerSide side);
 }

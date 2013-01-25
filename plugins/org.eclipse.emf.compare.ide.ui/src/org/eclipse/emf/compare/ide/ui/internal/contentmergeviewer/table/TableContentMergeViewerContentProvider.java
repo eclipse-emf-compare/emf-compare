@@ -21,7 +21,7 @@ import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -130,8 +130,8 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 		if (element instanceof ICompareInput) {
 			ICompareInput node = (ICompareInput)element;
 			ITypedElement left = node.getLeft();
-			if (left instanceof IStructuralFeatureAccessor) {
-				Comparison comparison = ((IStructuralFeatureAccessor)left).getComparison();
+			if (left instanceof ICompareAccessor) {
+				Comparison comparison = ((ICompareAccessor)left).getComparison();
 				EList<Match> matches = comparison.getMatches();
 				EObject leftEObject = null;
 				for (Match match : matches) {
@@ -185,8 +185,8 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 		if (element instanceof ICompareInput) {
 			ICompareInput node = (ICompareInput)element;
 			ITypedElement right = node.getRight();
-			if (right instanceof IStructuralFeatureAccessor) {
-				Comparison comparison = ((IStructuralFeatureAccessor)right).getComparison();
+			if (right instanceof ICompareAccessor) {
+				Comparison comparison = ((ICompareAccessor)right).getComparison();
 				EList<Match> matches = comparison.getMatches();
 				EObject rightEObject = null;
 				for (Match match : matches) {

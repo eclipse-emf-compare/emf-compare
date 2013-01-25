@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,8 +12,10 @@ package org.eclipse.emf.compare.rcp.ui.mergeviewer;
 
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.ResourceContentsAccessorImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -152,11 +154,25 @@ public class MergeViewerInfoViewer extends ContentViewer {
 
 			if (getLabelProvider() instanceof ILabelProvider) {
 				ILabelProvider labelProvider = (ILabelProvider)getLabelProvider();
+
 				fFeatureIcon.setImage(labelProvider.getImage(structuralFeature));
 				fFeatureLabel.setText(labelProvider.getText(structuralFeature));
 
 				fEObjectIcon.setImage(labelProvider.getImage(eObject));
 				fEObjectLabel.setText(labelProvider.getText(eObject));
+			}
+
+			fControl.layout(true);
+		} else if (fInput instanceof ResourceContentsAccessorImpl) {
+			final ResourceContentsAccessorImpl resourceContentAccessor = (ResourceContentsAccessorImpl)fInput;
+			final Resource resource = resourceContentAccessor.getResource(fSide);
+
+			if (getLabelProvider() instanceof ILabelProvider) {
+				ILabelProvider labelProvider = (ILabelProvider)getLabelProvider();
+				fFeatureLabel.setText("resource contents"); //$NON-NLS-1$
+
+				fEObjectIcon.setImage(labelProvider.getImage(resource));
+				fEObjectLabel.setText(labelProvider.getText(resource));
 			}
 
 			fControl.layout(true);
