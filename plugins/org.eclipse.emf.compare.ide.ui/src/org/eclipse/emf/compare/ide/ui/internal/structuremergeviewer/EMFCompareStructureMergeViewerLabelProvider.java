@@ -103,7 +103,12 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 		final StyledString ret;
 		if (element instanceof Adapter) {
 			Notifier target = ((Adapter)element).getTarget();
-			ret = getStyledText(getAdapterFactory(), target);
+			StyledString styledText = getStyledText(getAdapterFactory(), target);
+			if (styledText == null) {
+				ret = new StyledString(super.getText(target));
+			} else {
+				ret = styledText;
+			}
 		} else if (element instanceof DifferenceGroup) {
 			ret = new StyledString(((DifferenceGroup)element).getName());
 		} else {
