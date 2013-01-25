@@ -13,7 +13,7 @@
 -->
 
 <plugin>
-   <extension-point id="mergerExtension" name="Merger Extension" schema="schema/mergerExtension.exsd"/>
+   <extension-point id="mergerExtension" name="Merger Extension" schema="schema/MergerExtension.exsd"/>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
