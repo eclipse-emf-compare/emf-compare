@@ -59,6 +59,8 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 		}
 	};
 
+	private final OverlayImageProvider overlayProvider;
+
 	/**
 	 * Constructor calling super {@link #MatchItemProvider(AdapterFactory)}.
 	 * 
@@ -67,6 +69,7 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 	 */
 	public MatchItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+		overlayProvider = new OverlayImageProvider(getResourceLocator(), true);
 	}
 
 	/**
@@ -90,6 +93,9 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 		if (ret == null) {
 			ret = super.getImage(object);
 		}
+
+		Object matchImage = overlayProvider.getComposedImage(match, ret);
+		ret = overlayImage(object, matchImage);
 
 		return ret;
 	}

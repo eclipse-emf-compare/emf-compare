@@ -56,11 +56,7 @@
          point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
             class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.CompareNodeAdapterFactory"
-            supportedTypes=
-            "org.eclipse.compare.structuremergeviewer.IDiffElement
-             org.eclipse.compare.structuremergeviewer.IDiffContainer
-             org.eclipse.compare.structuremergeviewer.ITypedElement
-             org.eclipse.compare.structuremergeviewer.ICompareInput"
+            supportedTypes="org.eclipse.compare.structuremergeviewer.ICompareInput"
             uri="http://www.eclipse.org/emf/compare">
       </factory>
    </extension>

@@ -10,46 +10,41 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
+import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Iterables.toArray;
-import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffContainer.adapt;
+import static com.google.common.collect.Iterables.transform;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
-import org.eclipse.compare.structuremergeviewer.IDiffContainer;
-import org.eclipse.compare.structuremergeviewer.IDiffElement;
+import org.eclipse.compare.structuremergeviewer.ICompareInput;
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGroup;
 import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGrouper;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 
-class EMFCompareStructureMergeViewerContentProvider implements ITreeContentProvider {
+class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryContentProvider {
 
 	private final DifferenceGrouper fDifferenceGrouper;
 
-	private final AdapterFactory fAdapterFactory;
-
 	EMFCompareStructureMergeViewerContentProvider(AdapterFactory adapterFactory,
 			DifferenceGrouper differenceGrouper) {
-		this.fAdapterFactory = adapterFactory;
+		super(adapterFactory);
 		this.fDifferenceGrouper = differenceGrouper;
 	}
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		// empty implementation
-	}
-
-	public void dispose() {
-	}
-
+	@Override
 	public Object getParent(Object element) {
 		final Object ret;
-		if (element instanceof IDiffElement) {
-			ret = ((IDiffElement)element).getParent();
+		if (element instanceof Adapter) {
+			ret = getAdapterFactory().adapt(super.getParent(((Adapter)element).getTarget()),
+					ICompareInput.class);
 		} else if (element instanceof DifferenceGroup) {
 			ret = ((DifferenceGroup)element).getComparison();
 		} else {
@@ -58,30 +53,28 @@ class EMFCompareStructureMergeViewerContentProvider implements ITreeContentProvi
 		return ret;
 	}
 
+	@Override
 	public final boolean hasChildren(Object element) {
 		final boolean ret;
 		if (element instanceof ComparisonNode) {
 			Comparison target = ((ComparisonNode)element).getTarget();
 			final Iterable<? extends DifferenceGroup> groups = fDifferenceGrouper.getGroups(target);
 			if (isEmpty(groups)) {
-				ret = doHasChildren((ComparisonNode)element);
+				ret = super.hasChildren(((Adapter)element).getTarget());
 			} else {
 				ret = true;
 			}
-		} else if (element instanceof IDiffContainer) {
-			ret = doHasChildren((IDiffContainer)element);
 		} else if (element instanceof DifferenceGroup) {
 			ret = !isEmpty(((DifferenceGroup)element).getDifferences());
+		} else if (element instanceof Adapter) {
+			ret = super.hasChildren(((Adapter)element).getTarget());
 		} else {
 			ret = false;
 		}
 		return ret;
 	}
 
-	private boolean doHasChildren(IDiffContainer element) {
-		return element.hasChildren();
-	}
-
+	@Override
 	public final Object[] getChildren(Object element) {
 		final Object[] ret;
 		if (element instanceof ComparisonNode) {
@@ -90,25 +83,55 @@ class EMFCompareStructureMergeViewerContentProvider implements ITreeContentProvi
 			if (!isEmpty(groups)) {
 				ret = Iterables.toArray(groups, DifferenceGroup.class);
 			} else {
-				ret = doGetChildren((IDiffContainer)element);
+				Iterable<ICompareInput> compareInputs = adapt(super.getChildren(((Adapter)element)
+						.getTarget()), getAdapterFactory(), ICompareInput.class);
+				ret = toArray(compareInputs, ICompareInput.class);
 			}
-		} else if (element instanceof IDiffContainer) {
-			ret = doGetChildren((IDiffContainer)element);
 		} else if (element instanceof DifferenceGroup) {
 			Iterable<? extends Diff> differences = ((DifferenceGroup)element).getDifferences();
-			Iterable<IDiffElement> diffNodes = adapt(differences, fAdapterFactory, IDiffElement.class);
-			ret = toArray(diffNodes, IDiffElement.class);
+			Iterable<ICompareInput> compareInputs = adapt(differences, getAdapterFactory(),
+					ICompareInput.class);
+			ret = toArray(compareInputs, ICompareInput.class);
+		} else if (element instanceof Adapter) {
+			Iterable<ICompareInput> compareInputs = adapt(super.getChildren(((Adapter)element).getTarget()),
+					getAdapterFactory(), ICompareInput.class);
+			ret = toArray(compareInputs, ICompareInput.class);
 		} else {
 			ret = new Object[0];
 		}
 		return ret;
 	}
 
-	private Object[] doGetChildren(IDiffContainer diffContainer) {
-		return diffContainer.getChildren();
-	}
-
+	@Override
 	public Object[] getElements(Object element) {
 		return getChildren(element);
+	}
+
+	/**
+	 * Adapts each elements of the the given <code>iterable</code> to the given <code>type</code> by using the
+	 * given <code>adapterFactory</code>.
+	 * 
+	 * @param <T>
+	 *            the type of returned elements.
+	 * @param iterable
+	 *            the iterable to transform.
+	 * @param adapterFactory
+	 *            the {@link AdapterFactory} used to adapt elements
+	 * @param type
+	 *            the target type of adapted elements
+	 * @return an iterable with element of type <code>type</code>.
+	 */
+	static <T> Iterable<T> adapt(Iterable<?> iterable, final AdapterFactory adapterFactory,
+			final Class<T> type) {
+		Function<Object, Object> adaptFunction = new Function<Object, Object>() {
+			public Object apply(Object input) {
+				return adapterFactory.adapt(input, type);
+			}
+		};
+		return filter(transform(iterable, adaptFunction), type);
+	}
+
+	static <T> Iterable<T> adapt(Object[] iterable, final AdapterFactory adapterFactory, final Class<T> type) {
+		return adapt(Lists.newArrayList(iterable), adapterFactory, type);
 	}
 }

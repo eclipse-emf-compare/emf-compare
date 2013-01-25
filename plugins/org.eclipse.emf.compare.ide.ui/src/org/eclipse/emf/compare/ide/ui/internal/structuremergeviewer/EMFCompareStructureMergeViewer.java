@@ -24,7 +24,6 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.DiffTreeViewer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
-import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -109,7 +108,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 
 		boolean leftIsLocal = CompareConfigurationExtension.getBoolean(configuration, "LEFT_IS_LOCAL", false); //$NON-NLS-1$
 		setLabelProvider(new DelegatingStyledCellLabelProvider(
-				new EMFCompareStructureMergeViewerLabelProvider(fAdapterFactory, this, leftIsLocal)));
+				new EMFCompareStructureMergeViewerLabelProvider(fAdapterFactory, this)));
 		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(fAdapterFactory,
 				differenceGrouper));
 
@@ -308,7 +307,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 
 	void compareInputChanged(final Comparison comparison) {
 		getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, comparison);
-		fRoot = fAdapterFactory.adapt(comparison, IDiffElement.class);
+		fRoot = fAdapterFactory.adapt(comparison, ICompareInput.class);
 
 		getCompareConfiguration().getContainer().runAsynchronously(new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -455,7 +454,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			if (!affectedObjects.isEmpty()) {
 				List<Object> adaptedAffectedObject = newArrayList();
 				for (Object affectedObject : affectedObjects) {
-					adaptedAffectedObject.add(fAdapterFactory.adapt(affectedObject, IDiffElement.class));
+					adaptedAffectedObject.add(fAdapterFactory.adapt(affectedObject, ICompareInput.class));
 				}
 				setSelection(new StructuredSelection(adaptedAffectedObject), true);
 			}

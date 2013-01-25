@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
-import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.AttributeChange;
 
@@ -39,15 +38,5 @@ public class AttributeChangeNode extends DiffNode {
 	@Override
 	public AttributeChange getTarget() {
 		return (AttributeChange)super.getTarget();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffElement#getType()
-	 */
-	@Override
-	public String getType() {
-		return ITypedElement.TEXT_TYPE;
 	}
 }

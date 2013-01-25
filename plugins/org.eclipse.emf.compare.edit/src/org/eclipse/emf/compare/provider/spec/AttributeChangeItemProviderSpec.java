@@ -33,11 +33,14 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  */
 public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider implements IItemStyledLabelProvider {
 
+	private final OverlayImageProvider overlayProvider;
+
 	/**
 	 * @param adapterFactory
 	 */
 	public AttributeChangeItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+		overlayProvider = new OverlayImageProvider(getResourceLocator(), true);
 	}
 
 	/**
@@ -48,11 +51,15 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 	@Override
 	public Object getImage(Object object) {
 		AttributeChange attributeChange = (AttributeChange)object;
-		Object ret = AdapterFactoryUtil.getImage(getRootAdapterFactory(), attributeChange.getValue());
+		Object attributeChangeValueImage = AdapterFactoryUtil.getImage(getRootAdapterFactory(),
+				attributeChange.getValue());
 
-		if (ret == null) {
-			ret = super.getImage(object);
+		if (attributeChangeValueImage == null) {
+			attributeChangeValueImage = super.getImage(object);
 		}
+
+		Object diffImage = overlayProvider.getComposedImage(attributeChange, attributeChangeValueImage);
+		Object ret = overlayImage(object, diffImage);
 
 		return ret;
 	}

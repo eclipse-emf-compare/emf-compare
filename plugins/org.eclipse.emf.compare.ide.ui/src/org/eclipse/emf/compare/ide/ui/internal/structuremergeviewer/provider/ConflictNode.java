@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
-import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode;
@@ -40,15 +39,5 @@ public class ConflictNode extends AbstractEDiffNode {
 	@Override
 	public Conflict getTarget() {
 		return (Conflict)super.getTarget();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffElement#getKind()
-	 */
-	@Override
-	public int getKind() {
-		return Differencer.CONFLICTING;
 	}
 }

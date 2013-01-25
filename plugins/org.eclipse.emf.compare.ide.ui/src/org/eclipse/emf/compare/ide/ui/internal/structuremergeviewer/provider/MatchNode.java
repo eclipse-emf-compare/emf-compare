@@ -23,7 +23,6 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.ContentMergeViewerConstants;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode;
 import org.eclipse.emf.ecore.EObject;
 
@@ -79,16 +78,6 @@ public class MatchNode extends AbstractEDiffNode {
 	@Override
 	public Match getTarget() {
 		return (Match)super.getTarget();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffElement#getType()
-	 */
-	@Override
-	public String getType() {
-		return ContentMergeViewerConstants.EOBJECT_NODE_TYPE;
 	}
 
 	/**

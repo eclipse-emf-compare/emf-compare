@@ -49,6 +49,8 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  */
 public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider implements IItemStyledLabelProvider {
 
+	private final OverlayImageProvider overlayProvider;
+
 	/**
 	 * Constructor calling super {@link #ReferenceChangeItemProvider(AdapterFactory)}.
 	 * 
@@ -57,6 +59,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	 */
 	public ReferenceChangeItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+		overlayProvider = new OverlayImageProvider(getResourceLocator(), true);
 	}
 
 	/**
@@ -139,9 +142,13 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	public Object getImage(Object object) {
 		ReferenceChange refChange = (ReferenceChange)object;
 
-		Object image = AdapterFactoryUtil.getImage(getRootAdapterFactory(), refChange.getValue());
+		Object refChangeValueImage = AdapterFactoryUtil.getImage(getRootAdapterFactory(), refChange
+				.getValue());
 
-		return image;
+		Object diffImage = overlayProvider.getComposedImage(refChange, refChangeValueImage);
+		Object ret = overlayImage(object, diffImage);
+
+		return ret;
 	}
 
 	/**

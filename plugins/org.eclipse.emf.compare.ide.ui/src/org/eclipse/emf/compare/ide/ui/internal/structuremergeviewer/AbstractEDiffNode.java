@@ -11,20 +11,26 @@
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
 import org.eclipse.compare.ITypedElement;
+import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory.Registry;
+import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public abstract class AbstractEDiffNode extends AbstractEDiffContainer implements ICompareInput {
+public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareInput {
 
 	/**
 	 * 
@@ -32,11 +38,33 @@ public abstract class AbstractEDiffNode extends AbstractEDiffContainer implement
 	private final ListenerList fListener;
 
 	/**
+	 * The {@link AdapterFactory} used to implement {@link #getName()} and {@link #getImage()}.
+	 */
+	private final AdapterFactory fAdapterFactory;
+
+	/**
+	 * Simple constructor storing the given {@link AdapterFactory}.
+	 * 
 	 * @param adapterFactory
+	 *            the factory.
 	 */
 	public AbstractEDiffNode(AdapterFactory adapterFactory) {
-		super(adapterFactory);
+		fAdapterFactory = adapterFactory;
 		fListener = new ListenerList();
+	}
+
+	@Override
+	public boolean isAdapterForType(Object type) {
+		return type == fAdapterFactory;
+	}
+
+	/**
+	 * Final accessor to the {@link AdapterFactory} for sub classses.
+	 * 
+	 * @return the wrapped {@link AdapterFactory}.
+	 */
+	protected final AdapterFactory getAdapterFactory() {
+		return fAdapterFactory;
 	}
 
 	/**
@@ -87,6 +115,34 @@ public abstract class AbstractEDiffNode extends AbstractEDiffContainer implement
 	protected IAccessorFactory getAccessorFactoryForTarget() {
 		Registry factoryRegistry = EMFCompareIDEUIPlugin.getDefault().getAccessorFactoryRegistry();
 		return factoryRegistry.getHighestRankingFactory(getTarget());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.ITypedElement#getImage()
+	 */
+	public Image getImage() {
+		Image ret = null;
+		Adapter adapter = getAdapterFactory().adapt(target, IItemLabelProvider.class);
+		if (adapter instanceof IItemLabelProvider) {
+			Object imageObject = ((IItemLabelProvider)adapter).getImage(target);
+			ret = ExtendedImageRegistry.getInstance().getImage(imageObject);
+		}
+		return ret;
+	}
+
+	public int getKind() {
+		return Differencer.NO_CHANGE;
+	}
+
+	public String getName() {
+		String ret = null;
+		Adapter adapter = getAdapterFactory().adapt(target, IItemLabelProvider.class);
+		if (adapter instanceof IItemLabelProvider) {
+			ret = ((IItemLabelProvider)adapter).getText(target);
+		}
+		return ret;
 	}
 
 	/**

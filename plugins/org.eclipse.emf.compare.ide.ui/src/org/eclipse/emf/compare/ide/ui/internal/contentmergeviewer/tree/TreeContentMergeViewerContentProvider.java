@@ -50,7 +50,8 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 	private final Comparison fComparison;
 
 	/**
-	 * Creates a new {@link TreeContentMergeViewerContentProvider} and stored the given {@link CompareConfiguration}.
+	 * Creates a new {@link TreeContentMergeViewerContentProvider} and stored the given
+	 * {@link CompareConfiguration}.
 	 * 
 	 * @param cc
 	 *            the {@link CompareConfiguration} that will be used to get label and image of left, right and
@@ -111,6 +112,7 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 			Object ret = compareInput.getAncestor();
 			// if no ancestor and element is a diff, try to reach the ancestor of parent, recursively
 			if (ret == null && element instanceof IDiffElement) {
+				// TODO: MBA use adapterfactory
 				IDiffContainer parent = ((IDiffElement)compareInput).getParent();
 				ret = getAncestorContent(parent);
 			}
@@ -162,6 +164,7 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 			Object ret = compareInput.getLeft();
 			// if no left and element is a diff, try to reach the left of parent, recursively
 			if (ret == null && element instanceof IDiffElement) {
+				// TODO: MBA use adapterfactory
 				IDiffContainer parent = ((IDiffElement)compareInput).getParent();
 				ret = getLeftContent(parent);
 			}
@@ -240,6 +243,7 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 			Object ret = compareInput.getRight();
 			// if no right and element is a diff, try to reach the right of parent, recursively
 			if (ret == null && element instanceof IDiffElement) {
+				// TODO: MBA use adapterfactory
 				IDiffContainer parent = ((IDiffElement)compareInput).getParent();
 				ret = getRightContent(parent);
 			}
@@ -260,6 +264,7 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 		} else if (element instanceof ICompareInput) {
 			Object right = ((ICompareInput)element).getRight();
 			if (right == null && element instanceof IDiffElement) {
+				// TODO: MBA use adapterfactory
 				IDiffContainer parent = ((IDiffElement)element).getParent();
 				if (parent instanceof ICompareInput) {
 					right = ((ICompareInput)parent).getRight();

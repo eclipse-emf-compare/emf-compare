@@ -14,10 +14,7 @@ import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.Collection;
 
-import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
-import org.eclipse.compare.structuremergeviewer.IDiffContainer;
-import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
@@ -54,9 +51,6 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	/**
 	 * Creates an {@link ComposeableAdapterFactory} with the following supported types:
 	 * <ul>
-	 * <li>{@link IDiffElement}</li>,
-	 * <li>{@link IDiffContainer}</li>,
-	 * <li>{@link ITypedElement}</li>,
 	 * <li>{@link ICompareInput}</li>.
 	 * </ul>
 	 * 
@@ -64,9 +58,6 @@ public class CompareNodeAdapterFactory extends CompareAdapterFactory implements 
 	 *            This will be used by the comparison adapter to group differences together.
 	 */
 	public CompareNodeAdapterFactory() {
-		supportedTypes.add(IDiffElement.class);
-		supportedTypes.add(IDiffContainer.class);
-		supportedTypes.add(ITypedElement.class);
 		supportedTypes.add(ICompareInput.class);
 	}
 
