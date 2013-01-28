@@ -10,19 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
 import org.eclipse.compare.IEditableContent;
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.StringAttributeChangeAccessor;
-import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.swt.graphics.Image;
 
@@ -66,23 +60,6 @@ public class IDEStringAttributeChangeAccessor extends StringAttributeChangeAcces
 	 */
 	public String getType() {
 		return ContentMergeViewerConstants.TEXT_DIFF_NODE_TYPE;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.IStreamContentAccessor#getContents()
-	 */
-	@Override
-	public InputStream getContents() throws CoreException {
-		Object value = ReferenceUtil.safeEGet(getEObject(), getEAtribute());
-		String stringValue = EcoreUtil.convertToString(getEAtribute().getEAttributeType(), value);
-		// Assume that the platform locale is appropriate.
-		if (stringValue != null) {
-			return new ByteArrayInputStream(stringValue.getBytes());
-		} else {
-			return new ByteArrayInputStream(new byte[0]);
-		}
 	}
 
 	/**
