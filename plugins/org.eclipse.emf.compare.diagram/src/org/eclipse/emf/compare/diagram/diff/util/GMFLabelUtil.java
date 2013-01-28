@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,9 +39,12 @@ import org.eclipse.swt.widgets.Shell;
  * @author Cedric Notot <a href="mailto:cedric.notot@obeo.fr">cedric.notot@obeo.fr</a>
  */
 public final class GMFLabelUtil {
+	// CHECKSTYLE:OFF
 	// FIXME this is dangerous (potential memory leaks) and crappy (singleton), but was made to avoid creating
 	// thousands of Diagrams.
 	private static Map<Diagram, DiagramEditPart> DIAGRAM_EDIT_PARTS = Maps.newHashMap();
+
+	// CHECKSTYLE:ON
 
 	/**
 	 * Constructor.
@@ -89,6 +92,9 @@ public final class GMFLabelUtil {
 		Display.getDefault().syncExec(labelSetter);
 	}
 
+	/**
+	 * Clean edit parts and registry.
+	 */
 	public static void cleanup() {
 		for (Map.Entry<Diagram, DiagramEditPart> entry : DIAGRAM_EDIT_PARTS.entrySet()) {
 			entry.getValue().deactivate();

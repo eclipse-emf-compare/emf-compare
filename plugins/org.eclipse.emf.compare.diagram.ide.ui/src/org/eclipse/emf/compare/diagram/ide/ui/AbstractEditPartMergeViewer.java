@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,25 +15,38 @@ import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
 import org.eclipse.jface.viewers.ISelection;
 
 /**
+ * Abstract viewer for comparison of graphical elements.
+ * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+ * @since 3.0
  */
-public abstract class DMergeViewer extends AbstractEditPartViewer {
+public abstract class AbstractEditPartMergeViewer extends AbstractEditPartViewer {
 
+	/** The side that manages this viewer. */
 	private final MergeViewerSide fSide;
 
 	/**
+	 * Constructor.
 	 * 
+	 * @param side
+	 *            The side having to be handle.
 	 */
-	public DMergeViewer(MergeViewerSide side) {
+	public AbstractEditPartMergeViewer(MergeViewerSide side) {
 		fSide = side;
 	}
 
+	/**
+	 * Set the input of the viewer.
+	 * 
+	 * @param object
+	 *            The input.
+	 */
 	public abstract void setInput(Object object);
 
 	/**
 	 * Returns the wrapped {@link AbstractEditPartViewer}.
 	 * 
-	 * @return
+	 * @return The viewer.
 	 */
 	protected abstract AbstractEditPartViewer getGraphicalViewer();
 

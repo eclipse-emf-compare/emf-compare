@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,20 +20,28 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Composite;
 
 /**
+ * Abstract graphical merge viewer for comparison of graphical elements.
+ * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+ * @since 3.0
  */
-public abstract class GraphicalMergeViewer extends DMergeViewer {
+public abstract class AbstractGraphicalMergeViewer extends AbstractEditPartMergeViewer {
 
-	private final ISelectionChangedListener fForwardingSelectionListener;
-
-	/** the diagram edit domain. */
+	/** The diagram edit domain. */
 	protected DiagramEditDomain editDomain;
 
+	/** Listener for forwarding selection. */
+	private final ISelectionChangedListener fForwardingSelectionListener;
+
 	/**
+	 * The constructor.
+	 * 
 	 * @param parent
+	 *            The parent composite.
 	 * @param side
+	 *            The side having to be handle.
 	 */
-	public GraphicalMergeViewer(Composite parent, MergeViewerSide side) {
+	public AbstractGraphicalMergeViewer(Composite parent, MergeViewerSide side) {
 		super(side);
 
 		editDomain = new DiagramEditDomain(null);
@@ -46,6 +54,11 @@ public abstract class GraphicalMergeViewer extends DMergeViewer {
 		// getGraphicalViewer().addSelectionChangedListener(fForwardingSelectionListener);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.gef.ui.parts.AbstractEditPartViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
+	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
 		// getGraphicalViewer().removeSelectionChangedListener(fForwardingSelectionListener);
@@ -55,11 +68,14 @@ public abstract class GraphicalMergeViewer extends DMergeViewer {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.ide.ui.DMergeViewer#getGraphicalViewer()
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.AbstractEditPartMergeViewer#getGraphicalViewer()
 	 */
 	@Override
 	protected abstract AbstractEditPartViewer getGraphicalViewer();
 
+	/**
+	 * Listener for forwarding selection.
+	 */
 	private class ForwardingViewerSelectionListener implements ISelectionChangedListener {
 		/**
 		 * {@inheritDoc}

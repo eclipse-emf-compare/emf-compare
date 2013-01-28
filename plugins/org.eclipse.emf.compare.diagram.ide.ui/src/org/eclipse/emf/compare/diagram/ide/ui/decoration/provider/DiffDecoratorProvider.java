@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,6 @@
  * Contributors:
  *   Obeo - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.emf.compare.diagram.ide.ui.decoration.provider;
 
 import java.util.Iterator;
@@ -150,6 +149,13 @@ public class DiffDecoratorProvider extends AbstractProvider implements IDecorato
 		return view != null && (view instanceof Node);
 	}
 
+	/**
+	 * Get the graphical difference in relation to the given view.
+	 * 
+	 * @param view
+	 *            The view.
+	 * @return The graphical difference.
+	 */
 	public static DiagramDiff getRelatedSelectedDifference(View view) {
 		SelectedDiffAdapter adapter = getSelectedDiffAdapter(view);
 		if (adapter != null) {
@@ -161,6 +167,13 @@ public class DiffDecoratorProvider extends AbstractProvider implements IDecorato
 		return null;
 	}
 
+	/**
+	 * Get a <code>SelectedDiffAdapter</code> if it exists, on the given view.
+	 * 
+	 * @param view
+	 *            The view.
+	 * @return The adapter or null.
+	 */
 	private static SelectedDiffAdapter getSelectedDiffAdapter(View view) {
 		Iterator<Adapter> adapters = view.eAdapters().iterator();
 		while (adapters.hasNext()) {

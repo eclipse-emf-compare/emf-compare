@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,8 +59,9 @@ public final class DiagramCompareUIMessages {
 	 * @see MessageFormat#format(String, Object[])
 	 */
 	public static String getString(String key, Object... arguments) {
-		if (arguments == null)
+		if (arguments == null) {
 			return getString(key);
+		}
 		return MessageFormat.format(getString(key), arguments);
 	}
 }

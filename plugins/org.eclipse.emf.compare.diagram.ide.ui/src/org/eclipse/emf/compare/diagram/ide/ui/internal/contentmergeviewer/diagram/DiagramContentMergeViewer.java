@@ -42,8 +42,8 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.diagram.DiagramDiff;
 import org.eclipse.emf.compare.diagram.NodeChange;
-import org.eclipse.emf.compare.diagram.ide.ui.DMergeViewer;
-import org.eclipse.emf.compare.diagram.ide.ui.GraphicalMergeViewer;
+import org.eclipse.emf.compare.diagram.ide.ui.AbstractEditPartMergeViewer;
+import org.eclipse.emf.compare.diagram.ide.ui.AbstractGraphicalMergeViewer;
 import org.eclipse.emf.compare.diagram.ide.ui.decoration.DeleteGhostImageFigure;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramDiffAccessor;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
@@ -144,8 +144,8 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	@SuppressWarnings("unchecked")
 	// see createMergeViewer() to see it is safe
 	@Override
-	public GraphicalMergeViewer getAncestorMergeViewer() {
-		return (GraphicalMergeViewer)super.getAncestorMergeViewer();
+	public AbstractGraphicalMergeViewer getAncestorMergeViewer() {
+		return (AbstractGraphicalMergeViewer)super.getAncestorMergeViewer();
 	}
 
 	/**
@@ -156,8 +156,8 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	@SuppressWarnings("unchecked")
 	// see createMergeViewer() to see it is safe
 	@Override
-	public GraphicalMergeViewer getLeftMergeViewer() {
-		return (GraphicalMergeViewer)super.getLeftMergeViewer();
+	public AbstractGraphicalMergeViewer getLeftMergeViewer() {
+		return (AbstractGraphicalMergeViewer)super.getLeftMergeViewer();
 	}
 
 	/**
@@ -168,8 +168,8 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	@SuppressWarnings("unchecked")
 	// see createMergeViewer() to see it is safe
 	@Override
-	public GraphicalMergeViewer getRightMergeViewer() {
-		return (GraphicalMergeViewer)super.getRightMergeViewer();
+	public AbstractGraphicalMergeViewer getRightMergeViewer() {
+		return (AbstractGraphicalMergeViewer)super.getRightMergeViewer();
 	}
 
 	/**
@@ -242,7 +242,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#createMergeViewer(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
-	protected DMergeViewer createMergeViewer(final Composite parent, MergeViewerSide side,
+	protected AbstractEditPartMergeViewer createMergeViewer(final Composite parent, MergeViewerSide side,
 			DiagramCompareContentMergeViewer master) {
 		final DiagramMergeViewer mergeTreeViewer = new DiagramMergeViewer(parent, side);
 		return mergeTreeViewer;
