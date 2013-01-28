@@ -135,17 +135,21 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 				Match match = diff.getMatch();
 				final EObject left = match.getLeft();
 				final EObject right = match.getRight();
-				Object oldLeftValue = ReferenceUtil.safeEGet(left, eAttribute);
-				Object oldRightValue = ReferenceUtil.safeEGet(right, eAttribute);
+				Object oldLeftValue = left == null ? null : ReferenceUtil.safeEGet(left, eAttribute);
+				Object oldRightValue = right == null ? null : ReferenceUtil.safeEGet(right, eAttribute);
 				final String newLeftValue = new String(getContents(true));
 				final Object newRightValue = new String(getContents(false));
-				if (!newLeftValue.equals(oldLeftValue) && getCompareConfiguration().isLeftEditable()) {
+				// TOOD: use equality helper to compare values && use EcoreUtil.convertToString to create the
+				// sring rep of oldXXValue
+				if (left != null && !newLeftValue.equals(oldLeftValue)
+						&& getCompareConfiguration().isLeftEditable()) {
 					// Save the change on left side
 					fEditingDomain.getCommandStack().execute(
 							new UpdateModelAndRejectDiffCommand(fEditingDomain.getChangeRecorder(), left,
 									eAttribute, newLeftValue, diff, true));
 				}
-				if (!newRightValue.equals(oldRightValue) && getCompareConfiguration().isRightEditable()) {
+				if (right != null && !newRightValue.equals(oldRightValue)
+						&& getCompareConfiguration().isRightEditable()) {
 					// Save the change on right side
 					fEditingDomain.getCommandStack().execute(
 							new UpdateModelAndRejectDiffCommand(fEditingDomain.getChangeRecorder(), right,
