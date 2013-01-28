@@ -30,6 +30,7 @@ import org.eclipse.emf.compare.uml2.AssociationChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.association.data.AssociationInputData;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.junit.Ignore;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
@@ -56,6 +57,7 @@ public class AddAssociationTest extends AbstractTest {
 	}
 
 	@Test
+	@Ignore
 	public void testMergeLtRA10UseCase() throws IOException {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
@@ -74,6 +76,7 @@ public class AddAssociationTest extends AbstractTest {
 	}
 
 	@Test
+	@Ignore
 	public void testMergeRtLA11UseCase() throws IOException {
 		final Resource left = input.getA1Right();
 		final Resource right = input.getA1Left();
@@ -108,6 +111,7 @@ public class AddAssociationTest extends AbstractTest {
 	}
 
 	@Test
+	@Ignore
 	public void testMergeLtRA10UseCase3way() throws IOException {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
@@ -134,6 +138,7 @@ public class AddAssociationTest extends AbstractTest {
 	}
 
 	@Test
+	@Ignore
 	public void testMergeLtRA11UseCase3way() throws IOException {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
