@@ -24,19 +24,19 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGroup;
-import org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGrouper;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.DifferenceGroup;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.StructureMergeViewerGrouper;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 
 class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryContentProvider {
 
-	private final DifferenceGrouper fDifferenceGrouper;
+	private final StructureMergeViewerGrouper fViewerGrouper;
 
 	EMFCompareStructureMergeViewerContentProvider(AdapterFactory adapterFactory,
-			DifferenceGrouper differenceGrouper) {
+			StructureMergeViewerGrouper structureMergeViewerGrouper) {
 		super(adapterFactory);
-		this.fDifferenceGrouper = differenceGrouper;
+		this.fViewerGrouper = structureMergeViewerGrouper;
 	}
 
 	@Override
@@ -58,7 +58,7 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 		final boolean ret;
 		if (element instanceof ComparisonNode) {
 			Comparison target = ((ComparisonNode)element).getTarget();
-			final Iterable<? extends DifferenceGroup> groups = fDifferenceGrouper.getGroups(target);
+			final Iterable<? extends DifferenceGroup> groups = fViewerGrouper.getGroups(target);
 			if (isEmpty(groups)) {
 				ret = super.hasChildren(((Adapter)element).getTarget());
 			} else {
@@ -79,7 +79,7 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 		final Object[] ret;
 		if (element instanceof ComparisonNode) {
 			Comparison target = ((ComparisonNode)element).getTarget();
-			final Iterable<? extends DifferenceGroup> groups = fDifferenceGrouper.getGroups(target);
+			final Iterable<? extends DifferenceGroup> groups = fViewerGrouper.getGroups(target);
 			if (!isEmpty(groups)) {
 				ret = Iterables.toArray(groups, DifferenceGroup.class);
 			} else {

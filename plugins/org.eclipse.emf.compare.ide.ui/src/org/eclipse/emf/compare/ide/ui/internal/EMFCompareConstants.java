@@ -37,6 +37,10 @@ public final class EMFCompareConstants {
 
 	public static final String EDITING_DOMAIN = EMFCompareIDEUIPlugin.PLUGIN_ID + ".EDITING_DOMAIN"; //$NON-NLS-1$
 
+	public static final String SELECTED_FILTERS = EMFCompareIDEUIPlugin.PLUGIN_ID + ".SELECTED_FILTERS"; //$NON-NLS-1$
+
+	public static final String SELECTED_GROUP = EMFCompareIDEUIPlugin.PLUGIN_ID + ".SELECTED_GROUP"; //$NON-NLS-1$
+
 	// ITypedElement#getType()
 
 	public static final String NODE_TYPE__EMF_RESOURCESET = "NODE_TYPE__EMF_RESOURCESET"; //$NON-NLS-1$
