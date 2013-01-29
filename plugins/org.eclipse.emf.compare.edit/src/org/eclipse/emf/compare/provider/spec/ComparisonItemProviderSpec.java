@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,12 +16,18 @@ import static com.google.common.collect.Iterables.isEmpty;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.provider.ComparisonItemProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
@@ -64,8 +70,19 @@ public class ComparisonItemProviderSpec extends ComparisonItemProvider implement
 	}
 
 	private Iterable<EObject> getChildrenIterable(Comparison comparison) {
-		Iterable<Match> match = getNonEmptyMatches(comparison);
-		return concat(match, comparison.getMatchedResources());
+		Iterable<? extends EObject> matches = getNonEmptyMatches(comparison);
+		List<EObject> children = Lists.newArrayList(matches);
+		for (EObject match : matches) {
+			EList<Diff> differences = ((Match)match).getDifferences();
+			Iterable<ResourceAttachmentChange> resourcesAttachmentChanges = filter(differences,
+					ResourceAttachmentChange.class);
+			if (!isEmpty(resourcesAttachmentChanges)) {
+				children.remove(match);
+				Iterables.addAll(children, resourcesAttachmentChanges);
+			}
+		}
+
+		return concat(children, comparison.getMatchedResources());
 	}
 
 	private Iterable<Match> getNonEmptyMatches(Comparison comparison) {
