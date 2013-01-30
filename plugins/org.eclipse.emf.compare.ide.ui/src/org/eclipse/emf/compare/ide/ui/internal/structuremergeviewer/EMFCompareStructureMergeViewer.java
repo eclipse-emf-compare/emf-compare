@@ -189,7 +189,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	 */
 	@Override
 	public ViewerComparator getComparator() {
-		return structureMergeViewerComparator;
+		return null;// structureMergeViewerComparator;
 	}
 
 	@SuppressWarnings("unchecked")

@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
+import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
@@ -39,8 +40,8 @@ public class UMLManyStructuralFeatureAccessor extends ManyStructuralFeatureAcces
 	 * @param diff
 	 * @param side
 	 */
-	public UMLManyStructuralFeatureAccessor(Diff diff, MergeViewerSide side) {
-		super(diff, side);
+	public UMLManyStructuralFeatureAccessor(AdapterFactory adapterFactory, Diff diff, MergeViewerSide side) {
+		super(adapterFactory, diff, side);
 	}
 
 	/**

@@ -20,7 +20,6 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
-import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
@@ -28,7 +27,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeVie
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.TableMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MatchedObject;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -208,8 +206,8 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			 */
 			@Override
 			public Font getFont(Object object, int columnIndex) {
-				if (object instanceof MatchedObject) {
-					final Object value = ((MatchedObject)object).getSideValue(side);
+				if (object instanceof IMergeViewerItem) {
+					final Object value = ((IMergeViewerItem)object).getSideValue(side);
 					if (value instanceof EObject && ((EObject)value).eIsProxy()) {
 						return getFontFromObject(IItemFontProvider.ITALIC_FONT);
 					}
@@ -225,11 +223,14 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			 */
 			@Override
 			public String getColumnText(Object object, int columnIndex) {
-				if (object instanceof MatchedObject) {
+				if (object instanceof IMergeViewerItem) {
 					final String text;
-					final Object value = ((MatchedObject)object).getSideValue(side);
+					IMergeViewerItem mergeViewerItem = (IMergeViewerItem)object;
+					final Object value = mergeViewerItem.getSideValue(side);
 					if (value instanceof EObject && ((EObject)value).eIsProxy()) {
 						text = "proxy : " + ((InternalEObject)value).eProxyURI().toString();
+					} else if (mergeViewerItem.isInsertionPoint()) {
+						text = " ";
 					} else {
 						text = super.getColumnText(value, columnIndex);
 					}
@@ -246,8 +247,13 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			 */
 			@Override
 			public Image getColumnImage(Object object, int columnIndex) {
-				if (object instanceof MatchedObject) {
-					return super.getColumnImage(((MatchedObject)object).getSideValue(side), columnIndex);
+				if (object instanceof IMergeViewerItem) {
+					IMergeViewerItem mergeViewerItem = (IMergeViewerItem)object;
+					if (((IMergeViewerItem)object).isInsertionPoint()) {
+						return null;
+					} else {
+						return super.getColumnImage(mergeViewerItem.getSideValue(side), columnIndex);
+					}
 				}
 				return super.getColumnImage(object, columnIndex);
 			}

@@ -8,32 +8,12 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
-
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
-import org.eclipse.jface.viewers.ContentViewer;
+package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ *
  */
-public abstract class AbstractMergeViewer extends ContentViewer implements IMergeViewer {
-
-	private final MergeViewerSide fSide;
-
-	/**
-	 * 
-	 */
-	public AbstractMergeViewer(MergeViewerSide side) {
-		fSide = side;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer#getSide()
-	 */
-	public MergeViewerSide getSide() {
-		return fSide;
-	}
+public interface IItemProvider {
 
 }

@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor;
 
 import com.google.common.collect.ImmutableList;
 
+import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.SingleStructuralFeatureAccessorImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
@@ -27,8 +28,8 @@ public class UMLSingleStructuralFeatureAccessor extends SingleStructuralFeatureA
 	 * @param diff
 	 * @param side
 	 */
-	public UMLSingleStructuralFeatureAccessor(Diff diff, MergeViewerSide side) {
-		super(diff, side);
+	public UMLSingleStructuralFeatureAccessor(AdapterFactory adapterFactory, Diff diff, MergeViewerSide side) {
+		super(adapterFactory, diff, side);
 	}
 
 	/**

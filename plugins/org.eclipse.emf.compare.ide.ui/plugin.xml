@@ -35,13 +35,13 @@
          point="org.eclipse.compare.contentMergeViewers">
       <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerCreator"
-            extensions="org.eclipse.emf.compare.rcp.ui.eMatch"
+            extensions="org.eclipse.emf.compare.rcp.ui.eTreeDiff,org.eclipse.emf.compare.rcp.ui.eMatch"
             id="org.eclipse.emf.compare.ide.ui.internal.EObjectContentMergeViewer"
             label="EMFCompare Content Merge Viewer">
       </viewer>
       <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table.TableContentMergeViewerCreator"
-            extensions="org.eclipse.emf.compare.rcp.ui.eDiff,org.eclipse.emf.compare.rcp.ui.eResourceDiff"
+            extensions="org.eclipse.emf.compare.rcp.ui.eListDiff,org.eclipse.emf.compare.rcp.ui.eResourceDiff"
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EObjectListContentMergeViewer"
             label="EMFCompare Content Merge Viewer">
       </viewer>

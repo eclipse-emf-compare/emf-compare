@@ -8,12 +8,12 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer;
+package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ *
  */
-public interface ICompareColorProvider {
+public interface IMergeViewerItemFactory {
 
-	ICompareColor getCompareColor();
 }

@@ -51,7 +51,7 @@ public class ManyStructuralFeatureAccessorFactory extends AbstractAccessorFactor
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createLeft(AdapterFactory adapterFactory, Object target) {
-		return new ManyStructuralFeatureAccessorImpl((Diff)target, MergeViewerSide.LEFT);
+		return new ManyStructuralFeatureAccessorImpl(adapterFactory, (Diff)target, MergeViewerSide.LEFT);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class ManyStructuralFeatureAccessorFactory extends AbstractAccessorFactor
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createRight(AdapterFactory adapterFactory, Object target) {
-		return new ManyStructuralFeatureAccessorImpl((Diff)target, MergeViewerSide.RIGHT);
+		return new ManyStructuralFeatureAccessorImpl(adapterFactory, (Diff)target, MergeViewerSide.RIGHT);
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class ManyStructuralFeatureAccessorFactory extends AbstractAccessorFactor
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createAncestor(AdapterFactory adapterFactory, Object target) {
-		return new ManyStructuralFeatureAccessorImpl((Diff)target, MergeViewerSide.ANCESTOR);
+		return new ManyStructuralFeatureAccessorImpl(adapterFactory, (Diff)target, MergeViewerSide.ANCESTOR);
 	}
 
 }

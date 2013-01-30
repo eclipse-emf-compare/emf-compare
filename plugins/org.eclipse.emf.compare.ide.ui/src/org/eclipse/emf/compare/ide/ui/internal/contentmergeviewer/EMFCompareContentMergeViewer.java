@@ -37,7 +37,6 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoActio
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColorProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
@@ -48,7 +47,6 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -64,7 +62,7 @@ import org.eclipse.ui.actions.ActionFactory;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer implements ISelectionChangedListener, ICompareColorProvider, IAdaptable {
+public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer implements ISelectionChangedListener, ICompareColor.Provider, IAdaptable {
 
 	private static final String HANDLER_SERVICE = "fHandlerService";
 
@@ -481,12 +479,17 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent event) {
+		synchronizeSelection(event);
+		updateToolItems();
+	}
+
+	private void synchronizeSelection(SelectionChangedEvent event) {
 		if (fSyncingSelections.compareAndSet(false, true)) { // prevents stack overflow :)
 			try {
-				ISelectionProvider selectionProvider = event.getSelectionProvider();
 				ISelection selection = event.getSelection();
-				synchronizeSelection(selectionProvider, selection);
-				updateToolItems();
+				fLeft.setSelection(selection, true);
+				fRight.setSelection(selection, true);
+				fAncestor.setSelection(selection, true);
 			} finally {
 				fSyncingSelections.set(false);
 			}
@@ -544,19 +547,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			}
 		}
 		return diff;
-	}
-
-	private void synchronizeSelection(final ISelectionProvider selectionProvider, final ISelection selection) {
-		if (selectionProvider == fLeft) {
-			fRight.setSelection(selection, true);
-			fAncestor.setSelection(selection, true);
-		} else if (selectionProvider == fRight) {
-			fLeft.setSelection(selection, true);
-			fAncestor.setSelection(selection, true);
-		} else { // selectionProvider == fAncestor
-			fLeft.setSelection(selection, true);
-			fRight.setSelection(selection, true);
-		}
 	}
 
 	/**

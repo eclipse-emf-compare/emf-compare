@@ -22,17 +22,22 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
-import org.eclipse.emf.compare.AttributeChange;
+import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IStructuralFeatureAccessor;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.impl.TypeConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
+import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -49,7 +54,10 @@ public abstract class AbstractStructuralFeatureAccessor implements IStructuralFe
 
 	private final ImmutableList<Diff> fDifferences;
 
-	public AbstractStructuralFeatureAccessor(Diff diff, MergeViewerSide side) {
+	private final AdapterFactory fAdapterFactory;
+
+	public AbstractStructuralFeatureAccessor(AdapterFactory adapterFactory, Diff diff, MergeViewerSide side) {
+		fAdapterFactory = adapterFactory;
 		fDiff = diff;
 		fSide = side;
 		fOwnerMatch = diff.getMatch();
@@ -86,24 +94,10 @@ public abstract class AbstractStructuralFeatureAccessor implements IStructuralFe
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IStructuralFeatureAccessor#getInitialItem()
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor#getInitialItem()
 	 */
 	public EObject getEObject(MergeViewerSide side) {
-		final EObject eObject;
-		switch (side) {
-			case ANCESTOR:
-				eObject = fOwnerMatch.getOrigin();
-				break;
-			case LEFT:
-				eObject = fOwnerMatch.getLeft();
-				break;
-			case RIGHT:
-				eObject = fOwnerMatch.getRight();
-				break;
-			default:
-				throw new IllegalStateException();
-		}
-		return eObject;
+		return MergeViewerUtil.getEObject(fOwnerMatch, side);
 	}
 
 	/**
@@ -129,6 +123,13 @@ public abstract class AbstractStructuralFeatureAccessor implements IStructuralFe
 		return fDifferences;
 	}
 
+	/**
+	 * @return the fAdapterFactory
+	 */
+	protected final AdapterFactory getAdapterFactory() {
+		return fAdapterFactory;
+	}
+
 	protected ImmutableList<Diff> computeDifferences() {
 		List<Diff> siblingDifferences = fOwnerMatch.getDifferences();
 		// We'll display all diffs on the same reference, excluding the pseudo conflicts.
@@ -145,15 +146,7 @@ public abstract class AbstractStructuralFeatureAccessor implements IStructuralFe
 	 * @return The feature affected by this {@code diff}, if any. <code>null</code> if none.
 	 */
 	protected EStructuralFeature getAffectedFeature(Diff diff) {
-		final EStructuralFeature feature;
-		if (diff instanceof ReferenceChange) {
-			feature = ((ReferenceChange)diff).getReference();
-		} else if (diff instanceof AttributeChange) {
-			feature = ((AttributeChange)diff).getAttribute();
-		} else {
-			feature = null;
-		}
-		return feature;
+		return MergeViewerUtil.getAffectedFeature(diff);
 	}
 
 	/**
@@ -161,5 +154,38 @@ public abstract class AbstractStructuralFeatureAccessor implements IStructuralFe
 	 */
 	protected final Diff getInitialDiff() {
 		return fDiff;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getName()
+	 */
+	public String getName() {
+		return this.getClass().getName();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getImage()
+	 */
+	public Image getImage() {
+		if (getStructuralFeature() instanceof EAttribute) {
+			return ExtendedImageRegistry.getInstance().getImage(
+					EcoreEditPlugin.getPlugin().getImage("full/obj16/EAttribute")); //$NON-NLS-1$
+		} else {
+			return ExtendedImageRegistry.getInstance().getImage(
+					EcoreEditPlugin.getPlugin().getImage("full/obj16/EReference")); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getType()
+	 */
+	public String getType() {
+		return TypeConstants.TYPE__ELIST_DIFF;
 	}
 }

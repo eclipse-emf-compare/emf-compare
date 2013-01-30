@@ -14,18 +14,13 @@ import static com.google.common.collect.Iterables.getFirst;
 
 import com.google.common.collect.ImmutableList;
 
+import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.impl.TypeConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.InsertionPoint;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MatchedObject;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
-import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -36,8 +31,8 @@ public class SingleStructuralFeatureAccessorImpl extends AbstractStructuralFeatu
 	 * @param diff
 	 * @param side
 	 */
-	public SingleStructuralFeatureAccessorImpl(Diff diff, MergeViewerSide side) {
-		super(diff, side);
+	public SingleStructuralFeatureAccessorImpl(AdapterFactory adapterFactory, Diff diff, MergeViewerSide side) {
+		super(adapterFactory, diff, side);
 	}
 
 	/**
@@ -60,10 +55,12 @@ public class SingleStructuralFeatureAccessorImpl extends AbstractStructuralFeatu
 		Diff diff = getFirst(getDifferences(), null);
 		final ImmutableList<? extends IMergeViewerItem> ret;
 		if (thisSideValue == null) {
-			InsertionPoint insertionPoint = new InsertionPoint(diff, leftValue, rightValue, ancestorValue);
+			IMergeViewerItem insertionPoint = new MergeViewerItem(getComparison(), diff, leftValue,
+					rightValue, ancestorValue, getSide(), getAdapterFactory());
 			ret = ImmutableList.of(insertionPoint);
 		} else {
-			MatchedObject matchedObject = new MatchedObject(diff, leftValue, rightValue, ancestorValue);
+			IMergeViewerItem matchedObject = new MergeViewerItem(getComparison(), diff, leftValue,
+					rightValue, ancestorValue, getSide(), getAdapterFactory());
 			ret = ImmutableList.of(matchedObject);
 		}
 
@@ -78,38 +75,4 @@ public class SingleStructuralFeatureAccessorImpl extends AbstractStructuralFeatu
 		}
 		return value;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getName()
-	 */
-	public String getName() {
-		return SingleStructuralFeatureAccessorImpl.class.getName();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getImage()
-	 */
-	public Image getImage() {
-		if (getStructuralFeature() instanceof EAttribute) {
-			return ExtendedImageRegistry.getInstance().getImage(
-					EcoreEditPlugin.getPlugin().getImage("full/obj16/EAttribute")); //$NON-NLS-1$
-		} else {
-			return ExtendedImageRegistry.getInstance().getImage(
-					EcoreEditPlugin.getPlugin().getImage("full/obj16/EReference")); //$NON-NLS-1$
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getType()
-	 */
-	public String getType() {
-		return TypeConstants.TYPE__EDIFF;
-	}
-
 }

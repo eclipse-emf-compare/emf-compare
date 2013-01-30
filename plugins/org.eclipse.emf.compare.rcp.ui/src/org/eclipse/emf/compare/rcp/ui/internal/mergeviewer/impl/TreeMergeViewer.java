@@ -10,45 +10,110 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IEObjectAccessor;
-import org.eclipse.emf.ecore.EObject;
+import static com.google.common.collect.Lists.newArrayList;
+
+import java.util.Iterator;
+import java.util.List;
+
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-public class TreeMergeViewer extends StructuredMergeViewer {
+public class TreeMergeViewer extends TableOrTreeMergeViewer {
 
-	private IEObjectAccessor fInput;
+	private Object fInput;
 
 	private TreeViewer fTreeViewer;
 
 	/**
 	 * @param parent
 	 */
-	public TreeMergeViewer(Composite parent, MergeViewerSide side) {
-		super(parent, side);
+	public TreeMergeViewer(Composite parent, MergeViewerSide side, ICompareColor.Provider colorProvider) {
+		super(parent, side, colorProvider);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeViewer#createControl(org.eclipse.swt.widgets.Composite)
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.impl.StructuredMergeViewer#setSelection(org.eclipse.jface.viewers.ISelection,
+	 *      boolean)
+	 */
+	@Override
+	public void setSelection(ISelection selection, boolean reveal) {
+		if (selection instanceof IStructuredSelection) {
+			List<Object> newSelection = newArrayList();
+			Iterator<?> iterator = ((IStructuredSelection)selection).iterator();
+			while (iterator.hasNext()) {
+				Object object = iterator.next();
+
+				if (object instanceof MergeViewerItem) {
+					MergeViewerItem item = (MergeViewerItem)object;
+					Diff diff = item.getDiff();
+					if (diff != null && diff.getKind() == DifferenceKind.MOVE) {
+						// we should select the other item (insertion point or matched object) related to this
+						// move in this very same merge viewer.
+						IMergeViewerItem opposite = item.cloneAsOpposite();
+						newSelection.add(opposite);
+					}
+				}
+
+				// always selection the given object in selection
+				newSelection.add(object);
+			}
+			super.setSelection(new StructuredSelection(newSelection), reveal);
+		} else {
+			super.setSelection(selection, reveal);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.impl.AbstractMergeViewer#createControl(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
 	protected Control createControl(Composite parent) {
-		fTreeViewer = new TreeViewer(parent);
-		return fTreeViewer.getControl();
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(1, false);
+		layout.marginLeft = -1;
+		layout.marginRight = -1;
+		layout.marginTop = -1;
+		layout.marginBottom = 0;
+		layout.horizontalSpacing = 0;
+		layout.verticalSpacing = 0;
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		composite.setLayout(layout);
+
+		fTreeViewer = new TreeViewer(composite);
+		fTreeViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		return composite;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.ide.ui.internal.contentmergeviewer.AbstractMergeViewer#getStructuredViewer()
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.AbstractMergeViewer#getStructuredViewer()
 	 */
 	@Override
-	protected TreeViewer getStructuredViewer() {
+	public TreeViewer getStructuredViewer() {
 		return fTreeViewer;
+	}
+
+	public void setExpandedState(Object elementOrTreePath, boolean expanded) {
+		getStructuredViewer().setExpandedState(elementOrTreePath, expanded);
 	}
 
 	/**
@@ -58,21 +123,13 @@ public class TreeMergeViewer extends StructuredMergeViewer {
 	 */
 	@Override
 	protected void inputChanged(Object input, Object oldInput) {
-		if (input instanceof IEObjectAccessor) {
-			fInput = ((IEObjectAccessor)input);
-			EObject eObject = ((IEObjectAccessor)input).getEObject();
-			final Object viewerInput = doGetInput(eObject);
-			getStructuredViewer().setInput(viewerInput);
-			Object selection = viewerInput;
-			if (eObject != null) {
-				if (eObject.eContainer() == viewerInput) {
-					selection = eObject;
-				} else if (eObject.eContainer() == null) {
-					selection = eObject;
-				}
+		if (input instanceof ICompareAccessor) {
+			fInput = input;
+			getStructuredViewer().setInput(input);
+			IMergeViewerItem initialItem = ((ICompareAccessor)input).getInitialItem();
+			if (initialItem != null) {
+				getStructuredViewer().setSelection(new StructuredSelection(initialItem), true);
 			}
-			getStructuredViewer().setSelection(new StructuredSelection(selection));
-			getStructuredViewer().expandToLevel(selection, 1);
 		} else {
 			getStructuredViewer().setInput(null);
 		}
@@ -86,27 +143,6 @@ public class TreeMergeViewer extends StructuredMergeViewer {
 	@Override
 	public Object getInput() {
 		return fInput;
-	}
-
-	/**
-	 * Returns either the {@link EObject#eContainer() container} of the given <code>eObject</code> if it is
-	 * not null or its {@link EObject#eResource() containing resource} if it is not null.
-	 * 
-	 * @param eObject
-	 *            the object to get the input from.
-	 * @return either the {@link EObject#eContainer()} of the given <code>eObject</code> if it is not null or
-	 *         its {@link EObject#eResource() containing resource} if it is not null.
-	 */
-	private static Object doGetInput(EObject eObject) {
-		Object input = null;
-		if (eObject != null) {
-			if (eObject.eContainer() != null) {
-				input = eObject.eContainer();
-			} else {
-				input = eObject.eResource();
-			}
-		}
-		return input;
 	}
 
 	/**

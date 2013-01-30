@@ -32,13 +32,13 @@ public class UMLSingleStructuralFeatureAccessorFactory extends AbstractAccessorF
 				&& !((UMLDiff)target).getEReference().isMany();
 	}
 
-	private ITypedElement createAccessor(UMLDiff diff, MergeViewerSide side) {
+	private ITypedElement createAccessor(AdapterFactory adapterFactory, UMLDiff diff, MergeViewerSide side) {
 		ITypedElement ret = null;
 		switch (diff.getKind()) {
 			case ADD:
 			case DELETE:
 			case MOVE:
-				ret = new UMLSingleStructuralFeatureAccessor(diff, side);
+				ret = new UMLSingleStructuralFeatureAccessor(adapterFactory, diff, side);
 				break;
 			case CHANGE:
 				// TODO: what to do in change ?
@@ -56,7 +56,7 @@ public class UMLSingleStructuralFeatureAccessorFactory extends AbstractAccessorF
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createLeft(AdapterFactory adapterFactory, Object target) {
-		return createAccessor((UMLDiff)target, MergeViewerSide.LEFT);
+		return createAccessor(adapterFactory, (UMLDiff)target, MergeViewerSide.LEFT);
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class UMLSingleStructuralFeatureAccessorFactory extends AbstractAccessorF
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createRight(AdapterFactory adapterFactory, Object target) {
-		return createAccessor((UMLDiff)target, MergeViewerSide.RIGHT);
+		return createAccessor(adapterFactory, (UMLDiff)target, MergeViewerSide.RIGHT);
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class UMLSingleStructuralFeatureAccessorFactory extends AbstractAccessorF
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createAncestor(AdapterFactory adapterFactory, Object target) {
-		return createAccessor((UMLDiff)target, MergeViewerSide.ANCESTOR);
+		return createAccessor(adapterFactory, (UMLDiff)target, MergeViewerSide.ANCESTOR);
 	}
 
 }

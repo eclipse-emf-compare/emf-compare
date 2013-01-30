@@ -55,4 +55,11 @@ public interface ICompareColor {
 	 */
 	void dispose();
 
+	/**
+	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+	 */
+	public interface Provider {
+
+		ICompareColor getCompareColor();
+	}
 }

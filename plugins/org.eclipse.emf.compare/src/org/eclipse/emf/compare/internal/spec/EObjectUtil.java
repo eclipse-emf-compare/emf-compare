@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-final class EObjectUtil {
+public final class EObjectUtil {
 
 	/**
 	 * Private constructor to avoid instantiation.

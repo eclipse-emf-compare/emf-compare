@@ -39,8 +39,8 @@ public class UMLStereotypeApplicationChangeFeatureAccessorFactory extends Abstra
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createLeft(AdapterFactory adapterFactory, Object target) {
-		return new UMLStereotypeApplicationChangeFeatureAccessor((StereotypeApplicationChange)target,
-				MergeViewerSide.LEFT);
+		return new UMLStereotypeApplicationChangeFeatureAccessor(adapterFactory,
+				(StereotypeApplicationChange)target, MergeViewerSide.LEFT);
 	}
 
 	/**
@@ -50,8 +50,8 @@ public class UMLStereotypeApplicationChangeFeatureAccessorFactory extends Abstra
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createRight(AdapterFactory adapterFactory, Object target) {
-		return new UMLStereotypeApplicationChangeFeatureAccessor((StereotypeApplicationChange)target,
-				MergeViewerSide.RIGHT);
+		return new UMLStereotypeApplicationChangeFeatureAccessor(adapterFactory,
+				(StereotypeApplicationChange)target, MergeViewerSide.RIGHT);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class UMLStereotypeApplicationChangeFeatureAccessorFactory extends Abstra
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createAncestor(AdapterFactory adapterFactory, Object target) {
-		return new UMLStereotypeApplicationChangeFeatureAccessor((StereotypeApplicationChange)target,
-				MergeViewerSide.ANCESTOR);
+		return new UMLStereotypeApplicationChangeFeatureAccessor(adapterFactory,
+				(StereotypeApplicationChange)target, MergeViewerSide.ANCESTOR);
 	}
 }

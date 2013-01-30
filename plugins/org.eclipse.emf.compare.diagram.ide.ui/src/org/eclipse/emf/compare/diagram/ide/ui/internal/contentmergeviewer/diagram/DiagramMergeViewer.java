@@ -139,7 +139,7 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.AbstractGraphicalMergeViewer#createControl(org.eclipse.swt.widgets.Composite)
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.impl.AbstractMergeViewer#createControl(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
 	public Control createControl(Composite parent) {

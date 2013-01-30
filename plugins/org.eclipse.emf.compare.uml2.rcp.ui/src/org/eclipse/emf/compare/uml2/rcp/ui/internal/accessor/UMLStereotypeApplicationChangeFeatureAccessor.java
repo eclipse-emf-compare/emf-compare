@@ -21,6 +21,7 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
+import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -64,9 +65,9 @@ public class UMLStereotypeApplicationChangeFeatureAccessor extends UMLManyStruct
 	 * @param side
 	 *            The side on which this accessor will be used.
 	 */
-	public UMLStereotypeApplicationChangeFeatureAccessor(StereotypeApplicationChange diff,
-			MergeViewerSide side) {
-		super(diff, side);
+	public UMLStereotypeApplicationChangeFeatureAccessor(AdapterFactory adapterFactory,
+			StereotypeApplicationChange diff, MergeViewerSide side) {
+		super(adapterFactory, diff, side);
 	}
 
 	/**

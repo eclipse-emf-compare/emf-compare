@@ -20,23 +20,18 @@ import com.google.common.collect.ImmutableList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.impl.TypeConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.InsertionPoint;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MatchedObject;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
-import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -47,8 +42,8 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 	 * @param diff
 	 * @param side
 	 */
-	public ManyStructuralFeatureAccessorImpl(Diff diff, MergeViewerSide side) {
-		super(diff, side);
+	public ManyStructuralFeatureAccessorImpl(AdapterFactory adapterFactory, Diff diff, MergeViewerSide side) {
+		super(adapterFactory, diff, side);
 	}
 
 	/**
@@ -82,7 +77,8 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 		Object left = matchingValue(object, MergeViewerSide.LEFT);
 		Object right = matchingValue(object, MergeViewerSide.RIGHT);
 		Object ancestor = matchingValue(object, MergeViewerSide.ANCESTOR);
-		return new MatchedObject(diff, left, right, ancestor);
+		return new MergeViewerItem(getComparison(), diff, left, right, ancestor, getSide(),
+				getAdapterFactory());
 	}
 
 	private List<? extends IMergeViewerItem> createInsertionPoints(
@@ -103,11 +99,13 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 				if (leftEmptyBox || rightEmptyBox) {
 					Object ancestor = getValueFromDiff(diff, MergeViewerSide.ANCESTOR);
 
-					InsertionPoint insertionPoint = new InsertionPoint(diff, left, right, ancestor);
+					IMergeViewerItem insertionPoint = new MergeViewerItem(getComparison(), diff, left, right,
+							ancestor, getSide(), getAdapterFactory());
 
 					final int insertionIndex = Math.min(findInsertionIndex(diff, rightToLeft), ret.size());
 					List<IMergeViewerItem> subList = ret.subList(0, insertionIndex);
-					final int nbInsertionPointBefore = size(filter(subList, InsertionPoint.class));
+					final int nbInsertionPointBefore = size(filter(subList,
+							IMergeViewerItem.IS_INSERTION_POINT));
 
 					int index = Math.min(insertionIndex + nbInsertionPointBefore, ret.size());
 					ret.add(index, insertionPoint);
@@ -215,38 +213,5 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 			ret = null;
 		}
 		return ret;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getName()
-	 */
-	public String getName() {
-		return ManyStructuralFeatureAccessorImpl.class.getName();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getImage()
-	 */
-	public Image getImage() {
-		if (getStructuralFeature() instanceof EAttribute) {
-			return ExtendedImageRegistry.getInstance().getImage(
-					EcoreEditPlugin.getPlugin().getImage("full/obj16/EAttribute")); //$NON-NLS-1$
-		} else {
-			return ExtendedImageRegistry.getInstance().getImage(
-					EcoreEditPlugin.getPlugin().getImage("full/obj16/EReference")); //$NON-NLS-1$
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getType()
-	 */
-	public String getType() {
-		return TypeConstants.TYPE__EDIFF;
 	}
 }

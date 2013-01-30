@@ -7,7 +7,9 @@ public final class TypeConstants {
 	private TypeConstants() {
 	}
 
-	public static final String TYPE__EDIFF = EMFCompareRCPUIPlugin.PLUGIN_ID + ".eDiff"; //$NON-NLS-1$
+	public static final String TYPE__ETREE_DIFF = EMFCompareRCPUIPlugin.PLUGIN_ID + ".eTreeDiff"; //$NON-NLS-1$
+
+	public static final String TYPE__ELIST_DIFF = EMFCompareRCPUIPlugin.PLUGIN_ID + ".eListDiff"; //$NON-NLS-1$
 
 	public static final String TYPE__ETEXT_DIFF = EMFCompareRCPUIPlugin.PLUGIN_ID + ".eTextDiff"; //$NON-NLS-1$
 

@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ConflictKind;
@@ -43,8 +44,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IReso
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.impl.TypeConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.InsertionPoint;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MatchedObject;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.ecore.EObject;
@@ -70,13 +70,16 @@ public class ResourceContentsAccessorImpl implements IResourceContentsAccessor {
 	/** The list of sibling differences of the performed difference. */
 	private final ImmutableList<Diff> fDifferences;
 
+	private final AdapterFactory fAdapterFactory;
+
 	/**
 	 * @param diff
 	 *            The difference performed.
 	 * @param side
 	 *            The side on which the difference is located.
 	 */
-	public ResourceContentsAccessorImpl(Diff diff, MergeViewerSide side) {
+	public ResourceContentsAccessorImpl(AdapterFactory adapterFactory, Diff diff, MergeViewerSide side) {
+		fAdapterFactory = adapterFactory;
 		fDiff = diff;
 		fSide = side;
 		fOwnerMatch = diff.getMatch();
@@ -232,7 +235,7 @@ public class ResourceContentsAccessorImpl implements IResourceContentsAccessor {
 		Object left = matchingValue(object, MergeViewerSide.LEFT);
 		Object right = matchingValue(object, MergeViewerSide.RIGHT);
 		Object ancestor = matchingValue(object, MergeViewerSide.ANCESTOR);
-		return new MatchedObject(diff, left, right, ancestor);
+		return new MergeViewerItem(getComparison(), diff, left, right, ancestor, getSide(), fAdapterFactory);
 	}
 
 	private List<? extends IMergeViewerItem> createInsertionPoints(
@@ -253,11 +256,13 @@ public class ResourceContentsAccessorImpl implements IResourceContentsAccessor {
 				if (leftEmptyBox || rightEmptyBox) {
 					Object ancestor = getValueFromDiff(diff, MergeViewerSide.ANCESTOR);
 
-					InsertionPoint insertionPoint = new InsertionPoint(diff, left, right, ancestor);
+					IMergeViewerItem insertionPoint = new MergeViewerItem(getComparison(), diff, left, right,
+							ancestor, getSide(), fAdapterFactory);
 
 					final int insertionIndex = Math.min(findInsertionIndex(diff, rightToLeft), ret.size());
 					List<IMergeViewerItem> subList = ret.subList(0, insertionIndex);
-					final int nbInsertionPointBefore = size(filter(subList, InsertionPoint.class));
+					final int nbInsertionPointBefore = size(filter(subList,
+							IMergeViewerItem.IS_INSERTION_POINT));
 
 					int index = Math.min(insertionIndex + nbInsertionPointBefore, ret.size());
 					ret.add(index, insertionPoint);
