@@ -11,16 +11,15 @@
 package org.eclipse.emf.compare.internal.spec;
 
 import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.transform;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.BasicEList;
@@ -35,7 +34,6 @@ import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -46,25 +44,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ComparisonSpec extends ComparisonImpl {
-	/**
-	 * Converts an inverse reference to its corresponding EObject.
-	 * 
-	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
-	 */
-	private static final Function<EStructuralFeature.Setting, EObject> INVERSE_REFERENCES = new Function<EStructuralFeature.Setting, EObject>() {
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see com.google.common.base.Function#apply(java.lang.Object)
-		 */
-		public EObject apply(Setting input) {
-			if (input != null) {
-				return input.getEObject();
-			}
-			return null;
-		}
-	};
-
 	/** Keeps a reference to our match cross referencer. */
 	private MatchCrossReferencer matchCrossReferencer;
 
@@ -143,27 +122,12 @@ public class ComparisonSpec extends ComparisonImpl {
 	 * @return a possibly empty {@link Iterable} of inverse references.
 	 */
 	private Iterable<EObject> getInverse(EObject element, ECrossReferenceAdapter adapter) {
-		return getInverse(element, adapter, Predicates.<Setting> alwaysTrue());
-	}
-
-	/**
-	 * Returns an {@link Iterable} of EObject being inverse references of the given {@code element} stored by
-	 * the {@code adapter}. It is possible to filter returned EObject by filtering out on {@link Setting cross
-	 * references}.
-	 * 
-	 * @param element
-	 *            the target of the search cross references.
-	 * @param adapter
-	 *            the {@link ECrossReferenceAdapter} to use to look for inverse references.
-	 * @param settingsFilter
-	 *            a filter of {@link Setting} applied on the output of
-	 *            {@link ECrossReferenceAdapter#getInverseReferences(EObject, boolean)}.
-	 * @return a possibly empty {@link Iterable} of inverse references.
-	 */
-	private Iterable<EObject> getInverse(EObject element, ECrossReferenceAdapter adapter,
-			Predicate<Setting> settingsFilter) {
-		final Iterable<EStructuralFeature.Setting> settings = adapter.getInverseReferences(element, false);
-		return transform(filter(settings, settingsFilter), INVERSE_REFERENCES);
+		final Collection<EStructuralFeature.Setting> settings = adapter.getInverseReferences(element, false);
+		final List<EObject> eObjects = Lists.newArrayList();
+		for (EStructuralFeature.Setting setting : settings) {
+			eObjects.add(setting.getEObject());
+		}
+		return eObjects;
 	}
 
 	/**
