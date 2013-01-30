@@ -141,16 +141,25 @@ public final class DiffUtil {
 	 */
 	public static <E> List<E> longestCommonSubsequence(Comparison comparison, Iterable<E> ignoredElements,
 			List<E> sequence1, List<E> sequence2) {
+		// FIXME : merge the two "LCS" methods in one (only one line differs...)
+		final List<E> copy1 = Lists.newArrayList(sequence1);
+		final List<E> copy2 = Lists.newArrayList(sequence2);
+
+		// Reduce sets
+		final List<E> prefix = trimPrefix(comparison, ignoredElements, copy1, copy2);
+		final List<E> suffix = trimSuffix(comparison, ignoredElements, copy1, copy2);
+
 		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
-		final int size1 = sequence1.size();
-		final int size2 = sequence2.size();
+		final int size1 = copy1.size();
+		final int size2 = copy2.size();
+
 		final int[][] matrix = new int[size1 + 1][size2 + 1];
 
 		// Compute the LCS matrix
 		for (int i = 1; i <= size1; i++) {
+			final E first = copy1.get(i - 1);
 			for (int j = 1; j <= size2; j++) {
-				final E first = sequence1.get(i - 1);
-				final E second = sequence2.get(j - 1);
+				final E second = copy2.get(j - 1);
 				if (equalityHelper.matchingValues(first, second)
 						&& !contains(comparison, equalityHelper, ignoredElements, second)) {
 					matrix[i][j] = 1 + matrix[i - 1][j - 1];
@@ -160,38 +169,151 @@ public final class DiffUtil {
 			}
 		}
 
-		// Shortcut evaluation if the lcs is the whole sequence
-		final boolean lcsIs1 = matrix[size1][size2] == size1;
-		final boolean lcsIs2 = matrix[size1][size2] == size2;
-		if (lcsIs1 || lcsIs2) {
-			final List<E> shortcut;
-			if (lcsIs1) {
-				shortcut = ImmutableList.copyOf(sequence1);
-			} else {
-				shortcut = ImmutableList.copyOf(sequence2);
-			}
-			return shortcut;
-		}
-
+		// Traceback the matrix to create the final LCS
 		int current1 = size1;
 		int current2 = size2;
 		final List<E> result = Lists.newArrayList();
 
 		while (current1 > 0 && current2 > 0) {
-			final E first = sequence1.get(current1 - 1);
-			final E second = sequence2.get(current2 - 1);
-			if (equalityHelper.matchingValues(first, second)
-					&& !contains(comparison, equalityHelper, ignoredElements, second)) {
-				result.add(first);
+			final int currentLength = matrix[current1][current2];
+			final int nextLeft = matrix[current1][current2 - 1];
+			final int nextUp = matrix[current1 - 1][current2];
+			if (currentLength > nextLeft && currentLength > nextUp) {
+				result.add(copy1.get(current1 - 1));
 				current1--;
 				current2--;
-			} else if (matrix[current1][current2 - 1] >= matrix[current1 - 1][current2]) {
+			} else if (nextLeft >= nextUp) {
 				current2--;
 			} else {
 				current1--;
 			}
 		}
-		return Lists.reverse(result);
+
+		return ImmutableList.copyOf(Iterables.concat(prefix, Lists.reverse(result), suffix));
+	}
+
+	/**
+	 * Trims and returns the common prefix of the two given sequences. All ignored elements within or after
+	 * this common prefix will also be trimmed.
+	 * <p>
+	 * Note that the two given sequences will be modified in-place.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param ignoredElements
+	 *            Specifies elements that should be excluded from the subsequences.
+	 * @param sequence1
+	 *            First of the two sequences to consider.
+	 * @param sequence2
+	 *            Second of the two sequences to consider.
+	 * @param <E>
+	 *            Type of the sequences content.
+	 * @return The common prefix of the two given sequences, less their ignored elements. As a side note, both
+	 *         {@code sequence1} and {@code sequence2} will have been trimmed of their prefix when this
+	 *         returns.
+	 */
+	private static <E> List<E> trimPrefix(Comparison comparison, Iterable<E> ignoredElements,
+			List<E> sequence1, List<E> sequence2) {
+		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+		final int size1 = sequence1.size();
+		final int size2 = sequence2.size();
+
+		final List<E> prefix = Lists.newArrayList();
+		int start1 = 1;
+		int start2 = 1;
+		boolean matching = true;
+		while (start1 <= size1 && start2 <= size2 && matching) {
+			final E first = sequence1.get(start1 - 1);
+			final E second = sequence2.get(start2 - 1);
+			if (equalityHelper.matchingValues(first, second)) {
+				prefix.add(first);
+				start1++;
+				start2++;
+			} else {
+				boolean ignore1 = contains(comparison, equalityHelper, ignoredElements, first);
+				boolean ignore2 = contains(comparison, equalityHelper, ignoredElements, second);
+				if (ignore1) {
+					start1++;
+				}
+				if (ignore2) {
+					start2++;
+				}
+				if (!ignore1 && !ignore2) {
+					matching = false;
+				}
+			}
+		}
+		for (int i = 1; i < start1; i++) {
+			sequence1.remove(0);
+		}
+		for (int i = 1; i < start2; i++) {
+			sequence2.remove(0);
+		}
+
+		return prefix;
+	}
+
+	/**
+	 * Trims and returns the common suffix of the two given sequences. All ignored elements within or before
+	 * this common suffix will also be trimmed.
+	 * <p>
+	 * Note that the two given sequences will be modified in-place.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param ignoredElements
+	 *            Specifies elements that should be excluded from the subsequences.
+	 * @param sequence1
+	 *            First of the two sequences to consider.
+	 * @param sequence2
+	 *            Second of the two sequences to consider.
+	 * @param <E>
+	 *            Type of the sequences content.
+	 * @return The common suffix of the two given sequences, less their ignored elements. As a side note, both
+	 *         {@code sequence1} and {@code sequence2} will have been trimmed of their suffix when this
+	 *         returns.
+	 */
+	private static <E> List<E> trimSuffix(Comparison comparison, Iterable<E> ignoredElements,
+			List<E> sequence1, List<E> sequence2) {
+		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+		final int size1 = sequence1.size();
+		final int size2 = sequence2.size();
+
+		final List<E> suffix = Lists.newArrayList();
+		int end1 = size1;
+		int end2 = size2;
+		boolean matching = true;
+		while (end1 > 0 && end2 > 0 && matching) {
+			final E first = sequence1.get(end1 - 1);
+			final E second = sequence2.get(end2 - 1);
+			if (equalityHelper.matchingValues(first, second)) {
+				suffix.add(first);
+				end1--;
+				end2--;
+			} else {
+				boolean ignore1 = contains(comparison, equalityHelper, ignoredElements, first);
+				boolean ignore2 = contains(comparison, equalityHelper, ignoredElements, second);
+				if (ignore1) {
+					end1--;
+				}
+				if (ignore2) {
+					end2--;
+				}
+				if (!ignore1 && !ignore2) {
+					matching = false;
+				}
+			}
+		}
+		for (int i = size1; i > end1; i--) {
+			sequence1.remove(sequence1.size() - 1);
+		}
+		for (int i = size2; i > end2; i--) {
+			sequence2.remove(sequence2.size() - 1);
+		}
+
+		return Lists.reverse(suffix);
 	}
 
 	/**
@@ -234,56 +356,7 @@ public final class DiffUtil {
 	 */
 	public static <E> List<E> longestCommonSubsequence(Comparison comparison, List<E> sequence1,
 			List<E> sequence2) {
-		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
-		final int size1 = sequence1.size();
-		final int size2 = sequence2.size();
-
-		final int[][] matrix = new int[size1 + 1][size2 + 1];
-
-		// Compute the LCS matrix
-		for (int i = 1; i <= size1; i++) {
-			final E first = sequence1.get(i - 1);
-			for (int j = 1; j <= size2; j++) {
-				final E second = sequence2.get(j - 1);
-				if (equalityHelper.matchingValues(first, second)) {
-					matrix[i][j] = 1 + matrix[i - 1][j - 1];
-				} else {
-					matrix[i][j] = Math.max(matrix[i - 1][j], matrix[i][j - 1]);
-				}
-			}
-		}
-
-		// Shortcut evaluation if the lcs is the whole sequence
-		final boolean lcsIs1 = matrix[size1][size2] == size1;
-		final boolean lcsIs2 = matrix[size1][size2] == size2;
-		if (lcsIs1 || lcsIs2) {
-			final List<E> shortcut;
-			if (lcsIs1) {
-				shortcut = ImmutableList.copyOf(sequence1);
-			} else {
-				shortcut = ImmutableList.copyOf(sequence2);
-			}
-			return shortcut;
-		}
-
-		int current1 = size1;
-		int current2 = size2;
-		final List<E> result = Lists.newArrayList();
-
-		while (current1 > 0 && current2 > 0) {
-			final E first = sequence1.get(current1 - 1);
-			final E second = sequence2.get(current2 - 1);
-			if (equalityHelper.matchingValues(first, second)) {
-				result.add(first);
-				current1--;
-				current2--;
-			} else if (matrix[current1][current2 - 1] >= matrix[current1 - 1][current2]) {
-				current2--;
-			} else {
-				current1--;
-			}
-		}
-		return Lists.reverse(result);
+		return longestCommonSubsequence(comparison, Collections.<E> emptyList(), sequence1, sequence2);
 	}
 
 	/*
@@ -655,8 +728,10 @@ public final class DiffUtil {
 			targetList = ImmutableList.of();
 		}
 
-		final Iterable<Object> ignoredElements = Iterables.concat(computeIgnoredElements(targetList, diff),
+		Iterable<Object> ignoredElements = Iterables.concat(computeIgnoredElements(targetList, diff),
 				Collections.singleton(value));
+		// We know we'll have to iterate quite a number of times on this one.
+		ignoredElements = Lists.newArrayList(ignoredElements);
 
 		return DiffUtil.findInsertionIndex(comparison, ignoredElements, sourceList, targetList, value);
 	}
@@ -766,23 +841,32 @@ public final class DiffUtil {
 	 *         element in {@code candidates}.
 	 */
 	private static <E> Iterable<E> computeIgnoredElements(Iterable<E> candidates, final Diff diff) {
-		return Iterables.filter(candidates, new Predicate<Object>() {
-			public boolean apply(final Object element) {
-				final Match match = diff.getMatch();
-				final EStructuralFeature feature;
-				if (diff instanceof AttributeChange) {
-					feature = ((AttributeChange)diff).getAttribute();
-				} else if (diff instanceof ReferenceChange) {
-					feature = ((ReferenceChange)diff).getReference();
-				} else {
-					return false;
-				}
+		final Match match = diff.getMatch();
+		final Iterable<? extends Diff> filteredCandidates = Lists.newArrayList(match.getDifferences());
+		final EStructuralFeature feature;
+		if (diff instanceof AttributeChange) {
+			feature = ((AttributeChange)diff).getAttribute();
+		} else if (diff instanceof ReferenceChange) {
+			feature = ((ReferenceChange)diff).getReference();
+		} else {
+			return Collections.emptyList();
+		}
 
-				final Iterable<? extends Diff> filteredCandidates = Iterables.filter(match.getDifferences(),
-						diff.getClass());
-				return Iterables.any(filteredCandidates, new UnresolvedDiffMatching(feature, element));
+		final Set<E> ignored = Sets.newLinkedHashSet();
+		for (E candidate : candidates) {
+			if (candidate instanceof EObject) {
+				final Iterable<? extends Diff> differences = match.getComparison().getDifferences(
+						(EObject)candidate);
+				if (Iterables.any(differences, new UnresolvedDiffMatching(feature, candidate))) {
+					ignored.add(candidate);
+				}
+			} else {
+				if (Iterables.any(filteredCandidates, new UnresolvedDiffMatching(feature, candidate))) {
+					ignored.add(candidate);
+				}
 			}
-		});
+		}
+		return ignored;
 	}
 
 	/**
