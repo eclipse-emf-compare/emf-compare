@@ -11,11 +11,14 @@
 package org.eclipse.emf.compare.provider.spec;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.MatchResourceItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.edit.provider.IItemLabelProvider;
 
 /**
  * Specialized {@link MatchResourceItemProvider} returning nice output for {@link #getText(Object)} and
@@ -56,13 +59,43 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider imp
 		if (rightURI != null) {
 			text += rightURI.substring(commonBase.length());
 		}
-		// TODO is that really useful info?
-		// if (matchResource.eContainer() instanceof Comparison
-		// && ((Comparison)matchResource.eContainer()).isThreeWay()) {
-		// final String originURI = matchResource.getOriginURI();
-		// text += " (" + originURI + ")";
-		// }
+		if (matchResource.eContainer() instanceof Comparison
+				&& ((Comparison)matchResource.eContainer()).isThreeWay()) {
+			final String originURI = matchResource.getOriginURI();
+			text += " (" + originURI.substring(commonBase.length()) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		return text;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.MatchResourceItemProvider#getImage(java.lang.Object)
+	 */
+	@Override
+	public Object getImage(Object object) {
+		final MatchResource matchResource = (MatchResource)object;
+		Resource resource = matchResource.getLeft();
+		if (resource == null) {
+			resource = matchResource.getRight();
+			if (resource == null) {
+				resource = matchResource.getOrigin();
+			}
+		}
+
+		if (resource != null) {
+			IItemLabelProvider itemLabelProvider = (IItemLabelProvider)getRootAdapterFactory().adapt(
+					resource, IItemLabelProvider.class);
+
+			Object image = itemLabelProvider.getImage(resource);
+			if (image != null) {
+				return image;
+			} else {
+				return super.getImage(object);
+			}
+		} else {
+			return super.getImage(object);
+		}
 	}
 
 	/**
@@ -83,9 +116,15 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider imp
 		final char[] rightChars = right.toCharArray();
 
 		final StringBuilder buffer = new StringBuilder();
+		StringBuilder fragmentBuffer = new StringBuilder();
 		for (int i = 0; i < Math.min(leftChars.length, rightChars.length); i++) {
 			if (leftChars[i] == rightChars[i]) {
-				buffer.append(leftChars[i]);
+				fragmentBuffer.append(leftChars[i]);
+
+				if (leftChars[i] == '\\' || leftChars[i] == '/') {
+					buffer.append(fragmentBuffer);
+					fragmentBuffer = new StringBuilder();
+				}
 			} else {
 				break;
 			}
