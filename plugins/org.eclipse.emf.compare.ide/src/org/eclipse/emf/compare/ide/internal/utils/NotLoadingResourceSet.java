@@ -26,9 +26,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
@@ -135,13 +133,35 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 		while (resourceContent.hasNext()) {
 			final EObject eObject = resourceContent.next();
 			resolveCrossReferences(eObject);
-			final TreeIterator<EObject> childContent = basicEAllContents(eObject);
-			while (childContent.hasNext()) {
-				final EObject child = childContent.next();
-				resolveCrossReferences(child);
-			}
+			resolveChildren(eObject);
 		}
 		resource.getContents().addAll(roots);
+	}
+
+	/**
+	 * Recursively resolve all children of the given EObject, including (but stopping at) any proxy.
+	 * 
+	 * @param eObject
+	 *            The eObject which children we are to resolve.
+	 */
+	private void resolveChildren(EObject eObject) {
+		final List<EObject> list = eObject.eContents();
+		final ListIterator<EObject> childContent = ((InternalEList<EObject>)list).basicListIterator();
+		while (childContent.hasNext()) {
+			final EObject child = childContent.next();
+			if (child.eIsProxy()) {
+				final URI proxyURI = ((InternalEObject)child).eProxyURI();
+				final Resource targetRes = getResource(proxyURI.trimFragment(), false);
+				if (targetRes != null) {
+					// resolve this one
+					list.get(childContent.previousIndex());
+				}
+				resolveCrossReferences(child);
+			} else {
+				resolveCrossReferences(child);
+				resolveChildren(child);
+			}
+		}
 	}
 
 	/**
@@ -164,29 +184,5 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 				}
 			}
 		}
-	}
-
-	/**
-	 * An implementation of {@link EObject#eAllContents()} that will not resolve its proxies.
-	 * 
-	 * @param eObject
-	 *            The eobject for which contents we need an iterator.
-	 * @return The created {@link TreeIterator}.
-	 */
-	private TreeIterator<EObject> basicEAllContents(final EObject eObject) {
-		return new AbstractTreeIterator<EObject>(eObject, false) {
-			/** Generated SUID. */
-			private static final long serialVersionUID = 6874121606163401152L;
-
-			/**
-			 * {@inheritDoc}
-			 * 
-			 * @see org.eclipse.emf.common.util.AbstractTreeIterator#getChildren(java.lang.Object)
-			 */
-			@Override
-			public Iterator<EObject> getChildren(Object obj) {
-				return ((InternalEList<EObject>)((EObject)obj).eContents()).basicIterator();
-			}
-		};
 	}
 }
