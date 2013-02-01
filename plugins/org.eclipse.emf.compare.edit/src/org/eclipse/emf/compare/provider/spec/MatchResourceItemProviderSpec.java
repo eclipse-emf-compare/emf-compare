@@ -10,9 +10,15 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
+import static com.google.common.collect.Iterables.filter;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.MatchResource;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.MatchResourceItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
@@ -36,6 +42,24 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider imp
 	 */
 	public MatchResourceItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+	}
+
+	@Override
+	public Collection<?> getChildren(Object object) {
+		Collection<Object> children = new ArrayList<Object>();
+		MatchResource matchResource = (MatchResource)object;
+		Comparison comparison = matchResource.getComparison();
+		for (ResourceAttachmentChange rac : filter(comparison.getDifferences(),
+				ResourceAttachmentChange.class)) {
+			final String diffResourceURI = rac.getResourceURI();
+			if (diffResourceURI != null
+					&& (diffResourceURI.equals(matchResource.getLeftURI())
+							|| diffResourceURI.equals(matchResource.getRightURI()) || diffResourceURI
+								.equals(matchResource.getOriginURI()))) {
+				children.add(rac);
+			}
+		}
+		return children;
 	}
 
 	/**

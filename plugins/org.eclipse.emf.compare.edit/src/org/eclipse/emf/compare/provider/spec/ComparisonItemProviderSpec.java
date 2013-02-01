@@ -16,7 +16,6 @@ import static com.google.common.collect.Iterables.isEmpty;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import java.util.Collection;
@@ -74,11 +73,8 @@ public class ComparisonItemProviderSpec extends ComparisonItemProvider implement
 		List<EObject> children = Lists.newArrayList(matches);
 		for (EObject match : matches) {
 			EList<Diff> differences = ((Match)match).getDifferences();
-			Iterable<ResourceAttachmentChange> resourcesAttachmentChanges = filter(differences,
-					ResourceAttachmentChange.class);
-			if (!isEmpty(resourcesAttachmentChanges)) {
+			if (!isEmpty(filter(differences, ResourceAttachmentChange.class))) {
 				children.remove(match);
-				Iterables.addAll(children, resourcesAttachmentChanges);
 			}
 		}
 

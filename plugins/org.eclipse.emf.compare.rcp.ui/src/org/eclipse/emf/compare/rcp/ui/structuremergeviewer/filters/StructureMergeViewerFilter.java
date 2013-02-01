@@ -27,6 +27,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilterSelectionChangeEvent.Action;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.DifferenceGroup;
 import org.eclipse.emf.ecore.EObject;
@@ -95,6 +96,9 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 			} else if (notifier instanceof Match) {
 				final Iterator<Diff> differences = ((Match)notifier).getAllDifferences().iterator();
 				result = Iterators.any(differences, not(predicate));
+			} else if (notifier instanceof MatchResource) {
+				final MatchResource matchResource = (MatchResource)notifier;
+				result = !predicate.apply(matchResource);
 			}
 		} else if (element instanceof DifferenceGroup) {
 			final Iterator<? extends Diff> differences = ((DifferenceGroup)element).getDifferences()
@@ -120,7 +124,8 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 */
 	public void addFilter(IDifferenceFilter filter) {
 		addPredicate(filter.getPredicate());
-		eventBus.post(new IDifferenceFilterSelectionChangeEvent.DefaultFilterSelectionChangeEvent(filter, Action.ADD));
+		eventBus.post(new IDifferenceFilterSelectionChangeEvent.DefaultFilterSelectionChangeEvent(filter,
+				Action.ADD));
 	}
 
 	/**
@@ -131,7 +136,8 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 */
 	public void removeFilter(IDifferenceFilter filter) {
 		removePredicate(filter.getPredicate());
-		eventBus.post(new IDifferenceFilterSelectionChangeEvent.DefaultFilterSelectionChangeEvent(filter, Action.REMOVE));
+		eventBus.post(new IDifferenceFilterSelectionChangeEvent.DefaultFilterSelectionChangeEvent(filter,
+				Action.REMOVE));
 	}
 
 	/**

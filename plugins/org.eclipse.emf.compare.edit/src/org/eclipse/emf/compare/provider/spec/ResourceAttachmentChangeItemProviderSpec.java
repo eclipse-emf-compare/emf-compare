@@ -138,7 +138,7 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 			ret = super.getImage(object);
 		}
 
-		Object matchImage = overlayProvider.getComposedImage(match, ret);
+		Object matchImage = overlayProvider.getComposedImage((ResourceAttachmentChange)object, ret);
 		ret = overlayImage(object, matchImage);
 
 		return ret;

@@ -32,7 +32,7 @@
     </eOperations>
     <eOperations name="getEqualityHelper" eType="#//IEqualityHelper"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="matchedResources" upperBound="-1"
-        eType="#//MatchResource" containment="true">
+        eType="#//MatchResource" containment="true" eOpposite="#//MatchResource/comparison">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="This contains the mappings for each compared Resource."/>
       </eAnnotations>
@@ -96,6 +96,8 @@
         <details key="documentation" value="Keeps a reference towards the origin Resource of this Match. Might be null if this is a Comparison we have re-loaded from its serialized form and the origin EResource could not be loaded."/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comparison" eType="#//Comparison"
+        eOpposite="#//Comparison/matchedResources"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Match">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

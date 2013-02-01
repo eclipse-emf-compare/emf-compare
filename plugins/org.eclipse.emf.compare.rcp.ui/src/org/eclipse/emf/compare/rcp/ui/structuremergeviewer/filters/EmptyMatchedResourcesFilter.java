@@ -10,10 +10,16 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters;
 
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.isEmpty;
+
 import com.google.common.base.Predicate;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.MatchResource;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 
@@ -23,7 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class MatchedResourcesFilter implements IDifferenceFilter {
+public class EmptyMatchedResourcesFilter implements IDifferenceFilter {
 
 	/** A human-readable label for this filter. This will be displayed in the EMF Compare UI. */
 	private String label;
@@ -37,7 +43,7 @@ public class MatchedResourcesFilter implements IDifferenceFilter {
 	/**
 	 * Constructs the filter with the appropriate predicate.
 	 */
-	public MatchedResourcesFilter() {
+	public EmptyMatchedResourcesFilter() {
 		super();
 		setPredicate();
 	}
@@ -103,7 +109,24 @@ public class MatchedResourcesFilter implements IDifferenceFilter {
 	private void setPredicate() {
 		final Predicate<? super EObject> actualPredicate = new Predicate<EObject>() {
 			public boolean apply(EObject input) {
-				return input instanceof MatchResource;
+				if (input instanceof MatchResource) {
+					EList<Diff> differences = ((MatchResource)input).getComparison().getDifferences();
+					Iterable<ResourceAttachmentChange> resourceAttachmentchanges = filter(differences,
+							ResourceAttachmentChange.class);
+					if (!isEmpty(resourceAttachmentchanges)) {
+						for (ResourceAttachmentChange rac : resourceAttachmentchanges) {
+							final String diffResourceURI = rac.getResourceURI();
+							if (!diffResourceURI.equals(((MatchResource)input).getLeftURI())
+									&& !diffResourceURI.equals(((MatchResource)input).getRightURI())
+									&& !diffResourceURI.equals(((MatchResource)input).getOriginURI())) {
+								return true;
+							}
+						}
+					} else {
+						return true;
+					}
+				}
+				return false;
 			}
 		};
 		predicate = actualPredicate;

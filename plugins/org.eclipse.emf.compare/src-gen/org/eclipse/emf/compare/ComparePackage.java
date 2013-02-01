@@ -201,13 +201,22 @@ public interface ComparePackage extends EPackage {
 	int MATCH_RESOURCE__ORIGIN = 5;
 
 	/**
+	 * The feature id for the '<em><b>Comparison</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MATCH_RESOURCE__COMPARISON = 6;
+
+	/**
 	 * The number of structural features of the '<em>Match Resource</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MATCH_RESOURCE_FEATURE_COUNT = 6;
+	int MATCH_RESOURCE_FEATURE_COUNT = 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.impl.MatchImpl <em>Match</em>}' class.
@@ -1021,6 +1030,17 @@ public interface ComparePackage extends EPackage {
 	EAttribute getMatchResource_Origin();
 
 	/**
+	 * Returns the meta object for the container reference '{@link org.eclipse.emf.compare.MatchResource#getComparison <em>Comparison</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Comparison</em>'.
+	 * @see org.eclipse.emf.compare.MatchResource#getComparison()
+	 * @see #getMatchResource()
+	 * @generated
+	 */
+	EReference getMatchResource_Comparison();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.Match <em>Match</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1536,6 +1556,14 @@ public interface ComparePackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute MATCH_RESOURCE__ORIGIN = eINSTANCE.getMatchResource_Origin();
+
+		/**
+		 * The meta object literal for the '<em><b>Comparison</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MATCH_RESOURCE__COMPARISON = eINSTANCE.getMatchResource_Comparison();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.impl.MatchImpl <em>Match</em>}' class.

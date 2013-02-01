@@ -57,8 +57,8 @@
       </filter>
       <filter
             activeByDefault="true"
-            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.MatchedResourcesFilter"
-            label="Resource Mappings">
+            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.EmptyMatchedResourcesFilter"
+            label="Empty Resource Mappings">
       </filter>
    </extension>
 </plugin>

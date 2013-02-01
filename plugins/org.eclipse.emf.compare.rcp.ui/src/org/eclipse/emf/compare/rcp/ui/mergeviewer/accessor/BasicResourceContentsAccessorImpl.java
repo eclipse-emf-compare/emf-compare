@@ -26,9 +26,9 @@ import com.google.common.collect.Iterables;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
@@ -42,6 +42,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
+ * @since 3.0
  */
 public abstract class BasicResourceContentsAccessorImpl implements IResourceContentsAccessor {
 
@@ -104,9 +105,8 @@ public abstract class BasicResourceContentsAccessorImpl implements IResourceCont
 	public Resource getResource(MergeViewerSide side) {
 		Resource resource = null;
 		Collection<MatchResource> matchResources = fOwnerMatch.getComparison().getMatchedResources();
-		Iterator<MatchResource> it = matchResources.iterator();
-		if (it.hasNext()) {
-			MatchResource matchResource = it.next();
+		final String diffResourceURI = ((ResourceAttachmentChange)fDiff).getResourceURI();
+		for (MatchResource matchResource : matchResources) {
 			switch (side) {
 				case ANCESTOR:
 					resource = matchResource.getOrigin();
@@ -119,6 +119,12 @@ public abstract class BasicResourceContentsAccessorImpl implements IResourceCont
 					break;
 				default:
 					throw new IllegalStateException();
+			}
+			if (resource != null) {
+				URI resourceURI = resource.getURI();
+				if (diffResourceURI.equals(resourceURI.toString())) {
+					return resource;
+				}
 			}
 		}
 		return resource;

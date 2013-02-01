@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -37,29 +38,27 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#getMatchedResources <em>Matched Resources</em>}</li>
- * <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#getMatches <em>Matches</em>}</li>
- * <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#getConflicts <em>Conflicts</em>}</li>
- * <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#getEquivalences <em>Equivalences</em>}</li>
- * <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#isThreeWay <em>Three Way</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#getMatchedResources <em>Matched Resources</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#getMatches <em>Matches</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#getConflicts <em>Conflicts</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#getEquivalences <em>Equivalences</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.ComparisonImpl#isThreeWay <em>Three Way</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 @SuppressWarnings("boxing")
 public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public static final String copyright = "Copyright (c) 2012 Obeo.\r\nAll rights reserved. This program and the accompanying materials\r\nare made available under the terms of the Eclipse Public License v1.0\r\nwhich accompanies this distribution, and is available at\r\nhttp://www.eclipse.org/legal/epl-v10.html\r\n\r\nContributors:\r\n    Obeo - initial API and implementation"; //$NON-NLS-1$
 
 	/**
-	 * The cached value of the '{@link #getMatchedResources() <em>Matched Resources</em>}' containment
-	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getMatchedResources() <em>Matched Resources</em>}' containment reference list.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getMatchedResources()
 	 * @generated
 	 * @ordered
@@ -89,7 +88,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 	/**
 	 * The cached value of the '{@link #getEquivalences() <em>Equivalences</em>}' containment reference list.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @see #getEquivalences()
 	 * @generated
 	 * @ordered
@@ -97,9 +95,9 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 	protected EList<Equivalence> equivalences;
 
 	/**
-	 * The default value of the '{@link #isThreeWay() <em>Three Way</em>}' attribute. <!-- begin-user-doc -->
+	 * The default value of the '{@link #isThreeWay() <em>Three Way</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #isThreeWay()
 	 * @generated
 	 * @ordered
@@ -107,9 +105,9 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 	protected static final boolean THREE_WAY_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isThreeWay() <em>Three Way</em>}' attribute. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #isThreeWay() <em>Three Way</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #isThreeWay()
 	 * @generated
 	 * @ordered
@@ -118,7 +116,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected ComparisonImpl() {
@@ -127,7 +124,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -137,20 +133,19 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<MatchResource> getMatchedResources() {
 		if (matchedResources == null) {
-			matchedResources = new EObjectContainmentEList<MatchResource>(MatchResource.class, this,
-					ComparePackage.COMPARISON__MATCHED_RESOURCES);
+			matchedResources = new EObjectContainmentWithInverseEList<MatchResource>(MatchResource.class,
+					this, ComparePackage.COMPARISON__MATCHED_RESOURCES,
+					ComparePackage.MATCH_RESOURCE__COMPARISON);
 		}
 		return matchedResources;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<Match> getMatches() {
@@ -163,7 +158,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<Conflict> getConflicts() {
@@ -176,7 +170,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<Equivalence> getEquivalences() {
@@ -189,7 +182,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<Diff> getDifferences() {
@@ -200,7 +192,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<Diff> getDifferences(EObject element) {
@@ -211,7 +202,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Match getMatch(EObject element) {
@@ -222,7 +212,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public IEqualityHelper getEqualityHelper() {
@@ -232,8 +221,23 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 	}
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ComparePackage.COMPARISON__MATCHED_RESOURCES:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getMatchedResources()).basicAdd(
+						otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public boolean isThreeWay() {
@@ -242,21 +246,18 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setThreeWay(boolean newThreeWay) {
 		boolean oldThreeWay = threeWay;
 		threeWay = newThreeWay;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ComparePackage.COMPARISON__THREE_WAY,
 					oldThreeWay, threeWay));
-		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -276,7 +277,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -298,7 +298,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -330,7 +329,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -357,7 +355,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -379,14 +376,12 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) {
+		if (eIsProxy())
 			return super.toString();
-		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (threeWay: "); //$NON-NLS-1$
