@@ -13,6 +13,8 @@ package org.eclipse.emf.compare.internal.spec;
 import static com.google.common.collect.Iterables.filter;
 
 import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
@@ -20,6 +22,7 @@ import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.BasicEList;
@@ -82,13 +85,25 @@ public class ComparisonSpec extends ComparisonImpl {
 			diffCrossReferencer = new DiffCrossReferencer();
 			eAdapters().add(diffCrossReferencer);
 		}
-		Iterable<Diff> crossRefs = filter(getInverse(element, diffCrossReferencer), Diff.class);
 
-		final BasicEList<Diff> diffs = new BasicEList<Diff>();
-		for (Diff diff : crossRefs) {
-			diffs.add(diff);
+		final Match match = getMatch(element);
+		if (match != null) {
+			Iterable<Diff> left = ImmutableList.of();
+			Iterable<Diff> right = ImmutableList.of();
+			Iterable<Diff> origin = ImmutableList.of();
+			if (match.getLeft() != null) {
+				left = filter(getInverse(match.getLeft(), diffCrossReferencer), Diff.class);
+			}
+			if (match.getRight() != null) {
+				right = filter(getInverse(match.getRight(), diffCrossReferencer), Diff.class);
+			}
+			if (match.getOrigin() != null) {
+				origin = filter(getInverse(match.getOrigin(), diffCrossReferencer), Diff.class);
+			}
+			Set<Diff> crossRefs = ImmutableSet.copyOf(Iterables.concat(left, right, origin));
+			return new BasicEList<Diff>(crossRefs);
 		}
-		return diffs;
+		return new BasicEList<Diff>();
 	}
 
 	/**
