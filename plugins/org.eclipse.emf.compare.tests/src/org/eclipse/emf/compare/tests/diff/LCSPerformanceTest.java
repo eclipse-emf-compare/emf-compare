@@ -84,7 +84,8 @@ public class LCSPerformanceTest {
 	 * machine, so the timeout has been raised to 40s.
 	 * </p>
 	 */
-	@Test(timeout = 40000)
+	@Test(timeout = 60000)
+	// FIXME: raise the limit to 60sec after changes in ComparisonSpec#getDifferences(EObject) (
 	public void copyLeftToRight() {
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
