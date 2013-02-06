@@ -32,6 +32,7 @@ import org.eclipse.core.resources.mapping.RemoteResourceMappingContext;
 import org.eclipse.core.resources.mapping.ResourceMappingContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -466,8 +467,14 @@ public final class EMFSynchronizationModel {
 		try {
 			final IStorage startStorage = start.getStorage(new NullProgressMonitor());
 			if (resourceSet.resolveAll(startStorage)) {
-				final Set<IStorage> storages = Sets.newLinkedHashSet(Sets.union(Collections
-						.singleton(startStorage), converter.getLoadedRevisions()));
+				final Set<IStorage> storages = Sets.newLinkedHashSet();
+				storages.add(startStorage);
+				final IPath startPath = startStorage.getFullPath();
+				for (IStorage loaded : converter.getLoadedRevisions()) {
+					if (!startPath.equals(loaded.getFullPath())) {
+						storages.add(loaded);
+					}
+				}
 				traversal = new StorageTraversal(storages);
 			} else {
 				// FIXME log
