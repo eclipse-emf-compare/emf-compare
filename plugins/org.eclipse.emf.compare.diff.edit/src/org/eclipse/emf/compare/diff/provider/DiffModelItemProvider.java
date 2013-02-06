@@ -17,6 +17,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
@@ -181,12 +182,15 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 			} else {
 				resourceName = resourceURI.lastSegment();
 			}
-			if (diff.getOwnedElements().size() > 0) {
-				text = getString("_UI_DiffModel_type", new Object[] { //$NON-NLS-1$
-						((DiffGroup)diff.getOwnedElements().get(0)).getSubchanges(), resourceName, });
-			} else {
-				text = getString("_UI_DiffModel_type", new Object[] {Integer.valueOf(0), resourceName, }); //$NON-NLS-1$
+			int diffCount = 0;
+			for (DiffElement sub : diff.getOwnedElements()) {
+				if (sub instanceof DiffGroup) {
+					diffCount += ((DiffGroup)sub).getSubchanges();
+				} else {
+					diffCount++;
+				}
 			}
+			text = getString("_UI_DiffModel_type", new Object[] {Integer.valueOf(diffCount), resourceName, }); //$NON-NLS-1$
 		}
 		return text;
 	}
