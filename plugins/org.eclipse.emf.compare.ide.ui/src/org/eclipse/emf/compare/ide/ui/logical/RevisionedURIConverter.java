@@ -153,10 +153,8 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 				IResource temp = ResourcesPlugin.getWorkspace().getRoot().getFile(platformString);
 				if (!temp.exists() && normalizedUri.isPlatformResource() && platformString.segmentCount() > 1) {
 					// We tend to get here with unresolvable URIs with git; as it tends to give URIs of the
-					// form
-					// platform:/resource/<repository name>/<workspace relative path> instead of the
-					// resolvable
-					// platform:/resource/<workspace relative path> . We'll try for this case
+					// form platform:/resource/<repository name>/<workspace relative path> instead of the
+					// resolvable platform:/resource/<workspace relative path> . We'll try for this case.
 					targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
 							platformString.removeFirstSegments(1));
 				} else {
@@ -222,9 +220,11 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 				// This file exists on the repository.
 				IFileRevision soughtRevision = null;
 				final IFileRevision[] revisions = history.getFileRevisions();
-				for (int i = 0; i < revisions.length && soughtRevision == null; i++) {
+				for (int i = 0; i < revisions.length; i++) {
 					final IFileRevision revision = revisions[i];
-					if (maxTimestamp < 0 || revision.getTimestamp() < maxTimestamp) {
+					if ((maxTimestamp < 0 || revision.getTimestamp() < maxTimestamp)
+							&& (soughtRevision == null || soughtRevision.getTimestamp() < revision
+									.getTimestamp())) {
 						soughtRevision = revision;
 					}
 				}
