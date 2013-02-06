@@ -15,6 +15,9 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
@@ -69,7 +72,6 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 		final WizardNewFileCreationPage wizardNewFileCreationPage = (WizardNewFileCreationPage)getPage("newFilePage1"); //$NON-NLS-1$
 		wizardNewFileCreationPage.setFileName("result." + fileExtension); //$NON-NLS-1$
 		wizardNewFileCreationPage.setAllowExistingResources(true);
-
 	}
 
 	/**
@@ -121,7 +123,11 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 					modelInputSnapshot.setDate(Calendar.getInstance(Locale.getDefault()).getTime());
 					ModelUtils.save(modelInputSnapshot, createdFile.getLocation().toOSString());
 				}
+				createdFile.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
 			} catch (final IOException e) {
+				EMFComparePlugin.log(e, false);
+			} catch (CoreException e) {
+				// File won't be refreshed...
 				EMFComparePlugin.log(e, false);
 			}
 			result = true;
