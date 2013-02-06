@@ -321,6 +321,8 @@ public class ModelStructureMergeViewer extends TreeViewer {
 				setExpandedTreePaths(expandedPaths);
 			}
 		}
+
+		updateToolItems();
 	}
 
 	/**
