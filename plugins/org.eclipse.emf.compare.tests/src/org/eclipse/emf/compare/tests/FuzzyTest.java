@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,12 +19,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.match.eobject.URIDistance;
+import org.eclipse.emf.compare.merge.BatchMerger;
+import org.eclipse.emf.compare.merge.IBatchMerger;
+import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -47,6 +51,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(FuzzyRunner.class)
 @DataProvider(EMFDataProvider.class)
+@SuppressWarnings("nls")
 public class FuzzyTest {
 
 	@Data
@@ -54,6 +59,8 @@ public class FuzzyTest {
 
 	@Util
 	private MutateUtil util;
+
+	private IMerger.Registry mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
 
 	/**
 	 * Test to check if the {@link FuzzyRunner} is working.
@@ -81,10 +88,8 @@ public class FuzzyTest {
 
 		Comparison result = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(root, backup));
 		int nbDiffs = result.getDifferences().size();
-
-		for (Diff delta : result.getDifferences()) {
-			delta.copyRightToLeft();
-		}
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		merger.copyAllRightToLeft(result.getDifferences(), new BasicMonitor());
 
 		for (Diff delta : result.getDifferences()) {
 			assertSame(delta.getState(), DifferenceState.MERGED);
@@ -111,7 +116,8 @@ public class FuzzyTest {
 				if (diff.getMatch().getRight() != null) {
 					String uri = new URIDistance().apply(diff.getMatch().getRight()).toString();
 					if (urisToDebug.contains(uri)) {
-						diff.copyRightToLeft();
+						final IMerger diffMerger = mergerRegistry.getHighestRankingMerger(diff);
+						diffMerger.copyRightToLeft(diff, new BasicMonitor());
 					}
 				}
 			}
@@ -136,9 +142,8 @@ public class FuzzyTest {
 
 		Comparison result = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(root, backup));
 		int nbDiffs = result.getDifferences().size();
-		for (Diff delta : result.getDifferences()) {
-			delta.copyLeftToRight();
-		}
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		merger.copyAllLeftToRight(result.getDifferences(), new BasicMonitor());
 
 		Comparison valid = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(root, backup));
 		List<Diff> differences = valid.getDifferences();

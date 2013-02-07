@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.extension.merge;
+package org.eclipse.emf.compare.merge;
 
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
@@ -26,13 +26,17 @@ import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Diff;
 
 /**
- * Interface for a merger.
+ * Mergers are used by EMF Compare to merge specific differences from one side to the other. A number of
+ * default mergers are provided by EMF Compare, but they can be sub-classed and extended by clients through
+ * the extension point "org.eclipse.emf.compare.ide.mergerExtension".
+ * <p>
+ * Clients can either implement the whole merger contract or extend {@link AbstractMerger} instead.
+ * </p>
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  * @since 3.0
  */
 public interface IMerger {
-
 	/**
 	 * Check if the merger is a good candidate to merge the given difference.
 	 * 
@@ -93,10 +97,16 @@ public interface IMerger {
 	Registry getRegistry();
 
 	/**
-	 * The merger registry.
+	 * This will hold all registered mergers. Mergers can be registered manually in the registry, but they are
+	 * usually registered through the "org.eclipse.emf.compare.ide.mergerExtension" extension point.
+	 * <p>
+	 * An instance of the registry is usually accessed through
+	 * "EMFCompareIDEPlugin.getDefault().getMergerRegistry()". However, if you need an instance of the
+	 * registry in a standalone environment, you should use "IMerger.RegistryImpl.createStandaloneInstance()"
+	 * so that the default registrations are taken care of.
+	 * </p>
 	 */
-	interface Registry {
-
+	public interface Registry {
 		/**
 		 * Returns the merger, for the given target, owning the highest ranking.
 		 * 
@@ -140,7 +150,8 @@ public interface IMerger {
 	}
 
 	/**
-	 * The implementation of the merger registry.
+	 * A default implementation of an {@link IMerger.Registry}. This is the implementation EMF Compare will
+	 * use through its GUI.
 	 */
 	public class RegistryImpl implements Registry {
 
@@ -157,6 +168,30 @@ public interface IMerger {
 		}
 
 		/**
+		 * Returns a registry filled with the default mergers provided by EMF Compare; namely
+		 * {@link AttributeChangeMerger}, {@link ReferenceChangeMerger} and
+		 * {@link ResourceAttachmentChangeMerger}.
+		 * 
+		 * @return A registry filled with the default mergers provided by EMF Compare.
+		 */
+		public static IMerger.Registry createStandaloneInstance() {
+			final IMerger.Registry registry = new RegistryImpl();
+
+			final IMerger attributeMerger = new AttributeChangeMerger();
+			attributeMerger.setRanking(10);
+			final IMerger referenceMerger = new ReferenceChangeMerger();
+			referenceMerger.setRanking(10);
+			final IMerger resourceAttachmentMerger = new ResourceAttachmentChangeMerger();
+			resourceAttachmentMerger.setRanking(10);
+
+			registry.add(attributeMerger);
+			registry.add(referenceMerger);
+			registry.add(resourceAttachmentMerger);
+
+			return registry;
+		}
+
+		/**
 		 * Returns the predicate to check if the current merger is a good candidate to handle the given target
 		 * difference.
 		 * 
@@ -164,7 +199,7 @@ public interface IMerger {
 		 *            The given difference.
 		 * @return The predicate.
 		 */
-		static final Predicate<IMerger> isMergerFor(final Diff target) {
+		private static Predicate<IMerger> isMergerFor(final Diff target) {
 			return new Predicate<IMerger>() {
 				/**
 				 * {@inheritDoc}
@@ -180,7 +215,7 @@ public interface IMerger {
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.extension.merge.IMerger.Registry#add(org.eclipse.emf.compare.extension.merge.IMerger)
+		 * @see org.eclipse.emf.compare.merge.IMerger.Registry#add(org.eclipse.emf.compare.merge.IMerger)
 		 */
 		public IMerger add(IMerger merger) {
 			Preconditions.checkNotNull(merger);
@@ -191,7 +226,7 @@ public interface IMerger {
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.extension.merge.IMerger.Registry#remove(java.lang.String)
+		 * @see org.eclipse.emf.compare.merge.IMerger.Registry#remove(java.lang.String)
 		 */
 		public IMerger remove(String className) {
 			IMerger previous = map.remove(className);
@@ -204,7 +239,7 @@ public interface IMerger {
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.extension.merge.IMerger.Registry#clear()
+		 * @see org.eclipse.emf.compare.merge.IMerger.Registry#clear()
 		 */
 		public void clear() {
 			map.clear();
@@ -213,7 +248,7 @@ public interface IMerger {
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.extension.merge.IMerger.Registry#getHighestRankingMerger(org.eclipse.emf.compare.Diff)
+		 * @see org.eclipse.emf.compare.merge.IMerger.Registry#getHighestRankingMerger(org.eclipse.emf.compare.Diff)
 		 */
 		public IMerger getHighestRankingMerger(Diff target) {
 			Iterator<IMerger> mergers = getMergers(target).iterator();
@@ -231,13 +266,19 @@ public interface IMerger {
 				ret = highestRanking;
 			}
 
+			if (ret == null) {
+				// TODO externalize and use accurate Exception.
+				throw new IllegalStateException("No merger found for diff "
+						+ target.getClass().getSimpleName());
+			}
+
 			return ret;
 		}
 
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.extension.merge.IMerger.Registry#getMergers(org.eclipse.emf.compare.Diff)
+		 * @see org.eclipse.emf.compare.merge.IMerger.Registry#getMergers(org.eclipse.emf.compare.Diff)
 		 */
 		public Collection<IMerger> getMergers(Diff target) {
 			Iterable<IMerger> mergers = filter(map.values(), isMergerFor(target));
@@ -247,63 +288,5 @@ public interface IMerger {
 			}
 			return ret;
 		}
-
 	}
-
-	/**
-	 * Implementation of <code>IMerger</code> to factorize the accessors to ranking.
-	 */
-	public abstract class AbstractMerger implements IMerger {
-
-		/**
-		 * The ranking of the merger.
-		 */
-		private int ranking;
-
-		/**
-		 * The merger registry.
-		 */
-		private Registry registry;
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.extension.merge.IMerger#getRanking()
-		 */
-		public int getRanking() {
-			return ranking;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.extension.merge.IMerger#setRanking(int)
-		 */
-		public void setRanking(int r) {
-			ranking = r;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.extension.merge.IMerger#getRegistry()
-		 */
-		public Registry getRegistry() {
-			return registry;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.extension.merge.IMerger#setRegistry(org.eclipse.emf.compare.extension.merge.IMerger.Registry)
-		 */
-		public void setRegistry(Registry registry) {
-			if (this.registry != null && registry != null) {
-				throw new IllegalStateException("The registry has to be set only once."); //$NON-NLS-1$
-			}
-			this.registry = registry;
-		}
-
-	}
-
 }

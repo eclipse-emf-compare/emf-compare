@@ -29,5 +29,12 @@ Contributors:
          </nsURI>
       </postProcessor>
    </extension>
+   <extension
+         point="org.eclipse.emf.compare.ide.mergerExtension">
+      <merger
+            class="org.eclipse.emf.compare.uml2.merge.UMLDiffMerger"
+            ranking="11">
+      </merger>
+   </extension>
 
 </plugin>

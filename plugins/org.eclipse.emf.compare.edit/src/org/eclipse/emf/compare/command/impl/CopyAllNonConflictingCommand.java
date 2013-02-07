@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,13 +10,18 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.command.impl;
 
+import com.google.common.base.Predicate;
+
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.extension.merge.IMerger;
+import org.eclipse.emf.compare.merge.BatchMerger;
+import org.eclipse.emf.compare.merge.IBatchMerger;
+import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 
 /**
@@ -57,12 +62,21 @@ public class CopyAllNonConflictingCommand extends AbstractCopyCommand {
 	 */
 	@Override
 	protected void doExecute() {
-		for (Diff diff : differences) {
-			if (diff.getConflict() == null
-					&& (leftToRight && diff.getSource() == DifferenceSource.LEFT || !leftToRight
-							&& diff.getSource() == DifferenceSource.RIGHT)) {
-				copy(diff);
+		final Predicate<? super Diff> filter = new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				if (input == null || input.getConflict() != null) {
+					return false;
+				}
+				return leftToRight && input.getSource() == DifferenceSource.LEFT || !leftToRight
+						&& input.getSource() == DifferenceSource.RIGHT;
 			}
+		};
+
+		IBatchMerger merger = new BatchMerger(mergerRegistry, filter);
+		if (leftToRight) {
+			merger.copyAllLeftToRight(differences, new BasicMonitor());
+		} else {
+			merger.copyAllRightToLeft(differences, new BasicMonitor());
 		}
 	}
 }

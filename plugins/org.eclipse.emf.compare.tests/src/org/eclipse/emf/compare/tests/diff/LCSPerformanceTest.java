@@ -1,3 +1,13 @@
+/**
+ * Copyright (c) 2013 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ */
 package org.eclipse.emf.compare.tests.diff;
 
 import static junit.framework.Assert.assertEquals;
@@ -7,11 +17,15 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.merge.BatchMerger;
+import org.eclipse.emf.compare.merge.IBatchMerger;
+import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.nodes.Node;
 import org.eclipse.emf.compare.tests.nodes.NodesFactory;
@@ -81,18 +95,17 @@ public class LCSPerformanceTest {
 	 * </p>
 	 * <p>
 	 * Note that this test should run in less than 30 seconds... However that is not true on our build
-	 * machine, so the timeout has been raised to 40s.
+	 * machine, so the timeout has been raised to 60s.
 	 * </p>
 	 */
 	@Test(timeout = 60000)
-	// FIXME: raise the limit to 60sec after changes in ComparisonSpec#getDifferences(EObject) (
 	public void copyLeftToRight() {
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
-		for (Diff diff : comparison.getDifferences()) {
-			diff.copyLeftToRight();
-		}
+		final IMerger.Registry registry = IMerger.RegistryImpl.createStandaloneInstance();
+		final IBatchMerger merger = new BatchMerger(registry);
+		merger.copyAllLeftToRight(comparison.getDifferences(), new BasicMonitor());
 
 		comparison = EMFCompare.builder().build().compare(scope);
 		assertTrue(comparison.getDifferences().isEmpty());
@@ -110,9 +123,9 @@ public class LCSPerformanceTest {
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
-		for (Diff diff : comparison.getDifferences()) {
-			diff.copyRightToLeft();
-		}
+		final IMerger.Registry registry = IMerger.RegistryImpl.createStandaloneInstance();
+		final IBatchMerger merger = new BatchMerger(registry);
+		merger.copyAllRightToLeft(comparison.getDifferences(), new BasicMonitor());
 
 		comparison = EMFCompare.builder().build().compare(scope);
 		assertTrue(comparison.getDifferences().isEmpty());

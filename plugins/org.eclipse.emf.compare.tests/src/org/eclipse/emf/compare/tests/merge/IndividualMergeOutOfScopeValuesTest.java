@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,11 +21,13 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.merge.data.IndividualDiffInputData;
 import org.eclipse.emf.ecore.EObject;
@@ -38,6 +40,8 @@ import org.junit.Test;
 @SuppressWarnings({"nls", "unchecked" })
 public class IndividualMergeOutOfScopeValuesTest {
 	private IndividualDiffInputData input = new IndividualDiffInputData();
+
+	private final IMerger.Registry mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
 
 	@Test
 	public void testReferenceMonoChange2WayLtR() throws IOException {
@@ -63,7 +67,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(leftDiffContainer, diff.getMatch().getLeft());
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -106,7 +110,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(leftDiffContainer, diff.getMatch().getLeft());
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -152,7 +156,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -206,7 +210,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -258,7 +262,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -310,7 +314,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -361,7 +365,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(leftDiffContainer, diff.getMatch().getLeft());
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -404,7 +408,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(leftDiffContainer, diff.getMatch().getLeft());
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -448,7 +452,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -498,7 +502,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -545,7 +549,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -592,7 +596,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -639,7 +643,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(leftDiffContainer, diff.getMatch().getLeft());
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -680,7 +684,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(leftDiffContainer, diff.getMatch().getLeft());
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -726,7 +730,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -774,7 +778,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -823,7 +827,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -872,7 +876,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -917,7 +921,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(leftDiffContainer, diff.getMatch().getLeft());
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -977,7 +981,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(leftDiffContainer, diff.getMatch().getLeft());
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -1039,7 +1043,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -1114,7 +1118,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -1187,7 +1191,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -1260,7 +1264,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -1332,7 +1336,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(leftDiffContainer, diff.getMatch().getLeft());
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -1391,7 +1395,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(leftDiffContainer, diff.getMatch().getLeft());
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -1454,7 +1458,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -1530,7 +1534,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -1606,7 +1610,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -1680,7 +1684,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertSame(rightDiffContainer, diff.getMatch().getRight());
 		assertSame(originDiffContainer, diff.getMatch().getOrigin());
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -1768,7 +1772,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertTrue(rightProxyIndex != -1);
 		assertFalse(leftProxyIndex == rightProxyIndex);
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -1830,7 +1834,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertTrue(rightProxyIndex != -1);
 		assertFalse(leftProxyIndex == rightProxyIndex);
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -1900,7 +1904,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertFalse(leftProxyIndex == rightProxyIndex);
 		assertEquals(rightProxyIndex, originProxyIndex);
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -1977,7 +1981,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertFalse(leftProxyIndex == rightProxyIndex);
 		assertEquals(rightProxyIndex, originProxyIndex);
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -2053,7 +2057,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertFalse(leftProxyIndex == rightProxyIndex);
 		assertEquals(leftProxyIndex, originProxyIndex);
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 
@@ -2129,7 +2133,7 @@ public class IndividualMergeOutOfScopeValuesTest {
 		assertFalse(leftProxyIndex == rightProxyIndex);
 		assertEquals(leftProxyIndex, originProxyIndex);
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// The proxy should not have been resolved by the merge operation
 		assertTrue(diff.getValue().eIsProxy());
 

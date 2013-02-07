@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import com.google.common.collect.Iterators;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,9 +28,8 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.extension.merge.DefaultMerger;
-import org.eclipse.emf.compare.extension.merge.IMerger;
-import org.eclipse.emf.compare.extension.merge.IMerger.RegistryImpl;
+import org.eclipse.emf.compare.merge.AbstractMerger;
+import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.merge.data.IndividualDiffInputData;
 import org.eclipse.emf.ecore.EObject;
@@ -59,7 +57,8 @@ public class ExtensionMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedAttribute("root.origin", featureName, "originValue", "leftValue")));
 
-		IMerger merger = getMerger(diff, new ArrayList<IMerger>(), DefaultMerger.class);
+		IMerger merger = getMerger(IMerger.RegistryImpl.createStandaloneInstance(), diff,
+				AbstractMerger.class);
 		merger.copyLeftToRight(diff, null);
 
 		final EObject originNode = getNodeNamed(right, "origin");
@@ -73,19 +72,11 @@ public class ExtensionMergeTest {
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
-	public static IMerger getMerger(final Diff diff, final List<? extends IMerger> specificMergers,
+	public static IMerger getMerger(final IMerger.Registry registry, final Diff diff,
 			final Class<? extends IMerger> expectedMerger) {
-		IMerger.Registry registry = new RegistryImpl();
-		IMerger coreMerger = new DefaultMerger();
-		coreMerger.setRanking(0);
-		registry.add(coreMerger);
-		for (Iterator<? extends IMerger> iterator = specificMergers.iterator(); iterator.hasNext();) {
-			IMerger iMerger = iterator.next();
-			registry.add(iMerger);
-		}
 		IMerger merger = registry.getHighestRankingMerger(diff);
 		assertNotNull("No merger has been found for the diff: " + diff, merger);
-		assertTrue("The found merger is not an expexted CoreDiffMerger", expectedMerger.isInstance(merger));
+		assertTrue("The found merger is not the expexted Merger", expectedMerger.isInstance(merger));
 		return merger;
 	}
 

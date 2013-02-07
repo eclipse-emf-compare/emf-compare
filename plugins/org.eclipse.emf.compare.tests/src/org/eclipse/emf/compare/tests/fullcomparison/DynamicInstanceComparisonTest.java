@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,9 +14,12 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.merge.BatchMerger;
+import org.eclipse.emf.compare.merge.IBatchMerger;
+import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.fullcomparison.data.dynamic.DynamicInstancesInputData;
 import org.eclipse.emf.compare.tests.suite.AllTests;
@@ -38,6 +41,8 @@ public class DynamicInstanceComparisonTest {
 	Resource right;
 
 	Resource origin;
+
+	final IMerger.Registry mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
 
 	@Before
 	public void setUp() throws Exception {
@@ -68,9 +73,10 @@ public class DynamicInstanceComparisonTest {
 		Comparison result = EMFCompare.builder().build().compare(scope);
 		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1, result
 				.getDifferences().size());
-		for (Diff diff : result.getDifferences()) {
-			diff.copyLeftToRight();
-		}
+
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		merger.copyAllLeftToRight(result.getDifferences(), new BasicMonitor());
+
 		assertEquals("We are supposed to have no difference as we merged everything", 0, EMFCompare.builder()
 				.build().compare(scope).getDifferences().size());
 	}
@@ -81,9 +87,10 @@ public class DynamicInstanceComparisonTest {
 		Comparison result = EMFCompare.builder().build().compare(scope);
 		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1, result
 				.getDifferences().size());
-		for (Diff diff : result.getDifferences()) {
-			diff.copyRightToLeft();
-		}
+
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		merger.copyAllRightToLeft(result.getDifferences(), new BasicMonitor());
+
 		assertEquals("We are supposed to have no difference as we merged everything", 0, EMFCompare.builder()
 				.build().compare(scope).getDifferences().size());
 	}

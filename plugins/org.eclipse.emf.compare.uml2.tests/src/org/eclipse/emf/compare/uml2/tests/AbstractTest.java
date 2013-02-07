@@ -1,3 +1,13 @@
+/**
+ * Copyright (c) 2012, 2013 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ */
 package org.eclipse.emf.compare.uml2.tests;
 
 import static org.junit.Assert.assertTrue;
@@ -9,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.ComparePackage;
@@ -18,9 +29,13 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.extension.PostProcessorDescriptor;
 import org.eclipse.emf.compare.extension.PostProcessorRegistry;
+import org.eclipse.emf.compare.merge.BatchMerger;
+import org.eclipse.emf.compare.merge.IBatchMerger;
+import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.diff.UMLDiffExtensionPostProcessor;
+import org.eclipse.emf.compare.uml2.merge.UMLDiffMerger;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -35,13 +50,19 @@ public abstract class AbstractTest {
 
 	private EMFCompare emfCompare;
 
+	private static final IMerger.Registry mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
+
 	@BeforeClass
-	public static void fillEMFRegistries() {
+	public static void fillRegistries() {
 		EPackage.Registry.INSTANCE.put(ComparePackage.eNS_URI, ComparePackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);
 
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("uml", //$NON-NLS-1$
 				new UMLResourceFactoryImpl());
+
+		final IMerger umlMerger = new UMLDiffMerger();
+		umlMerger.setRanking(11);
+		mergerRegistry.add(umlMerger);
 	}
 
 	@Before
@@ -110,9 +131,8 @@ public abstract class AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
 		final Comparison comparisonBefore = getCompare().compare(scope);
 		EList<Diff> differences = comparisonBefore.getDifferences();
-		for (Diff diff : differences) {
-			diff.copyLeftToRight();
-		}
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		merger.copyAllLeftToRight(differences, new BasicMonitor());
 		final Comparison comparisonAfter = getCompare().compare(scope);
 		assertTrue("Comparison#getDifferences() must be empty after copyAllLeftToRight", comparisonAfter
 				.getDifferences().isEmpty());
@@ -122,9 +142,8 @@ public abstract class AbstractTest {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
 		final Comparison comparisonBefore = getCompare().compare(scope);
 		EList<Diff> differences = comparisonBefore.getDifferences();
-		for (Diff diff : differences) {
-			diff.copyRightToLeft();
-		}
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		merger.copyAllRightToLeft(differences, new BasicMonitor());
 		final Comparison comparisonAfter = getCompare().compare(scope);
 		assertTrue("Comparison#getDifferences() must be empty after copyAllRightToLeft", comparisonAfter
 				.getDifferences().isEmpty());

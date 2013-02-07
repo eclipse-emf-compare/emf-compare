@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
@@ -31,6 +32,9 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.merge.BatchMerger;
+import org.eclipse.emf.compare.merge.IBatchMerger;
+import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.fragmentation.data.FragmentationInputData;
 import org.eclipse.emf.ecore.EObject;
@@ -44,6 +48,8 @@ import org.junit.Test;
 @SuppressWarnings("nls")
 public class FragmentationTest {
 	private final FragmentationInputData input = new FragmentationInputData();
+
+	private final IMerger.Registry mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
 
 	@Test
 	public void testUncontroledObjectResourceSet() throws IOException {
@@ -103,7 +109,7 @@ public class FragmentationTest {
 		final List<Diff> differences = comparison.getDifferences();
 		final Diff diff = differences.get(0);
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		assertSame(Integer.valueOf(1), Integer.valueOf(leftSet.getResources().size()));
 		assertSame(Integer.valueOf(2), Integer.valueOf(originSet.getResources().size()));
 		// Still two resources, though one is empty
@@ -156,7 +162,7 @@ public class FragmentationTest {
 		final List<Diff> differences = comparison.getDifferences();
 		final Diff diff = differences.get(0);
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		assertSame(Integer.valueOf(2), Integer.valueOf(leftSet.getResources().size()));
 		assertSame(Integer.valueOf(2), Integer.valueOf(originSet.getResources().size()));
 		assertSame(Integer.valueOf(2), Integer.valueOf(rightSet.getResources().size()));
@@ -231,9 +237,8 @@ public class FragmentationTest {
 
 		final List<Diff> differences = comparison.getDifferences();
 
-		for (Diff diff : differences) {
-			diff.copyLeftToRight();
-		}
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		merger.copyAllLeftToRight(differences, new BasicMonitor());
 
 		final EObject leftFragmentedNode = getNodeNamed(left, "fragmented");
 		final EObject originFragmentedNode = getNodeNamed(origin, "fragmented");
@@ -284,9 +289,8 @@ public class FragmentationTest {
 
 		final List<Diff> differences = comparison.getDifferences();
 
-		for (Diff diff : differences) {
-			diff.copyRightToLeft();
-		}
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		merger.copyAllRightToLeft(differences, new BasicMonitor());
 
 		final EObject leftFragmentedNode = getNodeNamed(left, "fragmented");
 		final EObject originFragmentedNode = getNodeNamed(origin, "fragmented");
@@ -379,7 +383,7 @@ public class FragmentationTest {
 		final List<Diff> differences = comparison.getDifferences();
 		final Diff diff = differences.get(0);
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		assertSame(Integer.valueOf(2), Integer.valueOf(leftSet.getResources().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(originSet.getResources().size()));
 		assertSame(Integer.valueOf(2), Integer.valueOf(rightSet.getResources().size()));
@@ -425,7 +429,7 @@ public class FragmentationTest {
 		final List<Diff> differences = comparison.getDifferences();
 		final Diff diff = differences.get(0);
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// Note : we still have 2 resources there, though one is empty
 		assertSame(Integer.valueOf(2), Integer.valueOf(leftSet.getResources().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(originSet.getResources().size()));
@@ -507,9 +511,8 @@ public class FragmentationTest {
 
 		final List<Diff> differences = comparison.getDifferences();
 
-		for (Diff diff : differences) {
-			diff.copyLeftToRight();
-		}
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		merger.copyAllLeftToRight(differences, new BasicMonitor());
 
 		final EObject leftFragmentedNode = getNodeNamed(left, "fragmented");
 		final EObject originFragmentedNode = getNodeNamed(origin, "fragmented");
@@ -560,9 +563,8 @@ public class FragmentationTest {
 
 		final List<Diff> differences = comparison.getDifferences();
 
-		for (Diff diff : differences) {
-			diff.copyRightToLeft();
-		}
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		merger.copyAllRightToLeft(differences, new BasicMonitor());
 
 		final EObject leftFragmentedNode = getNodeNamed(left, "fragmented");
 		final EObject originFragmentedNode = getNodeNamed(origin, "fragmented");
@@ -655,7 +657,7 @@ public class FragmentationTest {
 		final List<Diff> differences = comparison.getDifferences();
 		final Diff diff = differences.get(0);
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		assertSame(Integer.valueOf(2), Integer.valueOf(leftSet.getResources().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(originSet.getResources().size()));
 		assertSame(Integer.valueOf(2), Integer.valueOf(rightSet.getResources().size()));
@@ -701,7 +703,7 @@ public class FragmentationTest {
 		final List<Diff> differences = comparison.getDifferences();
 		final Diff diff = differences.get(0);
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// Note : we still have 2 resources there, though one is empty
 		assertSame(Integer.valueOf(2), Integer.valueOf(leftSet.getResources().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(originSet.getResources().size()));
@@ -783,9 +785,8 @@ public class FragmentationTest {
 
 		final List<Diff> differences = comparison.getDifferences();
 
-		for (Diff diff : differences) {
-			diff.copyLeftToRight();
-		}
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		merger.copyAllLeftToRight(differences, new BasicMonitor());
 
 		final EObject leftFragmentedNode = getNodeNamed(left, "fragmented");
 		final EObject originFragmentedNode = getNodeNamed(origin, "fragmented");
@@ -836,9 +837,8 @@ public class FragmentationTest {
 
 		final List<Diff> differences = comparison.getDifferences();
 
-		for (Diff diff : differences) {
-			diff.copyRightToLeft();
-		}
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		merger.copyAllRightToLeft(differences, new BasicMonitor());
 
 		final EObject leftFragmentedNode = getNodeNamed(left, "fragmented");
 		final EObject originFragmentedNode = getNodeNamed(origin, "fragmented");
@@ -931,7 +931,7 @@ public class FragmentationTest {
 		final List<Diff> differences = comparison.getDifferences();
 		final Diff diff = differences.get(0);
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		assertSame(Integer.valueOf(1), Integer.valueOf(left.getContents().size()));
 		assertSame(Integer.valueOf(2), Integer.valueOf(origin.getContents().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(right.getContents().size()));
@@ -969,7 +969,7 @@ public class FragmentationTest {
 		final List<Diff> differences = comparison.getDifferences();
 		final Diff diff = differences.get(0);
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		assertSame(Integer.valueOf(2), Integer.valueOf(left.getContents().size()));
 		assertSame(Integer.valueOf(2), Integer.valueOf(origin.getContents().size()));
 		assertSame(Integer.valueOf(2), Integer.valueOf(right.getContents().size()));
@@ -1012,7 +1012,7 @@ public class FragmentationTest {
 		final List<Diff> differences = comparison.getDifferences();
 		final Diff diff = differences.get(0);
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		assertSame(Integer.valueOf(1), Integer.valueOf(left.getContents().size()));
 		assertSame(Integer.valueOf(2), Integer.valueOf(origin.getContents().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(right.getContents().size()));
@@ -1042,7 +1042,7 @@ public class FragmentationTest {
 		final List<Diff> differences = comparison.getDifferences();
 		final Diff diff = differences.get(0);
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		assertSame(Integer.valueOf(2), Integer.valueOf(left.getContents().size()));
 		assertSame(Integer.valueOf(2), Integer.valueOf(origin.getContents().size()));
 		assertSame(Integer.valueOf(2), Integer.valueOf(right.getContents().size()));
@@ -1113,7 +1113,7 @@ public class FragmentationTest {
 		final List<Diff> differences = comparison.getDifferences();
 		final Diff diff = differences.get(0);
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		assertSame(Integer.valueOf(2), Integer.valueOf(left.getContents().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(origin.getContents().size()));
 		assertSame(Integer.valueOf(2), Integer.valueOf(right.getContents().size()));
@@ -1151,7 +1151,7 @@ public class FragmentationTest {
 		final List<Diff> differences = comparison.getDifferences();
 		final Diff diff = differences.get(0);
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		assertSame(Integer.valueOf(1), Integer.valueOf(left.getContents().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(origin.getContents().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(right.getContents().size()));
@@ -1198,7 +1198,7 @@ public class FragmentationTest {
 		final List<Diff> differences = comparison.getDifferences();
 		final Diff diff = differences.get(0);
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		assertSame(Integer.valueOf(2), Integer.valueOf(left.getContents().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(origin.getContents().size()));
 		assertSame(Integer.valueOf(2), Integer.valueOf(right.getContents().size()));
@@ -1228,7 +1228,7 @@ public class FragmentationTest {
 		final List<Diff> differences = comparison.getDifferences();
 		final Diff diff = differences.get(0);
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		assertSame(Integer.valueOf(1), Integer.valueOf(left.getContents().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(origin.getContents().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(right.getContents().size()));

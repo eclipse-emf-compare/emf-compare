@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,14 +18,11 @@ import com.google.common.collect.Iterables;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
-import org.eclipse.emf.compare.extension.merge.IMerger;
-import org.eclipse.emf.compare.provider.EMFCompareEditPlugin;
+import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.edit.command.ChangeCommand;
 
@@ -43,7 +40,7 @@ public abstract class AbstractCopyCommand extends ChangeCommand implements IComp
 	protected final boolean leftToRight;
 
 	/** Merger registry. */
-	private final IMerger.Registry mergerRegistry;
+	protected final IMerger.Registry mergerRegistry;
 
 	/**
 	 * Constructs an instance of this command given the list of differences that it needs to merge.
@@ -95,26 +92,4 @@ public abstract class AbstractCopyCommand extends ChangeCommand implements IComp
 	public boolean canExecute() {
 		return super.canExecute() && Iterables.any(differences, hasState(DifferenceState.UNRESOLVED));
 	}
-
-	/**
-	 * Copies elements from one side to the other side of the given difference.
-	 * 
-	 * @param diff
-	 *            The difference.
-	 */
-	protected void copy(Diff diff) {
-		IMerger merger = mergerRegistry.getHighestRankingMerger(diff);
-		if (merger != null) {
-			if (leftToRight) {
-				merger.copyLeftToRight(diff, null);
-			} else {
-				merger.copyRightToLeft(diff, null);
-			}
-		} else {
-			EMFCompareEditPlugin.getPlugin().getLog().log(
-					new Status(IStatus.ERROR, EMFCompareEditPlugin.PLUGIN_ID,
-							"No merger found for the difference: " + diff)); //$NON-NLS-1$
-		}
-	}
-
 }

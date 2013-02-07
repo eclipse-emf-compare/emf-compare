@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2011, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,13 +18,13 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.extension.PostProcessorRegistry;
-import org.eclipse.emf.compare.extension.merge.IMerger;
 import org.eclipse.emf.compare.ide.internal.extension.PostProcessorRegistryListener;
 import org.eclipse.emf.compare.ide.internal.policy.LoadOnDemandPolicyRegistryImpl;
 import org.eclipse.emf.compare.ide.internal.policy.LoadOnDemandPolicyRegistryListener;
 import org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy;
 import org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy.Registry;
 import org.eclipse.emf.compare.ide.utils.AbstractRegistryEventListener;
+import org.eclipse.emf.compare.merge.IMerger;
 import org.osgi.framework.BundleContext;
 
 /**

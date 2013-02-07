@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,7 @@ import org.eclipse.emf.compare.command.impl.CopyAllNonConflictingCommand;
 import org.eclipse.emf.compare.command.impl.CopyCommand;
 import org.eclipse.emf.compare.command.impl.DualCompareCommandStack;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
-import org.eclipse.emf.compare.extension.merge.IMerger;
+import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -146,7 +146,7 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.domain.ICompareEditingDomain#createCopyCommand(org.eclipse.emf.compare.Diff,
-	 *      boolean, org.eclipse.emf.compare.extension.merge.IMerger.Registry)
+	 *      boolean, org.eclipse.emf.compare.merge.IMerger.Registry)
 	 * @since 3.0
 	 */
 	public Command createCopyCommand(Diff diff, boolean leftToRight, IMerger.Registry mergerRegistry) {
@@ -160,7 +160,7 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.domain.ICompareEditingDomain#createCopyAllNonConflictingCommand(java.util.List,
-	 *      boolean, org.eclipse.emf.compare.extension.merge.IMerger.Registry)
+	 *      boolean, org.eclipse.emf.compare.merge.IMerger.Registry)
 	 * @since 3.0
 	 */
 	public Command createCopyAllNonConflictingCommand(List<? extends Diff> differences, boolean leftToRight,

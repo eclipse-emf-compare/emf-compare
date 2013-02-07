@@ -1,20 +1,20 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.emf.compare" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="org.eclipse.emf.compare.ide" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appInfo>
-         <meta.schema plugin="org.eclipse.emf.compare" id="mergerExtension" name="Merger Extension"/>
-      </appInfo>
+      <appinfo>
+         <meta.schema plugin="org.eclipse.emf.compare.ide" id="mergerExtension" name="Merger Extension"/>
+      </appinfo>
       <documentation>
-         [Enter description of this extension point.]
+         This can be used to provide your own mergers to either replace existing ones or implement mergers for custom differences.
       </documentation>
    </annotation>
 
    <element name="extension">
       <annotation>
-         <appInfo>
+         <appinfo>
             <meta.element />
-         </appInfo>
+         </appinfo>
       </annotation>
       <complexType>
          <sequence>
@@ -39,9 +39,9 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute translatable="true"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -54,9 +54,9 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.extension.merge.IMerger"/>
-               </appInfo>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.merge.IMerger"/>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="ranking" type="string" use="required">
@@ -70,40 +70,60 @@
    </element>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="since"/>
-      </appInfo>
+      </appinfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         3.0
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="examples"/>
-      </appInfo>
+      </appinfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;extension point=&quot;org.eclipse.emf.compare.ide.mergerExtension&quot;&gt;
+  &lt;merger
+      class=&quot;org.eclipse.emf.compare.merge.ResourceAttachmentChangeMerger&quot;
+      ranking=&quot;10&quot;&gt;
+  &lt;/merger&gt;
+  &lt;merger
+      class=&quot;org.eclipse.emf.compare.merge.ReferenceChangeMerger&quot;
+      ranking=&quot;10&quot;&gt;
+  &lt;/merger&gt;
+  &lt;merger
+      class=&quot;org.eclipse.emf.compare.merge.AttributeChangeMerger&quot;
+      ranking=&quot;10&quot;&gt;
+  &lt;/merger&gt;
+&lt;/extension&gt;
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="apiinfo"/>
-      </appInfo>
-      <documentation>
-         [Enter API information here.]
-      </documentation>
-   </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="implementation"/>
-      </appInfo>
+      </appinfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         See org.eclipse.emf.compare.ide/plugin.xml for existing contributions.
       </documentation>
    </annotation>
 
+   <annotation>
+      <appinfo>
+         <meta.section type="copyright"/>
+      </appinfo>
+      <documentation>
+         Copyright (c) 2011, 2013 Obeo.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+    Obeo - initial API and implementation
+      </documentation>
+   </annotation>
 
 </schema>

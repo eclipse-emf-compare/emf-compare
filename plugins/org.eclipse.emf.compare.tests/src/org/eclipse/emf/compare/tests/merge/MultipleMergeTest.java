@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -38,6 +39,7 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.conflict.data.ConflictInputData;
 import org.eclipse.emf.compare.tests.equi.data.EquiInputData;
@@ -52,6 +54,8 @@ public class MultipleMergeTest {
 	private ConflictInputData conflictInput = new ConflictInputData();
 
 	private EquiInputData equivalenceInput = new EquiInputData();
+
+	private IMerger.Registry mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
 
 	@Test
 	public void testComplexUseCaseLtoR1() throws IOException {
@@ -99,7 +103,7 @@ public class MultipleMergeTest {
 		final ReferenceChange diff1 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.LEFT), added("Root.Node8")));
 		// LCS is currently {2, 3, 4}. Insertion index is right before 2.
-		diff1.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff1).copyLeftToRight(diff1, new BasicMonitor());
 		assertValueIndexIs(diff1, false, 1);
 
 		// merge 2 (add Node9). Since there is a conflict, merge 9 right beforehand
@@ -108,9 +112,9 @@ public class MultipleMergeTest {
 		final ReferenceChange diff9 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), added("Root.Node9")));
 		// Revert addition of Node9 in right
-		diff9.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff9).copyLeftToRight(diff9, new BasicMonitor());
 		// LCS is now {8, 2, 3, 4}. Insertion should be right after 8
-		diff2.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff2).copyLeftToRight(diff2, new BasicMonitor());
 		assertValueIndexIs(diff2, false, 2);
 
 		// merge 3 (move Node1). Since there is a conflict, merge 11 beforehand
@@ -119,10 +123,10 @@ public class MultipleMergeTest {
 		final ReferenceChange diff11 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), moved("Root.Node1", "containmentRef1")));
 		// revert move of Node 1 in right. It should be re-positioned right before 2
-		diff11.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff11).copyLeftToRight(diff11, new BasicMonitor());
 		assertValueIndexIs(diff11, false, 3);
 		// LCS is {8, 9, 2, 3, 4}. 1 should be moved right after 4.
-		diff3.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff3).copyLeftToRight(diff3, new BasicMonitor());
 		assertValueIndexIs(diff3, false, 7);
 
 		// merge 4 (add Node0). There is a conflict. Merge 10 beforehand.
@@ -131,9 +135,9 @@ public class MultipleMergeTest {
 		final ReferenceChange diff10 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), added("Root.Node0")));
 		// revert addition of 0 in right
-		diff10.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff10).copyLeftToRight(diff10, new BasicMonitor());
 		// LCS is now {8, 9, 2, 3, 4, 1}. 0 should be added right after 1
-		diff4.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff4).copyLeftToRight(diff4, new BasicMonitor());
 		assertValueIndexIs(diff4, false, 7);
 
 		// merge 5 (remove Node5). There is a conflict, but it is a pseudo-conflict.
@@ -142,9 +146,9 @@ public class MultipleMergeTest {
 				fromSide(DifferenceSource.LEFT), removed("Root.Node5")));
 		final ReferenceChange diff12 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), removed("Root.Node5")));
-		diff12.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff12).copyLeftToRight(diff12, new BasicMonitor());
 		assertValueIndexIs(diff12, false, 6);
-		diff5.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff5).copyLeftToRight(diff5, new BasicMonitor());
 		assertValueIndexIs(diff5, false, -1);
 
 		// merge 6 (remove Node6). There is a conflict. Merge 8 beforehand.
@@ -153,15 +157,15 @@ public class MultipleMergeTest {
 		final ReferenceChange diff8 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), moved("Root.Node6", "containmentRef1")));
 		// Revert move of 6 in right.
-		diff8.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff8).copyLeftToRight(diff8, new BasicMonitor());
 		assertValueIndexIs(diff8, false, 5);
-		diff6.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff6).copyLeftToRight(diff6, new BasicMonitor());
 		assertValueIndexIs(diff6, false, -1);
 
 		// merge 7 (remove Node7)
 		final ReferenceChange diff7 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.LEFT), removed("Root.Node7")));
-		diff7.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff7).copyLeftToRight(diff7, new BasicMonitor());
 		assertValueIndexIs(diff7, false, -1);
 
 		// Left and Right should now be equal
@@ -192,10 +196,10 @@ public class MultipleMergeTest {
 		final ReferenceChange diff11 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), moved("Root.Node1", "containmentRef1")));
 		// revert move of Node 1 in right. It should be re-positioned right before 2
-		diff11.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff11).copyLeftToRight(diff11, new BasicMonitor());
 		assertValueIndexIs(diff11, false, 1);
 		// Merge move of 1. Should be moved right after 4.
-		diff3.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff3).copyLeftToRight(diff3, new BasicMonitor());
 		assertValueIndexIs(diff3, false, 6);
 
 		// merge 6 (add Node6). There is a conflict. Merge 8 beforehand.
@@ -204,15 +208,15 @@ public class MultipleMergeTest {
 		final ReferenceChange diff8 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), moved("Root.Node6", "containmentRef1")));
 		// Revert move of 6 in right.
-		diff8.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff8).copyLeftToRight(diff8, new BasicMonitor());
 		assertValueIndexIs(diff8, false, 5);
-		diff6.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff6).copyLeftToRight(diff6, new BasicMonitor());
 		assertValueIndexIs(diff6, false, -1);
 
 		// merge 7 (remove Node7)
 		final ReferenceChange diff7 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.LEFT), removed("Root.Node7")));
-		diff7.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff7).copyLeftToRight(diff7, new BasicMonitor());
 		assertValueIndexIs(diff7, false, -1);
 
 		// merge 4 (add Node0). There is a conflict. Merge 10 beforehand.
@@ -221,15 +225,15 @@ public class MultipleMergeTest {
 		final ReferenceChange diff10 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), added("Root.Node0")));
 		// revert addition of 0 in right
-		diff10.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff10).copyLeftToRight(diff10, new BasicMonitor());
 		assertValueIndexIs(diff10, false, -1);
-		diff4.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff4).copyLeftToRight(diff4, new BasicMonitor());
 		assertValueIndexIs(diff4, false, 5);
 
 		// merge 1 (add Node8)
 		final ReferenceChange diff1 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.LEFT), added("Root.Node8")));
-		diff1.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff1).copyLeftToRight(diff1, new BasicMonitor());
 		assertValueIndexIs(diff1, false, 0);
 
 		// merge 2 (add Node9). Since there is a conflict, merge 9 right beforehand
@@ -238,9 +242,9 @@ public class MultipleMergeTest {
 		final ReferenceChange diff9 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), added("Root.Node9")));
 		// Revert addition of Node9 in right
-		diff9.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff9).copyLeftToRight(diff9, new BasicMonitor());
 		assertValueIndexIs(diff9, false, -1);
-		diff2.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff2).copyLeftToRight(diff2, new BasicMonitor());
 		assertValueIndexIs(diff2, false, 1);
 
 		// merge 5 (remove Node5). There is a conflict, but it is a pseudo-conflict.
@@ -249,10 +253,10 @@ public class MultipleMergeTest {
 		final ReferenceChange diff12 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), removed("Root.Node5")));
 		// revert remove
-		diff12.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff12).copyLeftToRight(diff12, new BasicMonitor());
 		assertValueIndexIs(diff12, false, 5);
 		// apply remove
-		diff5.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff5).copyLeftToRight(diff5, new BasicMonitor());
 		assertValueIndexIs(diff5, false, -1);
 
 		// Left and Right should now be equal
@@ -283,10 +287,10 @@ public class MultipleMergeTest {
 		final ReferenceChange diff8 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), moved("Root.Node6", "containmentRef1")));
 		// Revert remove of 6 in left.
-		diff6.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff6).copyRightToLeft(diff6, new BasicMonitor());
 		assertValueIndexIs(diff6, true, 5);
 		// apply the move in left
-		diff8.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff8).copyRightToLeft(diff8, new BasicMonitor());
 		assertValueIndexIs(diff8, true, 2);
 
 		// merge 9 (add Node9). Since there is a conflict, merge 2 right beforehand
@@ -295,9 +299,9 @@ public class MultipleMergeTest {
 		final ReferenceChange diff9 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), added("Root.Node9")));
 		// Revert addition in left
-		diff2.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff2).copyRightToLeft(diff2, new BasicMonitor());
 		assertValueIndexIs(diff2, true, -1);
-		diff9.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff9).copyRightToLeft(diff9, new BasicMonitor());
 		assertValueIndexIs(diff9, true, 3);
 
 		// merge 10 (add Node0). There is a conflict. Merge 4 beforehand.
@@ -306,9 +310,9 @@ public class MultipleMergeTest {
 		final ReferenceChange diff10 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), added("Root.Node0")));
 		// Revert addition in left
-		diff4.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff4).copyRightToLeft(diff4, new BasicMonitor());
 		assertValueIndexIs(diff4, true, -1);
-		diff10.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff10).copyRightToLeft(diff10, new BasicMonitor());
 		assertValueIndexIs(diff10, true, 5);
 
 		// merge 11 (move Node1). Since there is a conflict, merge 3 beforehand
@@ -317,9 +321,9 @@ public class MultipleMergeTest {
 		final ReferenceChange diff11 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), moved("Root.Node1", "containmentRef1")));
 		// Revert move of 1 in left
-		diff3.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff3).copyRightToLeft(diff3, new BasicMonitor());
 		assertValueIndexIs(diff3, true, 2);
-		diff11.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff11).copyRightToLeft(diff11, new BasicMonitor());
 		assertValueIndexIs(diff11, true, 6);
 
 		// merge 12 (remove Node5). Merge 5 beforehand.
@@ -328,21 +332,21 @@ public class MultipleMergeTest {
 		final ReferenceChange diff12 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), removed("Root.Node5")));
 		// revert remove in left
-		diff5.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff5).copyRightToLeft(diff5, new BasicMonitor());
 		assertValueIndexIs(diff5, true, 8);
-		diff12.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff12).copyRightToLeft(diff12, new BasicMonitor());
 		assertValueIndexIs(diff12, true, -1);
 
 		// merge 1 (add Node8). This will remove Node8
 		final ReferenceChange diff1 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.LEFT), added("Root.Node8")));
-		diff1.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff1).copyRightToLeft(diff1, new BasicMonitor());
 		assertValueIndexIs(diff1, false, -1);
 
 		// merge 7 (remove Node7). This will re-add Node7
 		final ReferenceChange diff7 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.LEFT), removed("Root.Node7")));
-		diff7.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff7).copyRightToLeft(diff7, new BasicMonitor());
 		assertValueIndexIs(diff7, false, 7);
 
 		// Left and Right should now be equal
@@ -377,9 +381,9 @@ public class MultipleMergeTest {
 		final ReferenceChange diff12 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), removed("Root.Node5")));
 		// revert remove in left
-		diff5.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff5).copyRightToLeft(diff5, new BasicMonitor());
 		assertValueIndexIs(diff5, true, 5);
-		diff12.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff12).copyRightToLeft(diff12, new BasicMonitor());
 		assertValueIndexIs(diff12, true, -1);
 
 		// merge 10 (add Node0). There is a conflict. Merge 4 beforehand.
@@ -388,15 +392,15 @@ public class MultipleMergeTest {
 		final ReferenceChange diff10 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), added("Root.Node0")));
 		// Revert addition in left
-		diff4.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff4).copyRightToLeft(diff4, new BasicMonitor());
 		assertValueIndexIs(diff4, true, -1);
-		diff10.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff10).copyRightToLeft(diff10, new BasicMonitor());
 		assertValueIndexIs(diff10, true, 4);
 
 		// merge 7 (remove Node7). This will re-add Node7
 		final ReferenceChange diff7 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.LEFT), removed("Root.Node7")));
-		diff7.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff7).copyRightToLeft(diff7, new BasicMonitor());
 		assertValueIndexIs(diff7, false, 7);
 
 		// merge 9 (add Node9). Since there is a conflict, merge 2 right beforehand
@@ -405,15 +409,15 @@ public class MultipleMergeTest {
 		final ReferenceChange diff9 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), added("Root.Node9")));
 		// Revert addition in left
-		diff2.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff2).copyRightToLeft(diff2, new BasicMonitor());
 		assertValueIndexIs(diff2, true, -1);
-		diff9.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff9).copyRightToLeft(diff9, new BasicMonitor());
 		assertValueIndexIs(diff9, true, 2);
 
 		// merge 1 (add Node8). This will remove Node8
 		final ReferenceChange diff1 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.LEFT), added("Root.Node8")));
-		diff1.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff1).copyRightToLeft(diff1, new BasicMonitor());
 		assertValueIndexIs(diff1, false, -1);
 
 		// merge 8 (move Node6). There is a conflict. Merge 6 beforehand.
@@ -422,10 +426,10 @@ public class MultipleMergeTest {
 		final ReferenceChange diff8 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), moved("Root.Node6", "containmentRef1")));
 		// Revert remove of 6 in left.
-		diff6.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff6).copyRightToLeft(diff6, new BasicMonitor());
 		assertValueIndexIs(diff6, true, 5);
 		// apply the move in left
-		diff8.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff8).copyRightToLeft(diff8, new BasicMonitor());
 		assertValueIndexIs(diff8, true, 0);
 
 		// merge 11 (move Node1). Since there is a conflict, merge 3 beforehand
@@ -434,9 +438,9 @@ public class MultipleMergeTest {
 		final ReferenceChange diff11 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), moved("Root.Node1", "containmentRef1")));
 		// Revert move of 1 in left
-		diff3.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff3).copyRightToLeft(diff3, new BasicMonitor());
 		assertValueIndexIs(diff3, true, 1);
-		diff11.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff11).copyRightToLeft(diff11, new BasicMonitor());
 		assertValueIndexIs(diff11, true, 5);
 
 		// Left and Right should now be equal
@@ -477,19 +481,19 @@ public class MultipleMergeTest {
 		final ReferenceChange diff6 = (ReferenceChange)Iterators.find(differences.iterator(),
 				addedToReference("Requirements.F", "source", "Requirements.E"));
 
-		diff1.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff1).copyLeftToRight(diff1, new BasicMonitor());
 		// Check that diff1 got properly merged
 		assertMerged(comparison, diff1, false, false);
 		// And validate that diff2 got merged as an equivalent diff
 		assertMerged(comparison, diff2, false, false);
 
-		diff3.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff3).copyLeftToRight(diff3, new BasicMonitor());
 		// Check that diff3 got properly merged
 		assertMerged(comparison, diff3, false, false);
 		// And validate that diff4 got merged as an equivalent diff
 		assertMerged(comparison, diff4, false, false);
 
-		diff5.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff5).copyLeftToRight(diff5, new BasicMonitor());
 		// Check that diff5 got properly merged
 		assertMerged(comparison, diff5, false, false);
 		// And validate that diff6 got merged as an equivalent diff
@@ -529,17 +533,17 @@ public class MultipleMergeTest {
 		final ReferenceChange diff6 = (ReferenceChange)Iterators.find(differences.iterator(),
 				addedToReference("Requirements.F", "source", "Requirements.E"));
 
-		diff1.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff1).copyRightToLeft(diff1, new BasicMonitor());
 		// Check that diff1 got properly merged (we're unsetting values)
 		assertMerged(comparison, diff1, true, true);
 		// And validate that diff2 got merged as an equivalent diff
 		assertMerged(comparison, diff2, true, true);
 
-		diff3.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff3).copyRightToLeft(diff3, new BasicMonitor());
 		assertMerged(comparison, diff3, true, true);
 		assertMerged(comparison, diff4, true, true);
 
-		diff5.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff5).copyRightToLeft(diff5, new BasicMonitor());
 		assertMerged(comparison, diff5, true, true);
 		assertMerged(comparison, diff6, true, true);
 
@@ -572,11 +576,11 @@ public class MultipleMergeTest {
 		final ReferenceChange diff4 = (ReferenceChange)Iterators.find(differences.iterator(),
 				addedToReference("Requirements.A", "source", "Requirements.B"));
 
-		diff1.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff1).copyLeftToRight(diff1, new BasicMonitor());
 		assertMerged(comparison, diff1, false, false);
 		assertMerged(comparison, diff2, false, false);
 
-		diff3.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff3).copyLeftToRight(diff3, new BasicMonitor());
 		assertMerged(comparison, diff3, false, false);
 		assertMerged(comparison, diff4, false, false);
 
@@ -609,11 +613,11 @@ public class MultipleMergeTest {
 		final ReferenceChange diff4 = (ReferenceChange)Iterators.find(differences.iterator(),
 				addedToReference("Requirements.A", "source", "Requirements.B"));
 
-		diff1.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff1).copyRightToLeft(diff1, new BasicMonitor());
 		assertMerged(comparison, diff1, true, true);
 		assertMerged(comparison, diff2, true, true);
 
-		diff3.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff3).copyRightToLeft(diff3, new BasicMonitor());
 		assertMerged(comparison, diff3, true, true);
 		assertMerged(comparison, diff4, true, true);
 
@@ -668,19 +672,19 @@ public class MultipleMergeTest {
 		final ReferenceChange diff12 = (ReferenceChange)Iterators.find(differences.iterator(),
 				addedToReference("Requirements", "containmentRef1", "Requirements.F"));
 
-		diff1.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff1).copyLeftToRight(diff1, new BasicMonitor());
 		assertMerged(comparison, diff1, false, false);
 		assertMerged(comparison, diff2, false, false);
 		assertSame(DifferenceState.MERGED, diff7.getState());
 		assertSame(DifferenceState.MERGED, diff8.getState());
 
-		diff3.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff3).copyLeftToRight(diff3, new BasicMonitor());
 		assertMerged(comparison, diff3, false, false);
 		assertMerged(comparison, diff4, false, false);
 		assertSame(DifferenceState.MERGED, diff9.getState());
 		assertSame(DifferenceState.MERGED, diff10.getState());
 
-		diff5.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff5).copyLeftToRight(diff5, new BasicMonitor());
 		assertMerged(comparison, diff5, false, false);
 		assertMerged(comparison, diff6, false, false);
 		assertSame(DifferenceState.MERGED, diff11.getState());
@@ -739,31 +743,31 @@ public class MultipleMergeTest {
 
 		// Removing the link between A and B does not necessarily means removing A and B
 		// The "required" diffs will ne be merged
-		diff1.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff1).copyRightToLeft(diff1, new BasicMonitor());
 		assertMerged(comparison, diff1, true, true);
 		assertMerged(comparison, diff2, true, true);
 		assertSame(DifferenceState.UNRESOLVED, diff7.getState());
 		assertSame(DifferenceState.UNRESOLVED, diff8.getState());
 
-		diff3.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff3).copyRightToLeft(diff3, new BasicMonitor());
 		assertMerged(comparison, diff3, true, true);
 		assertMerged(comparison, diff4, true, true);
 		assertSame(DifferenceState.UNRESOLVED, diff9.getState());
 		assertSame(DifferenceState.UNRESOLVED, diff10.getState());
 
-		diff5.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff5).copyRightToLeft(diff5, new BasicMonitor());
 		assertMerged(comparison, diff5, true, true);
 		assertMerged(comparison, diff6, true, true);
 		assertSame(DifferenceState.UNRESOLVED, diff11.getState());
 		assertSame(DifferenceState.UNRESOLVED, diff12.getState());
 
 		// Merge the 6 remaining diffs
-		diff7.copyRightToLeft();
-		diff8.copyRightToLeft();
-		diff9.copyRightToLeft();
-		diff10.copyRightToLeft();
-		diff11.copyRightToLeft();
-		diff12.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff7).copyRightToLeft(diff7, new BasicMonitor());
+		mergerRegistry.getHighestRankingMerger(diff8).copyRightToLeft(diff8, new BasicMonitor());
+		mergerRegistry.getHighestRankingMerger(diff9).copyRightToLeft(diff9, new BasicMonitor());
+		mergerRegistry.getHighestRankingMerger(diff10).copyRightToLeft(diff10, new BasicMonitor());
+		mergerRegistry.getHighestRankingMerger(diff11).copyRightToLeft(diff11, new BasicMonitor());
+		mergerRegistry.getHighestRankingMerger(diff12).copyRightToLeft(diff12, new BasicMonitor());
 
 		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
@@ -797,7 +801,7 @@ public class MultipleMergeTest {
 		final ReferenceChange diff4 = (ReferenceChange)Iterators.find(differences.iterator(),
 				changedReference("Requirements.C", "source", null, "Requirements.A"));
 
-		diff2.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff2).copyLeftToRight(diff2, new BasicMonitor());
 		assertSame(DifferenceState.MERGED, diff1.getState());
 		assertMerged(comparison, diff2, false, false);
 		assertMerged(comparison, diff3, true, false);
@@ -835,13 +839,13 @@ public class MultipleMergeTest {
 		final ReferenceChange diff4 = (ReferenceChange)Iterators.find(differences.iterator(),
 				changedReference("Requirements.C", "source", null, "Requirements.A"));
 
-		diff1.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff1).copyLeftToRight(diff1, new BasicMonitor());
 		assertSame(DifferenceState.MERGED, diff1.getState());
 		assertSame(DifferenceState.UNRESOLVED, diff2.getState());
 		assertSame(DifferenceState.UNRESOLVED, diff3.getState());
 		assertSame(DifferenceState.UNRESOLVED, diff4.getState());
 
-		diff2.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff2).copyLeftToRight(diff2, new BasicMonitor());
 		assertMerged(comparison, diff2, false, false);
 		assertMerged(comparison, diff3, true, false);
 		assertMerged(comparison, diff4, false, false);
@@ -878,7 +882,7 @@ public class MultipleMergeTest {
 		final ReferenceChange diff4 = (ReferenceChange)Iterators.find(differences.iterator(),
 				changedReference("Requirements.C", "source", null, "Requirements.A"));
 
-		diff2.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff2).copyRightToLeft(diff2, new BasicMonitor());
 		assertSame(DifferenceState.UNRESOLVED, diff1.getState());
 		assertMerged(comparison, diff3, false, true);
 		assertMerged(comparison, diff4, true, true);
@@ -892,7 +896,7 @@ public class MultipleMergeTest {
 		assertEquals("B", nodeB.eGet(nodeB.eClass().getEStructuralFeature("name")));
 		assertSame(nodeB, nodeA.eGet(diff2.getReference()));
 
-		diff1.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff1).copyRightToLeft(diff1, new BasicMonitor());
 
 		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
@@ -930,14 +934,14 @@ public class MultipleMergeTest {
 		final ReferenceChange diff5 = (ReferenceChange)Iterators.find(differences.iterator(),
 				changedReference("Requirements.C", "source", null, "Requirements.A"));
 
-		diff1.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff1).copyLeftToRight(diff1, new BasicMonitor());
 		assertMerged(comparison, diff1, false, false);
 		assertSame(DifferenceState.UNRESOLVED, diff2.getState());
 		assertSame(DifferenceState.UNRESOLVED, diff3.getState());
 		assertSame(DifferenceState.UNRESOLVED, diff4.getState());
 		assertSame(DifferenceState.UNRESOLVED, diff5.getState());
 
-		diff2.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff2).copyLeftToRight(diff2, new BasicMonitor());
 		// B has been deleted : unset element in right
 		assertMerged(comparison, diff2, true, false);
 		// Change A.destination from "B" to "C"
@@ -987,7 +991,7 @@ public class MultipleMergeTest {
 
 		// 1 is required by 3, which is required by 2 and equivalent to 4 and 5.
 		// Resetting 1 should thus reset all other diffs.
-		diff1.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff1).copyRightToLeft(diff1, new BasicMonitor());
 		assertMerged(comparison, diff1, true, true);
 		assertMerged(comparison, diff2, false, true);
 
