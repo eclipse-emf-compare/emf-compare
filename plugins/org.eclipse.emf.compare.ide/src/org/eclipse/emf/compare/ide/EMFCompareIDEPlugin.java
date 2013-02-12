@@ -99,8 +99,8 @@ public class EMFCompareIDEPlugin extends Plugin {
 		loadOnDemandRegistryListener.readRegistry(registry);
 
 		mergerRegistry = new IMerger.RegistryImpl();
-		mergerRegistryListener = new MergerExtensionRegistryListener(COMPARE_PLUGIN_ID, MERGER_EXTENSION_PPID);
-		registry.addListener(mergerRegistryListener, COMPARE_PLUGIN_ID + "." + MERGER_EXTENSION_PPID);
+		mergerRegistryListener = new MergerExtensionRegistryListener(PLUGIN_ID, MERGER_EXTENSION_PPID);
+		registry.addListener(mergerRegistryListener, PLUGIN_ID + "." + MERGER_EXTENSION_PPID);
 		mergerRegistryListener.readRegistry(registry);
 
 	}
