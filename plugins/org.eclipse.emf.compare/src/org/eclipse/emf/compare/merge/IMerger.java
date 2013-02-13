@@ -24,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.EMFCompareMessages;
 
 /**
  * Mergers are used by EMF Compare to merge specific differences from one side to the other. A number of
@@ -267,9 +268,8 @@ public interface IMerger {
 			}
 
 			if (ret == null) {
-				// TODO externalize and use accurate Exception.
-				throw new IllegalStateException("No merger found for diff "
-						+ target.getClass().getSimpleName());
+				throw new IllegalStateException(EMFCompareMessages.getString("IMerger.MissingMerger", target //$NON-NLS-1$
+						.getClass().getSimpleName()));
 			}
 
 			return ret;

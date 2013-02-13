@@ -86,6 +86,7 @@ public class ComparisonSpec extends ComparisonImpl {
 			eAdapters().add(diffCrossReferencer);
 		}
 
+		final EList<Diff> result;
 		Iterable<Diff> diffOnElement = filter(getInverse(element, diffCrossReferencer), Diff.class);
 		final Match match = getMatch(element);
 		if (match != null) {
@@ -102,10 +103,11 @@ public class ComparisonSpec extends ComparisonImpl {
 				origin = filter(getInverse(match.getOrigin(), diffCrossReferencer), Diff.class);
 			}
 			Set<Diff> crossRefs = ImmutableSet.copyOf(Iterables.concat(diffOnElement, left, right, origin));
-			return new BasicEList<Diff>(crossRefs);
+			result = new BasicEList<Diff>(crossRefs);
 		} else {
-			return new BasicEList<Diff>(ImmutableSet.copyOf(diffOnElement));
+			result = new BasicEList<Diff>(ImmutableSet.copyOf(diffOnElement));
 		}
+		return result;
 	}
 
 	/**

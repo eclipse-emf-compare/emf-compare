@@ -44,6 +44,8 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  *
  * @generated
  */
+//Supressing warnings : generated code
+@SuppressWarnings("all")
 public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResource {
 	/**
 	 * <!-- begin-user-doc -->
