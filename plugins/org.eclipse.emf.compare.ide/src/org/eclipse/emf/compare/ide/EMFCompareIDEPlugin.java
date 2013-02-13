@@ -46,9 +46,6 @@ public class EMFCompareIDEPlugin extends Plugin {
 	 */
 	public static final String MERGER_EXTENSION_PPID = "mergerExtension"; //$NON-NLS-1$
 
-	/** The plug-in ID of org.eclipse.emf.compare. */
-	private static final String COMPARE_PLUGIN_ID = "org.eclipse.emf.compare"; //$NON-NLS-1$
-
 	/** This plugin's shared instance. */
 	private static EMFCompareIDEPlugin plugin;
 
@@ -95,12 +92,12 @@ public class EMFCompareIDEPlugin extends Plugin {
 		this.loadOnDemandRegistryListener = new LoadOnDemandPolicyRegistryListener(loadOnDemandRegistry,
 				PLUGIN_ID, LOAD_ON_DEMAND_POLICY_PPID);
 
-		registry.addListener(loadOnDemandRegistryListener, PLUGIN_ID + "." + LOAD_ON_DEMAND_POLICY_PPID);
+		registry.addListener(loadOnDemandRegistryListener, PLUGIN_ID + '.' + LOAD_ON_DEMAND_POLICY_PPID);
 		loadOnDemandRegistryListener.readRegistry(registry);
 
 		mergerRegistry = new IMerger.RegistryImpl();
 		mergerRegistryListener = new MergerExtensionRegistryListener(PLUGIN_ID, MERGER_EXTENSION_PPID);
-		registry.addListener(mergerRegistryListener, PLUGIN_ID + "." + MERGER_EXTENSION_PPID);
+		registry.addListener(mergerRegistryListener, PLUGIN_ID + '.' + MERGER_EXTENSION_PPID);
 		mergerRegistryListener.readRegistry(registry);
 
 	}
@@ -211,8 +208,8 @@ public class EMFCompareIDEPlugin extends Plugin {
 					try {
 						Integer.parseInt(rankingStr);
 					} catch (NumberFormatException nfe) {
-						logError(element, "Attribute '" + ATT_RANKING
-								+ "' is malformed, should be an integer.");
+						logError(element, EMFCompareIDEMessages.getString("malformed.extension.attribute", //$NON-NLS-1$
+								ATT_RANKING));
 					}
 					logMissingAttribute(element, ATT_RANKING);
 				} else {
@@ -223,8 +220,8 @@ public class EMFCompareIDEPlugin extends Plugin {
 								merger.setRanking(Integer.parseInt(element.getAttribute(ATT_RANKING)));
 								IMerger previous = mergerRegistry.add(merger);
 								if (previous != null) {
-									log(IStatus.WARNING, "The factory '" + merger.getClass().getName()
-											+ "' is registered twice.");
+									log(IStatus.WARNING, EMFCompareIDEMessages.getString(
+											"duplicate.extension", merger.getClass().getName())); //$NON-NLS-1$
 								}
 							} catch (CoreException e) {
 								logError(element, e.getMessage());
