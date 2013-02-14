@@ -86,8 +86,8 @@ public class DiffEdgeDecorator extends AbstractDifferenceDecorator {
 		final ArrayList<IDecoration> decorations = new ArrayList<IDecoration>(1);
 		highlightEdge(getTargetEditPart().getFigure(), ColorConstants.green, 2);
 		final Image added = GMFCompareUIPlugin.getDefault().getImage(GMFCompareUIPlugin.ICON_ADDED);
-		final IDecoration decoration2 = getTarget().addConnectionDecoration(added, 50, false);
-		decorations.add(decoration2);
+		// final IDecoration decoration2 = getTarget().addConnectionDecoration(added, 50, false);
+		// decorations.add(decoration2);
 		return decorations;
 	}
 
@@ -101,8 +101,8 @@ public class DiffEdgeDecorator extends AbstractDifferenceDecorator {
 		final ArrayList<IDecoration> decorations = new ArrayList<IDecoration>(1);
 		highlightEdge(getTargetEditPart().getFigure(), ColorConstants.red, 2);
 		final Image deleted = GMFCompareUIPlugin.getDefault().getImage(GMFCompareUIPlugin.ICON_DELETED);
-		final IDecoration decoration2 = getTarget().addConnectionDecoration(deleted, 50, false);
-		decorations.add(decoration2);
+		// final IDecoration decoration2 = getTarget().addConnectionDecoration(deleted, 50, false);
+		// decorations.add(decoration2);
 		return decorations;
 	}
 
@@ -115,8 +115,8 @@ public class DiffEdgeDecorator extends AbstractDifferenceDecorator {
 	protected List<IDecoration> getMovedDecorations() {
 		final ArrayList<IDecoration> decorations = new ArrayList<IDecoration>(1);
 		final Image moved = GMFCompareUIPlugin.getDefault().getImage(GMFCompareUIPlugin.ICON_MOVED);
-		final IDecoration decoration = getTarget().addConnectionDecoration(moved, 50, false);
-		decorations.add(decoration);
+		// final IDecoration decoration = getTarget().addConnectionDecoration(moved, 50, false);
+		// decorations.add(decoration);
 		return decorations;
 	}
 

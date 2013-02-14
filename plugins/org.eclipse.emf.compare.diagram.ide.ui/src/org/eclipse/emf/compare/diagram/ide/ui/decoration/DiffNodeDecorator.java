@@ -21,7 +21,6 @@ import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoration;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
-import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget.Direction;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.swt.graphics.Image;
 
@@ -75,8 +74,9 @@ public class DiffNodeDecorator extends AbstractDifferenceDecorator {
 	protected List<IDecoration> getMovedDecorations() {
 		final ArrayList<IDecoration> decorations = new ArrayList<IDecoration>(1);
 		final Image moved = GMFCompareUIPlugin.getDefault().getImage(GMFCompareUIPlugin.ICON_MOVED);
-		final IDecoration decoration = getTarget().addShapeDecoration(moved, Direction.NORTH_EAST, 1, false);
-		decorations.add(decoration);
+		// final IDecoration decoration = getTarget().addShapeDecoration(moved, Direction.NORTH_EAST, 1,
+		// false);
+		// decorations.add(decoration);
 		return decorations;
 	}
 
@@ -101,8 +101,9 @@ public class DiffNodeDecorator extends AbstractDifferenceDecorator {
 		final ArrayList<IDecoration> decorations = new ArrayList<IDecoration>(1);
 		highlightNode(getTargetEditPart().getFigure(), ColorConstants.green, 2);
 		final Image added = GMFCompareUIPlugin.getDefault().getImage(GMFCompareUIPlugin.ICON_ADDED);
-		final IDecoration decoration2 = getTarget().addShapeDecoration(added, Direction.NORTH_WEST, 1, false);
-		decorations.add(decoration2);
+		// final IDecoration decoration2 = getTarget().addShapeDecoration(added, Direction.NORTH_WEST, 1,
+		// false);
+		// decorations.add(decoration2);
 		return decorations;
 	}
 
@@ -138,9 +139,9 @@ public class DiffNodeDecorator extends AbstractDifferenceDecorator {
 		final ArrayList<IDecoration> decorations = new ArrayList<IDecoration>(1);
 		highlightNode(getTargetEditPart().getFigure(), ColorConstants.red, 2);
 		final Image deleted = GMFCompareUIPlugin.getDefault().getImage(GMFCompareUIPlugin.ICON_DELETED);
-		final IDecoration decoration2 = getTarget().addShapeDecoration(deleted, Direction.NORTH_WEST, 1,
-				false);
-		decorations.add(decoration2);
+		// final IDecoration decoration2 = getTarget().addShapeDecoration(deleted, Direction.NORTH_WEST, 1,
+		// false);
+		// decorations.add(decoration2);
 		return decorations;
 	}
 
