@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,67 +12,68 @@ package org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagr
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.base.Predicates.or;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.draw2d.FreeformLayeredPane;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Polyline;
+import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.diagram.DiagramDiff;
-import org.eclipse.emf.compare.diagram.NodeChange;
 import org.eclipse.emf.compare.diagram.ide.ui.AbstractEditPartMergeViewer;
 import org.eclipse.emf.compare.diagram.ide.ui.AbstractGraphicalMergeViewer;
-import org.eclipse.emf.compare.diagram.ide.ui.decoration.DeleteGhostImageFigure;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramDiffAccessor;
-import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.DiagramCompareContentMergeViewer;
 import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.DiffNode;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.gef.ConnectionEditPart;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
+import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.notation.BasicCompartment;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * Specialized {@link org.eclipse.compare.contentmergeviewer.ContentMergeViewer} that uses
@@ -82,21 +83,866 @@ import org.eclipse.swt.widgets.Display;
  */
 public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer {
 
-	private Map<IFigure, Phantom> phantomsMap = new HashMap<IFigure, Phantom>();
+	/**
+	 * Phantom manager to create, hide or reveal phantom figures related to deleted or added graphical
+	 * objects.
+	 * 
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+	 */
+	private class PhantomManager {
 
-	private Map<IFigure, IFigure> containerMap = new HashMap<IFigure, IFigure>();
+		/**
+		 * Phantom represented by a <code>figure</code> on a <code>layer</code>, from the given
+		 * <code>side</code> of the merge viewer. An edit part may be linked to the <code>figure</code> in
+		 * some cases.<br>
+		 * The phantom is related to a <code>difference</code> and it is binded with the reference view and
+		 * figure.
+		 * 
+		 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+		 */
+		private class Phantom {
+			/** The reference <code>View</code> for this phantom. */
+			private View fOriginView;
 
-	private Map<IFigure, Integer> phantomSelection = new HashMap<IFigure, Integer>();
+			/** The reference <code>IFigure</code> for this phantom. */
+			private IFigure fOriginFigure;
+
+			/** The <code>IFigure</code> representing this phantom. */
+			private IFigure fFigure;
+
+			/** The layer on which the <code>figure</code> has to be drawn. */
+			private IFigure fLayer;
+
+			/** The side of the merge viewer on which the <code>figure</code> has to be drawn. */
+			private MergeViewerSide fSide;
+
+			/** The difference related to this phantom. */
+			private Diff fDifference;
+
+			/** The edit part of the figure representing this phantom. May be null. */
+			private EditPart fEditPart;
+
+			/**
+			 * Constructor.
+			 * 
+			 * @param layer
+			 *            {@link Phantom#fLayer}.
+			 * @param side
+			 *            {@link Phantom#fSide}.
+			 * @param originView
+			 *            {@link Phantom#fOriginView}.
+			 * @param originFigure
+			 *            {@link Phantom#fOriginFigure}.
+			 * @param diff
+			 *            {@link Phantom#fDifference}.
+			 */
+			public Phantom(IFigure layer, MergeViewerSide side, View originView, IFigure originFigure,
+					Diff diff) {
+				setLayer(layer);
+				setSide(side);
+				setOriginView(originView);
+				setOriginFigure(originFigure);
+				setDifference(diff);
+			}
+
+			/**
+			 * Constructor.
+			 * 
+			 * @param figure
+			 *            {@link Phantom#fFigure}.
+			 * @param editPart
+			 *            {@link Phantom#fEditPart}.
+			 * @param layer
+			 *            {@link Phantom#fLayer}.
+			 * @param side
+			 *            {@link Phantom#fSide}.
+			 * @param originView
+			 *            {@link Phantom#fOriginView}.
+			 * @param originFigure
+			 *            {@link Phantom#fOriginFigure}.
+			 * @param diff
+			 *            {@link Phantom#fDifference}.
+			 */
+			public Phantom(IFigure figure, EditPart editPart, IFigure layer, MergeViewerSide side,
+					View originView, IFigure originFigure, Diff diff) {
+				setFigure(figure);
+				setLayer(layer);
+				setSide(side);
+				setOriginView(originView);
+				setOriginFigure(originFigure);
+				setDifference(diff);
+				setEditPart(editPart);
+			}
+
+			/**
+			 * Get the ancestor phantoms of this one.
+			 * 
+			 * @return The list of the ancestors.
+			 */
+			private List<Phantom> getAncestors() {
+				List<Phantom> result = new ArrayList<Phantom>();
+				EObject parentOriginView = fOriginView.eContainer();
+				while (parentOriginView != null) {
+					result.addAll(getOrCreatePhantoms(parentOriginView));
+					parentOriginView = parentOriginView.eContainer();
+				}
+				return result;
+			}
+
+			/**
+			 * From the given view, get or create the related phantoms.
+			 * 
+			 * @param referenceView
+			 *            The given view.
+			 * @return The list of phantoms.
+			 */
+			private List<Phantom> getOrCreatePhantoms(EObject referenceView) {
+				List<Phantom> result = new ArrayList<Phantom>();
+				Collection<Diff> diffs = Collections2.filter(fComparison.getDifferences(referenceView),
+						goodCandidate());
+				for (Diff change : diffs) {
+					Phantom phantom = fPhantomRegistry.get(change);
+					if (phantom == null) {
+						phantom = createAndRegisterPhantom(change, (View)referenceView, PhantomManager.this
+								.getFigure((View)referenceView), fSide);
+					}
+					result.add(phantom);
+				}
+				return result;
+			}
+
+			/**
+			 * Get the phantom dependencies of this one. The dependencies are the phantom ancestors plus the
+			 * extremities of an edge phantom.
+			 * 
+			 * @return The list of found phantoms.
+			 */
+			public List<Phantom> getDependencies() {
+				List<Phantom> result = new ArrayList<Phantom>();
+				result.addAll(getAncestors());
+				if (fOriginView instanceof Edge) {
+					View source = ((Edge)fOriginView).getSource();
+					View target = ((Edge)fOriginView).getTarget();
+					result.addAll(getOrCreatePhantoms(source));
+					result.addAll(getOrCreatePhantoms(target));
+				}
+				return result;
+			}
+
+			/**
+			 * Getter.
+			 * 
+			 * @return the originView {@link Phantom#fOriginView}.
+			 */
+			public View getOriginView() {
+				return fOriginView;
+			}
+
+			/**
+			 * Setter.
+			 * 
+			 * @param originView
+			 *            {@link Phantom#fOriginView}.
+			 */
+			public void setOriginView(View originView) {
+				this.fOriginView = originView;
+			}
+
+			/**
+			 * Getter.
+			 * 
+			 * @return the originFigure {@link Phantom#fOriginFigure}.
+			 */
+			public IFigure getOriginFigure() {
+				return fOriginFigure;
+			}
+
+			/**
+			 * Setter.
+			 * 
+			 * @param originFigure
+			 *            {@link Phantom#fOriginFigure}.
+			 */
+			public void setOriginFigure(IFigure originFigure) {
+				this.fOriginFigure = originFigure;
+			}
+
+			/**
+			 * Getter.
+			 * 
+			 * @return the figure {@link Phantom#fFigure}.
+			 */
+			public IFigure getFigure() {
+				return fFigure;
+			}
+
+			/**
+			 * Setter.
+			 * 
+			 * @param figure
+			 *            {@link Phantom#fFigure}.
+			 */
+			public void setFigure(IFigure figure) {
+				this.fFigure = figure;
+			}
+
+			/**
+			 * Getter.
+			 * 
+			 * @return the layer {@link Phantom#fLayer}.
+			 */
+			public IFigure getLayer() {
+				return fLayer;
+			}
+
+			/**
+			 * Setter.
+			 * 
+			 * @param layer
+			 *            {@link Phantom#fLayer}.
+			 */
+			public void setLayer(IFigure layer) {
+				this.fLayer = layer;
+			}
+
+			/**
+			 * Getter.
+			 * 
+			 * @return the side {@link Phantom#fSide}.
+			 */
+			public MergeViewerSide getSide() {
+				return fSide;
+			}
+
+			/**
+			 * Setter.
+			 * 
+			 * @param side
+			 *            {@link Phantom#fSide}.
+			 */
+			public void setSide(MergeViewerSide side) {
+				this.fSide = side;
+			}
+
+			/**
+			 * Getter.
+			 * 
+			 * @return the difference {@link Phantom#fDifference}.
+			 */
+			public Diff getDifference() {
+				return fDifference;
+			}
+
+			/**
+			 * Setter.
+			 * 
+			 * @param difference
+			 *            {@link Phantom#fDifference}.
+			 */
+			public void setDifference(Diff difference) {
+				this.fDifference = difference;
+			}
+
+			/**
+			 * Getter.
+			 * 
+			 * @return the editPart {@link Phantom#fEditPart}.
+			 */
+			public EditPart getEditPart() {
+				return fEditPart;
+			}
+
+			/**
+			 * Setter.
+			 * 
+			 * @param editPart
+			 *            {@link Phantom#fEditPart}.
+			 */
+			public void setEditPart(EditPart editPart) {
+				this.fEditPart = editPart;
+			}
+		}
+
+		/** Registry of created phantoms, indexed by difference. */
+		private final Map<Diff, Phantom> fPhantomRegistry = new HashMap<Diff, Phantom>();
+
+		/**
+		 * Constructor.
+		 */
+		public PhantomManager() {
+
+		}
+
+		/**
+		 * From a given difference, it hides the related phantoms.
+		 * 
+		 * @param difference
+		 *            The difference.
+		 */
+		public void hidePhantoms(Diff difference) {
+			Phantom old = getPhantom(difference);
+			if (old != null && fComparison != null) {
+				handlePhantom(old, false);
+			}
+		}
+
+		/**
+		 * It reveals the given phantom and its dependencies.
+		 * 
+		 * @param phantom
+		 *            The phantom.
+		 */
+		public void revealPhantoms(Phantom phantom) {
+			handlePhantom(phantom, true);
+		}
+
+		/**
+		 * From a given difference, it reveals the related phantoms.
+		 * 
+		 * @param difference
+		 *            The difference.
+		 */
+		public void revealPhantoms(Diff difference) {
+
+			Phantom phantom = getPhantom(difference);
+
+			// Create phantoms only if they do not already exist and if the related difference is an ADD or
+			// DELETE
+			if (phantom == null && isGoodCandidate(difference)) {
+
+				DiagramDiff diagramDiff = (DiagramDiff)difference;
+
+				Match match = fComparison.getMatch(diagramDiff.getView());
+
+				EObject originObj = match.getOrigin();
+				EObject leftObj = match.getLeft();
+				EObject rightObj = match.getRight();
+
+				if (leftObj instanceof View || rightObj instanceof View) {
+
+					View leftView = (View)leftObj;
+					View rightView = (View)rightObj;
+
+					View referenceView = getReferenceView((View)originObj, leftView, rightView);
+					IFigure referenceFigure = getFigure(referenceView);
+
+					MergeViewerSide targetSide = getTargetSide(leftView);
+
+					phantom = createAndRegisterPhantom(difference, referenceView, referenceFigure, targetSide);
+
+				}
+
+			}
+
+			// The selected difference is an ADD or DELETE and a phantom exists for it
+			if (phantom != null) {
+				revealPhantoms(phantom);
+			}
+		}
+
+		/**
+		 * Get the phantom related to the given difference.
+		 * 
+		 * @param difference
+		 *            The difference.
+		 * @return The main phantom.
+		 */
+		public Phantom getPhantom(Diff difference) {
+			return fPhantomRegistry.get(difference);
+		}
+
+		/**
+		 * Get the predicate to know the differences concerned by the display of phantoms.<br>
+		 * Only the diagram differences ADD or DELETE are concerned by this display.
+		 * 
+		 * @return The predicate.
+		 */
+		private Predicate<Diff> goodCandidate() {
+			return new Predicate<Diff>() {
+				public boolean apply(Diff difference) {
+					return and(instanceOf(DiagramDiff.class),
+							or(ofKind(DifferenceKind.ADD), ofKind(DifferenceKind.DELETE))).apply(difference);
+				}
+			};
+		}
+
+		/**
+		 * It manages the display of the given phantom and its dependencies.
+		 * 
+		 * @param phantom
+		 *            The main phantom to handle.
+		 * @param isAdd
+		 *            True if the phantoms have to be revealed, False otherwise.
+		 */
+		private void handlePhantom(Phantom phantom, boolean isAdd) {
+			handlePhantomFigure(phantom, isAdd);
+			IFigure figure = phantom.getFigure();
+			if (figure instanceof Shape) {
+				if (isAdd) {
+					((Shape)figure).setLineWidth(((Shape)figure).getLineWidth() + 1);
+					Color strokeColor = getCompareColor().getStrokeColor(phantom.getDifference(),
+							isThreeWay(), false, true);
+					figure.setForegroundColor(strokeColor);
+					// FIXME: Find a way to set the focus on this figure.
+					getViewer(phantom.getSide()).getGraphicalViewer().reveal(figure);
+				} else {
+					((Shape)figure).setLineWidth(((Shape)figure).getLineWidth() - 1);
+				}
+			}
+			for (Phantom ancestor : phantom.getDependencies()) {
+				handlePhantomFigure(ancestor, isAdd);
+				if (isAdd) {
+					Color strokeColor = getCompareColor().getStrokeColor(ancestor.getDifference(),
+							isThreeWay(), false, false);
+					ancestor.getFigure().setForegroundColor(strokeColor);
+				}
+			}
+		}
+
+		/**
+		 * It manages the display of the given phantom.
+		 * 
+		 * @param phantom
+		 *            The phantom to handle.
+		 * @param isAdd
+		 *            True if it has to be revealed, False otherwise.
+		 */
+		private void handlePhantomFigure(Phantom phantom, boolean isAdd) {
+			if (phantom.getEditPart() == null) {
+				if (isAdd) {
+					phantom.getLayer().add(phantom.getFigure());
+				} else {
+					phantom.getLayer().remove(phantom.getFigure());
+				}
+			} else {
+				if (isAdd) {
+					phantom.getEditPart().activate();
+					phantom.getLayer().add(phantom.getFigure());
+				} else {
+					phantom.getEditPart().deactivate();
+					phantom.getLayer().remove(phantom.getFigure());
+				}
+			}
+		}
+
+		/**
+		 * It checks if the given difference is a good candidate to manage phantoms.<br>
+		 * 
+		 * @see {@link PhantomManager#goodCandidate()}.
+		 * @param difference
+		 *            The difference.
+		 * @return True if it is a good candidate, False otherwise.
+		 */
+		private boolean isGoodCandidate(Diff difference) {
+			return goodCandidate().apply(difference);
+		}
+
+		/**
+		 * Get the view which has to be used as reference to build a phantom.<br>
+		 * The reference is the non null object among the given objects. In case of delete object, in the
+		 * context of three-way comparison, the reference will be the ancestor one (<code>originObj</code>).
+		 * 
+		 * @param originObj
+		 *            The ancestor object.
+		 * @param leftView
+		 *            The left object.
+		 * @param rightView
+		 *            The right object.
+		 * @return The reference object.
+		 */
+		private View getReferenceView(View originObj, View leftView, View rightView) {
+			View referenceView;
+			if (originObj != null) {
+				referenceView = originObj;
+			} else if (leftView != null) {
+				referenceView = leftView;
+			} else {
+				referenceView = rightView;
+			}
+			return referenceView;
+		}
+
+		/**
+		 * Get the figure related to the given view.
+		 * 
+		 * @param view
+		 *            The view.
+		 * @return the figure.
+		 */
+		private IFigure getFigure(View view) {
+			MergeViewerSide side = getSide(view);
+			GraphicalEditPart originEditPart = (GraphicalEditPart)getViewer(side).getEditPart(view);
+			return originEditPart.getFigure();
+		}
+
+		/**
+		 * Get the side where phantoms have to be drawn, according to the given left view.<br>
+		 * If the left object is null, a phantom should be drawn instead. Else, it means that the right object
+		 * is null and a phantom should be displayed on the right side.
+		 * 
+		 * @param leftView
+		 *            The left view. It may be null.
+		 * @return The side for phantoms.
+		 */
+		private MergeViewerSide getTargetSide(View leftView) {
+			MergeViewerSide targetSide = null;
+			if (leftView == null) {
+				targetSide = MergeViewerSide.LEFT;
+			} else {
+				targetSide = MergeViewerSide.RIGHT;
+			}
+			return targetSide;
+		}
+
+		/**
+		 * It creates a new phantom and registers it in the {@link PhantomManager#fPhantomRegistry}.
+		 * 
+		 * @param diff
+		 *            The related difference used as index for the main phantom.
+		 * @param referenceView
+		 *            The reference view as base for creation of the phantom.
+		 * @param referenceFigure
+		 *            The reference figure as base for creation of the phantom.
+		 * @param targetSide
+		 *            The side where the phantom has to be created.
+		 * @return The phantom.
+		 */
+		private Phantom createAndRegisterPhantom(Diff diff, View referenceView, IFigure referenceFigure,
+				MergeViewerSide targetSide) {
+			Phantom phantom = createPhantom(diff, referenceView, referenceFigure, targetSide);
+			fPhantomRegistry.put(diff, phantom);
+			return phantom;
+		}
+
+		/**
+		 * It creates a new phantom from the given difference, view and figure.
+		 * 
+		 * @param diff
+		 *            The related difference used as index for the main phantom.
+		 * @param referenceView
+		 *            The reference view as base for creation of the phantom.
+		 * @param referenceFigure
+		 *            The reference figure as base for creation of the phantom.
+		 * @param side
+		 *            The side where the phantom has to be created.
+		 * @return The phantom.
+		 */
+		private Phantom createPhantom(Diff diff, View referenceView, IFigure referenceFigure,
+				MergeViewerSide side) {
+
+			MergeViewerSide referenceSide = getSide(referenceView);
+
+			Rectangle rect = referenceFigure.getBounds().getCopy();
+			rect.performScale(((DiagramRootEditPart)getViewer(side).getGraphicalViewer().getRootEditPart())
+					.getZoomManager().getZoom());
+
+			IFigure referenceLayer = getLayer(referenceView, referenceSide);
+			translateCoordinates(referenceFigure, referenceLayer, rect);
+
+			// Default case: Nodes
+			IFigure ghost = new RectangleFigure();
+			ghost.setBounds(rect);
+			// FIXME: To manage case inside a container where its coordinates changed.
+
+			IFigure targetLayer = getLayer(referenceView, side);
+			Phantom phantom = new Phantom(targetLayer, side, referenceView, referenceFigure, diff);
+
+			// Container "list" case
+			if (referenceView.eContainer() instanceof BasicCompartment) {
+				ghost = new Polyline();
+
+				Diff refiningDiff = Iterators.find(diff.getRefinedBy().iterator(), and(
+						valueIs(referenceView), onFeature(NotationPackage.Literals.VIEW__PERSISTED_CHILDREN
+								.getName())));
+
+				// FIXME:
+				// - It has to manage visible views.
+				// - About transient children ?
+				int index = DiffUtil.findInsertionIndex(fComparison, refiningDiff,
+						side == MergeViewerSide.LEFT);
+
+				IFigure referenceParentFigure = referenceFigure.getParent();
+				Rectangle referenceParentBounds = referenceParentFigure.getBounds().getCopy();
+				translateCoordinates(referenceParentFigure, referenceLayer, referenceParentBounds);
+				// FIXME: To manage case inside a container where its coordinates changed.
+
+				View parentView = (View)getMatchView(referenceView.eContainer(), side);
+				if (parentView != null) {
+					int nbElements = getVisibleViews(parentView).size();
+					if (index > nbElements) {
+						index = nbElements;
+					}
+				}
+
+				// FIXME: The add of decorators modifies the physical coordinates of elements
+				int pos = rect.height * index + referenceParentBounds.y + 1;
+
+				((Polyline)ghost).addPoint(new Point(rect.x, pos));
+				((Polyline)ghost).addPoint(new Point(rect.x + rect.width, pos));
+
+				// Edge case
+			} else if (referenceView instanceof Edge) {
+				// If the edge phantom ties shapes where their coordinates changed
+				if (hasAnExtremityChange((Edge)referenceView, side)) {
+					EditPart edgeEditPart = createEdgeEditPart((Edge)referenceView, referenceSide, side);
+					if (edgeEditPart instanceof GraphicalEditPart) {
+						phantom.setEditPart(edgeEditPart);
+						edgeEditPart.activate();
+						ghost = ((GraphicalEditPart)edgeEditPart).getFigure();
+						ghost.getChildren().clear();
+					}
+					// Else, it creates only a polyline connection figure with the same properties as the
+					// reference
+				} else {
+					EditPart edgeEditPartReference = getViewer(referenceSide).getEditPart(referenceView);
+					if (edgeEditPartReference instanceof ConnectionEditPart) {
+						IFigure ref = ((ConnectionEditPart)edgeEditPartReference).getFigure();
+						// CHECKSTYLE:OFF
+						if (ref instanceof PolylineConnection) {
+							// CHECKSTYLE:ON
+							ghost = new PolylineConnection();
+							ghost.setBounds(ref.getBounds().getCopy());
+							((PolylineConnection)ghost).setPoints(((PolylineConnection)ref).getPoints()
+									.getCopy());
+						}
+					}
+				}
+			}
+
+			if (ghost instanceof Shape) {
+				((Shape)ghost).setFill(false);
+			}
+
+			phantom.setFigure(ghost);
+
+			return phantom;
+		}
+
+		/**
+		 * Get the visible view under the given parent view.
+		 * 
+		 * @param parent
+		 *            The parent view.
+		 * @return The list of views.
+		 */
+		private List<View> getVisibleViews(View parent) {
+			return (List<View>)Lists.newArrayList(Iterators.filter(parent.getChildren().iterator(),
+					new Predicate<Object>() {
+						public boolean apply(Object input) {
+							return input instanceof View && ((View)input).isVisible();
+						}
+					}));
+		}
+
+		/**
+		 * It translates the coordinates of the given bounds, from the reference figure and the root of this
+		 * one, to absolute coordinates.
+		 * 
+		 * @param referenceFigure
+		 *            The reference figure.
+		 * @param rootReferenceFigure
+		 *            The root of the reference figure.
+		 * @param boundsToTranslate
+		 *            The bounds to translate.
+		 */
+		private void translateCoordinates(IFigure referenceFigure, IFigure rootReferenceFigure,
+				Rectangle boundsToTranslate) {
+			IFigure referenceParentFigure = referenceFigure.getParent();
+			if (referenceParentFigure != null && referenceFigure != rootReferenceFigure) {
+				if (referenceParentFigure.isCoordinateSystem()) {
+					boundsToTranslate.x += referenceParentFigure.getBounds().x;
+					boundsToTranslate.y += referenceParentFigure.getBounds().y;
+				}
+				translateCoordinates(referenceParentFigure, rootReferenceFigure, boundsToTranslate);
+			}
+		}
+
+		/**
+		 * It checks that the given edge is linked to graphical objects subjected to coordinate changes, on
+		 * the given side.
+		 * 
+		 * @param edge
+		 *            The edge to check.
+		 * @param targetSide
+		 *            The side to check extremities (side of the phantom).
+		 * @return True if an extremity at least changed its location, False otherwise.
+		 */
+		private boolean hasAnExtremityChange(Edge edge, MergeViewerSide targetSide) {
+			View referenceSource = edge.getSource();
+			View referenceTarget = edge.getTarget();
+			return hasChange(referenceSource, targetSide) || hasChange(referenceTarget, targetSide);
+		}
+
+		/**
+		 * It checks that the coordinates of the given view changed between left and right, from the given
+		 * side.
+		 * 
+		 * @param referenceExtremity
+		 *            The view to check.
+		 * @param targetSide
+		 *            The side to focus.
+		 * @return True if the view changed its location, False otherwise.
+		 */
+		private boolean hasChange(View referenceExtremity, MergeViewerSide targetSide) {
+			DifferenceKind lookup = DifferenceKind.MOVE; // FIXME: it will be change to CHANGE (change
+															// coordinates)
+			View extremity = (View)getMatchView(referenceExtremity, targetSide);
+			// Look for a related change coordinates on the extremity of the edge reference.
+			Collection<Diff> diffs = Collections2.filter(fComparison.getDifferences(referenceExtremity), and(
+					instanceOf(DiagramDiff.class), ofKind(lookup)));
+			if (diffs.isEmpty()) {
+				// Look for a related change coordinates on the matching extremity (other side) of the edge
+				// reference.
+				diffs = Collections2.filter(fComparison.getDifferences(extremity), and(
+						instanceOf(DiagramDiff.class), ofKind(lookup)));
+			}
+			return !diffs.isEmpty();
+		}
+
+		/**
+		 * Get the layer on the given side, from the reference view.<br>
+		 * 
+		 * @see @ link PhantomManager#getIDLayer(View)} .
+		 * @param referenceView
+		 *            The reference view.
+		 * @param side
+		 *            The side where the layer has to be found.
+		 * @return The layer figure.
+		 */
+		private IFigure getLayer(View referenceView, MergeViewerSide side) {
+			Diagram referenceDiagram = referenceView.getDiagram();
+			Diagram targetDiagram = (Diagram)getMatchView(referenceDiagram, side);
+			DiagramMergeViewer targetViewer = getViewer(side);
+			IFigure targetLayer = LayerManager.Helper.find(targetViewer.getEditPart(targetDiagram)).getLayer(
+					getIDLayer(referenceView));
+			return targetLayer;
+		}
+
+		/**
+		 * Get the layer ID to use from the reference view.<br>
+		 * If the reference view is an edge, it is the {@link LayerConstants.CONNECTION_LAYER} which is used,
+		 * {@link LayerConstants.SCALABLE_LAYERS} otherwise.
+		 * 
+		 * @param referenceView
+		 *            The reference view.
+		 * @return The ID of te layer.
+		 */
+		private Object getIDLayer(View referenceView) {
+			if (referenceView instanceof Edge) {
+				return LayerConstants.CONNECTION_LAYER;
+			} else {
+				return LayerConstants.SCALABLE_LAYERS;
+			}
+		}
+
+		/**
+		 * It creates and returns a new edit part from the given edge. This edit part listens the reference
+		 * edge but is attached to the controllers of the target (phantom) side.
+		 * 
+		 * @param referenceEdge
+		 *            The edge as base of the edit part.
+		 * @param referenceSide
+		 *            The side of this edge.
+		 * @param targetSide
+		 *            The side where the edit part has to be created to draw the related phantom.
+		 * @return The new edit part.
+		 */
+		private EditPart createEdgeEditPart(Edge referenceEdge, MergeViewerSide referenceSide,
+				MergeViewerSide targetSide) {
+			EditPart edgeEditPartReference = getViewer(referenceSide).getEditPart(referenceEdge);
+			EditPart edgeEditPart = null;
+			if (edgeEditPartReference instanceof ConnectionEditPart) {
+				edgeEditPart = createEditPartForPhantoms(referenceEdge, referenceSide, targetSide);
+				if (edgeEditPart instanceof ConnectionEditPart) {
+					View source = (View)((ConnectionEditPart)edgeEditPartReference).getSource().getModel();
+					if (source == null) {
+						source = referenceEdge.getSource();
+					}
+					View target = (View)((ConnectionEditPart)edgeEditPartReference).getTarget().getModel();
+					if (target == null) {
+						target = referenceEdge.getTarget();
+					}
+					EditPart sourceEp = createEditPartForPhantoms(source, referenceSide, targetSide);
+					((AbstractGraphicalEditPart)sourceEp).activate();
+					((AbstractGraphicalEditPart)sourceEp).getFigure();
+					((ConnectionEditPart)edgeEditPart).setSource(sourceEp);
+					EditPart targetEp = createEditPartForPhantoms(target, referenceSide, targetSide);
+					((AbstractGraphicalEditPart)targetEp).activate();
+					((AbstractGraphicalEditPart)targetEp).getFigure();
+					((ConnectionEditPart)edgeEditPart).setTarget(targetEp);
+				}
+			}
+			return edgeEditPart;
+		}
+
+		/**
+		 * It creates and returns a new edit part from the given view. This edit part listens the reference
+		 * view but is attached to the controllers of the target (phantom) side.
+		 * 
+		 * @param referenceView
+		 *            The view as base of the edit part.
+		 * @param referenceSide
+		 *            The side of this view.
+		 * @param targetSide
+		 *            The side where the edit part has to be created to draw the related phantom.
+		 * @return The new edit part.
+		 */
+		private EditPart createEditPartForPhantoms(EObject referenceView, MergeViewerSide referenceSide,
+				MergeViewerSide targetSide) {
+			EditPart editPartParent = null;
+			EditPart editPart = null;
+			EditPart editPartReference = getViewer(referenceSide).getEditPart(referenceView);
+			EditPart editPartReferenceParent = editPartReference.getParent();
+			Object referenceViewParent = editPartReferenceParent.getModel();
+			if (!(referenceViewParent instanceof EObject)) {
+				referenceViewParent = referenceView.eContainer();
+			}
+			View viewParent = (View)getMatchView((EObject)referenceViewParent, targetSide);
+			if (viewParent != null) {
+				editPartParent = getViewer(targetSide).getEditPart(viewParent);
+			}
+			if (editPartParent == null) {
+				editPartParent = createEditPartForPhantoms((EObject)referenceViewParent, referenceSide,
+						targetSide);
+
+			}
+			if (editPartParent != null) {
+				View view = (View)getMatchView(referenceView, targetSide);
+				if (view != null) {
+					editPart = getViewer(targetSide).getEditPart(view);
+				}
+				if (editPart == null) {
+					editPart = getViewer(targetSide).getGraphicalViewer().getEditPartFactory()
+							.createEditPart(editPartParent, referenceView);
+					editPart.setParent(editPartParent);
+					editPart.removeEditPolicy(EditPolicyRoles.DECORATION_ROLE);
+					editPart.removeEditPolicy(EditPolicyRoles.OPEN_ROLE);
+					if (editPart instanceof IGraphicalEditPart) {
+						((IGraphicalEditPart)editPart).disableEditMode();
+					}
+					getViewer(targetSide).getGraphicalViewer().getEditPartRegistry().put(referenceView,
+							editPart);
+				}
+
+			}
+			return editPart;
+		}
+	}
 
 	/**
 	 * Bundle name of the property file containing all displayed strings.
 	 */
 	private static final String BUNDLE_NAME = DiagramContentMergeViewer.class.getName();
 
+	/** The phantom manager to use in the context of this viewer. */
+	private PhantomManager phantomManager = new PhantomManager();
+
+	/** The current "opened" difference. */
+	private Diff currentSelectedDiff;
+
 	/**
-	 * The {@link org.eclipse.emf.common.notify.AdapterFactory} used to create
-	 * {@link AdapterFactoryContentProvider} and {@link AdapterFactoryLabelProvider} for ancestor, left and
-	 * right {@link org.eclipse.jface.viewers.TreeViewer}.
+	 * The adapter factory used to create the content and label provider for ancestor, left and right
+	 * {@link DiagramMergeViewer}.
 	 */
 	private final ComposedAdapterFactory fAdapterFactory;
 
@@ -106,7 +952,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	 * <p>
 	 * It calls {@link #buildControl(Composite)} as stated in its javadoc.
 	 * <p>
-	 * It sets a {@link TreeContentMergeViewerContentProvider specific}
+	 * It sets a {@link GMFModelContentMergeContentProvider}
 	 * {@link #setContentProvider(org.eclipse.jface.viewers.IContentProvider) content provider} to properly
 	 * display ancestor, left and right parts.
 	 * 
@@ -259,650 +1105,120 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 
 	}
 
-	private class Phantom {
-		public IFigure figure;
-
-		public IFigure layer;
-
-		public Phantom(IFigure figure, IFigure layer) {
-			this.figure = figure;
-			this.layer = layer;
-		}
-	}
-
-	private Predicate<Diff> diffsForPhantoms = and(ofKind(DifferenceKind.DELETE),
-			instanceOf(NodeChange.class));
-
 	@Override
 	protected void updateContent(Object ancestor, Object left, Object right) {
-		// TODO: To Fix the problem to locate ghost figures
-		// TODO: To test multi-diagrams to clean phantoms
-		// TODO: To manage the edge cases for phantoms (display the same figures (composing the edge) but in
-		// red color)
-		// TODO: To change decorators (to take off the icons (+ for adds) and use the same decoration as
-		// changes for moves)
 		super.updateContent(ancestor, left, right);
 
-		// FIXME: Alternative solution (start of implementation) to correctly manage the position of ghost
-		// figures.
-		// if (left instanceof IDiagramNodeAccessor) {
-		//
-		// IDiagramNodeAccessor input = (IDiagramNodeAccessor)left;
-		// Comparison comparison = input.getComparison();
-		//
-		// PhantomsManager manager = new PhantomsManager();
-		// manager.initCacheFigures(comparison);
-		// manager.initPhantoms(comparison, Collections2.filter(input.getAllDiffs(), diffsForPhantoms));
-		// manager.attachPhantoms();
-		//
-		// }
+		fLeft.flush();
+		((DiagramMergeViewer)fLeft).getGraphicalViewer().flush();
+		fRight.flush();
+		((DiagramMergeViewer)fRight).getGraphicalViewer().flush();
+		fAncestor.flush();
+		((DiagramMergeViewer)fAncestor).getGraphicalViewer().flush();
 
-		if (left instanceof IDiagramNodeAccessor) {
-			IDiagramNodeAccessor input = (IDiagramNodeAccessor)left;
+		if (left instanceof IDiagramDiffAccessor) {
+			IDiagramDiffAccessor input = (IDiagramDiffAccessor)left;
 
-			Collection<Diff> deleteDiffs = Collections2.filter(input.getAllDiffs(), diffsForPhantoms);
-
-			// *** BEGIN first solution ***
-			// FIXME: In some cases (o.e.e.c.d.ide.ui.papyrus.tests/NodeChange/a9) the position of the ghost
-			// is outside the visible containing figure.
-			// You have to create the hierarchy of figures between the visible one and the new ghost figure.
-			// For that, you have to map all the figures from every side (see alternative solution).
-			if (phantomsMap.isEmpty()) {
-
-				fLeft.flush();
-				((DiagramMergeViewer)fLeft).getGraphicalViewer().flush();
-				fRight.flush();
-				((DiagramMergeViewer)fRight).getGraphicalViewer().flush();
-				fAncestor.flush();
-				((DiagramMergeViewer)fAncestor).getGraphicalViewer().flush();
-
-				// Create phantoms -> cache them and their possible container
-				Iterator<Diff> itDeleteDiffs = deleteDiffs.iterator();
-				while (itDeleteDiffs.hasNext()) {
-
-					DiagramDiff diff = (DiagramDiff)itDeleteDiffs.next();
-
-					View viewRef = (View)diff.getView();
-					IFigure ref = getReferenceFigureValue(input.getComparison(), diff);
-					Diagram diagram = viewRef.getDiagram();
-
-					MergeViewerSide targetSide = getTargetSide(input.getComparison(), viewRef);
-					Diagram targetDiagram = (Diagram)getMatchView(input.getComparison(), diagram, targetSide);
-					DiagramMergeViewer targetViewer = getViewer(targetSide);
-
-					IFigure targetLayer = LayerManager.Helper.find(targetViewer.getEditPart(targetDiagram))
-							.getLayer(LayerConstants.SCALABLE_LAYERS);
-
-					IFigure ghost = createGhostFigure(ref, targetSide,
-							viewRef.eContainer() instanceof BasicCompartment);
-					phantomsMap.put(ref, new Phantom(ghost, targetLayer));
-
-					View parentViewRef = (View)getMatchView(diff.getMatch(), getSide(input.getComparison(),
-							viewRef));
-
-					if (parentViewRef != null) {
-						IFigure parentRefFigure = getFigure(input.getComparison(), parentViewRef);
-						View parentTargetView = (View)getMatchView(diff.getMatch(), getSide(diff));
-						if (parentTargetView != null) {
-							IFigure parentTargetFigure = getFigure(input.getComparison(), parentTargetView);
-							containerMap.put(parentRefFigure, parentTargetFigure);
-						}
-					}
-
-				}
-
-				// Iterate on cache to attach phantoms on the correct figures
-				for (Entry<IFigure, Phantom> entry : phantomsMap.entrySet()) {
-					IFigure ref = entry.getKey();
-
-					Phantom target = entry.getValue();
-					IFigure ghost = target.figure;
-					IFigure targetLayer = target.layer;
-
-					IFigure parentGhost = findMatchingParentGhost(ref);
-					if (parentGhost != null) {
-						addToParent(ref, ghost, parentGhost);
-					} else {
-						IFigure parent = findMatchingParent(ref);
-						if (parent != null) {
-							addToParent(ref, ghost, parent);
-						} else {
-							targetLayer.add(ghost);
-						}
-					}
-				}
+			// initialization: reset the current difference selection hiding potential visible phantoms
+			if (currentSelectedDiff != null) {
+				phantomManager.hidePhantoms(currentSelectedDiff);
 			}
-			// *** END first solution ***
 
-			// reset phantom selections
-			resetPhantomSelections();
+			Diff diff = input.getDiff();
+			currentSelectedDiff = diff;
 
-			// set phantom selections
-			if (input instanceof IDiagramDiffAccessor) {
-				IFigure figureRef = getReferenceFigure(input.getComparison(),
-						(View)((IDiagramDiffAccessor)left).getDiff().getView());
+			phantomManager.revealPhantoms(diff);
 
-				Phantom target = phantomsMap.get(figureRef);
-				if (target != null) {
-
-					int oldLineWidth = ((Shape)target.figure).getLineWidth();
-
-					// save its line width
-					phantomSelection.put(target.figure, oldLineWidth);
-
-					// enhance its line width
-					((Shape)target.figure).setLineWidth(oldLineWidth + 2);
-
-				}
-			}
+			// reveal object
+			EObject view = ((DiagramDiff)diff).getView();
+			DiagramMergeViewer targetViewer = getViewer(getSide((View)view));
+			getViewer(getSide((View)view)).getGraphicalViewer().reveal(targetViewer.getEditPart(view));
 		}
 
 	}
 
-	private void addToParent(IFigure ref, IFigure ghost, IFigure parent) {
-		parent.add(ghost);
-		Rectangle copyRef = ref.getBounds().getCopy();
-		ref.getParent().translateToAbsolute(copyRef);
-		ghost.setBounds(copyRef);
-	}
-
-	private void resetPhantomSelections() {
-		for (Entry<IFigure, Integer> entry : phantomSelection.entrySet()) {
-			IFigure fig = entry.getKey();
-			int oldValue = entry.getValue();
-			((Shape)fig).setLineWidth(oldValue);
-		}
-		phantomSelection.clear();
-	}
-
-	private IFigure getReferenceFigureValue(Comparison comparison, DiagramDiff diff) {
-		View viewRef = (View)diff.getView();
-		return getReferenceFigure(comparison, viewRef);
-	}
-
-	private MergeViewerSide getTargetSide(Comparison comparison, View viewRef) {
-		Match matchViewRef = comparison.getMatch(viewRef);
-		// looking for null side
-		MergeViewerSide side = null;
-		if (matchViewRef.getLeft() == null) {
-			side = MergeViewerSide.LEFT;
-		} else {
-			side = MergeViewerSide.RIGHT;
-		}
-
-		return side;
-	}
-
-	private IFigure findMatchingParentGhost(IFigure figure) {
-		IFigure parent = figure.getParent();
-		if (parent != null) {
-			Phantom parentTarget = phantomsMap.get(parent);
-			if (parentTarget == null) {
-				return findMatchingParentGhost(parent);
-			} else {
-				return parentTarget.figure;
-			}
-		}
-		return parent;
-	}
-
-	private IFigure findMatchingParent(IFigure figure) {
-		IFigure parent = figure.getParent();
-		if (parent != null) {
-			IFigure parentTarget = containerMap.get(parent);
-			if (parentTarget == null) {
-				return findMatchingParent(parent);
-			} else {
-				return parentTarget;
-			}
-		}
-		return parent;
-	}
-
+	/**
+	 * Utility method to retrieve the {@link DiagramMergeViewer} from the given side.
+	 * 
+	 * @param side
+	 *            The side to focus.
+	 * @return The viewer.
+	 */
 	private DiagramMergeViewer getViewer(MergeViewerSide side) {
+		DiagramMergeViewer result = null;
 		switch (side) {
 			case LEFT:
-				return (DiagramMergeViewer)fLeft;
+				result = (DiagramMergeViewer)fLeft;
+				break;
 			case RIGHT:
-				return (DiagramMergeViewer)fRight;
+				result = (DiagramMergeViewer)fRight;
+				break;
 			case ANCESTOR:
-				return (DiagramMergeViewer)fAncestor;
+				result = (DiagramMergeViewer)fAncestor;
+				break;
 			default:
-				return null;
 		}
+		return result;
 	}
 
-	private EObject getMatchView(Comparison comparison, View view, MergeViewerSide side) {
-		Match match = comparison.getMatch(view);
+	/**
+	 * Utility method to know the side where is located the given view.
+	 * 
+	 * @param view
+	 *            The view.
+	 * @return The side of the view.
+	 */
+	private MergeViewerSide getSide(View view) {
+		MergeViewerSide result = null;
+		Match match = fComparison.getMatch(view);
+		if (match.getLeft() == view) {
+			result = MergeViewerSide.LEFT;
+		} else if (match.getRight() == view) {
+			result = MergeViewerSide.RIGHT;
+		} else if (match.getOrigin() == view) {
+			result = MergeViewerSide.ANCESTOR;
+		}
+		return result;
+	}
+
+	/**
+	 * Utility method to get the object matching with the given one, to the given side.
+	 * 
+	 * @param object
+	 *            The object as base of the lookup.
+	 * @param side
+	 *            The side where the potential matching object has to be retrieved.
+	 * @return The matching object.
+	 */
+	private EObject getMatchView(EObject object, MergeViewerSide side) {
+		Match match = fComparison.getMatch(object);
 		return getMatchView(match, side);
 	}
 
+	/**
+	 * Utility method to get the object in the given side from the given match.
+	 * 
+	 * @param match
+	 *            The match.
+	 * @param side
+	 *            The side where the potential matching object has to be retrieved.
+	 * @return The matching object.
+	 */
 	private EObject getMatchView(Match match, MergeViewerSide side) {
+		EObject result = null;
 		switch (side) {
 			case LEFT:
-				return match.getLeft();
+				result = match.getLeft();
+				break;
 			case RIGHT:
-				return match.getRight();
+				result = match.getRight();
+				break;
 			case ANCESTOR:
-				return match.getOrigin();
+				result = match.getOrigin();
+				break;
 			default:
-				return null;
 		}
+		return result;
 	}
-
-	private IFigure getReferenceFigure(Comparison comparison, View view) {
-		MergeViewerSide originSide = null;
-		if (getMatchView(comparison, view, MergeViewerSide.ANCESTOR) != null) {
-			originSide = MergeViewerSide.ANCESTOR;
-		} else {
-			Match match = comparison.getMatch(view);
-			if (match.getLeft() != null) {
-				originSide = MergeViewerSide.LEFT;
-			} else {
-				originSide = MergeViewerSide.RIGHT;
-			}
-		}
-
-		EObject origin = getMatchView(comparison, view, originSide);
-
-		if (origin instanceof View) {
-
-			return getFigure(comparison, (View)origin);
-		}
-		return null;
-	}
-
-	private IFigure getFigure(Comparison comparison, View view) {
-		MergeViewerSide side = getSide(comparison, view);
-		GraphicalEditPart originEditPart = (GraphicalEditPart)getViewer(side).getEditPart(view);
-		return originEditPart.getFigure();
-	}
-
-	private IFigure createGhostFigure(IFigure ref, MergeViewerSide side, boolean isEltOfList) {
-
-		Rectangle rect = ref.getBounds().getCopy();
-
-		IFigure ghost = null;
-
-		if (isEltOfList) {
-			ghost = new Polyline();
-			((Polyline)ghost).addPoint(new Point(rect.x, rect.y - 1));
-			((Polyline)ghost).addPoint(new Point(rect.x + rect.width, rect.y - 1));
-			ghost.setBackgroundColor(new Color(Display.getCurrent(), new RGB(255, 0, 0)));
-			((Shape)ghost).setLineWidth(2);
-		} else {
-			ghost = new DeleteGhostImageFigure();
-			ghost.setBounds(rect);
-		}
-
-		rect.performScale(((DiagramRootEditPart)getViewer(side).getGraphicalViewer().getRootEditPart())
-				.getZoomManager().getZoom());
-
-		ghost.setForegroundColor(new Color(Display.getCurrent(), new RGB(255, 0, 0)));
-		((Shape)ghost).setAlpha(150);
-		return ghost;
-	}
-
-	private MergeViewerSide getSide(Diff diff) {
-		if (diff.getSource() == DifferenceSource.LEFT) {
-			return MergeViewerSide.LEFT;
-		} else {
-			return MergeViewerSide.RIGHT;
-		}
-
-	}
-
-	private MergeViewerSide getSide(Comparison comparison, View view) {
-		Match match = comparison.getMatch(view);
-		if (match.getLeft() == view) {
-			return MergeViewerSide.LEFT;
-		} else if (match.getRight() == view) {
-			return MergeViewerSide.RIGHT;
-		} else if (match.getOrigin() == view) {
-			return MergeViewerSide.ANCESTOR;
-		} else {
-			return null;
-		}
-	}
-
-	// *** BEGIN alternative developing solution ***
-	final class PhantomsManager {
-
-		/**  */
-		private Map<IFigure, MatchFigure> relevantFigures = new HashMap<IFigure, MatchFigure>();
-
-		private List<MatchFigure> matchedFigures = new ArrayList<MatchFigure>();
-
-		private Map<IFigure, IFigure> phantoms = new HashMap<IFigure, IFigure>();
-
-		public void initCacheFigures(Comparison comparison) {
-			List<Match> matches = getAllMatches(comparison);
-			for (Match match : matches) {
-				createMatchFigure(match);
-			}
-			// Add glue to the figures
-			for (MatchFigure matchFigure : matchedFigures) {
-				createParentMatchFigures(matchFigure);
-			}
-		}
-
-		public void initPhantoms(Comparison comparison, Collection<Diff> deleteDifferences) {
-			Iterator<Diff> itDeleteDiffs = deleteDifferences.iterator();
-			while (itDeleteDiffs.hasNext()) {
-
-				DiagramDiff diff = (DiagramDiff)itDeleteDiffs.next();
-
-				Map<MergeViewerSide, IFigure> figures = getFigures(comparison, diff);
-
-				View refView = (View)diff.getView();
-				Match match = comparison.getMatch(refView);
-
-				MergeViewerSide refSide = getReferenceSide(match);
-				IFigure refFigure = figures.get(refSide);
-
-				MatchFigure matchFigure = new MatchFigure(figures.get(MergeViewerSide.ANCESTOR), figures
-						.get(MergeViewerSide.LEFT), figures.get(MergeViewerSide.RIGHT));
-
-				MergeViewerSide targetSide = getTargetSide(comparison, refView);
-
-				IFigure ghost = createGhostFigure(refFigure, targetSide,
-						refView.eContainer() instanceof BasicCompartment);
-				matchFigure.setGhost(targetSide, ghost);
-
-				relevantFigures.put(refFigure, matchFigure);
-				relevantFigures.put(ghost, matchFigure);
-				phantoms.put(refFigure, ghost);
-
-			}
-		}
-
-		public void attachPhantoms() {
-			for (Entry<IFigure, IFigure> entry : phantoms.entrySet()) {
-				IFigure refFigure = entry.getKey();
-				MatchFigure matchFigure = relevantFigures.get(refFigure);
-				MatchFigure matchFigureParent = relevantFigures.get(refFigure.getParent());
-				IFigure ghost = matchFigure.ghost;
-				if (ghost != null) {
-					IFigure targetParent = matchFigureParent.getFigure(matchFigure.getSide(ghost));
-
-					// Retrieve the target layer. FIXME: retrieve the target diagram view to get its editpart.
-					IFigure targetLayer = LayerManager.Helper.find(
-							getViewer(matchFigure.getSide(ghost)).getEditPart(null)).getLayer(
-							LayerConstants.SCALABLE_LAYERS);
-
-					if (targetParent instanceof FreeformLayeredPane) {
-						targetLayer.add(ghost);
-					} else {
-						targetParent.add(ghost);
-					}
-
-				}
-			}
-		}
-
-		private MergeViewerSide getReferenceSide(Match match) {
-			EObject origin = match.getOrigin();
-			if (origin != null) {
-				return MergeViewerSide.ANCESTOR;
-			} else {
-				EObject left = match.getLeft();
-				EObject right = match.getRight();
-				if (left != null) {
-					return MergeViewerSide.LEFT;
-				} else if (right != null) {
-					return MergeViewerSide.RIGHT;
-				}
-			}
-			return null;
-		}
-
-		private ViewSide getReferenceView(Match match) {
-			switch (getReferenceSide(match)) {
-				case ANCESTOR:
-					return new ViewSide(MergeViewerSide.ANCESTOR, (View)match.getOrigin());
-				case LEFT:
-					return new ViewSide(MergeViewerSide.LEFT, (View)match.getLeft());
-				case RIGHT:
-					return new ViewSide(MergeViewerSide.RIGHT, (View)match.getRight());
-			}
-			return null;
-		}
-
-		private List<Match> getAllMatches(Comparison comparison) {
-			List<Match> result = new ArrayList<Match>();
-			for (Match match : comparison.getMatches()) {
-				result.add(match);
-				result.addAll(Lists.newArrayList(match.getAllSubmatches()));
-			}
-			return result;
-		}
-
-		private List<Match> getDeepestMatches(Comparison comparison) {
-			List<Match> result = new ArrayList<Match>();
-			for (Match match : comparison.getMatches()) {
-				result.addAll(getDeepestMatches(match));
-			}
-			return result;
-		}
-
-		private List<Match> getDeepestMatches(Match match) {
-			List<Match> result = new ArrayList<Match>();
-			Iterator<Match> subMatches = match.getAllSubmatches().iterator();
-			if (!subMatches.hasNext()) {
-				result.add(match);
-			} else {
-				while (subMatches.hasNext()) {
-					Match subMatch = subMatches.next();
-					if (subMatch.getSubmatches().isEmpty()) {
-						result.add(subMatch);
-					}
-				}
-			}
-			return result;
-		}
-
-		private Map<MergeViewerSide, IFigure> getFigures(Comparison comparison, DiagramDiff diff) {
-			Map<MergeViewerSide, IFigure> result = new HashMap<MergeViewerSide, IFigure>();
-			View view = (View)diff.getView();
-			Match match = comparison.getMatch(view);
-			View origin = (View)match.getOrigin();
-			result.putAll(getFigure(comparison, origin));
-			View left = (View)match.getLeft();
-			result.putAll(getFigure(comparison, left));
-			View right = (View)match.getRight();
-			result.putAll(getFigure(comparison, right));
-			return result;
-		}
-
-		private IFigure getFigure(ViewSide viewSide) {
-			GraphicalEditPart originEditPart = (GraphicalEditPart)getViewer(viewSide.side).getEditPart(
-					viewSide.view);
-			return originEditPart.getFigure();
-		}
-
-		private Map<MergeViewerSide, IFigure> getFigure(Comparison comparison, View view) {
-			Map<MergeViewerSide, IFigure> result = new HashMap<MergeViewerSide, IFigure>();
-			if (view != null) {
-				MergeViewerSide side = getSide(comparison, view);
-				GraphicalEditPart editPart = (GraphicalEditPart)getViewer(side).getEditPart(view);
-				result.put(side, editPart.getFigure());
-			}
-			return result;
-		}
-
-		private MatchFigure createMatchFigure(Match match) {
-
-			IFigure originFigure = null;
-			IFigure leftFigure = null;
-			IFigure rightFigure = null;
-
-			if (match.getOrigin() != null) {
-				originFigure = getFigure(new ViewSide(MergeViewerSide.ANCESTOR, (View)match.getOrigin()));
-			}
-			if (match.getLeft() != null) {
-				leftFigure = getFigure(new ViewSide(MergeViewerSide.LEFT, (View)match.getLeft()));
-
-			}
-			if (match.getRight() != null) {
-				rightFigure = getFigure(new ViewSide(MergeViewerSide.RIGHT, (View)match.getRight()));
-			}
-
-			MatchFigure matchFigure = createMatchFigure(originFigure, leftFigure, rightFigure);
-			matchedFigures.add(matchFigure);
-			matchFigure.match = match;
-
-			return matchFigure;
-		}
-
-		private MatchFigure createMatchFigure(IFigure origin, IFigure left, IFigure right) {
-			MatchFigure matchFigure = new MatchFigure(origin, left, right);
-			if (origin != null) {
-				relevantFigures.put(origin, matchFigure);
-			}
-			if (left != null) {
-				relevantFigures.put(left, matchFigure);
-			}
-			if (right != null) {
-				relevantFigures.put(right, matchFigure);
-			}
-			return matchFigure;
-		}
-
-		private void createParentMatchFigures(MatchFigure matchFigure) {
-			IFigure origin = matchFigure.origin;
-			IFigure left = matchFigure.left;
-			IFigure right = matchFigure.right;
-			while (createParentMatchFigure(origin, left, right)) {
-				if (origin != null) {
-					origin = origin.getParent();
-				}
-				if (left != null) {
-					left = left.getParent();
-				}
-				if (right != null) {
-					right = right.getParent();
-				}
-			}
-		}
-
-		private boolean createParentMatchFigure(IFigure origin, IFigure left, IFigure right) {
-			IFigure originParent = null;
-			IFigure leftParent = null;
-			IFigure rightParent = null;
-			if (left != null) {
-				leftParent = left.getParent();
-				if (leftParent == null || relevantFigures.get(leftParent) != null) {
-					return false;
-				}
-			}
-			if (right != null) {
-				rightParent = right.getParent();
-				if (rightParent == null || relevantFigures.get(rightParent) != null) {
-					return false;
-				}
-			}
-			if (origin != null) {
-				originParent = origin.getParent();
-				if (originParent == null || relevantFigures.get(originParent) != null) {
-					return false;
-				}
-			}
-			createMatchFigure(originParent, leftParent, rightParent);
-			return true;
-
-		}
-
-		private IFigure getFigure(MatchFigure matchFigure, MergeViewerSide side) {
-			switch (side) {
-				case LEFT:
-					return matchFigure.left;
-				case RIGHT:
-					return matchFigure.right;
-				case ANCESTOR:
-					return matchFigure.origin;
-				default:
-					return null;
-			}
-		}
-
-		final class ViewSide {
-			public MergeViewerSide side;
-
-			public View view;
-
-			public ViewSide(MergeViewerSide side, View view) {
-				this.side = side;
-				this.view = view;
-			}
-		}
-
-		final class MatchFigure {
-
-			public IFigure origin;
-
-			public IFigure left;
-
-			public IFigure right;
-
-			public Match match;
-
-			public IFigure ghost;
-
-			public MatchFigure(IFigure origin, IFigure left, IFigure right) {
-				this.origin = origin;
-				this.left = left;
-				this.right = right;
-			}
-
-			public MatchFigure(IFigure origin, IFigure left, IFigure right, Match match) {
-				this.origin = origin;
-				this.left = left;
-				this.right = right;
-				this.match = match;
-			}
-
-			public void setGhost(MergeViewerSide side, IFigure ghost) {
-				this.ghost = ghost;
-				switch (side) {
-					case ANCESTOR:
-						origin = ghost;
-						break;
-					case LEFT:
-						left = ghost;
-						break;
-					case RIGHT:
-						right = ghost;
-						break;
-				}
-			}
-
-			public MergeViewerSide getSide(IFigure figure) {
-				if (figure == origin) {
-					return MergeViewerSide.ANCESTOR;
-				} else if (figure == left) {
-					return MergeViewerSide.LEFT;
-				} else if (figure == right) {
-					return MergeViewerSide.RIGHT;
-				}
-				return null;
-			}
-
-			public IFigure getFigure(MergeViewerSide side) {
-				switch (side) {
-					case ANCESTOR:
-						return origin;
-					case LEFT:
-						return left;
-					case RIGHT:
-						return right;
-				}
-				return null;
-			}
-
-		}
-
-	}
-
-	// *** END alternative developing solution ***
 
 }

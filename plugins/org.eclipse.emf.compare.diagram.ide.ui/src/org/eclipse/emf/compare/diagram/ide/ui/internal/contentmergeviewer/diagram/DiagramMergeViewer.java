@@ -16,9 +16,12 @@ import java.util.Iterator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Viewport;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.diagram.DiagramDiff;
 import org.eclipse.emf.compare.diagram.EdgeChange;
@@ -29,7 +32,6 @@ import org.eclipse.emf.compare.diagram.Show;
 import org.eclipse.emf.compare.diagram.ide.ui.AbstractGraphicalMergeViewer;
 import org.eclipse.emf.compare.diagram.ide.ui.decoration.DiffDecorationEditPolicy;
 import org.eclipse.emf.compare.diagram.ide.ui.decoration.provider.DiffDecoratorProvider;
-import org.eclipse.emf.compare.diagram.ide.ui.decoration.provider.SelectedDiffAdapter;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
 import org.eclipse.emf.compare.diagram.util.DiagramCompareSwitch;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
@@ -62,7 +64,7 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 
 	private IDiagramNodeAccessor fInput;
 
-	private DiagramGraphicalViewer fGraphicalViewer;
+	private MyGraphicalViewer fGraphicalViewer;
 
 	/** the zoom factor of displayed diagrams. */
 	private static final double ZOOM_FACTOR = 1;
@@ -89,7 +91,7 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 	}
 
 	private void createDiagramGraphicalViewer(Composite composite) {
-		fGraphicalViewer = new DiagramGraphicalViewer();
+		fGraphicalViewer = new MyGraphicalViewer();
 		fGraphicalViewer.createControl(composite);
 		fGraphicalViewer.setEditDomain(editDomain);
 		fGraphicalViewer.setEditPartFactory(EditPartService.getInstance());
@@ -99,7 +101,7 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 	}
 
 	@Override
-	public DiagramGraphicalViewer getGraphicalViewer() {
+	public MyGraphicalViewer getGraphicalViewer() {
 		return fGraphicalViewer;
 	}
 
@@ -117,26 +119,26 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 
 			initEditingDomain(diagram);
 
-			if (diagram != null) {
-				Iterator<EObject> contents = diagram.eAllContents();
-				while (contents.hasNext()) {
-					EObject obj = contents.next();
-					if (obj instanceof View) {
-						for (Diff diff : ((IDiagramNodeAccessor)input).getComparison().getDifferences(obj)) {
-							if (diff instanceof DiagramDiff) {
-								if (diff.getKind() != DifferenceKind.DELETE) {
-									obj.eAdapters().add(new SelectedDiffAdapter((DiagramDiff)diff));
-									EditPart editPart = getEditPart((View)obj);
-									if (editPart != null) {
-										installDecoratorPolicy(editPart);
-										editPart.refresh();
-									}
-								}
-							}
-						}
-					}
-				}
-			}
+			// if (diagram != null) {
+			// Iterator<EObject> contents = diagram.eAllContents();
+			// while (contents.hasNext()) {
+			// EObject obj = contents.next();
+			// if (obj instanceof View) {
+			// for (Diff diff : ((IDiagramNodeAccessor)input).getComparison().getDifferences(obj)) {
+			// if (diff instanceof DiagramDiff) {
+			// if (diff.getKind() != DifferenceKind.DELETE) {
+			// obj.eAdapters().add(new SelectedDiffAdapter((DiagramDiff)diff));
+			// EditPart editPart = getEditPart((View)obj);
+			// if (editPart != null) {
+			// installDecoratorPolicy(editPart);
+			// editPart.refresh();
+			// }
+			// }
+			// }
+			// }
+			// }
+			// }
+			// }
 
 			// Selection
 			fGraphicalViewer.deselectAll();
@@ -179,14 +181,14 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 		return null;
 	}
 
-	public EditPart getEditPart(final View view) {
+	public EditPart getEditPart(final EObject view) {
 		final EditPart editPart = (EditPart)fGraphicalViewer.getEditPartRegistry().get(view);
 		if (editPart == null) {
 			Diagram diagram = null;
 			if (view instanceof Diagram) {
 				diagram = (Diagram)view;
-			} else {
-				diagram = view.getDiagram();
+			} else if (view instanceof View) {
+				diagram = ((View)view).getDiagram();
 			}
 			if (diagram != null && !diagram.equals(currentDiag)) {
 				currentDiag = diagram;
@@ -394,6 +396,42 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 			}
 		}
 		return false;
+	}
+
+	public class MyGraphicalViewer extends DiagramGraphicalViewer {
+
+		public void reveal(IFigure figure) {
+			IFigure target = figure;
+			Viewport port = getFigureCanvas().getViewport();
+			Rectangle exposeRegion = target.getBounds().getCopy();
+			target = target.getParent();
+			while (target != null && target != port) {
+				target.translateToParent(exposeRegion);
+				target = target.getParent();
+			}
+			exposeRegion.expand(5, 5);
+
+			Dimension viewportSize = port.getClientArea().getSize();
+
+			Point topLeft = exposeRegion.getTopLeft();
+			Point bottomRight = exposeRegion.getBottomRight().translate(viewportSize.getNegated());
+			Point finalLocation = new Point();
+			if (viewportSize.width < exposeRegion.width) {
+				finalLocation.x = Math.min(bottomRight.x, Math.max(topLeft.x, port.getViewLocation().x));
+			} else {
+				finalLocation.x = Math.min(topLeft.x, Math.max(bottomRight.x, port.getViewLocation().x));
+			}
+
+			if (viewportSize.height < exposeRegion.height) {
+				finalLocation.y = Math.min(bottomRight.y, Math.max(topLeft.y, port.getViewLocation().y));
+			} else {
+				finalLocation.y = Math.min(topLeft.y, Math.max(bottomRight.y, port.getViewLocation().y));
+			}
+
+			getFigureCanvas().scrollSmoothTo(finalLocation.x, finalLocation.y);
+
+		}
+
 	}
 
 }

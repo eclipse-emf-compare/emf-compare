@@ -89,6 +89,7 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 
 	private final AtomicBoolean fSyncingSelections = new AtomicBoolean(false);
 
+	/** Colors used in the context of EMF Compare. */
 	private EMFCompareColor fColors;
 
 	private final ICompareEditingDomain fEditingDomain;
