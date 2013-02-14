@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,11 +34,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.merge.data.IndividualDiffInputData;
 import org.eclipse.emf.ecore.EObject;
@@ -50,6 +52,8 @@ import org.junit.Test;
 @SuppressWarnings("nls")
 public class IndividualMergeTest {
 	private IndividualDiffInputData input = new IndividualDiffInputData();
+
+	private final IMerger.Registry mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
 
 	@Test
 	public void testAttributeMonoChange2WayLtR() throws IOException {
@@ -66,7 +70,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedAttribute("root.origin", featureName, "originValue", "leftValue")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -93,7 +97,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedAttribute("root.origin", featureName, "originValue", "leftValue")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -121,7 +125,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedAttribute("root.origin", featureName, "originValue", "leftValue")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -151,7 +155,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedAttribute("root.origin", featureName, "originValue", "leftValue")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -180,7 +184,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				changedAttribute("root.origin", featureName, "originValue", "leftValue")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -209,7 +213,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				changedAttribute("root.origin", featureName, "originValue", "leftValue")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -238,7 +242,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedAttribute("root.origin", featureName, null, "leftValue")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -265,7 +269,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedAttribute("root.origin", featureName, null, "leftValue")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -293,7 +297,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedAttribute("root.origin", featureName, null, "leftValue")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -323,7 +327,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedAttribute("root.origin", featureName, null, "leftValue")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -352,7 +356,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				changedAttribute("root.origin", featureName, null, "leftValue")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -381,7 +385,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				changedAttribute("root.origin", featureName, null, "leftValue")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -410,7 +414,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedAttribute("root.origin", featureName, "originValue", null)));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -437,7 +441,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedAttribute("root.origin", featureName, "originValue", null)));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -465,7 +469,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedAttribute("root.origin", featureName, "originValue", null)));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -495,7 +499,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedAttribute("root.origin", featureName, "originValue", null)));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -524,7 +528,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				changedAttribute("root.origin", featureName, "originValue", null)));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -553,7 +557,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				changedAttribute("root.origin", featureName, "originValue", null)));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -582,7 +586,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				addedToAttribute("root.origin", featureName, "value1")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -611,7 +615,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				addedToAttribute("root.origin", featureName, "value1")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -641,7 +645,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				addedToAttribute("root.origin", featureName, "value1")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -673,7 +677,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				addedToAttribute("root.origin", featureName, "value1")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -704,7 +708,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				addedToAttribute("root.origin", featureName, "value1")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -735,7 +739,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				addedToAttribute("root.origin", featureName, "value1")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -766,7 +770,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				removedFromAttribute("root.origin", featureName, "value1")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -795,7 +799,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				removedFromAttribute("root.origin", featureName, "value1")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -825,7 +829,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				removedFromAttribute("root.origin", featureName, "value1")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -857,7 +861,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				removedFromAttribute("root.origin", featureName, "value1")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -888,7 +892,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				removedFromAttribute("root.origin", featureName, "value1")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -919,7 +923,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				removedFromAttribute("root.origin", featureName, "value1")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -951,7 +955,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				movedInAttribute("root.origin", featureName, "value1")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(right, "origin");
 		assertNotNull(targetNode);
 		final EObject sourceNode = getNodeNamed(left, "origin");
@@ -985,7 +989,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				movedInAttribute("root.origin", featureName, "value1")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(left, "origin");
 		assertNotNull(targetNode);
 		final EObject sourceNode = getNodeNamed(right, "origin");
@@ -1020,7 +1024,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				movedInAttribute("root.origin", featureName, "value1")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(right, "origin");
 		assertNotNull(targetNode);
 		final EObject sourceNode = getNodeNamed(left, "origin");
@@ -1057,7 +1061,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				movedInAttribute("root.origin", featureName, "value1")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(left, "origin");
 		assertNotNull(targetNode);
 		final EObject sourceNode = getNodeNamed(origin, "origin");
@@ -1093,7 +1097,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				movedInAttribute("root.origin", featureName, "value1")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(right, "origin");
 		assertNotNull(targetNode);
 		final EObject sourceNode = getNodeNamed(origin, "origin");
@@ -1129,7 +1133,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				movedInAttribute("root.origin", featureName, "value1")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(left, "origin");
 		assertNotNull(targetNode);
 		final EObject sourceNode = getNodeNamed(right, "origin");
@@ -1164,7 +1168,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedReference("root.origin", featureName, "root.originValue", "root.targetValue")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(right, "targetValue");
@@ -1193,7 +1197,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedReference("root.origin", featureName, "root.originValue", "root.targetValue")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(left, "originValue");
@@ -1223,7 +1227,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedReference("root.origin", featureName, "root.originValue", "root.targetValue")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(right, "targetValue");
@@ -1255,7 +1259,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedReference("root.origin", featureName, "root.originValue", "root.targetValue")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(left, "originValue");
@@ -1286,7 +1290,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				changedReference("root.origin", featureName, "root.originValue", "root.targetValue")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(right, "originValue");
@@ -1317,7 +1321,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				changedReference("root.origin", featureName, "root.originValue", "root.targetValue")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(left, "targetValue");
@@ -1348,7 +1352,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedReference("root.origin", featureName, null, "root.left")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(right, "left");
@@ -1377,7 +1381,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedReference("root.origin", featureName, null, "root.left")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -1405,7 +1409,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedReference("root.origin", featureName, null, "root.left")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(right, "left");
@@ -1437,7 +1441,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedReference("root.origin", featureName, null, "root.left")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -1466,7 +1470,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				changedReference("root.origin", featureName, null, "root.left")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -1495,7 +1499,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				changedReference("root.origin", featureName, null, "root.left")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(left, "left");
@@ -1526,7 +1530,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedReference("root.origin", featureName, "root.target", null)));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -1553,7 +1557,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedReference("root.origin", featureName, "root.target", null)));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(left, "target");
@@ -1583,7 +1587,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedReference("root.origin", featureName, "root.target", null)));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -1613,7 +1617,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				changedReference("root.origin", featureName, "root.target", null)));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(left, "target");
@@ -1644,7 +1648,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				changedReference("root.origin", featureName, "root.target", null)));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(right, "target");
@@ -1675,7 +1679,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				changedReference("root.origin", featureName, "root.target", null)));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EStructuralFeature feature = originNode.eClass().getEStructuralFeature(featureName);
@@ -1704,7 +1708,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				addedToReference("root.origin", featureName, "root.target")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(right, "target");
@@ -1735,7 +1739,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				addedToReference("root.origin", featureName, "root.target")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(left, "target");
@@ -1767,7 +1771,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				addedToReference("root.origin", featureName, "root.target")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(right, "target");
@@ -1801,7 +1805,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				addedToReference("root.origin", featureName, "root.target")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(left, "target");
@@ -1834,7 +1838,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				addedToReference("root.origin", featureName, "root.target")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(right, "target");
@@ -1867,7 +1871,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				addedToReference("root.origin", featureName, "root.target")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(left, "target");
@@ -1900,7 +1904,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				removedFromReference("root.origin", featureName, "root.target")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(right, "target");
@@ -1931,7 +1935,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				removedFromReference("root.origin", featureName, "root.target")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(left, "target");
@@ -1963,7 +1967,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				removedFromReference("root.origin", featureName, "root.target")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(right, "target");
@@ -1997,7 +2001,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				removedFromReference("root.origin", featureName, "root.target")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(left, "target");
@@ -2030,7 +2034,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				removedFromReference("root.origin", featureName, "root.target")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(right, "target");
@@ -2063,7 +2067,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				removedFromReference("root.origin", featureName, "root.target")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
 		assertNotNull(originNode);
 		final EObject targetNode = getNodeNamed(left, "target");
@@ -2097,7 +2101,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				movedInReference("root.origin", featureName, "root.value1")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(right, "origin");
 		assertNotNull(targetNode);
 		final EObject sourceNode = getNodeNamed(left, "origin");
@@ -2132,7 +2136,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				movedInReference("root.origin", featureName, "root.value1")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(left, "origin");
 		assertNotNull(targetNode);
 		final EObject sourceNode = getNodeNamed(right, "origin");
@@ -2168,7 +2172,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				movedInReference("root.origin", featureName, "root.value1")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(right, "origin");
 		assertNotNull(targetNode);
 		final EObject sourceNode = getNodeNamed(left, "origin");
@@ -2206,7 +2210,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				movedInReference("root.origin", featureName, "root.value1")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(left, "origin");
 		assertNotNull(targetNode);
 		final EObject sourceNode = getNodeNamed(origin, "origin");
@@ -2243,7 +2247,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				movedInReference("root.origin", featureName, "root.value1")));
 
-		diff.copyLeftToRight();
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(right, "origin");
 		assertNotNull(targetNode);
 		final EObject sourceNode = getNodeNamed(origin, "origin");
@@ -2280,7 +2284,7 @@ public class IndividualMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				movedInReference("root.origin", featureName, "root.value1")));
 
-		diff.copyRightToLeft();
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(left, "origin");
 		assertNotNull(targetNode);
 		final EObject sourceNode = getNodeNamed(right, "origin");

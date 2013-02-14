@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.ide.ui;singleton:=true
-Bundle-Version: 2.1.0.qualifier
+Bundle-Version: 3.0.0.qualifier
 Bundle-Activator: org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.core.runtime,
@@ -21,8 +21,6 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Export-Package: org.eclipse.emf.compare.ide.ui.internal;x-internal:=true,
- org.eclipse.emf.compare.ide.ui.internal.actions.filter;x-internal:=true,
- org.eclipse.emf.compare.ide.ui.internal.actions.group;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.actions.save;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor;x-internal:=true,
@@ -41,4 +39,5 @@ Import-Package: com.google.common.annotations;version="[10.0.0,11.0.0)",
  com.google.common.base;version="[10.0.0,11.0.0)",
  com.google.common.cache;version="[10.0.0,11.0.0)",
  com.google.common.collect;version="[10.0.0,11.0.0)",
+ com.google.common.eventbus;version="[10.0.0,11.0.0)",
  com.google.common.io;version="[10.0.0,11.0.0)"

@@ -67,7 +67,7 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		registry = new IAccessorFactory.RegistryImpl();
 
 		listener = new AccessorFactoryExtensionRegistryListener(PLUGIN_ID, ACCESSOR_FACTORY_PPID);
-		extensionRegistry.addListener(listener, PLUGIN_ID + "." + ACCESSOR_FACTORY_PPID);
+		extensionRegistry.addListener(listener, PLUGIN_ID + "." + ACCESSOR_FACTORY_PPID); //$NON-NLS-1$
 		listener.readRegistry(extensionRegistry);
 	}
 
@@ -199,8 +199,8 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 					try {
 						Integer.parseInt(rankingStr);
 					} catch (NumberFormatException nfe) {
-						logError(element, "Attribute '" + ATT_RANKING
-								+ "' is malformed, should be an integer.");
+						logError(element, "Attribute '" + ATT_RANKING //$NON-NLS-1$
+								+ "' is malformed, should be an integer."); //$NON-NLS-1$
 					}
 					logMissingAttribute(element, ATT_RANKING);
 				} else {
@@ -212,8 +212,8 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 								factory.setRanking(Integer.parseInt(element.getAttribute(ATT_RANKING)));
 								IAccessorFactory previous = registry.add(factory);
 								if (previous != null) {
-									log(IStatus.WARNING, "The factory '" + factory.getClass().getName()
-											+ "' is registered twice.");
+									log(IStatus.WARNING, "The factory '" + factory.getClass().getName() //$NON-NLS-1$
+											+ "' is registered twice."); //$NON-NLS-1$
 								}
 							} catch (CoreException e) {
 								logError(element, e.getMessage());
@@ -240,4 +240,5 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 			log(IStatus.ERROR, string);
 		}
 	}
+
 }

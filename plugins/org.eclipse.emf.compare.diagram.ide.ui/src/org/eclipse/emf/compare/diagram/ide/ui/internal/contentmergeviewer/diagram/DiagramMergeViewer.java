@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,7 @@ import org.eclipse.emf.compare.diagram.Hide;
 import org.eclipse.emf.compare.diagram.LabelChange;
 import org.eclipse.emf.compare.diagram.NodeChange;
 import org.eclipse.emf.compare.diagram.Show;
-import org.eclipse.emf.compare.diagram.ide.ui.GraphicalMergeViewer;
+import org.eclipse.emf.compare.diagram.ide.ui.AbstractGraphicalMergeViewer;
 import org.eclipse.emf.compare.diagram.ide.ui.decoration.DiffDecorationEditPolicy;
 import org.eclipse.emf.compare.diagram.ide.ui.decoration.provider.DiffDecoratorProvider;
 import org.eclipse.emf.compare.diagram.ide.ui.decoration.provider.SelectedDiffAdapter;
@@ -55,7 +55,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-class DiagramMergeViewer extends GraphicalMergeViewer {
+/**
+ * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+ */
+class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 
 	private IDiagramNodeAccessor fInput;
 

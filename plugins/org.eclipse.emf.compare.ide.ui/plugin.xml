@@ -2,7 +2,7 @@
 <?eclipse version="3.4"?>
 
 <!--
- Copyright (c) 2012 Obeo.
+ Copyright (c) 2012, 2013 Obeo.
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
  which accompanies this distribution, and is available at
@@ -51,54 +51,19 @@
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text.EMFCompareTextContentMergeViewer"
             label="EMFCompare Text Merge Viewer">
       </viewer>
+      <viewer
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table.TableContentMergeViewerCreator"
+            extensions="resource_contents"
+            id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text.EMFCompareResourceContentsContentMergeViewer"
+            label="EMFCompare Resource Contents Merge Viewer">
+      </viewer>
    </extension>
    <extension
          point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
             class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.CompareNodeAdapterFactory"
-            supportedTypes=
-            "org.eclipse.compare.structuremergeviewer.IDiffElement
-             org.eclipse.compare.structuremergeviewer.IDiffContainer
-             org.eclipse.compare.structuremergeviewer.ITypedElement
-             org.eclipse.compare.structuremergeviewer.ICompareInput"
+            supportedTypes="org.eclipse.compare.structuremergeviewer.ICompareInput"
             uri="http://www.eclipse.org/emf/compare">
-      </factory>
-   </extension>
-   <extension
-         id="org.eclipse.emf.compare.model.provider"
-         name="EMF Compare"
-         point="org.eclipse.core.resources.modelProviders">
-      <modelProvider
-            class="org.eclipse.emf.compare.ide.ui.logical.EMFModelProvider">
-      </modelProvider>
-      <enablement>
-         <and>
-            <adapt
-                  type="org.eclipse.core.resources.IFile">
-            </adapt>
-            <or>
-               <test
-                     args="kindOf"
-                     property="org.eclipse.core.resources.contentTypeId"
-                     value="org.eclipse.emf.ecore">
-               </test>
-               <test
-                     args="kindOf"
-                     property="org.eclipse.core.resources.contentTypeId"
-                     value="org.eclipse.emf.ecore.xmi">
-               </test>
-            </or>
-         </and>
-      </enablement>
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.adapters">
-      <factory
-            adaptableType="org.eclipse.emf.compare.ide.ui.logical.EMFModelProvider"
-            class="org.eclipse.emf.compare.ide.ui.logical.EMFCompareAdapterFactory">
-         <adapter
-               type="org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter">
-         </adapter>
       </factory>
    </extension>
    <extension
@@ -117,6 +82,10 @@
       </factory>
       <factory
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.factory.IDEStringAttributeChangeAccessorFactory"
+            ranking="10">
+      </factory>
+      <factory
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.factory.IDEResourceContentsAccessorFactory"
             ranking="10">
       </factory>
    </extension>

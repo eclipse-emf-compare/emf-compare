@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,21 +10,19 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.command.impl;
 
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
+import com.google.common.base.Predicate;
 
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.DifferenceState;
-import org.eclipse.emf.compare.command.ICompareCopyCommand;
+import org.eclipse.emf.compare.merge.BatchMerger;
+import org.eclipse.emf.compare.merge.IBatchMerger;
+import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
-import org.eclipse.emf.edit.command.ChangeCommand;
 
 /**
  * This command can be used to copy a number of diffs (or a single one) in a given direction.
@@ -35,12 +33,7 @@ import org.eclipse.emf.edit.command.ChangeCommand;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class CopyAllNonConflictingCommand extends ChangeCommand implements ICompareCopyCommand {
-	/** The list of differences we are to merge. */
-	private final List<? extends Diff> differences;
-
-	/** Direction of the merge operation. */
-	private final boolean leftToRight;
+public class CopyAllNonConflictingCommand extends AbstractCopyCommand {
 
 	/**
 	 * Constructs an instance of this command given the list of differences that it needs to merge.
@@ -53,41 +46,13 @@ public class CopyAllNonConflictingCommand extends ChangeCommand implements IComp
 	 *            The list of differences that this command should merge.
 	 * @param leftToRight
 	 *            The direction in which {@code differences} should be merged.
+	 * @param mergerRegistry
+	 *            The registry of mergers.
+	 * @since 3.0
 	 */
 	public CopyAllNonConflictingCommand(ChangeRecorder changeRecorder, Collection<Notifier> notifiers,
-			List<? extends Diff> differences, boolean leftToRight) {
-		super(changeRecorder, notifiers);
-		this.differences = ImmutableList.copyOf(differences);
-		this.leftToRight = leftToRight;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.command.ICompareCopyCommand#isLeftToRight()
-	 */
-	public boolean isLeftToRight() {
-		return leftToRight;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.common.command.AbstractCommand#getAffectedObjects()
-	 */
-	@Override
-	public Collection<?> getAffectedObjects() {
-		return differences;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.common.command.AbstractCommand#canExecute()
-	 */
-	@Override
-	public boolean canExecute() {
-		return super.canExecute() && Iterables.any(differences, hasState(DifferenceState.UNRESOLVED));
+			List<? extends Diff> differences, boolean leftToRight, IMerger.Registry mergerRegistry) {
+		super(changeRecorder, notifiers, differences, leftToRight, mergerRegistry);
 	}
 
 	/**
@@ -97,18 +62,21 @@ public class CopyAllNonConflictingCommand extends ChangeCommand implements IComp
 	 */
 	@Override
 	protected void doExecute() {
+		final Predicate<? super Diff> filter = new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				if (input == null || input.getConflict() != null) {
+					return false;
+				}
+				return leftToRight && input.getSource() == DifferenceSource.LEFT || !leftToRight
+						&& input.getSource() == DifferenceSource.RIGHT;
+			}
+		};
+
+		IBatchMerger merger = new BatchMerger(mergerRegistry, filter);
 		if (leftToRight) {
-			for (Diff diff : differences) {
-				if (diff.getSource() == DifferenceSource.LEFT && diff.getConflict() == null) {
-					diff.copyLeftToRight();
-				}
-			}
+			merger.copyAllLeftToRight(differences, new BasicMonitor());
 		} else {
-			for (Diff diff : differences) {
-				if (diff.getSource() == DifferenceSource.RIGHT && diff.getConflict() == null) {
-					diff.copyRightToLeft();
-				}
-			}
+			merger.copyAllRightToLeft(differences, new BasicMonitor());
 		}
 	}
 }

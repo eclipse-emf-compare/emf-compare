@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
+import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.filter;
@@ -31,8 +32,12 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
+import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
+import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 
@@ -42,7 +47,7 @@ import org.eclipse.emf.ecore.EReference;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class MatchItemProviderSpec extends MatchItemProvider {
+public class MatchItemProviderSpec extends MatchItemProvider implements IItemStyledLabelProvider {
 
 	private static final Predicate<ReferenceChange> CONTAINMENT_REFERENCE_CHANGE = new Predicate<ReferenceChange>() {
 		public boolean apply(ReferenceChange input) {
@@ -56,6 +61,8 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 		}
 	};
 
+	private final OverlayImageProvider overlayProvider;
+
 	/**
 	 * Constructor calling super {@link #MatchItemProvider(AdapterFactory)}.
 	 * 
@@ -64,6 +71,7 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	 */
 	public MatchItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+		overlayProvider = new OverlayImageProvider(getResourceLocator(), true);
 	}
 
 	/**
@@ -87,6 +95,9 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 		if (ret == null) {
 			ret = super.getImage(object);
 		}
+
+		Object matchImage = overlayProvider.getComposedImage(match, ret);
+		ret = overlayImage(object, matchImage);
 
 		return ret;
 	}
@@ -134,7 +145,7 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 		@SuppressWarnings("unchecked")
 		Predicate<Object> childrenFilter = not(or(matchOfContainmentDiff(containementDifferenceValues),
 				matchWithNoChildren(), emptyMatch(), PSEUDO_CONFLICT_DIFF, REFINED_DIFF,
-				PSEUDO_DELETE_CONFLICT));
+				PSEUDO_DELETE_CONFLICT, instanceOf(ResourceAttachmentChange.class)));
 
 		Iterable<?> filteredChildren = filter(super.getChildren(match), childrenFilter);
 		return filteredChildren;
@@ -250,5 +261,14 @@ public class MatchItemProviderSpec extends MatchItemProvider {
 	public boolean hasChildren(Object object) {
 		Match match = (Match)object;
 		return !isEmpty(getChildrenIterable(match));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
+	 */
+	public IStyledString.IComposedStyledString getStyledText(Object object) {
+		return new ComposedStyledString(getText(object));
 	}
 }

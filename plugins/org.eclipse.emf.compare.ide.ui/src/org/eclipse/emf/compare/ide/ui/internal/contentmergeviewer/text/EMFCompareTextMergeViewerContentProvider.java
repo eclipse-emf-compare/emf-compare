@@ -135,6 +135,7 @@ public class EMFCompareTextMergeViewerContentProvider implements IMergeViewerCon
 		}
 		if (element instanceof ICompareInput) {
 			Object left = ((ICompareInput)element).getLeft();
+			// TODO: MBA use adapterfactory
 			if (left == null && element instanceof IDiffElement) {
 				IDiffElement parent = ((IDiffElement)element).getParent();
 				if (parent instanceof ICompareInput) {
@@ -206,6 +207,7 @@ public class EMFCompareTextMergeViewerContentProvider implements IMergeViewerCon
 		if (element instanceof ICompareInput) {
 			Object right = ((ICompareInput)element).getRight();
 			if (right == null && element instanceof IDiffElement) {
+				// TODO: MBA use adapterfactory
 				IDiffContainer parent = ((IDiffElement)element).getParent();
 				if (parent instanceof ICompareInput) {
 					right = ((ICompareInput)parent).getRight();

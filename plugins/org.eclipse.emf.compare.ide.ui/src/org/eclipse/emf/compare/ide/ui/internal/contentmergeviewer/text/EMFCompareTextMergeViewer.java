@@ -33,14 +33,18 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.AttributeChangeNode;
+import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.ChangeCommand;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -87,7 +91,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 			final Comparison comparison = attributeChange.getMatch().getComparison();
 
 			final Command copyCommand = fEditingDomain.createCopyAllNonConflictingCommand(comparison
-					.getDifferences(), leftToRight);
+					.getDifferences(), leftToRight, EMFCompareIDEPlugin.getDefault().getMergerRegistry());
 			fEditingDomain.getCommandStack().execute(copyCommand);
 
 			refresh();
@@ -99,7 +103,8 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 		if (input instanceof AttributeChangeNode) {
 			final AttributeChange attributeChange = ((AttributeChangeNode)input).getTarget();
 
-			final Command copyCommand = fEditingDomain.createCopyCommand(attributeChange, leftToRight);
+			final Command copyCommand = fEditingDomain.createCopyCommand(attributeChange, leftToRight,
+					EMFCompareIDEPlugin.getDefault().getMergerRegistry());
 			fEditingDomain.getCommandStack().execute(copyCommand);
 
 			refresh();
@@ -130,30 +135,39 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 			if (oldInput instanceof AttributeChangeNode) {
 				final AttributeChange diff = ((AttributeChangeNode)oldInput).getTarget();
 				final EAttribute eAttribute = diff.getAttribute();
-				Match match = diff.getMatch();
-				final EObject left = match.getLeft();
-				final EObject right = match.getRight();
-				Object oldLeftValue = ReferenceUtil.safeEGet(left, eAttribute);
-				Object oldRightValue = ReferenceUtil.safeEGet(right, eAttribute);
-				final String newLeftValue = new String(getContents(true));
-				final Object newRightValue = new String(getContents(false));
-				if (!newLeftValue.equals(oldLeftValue) && getCompareConfiguration().isLeftEditable()) {
-					// Save the change on left side
-					fEditingDomain.getCommandStack().execute(
-							new UpdateModelAndRejectDiffCommand(fEditingDomain.getChangeRecorder(), left,
-									eAttribute, newLeftValue, diff, true));
-				}
-				if (!newRightValue.equals(oldRightValue) && getCompareConfiguration().isRightEditable()) {
-					// Save the change on right side
-					fEditingDomain.getCommandStack().execute(
-							new UpdateModelAndRejectDiffCommand(fEditingDomain.getChangeRecorder(), right,
-									eAttribute, newRightValue, diff, false));
+				final Match match = diff.getMatch();
+				final IEqualityHelper equalityHelper = match.getComparison().getEqualityHelper();
 
-				}
-
+				updateModel(diff, eAttribute, equalityHelper, match.getLeft(), true);
+				updateModel(diff, eAttribute, equalityHelper, match.getRight(), false);
 			}
 		}
 		super.setInput(newInput);
+	}
+
+	private void updateModel(final AttributeChange diff, final EAttribute eAttribute,
+			final IEqualityHelper equalityHelper, final EObject eObject, boolean isLeft) {
+		final String oldValue = getStringValue(eObject, eAttribute);
+		final String newValue = new String(getContents(isLeft));
+
+		final boolean oldAndNewEquals = equalityHelper.matchingAttributeValues(newValue, oldValue);
+		if (eObject != null && !oldAndNewEquals && getCompareConfiguration().isLeftEditable()) {
+			// Save the change on left side
+			fEditingDomain.getCommandStack().execute(
+					new UpdateModelAndRejectDiffCommand(fEditingDomain.getChangeRecorder(), eObject,
+							eAttribute, newValue, diff, isLeft));
+		}
+	}
+
+	private String getStringValue(final EObject eObject, final EAttribute eAttribute) {
+		final EDataType eAttributeType = eAttribute.getEAttributeType();
+		final Object value;
+		if (eObject == null) {
+			value = null;
+		} else {
+			value = ReferenceUtil.safeEGet(eObject, eAttribute);
+		}
+		return EcoreUtil.convertToString(eAttributeType, value);
 	}
 
 	/**

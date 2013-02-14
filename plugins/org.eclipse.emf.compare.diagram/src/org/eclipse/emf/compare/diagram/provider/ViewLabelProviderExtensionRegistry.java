@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class ViewLabelProviderExtensionRegistry {
+public final class ViewLabelProviderExtensionRegistry {
 
 	/** List of extensions created from the extension point contributions. */
 	private static final List<ViewLabelProviderExtensionDescriptor> VIEW_LABEL_PROVIDERS = new ArrayList<ViewLabelProviderExtensionDescriptor>();

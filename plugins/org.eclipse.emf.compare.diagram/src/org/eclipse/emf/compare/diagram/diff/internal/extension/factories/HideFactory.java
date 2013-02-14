@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,15 +23,27 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
- * Factory for UMLAssociationChangeLeftTarget.
+ * Factory of hide changes.
+ * 
+ * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public class HideFactory extends AbstractDiffExtensionFactory {
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory#getExtensionKind()
+	 */
 	@Override
 	public Class<? extends Diff> getExtensionKind() {
 		return Hide.class;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.Diff)
+	 */
 	public Diff create(Diff input) {
 		final Hide ret = DiagramCompareFactory.eINSTANCE.createHide();
 
@@ -49,6 +61,11 @@ public class HideFactory extends AbstractDiffExtensionFactory {
 		return ret;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory#isRelatedToAnExtensionChange(org.eclipse.emf.compare.AttributeChange)
+	 */
 	@Override
 	protected boolean isRelatedToAnExtensionChange(AttributeChange input) {
 		if (input.getAttribute().equals(NotationPackage.eINSTANCE.getView_Visible())) {

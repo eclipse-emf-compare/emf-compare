@@ -15,9 +15,12 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
+import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
+import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.compare.uml2.provider.StereotypeApplicationChangeItemProvider;
@@ -31,7 +34,7 @@ import org.eclipse.uml2.uml.util.UMLUtil;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class StereotypeApplicationChangeItemProviderSpec extends StereotypeApplicationChangeItemProvider {
+public class StereotypeApplicationChangeItemProviderSpec extends StereotypeApplicationChangeItemProvider implements IItemStyledLabelProvider {
 
 	/**
 	 * This constructs an instance from a factory and a notifier.
@@ -77,60 +80,7 @@ public class StereotypeApplicationChangeItemProviderSpec extends StereotypeAppli
 	 */
 	@Override
 	public String getText(Object object) {
-		final UMLDiff umlDiff = (UMLDiff)object;
-
-		String remotely = "";
-		if (umlDiff.getSource() == DifferenceSource.RIGHT) {
-			remotely = "remotely ";
-		}
-
-		Stereotype stereotype = ((StereotypeApplicationChange)umlDiff).getStereotype();
-		if (stereotype == null) {
-			stereotype = UMLUtil.getStereotype(umlDiff.getDiscriminant());
-		}
-
-		final String stereotypeText;
-		if (stereotype != null) {
-			stereotypeText = AdapterFactoryUtil.getText(getRootAdapterFactory(), stereotype) + ' ';
-		} else if (umlDiff.getDiscriminant() instanceof NamedElement) {
-			stereotypeText = "Stereotype " + ((NamedElement)umlDiff.getDiscriminant()).getName() + ' ';
-		} else {
-			// Can't really do more
-			stereotypeText = "Stereotype ";
-		}
-
-		final Match targetMatch = umlDiff.getMatch();
-		final EObject target = findNonNullSide(targetMatch);
-		String targetLabel = null;
-
-		final String action;
-		switch (umlDiff.getKind()) {
-			case ADD:
-				action = "applied";
-				targetLabel = " to ";
-				break;
-			case DELETE:
-				action = "unapplied";
-				targetLabel = " from ";
-				break;
-			case CHANGE:
-				action = "changed";
-				targetLabel = " on ";
-				break;
-			case MOVE:
-				action = "moved";
-				targetLabel = " to ";
-				break;
-			default:
-				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName()
-						+ " value: " + umlDiff.getKind());
-		}
-
-		if (target != null) {
-			targetLabel += AdapterFactoryUtil.getText(getRootAdapterFactory(), target);
-		}
-
-		return stereotypeText + "has been " + remotely + action + targetLabel;
+		return getStyledText(object).getString();
 	}
 
 	/**
@@ -186,5 +136,58 @@ public class StereotypeApplicationChangeItemProviderSpec extends StereotypeAppli
 			default:
 				return super.getForeground(object);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
+	 */
+	public IStyledString.IComposedStyledString getStyledText(Object object) {
+		final UMLDiff umlDiff = (UMLDiff)object;
+
+		Stereotype stereotype = ((StereotypeApplicationChange)umlDiff).getStereotype();
+		if (stereotype == null) {
+			stereotype = UMLUtil.getStereotype(umlDiff.getDiscriminant());
+		}
+
+		final ComposedStyledString stereotypeText = new ComposedStyledString();
+		if (stereotype != null) {
+			stereotypeText.append(AdapterFactoryUtil.getText(getRootAdapterFactory(), stereotype) + ' ');
+		} else if (umlDiff.getDiscriminant() instanceof NamedElement) {
+			stereotypeText.append("Stereotype " + ((NamedElement)umlDiff.getDiscriminant()).getName() + ' '); //$NON-NLS-1$
+		} else {
+			// Can't really do more
+			stereotypeText.append("Stereotype "); //$NON-NLS-1$
+		}
+
+		final Match targetMatch = umlDiff.getMatch();
+		final EObject target = findNonNullSide(targetMatch);
+		String targetLabel = null;
+
+		final String action;
+		switch (umlDiff.getKind()) {
+			case ADD:
+				action = "applied"; //$NON-NLS-1$
+				break;
+			case DELETE:
+				action = "unapplied"; //$NON-NLS-1$
+				break;
+			case CHANGE:
+				action = "changed"; //$NON-NLS-1$
+				break;
+			case MOVE:
+				action = "moved"; //$NON-NLS-1$
+				break;
+			default:
+				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
+						+ " value: " + umlDiff.getKind()); //$NON-NLS-1$
+		}
+
+		if (target != null) {
+			targetLabel += AdapterFactoryUtil.getText(getRootAdapterFactory(), target);
+		}
+
+		return stereotypeText.append(" [" + targetLabel + " " + action + "]", Style.DECORATIONS_STYLER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }

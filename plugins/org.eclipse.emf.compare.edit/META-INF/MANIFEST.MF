@@ -13,7 +13,8 @@ Export-Package: org.eclipse.emf.compare.command,
  org.eclipse.emf.compare.domain,
  org.eclipse.emf.compare.domain.impl,
  org.eclipse.emf.compare.provider,
- org.eclipse.emf.compare.provider.spec
+ org.eclipse.emf.compare.provider.spec,
+ org.eclipse.emf.compare.provider.utils
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare;visibility:=reexport,
  org.eclipse.emf.edit;visibility:=reexport,

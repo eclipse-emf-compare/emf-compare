@@ -37,7 +37,6 @@ import org.eclipse.emf.ecore.EObject;
 public interface Comparison extends EObject {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	String copyright = "Copyright (c) 2012 Obeo.\r\nAll rights reserved. This program and the accompanying materials\r\nare made available under the terms of the Eclipse Public License v1.0\r\nwhich accompanies this distribution, and is available at\r\nhttp://www.eclipse.org/legal/epl-v10.html\r\n\r\nContributors:\r\n    Obeo - initial API and implementation"; //$NON-NLS-1$
@@ -82,11 +81,12 @@ public interface Comparison extends EObject {
 	EList<Conflict> getConflicts();
 
 	/**
-	 * Returns the value of the '<em><b>Equivalences</b></em>' containment reference list. The list contents
-	 * are of type {@link org.eclipse.emf.compare.Equivalence}. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * <!-- begin-model-doc --> If we detected any equivalence between diffs during the comparison process,
-	 * this will contain them. <!-- end-model-doc -->
-	 * 
+	 * Returns the value of the '<em><b>Equivalences</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.emf.compare.Equivalence}.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * If we detected any equivalence between diffs during the comparison process, this will contain them.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Equivalences</em>' containment reference list.
 	 * @see org.eclipse.emf.compare.ComparePackage#getComparison_Equivalences()
 	 * @model containment="true"
@@ -138,16 +138,15 @@ public interface Comparison extends EObject {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model kind="operation" dataType="org.eclipse.emf.compare.IEqualityHelper"
 	 * @generated
 	 */
 	IEqualityHelper getEqualityHelper();
 
 	/**
-	 * Returns the value of the '<em><b>Three Way</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * Returns the value of the '<em><b>Three Way</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Three Way</em>' attribute.
 	 * @see #setThreeWay(boolean)
 	 * @see org.eclipse.emf.compare.ComparePackage#getComparison_ThreeWay()
@@ -157,11 +156,9 @@ public interface Comparison extends EObject {
 	boolean isThreeWay();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.Comparison#isThreeWay <em>Three Way</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Three Way</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.Comparison#isThreeWay <em>Three Way</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Three Way</em>' attribute.
 	 * @see #isThreeWay()
 	 * @generated
 	 */

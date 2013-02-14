@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,8 @@ import org.eclipse.emf.compare.diagram.diff.internal.extension.factories.ShowFac
 
 /**
  * Registry of all {@link IDiffExtensionFactory}.
+ * 
+ * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public final class DiffExtensionFactoryRegistry {
 
@@ -32,7 +34,6 @@ public final class DiffExtensionFactoryRegistry {
 	 * Constructor.
 	 */
 	private DiffExtensionFactoryRegistry() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -40,8 +41,7 @@ public final class DiffExtensionFactoryRegistry {
 	 * unmodifiable.
 	 * 
 	 * @param configuration
-	 * @param engine
-	 *            The UML2 difference engine.
+	 *            The diagram comparison configuration.
 	 * @return an unmodifiable set of all {@link IDiffExtensionFactory}.
 	 */
 	public static Map<Class<? extends Diff>, IDiffExtensionFactory> createExtensionFactories(

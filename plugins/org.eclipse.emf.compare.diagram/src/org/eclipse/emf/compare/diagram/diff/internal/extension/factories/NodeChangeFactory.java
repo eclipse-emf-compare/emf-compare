@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,21 +37,40 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
- * Factory for UMLAssociationChangeLeftTarget.
+ * Factory of node changes.
+ * 
+ * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public class NodeChangeFactory extends AbstractDiffExtensionFactory {
 
+	/** Configuration of the diagram comparison. */
 	private final DiagramComparisonConfiguration configuration;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param configuration
+	 *            The configuration of the diagram comparison.
+	 */
 	public NodeChangeFactory(DiagramComparisonConfiguration configuration) {
 		this.configuration = configuration;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory#getExtensionKind()
+	 */
 	@Override
 	public Class<? extends Diff> getExtensionKind() {
 		return NodeChange.class;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.Diff)
+	 */
 	public Diff create(Diff input) {
 		final NodeChange ret = DiagramCompareFactory.eINSTANCE.createNodeChange();
 
@@ -86,6 +105,12 @@ public class NodeChangeFactory extends AbstractDiffExtensionFactory {
 		return ret;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory#fillRequiredDifferences(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.compare.Diff)
+	 */
 	@Override
 	public void fillRequiredDifferences(Comparison comparison, Diff extension) {
 		final DiagramDiff diff = (DiagramDiff)extension;
@@ -114,11 +139,21 @@ public class NodeChangeFactory extends AbstractDiffExtensionFactory {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory#getParentMatch(org.eclipse.emf.compare.Diff)
+	 */
 	@Override
 	public Match getParentMatch(Diff input) {
 		return input.getMatch().getComparison().getMatch(getViewContainer(input));
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory#isRelatedToAnExtensionAdd(org.eclipse.emf.compare.ReferenceChange)
+	 */
 	@Override
 	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
 		return input.getReference().isContainment() && input.getKind() == DifferenceKind.ADD
@@ -126,6 +161,11 @@ public class NodeChangeFactory extends AbstractDiffExtensionFactory {
 				&& ReferenceUtil.safeEGet(input.getValue(), NotationPackage.Literals.VIEW__ELEMENT) != null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory#isRelatedToAnExtensionDelete(org.eclipse.emf.compare.ReferenceChange)
+	 */
 	@Override
 	protected boolean isRelatedToAnExtensionDelete(ReferenceChange input) {
 		return input.getReference().isContainment() && input.getKind() == DifferenceKind.DELETE
@@ -133,6 +173,11 @@ public class NodeChangeFactory extends AbstractDiffExtensionFactory {
 				&& ReferenceUtil.safeEGet(input.getValue(), NotationPackage.Literals.VIEW__ELEMENT) != null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory#isRelatedToAnExtensionMove(org.eclipse.emf.compare.AttributeChange)
+	 */
 	@Override
 	protected boolean isRelatedToAnExtensionMove(AttributeChange input) {
 		return input.getAttribute().eContainer().equals(NotationPackage.eINSTANCE.getLocation())
@@ -165,6 +210,13 @@ public class NodeChangeFactory extends AbstractDiffExtensionFactory {
 		return false;
 	}
 
+	/**
+	 * From a given diagram difference extension, get the related semantic difference.
+	 * 
+	 * @param input
+	 *            The diagram difference extension.
+	 * @return The semantic one.
+	 */
 	private Diff getSemanticDiff(Diff input) {
 		if (input instanceof ReferenceChange && ((ReferenceChange)input).getValue() instanceof View) {
 			final View view = (View)((ReferenceChange)input).getValue();

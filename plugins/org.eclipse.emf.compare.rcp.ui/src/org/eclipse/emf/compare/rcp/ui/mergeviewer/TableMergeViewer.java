@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.rcp.ui.mergeviewer;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.ICompareAccessor;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -251,8 +251,8 @@ public class TableMergeViewer extends StructuredMergeViewer {
 
 	private void setDiffColorsToGC(GC g, Diff diff, boolean selected) {
 		boolean isThreeWay = false;
-		if (getInput() instanceof IStructuralFeatureAccessor) {
-			Comparison comparison = ((IStructuralFeatureAccessor)getInput()).getComparison();
+		if (getInput() instanceof ICompareAccessor) {
+			Comparison comparison = ((ICompareAccessor)getInput()).getComparison();
 			isThreeWay = comparison.isThreeWay();
 		}
 		g.setForeground(fColorProvider.getCompareColor().getStrokeColor(diff, isThreeWay, false, selected));

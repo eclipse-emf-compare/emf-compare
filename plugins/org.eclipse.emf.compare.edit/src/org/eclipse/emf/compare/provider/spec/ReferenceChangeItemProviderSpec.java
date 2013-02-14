@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
+import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
@@ -29,8 +30,13 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
+import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.ReferenceChangeItemProvider;
+import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -43,7 +49,9 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider {
+public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider implements IItemStyledLabelProvider {
+
+	private final OverlayImageProvider overlayProvider;
 
 	/**
 	 * Constructor calling super {@link #ReferenceChangeItemProvider(AdapterFactory)}.
@@ -53,6 +61,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	 */
 	public ReferenceChangeItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+		overlayProvider = new OverlayImageProvider(getResourceLocator(), true);
 	}
 
 	/**
@@ -62,37 +71,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		final ReferenceChange refChange = (ReferenceChange)object;
-
-		final String valueText = getValueText(refChange);
-		final String referenceText = getReferenceText(refChange);
-
-		String remotely = ""; //$NON-NLS-1$
-		if (refChange.getSource() == DifferenceSource.RIGHT) {
-			remotely = "remotely "; //$NON-NLS-1$
-		}
-
-		String ret = ""; //$NON-NLS-1$
-		switch (refChange.getKind()) {
-			case ADD:
-				ret = valueText + " has been " + remotely + "added to " + referenceText; //$NON-NLS-1$ //$NON-NLS-2$
-				break;
-			case DELETE:
-				ret = valueText + " has been " + remotely + "deleted from " + referenceText; //$NON-NLS-1$ //$NON-NLS-2$
-				break;
-			case CHANGE:
-				String changeText = changeText(refChange, refChange.getReference());
-				ret = referenceText + " " + valueText + " has been " + remotely + changeText; //$NON-NLS-1$ //$NON-NLS-2$
-				break;
-			case MOVE:
-				ret = valueText + " has been " + remotely + "moved in " + referenceText; //$NON-NLS-1$ //$NON-NLS-2$
-				break;
-			default:
-				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
-						+ " value: " + refChange.getKind()); //$NON-NLS-1$
-		}
-
-		return ret;
+		return getStyledText(object).getString();
 	}
 
 	static String changeText(final Diff diff, EStructuralFeature feature) {
@@ -165,9 +144,13 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	public Object getImage(Object object) {
 		ReferenceChange refChange = (ReferenceChange)object;
 
-		Object image = AdapterFactoryUtil.getImage(getRootAdapterFactory(), refChange.getValue());
+		Object refChangeValueImage = AdapterFactoryUtil.getImage(getRootAdapterFactory(), refChange
+				.getValue());
 
-		return image;
+		Object diffImage = overlayProvider.getComposedImage(refChange, refChangeValueImage);
+		Object ret = overlayImage(object, diffImage);
+
+		return ret;
 	}
 
 	/**
@@ -193,7 +176,8 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 			}
 		}
 
-		return ImmutableList.copyOf(filter(ret, not(MatchItemProviderSpec.REFINED_DIFF)));
+		return ImmutableList.copyOf(filter(filter(ret, not(instanceOf(ResourceAttachmentChange.class))),
+				not(MatchItemProviderSpec.REFINED_DIFF)));
 
 	}
 
@@ -242,4 +226,41 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
+	 */
+	public IStyledString.IComposedStyledString getStyledText(Object object) {
+		final ReferenceChange refChange = (ReferenceChange)object;
+
+		final String valueText = getValueText(refChange);
+
+		final String referenceText = getReferenceText(refChange);
+
+		ComposedStyledString ret = new ComposedStyledString(valueText);
+		ret.append(" [" + referenceText, Style.DECORATIONS_STYLER); //$NON-NLS-1$
+
+		switch (refChange.getKind()) {
+			case ADD:
+				ret.append(" add", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+				break;
+			case DELETE:
+				ret.append(" delete", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+				break;
+			case CHANGE:
+				ret.append(" " + changeText(refChange, refChange.getReference()), //$NON-NLS-1$
+						Style.DECORATIONS_STYLER);
+				break;
+			case MOVE:
+				ret.append(" move", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+				break;
+			default:
+				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
+						+ " value: " + refChange.getKind()); //$NON-NLS-1$
+		}
+		ret.append("]", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+
+		return ret;
+	}
 }

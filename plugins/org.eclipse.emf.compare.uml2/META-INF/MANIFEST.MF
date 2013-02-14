@@ -22,6 +22,7 @@ Export-Package: org.eclipse.emf.compare.uml2,
  org.eclipse.emf.compare.uml2.diff.internal.extension.usecase;x-internal:=true,
  org.eclipse.emf.compare.uml2.diff.internal.util;x-friends:="org.eclipse.emf.compare.uml2.edit",
  org.eclipse.emf.compare.uml2.impl,
+ org.eclipse.emf.compare.uml2.merge,
  org.eclipse.emf.compare.uml2.util
 Bundle-Activator: org.eclipse.emf.compare.uml2.UMLDiffEnginePlugin
 Import-Package: com.google.common.base;version="[10.0.0,11.0.0)",

@@ -27,5 +27,12 @@
          </nsURI>
       </postProcessor>
    </extension>
+   <extension
+         point="org.eclipse.emf.compare.ide.mergerExtension">
+      <merger
+            class="org.eclipse.emf.compare.diagram.merge.DiagramDiffMerger"
+            ranking="11">
+      </merger>
+   </extension>
 
 </plugin>

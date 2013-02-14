@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
@@ -38,7 +39,7 @@ import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColorProvider;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.IStructuralFeatureAccessor;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.ICompareAccessor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
@@ -170,8 +171,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		// synchronize their selection)
 
 		IMergeViewerItem leftInitialItem = null;
-		if (left instanceof IStructuralFeatureAccessor) {
-			leftInitialItem = ((IStructuralFeatureAccessor)left).getInitialItem();
+		if (left instanceof ICompareAccessor) {
+			leftInitialItem = ((ICompareAccessor)left).getInitialItem();
 		}
 
 		ISelection leftSelection = createSelectionOrEmpty(leftInitialItem);
@@ -322,7 +323,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		EList<Diff> differences = getComparison().getDifferences();
 
 		final Command copyCommand = getEditingDomain().createCopyAllNonConflictingCommand(differences,
-				leftToRight);
+				leftToRight, EMFCompareIDEPlugin.getDefault().getMergerRegistry());
 
 		getEditingDomain().getCommandStack().execute(copyCommand);
 

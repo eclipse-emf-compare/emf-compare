@@ -20,21 +20,27 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.AttributeChangeItemProvider;
+import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
+import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider {
+public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider implements IItemStyledLabelProvider {
+
+	private final OverlayImageProvider overlayProvider;
 
 	/**
 	 * @param adapterFactory
 	 */
 	public AttributeChangeItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+		overlayProvider = new OverlayImageProvider(getResourceLocator(), true);
 	}
 
 	/**
@@ -45,11 +51,15 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 	@Override
 	public Object getImage(Object object) {
 		AttributeChange attributeChange = (AttributeChange)object;
-		Object ret = AdapterFactoryUtil.getImage(getRootAdapterFactory(), attributeChange.getValue());
+		Object attributeChangeValueImage = AdapterFactoryUtil.getImage(getRootAdapterFactory(),
+				attributeChange.getValue());
 
-		if (ret == null) {
-			ret = super.getImage(object);
+		if (attributeChangeValueImage == null) {
+			attributeChangeValueImage = super.getImage(object);
 		}
+
+		Object diffImage = overlayProvider.getComposedImage(attributeChange, attributeChangeValueImage);
+		Object ret = overlayImage(object, diffImage);
 
 		return ret;
 	}
@@ -61,38 +71,7 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		final AttributeChange attChange = (AttributeChange)object;
-
-		final String valueText = getValueText(attChange);
-		final String attributeText = getAttributeText(attChange);
-
-		String remotely = ""; //$NON-NLS-1$
-		if (attChange.getSource() == DifferenceSource.RIGHT) {
-			remotely = "remotely "; //$NON-NLS-1$
-		}
-
-		String ret = ""; //$NON-NLS-1$
-		switch (attChange.getKind()) {
-			case ADD:
-				ret = valueText + " has been " + remotely + "added to " + attributeText; //$NON-NLS-1$ //$NON-NLS-2$
-				break;
-			case DELETE:
-				ret = valueText + " has been " + remotely + "deleted from " + attributeText; //$NON-NLS-1$ //$NON-NLS-2$
-				break;
-			case CHANGE:
-				String changeText = ReferenceChangeItemProviderSpec.changeText(attChange, attChange
-						.getAttribute());
-				ret = attributeText + " " + valueText + " has been " + remotely + changeText; //$NON-NLS-1$ //$NON-NLS-2$
-				break;
-			case MOVE:
-				ret = valueText + " has been " + remotely + "moved in '" + attributeText; //$NON-NLS-1$ //$NON-NLS-2$
-				break;
-			default:
-				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
-						+ " value: " + attChange.getKind()); //$NON-NLS-1$
-		}
-
-		return ret;
+		return getStyledText(object).getString();
 	}
 
 	protected String getAttributeText(final AttributeChange attChange) {
@@ -143,5 +122,44 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 			default:
 				return super.getForeground(object);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
+	 */
+	public IStyledString.IComposedStyledString getStyledText(Object object) {
+		final AttributeChange attChange = (AttributeChange)object;
+
+		final String valueText = getValueText(attChange);
+
+		final String attributeText = getAttributeText(attChange);
+
+		ComposedStyledString ret = new ComposedStyledString(valueText);
+		ret.append(" [" + attributeText, Style.DECORATIONS_STYLER); //$NON-NLS-1$
+
+		switch (attChange.getKind()) {
+			case ADD:
+				ret.append(" add", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+				break;
+			case DELETE:
+				ret.append(" delete", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+				break;
+			case CHANGE:
+				ret.append(
+						" " + ReferenceChangeItemProviderSpec.changeText(attChange, attChange.getAttribute()), //$NON-NLS-1$
+						Style.DECORATIONS_STYLER);
+				break;
+			case MOVE:
+				ret.append(" move", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+				break;
+			default:
+				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
+						+ " value: " + attChange.getKind()); //$NON-NLS-1$
+		}
+		ret.append("]", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+
+		return ret;
 	}
 }

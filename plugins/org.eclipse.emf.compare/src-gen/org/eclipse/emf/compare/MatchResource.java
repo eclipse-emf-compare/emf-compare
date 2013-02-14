@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.resource.Resource;
  *   <li>{@link org.eclipse.emf.compare.MatchResource#getLeft <em>Left</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.MatchResource#getRight <em>Right</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.MatchResource#getOrigin <em>Origin</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.MatchResource#getComparison <em>Comparison</em>}</li>
  * </ul>
  * </p>
  *
@@ -195,5 +196,33 @@ public interface MatchResource extends EObject {
 	 * @generated
 	 */
 	void setOrigin(Resource value);
+
+	/**
+	 * Returns the value of the '<em><b>Comparison</b></em>' container reference.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.compare.Comparison#getMatchedResources <em>Matched Resources</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Comparison</em>' container reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Comparison</em>' container reference.
+	 * @see #setComparison(Comparison)
+	 * @see org.eclipse.emf.compare.ComparePackage#getMatchResource_Comparison()
+	 * @see org.eclipse.emf.compare.Comparison#getMatchedResources
+	 * @model opposite="matchedResources" transient="false"
+	 * @generated
+	 */
+	Comparison getComparison();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.MatchResource#getComparison <em>Comparison</em>}' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Comparison</em>' container reference.
+	 * @see #getComparison()
+	 * @generated
+	 */
+	void setComparison(Comparison value);
 
 } // MatchResource

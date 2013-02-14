@@ -18,6 +18,7 @@ import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.tests.command.CommandStackTestSuite;
 import org.eclipse.emf.compare.tests.conflict.ConflictDetectionTest;
 import org.eclipse.emf.compare.tests.diff.DiffUtilTest;
+import org.eclipse.emf.compare.tests.diff.LCSPerformanceTest;
 import org.eclipse.emf.compare.tests.diff.URIDistanceTest;
 import org.eclipse.emf.compare.tests.edit.AllEditTests;
 import org.eclipse.emf.compare.tests.equi.EquiComputingTest;
@@ -26,6 +27,7 @@ import org.eclipse.emf.compare.tests.fullcomparison.DynamicInstanceComparisonTes
 import org.eclipse.emf.compare.tests.fullcomparison.ExtLibraryTest;
 import org.eclipse.emf.compare.tests.fullcomparison.IdentifierComparisonTest;
 import org.eclipse.emf.compare.tests.fullcomparison.ProximityComparisonTest;
+import org.eclipse.emf.compare.tests.merge.ExtensionMergeTest;
 import org.eclipse.emf.compare.tests.merge.IndividualMergeOutOfScopeValuesTest;
 import org.eclipse.emf.compare.tests.merge.IndividualMergeTest;
 import org.eclipse.emf.compare.tests.merge.MultipleMergeTest;
@@ -49,10 +51,10 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({CompareTestSuite.class, DefaultComparisonScopeTest.class, IdentifierComparisonTest.class,
 		ExtLibraryTest.class, ConflictDetectionTest.class, ReqComputingTest.class, EquiComputingTest.class,
-		DiffUtilTest.class, MultipleMergeTest.class, PostProcessorTest.class, IndividualMergeTest.class,
-		IndividualMergeOutOfScopeValuesTest.class, ProximityComparisonTest.class,
-		DynamicInstanceComparisonTest.class, URIDistanceTest.class, FragmentationTest.class,
-		AllEditTests.class, CommandStackTestSuite.class, })
+		DiffUtilTest.class, LCSPerformanceTest.class, MultipleMergeTest.class, PostProcessorTest.class,
+		IndividualMergeTest.class, ExtensionMergeTest.class, IndividualMergeOutOfScopeValuesTest.class,
+		ProximityComparisonTest.class, DynamicInstanceComparisonTest.class, URIDistanceTest.class,
+		FragmentationTest.class, AllEditTests.class, CommandStackTestSuite.class, })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.

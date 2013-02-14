@@ -35,7 +35,7 @@
     <genDataTypes ecoreDataType="compare.ecore#//EIterable">
       <genTypeParameters ecoreTypeParameter="compare.ecore#//EIterable/T"/>
     </genDataTypes>
-    <genDataTypes ecoreDataType="compare.ecore#//CompareConfiguration"/>
+    <genDataTypes ecoreDataType="compare.ecore#//IEqualityHelper"/>
     <genClasses ecoreClass="compare.ecore#//Comparison">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/matchedResources"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/matches"/>
@@ -49,7 +49,7 @@
       <genOperations ecoreOperation="compare.ecore#//Comparison/getMatch">
         <genParameters ecoreParameter="compare.ecore#//Comparison/getMatch/element"/>
       </genOperations>
-      <genOperations ecoreOperation="compare.ecore#//Comparison/getConfiguration"/>
+      <genOperations ecoreOperation="compare.ecore#//Comparison/getEqualityHelper"/>
     </genClasses>
     <genClasses ecoreClass="compare.ecore#//MatchResource">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/leftURI"/>
@@ -58,6 +58,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/left"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/right"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/origin"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference compare.ecore#//MatchResource/comparison"/>
     </genClasses>
     <genClasses ecoreClass="compare.ecore#//Match">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Match/submatches"/>

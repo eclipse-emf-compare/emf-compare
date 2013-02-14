@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notifier;
@@ -55,15 +55,12 @@ public class MatchCrossReferencer extends ECrossReferenceAdapter {
 	 */
 	@Override
 	public Collection<Setting> getInverseReferences(EObject eObject, boolean resolve) {
-		Collection<EStructuralFeature.Setting> result = Lists.newArrayList();
-
 		Collection<EStructuralFeature.Setting> nonNavigableInverseReferences = inverseCrossReferencer
 				.get(eObject);
-		if (nonNavigableInverseReferences != null) {
-			result.addAll(nonNavigableInverseReferences);
+		if (nonNavigableInverseReferences == null) {
+			return Collections.emptyList();
 		}
-
-		return result;
+		return Collections.unmodifiableCollection(nonNavigableInverseReferences);
 	}
 
 	/**

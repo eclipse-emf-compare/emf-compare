@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.provider.spec;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.provider.CompareItemProviderAdapterFactory;
+import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 
 /**
@@ -21,6 +22,11 @@ import org.eclipse.emf.edit.provider.IItemLabelProvider;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAdapterFactory {
+
+	public CompareItemProviderAdapterFactorySpec() {
+		super();
+		supportedTypes.add(IItemStyledLabelProvider.class);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -103,5 +109,19 @@ public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAd
 		}
 
 		return conflictItemProvider;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.CompareItemProviderAdapterFactory#createResourceAttachmentChangeAdapter()
+	 */
+	@Override
+	public Adapter createResourceAttachmentChangeAdapter() {
+		if (resourceAttachmentChangeItemProvider == null) {
+			resourceAttachmentChangeItemProvider = new ResourceAttachmentChangeItemProviderSpec(this);
+		}
+
+		return resourceAttachmentChangeItemProvider;
 	}
 }

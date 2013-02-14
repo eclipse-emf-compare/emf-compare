@@ -26,8 +26,9 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.diagram.ide.ui.DMergeViewer;
+import org.eclipse.emf.compare.diagram.ide.ui.AbstractEditPartMergeViewer;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
@@ -74,11 +75,11 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	 */
 	protected static final int CENTER_WIDTH = 34;
 
-	protected DMergeViewer fAncestor;
+	protected AbstractEditPartMergeViewer fAncestor;
 
-	protected DMergeViewer fLeft;
+	protected AbstractEditPartMergeViewer fLeft;
 
-	protected DMergeViewer fRight;
+	protected AbstractEditPartMergeViewer fRight;
 
 	private ActionContributionItem fCopyDiffLeftToRightItem;
 
@@ -377,7 +378,7 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 		EList<Diff> differences = getComparison().getDifferences();
 
 		final Command copyCommand = getEditingDomain().createCopyAllNonConflictingCommand(differences,
-				leftToRight);
+				leftToRight, EMFCompareIDEPlugin.getDefault().getMergerRegistry());
 
 		getEditingDomain().getCommandStack().execute(copyCommand);
 
@@ -439,7 +440,7 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 		fRight.getControl().setBounds(x + width1 + centerWidth, y, width2, height);
 	}
 
-	protected abstract DMergeViewer createMergeViewer(Composite parent, MergeViewerSide side,
+	protected abstract AbstractEditPartMergeViewer createMergeViewer(Composite parent, MergeViewerSide side,
 			DiagramCompareContentMergeViewer master);
 
 	@Override
@@ -491,21 +492,21 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	/**
 	 * @return the fAncestor
 	 */
-	public DMergeViewer getAncestorMergeViewer() {
+	public AbstractEditPartMergeViewer getAncestorMergeViewer() {
 		return fAncestor;
 	}
 
 	/**
 	 * @return the fLeft
 	 */
-	public DMergeViewer getLeftMergeViewer() {
+	public AbstractEditPartMergeViewer getLeftMergeViewer() {
 		return fLeft;
 	}
 
 	/**
 	 * @return the fRight
 	 */
-	public DMergeViewer getRightMergeViewer() {
+	public AbstractEditPartMergeViewer getRightMergeViewer() {
 		return fRight;
 	}
 
@@ -561,7 +562,7 @@ public abstract class DiagramCompareContentMergeViewer extends ContentMergeViewe
 	 *            The viewer which selection is to be checked.
 	 * @return The first of the Diffs selected in the given viewer, if any.
 	 */
-	protected Diff getDiffFrom(DMergeViewer viewer) {
+	protected Diff getDiffFrom(AbstractEditPartMergeViewer viewer) {
 		Diff diff = null;
 		final ISelection selection = viewer.getSelection();
 		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,15 +37,27 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
- * Factory for UMLAssociationChangeLeftTarget.
+ * Factory of edge changes.
+ * 
+ * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public class EdgeChangeFactory extends AbstractDiffExtensionFactory {
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory#getExtensionKind()
+	 */
 	@Override
 	public Class<? extends Diff> getExtensionKind() {
 		return EdgeChange.class;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.Diff)
+	 */
 	public Diff create(Diff input) {
 		final EdgeChange ret = DiagramCompareFactory.eINSTANCE.createEdgeChange();
 
@@ -80,6 +92,12 @@ public class EdgeChangeFactory extends AbstractDiffExtensionFactory {
 		return ret;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory#fillRequiredDifferences(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.compare.Diff)
+	 */
 	@Override
 	public void fillRequiredDifferences(Comparison comparison, Diff extension) {
 		final DiagramDiff diff = (DiagramDiff)extension;
@@ -163,36 +181,69 @@ public class EdgeChangeFactory extends AbstractDiffExtensionFactory {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory#getParentMatch(org.eclipse.emf.compare.Diff)
+	 */
 	@Override
 	public Match getParentMatch(Diff input) {
 		return input.getMatch().getComparison().getMatch(getViewContainer(input));
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory#isRelatedToAnExtensionAdd(org.eclipse.emf.compare.ReferenceChange)
+	 */
 	@Override
 	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
 		return input.getValue() instanceof Edge && input.getReference().isContainment()
 				&& input.getKind() == DifferenceKind.ADD;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory#isRelatedToAnExtensionDelete(org.eclipse.emf.compare.ReferenceChange)
+	 */
 	@Override
 	protected boolean isRelatedToAnExtensionDelete(ReferenceChange input) {
 		return input.getValue() instanceof Edge && input.getReference().isContainment()
 				&& input.getKind() == DifferenceKind.DELETE;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory#isRelatedToAnExtensionMove(org.eclipse.emf.compare.AttributeChange)
+	 */
 	@Override
 	protected boolean isRelatedToAnExtensionMove(AttributeChange input) {
-		return (input.getAttribute().eContainer().equals(NotationPackage.eINSTANCE.getRelativeBendpoints()) || input
-				.getAttribute().equals(NotationPackage.eINSTANCE.getIdentityAnchor_Id())
-				&& input.getRefines().isEmpty());
+		return input.getAttribute().eContainer().equals(NotationPackage.eINSTANCE.getRelativeBendpoints())
+				|| input.getAttribute().equals(NotationPackage.eINSTANCE.getIdentityAnchor_Id())
+				&& input.getRefines().isEmpty();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.diff.internal.extension.AbstractDiffExtensionFactory#isRelatedToAnExtensionMove(org.eclipse.emf.compare.ReferenceChange)
+	 */
 	@Override
 	protected boolean isRelatedToAnExtensionMove(ReferenceChange input) {
 		return input.getValue() instanceof IdentityAnchor && input.getReference().isContainment()
 				&& input.getRefines().isEmpty();
 	}
 
+	/**
+	 * Get all differences which are part of a move extension, from the given difference (being part of the
+	 * result).
+	 * 
+	 * @param input
+	 *            The given difference.
+	 * @return The found differences.
+	 */
 	private Set<Diff> getAllDifferencesForMove(Diff input) {
 		// FIXME we're not taking enough diffs into account here
 		final Comparison comparison = input.getMatch().getComparison();
@@ -202,12 +253,22 @@ public class EdgeChangeFactory extends AbstractDiffExtensionFactory {
 		return result;
 	}
 
+	/**
+	 * Get all differences which are part of a move extension, from the given match.
+	 * 
+	 * @param comparison
+	 *            The comparison.
+	 * @param match
+	 *            The match.
+	 * @return The found differences.
+	 */
 	private Set<Diff> getAllNonExtendedDifferences(Comparison comparison, Match match) {
 		final Set<Diff> result = Sets.newLinkedHashSet();
 
 		final Set<Match> prune = Sets.newLinkedHashSet();
 		for (Diff candidate : match.getDifferences()) {
 			if (getRelatedExtensionKind(candidate) != null) {
+				// It exists an extension for this candidate
 				result.add(candidate);
 			} else if (candidate instanceof ReferenceChange
 					&& ((ReferenceChange)candidate).getReference().isContainment()) {
@@ -224,6 +285,13 @@ public class EdgeChangeFactory extends AbstractDiffExtensionFactory {
 		return result;
 	}
 
+	/**
+	 * From a given diagram difference extension, get the related semantic difference.
+	 * 
+	 * @param input
+	 *            The diagram difference extension.
+	 * @return The semantic one.
+	 */
 	private Diff getSemanticDiff(Diff input) {
 		if (input instanceof ReferenceChange && ((ReferenceChange)input).getValue() instanceof View) {
 			final View view = (View)((ReferenceChange)input).getValue();

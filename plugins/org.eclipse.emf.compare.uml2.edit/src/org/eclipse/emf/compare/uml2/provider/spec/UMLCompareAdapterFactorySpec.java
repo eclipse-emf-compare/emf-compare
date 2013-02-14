@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.uml2.provider.spec;
 
 import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.uml2.provider.StereotypeApplicationChangeItemProvider;
 import org.eclipse.emf.compare.uml2.provider.UMLCompareItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
@@ -47,6 +48,11 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 	ForwardingUMLDiffItemProvider fStereotypeReferenceChangeItemProvider;
 
 	ForwardingUMLDiffItemProvider fSubstitutionChangeItemProvider;
+
+	public UMLCompareAdapterFactorySpec() {
+		super();
+		supportedTypes.add(IItemStyledLabelProvider.class);
+	}
 
 	/**
 	 * {@inheritDoc}

@@ -355,7 +355,12 @@ public final class SyncResourceSet extends ResourceSetImpl {
 			final TreeIterator<EObject> childContent = basicEAllContents(eObject);
 			while (childContent.hasNext()) {
 				final EObject child = childContent.next();
-				resolveCrossReferences(child);
+				if (child.eIsProxy()) {
+					final URI proxyURI = ((InternalEObject)child).eProxyURI();
+					getResource(proxyURI.trimFragment(), false);
+				} else {
+					resolveCrossReferences(child);
+				}
 			}
 		}
 		resource.getContents().addAll(roots);
