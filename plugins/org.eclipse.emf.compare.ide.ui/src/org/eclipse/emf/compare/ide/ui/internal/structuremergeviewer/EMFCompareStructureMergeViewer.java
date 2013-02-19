@@ -142,7 +142,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		setLabelProvider(new DelegatingStyledCellLabelProvider(
 				new EMFCompareStructureMergeViewerLabelProvider(fAdapterFactory, this)));
 		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(fAdapterFactory,
-				structureMergeViewerGrouper));
+				structureMergeViewerGrouper, structureMergeViewerFilter));
 
 		if (parent instanceof CompareViewerSwitchingPane) {
 			fParent = (CompareViewerSwitchingPane)parent;

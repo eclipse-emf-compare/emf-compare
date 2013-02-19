@@ -10,46 +10,40 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters;
 
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.isEmpty;
-
 import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.MatchResource;
-import org.eclipse.emf.compare.ResourceAttachmentChange;
+import java.util.Iterator;
+
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.provider.spec.MatchItemProviderSpec;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * A filter used by default that filtered out matched elements.
+ * A filter used by default that filtered out identical elements.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class EmptyMatchedResourcesFilter extends AbstractDifferenceFilter {
+public class IdenticalElementsFilter extends AbstractDifferenceFilter {
 
 	/**
 	 * The predicate use by this filter when it is selected.
 	 */
 	private static final Predicate<? super EObject> predicateWhenSelected = new Predicate<EObject>() {
 		public boolean apply(EObject input) {
-			if (input instanceof MatchResource) {
-				EList<Diff> differences = ((MatchResource)input).getComparison().getDifferences();
-				Iterable<ResourceAttachmentChange> resourceAttachmentchanges = filter(differences,
-						ResourceAttachmentChange.class);
-				if (!isEmpty(resourceAttachmentchanges)) {
-					for (ResourceAttachmentChange rac : resourceAttachmentchanges) {
-						final String diffResourceURI = rac.getResourceURI();
-						if (!diffResourceURI.equals(((MatchResource)input).getLeftURI())
-								&& !diffResourceURI.equals(((MatchResource)input).getRightURI())
-								&& !diffResourceURI.equals(((MatchResource)input).getOriginURI())) {
-							return true;
-						}
+			if (input instanceof Match) {
+				Match match = (Match)input;
+				Iterator<Adapter> adapters = match.eAdapters().iterator();
+				while (adapters.hasNext()) {
+					Adapter adapter = adapters.next();
+					if (adapter instanceof MatchItemProviderSpec) {
+						MatchItemProviderSpec matchItem = (MatchItemProviderSpec)adapter;
+						return Iterables.isEmpty(matchItem.getFilteredChildren((match)));
 					}
-				} else {
-					return true;
 				}
+				return Iterables.isEmpty(match.getAllDifferences());
 			}
 			return false;
 		}

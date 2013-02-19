@@ -10,50 +10,53 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters;
 
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.isEmpty;
-
 import com.google.common.base.Predicate;
 
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.MatchResource;
-import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * A filter used by default that filtered out matched elements.
+ * A filter used by default that filtered out pseudo conflicts differences.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class EmptyMatchedResourcesFilter extends AbstractDifferenceFilter {
+public class PseudoConflictsFilter extends AbstractDifferenceFilter {
 
 	/**
 	 * The predicate use by this filter when it is selected.
 	 */
 	private static final Predicate<? super EObject> predicateWhenSelected = new Predicate<EObject>() {
 		public boolean apply(EObject input) {
-			if (input instanceof MatchResource) {
-				EList<Diff> differences = ((MatchResource)input).getComparison().getDifferences();
-				Iterable<ResourceAttachmentChange> resourceAttachmentchanges = filter(differences,
-						ResourceAttachmentChange.class);
-				if (!isEmpty(resourceAttachmentchanges)) {
-					for (ResourceAttachmentChange rac : resourceAttachmentchanges) {
-						final String diffResourceURI = rac.getResourceURI();
-						if (!diffResourceURI.equals(((MatchResource)input).getLeftURI())
-								&& !diffResourceURI.equals(((MatchResource)input).getRightURI())
-								&& !diffResourceURI.equals(((MatchResource)input).getOriginURI())) {
-							return true;
-						}
-					}
-				} else {
-					return true;
+			boolean ret = false;
+			if (input instanceof Diff) {
+				Diff diff = (Diff)input;
+				Conflict conflict = diff.getConflict();
+				if (conflict != null && conflict.getKind() == ConflictKind.PSEUDO) {
+					ret = true;
 				}
 			}
-			return false;
+			return ret;
 		}
 	};
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#isEnabled(org.eclipse.emf.compare.scope.IComparisonScope,
+	 *      org.eclipse.emf.compare.Comparison)
+	 */
+	@Override
+	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
+		if (comparison != null && comparison.isThreeWay()) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * {@inheritDoc}

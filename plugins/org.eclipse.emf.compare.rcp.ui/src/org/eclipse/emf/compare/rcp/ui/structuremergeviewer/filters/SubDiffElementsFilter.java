@@ -10,48 +10,45 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters;
 
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.isEmpty;
-
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
 
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.MatchResource;
-import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.provider.spec.MatchItemProviderSpec;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * A filter used by default that filtered out matched elements.
+ * A filter used by default that filtered out sub differences.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class EmptyMatchedResourcesFilter extends AbstractDifferenceFilter {
+public class SubDiffElementsFilter extends AbstractDifferenceFilter {
 
 	/**
 	 * The predicate use by this filter when it is selected.
 	 */
 	private static final Predicate<? super EObject> predicateWhenSelected = new Predicate<EObject>() {
 		public boolean apply(EObject input) {
-			if (input instanceof MatchResource) {
-				EList<Diff> differences = ((MatchResource)input).getComparison().getDifferences();
-				Iterable<ResourceAttachmentChange> resourceAttachmentchanges = filter(differences,
-						ResourceAttachmentChange.class);
-				if (!isEmpty(resourceAttachmentchanges)) {
-					for (ResourceAttachmentChange rac : resourceAttachmentchanges) {
-						final String diffResourceURI = rac.getResourceURI();
-						if (!diffResourceURI.equals(((MatchResource)input).getLeftURI())
-								&& !diffResourceURI.equals(((MatchResource)input).getRightURI())
-								&& !diffResourceURI.equals(((MatchResource)input).getOriginURI())) {
-							return true;
+			boolean ret = false;
+			if (input instanceof Diff) {
+				final Diff diff = (Diff)input;
+				final Conflict conflict = diff.getConflict();
+				if (conflict == null) {
+					final EObject grandParent = diff.getMatch().eContainer();
+					if (grandParent instanceof Match) {
+						ImmutableSet<EObject> containementDifferenceValues = MatchItemProviderSpec
+								.containmentReferencesValues((Match)grandParent);
+						if (MatchItemProviderSpec.matchOfContainmentDiff(containementDifferenceValues).apply(
+								diff.getMatch())) {
+							ret = true;
 						}
 					}
-				} else {
-					return true;
 				}
 			}
-			return false;
+			return ret;
 		}
 	};
 
@@ -64,5 +61,4 @@ public class EmptyMatchedResourcesFilter extends AbstractDifferenceFilter {
 	public Predicate<? super EObject> getPredicateWhenSelected() {
 		return predicateWhenSelected;
 	}
-
 }

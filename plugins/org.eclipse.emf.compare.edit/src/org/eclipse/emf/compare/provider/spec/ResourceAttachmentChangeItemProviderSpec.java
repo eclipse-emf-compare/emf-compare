@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
-import static com.google.common.base.Predicates.not;
-import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.collect.ImmutableCollection;
@@ -88,7 +86,7 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 			ret.addAll(children);
 		}
 
-		return ImmutableList.copyOf(filter(ret, not(MatchItemProviderSpec.REFINED_DIFF)));
+		return ImmutableList.copyOf(ret);
 	}
 
 	private Collection<?> getChildren(Match matchOfValue) {

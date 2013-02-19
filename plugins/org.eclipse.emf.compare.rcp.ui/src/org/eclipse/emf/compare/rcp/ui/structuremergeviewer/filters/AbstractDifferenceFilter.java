@@ -1,48 +1,47 @@
-/*******************************************************************************
- * Copyright (c) 2013 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Obeo - initial API and implementation
- *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters;
 
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
-
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * A filter used by default that filtered out removed elements.
+ * An abstract filter implementation.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class RemovedElementsFilter implements IDifferenceFilter {
+public abstract class AbstractDifferenceFilter implements IDifferenceFilter {
 
 	/** A human-readable label for this filter. This will be displayed in the EMF Compare UI. */
-	private String label;
+	protected String label;
 
 	/** The initial activation state of the filter. */
-	private boolean activeByDefault;
-
-	/** The Predicate activate through this action. */
-	private Predicate<? super EObject> predicate;
+	protected boolean activeByDefault;
 
 	/**
 	 * Constructs the filter with the appropriate predicate.
 	 */
-	public RemovedElementsFilter() {
+	public AbstractDifferenceFilter() {
 		super();
-		setPredicate();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#getPredicateWhenSelected()
+	 */
+	public abstract Predicate<? super EObject> getPredicateWhenSelected();
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#getPredicateWhenUnselected()
+	 */
+	public Predicate<? super EObject> getPredicateWhenUnselected() {
+		return Predicates.alwaysFalse();
 	}
 
 	/**
@@ -89,27 +88,6 @@ public class RemovedElementsFilter implements IDifferenceFilter {
 	 */
 	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
 		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#getPredicate()
-	 */
-	public Predicate<? super EObject> getPredicate() {
-		return predicate;
-	}
-
-	/**
-	 * Set the predicate that will be activate through this filter.
-	 */
-	private void setPredicate() {
-		final Predicate<? super EObject> actualPredicate = new Predicate<EObject>() {
-			public boolean apply(EObject input) {
-				return input instanceof Diff && ofKind(DifferenceKind.DELETE).apply((Diff)input);
-			}
-		};
-		predicate = actualPredicate;
 	}
 
 }

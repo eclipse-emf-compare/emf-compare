@@ -110,7 +110,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 		Collection<?> borrowable_MatchChildren = adaptAsITreItemContentProvider(borrowableCategory_Match)
 				.getChildren(borrowableCategory_Match);
 
-		assertEquals(1, borrowable_MatchChildren.size());
+		assertEquals(3, borrowable_MatchChildren.size());
 	}
 
 	@Test
@@ -211,7 +211,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 		Collection<?> periodical_ReferenceChangeChildren = adaptAsITreItemContentProvider(
 				periodical_ReferenceChange).getChildren(periodical_ReferenceChange);
 
-		assertEquals(3, periodical_ReferenceChangeChildren.size());
+		assertEquals(5, periodical_ReferenceChangeChildren.size());
 
 		ReferenceChange issuesPerYearChange = getReferenceChangeWithFeatureValue(
 				periodical_ReferenceChangeChildren, "name", "issuesPerYear");
