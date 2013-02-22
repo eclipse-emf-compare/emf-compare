@@ -60,7 +60,6 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editparts.LayerManager;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.notation.BasicCompartment;
@@ -84,150 +83,78 @@ import org.eclipse.swt.widgets.Composite;
 public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer {
 
 	/**
-	 * Phantom manager to create, hide or reveal phantom figures related to deleted or added graphical
+	 * Interface for the management of decorators.
+	 * 
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+	 */
+	private interface IDecoratorManager {
+
+		/**
+		 * From a given difference, it hides the related decorators.
+		 * 
+		 * @param difference
+		 *            The difference.
+		 */
+		void hideDecorators(Diff difference);
+
+		/**
+		 * From a given difference, it reveals the related decorators.
+		 * 
+		 * @param difference
+		 *            The difference.
+		 */
+		void revealDecorators(Diff difference);
+	}
+
+	/**
+	 * Decorator manager to create, hide or reveal decorator figures related to deleted or added graphical
 	 * objects.
 	 * 
 	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
 	 */
-	private class PhantomManager {
+	private abstract class AbstractDecoratorManager implements IDecoratorManager {
 
 		/**
-		 * Phantom represented by a <code>figure</code> on a <code>layer</code>, from the given
+		 * Decorator represented by a <code>figure</code> on a <code>layer</code>, from the given
 		 * <code>side</code> of the merge viewer. An edit part may be linked to the <code>figure</code> in
 		 * some cases.<br>
-		 * The phantom is related to a <code>difference</code> and it is binded with the reference view and
+		 * The decorator is related to a <code>difference</code> and it is binded with the reference view and
 		 * figure.
 		 * 
 		 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
 		 */
-		private class Phantom {
-			/** The reference <code>View</code> for this phantom. */
-			private View fOriginView;
+		protected abstract class AbstractDecorator {
+
+			/** The reference <code>View</code> for this decorator. */
+			protected View fOriginView;
 
 			/** The reference <code>IFigure</code> for this phantom. */
-			private IFigure fOriginFigure;
+			protected IFigure fOriginFigure;
 
 			/** The <code>IFigure</code> representing this phantom. */
-			private IFigure fFigure;
+			protected IFigure fFigure;
 
 			/** The layer on which the <code>figure</code> has to be drawn. */
-			private IFigure fLayer;
+			protected IFigure fLayer;
 
 			/** The side of the merge viewer on which the <code>figure</code> has to be drawn. */
-			private MergeViewerSide fSide;
+			protected MergeViewerSide fSide;
 
 			/** The difference related to this phantom. */
-			private Diff fDifference;
+			protected Diff fDifference;
 
 			/** The edit part of the figure representing this phantom. May be null. */
-			private EditPart fEditPart;
+			protected EditPart fEditPart;
 
 			/**
-			 * Constructor.
-			 * 
-			 * @param layer
-			 *            {@link Phantom#fLayer}.
-			 * @param side
-			 *            {@link Phantom#fSide}.
-			 * @param originView
-			 *            {@link Phantom#fOriginView}.
-			 * @param originFigure
-			 *            {@link Phantom#fOriginFigure}.
-			 * @param diff
-			 *            {@link Phantom#fDifference}.
-			 */
-			public Phantom(IFigure layer, MergeViewerSide side, View originView, IFigure originFigure,
-					Diff diff) {
-				setLayer(layer);
-				setSide(side);
-				setOriginView(originView);
-				setOriginFigure(originFigure);
-				setDifference(diff);
-			}
-
-			/**
-			 * Constructor.
-			 * 
-			 * @param figure
-			 *            {@link Phantom#fFigure}.
-			 * @param editPart
-			 *            {@link Phantom#fEditPart}.
-			 * @param layer
-			 *            {@link Phantom#fLayer}.
-			 * @param side
-			 *            {@link Phantom#fSide}.
-			 * @param originView
-			 *            {@link Phantom#fOriginView}.
-			 * @param originFigure
-			 *            {@link Phantom#fOriginFigure}.
-			 * @param diff
-			 *            {@link Phantom#fDifference}.
-			 */
-			public Phantom(IFigure figure, EditPart editPart, IFigure layer, MergeViewerSide side,
-					View originView, IFigure originFigure, Diff diff) {
-				setFigure(figure);
-				setLayer(layer);
-				setSide(side);
-				setOriginView(originView);
-				setOriginFigure(originFigure);
-				setDifference(diff);
-				setEditPart(editPart);
-			}
-
-			/**
-			 * Get the ancestor phantoms of this one.
-			 * 
-			 * @return The list of the ancestors.
-			 */
-			private List<Phantom> getAncestors() {
-				List<Phantom> result = new ArrayList<Phantom>();
-				EObject parentOriginView = fOriginView.eContainer();
-				while (parentOriginView != null) {
-					result.addAll(getOrCreatePhantoms(parentOriginView));
-					parentOriginView = parentOriginView.eContainer();
-				}
-				return result;
-			}
-
-			/**
-			 * From the given view, get or create the related phantoms.
+			 * From the given view, get or create the related decorators.
 			 * 
 			 * @param referenceView
 			 *            The given view.
-			 * @return The list of phantoms.
+			 * @return a decorator.
 			 */
-			private List<Phantom> getOrCreatePhantoms(EObject referenceView) {
-				List<Phantom> result = new ArrayList<Phantom>();
-				Collection<Diff> diffs = Collections2.filter(fComparison.getDifferences(referenceView),
-						goodCandidate());
-				for (Diff change : diffs) {
-					Phantom phantom = fPhantomRegistry.get(change);
-					if (phantom == null) {
-						phantom = createAndRegisterPhantom(change, (View)referenceView, PhantomManager.this
-								.getFigure((View)referenceView), fSide);
-					}
-					result.add(phantom);
-				}
-				return result;
-			}
-
-			/**
-			 * Get the phantom dependencies of this one. The dependencies are the phantom ancestors plus the
-			 * extremities of an edge phantom.
-			 * 
-			 * @return The list of found phantoms.
-			 */
-			public List<Phantom> getDependencies() {
-				List<Phantom> result = new ArrayList<Phantom>();
-				result.addAll(getAncestors());
-				if (fOriginView instanceof Edge) {
-					View source = ((Edge)fOriginView).getSource();
-					View target = ((Edge)fOriginView).getTarget();
-					result.addAll(getOrCreatePhantoms(source));
-					result.addAll(getOrCreatePhantoms(target));
-				}
-				return result;
-			}
+			// protected abstract List<? extends AbstractDecorator> getOrCreateDecorators(EObject
+			// referenceView);
 
 			/**
 			 * Getter.
@@ -361,103 +288,362 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 			public void setEditPart(EditPart editPart) {
 				this.fEditPart = editPart;
 			}
+
+		}
+
+		/**
+		 * From a given difference, it hides the related decorators.
+		 * 
+		 * @param difference
+		 *            The difference.
+		 */
+		public void hideDecorators(Diff difference) {
+			List<? extends AbstractDecorator> oldDecorators = getDecorators(difference);
+			if (oldDecorators != null && !oldDecorators.isEmpty() && fComparison != null) {
+				handleDecorators(oldDecorators, false);
+			}
+		}
+
+		/**
+		 * From a given difference, it reveals the related decorators.
+		 * 
+		 * @param difference
+		 *            The difference.
+		 */
+		public void revealDecorators(Diff difference) {
+
+			List<? super AbstractDecorator> decorators = (List<? super AbstractDecorator>)getDecorators(difference);
+
+			// Create phantoms only if they do not already exist and if the related difference is an ADD or
+			// DELETE
+			if ((decorators == null || decorators.isEmpty()) && isGoodCandidate(difference)) {
+
+				DiagramDiff diagramDiff = (DiagramDiff)difference;
+
+				List<View> referenveViews = getReferenceViews(diagramDiff);
+
+				for (View referenceView : referenveViews) {
+					IFigure referenceFigure = getFigure(referenceView);
+
+					MergeViewerSide targetSide = getTargetSide(fComparison.getMatch(referenceView),
+							referenceView);
+
+					if (decorators == null) {
+						decorators = new ArrayList();
+					}
+
+					decorators.add(createAndRegisterDecorator(difference, referenceView, referenceFigure,
+							targetSide));
+				}
+
+			}
+
+			// The selected difference is an ADD or DELETE and decorators exist for it
+			if (decorators != null && !decorators.isEmpty()) {
+				revealDecorators((List<? extends AbstractDecorator>)decorators);
+			}
+		}
+
+		/**
+		 * It reveals the given decorators.
+		 * 
+		 * @param decorators
+		 *            The main decorators.
+		 */
+		protected void revealDecorators(List<? extends AbstractDecorator> decorators) {
+			handleDecorators(decorators, true);
+		}
+
+		/**
+		 * Get the figure related to the given view.
+		 * 
+		 * @param view
+		 *            The view.
+		 * @return the figure.
+		 */
+		protected IFigure getFigure(View view) {
+			MergeViewerSide side = getSide(view);
+			GraphicalEditPart originEditPart = (GraphicalEditPart)getViewer(side).getEditPart(view);
+			return originEditPart.getFigure();
+		}
+
+		/**
+		 * It manages the display of the given decorators.
+		 * 
+		 * @param decorators
+		 *            The decorators to handle.
+		 * @param isAdd
+		 *            True if it has to be revealed, False otherwise.
+		 */
+		protected void handleDecorators(List<? extends AbstractDecorator> decorators, boolean isAdd) {
+			for (AbstractDecorator decorator : decorators) {
+				handleDecorator(decorator, isAdd);
+			}
+		}
+
+		/**
+		 * It manages the display of the given decorator.
+		 * 
+		 * @param decorator
+		 *            The decorator to handle.
+		 * @param isAdd
+		 *            True if it has to be revealed, False otherwise.
+		 */
+		protected void handleDecorator(AbstractDecorator decorator, boolean isAdd) {
+			if (decorator.getEditPart() == null) {
+				if (isAdd) {
+					decorator.getLayer().add(decorator.getFigure());
+				} else {
+					decorator.getLayer().remove(decorator.getFigure());
+				}
+			} else {
+				if (isAdd) {
+					decorator.getEditPart().activate();
+					decorator.getLayer().add(decorator.getFigure());
+				} else {
+					decorator.getEditPart().deactivate();
+					decorator.getLayer().remove(decorator.getFigure());
+				}
+			}
+
+		}
+
+		/**
+		 * It checks if the given difference is a good candidate to manage decorators.<br>
+		 * 
+		 * @see {@link PhantomManager#goodCandidate()}.
+		 * @param difference
+		 *            The difference.
+		 * @return True if it is a good candidate, False otherwise.
+		 */
+		private boolean isGoodCandidate(Diff difference) {
+			return goodCandidate().apply(difference);
+		}
+
+		/**
+		 * Get the layer on the given side, from the reference view.<br>
+		 * 
+		 * @see @ link PhantomManager#getIDLayer(View)} .
+		 * @param referenceView
+		 *            The reference view.
+		 * @param side
+		 *            The side where the layer has to be found.
+		 * @return The layer figure.
+		 */
+		protected IFigure getLayer(View referenceView, MergeViewerSide side) {
+			Diagram referenceDiagram = referenceView.getDiagram();
+			Diagram targetDiagram = (Diagram)getMatchView(referenceDiagram, side);
+			DiagramMergeViewer targetViewer = getViewer(side);
+			IFigure targetLayer = LayerManager.Helper.find(targetViewer.getEditPart(targetDiagram)).getLayer(
+					getIDLayer(referenceView));
+			return targetLayer;
+		}
+
+		/**
+		 * Get the layer ID to use from the reference view.<br>
+		 * If the reference view is an edge, it is the {@link LayerConstants.CONNECTION_LAYER} which is used,
+		 * {@link LayerConstants.SCALABLE_LAYERS} otherwise.
+		 * 
+		 * @param referenceView
+		 *            The reference view.
+		 * @return The ID of te layer.
+		 */
+		protected Object getIDLayer(View referenceView) {
+			if (referenceView instanceof Edge) {
+				return LayerConstants.CONNECTION_LAYER;
+			} else {
+				return LayerConstants.SCALABLE_LAYERS;
+			}
+		}
+
+		/**
+		 * It translates the coordinates of the given bounds, from the reference figure and the root of this
+		 * one, to absolute coordinates.
+		 * 
+		 * @param referenceFigure
+		 *            The reference figure.
+		 * @param rootReferenceFigure
+		 *            The root of the reference figure.
+		 * @param boundsToTranslate
+		 *            The bounds to translate.
+		 */
+		protected void translateCoordinates(IFigure referenceFigure, IFigure rootReferenceFigure,
+				Rectangle boundsToTranslate) {
+			IFigure referenceParentFigure = referenceFigure.getParent();
+			if (referenceParentFigure != null && referenceFigure != rootReferenceFigure) {
+				if (referenceParentFigure.isCoordinateSystem()) {
+					boundsToTranslate.x += referenceParentFigure.getBounds().x;
+					boundsToTranslate.y += referenceParentFigure.getBounds().y;
+				}
+				translateCoordinates(referenceParentFigure, rootReferenceFigure, boundsToTranslate);
+			}
+		}
+
+		/**
+		 * Get the predicate to know the differences concerned by the display of decorators.
+		 * 
+		 * @return The predicate.
+		 */
+		protected abstract Predicate<Diff> goodCandidate();
+
+		/**
+		 * Get the views which have to be used as reference to build the related decorators from the given
+		 * difference of the value concerned by the difference.<br>
+		 * 
+		 * @param difference
+		 *            The difference.
+		 * @return The list of reference views.
+		 */
+		protected abstract List<View> getReferenceViews(DiagramDiff difference);
+
+		/**
+		 * Get the side where decorators have to be drawn, according to the given reference view and its
+		 * match.<br>
+		 * 
+		 * @param match
+		 *            The match of the reference view.
+		 * @param referenceView
+		 *            The reference view.
+		 * @return The side for phantoms.
+		 */
+		protected abstract MergeViewerSide getTargetSide(Match match, View referenceView);
+
+		/**
+		 * It creates new decorators and registers them.
+		 * 
+		 * @param diff
+		 *            The related difference used as index for the main decorator.
+		 * @param referenceView
+		 *            The reference view as base for creation of the decorator.
+		 * @param referenceFigure
+		 *            The reference figure as base for creation of the decorator.
+		 * @param targetSide
+		 *            The side where the decorator has to be created.
+		 * @return The list of main decorators.
+		 */
+		protected abstract AbstractDecorator createAndRegisterDecorator(Diff diff, View referenceView,
+				IFigure referenceFigure, MergeViewerSide targetSide);
+
+		/**
+		 * Get the main decorators related to the given difference.
+		 * 
+		 * @param difference
+		 *            The difference.
+		 * @return The list of main decorators.
+		 */
+		protected abstract List<? extends AbstractDecorator> getDecorators(Diff difference);
+
+	}
+
+	/**
+	 * Phantom manager to create, hide or reveal phantom figures related to deleted or added graphical
+	 * objects.
+	 * 
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+	 */
+	private class PhantomManager extends AbstractDecoratorManager {
+
+		/**
+		 * Phantom represented by a <code>figure</code> on a <code>layer</code>, from the given
+		 * <code>side</code> of the merge viewer. An edit part may be linked to the <code>figure</code> in
+		 * some cases.<br>
+		 * The phantom is related to a <code>difference</code> and it is binded with the reference view and
+		 * figure.
+		 * 
+		 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+		 */
+		private class Phantom extends AbstractDecorator {
+
+			/**
+			 * Constructor.
+			 * 
+			 * @param layer
+			 *            {@link Phantom#fLayer}.
+			 * @param side
+			 *            {@link Phantom#fSide}.
+			 * @param originView
+			 *            {@link Phantom#fOriginView}.
+			 * @param originFigure
+			 *            {@link Phantom#fOriginFigure}.
+			 * @param diff
+			 *            {@link Phantom#fDifference}.
+			 */
+			public Phantom(IFigure layer, MergeViewerSide side, View originView, IFigure originFigure,
+					Diff diff) {
+				setLayer(layer);
+				setSide(side);
+				setOriginView(originView);
+				setOriginFigure(originFigure);
+				setDifference(diff);
+			}
+
+			/**
+			 * Get the decorator dependencies of this one. The dependencies are the decorator ancestors plus
+			 * the extremities of an edge decorator.
+			 * 
+			 * @return The list of found decorators.
+			 */
+			public List<? extends AbstractDecorator> getDependencies() {
+				List<AbstractDecorator> result = new ArrayList<AbstractDecorator>();
+				result.addAll(getAncestors());
+				if (fOriginView instanceof Edge) {
+					View source = ((Edge)fOriginView).getSource();
+					View target = ((Edge)fOriginView).getTarget();
+					result.addAll(getOrCreateRelatedDecorators(source));
+					result.addAll(getOrCreateRelatedDecorators(target));
+				}
+				return result;
+			}
+
+			/**
+			 * From the given view, get or create the related phantoms.
+			 * 
+			 * @param referenceView
+			 *            The given view.
+			 * @return The list of phantoms.
+			 */
+			private List<Phantom> getOrCreateRelatedDecorators(EObject referenceView) {
+				List<Phantom> result = new ArrayList<Phantom>();
+				Collection<Diff> changes = Collections2.filter(fComparison.getDifferences(referenceView),
+						goodCandidate());
+				for (Diff change : changes) {
+					Phantom phantom = fPhantomRegistry.get(change);
+					if (phantom == null) {
+						phantom = createAndRegisterDecorator(change, (View)referenceView, PhantomManager.this
+								.getFigure((View)referenceView), fSide);
+					}
+					result.add(phantom);
+				}
+				return result;
+			}
+
+			/**
+			 * Get the ancestor decorators of this one.
+			 * 
+			 * @return The list of the ancestors.
+			 */
+			private List<? extends AbstractDecorator> getAncestors() {
+				List<AbstractDecorator> result = new ArrayList<AbstractDecorator>();
+				EObject parentOriginView = fOriginView.eContainer();
+				while (parentOriginView != null) {
+					result.addAll(getOrCreateRelatedDecorators(parentOriginView));
+					parentOriginView = parentOriginView.eContainer();
+				}
+				return result;
+			}
 		}
 
 		/** Registry of created phantoms, indexed by difference. */
 		private final Map<Diff, Phantom> fPhantomRegistry = new HashMap<Diff, Phantom>();
 
 		/**
-		 * Constructor.
-		 */
-		public PhantomManager() {
-
-		}
-
-		/**
-		 * From a given difference, it hides the related phantoms.
+		 * {@inheritDoc}
 		 * 
-		 * @param difference
-		 *            The difference.
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#goodCandidate()<br>
+		 *      Only the diagram differences ADD or DELETE are concerned by this display.
 		 */
-		public void hidePhantoms(Diff difference) {
-			Phantom old = getPhantom(difference);
-			if (old != null && fComparison != null) {
-				handlePhantom(old, false);
-			}
-		}
-
-		/**
-		 * It reveals the given phantom and its dependencies.
-		 * 
-		 * @param phantom
-		 *            The phantom.
-		 */
-		public void revealPhantoms(Phantom phantom) {
-			handlePhantom(phantom, true);
-		}
-
-		/**
-		 * From a given difference, it reveals the related phantoms.
-		 * 
-		 * @param difference
-		 *            The difference.
-		 */
-		public void revealPhantoms(Diff difference) {
-
-			Phantom phantom = getPhantom(difference);
-
-			// Create phantoms only if they do not already exist and if the related difference is an ADD or
-			// DELETE
-			if (phantom == null && isGoodCandidate(difference)) {
-
-				DiagramDiff diagramDiff = (DiagramDiff)difference;
-
-				Match match = fComparison.getMatch(diagramDiff.getView());
-
-				EObject originObj = match.getOrigin();
-				EObject leftObj = match.getLeft();
-				EObject rightObj = match.getRight();
-
-				if (leftObj instanceof View || rightObj instanceof View) {
-
-					View leftView = (View)leftObj;
-					View rightView = (View)rightObj;
-
-					View referenceView = getReferenceView((View)originObj, leftView, rightView);
-					IFigure referenceFigure = getFigure(referenceView);
-
-					MergeViewerSide targetSide = getTargetSide(leftView);
-
-					phantom = createAndRegisterPhantom(difference, referenceView, referenceFigure, targetSide);
-
-				}
-
-			}
-
-			// The selected difference is an ADD or DELETE and a phantom exists for it
-			if (phantom != null) {
-				revealPhantoms(phantom);
-			}
-		}
-
-		/**
-		 * Get the phantom related to the given difference.
-		 * 
-		 * @param difference
-		 *            The difference.
-		 * @return The main phantom.
-		 */
-		public Phantom getPhantom(Diff difference) {
-			return fPhantomRegistry.get(difference);
-		}
-
-		/**
-		 * Get the predicate to know the differences concerned by the display of phantoms.<br>
-		 * Only the diagram differences ADD or DELETE are concerned by this display.
-		 * 
-		 * @return The predicate.
-		 */
-		private Predicate<Diff> goodCandidate() {
+		@Override
+		protected Predicate<Diff> goodCandidate() {
 			return new Predicate<Diff>() {
 				public boolean apply(Diff difference) {
 					return and(instanceOf(DiagramDiff.class),
@@ -467,74 +653,116 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		}
 
 		/**
-		 * It manages the display of the given phantom and its dependencies.
+		 * {@inheritDoc}
 		 * 
-		 * @param phantom
-		 *            The main phantom to handle.
-		 * @param isAdd
-		 *            True if the phantoms have to be revealed, False otherwise.
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#getReferenceViews(org.eclipse.emf.compare.diagram.DiagramDiff)
 		 */
-		private void handlePhantom(Phantom phantom, boolean isAdd) {
-			handlePhantomFigure(phantom, isAdd);
-			IFigure figure = phantom.getFigure();
+		@Override
+		protected List<View> getReferenceViews(DiagramDiff difference) {
+			List<View> result = new ArrayList<View>();
+
+			Match match = fComparison.getMatch(difference.getView());
+
+			EObject originObj = match.getOrigin();
+			EObject leftObj = match.getLeft();
+			EObject rightObj = match.getRight();
+
+			if (leftObj instanceof View || rightObj instanceof View) {
+				result.add(getReferenceView((View)originObj, (View)leftObj, (View)rightObj));
+			}
+
+			return result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#getTargetSide(org.eclipse.emf.compare.Match,
+		 *      org.eclipse.gmf.runtime.notation.View)<br>
+		 *      If the left object is null, a phantom should be drawn instead. Else, it means that the right
+		 *      object is null and a phantom should be displayed on the right side.
+		 */
+		@Override
+		protected MergeViewerSide getTargetSide(Match match, View referenceView) {
+			MergeViewerSide targetSide = null;
+			if (match.getLeft() == null) {
+				targetSide = MergeViewerSide.LEFT;
+			} else {
+				targetSide = MergeViewerSide.RIGHT;
+			}
+			return targetSide;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#createAndRegisterDecorator(org.eclipse.emf.compare.Diff,
+		 *      org.eclipse.gmf.runtime.notation.View, org.eclipse.draw2d.IFigure,
+		 *      org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide)
+		 */
+		@Override
+		protected Phantom createAndRegisterDecorator(Diff diff, View referenceView, IFigure referenceFigure,
+				MergeViewerSide targetSide) {
+			Phantom phantom = createPhantom(diff, referenceView, referenceFigure, targetSide);
+			fPhantomRegistry.put(diff, phantom);
+			return phantom;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#getDecorators(org.eclipse.emf.compare.Diff)
+		 */
+		@Override
+		protected List<Phantom> getDecorators(Diff difference) {
+			List<Phantom> result = new ArrayList<DiagramContentMergeViewer.PhantomManager.Phantom>();
+			Phantom phantom = fPhantomRegistry.get(difference);
+			if (phantom != null) {
+				result.add(phantom);
+			}
+			return result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#handleDecorator(org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager.AbstractDecorator,
+		 *      boolean)
+		 */
+		@Override
+		protected void handleDecorator(AbstractDecorator decorator, boolean isAdd) {
+			super.handleDecorator(decorator, isAdd);
+
+			// Highlight the main added figure (reset this in case of deletion) in relation to the possible
+			// context figures
+			IFigure figure = decorator.getFigure();
 			if (figure instanceof Shape) {
 				if (isAdd) {
 					((Shape)figure).setLineWidth(((Shape)figure).getLineWidth() + 1);
-					Color strokeColor = getCompareColor().getStrokeColor(phantom.getDifference(),
+					Color strokeColor = getCompareColor().getStrokeColor(decorator.getDifference(),
 							isThreeWay(), false, true);
 					figure.setForegroundColor(strokeColor);
+					// figure.setBorder(new FocusBorder());
 					// FIXME: Find a way to set the focus on this figure.
-					getViewer(phantom.getSide()).getGraphicalViewer().reveal(figure);
+					getViewer(decorator.getSide()).getGraphicalViewer().reveal(figure);
 				} else {
 					((Shape)figure).setLineWidth(((Shape)figure).getLineWidth() - 1);
+					Color strokeColor = getCompareColor().getStrokeColor(decorator.getDifference(),
+							isThreeWay(), false, false);
+					figure.setForegroundColor(strokeColor);
+					// figure.setBorder(null);
 				}
 			}
-			for (Phantom ancestor : phantom.getDependencies()) {
-				handlePhantomFigure(ancestor, isAdd);
+
+			// Display the dependencies (context) of this decorator
+			for (AbstractDecorator ancestor : ((Phantom)decorator).getDependencies()) {
+				super.handleDecorator(ancestor, isAdd);
 				if (isAdd) {
 					Color strokeColor = getCompareColor().getStrokeColor(ancestor.getDifference(),
 							isThreeWay(), false, false);
 					ancestor.getFigure().setForegroundColor(strokeColor);
 				}
 			}
-		}
-
-		/**
-		 * It manages the display of the given phantom.
-		 * 
-		 * @param phantom
-		 *            The phantom to handle.
-		 * @param isAdd
-		 *            True if it has to be revealed, False otherwise.
-		 */
-		private void handlePhantomFigure(Phantom phantom, boolean isAdd) {
-			if (phantom.getEditPart() == null) {
-				if (isAdd) {
-					phantom.getLayer().add(phantom.getFigure());
-				} else {
-					phantom.getLayer().remove(phantom.getFigure());
-				}
-			} else {
-				if (isAdd) {
-					phantom.getEditPart().activate();
-					phantom.getLayer().add(phantom.getFigure());
-				} else {
-					phantom.getEditPart().deactivate();
-					phantom.getLayer().remove(phantom.getFigure());
-				}
-			}
-		}
-
-		/**
-		 * It checks if the given difference is a good candidate to manage phantoms.<br>
-		 * 
-		 * @see {@link PhantomManager#goodCandidate()}.
-		 * @param difference
-		 *            The difference.
-		 * @return True if it is a good candidate, False otherwise.
-		 */
-		private boolean isGoodCandidate(Diff difference) {
-			return goodCandidate().apply(difference);
 		}
 
 		/**
@@ -563,58 +791,6 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		}
 
 		/**
-		 * Get the figure related to the given view.
-		 * 
-		 * @param view
-		 *            The view.
-		 * @return the figure.
-		 */
-		private IFigure getFigure(View view) {
-			MergeViewerSide side = getSide(view);
-			GraphicalEditPart originEditPart = (GraphicalEditPart)getViewer(side).getEditPart(view);
-			return originEditPart.getFigure();
-		}
-
-		/**
-		 * Get the side where phantoms have to be drawn, according to the given left view.<br>
-		 * If the left object is null, a phantom should be drawn instead. Else, it means that the right object
-		 * is null and a phantom should be displayed on the right side.
-		 * 
-		 * @param leftView
-		 *            The left view. It may be null.
-		 * @return The side for phantoms.
-		 */
-		private MergeViewerSide getTargetSide(View leftView) {
-			MergeViewerSide targetSide = null;
-			if (leftView == null) {
-				targetSide = MergeViewerSide.LEFT;
-			} else {
-				targetSide = MergeViewerSide.RIGHT;
-			}
-			return targetSide;
-		}
-
-		/**
-		 * It creates a new phantom and registers it in the {@link PhantomManager#fPhantomRegistry}.
-		 * 
-		 * @param diff
-		 *            The related difference used as index for the main phantom.
-		 * @param referenceView
-		 *            The reference view as base for creation of the phantom.
-		 * @param referenceFigure
-		 *            The reference figure as base for creation of the phantom.
-		 * @param targetSide
-		 *            The side where the phantom has to be created.
-		 * @return The phantom.
-		 */
-		private Phantom createAndRegisterPhantom(Diff diff, View referenceView, IFigure referenceFigure,
-				MergeViewerSide targetSide) {
-			Phantom phantom = createPhantom(diff, referenceView, referenceFigure, targetSide);
-			fPhantomRegistry.put(diff, phantom);
-			return phantom;
-		}
-
-		/**
 		 * It creates a new phantom from the given difference, view and figure.
 		 * 
 		 * @param diff
@@ -633,15 +809,12 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 			MergeViewerSide referenceSide = getSide(referenceView);
 
 			Rectangle rect = referenceFigure.getBounds().getCopy();
-			rect.performScale(((DiagramRootEditPart)getViewer(side).getGraphicalViewer().getRootEditPart())
-					.getZoomManager().getZoom());
 
 			IFigure referenceLayer = getLayer(referenceView, referenceSide);
 			translateCoordinates(referenceFigure, referenceLayer, rect);
 
-			// Default case: Nodes
-			IFigure ghost = new RectangleFigure();
-			ghost.setBounds(rect);
+			IFigure ghost = null;
+
 			// FIXME: To manage case inside a container where its coordinates changed.
 
 			IFigure targetLayer = getLayer(referenceView, side);
@@ -657,14 +830,13 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 
 				// FIXME:
 				// - It has to manage visible views.
-				// - About transient children ?
+				// - What about transient children ?
 				int index = DiffUtil.findInsertionIndex(fComparison, refiningDiff,
 						side == MergeViewerSide.LEFT);
 
 				IFigure referenceParentFigure = referenceFigure.getParent();
 				Rectangle referenceParentBounds = referenceParentFigure.getBounds().getCopy();
 				translateCoordinates(referenceParentFigure, referenceLayer, referenceParentBounds);
-				// FIXME: To manage case inside a container where its coordinates changed.
 
 				View parentView = (View)getMatchView(referenceView.eContainer(), side);
 				if (parentView != null) {
@@ -675,10 +847,11 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 				}
 
 				// FIXME: The add of decorators modifies the physical coordinates of elements
+				// FIXME: Compute position from the y position of the first child + sum of height of the
+				// children.
 				int pos = rect.height * index + referenceParentBounds.y + 1;
 
-				((Polyline)ghost).addPoint(new Point(rect.x, pos));
-				((Polyline)ghost).addPoint(new Point(rect.x + rect.width, pos));
+				((Polyline)ghost).setEndpoints(new Point(rect.x, pos), new Point(rect.x + rect.width, pos));
 
 				// Edge case
 			} else if (referenceView instanceof Edge) {
@@ -694,19 +867,19 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 					// Else, it creates only a polyline connection figure with the same properties as the
 					// reference
 				} else {
-					EditPart edgeEditPartReference = getViewer(referenceSide).getEditPart(referenceView);
-					if (edgeEditPartReference instanceof ConnectionEditPart) {
-						IFigure ref = ((ConnectionEditPart)edgeEditPartReference).getFigure();
-						// CHECKSTYLE:OFF
-						if (ref instanceof PolylineConnection) {
-							// CHECKSTYLE:ON
-							ghost = new PolylineConnection();
-							ghost.setBounds(ref.getBounds().getCopy());
-							((PolylineConnection)ghost).setPoints(((PolylineConnection)ref).getPoints()
-									.getCopy());
-						}
+					if (referenceFigure instanceof PolylineConnection) {
+						ghost = new PolylineConnection();
+						ghost.setBounds(rect);
+						((PolylineConnection)ghost).setPoints(((PolylineConnection)referenceFigure)
+								.getPoints().getCopy());
 					}
 				}
+			}
+
+			// Default case: Nodes
+			if (ghost == null) {
+				ghost = new RectangleFigure();
+				ghost.setBounds(rect);
 			}
 
 			if (ghost instanceof Shape) {
@@ -714,6 +887,8 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 			}
 
 			phantom.setFigure(ghost);
+
+			translateWhenInsideContainerChange(phantom);
 
 			return phantom;
 		}
@@ -735,26 +910,67 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		}
 
 		/**
-		 * It translates the coordinates of the given bounds, from the reference figure and the root of this
-		 * one, to absolute coordinates.
+		 * It translates and resizes the figure of the given phantom when this one is nested in a container
+		 * which is subjected to a coordinates change.
 		 * 
-		 * @param referenceFigure
-		 *            The reference figure.
-		 * @param rootReferenceFigure
-		 *            The root of the reference figure.
-		 * @param boundsToTranslate
-		 *            The bounds to translate.
+		 * @param phantom
+		 *            The phantom.
 		 */
-		private void translateCoordinates(IFigure referenceFigure, IFigure rootReferenceFigure,
-				Rectangle boundsToTranslate) {
-			IFigure referenceParentFigure = referenceFigure.getParent();
-			if (referenceParentFigure != null && referenceFigure != rootReferenceFigure) {
-				if (referenceParentFigure.isCoordinateSystem()) {
-					boundsToTranslate.x += referenceParentFigure.getBounds().x;
-					boundsToTranslate.y += referenceParentFigure.getBounds().y;
+		private void translateWhenInsideContainerChange(Phantom phantom) {
+			Collection<Diff> changes = Collections2.filter(phantom.getDifference().getMatch()
+					.getDifferences(), new Predicate<Diff>() {
+
+				public boolean apply(Diff difference) {
+					// FIXME: it will be changed to CHANGE (change coordinates (or dimension))
+					return difference.getKind() == DifferenceKind.MOVE;
 				}
-				translateCoordinates(referenceParentFigure, rootReferenceFigure, boundsToTranslate);
+
+			});
+			if (changes.size() > 0) {
+				View referenceView = phantom.getOriginView();
+				View parentReferenceView = (View)referenceView.eContainer();
+				if (parentReferenceView != null) {
+					View parentView = (View)getMatchView(parentReferenceView, phantom.getSide());
+					IFigure parentFigure = getFigure(parentView);
+					Rectangle parentRect = parentFigure.getBounds().getCopy();
+					translateCoordinates(parentFigure, getLayer(parentReferenceView, getSide(parentView)),
+							parentRect);
+
+					IFigure parentReferenceFigure = getFigure(parentReferenceView);
+					Rectangle parentReferenceRect = parentReferenceFigure.getBounds().getCopy();
+					translateCoordinates(parentReferenceFigure, getLayer(parentReferenceView,
+							getSide(parentReferenceView)), parentReferenceRect);
+
+					int deltaX = parentRect.x - parentReferenceRect.x;
+					int deltaY = parentRect.y - parentReferenceRect.y;
+					int deltaWidth = parentRect.width - parentReferenceRect.width;
+
+					IFigure figure = phantom.getFigure();
+
+					Rectangle rect = figure.getBounds().getCopy();
+					rect.x += deltaX;
+					rect.y += deltaY;
+					rect.width += deltaWidth;
+					figure.setBounds(rect);
+
+					if (figure instanceof Polyline) {
+
+						Point firstPoint = ((Polyline)figure).getPoints().getFirstPoint().getCopy();
+						Point lastPoint = ((Polyline)figure).getPoints().getLastPoint().getCopy();
+
+						firstPoint.x += deltaX;
+						firstPoint.y += deltaY;
+
+						lastPoint.x += deltaX + deltaWidth;
+						lastPoint.y += deltaY;
+
+						((Polyline)figure).setEndpoints(firstPoint, lastPoint);
+
+					}
+
+				}
 			}
+
 		}
 
 		/**
@@ -777,18 +993,18 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		 * It checks that the coordinates of the given view changed between left and right, from the given
 		 * side.
 		 * 
-		 * @param referenceExtremity
+		 * @param referenceView
 		 *            The view to check.
 		 * @param targetSide
 		 *            The side to focus.
 		 * @return True if the view changed its location, False otherwise.
 		 */
-		private boolean hasChange(View referenceExtremity, MergeViewerSide targetSide) {
+		private boolean hasChange(View referenceView, MergeViewerSide targetSide) {
 			DifferenceKind lookup = DifferenceKind.MOVE; // FIXME: it will be change to CHANGE (change
 															// coordinates)
-			View extremity = (View)getMatchView(referenceExtremity, targetSide);
+			View extremity = (View)getMatchView(referenceView, targetSide);
 			// Look for a related change coordinates on the extremity of the edge reference.
-			Collection<Diff> diffs = Collections2.filter(fComparison.getDifferences(referenceExtremity), and(
+			Collection<Diff> diffs = Collections2.filter(fComparison.getDifferences(referenceView), and(
 					instanceOf(DiagramDiff.class), ofKind(lookup)));
 			if (diffs.isEmpty()) {
 				// Look for a related change coordinates on the matching extremity (other side) of the edge
@@ -797,42 +1013,6 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 						instanceOf(DiagramDiff.class), ofKind(lookup)));
 			}
 			return !diffs.isEmpty();
-		}
-
-		/**
-		 * Get the layer on the given side, from the reference view.<br>
-		 * 
-		 * @see @ link PhantomManager#getIDLayer(View)} .
-		 * @param referenceView
-		 *            The reference view.
-		 * @param side
-		 *            The side where the layer has to be found.
-		 * @return The layer figure.
-		 */
-		private IFigure getLayer(View referenceView, MergeViewerSide side) {
-			Diagram referenceDiagram = referenceView.getDiagram();
-			Diagram targetDiagram = (Diagram)getMatchView(referenceDiagram, side);
-			DiagramMergeViewer targetViewer = getViewer(side);
-			IFigure targetLayer = LayerManager.Helper.find(targetViewer.getEditPart(targetDiagram)).getLayer(
-					getIDLayer(referenceView));
-			return targetLayer;
-		}
-
-		/**
-		 * Get the layer ID to use from the reference view.<br>
-		 * If the reference view is an edge, it is the {@link LayerConstants.CONNECTION_LAYER} which is used,
-		 * {@link LayerConstants.SCALABLE_LAYERS} otherwise.
-		 * 
-		 * @param referenceView
-		 *            The reference view.
-		 * @return The ID of te layer.
-		 */
-		private Object getIDLayer(View referenceView) {
-			if (referenceView instanceof Edge) {
-				return LayerConstants.CONNECTION_LAYER;
-			} else {
-				return LayerConstants.SCALABLE_LAYERS;
-			}
 		}
 
 		/**
@@ -930,15 +1110,258 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	}
 
 	/**
+	 * Marker manager to create, hide or reveal marker figures related to deleted or added graphical objects.
+	 * 
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+	 */
+	private class MarkerManager extends AbstractDecoratorManager {
+
+		/**
+		 * Marker represented by a <code>figure</code> on a <code>layer</code>, from the given
+		 * <code>side</code> of the merge viewer. An edit part may be linked to the <code>figure</code> in
+		 * some cases.<br>
+		 * The marker is related to a <code>difference</code> and it is binded with the reference view and
+		 * figure.
+		 * 
+		 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+		 */
+		private class Marker extends AbstractDecorator {
+
+			/** Thickness of the marker. */
+			public static final int THICKNESS = 6;
+
+			/** The alpha number for the figure. */
+			public static final int ALPHA = 30;
+
+			/**
+			 * Constructor.
+			 * 
+			 * @param layer
+			 *            {@link Marker#fLayer}.
+			 * @param side
+			 *            {@link Marker#fSide}.
+			 * @param originView
+			 *            {@link Marker#fOriginView}.
+			 * @param originFigure
+			 *            {@link Marker#fOriginFigure}.
+			 * @param diff
+			 *            {@link Marker#fDifference}.
+			 */
+			public Marker(IFigure layer, MergeViewerSide side, View originView, IFigure originFigure,
+					Diff diff) {
+				setLayer(layer);
+				setSide(side);
+				setOriginView(originView);
+				setOriginFigure(originFigure);
+				setDifference(diff);
+			}
+		}
+
+		/** Registry of created markers, indexed by difference. */
+		private Map<Diff, List<Marker>> fMarkerRegistry = new HashMap<Diff, List<Marker>>();
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#getReferenceViews(org.eclipse.emf.compare.diagram.DiagramDiff)
+		 */
+		@Override
+		protected List<View> getReferenceViews(DiagramDiff difference) {
+			List<View> result = new ArrayList<View>();
+			Match matchValue = fComparison.getMatch(difference.getView());
+			if (matchValue.getLeft() != null) {
+				result.add((View)matchValue.getLeft());
+			}
+			if (matchValue.getRight() != null) {
+				result.add((View)matchValue.getRight());
+			}
+			if (fComparison.isThreeWay()) {
+				switch (difference.getKind()) {
+					case DELETE:
+					case CHANGE:
+					case MOVE:
+						result.add((View)matchValue.getOrigin());
+						break;
+					default:
+						break;
+				}
+			}
+			return result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#getTargetSide(org.eclipse.emf.compare.Match,
+		 *      org.eclipse.gmf.runtime.notation.View)
+		 */
+		@Override
+		protected MergeViewerSide getTargetSide(Match match, View referenceView) {
+			return getSide(referenceView);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#createAndRegisterDecorator(org.eclipse.emf.compare.Diff,
+		 *      org.eclipse.gmf.runtime.notation.View, org.eclipse.draw2d.IFigure,
+		 *      org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide)
+		 */
+		@Override
+		protected Marker createAndRegisterDecorator(Diff diff, View referenceView, IFigure referenceFigure,
+				MergeViewerSide targetSide) {
+			Marker marker = createMarker(diff, referenceView, referenceFigure, targetSide);
+			List<Marker> markers = fMarkerRegistry.get(diff);
+			if (markers == null) {
+				markers = new ArrayList<Marker>();
+				fMarkerRegistry.put(diff, markers);
+			}
+			markers.add(marker);
+			return marker;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#getDecorators(org.eclipse.emf.compare.Diff)
+		 */
+		@Override
+		protected List<Marker> getDecorators(Diff difference) {
+			return fMarkerRegistry.get(difference);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#goodCandidate()<br>
+		 *      All graphical differences are concerned.
+		 */
+		@Override
+		protected Predicate<Diff> goodCandidate() {
+			return new Predicate<Diff>() {
+				public boolean apply(Diff difference) {
+					return instanceOf(DiagramDiff.class).apply(difference);
+				}
+			};
+		}
+
+		/**
+		 * It creates a new marker from the given difference, view and figure.
+		 * 
+		 * @param diff
+		 *            The related difference used as index for the main marker.
+		 * @param referenceView
+		 *            The reference view as base for creation of the marker.
+		 * @param referenceFigure
+		 *            The reference figure as base for creation of the marker.
+		 * @param side
+		 *            The side where the marker has to be created.
+		 * @return The phantom.
+		 */
+		private Marker createMarker(Diff diff, View referenceView, IFigure referenceFigure,
+				MergeViewerSide side) {
+
+			Rectangle referenceBounds = referenceFigure.getBounds().getCopy();
+			IFigure referenceLayer = getLayer(referenceView, side);
+			translateCoordinates(referenceFigure, referenceLayer, referenceBounds);
+
+			IFigure markerFigure = null;
+
+			IFigure targetLayer = getLayer(referenceView, side);
+			Marker marker = new Marker(targetLayer, side, referenceView, referenceFigure, diff);
+
+			if (referenceView.eContainer() instanceof BasicCompartment) {
+
+				markerFigure = new RectangleFigure();
+				markerFigure.setBounds(referenceBounds);
+
+			} else if (referenceView instanceof Edge) {
+
+				if (referenceFigure instanceof PolylineConnection) {
+
+					markerFigure = new PolylineConnection();
+
+					markerFigure.setBounds(referenceBounds);
+
+					((PolylineConnection)markerFigure).setPoints(((PolylineConnection)referenceFigure)
+							.getPoints().getCopy());
+
+					int oldWidth = ((Shape)referenceFigure).getLineWidth();
+					int newWidth = oldWidth + Marker.THICKNESS * 2;
+					((PolylineConnection)markerFigure).setLineWidth(newWidth);
+				}
+
+			}
+
+			// Default case: Nodes
+			if (markerFigure == null) {
+
+				markerFigure = new RectangleFigure();
+
+				referenceBounds.x -= Marker.THICKNESS;
+				referenceBounds.y -= Marker.THICKNESS;
+				referenceBounds.width += Marker.THICKNESS * 2;
+				referenceBounds.height += Marker.THICKNESS * 2;
+
+				markerFigure.setBounds(referenceBounds);
+			}
+
+			Color strokeColor = getCompareColor().getStrokeColor(diff, isThreeWay(), false, true);
+			markerFigure.setForegroundColor(strokeColor);
+			markerFigure.setBackgroundColor(strokeColor);
+			// markerFigure.setBorder(new FocusBorder());
+			((Shape)markerFigure).setAlpha(Marker.ALPHA);
+
+			marker.setFigure(markerFigure);
+
+			return marker;
+		}
+	}
+
+	/**
+	 * Decorator manager to create, hide or reveal all decorator figures related to graphical changes.
+	 * 
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+	 */
+	private class DecoratorsManager implements IDecoratorManager {
+		/** Phantoms manager. */
+		private IDecoratorManager fPhantomManager = new PhantomManager();
+
+		/** Markers manager. */
+		private IDecoratorManager fMarkerManager = new MarkerManager();
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.IDecoratorManager#hideDecorators(org.eclipse.emf.compare.Diff)
+		 */
+		public void hideDecorators(Diff difference) {
+			fMarkerManager.hideDecorators(difference);
+			fPhantomManager.hideDecorators(difference);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.IDecoratorManager#revealDecorators(org.eclipse.emf.compare.Diff)
+		 */
+		public void revealDecorators(Diff difference) {
+			fMarkerManager.revealDecorators(difference);
+			fPhantomManager.revealDecorators(difference);
+		}
+
+	}
+
+	/**
 	 * Bundle name of the property file containing all displayed strings.
 	 */
 	private static final String BUNDLE_NAME = DiagramContentMergeViewer.class.getName();
 
 	/** The phantom manager to use in the context of this viewer. */
-	private PhantomManager phantomManager = new PhantomManager();
+	private final DecoratorsManager fDecoratorsManager = new DecoratorsManager();
 
 	/** The current "opened" difference. */
-	private Diff currentSelectedDiff;
+	private Diff fCurrentSelectedDiff;
 
 	/**
 	 * The adapter factory used to create the content and label provider for ancestor, left and right
@@ -1105,6 +1528,12 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.DiagramCompareContentMergeViewer#updateContent(java.lang.Object,
+	 *      java.lang.Object, java.lang.Object)
+	 */
 	@Override
 	protected void updateContent(Object ancestor, Object left, Object right) {
 		super.updateContent(ancestor, left, right);
@@ -1120,19 +1549,22 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 			IDiagramDiffAccessor input = (IDiagramDiffAccessor)left;
 
 			// initialization: reset the current difference selection hiding potential visible phantoms
-			if (currentSelectedDiff != null) {
-				phantomManager.hidePhantoms(currentSelectedDiff);
+			if (fCurrentSelectedDiff != null) {
+				fDecoratorsManager.hideDecorators(fCurrentSelectedDiff);
 			}
 
 			Diff diff = input.getDiff();
-			currentSelectedDiff = diff;
+			fCurrentSelectedDiff = diff;
 
-			phantomManager.revealPhantoms(diff);
+			fDecoratorsManager.revealDecorators(diff);
 
 			// reveal object
 			EObject view = ((DiagramDiff)diff).getView();
 			DiagramMergeViewer targetViewer = getViewer(getSide((View)view));
 			getViewer(getSide((View)view)).getGraphicalViewer().reveal(targetViewer.getEditPart(view));
+
+			// FIXME use the decorator manager to refresh decorators after a merge and using undo/redo
+			// actions.
 		}
 
 	}

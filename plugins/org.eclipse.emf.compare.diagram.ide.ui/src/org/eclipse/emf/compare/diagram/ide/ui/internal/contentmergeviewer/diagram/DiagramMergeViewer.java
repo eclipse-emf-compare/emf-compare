@@ -11,33 +11,17 @@
 package org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram;
 
 import java.util.Collection;
-import java.util.Iterator;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.diagram.DiagramDiff;
-import org.eclipse.emf.compare.diagram.EdgeChange;
-import org.eclipse.emf.compare.diagram.Hide;
-import org.eclipse.emf.compare.diagram.LabelChange;
-import org.eclipse.emf.compare.diagram.NodeChange;
-import org.eclipse.emf.compare.diagram.Show;
 import org.eclipse.emf.compare.diagram.ide.ui.AbstractGraphicalMergeViewer;
-import org.eclipse.emf.compare.diagram.ide.ui.decoration.DiffDecorationEditPolicy;
-import org.eclipse.emf.compare.diagram.ide.ui.decoration.provider.DiffDecoratorProvider;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
-import org.eclipse.emf.compare.diagram.util.DiagramCompareSwitch;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
@@ -58,22 +42,31 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 /**
+ * The graphical viewer on each side of the compare viewer.
+ * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 
-	private IDiagramNodeAccessor fInput;
-
-	private MyGraphicalViewer fGraphicalViewer;
-
 	/** the zoom factor of displayed diagrams. */
 	private static final double ZOOM_FACTOR = 1;
+
+	/** The input of the viewer. */
+	private IDiagramNodeAccessor fInput;
+
+	/** The graphical viewer. */
+	private DiagramGraphicalViewerForCompare fGraphicalViewer;
 
 	/** the current diagram used. */
 	private Diagram currentDiag;
 
 	/**
+	 * Constructor.
+	 * 
 	 * @param parent
+	 *            The parent composite.
+	 * @param side
+	 *            The side having to be managed by this viewer.
 	 */
 	public DiagramMergeViewer(Composite parent, MergeViewerSide side) {
 		super(parent, side);
@@ -84,14 +77,25 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer#createControl(org.eclipse.swt.widgets.Composite)
 	 */
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.gef.ui.parts.AbstractEditPartViewer#createControl(org.eclipse.swt.widgets.Composite)
+	 */
 	@Override
 	public Control createControl(Composite parent) {
 		createDiagramGraphicalViewer(parent);
 		return fGraphicalViewer.getControl();
 	}
 
+	/**
+	 * It creates and initialize the graphical viewer.
+	 * 
+	 * @param composite
+	 *            The composite.
+	 */
 	private void createDiagramGraphicalViewer(Composite composite) {
-		fGraphicalViewer = new MyGraphicalViewer();
+		fGraphicalViewer = new DiagramGraphicalViewerForCompare();
 		fGraphicalViewer.createControl(composite);
 		fGraphicalViewer.setEditDomain(editDomain);
 		fGraphicalViewer.setEditPartFactory(EditPartService.getInstance());
@@ -100,16 +104,21 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 				MouseWheelZoomHandler.SINGLETON);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.AbstractGraphicalMergeViewer#getGraphicalViewer()
+	 */
 	@Override
-	public MyGraphicalViewer getGraphicalViewer() {
+	public DiagramGraphicalViewerForCompare getGraphicalViewer() {
 		return fGraphicalViewer;
 	}
 
-	private void installDecoratorPolicy(EditPart editPart) {
-		editPart.removeEditPolicy(EditPolicyRoles.DECORATION_ROLE);
-		editPart.installEditPolicy(EditPolicyRoles.DECORATION_ROLE, new DiffDecorationEditPolicy());
-	}
-
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.AbstractEditPartMergeViewer#setInput(java.lang.Object)
+	 */
 	@Override
 	public void setInput(final Object input) {
 		if (input instanceof IDiagramNodeAccessor) {
@@ -118,27 +127,6 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 			View view = ((IDiagramNodeAccessor)input).getOwnedView();
 
 			initEditingDomain(diagram);
-
-			// if (diagram != null) {
-			// Iterator<EObject> contents = diagram.eAllContents();
-			// while (contents.hasNext()) {
-			// EObject obj = contents.next();
-			// if (obj instanceof View) {
-			// for (Diff diff : ((IDiagramNodeAccessor)input).getComparison().getDifferences(obj)) {
-			// if (diff instanceof DiagramDiff) {
-			// if (diff.getKind() != DifferenceKind.DELETE) {
-			// obj.eAdapters().add(new SelectedDiffAdapter((DiagramDiff)diff));
-			// EditPart editPart = getEditPart((View)obj);
-			// if (editPart != null) {
-			// installDecoratorPolicy(editPart);
-			// editPart.refresh();
-			// }
-			// }
-			// }
-			// }
-			// }
-			// }
-			// }
 
 			// Selection
 			fGraphicalViewer.deselectAll();
@@ -161,6 +149,12 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 		}
 	}
 
+	/**
+	 * It creates an editing domain for this diagram.
+	 * 
+	 * @param diagram
+	 *            The diagram.
+	 */
 	private void initEditingDomain(Diagram diagram) {
 		ResourceSet resourceSet = null;
 		if (diagram != null) {
@@ -172,15 +166,24 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 		}
 	}
 
-	public Object getInput() {
-		return fInput;
-	}
-
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.gef.EditPartViewer#findObjectAtExcluding(org.eclipse.draw2d.geometry.Point,
+	 *      java.util.Collection, org.eclipse.gef.EditPartViewer.Conditional)
+	 */
 	public EditPart findObjectAtExcluding(Point location, Collection exclusionSet, Conditional conditional) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Get the editpart from the given view.
+	 * 
+	 * @param view
+	 *            The view.
+	 * @return The editpart.
+	 */
 	public EditPart getEditPart(final EObject view) {
 		final EditPart editPart = (EditPart)fGraphicalViewer.getEditPartRegistry().get(view);
 		if (editPart == null) {
@@ -204,37 +207,12 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 		return (EditPart)fGraphicalViewer.getEditPartRegistry().get(view);
 	}
 
-	public EditPart findEditPart(final EObject eobj) {
-		// check viewer
-		if (eobj instanceof View) {
-			final Diagram d = ((View)eobj).getDiagram();
-			checkAndDisplayDiagram(d);
-		}
-		return (EditPart)fGraphicalViewer.getEditPartRegistry().get(eobj);
-	}
-
-	private void checkAndDisplayDiagram(final Diagram d) {
-		if (d != null && !d.equals(currentDiag)) {
-			currentDiag = d;
-			displayDiagram(d);
-		}
-	}
-
-	protected final void displayDiagram(final Diagram diag) {
-		if (diag == null) {
-			return;
-		}
-		currentDiag = diag;
-		// be sure the viewer will be correctly refreshed ( connections )
-		fGraphicalViewer.getEditPartRegistry().clear();
-		final DiagramRootEditPart rootEditPart = new DiagramRootEditPart(diag.getMeasurementUnit());
-		fGraphicalViewer.setRootEditPart(rootEditPart);
-		fGraphicalViewer.setContents(diag);
-		disableEditMode((DiagramEditPart)fGraphicalViewer.getContents());
-		rootEditPart.getZoomManager().setZoomAnimationStyle(ZoomManager.ANIMATE_NEVER);
-		rootEditPart.getZoomManager().setZoom(ZOOM_FACTOR);
-	}
-
+	/**
+	 * It disables editing actions from the given editpart.
+	 * 
+	 * @param diagEditPart
+	 *            The editpart.
+	 */
 	private void disableEditMode(DiagramEditPart diagEditPart) {
 		diagEditPart.disableEditMode();
 		for (Object obj : diagEditPart.getPrimaryEditParts()) {
@@ -244,6 +222,12 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 		}
 	}
 
+	/**
+	 * It disables editing actions from the given editpart.
+	 * 
+	 * @param obj
+	 *            The editpart.
+	 */
 	private void disableEditMode(IGraphicalEditPart obj) {
 		obj.disableEditMode();
 		obj.removeEditPolicy(EditPolicyRoles.OPEN_ROLE);
@@ -255,151 +239,20 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 	}
 
 	/**
-	 * Inner class for visit dagramDiffs.
+	 * {@link DiagramGraphicalViewer} which enables to make a reveal on a given figure, without editpart.
+	 * FIXME: Find a better solution to make the reveal.
 	 * 
-	 * @author <a href="mailto:stephane.bouchet@obeo.fr">Stephane Bouchet</a>
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
 	 */
-	private class DiagramdiffSwitchVisitor extends DiagramCompareSwitch<IStatus> {
-
-		private View view;
-
-		private boolean annotate;
-
-		public DiagramdiffSwitchVisitor(View view, boolean annotate) {
-			this.view = view;
-			this.annotate = annotate;
-		}
+	public class DiagramGraphicalViewerForCompare extends DiagramGraphicalViewer {
 
 		/**
-		 * {@inheritDoc}
+		 * It reveals the given figure. It is a partial copy of
+		 * {@link DiagramGraphicalViewer#reveal(EditPart)}.
 		 * 
-		 * @see org.eclipse.emf.compare.diagram.diagramdiff.util.DiagramdiffSwitch#caseDiagramLabelChange(org.eclipse.emf.compare.diagram.diagramdiff.DiagramLabelChange)
+		 * @param figure
+		 *            The figure.
 		 */
-		@Override
-		public IStatus caseLabelChange(LabelChange diff) {
-			return checkResult(annotateNotation(view, DiffDecoratorProvider.DIFF_LABEL_MODIFIED));
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.diagram.diagramdiff.util.DiagramdiffSwitch#caseDiagramShowElement(org.eclipse.emf.compare.diagram.diagramdiff.DiagramShowElement)
-		 */
-		@Override
-		public IStatus caseShow(Show diff) {
-			return checkResult(annotateNotation(view, DiffDecoratorProvider.DIFF_SHOWED));
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.diagram.diagramdiff.util.DiagramdiffSwitch#caseDiagramHideElement(org.eclipse.emf.compare.diagram.diagramdiff.DiagramHideElement)
-		 */
-		@Override
-		public IStatus caseHide(Hide diff) {
-			return checkResult(annotateNotation(view, DiffDecoratorProvider.DIFF_SHOWED));
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.diagram.diagramdiff.util.DiagramdiffSwitch#caseDiagramMoveNode(org.eclipse.emf.compare.diagram.diagramdiff.DiagramMoveNode)
-		 */
-		@Override
-		public IStatus caseNodeChange(NodeChange diff) {
-			boolean result = true;
-			if (diff.getKind() == DifferenceKind.MOVE) {
-				return checkResult(annotateNotation(view, DiffDecoratorProvider.DIFF_MOVED));
-			} else if (diff.getKind() == DifferenceKind.ADD) {
-				return checkResult(annotateNotation(view, DiffDecoratorProvider.DIFF_ADDED));
-			} else if (diff.getKind() == DifferenceKind.DELETE) {
-				return checkResult(annotateNotation(view, DiffDecoratorProvider.DIFF_REMOVED));
-			}
-			return checkResult(result);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.diagram.diagramdiff.util.DiagramdiffSwitch#caseDiagramEdgeChange(org.eclipse.emf.compare.diagram.diagramdiff.DiagramEdgeChange)
-		 */
-		@Override
-		public IStatus caseEdgeChange(EdgeChange diff) {
-			return checkResult(annotateNotation(view, DiffDecoratorProvider.DIFF_MOVED));
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.diagram.diagramdiff.util.DiagramdiffSwitch#defaultCase(org.eclipse.emf.ecore.EObject)
-		 */
-		@Override
-		public IStatus defaultCase(EObject diff) {
-			// we don't care about generic diffs
-			return Status.OK_STATUS;
-		}
-
-		/**
-		 * Set the given annotation to the given notation element.
-		 * 
-		 * @param element
-		 *            the notation element to annotate
-		 * @param annotation
-		 *            the diff annotation
-		 * @return true if annotation has been added to the view
-		 */
-		protected boolean annotateNotation(View element, String annotation) {
-			boolean result = false;
-			if (annotate) {
-				EAnnotation diffAnnotation = null;
-				if (element.getEAnnotation(DiffDecoratorProvider.DIFF) == null) {
-					diffAnnotation = EcoreFactory.eINSTANCE.createEAnnotation();
-					diffAnnotation.setSource(DiffDecoratorProvider.DIFF);
-					result = element.getEAnnotations().add(diffAnnotation);
-				} else {
-					diffAnnotation = element.getEAnnotation(DiffDecoratorProvider.DIFF);
-				}
-				// FIXME should this string be externalized?
-				diffAnnotation.getDetails().put(annotation, "diffDetail"); //$NON-NLS-1$
-				result = true;
-			} else {
-				if (element.getEAnnotation(DiffDecoratorProvider.DIFF) != null) {
-					final EAnnotation diffAnnotation = element.getEAnnotation(DiffDecoratorProvider.DIFF);
-					result = element.getEAnnotations().remove(diffAnnotation);
-				}
-			}
-			return result;
-		}
-
-		/**
-		 * Utility method to transform a boolean result into status.
-		 * 
-		 * @param ok
-		 *            the boolean state
-		 * @return a status corresponding to the state of the boolean
-		 */
-		protected IStatus checkResult(boolean ok) {
-			if (ok) {
-				return Status.OK_STATUS;
-			}
-			return Status.CANCEL_STATUS;
-		}
-
-	}
-
-	private boolean hasSelectedDiffAdapter(View view) {
-		Iterator<Adapter> adapters = view.eAdapters().iterator();
-		while (adapters.hasNext()) {
-			Adapter adapter = adapters.next();
-			if (adapter.isAdapterForType(DiagramDiff.class)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public class MyGraphicalViewer extends DiagramGraphicalViewer {
-
 		public void reveal(IFigure figure) {
 			IFigure target = figure;
 			Viewport port = getFigureCanvas().getViewport();
