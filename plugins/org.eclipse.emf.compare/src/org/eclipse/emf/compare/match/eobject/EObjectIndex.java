@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.eobject;
 
-import java.util.Collection;
 import java.util.Map;
 
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -29,11 +29,14 @@ public interface EObjectIndex {
 	 *            the side we are looking for.
 	 * @return the list of EObjects of a given side still available in the index.
 	 */
-	Collection<EObject> getValuesStillThere(Side side);
+	Iterable<EObject> getValuesStillThere(Side side);
 
 	/**
 	 * Return the closest EObjects found in other sides than the one given.
 	 * 
+	 * @param inProgress
+	 *            the comparison currently being computed. It will not be changed directly but only queried to
+	 *            know if some element has already been matched or not.
 	 * @param eObj
 	 *            the base EObject used to lookup similar ones.
 	 * @param side
@@ -41,7 +44,7 @@ public interface EObjectIndex {
 	 * @return a map of Side, EObjects, returning all the found objects (and the passed one) which are the
 	 *         closests.
 	 */
-	Map<Side, EObject> findClosests(EObject eObj, Side side);
+	Map<Side, EObject> findClosests(Comparison inProgress, EObject eObj, Side side);
 
 	/**
 	 * Remove an object from the index.

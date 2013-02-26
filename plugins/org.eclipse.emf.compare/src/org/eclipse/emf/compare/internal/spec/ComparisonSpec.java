@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.internal.spec;
 
 import static com.google.common.collect.Iterables.filter;
 
+import com.google.common.base.Predicate;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -27,6 +28,7 @@ import java.util.Set;
 import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.impl.ComparisonImpl;
@@ -125,9 +127,15 @@ public class ComparisonSpec extends ComparisonImpl {
 			matchCrossReferencer = new MatchCrossReferencer();
 			eAdapters().add(matchCrossReferencer);
 		}
-		Iterable<Match> crossRefs = filter(getInverse(element, matchCrossReferencer), Match.class);
+		Iterable<EObject> crossRefs = filter(getInverse(element, matchCrossReferencer),
+				new Predicate<EObject>() {
 
-		return Iterables.getFirst(crossRefs, null);
+					public boolean apply(EObject input) {
+						return input.eClass() == ComparePackage.eINSTANCE.getMatch();
+					}
+				});
+
+		return (Match)Iterables.getFirst(crossRefs, null);
 	}
 
 	/**

@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.compare.CompareFactory;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -97,11 +98,8 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 
 	/**
 	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.match.eobject.IEObjectMatcher#createMatches(java.util.Iterator,
-	 *      java.util.Iterator, java.util.Iterator)
 	 */
-	public Iterable<Match> createMatches(Iterator<? extends EObject> leftEObjects,
+	public void createMatches(Comparison comparison, Iterator<? extends EObject> leftEObjects,
 			Iterator<? extends EObject> rightEObjects, Iterator<? extends EObject> originEObjects) {
 		final List<EObject> leftEObjectsNoID = Lists.newArrayList();
 		final List<EObject> rightEObjectsNoID = Lists.newArrayList();
@@ -110,9 +108,11 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 		final Set<Match> matches = matchPerId(leftEObjects, rightEObjects, originEObjects, leftEObjectsNoID,
 				rightEObjectsNoID, originEObjectsNoID);
 
+		Iterables.addAll(comparison.getMatches(), matches);
 		if (delegate.isPresent()) {
-			Iterables.addAll(matches, delegate.get().createMatches(leftEObjectsNoID.iterator(),
-					rightEObjectsNoID.iterator(), originEObjectsNoID.iterator()));
+
+			delegate.get().createMatches(comparison, leftEObjectsNoID.iterator(),
+					rightEObjectsNoID.iterator(), originEObjectsNoID.iterator());
 		} else {
 			for (EObject eObject : leftEObjectsNoID) {
 				Match match = CompareFactory.eINSTANCE.createMatch();
@@ -132,8 +132,6 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 			}
 
 		}
-
-		return matches;
 	}
 
 	/**

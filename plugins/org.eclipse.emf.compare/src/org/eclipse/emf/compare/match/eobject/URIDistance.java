@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.match.eobject;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -20,9 +21,9 @@ import com.google.common.collect.Lists;
 
 import java.util.Iterator;
 
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.InternalEObject;
 
 /**
  * This class is able to measure similarity between "URI like" strings, basically strings separated by "/".
@@ -42,10 +43,35 @@ public class URIDistance implements Function<EObject, Iterable<String>> {
 	private Cache<EObject, Iterable<String>> locationCache;
 
 	/**
+	 * A computing cache for the uri fragments.
+	 */
+	private Cache<EObject, String> fragmentsCache;
+
+	/**
+	 * An optional comparison to retrieve matches already computed. This will impact the way the uri is
+	 * computed by making sure two matching objects will have the same URI.
+	 */
+	private Optional<Comparison> underMatch = Optional.absent();
+
+	/**
 	 * Create a new {@link URIDistance}.
 	 */
 	public URIDistance() {
 		locationCache = CacheBuilder.newBuilder().maximumSize(10000).build(CacheLoader.from(this));
+		fragmentsCache = CacheBuilder.newBuilder().maximumSize(10000).build(
+				CacheLoader.from(new EUriFragmentFunction()));
+		// CHECKSTYLE:ON
+	}
+
+	/**
+	 * Set an optional comparison used to retrieve matches already computed. This will impact the way the uri
+	 * is computed by making sure two matching objects will have the same URI.
+	 * 
+	 * @param comparison
+	 *            the comparison to use to retrieve the matches.
+	 */
+	public void setComparison(Comparison comparison) {
+		this.underMatch = Optional.fromNullable(comparison);
 	}
 
 	/**
@@ -113,14 +139,20 @@ public class URIDistance implements Function<EObject, Iterable<String>> {
 	 * @see com.google.common.base.Function#apply(java.lang.Object)
 	 */
 	public Iterable<String> apply(EObject input) {
-		EObject cur = input;
 		String result = ""; //$NON-NLS-1$
 		EObject container = input.eContainer();
 		if (container != null) {
-			EStructuralFeature feat = cur.eContainingFeature();
-			if (input instanceof InternalEObject) {
-				String frag = ((InternalEObject)container).eURIFragmentSegment(feat, cur);
-				result = frag;
+			if (underMatch.isPresent()) {
+				/*
+				 * If we have a match for the container, we want to make sure the fragment is going to be the
+				 * same.
+				 */
+				Match m = underMatch.get().getMatch(container);
+				if (m == null) {
+					result = retrieveFragment(input);
+				}
+			} else {
+				result = retrieveFragment(input);
 			}
 		} else {
 			result = "0"; //$NON-NLS-1$
@@ -131,6 +163,17 @@ public class URIDistance implements Function<EObject, Iterable<String>> {
 					.getUnchecked(input.eContainer()));
 		}
 		return Lists.newArrayList(result);
+	}
+
+	/**
+	 * the containing fragment for a given {@link EObject}.
+	 * 
+	 * @param input
+	 *            an EObject.
+	 * @return a String representation of its containing fragment.
+	 */
+	public String retrieveFragment(EObject input) {
+		return fragmentsCache.getUnchecked(input);
 	}
 
 	/**

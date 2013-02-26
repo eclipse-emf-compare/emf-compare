@@ -109,13 +109,13 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 		} else if (converted1 instanceof EObject && converted2 instanceof EObject) {
 			// [248442] This will handle FeatureMapEntries detection
 			equal = matchingEObjects((EObject)converted1, (EObject)converted2);
+		} else if (isNullOrEmptyString(converted1) && isNullOrEmptyString(converted2)) {
+			// Special case, consider that the empty String is equal to null (unset attributes)
+			equal = true;
 		} else if (converted1 != null && converted1.getClass().isArray() && converted2 != null
 				&& converted2.getClass().isArray()) {
 			// [299641] compare arrays by their content instead of instance equality
 			equal = matchingArrays(converted1, converted2);
-		} else if (isNullOrEmptyString(converted1) && isNullOrEmptyString(converted2)) {
-			// Special case, consider that the empty String is equal to null (unset attributes)
-			equal = true;
 		} else {
 			equal = converted1 != null && converted1.equals(converted2);
 		}
