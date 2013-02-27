@@ -52,6 +52,8 @@ import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.actions.collapse.CollapseAllModelAction;
+import org.eclipse.emf.compare.ide.ui.internal.actions.expand.ExpandAllModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.actions.save.SaveComparisonModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
@@ -73,6 +75,7 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ContentViewer;
@@ -583,6 +586,10 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		filterActionMenu = new FilterActionMenu(getStructureMergeViewerFilter(), getFiltersMenuManager());
 		saveAction = new SaveComparisonModelAction(getCompareConfiguration());
 		toolbarManager.add(saveAction);
+		toolbarManager.add(new Separator());
+		toolbarManager.add(new ExpandAllModelAction(this));
+		toolbarManager.add(new CollapseAllModelAction(this));
+		toolbarManager.add(new Separator());
 		toolbarManager.add(groupActionMenu);
 		toolbarManager.add(filterActionMenu);
 	}
