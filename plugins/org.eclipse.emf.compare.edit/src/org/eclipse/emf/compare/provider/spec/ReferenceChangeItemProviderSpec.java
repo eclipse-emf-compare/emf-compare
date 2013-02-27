@@ -61,7 +61,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	 */
 	public ReferenceChangeItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
-		overlayProvider = new OverlayImageProvider(getResourceLocator(), true);
+		overlayProvider = new OverlayImageProvider(getResourceLocator());
 	}
 
 	/**

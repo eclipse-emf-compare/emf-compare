@@ -40,7 +40,7 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 	 */
 	public AttributeChangeItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
-		overlayProvider = new OverlayImageProvider(getResourceLocator(), true);
+		overlayProvider = new OverlayImageProvider(getResourceLocator());
 	}
 
 	/**

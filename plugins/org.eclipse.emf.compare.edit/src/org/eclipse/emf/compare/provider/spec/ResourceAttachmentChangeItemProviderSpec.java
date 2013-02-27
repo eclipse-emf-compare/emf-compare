@@ -53,7 +53,7 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 	 */
 	public ResourceAttachmentChangeItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
-		overlayProvider = new OverlayImageProvider(getResourceLocator(), true);
+		overlayProvider = new OverlayImageProvider(getResourceLocator());
 	}
 
 	/**

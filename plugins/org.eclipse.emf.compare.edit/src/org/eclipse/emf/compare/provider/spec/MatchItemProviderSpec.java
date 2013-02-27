@@ -71,7 +71,7 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 	 */
 	public MatchItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
-		overlayProvider = new OverlayImageProvider(getResourceLocator(), true);
+		overlayProvider = new OverlayImageProvider(getResourceLocator());
 	}
 
 	/**
