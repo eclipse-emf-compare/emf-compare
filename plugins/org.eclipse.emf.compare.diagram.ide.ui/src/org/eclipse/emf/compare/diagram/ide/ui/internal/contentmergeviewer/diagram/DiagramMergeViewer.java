@@ -10,34 +10,37 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram;
 
-import java.util.Collection;
-
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.emf.compare.diagram.ide.ui.AbstractGraphicalMergeViewer;
+import org.eclipse.emf.compare.diagram.ide.ui.internal.AbstractGraphicalMergeViewer;
+import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramDiffAccessor;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.MouseWheelZoomHandler;
+import org.eclipse.gef.SelectionManager;
 import org.eclipse.gef.editparts.ZoomManager;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
+import org.eclipse.gef.ui.parts.DomainEventDispatcher;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -48,17 +51,76 @@ import org.eclipse.swt.widgets.Control;
  */
 class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 
+	/**
+	 * Selection manager to forbid manual selections on graphical objects.
+	 * 
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+	 */
+	protected class NonEditingManager extends SelectionManager {
+
+		@Override
+		public void appendSelection(EditPart editpart) {
+			// needed to disable manual selection on every objects.
+		}
+	}
+
+	/**
+	 * Event dispatcher to forbid external mouse actions on diagrams.
+	 * 
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+	 */
+	protected class NonEditingEventDispatcher extends DomainEventDispatcher {
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param d
+		 *            The edit domain.
+		 * @param v
+		 *            The edit part viewer.
+		 */
+		public NonEditingEventDispatcher(EditDomain d, EditPartViewer v) {
+			super(d, v);
+		}
+
+		@Override
+		public void dispatchMousePressed(MouseEvent me) {
+			// needed not to get a change of the cursor releasing from a connector.
+		}
+
+		@Override
+		public void dispatchMouseReleased(MouseEvent me) {
+			// needed not to get a change of the cursor releasing from a connector.
+		}
+
+		@Override
+		public void dispatchMouseDoubleClicked(MouseEvent me) {
+			// needed not to get a change of the cursor double-clicking on a connector.
+		}
+
+		@Override
+		public void dispatchMouseHover(MouseEvent me) {
+			// needed not to get a change of the cursor hovering a connector.
+		}
+
+		@Override
+		public void dispatchMouseMoved(MouseEvent me) {
+			// needed not to get a change of the cursor hovering a connector.
+		}
+
+	}
+
 	/** the zoom factor of displayed diagrams. */
 	private static final double ZOOM_FACTOR = 1;
-
-	/** The input of the viewer. */
-	private IDiagramNodeAccessor fInput;
 
 	/** The graphical viewer. */
 	private DiagramGraphicalViewerForCompare fGraphicalViewer;
 
 	/** the current diagram used. */
 	private Diagram currentDiag;
+
+	/** The diagram edit domain. */
+	private DiagramEditDomain editDomain;
 
 	/**
 	 * Constructor.
@@ -70,20 +132,19 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 	 */
 	public DiagramMergeViewer(Composite parent, MergeViewerSide side) {
 		super(parent, side);
+		((FigureCanvas)fGraphicalViewer.getControl()).getLightweightSystem().setEventDispatcher(
+				new NonEditingEventDispatcher(editDomain, fGraphicalViewer));
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer#createControl(org.eclipse.swt.widgets.Composite)
-	 */
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.gef.ui.parts.AbstractEditPartViewer#createControl(org.eclipse.swt.widgets.Composite)
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.AbstractGraphicalMergeViewer#createControl(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
 	public Control createControl(Composite parent) {
+		editDomain = new DiagramEditDomain(null);
+		editDomain.setCommandStack(new DiagramCommandStack(editDomain));
 		createDiagramGraphicalViewer(parent);
 		return fGraphicalViewer.getControl();
 	}
@@ -102,12 +163,14 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 		fGraphicalViewer.getControl().setBackground(ColorConstants.listBackground);
 		fGraphicalViewer.setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.CTRL),
 				MouseWheelZoomHandler.SINGLETON);
+
+		fGraphicalViewer.setSelectionManager(new NonEditingManager());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.ide.ui.AbstractGraphicalMergeViewer#getGraphicalViewer()
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.AbstractGraphicalMergeViewer#getGraphicalViewer()
 	 */
 	@Override
 	public DiagramGraphicalViewerForCompare getGraphicalViewer() {
@@ -122,30 +185,26 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 	@Override
 	public void setInput(final Object input) {
 		if (input instanceof IDiagramNodeAccessor) {
-			fInput = (IDiagramNodeAccessor)input;
 			Diagram diagram = ((IDiagramNodeAccessor)input).getOwnedDiagram();
-			View view = ((IDiagramNodeAccessor)input).getOwnedView();
-
 			initEditingDomain(diagram);
-
-			// Selection
-			fGraphicalViewer.deselectAll();
+			EditPart editPart = null;
+			View view = ((IDiagramNodeAccessor)input).getOwnedView();
 			if (view != null) {
-
-				EditPart viewPart = getEditPart(view);
-
-				if (viewPart != null) {
-
-					while (!viewPart.isSelectable()) {
-						viewPart = viewPart.getParent();
-					}
-
-					setSelection(new StructuredSelection(viewPart));
-					getGraphicalViewer().reveal(viewPart);
-
+				editPart = getEditPart(view);
+			}
+			fGraphicalViewer.deselectAll();
+			// Selection only on matches.
+			if (!(input instanceof IDiagramDiffAccessor) && editPart != null) {
+				while (editPart != null && !editPart.isSelectable()) {
+					editPart = editPart.getParent();
 				}
 
+				if (editPart != null) {
+					setSelection(new StructuredSelection(editPart));
+					fGraphicalViewer.reveal(editPart);
+				}
 			}
+
 		}
 	}
 
@@ -164,17 +223,6 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 				&& TransactionalEditingDomain.Factory.INSTANCE.getEditingDomain(resourceSet) == null) {
 			TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(resourceSet);
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.gef.EditPartViewer#findObjectAtExcluding(org.eclipse.draw2d.geometry.Point,
-	 *      java.util.Collection, org.eclipse.gef.EditPartViewer.Conditional)
-	 */
-	public EditPart findObjectAtExcluding(Point location, Collection exclusionSet, Conditional conditional) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	/**
@@ -199,48 +247,26 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 				final DiagramRootEditPart rootEditPart = new DiagramRootEditPart(diagram.getMeasurementUnit());
 				fGraphicalViewer.setRootEditPart(rootEditPart);
 				fGraphicalViewer.setContents(diagram);
-				disableEditMode((DiagramEditPart)fGraphicalViewer.getContents());
 				rootEditPart.getZoomManager().setZoomAnimationStyle(ZoomManager.ANIMATE_NEVER);
 				rootEditPart.getZoomManager().setZoom(ZOOM_FACTOR);
+
 			}
 		}
 		return (EditPart)fGraphicalViewer.getEditPartRegistry().get(view);
 	}
 
 	/**
-	 * It disables editing actions from the given editpart.
+	 * {@inheritDoc}
 	 * 
-	 * @param diagEditPart
-	 *            The editpart.
+	 * @see org.eclipse.jface.viewers.Viewer#refresh()
 	 */
-	private void disableEditMode(DiagramEditPart diagEditPart) {
-		diagEditPart.disableEditMode();
-		for (Object obj : diagEditPart.getPrimaryEditParts()) {
-			if (obj instanceof IGraphicalEditPart) {
-				disableEditMode((IGraphicalEditPart)obj);
-			}
-		}
-	}
+	@Override
+	public void refresh() {
 
-	/**
-	 * It disables editing actions from the given editpart.
-	 * 
-	 * @param obj
-	 *            The editpart.
-	 */
-	private void disableEditMode(IGraphicalEditPart obj) {
-		obj.disableEditMode();
-		obj.removeEditPolicy(EditPolicyRoles.OPEN_ROLE);
-		for (Object child : obj.getChildren()) {
-			if (child instanceof IGraphicalEditPart) {
-				disableEditMode((IGraphicalEditPart)child);
-			}
-		}
 	}
 
 	/**
 	 * {@link DiagramGraphicalViewer} which enables to make a reveal on a given figure, without editpart.
-	 * FIXME: Find a better solution to make the reveal.
 	 * 
 	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
 	 */
@@ -248,7 +274,8 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 
 		/**
 		 * It reveals the given figure. It is a partial copy of
-		 * {@link DiagramGraphicalViewer#reveal(EditPart)}.
+		 * {@link DiagramGraphicalViewer#reveal(EditPart)}.<br>
+		 * FIXME: Find a better solution to make the reveal.
 		 * 
 		 * @param figure
 		 *            The figure.
@@ -283,6 +310,11 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 
 			getFigureCanvas().scrollSmoothTo(finalLocation.x, finalLocation.y);
 
+		}
+
+		@Override
+		protected DomainEventDispatcher getEventDispatcher() {
+			return new NonEditingEventDispatcher(editDomain, this);
 		}
 
 	}

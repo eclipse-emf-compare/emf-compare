@@ -2,15 +2,6 @@
 <?eclipse version="3.2"?>
 <plugin>
      
-     <extension
-           point="org.eclipse.gmf.runtime.diagram.ui.decoratorProviders">
-        <decoratorProvider
-              class="org.eclipse.emf.compare.diagram.ide.ui.decoration.provider.DiffDecoratorProvider">
-           <Priority
-                 name="Lowest">
-           </Priority>
-        </decoratorProvider>
-     </extension>
      
      <extension
          point="org.eclipse.ui.preferencePages">

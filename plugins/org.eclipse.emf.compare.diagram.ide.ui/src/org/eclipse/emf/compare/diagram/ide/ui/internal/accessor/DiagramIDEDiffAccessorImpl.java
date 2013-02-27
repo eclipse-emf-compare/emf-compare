@@ -68,7 +68,10 @@ public class DiagramIDEDiffAccessorImpl extends DiagramIDEMatchAccessorImpl impl
 	public EObject getEObject(MergeViewerSide side) {
 		EObject obj = getEObject();
 		Match eObjectMatch = fComparison.getMatch(obj);
-		return getEObject(eObjectMatch, side);
+		if (eObjectMatch != null) {
+			return getEObject(eObjectMatch, side);
+		}
+		return null;
 	}
 
 }

@@ -19,12 +19,15 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EventObject;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -38,36 +41,41 @@ import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.command.impl.CopyCommand;
 import org.eclipse.emf.compare.diagram.DiagramDiff;
-import org.eclipse.emf.compare.diagram.ide.ui.AbstractEditPartMergeViewer;
-import org.eclipse.emf.compare.diagram.ide.ui.AbstractGraphicalMergeViewer;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramDiffAccessor;
-import org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.DiagramCompareContentMergeViewer;
+import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
+import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.DiffNode;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
+import org.eclipse.emf.transaction.TransactionalCommandStack;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editparts.LayerManager;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.notation.BasicCompartment;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.graphics.Color;
@@ -80,7 +88,7 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer {
+public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 
 	/**
 	 * Interface for the management of decorators.
@@ -88,6 +96,11 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
 	 */
 	private interface IDecoratorManager {
+
+		/**
+		 * It hides the revealed decorators.
+		 */
+		void hideAll();
 
 		/**
 		 * From a given difference, it hides the related decorators.
@@ -145,16 +158,6 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 
 			/** The edit part of the figure representing this phantom. May be null. */
 			protected EditPart fEditPart;
-
-			/**
-			 * From the given view, get or create the related decorators.
-			 * 
-			 * @param referenceView
-			 *            The given view.
-			 * @return a decorator.
-			 */
-			// protected abstract List<? extends AbstractDecorator> getOrCreateDecorators(EObject
-			// referenceView);
 
 			/**
 			 * Getter.
@@ -299,8 +302,8 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		 */
 		public void hideDecorators(Diff difference) {
 			List<? extends AbstractDecorator> oldDecorators = getDecorators(difference);
-			if (oldDecorators != null && !oldDecorators.isEmpty() && fComparison != null) {
-				handleDecorators(oldDecorators, false);
+			if (oldDecorators != null && !oldDecorators.isEmpty() && getComparison() != null) {
+				handleDecorators(oldDecorators, false, true);
 			}
 		}
 
@@ -325,7 +328,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 				for (View referenceView : referenveViews) {
 					IFigure referenceFigure = getFigure(referenceView);
 
-					MergeViewerSide targetSide = getTargetSide(fComparison.getMatch(referenceView),
+					MergeViewerSide targetSide = getTargetSide(getComparison().getMatch(referenceView),
 							referenceView);
 
 					if (decorators == null) {
@@ -351,7 +354,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		 *            The main decorators.
 		 */
 		protected void revealDecorators(List<? extends AbstractDecorator> decorators) {
-			handleDecorators(decorators, true);
+			handleDecorators(decorators, true, true);
 		}
 
 		/**
@@ -374,10 +377,14 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		 *            The decorators to handle.
 		 * @param isAdd
 		 *            True if it has to be revealed, False otherwise.
+		 * @param areMain
+		 *            It indicates if the given decorators to handle are considered as the main ones (the ones
+		 *            directly linked to the selected difference).
 		 */
-		protected void handleDecorators(List<? extends AbstractDecorator> decorators, boolean isAdd) {
+		protected void handleDecorators(List<? extends AbstractDecorator> decorators, boolean isAdd,
+				boolean areMain) {
 			for (AbstractDecorator decorator : decorators) {
-				handleDecorator(decorator, isAdd);
+				handleDecorator(decorator, isAdd, areMain);
 			}
 		}
 
@@ -388,24 +395,66 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		 *            The decorator to handle.
 		 * @param isAdd
 		 *            True if it has to be revealed, False otherwise.
+		 * @param isMain
+		 *            It indicates if the given decorator to handle is considered as the main one (the one
+		 *            directly linked to the selected difference).
 		 */
-		protected void handleDecorator(AbstractDecorator decorator, boolean isAdd) {
-			if (decorator.getEditPart() == null) {
-				if (isAdd) {
-					decorator.getLayer().add(decorator.getFigure());
-				} else {
-					decorator.getLayer().remove(decorator.getFigure());
+		protected void handleDecorator(AbstractDecorator decorator, boolean isAdd, boolean isMain) {
+			IFigure layer = decorator.getLayer();
+			IFigure figure = decorator.getFigure();
+			EditPart editpart = decorator.getEditPart();
+			if (editpart == null) {
+				if (isAdd && !layer.getChildren().contains(figure)) {
+					handleAddDecorator(decorator, layer, figure, isMain);
+				} else if (layer.getChildren().contains(figure)) {
+					handleDeleteDecorator(decorator, layer, figure, isMain);
 				}
 			} else {
-				if (isAdd) {
-					decorator.getEditPart().activate();
-					decorator.getLayer().add(decorator.getFigure());
-				} else {
-					decorator.getEditPart().deactivate();
-					decorator.getLayer().remove(decorator.getFigure());
+				if (isAdd && !editpart.isActive()) {
+					editpart.activate();
+					handleAddDecorator(decorator, layer, figure, isMain);
+				} else if (editpart.isActive()) {
+					editpart.deactivate();
+					handleDeleteDecorator(decorator, layer, figure, isMain);
 				}
 			}
 
+		}
+
+		/**
+		 * It manages the reveal of the given decorator.
+		 * 
+		 * @param decorator
+		 *            The decorator.
+		 * @param parent
+		 *            The parent figure which has to get the figure to reveal (<code>toAdd</code>)
+		 * @param toAdd
+		 *            The figure to reveal.
+		 * @param isMain
+		 *            It indicates if the given decorator to reveal is considered as the main one (the one
+		 *            directly linked to the selected difference).
+		 */
+		protected void handleAddDecorator(AbstractDecorator decorator, IFigure parent, IFigure toAdd,
+				boolean isMain) {
+			parent.add(toAdd);
+		}
+
+		/**
+		 * It manages the hiding of the given decorator.
+		 * 
+		 * @param decorator
+		 *            The decorator.
+		 * @param parent
+		 *            The parent figure which has to get the figure to hide (<code>toDelete</code>)
+		 * @param toDelete
+		 *            The figure to hide.
+		 * @param isMain
+		 *            It indicates if the given decorator to hide is considered as the main one (the one
+		 *            directly linked to the selected difference).
+		 */
+		protected void handleDeleteDecorator(AbstractDecorator decorator, IFigure parent, IFigure toDelete,
+				boolean isMain) {
+			parent.remove(toDelete);
 		}
 
 		/**
@@ -604,7 +653,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 			 */
 			private List<Phantom> getOrCreateRelatedDecorators(EObject referenceView) {
 				List<Phantom> result = new ArrayList<Phantom>();
-				Collection<Diff> changes = Collections2.filter(fComparison.getDifferences(referenceView),
+				Collection<Diff> changes = Collections2.filter(getComparison().getDifferences(referenceView),
 						goodCandidate());
 				for (Diff change : changes) {
 					Phantom phantom = fPhantomRegistry.get(change);
@@ -661,7 +710,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		protected List<View> getReferenceViews(DiagramDiff difference) {
 			List<View> result = new ArrayList<View>();
 
-			Match match = fComparison.getMatch(difference.getView());
+			Match match = getComparison().getMatch(difference.getView());
 
 			EObject originObj = match.getOrigin();
 			EObject leftObj = match.getLeft();
@@ -730,38 +779,47 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		 *      boolean)
 		 */
 		@Override
-		protected void handleDecorator(AbstractDecorator decorator, boolean isAdd) {
-			super.handleDecorator(decorator, isAdd);
-
-			// Highlight the main added figure (reset this in case of deletion) in relation to the possible
-			// context figures
-			IFigure figure = decorator.getFigure();
-			if (figure instanceof Shape) {
-				if (isAdd) {
-					((Shape)figure).setLineWidth(((Shape)figure).getLineWidth() + 1);
-					Color strokeColor = getCompareColor().getStrokeColor(decorator.getDifference(),
-							isThreeWay(), false, true);
-					figure.setForegroundColor(strokeColor);
-					// figure.setBorder(new FocusBorder());
-					// FIXME: Find a way to set the focus on this figure.
-					getViewer(decorator.getSide()).getGraphicalViewer().reveal(figure);
-				} else {
-					((Shape)figure).setLineWidth(((Shape)figure).getLineWidth() - 1);
-					Color strokeColor = getCompareColor().getStrokeColor(decorator.getDifference(),
-							isThreeWay(), false, false);
-					figure.setForegroundColor(strokeColor);
-					// figure.setBorder(null);
-				}
-			}
-
+		protected void handleDecorator(AbstractDecorator decorator, boolean isAdd, boolean isMain) {
+			super.handleDecorator(decorator, isAdd, isMain);
 			// Display the dependencies (context) of this decorator
 			for (AbstractDecorator ancestor : ((Phantom)decorator).getDependencies()) {
-				super.handleDecorator(ancestor, isAdd);
-				if (isAdd) {
-					Color strokeColor = getCompareColor().getStrokeColor(ancestor.getDifference(),
-							isThreeWay(), false, false);
-					ancestor.getFigure().setForegroundColor(strokeColor);
-				}
+				super.handleDecorator(ancestor, isAdd, false);
+			}
+		}
+
+		@Override
+		protected void handleAddDecorator(AbstractDecorator decorator, IFigure parent, IFigure toAdd,
+				boolean isMain) {
+			super.handleAddDecorator(decorator, parent, toAdd, isMain);
+			// Set the highlight of the figure
+			Color strokeColor = null;
+			if (isMain) {
+				((Shape)toAdd).setLineWidth(((Shape)toAdd).getLineWidth() + 1);
+				strokeColor = getCompareColor().getStrokeColor(decorator.getDifference(), isThreeWay(),
+						false, true);
+				// figure.setBorder(new FocusBorder());
+
+				// FIXME: Find a way to set the focus on this figure.
+				getViewer(decorator.getSide()).getGraphicalViewer().reveal(toAdd);
+			} else {
+				strokeColor = getCompareColor().getStrokeColor(decorator.getDifference(), isThreeWay(),
+						false, false);
+
+			}
+			toAdd.setForegroundColor(strokeColor);
+		}
+
+		@Override
+		protected void handleDeleteDecorator(AbstractDecorator decorator, IFigure parent, IFigure toDelete,
+				boolean isMain) {
+			super.handleDeleteDecorator(decorator, parent, toDelete, isMain);
+			// Re-initialize the highlight of the figure
+			if (isMain) {
+				((Shape)toDelete).setLineWidth(((Shape)toDelete).getLineWidth() - 1);
+				Color strokeColor = getCompareColor().getStrokeColor(decorator.getDifference(), isThreeWay(),
+						false, false);
+				toDelete.setForegroundColor(strokeColor);
+				// figure.setBorder(null);
 			}
 		}
 
@@ -815,8 +873,6 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 
 			IFigure ghost = null;
 
-			// FIXME: To manage case inside a container where its coordinates changed.
-
 			IFigure targetLayer = getLayer(referenceView, side);
 			Phantom phantom = new Phantom(targetLayer, side, referenceView, referenceFigure, diff);
 
@@ -831,7 +887,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 				// FIXME:
 				// - It has to manage visible views.
 				// - What about transient children ?
-				int index = DiffUtil.findInsertionIndex(fComparison, refiningDiff,
+				int index = DiffUtil.findInsertionIndex(getComparison(), refiningDiff,
 						side == MergeViewerSide.LEFT);
 
 				IFigure referenceParentFigure = referenceFigure.getParent();
@@ -860,7 +916,6 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 					EditPart edgeEditPart = createEdgeEditPart((Edge)referenceView, referenceSide, side);
 					if (edgeEditPart instanceof GraphicalEditPart) {
 						phantom.setEditPart(edgeEditPart);
-						edgeEditPart.activate();
 						ghost = ((GraphicalEditPart)edgeEditPart).getFigure();
 						ghost.getChildren().clear();
 					}
@@ -944,6 +999,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 					int deltaX = parentRect.x - parentReferenceRect.x;
 					int deltaY = parentRect.y - parentReferenceRect.y;
 					int deltaWidth = parentRect.width - parentReferenceRect.width;
+					int deltaHeight = parentRect.height - parentReferenceRect.height;
 
 					IFigure figure = phantom.getFigure();
 
@@ -951,6 +1007,9 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 					rect.x += deltaX;
 					rect.y += deltaY;
 					rect.width += deltaWidth;
+					if (!(figure instanceof Polyline)) {
+						rect.height += deltaHeight;
+					}
 					figure.setBounds(rect);
 
 					if (figure instanceof Polyline) {
@@ -1004,12 +1063,12 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 															// coordinates)
 			View extremity = (View)getMatchView(referenceView, targetSide);
 			// Look for a related change coordinates on the extremity of the edge reference.
-			Collection<Diff> diffs = Collections2.filter(fComparison.getDifferences(referenceView), and(
+			Collection<Diff> diffs = Collections2.filter(getComparison().getDifferences(referenceView), and(
 					instanceOf(DiagramDiff.class), ofKind(lookup)));
 			if (diffs.isEmpty()) {
 				// Look for a related change coordinates on the matching extremity (other side) of the edge
 				// reference.
-				diffs = Collections2.filter(fComparison.getDifferences(extremity), and(
+				diffs = Collections2.filter(getComparison().getDifferences(extremity), and(
 						instanceOf(DiagramDiff.class), ofKind(lookup)));
 			}
 			return !diffs.isEmpty();
@@ -1095,17 +1154,30 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 					editPart = getViewer(targetSide).getGraphicalViewer().getEditPartFactory()
 							.createEditPart(editPartParent, referenceView);
 					editPart.setParent(editPartParent);
-					editPart.removeEditPolicy(EditPolicyRoles.DECORATION_ROLE);
-					editPart.removeEditPolicy(EditPolicyRoles.OPEN_ROLE);
-					if (editPart instanceof IGraphicalEditPart) {
-						((IGraphicalEditPart)editPart).disableEditMode();
-					}
 					getViewer(targetSide).getGraphicalViewer().getEditPartRegistry().put(referenceView,
 							editPart);
 				}
 
 			}
 			return editPart;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.IDecoratorManager#hideAll()
+		 */
+		public void hideAll() {
+			Iterator<Phantom> visiblePhantoms = Iterators.filter(fPhantomRegistry.values().iterator(),
+					new Predicate<Phantom>() {
+						public boolean apply(Phantom phantom) {
+							return phantom.getFigure().getParent() != null;
+						}
+					});
+			while (visiblePhantoms.hasNext()) {
+				Phantom phantom = (Phantom)visiblePhantoms.next();
+				handleDecorator(phantom, false, true);
+			}
 		}
 	}
 
@@ -1168,14 +1240,14 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		@Override
 		protected List<View> getReferenceViews(DiagramDiff difference) {
 			List<View> result = new ArrayList<View>();
-			Match matchValue = fComparison.getMatch(difference.getView());
+			Match matchValue = getComparison().getMatch(difference.getView());
 			if (matchValue.getLeft() != null) {
 				result.add((View)matchValue.getLeft());
 			}
 			if (matchValue.getRight() != null) {
 				result.add((View)matchValue.getRight());
 			}
-			if (fComparison.isThreeWay()) {
+			if (getComparison().isThreeWay()) {
 				switch (difference.getKind()) {
 					case DELETE:
 					case CHANGE:
@@ -1228,6 +1300,14 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		@Override
 		protected List<Marker> getDecorators(Diff difference) {
 			return fMarkerRegistry.get(difference);
+		}
+
+		@Override
+		protected void handleAddDecorator(AbstractDecorator decorator, IFigure parent, IFigure toAdd,
+				boolean isMain) {
+			super.handleAddDecorator(decorator, parent, toAdd, isMain);
+			DiagramMergeViewer viewer = getViewer(decorator.getSide());
+			viewer.getGraphicalViewer().reveal(viewer.getEditPart(decorator.getOriginView()));
 		}
 
 		/**
@@ -1316,6 +1396,25 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 
 			return marker;
 		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.IDecoratorManager#hideAll()
+		 */
+		public void hideAll() {
+			Iterator<Marker> visibleMarkers = Iterators.filter(Iterables.concat(fMarkerRegistry.values())
+					.iterator(), new Predicate<Marker>() {
+				public boolean apply(Marker marker) {
+					return marker.getFigure().getParent() != null;
+				}
+			});
+			while (visibleMarkers.hasNext()) {
+				Marker marker = (Marker)visibleMarkers.next();
+				handleDecorator(marker, false, true);
+			}
+		}
+
 	}
 
 	/**
@@ -1350,12 +1449,28 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 			fPhantomManager.revealDecorators(difference);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.IDecoratorManager#hideAll()
+		 */
+		public void hideAll() {
+			fMarkerManager.hideAll();
+			fPhantomManager.hideAll();
+		}
+
 	}
 
 	/**
 	 * Bundle name of the property file containing all displayed strings.
 	 */
 	private static final String BUNDLE_NAME = DiagramContentMergeViewer.class.getName();
+
+	/** The editing domain. */
+	private ICompareEditingDomain fEditingDomain;
+
+	/** Listener to manage the update of the decorators on events about the command stack. */
+	private CommandStackListener fDecoratorsCommandStackListener;
 
 	/** The phantom manager to use in the context of this viewer. */
 	private final DecoratorsManager fDecoratorsManager = new DecoratorsManager();
@@ -1375,7 +1490,6 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	 * <p>
 	 * It calls {@link #buildControl(Composite)} as stated in its javadoc.
 	 * <p>
-	 * It sets a {@link GMFModelContentMergeContentProvider}
 	 * {@link #setContentProvider(org.eclipse.jface.viewers.IContentProvider) content provider} to properly
 	 * display ancestor, left and right parts.
 	 * 
@@ -1385,13 +1499,14 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	 *            the {@link CompareConfiguration}
 	 */
 	public DiagramContentMergeViewer(Composite parent, CompareConfiguration config) {
-		super(parent, SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
+		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
+
 		fAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 
 		buildControl(parent);
-		setContentProvider(new GMFModelContentMergeContentProvider(config, fComparison));
+		setContentProvider(new TreeContentMergeViewerContentProvider(config, getComparison()));
 	}
 
 	/**
@@ -1401,6 +1516,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
+		fEditingDomain.getCommandStack().removeCommandStackListener(fDecoratorsCommandStackListener);
 		fAdapterFactory.dispose();
 		super.handleDispose(event);
 	}
@@ -1413,8 +1529,8 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	@SuppressWarnings("unchecked")
 	// see createMergeViewer() to see it is safe
 	@Override
-	public AbstractGraphicalMergeViewer getAncestorMergeViewer() {
-		return (AbstractGraphicalMergeViewer)super.getAncestorMergeViewer();
+	public DiagramMergeViewer getAncestorMergeViewer() {
+		return (DiagramMergeViewer)super.getAncestorMergeViewer();
 	}
 
 	/**
@@ -1425,8 +1541,8 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	@SuppressWarnings("unchecked")
 	// see createMergeViewer() to see it is safe
 	@Override
-	public AbstractGraphicalMergeViewer getLeftMergeViewer() {
-		return (AbstractGraphicalMergeViewer)super.getLeftMergeViewer();
+	public DiagramMergeViewer getLeftMergeViewer() {
+		return (DiagramMergeViewer)super.getLeftMergeViewer();
 	}
 
 	/**
@@ -1437,8 +1553,8 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	@SuppressWarnings("unchecked")
 	// see createMergeViewer() to see it is safe
 	@Override
-	public AbstractGraphicalMergeViewer getRightMergeViewer() {
-		return (AbstractGraphicalMergeViewer)super.getRightMergeViewer();
+	public DiagramMergeViewer getRightMergeViewer() {
+		return (DiagramMergeViewer)super.getRightMergeViewer();
 	}
 
 	/**
@@ -1453,9 +1569,9 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		 * select a Diagram Difference. This is meant to change so that we use selection synchronization
 		 * instead. This code will break whenever we implement that change.
 		 */
-		if (getInput() instanceof DiffNode) {
-			final Command command = getEditingDomain().createCopyCommand(((DiffNode)getInput()).getTarget(),
-					leftToRight, EMFCompareIDEPlugin.getDefault().getMergerRegistry());
+		if (fCurrentSelectedDiff != null) {
+			final Command command = getEditingDomain().createCopyCommand(fCurrentSelectedDiff, leftToRight,
+					EMFCompareIDEPlugin.getDefault().getMergerRegistry());
 			getEditingDomain().getCommandStack().execute(command);
 
 			if (leftToRight) {
@@ -1463,34 +1579,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 			} else {
 				setLeftDirty(true);
 			}
-			refresh();
-			return;
-		}
-		final IStructuredSelection selection;
-		if (leftToRight) {
-			selection = (IStructuredSelection)getLeftMergeViewer().getSelection();
-		} else {
-			selection = (IStructuredSelection)getRightMergeViewer().getSelection();
-		}
-
-		Object firstElement = selection.getFirstElement();
-
-		if (firstElement instanceof GraphicalEditPart) {
-			Object elt = ((GraphicalEditPart)firstElement).getModel();
-			if (elt instanceof EObject) {
-				List<Diff> differences = getComparison().getDifferences((EObject)elt);
-
-				final Command command = getEditingDomain().createCopyAllNonConflictingCommand(differences,
-						leftToRight, EMFCompareIDEPlugin.getDefault().getMergerRegistry());
-				getEditingDomain().getCommandStack().execute(command);
-
-				if (leftToRight) {
-					setRightDirty(true);
-				} else {
-					setLeftDirty(true);
-				}
-				refresh();
-			}
+			// refresh();
 		}
 
 	}
@@ -1508,20 +1597,19 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#createMergeViewer(org.eclipse.swt.widgets.Composite)
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.DiagramCompareContentMergeViewer#createMergeViewer(org.eclipse.swt.widgets.Composite,
+	 *      org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide)
 	 */
 	@Override
-	protected AbstractEditPartMergeViewer createMergeViewer(final Composite parent, MergeViewerSide side,
-			DiagramCompareContentMergeViewer master) {
-		final DiagramMergeViewer mergeTreeViewer = new DiagramMergeViewer(parent, side);
-		return mergeTreeViewer;
+	protected IMergeViewer createMergeViewer(Composite parent, MergeViewerSide side) {
+		final DiagramMergeViewer diagramMergeViewer = new DiagramMergeViewer(parent, side);
+		return diagramMergeViewer;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#paintCenter(org.eclipse.swt.widgets.Canvas,
-	 *      org.eclipse.swt.graphics.GC)
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.DiagramCompareContentMergeViewer#paintCenter(org.eclipse.swt.graphics.GC)
 	 */
 	@Override
 	protected void paintCenter(GC g) {
@@ -1536,37 +1624,104 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	 */
 	@Override
 	protected void updateContent(Object ancestor, Object left, Object right) {
-		super.updateContent(ancestor, left, right);
+		initStackListenerAndUpdateContent(ancestor, left, right);
 
-		fLeft.flush();
-		((DiagramMergeViewer)fLeft).getGraphicalViewer().flush();
-		fRight.flush();
-		((DiagramMergeViewer)fRight).getGraphicalViewer().flush();
-		fAncestor.flush();
-		((DiagramMergeViewer)fAncestor).getGraphicalViewer().flush();
+		getLeftMergeViewer().getGraphicalViewer().flush();
+		getRightMergeViewer().getGraphicalViewer().flush();
+		getAncestorMergeViewer().getGraphicalViewer().flush();
 
 		if (left instanceof IDiagramDiffAccessor) {
 			IDiagramDiffAccessor input = (IDiagramDiffAccessor)left;
 
 			// initialization: reset the current difference selection hiding potential visible phantoms
-			if (fCurrentSelectedDiff != null) {
+			if (fCurrentSelectedDiff != null && fCurrentSelectedDiff.getState() != DifferenceState.MERGED) {
 				fDecoratorsManager.hideDecorators(fCurrentSelectedDiff);
 			}
 
-			Diff diff = input.getDiff();
+			Diff diff = input.getDiff(); // equivalent to getInput().getTarget()
 			fCurrentSelectedDiff = diff;
 
-			fDecoratorsManager.revealDecorators(diff);
-
-			// reveal object
-			EObject view = ((DiagramDiff)diff).getView();
-			DiagramMergeViewer targetViewer = getViewer(getSide((View)view));
-			getViewer(getSide((View)view)).getGraphicalViewer().reveal(targetViewer.getEditPart(view));
+			if (diff.getState() != DifferenceState.MERGED) {
+				fDecoratorsManager.revealDecorators(diff);
+			}
 
 			// FIXME use the decorator manager to refresh decorators after a merge and using undo/redo
 			// actions.
+		} else if (left instanceof IDiagramNodeAccessor) {
+			if (fCurrentSelectedDiff != null && fCurrentSelectedDiff.getState() != DifferenceState.MERGED) {
+				fDecoratorsManager.hideDecorators(fCurrentSelectedDiff);
+			}
+			fCurrentSelectedDiff = null;
 		}
 
+		updateToolItems();
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#installCommandStackListener(org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction,
+	 *      org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction)
+	 */
+	@Override
+	protected CommandStackListener installCommandStackListener(UndoAction undoAction, RedoAction redoAction) {
+		CommandStackListener cmdStackListener = super.installCommandStackListener(undoAction, redoAction);
+		fEditingDomain = getEditingDomain();
+		fDecoratorsCommandStackListener = new CommandStackListener() {
+
+			public void commandStackChanged(EventObject event) {
+				Object source = event.getSource();
+				if (source instanceof TransactionalCommandStack) {
+					Command command = ((TransactionalCommandStack)source).getMostRecentCommand();
+					if (command instanceof CopyCommand) {
+						Iterator<DiagramDiff> diffs = Iterators.filter(command.getAffectedObjects()
+								.iterator(), DiagramDiff.class);
+						while (diffs.hasNext()) {
+							DiagramDiff diagramDiff = diffs.next();
+							if (diagramDiff.getState() != DifferenceState.UNRESOLVED) {
+								fDecoratorsManager.hideDecorators(diagramDiff);
+							}
+						}
+					}
+				}
+			}
+		};
+		fEditingDomain.getCommandStack().addCommandStackListener(fDecoratorsCommandStackListener);
+		return cmdStackListener;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+	 */
+	@Override
+	public void selectionChanged(SelectionChangedEvent event) {
+		// No selection synchronization (content to structure merge viewer).
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#getDiffFrom(org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer)
+	 */
+	@Override
+	protected Diff getDiffFrom(IMergeViewer viewer) {
+		return fCurrentSelectedDiff;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#createControls(org.eclipse.swt.widgets.Composite)
+	 */
+	@Override
+	protected void createControls(Composite composite) {
+		super.createControls(composite);
+		getAncestorMergeViewer().removeSelectionChangedListener(this);
+		getLeftMergeViewer().removeSelectionChangedListener(this);
+		getRightMergeViewer().removeSelectionChangedListener(this);
 	}
 
 	/**
@@ -1580,13 +1735,13 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 		DiagramMergeViewer result = null;
 		switch (side) {
 			case LEFT:
-				result = (DiagramMergeViewer)fLeft;
+				result = getLeftMergeViewer();
 				break;
 			case RIGHT:
-				result = (DiagramMergeViewer)fRight;
+				result = getRightMergeViewer();
 				break;
 			case ANCESTOR:
-				result = (DiagramMergeViewer)fAncestor;
+				result = getAncestorMergeViewer();
 				break;
 			default:
 		}
@@ -1602,7 +1757,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	 */
 	private MergeViewerSide getSide(View view) {
 		MergeViewerSide result = null;
-		Match match = fComparison.getMatch(view);
+		Match match = getComparison().getMatch(view);
 		if (match.getLeft() == view) {
 			result = MergeViewerSide.LEFT;
 		} else if (match.getRight() == view) {
@@ -1623,7 +1778,7 @@ public class DiagramContentMergeViewer extends DiagramCompareContentMergeViewer 
 	 * @return The matching object.
 	 */
 	private EObject getMatchView(EObject object, MergeViewerSide side) {
-		Match match = fComparison.getMatch(object);
+		Match match = getComparison().getMatch(object);
 		return getMatchView(match, side);
 	}
 
