@@ -156,16 +156,11 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 */
 	@Override
 	protected void updateContent(Object ancestor, Object left, Object right) {
-		undoAction.setEditingDomain(getEditingDomain());
-		redoAction.setEditingDomain(getEditingDomain());
+		initStackListenerAndUpdateContent(ancestor, left, right);
+		updateSelection(left);
+	}
 
-		if (getEditingDomain() != null && fCommandStackListener == null) {
-			fCommandStackListener = installCommandStackListener(undoAction, redoAction);
-		}
-
-		fAncestor.setInput(ancestor);
-		fLeft.setInput(left);
-		fRight.setInput(right);
+	protected void updateSelection(Object left) {
 		// must update selection after the three viewers input has been set
 		// to avoid some NPE/AssertionError (they are calling each other on selectionChanged event to
 		// synchronize their selection)
@@ -179,6 +174,19 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		fLeft.setSelection(leftSelection, true); // others will synchronize on this one :)
 
 		getCenterControl().redraw();
+	}
+
+	protected void initStackListenerAndUpdateContent(Object ancestor, Object left, Object right) {
+		undoAction.setEditingDomain(getEditingDomain());
+		redoAction.setEditingDomain(getEditingDomain());
+
+		if (getEditingDomain() != null && fCommandStackListener == null) {
+			fCommandStackListener = installCommandStackListener(undoAction, redoAction);
+		}
+
+		fAncestor.setInput(ancestor);
+		fLeft.setInput(left);
+		fRight.setInput(right);
 	}
 
 	private ISelection createSelectionOrEmpty(final Object o) {
@@ -298,7 +306,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
 	}
 
-	private CommandStackListener installCommandStackListener(final UndoAction undoAction,
+	protected CommandStackListener installCommandStackListener(final UndoAction undoAction,
 			final RedoAction redoAction) {
 		CommandStackListener commandStackListener = new CommandStackListener() {
 			public void commandStackChanged(EventObject event) {
@@ -491,6 +499,10 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	protected void updateToolItems() {
 		super.updateToolItems();
 
+		manageCopyActionsActivation();
+	}
+
+	protected void manageCopyActionsActivation() {
 		Diff diff = getDiffFrom(getRightMergeViewer());
 		if (diff == null) {
 			diff = getDiffFrom(getLeftMergeViewer());
