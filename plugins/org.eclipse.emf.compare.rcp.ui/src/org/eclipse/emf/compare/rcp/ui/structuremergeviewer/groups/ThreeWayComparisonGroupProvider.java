@@ -90,8 +90,8 @@ public class ThreeWayComparisonGroupProvider implements IDifferenceGroupProvider
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setDefaultSelected(boolean)
 	 */
-	public void setDefaultSelected(boolean activeByDefault) {
-		this.activeByDefault = activeByDefault;
+	public void setDefaultSelected(boolean active) {
+		this.activeByDefault = active;
 	}
 
 	/**
