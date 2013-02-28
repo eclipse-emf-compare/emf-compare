@@ -122,6 +122,8 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 
 	private FilterActionMenu filterActionMenu;
 
+	private SaveComparisonModelAction saveAction;
+
 	private EventBus eventBus;
 
 	/**
@@ -262,9 +264,11 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				final CompareConfiguration config = getCompareConfiguration();
 				if (!syncModel.isLeftEditable()) {
 					config.setLeftEditable(false);
+					saveAction.setEnabled(false);
 				}
 				if (!syncModel.isRightEditable()) {
 					config.setRightEditable(false);
+					saveAction.setEnabled(false);
 				}
 
 				final IComparisonScope scope = syncModel.createMinimizedScope();
@@ -441,7 +445,8 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		groupActionMenu = new GroupActionMenu(getStructureMergeViewerGrouper(), getGroupsMenuManager(),
 				getDefaultGroupProvider());
 		filterActionMenu = new FilterActionMenu(getStructureMergeViewerFilter(), getFiltersMenuManager());
-		toolbarManager.add(new SaveComparisonModelAction(getCompareConfiguration()));
+		saveAction = new SaveComparisonModelAction(getCompareConfiguration());
+		toolbarManager.add(saveAction);
 		toolbarManager.add(groupActionMenu);
 		toolbarManager.add(filterActionMenu);
 	}
