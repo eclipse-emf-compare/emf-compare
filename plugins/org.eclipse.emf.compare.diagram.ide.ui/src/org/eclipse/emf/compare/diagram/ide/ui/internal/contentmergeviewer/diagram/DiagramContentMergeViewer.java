@@ -328,15 +328,18 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 				for (View referenceView : referenveViews) {
 					IFigure referenceFigure = getFigure(referenceView);
 
-					MergeViewerSide targetSide = getTargetSide(getComparison().getMatch(referenceView),
-							referenceView);
+					if (referenceFigure != null) {
+						MergeViewerSide targetSide = getTargetSide(getComparison().getMatch(referenceView),
+								referenceView);
 
-					if (decorators == null) {
-						decorators = new ArrayList();
+						if (decorators == null) {
+							decorators = new ArrayList();
+						}
+
+						decorators.add(createAndRegisterDecorator(difference, referenceView, referenceFigure,
+								targetSide));
 					}
 
-					decorators.add(createAndRegisterDecorator(difference, referenceView, referenceFigure,
-							targetSide));
 				}
 
 			}
@@ -367,7 +370,10 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		protected IFigure getFigure(View view) {
 			MergeViewerSide side = getSide(view);
 			GraphicalEditPart originEditPart = (GraphicalEditPart)getViewer(side).getEditPart(view);
-			return originEditPart.getFigure();
+			if (originEditPart != null) {
+				return originEditPart.getFigure();
+			}
+			return null;
 		}
 
 		/**
@@ -658,10 +664,15 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 				for (Diff change : changes) {
 					Phantom phantom = fPhantomRegistry.get(change);
 					if (phantom == null) {
-						phantom = createAndRegisterDecorator(change, (View)referenceView, PhantomManager.this
-								.getFigure((View)referenceView), fSide);
+						IFigure referenceFigure = PhantomManager.this.getFigure((View)referenceView);
+						if (referenceFigure != null) {
+							phantom = createAndRegisterDecorator(change, (View)referenceView,
+									referenceFigure, fSide);
+						}
 					}
-					result.add(phantom);
+					if (phantom != null) {
+						result.add(phantom);
+					}
 				}
 				return result;
 			}
@@ -972,64 +983,108 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 *            The phantom.
 		 */
 		private void translateWhenInsideContainerChange(Phantom phantom) {
-			Collection<Diff> changes = Collections2.filter(phantom.getDifference().getMatch()
-					.getDifferences(), new Predicate<Diff>() {
+			// FIXME: It was "phantom.getDifference().getMatch()" replaced by
+			// "getDiffAncestors(phantom.getDifference())" to fix a regression due to an other regression
+			// about
+			// the location of the extensions under matches.
+			Collection<Diff> changes = Collections2.filter(getDiffAncestors(phantom.getDifference()),
+					new Predicate<Diff>() {
 
-				public boolean apply(Diff difference) {
-					// FIXME: it will be changed to CHANGE (change coordinates (or dimension))
-					return difference.getKind() == DifferenceKind.MOVE;
-				}
+						public boolean apply(Diff difference) {
+							// FIXME: it will be changed to CHANGE (change coordinates (or dimension))
+							return difference.getKind() == DifferenceKind.MOVE;
+						}
 
-			});
+					});
 			if (changes.size() > 0) {
 				View referenceView = phantom.getOriginView();
 				View parentReferenceView = (View)referenceView.eContainer();
 				if (parentReferenceView != null) {
 					View parentView = (View)getMatchView(parentReferenceView, phantom.getSide());
 					IFigure parentFigure = getFigure(parentView);
-					Rectangle parentRect = parentFigure.getBounds().getCopy();
-					translateCoordinates(parentFigure, getLayer(parentReferenceView, getSide(parentView)),
-							parentRect);
+					if (parentFigure != null) {
+						Rectangle parentRect = parentFigure.getBounds().getCopy();
+						translateCoordinates(parentFigure,
+								getLayer(parentReferenceView, getSide(parentView)), parentRect);
 
-					IFigure parentReferenceFigure = getFigure(parentReferenceView);
-					Rectangle parentReferenceRect = parentReferenceFigure.getBounds().getCopy();
-					translateCoordinates(parentReferenceFigure, getLayer(parentReferenceView,
-							getSide(parentReferenceView)), parentReferenceRect);
+						IFigure parentReferenceFigure = getFigure(parentReferenceView);
+						// CHECKSTYLE:OFF
+						if (parentReferenceFigure != null) {
+							Rectangle parentReferenceRect = parentReferenceFigure.getBounds().getCopy();
+							translateCoordinates(parentReferenceFigure, getLayer(parentReferenceView,
+									getSide(parentReferenceView)), parentReferenceRect);
 
-					int deltaX = parentRect.x - parentReferenceRect.x;
-					int deltaY = parentRect.y - parentReferenceRect.y;
-					int deltaWidth = parentRect.width - parentReferenceRect.width;
-					int deltaHeight = parentRect.height - parentReferenceRect.height;
+							int deltaX = parentRect.x - parentReferenceRect.x;
+							int deltaY = parentRect.y - parentReferenceRect.y;
+							int deltaWidth = parentRect.width - parentReferenceRect.width;
+							int deltaHeight = parentRect.height - parentReferenceRect.height;
 
-					IFigure figure = phantom.getFigure();
+							IFigure figure = phantom.getFigure();
 
-					Rectangle rect = figure.getBounds().getCopy();
-					rect.x += deltaX;
-					rect.y += deltaY;
-					rect.width += deltaWidth;
-					if (!(figure instanceof Polyline)) {
-						rect.height += deltaHeight;
+							Rectangle rect = figure.getBounds().getCopy();
+							rect.x += deltaX;
+							rect.y += deltaY;
+							rect.width += deltaWidth;
+							if (!(figure instanceof Polyline)) {
+								rect.height += deltaHeight;
+							}
+							figure.setBounds(rect);
+
+							if (figure instanceof Polyline) {
+
+								Point firstPoint = ((Polyline)figure).getPoints().getFirstPoint().getCopy();
+								Point lastPoint = ((Polyline)figure).getPoints().getLastPoint().getCopy();
+
+								firstPoint.x += deltaX;
+								firstPoint.y += deltaY;
+
+								lastPoint.x += deltaX + deltaWidth;
+								lastPoint.y += deltaY;
+
+								((Polyline)figure).setEndpoints(firstPoint, lastPoint);
+
+							}
+						}
+						// CHECKSTYLE:ON
 					}
-					figure.setBounds(rect);
-
-					if (figure instanceof Polyline) {
-
-						Point firstPoint = ((Polyline)figure).getPoints().getFirstPoint().getCopy();
-						Point lastPoint = ((Polyline)figure).getPoints().getLastPoint().getCopy();
-
-						firstPoint.x += deltaX;
-						firstPoint.y += deltaY;
-
-						lastPoint.x += deltaX + deltaWidth;
-						lastPoint.y += deltaY;
-
-						((Polyline)figure).setEndpoints(firstPoint, lastPoint);
-
-					}
-
 				}
 			}
+		}
 
+		/**
+		 * Get all the ancestor matches from the given difference.
+		 * 
+		 * @param difference
+		 *            The difference.
+		 * @return the list of ancestor matches.
+		 */
+		private List<Match> getMatchAncestors(Diff difference) {
+			List<Match> result = new ArrayList<Match>();
+			EObject match = difference.getMatch();
+			while (match != null) {
+				if (match instanceof Match) {
+					result.add((Match)match);
+				}
+				match = match.eContainer();
+			}
+			return result;
+		}
+
+		/**
+		 * Get all the differences above the given one.
+		 * 
+		 * @param difference
+		 *            The difference.
+		 * @return the list of parent differences.
+		 */
+		private List<Diff> getDiffAncestors(Diff difference) {
+			List<Diff> result = new ArrayList<Diff>();
+			Iterator<Match> matches = getMatchAncestors(difference).iterator();
+			while (matches.hasNext()) {
+				Match match = matches.next();
+				result.addAll(match.getDifferences());
+			}
+			return result;
 		}
 
 		/**
@@ -1241,21 +1296,23 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		protected List<View> getReferenceViews(DiagramDiff difference) {
 			List<View> result = new ArrayList<View>();
 			Match matchValue = getComparison().getMatch(difference.getView());
-			if (matchValue.getLeft() != null) {
-				result.add((View)matchValue.getLeft());
-			}
-			if (matchValue.getRight() != null) {
-				result.add((View)matchValue.getRight());
-			}
-			if (getComparison().isThreeWay()) {
-				switch (difference.getKind()) {
-					case DELETE:
-					case CHANGE:
-					case MOVE:
-						result.add((View)matchValue.getOrigin());
-						break;
-					default:
-						break;
+			if (matchValue != null) {
+				if (matchValue.getLeft() != null) {
+					result.add((View)matchValue.getLeft());
+				}
+				if (matchValue.getRight() != null) {
+					result.add((View)matchValue.getRight());
+				}
+				if (getComparison().isThreeWay()) {
+					switch (difference.getKind()) {
+						case DELETE:
+						case CHANGE:
+						case MOVE:
+							result.add((View)matchValue.getOrigin());
+							break;
+						default:
+							break;
+					}
 				}
 			}
 			return result;
