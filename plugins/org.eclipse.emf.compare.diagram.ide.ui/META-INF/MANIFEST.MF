@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.diagram.ide.ui;singleton:=true
 Bundle-Version: 3.0.0.qualifier
-Bundle-Activator: org.eclipse.emf.compare.diagram.ide.ui.internal.GMFCompareUIPlugin
+Bundle-Activator: org.eclipse.emf.compare.diagram.ide.ui.internal.CompareDiagramIDEUIPlugin
 Require-Bundle: org.eclipse.compare,
  org.eclipse.emf.compare,
  org.eclipse.gmf.runtime.diagram.ui,
@@ -11,7 +11,6 @@ Require-Bundle: org.eclipse.compare,
  org.eclipse.emf.compare.ide;bundle-version="3.0.0",
  org.eclipse.emf.compare.ide.ui;bundle-version="2.1.0",
  org.eclipse.emf.compare.rcp.ui;bundle-version="2.1.0",
- org.eclipse.emf.compare.diagram.ide;bundle-version="2.0.0",
  org.eclipse.emf.edit.ui;bundle-version="2.5.0",
  org.eclipse.emf.ecore.edit;bundle-version="2.5.0",
  org.eclipse.emf.compare.edit;bundle-version="3.0.0"
@@ -20,6 +19,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.emf.compare.diagram.ide.ui.internal;x-internal:=true,
  org.eclipse.emf.compare.diagram.ide.ui.internal.accessor;x-internal:=true,
+ org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.factory;x-internal:=true,
  org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram;x-internal:=true,
  org.eclipse.emf.compare.diagram.ide.ui.internal.preferences;x-internal:=true
 Bundle-Vendor: %providerName

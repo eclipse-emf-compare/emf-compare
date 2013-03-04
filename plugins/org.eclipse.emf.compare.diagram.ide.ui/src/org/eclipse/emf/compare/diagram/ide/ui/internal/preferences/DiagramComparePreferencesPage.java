@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.internal.preferences;
 
-import org.eclipse.emf.compare.diagram.diff.util.DiagramCompareConstants;
-import org.eclipse.emf.compare.diagram.diff.util.DiagramCompareUIMessages;
-import org.eclipse.emf.compare.diagram.ide.GMFCompareIDEPlugin;
+import org.eclipse.emf.compare.diagram.ide.ui.internal.CompareDiagramIDEUIPlugin;
+import org.eclipse.emf.compare.diagram.internal.CompareDiagramConstants;
+import org.eclipse.emf.compare.diagram.internal.CompareDiagramUIMessages;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.swt.SWT;
@@ -34,8 +34,8 @@ public class DiagramComparePreferencesPage extends FieldEditorPreferencePage imp
 	 */
 	public DiagramComparePreferencesPage() {
 		super(GRID);
-		setPreferenceStore(GMFCompareIDEPlugin.getDefault().getPreferenceStore());
-		setDescription(DiagramCompareUIMessages.getString("DiagramComparePreferencesPage.description")); //$NON-NLS-1$
+		setPreferenceStore(CompareDiagramIDEUIPlugin.getDefault().getPreferenceStore());
+		setDescription(CompareDiagramUIMessages.getString("DiagramComparePreferencesPage.description")); //$NON-NLS-1$
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class DiagramComparePreferencesPage extends FieldEditorPreferencePage imp
 	 */
 	public void createDiagramComparisonGroup() {
 		final Group diagramGroup = new Group(getFieldEditorParent(), SWT.SHADOW_ETCHED_IN);
-		diagramGroup.setText(DiagramCompareUIMessages
+		diagramGroup.setText(CompareDiagramUIMessages
 				.getString("DiagramComparePreferencesPage.diagramComparisonGroupTitle")); //$NON-NLS-1$
 		diagramGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -53,8 +53,8 @@ public class DiagramComparePreferencesPage extends FieldEditorPreferencePage imp
 		diagramGroup.setLayout(diagramLayout);
 		diagramGroup.setFont(getFieldEditorParent().getFont());
 
-		addField(new IntegerFieldEditor(DiagramCompareConstants.PREFERENCES_KEY_MOVE_THRESHOLD,
-				DiagramCompareConstants.PREFERENCES_DESCRIPTION_MOVE_THRESHOLD, diagramGroup, 3) {
+		addField(new IntegerFieldEditor(CompareDiagramConstants.PREFERENCES_KEY_MOVE_THRESHOLD,
+				CompareDiagramConstants.PREFERENCES_DESCRIPTION_MOVE_THRESHOLD, diagramGroup, 3) {
 			@Override
 			protected void adjustForNumColumns(int numColumns) {
 				// do nothing

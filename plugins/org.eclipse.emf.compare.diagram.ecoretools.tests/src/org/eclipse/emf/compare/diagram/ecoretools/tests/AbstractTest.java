@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.diagram.diff.DiagramDiffExtensionPostProcessor;
+import org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor;
 import org.eclipse.emf.compare.extension.PostProcessorDescriptor;
 import org.eclipse.emf.compare.extension.PostProcessorRegistry;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -29,7 +29,7 @@ public abstract class AbstractTest {
 		postProcessorRegistry.addPostProcessor(new PostProcessorDescriptor(
 				"http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation", null,
 				"org.eclipse.emf.compare.diagram.diff.DiagramDiffExtensionPostProcessor",
-				new DiagramDiffExtensionPostProcessor()));
+				new CompareDiagramPostProcessor()));
 		emfCompare = EMFCompare.builder().setPostProcessorRegistry(postProcessorRegistry).build();
 	}
 
