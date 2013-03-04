@@ -13,9 +13,8 @@ package org.eclipse.emf.compare.diagram.ide.ui.internal;
 import org.eclipse.emf.compare.diagram.internal.CompareDiagramConfiguration;
 import org.eclipse.emf.compare.diagram.internal.CompareDiagramConstants;
 import org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor;
-import org.eclipse.emf.compare.extension.PostProcessorDescriptor;
-import org.eclipse.emf.compare.extension.PostProcessorRegistry;
-import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
+import org.eclipse.emf.compare.postprocessor.IPostProcessor;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -69,13 +68,15 @@ public class CompareDiagramIDEUIPlugin extends AbstractUIPlugin {
 		configuration.setMoveThreshold(getPreferenceStore().getInt(
 				CompareDiagramConstants.PREFERENCES_KEY_MOVE_THRESHOLD));
 
-		PostProcessorRegistry postProcessorRegistry = EMFCompareIDEPlugin.getDefault()
+		IPostProcessor.Registry postProcessorRegistry = EMFCompareRCPPlugin.getDefault()
 				.getPostProcessorRegistry();
-		for (PostProcessorDescriptor descriptor : postProcessorRegistry.getRegisteredPostProcessors()) {
-			if (descriptor.getExtensionClassName().equals(CompareDiagramPostProcessor.class.getName())) {
-				CompareDiagramPostProcessor postProcessor = (CompareDiagramPostProcessor)descriptor
-						.getPostProcessor();
-				postProcessor.setConfiguration(configuration);
+		for (IPostProcessor postprocessor : postProcessorRegistry.getPostProcessors()) {
+			if (postprocessor instanceof CompareDiagramPostProcessor) {
+				((CompareDiagramPostProcessor)postprocessor).setConfiguration(configuration);
+			} else if (postprocessor instanceof IPostProcessor.Descriptor
+					&& ((IPostProcessor.Descriptor)postprocessor).getPostProcessor() instanceof CompareDiagramPostProcessor) {
+				((CompareDiagramPostProcessor)((IPostProcessor.Descriptor)postprocessor).getPostProcessor())
+						.setConfiguration(configuration);
 			}
 		}
 	}

@@ -51,11 +51,11 @@ import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramDiffAcce
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
-import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.utils.DiffUtil;
@@ -1628,7 +1628,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 */
 		if (fCurrentSelectedDiff != null) {
 			final Command command = getEditingDomain().createCopyCommand(fCurrentSelectedDiff, leftToRight,
-					EMFCompareIDEPlugin.getDefault().getMergerRegistry());
+					EMFCompareRCPPlugin.getDefault().getMergerRegistry());
 			getEditingDomain().getCommandStack().execute(command);
 
 			if (leftToRight) {

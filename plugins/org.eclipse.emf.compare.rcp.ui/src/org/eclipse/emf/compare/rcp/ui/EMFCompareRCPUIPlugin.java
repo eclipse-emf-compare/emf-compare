@@ -14,13 +14,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.compare.rcp.ui.internal.util.AbstractRegistryEventListener;
+import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
+import org.eclipse.emf.compare.rcp.ui.internal.DifferenceGroupProviderExtensionRegistryListener;
+import org.eclipse.emf.compare.rcp.ui.internal.FilterExtensionRegistryListener;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -81,13 +81,14 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 		groupProviderRegistry = new IDifferenceGroupProvider.RegistryImpl();
 
 		groupProviderRegistryListener = new DifferenceGroupProviderExtensionRegistryListener(PLUGIN_ID,
-				GROUP_PROVIDER_PPID);
+				GROUP_PROVIDER_PPID, getLog(), groupProviderRegistry);
 		extensionRegistry.addListener(groupProviderRegistryListener, PLUGIN_ID + "." + GROUP_PROVIDER_PPID); //$NON-NLS-1$
 		groupProviderRegistryListener.readRegistry(extensionRegistry);
 
 		filterRegistry = new IDifferenceFilter.RegistryImpl();
 
-		filterRegistryListener = new FilterExtensionRegistryListener(PLUGIN_ID, FILTER_PROVIDER_PPID);
+		filterRegistryListener = new FilterExtensionRegistryListener(PLUGIN_ID, FILTER_PROVIDER_PPID,
+				getLog(), filterRegistry);
 		extensionRegistry.addListener(filterRegistryListener, PLUGIN_ID + "." + FILTER_PROVIDER_PPID); //$NON-NLS-1$
 		filterRegistryListener.readRegistry(extensionRegistry);
 	}
@@ -205,161 +206,5 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 			iterator.next().dispose();
 		}
 		resourcesMapper.clear();
-	}
-
-	private class DifferenceGroupProviderExtensionRegistryListener extends AbstractRegistryEventListener {
-
-		static final String TAG_GROUP_PROVIDER = "group"; //$NON-NLS-1$
-
-		static final String ATT_CLASS = "class"; //$NON-NLS-1$
-
-		static final String ATT_LABEL = "label"; //$NON-NLS-1$
-
-		static final String ATT_ACTIVE = "activeByDefault"; //$NON-NLS-1$
-
-		/**
-		 * @param pluginID
-		 * @param extensionPointID
-		 * @param registry
-		 */
-		public DifferenceGroupProviderExtensionRegistryListener(String pluginID, String extensionPointID) {
-			super(pluginID, extensionPointID);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.util.AbstractRegistryEventListener#readElement(org.eclipse.core.runtime.IConfigurationElement,
-		 *      org.eclipse.emf.compare.rcp.ui.internal.util.AbstractRegistryEventListener.Action)
-		 */
-		@SuppressWarnings("boxing")
-		@Override
-		protected boolean readElement(IConfigurationElement element, Action b) {
-			if (element.getName().equals(TAG_GROUP_PROVIDER)) {
-				if (element.getAttribute(ATT_CLASS) == null) {
-					logMissingAttribute(element, ATT_CLASS);
-				} else if (element.getAttribute(ATT_LABEL) == null) {
-					logMissingAttribute(element, ATT_LABEL);
-				} else if (element.getAttribute(ATT_ACTIVE) == null) {
-					logMissingAttribute(element, ATT_ACTIVE);
-				} else {
-					switch (b) {
-						case ADD:
-							try {
-								IDifferenceGroupProvider provider = (IDifferenceGroupProvider)element
-										.createExecutableExtension(ATT_CLASS);
-								provider.setLabel(element.getAttribute(ATT_LABEL));
-								if (Boolean.valueOf(element.getAttribute(ATT_ACTIVE))) {
-									provider.setDefaultSelected(true);
-								} else {
-									provider.setDefaultSelected(false);
-								}
-								IDifferenceGroupProvider previous = groupProviderRegistry.add(provider);
-								if (previous != null) {
-									log(IStatus.WARNING, "The provider '" + provider.getClass().getName()
-											+ "' is registered twice.");
-								}
-							} catch (CoreException e) {
-								logError(element, e.getMessage());
-							}
-							break;
-						case REMOVE:
-							groupProviderRegistry.remove(element.getAttribute(ATT_CLASS));
-							break;
-					}
-					return true;
-				}
-			}
-			return false;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.util.AbstractRegistryEventListener#logError(org.eclipse.core.runtime.IConfigurationElement,
-		 *      java.lang.String)
-		 */
-		@Override
-		protected void logError(IConfigurationElement element, String string) {
-			log(IStatus.ERROR, string);
-		}
-	}
-
-	private class FilterExtensionRegistryListener extends AbstractRegistryEventListener {
-
-		static final String TAG_FILTER_ACTION = "filter"; //$NON-NLS-1$
-
-		static final String ATT_CLASS = "class"; //$NON-NLS-1$
-
-		static final String ATT_LABEL = "label"; //$NON-NLS-1$
-
-		static final String ATT_ACTIVE = "activeByDefault"; //$NON-NLS-1$
-
-		/**
-		 * @param pluginID
-		 * @param extensionPointID
-		 * @param registry
-		 */
-		public FilterExtensionRegistryListener(String pluginID, String extensionPointID) {
-			super(pluginID, extensionPointID);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.util.AbstractRegistryEventListener#readElement(org.eclipse.core.runtime.IConfigurationElement,
-		 *      org.eclipse.emf.compare.rcp.ui.internal.util.AbstractRegistryEventListener.Action)
-		 */
-		@SuppressWarnings("boxing")
-		@Override
-		protected boolean readElement(IConfigurationElement element, Action b) {
-			if (element.getName().equals(TAG_FILTER_ACTION)) {
-				if (element.getAttribute(ATT_CLASS) == null) {
-					logMissingAttribute(element, ATT_CLASS);
-				} else if (element.getAttribute(ATT_LABEL) == null) {
-					logMissingAttribute(element, ATT_LABEL);
-				} else if (element.getAttribute(ATT_ACTIVE) == null) {
-					logMissingAttribute(element, ATT_ACTIVE);
-				} else {
-					switch (b) {
-						case ADD:
-							try {
-								IDifferenceFilter filter = (IDifferenceFilter)element
-										.createExecutableExtension(ATT_CLASS);
-								filter.setLabel(element.getAttribute(ATT_LABEL));
-								if (Boolean.valueOf(element.getAttribute(ATT_ACTIVE))) {
-									filter.setDefaultSelected(true);
-								} else {
-									filter.setDefaultSelected(false);
-								}
-								IDifferenceFilter previous = filterRegistry.add(filter);
-								if (previous != null) {
-									log(IStatus.WARNING, "The filter '" + filter.getClass().getName()
-											+ "' is registered twice.");
-								}
-							} catch (CoreException e) {
-								logError(element, e.getMessage());
-							}
-							break;
-						case REMOVE:
-							filterRegistry.remove(element.getAttribute(ATT_CLASS));
-							break;
-					}
-					return true;
-				}
-			}
-			return false;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.util.AbstractRegistryEventListener#logError(org.eclipse.core.runtime.IConfigurationElement,
-		 *      java.lang.String)
-		 */
-		@Override
-		protected void logError(IConfigurationElement element, String string) {
-			log(IStatus.ERROR, string);
-		}
 	}
 }

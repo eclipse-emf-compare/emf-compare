@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+
+<!--
+ Copyright (c) 2013 Obeo.
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ 
+ Contributors:
+     Obeo - initial API and implementation
+-->
+
+<plugin>
+   <extension-point id="postProcessor" name="Post Processor" schema="schema/postProcessor.exsd"/>
+   <extension-point id="merger" name="Merger" schema="schema/merger.exsd"/>
+   
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.eclipse.org/emf/compare"
+            class="org.eclipse.emf.compare.ComparePackage"
+            genModel="platform:/plugin/org.eclipse.emf.compare/model/compare.genmodel"/>
+   </extension>
+   
+   <extension
+         point="org.eclipse.emf.compare.rcp.merger">
+      <merger
+            class="org.eclipse.emf.compare.merge.ResourceAttachmentChangeMerger"
+            ranking="10">
+      </merger>
+      <merger
+            class="org.eclipse.emf.compare.merge.ReferenceChangeMerger"
+            ranking="10">
+      </merger>
+      <merger
+            class="org.eclipse.emf.compare.merge.AttributeChangeMerger"
+            ranking="10">
+      </merger>
+   </extension>
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            id="org.eclipse.emf.compare.content.type"
+            name="EMF Compare"
+            priority="normal">
+      </content-type>
+   </extension>
+</plugin>

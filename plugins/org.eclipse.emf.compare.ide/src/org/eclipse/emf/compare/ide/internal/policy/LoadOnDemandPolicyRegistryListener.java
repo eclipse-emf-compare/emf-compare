@@ -12,11 +12,12 @@ package org.eclipse.emf.compare.ide.internal.policy;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy;
 import org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy.Registry;
-import org.eclipse.emf.compare.ide.utils.AbstractRegistryEventListener;
+import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 
 /**
  * A listener for load on demand policy extension point.
@@ -45,60 +46,60 @@ public class LoadOnDemandPolicyRegistryListener extends AbstractRegistryEventLis
 	 *            the id of the extension point to listen to.
 	 */
 	public LoadOnDemandPolicyRegistryListener(ILoadOnDemandPolicy.Registry registry, String pluginID,
-			String extensionPointID) {
-		super(pluginID, extensionPointID);
+			String extensionPointID, ILog log) {
+		super(pluginID, extensionPointID, log);
 		this.registry = registry;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.utils.AbstractRegistryEventListener#readElement(org.eclipse.core.runtime.IConfigurationElement,
-	 *      org.eclipse.emf.compare.ide.utils.AbstractRegistryEventListener.Action)
+	 * @see org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener#validateExtensionElement(org.eclipse.core.runtime.IConfigurationElement)
 	 */
 	@Override
-	protected boolean readElement(IConfigurationElement element, Action action) {
-		if (element.getName().equals(TAG_POLICY)) {
+	protected boolean validateExtensionElement(IConfigurationElement element) {
+		if (TAG_POLICY.equals(element.getName())) {
 			if (element.getAttribute(ATT_CLASS) == null) {
 				logMissingAttribute(element, ATT_CLASS);
+				return false;
 			} else {
-				switch (action) {
-					case ADD:
-						try {
-							ILoadOnDemandPolicy policy = (ILoadOnDemandPolicy)element
-									.createExecutableExtension(ATT_CLASS);
-							ILoadOnDemandPolicy previous = registry.addPolicy(policy);
-							if (previous != null) {
-								EMFCompareIDEPlugin.getDefault().log(
-										IStatus.WARNING,
-										"The factory '" + policy.getClass().getName()
-												+ "' is registered twice.");
-							}
-						} catch (CoreException e) {
-							logError(element, e.getMessage());
-						}
-						break;
-					case REMOVE:
-						registry.removePolicy(element.getAttribute(ATT_CLASS));
-						break;
-					default:
-						throw new IllegalStateException("Unsupported case " + action);
-				}
 				return true;
 			}
+		} else {
+			return false;
 		}
-		return false;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.utils.AbstractRegistryEventListener#logError(org.eclipse.core.runtime.IConfigurationElement,
-	 *      java.lang.String)
+	 * @see org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener#addedValid(org.eclipse.core.runtime.IConfigurationElement)
 	 */
 	@Override
-	protected void logError(IConfigurationElement element, String string) {
-		EMFCompareIDEPlugin.getDefault().log(IStatus.ERROR, string);
+	protected boolean addedValid(IConfigurationElement element) {
+		try {
+			ILoadOnDemandPolicy policy = (ILoadOnDemandPolicy)element.createExecutableExtension(ATT_CLASS);
+			ILoadOnDemandPolicy previous = registry.addPolicy(policy);
+			if (previous != null) {
+				EMFCompareIDEPlugin.getDefault().log(IStatus.WARNING,
+						"The factory '" + policy.getClass().getName() + "' is registered twice.");
+			}
+		} catch (CoreException e) {
+			log(IStatus.ERROR, element, e.getMessage());
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener#removedValid(org.eclipse.core.runtime.IConfigurationElement)
+	 */
+	@Override
+	protected boolean removedValid(IConfigurationElement element) {
+		registry.removePolicy(element.getAttribute(ATT_CLASS));
+		return true;
 	}
 
 }

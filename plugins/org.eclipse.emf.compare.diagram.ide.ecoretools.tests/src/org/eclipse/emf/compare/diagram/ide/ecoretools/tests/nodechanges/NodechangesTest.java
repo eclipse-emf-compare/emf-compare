@@ -1,13 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2013 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ecoretools.tests.nodechanges;
-
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.instanceOf;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedAttribute;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,20 +16,31 @@ import java.util.List;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.diagram.ecoretools.tests.AbstractTest;
 import org.eclipse.emf.compare.diagram.ecoretools.tests.DiagramInputData;
 import org.eclipse.emf.compare.diagram.ide.ecoretools.tests.nodechanges.data.NodeChangesInputData;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.CompareDiagramIDEUIPlugin;
 import org.eclipse.emf.compare.diagram.internal.CompareDiagramConstants;
 import org.eclipse.emf.compare.diagram.internal.extensions.NodeChange;
-import org.eclipse.emf.compare.extension.PostProcessorRegistry;
-import org.eclipse.emf.compare.ide.EMFCompareIDE;
+import org.eclipse.emf.compare.postprocessor.IPostProcessor;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Iterators;
+
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.instanceOf;
+
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertSame;
+import static junit.framework.Assert.assertTrue;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedAttribute;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 
 @SuppressWarnings("nls")
 public class NodechangesTest extends AbstractTest {
@@ -42,7 +54,7 @@ public class NodechangesTest extends AbstractTest {
 	}
 	
 	@Override
-	protected PostProcessorRegistry getPostProcessorRegistry() {
+	protected IPostProcessor.Registry getPostProcessorRegistry() {
 		throw new UnsupportedOperationException("do not call this in IDE context");
 	}
 	
@@ -70,8 +82,9 @@ public class NodechangesTest extends AbstractTest {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
 
-		final IComparisonScope scope = EMFCompareIDE.createDefaultScope(left.getResourceSet(), right.getResourceSet());
-		final Comparison comparison = EMFCompareIDE.builder().build().compare(scope);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right.getResourceSet());
+		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(
+				EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build().compare(scope);
 		
 		final List<Diff> differences = comparison.getDifferences();
 		
@@ -90,8 +103,9 @@ public class NodechangesTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final IComparisonScope scope = EMFCompareIDE.createDefaultScope(left.getResourceSet(), right.getResourceSet());
-		final Comparison comparison = EMFCompareIDE.builder().build().compare(scope);
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right.getResourceSet());
+		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(
+				EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build().compare(scope);
 		
 		final List<Diff> differences = comparison.getDifferences();
 

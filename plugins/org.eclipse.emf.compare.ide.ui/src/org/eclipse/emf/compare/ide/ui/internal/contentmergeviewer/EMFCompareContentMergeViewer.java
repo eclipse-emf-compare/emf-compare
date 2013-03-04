@@ -28,12 +28,12 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
-import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColorProvider;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer;
@@ -331,7 +331,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		EList<Diff> differences = getComparison().getDifferences();
 
 		final Command copyCommand = getEditingDomain().createCopyAllNonConflictingCommand(differences,
-				leftToRight, EMFCompareIDEPlugin.getDefault().getMergerRegistry());
+				leftToRight, EMFCompareRCPPlugin.getDefault().getMergerRegistry());
 
 		getEditingDomain().getCommandStack().execute(copyCommand);
 

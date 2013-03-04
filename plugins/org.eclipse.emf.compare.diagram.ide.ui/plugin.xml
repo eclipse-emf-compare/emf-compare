@@ -25,7 +25,7 @@
       </page>
    </extension>
      <extension
-           point="org.eclipse.emf.compare.ide.ui.accessor_factory">
+           point="org.eclipse.emf.compare.ide.ui.accessorFactory">
         <factory
               class="org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.factory.DiagramIDEDiffAccessorFactory"
               ranking="40">

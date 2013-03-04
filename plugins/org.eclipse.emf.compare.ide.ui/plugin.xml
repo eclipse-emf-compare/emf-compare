@@ -13,7 +13,7 @@
 -->
 
 <plugin>
-   <extension-point id="accessor_factory" name="Accessor Factory" schema="schema/accessor_factory.exsd"/>
+   <extension-point id="accessorFactory" name="Accessor Factory" schema="schema/accessorFactory.exsd"/>
    <extension
          point="org.eclipse.compare.structureMergeViewers">
       <viewer
@@ -75,7 +75,7 @@
       </factory>
    </extension>
    <extension
-         point="org.eclipse.emf.compare.ide.ui.accessor_factory">
+         point="org.eclipse.emf.compare.ide.ui.accessorFactory">
       <factory
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.factory.IDEEObjectAccessorFactory"
             ranking="10">

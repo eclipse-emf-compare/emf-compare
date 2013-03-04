@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,10 +8,15 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.extension;
+package org.eclipse.emf.compare.postprocessor;
+
+import com.google.common.collect.ImmutableList;
+
+import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.scope.IComparisonScope;
 
 /**
  * Implementations of this interface can be used in order to tell EMF Compare how to make post treatments at
@@ -93,4 +98,82 @@ public interface IPostProcessor {
 	 */
 	void postComparison(Comparison comparison, Monitor monitor);
 
+	/**
+	 * Returns the pattern of namespace URI on which this post processor can be applied.
+	 * 
+	 * @return The namespace URI pattern.
+	 */
+	Pattern getNsURI();
+
+	/**
+	 * Returns the pattern of resource URI on which this post processor can be applied.
+	 * 
+	 * @return The resource URI.
+	 */
+	Pattern getResourceURI();
+
+	/**
+	 * Registry of post processor.
+	 * 
+	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+	 */
+	public interface Registry {
+
+		/**
+		 * Adds a post processor to the registry.
+		 * 
+		 * @param postProcessor
+		 *            Post Processor that is to be added to this registry.
+		 */
+		IPostProcessor addPostProcessor(IPostProcessor postProcessor);
+
+		/**
+		 * Removes all extensions from this registry.
+		 * 
+		 * @noreference This method is not intended to be referenced by clients.
+		 */
+		void clear();
+
+		/**
+		 * This will return a copy of the registered post processors list.
+		 * 
+		 * @return A copy of the registered post processors list.
+		 */
+		ImmutableList<IPostProcessor> getPostProcessors();
+
+		/**
+		 * Removes a post processor from this registry.
+		 * 
+		 * @param postProcessorClassName
+		 *            Qualified class name of the post processor that is to be removed from the registry.
+		 * @return the previous value associated with <tt>key</tt>, or <tt>null</tt> if there was no mapping
+		 *         for <tt>key</tt>.
+		 */
+		IPostProcessor removePostProcessor(String postProcessorClassName);
+
+		/**
+		 * Retrieve the post processors from a given <code>scope</code>. The scope provides the set of scanned
+		 * namespaces and resource uris. If they match with the regex of some post processors, then tey are
+		 * returned.
+		 * 
+		 * @param scope
+		 *            The given scope.
+		 * @return The associated post processors if any.
+		 */
+		ImmutableList<IPostProcessor> getPostProcessors(IComparisonScope scope);
+	}
+
+	/**
+	 * Wrapper describing the given post processor
+	 * 
+	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+	 */
+	interface Descriptor extends IPostProcessor {
+		/**
+		 * Returns the wrapped post processor
+		 * 
+		 * @return the wrapped post processor
+		 */
+		IPostProcessor getPostProcessor();
+	}
 }

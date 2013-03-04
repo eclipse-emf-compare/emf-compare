@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,14 +8,16 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.utils;
+package org.eclipse.emf.compare.rcp.extension;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IRegistryEventListener;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
 /**
  * Abstract utility class to listen to the {@link IExtensionRegistry}. It provides base implementation to
@@ -49,26 +51,31 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 	}
 
 	/**
-	 * The plugin ID which declare the extension point to be monitored.
+	 * The namespace of the extension point to be monitored.
 	 */
-	private final String pluginID;
+	private final String namespace;
 
 	/**
 	 * The extension point ID to be monitored.
 	 */
 	private final String extensionPointID;
 
+	private final ILog log;
+
 	/**
 	 * Creates a new registry event listener.
 	 * 
-	 * @param pluginID
-	 *            The plugin ID which declare the extension point to be monitored.
+	 * @param namespace
+	 *            The namespace of the extension point to be monitored.
 	 * @param extensionPointID
 	 *            The extension point ID to be monitored
+	 * @param log
+	 *            The log object to be used to log error and/or warning.
 	 */
-	public AbstractRegistryEventListener(String pluginID, String extensionPointID) {
-		this.pluginID = pluginID;
+	public AbstractRegistryEventListener(String namespace, String extensionPointID, ILog log) {
+		this.namespace = namespace;
 		this.extensionPointID = extensionPointID;
+		this.log = log;
 	}
 
 	/**
@@ -79,7 +86,7 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 	 *            the registry to read.
 	 */
 	public void readRegistry(IExtensionRegistry extensionRegistry) {
-		IExtensionPoint point = extensionRegistry.getExtensionPoint(pluginID, extensionPointID);
+		IExtensionPoint point = extensionRegistry.getExtensionPoint(namespace, extensionPointID);
 		if (point != null) {
 			IConfigurationElement[] elements = point.getConfigurationElements();
 			for (int i = 0; i < elements.length; i++) {
@@ -99,7 +106,55 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 	 *            is the element added or removed.
 	 * @return true if the element is recognized as valid regarding the monitored extension point.
 	 */
-	protected abstract boolean readElement(IConfigurationElement element, Action action);
+	protected boolean readElement(IConfigurationElement element, Action action) {
+		final boolean ret;
+		if (validateExtensionElement(element)) {
+			switch (action) {
+				case ADD:
+					ret = addedValid(element);
+					break;
+				case REMOVE:
+					ret = removedValid(element);
+					break;
+				default:
+					ret = false;
+					break;
+			}
+		} else {
+			ret = false;
+		}
+		return ret;
+	}
+
+	/**
+	 * Validates if the given element is an element for the given extension and is well constructed. Returns
+	 * true if the element should be further parsed for addition or removal.
+	 * 
+	 * @param element
+	 *            the element to validate.
+	 * @return true if the element should be further parsed for addition or removal, else otherwise.
+	 */
+	protected abstract boolean validateExtensionElement(IConfigurationElement element);
+
+	/**
+	 * Process the given element as the addition of a valid element extension.
+	 * 
+	 * @param element
+	 *            the element to be added.
+	 * @return true if the given element has been added and if its children should be processed, false
+	 *         otherwise.
+	 */
+	protected abstract boolean addedValid(IConfigurationElement element);
+
+	/**
+	 * Process the given element as the removal of a valid element extension.
+	 * 
+	 * @param element
+	 *            the element to be removed.
+	 * @return true if the given element has been removed and if its children should be processed, false
+	 *         otherwise.
+	 */
+	protected abstract boolean removedValid(IConfigurationElement element);
 
 	/**
 	 * Reads the given element and, if recognized, browse recursively the children and try to read it.
@@ -117,12 +172,12 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 				internalReadElement(children[i], action);
 			}
 		} else {
-			logError(element, "Error processing extension: " + element); //$NON-NLS-1$
+			log(IStatus.ERROR, element, "Error processing extension: " + element);
 		}
 	}
 
 	/**
-	 * Delegates the logging of a missing attribute to {@link #logError(IConfigurationElement, String)} with a
+	 * Delegates the logging of a missing attribute to {@link #log(IConfigurationElement, String)} with a
 	 * proper message.
 	 * 
 	 * @param element
@@ -131,18 +186,33 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 	 *            the name of the missing attribute.
 	 */
 	protected void logMissingAttribute(IConfigurationElement element, String attributeName) {
-		logError(element, "The required attribute '" + attributeName + "' not defined"); //$NON-NLS-1$//$NON-NLS-2$
+		log(IStatus.ERROR, element, "The required attribute '" + attributeName + "' not defined");
 	}
 
 	/**
-	 * Log the error to any mean (often the current plugin logger).
+	 * Log the error to the current plugin logger.
 	 * 
 	 * @param element
 	 *            the element from which comes to the error.
-	 * @param string
+	 * @param message
 	 *            the message to be logged.
 	 */
-	protected abstract void logError(IConfigurationElement element, String string);
+	protected void log(int severity, IConfigurationElement element, String message) {
+		log.log(new Status(severity, element.getDeclaringExtension().getContributor().getName(), message));
+	}
+
+	/**
+	 * Log the error to the current plugin logger.
+	 * 
+	 * @param element
+	 *            the element from which comes to the error.
+	 * @param message
+	 *            the message to be logged.
+	 */
+	protected void log(IConfigurationElement element, Throwable t) {
+		log.log(new Status(IStatus.ERROR, element.getDeclaringExtension().getContributor().getName(), t
+				.getMessage(), t));
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -192,58 +262,5 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 	 */
 	public void removed(IExtensionPoint[] extensionPoints) {
 		// no need to listen to this.
-	}
-
-	/**
-	 * Simple utility class to create proxy of extension that are
-	 * {@link IConfigurationElement#createExecutableExtension(String) instantiable}.
-	 * <p>
-	 * No test of the {@link IConfigurationElement#isValid() validity} of the wrapped
-	 * {@link IConfigurationElement} is performed. As such you should always extend this class while listening
-	 * to the {@link IExtensionRegistry} and react properly the removal of the wrapped
-	 * {@link IConfigurationElement}.
-	 * 
-	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
-	 */
-	public static class PluginClassDescriptor {
-		/**
-		 * The element from which create an instance.
-		 */
-		protected IConfigurationElement element;
-
-		/**
-		 * The name of the attribute that holds the class full name to be instantiated.
-		 */
-		protected String attributeName;
-
-		/**
-		 * Creates a new descriptor for given element keeping the class name to be instantiated in an
-		 * attribute named {@code attributeName}.
-		 * 
-		 * @param element
-		 *            The element from which create an instance.
-		 * @param attributeName
-		 *            The name of the attribute that holds the class full name to be instantiated.
-		 */
-		public PluginClassDescriptor(IConfigurationElement element, String attributeName) {
-			this.element = element;
-			this.attributeName = attributeName;
-		}
-
-		/**
-		 * Creates a new instance.
-		 * 
-		 * @return the new instance.
-		 * @throws RuntimeException
-		 *             wraps a CoreException if an instance of the executable extension could not be created
-		 *             for any reason.
-		 */
-		public Object createInstance() {
-			try {
-				return element.createExecutableExtension(attributeName);
-			} catch (CoreException e) {
-				throw new RuntimeException(e);
-			}
-		}
 	}
 }

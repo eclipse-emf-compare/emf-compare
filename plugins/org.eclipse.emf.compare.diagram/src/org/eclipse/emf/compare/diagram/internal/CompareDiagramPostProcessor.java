@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.diagram.internal;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
@@ -21,14 +22,14 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.factories.DiagramExtensionFactoryRegistry;
 import org.eclipse.emf.compare.diagram.internal.factories.IDiagramExtensionFactory;
-import org.eclipse.emf.compare.extension.IPostProcessor;
+import org.eclipse.emf.compare.postprocessor.AbstractPostProcessor;
 
 /**
  * Post-processor to create the diagram difference extensions.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class CompareDiagramPostProcessor implements IPostProcessor {
+public class CompareDiagramPostProcessor extends AbstractPostProcessor {
 
 	/** Registry of diagram difference extension factories. */
 	private Set<IDiagramExtensionFactory> diagramExtensionFactories;
@@ -40,7 +41,7 @@ public class CompareDiagramPostProcessor implements IPostProcessor {
 	 * Constructor.
 	 */
 	public CompareDiagramPostProcessor() {
-
+		super(Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null); //$NON-NLS-1$
 	}
 
 	/**
@@ -49,8 +50,8 @@ public class CompareDiagramPostProcessor implements IPostProcessor {
 	 * @param configuration
 	 *            The diagram comparison configuration.
 	 */
-	public CompareDiagramPostProcessor(CompareDiagramConfiguration configuration) {
-		this.configuration = configuration;
+	public CompareDiagramPostProcessor(Pattern nsURI, Pattern resourceURI) {
+		super(nsURI, resourceURI);
 	}
 
 	/**
@@ -66,7 +67,7 @@ public class CompareDiagramPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postMatch(org.eclipse.emf.compare.Comparison,
+	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor#postMatch(org.eclipse.emf.compare.Comparison,
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postMatch(Comparison comparison, Monitor monitor) {
@@ -75,7 +76,7 @@ public class CompareDiagramPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postDiff(org.eclipse.emf.compare.Comparison,
+	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor#postDiff(org.eclipse.emf.compare.Comparison,
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postDiff(Comparison comparison, Monitor monitor) {
@@ -84,7 +85,7 @@ public class CompareDiagramPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postRequirements(org.eclipse.emf.compare.Comparison,
+	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor#postRequirements(org.eclipse.emf.compare.Comparison,
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postRequirements(Comparison comparison, Monitor monitor) {
@@ -114,7 +115,7 @@ public class CompareDiagramPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postEquivalences(org.eclipse.emf.compare.Comparison,
+	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor#postEquivalences(org.eclipse.emf.compare.Comparison,
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postEquivalences(Comparison comparison, Monitor monitor) {
@@ -123,7 +124,7 @@ public class CompareDiagramPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postConflicts(org.eclipse.emf.compare.Comparison,
+	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor#postConflicts(org.eclipse.emf.compare.Comparison,
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postConflicts(Comparison comparison, Monitor monitor) {
@@ -132,7 +133,7 @@ public class CompareDiagramPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postComparison(org.eclipse.emf.compare.Comparison,
+	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor#postComparison(org.eclipse.emf.compare.Comparison,
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postComparison(Comparison comparison, Monitor monitor) {

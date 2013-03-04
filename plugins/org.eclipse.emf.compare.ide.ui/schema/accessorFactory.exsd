@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.emf.compare.ide.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.eclipse.emf.compare.ide.ui" id="accessor_factory" name="Accessor Factory"/>
+         <meta.schema plugin="org.eclipse.emf.compare.ide.ui" id="accessorFactory" name="Accessor Factory"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]

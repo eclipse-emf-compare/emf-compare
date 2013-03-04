@@ -8,7 +8,8 @@ Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.5.0",
  org.eclipse.emf.compare;bundle-version="2.0.1",
- org.eclipse.emf.ecore.xmi;bundle-version="2.5.0"
+ org.eclipse.emf.ecore.xmi;bundle-version="2.5.0",
+ org.eclipse.emf.compare.rcp;bundle-version="2.1.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Localization: plugin
@@ -19,7 +20,6 @@ Import-Package: com.google.common.annotations;version="[11.0.0,15.0.0)",
  com.google.common.io;version="[11.0.0,15.0.0)",
  com.google.common.util.concurrent;version="[11.0.0,15.0.0)"
 Export-Package: org.eclipse.emf.compare.ide,
- org.eclipse.emf.compare.ide.internal.extension;x-internal:=true,
  org.eclipse.emf.compare.ide.internal.policy;x-internal:=true,
  org.eclipse.emf.compare.ide.internal.utils;x-friends:="org.eclipse.emf.compare.ide.ui",
  org.eclipse.emf.compare.ide.policy,

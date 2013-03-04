@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.emf.compare.rcp;singleton:=true
+Bundle-Version: 2.1.0.qualifier
+Bundle-Activator: org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin
+Bundle-Vendor: %providerName
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.compare;bundle-version="3.0.0"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
+Bundle-Localization: plugin
+Export-Package: org.eclipse.emf.compare.rcp,
+ org.eclipse.emf.compare.rcp.extension,
+ org.eclipse.emf.compare.rcp.internal;x-internal:=true,
+ org.eclipse.emf.compare.rcp.internal.merger;x-internal:=true,
+ org.eclipse.emf.compare.rcp.internal.postprocessor;x-internal:=true

@@ -17,6 +17,7 @@ import com.google.common.collect.Iterators;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicMonitor;
@@ -27,11 +28,10 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.extension.PostProcessorDescriptor;
-import org.eclipse.emf.compare.extension.PostProcessorRegistry;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.compare.postprocessor.PostProcessorRegistryImpl;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.diff.UMLDiffExtensionPostProcessor;
@@ -67,10 +67,9 @@ public abstract class AbstractTest {
 
 	@Before
 	public void before() {
-		PostProcessorRegistry registry = new PostProcessorRegistry();
-		registry.addPostProcessor(new PostProcessorDescriptor("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML",
-				null, "org.eclipse.emf.compare.uml2.diff.UMLDiffExtensionPostProcessor",
-				new UMLDiffExtensionPostProcessor()));
+		PostProcessorRegistryImpl registry = new PostProcessorRegistryImpl();
+		registry.addPostProcessor(new UMLDiffExtensionPostProcessor(Pattern
+				.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null));
 		emfCompare = EMFCompare.builder().setPostProcessorRegistry(registry).build();
 	}
 

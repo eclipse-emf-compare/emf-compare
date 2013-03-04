@@ -23,19 +23,19 @@
    
    
    <extension
-         point="org.eclipse.emf.compare.postProcessor">
-      <postProcessor
+         point="org.eclipse.emf.compare.rcp.postProcessor">
+      <processor
             class="org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor">
          <nsURI
                value="http://www.eclipse.org/gmf/runtime/\d.\d.\d/notation">
          </nsURI>
-      </postProcessor>
+      </processor>
    </extension>
    <extension
-         point="org.eclipse.emf.compare.ide.mergerExtension">
+         point="org.eclipse.emf.compare.rcp.merger">
       <merger
             class="org.eclipse.emf.compare.diagram.internal.merge.CompareDiagramMerger"
-            ranking="11">
+            ranking="20">
       </merger>
    </extension>
 

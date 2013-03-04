@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2012, 2013 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.uml2.diff;
 
 import com.google.common.collect.Iterables;
@@ -11,6 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
@@ -19,7 +30,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.extension.IPostProcessor;
+import org.eclipse.emf.compare.postprocessor.AbstractPostProcessor;
 import org.eclipse.emf.compare.uml2.UMLDiff;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.DiffExtensionFactoryRegistry;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory;
@@ -29,7 +40,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.uml2.common.util.SubsetSupersetEObjectEList;
 
-public class UMLDiffExtensionPostProcessor implements IPostProcessor {
+public class UMLDiffExtensionPostProcessor extends AbstractPostProcessor {
+
 	/** UML2 extensions factories. */
 	private Set<IDiffExtensionFactory> uml2ExtensionFactories;
 
@@ -60,10 +72,22 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 	 */
 	private static final Field SUBSET_FEATURES_FIELD = getSubsetField();
 
+	public UMLDiffExtensionPostProcessor() {
+		super(Pattern.compile("http://www.eclipse.org/uml2/\\d.\\d.\\d/UML"), null);
+	}
+
+	/**
+	 * @param nsURI
+	 * @param resourceURI
+	 */
+	public UMLDiffExtensionPostProcessor(Pattern nsURI, Pattern resourceURI) {
+		super(nsURI, resourceURI);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postMatch(org.eclipse.emf.compare.Comparison,
+	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor#postMatch(org.eclipse.emf.compare.Comparison,
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postMatch(Comparison comparison, Monitor monitor) {
@@ -73,7 +97,7 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postDiff(org.eclipse.emf.compare.Comparison,
+	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor#postDiff(org.eclipse.emf.compare.Comparison,
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postDiff(Comparison comparison, Monitor monitor) {
@@ -178,7 +202,7 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postRequirements(org.eclipse.emf.compare.Comparison,
+	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor#postRequirements(org.eclipse.emf.compare.Comparison,
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postRequirements(Comparison comparison, Monitor monitor) {
@@ -188,7 +212,7 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postEquivalences(org.eclipse.emf.compare.Comparison,
+	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor#postEquivalences(org.eclipse.emf.compare.Comparison,
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postEquivalences(Comparison comparison, Monitor monitor) {
@@ -218,7 +242,7 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postConflicts(org.eclipse.emf.compare.Comparison,
+	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor#postConflicts(org.eclipse.emf.compare.Comparison,
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postConflicts(Comparison comparison, Monitor monitor) {
@@ -228,7 +252,7 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postComparison(org.eclipse.emf.compare.Comparison,
+	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor#postComparison(org.eclipse.emf.compare.Comparison,
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postComparison(Comparison comparison, Monitor monitor) {

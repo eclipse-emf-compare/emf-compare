@@ -41,13 +41,13 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
-import org.eclipse.emf.compare.ide.EMFCompareIDE;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.actions.save.SaveComparisonModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
 import org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.actions.FilterActionMenu;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.actions.GroupActionMenu;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
@@ -272,7 +272,8 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				}
 
 				final IComparisonScope scope = syncModel.createMinimizedScope();
-				final Comparison compareResult = EMFCompareIDE.builder().build().compare(scope,
+				final Comparison compareResult = EMFCompare.builder().setPostProcessorRegistry(
+						EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build().compare(scope,
 						BasicMonitor.toMonitor(monitor));
 
 				final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();

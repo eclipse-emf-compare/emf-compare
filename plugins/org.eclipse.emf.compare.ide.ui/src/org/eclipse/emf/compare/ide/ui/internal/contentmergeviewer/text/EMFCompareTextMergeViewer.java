@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,10 +33,10 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
-import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.AttributeChangeNode;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
@@ -91,7 +91,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 			final Comparison comparison = attributeChange.getMatch().getComparison();
 
 			final Command copyCommand = fEditingDomain.createCopyAllNonConflictingCommand(comparison
-					.getDifferences(), leftToRight, EMFCompareIDEPlugin.getDefault().getMergerRegistry());
+					.getDifferences(), leftToRight, EMFCompareRCPPlugin.getDefault().getMergerRegistry());
 			fEditingDomain.getCommandStack().execute(copyCommand);
 
 			refresh();
@@ -104,7 +104,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 			final AttributeChange attributeChange = ((AttributeChangeNode)input).getTarget();
 
 			final Command copyCommand = fEditingDomain.createCopyCommand(attributeChange, leftToRight,
-					EMFCompareIDEPlugin.getDefault().getMergerRegistry());
+					EMFCompareRCPPlugin.getDefault().getMergerRegistry());
 			fEditingDomain.getCommandStack().execute(copyCommand);
 
 			refresh();

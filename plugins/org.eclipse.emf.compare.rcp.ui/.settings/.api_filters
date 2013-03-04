@@ -8,12 +8,4 @@
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/emf/compare/rcp/ui/mergeviewer/accessor/ManyStructuralFeatureAccessorImpl.java" type="org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.ManyStructuralFeatureAccessorImpl">
-        <filter id="421683322">
-            <message_arguments>
-                <message_argument value="org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.ManyStructuralFeatureAccessorImpl"/>
-                <message_argument value="getDiffValue(Diff)"/>
-            </message_arguments>
-        </filter>
-    </resource>
 </component>

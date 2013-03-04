@@ -21,19 +21,19 @@ Contributors:
             genModel="model/uml2diff.genmodel"/>
    </extension>
    <extension
-         point="org.eclipse.emf.compare.postProcessor">
-      <postProcessor
+         point="org.eclipse.emf.compare.rcp.postProcessor">
+      <processor
             class="org.eclipse.emf.compare.uml2.diff.UMLDiffExtensionPostProcessor">
          <nsURI
                value="http://www.eclipse.org/uml2/\d.0.0/UML">
          </nsURI>
-      </postProcessor>
+      </processor>
    </extension>
    <extension
-         point="org.eclipse.emf.compare.ide.mergerExtension">
+         point="org.eclipse.emf.compare.rcp.merger">
       <merger
             class="org.eclipse.emf.compare.uml2.merge.UMLDiffMerger"
-            ranking="11">
+            ranking="20">
       </merger>
    </extension>
 

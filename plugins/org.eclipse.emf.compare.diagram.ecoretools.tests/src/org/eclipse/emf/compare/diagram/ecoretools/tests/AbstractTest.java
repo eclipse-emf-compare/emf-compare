@@ -1,13 +1,24 @@
+/*******************************************************************************
+ * Copyright (c) 2013 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ecoretools.tests;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor;
-import org.eclipse.emf.compare.extension.PostProcessorDescriptor;
-import org.eclipse.emf.compare.extension.PostProcessorRegistry;
+import org.eclipse.emf.compare.postprocessor.IPostProcessor;
+import org.eclipse.emf.compare.postprocessor.PostProcessorRegistryImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.junit.After;
@@ -21,15 +32,13 @@ public abstract class AbstractTest {
 
 	private EMFCompare emfCompare;
 	
-	private PostProcessorRegistry postProcessorRegistry;
+	private PostProcessorRegistryImpl postProcessorRegistry;
 
 	@Before
 	public void before() {
-		postProcessorRegistry = new PostProcessorRegistry();
-		postProcessorRegistry.addPostProcessor(new PostProcessorDescriptor(
-				"http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation", null,
-				"org.eclipse.emf.compare.diagram.diff.DiagramDiffExtensionPostProcessor",
-				new CompareDiagramPostProcessor()));
+		postProcessorRegistry = new PostProcessorRegistryImpl();
+		postProcessorRegistry.addPostProcessor(new CompareDiagramPostProcessor(
+				Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null));
 		emfCompare = EMFCompare.builder().setPostProcessorRegistry(postProcessorRegistry).build();
 	}
 
@@ -40,7 +49,7 @@ public abstract class AbstractTest {
 	/**
 	 * @return the postProcessorRegistry
 	 */
-	protected PostProcessorRegistry getPostProcessorRegistry() {
+	protected IPostProcessor.Registry getPostProcessorRegistry() {
 		return postProcessorRegistry;
 	}
 	

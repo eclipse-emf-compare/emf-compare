@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2012 Obeo.
+ * Copyright (c) 2006, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide;
+package org.eclipse.emf.compare.rcp.internal;
 
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
@@ -19,9 +19,9 @@ import java.util.ResourceBundle;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public final class EMFCompareIDEMessages {
+public final class EMFCompareRCPMessages {
 	/** Full qualified path to the properties file in which to seek the keys. */
-	private static final String BUNDLE_NAME = "org.eclipse.emf.compare.ide.emfcompareidemessages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.emf.compare.rcp.internal.emfcomparercpmessages"; //$NON-NLS-1$
 
 	/** Contains the locale specific {@link String}s needed by this plug-in. */
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
@@ -29,7 +29,7 @@ public final class EMFCompareIDEMessages {
 	/**
 	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
-	private EMFCompareIDEMessages() {
+	private EMFCompareRCPMessages() {
 		// prevents instantiation
 	}
 
@@ -57,7 +57,8 @@ public final class EMFCompareIDEMessages {
 	 *         <code>'!' + key + '!'</code> will be returned in case we didn't find it in the bundle.
 	 */
 	public static String getString(String key) {
-		// Pass through MessageFormat so that we're consistent in the handling of special chars such as the
+		// Pass through MessageFormat so that we're consistent in the handling
+		// of special chars such as the
 		// apostrophe
 		return MessageFormat.format(internalGetString(key), new Object[] {});
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,10 +24,10 @@ import org.eclipse.emf.compare.diff.DiffBuilder;
 import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.equi.DefaultEquiEngine;
 import org.eclipse.emf.compare.equi.IEquiEngine;
-import org.eclipse.emf.compare.extension.IPostProcessor;
-import org.eclipse.emf.compare.extension.PostProcessorRegistry;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
+import org.eclipse.emf.compare.postprocessor.IPostProcessor;
+import org.eclipse.emf.compare.postprocessor.PostProcessorRegistryImpl;
 import org.eclipse.emf.compare.req.DefaultReqEngine;
 import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
@@ -66,7 +66,7 @@ public class EMFCompare {
 	private final IConflictDetector conflictDetector;
 
 	/** The PostProcessorRegistry to use to find an IPostProcessor. */
-	private final PostProcessorRegistry postProcessorRegistry;
+	private final IPostProcessor.Registry postProcessorRegistry;
 
 	/**
 	 * Creates a new EMFCompare object able to compare Notifier with the help of given engines.
@@ -86,7 +86,7 @@ public class EMFCompare {
 	 */
 	protected EMFCompare(IMatchEngine matchEngine, IDiffEngine diffEngine, IReqEngine reqEngine,
 			IEquiEngine equiEngine, IConflictDetector conflictDetector,
-			PostProcessorRegistry postProcessorRegistry) {
+			IPostProcessor.Registry postProcessorRegistry) {
 		this.matchEngine = checkNotNull(matchEngine);
 		this.diffEngine = checkNotNull(diffEngine);
 		this.reqEngine = checkNotNull(reqEngine);
@@ -246,7 +246,7 @@ public class EMFCompare {
 		protected IConflictDetector conflictDetector;
 
 		/** The PostProcessorRegistry to use to find an IPostProcessor. */
-		protected PostProcessorRegistry registry;
+		protected IPostProcessor.Registry registry;
 
 		/**
 		 * Creates a new builder object.
@@ -321,7 +321,7 @@ public class EMFCompare {
 		 *            the PostProcessor to be used to find the post processor of each comparison steps.
 		 * @return this same builder to allow chained call.
 		 */
-		public Builder setPostProcessorRegistry(PostProcessorRegistry r) {
+		public Builder setPostProcessorRegistry(IPostProcessor.Registry r) {
 			this.registry = checkNotNull(r);
 			return this;
 		}
@@ -345,7 +345,7 @@ public class EMFCompare {
 				equiEngine = new DefaultEquiEngine();
 			}
 			if (registry == null) {
-				registry = new PostProcessorRegistry();
+				registry = new PostProcessorRegistryImpl();
 			}
 			if (conflictDetector == null) {
 				conflictDetector = new DefaultConflictDetector();

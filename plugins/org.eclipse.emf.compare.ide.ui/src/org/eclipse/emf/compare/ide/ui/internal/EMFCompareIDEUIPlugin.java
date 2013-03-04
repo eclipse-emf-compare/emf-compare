@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,11 +13,12 @@ package org.eclipse.emf.compare.ide.ui.internal;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory;
-import org.eclipse.emf.compare.ide.utils.AbstractRegistryEventListener;
+import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -66,7 +67,7 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 
 		registry = new IAccessorFactory.RegistryImpl();
 
-		listener = new AccessorFactoryExtensionRegistryListener(PLUGIN_ID, ACCESSOR_FACTORY_PPID);
+		listener = new AccessorFactoryExtensionRegistryListener(PLUGIN_ID, ACCESSOR_FACTORY_PPID, getLog());
 		extensionRegistry.addListener(listener, PLUGIN_ID + "." + ACCESSOR_FACTORY_PPID); //$NON-NLS-1$
 		listener.readRegistry(extensionRegistry);
 	}
@@ -179,65 +180,71 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		 * @param extensionPointID
 		 * @param registry
 		 */
-		public AccessorFactoryExtensionRegistryListener(String pluginID, String extensionPointID) {
-			super(pluginID, extensionPointID);
+		public AccessorFactoryExtensionRegistryListener(String pluginID, String extensionPointID, ILog log) {
+			super(pluginID, extensionPointID, log);
 		}
 
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.ide.utils.AbstractRegistryEventListener#readElement(org.eclipse.core.runtime.IConfigurationElement,
-		 *      org.eclipse.emf.compare.ide.utils.AbstractRegistryEventListener.Action)
+		 * @see org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener#validateExtensionElement(org.eclipse.core.runtime.IConfigurationElement)
 		 */
 		@Override
-		protected boolean readElement(IConfigurationElement element, Action b) {
+		protected boolean validateExtensionElement(IConfigurationElement element) {
+			final boolean valid;
 			if (element.getName().equals(TAG_FACTORY)) {
 				if (element.getAttribute(ATT_CLASS) == null) {
 					logMissingAttribute(element, ATT_CLASS);
+					valid = false;
 				} else if (element.getAttribute(ATT_RANKING) == null) {
 					String rankingStr = element.getAttribute(ATT_RANKING);
 					try {
 						Integer.parseInt(rankingStr);
 					} catch (NumberFormatException nfe) {
-						logError(element, "Attribute '" + ATT_RANKING
+						log(IStatus.ERROR, element, "Attribute '" + ATT_RANKING
 								+ "' is malformed, should be an integer.");
 					}
 					logMissingAttribute(element, ATT_RANKING);
+					valid = false;
 				} else {
-					switch (b) {
-						case ADD:
-							try {
-								IAccessorFactory factory = (IAccessorFactory)element
-										.createExecutableExtension(ATT_CLASS);
-								factory.setRanking(Integer.parseInt(element.getAttribute(ATT_RANKING)));
-								IAccessorFactory previous = registry.add(factory);
-								if (previous != null) {
-									log(IStatus.WARNING, "The factory '" + factory.getClass().getName()
-											+ "' is registered twice.");
-								}
-							} catch (CoreException e) {
-								logError(element, e.getMessage());
-							}
-							break;
-						case REMOVE:
-							registry.remove(element.getAttribute(ATT_CLASS));
-							break;
-					}
-					return true;
+					valid = true;
 				}
+			} else {
+				valid = false;
 			}
-			return false;
+			return valid;
 		}
 
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.ide.utils.AbstractRegistryEventListener#logError(org.eclipse.core.runtime.IConfigurationElement,
-		 *      java.lang.String)
+		 * @see org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener#addedValid(org.eclipse.core.runtime.IConfigurationElement)
 		 */
 		@Override
-		protected void logError(IConfigurationElement element, String string) {
-			log(IStatus.ERROR, string);
+		protected boolean addedValid(IConfigurationElement element) {
+			try {
+				IAccessorFactory factory = (IAccessorFactory)element.createExecutableExtension(ATT_CLASS);
+				factory.setRanking(Integer.parseInt(element.getAttribute(ATT_RANKING)));
+				IAccessorFactory previous = registry.add(factory);
+				if (previous != null) {
+					log(IStatus.WARNING, element, "The accessor factory '" + factory.getClass().getName()
+							+ "' is registered twice.");
+				}
+			} catch (CoreException e) {
+				log(element, e);
+			}
+			return true;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener#removedValid(org.eclipse.core.runtime.IConfigurationElement)
+		 */
+		@Override
+		protected boolean removedValid(IConfigurationElement element) {
+			registry.remove(element.getAttribute(ATT_CLASS));
+			return true;
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,6 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
-import org.eclipse.emf.compare.ide.EMFCompareIDE;
 import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeEditorInput;
 import org.eclipse.emf.compare.match.DefaultComparisonFactory;
 import org.eclipse.emf.compare.match.DefaultEqualityHelperFactory;
@@ -36,6 +35,7 @@ import org.eclipse.emf.compare.match.IComparisonFactory;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.EObject;
@@ -60,7 +60,8 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 		IEObjectMatcher eObjectMatcher = DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER);
 		IMatchEngine matchEngine = new MatchEObjectEngine(eObjectMatcher, new DefaultComparisonFactory(
 				new DefaultEqualityHelperFactory()));
-		EMFCompare comparator = EMFCompareIDE.builder().setMatchEngine(matchEngine).build();
+		EMFCompare comparator = EMFCompare.builder().setMatchEngine(matchEngine).setPostProcessorRegistry(
+				EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build();
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
 		input = new ComparisonScopeEditorInput(configuration, editingDomain, adapterFactory, comparator,
 				scope);

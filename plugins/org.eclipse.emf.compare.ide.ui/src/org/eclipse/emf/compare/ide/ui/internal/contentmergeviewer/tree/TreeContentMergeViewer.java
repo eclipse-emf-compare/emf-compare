@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,8 @@ import java.util.ResourceBundle;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.TreeMergeViewer;
@@ -145,7 +145,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 		List<Diff> differences = getComparison().getDifferences((EObject)firstElement);
 
 		final Command command = getEditingDomain().createCopyAllNonConflictingCommand(differences,
-				leftToRight, EMFCompareIDEPlugin.getDefault().getMergerRegistry());
+				leftToRight, EMFCompareRCPPlugin.getDefault().getMergerRegistry());
 		getEditingDomain().getCommandStack().execute(command);
 
 		refresh();
