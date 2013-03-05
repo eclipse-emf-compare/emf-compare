@@ -86,19 +86,16 @@
     <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
     <module>../plugins/org.eclipse.emf.compare.diagram</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ide</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui</module>
 
     <!-- Ecore Tools -->
     <module>../packaging/org.eclipse.emf.compare.diagram.ecoretools-feature</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.ecoretools</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools.tests</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools.tests</module>
 
     <!-- Papyrus -->
     <module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ide.papyrus</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
   </modules>
 
