@@ -25,9 +25,9 @@
 <repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="com.google.guava" version="10.0.1.v201203051515"/>
+<unit id="com.google.guava" version="11.0.2.v201303041551"/>
 <unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/"/>
+<repository location="http://build.eclipse.org/orbit/committers/orbit-I/20130305082625/I20130305082625/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.emfstore.modelmutator.feature.feature.group" version="0.9.3.M5"/>
