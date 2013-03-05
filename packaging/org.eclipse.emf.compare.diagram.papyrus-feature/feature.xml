@@ -32,13 +32,6 @@
    </requires>
 
    <plugin
-         id="org.eclipse.emf.compare.diagram.ide.papyrus"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.emf.compare.diagram.ide.ui.papyrus"
          download-size="0"
          install-size="0"
