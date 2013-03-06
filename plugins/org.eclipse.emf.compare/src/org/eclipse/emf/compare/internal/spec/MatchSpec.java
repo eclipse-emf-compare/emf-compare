@@ -105,7 +105,7 @@ public class MatchSpec extends MatchImpl {
 	 * 
 	 * @see org.eclipse.emf.ecore.impl.BasicEObjectImpl#toString()
 	 */
-	@SuppressWarnings({"boxing", "nls" })
+	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
 		// @formatter:off

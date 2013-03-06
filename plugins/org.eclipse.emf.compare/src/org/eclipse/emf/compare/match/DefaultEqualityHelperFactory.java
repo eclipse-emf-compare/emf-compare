@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match;
 
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.LoadingCache;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.utils.EqualityHelper;
@@ -50,7 +50,7 @@ public class DefaultEqualityHelperFactory implements IEqualityHelperFactory {
 	 * @see org.eclipse.emf.compare.match.IEqualityHelperFactory#createEqualityHelper()
 	 */
 	public IEqualityHelper createEqualityHelper() {
-		Cache<EObject, URI> cache = EqualityHelper.createDefaultCache(getCacheBuilder());
+		LoadingCache<EObject, URI> cache = EqualityHelper.createDefaultCache(getCacheBuilder());
 		IEqualityHelper equalityHelper = new EqualityHelper(cache);
 		return equalityHelper;
 	}

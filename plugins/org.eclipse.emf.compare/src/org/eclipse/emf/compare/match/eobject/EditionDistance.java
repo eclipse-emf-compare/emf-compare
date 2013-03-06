@@ -11,7 +11,7 @@
 package org.eclipse.emf.compare.match.eobject;
 
 import com.google.common.base.Predicate;
-import com.google.common.cache.Cache;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Sets;
@@ -96,7 +96,7 @@ public class EditionDistance implements DistanceFunction {
 		IEqualityHelperFactory fakeEqualityHelperFactory = new DefaultEqualityHelperFactory() {
 			@Override
 			public IEqualityHelper createEqualityHelper() {
-				final Cache<EObject, URI> cache = EqualityHelper.createDefaultCache(getCacheBuilder());
+				final LoadingCache<EObject, URI> cache = EqualityHelper.createDefaultCache(getCacheBuilder());
 				return new EqualityHelper(cache) {
 					@Override
 					protected boolean matchingURIs(EObject object1, EObject object2) {
