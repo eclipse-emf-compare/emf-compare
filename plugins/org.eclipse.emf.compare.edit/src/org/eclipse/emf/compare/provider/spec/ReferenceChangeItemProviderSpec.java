@@ -96,19 +96,19 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		if (sourceSide != null) {
 			Object leftValue = ReferenceUtil.safeEGet(sourceSide, eStructuralFeature);
 			if (leftValue == null || isStringAndNullOrEmpty(leftValue)) {
-				changeText = "unset"; //$NON-NLS-1$
+				changeText = "unset";
 			} else if (otherSide != null) {
 				Object otherValue = ReferenceUtil.safeEGet(otherSide, eStructuralFeature);
 				if (otherValue == null || isStringAndNullOrEmpty(otherValue)) {
-					changeText = "set"; //$NON-NLS-1$
+					changeText = "set";
 				} else {
-					changeText = "changed"; //$NON-NLS-1$
+					changeText = "changed";
 				}
 			} else {
-				changeText = "set"; //$NON-NLS-1$
+				changeText = "set";
 			}
 		} else {
-			changeText = "unset"; //$NON-NLS-1$
+			changeText = "unset";
 		}
 		return changeText;
 	}
@@ -243,21 +243,20 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 
 		switch (refChange.getKind()) {
 			case ADD:
-				ret.append(" add", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+				ret.append(" add", Style.DECORATIONS_STYLER);
 				break;
 			case DELETE:
-				ret.append(" delete", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+				ret.append(" delete", Style.DECORATIONS_STYLER);
 				break;
 			case CHANGE:
-				ret.append(" " + changeText(refChange, refChange.getReference()), //$NON-NLS-1$
-						Style.DECORATIONS_STYLER);
+				ret.append(" " + changeText(refChange, refChange.getReference()), Style.DECORATIONS_STYLER);
 				break;
 			case MOVE:
-				ret.append(" move", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+				ret.append(" move", Style.DECORATIONS_STYLER);
 				break;
 			default:
-				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
-						+ " value: " + refChange.getKind()); //$NON-NLS-1$
+				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName()
+						+ " value: " + refChange.getKind());
 		}
 		ret.append("]", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 

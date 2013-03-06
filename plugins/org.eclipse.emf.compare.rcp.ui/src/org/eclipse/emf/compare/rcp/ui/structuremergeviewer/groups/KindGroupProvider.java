@@ -45,13 +45,13 @@ public class KindGroupProvider implements IDifferenceGroupProvider {
 		final List<Diff> diffs = comparison.getDifferences();
 
 		final DifferenceGroup additions = new DefaultDifferenceGroup(comparison, diffs,
-				ofKind(DifferenceKind.ADD), "Additions"); //$NON-NLS-1$
+				ofKind(DifferenceKind.ADD), "Additions");
 		final DifferenceGroup deletions = new DefaultDifferenceGroup(comparison, diffs,
-				ofKind(DifferenceKind.DELETE), "Deletions"); //$NON-NLS-1$
+				ofKind(DifferenceKind.DELETE), "Deletions");
 		final DifferenceGroup changes = new DefaultDifferenceGroup(comparison, diffs,
-				ofKind(DifferenceKind.CHANGE), "Changes"); //$NON-NLS-1$
+				ofKind(DifferenceKind.CHANGE), "Changes");
 		final DifferenceGroup moves = new DefaultDifferenceGroup(comparison, diffs,
-				ofKind(DifferenceKind.MOVE), "Moves"); //$NON-NLS-1$
+				ofKind(DifferenceKind.MOVE), "Moves");
 
 		return ImmutableList.of(additions, deletions, changes, moves);
 	}

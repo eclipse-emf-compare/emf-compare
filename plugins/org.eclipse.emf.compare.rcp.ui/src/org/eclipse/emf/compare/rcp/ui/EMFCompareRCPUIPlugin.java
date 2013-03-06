@@ -256,8 +256,8 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 								}
 								IDifferenceGroupProvider previous = groupProviderRegistry.add(provider);
 								if (previous != null) {
-									log(IStatus.WARNING, "The provider '" + provider.getClass().getName() //$NON-NLS-1$
-											+ "' is registered twice."); //$NON-NLS-1$
+									log(IStatus.WARNING, "The provider '" + provider.getClass().getName()
+											+ "' is registered twice.");
 								}
 							} catch (CoreException e) {
 								logError(element, e.getMessage());
@@ -334,8 +334,8 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 								}
 								IDifferenceFilter previous = filterRegistry.add(filter);
 								if (previous != null) {
-									log(IStatus.WARNING, "The filter '" + filter.getClass().getName() //$NON-NLS-1$
-											+ "' is registered twice."); //$NON-NLS-1$
+									log(IStatus.WARNING, "The filter '" + filter.getClass().getName()
+											+ "' is registered twice.");
 								}
 							} catch (CoreException e) {
 								logError(element, e.getMessage());

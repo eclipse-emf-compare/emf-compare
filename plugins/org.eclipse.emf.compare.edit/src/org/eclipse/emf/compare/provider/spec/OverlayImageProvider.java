@@ -229,12 +229,12 @@ public class OverlayImageProvider {
 		 * @see org.eclipse.emf.edit.provider.ComposedImage#getSize(java.util.Collection)
 		 */
 		@Override
-		public Size getSize(Collection<? extends Size> imageSizes) {
-			this.imageSizes = newArrayList(imageSizes);
+		public Size getSize(Collection<? extends Size> sizes) {
+			this.imageSizes = newArrayList(sizes);
 			List<Point> drawPoints = getDrawPoints(null);
 
 			Size result = new Size();
-			for (int i = 0; i < imageSizes.size(); i++) {
+			for (int i = 0; i < sizes.size(); i++) {
 				Size size = this.imageSizes.get(i);
 				Point point = drawPoints.get(i);
 

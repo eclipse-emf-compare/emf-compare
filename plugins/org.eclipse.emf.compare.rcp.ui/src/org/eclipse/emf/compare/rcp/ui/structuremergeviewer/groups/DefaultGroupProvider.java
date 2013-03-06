@@ -39,7 +39,7 @@ public class DefaultGroupProvider implements IDifferenceGroupProvider {
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getLabel()
 	 */
 	public String getLabel() {
-		return "Default"; //$NON-NLS-1$
+		return "Default";
 	}
 
 	/**

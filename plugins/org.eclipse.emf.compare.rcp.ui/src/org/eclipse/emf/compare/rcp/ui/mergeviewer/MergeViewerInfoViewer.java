@@ -169,7 +169,7 @@ public class MergeViewerInfoViewer extends ContentViewer {
 
 			if (getLabelProvider() instanceof ILabelProvider) {
 				ILabelProvider labelProvider = (ILabelProvider)getLabelProvider();
-				fFeatureLabel.setText("resource contents"); //$NON-NLS-1$
+				fFeatureLabel.setText("resource contents");
 
 				fEObjectIcon.setImage(labelProvider.getImage(resource));
 				fEObjectLabel.setText(labelProvider.getText(resource));

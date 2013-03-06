@@ -199,8 +199,8 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 					try {
 						Integer.parseInt(rankingStr);
 					} catch (NumberFormatException nfe) {
-						logError(element, "Attribute '" + ATT_RANKING //$NON-NLS-1$
-								+ "' is malformed, should be an integer."); //$NON-NLS-1$
+						logError(element, "Attribute '" + ATT_RANKING
+								+ "' is malformed, should be an integer.");
 					}
 					logMissingAttribute(element, ATT_RANKING);
 				} else {
@@ -212,8 +212,8 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 								factory.setRanking(Integer.parseInt(element.getAttribute(ATT_RANKING)));
 								IAccessorFactory previous = registry.add(factory);
 								if (previous != null) {
-									log(IStatus.WARNING, "The factory '" + factory.getClass().getName() //$NON-NLS-1$
-											+ "' is registered twice."); //$NON-NLS-1$
+									log(IStatus.WARNING, "The factory '" + factory.getClass().getName()
+											+ "' is registered twice.");
 								}
 							} catch (CoreException e) {
 								logError(element, e.getMessage());

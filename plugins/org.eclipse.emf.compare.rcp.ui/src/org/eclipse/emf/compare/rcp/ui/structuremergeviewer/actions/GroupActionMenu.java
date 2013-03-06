@@ -56,7 +56,7 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 		this.menuManager = menuManager;
 		this.structureMergeViewerGrouper = structureMergeViewerGrouper;
 		this.defaultGroupProvider = defaultGroupProvider;
-		setToolTipText("Groups"); //$NON-NLS-1$
+		setToolTipText("Groups");
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareRCPUIPlugin.PLUGIN_ID,
 				"icons/full/toolb16/group.gif")); //$NON-NLS-1$
 		setMenuCreator(this);

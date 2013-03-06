@@ -241,7 +241,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 
 	private IRunnableWithProgress inputChangedTask = new IRunnableWithProgress() {
 		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-			monitor.beginTask("Computing Structure Differences", 100); //$NON-NLS-1$
+			monitor.beginTask("Computing Structure Differences", 100);
 			compareInputChanged((ICompareInput)getInput(), new SubProgressMonitor(monitor, 100));
 			monitor.done();
 		}
@@ -394,7 +394,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				String message = null;
 				if (comparison.getDifferences().isEmpty()) {
-					message = "No Differences"; //$NON-NLS-1$
+					message = "No Differences";
 				}
 
 				if (Display.getCurrent() != null) {

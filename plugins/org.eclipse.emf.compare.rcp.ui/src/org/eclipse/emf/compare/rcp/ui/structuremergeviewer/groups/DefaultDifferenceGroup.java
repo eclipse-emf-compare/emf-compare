@@ -58,7 +58,7 @@ public class DefaultDifferenceGroup implements DifferenceGroup {
 	 */
 	public DefaultDifferenceGroup(Comparison comparison, Iterable<? extends Diff> unfiltered,
 			Predicate<? super Diff> filter) {
-		this(comparison, unfiltered, filter, "Group", null); //$NON-NLS-1$
+		this(comparison, unfiltered, filter, "Group", null);
 	}
 
 	/**
