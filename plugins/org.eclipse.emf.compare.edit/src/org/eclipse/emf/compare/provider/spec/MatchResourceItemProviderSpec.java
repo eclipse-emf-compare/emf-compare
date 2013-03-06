@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.MatchResourceItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
@@ -32,7 +33,7 @@ import org.eclipse.emf.edit.provider.IItemLabelProvider;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class MatchResourceItemProviderSpec extends MatchResourceItemProvider implements IItemStyledLabelProvider {
+public class MatchResourceItemProviderSpec extends MatchResourceItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider {
 
 	/**
 	 * Constructor calling super {@link #MatchResourceItemProviderSpec(AdapterFactory)}.
@@ -100,6 +101,7 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider imp
 	public Object getImage(Object object) {
 		final MatchResource matchResource = (MatchResource)object;
 		Resource resource = matchResource.getLeft();
+		Object image = null;
 		if (resource == null) {
 			resource = matchResource.getRight();
 			if (resource == null) {
@@ -111,15 +113,14 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider imp
 			IItemLabelProvider itemLabelProvider = (IItemLabelProvider)getRootAdapterFactory().adapt(
 					resource, IItemLabelProvider.class);
 
-			Object image = itemLabelProvider.getImage(resource);
-			if (image != null) {
-				return image;
-			} else {
-				return super.getImage(object);
+			image = itemLabelProvider.getImage(resource);
+			if (image == null) {
+				image = super.getImage(object);
 			}
 		} else {
-			return super.getImage(object);
+			image = super.getImage(object);
 		}
+		return image;
 	}
 
 	/**
@@ -164,5 +165,14 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider imp
 	 */
 	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		return new ComposedStyledString(getText(object));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.IItemDescriptionProvider#getDescription(java.lang.Object)
+	 */
+	public String getDescription(Object object) {
+		return getText(object);
 	}
 }

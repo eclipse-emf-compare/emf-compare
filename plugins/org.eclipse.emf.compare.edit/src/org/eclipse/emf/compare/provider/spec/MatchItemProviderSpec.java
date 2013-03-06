@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,6 +32,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
+import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
@@ -44,7 +45,7 @@ import org.eclipse.emf.ecore.EObject;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class MatchItemProviderSpec extends MatchItemProvider implements IItemStyledLabelProvider {
+public class MatchItemProviderSpec extends MatchItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider {
 
 	/**
 	 * A predicate to know if the given {@link ReferenceChange} is a reference of type containment.
@@ -64,7 +65,7 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 		}
 	};
 
-	/** A provider to compose images. */
+	/** The image provider used with this item provider. */
 	private final OverlayImageProvider overlayProvider;
 
 	/**
@@ -282,5 +283,14 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 	 */
 	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		return new ComposedStyledString(getText(object));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.IItemDescriptionProvider#getDescription(java.lang.Object)
+	 */
+	public String getDescription(Object object) {
+		return getText(object);
 	}
 }

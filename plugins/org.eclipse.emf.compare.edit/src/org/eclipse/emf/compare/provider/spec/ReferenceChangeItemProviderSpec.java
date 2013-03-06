@@ -32,6 +32,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
+import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.ReferenceChangeItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
@@ -49,8 +50,12 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider implements IItemStyledLabelProvider {
+public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider {
 
+	/** The elide length. */
+	private static final int ELIDE_LENGTH = 50;
+
+	/** The image provider used with this item provider. */
 	private final OverlayImageProvider overlayProvider;
 
 	/**
@@ -90,6 +95,19 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		return changeText;
 	}
 
+	/**
+	 * Returns the type of change linked to the given {@link EStructuralFeature} ("unset", "set" or
+	 * "changed"), according the the given sides.
+	 * 
+	 * @param eStructuralFeature
+	 *            the given {@link EStructuralFeature}.
+	 * @param sourceSide
+	 *            the source side as an {@link EObject}.
+	 * @param otherSide
+	 *            the other side as an {@link EObject}.
+	 * @return a String ("unset", "set" or "changed") containing the type of change linked to the given
+	 *         {@link EStructuralFeature}, according the the given sides.
+	 */
 	private static String changeText(final EStructuralFeature eStructuralFeature, EObject sourceSide,
 			EObject otherSide) {
 		String changeText;
@@ -113,6 +131,13 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		return changeText;
 	}
 
+	/**
+	 * Checks if the given Object is a null or empty String.
+	 * 
+	 * @param s
+	 *            the given Object.
+	 * @return true if the Object is a null or empty String, false otherwise.
+	 */
 	private static boolean isStringAndNullOrEmpty(Object s) {
 		if (s instanceof String) {
 			return Strings.isNullOrEmpty((String)s);
@@ -121,16 +146,30 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		}
 	}
 
+	/**
+	 * Returns the name of the reference linked to the given {@link ReferenceChange}.
+	 * 
+	 * @param refChange
+	 *            the given {@link ReferenceChange}.
+	 * @return the name of the reference linked to the given {@link ReferenceChange}.
+	 */
 	protected String getReferenceText(final ReferenceChange refChange) {
 		return refChange.getReference().getName();
 	}
 
+	/**
+	 * Converts to text the given {@link ReferenceChange}.
+	 * 
+	 * @param refChange
+	 *            the given {@link ReferenceChange}.
+	 * @return a nice text from the the given {@link ReferenceChange}.
+	 */
 	protected String getValueText(final ReferenceChange refChange) {
 		String value = AdapterFactoryUtil.getText(getRootAdapterFactory(), refChange.getValue());
 		if (value == null) {
 			value = "<null>"; //$NON-NLS-1$
 		} else {
-			value = org.eclipse.emf.compare.provider.spec.Strings.elide(value, 50, "..."); //$NON-NLS-1$
+			value = org.eclipse.emf.compare.provider.spec.Strings.elide(value, ELIDE_LENGTH, "..."); //$NON-NLS-1$
 		}
 		return value;
 	}
@@ -180,6 +219,13 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 
 	}
 
+	/**
+	 * Returns the children of the given {@link Match}.
+	 * 
+	 * @param matchOfValue
+	 *            the given {@link Match}.
+	 * @return the children of the given {@link Match}.
+	 */
 	private Collection<?> getChildren(Match matchOfValue) {
 		final Collection<?> children;
 		ITreeItemContentProvider matchItemContentProvider = (ITreeItemContentProvider)adapterFactory.adapt(
@@ -258,6 +304,47 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 						+ " value: " + refChange.getKind());
 		}
 		ret.append("]", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+
+		return ret;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.IItemDescriptionProvider#getDescription(java.lang.Object)
+	 */
+	public String getDescription(Object object) {
+		final ReferenceChange refChange = (ReferenceChange)object;
+
+		final String valueText = getValueText(refChange);
+		final String referenceText = getReferenceText(refChange);
+
+		String remotely = ""; //$NON-NLS-1$
+		if (refChange.getSource() == DifferenceSource.RIGHT) {
+			remotely = "remotely "; //$NON-NLS-1$
+		}
+
+		String ret = ""; //$NON-NLS-1$
+		final String hasBeen = " has been "; //$NON-NLS-1$
+
+		switch (refChange.getKind()) {
+			case ADD:
+				ret = valueText + hasBeen + remotely + "added to " + referenceText; //$NON-NLS-1$ 
+				break;
+			case DELETE:
+				ret = valueText + hasBeen + remotely + "deleted from " + referenceText; //$NON-NLS-1$ 
+				break;
+			case CHANGE:
+				String changeText = changeText(refChange, refChange.getReference());
+				ret = referenceText + " " + valueText + hasBeen + remotely + changeText; //$NON-NLS-1$ 
+				break;
+			case MOVE:
+				ret = valueText + hasBeen + remotely + "moved in " + referenceText; //$NON-NLS-1$ 
+				break;
+			default:
+				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
+						+ " value: " + refChange.getKind()); //$NON-NLS-1$
+		}
 
 		return ret;
 	}
