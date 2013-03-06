@@ -26,6 +26,10 @@
             contentTypeId="org.eclipse.emf.ecore.xmi"
             structureMergeViewerId="org.eclipse.emf.compare.ide.ui.internal.structureMergeViewer">
       </contentTypeBinding>
+      <contentTypeBinding
+            contentTypeId="org.eclipse.emf.compare.content.type"
+            structureMergeViewerId="org.eclipse.emf.compare.ide.ui.internal.structureMergeViewer">
+      </contentTypeBinding>
    </extension>
    <extension
          point="org.eclipse.compare.contentMergeViewers">
@@ -38,6 +42,10 @@
       <contentTypeBinding
             contentMergeViewerId="org.eclipse.emf.compare.ide.ui.internal.EObjectContentMergeViewer"
             contentTypeId="org.eclipse.emf.ecore.xmi">
+      </contentTypeBinding>
+      <contentTypeBinding
+            contentMergeViewerId="org.eclipse.emf.compare.ide.ui.internal.EObjectContentMergeViewer"
+            contentTypeId="org.eclipse.emf.compare.content.type">
       </contentTypeBinding>
       <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table.TableContentMergeViewerCreator"
