@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
 
 import com.google.common.collect.ImmutableSet;
 
+import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -103,8 +104,9 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 		if (input instanceof AttributeChangeNode) {
 			final AttributeChange attributeChange = ((AttributeChangeNode)input).getTarget();
 
-			final Command copyCommand = fEditingDomain.createCopyCommand(attributeChange, leftToRight,
-					EMFCompareRCPPlugin.getDefault().getMergerRegistry());
+			final Command copyCommand = fEditingDomain.createCopyCommand(Collections
+					.singletonList(attributeChange), leftToRight, EMFCompareRCPPlugin.getDefault()
+					.getMergerRegistry());
 			fEditingDomain.getCommandStack().execute(copyCommand);
 
 			refresh();

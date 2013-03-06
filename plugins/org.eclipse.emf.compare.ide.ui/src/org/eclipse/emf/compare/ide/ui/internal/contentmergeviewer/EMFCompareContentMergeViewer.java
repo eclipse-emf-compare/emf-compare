@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
+import java.util.Collection;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.ResourceBundle;
@@ -40,6 +41,8 @@ import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.ICompareAccessor;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.SubDiffElementsFilter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
@@ -567,5 +570,27 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			getEditingDomain().getCommandStack().removeCommandStackListener(fCommandStackListener);
 		}
 		super.handleDispose(event);
+	}
+
+	/**
+	 * Checks the state of the filter sub diff elements.
+	 * 
+	 * @return true, if the filter sub diff is active, false otherwise.
+	 */
+	@SuppressWarnings("unchecked")
+	protected boolean isSubDiffFilterActive() {
+		Object property = getCompareConfiguration().getProperty(EMFCompareConstants.SELECTED_FILTERS);
+		final Collection<IDifferenceFilter> selectedFilters;
+		if (property == null) {
+			return false;
+		} else {
+			selectedFilters = (Collection<IDifferenceFilter>)property;
+			for (IDifferenceFilter iDifferenceFilter : selectedFilters) {
+				if (iDifferenceFilter instanceof SubDiffElementsFilter) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

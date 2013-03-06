@@ -47,8 +47,8 @@ public class CopyCommand extends AbstractCopyCommand {
 	 *            The registry of mergers.
 	 * @since 3.0
 	 */
-	public CopyCommand(ChangeRecorder changeRecorder, Collection<Notifier> notifiers, List<Diff> differences,
-			boolean leftToRight, IMerger.Registry mergerRegistry) {
+	public CopyCommand(ChangeRecorder changeRecorder, Collection<Notifier> notifiers,
+			List<? extends Diff> differences, boolean leftToRight, IMerger.Registry mergerRegistry) {
 		super(changeRecorder, notifiers, differences, leftToRight, mergerRegistry);
 	}
 

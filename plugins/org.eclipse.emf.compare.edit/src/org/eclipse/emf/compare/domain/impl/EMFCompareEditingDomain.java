@@ -14,7 +14,6 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.command.BasicCommandStack;
@@ -149,11 +148,15 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 	 *      boolean, org.eclipse.emf.compare.merge.IMerger.Registry)
 	 * @since 3.0
 	 */
-	public Command createCopyCommand(Diff diff, boolean leftToRight, IMerger.Registry mergerRegistry) {
-		ImmutableSet<Notifier> notifiers = ImmutableSet.<Notifier> builder().add(
-				diff.getMatch().getComparison()).addAll(fNotifiers).build();
-		return new CopyCommand(fChangeRecorder, notifiers, Collections.singletonList(diff), leftToRight,
-				mergerRegistry);
+	public Command createCopyCommand(List<? extends Diff> differences, boolean leftToRight,
+			IMerger.Registry mergerRegistry) {
+		ImmutableSet.Builder<Notifier> notifiersBuilder = ImmutableSet.builder();
+		for (Diff diff : differences) {
+			notifiersBuilder.add(diff.getMatch().getComparison());
+		}
+		ImmutableSet<Notifier> notifiers = notifiersBuilder.addAll(fNotifiers).build();
+
+		return new CopyCommand(fChangeRecorder, notifiers, differences, leftToRight, mergerRegistry);
 	}
 
 	/**

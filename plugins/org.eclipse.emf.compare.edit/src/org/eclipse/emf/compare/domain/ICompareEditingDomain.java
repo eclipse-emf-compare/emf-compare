@@ -35,7 +35,8 @@ public interface ICompareEditingDomain {
 	/**
 	 * @since 3.0
 	 */
-	Command createCopyCommand(Diff diff, boolean leftToRight, IMerger.Registry mergerRegistry);
+	Command createCopyCommand(List<? extends Diff> differences, boolean leftToRight,
+			IMerger.Registry mergerRegistry);
 
 	/**
 	 * @since 3.0

@@ -25,6 +25,7 @@ import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -51,6 +52,7 @@ import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramDiffAcce
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
@@ -1627,7 +1629,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 * instead. This code will break whenever we implement that change.
 		 */
 		if (fCurrentSelectedDiff != null) {
-			final Command command = getEditingDomain().createCopyCommand(fCurrentSelectedDiff, leftToRight,
+			final Command command = getEditingDomain().createCopyCommand(
+					Collections.singletonList(fCurrentSelectedDiff), leftToRight,
 					EMFCompareRCPPlugin.getDefault().getMergerRegistry());
 			getEditingDomain().getCommandStack().execute(command);
 
