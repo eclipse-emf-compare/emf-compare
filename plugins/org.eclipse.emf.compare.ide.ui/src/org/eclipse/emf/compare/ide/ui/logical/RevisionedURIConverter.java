@@ -49,7 +49,7 @@ import org.eclipse.team.core.history.IFileRevision;
  * as version <i>1.17</i> of the ecore. If I compare my own copy of the genmodel with the "latest from HEAD"
  * (version <i>1.19</i>), then this URI Converter will be used to resolve the proxy of that "remote" file with
  * the corresponding "remote" version of the ecore file. In this case, it should be version <i>1.20</i>
- * (latest non-breaking) of the ecore file, not the <i>1.17</i> that was commited along.
+ * (latest non-breaking) of the ecore file, not the <i>1.17</i> that was commited alongside it.
  * </p>
  * <p>
  * To this end, when creating a revisioned URI converter, we give it a file revision that corresponds to what
@@ -76,17 +76,6 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 	private IFile baseFile;
 
 	/**
-	 * We need a "maximum" timestamp : see javadoc of the class.
-	 * <p>
-	 * <ul>
-	 * <li><code>-2</code> is the unitialized value,</li>
-	 * <li><code>-1</code> means we have no upper bound (use the latest revisions of the files),</li>
-	 * <li>Any other value will be used to find the file revisions of our dependencies.</li>
-	 * </p>
-	 */
-	private long maxTimestamp = -2;
-
-	/**
 	 * Instantiates our URI converter given its delegate.
 	 * 
 	 * @param delegate
@@ -108,25 +97,6 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 		final RepositoryProvider repositoryProvider = RepositoryProvider.getProvider(baseFile.getProject());
 		if (repositoryProvider == null) {
 			return;
-		}
-
-		final IFileHistoryProvider historyProvider = repositoryProvider.getFileHistoryProvider();
-		final IFileHistory history = historyProvider.getFileHistoryFor(baseFile, IFileHistoryProvider.NONE,
-				new NullProgressMonitor());
-		if (history != null) {
-			// We'll search for the revision "above" the given one in order to determine our upper bound
-			final IFileRevision[] revisions = history.getFileRevisions();
-			final String baseID = baseRevision.getContentIdentifier();
-
-			for (int i = 0; i < revisions.length && this.maxTimestamp == -2; i++) {
-				if (baseID.equals(revisions[i].getContentIdentifier())) {
-					if (i == 0) {
-						this.maxTimestamp = -1;
-					} else {
-						this.maxTimestamp = revisions[i - 1].getTimestamp();
-					}
-				}
-			}
 		}
 	}
 
@@ -219,13 +189,20 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 			if (history != null) {
 				// This file exists on the repository.
 				IFileRevision soughtRevision = null;
-				final IFileRevision[] revisions = history.getFileRevisions();
-				for (int i = 0; i < revisions.length; i++) {
-					final IFileRevision revision = revisions[i];
-					if ((maxTimestamp < 0 || revision.getTimestamp() < maxTimestamp)
-							&& (soughtRevision == null || soughtRevision.getTimestamp() < revision
-									.getTimestamp())) {
-						soughtRevision = revision;
+				final IFileRevision[] parents = history.getContributors(baseRevision);
+
+				/*
+				 * the most common case is to have a single parent. However, if baseRevision was a merging
+				 * point, there may be more than one. Use the "oldest" one.
+				 */
+				for (int i = 0; i < parents.length; i++) {
+					final IFileRevision candidate = parents[i];
+					/*
+					 * FIXME this needs to be tested with a merging point. File revisions created by Team may
+					 * have no timestamp (ResourceVariantFileRevision is an example).
+					 */
+					if (soughtRevision == null || soughtRevision.getTimestamp() < candidate.getTimestamp()) {
+						soughtRevision = candidate;
 					}
 				}
 
@@ -248,12 +225,14 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 			try {
 				IFileState soughtState = null;
 				final IFileState[] revisions = ((IFile)actualFile).getHistory(new NullProgressMonitor());
-				for (int i = 0; i < revisions.length && soughtState == null; i++) {
-					final IFileState revision = revisions[i];
-					if (maxTimestamp < 0 || revision.getModificationTime() < maxTimestamp) {
-						soughtState = revision;
-					}
-				}
+				// TODO
+				// for (int i = 0; i < revisions.length && soughtState == null; i++) {
+				// final IFileState revision = revisions[i];
+				// if (maxTimestamp < 0 || revision.getModificationTime() < maxTimestamp) {
+				// soughtState = revision;
+				// }
+				// }
+				soughtState = revisions[0];
 
 				if (soughtState != null) {
 					getLoadedRevisions().add(soughtState);
