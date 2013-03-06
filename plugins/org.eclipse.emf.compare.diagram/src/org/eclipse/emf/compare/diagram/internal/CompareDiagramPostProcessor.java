@@ -90,7 +90,8 @@ public class CompareDiagramPostProcessor implements IPostProcessor {
 	public void postRequirements(Comparison comparison, Monitor monitor) {
 		final Map<Class<? extends Diff>, IDiagramExtensionFactory> mapDiagramExtensionFactories = DiagramExtensionFactoryRegistry
 				.createExtensionFactories(configuration);
-		diagramExtensionFactories = new HashSet<IDiagramExtensionFactory>(mapDiagramExtensionFactories.values());
+		diagramExtensionFactories = new HashSet<IDiagramExtensionFactory>(mapDiagramExtensionFactories
+				.values());
 
 		// Creation of the diagram difference extensions
 		for (Diff diff : comparison.getDifferences()) {
@@ -101,7 +102,8 @@ public class CompareDiagramPostProcessor implements IPostProcessor {
 		for (Diff diff : comparison.getDifferences()) {
 			if (diff instanceof DiagramDiff) {
 				final Class<?> classDiffElement = diff.eClass().getInstanceClass();
-				final IDiagramExtensionFactory diffFactory = mapDiagramExtensionFactories.get(classDiffElement);
+				final IDiagramExtensionFactory diffFactory = mapDiagramExtensionFactories
+						.get(classDiffElement);
 				if (diffFactory != null) {
 					diffFactory.fillRequiredDifferences(comparison, diff);
 				}
@@ -125,6 +127,15 @@ public class CompareDiagramPostProcessor implements IPostProcessor {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postConflicts(Comparison comparison, Monitor monitor) {
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postComparison(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.common.util.Monitor)
+	 */
+	public void postComparison(Comparison comparison, Monitor monitor) {
 	}
 
 	/**
