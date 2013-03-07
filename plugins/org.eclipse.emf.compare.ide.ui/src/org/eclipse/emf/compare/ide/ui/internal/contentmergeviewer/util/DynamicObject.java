@@ -12,9 +12,9 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util;
 
 import static com.google.common.base.Throwables.propagate;
 
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
@@ -30,7 +30,7 @@ import java.lang.reflect.Modifier;
  */
 public class DynamicObject {
 
-	private final Cache<String, Field> fFieldCache;
+	private final LoadingCache<String, Field> fFieldCache;
 
 	private final Object fTarget;
 
