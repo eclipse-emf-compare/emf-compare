@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.mergeviewer;
 
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 
@@ -88,7 +88,7 @@ public class CompareColorImpl implements RemovalListener<RGB, Color>, ICompareCo
 
 	private RGB fResolved;
 
-	private final Cache<RGB, Color> fColors;
+	private final LoadingCache<RGB, Color> fColors;
 
 	private final IPreferenceStore fPreferenceStore;
 
