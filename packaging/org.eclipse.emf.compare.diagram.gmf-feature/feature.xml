@@ -4,7 +4,7 @@
       label="%featureName"
       version="2.1.0.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.emf.compare">
+      plugin="org.eclipse.emf.compare.diagram">
 
    <description>
       %description
