@@ -16,8 +16,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsFactory;
 import org.eclipse.emf.compare.diagram.internal.extensions.Hide;
-import org.eclipse.emf.compare.diagram.internal.factories.AbstractDiagramExtensionFactory;
-import org.eclipse.emf.compare.utils.MatchUtil;
+import org.eclipse.emf.compare.diagram.internal.factories.AbstractDiagramChangeFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -27,12 +26,12 @@ import org.eclipse.gmf.runtime.notation.View;
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class HideFactory extends AbstractDiagramExtensionFactory {
+public class HideFactory extends AbstractDiagramChangeFactory {
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.internal.factories.AbstractDiagramExtensionFactory#getExtensionKind()
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#getExtensionKind()
 	 */
 	@Override
 	public Class<? extends Diff> getExtensionKind() {
@@ -42,29 +41,28 @@ public class HideFactory extends AbstractDiagramExtensionFactory {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.internal.factories.IDiagramExtensionFactory#create(org.eclipse.emf.compare.Diff)
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#createExtension()
 	 */
-	public Diff create(Diff input) {
-		final Hide ret = ExtensionsFactory.eINSTANCE.createHide();
-
-		final DifferenceKind extensionKind = getRelatedExtensionKind(input);
-
-		ret.setKind(extensionKind);
-
-		ret.getRefinedBy().add(input);
-
-		if (input instanceof AttributeChange) {
-			ret.setView(MatchUtil.getContainer(input.getMatch().getComparison(), input));
-		}
-		ret.setSource(input.getSource());
-
-		return ret;
+	@Override
+	public Hide createExtension() {
+		return ExtensionsFactory.eINSTANCE.createHide();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.internal.factories.AbstractDiagramExtensionFactory#isRelatedToAnExtensionChange(org.eclipse.emf.compare.AttributeChange)
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#setRefiningChanges(org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff,
+	 *      org.eclipse.emf.compare.DifferenceKind, org.eclipse.emf.compare.Diff)
+	 */
+	@Override
+	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
+		extension.getRefinedBy().add(refiningDiff);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#isRelatedToAnExtensionChange(org.eclipse.emf.compare.AttributeChange)
 	 */
 	@Override
 	protected boolean isRelatedToAnExtensionChange(AttributeChange input) {

@@ -100,6 +100,15 @@ public class ExtensionsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ExtensionsPackage.COORDINATES_CHANGE: {
+				CoordinatesChange coordinatesChange = (CoordinatesChange)theEObject;
+				T result = caseCoordinatesChange(coordinatesChange);
+				if (result == null) result = caseNodeChange(coordinatesChange);
+				if (result == null) result = caseDiagramDiff(coordinatesChange);
+				if (result == null) result = caseDiff(coordinatesChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ExtensionsPackage.EDGE_CHANGE: {
 				EdgeChange edgeChange = (EdgeChange)theEObject;
 				T result = caseEdgeChange(edgeChange);
@@ -161,6 +170,21 @@ public class ExtensionsSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseNodeChange(NodeChange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Coordinates Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Coordinates Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCoordinatesChange(CoordinatesChange object) {
 		return null;
 	}
 

@@ -16,8 +16,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsFactory;
 import org.eclipse.emf.compare.diagram.internal.extensions.Show;
-import org.eclipse.emf.compare.diagram.internal.factories.AbstractDiagramExtensionFactory;
-import org.eclipse.emf.compare.utils.MatchUtil;
+import org.eclipse.emf.compare.diagram.internal.factories.AbstractDiagramChangeFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -27,38 +26,27 @@ import org.eclipse.gmf.runtime.notation.View;
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class ShowFactory extends AbstractDiagramExtensionFactory {
+public class ShowFactory extends AbstractDiagramChangeFactory {
 
 	@Override
 	public Class<? extends Diff> getExtensionKind() {
 		return Show.class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.diagram.internal.factories.IDiagramExtensionFactory#create(org.eclipse.emf.compare.Diff)
-	 */
-	public Diff create(Diff input) {
-		final Show ret = ExtensionsFactory.eINSTANCE.createShow();
+	@Override
+	public Show createExtension() {
+		return ExtensionsFactory.eINSTANCE.createShow();
+	}
 
-		final DifferenceKind extensionKind = getRelatedExtensionKind(input);
-
-		ret.setKind(extensionKind);
-
-		ret.getRefinedBy().add(input);
-
-		if (input instanceof AttributeChange) {
-			ret.setView(MatchUtil.getContainer(input.getMatch().getComparison(), input));
-		}
-
-		return ret;
+	@Override
+	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
+		extension.getRefinedBy().add(refiningDiff);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.internal.factories.AbstractDiagramExtensionFactory#isRelatedToAnExtensionChange(org.eclipse.emf.compare.AttributeChange)
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#isRelatedToAnExtensionChange(org.eclipse.emf.compare.AttributeChange)
 	 */
 	@Override
 	protected boolean isRelatedToAnExtensionChange(AttributeChange input) {

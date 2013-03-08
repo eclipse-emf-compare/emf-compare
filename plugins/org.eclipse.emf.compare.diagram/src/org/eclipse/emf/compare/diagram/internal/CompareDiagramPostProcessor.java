@@ -20,7 +20,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.factories.DiagramExtensionFactoryRegistry;
-import org.eclipse.emf.compare.diagram.internal.factories.IDiagramExtensionFactory;
+import org.eclipse.emf.compare.internal.postprocessor.factories.IChangeFactory;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 
 /**
@@ -31,7 +31,7 @@ import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 public class CompareDiagramPostProcessor implements IPostProcessor {
 
 	/** Registry of diagram difference extension factories. */
-	private Set<IDiagramExtensionFactory> diagramExtensionFactories;
+	private Set<IChangeFactory> diagramExtensionFactories;
 
 	/** Diagram comparison configuration. */
 	private CompareDiagramConfiguration configuration;
@@ -71,27 +71,6 @@ public class CompareDiagramPostProcessor implements IPostProcessor {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postRequirements(Comparison comparison, Monitor monitor) {
-		final Map<Class<? extends Diff>, IDiagramExtensionFactory> mapDiagramExtensionFactories = DiagramExtensionFactoryRegistry
-				.createExtensionFactories(configuration);
-		diagramExtensionFactories = new HashSet<IDiagramExtensionFactory>(mapDiagramExtensionFactories
-				.values());
-
-		// Creation of the diagram difference extensions
-		for (Diff diff : comparison.getDifferences()) {
-			applyManagedTypes(diff);
-		}
-
-		// Filling of the requirements link of the difference extensions
-		for (Diff diff : comparison.getDifferences()) {
-			if (diff instanceof DiagramDiff) {
-				final Class<?> classDiffElement = diff.eClass().getInstanceClass();
-				final IDiagramExtensionFactory diffFactory = mapDiagramExtensionFactories
-						.get(classDiffElement);
-				if (diffFactory != null) {
-					diffFactory.fillRequiredDifferences(comparison, diff);
-				}
-			}
-		}
 	}
 
 	/**
@@ -119,6 +98,27 @@ public class CompareDiagramPostProcessor implements IPostProcessor {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postComparison(Comparison comparison, Monitor monitor) {
+		final Map<Class<? extends Diff>, IChangeFactory> mapDiagramExtensionFactories = DiagramExtensionFactoryRegistry
+				.createExtensionFactories(configuration);
+		diagramExtensionFactories = new HashSet<IChangeFactory>(mapDiagramExtensionFactories
+				.values());
+
+		// Creation of the diagram difference extensions
+		for (Diff diff : comparison.getDifferences()) {
+			applyManagedTypes(diff);
+		}
+
+		// Filling of the requirements link of the difference extensions
+		for (Diff diff : comparison.getDifferences()) {
+			if (diff instanceof DiagramDiff) {
+				final Class<?> classDiffElement = diff.eClass().getInstanceClass();
+				final IChangeFactory diffFactory = mapDiagramExtensionFactories
+						.get(classDiffElement);
+				if (diffFactory != null) {
+					diffFactory.fillRequiredDifferences(comparison, diff);
+				}
+			}
+		}
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class CompareDiagramPostProcessor implements IPostProcessor {
 	 *            The current candidate difference for the build of the diagram extension.
 	 */
 	private void applyManagedTypes(Diff element) {
-		for (IDiagramExtensionFactory factory : diagramExtensionFactories) {
+		for (IChangeFactory factory : diagramExtensionFactories) {
 			if (factory.handles(element)) {
 				final Diff extension = factory.create(element);
 				final Match match = factory.getParentMatch(element);

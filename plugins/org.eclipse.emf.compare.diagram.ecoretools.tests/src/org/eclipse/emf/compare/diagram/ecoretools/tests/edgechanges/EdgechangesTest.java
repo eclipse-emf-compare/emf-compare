@@ -2,7 +2,6 @@ package org.eclipse.emf.compare.diagram.ecoretools.tests.edgechanges;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
-import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
@@ -26,7 +25,6 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.notation.Edge;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicate;
@@ -56,7 +54,7 @@ public class EdgechangesTest extends AbstractTest {
 		final Diff attributeChange = Iterators.find(differences.iterator(),
 				and(instanceOf(AttributeChange.class), ofKind(DifferenceKind.CHANGE)));
 		final Diff edgeChange = Iterators.find(differences.iterator(),
-				and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.MOVE)));
+				and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.CHANGE)));
 
 		assertNotNull(attributeChange);
 		assertNotNull(edgeChange);
@@ -83,7 +81,7 @@ public class EdgechangesTest extends AbstractTest {
 		final Diff attributeChange = Iterators.find(differences.iterator(),
 				and(instanceOf(AttributeChange.class), ofKind(DifferenceKind.CHANGE)));
 		final Diff edgeChange = Iterators.find(differences.iterator(),
-				and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.MOVE)));
+				and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.CHANGE)));
 
 		assertNotNull(attributeChange);
 		assertNotNull(edgeChange);
@@ -93,7 +91,6 @@ public class EdgechangesTest extends AbstractTest {
 	}
 
 	@Test
-	@Ignore
 	public void testA20UseCase() throws IOException {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
@@ -112,7 +109,7 @@ public class EdgechangesTest extends AbstractTest {
 				and(instanceOf(AttributeChange.class), ofKind(DifferenceKind.CHANGE)));
 
 		final Diff edgeChange = Iterators.find(differences.iterator(),
-				and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.MOVE)));
+				and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.CHANGE)));
 
 		assertTrue(diffs.size() == 3);
 		assertNotNull(edgeChange);
@@ -123,7 +120,6 @@ public class EdgechangesTest extends AbstractTest {
 	}
 
 	@Test
-	@Ignore
 	public void testA21UseCase() throws IOException {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
@@ -142,7 +138,7 @@ public class EdgechangesTest extends AbstractTest {
 				and(instanceOf(AttributeChange.class), ofKind(DifferenceKind.CHANGE)));
 
 		final Diff edgeChange = Iterators.find(differences.iterator(),
-				and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.MOVE)));
+				and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.CHANGE)));
 
 		assertTrue(diffs.size() == 3);
 		assertNotNull(edgeChange);
@@ -169,7 +165,7 @@ public class EdgechangesTest extends AbstractTest {
 		final Diff attributeChange = Iterators.find(differences.iterator(),
 				and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.ADD)));
 		final Diff edgeChange = Iterators.find(differences.iterator(),
-				and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.MOVE)));
+				and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.CHANGE)));
 
 		assertNotNull(attributeChange);
 		assertNotNull(edgeChange);
@@ -197,7 +193,7 @@ public class EdgechangesTest extends AbstractTest {
 		final Diff attributeChange = Iterators.find(differences.iterator(),
 				and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.DELETE)));
 		final Diff edgeChange = Iterators.find(differences.iterator(),
-				and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.MOVE)));
+				and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.CHANGE)));
 
 		assertNotNull(attributeChange);
 		assertNotNull(edgeChange);
@@ -207,7 +203,6 @@ public class EdgechangesTest extends AbstractTest {
 	}
 
 	@Test
-	@Ignore
 	public void testA40UseCase() throws IOException {
 		final Resource left = input.getA4Left();
 		final Resource right = input.getA4Right();
@@ -232,8 +227,8 @@ public class EdgechangesTest extends AbstractTest {
 		assertSame(Integer.valueOf(12), diffs.size());
 		assertNotNull(edgeChange);
 
-		assertSame(Integer.valueOf(11), edgeChange.getRefinedBy().size());
-		assertFalse(edgeChange.getRefinedBy().contains(addEdge));
+		assertSame(Integer.valueOf(12), edgeChange.getRefinedBy().size());// 11 + the add of edge for convenience...
+		assertTrue(edgeChange.getRefinedBy().contains(addEdge)); // for convenience...
 
 	}
 
@@ -260,7 +255,7 @@ public class EdgechangesTest extends AbstractTest {
 		assertSame(Integer.valueOf(12), diffs.size());
 		assertNotNull(edgeChange);
 
-		assertSame(Integer.valueOf(1), edgeChange.getRefinedBy().size());
+		assertSame(Integer.valueOf(12), edgeChange.getRefinedBy().size());
 		Diff deleteEdge = Iterators.find(differences.iterator(),
 				and(valueIsEdge, ofKind(DifferenceKind.DELETE)));
 		assertTrue(edgeChange.getRefinedBy().contains(deleteEdge));

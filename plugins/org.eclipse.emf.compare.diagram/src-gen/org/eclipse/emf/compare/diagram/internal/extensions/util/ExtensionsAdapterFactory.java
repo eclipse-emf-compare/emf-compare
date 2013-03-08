@@ -90,6 +90,10 @@ public class ExtensionsAdapterFactory extends AdapterFactoryImpl {
 				return createNodeChangeAdapter();
 			}
 			@Override
+			public Adapter caseCoordinatesChange(CoordinatesChange object) {
+				return createCoordinatesChangeAdapter();
+			}
+			@Override
 			public Adapter caseEdgeChange(EdgeChange object) {
 				return createEdgeChangeAdapter();
 			}
@@ -160,6 +164,20 @@ public class ExtensionsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createNodeChangeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diagram.internal.extensions.CoordinatesChange <em>Coordinates Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diagram.internal.extensions.CoordinatesChange
+	 * @generated
+	 */
+	public Adapter createCoordinatesChangeAdapter() {
 		return null;
 	}
 

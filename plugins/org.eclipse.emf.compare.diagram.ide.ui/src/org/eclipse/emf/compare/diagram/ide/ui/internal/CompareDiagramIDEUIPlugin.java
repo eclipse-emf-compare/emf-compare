@@ -53,8 +53,6 @@ public class CompareDiagramIDEUIPlugin extends AbstractUIPlugin {
 		configuration = new CompareDiagramConfiguration();
 		getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
-				// XXX: does it work ?
-
 				if (CompareDiagramConstants.PREFERENCES_KEY_MOVE_THRESHOLD.equals(event.getProperty())) {
 					Object newValue = event.getNewValue();
 					if (newValue != null) {

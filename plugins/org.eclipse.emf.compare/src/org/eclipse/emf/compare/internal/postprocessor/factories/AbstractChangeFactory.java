@@ -8,12 +8,14 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diagram.internal.factories;
+package org.eclipse.emf.compare.internal.postprocessor.factories;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -26,17 +28,14 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.util.CompareSwitch;
-import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gmf.runtime.notation.NotationPackage;
-import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Factory of diagram difference extensions.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public abstract class AbstractDiagramExtensionFactory implements IDiagramExtensionFactory {
+public abstract class AbstractChangeFactory implements IChangeFactory {
 
 	/**
 	 * Switch which returns the <code>DifferenceKind</code> of the matching diagram extension in relation to
@@ -116,43 +115,102 @@ public abstract class AbstractDiagramExtensionFactory implements IDiagramExtensi
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.internal.factories.IDiagramExtensionFactory#handles(org.eclipse.emf.compare.Diff)
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.IChangeFactory#handles(org.eclipse.emf.compare.Diff)
 	 */
 	public boolean handles(Diff input) {
-		return getRelatedExtensionKind(input) != null && !isDiffOnAddOrDelete(input);
+		return getRelatedExtensionKind(input) != null;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.internal.factories.IDiagramExtensionFactory#getParentMatch(org.eclipse.emf.compare.Diff)
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.IChangeFactory#create(org.eclipse.emf.compare.Diff)
+	 */
+	public Diff create(Diff input) {
+		Diff ret = createExtension();
+
+		final DifferenceKind extensionKind = getRelatedExtensionKind(input);
+		ret.setKind(extensionKind);
+
+		setRefiningChanges(ret, extensionKind, input);
+
+		ret.setSource(input.getSource());
+
+		// FIXME: Maybe it would be better to get all conflict objects from all conflicting unit differences
+		// and
+		// create a new conflict object with these differences, to set on the macroscopic change (ret).
+		Diff conflictingDiff = Iterators.find(ret.getRefinedBy().iterator(), new Predicate<Diff>() {
+			public boolean apply(Diff difference) {
+				return difference.getConflict() != null;
+			}
+		}, null);
+		if (conflictingDiff != null) {
+			ret.setConflict(conflictingDiff.getConflict());
+		}
+
+		return ret;
+	}
+
+	/**
+	 * It creates the graphical change extension.
+	 * 
+	 * @return The extension.
+	 */
+	public abstract Diff createExtension();
+
+	/**
+	 * Get the refining differences and set the given extension with them, from the given refining one.
+	 * 
+	 * @param extension
+	 *            The extension to set.
+	 * @param extensionKind
+	 *            The extension kind.
+	 * @param refiningDiff
+	 *            The refining difference.
+	 */
+	public abstract void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff);
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.IChangeFactory#getParentMatch(org.eclipse.emf.compare.Diff)
 	 */
 	public Match getParentMatch(Diff input) {
 		return input.getMatch();
 	}
 
 	/**
-	 * Check if the given difference is part of an add or delete change.
+	 * {@inheritDoc}
 	 * 
-	 * @param input
-	 *            The difference to check.
-	 * @return True if it is part of an add or delete change, false otherwise.
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.IChangeFactory#getExtensionKind()
 	 */
-	protected boolean isDiffOnAddOrDelete(Diff input) {
-		final Match match = input.getMatch();
-		final EObject container = match.eContainer();
-		if (container instanceof Match) {
-			final Iterator<Diff> diffs = ((Match)container).getAllDifferences().iterator();
-			while (diffs.hasNext()) {
-				final Diff diff = diffs.next();
-				if (diff instanceof ReferenceChange
-						&& (isRelatedToAnExtensionAdd((ReferenceChange)diff) || isRelatedToAnExtensionDelete((ReferenceChange)diff))
-						&& match.getComparison().getMatch(((ReferenceChange)diff).getValue()) == match) {
-					return true;
-				}
-			}
+	public Class<? extends Diff> getExtensionKind() {
+		return Diff.class;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.IChangeFactory#fillRequiredDifferences(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.compare.Diff)
+	 */
+	public void fillRequiredDifferences(Comparison comparison, Diff extension) {
+		// Browse required and requiring unit differences to deduce the requirement link from and to the given
+		// extension.
+		List<Diff> requiredExtensions = new ArrayList<Diff>();
+		List<Diff> requiringExtensions = new ArrayList<Diff>();
+		Iterator<Diff> refiningDiffs = extension.getRefinedBy().iterator();
+		while (refiningDiffs.hasNext()) {
+			Diff refiningDiff = refiningDiffs.next();
+			requiredExtensions.addAll(getDistinctRefinedDifferences(refiningDiff.getRequires()));
+			requiringExtensions.addAll(getDistinctRefinedDifferences(refiningDiff.getRequiredBy()));
 		}
-		return false;
+		// Keep only difference extensions as the given one
+		requiredExtensions.remove(extension);
+		requiringExtensions.remove(extension);
+
+		extension.getRequires().addAll(requiredExtensions);
+		extension.getRequiredBy().addAll(requiringExtensions);
 	}
 
 	/**
@@ -312,15 +370,6 @@ public abstract class AbstractDiagramExtensionFactory implements IDiagramExtensi
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.diagram.internal.factories.IDiagramExtensionFactory#getExtensionKind()
-	 */
-	public Class<? extends Diff> getExtensionKind() {
-		return Diff.class;
-	}
-
-	/**
 	 * Get all the add and delete changes on the objects contained in the one concerned by the given reference
 	 * change.
 	 * 
@@ -334,48 +383,6 @@ public abstract class AbstractDiagramExtensionFactory implements IDiagramExtensi
 		final Set<Diff> result = getAllContainedDifferences(comparison, match);
 
 		return result;
-	}
-
-	/**
-	 * Get all the add and delete changes under the given match.
-	 * 
-	 * @param comparison
-	 *            The comparison.
-	 * @param match
-	 *            The match
-	 * @return The found differences.
-	 */
-	private Set<Diff> getAllContainedDifferences(Comparison comparison, Match match) {
-		final Set<Diff> result = Sets.newLinkedHashSet();
-
-		final Set<Match> prune = Sets.newLinkedHashSet();
-		for (Diff candidate : match.getDifferences()) {
-			if (!getExtensionKind().isInstance(candidate)) {
-				if (!(candidate instanceof ReferenceChange && (isRelatedToAnExtensionAdd((ReferenceChange)candidate) || isRelatedToAnExtensionDelete((ReferenceChange)candidate)))) {
-					result.add(candidate);
-				} else if (candidate instanceof ReferenceChange
-						&& ((ReferenceChange)candidate).getReference().isContainment()) {
-					prune.add(comparison.getMatch(((ReferenceChange)candidate).getValue()));
-				}
-			}
-		}
-
-		for (Match submatch : match.getSubmatches()) {
-			if (!prune.contains(submatch)) {
-				result.addAll(getAllContainedDifferences(comparison, submatch));
-			}
-		}
-
-		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.diagram.internal.factories.IDiagramExtensionFactory#fillRequiredDifferences(org.eclipse.emf.compare.Comparison,
-	 *      org.eclipse.emf.compare.Diff)
-	 */
-	public void fillRequiredDifferences(Comparison comparison, Diff extension) {
 	}
 
 	/**
@@ -400,36 +407,57 @@ public abstract class AbstractDiagramExtensionFactory implements IDiagramExtensi
 	}
 
 	/**
-	 * Get the GMF view which represents a semantic element and containing the given difference.
+	 * Get all the add and delete changes under the given match.
 	 * 
-	 * @param input
-	 *            The difference.
-	 * @return The found view.
+	 * @param comparison
+	 *            The comparison.
+	 * @param match
+	 *            The match
+	 * @return The found differences.
 	 */
-	protected View getViewContainer(Diff input) {
-		final Match match = input.getMatch();
-		return getViewContainer(match);
+	private Set<Diff> getAllContainedDifferences(Comparison comparison, Match match) {
+		final Set<Diff> result = Sets.newLinkedHashSet();
+
+		final Set<Match> prune = Sets.newLinkedHashSet();
+		for (Diff candidate : match.getDifferences()) {
+			// Keep only unit changes...
+			if (!getExtensionKind().isInstance(candidate)) {
+				// ... which are not related to an other macroscopic ADD or DELETE of a graphical object.
+				if (!(candidate instanceof ReferenceChange && (isRelatedToAnExtensionAdd((ReferenceChange)candidate) || isRelatedToAnExtensionDelete((ReferenceChange)candidate)))) {
+					result.add(candidate);
+				} else if (candidate instanceof ReferenceChange
+						&& ((ReferenceChange)candidate).getReference().isContainment()) {
+					// match of an added or deleted graphical object.
+					prune.add(comparison.getMatch(((ReferenceChange)candidate).getValue()));
+				}
+			}
+		}
+
+		// Re-iterate the research in sub matches of expected objects.
+		for (Match submatch : match.getSubmatches()) {
+			if (!prune.contains(submatch)) {
+				result.addAll(getAllContainedDifferences(comparison, submatch));
+			}
+		}
+
+		return result;
 	}
 
 	/**
-	 * From the one of the matched objects of the given match, it returns the first found parent GMF view
-	 * which represents a semantic element.
+	 * Get the distinct differences refined by the given differences.
 	 * 
-	 * @param match
-	 *            The given match.
-	 * @return The found view.
+	 * @param refiningDifferences
+	 *            The refining differences.
+	 * @return The set of refined differences.
 	 */
-	protected View getViewContainer(Match match) {
-		EObject result = match.getLeft();
-		if (result == null) {
-			result = match.getRight();
+	private Set<Diff> getDistinctRefinedDifferences(List<Diff> refiningDifferences) {
+		Iterator<Diff> unitDiffs = refiningDifferences.iterator();
+		Set<Diff> extensions = new HashSet<Diff>();
+		while (unitDiffs.hasNext()) {
+			Diff unitDiff = unitDiffs.next();
+			extensions.addAll(unitDiff.getRefines());
 		}
-		if (!(result instanceof View && ReferenceUtil
-				.safeEGet(result, NotationPackage.Literals.VIEW__ELEMENT) != null)
-				&& match.eContainer() instanceof Match) {
-			result = getViewContainer((Match)match.eContainer());
-		}
-		return (View)result;
+		return extensions;
 	}
 
 }

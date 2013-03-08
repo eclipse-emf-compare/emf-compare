@@ -72,7 +72,7 @@ public interface ExtensionsPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diagram.internal.extensions.impl.ExtensionsPackageImpl#getDiagramDiff()
 	 * @generated
 	 */
-	int DIAGRAM_DIFF = 4;
+	int DIAGRAM_DIFF = 5;
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
@@ -573,6 +573,133 @@ public interface ExtensionsPackage extends EPackage {
 	int NODE_CHANGE_FEATURE_COUNT = DIAGRAM_DIFF_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diagram.internal.extensions.impl.CoordinatesChangeImpl <em>Coordinates Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diagram.internal.extensions.impl.CoordinatesChangeImpl
+	 * @see org.eclipse.emf.compare.diagram.internal.extensions.impl.ExtensionsPackageImpl#getCoordinatesChange()
+	 * @generated
+	 */
+	int COORDINATES_CHANGE = 3;
+
+	/**
+	 * The feature id for the '<em><b>Match</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COORDINATES_CHANGE__MATCH = NODE_CHANGE__MATCH;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COORDINATES_CHANGE__REQUIRES = NODE_CHANGE__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COORDINATES_CHANGE__REQUIRED_BY = NODE_CHANGE__REQUIRED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Refines</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COORDINATES_CHANGE__REFINES = NODE_CHANGE__REFINES;
+
+	/**
+	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COORDINATES_CHANGE__REFINED_BY = NODE_CHANGE__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COORDINATES_CHANGE__KIND = NODE_CHANGE__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COORDINATES_CHANGE__SOURCE = NODE_CHANGE__SOURCE;
+
+	/**
+	 * The feature id for the '<em><b>State</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COORDINATES_CHANGE__STATE = NODE_CHANGE__STATE;
+
+	/**
+	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COORDINATES_CHANGE__EQUIVALENCE = NODE_CHANGE__EQUIVALENCE;
+
+	/**
+	 * The feature id for the '<em><b>Conflict</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COORDINATES_CHANGE__CONFLICT = NODE_CHANGE__CONFLICT;
+
+	/**
+	 * The feature id for the '<em><b>Semantic Diff</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COORDINATES_CHANGE__SEMANTIC_DIFF = NODE_CHANGE__SEMANTIC_DIFF;
+
+	/**
+	 * The feature id for the '<em><b>View</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COORDINATES_CHANGE__VIEW = NODE_CHANGE__VIEW;
+
+	/**
+	 * The number of structural features of the '<em>Coordinates Change</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COORDINATES_CHANGE_FEATURE_COUNT = NODE_CHANGE_FEATURE_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diagram.internal.extensions.impl.EdgeChangeImpl <em>Edge Change</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -580,7 +707,7 @@ public interface ExtensionsPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diagram.internal.extensions.impl.ExtensionsPackageImpl#getEdgeChange()
 	 * @generated
 	 */
-	int EDGE_CHANGE = 3;
+	int EDGE_CHANGE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
@@ -731,6 +858,16 @@ public interface ExtensionsPackage extends EPackage {
 	EClass getNodeChange();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diagram.internal.extensions.CoordinatesChange <em>Coordinates Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Coordinates Change</em>'.
+	 * @see org.eclipse.emf.compare.diagram.internal.extensions.CoordinatesChange
+	 * @generated
+	 */
+	EClass getCoordinatesChange();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diagram.internal.extensions.EdgeChange <em>Edge Change</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -823,6 +960,16 @@ public interface ExtensionsPackage extends EPackage {
 		 * @generated
 		 */
 		EClass NODE_CHANGE = eINSTANCE.getNodeChange();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diagram.internal.extensions.impl.CoordinatesChangeImpl <em>Coordinates Change</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diagram.internal.extensions.impl.CoordinatesChangeImpl
+		 * @see org.eclipse.emf.compare.diagram.internal.extensions.impl.ExtensionsPackageImpl#getCoordinatesChange()
+		 * @generated
+		 */
+		EClass COORDINATES_CHANGE = eINSTANCE.getCoordinatesChange();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diagram.internal.extensions.impl.EdgeChangeImpl <em>Edge Change</em>}' class.

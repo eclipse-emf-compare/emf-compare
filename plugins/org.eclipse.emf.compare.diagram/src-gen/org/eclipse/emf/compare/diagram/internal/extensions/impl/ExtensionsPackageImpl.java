@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.diagram.internal.extensions.impl;
 
 import org.eclipse.emf.compare.ComparePackage;
 
+import org.eclipse.emf.compare.diagram.internal.extensions.CoordinatesChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.extensions.EdgeChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsFactory;
@@ -54,6 +55,13 @@ public class ExtensionsPackageImpl extends EPackageImpl implements ExtensionsPac
 	 * @generated
 	 */
 	private EClass nodeChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass coordinatesChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -165,6 +173,15 @@ public class ExtensionsPackageImpl extends EPackageImpl implements ExtensionsPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getCoordinatesChange() {
+		return coordinatesChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getEdgeChange() {
 		return edgeChangeEClass;
 	}
@@ -230,6 +247,8 @@ public class ExtensionsPackageImpl extends EPackageImpl implements ExtensionsPac
 
 		nodeChangeEClass = createEClass(NODE_CHANGE);
 
+		coordinatesChangeEClass = createEClass(COORDINATES_CHANGE);
+
 		edgeChangeEClass = createEClass(EDGE_CHANGE);
 
 		diagramDiffEClass = createEClass(DIAGRAM_DIFF);
@@ -272,6 +291,7 @@ public class ExtensionsPackageImpl extends EPackageImpl implements ExtensionsPac
 		showEClass.getESuperTypes().add(this.getDiagramDiff());
 		hideEClass.getESuperTypes().add(this.getDiagramDiff());
 		nodeChangeEClass.getESuperTypes().add(this.getDiagramDiff());
+		coordinatesChangeEClass.getESuperTypes().add(this.getNodeChange());
 		edgeChangeEClass.getESuperTypes().add(this.getDiagramDiff());
 		diagramDiffEClass.getESuperTypes().add(theComparePackage.getDiff());
 
@@ -281,6 +301,8 @@ public class ExtensionsPackageImpl extends EPackageImpl implements ExtensionsPac
 		initEClass(hideEClass, Hide.class, "Hide", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(nodeChangeEClass, NodeChange.class, "NodeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(coordinatesChangeEClass, CoordinatesChange.class, "CoordinatesChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(edgeChangeEClass, EdgeChange.class, "EdgeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

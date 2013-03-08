@@ -177,11 +177,11 @@ public class DiagramMatchAccessorImpl implements IDiagramNodeAccessor, ITypedEle
 	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor#getOwnedView()
 	 */
 	public View getOwnedView() {
-		View result = (View)getEObject(fSide);
-		if (result == null) {
+		EObject result = getEObject(fSide);
+		if (result == null || !(result instanceof View)) {
 			result = getDiagram(fSide);
 		}
-		return result;
+		return (View)result;
 	}
 
 	/**

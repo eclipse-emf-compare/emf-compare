@@ -15,19 +15,26 @@ import org.eclipse.emf.compare.diagram.internal.extensions.provider.ExtensionsIt
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 
 /**
+ * Specific item provider adapter factory to use the {@link ForwardingDiagramDiffItemProvider} providers.
+ * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public class ExtensionsItemProviderAdapterFactorySpec extends ExtensionsItemProviderAdapterFactory {
 
+	/** Item provider used for the Show change. */
 	ForwardingDiagramDiffItemProvider fShowItemProvider;
 
+	/** Item provider used for the Hide change. */
 	ForwardingDiagramDiffItemProvider fHideItemProvider;
 
-	ForwardingDiagramDiffItemProvider fNodeChangeItemProvider;
+	/** Item provider used for the Node change. */
+	NodeChangeItemProviderSpec fNodeChangeItemProvider;
 
+	/** Item provider used for the Edge change. */
 	ForwardingDiagramDiffItemProvider fEdgeChangeItemProvider;
 
-	ForwardingDiagramDiffItemProvider fLabelChangeItemProvider;
+	/** Item provider used for the coordinates change. */
+	ForwardingDiagramDiffItemProvider fCoordinatesChangeItemProvider;
 
 	@Override
 	public Adapter createEdgeChangeAdapter() {
@@ -64,5 +71,14 @@ public class ExtensionsItemProviderAdapterFactorySpec extends ExtensionsItemProv
 					.createShowAdapter());
 		}
 		return fShowItemProvider;
+	}
+
+	@Override
+	public Adapter createCoordinatesChangeAdapter() {
+		if (fCoordinatesChangeItemProvider == null) {
+			fCoordinatesChangeItemProvider = new ForwardingDiagramDiffItemProvider((ItemProviderAdapter)super
+					.createCoordinatesChangeAdapter());
+		}
+		return fCoordinatesChangeItemProvider;
 	}
 }

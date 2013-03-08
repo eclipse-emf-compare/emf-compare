@@ -49,13 +49,13 @@ public class CompareDiagramMerger extends AbstractMerger {
 
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		diff.setState(DifferenceState.MERGED);
-		final Diff semanticDiff = diff.getSemanticDiff();
-		if (semanticDiff != null) {
-			for (Diff semanticRefines : semanticDiff.getRefines()) {
-				mergeDiff(semanticRefines, false, monitor);
-			}
-			mergeDiff(semanticDiff, false, monitor);
-		}
+		// final Diff semanticDiff = diff.getSemanticDiff();
+		// if (semanticDiff != null) {
+		// for (Diff semanticRefines : semanticDiff.getRefines()) {
+		// mergeDiff(semanticRefines, false, monitor);
+		// }
+		// mergeDiff(semanticDiff, false, monitor);
+		// }
 
 		if (diff.getSource() == DifferenceSource.LEFT) {
 			// merge all "requires" diffs
@@ -87,13 +87,13 @@ public class CompareDiagramMerger extends AbstractMerger {
 
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		diff.setState(DifferenceState.MERGED);
-		final Diff semanticDiff = diff.getSemanticDiff();
-		if (semanticDiff != null) {
-			for (Diff semanticRefines : semanticDiff.getRefines()) {
-				mergeDiff(semanticRefines, true, monitor);
-			}
-			mergeDiff(semanticDiff, true, monitor);
-		}
+		// final Diff semanticDiff = diff.getSemanticDiff();
+		// if (semanticDiff != null) {
+		// for (Diff semanticRefines : semanticDiff.getRefines()) {
+		// mergeDiff(semanticRefines, true, monitor);
+		// }
+		// mergeDiff(semanticDiff, true, monitor);
+		// }
 
 		if (diff.getSource() == DifferenceSource.LEFT) {
 			// merge all "required by" diffs

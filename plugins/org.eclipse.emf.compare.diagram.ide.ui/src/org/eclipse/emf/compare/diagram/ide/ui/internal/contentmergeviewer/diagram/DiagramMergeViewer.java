@@ -249,7 +249,6 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 				fGraphicalViewer.setContents(diagram);
 				rootEditPart.getZoomManager().setZoomAnimationStyle(ZoomManager.ANIMATE_NEVER);
 				rootEditPart.getZoomManager().setZoom(ZOOM_FACTOR);
-
 			}
 		}
 		return (EditPart)fGraphicalViewer.getEditPartRegistry().get(view);

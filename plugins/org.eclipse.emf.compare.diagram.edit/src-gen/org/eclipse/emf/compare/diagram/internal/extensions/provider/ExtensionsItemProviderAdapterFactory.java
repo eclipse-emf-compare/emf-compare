@@ -153,6 +153,29 @@ public class ExtensionsItemProviderAdapterFactory extends ExtensionsAdapterFacto
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diagram.internal.extensions.CoordinatesChange} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected CoordinatesChangeItemProvider coordinatesChangeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diagram.internal.extensions.CoordinatesChange}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createCoordinatesChangeAdapter() {
+		if (coordinatesChangeItemProvider == null) {
+			coordinatesChangeItemProvider = new CoordinatesChangeItemProvider(this);
+		}
+
+		return coordinatesChangeItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diagram.internal.extensions.EdgeChange} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -277,6 +300,7 @@ public class ExtensionsItemProviderAdapterFactory extends ExtensionsAdapterFacto
 		if (showItemProvider != null) showItemProvider.dispose();
 		if (hideItemProvider != null) hideItemProvider.dispose();
 		if (nodeChangeItemProvider != null) nodeChangeItemProvider.dispose();
+		if (coordinatesChangeItemProvider != null) coordinatesChangeItemProvider.dispose();
 		if (edgeChangeItemProvider != null) edgeChangeItemProvider.dispose();
 	}
 

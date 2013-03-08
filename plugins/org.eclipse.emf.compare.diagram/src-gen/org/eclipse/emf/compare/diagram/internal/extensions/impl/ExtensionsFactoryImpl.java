@@ -67,6 +67,7 @@ public class ExtensionsFactoryImpl extends EFactoryImpl implements ExtensionsFac
 			case ExtensionsPackage.SHOW: return createShow();
 			case ExtensionsPackage.HIDE: return createHide();
 			case ExtensionsPackage.NODE_CHANGE: return createNodeChange();
+			case ExtensionsPackage.COORDINATES_CHANGE: return createCoordinatesChange();
 			case ExtensionsPackage.EDGE_CHANGE: return createEdgeChange();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
@@ -101,6 +102,16 @@ public class ExtensionsFactoryImpl extends EFactoryImpl implements ExtensionsFac
 	public NodeChange createNodeChange() {
 		NodeChangeImpl nodeChange = new NodeChangeImpl();
 		return nodeChange;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public CoordinatesChange createCoordinatesChange() {
+		CoordinatesChangeImpl coordinatesChange = new CoordinatesChangeImpl();
+		return coordinatesChange;
 	}
 
 	/**

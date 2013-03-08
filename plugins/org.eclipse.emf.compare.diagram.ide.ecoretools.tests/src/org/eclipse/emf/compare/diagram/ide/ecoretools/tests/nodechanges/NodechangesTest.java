@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.diagram.ecoretools.tests.DiagramInputData;
 import org.eclipse.emf.compare.diagram.ide.ecoretools.tests.nodechanges.data.NodeChangesInputData;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.CompareDiagramIDEUIPlugin;
 import org.eclipse.emf.compare.diagram.internal.CompareDiagramConstants;
+import org.eclipse.emf.compare.diagram.internal.extensions.CoordinatesChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.NodeChange;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
@@ -121,7 +122,7 @@ public class NodechangesTest extends AbstractTest {
 		final Diff changeY = Iterators.find(differences.iterator(), onFeature("y"));
 		
 		if (overDetectionThreshold) {
-			final Diff moveNode = Iterators.find(differences.iterator(), and(instanceOf(NodeChange.class), ofKind(DifferenceKind.MOVE)));
+			final Diff moveNode = Iterators.find(differences.iterator(), and(instanceOf(CoordinatesChange.class), ofKind(DifferenceKind.CHANGE)));
 			assertSame(Integer.valueOf(2), moveNode.getRefinedBy().size());
 			assertTrue(moveNode.getRefinedBy().contains(changeX));
 			assertTrue(moveNode.getRefinedBy().contains(changeY));

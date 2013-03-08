@@ -18,13 +18,15 @@ import java.util.Map;
 
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.diagram.internal.CompareDiagramConfiguration;
+import org.eclipse.emf.compare.diagram.internal.factories.extensions.CoordinatesChangeFactory;
 import org.eclipse.emf.compare.diagram.internal.factories.extensions.EdgeChangeFactory;
 import org.eclipse.emf.compare.diagram.internal.factories.extensions.HideFactory;
 import org.eclipse.emf.compare.diagram.internal.factories.extensions.NodeChangeFactory;
 import org.eclipse.emf.compare.diagram.internal.factories.extensions.ShowFactory;
+import org.eclipse.emf.compare.internal.postprocessor.factories.IChangeFactory;
 
 /**
- * Registry of all {@link IDiagramExtensionFactory}.
+ * Registry of all {@link IChangeFactory}.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
@@ -37,24 +39,25 @@ public final class DiagramExtensionFactoryRegistry {
 	}
 
 	/**
-	 * Creates and returns all {@link IDiagramExtensionFactory} available in this plugin. The returned Set in
+	 * Creates and returns all {@link IChangeFactory} available in this plugin. The returned Set in
 	 * unmodifiable.
 	 * 
 	 * @param configuration
 	 *            The diagram comparison configuration.
-	 * @return an unmodifiable set of all {@link IDiagramExtensionFactory}.
+	 * @return an unmodifiable set of all {@link IChangeFactory}.
 	 */
-	public static Map<Class<? extends Diff>, IDiagramExtensionFactory> createExtensionFactories(
+	public static Map<Class<? extends Diff>, IChangeFactory> createExtensionFactories(
 			CompareDiagramConfiguration configuration) {
-		final Map<Class<? extends Diff>, IDiagramExtensionFactory> dataset = new HashMap<Class<? extends Diff>, IDiagramExtensionFactory>();
+		final Map<Class<? extends Diff>, IChangeFactory> dataset = new HashMap<Class<? extends Diff>, IChangeFactory>();
 
-		List<IDiagramExtensionFactory> factories = new ArrayList<IDiagramExtensionFactory>();
+		List<IChangeFactory> factories = new ArrayList<IChangeFactory>();
 		factories.add(new HideFactory());
 		factories.add(new ShowFactory());
-		factories.add(new NodeChangeFactory(configuration));
+		factories.add(new NodeChangeFactory());
+		factories.add(new CoordinatesChangeFactory(configuration));
 		factories.add(new EdgeChangeFactory());
 
-		for (IDiagramExtensionFactory iDiffExtensionFactory : factories) {
+		for (IChangeFactory iDiffExtensionFactory : factories) {
 			dataset.put(iDiffExtensionFactory.getExtensionKind(), iDiffExtensionFactory);
 		}
 

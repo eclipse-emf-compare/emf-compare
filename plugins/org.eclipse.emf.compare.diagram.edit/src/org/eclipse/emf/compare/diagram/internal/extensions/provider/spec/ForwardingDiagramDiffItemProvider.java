@@ -27,10 +27,24 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
+ * Unique item provider for every diagram differences.
+ * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider {
 
+	/** Max size allowed for the display of label. */
+	private static final int CHAR_SIZE_LIMIT = 50;
+
+	/** Used to describe the change. */
+	private static final String HAS_BEEN = " has been "; //$NON-NLS-1$
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param delegate
+	 *            Default item provider adapter.
+	 */
 	public ForwardingDiagramDiffItemProvider(ItemProviderAdapter delegate) {
 		super(delegate);
 	}
@@ -78,29 +92,36 @@ public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider {
 		String ret = "";
 		switch (diagramDiff.getKind()) {
 			case ADD:
-				ret = valueText + " has been " + remotely + "added";
+				ret = valueText + HAS_BEEN + remotely + "added"; //$NON-NLS-1$
 				break;
 			case DELETE:
-				ret = valueText + " has been " + remotely + "deleted";
+				ret = valueText + HAS_BEEN + remotely + "deleted"; //$NON-NLS-1$
 				break;
 			case CHANGE:
-				ret = valueText + " has been " + remotely + "changed";
+				ret = valueText + HAS_BEEN + remotely + "changed"; //$NON-NLS-1$
 				break;
 			case MOVE:
-				ret = valueText + " has been " + remotely + "moved";
+				ret = valueText + HAS_BEEN + remotely + "moved"; //$NON-NLS-1$
 				break;
 			default:
-				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName()
-						+ " value: " + diagramDiff.getKind());
+				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
+						+ " value: " + diagramDiff.getKind()); //$NON-NLS-1$
 		}
 
 		return ret;
 	}
 
+	/**
+	 * It is used to get the word to describe that the change is in the remote side.
+	 * 
+	 * @param diagramDiff
+	 *            the change.
+	 * @return The word.
+	 */
 	protected String getRemoteText(DiagramDiff diagramDiff) {
-		String remotely = "";
+		String remotely = ""; //$NON-NLS-1$
 		if (diagramDiff.getSource() == DifferenceSource.RIGHT) {
-			remotely = "remotely ";
+			remotely = "remotely "; //$NON-NLS-1$
 		}
 		return remotely;
 	}
@@ -146,6 +167,13 @@ public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider {
 		return null;
 	}
 
+	/**
+	 * It builds the label of the item related to the given difference.
+	 * 
+	 * @param diagramDiff
+	 *            the difference.
+	 * @return the label.
+	 */
 	protected String getValueText(final DiagramDiff diagramDiff) {
 		String value = "<null>";
 		if (diagramDiff.getView() instanceof View) {
@@ -154,7 +182,7 @@ public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider {
 					+ AdapterFactoryUtil.getText(getRootAdapterFactory(), ((View)diagramDiff.getView())
 							.getElement());
 		}
-		value = Strings.elide(value, 50, "...");
+		value = Strings.elide(value, CHAR_SIZE_LIMIT, "..."); //$NON-NLS-1$
 		return value;
 	}
 

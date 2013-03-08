@@ -57,6 +57,15 @@ public interface ExtensionsFactory extends EFactory {
 	NodeChange createNodeChange();
 
 	/**
+	 * Returns a new object of class '<em>Coordinates Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Coordinates Change</em>'.
+	 * @generated
+	 */
+	CoordinatesChange createCoordinatesChange();
+
+	/**
 	 * Returns a new object of class '<em>Edge Change</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -50,7 +50,9 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.impl.CopyCommand;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramDiffAccessor;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
+import org.eclipse.emf.compare.diagram.internal.extensions.CoordinatesChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
+import org.eclipse.emf.compare.diagram.internal.factories.extensions.CoordinatesChangeFactory;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
@@ -318,8 +320,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 
 			List<? super AbstractDecorator> decorators = (List<? super AbstractDecorator>)getDecorators(difference);
 
-			// Create phantoms only if they do not already exist and if the related difference is an ACTIVATE or
-			// DELETE
+			// Create decorators only if they do not already exist and if the selected difference is a good
+			// candidate for that.
 			if ((decorators == null || decorators.isEmpty()) && isGoodCandidate(difference)) {
 
 				DiagramDiff diagramDiff = (DiagramDiff)difference;
@@ -345,7 +347,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 
 			}
 
-			// The selected difference is an ACTIVATE or DELETE and decorators exist for it
+			// The selected difference is a good candidate and decorators exist for it
 			if (decorators != null && !decorators.isEmpty()) {
 				revealDecorators((List<? extends AbstractDecorator>)decorators);
 			}
@@ -811,7 +813,6 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 						false, true);
 				// figure.setBorder(new FocusBorder());
 
-				// FIXME: Find a way to set the focus on this figure.
 				getViewer(decorator.getSide()).getGraphicalViewer().reveal(toAdd);
 			} else {
 				strokeColor = getCompareColor().getStrokeColor(decorator.getDifference(), isThreeWay(),
@@ -896,9 +897,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 						valueIs(referenceView), onFeature(NotationPackage.Literals.VIEW__PERSISTED_CHILDREN
 								.getName())));
 
-				// FIXME:
-				// - It has to manage visible views.
-				// - What about transient children ?
+				// FIXME: It has to manage visible views.
 				int index = DiffUtil.findInsertionIndex(getComparison(), refiningDiff,
 						side == MergeViewerSide.LEFT);
 
@@ -984,20 +983,17 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 *            The phantom.
 		 */
 		private void translateWhenInsideContainerChange(Phantom phantom) {
-			// FIXME: It was "phantom.getDifference().getMatch()" replaced by
-			// "getDiffAncestors(phantom.getDifference())" to fix a regression due to an other regression
-			// about
-			// the location of the extensions under matches.
-			Collection<Diff> changes = Collections2.filter(getDiffAncestors(phantom.getDifference()),
-					new Predicate<Diff>() {
-
-						public boolean apply(Diff difference) {
-							// FIXME: it will be changed to CHANGE (change coordinates (or dimension))
-							return difference.getKind() == DifferenceKind.MOVE;
-						}
-
-					});
-			if (changes.size() > 0) {
+			boolean isCandidate = false;
+			Diff diff = phantom.getDifference();
+			if (diff instanceof DiagramDiff) {
+				EObject parent = ((DiagramDiff)diff).getView().eContainer();
+				while (parent instanceof View && !isCandidate) {
+					isCandidate = Iterables.any(getComparison().getDifferences(parent),
+							instanceOf(CoordinatesChange.class));
+					parent = parent.eContainer();
+				}
+			}
+			if (isCandidate) {
 				View referenceView = phantom.getOriginView();
 				View parentReferenceView = (View)referenceView.eContainer();
 				if (parentReferenceView != null) {
@@ -1115,17 +1111,16 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 * @return True if the view changed its location, False otherwise.
 		 */
 		private boolean hasChange(View referenceView, MergeViewerSide targetSide) {
-			DifferenceKind lookup = DifferenceKind.MOVE; // FIXME: it will be change to CHANGE (change
-															// coordinates)
+			DifferenceKind lookup = DifferenceKind.CHANGE;
 			View extremity = (View)getMatchView(referenceView, targetSide);
 			// Look for a related change coordinates on the extremity of the edge reference.
-			Collection<Diff> diffs = Collections2.filter(getComparison().getDifferences(referenceView), and(
-					instanceOf(DiagramDiff.class), ofKind(lookup)));
+			Collection<Diff> diffs = Collections2.filter(getComparison().getDifferences(referenceView),
+					CoordinatesChangeFactory.isCoordinatesChangeExtension());
 			if (diffs.isEmpty()) {
 				// Look for a related change coordinates on the matching extremity (other side) of the edge
 				// reference.
-				diffs = Collections2.filter(getComparison().getDifferences(extremity), and(
-						instanceOf(DiagramDiff.class), ofKind(lookup)));
+				diffs = Collections2.filter(getComparison().getDifferences(extremity),
+						CoordinatesChangeFactory.isCoordinatesChangeExtension());
 			}
 			return !diffs.isEmpty();
 		}
@@ -1365,7 +1360,10 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 				boolean isMain) {
 			super.handleAddDecorator(decorator, parent, toAdd, isMain);
 			DiagramMergeViewer viewer = getViewer(decorator.getSide());
-			viewer.getGraphicalViewer().reveal(viewer.getEditPart(decorator.getOriginView()));
+			EditPart editPart = viewer.getEditPart(decorator.getOriginView());
+			if (editPart != null) {
+				viewer.getGraphicalViewer().reveal(editPart);
+			}
 		}
 
 		/**
@@ -1703,9 +1701,6 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			if (diff.getState() != DifferenceState.MERGED) {
 				fDecoratorsManager.revealDecorators(diff);
 			}
-
-			// FIXME use the decorator manager to refresh decorators after a merge and using undo/redo
-			// actions.
 		} else if (left instanceof IDiagramNodeAccessor) {
 			if (fCurrentSelectedDiff != null && fCurrentSelectedDiff.getState() != DifferenceState.MERGED) {
 				fDecoratorsManager.hideDecorators(fCurrentSelectedDiff);

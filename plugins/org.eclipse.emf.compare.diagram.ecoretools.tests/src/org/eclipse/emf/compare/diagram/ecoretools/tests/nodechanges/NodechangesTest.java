@@ -52,7 +52,6 @@ public class NodechangesTest extends AbstractTest {
 	private NodeChangesInputData input = new NodeChangesInputData();
 
 	@Test
-	@Ignore
 	public void testA10UseCase() throws IOException {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
@@ -213,7 +212,8 @@ public class NodechangesTest extends AbstractTest {
 				and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD),
 						refinedBy(addRefElementInEAnnotationView)));
 
-		assertSame(Integer.valueOf(9), addNodeEPackageExtension.getRefinedBy().size());
+		assertSame(Integer.valueOf(10), addNodeEPackageExtension.getRefinedBy().size());
+		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addEPackageView));//for convenience...
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addNodeInEPackageView1));
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addNodeInEPackageView2));
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addDrawerStyleInNodeInEPackageView2));
@@ -224,7 +224,8 @@ public class NodechangesTest extends AbstractTest {
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addBoundsInEPackageView));
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addRefElementInEPackageView));
 
-		assertSame(Integer.valueOf(12), addNodeEClassExtension.getRefinedBy().size());
+		assertSame(Integer.valueOf(13), addNodeEClassExtension.getRefinedBy().size());
+		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addEClassView));//for convenience...
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addNodeInEClassView1));
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addNodeInEClassView2));
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addDrawerStyleInNodeInEClassView2));
@@ -238,14 +239,16 @@ public class NodechangesTest extends AbstractTest {
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addRefElementInEClassView));
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addBoundsInEClassView));
 
-		assertSame(Integer.valueOf(5), addNodeEDataTypeExtension.getRefinedBy().size());
+		assertSame(Integer.valueOf(6), addNodeEDataTypeExtension.getRefinedBy().size());
+		assertTrue(addNodeEDataTypeExtension.getRefinedBy().contains(addEDataTypeView));// for convenience...
 		assertTrue(addNodeEDataTypeExtension.getRefinedBy().contains(addNodeInEDataTypeView1));
 		assertTrue(addNodeEDataTypeExtension.getRefinedBy().contains(addNodeInEDataTypeView2));
 		assertTrue(addNodeEDataTypeExtension.getRefinedBy().contains(addShapeStyleInEDataTypeView));
 		assertTrue(addNodeEDataTypeExtension.getRefinedBy().contains(addRefElementInEDataTypeView));
 		assertTrue(addNodeEDataTypeExtension.getRefinedBy().contains(addBoundsInEDataTypeView));
 
-		assertSame(Integer.valueOf(8), addNodeEENumExtension.getRefinedBy().size());
+		assertSame(Integer.valueOf(9), addNodeEENumExtension.getRefinedBy().size());
+		assertTrue(addNodeEENumExtension.getRefinedBy().contains(addEEnumView));// for convenience...
 		assertTrue(addNodeEENumExtension.getRefinedBy().contains(addNodeInEEnumView1));
 		assertTrue(addNodeEENumExtension.getRefinedBy().contains(addNodeInEEnumView2));
 		assertTrue(addNodeEENumExtension.getRefinedBy().contains(addDrawerStyleInNodeInEEnumView2));
@@ -255,7 +258,8 @@ public class NodechangesTest extends AbstractTest {
 		assertTrue(addNodeEENumExtension.getRefinedBy().contains(addRefElementInEEnumView));
 		assertTrue(addNodeEENumExtension.getRefinedBy().contains(addBoundsInEEnumView));
 
-		assertSame(Integer.valueOf(8), addNodeEAnnotationExtension.getRefinedBy().size());
+		assertSame(Integer.valueOf(9), addNodeEAnnotationExtension.getRefinedBy().size());
+		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addEAnnotationView));// for convenience...
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addNodeInEAnnotationView1));
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addNodeInEAnnotationView2));
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy()
@@ -458,17 +462,75 @@ public class NodechangesTest extends AbstractTest {
 				differences.iterator(),
 				and(instanceOf(NodeChange.class), ofKind(DifferenceKind.DELETE),
 						refinedBy(addEAnnotationView)));
+		
+		assertSame(Integer.valueOf(10), addNodeEPackageExtension.getRefinedBy().size());
+		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addEPackageView));
+		//for convenience:
+		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addNodeInEPackageView1));
+		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addNodeInEPackageView2));
+		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addDrawerStyleInNodeInEPackageView2));
+		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addSortingStyleInNodeInEPackageView2));
+		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addFilteringStyleInNodeInEPackageView2));
+		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addShapeStyleInEPackageView));
+		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addMultiDiagramLinkStyleInEPackageView));
+		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addBoundsInEPackageView));
+		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addRefElementInEPackageView));
 
-		assertSame(Integer.valueOf(1), addNodeEPackageExtension.getRefinedBy().size());
-		assertSame(Integer.valueOf(1), addNodeEClassExtension.getRefinedBy().size());
-		assertSame(Integer.valueOf(1), addNodeEDataTypeExtension.getRefinedBy().size());
-		assertSame(Integer.valueOf(1), addNodeEENumExtension.getRefinedBy().size());
-		assertSame(Integer.valueOf(1), addNodeEAnnotationExtension.getRefinedBy().size());
+		assertSame(Integer.valueOf(13), addNodeEClassExtension.getRefinedBy().size());
+		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addEClassView));
+		//for convenience:
+		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addNodeInEClassView1));
+		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addNodeInEClassView2));
+		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addDrawerStyleInNodeInEClassView2));
+		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addSortingStyleInNodeInEClassView2));
+		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addFilteringStyleInNodeInEClassView2));
+		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addNodeInEClassView3));
+		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addDrawerStyleInNodeInEClassView3));
+		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addSortingStyleInNodeInEClassView3));
+		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addFilteringStyleInNodeInEClassView));
+		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addShapeStyleInEClassView));
+		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addRefElementInEClassView));
+		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addBoundsInEClassView));
+
+		assertSame(Integer.valueOf(6), addNodeEDataTypeExtension.getRefinedBy().size());
+		assertTrue(addNodeEDataTypeExtension.getRefinedBy().contains(addEDataTypeView));
+		// for convenience:
+		assertTrue(addNodeEDataTypeExtension.getRefinedBy().contains(addNodeInEDataTypeView1));
+		assertTrue(addNodeEDataTypeExtension.getRefinedBy().contains(addNodeInEDataTypeView2));
+		assertTrue(addNodeEDataTypeExtension.getRefinedBy().contains(addShapeStyleInEDataTypeView));
+		assertTrue(addNodeEDataTypeExtension.getRefinedBy().contains(addRefElementInEDataTypeView));
+		assertTrue(addNodeEDataTypeExtension.getRefinedBy().contains(addBoundsInEDataTypeView));
+
+		assertSame(Integer.valueOf(9), addNodeEENumExtension.getRefinedBy().size());
+		assertTrue(addNodeEENumExtension.getRefinedBy().contains(addEEnumView));
+		// for convenience:
+		assertTrue(addNodeEENumExtension.getRefinedBy().contains(addNodeInEEnumView1));
+		assertTrue(addNodeEENumExtension.getRefinedBy().contains(addNodeInEEnumView2));
+		assertTrue(addNodeEENumExtension.getRefinedBy().contains(addDrawerStyleInNodeInEEnumView2));
+		assertTrue(addNodeEENumExtension.getRefinedBy().contains(addSortingStyleInNodeInEEnumView2));
+		assertTrue(addNodeEENumExtension.getRefinedBy().contains(addFilteringStyleInNodeInEEnumView2));
+		assertTrue(addNodeEENumExtension.getRefinedBy().contains(addShapeStyleInEEnumView));
+		assertTrue(addNodeEENumExtension.getRefinedBy().contains(addRefElementInEEnumView));
+		assertTrue(addNodeEENumExtension.getRefinedBy().contains(addBoundsInEEnumView));
+
+		assertSame(Integer.valueOf(9), addNodeEAnnotationExtension.getRefinedBy().size());
+		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addEAnnotationView));
+		// for convenience:
+		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addNodeInEAnnotationView1));
+		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addNodeInEAnnotationView2));
+		assertTrue(addNodeEAnnotationExtension.getRefinedBy()
+				.contains(addDrawerStyleInNodeInEAnnotationView2));
+		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(
+				addSortingStyleInNodeInEAnnotationView2));
+		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(
+				addFilteringStyleInNodeInEAnnotationView2));
+		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addShapeStyleInEAnnotationView));
+		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addRefElementInEAnnotationView));
+		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addBoundsInEAnnotationView));
 
 	}
 
 	@Test
-	@Ignore
 	public void testA30UseCase() throws IOException {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
@@ -551,7 +613,8 @@ public class NodechangesTest extends AbstractTest {
 				and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD),
 						refinedBy(addRefElementInEClassView)));
 
-		assertSame(Integer.valueOf(21), addNodeEPackageExtension.getRefinedBy().size());
+		assertSame(Integer.valueOf(10), addNodeEPackageExtension.getRefinedBy().size());
+		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addEPackageView));// for convenience...
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addNodeInEPackageView1));
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addNodeInEPackageView2));
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addDrawerStyleInNodeInEPackageView2));
@@ -561,20 +624,9 @@ public class NodechangesTest extends AbstractTest {
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addMultiDiagramLinkStyleInEPackageView));
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addBoundsInEPackageView));
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addRefElementInEPackageView));
-		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addNodeInEClassView1));
-		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addNodeInEClassView2));
-		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addDrawerStyleInNodeInEClassView2));
-		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addSortingStyleInNodeInEClassView2));
-		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addFilteringStyleInNodeInEClassView2));
-		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addNodeInEClassView3));
-		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addDrawerStyleInNodeInEClassView3));
-		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addSortingStyleInNodeInEClassView3));
-		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addFilteringStyleInNodeInEClassView));
-		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addShapeStyleInEClassView));
-		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addRefElementInEClassView));
-		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addBoundsInEClassView));
 
-		assertSame(Integer.valueOf(12), addNodeEClassExtension.getRefinedBy().size());
+		assertSame(Integer.valueOf(13), addNodeEClassExtension.getRefinedBy().size());
+		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addEClassView));
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addNodeInEClassView1));
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addNodeInEClassView2));
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addDrawerStyleInNodeInEClassView2));

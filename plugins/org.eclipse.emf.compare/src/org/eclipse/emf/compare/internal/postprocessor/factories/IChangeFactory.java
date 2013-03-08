@@ -8,22 +8,22 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diagram.internal.factories;
+package org.eclipse.emf.compare.internal.postprocessor.factories;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 
 /**
- * An {@link IDiagramExtensionFactory} is a factory capable to create an {@link Diff extension} from a
- * {@link Diff} if and only if this factory can {@link #handles(Diff) handle} the given {@link Diff}.
+ * An {@link IChangeFactory} is a factory capable to create an {@link Diff extension} from a {@link Diff} if
+ * and only if this factory can {@link #handles(Diff) handle} the given {@link Diff}.
  * <p>
  * A factory must be able to say in which parent an {@link Diff extension} must be attached if it handles the
  * {@link Diff} from which it has been {@link #create(Diff) created}.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public interface IDiagramExtensionFactory {
+public interface IChangeFactory {
 
 	/**
 	 * Returns the kind of extension that this factory has to create.
@@ -65,7 +65,8 @@ public interface IDiagramExtensionFactory {
 	Match getParentMatch(Diff input);
 
 	/**
-	 * Sets the required link of the difference extension created by the related factory.
+	 * Sets the required link of the difference extension created by the related factory.<br>
+	 * It has to be called when all the extensions are created.
 	 * 
 	 * @param comparison
 	 *            The comparison.
