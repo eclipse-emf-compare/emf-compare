@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
  */
 public final class CompareDiagramUIMessages {
 	/** Full qualified path to the properties file in which to seek the keys. */
-	private static final String BUNDLE_NAME = "org.eclipse.emf.compare.diagram.diff.util.diagramcompareuimessages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.emf.compare.diagram.internal.diagramcompareuimessages"; //$NON-NLS-1$
 
 	/** Contains the locale specific {@link String}s needed by this plug-in. */
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
