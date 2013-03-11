@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.policy;
+package org.eclipse.emf.compare.rcp.policy;
 
 import java.util.List;
 

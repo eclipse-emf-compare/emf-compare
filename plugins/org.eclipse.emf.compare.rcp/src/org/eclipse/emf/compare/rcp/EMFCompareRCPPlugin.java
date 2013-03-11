@@ -18,7 +18,10 @@ import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.postprocessor.PostProcessorRegistryImpl;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.emf.compare.rcp.internal.merger.MergerExtensionRegistryListener;
+import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryImpl;
+import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.postprocessor.PostProcessorRegistryListener;
+import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -31,6 +34,9 @@ public class EMFCompareRCPPlugin extends Plugin {
 
 	public static final String POST_PROCESSOR_PPID = "postProcessor"; //$NON-NLS-1$
 
+	/** The id of the load on demand policy extension point. */
+	public static final String LOAD_ON_DEMAND_POLICY_PPID = "loadOnDemandPolicy"; //$NON-NLS-1$
+
 	/** The id of the merger extension point. */
 	public static final String MERGER_PPID = "merger"; //$NON-NLS-1$
 
@@ -40,6 +46,12 @@ public class EMFCompareRCPPlugin extends Plugin {
 	private IMerger.Registry mergerRegistry;
 
 	private AbstractRegistryEventListener mergerRegistryListener;
+
+	/** The registry that will hold references to all {@link ILoadOnDemandPolicy}. **/
+	private ILoadOnDemandPolicy.Registry loadOnDemandRegistry;
+
+	/** The registry listener that will be used to react to load on demand policy changes. */
+	private LoadOnDemandPolicyRegistryListener loadOnDemandRegistryListener;
 
 	/**
 	 * The registry that will hold references to all post processors.
@@ -70,6 +82,12 @@ public class EMFCompareRCPPlugin extends Plugin {
 				getLog(), postProcessorRegistry);
 		registry.addListener(postProcessorRegistryListener, PLUGIN_ID + '.' + POST_PROCESSOR_PPID);
 		postProcessorRegistryListener.readRegistry(registry);
+
+		loadOnDemandRegistry = new LoadOnDemandPolicyRegistryImpl();
+		loadOnDemandRegistryListener = new LoadOnDemandPolicyRegistryListener(loadOnDemandRegistry,
+				PLUGIN_ID, LOAD_ON_DEMAND_POLICY_PPID, getLog());
+		registry.addListener(loadOnDemandRegistryListener, PLUGIN_ID + '.' + LOAD_ON_DEMAND_POLICY_PPID);
+		loadOnDemandRegistryListener.readRegistry(registry);
 	}
 
 	/*
@@ -81,6 +99,10 @@ public class EMFCompareRCPPlugin extends Plugin {
 		EMFCompareRCPPlugin.plugin = null;
 
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+		registry.removeListener(loadOnDemandRegistryListener);
+		loadOnDemandRegistryListener = null;
+		loadOnDemandRegistry = null;
 
 		registry.removeListener(postProcessorRegistryListener);
 		postProcessorRegistryListener = null;
@@ -108,6 +130,15 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 */
 	public PostProcessorRegistryImpl getPostProcessorRegistry() {
 		return postProcessorRegistry;
+	}
+
+	/**
+	 * Returns the registry of load on demand policies.
+	 * 
+	 * @return the registry of load on demand policies.
+	 */
+	public ILoadOnDemandPolicy.Registry getLoadOnDemandPolicyRegistry() {
+		return loadOnDemandRegistry;
 	}
 
 	/**

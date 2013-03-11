@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy;
+import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
 import org.eclipse.uml2.uml.UMLPlugin;
 
 /**

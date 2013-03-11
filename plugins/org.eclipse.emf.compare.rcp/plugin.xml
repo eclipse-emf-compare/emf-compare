@@ -15,6 +15,7 @@
 <plugin>
    <extension-point id="postProcessor" name="Post Processor" schema="schema/postProcessor.exsd"/>
    <extension-point id="merger" name="Merger" schema="schema/merger.exsd"/>
+   <extension-point id="loadOnDemandPolicy" name="Load on Demand Policy" schema="schema/loadOnDemandPolicy.exsd"/>
    
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package

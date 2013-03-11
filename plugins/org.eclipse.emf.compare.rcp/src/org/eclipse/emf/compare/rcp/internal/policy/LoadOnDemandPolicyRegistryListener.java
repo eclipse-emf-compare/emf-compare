@@ -8,16 +8,15 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.internal.policy;
+package org.eclipse.emf.compare.rcp.internal.policy;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
-import org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy;
-import org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy.Registry;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
+import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
+import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy.Registry;
 
 /**
  * A listener for load on demand policy extension point.
@@ -81,8 +80,8 @@ public class LoadOnDemandPolicyRegistryListener extends AbstractRegistryEventLis
 			ILoadOnDemandPolicy policy = (ILoadOnDemandPolicy)element.createExecutableExtension(ATT_CLASS);
 			ILoadOnDemandPolicy previous = registry.addPolicy(policy);
 			if (previous != null) {
-				EMFCompareIDEPlugin.getDefault().log(IStatus.WARNING,
-						"The factory '" + policy.getClass().getName() + "' is registered twice.");
+				log(IStatus.WARNING, element, "The factory '" + policy.getClass().getName()
+						+ "' is registered twice.");
 			}
 		} catch (CoreException e) {
 			log(IStatus.ERROR, element, e.getMessage());

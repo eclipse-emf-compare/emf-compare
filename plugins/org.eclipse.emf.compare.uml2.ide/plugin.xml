@@ -2,7 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.emf.compare.ide.loadOnDemandPolicy">
+         point="org.eclipse.emf.compare.rcp.loadOnDemandPolicy">
       <policy
             class="org.eclipse.emf.compare.uml2.ide.internal.policy.UMLLoadOnDemandPolicy">
       </policy>

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.internal.policy;
+package org.eclipse.emf.compare.rcp.internal.policy;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy;
+import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
 
 /**
  * A default implementation that uses a map internally.
@@ -39,7 +39,7 @@ public class LoadOnDemandPolicyRegistryImpl implements ILoadOnDemandPolicy.Regis
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy.Registry#hasAnyAuthorizingPolicy(org.eclipse.emf.common.util.URI)
+	 * @see org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy.Registry#hasAnyAuthorizingPolicy(org.eclipse.emf.common.util.URI)
 	 */
 	public boolean hasAnyAuthorizingPolicy(URI uri) {
 		for (ILoadOnDemandPolicy policy : getPolicies()) {
@@ -53,7 +53,7 @@ public class LoadOnDemandPolicyRegistryImpl implements ILoadOnDemandPolicy.Regis
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy.Registry#getPolicies()
+	 * @see org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy.Registry#getPolicies()
 	 */
 	public List<ILoadOnDemandPolicy> getPolicies() {
 		return newArrayList(map.values());
@@ -62,7 +62,7 @@ public class LoadOnDemandPolicyRegistryImpl implements ILoadOnDemandPolicy.Regis
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy.Registry#addPolicy(org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy)
+	 * @see org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy.Registry#addPolicy(org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy)
 	 */
 	public ILoadOnDemandPolicy addPolicy(ILoadOnDemandPolicy policy) {
 		return map.put(policy.getClass().getName(), policy);
@@ -71,7 +71,7 @@ public class LoadOnDemandPolicyRegistryImpl implements ILoadOnDemandPolicy.Regis
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy.Registry#removePolicy(java.lang.String)
+	 * @see org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy.Registry#removePolicy(java.lang.String)
 	 */
 	public ILoadOnDemandPolicy removePolicy(String className) {
 		return map.remove(className);
@@ -80,7 +80,7 @@ public class LoadOnDemandPolicyRegistryImpl implements ILoadOnDemandPolicy.Regis
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy.Registry#clear()
+	 * @see org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy.Registry#clear()
 	 */
 	public void clear() {
 		map.clear();

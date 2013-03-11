@@ -29,9 +29,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
-import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
-import org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
+import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -74,7 +74,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 	 */
 	@Override
 	public Resource getResource(URI uri, boolean loadOnDemand) {
-		ILoadOnDemandPolicy.Registry registry = EMFCompareIDEPlugin.getDefault()
+		ILoadOnDemandPolicy.Registry registry = EMFCompareRCPPlugin.getDefault()
 				.getLoadOnDemandPolicyRegistry();
 		if (registry.hasAnyAuthorizingPolicy(uri)) {
 			return super.getResource(uri, true);
