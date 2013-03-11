@@ -36,7 +36,7 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	/** The plugin ID. */
 	public static final String PLUGIN_ID = "org.eclipse.emf.compare.ide.ui"; //$NON-NLS-1$
 
-	public static final String ACCESSOR_FACTORY_PPID = "accessor_factory"; //$NON-NLS-1$
+	public static final String ACCESSOR_FACTORY_PPID = "accessorFactory"; //$NON-NLS-1$
 
 	/** Plug-in's shared instance. */
 	private static EMFCompareIDEUIPlugin plugin;

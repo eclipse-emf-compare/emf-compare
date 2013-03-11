@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
@@ -30,7 +29,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.postprocessor.AbstractPostProcessor;
+import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.DiffExtensionFactoryRegistry;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.IDiffExtensionFactory;
@@ -40,7 +39,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.uml2.common.util.SubsetSupersetEObjectEList;
 
-public class UMLPostProcessor extends AbstractPostProcessor {
+public class UMLPostProcessor implements IPostProcessor {
 
 	/** UML2 extensions factories. */
 	private Set<IDiffExtensionFactory> uml2ExtensionFactories;
@@ -71,18 +70,6 @@ public class UMLPostProcessor extends AbstractPostProcessor {
 	 * </p>
 	 */
 	private static final Field SUBSET_FEATURES_FIELD = getSubsetField();
-
-	public UMLPostProcessor() {
-		super(Pattern.compile("http://www.eclipse.org/uml2/\\d.\\d.\\d/UML"), null);
-	}
-
-	/**
-	 * @param nsURI
-	 * @param resourceURI
-	 */
-	public UMLPostProcessor(Pattern nsURI, Pattern resourceURI) {
-		super(nsURI, resourceURI);
-	}
 
 	/**
 	 * {@inheritDoc}

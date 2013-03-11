@@ -31,9 +31,10 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
-import org.eclipse.emf.compare.postprocessor.PostProcessorRegistryImpl;
+import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
+import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
 import org.eclipse.emf.compare.uml2.internal.merge.UMLMerger;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.UMLPostProcessor;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
@@ -67,9 +68,9 @@ public abstract class AbstractTest {
 
 	@Before
 	public void before() {
-		PostProcessorRegistryImpl registry = new PostProcessorRegistryImpl();
-		registry.addPostProcessor(new UMLPostProcessor(Pattern
-				.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null));
+		PostProcessorDescriptorRegistryImpl<String> registry = new PostProcessorDescriptorRegistryImpl<String>();
+		registry.put(UMLPostProcessor.class.getName(), new TestPostProcessor.TestPostProcessorDescriptor(
+				Pattern.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null, new UMLPostProcessor()));
 		emfCompare = EMFCompare.builder().setPostProcessorRegistry(registry).build();
 	}
 

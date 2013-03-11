@@ -27,7 +27,7 @@ import org.eclipse.emf.compare.equi.IEquiEngine;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
-import org.eclipse.emf.compare.postprocessor.PostProcessorRegistryImpl;
+import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
 import org.eclipse.emf.compare.req.DefaultReqEngine;
 import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
@@ -66,7 +66,7 @@ public class EMFCompare {
 	private final IConflictDetector conflictDetector;
 
 	/** The PostProcessorRegistry to use to find an IPostProcessor. */
-	private final IPostProcessor.Registry postProcessorRegistry;
+	private final IPostProcessor.Descriptor.Registry<?> postProcessorDescriptorRegistry;
 
 	/**
 	 * Creates a new EMFCompare object able to compare Notifier with the help of given engines.
@@ -81,18 +81,18 @@ public class EMFCompare {
 	 *            IEquiEngine to use to compute comparison
 	 * @param conflictDetector
 	 *            IConflictDetector to use to compute comparison
-	 * @param postProcessorRegistry
+	 * @param postProcessorFactoryRegistry
 	 *            PostProcessorRegistry to use to find an IPostProcessor
 	 */
 	protected EMFCompare(IMatchEngine matchEngine, IDiffEngine diffEngine, IReqEngine reqEngine,
 			IEquiEngine equiEngine, IConflictDetector conflictDetector,
-			IPostProcessor.Registry postProcessorRegistry) {
+			IPostProcessor.Descriptor.Registry<?> postProcessorFactoryRegistry) {
 		this.matchEngine = checkNotNull(matchEngine);
 		this.diffEngine = checkNotNull(diffEngine);
 		this.reqEngine = checkNotNull(reqEngine);
 		this.equiEngine = checkNotNull(equiEngine);
 		this.conflictDetector = conflictDetector;
-		this.postProcessorRegistry = checkNotNull(postProcessorRegistry);
+		this.postProcessorDescriptorRegistry = checkNotNull(postProcessorFactoryRegistry);
 	}
 
 	/**
@@ -161,7 +161,7 @@ public class EMFCompare {
 
 		final Comparison comparison = matchEngine.match(scope, monitor);
 
-		List<IPostProcessor> postProcessors = postProcessorRegistry.getPostProcessors(scope);
+		List<IPostProcessor> postProcessors = postProcessorDescriptorRegistry.getPostProcessors(scope);
 
 		for (IPostProcessor iPostProcessor : postProcessors) {
 			iPostProcessor.postMatch(comparison, monitor);
@@ -232,7 +232,7 @@ public class EMFCompare {
 		protected IConflictDetector conflictDetector;
 
 		/** The PostProcessorRegistry to use to find an IPostProcessor. */
-		protected IPostProcessor.Registry registry;
+		protected IPostProcessor.Descriptor.Registry<?> registry;
 
 		/**
 		 * Creates a new builder object.
@@ -307,7 +307,7 @@ public class EMFCompare {
 		 *            the PostProcessor to be used to find the post processor of each comparison steps.
 		 * @return this same builder to allow chained call.
 		 */
-		public Builder setPostProcessorRegistry(IPostProcessor.Registry r) {
+		public Builder setPostProcessorRegistry(IPostProcessor.Descriptor.Registry<?> r) {
 			this.registry = checkNotNull(r);
 			return this;
 		}
@@ -331,7 +331,7 @@ public class EMFCompare {
 				equiEngine = new DefaultEquiEngine();
 			}
 			if (registry == null) {
-				registry = new PostProcessorRegistryImpl();
+				registry = new PostProcessorDescriptorRegistryImpl();
 			}
 			if (conflictDetector == null) {
 				conflictDetector = new DefaultConflictDetector();

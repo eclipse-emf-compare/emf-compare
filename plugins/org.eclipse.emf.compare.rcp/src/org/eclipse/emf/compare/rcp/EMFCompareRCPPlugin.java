@@ -15,12 +15,13 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.merge.IMerger;
-import org.eclipse.emf.compare.postprocessor.PostProcessorRegistryImpl;
+import org.eclipse.emf.compare.postprocessor.IPostProcessor;
+import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.emf.compare.rcp.internal.merger.MergerExtensionRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryImpl;
 import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryListener;
-import org.eclipse.emf.compare.rcp.internal.postprocessor.PostProcessorRegistryListener;
+import org.eclipse.emf.compare.rcp.internal.postprocessor.PostProcessorFactoryRegistryListener;
 import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
 import org.osgi.framework.BundleContext;
 
@@ -51,15 +52,15 @@ public class EMFCompareRCPPlugin extends Plugin {
 	private ILoadOnDemandPolicy.Registry loadOnDemandRegistry;
 
 	/** The registry listener that will be used to react to load on demand policy changes. */
-	private LoadOnDemandPolicyRegistryListener loadOnDemandRegistryListener;
+	private AbstractRegistryEventListener loadOnDemandRegistryListener;
 
 	/**
 	 * The registry that will hold references to all post processors.
 	 */
-	private PostProcessorRegistryImpl postProcessorRegistry;
+	private IPostProcessor.Descriptor.Registry<String> postProcessorDescriptorsRegistry;
 
 	/** The registry listener that will be used to react to post processor changes. */
-	private PostProcessorRegistryListener postProcessorRegistryListener;
+	private AbstractRegistryEventListener postProcessorFactoryRegistryListener;
 
 	/*
 	 * (non-Javadoc)
@@ -77,11 +78,11 @@ public class EMFCompareRCPPlugin extends Plugin {
 		registry.addListener(mergerRegistryListener, PLUGIN_ID + '.' + MERGER_PPID);
 		mergerRegistryListener.readRegistry(registry);
 
-		postProcessorRegistry = new PostProcessorRegistryImpl();
-		postProcessorRegistryListener = new PostProcessorRegistryListener(PLUGIN_ID, POST_PROCESSOR_PPID,
-				getLog(), postProcessorRegistry);
-		registry.addListener(postProcessorRegistryListener, PLUGIN_ID + '.' + POST_PROCESSOR_PPID);
-		postProcessorRegistryListener.readRegistry(registry);
+		postProcessorDescriptorsRegistry = new PostProcessorDescriptorRegistryImpl<String>();
+		postProcessorFactoryRegistryListener = new PostProcessorFactoryRegistryListener(PLUGIN_ID,
+				POST_PROCESSOR_PPID, getLog(), postProcessorDescriptorsRegistry);
+		registry.addListener(postProcessorFactoryRegistryListener, PLUGIN_ID + '.' + POST_PROCESSOR_PPID);
+		postProcessorFactoryRegistryListener.readRegistry(registry);
 
 		loadOnDemandRegistry = new LoadOnDemandPolicyRegistryImpl();
 		loadOnDemandRegistryListener = new LoadOnDemandPolicyRegistryListener(loadOnDemandRegistry,
@@ -104,9 +105,9 @@ public class EMFCompareRCPPlugin extends Plugin {
 		loadOnDemandRegistryListener = null;
 		loadOnDemandRegistry = null;
 
-		registry.removeListener(postProcessorRegistryListener);
-		postProcessorRegistryListener = null;
-		postProcessorRegistry = null;
+		registry.removeListener(postProcessorFactoryRegistryListener);
+		postProcessorFactoryRegistryListener = null;
+		postProcessorDescriptorsRegistry = null;
 
 		registry.removeListener(mergerRegistryListener);
 		mergerRegistryListener = null;
@@ -128,8 +129,8 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 * 
 	 * @return the post processor registry to which extension will be registered
 	 */
-	public PostProcessorRegistryImpl getPostProcessorRegistry() {
-		return postProcessorRegistry;
+	public IPostProcessor.Descriptor.Registry<String> getPostProcessorRegistry() {
+		return postProcessorDescriptorsRegistry;
 	}
 
 	/**

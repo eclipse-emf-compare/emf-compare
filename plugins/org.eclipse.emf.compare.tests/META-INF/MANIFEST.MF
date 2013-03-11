@@ -24,6 +24,8 @@ Export-Package: org.eclipse.emf.compare.tests.framework,
  org.eclipse.emf.compare.tests.nodes,
  org.eclipse.emf.compare.tests.nodes.impl,
  org.eclipse.emf.compare.tests.nodes.util,
+ org.eclipse.emf.compare.tests.postprocess,
+ org.eclipse.emf.compare.tests.postprocess.data,
  org.eclipse.emf.compare.tests.suite
 Import-Package: com.google.common.base;version="[11.0.0,15.0.0)",
  com.google.common.cache;version="[11.0.0,15.0.0)",

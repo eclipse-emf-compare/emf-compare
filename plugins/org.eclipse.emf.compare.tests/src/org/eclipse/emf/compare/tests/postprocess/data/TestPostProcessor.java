@@ -27,18 +27,6 @@ import org.eclipse.emf.compare.postprocessor.IPostProcessor;
  */
 public class TestPostProcessor implements IPostProcessor {
 
-	private Pattern nsURI;
-
-	private Pattern resourceURI;
-
-	/**
-	 * 
-	 */
-	public TestPostProcessor(String nsURI, String resourceURI) {
-		this.nsURI = nsURI == null ? null : Pattern.compile(nsURI);
-		this.resourceURI = resourceURI == null ? null : Pattern.compile(resourceURI);
-	}
-
 	public void postMatch(Comparison comparison, Monitor monitor) {
 		final List<Match> matches = comparison.getMatches();
 		final Match lastMatch = matches.get(matches.size() - 1);
@@ -96,29 +84,63 @@ public class TestPostProcessor implements IPostProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor#getNsURI()
-	 */
-	public Pattern getNsURI() {
-		return nsURI;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor#getResourceURI()
-	 */
-	public Pattern getResourceURI() {
-		return resourceURI;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor#postComparison(org.eclipse.emf.compare.Comparison,
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postComparison(Comparison comparison, Monitor monitor) {
 		// TODO Auto-generated method stub
+
+	}
+
+	public static class TestPostProcessorDescriptor implements IPostProcessor.Descriptor {
+
+		private final Pattern nsURI;
+
+		private final Pattern resourceURI;
+
+		private final IPostProcessor postProcessor;
+
+		public TestPostProcessorDescriptor(Pattern nsURI, Pattern resourceURI, IPostProcessor postProcessor) {
+			this.nsURI = nsURI;
+			this.resourceURI = resourceURI;
+			this.postProcessor = postProcessor;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor#getPostProcessor()
+		 */
+		public IPostProcessor getPostProcessor() {
+			return postProcessor;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor#getNsURI()
+		 */
+		public Pattern getNsURI() {
+			return nsURI;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor#getResourceURI()
+		 */
+		public Pattern getResourceURI() {
+			return resourceURI;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor#getInstanceClassName()
+		 */
+		public String getInstanceClassName() {
+			return postProcessor.getClass().getName();
+		}
 
 	}
 

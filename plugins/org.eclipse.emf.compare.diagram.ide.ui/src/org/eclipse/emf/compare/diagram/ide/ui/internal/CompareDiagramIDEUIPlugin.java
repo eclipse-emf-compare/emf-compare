@@ -68,15 +68,11 @@ public class CompareDiagramIDEUIPlugin extends AbstractUIPlugin {
 		configuration.setMoveThreshold(getPreferenceStore().getInt(
 				CompareDiagramConstants.PREFERENCES_KEY_MOVE_THRESHOLD));
 
-		IPostProcessor.Registry postProcessorRegistry = EMFCompareRCPPlugin.getDefault()
+		IPostProcessor.Descriptor.Registry<?> registry = EMFCompareRCPPlugin.getDefault()
 				.getPostProcessorRegistry();
-		for (IPostProcessor postprocessor : postProcessorRegistry.getPostProcessors()) {
-			if (postprocessor instanceof CompareDiagramPostProcessor) {
-				((CompareDiagramPostProcessor)postprocessor).setConfiguration(configuration);
-			} else if (postprocessor instanceof IPostProcessor.Descriptor
-					&& ((IPostProcessor.Descriptor)postprocessor).getPostProcessor() instanceof CompareDiagramPostProcessor) {
-				((CompareDiagramPostProcessor)((IPostProcessor.Descriptor)postprocessor).getPostProcessor())
-						.setConfiguration(configuration);
+		for (IPostProcessor.Descriptor descriptor : registry.getDescriptors()) {
+			if (CompareDiagramPostProcessor.class.getName().equals(descriptor.getInstanceClassName())) {
+				((CompareDiagramPostProcessor)descriptor.getPostProcessor()).setConfiguration(configuration);
 			}
 		}
 	}

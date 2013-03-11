@@ -13,14 +13,16 @@ package org.eclipse.emf.compare.tests.postprocess;
 import static junit.framework.Assert.assertSame;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.postprocessor.PostProcessorRegistryImpl;
+import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.postprocess.data.PostProcessInputData;
 import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
+import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor.TestPostProcessorDescriptor;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.BeforeClass;
@@ -53,11 +55,11 @@ public class PostProcessorTest {
 		final Resource left = input.getLeft();
 		final Resource right = input.getRight();
 
-		PostProcessorRegistryImpl registry = new PostProcessorRegistryImpl();
+		PostProcessorDescriptorRegistryImpl registry = new PostProcessorDescriptorRegistryImpl();
 		// Post processing (add a match element) if EMF Compare scans a model coming from the namespace URI
 		// "http://www.eclipse.org/emf/compare/tests/nodes" at least.
-		registry.addPostProcessor(new TestPostProcessor("http://www.eclipse.org/emf/compare/tests/nodes",
-				null));
+		registry.put(TestPostProcessor.class.getName(), new TestPostProcessorDescriptor(Pattern
+				.compile("http://www.eclipse.org/emf/compare/tests/nodes"), null, new TestPostProcessor()));
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build()
@@ -72,10 +74,11 @@ public class PostProcessorTest {
 		final Resource left = input.getLeft();
 		final Resource right = input.getRight();
 
-		PostProcessorRegistryImpl registry = new PostProcessorRegistryImpl();
+		PostProcessorDescriptorRegistryImpl registry = new PostProcessorDescriptorRegistryImpl();
 		// Post processing (add a match element) if EMF Compare scans a model from the namespace URI which
 		// matches the regex ".*/nodes" at least.
-		registry.addPostProcessor(new TestPostProcessor(".*/nodes", null));
+		registry.put(TestPostProcessor.class.getName(), new TestPostProcessorDescriptor(Pattern
+				.compile(".*/nodes"), null, new TestPostProcessor()));
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build()
@@ -90,9 +93,10 @@ public class PostProcessorTest {
 		final Resource left = input.getLeft();
 		final Resource right = input.getRight();
 
-		PostProcessorRegistryImpl registry = new PostProcessorRegistryImpl();
+		PostProcessorDescriptorRegistryImpl registry = new PostProcessorDescriptorRegistryImpl();
 		// No post processes if the regex matches no scanned namespace URIs.
-		registry.addPostProcessor(new TestPostProcessor(".*/nides", null));
+		registry.put(TestPostProcessor.class.getName(), new TestPostProcessorDescriptor(Pattern
+				.compile(".*/nides"), null, new TestPostProcessor()));
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build()
@@ -107,9 +111,10 @@ public class PostProcessorTest {
 		final Resource left = input.getLeft();
 		final Resource right = input.getRight();
 
-		PostProcessorRegistryImpl registry = new PostProcessorRegistryImpl();
+		PostProcessorDescriptorRegistryImpl registry = new PostProcessorDescriptorRegistryImpl();
 		// No post processes if the regex matches no scanned namespace URIs (null value case)
-		registry.addPostProcessor(new TestPostProcessor(null, null));
+		registry.put(TestPostProcessor.class.getName(), new TestPostProcessorDescriptor(null, null,
+				new TestPostProcessor()));
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build()
@@ -124,9 +129,10 @@ public class PostProcessorTest {
 		final Resource left = input.getLeft();
 		final Resource right = input.getRight();
 
-		PostProcessorRegistryImpl registry = new PostProcessorRegistryImpl();
+		PostProcessorDescriptorRegistryImpl registry = new PostProcessorDescriptorRegistryImpl();
 		// No post processes if the regex matches no scanned namespace URIs (empty value case)
-		registry.addPostProcessor(new TestPostProcessor("", null));
+		registry.put(TestPostProcessor.class.getName(), new TestPostProcessorDescriptor(Pattern.compile(""),
+				null, new TestPostProcessor()));
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build()
@@ -141,9 +147,10 @@ public class PostProcessorTest {
 		final Resource left = input.getLeft();
 		final Resource right = input.getRight();
 
-		PostProcessorRegistryImpl registry = new PostProcessorRegistryImpl();
+		PostProcessorDescriptorRegistryImpl registry = new PostProcessorDescriptorRegistryImpl();
 		// No post processes if the regex matches no scanned namespace URIs (blank value case)
-		registry.addPostProcessor(new TestPostProcessor(" ", null));
+		registry.put(TestPostProcessor.class.getName(), new TestPostProcessorDescriptor(Pattern.compile(" "),
+				null, new TestPostProcessor()));
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build()
@@ -158,10 +165,11 @@ public class PostProcessorTest {
 		final Resource left = input.getLeft();
 		final Resource right = input.getRight();
 
-		PostProcessorRegistryImpl registry = new PostProcessorRegistryImpl();
+		PostProcessorDescriptorRegistryImpl registry = new PostProcessorDescriptorRegistryImpl();
 		// Post processing (add a match element) if EMF Compare scans a resource where its URI is the same as
 		// the specified one at least.
-		registry.addPostProcessor(new TestPostProcessor(null, left.getURI().toString()));
+		registry.put(TestPostProcessor.class.getName(), new TestPostProcessorDescriptor(null, Pattern
+				.compile(left.getURI().toString()), new TestPostProcessor()));
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build()
@@ -176,10 +184,11 @@ public class PostProcessorTest {
 		final Resource left = input.getLeft();
 		final Resource right = input.getRight();
 
-		PostProcessorRegistryImpl registry = new PostProcessorRegistryImpl();
+		PostProcessorDescriptorRegistryImpl registry = new PostProcessorDescriptorRegistryImpl();
 		// Post processing (add a match element) if EMF Compare scans a resource where its URI matches the
 		// specified regex at least.
-		registry.addPostProcessor(new TestPostProcessor(null, ".*.nodes"));
+		registry.put(TestPostProcessor.class.getName(), new TestPostProcessorDescriptor(null, Pattern
+				.compile(".*.nodes"), new TestPostProcessor()));
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build()
@@ -194,9 +203,10 @@ public class PostProcessorTest {
 		final Resource left = input.getLeft();
 		final Resource right = input.getRight();
 
-		PostProcessorRegistryImpl registry = new PostProcessorRegistryImpl();
+		PostProcessorDescriptorRegistryImpl registry = new PostProcessorDescriptorRegistryImpl();
 		// No post processes if the regex matches no scanned resource URIs
-		registry.addPostProcessor(new TestPostProcessor(null, ".*.nides"));
+		registry.put(TestPostProcessor.class.getName(), new TestPostProcessorDescriptor(null, Pattern
+				.compile(".*.nides"), new TestPostProcessor()));
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build()
@@ -211,9 +221,10 @@ public class PostProcessorTest {
 		final Resource left = input.getLeft();
 		final Resource right = input.getRight();
 
-		PostProcessorRegistryImpl registry = new PostProcessorRegistryImpl();
+		PostProcessorDescriptorRegistryImpl registry = new PostProcessorDescriptorRegistryImpl();
 		// No post processes if the regex matches no scanned resource URIs (empty value)
-		registry.addPostProcessor(new TestPostProcessor(null, ""));
+		registry.put(TestPostProcessor.class.getName(), new TestPostProcessorDescriptor(null, Pattern
+				.compile(""), new TestPostProcessor()));
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build()
@@ -228,9 +239,10 @@ public class PostProcessorTest {
 		final Resource left = input.getLeft();
 		final Resource right = input.getRight();
 
-		PostProcessorRegistryImpl registry = new PostProcessorRegistryImpl();
+		PostProcessorDescriptorRegistryImpl registry = new PostProcessorDescriptorRegistryImpl();
 		// No post processes if the regex matches no scanned resource URIs (blank value)
-		registry.addPostProcessor(new TestPostProcessor(null, " "));
+		registry.put(TestPostProcessor.class.getName(), new TestPostProcessorDescriptor(null, Pattern
+				.compile(" "), new TestPostProcessor()));
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
 		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build()
@@ -239,5 +251,4 @@ public class PostProcessorTest {
 		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getMatches().size()));
 
 	}
-
 }

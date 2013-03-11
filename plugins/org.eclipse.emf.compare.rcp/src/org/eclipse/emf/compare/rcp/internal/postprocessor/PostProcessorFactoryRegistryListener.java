@@ -24,7 +24,7 @@ import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class PostProcessorRegistryListener extends AbstractRegistryEventListener {
+public class PostProcessorFactoryRegistryListener extends AbstractRegistryEventListener {
 
 	static final String TAG_PROCESSOR = "processor"; //$NON-NLS-1$
 
@@ -37,7 +37,7 @@ public class PostProcessorRegistryListener extends AbstractRegistryEventListener
 	static final String ATT_CLASS = "class"; //$NON-NLS-1$
 
 	/** The post processor registry to which extension will be registered. */
-	private final IPostProcessor.Registry registry;
+	private final IPostProcessor.Descriptor.Registry<String> registry;
 
 	/**
 	 * Creates a new registry listener with the given post processor registry to which extension will be
@@ -49,8 +49,8 @@ public class PostProcessorRegistryListener extends AbstractRegistryEventListener
 	 * @param extensionPointID
 	 * @param log
 	 */
-	public PostProcessorRegistryListener(String pluginID, String extensionPointID, ILog log,
-			IPostProcessor.Registry registry) {
+	public PostProcessorFactoryRegistryListener(String pluginID, String extensionPointID, ILog log,
+			IPostProcessor.Descriptor.Registry<String> registry) {
 		super(pluginID, extensionPointID, log);
 		this.registry = registry;
 	}
@@ -111,12 +111,13 @@ public class PostProcessorRegistryListener extends AbstractRegistryEventListener
 		if (resourceURIChildren.length > 0) {
 			resourceURI = Pattern.compile(resourceURIChildren[0].getAttribute(ATT_VALUE));
 		}
+		String className = element.getAttribute(ATT_CLASS);
 
-		IPostProcessor processor = new PostProcessorDescriptor(element, nsURI, resourceURI);
-		IPostProcessor previous = registry.addPostProcessor(processor);
+		IPostProcessor.Descriptor descriptor = new PostProcessorDescriptor(element, nsURI, resourceURI);
+		IPostProcessor.Descriptor previous = registry.put(className, descriptor);
 		if (previous != null) {
 			EMFCompareRCPPlugin.getDefault().log(IStatus.WARNING,
-					"The post processor '" + element.getAttribute(ATT_CLASS) + "' is registered twice.");
+					"The post processor factory '" + className + "' is registered twice.");
 		}
 		return true;
 	}
@@ -128,7 +129,8 @@ public class PostProcessorRegistryListener extends AbstractRegistryEventListener
 	 */
 	@Override
 	protected boolean removedValid(IConfigurationElement element) {
-		registry.removePostProcessor(element.getAttribute(ATT_CLASS));
+		String className = element.getAttribute(ATT_CLASS);
+		registry.remove(className);
 		return true;
 	}
 }

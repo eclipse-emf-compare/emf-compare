@@ -18,7 +18,8 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
-import org.eclipse.emf.compare.postprocessor.PostProcessorRegistryImpl;
+import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
+import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.junit.After;
@@ -32,13 +33,13 @@ public abstract class AbstractTest {
 
 	private EMFCompare emfCompare;
 	
-	private PostProcessorRegistryImpl postProcessorRegistry;
+	private PostProcessorDescriptorRegistryImpl<String> postProcessorRegistry;
 
 	@Before
 	public void before() {
-		postProcessorRegistry = new PostProcessorRegistryImpl();
-		postProcessorRegistry.addPostProcessor(new CompareDiagramPostProcessor(
-				Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null));
+		postProcessorRegistry = new PostProcessorDescriptorRegistryImpl<String>();
+		postProcessorRegistry.put(CompareDiagramPostProcessor.class.getName(), new TestPostProcessor.TestPostProcessorDescriptor(
+				Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null, new CompareDiagramPostProcessor()));
 		emfCompare = EMFCompare.builder().setPostProcessorRegistry(postProcessorRegistry).build();
 	}
 
@@ -49,7 +50,7 @@ public abstract class AbstractTest {
 	/**
 	 * @return the postProcessorRegistry
 	 */
-	protected IPostProcessor.Registry getPostProcessorRegistry() {
+	protected IPostProcessor.Descriptor.Registry<?> getPostProcessorRegistry() {
 		return postProcessorRegistry;
 	}
 	

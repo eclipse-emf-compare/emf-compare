@@ -95,7 +95,6 @@ public interface IAccessorFactory {
 		 * 
 		 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory.Registry#getFactories(java.lang.Object)
 		 */
-		@SuppressWarnings("unchecked")
 		// safe thanks to the isFactoryFor filter
 		public List<IAccessorFactory> getFactories(Object target) {
 			Iterable<IAccessorFactory> factories = filter(map.values(), isFactoryFor(target));

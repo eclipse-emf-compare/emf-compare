@@ -54,7 +54,7 @@ public class NodechangesTest extends AbstractTest {
 	}
 	
 	@Override
-	protected IPostProcessor.Registry getPostProcessorRegistry() {
+	protected IPostProcessor.Descriptor.Registry<?> getPostProcessorRegistry() {
 		throw new UnsupportedOperationException("do not call this in IDE context");
 	}
 	

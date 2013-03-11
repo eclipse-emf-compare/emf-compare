@@ -13,7 +13,6 @@ package org.eclipse.emf.compare.diagram.internal;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
@@ -22,37 +21,20 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.factories.DiagramExtensionFactoryRegistry;
 import org.eclipse.emf.compare.diagram.internal.factories.IDiagramExtensionFactory;
-import org.eclipse.emf.compare.postprocessor.AbstractPostProcessor;
+import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 
 /**
  * Post-processor to create the diagram difference extensions.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class CompareDiagramPostProcessor extends AbstractPostProcessor {
+public class CompareDiagramPostProcessor implements IPostProcessor {
 
 	/** Registry of diagram difference extension factories. */
 	private Set<IDiagramExtensionFactory> diagramExtensionFactories;
 
 	/** Diagram comparison configuration. */
 	private CompareDiagramConfiguration configuration;
-
-	/**
-	 * Constructor.
-	 */
-	public CompareDiagramPostProcessor() {
-		super(Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null); //$NON-NLS-1$
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param configuration
-	 *            The diagram comparison configuration.
-	 */
-	public CompareDiagramPostProcessor(Pattern nsURI, Pattern resourceURI) {
-		super(nsURI, resourceURI);
-	}
 
 	/**
 	 * Set the diagram comparison configuration.
