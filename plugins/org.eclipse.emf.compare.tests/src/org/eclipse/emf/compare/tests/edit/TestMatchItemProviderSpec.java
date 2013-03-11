@@ -46,9 +46,9 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 		Match ePackageMatch = getEcoreA1_EPackageMatch();
 
 		Collection<?> ePackageMatchChildren = itemProvider.getChildren(ePackageMatch);
-		assertEquals(9, ePackageMatchChildren.size());
+		assertEquals(18, ePackageMatchChildren.size());
 		assertEquals(4, size(filter(ePackageMatchChildren, Diff.class)));
-		assertEquals(5, size(filter(ePackageMatchChildren, Match.class)));
+		assertEquals(14, size(filter(ePackageMatchChildren, Match.class)));
 	}
 
 	static Match getEcoreA1_EPackageMatch() throws IOException {
@@ -68,9 +68,9 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 				"AudioVisualItem");
 		Collection<?> audioVisualItem_MatchChildren = itemProvider.getChildren(audioVisualItem_Match);
 
-		assertEquals(3, audioVisualItem_MatchChildren.size());
+		assertEquals(4, audioVisualItem_MatchChildren.size());
 		assertEquals(2, size(filter(audioVisualItem_MatchChildren, Diff.class)));
-		assertEquals(1, size(filter(audioVisualItem_MatchChildren, Match.class)));
+		assertEquals(2, size(filter(audioVisualItem_MatchChildren, Match.class)));
 	}
 
 	@Test
@@ -99,9 +99,9 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 		Match book_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "Book");
 		Collection<?> book_MatchChildren = itemProvider.getChildren(book_Match);
 
-		assertEquals(3, book_MatchChildren.size());
+		assertEquals(6, book_MatchChildren.size());
 		assertEquals(3, size(filter(book_MatchChildren, Diff.class)));
-		assertEquals(0, size(filter(book_MatchChildren, Match.class)));
+		assertEquals(3, size(filter(book_MatchChildren, Match.class)));
 	}
 
 	@Test
@@ -112,9 +112,9 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 		Match bookCategory_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "BookCategory");
 		Collection<?> bookCategory_MatchChildren = itemProvider.getChildren(bookCategory_Match);
 
-		assertEquals(4, bookCategory_MatchChildren.size());
+		assertEquals(7, bookCategory_MatchChildren.size());
 		assertEquals(4, size(filter(bookCategory_MatchChildren, Diff.class)));
-		assertEquals(0, size(filter(bookCategory_MatchChildren, Match.class)));
+		assertEquals(3, size(filter(bookCategory_MatchChildren, Match.class)));
 	}
 
 	@Test
@@ -125,9 +125,9 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 		Match borrowable_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "Borrowable");
 		Collection<?> borrowable_MatchChildren = itemProvider.getChildren(borrowable_Match);
 
-		assertEquals(1, borrowable_MatchChildren.size());
+		assertEquals(3, borrowable_MatchChildren.size());
 		assertEquals(1, size(filter(borrowable_MatchChildren, Diff.class)));
-		assertEquals(0, size(filter(borrowable_MatchChildren, Match.class)));
+		assertEquals(2, size(filter(borrowable_MatchChildren, Match.class)));
 	}
 
 	@Test

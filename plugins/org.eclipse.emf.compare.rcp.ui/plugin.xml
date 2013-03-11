@@ -24,11 +24,6 @@
       </group>
       <group
             activeByDefault="false"
-            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.MetamodelGroupProvider"
-            label="By Metaclass">
-      </group>
-      <group
-            activeByDefault="false"
             class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.ThreeWayComparisonGroupProvider"
             label="By Side">
       </group>
@@ -36,29 +31,29 @@
    <extension
          point="org.eclipse.emf.compare.rcp.ui.filters">
       <filter
-            activeByDefault="false"
-            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.ChangedElementsFilter"
-            label="Changed elements">
-      </filter>
-      <filter
-            activeByDefault="false"
-            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.AddedElementsFilter"
-            label="Added elements">
-      </filter>
-      <filter
-            activeByDefault="false"
-            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.RemovedElementsFilter"
-            label="Removed elements">
-      </filter>
-      <filter
-            activeByDefault="false"
-            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.MovedElementsFilter"
-            label="Moved elements">
+            activeByDefault="true"
+            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.EmptyMatchedResourcesFilter"
+            label="Empty resource mappings">
       </filter>
       <filter
             activeByDefault="true"
-            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.EmptyMatchedResourcesFilter"
-            label="Empty Resource Mappings">
+            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.PseudoConflictsFilter"
+            label="Pseudo conflicts differences">
+      </filter>
+      <filter
+            activeByDefault="true"
+            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.PseudoDeleteConflictsFilter"
+            label="Pseudo delete conflicts differences">
+      </filter>
+      <filter
+            activeByDefault="true"
+            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IdenticalElementsFilter"
+            label="Identical elements">
+      </filter>
+      <filter
+            activeByDefault="true"
+            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.SubDiffElementsFilter"
+            label="Sub diff elements">
       </filter>
    </extension>
 </plugin>

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,19 +27,28 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Image;
 
 /**
+ * Input of each diagram merge viewer when a match is selected.
+ * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public class DiagramIDEMatchAccessorImpl implements IDiagramNodeAccessor, ITypedElement, IStreamContentAccessor {
 
-	private Match fMatch;
-
-	private MergeViewerSide fSide;
-
+	/** The comparison. */
 	protected Comparison fComparison;
 
+	/** The related match object. */
+	private Match fMatch;
+
+	/** The side to impact. */
+	private MergeViewerSide fSide;
+
 	/**
-	 * @param adapterFactory
-	 * @param eObject
+	 * Constructor.
+	 * 
+	 * @param match
+	 *            The related match object.
+	 * @param side
+	 *            The side to impact.
 	 */
 	public DiagramIDEMatchAccessorImpl(Match match, MergeViewerSide side) {
 		this.fMatch = match;
@@ -96,45 +105,78 @@ public class DiagramIDEMatchAccessorImpl implements IDiagramNodeAccessor, ITyped
 		return new ByteArrayInputStream(new byte[] {' ' });
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor#getEObject(org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide)
+	 */
 	public EObject getEObject(MergeViewerSide side) {
 		return getEObject(fMatch, side);
 	}
 
+	/**
+	 * Get the object from the given side.
+	 * 
+	 * @param match
+	 *            The match of the expected object.
+	 * @param side
+	 *            The side to look for.
+	 * @return The found object.
+	 */
 	protected EObject getEObject(Match match, MergeViewerSide side) {
+		EObject result = null;
 		switch (side) {
 			case LEFT:
-				return match.getLeft();
-			case RIGHT:
-				return match.getRight();
-			case ANCESTOR:
-				return match.getOrigin();
-			default:
+				result = match.getLeft();
 				break;
+			case RIGHT:
+				result = match.getRight();
+				break;
+			case ANCESTOR:
+				result = match.getOrigin();
+				break;
+			default:
 		}
-		return null;
+		return result;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor#getDiagram(org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide)
+	 */
 	public Diagram getDiagram(MergeViewerSide side) {
+		Diagram diagram = null;
 		EObject obj = getEObject(side);
 		if (obj != null) {
-			return getDiagram(obj);
+			diagram = getDiagram(obj);
 		} else {
 			obj = getEObject(getOpposite(side));
 			if (obj != null) {
-				Diagram diagram = getDiagram(obj);
+				diagram = getDiagram(obj);
 				if (diagram != null) {
 					Match diagramMatch = fComparison.getMatch(diagram);
-					return (Diagram)getEObject(diagramMatch, side);
+					diagram = (Diagram)getEObject(diagramMatch, side);
 				}
 			}
 		}
-		return null;
+		return diagram;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor#getOwnedDiagram()
+	 */
 	public Diagram getOwnedDiagram() {
 		return getDiagram(fSide);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor#getOwnedView()
+	 */
 	public View getOwnedView() {
 		View result = (View)getEObject(fSide);
 		if (result == null) {
@@ -143,19 +185,37 @@ public class DiagramIDEMatchAccessorImpl implements IDiagramNodeAccessor, ITyped
 		return result;
 	}
 
+	/**
+	 * Get the related diagram from the given object.
+	 * 
+	 * @param obj
+	 *            The object.
+	 * @return The diagram.
+	 */
 	protected Diagram getDiagram(EObject obj) {
+		Diagram diagram = null;
 		if (obj instanceof Diagram) {
-			return (Diagram)obj;
+			diagram = (Diagram)obj;
 		} else if (obj instanceof View) {
-			return ((View)obj).getDiagram();
+			diagram = ((View)obj).getDiagram();
 		}
-		return null;
+		return diagram;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor#getComparison()
+	 */
 	public Comparison getComparison() {
 		return fComparison;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor#getOriginSide()
+	 */
 	public MergeViewerSide getOriginSide() {
 		EObject origin = getEObject(MergeViewerSide.ANCESTOR);
 		if (origin == null) {
@@ -165,14 +225,31 @@ public class DiagramIDEMatchAccessorImpl implements IDiagramNodeAccessor, ITyped
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor#getSide()
+	 */
 	public MergeViewerSide getSide() {
 		return fSide;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor#getAllDiffs()
+	 */
 	public List<Diff> getAllDiffs() {
 		return fComparison.getDifferences();
 	}
 
+	/**
+	 * Get the opposite side of the given one.
+	 * 
+	 * @param side
+	 *            The given side.
+	 * @return the opposite one.
+	 */
 	private MergeViewerSide getOpposite(MergeViewerSide side) {
 		if (side == MergeViewerSide.LEFT) {
 			return MergeViewerSide.RIGHT;

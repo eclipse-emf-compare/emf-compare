@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -38,11 +39,18 @@ public interface DifferenceGroup {
 	Comparison getComparison();
 
 	/**
-	 * A human-readable label for this group. This will be displayed in the EMF Compare UI.
+	 * A human-readable label for this group.
 	 * 
 	 * @return A human-readable label for this group that can be displayed to the user.
 	 */
 	String getName();
+
+	/**
+	 * The styled label for the this group. This will be displayed in the EMF Compare UI.
+	 * 
+	 * @return A human-readable styled label for this group that can be displayed to the user.
+	 */
+	IStyledString.IComposedStyledString getStyledName();
 
 	/**
 	 * The icon that is to be used for this group in the compare UI.

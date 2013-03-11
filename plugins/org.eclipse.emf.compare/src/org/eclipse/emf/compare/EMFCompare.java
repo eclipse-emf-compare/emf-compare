@@ -207,6 +207,10 @@ public class EMFCompare {
 			}
 		}
 
+		for (IPostProcessor iPostProcessor : postProcessors) {
+			iPostProcessor.postComparison(comparison, monitor);
+		}
+
 		return comparison;
 	}
 

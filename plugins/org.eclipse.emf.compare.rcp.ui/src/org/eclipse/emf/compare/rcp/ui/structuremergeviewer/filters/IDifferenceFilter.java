@@ -35,11 +35,22 @@ import org.eclipse.emf.ecore.EObject;
 public interface IDifferenceFilter {
 
 	/**
-	 * The predicate that will filter out objects in the structural differences view.
+	 * Returns the predicate that will filter out objects in the structural differences view when this filter
+	 * will be selected.
 	 * 
-	 * @return The predicate that will filter out objects in the structural differences view.
+	 * @return the predicate that will filter out objects in the structural differences view when this filter
+	 *         will be selected.
 	 */
-	Predicate<? super EObject> getPredicate();
+	Predicate<? super EObject> getPredicateWhenSelected();
+
+	/**
+	 * Returns the predicate that will filter out objects in the structural differences view when this filter
+	 * will be unselected.
+	 * 
+	 * @return the predicate that will filter out objects in the structural differences view when this filter
+	 *         will be unselected.
+	 */
+	Predicate<? super EObject> getPredicateWhenUnselected();
 
 	/**
 	 * A human-readable label for this filter. This will be displayed in the EMF Compare UI.

@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.internal.utils;
 
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Maps;
 
 import java.lang.reflect.Field;
@@ -50,7 +50,7 @@ public class ForwardingXMLHandler extends XMLHandler {
 	 * The cache in which we'll store the fields we access through reflection. Note that this is only used by
 	 * a single field in this implementation.
 	 */
-	private static final Cache<String, Field> FIELD_CACHE = CacheBuilder.newBuilder().build(
+	private static final LoadingCache<String, Field> FIELD_CACHE = CacheBuilder.newBuilder().build(
 			new CacheLoader<String, Field>() {
 				/**
 				 * {@inheritDoc}

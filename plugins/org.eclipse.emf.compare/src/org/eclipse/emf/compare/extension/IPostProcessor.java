@@ -29,6 +29,7 @@ public interface IPostProcessor {
 	 *            The comparison after the match step.
 	 * @param monitor
 	 *            The monitor to report progress or to check for cancellation
+	 * @since 3.0
 	 */
 	void postMatch(Comparison comparison, Monitor monitor);
 
@@ -40,6 +41,7 @@ public interface IPostProcessor {
 	 *            The comparison after the difference step.
 	 * @param monitor
 	 *            The monitor to report progress or to check for cancellation
+	 * @since 3.0
 	 */
 	void postDiff(Comparison comparison, Monitor monitor);
 
@@ -51,6 +53,7 @@ public interface IPostProcessor {
 	 *            The comparison after the requirements step.
 	 * @param monitor
 	 *            The monitor to report progress or to check for cancellation
+	 * @since 3.0
 	 */
 	void postRequirements(Comparison comparison, Monitor monitor);
 
@@ -62,6 +65,7 @@ public interface IPostProcessor {
 	 *            The comparison after the equivalences step.
 	 * @param monitor
 	 *            The monitor to report progress or to check for cancellation
+	 * @since 3.0
 	 */
 	void postEquivalences(Comparison comparison, Monitor monitor);
 
@@ -73,7 +77,20 @@ public interface IPostProcessor {
 	 *            The comparison after the conflicts step.
 	 * @param monitor
 	 *            The monitor to report progress or to check for cancellation
+	 * @since 3.0
 	 */
 	void postConflicts(Comparison comparison, Monitor monitor);
+
+	/**
+	 * This will be called by EMF Compare in order to execute the specified behavior after a comparison, from
+	 * a <code>comparison</code>.
+	 * 
+	 * @param comparison
+	 *            The comparison after the all steps.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation
+	 * @since 3.0
+	 */
+	void postComparison(Comparison comparison, Monitor monitor);
 
 }

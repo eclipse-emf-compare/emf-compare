@@ -38,4 +38,12 @@
             ranking="10">
       </merger>
    </extension>
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            id="org.eclipse.emf.compare.content.type"
+            name="EMF Compare"
+            priority="normal">
+      </content-type>
+   </extension>
 </plugin>

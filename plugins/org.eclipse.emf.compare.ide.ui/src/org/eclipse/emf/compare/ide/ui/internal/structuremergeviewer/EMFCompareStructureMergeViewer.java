@@ -130,6 +130,8 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 
 	private FilterActionMenu filterActionMenu;
 
+	private SaveComparisonModelAction saveAction;
+
 	private EventBus eventBus;
 
 	/**
@@ -148,7 +150,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		setLabelProvider(new DelegatingStyledCellLabelProvider(
 				new EMFCompareStructureMergeViewerLabelProvider(fAdapterFactory, this)));
 		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(fAdapterFactory,
-				structureMergeViewerGrouper));
+				structureMergeViewerGrouper, structureMergeViewerFilter));
 
 		if (parent instanceof CompareViewerSwitchingPane) {
 			fParent = (CompareViewerSwitchingPane)parent;
@@ -247,7 +249,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 
 	private IRunnableWithProgress inputChangedTask = new IRunnableWithProgress() {
 		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-			monitor.beginTask("Computing Structure Differences", 100); //$NON-NLS-1$
+			monitor.beginTask("Computing Structure Differences", 100);
 			compareInputChanged((ICompareInput)getInput(), new SubProgressMonitor(monitor, 100));
 			monitor.done();
 		}
@@ -322,9 +324,11 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				final CompareConfiguration config = getCompareConfiguration();
 				if (!syncModel.isLeftEditable()) {
 					config.setLeftEditable(false);
+					saveAction.setEnabled(false);
 				}
 				if (!syncModel.isRightEditable()) {
 					config.setRightEditable(false);
+					saveAction.setEnabled(false);
 				}
 
 				final IComparisonScope scope = syncModel.createMinimizedScope();
@@ -450,7 +454,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				String message = null;
 				if (comparison.getDifferences().isEmpty()) {
-					message = "No Differences"; //$NON-NLS-1$
+					message = "No Differences";
 				}
 
 				if (Display.getCurrent() != null) {
@@ -501,7 +505,8 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		groupActionMenu = new GroupActionMenu(getStructureMergeViewerGrouper(), getGroupsMenuManager(),
 				getDefaultGroupProvider());
 		filterActionMenu = new FilterActionMenu(getStructureMergeViewerFilter(), getFiltersMenuManager());
-		toolbarManager.add(new SaveComparisonModelAction(getCompareConfiguration()));
+		saveAction = new SaveComparisonModelAction(getCompareConfiguration());
+		toolbarManager.add(saveAction);
 		toolbarManager.add(groupActionMenu);
 		toolbarManager.add(filterActionMenu);
 	}

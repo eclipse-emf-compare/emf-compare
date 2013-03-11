@@ -4,8 +4,8 @@
 <target name="EMF Compare based on Juno with 4.2 Platform" sequenceNumber="57">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="com.google.guava" version="10.0.1.v201203051515"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/"/>
+<unit id="com.google.guava" version="11.0.2.v201303041551"/>
+<repository location="http://build.eclipse.org/orbit/committers/orbit-I/20130305082625/I20130305082625/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.emfstore.fuzzy.feature.feature.group" version="0.9.3.M5"/>

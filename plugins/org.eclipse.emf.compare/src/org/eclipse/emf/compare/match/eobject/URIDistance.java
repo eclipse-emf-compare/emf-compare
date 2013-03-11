@@ -12,9 +12,9 @@ package org.eclipse.emf.compare.match.eobject;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
@@ -40,12 +40,12 @@ public class URIDistance implements Function<EObject, Iterable<String>> {
 	/**
 	 * A computing cache for the locations.
 	 */
-	private Cache<EObject, Iterable<String>> locationCache;
+	private LoadingCache<EObject, Iterable<String>> locationCache;
 
 	/**
 	 * A computing cache for the uri fragments.
 	 */
-	private Cache<EObject, String> fragmentsCache;
+	private LoadingCache<EObject, String> fragmentsCache;
 
 	/**
 	 * An optional comparison to retrieve matches already computed. This will impact the way the uri is

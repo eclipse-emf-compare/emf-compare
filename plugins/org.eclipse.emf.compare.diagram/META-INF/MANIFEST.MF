@@ -7,12 +7,6 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.eclipse.emf.compare.diagram,
- org.eclipse.emf.compare.diagram.diff,
- org.eclipse.emf.compare.diagram.diff.util,
- org.eclipse.emf.compare.diagram.merge,
- org.eclipse.emf.compare.diagram.provider,
- org.eclipse.emf.compare.diagram.util
 Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.gmf.runtime.notation,
  org.eclipse.gmf.runtime.diagram.ui,
@@ -21,4 +15,11 @@ Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
 Import-Package: com.google.common.base;version="10.0.1",
  com.google.common.collect;version="10.0.1"
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.eclipse.emf.compare.diagram.DiagramDiffEnginePlugin
+Bundle-Activator: org.eclipse.emf.compare.diagram.internal.CompareDiagramPlugin
+Export-Package: org.eclipse.emf.compare.diagram.internal;x-internal:=true,
+ org.eclipse.emf.compare.diagram.internal.extensions;x-internal:=true,
+ org.eclipse.emf.compare.diagram.internal.extensions.impl;x-internal:=true,
+ org.eclipse.emf.compare.diagram.internal.extensions.util;x-internal:=true,
+ org.eclipse.emf.compare.diagram.internal.factories;x-internal:=true,
+ org.eclipse.emf.compare.diagram.internal.factories.extensions;x-internal:=true,
+ org.eclipse.emf.compare.diagram.internal.merge;x-internal:=true

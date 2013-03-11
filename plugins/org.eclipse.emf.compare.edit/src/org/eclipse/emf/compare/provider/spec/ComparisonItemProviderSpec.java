@@ -28,6 +28,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.provider.ComparisonItemProvider;
+import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
@@ -35,12 +36,18 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 
 /**
+ * Specialized {@link ComparisonItemProvider} returning nice output for {@link #getText(Object)} and
+ * {@link #getImage(Object)}.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class ComparisonItemProviderSpec extends ComparisonItemProvider implements IItemStyledLabelProvider {
+public class ComparisonItemProviderSpec extends ComparisonItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider {
 
 	/**
+	 * Constructs a ComparisonItemProviderSpec with the given factory.
+	 * 
 	 * @param adapterFactory
+	 *            the factory given to the super constructor.
 	 */
 	public ComparisonItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
@@ -68,6 +75,15 @@ public class ComparisonItemProviderSpec extends ComparisonItemProvider implement
 		return !isEmpty(getChildrenIterable(comparison));
 	}
 
+	/**
+	 * Returns the children of the given {@link Comparison}. In this case children means: non empty matches
+	 * (see {@link ComparisonItemProviderSpec#getNonEmptyMatches(Comparison)}), matches which not only
+	 * contains {@link ResourceAttachmentChange} differences, and matched resources.
+	 * 
+	 * @param comparison
+	 *            the given {@link Comparison}.
+	 * @return the filtered list of children of the given {@link Comparison}.
+	 */
 	private Iterable<EObject> getChildrenIterable(Comparison comparison) {
 		Iterable<? extends EObject> matches = getNonEmptyMatches(comparison);
 		List<EObject> children = Lists.newArrayList(matches);
@@ -81,6 +97,13 @@ public class ComparisonItemProviderSpec extends ComparisonItemProvider implement
 		return concat(children, comparison.getMatchedResources());
 	}
 
+	/**
+	 * Filters out the empty matches of the given {@link Comparison}.
+	 * 
+	 * @param comparison
+	 *            the given {@link Comparison}.
+	 * @return an iterable of non empty matches.
+	 */
 	private Iterable<Match> getNonEmptyMatches(Comparison comparison) {
 		Iterable<Match> match = filter(comparison.getMatches(), new Predicate<Match>() {
 			public boolean apply(Match input) {
@@ -110,5 +133,14 @@ public class ComparisonItemProviderSpec extends ComparisonItemProvider implement
 	 */
 	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		return new ComposedStyledString(getText(object));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.IItemDescriptionProvider#getDescription(java.lang.Object)
+	 */
+	public String getDescription(Object object) {
+		return getText(object);
 	}
 }

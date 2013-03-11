@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2013 Obeo.&#xD;&#xA;All rights reserved. This program and the accompanying materials&#xD;&#xA;are made available under the terms of the Eclipse Public License v1.0&#xD;&#xA;which accompanies this distribution, and is available at&#xD;&#xA;http://www.eclipse.org/legal/epl-v10.html&#xD;&#xA;&#xD;&#xA;Contributors:&#xD;&#xA;    Obeo - initial API and implementation"
+    modelDirectory="/org.eclipse.emf.compare.diagram/src-gen" editDirectory="/org.eclipse.emf.compare.diagram.edit/src-gen"
+    editorDirectory="/org.eclipse.emf.compare.diagram.editor/src-gen" modelPluginID="org.eclipse.emf.compare.diagram"
+    modelName="Extensions" importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0"
+    copyrightFields="false" colorProviders="true" fontProviders="true" usedGenPackages="../../org.eclipse.emf.compare/model/compare.genmodel#//compare platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
+  <foreignModel>diagramCompare.ecore</foreignModel>
+  <genPackages prefix="Extensions" basePackage="org.eclipse.emf.compare.diagram.internal"
+      disposableProviderFactory="true" ecorePackage="diagramCompare.ecore#/">
+    <genClasses ecoreClass="diagramCompare.ecore#//Show"/>
+    <genClasses ecoreClass="diagramCompare.ecore#//Hide"/>
+    <genClasses ecoreClass="diagramCompare.ecore#//NodeChange"/>
+    <genClasses ecoreClass="diagramCompare.ecore#//EdgeChange"/>
+    <genClasses image="false" ecoreClass="diagramCompare.ecore#//DiagramDiff">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diagramCompare.ecore#//DiagramDiff/semanticDiff"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diagramCompare.ecore#//DiagramDiff/view"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

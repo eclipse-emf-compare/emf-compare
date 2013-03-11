@@ -21,11 +21,11 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.diagram.DiagramDiff;
 import org.eclipse.emf.compare.diagram.ecoretools.tests.AbstractTest;
 import org.eclipse.emf.compare.diagram.ecoretools.tests.DiagramInputData;
 import org.eclipse.emf.compare.diagram.ecoretools.tests.edgechanges.data.EdgeChangesInputData;
-import org.eclipse.emf.compare.diagram.merge.DiagramDiffMerger;
+import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
+import org.eclipse.emf.compare.diagram.internal.merge.CompareDiagramMerger;
 import org.eclipse.emf.compare.merge.AttributeChangeMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.ReferenceChangeMerger;
@@ -56,14 +56,14 @@ public class ExtensionMergeTest extends AbstractTest {
 		final IMerger.Registry registry = IMerger.RegistryImpl.createStandaloneInstance();
 		final IMerger umlMerger = new UMLDiffMerger();
 		umlMerger.setRanking(11);
-		final IMerger diagramMerger = new DiagramDiffMerger();
+		final IMerger diagramMerger = new CompareDiagramMerger();
 		diagramMerger.setRanking(11);
 		registry.add(umlMerger);
 		registry.add(diagramMerger);
 		for (Diff diff : differences) {
 			final Class<? extends IMerger> expectedMerger;
 			if (diff instanceof DiagramDiff) {
-				expectedMerger = DiagramDiffMerger.class;
+				expectedMerger = CompareDiagramMerger.class;
 			} else if (diff instanceof UMLDiff) {
 				expectedMerger = UMLDiffMerger.class;
 			} else if (diff instanceof AttributeChange) {

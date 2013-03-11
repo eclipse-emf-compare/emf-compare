@@ -12,20 +12,25 @@ package org.eclipse.emf.compare.provider.spec;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.provider.CompareItemProviderAdapterFactory;
+import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
-import org.eclipse.emf.edit.provider.IItemLabelProvider;
 
 /**
  * Specialized {@link CompareItemProviderAdapterFactory} returning ItemProviderAdapter with nice
- * {@link IItemLabelProvider#getText(Object)} and {@link IItemLabelProvider#getImage(Object)}.
+ * {@link org.eclipse.emf.edit.provider.IItemLabelProvider#getText(Object)} and
+ * {@link org.eclipse.emf.edit.provider.IItemLabelProvider#getImage(Object)}.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAdapterFactory {
 
+	/**
+	 * Constructor calling super {@link #CompareItemProviderAdapterFactory()}.
+	 */
 	public CompareItemProviderAdapterFactorySpec() {
 		super();
 		supportedTypes.add(IItemStyledLabelProvider.class);
+		supportedTypes.add(IItemDescriptionProvider.class);
 	}
 
 	/**

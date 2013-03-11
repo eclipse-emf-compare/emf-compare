@@ -14,6 +14,7 @@ import com.google.common.base.Function;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 import java.lang.reflect.Array;
 import java.util.concurrent.ExecutionException;
@@ -35,7 +36,7 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  */
 public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	/** A cache keeping track of the URIs for EObjects. */
-	private final Cache<EObject, URI> uriCache;
+	private final LoadingCache<EObject, URI> uriCache;
 
 	/**
 	 * Creates a new EqualityHelper.
@@ -54,7 +55,7 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	 * @param uriCache
 	 *            the cache to be used for {@link EcoreUtil#getURI(EObject)} calls.
 	 */
-	public EqualityHelper(Cache<EObject, URI> uriCache) {
+	public EqualityHelper(LoadingCache<EObject, URI> uriCache) {
 		this.uriCache = uriCache;
 	}
 
@@ -285,7 +286,7 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	 *            The builder to use to instantiate the cache.
 	 * @return the new cache.
 	 */
-	public static Cache<EObject, URI> createDefaultCache(CacheBuilder<Object, Object> cacheBuilder) {
+	public static LoadingCache<EObject, URI> createDefaultCache(CacheBuilder<Object, Object> cacheBuilder) {
 		return cacheBuilder.build(CacheLoader.from(new URICacheFunction()));
 	}
 

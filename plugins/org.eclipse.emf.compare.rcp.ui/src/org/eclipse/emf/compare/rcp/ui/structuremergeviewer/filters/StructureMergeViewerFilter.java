@@ -14,6 +14,7 @@ import static com.google.common.base.Predicates.not;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -80,13 +81,13 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 */
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (predicates.isEmpty()) {
+		if (getPredicates().isEmpty()) {
 			return true;
 		}
 		boolean result = false;
-		final Predicate<? super EObject> predicate = Predicates.or(predicates);
+		final Predicate<? super EObject> predicate = Predicates.or(getPredicates());
 
-		if (predicates.isEmpty()) {
+		if (getPredicates().isEmpty()) {
 			result = true;
 		} else if (element instanceof Adapter) {
 			Notifier notifier = ((Adapter)element).getTarget();
@@ -94,8 +95,12 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 				final Diff diff = (Diff)notifier;
 				result = !predicate.apply(diff);
 			} else if (notifier instanceof Match) {
-				final Iterator<Diff> differences = ((Match)notifier).getAllDifferences().iterator();
-				result = Iterators.any(differences, not(predicate));
+				final Match match = (Match)notifier;
+				result = !predicate.apply(match);
+				if (result && !Iterables.isEmpty(match.getAllDifferences())) {
+					final Iterator<Diff> differences = match.getAllDifferences().iterator();
+					return Iterators.any(differences, not(predicate));
+				}
 			} else if (notifier instanceof MatchResource) {
 				final MatchResource matchResource = (MatchResource)notifier;
 				result = !predicate.apply(matchResource);
@@ -123,7 +128,8 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 *            The given {@link IDifferenceFilter}.
 	 */
 	public void addFilter(IDifferenceFilter filter) {
-		addPredicate(filter.getPredicate());
+		getPredicates().remove(filter.getPredicateWhenUnselected());
+		addPredicate(filter.getPredicateWhenSelected());
 		eventBus.post(new IDifferenceFilterSelectionChangeEvent.DefaultFilterSelectionChangeEvent(filter,
 				Action.ADD));
 	}
@@ -135,7 +141,8 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 *            The given {@link IDifferenceFilter}.
 	 */
 	public void removeFilter(IDifferenceFilter filter) {
-		removePredicate(filter.getPredicate());
+		getPredicates().add(filter.getPredicateWhenUnselected());
+		removePredicate(filter.getPredicateWhenSelected());
 		eventBus.post(new IDifferenceFilterSelectionChangeEvent.DefaultFilterSelectionChangeEvent(filter,
 				Action.REMOVE));
 	}
@@ -148,7 +155,7 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 *            accepted.
 	 */
 	public void addPredicate(Predicate<? super EObject> predicate) {
-		final boolean changed = predicates.add(predicate);
+		final boolean changed = getPredicates().add(predicate);
 		if (changed) {
 			refreshViewers();
 		}
@@ -162,7 +169,7 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 *            of the accepted ones.
 	 */
 	public void removePredicate(Predicate<? super EObject> predicate) {
-		final boolean changed = predicates.remove(predicate);
+		final boolean changed = getPredicates().remove(predicate);
 		if (changed) {
 			refreshViewers();
 		}
@@ -209,6 +216,15 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	public void uninstall(TreeViewer viewer) {
 		viewer.removeFilter(this);
 		viewers.remove(viewer);
+	}
+
+	/**
+	 * Get the predicates associated with this viewer.
+	 * 
+	 * @return the predicates
+	 */
+	public Set<Predicate<? super EObject>> getPredicates() {
+		return predicates;
 	}
 
 }

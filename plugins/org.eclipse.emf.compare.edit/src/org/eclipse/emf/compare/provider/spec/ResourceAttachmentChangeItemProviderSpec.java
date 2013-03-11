@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
-import static com.google.common.base.Predicates.not;
-import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.collect.ImmutableCollection;
@@ -23,9 +21,11 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
+import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.ResourceAttachmentChangeItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
@@ -41,8 +41,9 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachmentChangeItemProvider implements IItemStyledLabelProvider {
+public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachmentChangeItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider {
 
+	/** The image provider used with this item provider. */
 	private final OverlayImageProvider overlayProvider;
 
 	/**
@@ -53,7 +54,7 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 	 */
 	public ResourceAttachmentChangeItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
-		overlayProvider = new OverlayImageProvider(getResourceLocator(), true);
+		overlayProvider = new OverlayImageProvider(getResourceLocator());
 	}
 
 	/**
@@ -88,9 +89,16 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 			ret.addAll(children);
 		}
 
-		return ImmutableList.copyOf(filter(ret, not(MatchItemProviderSpec.REFINED_DIFF)));
+		return ImmutableList.copyOf(ret);
 	}
 
+	/**
+	 * Returns the children of the given {@link Match}.
+	 * 
+	 * @param matchOfValue
+	 *            the given {@link Match}.
+	 * @return the children of the given {@link Match}.
+	 */
 	private Collection<?> getChildren(Match matchOfValue) {
 		final Collection<?> children;
 		ITreeItemContentProvider matchItemContentProvider = (ITreeItemContentProvider)adapterFactory.adapt(
@@ -154,6 +162,11 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 		return getStyledText(object).getString();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
+	 */
 	public IComposedStyledString getStyledText(Object object) {
 		final Match match = ((ResourceAttachmentChange)object).getMatch();
 		String value = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getLeft());
@@ -174,5 +187,49 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 
 		return ret.append(" [resource contents " + label + "]", Style.DECORATIONS_STYLER); //$NON-NLS-1$ //$NON-NLS-2$
 
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.IItemDescriptionProvider#getDescription(java.lang.Object)
+	 */
+	public String getDescription(Object object) {
+		final ResourceAttachmentChange rac = (ResourceAttachmentChange)object;
+		final Match match = rac.getMatch();
+		String ret = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getLeft());
+		if (ret == null) {
+			ret = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getRight());
+		}
+		if (ret == null) {
+			ret = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getOrigin());
+		}
+		if (ret == null) {
+			ret = super.getText(object);
+		}
+
+		String remotely = "";
+		if (rac.getSource() == DifferenceSource.RIGHT) {
+			remotely = "remotely ";
+		}
+
+		DifferenceKind labelValue = rac.getKind();
+		final String hasBeen = " has been ";
+
+		switch (labelValue) {
+			case ADD:
+				ret += hasBeen + remotely + "added to resource contents";
+				break;
+			case DELETE:
+				ret += hasBeen + remotely + "deleted from resource contents";
+				break;
+			case MOVE:
+				ret += hasBeen + remotely + "moved in resource contents";
+				break;
+			default:
+				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName()
+						+ " value: " + rac.getKind());
+		}
+		return ret;
 	}
 }

@@ -11,9 +11,9 @@
 package org.eclipse.emf.compare.match.eobject;
 
 import com.google.common.base.Function;
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
@@ -37,7 +37,7 @@ class ByTypeIndex implements EObjectIndex {
 	/**
 	 * All the type specific indexes, created on demand.
 	 */
-	private Cache<String, EObjectIndex> allIndexes;
+	private LoadingCache<String, EObjectIndex> allIndexes;
 
 	/**
 	 * The distance function to use to create the delegates indexes.

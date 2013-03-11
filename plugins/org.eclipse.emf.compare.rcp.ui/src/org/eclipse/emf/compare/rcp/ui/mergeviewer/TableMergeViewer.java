@@ -153,7 +153,8 @@ public class TableMergeViewer extends StructuredMergeViewer {
 	private void paintItemDiffBox(Event event, Diff diff, Rectangle bounds) {
 		event.detail &= ~SWT.HOT;
 
-		if (diff.getState() == DifferenceState.DISCARDED || diff.getState() == DifferenceState.MERGED) {
+		if (diff != null
+				&& (diff.getState() == DifferenceState.DISCARDED || diff.getState() == DifferenceState.MERGED)) {
 			return;
 		}
 

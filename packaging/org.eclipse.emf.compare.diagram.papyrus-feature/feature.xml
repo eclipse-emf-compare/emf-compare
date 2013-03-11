@@ -4,7 +4,7 @@
       label="%featureName"
       version="2.1.0.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.emf.compare">
+      plugin="org.eclipse.emf.compare.diagram.ide.ui.papyrus">
 
    <description>
       %description
@@ -30,13 +30,6 @@
       <import feature="org.eclipse.papyrus.uml.tools.feature" version="0.9.1.v201209190809"/>
       <import plugin="org.eclipse.gmf.runtime.diagram.ui" version="1.6.0" match="greaterOrEqual"/>
    </requires>
-
-   <plugin
-         id="org.eclipse.emf.compare.diagram.ide.papyrus"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="org.eclipse.emf.compare.diagram.ide.ui.papyrus"

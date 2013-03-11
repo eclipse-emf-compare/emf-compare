@@ -11,36 +11,42 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <prerequisites>
-        <maven>3.0</maven>
-    </prerequisites>
+  <prerequisites>
+    <maven>3.0</maven>
+  </prerequisites>
 
-    <groupId>org.eclipse.emf.compare</groupId>
-    <artifactId>emf.compare-parent</artifactId>
-    <version>2.1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+  <groupId>org.eclipse.emf.compare</groupId>
+  <artifactId>emf.compare-parent</artifactId>
+  <version>2.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
-    <licenses>
-        <license>
-            <name>Eclipse Public License v1.0</name>
-            <comments>
-                All rights reserved.
+  <licenses>
+    <license>
+      <name>Eclipse Public License v1.0</name>
+      <comments>
+        All rights reserved.
 
-                This program and the accompanying materials are made
-                available under the terms of the Eclipse Public License v1.0
-                which accompanies this distribution, and is available at
-                http://www.eclipse.org/legal/epl-v10.htm
-            </comments>
-        </license>
-    </licenses>
+        This program and the accompanying materials are made
+        available under the terms of the Eclipse Public License v1.0
+        which accompanies this distribution, and is available at
+        http://www.eclipse.org/legal/epl-v10.htm
+      </comments>
+    </license>
+  </licenses>
 
-    <properties>
-        <tycho-version>0.16.0</tycho-version>
-        <tycho-extras-version>0.16.0</tycho-extras-version>
-    </properties>
-
+  <properties>
+    <tycho-version>0.17.0-SNAPSHOT</tycho-version>
+    <tycho-extras-version>0.17.0-SNAPSHOT</tycho-extras-version>
+  </properties>
+    
+  <pluginRepositories>
+    <pluginRepository>
+      <id>tycho-snapshots</id>
+      <url>https://oss.sonatype.org/content/groups/public/</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <modules>
     <!-- Update Site -->
@@ -86,19 +92,16 @@
     <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
     <module>../plugins/org.eclipse.emf.compare.diagram</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ide</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui</module>
 
     <!-- Ecore Tools -->
     <module>../packaging/org.eclipse.emf.compare.diagram.ecoretools-feature</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.ecoretools</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools.tests</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools.tests</module>
 
     <!-- Papyrus -->
     <module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ide.papyrus</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
   </modules>
 
@@ -280,7 +283,7 @@
                 <groupId>org.eclipse.emf.compare</groupId>
                 <artifactId>emf.compare-parent</artifactId>
                 <version>2.1.0-SNAPSHOT</version>
-                <classifier>targetPlatforms/kepler-m4-sdk</classifier>
+                <classifier>targetPlatforms/kepler-m5-sdk</classifier>
               </artifact>
             </target>
           </configuration>

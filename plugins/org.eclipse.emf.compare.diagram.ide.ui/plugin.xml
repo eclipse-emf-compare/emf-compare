@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
+
+<!--
+ Copyright (c) 2013 Obeo.
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ 
+ Contributors:
+     Obeo - initial API and implementation
+-->
+
 <plugin>
      
-     <extension
-           point="org.eclipse.gmf.runtime.diagram.ui.decoratorProviders">
-        <decoratorProvider
-              class="org.eclipse.emf.compare.diagram.ide.ui.decoration.provider.DiffDecoratorProvider">
-           <Priority
-                 name="Lowest">
-           </Priority>
-        </decoratorProvider>
-     </extension>
      
      <extension
          point="org.eclipse.ui.preferencePages">
@@ -31,6 +34,14 @@
               class="org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.factory.DiagramIDEMatchAccessorFactory"
               ranking="40">
         </factory>
+     </extension>
+     <extension
+           point="org.eclipse.emf.compare.rcp.ui.filters">
+        <filter
+              activeByDefault="true"
+              class="org.eclipse.emf.compare.diagram.ide.ui.structuremergeviewer.filters.GMFRefinedElementsFilter"
+              label="Diagram Refined elements">
+        </filter>
      </extension>
 
 </plugin>

@@ -49,7 +49,7 @@ public class FilterActionMenu extends Action implements IMenuCreator {
 		this.menuManager = menuManager;
 		this.structureMergeViewerFilter = structureMergeViewerFilter;
 		setMenuCreator(this);
-		setToolTipText("Filters"); //$NON-NLS-1$
+		setToolTipText("Filters");
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareRCPUIPlugin.PLUGIN_ID,
 				"icons/full/toolb16/filter.gif")); //$NON-NLS-1$
 	}

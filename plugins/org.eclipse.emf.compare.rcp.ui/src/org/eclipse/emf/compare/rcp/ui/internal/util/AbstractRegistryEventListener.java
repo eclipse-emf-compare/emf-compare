@@ -117,7 +117,7 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 				internalReadElement(children[i], action);
 			}
 		} else {
-			logError(element, "Error processing extension: " + element); //$NON-NLS-1$
+			logError(element, "Error processing extension: " + element);
 		}
 	}
 
@@ -131,7 +131,7 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 	 *            the name of the missing attribute.
 	 */
 	protected void logMissingAttribute(IConfigurationElement element, String attributeName) {
-		logError(element, "The required attribute '" + attributeName + "' not defined"); //$NON-NLS-1$//$NON-NLS-2$
+		logError(element, "The required attribute '" + attributeName + "' not defined");
 	}
 
 	/**

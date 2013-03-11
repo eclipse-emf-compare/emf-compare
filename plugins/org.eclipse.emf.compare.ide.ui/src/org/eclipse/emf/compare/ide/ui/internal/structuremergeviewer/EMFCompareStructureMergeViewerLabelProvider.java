@@ -27,15 +27,30 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
+/**
+ * A specialized {@link AdapterFactoryLabelProvider.FontAndColorProvider} for the structure merge viewer.
+ * 
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ */
 class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelProvider.FontAndColorProvider implements IStyledLabelProvider {
 
 	/**
+	 * Constructor calling super {@link #FontAndColorProvider(AdapterFactory, Viewer)}.
+	 * 
 	 * @param adapterFactory
+	 *            The adapter factory.
+	 * @param viewer
+	 *            The viewer.
 	 */
 	public EMFCompareStructureMergeViewerLabelProvider(AdapterFactory adapterFactory, Viewer viewer) {
 		super(adapterFactory, viewer);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getText(java.lang.Object)
+	 */
 	@Override
 	public String getText(Object element) {
 		return getStyledText(element).getString();
@@ -80,6 +95,11 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 		return super.getBackground(object);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getImage(java.lang.Object)
+	 */
 	@Override
 	public Image getImage(Object element) {
 		final Image ret;
@@ -99,6 +119,13 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 		return ret;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see 
+	 *      org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider.getStyledText(java
+	 *      .lang.Object)
+	 */
 	public StyledString getStyledText(Object element) {
 		final StyledString ret;
 		if (element instanceof Adapter) {
@@ -110,7 +137,8 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 				ret = styledText;
 			}
 		} else if (element instanceof DifferenceGroup) {
-			ret = new StyledString(((DifferenceGroup)element).getName());
+			StyledStringConverter stringConverter = new StyledStringConverter();
+			return stringConverter.toJFaceStyledString(((DifferenceGroup)element).getStyledName());
 		} else {
 			ret = new StyledString(super.getText(element));
 		}
@@ -137,13 +165,13 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 		if (object == null) {
 			return null;
 		}
-
+		StyledString ret = null;
 		Object itemStyledLabelProvider = adapterFactory.adapt(object, IItemStyledLabelProvider.class);
 		if (itemStyledLabelProvider instanceof IItemStyledLabelProvider) {
 			StyledStringConverter stringConverter = new StyledStringConverter();
-			return stringConverter.toJFaceStyledString(((IItemStyledLabelProvider)itemStyledLabelProvider)
+			ret = stringConverter.toJFaceStyledString(((IItemStyledLabelProvider)itemStyledLabelProvider)
 					.getStyledText(object));
 		}
-		return null;
+		return ret;
 	}
 }

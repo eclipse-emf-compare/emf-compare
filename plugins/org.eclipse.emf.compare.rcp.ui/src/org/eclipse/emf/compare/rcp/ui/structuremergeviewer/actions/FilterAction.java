@@ -45,7 +45,8 @@ public class FilterAction extends Action {
 	 * @param filter
 	 *            The filter associated with this action.
 	 */
-	public FilterAction(String text, StructureMergeViewerFilter structureMergeViewerFilter, IDifferenceFilter filter) {
+	public FilterAction(String text, StructureMergeViewerFilter structureMergeViewerFilter,
+			IDifferenceFilter filter) {
 		super(text, IAction.AS_CHECK_BOX);
 		this.structureMergeViewerFilter = structureMergeViewerFilter;
 		this.filter = filter;

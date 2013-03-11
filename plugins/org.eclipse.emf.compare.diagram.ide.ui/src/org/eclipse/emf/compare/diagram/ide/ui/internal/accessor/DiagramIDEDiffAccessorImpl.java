@@ -11,7 +11,7 @@
 package org.eclipse.emf.compare.diagram.ide.ui.internal.accessor;
 
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.diagram.DiagramDiff;
+import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
 
@@ -68,7 +68,10 @@ public class DiagramIDEDiffAccessorImpl extends DiagramIDEMatchAccessorImpl impl
 	public EObject getEObject(MergeViewerSide side) {
 		EObject obj = getEObject();
 		Match eObjectMatch = fComparison.getMatch(obj);
-		return getEObject(eObjectMatch, side);
+		if (eObjectMatch != null) {
+			return getEObject(eObjectMatch, side);
+		}
+		return null;
 	}
 
 }

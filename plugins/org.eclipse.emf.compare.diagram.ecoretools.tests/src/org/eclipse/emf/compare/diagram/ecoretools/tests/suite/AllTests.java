@@ -15,12 +15,12 @@ import junit.framework.Test;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
-import org.eclipse.emf.compare.diagram.DiagramComparePackage;
 import org.eclipse.emf.compare.diagram.ecoretools.tests.edgechanges.EdgechangesTest;
 import org.eclipse.emf.compare.diagram.ecoretools.tests.hide.HideTest;
 import org.eclipse.emf.compare.diagram.ecoretools.tests.merge.ExtensionMergeTest;
 import org.eclipse.emf.compare.diagram.ecoretools.tests.nodechanges.NodechangesTest;
 import org.eclipse.emf.compare.diagram.ecoretools.tests.show.ShowTest;
+import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
 import org.eclipse.emf.compare.tests.suite.CompareTestSuite;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -63,7 +63,7 @@ public class AllTests {
 	@BeforeClass
 	public static void fillEMFRegistries() {
 		EPackage.Registry.INSTANCE.put(ComparePackage.eNS_URI, ComparePackage.eINSTANCE);
-		EPackage.Registry.INSTANCE.put(DiagramComparePackage.eNS_URI, DiagramComparePackage.eINSTANCE);
+		EPackage.Registry.INSTANCE.put(ExtensionsPackage.eNS_URI, ExtensionsPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(NotationPackage.eNS_URI, NotationPackage.eINSTANCE);
 

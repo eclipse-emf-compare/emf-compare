@@ -11,12 +11,10 @@
 package org.eclipse.emf.compare.provider.spec;
 
 import static com.google.common.collect.Iterables.any;
-import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Lists.newArrayList;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
-
-import com.google.common.base.Predicate;
 
 import java.util.Collection;
 import java.util.List;
@@ -38,16 +36,13 @@ import org.eclipse.emf.edit.provider.ComposedImage;
  */
 public class OverlayImageProvider {
 
-	private final boolean fLeftIsLocal;
-
 	private final ResourceLocator fResourceLocator;
 
 	/**
 	 * 
 	 */
-	public OverlayImageProvider(ResourceLocator resourceLocator, boolean leftIsLocal) {
+	public OverlayImageProvider(ResourceLocator resourceLocator) {
 		this.fResourceLocator = resourceLocator;
-		this.fLeftIsLocal = leftIsLocal;
 	}
 
 	public Object getComposedImage(Diff diff, Object imageToCompose) {
@@ -70,44 +65,36 @@ public class OverlayImageProvider {
 		return new ComposedImageExtension(images);
 	}
 
+	// Nothing here has to be externalized
+	@SuppressWarnings("nls")
 	private String getImageOverlay(Diff diff) {
 		final DifferenceSource source = diff.getSource();
 		final Match match = diff.getMatch();
 		final Conflict conflict = diff.getConflict();
 		final DifferenceKind diffKind = diff.getKind();
-		final Comparison c = match.getComparison();
+		final Comparison comparison = match.getComparison();
 		String path = "full/ovr16/";
 
 		if (diff.getState() == DifferenceState.MERGED) {
 			path += "merged_ov";
 		} else if (diff.getState() == DifferenceState.DISCARDED) {
 			path += "removed_ov";
-		} else if (c.isThreeWay()) {
-			String filext = "";
-			if (conflict != null) {
-				if (conflict.getKind() == ConflictKind.REAL) {
-					filext = ".png";
-					path += "conf";
-					path += getConflictWay(source);
+		} else if (comparison.isThreeWay()) {
+			// "png" needs explicit declaration, "gif" does not
+			String extension = "";
+			if (conflict != null && conflict.getKind() == ConflictKind.REAL) {
+				extension = ".png";
+				path += "conf";
+				if (source == DifferenceSource.RIGHT) {
+					path += "r_";
 				}
-				// if (conflict.getKind() == ConflictKind.PSEUDO) {
-				// path += "pconf";
-				// }
 			} else {
 				switch (source) {
 					case LEFT:
-						if (fLeftIsLocal) {
-							path += "r_out";
-						} else {
-							path += "out";
-						}
+						path += "r_out";
 						break;
 					case RIGHT:
-						if (fLeftIsLocal) {
-							path += "r_in";
-						} else {
-							path += "in";
-						}
+						path += "r_in";
 						break;
 					default:
 						// Cannot happen ... for now
@@ -131,54 +118,29 @@ public class OverlayImageProvider {
 					// Cannot happen ... for now
 					break;
 			}
-			path += filext;
+			path += extension;
 		} else {
-			path += getPathForTwoWayDiff(diffKind);
+			switch (diffKind) {
+				case ADD:
+					path += "add_ov";
+					break;
+				case DELETE:
+					path += "del_ov";
+					break;
+				case CHANGE:
+					// fallthrough
+				case MOVE:
+					path += "chg_ov";
+					break;
+				default:
+					break;
+			}
 		}
 		return path;
 	}
 
-	private String getPathForTwoWayDiff(final DifferenceKind diffKind) {
-		final String path;
-		switch (diffKind) {
-			case ADD:
-				if (fLeftIsLocal) {
-					path = "add_ov";
-				} else {
-					path = "del_ov";
-				}
-				break;
-			case DELETE:
-				if (fLeftIsLocal) {
-					path = "del_ov";
-				} else {
-					path = "add_ov";
-				}
-				break;
-			case CHANGE:
-				// fallthrough
-			case MOVE:
-				path = "chg_ov";
-				break;
-			default:
-				path = "";
-				break;
-		}
-		return path;
-	}
-
-	private String getConflictWay(final DifferenceSource source) {
-		final String path;
-		if (source == DifferenceSource.LEFT && !fLeftIsLocal) {
-			path = "r_";
-		} else if (source == DifferenceSource.RIGHT && fLeftIsLocal) {
-			path = "r_";
-		} else {
-			path = "";
-		}
-		return path;
-	}
-
+	// Nothing here has to be externalized
+	@SuppressWarnings("nls")
 	private String getImageOverlay(Match match) {
 		String path = null;
 		final EObject ancestor = match.getOrigin();
@@ -188,91 +150,46 @@ public class OverlayImageProvider {
 		final Iterable<Diff> differences = match.getAllDifferences();
 
 		if (match.getComparison().isThreeWay()) {
-			boolean hasConflicts = any(differences, hasConflict(ConflictKind.REAL, ConflictKind.PSEUDO));
-
-			if (ancestor == null) {
-				if (left == null) {
-					if (right != null) {
-						if (fLeftIsLocal) {
-							path = "r_inadd_ov";
-						} else {
-							path = "inadd_ov";
-						}
-					}
-				} else if (right == null) {
-					if (fLeftIsLocal) {
-						path = "r_outadd_ov";
-					} else {
-						path = "outadd_ov";
-					}
-				} else if (hasConflicts && any(differences, hasConflict(ConflictKind.REAL))) {
-					path = "confadd_ov.png";
+			if (any(differences, hasConflict(ConflictKind.REAL))) {
+				path = "confinoutchg_ov.png";
+			} else if (ancestor == null) {
+				if (right == null) {
+					path = "r_outadd_ov";
+				} else if (left == null) {
+					path = "r_inadd_ov";
+				} else {
+					// pseudo conflict addition
+					// TODO we filter this by default, what to do if the filter is off?
 				}
 			} else if (left == null) {
-				if (right == null) {
-					// path = Differencer.CONFLICTING | Differencer.DELETION |
-					// Differencer.PSEUDO_CONFLICT;
-				} else if (!hasConflicts) {
-					if (fLeftIsLocal) {
-						path = "r_outdel_ov";
-					} else {
-						path = "outdel_ov";
-					}
-				} else if (any(differences, hasConflict(ConflictKind.REAL))) {
-					path = "confdel_ov.png";
+				if (right != null) {
+					path = "r_outdel_ov";
+				} else {
+					// pseudo conflict deletion
+					// TODO we filter this by default, what to do if the filter is off?
 				}
 			} else if (right == null) {
-				if (!hasConflicts) {
-					if (fLeftIsLocal) {
-						path = "r_indel_ov";
-					} else {
-						path = "indel_ov";
-					}
-				} else if (any(differences, hasConflict(ConflictKind.REAL))) {
-					path = "confchg_ov.png";
-				}
+				path = "r_indel_ov";
 			} else {
-				boolean ay = isEmpty(filter(differences, LEFT_DIFF));
-				boolean am = isEmpty(filter(differences, RIGHT_DIFF));
+				boolean hasLeftDiffs = any(differences, fromSide(DifferenceSource.LEFT));
+				boolean hasRightDiffs = any(differences, fromSide(DifferenceSource.RIGHT));
 
-				if (isEmpty(differences)) {
-					// empty
-				} else if (ay && !am) {
-					if (fLeftIsLocal) {
-						path = "r_inchg_ov";
-					} else {
-						path = "inchg_ov";
-					}
-				} else if (!ay && am) {
-					if (fLeftIsLocal) {
-						path = "r_outchg_ov";
-					} else {
-						path = "outchg_ov";
-					}
-				} else {
-					if (hasConflicts && any(differences, hasConflict(ConflictKind.REAL))) {
-						path = "confchg_ov.png";
-					} else {
-						path = "r_inoutchg_ov.gif";
-					}
+				if (hasLeftDiffs && hasRightDiffs) {
+					path = "r_inoutchg_ov";
+				} else if (hasLeftDiffs) {
+					path = "r_outchg_ov";
+				} else if (hasRightDiffs) {
+					path = "r_inchg_ov";
 				}
 			}
-		} else if (left == null) {
-			if (right != null) {
-				if (fLeftIsLocal) {
-					path = "add_ov";
-				} else {
-					path = "del_ov";
-				}
-			}
-		} else if (right == null) {
-			if (fLeftIsLocal) {
+		} else {
+			if (left == null) {
 				path = "del_ov";
-			} else {
+			} else if (right == null) {
 				path = "add_ov";
+			} else if (!isEmpty(differences)) {
+				path = "chg_ov";
 			}
-		} else if (!isEmpty(differences)) {
-			path = "chg_ov";
 		}
 
 		String ret = null;
@@ -281,18 +198,6 @@ public class OverlayImageProvider {
 		}
 		return ret;
 	}
-
-	private static final Predicate<Diff> LEFT_DIFF = new Predicate<Diff>() {
-		public boolean apply(Diff input) {
-			return input != null && input.getSource() == DifferenceSource.LEFT;
-		}
-	};
-
-	private static final Predicate<Diff> RIGHT_DIFF = new Predicate<Diff>() {
-		public boolean apply(Diff input) {
-			return input != null && input.getSource() == DifferenceSource.RIGHT;
-		}
-	};
 
 	private final class ComposedImageExtension extends ComposedImage {
 
@@ -324,12 +229,12 @@ public class OverlayImageProvider {
 		 * @see org.eclipse.emf.edit.provider.ComposedImage#getSize(java.util.Collection)
 		 */
 		@Override
-		public Size getSize(Collection<? extends Size> imageSizes) {
-			this.imageSizes = newArrayList(imageSizes);
+		public Size getSize(Collection<? extends Size> sizes) {
+			this.imageSizes = newArrayList(sizes);
 			List<Point> drawPoints = getDrawPoints(null);
 
 			Size result = new Size();
-			for (int i = 0; i < imageSizes.size(); i++) {
+			for (int i = 0; i < sizes.size(); i++) {
 				Size size = this.imageSizes.get(i);
 				Point point = drawPoints.get(i);
 

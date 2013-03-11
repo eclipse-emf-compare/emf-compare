@@ -15,6 +15,10 @@ import com.google.common.collect.Iterables;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -43,6 +47,15 @@ public class DefaultDifferenceGroup implements DifferenceGroup {
 	protected final Comparison comparison;
 
 	/**
+	 * A predicate to know if the given {@link Diff} is in an UNRESOLVED state.
+	 */
+	private static final Predicate<Diff> unresolved = new Predicate<Diff>() {
+		public boolean apply(Diff input) {
+			return DifferenceState.UNRESOLVED == input.getState();
+		}
+	};
+
+	/**
 	 * Instantiates this group given the comparison and filter that should be used in order to determine its
 	 * list of differences.
 	 * <p>
@@ -58,7 +71,7 @@ public class DefaultDifferenceGroup implements DifferenceGroup {
 	 */
 	public DefaultDifferenceGroup(Comparison comparison, Iterable<? extends Diff> unfiltered,
 			Predicate<? super Diff> filter) {
-		this(comparison, unfiltered, filter, "Group", null); //$NON-NLS-1$
+		this(comparison, unfiltered, filter, "Group", null);
 	}
 
 	/**
@@ -124,6 +137,22 @@ public class DefaultDifferenceGroup implements DifferenceGroup {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.DifferenceGroup#getStyledName()
+	 */
+	public IStyledString.IComposedStyledString getStyledName() {
+		final IStyledString.IComposedStyledString ret = new ComposedStyledString(getName());
+		int unresolvedDiffs = Iterables.size(Iterables.filter(getDifferences(), unresolved));
+		ret.append(" [" + unresolvedDiffs + " unresolved difference", Style.DECORATIONS_STYLER);
+		if (unresolvedDiffs > 1) {
+			ret.append("s", Style.DECORATIONS_STYLER);
+		}
+		ret.append("]", Style.DECORATIONS_STYLER);
+		return ret;
 	}
 
 	/**

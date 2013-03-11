@@ -4,7 +4,7 @@
       label="%featureName"
       version="2.1.0.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.emf.compare">
+      plugin="org.eclipse.emf.compare.diagram">
 
    <description>
       %description
@@ -33,13 +33,6 @@
 
    <plugin
          id="org.eclipse.emf.compare.diagram.edit"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.emf.compare.diagram.ide"
          download-size="0"
          install-size="0"
          version="0.0.0"

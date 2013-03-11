@@ -226,6 +226,15 @@ public class UMLDiffExtensionPostProcessor implements IPostProcessor {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.extension.IPostProcessor#postComparison(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.common.util.Monitor)
+	 */
+	public void postComparison(Comparison comparison, Monitor monitor) {
+	}
+
+	/**
 	 * Creates the difference extensions in relation to the existing {@link DiffElement}s.
 	 * 
 	 * @param element

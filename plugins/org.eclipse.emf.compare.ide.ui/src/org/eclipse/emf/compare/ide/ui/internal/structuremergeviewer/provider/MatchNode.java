@@ -10,14 +10,14 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;
 
-import static com.google.common.collect.Iterables.all;
-import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.isEmpty;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 
 import com.google.common.base.Predicate;
 
 import org.eclipse.compare.structuremergeviewer.Differencer;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
@@ -39,24 +39,6 @@ public class MatchNode extends AbstractEDiffNode {
 	private static final Predicate<Diff> CONFLICTUAL_DIFF = new Predicate<Diff>() {
 		public boolean apply(Diff input) {
 			return input != null && input.getConflict() != null;
-		}
-	};
-
-	private static final Predicate<Diff> PSEUDO_CONFLICT = new Predicate<Diff>() {
-		public boolean apply(Diff input) {
-			return input != null && input.getConflict().getKind() == ConflictKind.REAL;
-		}
-	};
-
-	private static final Predicate<Diff> LEFT_DIFF = new Predicate<Diff>() {
-		public boolean apply(Diff input) {
-			return input != null && input.getSource() == DifferenceSource.LEFT;
-		}
-	};
-
-	private static final Predicate<Diff> RIGHT_DIFF = new Predicate<Diff>() {
-		public boolean apply(Diff input) {
-			return input != null && input.getSource() == DifferenceSource.RIGHT;
 		}
 	};
 
@@ -83,7 +65,7 @@ public class MatchNode extends AbstractEDiffNode {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffElement#getKind()
+	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractEDiffNode#getKind()
 	 */
 	@Override
 	public int getKind() {
@@ -96,93 +78,43 @@ public class MatchNode extends AbstractEDiffNode {
 		final Iterable<Diff> differences = getTarget().getAllDifferences();
 
 		if (getTarget().getComparison().isThreeWay()) {
-			Iterable<Diff> conflictualDiffs = filter(differences, CONFLICTUAL_DIFF);
-
-			if (ancestor == null) {
-				if (left == null) {
-					if (right == null) {
-						Assert.isTrue(false);
-						// shouldn't happen
-					} else {
-						ret = Differencer.RIGHT | Differencer.ADDITION;
-					}
-				} else {
-					if (right == null) {
-						ret = Differencer.LEFT | Differencer.ADDITION;
-					} else {
-						if (!isEmpty(conflictualDiffs)) {
-							ret = Differencer.CONFLICTING | Differencer.ADDITION;
-							if (all(conflictualDiffs, PSEUDO_CONFLICT)) {
-								ret |= Differencer.PSEUDO_CONFLICT;
-							}
-						}
-					}
-				}
+			/*
+			 * Differencer.CONFLICTING == Differencer.LEFT | Differencer.RIGHT. With that in mind, all we need
+			 * to check is whether this is a pseudo conflict, and the kind of diff (deletion, addition).
+			 */
+			if (any(differences, hasConflict(ConflictKind.REAL))) {
+				ret |= Differencer.CONFLICTING;
+			} else if (any(differences, hasConflict(ConflictKind.PSEUDO))) {
+				// "pseudo" does not include the direction bits, we add them both through "CONFLITING"
+				ret |= Differencer.CONFLICTING | Differencer.PSEUDO_CONFLICT;
 			} else {
-				if (left == null) {
-					if (right == null) {
-						ret = Differencer.CONFLICTING | Differencer.DELETION | Differencer.PSEUDO_CONFLICT;
-					} else {
-						if (isEmpty(conflictualDiffs)) {
-							ret = Differencer.LEFT | Differencer.DELETION;
-						} else {
-							if (!isEmpty(conflictualDiffs)) {
-								ret = Differencer.CONFLICTING | Differencer.DELETION;
-								if (all(conflictualDiffs, PSEUDO_CONFLICT)) {
-									ret |= Differencer.PSEUDO_CONFLICT;
-								}
-							}
-						}
-					}
-				} else {
-					if (right == null) {
-						if (isEmpty(conflictualDiffs)) {
-							ret = Differencer.RIGHT | Differencer.DELETION;
-						} else {
-							if (!isEmpty(conflictualDiffs)) {
-								ret = Differencer.CONFLICTING | Differencer.CHANGE;
-								if (all(conflictualDiffs, PSEUDO_CONFLICT)) {
-									ret |= Differencer.PSEUDO_CONFLICT;
-								}
-							}
-						}
-					} else {
-						boolean ay = isEmpty(filter(differences, LEFT_DIFF));
-						boolean am = isEmpty(filter(differences, RIGHT_DIFF));
-
-						if (isEmpty(differences)) {
-							// empty
-						} else if (ay && !am) {
-							ret = Differencer.RIGHT | Differencer.CHANGE;
-						} else if (!ay && am) {
-							ret = Differencer.LEFT | Differencer.CHANGE;
-						} else {
-							if (!isEmpty(conflictualDiffs)) {
-								ret = Differencer.CONFLICTING | Differencer.CHANGE;
-								if (all(conflictualDiffs, PSEUDO_CONFLICT)) {
-									ret |= Differencer.PSEUDO_CONFLICT;
-								}
-							}
-						}
-					}
+				if (any(differences, fromSide(DifferenceSource.LEFT))) {
+					ret |= Differencer.LEFT;
+				}
+				if (any(differences, fromSide(DifferenceSource.RIGHT))) {
+					ret |= Differencer.RIGHT;
 				}
 			}
-		} else { // two way compare ignores ancestor
+
+			if (ancestor == null) {
+				if (left == null || right == null) {
+					ret |= Differencer.ADDITION;
+				} else {
+					// Can't have all three sides null.
+				}
+			} else if (left == null || right == null) {
+				ret |= Differencer.DELETION;
+			} else if (!isEmpty(differences)) {
+				ret |= Differencer.CHANGE;
+			}
+		} else {
+			// no direction bit in two-way
 			if (left == null) {
-				if (right == null) {
-					Assert.isTrue(false);
-					// shouldn't happen
-				} else {
-					ret = Differencer.ADDITION;
-				}
-			} else {
-				if (right == null) {
-					ret = Differencer.DELETION;
-				} else {
-					if (!isEmpty(differences)) {
-						ret = Differencer.CHANGE;
-					}
-				}
+				ret |= Differencer.DELETION;
+			} else if (right == null) {
+				ret |= Differencer.ADDITION;
+			} else if (!isEmpty(differences)) {
+				ret |= Differencer.CHANGE;
 			}
 		}
 		return ret;

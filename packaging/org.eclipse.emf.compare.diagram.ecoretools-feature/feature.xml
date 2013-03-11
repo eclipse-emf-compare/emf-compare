@@ -4,7 +4,7 @@
       label="%featureName"
       version="2.1.0.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.emf.compare">
+      plugin="org.eclipse.emf.compare.diagram.ide.ui.ecoretools">
 
    <description>
       %description
@@ -24,13 +24,6 @@
       <import feature="org.eclipse.emf.ecoretools" version="1.0.0"/>
       <import feature="org.eclipse.emf.compare.diagram.gmf" version="2.1.0.qualifier"/>
    </requires>
-
-   <plugin
-         id="org.eclipse.emf.compare.diagram.ide.ecoretools"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="org.eclipse.emf.compare.diagram.ide.ui.ecoretools"

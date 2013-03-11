@@ -48,12 +48,12 @@ public class ThreeWayComparisonGroupProvider implements IDifferenceGroupProvider
 		final List<Diff> diffs = comparison.getDifferences();
 
 		final DifferenceGroup leftSide = new DefaultDifferenceGroup(comparison, diffs, Predicates.and(
-				fromSide(DifferenceSource.LEFT), Predicates.not(hasConflict(ConflictKind.REAL))), "Left side"); //$NON-NLS-1$
+				fromSide(DifferenceSource.LEFT), Predicates.not(hasConflict(ConflictKind.REAL))), "Left side");
 		final DifferenceGroup rightSide = new DefaultDifferenceGroup(comparison, diffs, Predicates.and(
 				fromSide(DifferenceSource.RIGHT), Predicates.not(hasConflict(ConflictKind.REAL))),
-				"Right side"); //$NON-NLS-1$
+				"Right side");
 		final DifferenceGroup conflicts = new DefaultDifferenceGroup(comparison, diffs,
-				hasConflict(ConflictKind.REAL), "Conflicts"); //$NON-NLS-1$
+				hasConflict(ConflictKind.REAL), "Conflicts");
 
 		return ImmutableList.of(leftSide, rightSide, conflicts);
 	}
@@ -90,8 +90,8 @@ public class ThreeWayComparisonGroupProvider implements IDifferenceGroupProvider
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setDefaultSelected(boolean)
 	 */
-	public void setDefaultSelected(boolean activeByDefault) {
-		this.activeByDefault = activeByDefault;
+	public void setDefaultSelected(boolean active) {
+		this.activeByDefault = active;
 	}
 
 	/**
