@@ -34,8 +34,8 @@ import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.postprocessor.PostProcessorRegistryImpl;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
-import org.eclipse.emf.compare.uml2.diff.UMLDiffExtensionPostProcessor;
-import org.eclipse.emf.compare.uml2.merge.UMLDiffMerger;
+import org.eclipse.emf.compare.uml2.internal.merge.UMLMerger;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.UMLPostProcessor;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -60,7 +60,7 @@ public abstract class AbstractTest {
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("uml", //$NON-NLS-1$
 				new UMLResourceFactoryImpl());
 
-		final IMerger umlMerger = new UMLDiffMerger();
+		final IMerger umlMerger = new UMLMerger();
 		umlMerger.setRanking(11);
 		mergerRegistry.add(umlMerger);
 	}
@@ -68,7 +68,7 @@ public abstract class AbstractTest {
 	@Before
 	public void before() {
 		PostProcessorRegistryImpl registry = new PostProcessorRegistryImpl();
-		registry.addPostProcessor(new UMLDiffExtensionPostProcessor(Pattern
+		registry.addPostProcessor(new UMLPostProcessor(Pattern
 				.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null));
 		emfCompare = EMFCompare.builder().setPostProcessorRegistry(registry).build();
 	}

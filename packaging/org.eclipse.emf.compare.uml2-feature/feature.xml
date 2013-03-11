@@ -39,7 +39,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.emf.compare.uml2.ide.ui"
+         id="org.eclipse.emf.compare.uml2.ide.ui.internal"
          download-size="0"
          install-size="0"
          version="0.0.0"

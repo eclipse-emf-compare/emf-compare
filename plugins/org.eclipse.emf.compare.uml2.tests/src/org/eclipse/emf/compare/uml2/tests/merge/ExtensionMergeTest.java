@@ -27,8 +27,8 @@ import org.eclipse.emf.compare.merge.ReferenceChangeMerger;
 import org.eclipse.emf.compare.merge.ResourceAttachmentChangeMerger;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
-import org.eclipse.emf.compare.uml2.UMLDiff;
-import org.eclipse.emf.compare.uml2.merge.UMLDiffMerger;
+import org.eclipse.emf.compare.uml2.internal.UMLDiff;
+import org.eclipse.emf.compare.uml2.internal.merge.UMLMerger;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.association.data.AssociationInputData;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -58,13 +58,13 @@ public class ExtensionMergeTest extends AbstractTest {
 		final Comparison comparisonBefore = getCompare().compare(scope);
 		EList<Diff> differences = comparisonBefore.getDifferences();
 		final IMerger.Registry registry = IMerger.RegistryImpl.createStandaloneInstance();
-		final IMerger umlMerger = new UMLDiffMerger();
+		final IMerger umlMerger = new UMLMerger();
 		umlMerger.setRanking(11);
 		registry.add(umlMerger);
 		for (Diff diff : differences) {
 			final Class<? extends IMerger> expectedMerger;
 			if (diff instanceof UMLDiff) {
-				expectedMerger = UMLDiffMerger.class;
+				expectedMerger = UMLMerger.class;
 			} else if (diff instanceof AttributeChange) {
 				expectedMerger = AttributeChangeMerger.class;
 			} else if (diff instanceof ReferenceChange) {

@@ -17,13 +17,13 @@ Contributors:
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://www.eclipse.org/emf/compare/uml2/2.0"
-            class="org.eclipse.emf.compare.uml2.UMLComparePackage"
+            class="org.eclipse.emf.compare.uml2.internal.UMLComparePackage"
             genModel="model/uml2diff.genmodel"/>
    </extension>
    <extension
          point="org.eclipse.emf.compare.rcp.postProcessor">
       <processor
-            class="org.eclipse.emf.compare.uml2.diff.UMLDiffExtensionPostProcessor">
+            class="org.eclipse.emf.compare.uml2.internal.postprocessor.UMLPostProcessor">
          <nsURI
                value="http://www.eclipse.org/uml2/\d.0.0/UML">
          </nsURI>
@@ -32,7 +32,7 @@ Contributors:
    <extension
          point="org.eclipse.emf.compare.rcp.merger">
       <merger
-            class="org.eclipse.emf.compare.uml2.merge.UMLDiffMerger"
+            class="org.eclipse.emf.compare.uml2.internal.merge.UMLMerger"
             ranking="20">
       </merger>
    </extension>

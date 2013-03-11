@@ -21,7 +21,7 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
-import org.eclipse.emf.compare.uml2.ProfileApplicationChange;
+import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.profiles.data.dynamic.DynamicProfileInputData;
 import org.eclipse.emf.compare.uml2.tests.profiles.data.static_.StaticProfileInputData;

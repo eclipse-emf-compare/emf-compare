@@ -10,21 +10,20 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.uml2.uml;bundle-version="4.0.0",
- org.eclipse.emf.compare,
- org.eclipse.emf.compare.ide
+ org.eclipse.emf.compare
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.emf.compare.uml2,
- org.eclipse.emf.compare.uml2.diff,
- org.eclipse.emf.compare.uml2.diff.internal.extension;x-internal:=true,
- org.eclipse.emf.compare.uml2.diff.internal.extension.clazz;x-internal:=true,
- org.eclipse.emf.compare.uml2.diff.internal.extension.profile;x-internal:=true,
- org.eclipse.emf.compare.uml2.diff.internal.extension.sequence;x-internal:=true,
- org.eclipse.emf.compare.uml2.diff.internal.extension.usecase;x-internal:=true,
- org.eclipse.emf.compare.uml2.diff.internal.util;x-friends:="org.eclipse.emf.compare.uml2.edit",
- org.eclipse.emf.compare.uml2.impl,
- org.eclipse.emf.compare.uml2.merge,
- org.eclipse.emf.compare.uml2.util
-Bundle-Activator: org.eclipse.emf.compare.uml2.UMLDiffEnginePlugin
+Bundle-Activator: org.eclipse.emf.compare.uml2.internal.UMLComparePlugin
 Import-Package: com.google.common.base;version="[11.0.0,15.0.0)",
  com.google.common.collect;version="[11.0.0,15.0.0)",
  com.google.common.primitives;version="[11.0.0,15.0.0)"
+Export-Package: org.eclipse.emf.compare.uml2.internal;x-internal:=true,
+ org.eclipse.emf.compare.uml2.internal.impl;x-internal:=true,
+ org.eclipse.emf.compare.uml2.internal.merge;x-internal:=true,
+ org.eclipse.emf.compare.uml2.internal.postprocessor;x-internal:=true,
+ org.eclipse.emf.compare.uml2.internal.postprocessor.extension;x-internal:=true,
+ org.eclipse.emf.compare.uml2.internal.postprocessor.extension.clazz;x-internal:=true,
+ org.eclipse.emf.compare.uml2.internal.postprocessor.extension.profile;x-internal:=true,
+ org.eclipse.emf.compare.uml2.internal.postprocessor.extension.sequence;x-internal:=true,
+ org.eclipse.emf.compare.uml2.internal.postprocessor.extension.usecase;x-internal:=true,
+ org.eclipse.emf.compare.uml2.internal.postprocessor.util;x-internal:=true,
+ org.eclipse.emf.compare.uml2.internal.util;x-internal:=true

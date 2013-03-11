@@ -14,8 +14,8 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory.AbstractAccessorFactory;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.uml2.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.UMLStereotypeApplicationChangeFeatureAccessor;
+import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
 
 /**
  * This will be in charge of creating the accessor for stereotype changes.
