@@ -16,6 +16,7 @@
    <extension-point id="postProcessor" name="Post Processor" schema="schema/postProcessor.exsd"/>
    <extension-point id="merger" name="Merger" schema="schema/merger.exsd"/>
    <extension-point id="loadOnDemandPolicy" name="Load on Demand Policy" schema="schema/loadOnDemandPolicy.exsd"/>
+   <extension-point id="matchEngine" name="Match Engine" schema="schema/matchEngine.exsd"/>
    
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
@@ -46,5 +47,12 @@
             name="EMF Compare"
             priority="normal">
       </content-type>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.rcp.matchEngine">
+      <engineFactory
+            class="org.eclipse.emf.compare.match.impl.MatchEngineFactoryImpl"
+            ranking="10">
+      </engineFactory>
    </extension>
 </plugin>

@@ -13,6 +13,7 @@ Bundle-Localization: plugin
 Export-Package: org.eclipse.emf.compare.rcp,
  org.eclipse.emf.compare.rcp.extension,
  org.eclipse.emf.compare.rcp.internal;x-internal:=true,
+ org.eclipse.emf.compare.rcp.internal.match;x-internal:=true,
  org.eclipse.emf.compare.rcp.internal.merger;x-internal:=true,
  org.eclipse.emf.compare.rcp.internal.policy;x-internal:=true,
  org.eclipse.emf.compare.rcp.internal.postprocessor;x-internal:=true,

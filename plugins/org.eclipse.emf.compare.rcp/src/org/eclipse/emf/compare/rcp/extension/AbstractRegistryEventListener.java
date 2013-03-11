@@ -171,8 +171,6 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 			for (int i = 0; i < children.length; ++i) {
 				internalReadElement(children[i], action);
 			}
-		} else {
-			log(IStatus.ERROR, element, "Error processing extension: " + element);
 		}
 	}
 

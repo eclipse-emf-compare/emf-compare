@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,6 +65,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 *            The matcher that will be in charge of pairing EObjects together for this comparison process.
 	 * @param comparisonFactory
 	 *            factory that will be use to instantiate Comparison as return by match() methods.
+	 * @since 3.0
 	 */
 	public DefaultMatchEngine(IEObjectMatcher matcher, IComparisonFactory comparisonFactory) {
 		this.eObjectMatcher = checkNotNull(matcher);
@@ -394,4 +395,5 @@ public class DefaultMatchEngine implements IMatchEngine {
 
 		return matcher;
 	}
+
 }

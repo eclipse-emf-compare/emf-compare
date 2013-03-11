@@ -34,6 +34,7 @@ import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IComparisonFactory;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
+import org.eclipse.emf.compare.match.impl.MatchEngineFactoryImpl;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -56,12 +57,15 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 		ICompareEditingDomain editingDomain = createEMFCompareEditingDomain(part, left, right, origin);
 
 		final CompareConfiguration configuration = new CompareConfiguration();
-		// never use id in EObjects comparison
-		IEObjectMatcher eObjectMatcher = DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER);
-		IMatchEngine matchEngine = new MatchEObjectEngine(eObjectMatcher, new DefaultComparisonFactory(
-				new DefaultEqualityHelperFactory()));
-		EMFCompare comparator = EMFCompare.builder().setMatchEngine(matchEngine).setPostProcessorRegistry(
-				EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build();
+		IMatchEngine.Factory eObjectMatchEngineFactory = new MatchEObjectEngineFactory();
+		eObjectMatchEngineFactory.setRanking(9);
+		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = EMFCompareRCPPlugin.getDefault()
+				.getMatchEngineFactoryRegistry();
+		matchEngineFactoryRegistry.add(eObjectMatchEngineFactory);
+
+		EMFCompare comparator = EMFCompare.builder()
+				.setMatchEngineFactoryRegistry(matchEngineFactoryRegistry).setPostProcessorRegistry(
+						EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build();
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
 		input = new ComparisonScopeEditorInput(configuration, editingDomain, adapterFactory, comparator,
 				scope);
@@ -101,15 +105,75 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 		return delegatingEditingDomain;
 	}
 
-	private static class MatchEObjectEngine extends DefaultMatchEngine {
+	/**
+	 * A specialized {@link MatchEngineFactoryImpl} that wrap a {@link MatchEObjectEngine}.
+	 * 
+	 * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
+	 */
+	private static class MatchEObjectEngineFactory extends MatchEngineFactoryImpl {
+
 		/**
+		 * Default Constructor.
+		 */
+		public MatchEObjectEngineFactory() {
+			matchEngine = new MatchEObjectEngine();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see 
+		 *      org.eclipse.emf.compare.match.IMatchEngine.Factory.isMatchEngineFactoryFor(org.eclipse.emf.compare
+		 *      .scope.IComparisonScope)
+		 */
+		@Override
+		public boolean isMatchEngineFactoryFor(IComparisonScope scope) {
+			final Notifier left = scope.getLeft();
+			final Notifier right = scope.getRight();
+			if (left instanceof EObject && right instanceof EObject) {
+				return true;
+			}
+			return false;
+		}
+	}
+
+	/**
+	 * A specialized {@link DefaultMatchEngine} for comparison between EObjects.
+	 * 
+	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+	 */
+	private static class MatchEObjectEngine extends DefaultMatchEngine {
+
+		/**
+		 * Default Constructor.
+		 */
+		public MatchEObjectEngine() {
+			// never use id in EObjects comparison
+			super(DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER),
+					new DefaultComparisonFactory(new DefaultEqualityHelperFactory()));
+		}
+
+		/**
+		 * Constructor with matcher and comparison factory parameters.
+		 * 
 		 * @param matcher
+		 *            The matcher that will be in charge of pairing EObjects together for this comparison
+		 *            process.
 		 * @param comparisonFactory
+		 *            factory that will be use to instantiate Comparison as return by match() methods.
 		 */
 		public MatchEObjectEngine(IEObjectMatcher matcher, IComparisonFactory comparisonFactory) {
 			super(matcher, comparisonFactory);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.match.DefaultMatchEngine.match(org.eclipse.emf.compare.Comparison,
+		 *      org.eclipse.emf.compare.scope.IComparisonScope, org.eclipse.emf.ecore.EObject,
+		 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject,
+		 *      org.eclipse.emf.common.util.Monitor)
+		 */
 		@Override
 		protected void match(Comparison comparison, IComparisonScope scope, EObject left, EObject right,
 				EObject origin, Monitor monitor) {

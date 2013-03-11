@@ -32,7 +32,9 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.match.DefaultMatchEngine;
+import org.eclipse.emf.compare.match.IMatchEngine;
+import org.eclipse.emf.compare.match.impl.MatchEngineFactoryImpl;
+import org.eclipse.emf.compare.match.impl.MatchEngineFactoryRegistryImpl;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.EMFCompareAssert;
 import org.eclipse.emf.compare.tests.framework.EMFCompareTestBase;
@@ -75,8 +77,10 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		Resource left = inputData.getCompareLeft();
 		Resource right = inputData.getCompareRight();
 		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		Comparison result = EMFCompare.builder().setMatchEngine(
-				DefaultMatchEngine.create(UseIdentifiers.NEVER)).build().compare(scope);
+		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
+		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
+		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
+				.build().compare(scope);
 		assertEquals("We are supposed to have one rename diff", 1, result.getDifferences().size());
 	}
 
@@ -101,8 +105,10 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		v2.setName("renamed");
 
 		final IComparisonScope scope = EMFCompare.createDefaultScope(v1, v2);
-		Comparison result = EMFCompare.builder().setMatchEngine(
-				DefaultMatchEngine.create(UseIdentifiers.NEVER)).build().compare(scope);
+		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
+		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
+		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
+				.build().compare(scope);
 		assertAllMatched(Lists.newArrayList(v1), result);
 		assertEquals("We are supposed to have a rename", 1, result.getDifferences().size());
 	}
@@ -111,8 +117,10 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 	public void packageAddDelete() throws Exception {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData.getPackageAddDeleteLeft(),
 				inputData.getPackageAddDeleteRight());
-		Comparison result = EMFCompare.builder().setMatchEngine(
-				DefaultMatchEngine.create(UseIdentifiers.NEVER)).build().compare(scope);
+		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
+		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
+		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
+				.build().compare(scope);
 		EMFComparePrettyPrinter.printComparison(result, System.out);
 		final List<Diff> differences = result.getDifferences();
 		EMFCompareAssert.assertAddedToReference(differences, "p1.p2", "eSubpackages", "p1.p2.subPackage",
@@ -126,8 +134,10 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 	public void packageAddRemoveNoRename() throws Exception {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData
 				.getPackageAddRemoveNoRenameLeft(), inputData.getPackageAddRemoveNoRenameRight());
-		Comparison result = EMFCompare.builder().setMatchEngine(
-				DefaultMatchEngine.create(UseIdentifiers.NEVER)).build().compare(scope);
+		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
+		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
+		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
+				.build().compare(scope);
 		EMFComparePrettyPrinter.printComparison(result, System.out);
 		final List<Diff> differences = result.getDifferences();
 		// EMFCompareAssert.assertAddedToReference(differences, "p1.p2", "eSubpackages", "p1.p2.subPackage",
@@ -141,8 +151,10 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 	public void alwaysTakeTheClosestNoMatterTheIterationOrder() throws Exception {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData.getVerySmallLeft(), inputData
 				.getVerySmallRight());
-		Comparison result = EMFCompare.builder().setMatchEngine(
-				DefaultMatchEngine.create(UseIdentifiers.NEVER)).build().compare(scope);
+		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
+		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
+		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
+				.build().compare(scope);
 		assertEquals(
 				"The Match took on element which is close enough (in the limits) preventing the next iteration to take it (it was closest)",
 				1, result.getDifferences().size());
@@ -153,8 +165,10 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 	public void addRemoveAndNotRename() throws Exception {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData.get391657Left(), inputData
 				.get391657Right());
-		Comparison result = EMFCompare.builder().setMatchEngine(
-				DefaultMatchEngine.create(UseIdentifiers.NEVER)).build().compare(scope);
+		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
+		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
+		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
+				.build().compare(scope);
 		Iterator<AttributeChange> attrChanges = Iterators.filter(result.getDifferences().iterator(),
 				AttributeChange.class);
 		assertFalse("We are supposed to detect an addition/remove (and not a rename if that's what we get)",
@@ -166,8 +180,10 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 	public void resourceRootChange() throws Exception {
 		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData.get390666Left(), inputData
 				.get390666Right(), inputData.get390666Ancestor());
-		Comparison result = EMFCompare.builder().setMatchEngine(
-				DefaultMatchEngine.create(UseIdentifiers.NEVER)).build().compare(scope);
+		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
+		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
+		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
+				.build().compare(scope);
 		Iterator<ResourceAttachmentChange> attrChanges = Iterators.filter(result.getDifferences().iterator(),
 				ResourceAttachmentChange.class);
 		assertTrue("We are supposed to detect a new attachment to a resource", attrChanges.hasNext());
@@ -182,8 +198,10 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		 */
 		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData.get391798Left(), inputData
 				.get391798Right());
-		Comparison result = EMFCompare.builder().setMatchEngine(
-				DefaultMatchEngine.create(UseIdentifiers.NEVER)).build().compare(scope);
+		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
+		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
+		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
+				.build().compare(scope);
 		for (Diff dif : result.getDifferences()) {
 			if (dif instanceof ReferenceChange && dif.getKind() == DifferenceKind.MOVE) {
 

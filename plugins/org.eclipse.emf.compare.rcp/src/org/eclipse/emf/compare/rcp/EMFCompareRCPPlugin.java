@@ -14,10 +14,13 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.compare.match.IMatchEngine;
+import org.eclipse.emf.compare.match.impl.MatchEngineFactoryRegistryImpl;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
+import org.eclipse.emf.compare.rcp.internal.match.MatchEngineFactoryRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.merger.MergerExtensionRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryImpl;
 import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryListener;
@@ -41,6 +44,9 @@ public class EMFCompareRCPPlugin extends Plugin {
 	/** The id of the merger extension point. */
 	public static final String MERGER_PPID = "merger"; //$NON-NLS-1$
 
+	/** The id of the match extension point. */
+	public static final String MATCH_ENGINE_PPID = "matchEngine"; //$NON-NLS-1$
+
 	// This plugin is a singleton, so it's quite ok to keep the plugin in a static field.
 	private static EMFCompareRCPPlugin plugin;
 
@@ -62,6 +68,12 @@ public class EMFCompareRCPPlugin extends Plugin {
 	/** The registry listener that will be used to react to post processor changes. */
 	private AbstractRegistryEventListener postProcessorFactoryRegistryListener;
 
+	/** The registry that will hold references to all match engine factories. */
+	private IMatchEngine.Factory.Registry matchEngineFactoryRegistry;
+
+	/** The registry listener that will be used to react to match engine changes. */
+	private MatchEngineFactoryRegistryListener matchEngineRegistryListener;
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
@@ -71,6 +83,11 @@ public class EMFCompareRCPPlugin extends Plugin {
 		EMFCompareRCPPlugin.plugin = this;
 
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+		matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
+		matchEngineRegistryListener = new MatchEngineFactoryRegistryListener(PLUGIN_ID, MATCH_ENGINE_PPID,
+				getLog(), matchEngineFactoryRegistry);
+		matchEngineRegistryListener.readRegistry(registry);
 
 		mergerRegistry = new IMerger.RegistryImpl();
 		mergerRegistryListener = new MergerExtensionRegistryListener(PLUGIN_ID, MERGER_PPID, getLog(),
@@ -112,6 +129,10 @@ public class EMFCompareRCPPlugin extends Plugin {
 		registry.removeListener(mergerRegistryListener);
 		mergerRegistryListener = null;
 		mergerRegistry = null;
+
+		registry.removeListener(matchEngineRegistryListener);
+		matchEngineRegistryListener = null;
+		matchEngineFactoryRegistry = null;
 	}
 
 	/**
@@ -140,6 +161,16 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 */
 	public ILoadOnDemandPolicy.Registry getLoadOnDemandPolicyRegistry() {
 		return loadOnDemandRegistry;
+	}
+
+	/**
+	 * Returns the match engine factory registry to which extension will be registered.
+	 * 
+	 * @return the match engine factory registry to which extension will be registered
+	 * @since 3.0
+	 */
+	public IMatchEngine.Factory.Registry getMatchEngineFactoryRegistry() {
+		return matchEngineFactoryRegistry;
 	}
 
 	/**

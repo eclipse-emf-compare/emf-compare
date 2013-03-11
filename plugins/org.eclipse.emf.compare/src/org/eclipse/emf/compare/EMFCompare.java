@@ -24,15 +24,14 @@ import org.eclipse.emf.compare.diff.DiffBuilder;
 import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.equi.DefaultEquiEngine;
 import org.eclipse.emf.compare.equi.IEquiEngine;
-import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
+import org.eclipse.emf.compare.match.impl.MatchEngineFactoryRegistryImpl;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
 import org.eclipse.emf.compare.req.DefaultReqEngine;
 import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.utils.UseIdentifiers;
 
 /**
  * This class serves as the main entry point of a comparison. When all that is wanted is a basic comparison of
@@ -50,8 +49,8 @@ import org.eclipse.emf.compare.utils.UseIdentifiers;
  */
 public class EMFCompare {
 
-	/** The IMatchEngine to use to compute comparison. */
-	private final IMatchEngine matchEngine;
+	/** The registry we'll use to create a match engine for this comparison. */
+	private final IMatchEngine.Factory.Registry matchEngineFactoryRegistry;
 
 	/** The IDiffEngine to use to compute comparison. */
 	private final IDiffEngine diffEngine;
@@ -71,8 +70,9 @@ public class EMFCompare {
 	/**
 	 * Creates a new EMFCompare object able to compare Notifier with the help of given engines.
 	 * 
-	 * @param matchEngine
-	 *            IMatchEngine to use to compute comparison
+	 * @param matchEngineFactoryRegistry
+	 *            {@link IMatchEngine.Factory.Registry} to use to find a match engine factory to compute
+	 *            comparison
 	 * @param diffEngine
 	 *            IDiffEngine to use to compute comparison
 	 * @param reqEngine
@@ -84,10 +84,10 @@ public class EMFCompare {
 	 * @param postProcessorFactoryRegistry
 	 *            PostProcessorRegistry to use to find an IPostProcessor
 	 */
-	protected EMFCompare(IMatchEngine matchEngine, IDiffEngine diffEngine, IReqEngine reqEngine,
-			IEquiEngine equiEngine, IConflictDetector conflictDetector,
+	protected EMFCompare(IMatchEngine.Factory.Registry matchEngineFactoryRegistry, IDiffEngine diffEngine,
+			IReqEngine reqEngine, IEquiEngine equiEngine, IConflictDetector conflictDetector,
 			IPostProcessor.Descriptor.Registry<?> postProcessorFactoryRegistry) {
-		this.matchEngine = checkNotNull(matchEngine);
+		this.matchEngineFactoryRegistry = checkNotNull(matchEngineFactoryRegistry);
 		this.diffEngine = checkNotNull(diffEngine);
 		this.reqEngine = checkNotNull(reqEngine);
 		this.equiEngine = checkNotNull(equiEngine);
@@ -159,7 +159,8 @@ public class EMFCompare {
 		checkNotNull(scope);
 		checkNotNull(monitor);
 
-		final Comparison comparison = matchEngine.match(scope, monitor);
+		final Comparison comparison = matchEngineFactoryRegistry.getHighestRankingMatchEngineFactory(scope)
+				.getMatchEngine().match(scope, monitor);
 
 		List<IPostProcessor> postProcessors = postProcessorDescriptorRegistry.getPostProcessors(scope);
 
@@ -216,8 +217,8 @@ public class EMFCompare {
 	 */
 	public static class Builder {
 
-		/** The IMatchEngine to use to compute comparison. */
-		protected IMatchEngine matchEngine;
+		/** The registry we'll use to create a match engine for this comparison. */
+		protected IMatchEngine.Factory.Registry matchEngineFactoryRegistry;
 
 		/** The IReqEngine to use to compute comparison. */
 		protected IReqEngine reqEngine;
@@ -232,7 +233,7 @@ public class EMFCompare {
 		protected IConflictDetector conflictDetector;
 
 		/** The PostProcessorRegistry to use to find an IPostProcessor. */
-		protected IPostProcessor.Descriptor.Registry<?> postProcessorRegistry;
+		protected IPostProcessor.Descriptor.Registry<?> registry;
 
 		/**
 		 * Creates a new builder object.
@@ -241,14 +242,16 @@ public class EMFCompare {
 		}
 
 		/**
-		 * Sets the IMatchEngine to be used to compute Match.
+		 * Sets the IMatchEngine.Factory.Registry to be used to find a match engine factory to compute
+		 * comparison.
 		 * 
-		 * @param me
-		 *            the IMatchEngine to be used to compute comparison.
+		 * @param mefr
+		 *            the IMatchEngine.Factory.Registry to be used to find a match engine factory to compute
+		 *            comparison.
 		 * @return this same builder to allow chained call.
 		 */
-		public Builder setMatchEngine(IMatchEngine me) {
-			this.matchEngine = checkNotNull(me);
+		public Builder setMatchEngineFactoryRegistry(IMatchEngine.Factory.Registry mefr) {
+			this.matchEngineFactoryRegistry = checkNotNull(mefr);
 			return this;
 		}
 
@@ -308,7 +311,7 @@ public class EMFCompare {
 		 * @return this same builder to allow chained call.
 		 */
 		public Builder setPostProcessorRegistry(IPostProcessor.Descriptor.Registry<?> r) {
-			this.postProcessorRegistry = checkNotNull(r);
+			this.registry = checkNotNull(r);
 			return this;
 		}
 
@@ -318,8 +321,8 @@ public class EMFCompare {
 		 * @return an EMFCompare object configured with the previously given engines
 		 */
 		public EMFCompare build() {
-			if (matchEngine == null) {
-				matchEngine = DefaultMatchEngine.create(UseIdentifiers.WHEN_AVAILABLE);
+			if (matchEngineFactoryRegistry == null) {
+				matchEngineFactoryRegistry = MatchEngineFactoryRegistryImpl.createStandaloneInstance();
 			}
 			if (diffEngine == null) {
 				diffEngine = new DefaultDiffEngine(new DiffBuilder());
@@ -330,14 +333,14 @@ public class EMFCompare {
 			if (equiEngine == null) {
 				equiEngine = new DefaultEquiEngine();
 			}
-			if (postProcessorRegistry == null) {
-				postProcessorRegistry = new PostProcessorDescriptorRegistryImpl<Object>();
+			if (registry == null) {
+				registry = new PostProcessorDescriptorRegistryImpl();
 			}
 			if (conflictDetector == null) {
 				conflictDetector = new DefaultConflictDetector();
 			}
-			return new EMFCompare(this.matchEngine, this.diffEngine, this.reqEngine, this.equiEngine,
-					this.conflictDetector, this.postProcessorRegistry);
+			return new EMFCompare(this.matchEngineFactoryRegistry, this.diffEngine, this.reqEngine,
+					this.equiEngine, this.conflictDetector, this.registry);
 		}
 	}
 

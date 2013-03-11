@@ -273,9 +273,12 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				}
 
 				final IComparisonScope scope = syncModel.createMinimizedScope();
-				final Comparison compareResult = EMFCompare.builder().setPostProcessorRegistry(
-						EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build().compare(scope,
-						BasicMonitor.toMonitor(monitor));
+				final Comparison compareResult = EMFCompare
+						.builder()
+						.setMatchEngineFactoryRegistry(
+								EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry())
+						.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry())
+						.build().compare(scope, BasicMonitor.toMonitor(monitor));
 
 				final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
 				final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();
