@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.BasicMonitor;
-import org.eclipse.emf.common.util.BasicMonitor.Delegating;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
@@ -75,7 +74,8 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 			Iterator<? extends EObject> rightEObjects, Iterator<? extends EObject> originEObjects,
 			Monitor monitor) {
 
-		Delegating subMonitor = new BasicMonitor.Delegating(monitor);
+		// FIXME: how to create an EMF submonitor
+		Monitor subMonitor = new BasicMonitor();
 		subMonitor.beginTask("indexing objects", 1);
 		int nbElements = 0;
 		/*
@@ -109,7 +109,8 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 		subMonitor.worked(1);
 		subMonitor.done();
 
-		subMonitor = new BasicMonitor.Delegating(monitor);
+		// FIXME: how to create an EMF submonitor
+		subMonitor = new BasicMonitor();
 		subMonitor.beginTask("matching objects", nbElements);
 
 		Iterator<EObject> todo = index.getValuesStillThere(Side.LEFT).iterator();
