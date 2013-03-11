@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2011, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,22 +17,18 @@ import com.google.common.annotations.Beta;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.compare.IResourceProvider;
-import org.eclipse.compare.ISharedDocumentAdapter;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.mapping.RemoteResourceMappingContext;
-import org.eclipse.core.resources.mapping.ResourceMappingContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
@@ -45,8 +41,12 @@ import org.eclipse.emf.compare.scope.FilterComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.team.core.diff.IDiff;
+import org.eclipse.team.core.diff.IThreeWayDiff;
+import org.eclipse.team.core.diff.ITwoWayDiff;
 import org.eclipse.team.core.history.IFileRevision;
-import org.eclipse.ui.IEditorInput;
+import org.eclipse.team.core.mapping.provider.ResourceDiff;
+import org.eclipse.team.core.subscribers.Subscriber;
 
 /**
  * This class will act as a logical model for EMF. It will hold the necessary logic to be able to determine
@@ -118,58 +118,85 @@ public final class EMFSynchronizationModel {
 		this.rightEditable = rightEditable;
 	}
 
-	// TODO comment supported ITypedElements
 	/**
-	 * Creates a synchronization model by resolving the full logical model of the given elements.
+	 * Constructs a synchronization model by resolving the logical model of the given IFile, using
+	 * synchronization information provided by the given Subscriber.
 	 * 
+	 * @param subscriber
+	 *            The subscriber that can be used to retrieve synchronization information between our
+	 *            resources. May be <code>null</code>.
 	 * @param left
-	 *            The left resource, starting point of the left logical model we are to resolve.
+	 *            The resource which model is to be resolved.
 	 * @param right
-	 *            The right resource, starting point of the right logical model we are to resolve.
+	 *            The right resource if comparing local files.
 	 * @param origin
-	 *            The origin resource, starting point of the logical model we are to resolve as the origin
-	 *            one. Can be <code>null</code>.
-	 * @return The created synchronization model.
+	 *            the origin resource if comparing local files.
+	 * @return The resolved synchronization model.
 	 */
-	public static EMFSynchronizationModel createSynchronizationModel(ITypedElement left, ITypedElement right,
-			ITypedElement origin) {
-		/*
-		 * We need a way to load these models. If it is a local file, we'll simply resolve the resource set.
-		 * For any ITypedElement from which we can find an IFileRevision, we'll resolve the resource set by
-		 * using this file revision as a "base" i.e : we won't load any resource which revision is younger.
-		 */
-		final IFileRevision leftRevision = findFileRevision(left);
-		final IFileRevision rightRevision = findFileRevision(right);
-		final IFileRevision originRevision = findFileRevision(origin);
+	public static EMFSynchronizationModel createSynchronizationModel(Subscriber subscriber, IResource left,
+			IResource right, IResource origin) {
+		// History cannot be edited. Can we determine it here?
+		boolean canEditLeft = left != null;
+		boolean canEditRight = right != null;
 
-		boolean canEditLeft = true;
-		boolean canEditRight = true;
+		// FIXME resource can be null if we've been provided three remote revisions.
+		// Find a way around that.
+
+		IFileRevision leftRevision = null;
+		IFileRevision rightRevision = null;
+		IFileRevision originRevision = null;
+		if (subscriber != null && left != null) {
+			try {
+				final IDiff diff = subscriber.getDiff(left);
+				if (diff instanceof IThreeWayDiff) {
+					final ITwoWayDiff localChange = ((IThreeWayDiff)diff).getLocalChange();
+					final ITwoWayDiff remoteChange = ((IThreeWayDiff)diff).getRemoteChange();
+
+					// right and origin found here should match what was passed as input to this method.
+					if (localChange instanceof ResourceDiff) {
+						leftRevision = ((ResourceDiff)localChange).getAfterState();
+						originRevision = ((ResourceDiff)localChange).getBeforeState();
+					}
+					if (remoteChange instanceof ResourceDiff) {
+						rightRevision = ((ResourceDiff)remoteChange).getAfterState();
+						// origin should match
+					}
+				} else if (diff instanceof ResourceDiff) {
+					leftRevision = ((ResourceDiff)diff).getAfterState();
+					rightRevision = ((ResourceDiff)diff).getBeforeState();
+				} else {
+					// Can this happen?
+				}
+			} catch (CoreException e) {
+				// FIXME log this
+			}
+		} else if (subscriber != null) {
+			// FIXME we need to find the path of the resource from its ITypedElement
+		} else {
+			// FIXME can this be the case in a scenario where we need the logical model (i.e. more than one
+			// resource)?
+		}
 
 		final StorageTraversal leftTraversal;
 		final StorageTraversal rightTraversal;
 		final StorageTraversal originTraversal;
 		if (leftRevision == null) {
 			// Load it as a local model
-			final IResource leftRes = findResource(left);
-			leftTraversal = resolveTraversal(leftRes);
+			leftTraversal = resolveTraversal(left);
 		} else {
-			canEditLeft = false;
-			leftTraversal = resolveTraversal(leftRevision);
+			leftTraversal = resolveTraversal(subscriber, leftRevision, DiffSide.LEFT);
 		}
 		if (rightRevision == null) {
 			// Load it as a local model
-			final IResource rightRes = findResource(right);
-			rightTraversal = resolveTraversal(rightRes);
+			rightTraversal = resolveTraversal(right);
 		} else {
-			canEditRight = false;
-			rightTraversal = resolveTraversal(rightRevision);
+			rightTraversal = resolveTraversal(subscriber, rightRevision, DiffSide.RIGHT);
 		}
 		if (originRevision == null) {
 			// Load it as a local model
-			final IResource originRes = findResource(origin);
-			originTraversal = resolveTraversal(originRes);
+			originTraversal = resolveTraversal(origin);
 		} else {
-			originTraversal = resolveTraversal(originRevision);
+			originTraversal = resolveTraversal(subscriber, originRevision, DiffSide.ORIGIN);
 		}
 
 		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal, canEditLeft,
@@ -177,43 +204,11 @@ public final class EMFSynchronizationModel {
 	}
 
 	/**
-	 * Creates a synchronization model by resolving the full logical model of the given local resource,
-	 * retrieving remote content through the given {@link ResourceMappingContext context}.
+	 * Creates a synchronization model by resolving the full logical model of the given elements.
 	 * 
-	 * @param local
-	 *            The local file, will be considered "left" side of this model.
-	 * @param context
-	 *            The context from which we are to retrieve remote content.
-	 * @param monitor
-	 *            Will be used to report progress to the user.
-	 * @return The created synchronization model.
-	 */
-	public static EMFSynchronizationModel createSynchronizationModel(IFile local,
-			RemoteResourceMappingContext context, IProgressMonitor monitor) {
-		final StorageTraversal leftTraversal = resolveTraversal(local);
-		StorageTraversal rightTraversal = null;
-		StorageTraversal originTraversal = null;
-
-		try {
-			final IStorage right = context.fetchRemoteContents(local, monitor);
-		} catch (CoreException e) {
-			// FIXME log, fail?
-			rightTraversal = new StorageTraversal(Sets.<IFile> newLinkedHashSet());
-		}
-
-		try {
-			final IStorage origin = context.fetchBaseContents(local, monitor);
-		} catch (CoreException e) {
-			// FIXME log
-			originTraversal = new StorageTraversal(Sets.<IFile> newLinkedHashSet());
-		}
-		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal, local.exists()
-				&& !local.isReadOnly(), false);
-	}
-
-	/**
-	 * Creates a synchronization model by resolving the full logical model of the given local resources.
-	 * 
+	 * @param subscriber
+	 *            The subscriber that can be used to retrieve synchronization information between our
+	 *            resources. Can be <code>null</code>.
 	 * @param left
 	 *            The left resource, starting point of the left logical model we are to resolve.
 	 * @param right
@@ -223,34 +218,13 @@ public final class EMFSynchronizationModel {
 	 *            one. Can be <code>null</code>.
 	 * @return The created synchronization model.
 	 */
-	public static EMFSynchronizationModel createSynchronizationModel(IResource left, IResource right,
-			IResource origin) {
-		final StorageTraversal leftTraversal = resolveTraversal(left);
-		final StorageTraversal rightTraversal = resolveTraversal(right);
-		final StorageTraversal originTraversal = resolveTraversal(origin);
+	public static EMFSynchronizationModel createSynchronizationModel(Subscriber subscriber,
+			ITypedElement left, ITypedElement right, ITypedElement origin) {
+		final IResource leftResource = findResource(left);
+		final IResource rightResource = findResource(right);
+		final IResource originResource = findResource(origin);
 
-		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal, true, true);
-	}
-
-	/**
-	 * Creates a synchronization model by resolving the full logical model from the three given starting
-	 * points. We'll consider all of this URIs as pointing towards "local" resources.
-	 * 
-	 * @param left
-	 *            The left URI, starting point of the left logical model we are to resolve.
-	 * @param right
-	 *            The right URI, starting point of the right logical model we are to resolve.
-	 * @param origin
-	 *            The origin URI, starting point of the logical model we are to resolve as the origin one. Can
-	 *            be <code>null</code>.
-	 * @return The created synchronization model.
-	 */
-	public static EMFSynchronizationModel createSynchronizationModel(URI left, URI right, URI origin) {
-		final StorageTraversal leftTraversal = resolveTraversal(left);
-		final StorageTraversal rightTraversal = resolveTraversal(right);
-		final StorageTraversal originTraversal = resolveTraversal(origin);
-
-		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal, true, true);
+		return createSynchronizationModel(subscriber, leftResource, rightResource, originResource);
 	}
 
 	public IComparisonScope createMinimizedScope() {
@@ -360,15 +334,6 @@ public final class EMFSynchronizationModel {
 	}
 
 	/**
-	 * This is only meant for internal usage.
-	 * 
-	 * @return The left traversal of this model.
-	 */
-	/* package */StorageTraversal getLeftTraversal() {
-		return leftTraversal;
-	}
-
-	/**
 	 * Clients may call this in order to determine whether the left logical model can be edited.
 	 * 
 	 * @return <code>true</code> if modifications to the left model should be allowed, <code>false</code>
@@ -424,36 +389,17 @@ public final class EMFSynchronizationModel {
 	/**
 	 * Tries and resolve the resource traversal corresponding to the given starting point.
 	 * 
-	 * @param start
-	 *            The URI of the resource that will be considered as the "starting point" of the traversal to
-	 *            resolve.
-	 * @return The resource traversal corresponding to the logical model that's been computed from the given
-	 *         starting point.
-	 */
-	private static StorageTraversal resolveTraversal(URI start) {
-		if (start == null) {
-			return new StorageTraversal(Sets.<IFile> newLinkedHashSet());
-		}
-
-		final SyncResourceSet resourceSet = new SyncResourceSet();
-		final StorageURIConverter converter = new StorageURIConverter(resourceSet.getURIConverter());
-		resourceSet.setURIConverter(converter);
-		resourceSet.resolveAll(start);
-
-		final Set<IStorage> storages = Sets.newLinkedHashSet(converter.getLoadedRevisions());
-		return new StorageTraversal(storages);
-
-	}
-
-	/**
-	 * Tries and resolve the resource traversal corresponding to the given starting point.
-	 * 
+	 * @param subscriber
+	 *            This will be used to retrieve the remote revisions of referenced files. Can be
+	 *            <code>null</code>.
 	 * @param start
 	 *            The revision that will be considered as the "starting point" of the traversal to resolve.
+	 * @param side
+	 *            Side we are currently resolving.
 	 * @return The resource traversal corresponding to the logical model that's been computed from the given
 	 *         starting point.
 	 */
-	private static StorageTraversal resolveTraversal(IFileRevision start) {
+	private static StorageTraversal resolveTraversal(Subscriber subscriber, IFileRevision start, DiffSide side) {
 		if (start == null) {
 			return new StorageTraversal(Sets.<IFile> newLinkedHashSet());
 		}
@@ -461,13 +407,20 @@ public final class EMFSynchronizationModel {
 		// TODO how could we make this extensible?
 		StorageTraversal traversal = new StorageTraversal(Sets.<IFile> newLinkedHashSet());
 		final SyncResourceSet resourceSet = new SyncResourceSet();
-		final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(), start);
+		final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
+				subscriber, side);
 		resourceSet.setURIConverter(converter);
 		try {
 			final IStorage startStorage = start.getStorage(new NullProgressMonitor());
 			if (resourceSet.resolveAll(startStorage)) {
-				final Set<IStorage> storages = Sets.newLinkedHashSet(Sets.union(Collections
-						.singleton(startStorage), converter.getLoadedRevisions()));
+				final Set<IStorage> storages = Sets.newLinkedHashSet();
+				storages.add(startStorage);
+				final IPath startPath = startStorage.getFullPath();
+				for (IStorage loaded : converter.getLoadedRevisions()) {
+					if (!startPath.equals(loaded.getFullPath())) {
+						storages.add(loaded);
+					}
+				}
 				traversal = new StorageTraversal(storages);
 			} else {
 				// FIXME log
@@ -477,50 +430,6 @@ public final class EMFSynchronizationModel {
 			// FIXME ignore for now
 		}
 		return traversal;
-	}
-
-	/**
-	 * Try and determine the file revision of the given element.
-	 * 
-	 * @param element
-	 *            The element for which we need an {@link IFileRevision}.
-	 * @return The file revision of the given element if we could find one, <code>null</code> otherwise.
-	 */
-	private static IFileRevision findFileRevision(ITypedElement element) {
-		if (element == null) {
-			return null;
-		}
-
-		// Can we adapt it directly?
-		IFileRevision revision = adaptAs(element, IFileRevision.class);
-		if (revision == null) {
-			// Quite the workaround... but CVS does not offer us any other way.
-			// These few lines of code is what make us depend on org.eclipse.ui... Can we find another way?
-			final ISharedDocumentAdapter documentAdapter = adaptAs(element, ISharedDocumentAdapter.class);
-			if (documentAdapter != null) {
-				final IEditorInput editorInput = documentAdapter.getDocumentKey(element);
-				if (editorInput != null) {
-					revision = adaptAs(editorInput, IFileRevision.class);
-				}
-			}
-		}
-
-		if (revision == null) {
-			// Couldn't do it the API way ...
-			// At the time of writing, this was the case with EGit
-			try {
-				final Method method = element.getClass().getMethod("getFileRevision"); //$NON-NLS-1$
-				final Object value = method.invoke(element);
-				if (value instanceof IFileRevision) {
-					revision = (IFileRevision)value;
-				}
-				// CHECKSTYLE:OFF this would require five "catch" for ignored exceptions...
-			} catch (Exception e) {
-				// CHECKSTYLE:ON
-			}
-		}
-
-		return revision;
 	}
 
 	/**

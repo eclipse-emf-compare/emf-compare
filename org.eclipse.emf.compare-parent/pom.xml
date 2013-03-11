@@ -63,9 +63,9 @@
     <module>../plugins/org.eclipse.emf.compare.ide</module>
     <module>../plugins/org.eclipse.emf.compare.ide.ui</module>
     <module>../plugins/org.eclipse.emf.compare.doc</module>
+    <module>../plugins/org.eclipse.emf.compare.ide.ui.tests</module>
     <!-- There are no longer any "ide" tests
     <module>../plugins/org.eclipse.emf.compare.ide.tests</module>
-    <module>../plugins/org.eclipse.emf.compare.ide.ui.tests</module>
     -->
 
     <!-- RCP -->
@@ -337,9 +337,6 @@
       <repository><id>emfstore-fuzzy</id><layout>p2</layout>
             <url>http://download.eclipse.org/emf-store/milestones/latest</url>
         </repository>
-      <repository><id>swtbot</id><layout>p2</layout>
-          <url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site</url>          
-      </repository>        
   </repositories>
     </profile>
 

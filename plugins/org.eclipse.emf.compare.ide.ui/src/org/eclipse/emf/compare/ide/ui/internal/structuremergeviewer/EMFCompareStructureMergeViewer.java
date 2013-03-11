@@ -15,7 +15,10 @@ import static com.google.common.collect.Lists.newArrayList;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.EventObject;
 import java.util.HashSet;
@@ -80,6 +83,11 @@ import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.team.core.subscribers.Subscriber;
+import org.eclipse.team.core.subscribers.SubscriberMergeContext;
+import org.eclipse.team.internal.ui.mapping.ModelCompareEditorInput;
+import org.eclipse.team.ui.synchronize.ISynchronizeParticipant;
+import org.eclipse.team.ui.synchronize.ModelSynchronizeParticipant;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -248,6 +256,56 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		}
 	};
 
+	/**
+	 * Team left us with absolutely no way to determiner whether our supplied input is the result of a
+	 * synchronization or not.
+	 * <p>
+	 * In order to properly resolve the logical model of the resource currently being compared we need to know
+	 * what "other" resources were part of its logical model, and we need to know the revisions of these
+	 * resources we are to load. All of this has already been computed by Team, but it would not let us know.
+	 * This method uses discouraged means to get around this "black box" locking from Team.
+	 * </p>
+	 * <p>
+	 * The basic need here is to retrieve the Subscriber from this point. We have a lot of accessible
+	 * variables, the two most important being the CompareConfiguration and ICompareInput... I could find no
+	 * way around the privileged access to the private ModelCompareEditorInput.participant field. There does
+	 * not seem to be any adapter (or Platform.getAdapterManager().getAdapter(...)) that would allow for this,
+	 * so I'm taking the long way 'round.
+	 * </p>
+	 * 
+	 * @return The subscriber used for this comparison if any could be found, <code>null</code> otherwise.
+	 */
+	@SuppressWarnings("restriction")
+	private Subscriber getSubscriber() {
+		if (getCompareConfiguration().getContainer() instanceof ModelCompareEditorInput) {
+			final ModelCompareEditorInput modelInput = (ModelCompareEditorInput)getCompareConfiguration()
+					.getContainer();
+			ISynchronizeParticipant participant = null;
+			try {
+				final Field field = ModelCompareEditorInput.class.getDeclaredField("participant"); //$NON-NLS-1$
+				AccessController.doPrivileged(new PrivilegedAction<Object>() {
+					public Object run() {
+						field.setAccessible(true);
+						return null;
+					}
+				});
+				participant = (ISynchronizeParticipant)field.get(modelInput);
+			} catch (NoSuchFieldException e) {
+				// Swallow this, this private field was there at least from 3.5 to 4.3
+			} catch (IllegalArgumentException e) {
+				// Cannot happen
+			} catch (IllegalAccessException e) {
+				// "Should" not happen, but ignore it anyway
+			}
+			if (participant instanceof ModelSynchronizeParticipant
+					&& ((ModelSynchronizeParticipant)participant).getContext() instanceof SubscriberMergeContext) {
+				return ((SubscriberMergeContext)((ModelSynchronizeParticipant)participant).getContext())
+						.getSubscriber();
+			}
+		}
+		return null;
+	}
+
 	void compareInputChanged(ICompareInput input, IProgressMonitor monitor) {
 		if (input != null) {
 			if (input instanceof ComparisonNode) {
@@ -258,8 +316,10 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				final ITypedElement left = input.getLeft();
 				final ITypedElement right = input.getRight();
 				final ITypedElement origin = input.getAncestor();
+
+				final Subscriber subscriber = getSubscriber();
 				final EMFSynchronizationModel syncModel = EMFSynchronizationModel.createSynchronizationModel(
-						left, right, origin);
+						subscriber, left, right, origin);
 
 				// Double check : git allows modification of the index file ... but we cannot
 				final CompareConfiguration config = getCompareConfiguration();
