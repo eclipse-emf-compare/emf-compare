@@ -183,7 +183,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 		final Iterator<? extends EObject> rightEObjects = Iterators.concat(rightIterators.iterator());
 		final Iterator<? extends EObject> originEObjects = Iterators.concat(originIterators.iterator());
 
-		getEObjectMatcher().createMatches(comparison, leftEObjects, rightEObjects, originEObjects);
+		getEObjectMatcher().createMatches(comparison, leftEObjects, rightEObjects, originEObjects, monitor);
 	}
 
 	/**
@@ -266,7 +266,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 			originEObjects = Iterators.emptyIterator();
 		}
 
-		getEObjectMatcher().createMatches(comparison, leftEObjects, rightEObjects, originEObjects);
+		getEObjectMatcher().createMatches(comparison, leftEObjects, rightEObjects, originEObjects, monitor);
 
 	}
 
@@ -307,7 +307,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 			originEObjects = Iterators.emptyIterator();
 		}
 
-		getEObjectMatcher().createMatches(comparison, leftEObjects, rightEObjects, originEObjects);
+		getEObjectMatcher().createMatches(comparison, leftEObjects, rightEObjects, originEObjects, monitor);
 	}
 
 	/**

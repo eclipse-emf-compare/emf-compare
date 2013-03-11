@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.BasicMonitor.Delegating;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
@@ -71,11 +72,11 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 	 */
 
 	public void createMatches(Comparison comparison, Iterator<? extends EObject> leftEObjects,
-			Iterator<? extends EObject> rightEObjects, Iterator<? extends EObject> originEObjects) {
+			Iterator<? extends EObject> rightEObjects, Iterator<? extends EObject> originEObjects,
+			Monitor monitor) {
 
-		// TODO use the monitor we have been passed on as soon as we have one.
-		Monitor monitor = new BasicMonitor();
-		monitor.beginTask("indexing objects", 1);
+		Delegating subMonitor = new BasicMonitor.Delegating(monitor);
+		subMonitor.beginTask("indexing objects", 1);
 		int nbElements = 0;
 		/*
 		 * We are iterating through the three sides of the scope at the same time so that index might apply
@@ -104,18 +105,22 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 				eObjectsToSide.put(next, Side.ORIGIN);
 			}
 		}
-		monitor.done();
-		monitor.beginTask("matching objects", nbElements);
+
+		subMonitor.worked(1);
+		subMonitor.done();
+
+		subMonitor = new BasicMonitor.Delegating(monitor);
+		subMonitor.beginTask("matching objects", nbElements);
 
 		Iterator<EObject> todo = index.getValuesStillThere(Side.LEFT).iterator();
 		while (todo.hasNext()) {
-			Iterator<EObject> remainingResult = matchList(comparison, todo, monitor).iterator();
+			Iterator<EObject> remainingResult = matchList(comparison, todo, subMonitor).iterator();
 			todo = remainingResult;
 
 		}
 		todo = index.getValuesStillThere(Side.RIGHT).iterator();
 		while (todo.hasNext()) {
-			Iterator<EObject> remainingResult = matchList(comparison, todo, monitor).iterator();
+			Iterator<EObject> remainingResult = matchList(comparison, todo, subMonitor).iterator();
 			todo = remainingResult;
 		}
 
@@ -129,7 +134,7 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 			areMatching(comparison, null, null, notFound);
 		}
 
-		monitor.done();
+		subMonitor.done();
 		restructureMatchModel(comparison);
 
 	}

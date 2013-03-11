@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.match.eobject;
 
 import java.util.Iterator;
 
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.ecore.EObject;
 
@@ -50,7 +51,10 @@ public interface IEObjectMatcher {
 	 * @param originEObjects
 	 *            And iterator over the EObject that may be considered ancestors of the couples that can be
 	 *            detected in the left and right sides.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation
 	 */
 	void createMatches(Comparison comparison, Iterator<? extends EObject> leftEObjects,
-			Iterator<? extends EObject> rightEObjects, Iterator<? extends EObject> originEObjects);
+			Iterator<? extends EObject> rightEObjects, Iterator<? extends EObject> originEObjects,
+			Monitor monitor);
 }

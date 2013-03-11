@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
@@ -100,7 +101,8 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 	 * {@inheritDoc}
 	 */
 	public void createMatches(Comparison comparison, Iterator<? extends EObject> leftEObjects,
-			Iterator<? extends EObject> rightEObjects, Iterator<? extends EObject> originEObjects) {
+			Iterator<? extends EObject> rightEObjects, Iterator<? extends EObject> originEObjects,
+			Monitor monitor) {
 		final List<EObject> leftEObjectsNoID = Lists.newArrayList();
 		final List<EObject> rightEObjectsNoID = Lists.newArrayList();
 		final List<EObject> originEObjectsNoID = Lists.newArrayList();
@@ -112,7 +114,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 		if (delegate.isPresent()) {
 
 			delegate.get().createMatches(comparison, leftEObjectsNoID.iterator(),
-					rightEObjectsNoID.iterator(), originEObjectsNoID.iterator());
+					rightEObjectsNoID.iterator(), originEObjectsNoID.iterator(), monitor);
 		} else {
 			for (EObject eObject : leftEObjectsNoID) {
 				Match match = CompareFactory.eINSTANCE.createMatch();

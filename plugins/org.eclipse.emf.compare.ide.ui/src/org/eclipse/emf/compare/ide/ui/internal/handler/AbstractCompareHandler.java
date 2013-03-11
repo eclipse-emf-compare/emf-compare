@@ -131,7 +131,8 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 				originEObjects = Iterators.emptyIterator();
 			}
 
-			getEObjectMatcher().createMatches(comparison, leftEObjects, rightEObjects, originEObjects);
+			getEObjectMatcher().createMatches(comparison, leftEObjects, rightEObjects, originEObjects,
+					monitor);
 
 		}
 	}
