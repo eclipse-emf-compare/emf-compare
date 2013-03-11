@@ -96,20 +96,6 @@ public class EMFCompare {
 	}
 
 	/**
-	 * Creates a default EMF Compare Configuration.
-	 * <p>
-	 * This will use a basic monitor doing nothing to report progress.
-	 * </p>
-	 * 
-	 * @return The default EMF Compare Configuration.
-	 */
-	@Deprecated
-	public static EMFCompareConfiguration createDefaultConfiguration() {
-		final Monitor monitor = new BasicMonitor();
-		return new EMFCompareConfiguration(monitor, null);
-	}
-
-	/**
 	 * Creates a default comparison scope given its left and right notifiers.
 	 * <p>
 	 * The default comparison scope covers all proper content of the given notifiers, i.e any element
