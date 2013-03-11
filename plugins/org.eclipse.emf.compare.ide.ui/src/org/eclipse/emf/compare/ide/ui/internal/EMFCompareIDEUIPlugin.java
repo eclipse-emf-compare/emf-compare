@@ -10,15 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory;
-import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -36,17 +29,11 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	/** The plugin ID. */
 	public static final String PLUGIN_ID = "org.eclipse.emf.compare.ide.ui"; //$NON-NLS-1$
 
-	public static final String ACCESSOR_FACTORY_PPID = "accessorFactory"; //$NON-NLS-1$
-
 	/** Plug-in's shared instance. */
 	private static EMFCompareIDEUIPlugin plugin;
 
 	/** Manages the images that were loaded by EMF Compare. */
 	private LocalResourceManager fResourceManager;
-
-	private AbstractRegistryEventListener listener;
-
-	private IAccessorFactory.Registry registry;
 
 	/** Default constructor. */
 	public EMFCompareIDEUIPlugin() {
@@ -63,13 +50,6 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 
-		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
-
-		registry = new IAccessorFactory.RegistryImpl();
-
-		listener = new AccessorFactoryExtensionRegistryListener(PLUGIN_ID, ACCESSOR_FACTORY_PPID, getLog());
-		extensionRegistry.addListener(listener, PLUGIN_ID + "." + ACCESSOR_FACTORY_PPID); //$NON-NLS-1$
-		listener.readRegistry(extensionRegistry);
 	}
 
 	/**
@@ -79,9 +59,6 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		Platform.getExtensionRegistry().removeListener(listener);
-		registry = null;
-
 		if (fResourceManager != null) {
 			fResourceManager.dispose();
 		}
@@ -97,13 +74,6 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	 */
 	public static EMFCompareIDEUIPlugin getDefault() {
 		return plugin;
-	}
-
-	/**
-	 * @return the registry
-	 */
-	public IAccessorFactory.Registry getAccessorFactoryRegistry() {
-		return registry;
 	}
 
 	public ImageDescriptor getImageDescriptor(String path) {
@@ -165,87 +135,6 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 			fResourceManager = new LocalResourceManager(JFaceResources.getResources());
 		}
 		return fResourceManager;
-	}
-
-	private class AccessorFactoryExtensionRegistryListener extends AbstractRegistryEventListener {
-
-		static final String TAG_FACTORY = "factory"; //$NON-NLS-1$
-
-		static final String ATT_CLASS = "class"; //$NON-NLS-1$
-
-		static final String ATT_RANKING = "ranking"; //$NON-NLS-1$
-
-		/**
-		 * @param pluginID
-		 * @param extensionPointID
-		 * @param registry
-		 */
-		public AccessorFactoryExtensionRegistryListener(String pluginID, String extensionPointID, ILog log) {
-			super(pluginID, extensionPointID, log);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener#validateExtensionElement(org.eclipse.core.runtime.IConfigurationElement)
-		 */
-		@Override
-		protected boolean validateExtensionElement(IConfigurationElement element) {
-			final boolean valid;
-			if (element.getName().equals(TAG_FACTORY)) {
-				if (element.getAttribute(ATT_CLASS) == null) {
-					logMissingAttribute(element, ATT_CLASS);
-					valid = false;
-				} else if (element.getAttribute(ATT_RANKING) == null) {
-					String rankingStr = element.getAttribute(ATT_RANKING);
-					try {
-						Integer.parseInt(rankingStr);
-					} catch (NumberFormatException nfe) {
-						log(IStatus.ERROR, element, "Attribute '" + ATT_RANKING
-								+ "' is malformed, should be an integer.");
-					}
-					logMissingAttribute(element, ATT_RANKING);
-					valid = false;
-				} else {
-					valid = true;
-				}
-			} else {
-				valid = false;
-			}
-			return valid;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener#addedValid(org.eclipse.core.runtime.IConfigurationElement)
-		 */
-		@Override
-		protected boolean addedValid(IConfigurationElement element) {
-			try {
-				IAccessorFactory factory = (IAccessorFactory)element.createExecutableExtension(ATT_CLASS);
-				factory.setRanking(Integer.parseInt(element.getAttribute(ATT_RANKING)));
-				IAccessorFactory previous = registry.add(factory);
-				if (previous != null) {
-					log(IStatus.WARNING, element, "The accessor factory '" + factory.getClass().getName()
-							+ "' is registered twice.");
-				}
-			} catch (CoreException e) {
-				log(element, e);
-			}
-			return true;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener#removedValid(org.eclipse.core.runtime.IConfigurationElement)
-		 */
-		@Override
-		protected boolean removedValid(IConfigurationElement element) {
-			registry.remove(element.getAttribute(ATT_CLASS));
-			return true;
-		}
 	}
 
 }

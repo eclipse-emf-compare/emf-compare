@@ -35,14 +35,14 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompar
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColorProvider;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.ICompareAccessor;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.SubDiffElementsFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColorProvider;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.SubDiffElementsFilter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
@@ -116,7 +116,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColorProvider#getCompareColor()
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColorProvider#getCompareColor()
 	 */
 	public ICompareColor getCompareColor() {
 		return fColors;

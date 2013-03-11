@@ -26,7 +26,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -46,7 +46,7 @@ import org.eclipse.uml2.uml.util.UMLUtil;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class UMLStereotypeApplicationChangeFeatureAccessor extends UMLIDEManyStructuralFeatureAccessor {
+public class UMLStereotypeApplicationChangeFeatureAccessor extends UMLManyStructuralFeatureAccessor {
 
 	private final static EReference STEREOTYPE_APPLICATION = EcoreFactory.eINSTANCE.createEReference();
 
@@ -88,7 +88,7 @@ public class UMLStereotypeApplicationChangeFeatureAccessor extends UMLIDEManyStr
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.BasicStructuralFeatureAccessorImpl#getStructuralFeature()
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.AbstractStructuralFeatureAccessor#getStructuralFeature()
 	 */
 	@Override
 	public EStructuralFeature getStructuralFeature() {
@@ -98,8 +98,8 @@ public class UMLStereotypeApplicationChangeFeatureAccessor extends UMLIDEManyStr
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.ManyStructuralFeatureAccessorImpl#getValueFromDiff(org.eclipse.emf.compare.Diff,
-	 *      org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide)
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.ManyStructuralFeatureAccessorImpl#getValueFromDiff(org.eclipse.emf.compare.Diff,
+	 *      org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide)
 	 */
 	@Override
 	protected Object getValueFromDiff(Diff diff, MergeViewerSide side) {
@@ -117,7 +117,7 @@ public class UMLStereotypeApplicationChangeFeatureAccessor extends UMLIDEManyStr
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.UMLIDEManyStructuralFeatureAccessor#findInsertionIndex(org.eclipse.emf.compare.Diff,
+	 * @see org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.UMLManyStructuralFeatureAccessor#findInsertionIndex(org.eclipse.emf.compare.Diff,
 	 *      boolean)
 	 */
 	@Override

@@ -18,7 +18,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.ide.ui.internal.util.StyledStringConverter;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.DifferenceGroup;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
@@ -105,8 +105,8 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 		final Image ret;
 		if (element instanceof Adapter) {
 			ret = super.getImage(((Adapter)element).getTarget());
-		} else if (element instanceof DifferenceGroup) {
-			final Image groupImage = ((DifferenceGroup)element).getImage();
+		} else if (element instanceof IDifferenceGroup) {
+			final Image groupImage = ((IDifferenceGroup)element).getImage();
 			if (groupImage != null) {
 				ret = groupImage;
 			} else {
@@ -136,9 +136,9 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 			} else {
 				ret = styledText;
 			}
-		} else if (element instanceof DifferenceGroup) {
+		} else if (element instanceof IDifferenceGroup) {
 			StyledStringConverter stringConverter = new StyledStringConverter();
-			return stringConverter.toJFaceStyledString(((DifferenceGroup)element).getStyledName());
+			return stringConverter.toJFaceStyledString(((IDifferenceGroup)element).getStyledName());
 		} else {
 			ret = new StyledString(super.getText(element));
 		}

@@ -14,7 +14,7 @@ import static org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.Co
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.CompareColorImpl;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.CompareColorImpl;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;

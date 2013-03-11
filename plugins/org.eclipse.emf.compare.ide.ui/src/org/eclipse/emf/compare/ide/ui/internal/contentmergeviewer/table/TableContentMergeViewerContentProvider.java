@@ -21,7 +21,8 @@ import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.ICompareAccessor;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.AccessorAdapter;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -81,7 +82,11 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 
 	public Object getAncestorContent(Object element) {
 		if (element instanceof ICompareInput) {
-			return ((ICompareInput)element).getAncestor();
+			ITypedElement ancestor = ((ICompareInput)element).getAncestor();
+			if (ancestor instanceof AccessorAdapter) {
+				return ((AccessorAdapter)ancestor).getTarget();
+			}
+			return ancestor;
 		}
 		return null;
 	}
@@ -117,7 +122,11 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 
 	public Object getLeftContent(Object element) {
 		if (element instanceof ICompareInput) {
-			return ((ICompareInput)element).getLeft();
+			ITypedElement left = ((ICompareInput)element).getLeft();
+			if (left instanceof AccessorAdapter) {
+				return ((AccessorAdapter)left).getTarget();
+			}
+			return left;
 		}
 		return null;
 	}
@@ -172,7 +181,11 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 
 	public Object getRightContent(Object element) {
 		if (element instanceof ICompareInput) {
-			return ((ICompareInput)element).getRight();
+			ITypedElement right = ((ICompareInput)element).getRight();
+			if (right instanceof AccessorAdapter) {
+				return ((AccessorAdapter)right).getTarget();
+			}
+			return right;
 		}
 		return null;
 	}

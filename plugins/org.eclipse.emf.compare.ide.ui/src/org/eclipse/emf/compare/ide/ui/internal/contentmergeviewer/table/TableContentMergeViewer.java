@@ -23,12 +23,12 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewerItem;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.MatchedObject;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.TableMergeViewer;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.ICompareAccessor;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeViewer;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.TableMergeViewer;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MatchedObject;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -131,9 +131,9 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 		}
 	}
 
-	private Diff getDiffToCopy(MergeViewer mergeViewer) {
+	private Diff getDiffToCopy(AbstractMergeViewer abstractMergeViewer) {
 		Diff diffToCopy = null;
-		ISelection selection = mergeViewer.getSelection();
+		ISelection selection = abstractMergeViewer.getSelection();
 		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
 			Object firstElement = ((IStructuredSelection)selection).getFirstElement();
 			if (firstElement instanceof IMergeViewerItem) {
@@ -180,7 +180,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 *      org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide)
 	 */
 	@Override
-	protected MergeViewer createMergeViewer(Composite parent, final MergeViewerSide side) {
+	protected AbstractMergeViewer createMergeViewer(Composite parent, final MergeViewerSide side) {
 		TableMergeViewer ret = new TableMergeViewer(parent, side, this);
 		ret.getStructuredViewer().getTable().getVerticalBar().setVisible(false);
 

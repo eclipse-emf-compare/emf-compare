@@ -13,7 +13,7 @@
 -->
 
 <plugin>
-   <extension-point id="accessorFactory" name="Accessor Factory" schema="schema/accessorFactory.exsd"/>
+   
    <extension
          point="org.eclipse.compare.structureMergeViewers">
       <viewer
@@ -35,35 +35,21 @@
          point="org.eclipse.compare.contentMergeViewers">
       <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerCreator"
-            extensions="eobject"
+            extensions="org.eclipse.emf.compare.rcp.ui.eMatch"
             id="org.eclipse.emf.compare.ide.ui.internal.EObjectContentMergeViewer"
             label="EMFCompare Content Merge Viewer">
       </viewer>
-      <contentTypeBinding
-            contentMergeViewerId="org.eclipse.emf.compare.ide.ui.internal.EObjectContentMergeViewer"
-            contentTypeId="org.eclipse.emf.ecore.xmi">
-      </contentTypeBinding>
-      <contentTypeBinding
-            contentMergeViewerId="org.eclipse.emf.compare.ide.ui.internal.EObjectContentMergeViewer"
-            contentTypeId="org.eclipse.emf.compare.content.type">
-      </contentTypeBinding>
       <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table.TableContentMergeViewerCreator"
-            extensions="emfcompare_diff"
+            extensions="org.eclipse.emf.compare.rcp.ui.eDiff,org.eclipse.emf.compare.rcp.ui.eResourceDiff"
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EObjectListContentMergeViewer"
             label="EMFCompare Content Merge Viewer">
       </viewer>
       <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text.EMFCompareTextMergeViewerCreator"
-            extensions="eText"
+            extensions="org.eclipse.emf.compare.rcp.ui.eTextDiff"
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text.EMFCompareTextContentMergeViewer"
             label="EMFCompare Text Merge Viewer">
-      </viewer>
-      <viewer
-            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table.TableContentMergeViewerCreator"
-            extensions="resource_contents"
-            id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text.EMFCompareResourceContentsContentMergeViewer"
-            label="EMFCompare Resource Contents Merge Viewer">
       </viewer>
    </extension>
    <extension
@@ -72,29 +58,6 @@
             class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.CompareNodeAdapterFactory"
             supportedTypes="org.eclipse.compare.structuremergeviewer.ICompareInput"
             uri="http://www.eclipse.org/emf/compare">
-      </factory>
-   </extension>
-   <extension
-         point="org.eclipse.emf.compare.ide.ui.accessorFactory">
-      <factory
-            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.factory.IDEEObjectAccessorFactory"
-            ranking="10">
-      </factory>
-      <factory
-            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.factory.IDEManyStructuralFeatureAccessorFactory"
-            ranking="10">
-      </factory>
-      <factory
-            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.factory.IDESingleStructuralFeatureAccessorFactory"
-            ranking="10">
-      </factory>
-      <factory
-            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.factory.IDEStringAttributeChangeAccessorFactory"
-            ranking="10">
-      </factory>
-      <factory
-            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.factory.IDEResourceContentsAccessorFactory"
-            ranking="10">
       </factory>
    </extension>
    <extension

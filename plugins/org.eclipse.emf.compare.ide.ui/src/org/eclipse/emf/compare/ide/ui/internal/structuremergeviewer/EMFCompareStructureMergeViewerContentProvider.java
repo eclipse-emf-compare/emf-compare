@@ -34,9 +34,9 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.StructureMergeViewerFilter;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.DifferenceGroup;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.StructureMergeViewerGrouper;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.swt.graphics.Image;
@@ -83,8 +83,8 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 		if (element instanceof Adapter) {
 			ret = getAdapterFactory().adapt(super.getParent(((Adapter)element).getTarget()),
 					ICompareInput.class);
-		} else if (element instanceof DifferenceGroup) {
-			ret = ((DifferenceGroup)element).getComparison();
+		} else if (element instanceof IDifferenceGroup) {
+			ret = ((IDifferenceGroup)element).getComparison();
 		} else {
 			ret = null;
 		}
@@ -101,14 +101,14 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 		final boolean ret;
 		if (element instanceof ComparisonNode) {
 			Comparison target = ((ComparisonNode)element).getTarget();
-			final Iterable<? extends DifferenceGroup> groups = fViewerGrouper.getGroups(target);
+			final Iterable<? extends IDifferenceGroup> groups = fViewerGrouper.getGroups(target);
 			if (isEmpty(groups)) {
 				ret = super.hasChildren(((Adapter)element).getTarget());
 			} else {
 				ret = true;
 			}
-		} else if (element instanceof DifferenceGroup) {
-			ret = !isEmpty(((DifferenceGroup)element).getDifferences());
+		} else if (element instanceof IDifferenceGroup) {
+			ret = !isEmpty(((IDifferenceGroup)element).getDifferences());
 		} else if (element instanceof Adapter) {
 			ret = super.hasChildren(((Adapter)element).getTarget());
 		} else {
@@ -127,20 +127,20 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 		final Object[] ret;
 		if (element instanceof ComparisonNode) {
 			Comparison target = ((ComparisonNode)element).getTarget();
-			final Iterable<? extends DifferenceGroup> groups = fViewerGrouper.getGroups(target);
+			final Iterable<? extends IDifferenceGroup> groups = fViewerGrouper.getGroups(target);
 			if (!isEmpty(groups)) {
-				ret = Iterables.toArray(groups, DifferenceGroup.class);
+				ret = Iterables.toArray(groups, IDifferenceGroup.class);
 			} else {
 				Iterable<ICompareInput> compareInputs = adapt(super.getChildren(((Adapter)element)
 						.getTarget()), getAdapterFactory(), ICompareInput.class);
 				ret = toArray(compareInputs, ICompareInput.class);
 			}
-		} else if (element instanceof DifferenceGroup) {
-			final Comparison target = ((DifferenceGroup)element).getComparison();
+		} else if (element instanceof IDifferenceGroup) {
+			final Comparison target = ((IDifferenceGroup)element).getComparison();
 			Iterable<ICompareInput> compareInputs = adapt(super.getChildren(target), getAdapterFactory(),
 					ICompareInput.class);
 			Iterable<FilteredEDiffNode> filteredCompareInputs = filteredEDiffNodes(filter(compareInputs,
-					AbstractEDiffNode.class), (DifferenceGroup)element);
+					AbstractEDiffNode.class), (IDifferenceGroup)element);
 			ret = toArray(filteredCompareInputs, FilteredEDiffNode.class);
 		} else if (element instanceof Adapter) {
 			final Iterable<Object> children;
@@ -218,15 +218,15 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 
 	/**
 	 * Filter out each element of the given <code>array</code> that should not be contained under the given
-	 * {@link DifferenceGroup}.
+	 * {@link IDifferenceGroup}.
 	 * 
 	 * @param unfiltered
 	 *            the array to filter.
 	 * @param diffGroup
-	 *            the given {@link DifferenceGroup}.
-	 * @return an iterable of elements that should be contained under the given {@link DifferenceGroup}.
+	 *            the given {@link IDifferenceGroup}.
+	 * @return an iterable of elements that should be contained under the given {@link IDifferenceGroup}.
 	 */
-	private Iterable<Object> filteredElements(Object[] unfiltered, final DifferenceGroup diffGroup) {
+	private Iterable<Object> filteredElements(Object[] unfiltered, final IDifferenceGroup diffGroup) {
 		final Predicate<? super Object> isPartOfTree = new Predicate<Object>() {
 			public boolean apply(Object input) {
 				return isPartOfGroup(input, diffGroup);
@@ -236,16 +236,16 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 	}
 
 	/**
-	 * Returns whether this object should be contained under the given {@link DifferenceGroup}.
+	 * Returns whether this object should be contained under the given {@link IDifferenceGroup}.
 	 * 
 	 * @param object
 	 *            the object to filter.
 	 * @param diffGroup
-	 *            the given {@link DifferenceGroup}.
-	 * @return true if the object should be contained under the given {@link DifferenceGroup}, false
+	 *            the given {@link IDifferenceGroup}.
+	 * @return true if the object should be contained under the given {@link IDifferenceGroup}, false
 	 *         otherwise.
 	 */
-	private boolean isPartOfGroup(Object object, final DifferenceGroup diffGroup) {
+	private boolean isPartOfGroup(Object object, final IDifferenceGroup diffGroup) {
 		final Predicate<? super EObject> isPartOfTree = new Predicate<EObject>() {
 			public boolean apply(EObject input) {
 				return Iterables.contains(filter(diffGroup.getDifferences(), not(or(fViewerFilter
@@ -271,16 +271,16 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 
 	/**
 	 * Creates an iterable of {@link FilteredEDiffNode} from an iterable of {@link AbstractEDiffNode} and a
-	 * {@link DifferenceGroup}.
+	 * {@link IDifferenceGroup}.
 	 * 
 	 * @param iterable
 	 *            the iterable of {@link AbstractEDiffNode} to transform.
 	 * @param diffGroup
-	 *            the {@link DifferenceGroup} to associate with the FilteredEDiffNodes.
+	 *            the {@link IDifferenceGroup} to associate with the FilteredEDiffNodes.
 	 * @return an iterable of {@link FilteredEDiffNode}.
 	 */
 	private Iterable<FilteredEDiffNode> filteredEDiffNodes(Iterable<AbstractEDiffNode> iterable,
-			final DifferenceGroup diffGroup) {
+			final IDifferenceGroup diffGroup) {
 		Function<AbstractEDiffNode, FilteredEDiffNode> adaptFunction = new Function<AbstractEDiffNode, FilteredEDiffNode>() {
 			public FilteredEDiffNode apply(AbstractEDiffNode input) {
 				return new FilteredEDiffNode(input, diffGroup);
@@ -290,7 +290,7 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 	}
 
 	/**
-	 * AbstractEDiffNodes that know the DifferenceGroup in which they are. This class wraps an
+	 * AbstractEDiffNodes that know the IDifferenceGroup in which they are. This class wraps an
 	 * AbstractEDiffNode and it delegates its interfaces to corresponding AbstractEDiffNode implemented
 	 * interfaces.
 	 * 
@@ -301,21 +301,21 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 		/** The AbstractEDiffNode wrapped. */
 		private AbstractEDiffNode fDelegate;
 
-		/** The DifferenceGroup associated with the node. */
-		private DifferenceGroup differenceGroup;
+		/** The IDifferenceGroup associated with the node. */
+		private IDifferenceGroup iDifferenceGroup;
 
 		/**
 		 * This constructs an instance that wraps this {@link AbstractEDiffNode} contained in the given
-		 * {@link DifferenceGroup}.
+		 * {@link IDifferenceGroup}.
 		 * 
 		 * @param delegate
 		 *            the given AbstractEDiffNode.
 		 * @param diffGroup
-		 *            the given DifferenceGroup.
+		 *            the given IDifferenceGroup.
 		 */
-		public FilteredEDiffNode(AbstractEDiffNode delegate, DifferenceGroup diffGroup) {
+		public FilteredEDiffNode(AbstractEDiffNode delegate, IDifferenceGroup diffGroup) {
 			fDelegate = delegate;
-			differenceGroup = diffGroup;
+			iDifferenceGroup = diffGroup;
 		}
 
 		/**
@@ -328,12 +328,12 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 		}
 
 		/**
-		 * Returns the {@link DifferenceGroup} associated with the wrapped {@link AbstractEDiffNode}.
+		 * Returns the {@link IDifferenceGroup} associated with the wrapped {@link AbstractEDiffNode}.
 		 * 
 		 * @return the difference group.
 		 */
-		public DifferenceGroup getDifferenceGroup() {
-			return differenceGroup;
+		public IDifferenceGroup getDifferenceGroup() {
+			return iDifferenceGroup;
 		}
 
 		/**

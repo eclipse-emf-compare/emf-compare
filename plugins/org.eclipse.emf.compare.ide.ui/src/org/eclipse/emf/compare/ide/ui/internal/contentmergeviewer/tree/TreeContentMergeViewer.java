@@ -18,9 +18,9 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.MergeViewer;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.TreeMergeViewer;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeViewer;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.TreeMergeViewer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
@@ -167,7 +167,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#createMergeViewer(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
-	protected MergeViewer createMergeViewer(final Composite parent, MergeViewerSide side) {
+	protected AbstractMergeViewer createMergeViewer(final Composite parent, MergeViewerSide side) {
 		final TreeMergeViewer mergeTreeViewer = new TreeMergeViewer(parent, side);
 		IContentProvider contentProvider = new AdapterFactoryContentProvider(fAdapterFactory);
 		mergeTreeViewer.setContentProvider(contentProvider);

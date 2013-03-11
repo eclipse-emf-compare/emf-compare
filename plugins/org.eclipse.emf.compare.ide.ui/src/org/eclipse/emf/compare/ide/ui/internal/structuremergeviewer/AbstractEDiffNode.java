@@ -19,9 +19,9 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory.Registry;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.AccessorAdapter;
+import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.IAccessorFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.jface.util.SafeRunnable;
@@ -113,7 +113,8 @@ public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareI
 	}
 
 	protected IAccessorFactory getAccessorFactoryForTarget() {
-		Registry factoryRegistry = EMFCompareIDEUIPlugin.getDefault().getAccessorFactoryRegistry();
+		IAccessorFactory.Registry factoryRegistry = EMFCompareRCPUIPlugin.getDefault()
+				.getAccessorFactoryRegistry();
 		return factoryRegistry.getHighestRankingFactory(getTarget());
 	}
 
@@ -153,7 +154,8 @@ public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareI
 	public ITypedElement getAncestor() {
 		IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
 		if (accessorFactory != null) {
-			return accessorFactory.createAncestor(getAdapterFactory(), getTarget());
+			return AccessorAdapter
+					.adapt(accessorFactory.createAncestor(getAdapterFactory(), getTarget()));
 		}
 		return null;
 	}
@@ -166,7 +168,7 @@ public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareI
 	public ITypedElement getLeft() {
 		IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
 		if (accessorFactory != null) {
-			return accessorFactory.createLeft(getAdapterFactory(), getTarget());
+			return AccessorAdapter.adapt(accessorFactory.createLeft(getAdapterFactory(), getTarget()));
 		}
 		return null;
 	}
@@ -179,7 +181,7 @@ public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareI
 	public ITypedElement getRight() {
 		IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
 		if (accessorFactory != null) {
-			return accessorFactory.createRight(getAdapterFactory(), getTarget());
+			return AccessorAdapter.adapt(accessorFactory.createRight(getAdapterFactory(), getTarget()));
 		}
 		return null;
 	}

@@ -2,7 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.emf.compare.ide.ui.accessorFactory">
+         point="org.eclipse.emf.compare.rcp.ui.accessorFactory">
       <factory
             class="org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.factory.UMLIDEManyStructuralFeatureAccessorFactory"
             ranking="20">

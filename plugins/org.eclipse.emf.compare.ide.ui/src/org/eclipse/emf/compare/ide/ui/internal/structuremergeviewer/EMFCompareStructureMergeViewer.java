@@ -48,14 +48,14 @@ import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
 import org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.actions.FilterActionMenu;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.actions.GroupActionMenu;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilterSelectionChangeEvent;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.StructureMergeViewerFilter;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.DefaultGroupProvider;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.StructureMergeViewerGrouper;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.FilterActionMenu;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.GroupActionMenu;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilterSelectionChangeEvent;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -187,10 +187,10 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			selectedFilters = (Collection<IDifferenceFilter>)property;
 		}
 		switch (event.getAction()) {
-			case ADD:
+			case ACTIVATE:
 				selectedFilters.add(event.getFilter());
 				break;
-			case REMOVE:
+			case DEACTIVATE:
 				selectedFilters.remove(event.getFilter());
 				break;
 			default:

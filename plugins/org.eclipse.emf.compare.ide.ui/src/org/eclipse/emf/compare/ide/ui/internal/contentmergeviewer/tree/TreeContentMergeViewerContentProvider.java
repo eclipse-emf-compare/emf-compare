@@ -16,6 +16,7 @@ import com.google.common.collect.ImmutableMap;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IEditableContent;
+import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.IDiffContainer;
@@ -23,6 +24,7 @@ import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.AccessorAdapter;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.MatchNode;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -101,22 +103,13 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 		return fCompareConfiguration.getAncestorImage(element);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getAncestorContent(java.lang.Object)
-	 */
 	public Object getAncestorContent(Object element) {
 		if (element instanceof ICompareInput) {
-			ICompareInput compareInput = (ICompareInput)element;
-			Object ret = compareInput.getAncestor();
-			// if no ancestor and element is a diff, try to reach the ancestor of parent, recursively
-			if (ret == null && element instanceof IDiffElement) {
-				// TODO: MBA use adapterfactory
-				IDiffContainer parent = ((IDiffElement)compareInput).getParent();
-				ret = getAncestorContent(parent);
+			ITypedElement ancestor = ((ICompareInput)element).getAncestor();
+			if (ancestor instanceof AccessorAdapter) {
+				return ((AccessorAdapter)ancestor).getTarget();
 			}
-			return ret;
+			return ancestor;
 		}
 		return null;
 	}
@@ -153,22 +146,13 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 		return fCompareConfiguration.getLeftImage(element);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getLeftContent(java.lang.Object)
-	 */
 	public Object getLeftContent(Object element) {
 		if (element instanceof ICompareInput) {
-			ICompareInput compareInput = (ICompareInput)element;
-			Object ret = compareInput.getLeft();
-			// if no left and element is a diff, try to reach the left of parent, recursively
-			if (ret == null && element instanceof IDiffElement) {
-				// TODO: MBA use adapterfactory
-				IDiffContainer parent = ((IDiffElement)compareInput).getParent();
-				ret = getLeftContent(parent);
+			ITypedElement left = ((ICompareInput)element).getLeft();
+			if (left instanceof AccessorAdapter) {
+				return ((AccessorAdapter)left).getTarget();
 			}
-			return ret;
+			return left;
 		}
 		return null;
 	}
@@ -232,22 +216,13 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 		return fCompareConfiguration.getRightImage(element);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getRightContent(java.lang.Object)
-	 */
 	public Object getRightContent(Object element) {
 		if (element instanceof ICompareInput) {
-			ICompareInput compareInput = (ICompareInput)element;
-			Object ret = compareInput.getRight();
-			// if no right and element is a diff, try to reach the right of parent, recursively
-			if (ret == null && element instanceof IDiffElement) {
-				// TODO: MBA use adapterfactory
-				IDiffContainer parent = ((IDiffElement)compareInput).getParent();
-				ret = getRightContent(parent);
+			ITypedElement right = ((ICompareInput)element).getRight();
+			if (right instanceof AccessorAdapter) {
+				return ((AccessorAdapter)right).getTarget();
 			}
-			return ret;
+			return right;
 		}
 		return null;
 	}

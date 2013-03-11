@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.factory;
 
-import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory.AbstractAccessorFactory;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.UMLIDESingleStructuralFeatureAccessor;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.AbstractAccessorFactory;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.UMLSingleStructuralFeatureAccessor;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 
 /**
@@ -38,7 +38,7 @@ public class UMLIDESingleStructuralFeatureAccessorFactory extends AbstractAccess
 			case ADD:
 			case DELETE:
 			case MOVE:
-				ret = new UMLIDESingleStructuralFeatureAccessor(diff, side);
+				ret = new UMLSingleStructuralFeatureAccessor(diff, side);
 				break;
 			case CHANGE:
 				// TODO: what to do in change ?

@@ -25,13 +25,13 @@
       </page>
    </extension>
      <extension
-           point="org.eclipse.emf.compare.ide.ui.accessorFactory">
+           point="org.eclipse.emf.compare.rcp.ui.accessorFactory">
         <factory
-              class="org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.factory.DiagramIDEDiffAccessorFactory"
+              class="org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.factory.DiagramDiffAccessorFactory"
               ranking="40">
         </factory>
         <factory
-              class="org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.factory.DiagramIDEMatchAccessorFactory"
+              class="org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.factory.DiagramMatchAccessorFactory"
               ranking="40">
         </factory>
      </extension>

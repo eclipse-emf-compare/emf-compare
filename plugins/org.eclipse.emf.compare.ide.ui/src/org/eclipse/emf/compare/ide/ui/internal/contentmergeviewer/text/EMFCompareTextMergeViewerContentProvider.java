@@ -15,16 +15,13 @@ import static org.eclipse.emf.compare.ide.utils.ResourceUtil.saveAllResources;
 import com.google.common.collect.ImmutableMap;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.compare.IEditableContent;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
-import org.eclipse.compare.structuremergeviewer.IDiffContainer;
-import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.StringAttributeChangeAccessor;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.StringAttributeChangeAccessor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -88,7 +85,8 @@ public class EMFCompareTextMergeViewerContentProvider implements IMergeViewerCon
 
 	public Object getAncestorContent(Object element) {
 		if (element instanceof ICompareInput) {
-			return ((ICompareInput)element).getAncestor();
+			ITypedElement ancestor = ((ICompareInput)element).getAncestor();
+			return ancestor;
 		}
 		return null;
 	}
@@ -124,7 +122,8 @@ public class EMFCompareTextMergeViewerContentProvider implements IMergeViewerCon
 
 	public Object getLeftContent(Object element) {
 		if (element instanceof ICompareInput) {
-			return ((ICompareInput)element).getLeft();
+			ITypedElement left = ((ICompareInput)element).getLeft();
+			return left;
 		}
 		return null;
 	}
@@ -133,20 +132,7 @@ public class EMFCompareTextMergeViewerContentProvider implements IMergeViewerCon
 		if (hasError()) {
 			return false;
 		}
-		if (element instanceof ICompareInput) {
-			Object left = ((ICompareInput)element).getLeft();
-			// TODO: MBA use adapterfactory
-			if (left == null && element instanceof IDiffElement) {
-				IDiffElement parent = ((IDiffElement)element).getParent();
-				if (parent instanceof ICompareInput) {
-					left = ((ICompareInput)parent).getLeft();
-				}
-			}
-			if (left instanceof IEditableContent) {
-				return ((IEditableContent)left).isEditable();
-			}
-		}
-		return false;
+		return fCompareConfiguration.isLeftEditable();
 	}
 
 	public void saveLeftContent(Object element, byte[] bytes) {
@@ -195,7 +181,8 @@ public class EMFCompareTextMergeViewerContentProvider implements IMergeViewerCon
 
 	public Object getRightContent(Object element) {
 		if (element instanceof ICompareInput) {
-			return ((ICompareInput)element).getRight();
+			ITypedElement right = ((ICompareInput)element).getRight();
+			return right;
 		}
 		return null;
 	}
@@ -204,20 +191,7 @@ public class EMFCompareTextMergeViewerContentProvider implements IMergeViewerCon
 		if (hasError()) {
 			return false;
 		}
-		if (element instanceof ICompareInput) {
-			Object right = ((ICompareInput)element).getRight();
-			if (right == null && element instanceof IDiffElement) {
-				// TODO: MBA use adapterfactory
-				IDiffContainer parent = ((IDiffElement)element).getParent();
-				if (parent instanceof ICompareInput) {
-					right = ((ICompareInput)parent).getRight();
-				}
-			}
-			if (right instanceof IEditableContent) {
-				return ((IEditableContent)right).isEditable();
-			}
-		}
-		return false;
+		return fCompareConfiguration.isRightEditable();
 	}
 
 	public void saveRightContent(Object element, byte[] bytes) {

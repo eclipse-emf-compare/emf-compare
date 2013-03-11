@@ -15,16 +15,17 @@
 <plugin>
    <extension-point id="groups" name="EMF Compare Groups" schema="schema/groups.exsd"/>
    <extension-point id="filters" name="EMF Compare Filters" schema="schema/filters.exsd"/>
+   <extension-point id="accessorFactory" name="Accessor Factory" schema="schema/accessorFactory.exsd"/>
    <extension
          point="org.eclipse.emf.compare.rcp.ui.groups">
       <group
             activeByDefault="false"
-            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.KindGroupProvider"
+            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.KindGroupProvider"
             label="By Kind">
       </group>
       <group
             activeByDefault="false"
-            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.ThreeWayComparisonGroupProvider"
+            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.ThreeWayComparisonGroupProvider"
             label="By Side">
       </group>
    </extension>
@@ -32,28 +33,51 @@
          point="org.eclipse.emf.compare.rcp.ui.filters">
       <filter
             activeByDefault="true"
-            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.EmptyMatchedResourcesFilter"
+            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.EmptyMatchedResourcesFilter"
             label="Empty resource mappings">
       </filter>
       <filter
             activeByDefault="true"
-            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.PseudoConflictsFilter"
+            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.PseudoConflictsFilter"
             label="Pseudo conflicts differences">
       </filter>
       <filter
             activeByDefault="true"
-            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.PseudoDeleteConflictsFilter"
+            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.PseudoDeleteConflictsFilter"
             label="Pseudo delete conflicts differences">
       </filter>
       <filter
             activeByDefault="true"
-            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IdenticalElementsFilter"
+            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.IdenticalElementsFilter"
             label="Identical elements">
       </filter>
       <filter
             activeByDefault="true"
-            class="org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.SubDiffElementsFilter"
+            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.SubDiffElementsFilter"
             label="Sub diff elements">
       </filter>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.rcp.ui.accessorFactory">
+      <factory
+            class="org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.EObjectAccessorFactory"
+            ranking="10">
+      </factory>
+      <factory
+            class="org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.ManyStructuralFeatureAccessorFactory"
+            ranking="10">
+      </factory>
+      <factory
+            class="org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.SingleStructuralFeatureAccessorFactory"
+            ranking="10">
+      </factory>
+      <factory
+            class="org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.StringAttributeChangeAccessorFactory"
+            ranking="10">
+      </factory>
+      <factory
+            class="org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.ResourceContentsAccessorFactory"
+            ranking="10">
+      </factory>
    </extension>
 </plugin>
