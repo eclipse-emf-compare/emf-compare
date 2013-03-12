@@ -75,6 +75,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -410,6 +411,69 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				}
 			}
 		});
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.AbstractTreeViewer#isExpandable(java.lang.Object)
+	 */
+	@Override
+	public boolean isExpandable(Object parent) {
+		if (hasFilters()) {
+			// workaround for 65762
+			return hasFilteredChildren(parent);
+		}
+		return super.isExpandable(parent);
+	}
+
+	/**
+	 * Public method to test if a element has any children that passed the filters
+	 * 
+	 * @param parent
+	 *            the element to test
+	 * @return return <code>true</code> if the element has at least a child that passed the filters
+	 */
+	public final boolean hasFilteredChildren(Object parent) {
+		Object[] rawChildren = getRawChildren(parent);
+		return containsNonFiltered(rawChildren, parent);
+	}
+
+	private boolean containsNonFiltered(Object[] elements, Object parent) {
+		if (elements.length == 0) {
+			return false;
+		}
+		if (!hasFilters()) {
+			return true;
+		}
+		ViewerFilter[] filters = getFilters();
+		for (int i = 0; i < elements.length; i++) {
+			Object object = elements[i];
+			if (!isFiltered(object, parent, filters)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * All element filter tests must go through this method. Can be overridden by subclasses.
+	 * 
+	 * @param object
+	 *            the object to filter
+	 * @param parent
+	 *            the parent
+	 * @param filters
+	 *            the filters to apply
+	 * @return true if the element is filtered
+	 */
+	protected boolean isFiltered(Object object, Object parent, ViewerFilter[] filters) {
+		for (int i = 0; i < filters.length; i++) {
+			ViewerFilter filter = filters[i];
+			if (!filter.select(this, parent, object)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void refreshAfterDiff(String message, Object root) {
