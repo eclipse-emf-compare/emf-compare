@@ -41,7 +41,6 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -881,7 +880,7 @@ public final class DiffUtil {
 	 * When merging a {@link Diff}, returns the sub diffs of this given diff, and all associated diffs (see
 	 * {@link DiffUtil#getAssociatedDiffs(Iterable, boolean, Diff)}) of these sub diffs.
 	 * <p>
-	 * If the diff is an {@link AttributeChange} or a {@link ResourceAttachmentChange}, this method will
+	 * If the diff is an {@link AttributeChange} or a @{code ResourceAttachmentChange}, this method will
 	 * return an empty iterable.
 	 * </p>
 	 * <p>

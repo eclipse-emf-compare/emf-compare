@@ -22,6 +22,8 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
 /**
  * This will contain all of the EMF Compare extensions.
  * 
+ * @param <K>
+ *            the type of the key of this registry
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public class PostProcessorDescriptorRegistryImpl<K> implements IPostProcessor.Descriptor.Registry<K> {

@@ -33,7 +33,7 @@ public class GMFRefinedElementsFilter extends AbstractDifferenceFilter {
 	/**
 	 * The predicate use by this filter when it is selected.
 	 */
-	private static final Predicate<? super EObject> predicateWhenSelected = new Predicate<EObject>() {
+	private static final Predicate<? super EObject> PREDICATE_WHEN_SELECTED = new Predicate<EObject>() {
 		public boolean apply(EObject input) {
 			if (input instanceof Diff) {
 				Diff diff = (Diff)input;
@@ -68,7 +68,7 @@ public class GMFRefinedElementsFilter extends AbstractDifferenceFilter {
 	 */
 	@Override
 	public Predicate<? super EObject> getPredicateWhenSelected() {
-		return predicateWhenSelected;
+		return PREDICATE_WHEN_SELECTED;
 	}
 
 }

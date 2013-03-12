@@ -99,13 +99,13 @@ public interface IPostProcessor {
 	void postComparison(Comparison comparison, Monitor monitor);
 
 	/**
-	 * Wrapper describing the given post processor
+	 * Wrapper describing the given post processor.
 	 * 
 	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
 	 */
 	interface Descriptor {
 		/**
-		 * Returns the wrapped post processor
+		 * Returns the wrapped post processor.
 		 * 
 		 * @return the wrapped post processor
 		 */
@@ -128,7 +128,7 @@ public interface IPostProcessor {
 		/**
 		 * Returns the class name of the instance that will be returned by {@link #getPostProcessor()}.
 		 * 
-		 * @return
+		 * @return the class name of the instance that will be returned by {@link #getPostProcessor()}.
 		 */
 		String getInstanceClassName();
 
@@ -142,8 +142,14 @@ public interface IPostProcessor {
 			/**
 			 * Adds a post processor to the registry.
 			 * 
+			 * @param key
+			 *            key with which the specified descriptor is to be associated
 			 * @param descriptor
 			 *            Post Processor that is to be added to this registry.
+			 * @return the previous descriptor associated with <tt>key</tt>, or <tt>null</tt> if there was no
+			 *         mapping for <tt>key</tt>. (A <tt>null</tt> return can also indicate that the map
+			 *         previously associated <tt>null</tt> with <tt>key</tt>, if the implementation supports
+			 *         <tt>null</tt> values.)
 			 */
 			IPostProcessor.Descriptor put(K key, IPostProcessor.Descriptor descriptor);
 
@@ -164,8 +170,8 @@ public interface IPostProcessor {
 			/**
 			 * Removes a post processor from this registry.
 			 * 
-			 * @param postProcessorFactoryClassName
-			 *            Qualified class name of the post processor that is to be removed from the registry.
+			 * @param key
+			 *            key of the post processor descriptor that is to be removed from the registry.
 			 * @return the previous value associated with <tt>key</tt>, or <tt>null</tt> if there was no
 			 *         mapping for <tt>key</tt>.
 			 */
