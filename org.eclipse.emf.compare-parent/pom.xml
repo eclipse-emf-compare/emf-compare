@@ -77,8 +77,8 @@
     <module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
     <module>../plugins/org.eclipse.emf.compare.uml2</module>
     <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>
-    <module>../plugins/org.eclipse.emf.compare.uml2.ide</module>
-    <module>../plugins/org.eclipse.emf.compare.uml2.ide.ui</module>
+    <module>../plugins/org.eclipse.emf.compare.uml2.rcp</module>
+    <module>../plugins/org.eclipse.emf.compare.uml2.rcp.ui</module>
     <module>../plugins/org.eclipse.emf.compare.uml2.tests</module>
 
     <!-- SYSML -->
