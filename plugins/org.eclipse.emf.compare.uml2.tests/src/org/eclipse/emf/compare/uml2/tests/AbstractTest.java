@@ -70,7 +70,8 @@ public abstract class AbstractTest {
 	public void before() {
 		PostProcessorDescriptorRegistryImpl<String> registry = new PostProcessorDescriptorRegistryImpl<String>();
 		registry.put(UMLPostProcessor.class.getName(), new TestPostProcessor.TestPostProcessorDescriptor(
-				Pattern.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null, new UMLPostProcessor()));
+				Pattern.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null, new UMLPostProcessor(),
+				20));
 		emfCompare = EMFCompare.builder().setPostProcessorRegistry(registry).build();
 	}
 

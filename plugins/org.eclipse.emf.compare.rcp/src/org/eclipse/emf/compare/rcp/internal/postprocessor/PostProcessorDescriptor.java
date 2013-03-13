@@ -23,17 +23,27 @@ import org.eclipse.emf.compare.rcp.extension.PluginClassDescriptor;
  */
 public class PostProcessorDescriptor extends PluginClassDescriptor<IPostProcessor> implements IPostProcessor.Descriptor {
 
+	/** The pattern of namespace URI on which this post processor can be applied. */
 	private final Pattern nsURI;
 
+	/** The pattern of resource URI on which this post processor can be applied. */
 	private final Pattern resourceURI;
 
+	/** The wrapped post processor. */
 	private IPostProcessor instance;
+
+	/** Ordinal of this post processor. */
+	private int ordinal;
 
 	/**
 	 * Creates a descriptor corresponding to the information of the given <em>element</em>.
 	 * 
 	 * @param element
 	 *            Configuration element from which to create this descriptor.
+	 * @param nsURI
+	 *            The pattern of namespace URI on which this post processor can be applied.
+	 * @param resourceURI
+	 *            The pattern of resource URI on which this post processor can be applied.
 	 */
 	public PostProcessorDescriptor(IConfigurationElement element, Pattern nsURI, Pattern resourceURI) {
 		super(element, PostProcessorFactoryRegistryListener.ATT_CLASS);
@@ -78,6 +88,24 @@ public class PostProcessorDescriptor extends PluginClassDescriptor<IPostProcesso
 	 */
 	public String getInstanceClassName() {
 		return element.getAttribute(attributeName);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor#getOrdinal()
+	 */
+	public int getOrdinal() {
+		return ordinal;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor#setOrdinal(int)
+	 */
+	public void setOrdinal(int r) {
+		ordinal = r;
 	}
 
 }

@@ -112,6 +112,21 @@ public interface IPostProcessor {
 		IPostProcessor getPostProcessor();
 
 		/**
+		 * Returns the ordinal of this post processor.
+		 * 
+		 * @return The ordinal.
+		 */
+		int getOrdinal();
+
+		/**
+		 * Set the ordinal of this post processor.
+		 * 
+		 * @param parseInt
+		 *            The ordinal.
+		 */
+		void setOrdinal(int parseInt);
+
+		/**
 		 * Returns the pattern of namespace URI on which this post processor can be applied.
 		 * 
 		 * @return The namespace URI pattern.
@@ -180,7 +195,7 @@ public interface IPostProcessor {
 			/**
 			 * Retrieve the post processors from a given <code>scope</code>. The scope provides the set of
 			 * scanned namespaces and resource uris. If they match with the regex of some post processors,
-			 * then tey are returned.
+			 * then they are returned.
 			 * 
 			 * @param scope
 			 *            The given scope.

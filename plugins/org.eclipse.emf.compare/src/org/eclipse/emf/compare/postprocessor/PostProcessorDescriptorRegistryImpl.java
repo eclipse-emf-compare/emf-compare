@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.postprocessor;
 
+import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Ordering;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,6 +29,15 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public class PostProcessorDescriptorRegistryImpl<K> implements IPostProcessor.Descriptor.Registry<K> {
+
+	/**
+	 * Function ordering descriptors by their ranking.
+	 */
+	private static Function<IPostProcessor.Descriptor, Integer> ordinal = new Function<IPostProcessor.Descriptor, Integer>() {
+		public Integer apply(IPostProcessor.Descriptor from) {
+			return Integer.valueOf(from.getOrdinal());
+		}
+	};
 
 	/** List of all the post processors contributed through "org.eclipse.emf.compare.postProcessor". */
 	private final Map<K, IPostProcessor.Descriptor> postProcessorFactories;
@@ -63,7 +74,7 @@ public class PostProcessorDescriptorRegistryImpl<K> implements IPostProcessor.De
 	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor.Registry#getDescriptors()
 	 */
 	public ImmutableList<Descriptor> getDescriptors() {
-		return ImmutableList.copyOf(postProcessorFactories.values());
+		return Ordering.natural().onResultOf(ordinal).immutableSortedCopy(postProcessorFactories.values());
 	}
 
 	/**
@@ -78,7 +89,7 @@ public class PostProcessorDescriptorRegistryImpl<K> implements IPostProcessor.De
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor.Registry#getFactories(org.eclipse.emf.compare.scope.IComparisonScope)
+	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor.Registry#getPostProcessors(org.eclipse.emf.compare.scope.IComparisonScope)
 	 */
 	public ImmutableList<IPostProcessor> getPostProcessors(IComparisonScope scope) {
 		final ImmutableList.Builder<IPostProcessor> processors = ImmutableList.builder();

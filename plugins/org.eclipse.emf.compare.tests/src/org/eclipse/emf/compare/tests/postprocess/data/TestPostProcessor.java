@@ -100,10 +100,14 @@ public class TestPostProcessor implements IPostProcessor {
 
 		private final IPostProcessor postProcessor;
 
-		public TestPostProcessorDescriptor(Pattern nsURI, Pattern resourceURI, IPostProcessor postProcessor) {
+		private int ordinal;
+
+		public TestPostProcessorDescriptor(Pattern nsURI, Pattern resourceURI, IPostProcessor postProcessor,
+				int ordinal) {
 			this.nsURI = nsURI;
 			this.resourceURI = resourceURI;
 			this.postProcessor = postProcessor;
+			this.ordinal = ordinal;
 		}
 
 		/**
@@ -140,6 +144,24 @@ public class TestPostProcessor implements IPostProcessor {
 		 */
 		public String getInstanceClassName() {
 			return postProcessor.getClass().getName();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor#getOrdinal()
+		 */
+		public int getOrdinal() {
+			return ordinal;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor#setOrdinal(int)
+		 */
+		public void setOrdinal(int parseInt) {
+			ordinal = parseInt;
 		}
 
 	}

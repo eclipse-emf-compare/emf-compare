@@ -23,7 +23,8 @@ Contributors:
    <extension
          point="org.eclipse.emf.compare.rcp.postProcessor">
       <processor
-            class="org.eclipse.emf.compare.uml2.internal.postprocessor.UMLPostProcessor">
+            class="org.eclipse.emf.compare.uml2.internal.postprocessor.UMLPostProcessor"
+            ordinal="20">
          <nsURI
                value="http://www.eclipse.org/uml2/\d.0.0/UML">
          </nsURI>

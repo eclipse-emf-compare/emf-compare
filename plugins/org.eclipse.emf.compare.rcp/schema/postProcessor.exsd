@@ -64,8 +64,15 @@
                   Fully qualified name of a class that implements org.eclipse.emf.compare.postprocessor.IPostProcessor.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.postprocessor.IPostProcessor"/>
                </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="ordinal" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Denoting the specified position in the sequence of post processing. For example, if a post-processor P1 has an ordinal of 10 and another (P2) has an ordinal of 12, P1 will always be called before P2 if they are both applicable to the current comparison scope.
+               </documentation>
             </annotation>
          </attribute>
       </complexType>

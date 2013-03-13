@@ -25,7 +25,8 @@
    <extension
          point="org.eclipse.emf.compare.rcp.postProcessor">
       <processor
-            class="org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor">
+            class="org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor"
+            ordinal="30">
          <nsURI
                value="http://www.eclipse.org/gmf/runtime/\d.\d.\d/notation">
          </nsURI>

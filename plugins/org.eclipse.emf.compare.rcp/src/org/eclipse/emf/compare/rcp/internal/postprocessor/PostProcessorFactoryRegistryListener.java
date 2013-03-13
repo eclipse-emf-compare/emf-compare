@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
+import org.eclipse.emf.compare.rcp.internal.EMFCompareRCPMessages;
 
 /**
  * This listener will allow us to be aware of contribution changes against the model resolver extension point.
@@ -26,15 +27,23 @@ import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
  */
 public class PostProcessorFactoryRegistryListener extends AbstractRegistryEventListener {
 
+	/** TAG_PROCESSOR. */
 	static final String TAG_PROCESSOR = "processor"; //$NON-NLS-1$
 
+	/** TAG_NS_URI. */
 	static final String TAG_NS_URI = "nsURI"; //$NON-NLS-1$
 
+	/** TAG_RESOURCE_URI. */
 	static final String TAG_RESOURCE_URI = "resourceURI"; //$NON-NLS-1$
 
+	/** ATT_VALUE. */
 	static final String ATT_VALUE = "value"; //$NON-NLS-1$
 
+	/** ATT_CLASS. */
 	static final String ATT_CLASS = "class"; //$NON-NLS-1$
+
+	/** ATT_ORDINAL. */
+	static final String ATT_ORDINAL = "ordinal"; //$NON-NLS-1$
 
 	/** The post processor registry to which extension will be registered. */
 	private final IPostProcessor.Descriptor.Registry<String> registry;
@@ -43,11 +52,14 @@ public class PostProcessorFactoryRegistryListener extends AbstractRegistryEventL
 	 * Creates a new registry listener with the given post processor registry to which extension will be
 	 * registered.
 	 * 
+	 * @param pluginID
+	 *            The pluginID of the extension point to be monitored.
+	 * @param extensionPointID
+	 *            The extension point ID to be monitored
+	 * @param log
+	 *            The log object to be used to log error and/or warning.
 	 * @param registry
 	 *            the post processor registry to which extension will be registered.
-	 * @param pluginID
-	 * @param extensionPointID
-	 * @param log
 	 */
 	public PostProcessorFactoryRegistryListener(String pluginID, String extensionPointID, ILog log,
 			IPostProcessor.Descriptor.Registry<String> registry) {
@@ -69,6 +81,20 @@ public class PostProcessorFactoryRegistryListener extends AbstractRegistryEventL
 			if (element.getAttribute(ATT_CLASS) == null) {
 				logMissingAttribute(element, ATT_CLASS);
 				valid = false;
+			} else if (element.getAttribute(ATT_ORDINAL) == null) {
+				logMissingAttribute(element, ATT_ORDINAL);
+				valid = false;
+			} else if (element.getAttribute(ATT_ORDINAL) != null) {
+				String ordinalStr = element.getAttribute(ATT_ORDINAL);
+				try {
+					Integer.parseInt(ordinalStr);
+				} catch (NumberFormatException nfe) {
+					log(IStatus.ERROR, element, EMFCompareRCPMessages.getString(
+							"malformed.extension.attribute", //$NON-NLS-1$
+							ATT_ORDINAL));
+					return false;
+				}
+				valid = true;
 			} else if (nsURIChildren.length > 0) {
 				if (nsURIChildren[0].getAttribute(ATT_VALUE) == null) {
 					logMissingAttribute(nsURIChildren[0], ATT_VALUE);
@@ -114,6 +140,7 @@ public class PostProcessorFactoryRegistryListener extends AbstractRegistryEventL
 		String className = element.getAttribute(ATT_CLASS);
 
 		IPostProcessor.Descriptor descriptor = new PostProcessorDescriptor(element, nsURI, resourceURI);
+		descriptor.setOrdinal(Integer.parseInt(element.getAttribute(ATT_ORDINAL)));
 		IPostProcessor.Descriptor previous = registry.put(className, descriptor);
 		if (previous != null) {
 			EMFCompareRCPPlugin.getDefault().log(IStatus.WARNING,

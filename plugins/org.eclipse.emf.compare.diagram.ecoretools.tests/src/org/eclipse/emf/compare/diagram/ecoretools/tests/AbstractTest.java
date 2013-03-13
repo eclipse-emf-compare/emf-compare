@@ -39,7 +39,7 @@ public abstract class AbstractTest {
 	public void before() {
 		postProcessorRegistry = new PostProcessorDescriptorRegistryImpl<String>();
 		postProcessorRegistry.put(CompareDiagramPostProcessor.class.getName(), new TestPostProcessor.TestPostProcessorDescriptor(
-				Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null, new CompareDiagramPostProcessor()));
+				Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null, new CompareDiagramPostProcessor(), 30));
 		emfCompare = EMFCompare.builder().setPostProcessorRegistry(postProcessorRegistry).build();
 	}
 

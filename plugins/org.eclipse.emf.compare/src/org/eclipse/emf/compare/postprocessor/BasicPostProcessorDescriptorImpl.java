@@ -31,6 +31,9 @@ public class BasicPostProcessorDescriptorImpl implements Descriptor {
 	/** The described post processor. */
 	private final IPostProcessor postProcessor;
 
+	/** The ordinal of this post processor. */
+	private int ordinal;
+
 	/**
 	 * Constructs a new descriptor with the given value.
 	 * 
@@ -83,5 +86,23 @@ public class BasicPostProcessorDescriptorImpl implements Descriptor {
 	 */
 	public IPostProcessor getPostProcessor() {
 		return postProcessor;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor#getOrdinal()
+	 */
+	public int getOrdinal() {
+		return ordinal;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor#setOrdinal(int)
+	 */
+	public void setOrdinal(int parseInt) {
+		ordinal = parseInt;
 	}
 }
