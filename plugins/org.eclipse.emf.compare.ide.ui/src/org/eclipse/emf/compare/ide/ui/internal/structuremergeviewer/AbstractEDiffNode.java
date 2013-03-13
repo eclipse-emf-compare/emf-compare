@@ -152,12 +152,20 @@ public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareI
 	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getAncestor()
 	 */
 	public ITypedElement getAncestor() {
+		final ITypedElement ret;
 		IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
 		if (accessorFactory != null) {
-			return AccessorAdapter
-					.adapt(accessorFactory.createAncestor(getAdapterFactory(), getTarget()));
+			org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
+					.createAncestor(getAdapterFactory(), getTarget());
+			if (typedElement != null) {
+				ret = AccessorAdapter.adapt(typedElement);
+			} else {
+				ret = null;
+			}
+		} else {
+			ret = null;
 		}
-		return null;
+		return ret;
 	}
 
 	/**
@@ -166,11 +174,20 @@ public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareI
 	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getLeft()
 	 */
 	public ITypedElement getLeft() {
+		final ITypedElement ret;
 		IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
 		if (accessorFactory != null) {
-			return AccessorAdapter.adapt(accessorFactory.createLeft(getAdapterFactory(), getTarget()));
+			org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
+					.createLeft(getAdapterFactory(), getTarget());
+			if (typedElement != null) {
+				ret = AccessorAdapter.adapt(typedElement);
+			} else {
+				ret = null;
+			}
+		} else {
+			ret = null;
 		}
-		return null;
+		return ret;
 	}
 
 	/**
@@ -179,10 +196,19 @@ public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareI
 	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getRight()
 	 */
 	public ITypedElement getRight() {
+		final ITypedElement ret;
 		IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
 		if (accessorFactory != null) {
-			return AccessorAdapter.adapt(accessorFactory.createRight(getAdapterFactory(), getTarget()));
+			org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
+					.createRight(getAdapterFactory(), getTarget());
+			if (typedElement != null) {
+				ret = AccessorAdapter.adapt(typedElement);
+			} else {
+				ret = null;
+			}
+		} else {
+			ret = null;
 		}
-		return null;
+		return ret;
 	}
 }
