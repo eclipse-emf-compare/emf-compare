@@ -8,14 +8,14 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.factory;
+package org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor.factory;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.AbstractAccessorFactory;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.UMLStereotypeApplicationChangeFeatureAccessor;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
+import org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor.UMLStereotypeApplicationChangeFeatureAccessor;
 
 /**
  * This will be in charge of creating the accessor for stereotype changes.

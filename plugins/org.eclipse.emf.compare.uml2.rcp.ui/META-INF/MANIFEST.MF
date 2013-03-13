@@ -15,3 +15,6 @@ Import-Package: com.google.common.base;version="[11.0.0,15.0.0)",
  com.google.common.collect;version="[11.0.0,15.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
+Export-Package: org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor;x-internal:=true,
+ org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor.factory;x-internal:=true,
+ org.eclipse.emf.compare.uml2.rcp.ui.internal.structuremergeviewer.filters;x-internal:=true

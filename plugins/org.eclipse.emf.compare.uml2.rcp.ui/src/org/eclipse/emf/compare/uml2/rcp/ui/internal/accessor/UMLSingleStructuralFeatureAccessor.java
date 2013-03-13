@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.uml2.ide.ui.internal.accessor;
+package org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor;
 
 import com.google.common.collect.ImmutableList;
 

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.uml2.ide.internal.policy;
+package org.eclipse.emf.compare.uml2.rcp.internal.policy;
 
 import java.util.Collection;
 import java.util.Map;

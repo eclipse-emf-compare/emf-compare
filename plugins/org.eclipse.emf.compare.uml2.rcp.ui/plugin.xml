@@ -4,15 +4,15 @@
    <extension
          point="org.eclipse.emf.compare.rcp.ui.accessorFactory">
       <factory
-            class="org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.factory.UMLIDEManyStructuralFeatureAccessorFactory"
+            class="org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor.factory.UMLManyStructuralFeatureAccessorFactory"
             ranking="20">
       </factory>
       <factory
-            class="org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.factory.UMLIDESingleStructuralFeatureAccessorFactory"
+            class="org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor.factory.UMLSingleStructuralFeatureAccessorFactory"
             ranking="20">
       </factory>
       <factory
-            class="org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.factory.UMLStereotypeApplicationChangeFeatureAccessorFactory"
+            class="org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor.factory.UMLStereotypeApplicationChangeFeatureAccessorFactory"
             ranking="25">
       </factory>
    </extension>
@@ -20,7 +20,7 @@
          point="org.eclipse.emf.compare.rcp.ui.filters">
       <filter
             activeByDefault="true"
-            class="org.eclipse.emf.compare.uml2.ide.ui.internal.structuremergeviewer.filters.UMLRefinedElementsFilter"
+            class="org.eclipse.emf.compare.uml2.rcp.ui.internal.structuremergeviewer.filters.UMLRefinedElementsFilter"
             label="UML refined elements">
       </filter>
    </extension>

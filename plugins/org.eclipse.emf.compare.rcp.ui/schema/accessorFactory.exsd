@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.emf.compare.ide.ui" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="org.eclipse.emf.compare.rcp.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.eclipse.emf.compare.ide.ui" id="accessorFactory" name="Accessor Factory"/>
+         <meta.schema plugin="org.eclipse.emf.compare.rcp.ui" id="accessorFactory" name="Accessor Factory"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]

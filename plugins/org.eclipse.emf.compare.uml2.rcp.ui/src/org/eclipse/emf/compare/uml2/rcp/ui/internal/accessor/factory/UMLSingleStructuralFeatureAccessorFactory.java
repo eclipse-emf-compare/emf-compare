@@ -8,19 +8,19 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.factory;
+package org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor.factory;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.AbstractAccessorFactory;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.UMLManyStructuralFeatureAccessor;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
+import org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor.UMLSingleStructuralFeatureAccessor;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class UMLIDEManyStructuralFeatureAccessorFactory extends AbstractAccessorFactory {
+public class UMLSingleStructuralFeatureAccessorFactory extends AbstractAccessorFactory {
 
 	/**
 	 * {@inheritDoc}
@@ -29,7 +29,7 @@ public class UMLIDEManyStructuralFeatureAccessorFactory extends AbstractAccessor
 	 */
 	public boolean isFactoryFor(Object target) {
 		return target instanceof UMLDiff && ((UMLDiff)target).getEReference() != null
-				&& ((UMLDiff)target).getEReference().isMany();
+				&& !((UMLDiff)target).getEReference().isMany();
 	}
 
 	private ITypedElement createAccessor(UMLDiff diff, MergeViewerSide side) {
@@ -38,7 +38,7 @@ public class UMLIDEManyStructuralFeatureAccessorFactory extends AbstractAccessor
 			case ADD:
 			case DELETE:
 			case MOVE:
-				ret = new UMLManyStructuralFeatureAccessor(diff, side);
+				ret = new UMLSingleStructuralFeatureAccessor(diff, side);
 				break;
 			case CHANGE:
 				// TODO: what to do in change ?

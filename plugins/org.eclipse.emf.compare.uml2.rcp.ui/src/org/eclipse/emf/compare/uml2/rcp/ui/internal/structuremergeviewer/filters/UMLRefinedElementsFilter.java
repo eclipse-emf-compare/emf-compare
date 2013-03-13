@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.uml2.ide.ui.internal.structuremergeviewer.filters;
+package org.eclipse.emf.compare.uml2.rcp.ui.internal.structuremergeviewer.filters;
 
 import static com.google.common.base.Predicates.instanceOf;
 

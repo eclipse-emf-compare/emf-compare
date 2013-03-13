@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.uml2.ide.ui.internal.accessor;
+package org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
@@ -117,7 +117,7 @@ public class UMLStereotypeApplicationChangeFeatureAccessor extends UMLManyStruct
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.uml2.ide.ui.internal.accessor.UMLManyStructuralFeatureAccessor#findInsertionIndex(org.eclipse.emf.compare.Diff,
+	 * @see org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor.UMLManyStructuralFeatureAccessor#findInsertionIndex(org.eclipse.emf.compare.Diff,
 	 *      boolean)
 	 */
 	@Override

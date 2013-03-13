@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.emf.compare.rcp.loadOnDemandPolicy">
       <policy
-            class="org.eclipse.emf.compare.uml2.ide.internal.policy.UMLLoadOnDemandPolicy">
+            class="org.eclipse.emf.compare.uml2.rcp.internal.policy.UMLLoadOnDemandPolicy">
       </policy>
    </extension>
 
