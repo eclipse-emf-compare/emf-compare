@@ -18,7 +18,7 @@
          point="org.eclipse.compare.structureMergeViewers">
       <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerCreator"
-            extensions="xmi,NODE_TYPE__EMF_EOBJECT,NODE_TYPE__EMF_RESOURCE,NODE_TYPE__EMF_RESOURCESET"
+            extensions="NODE_TYPE__EMF_EOBJECT,NODE_TYPE__EMF_RESOURCE,NODE_TYPE__EMF_RESOURCESET"
             id="org.eclipse.emf.compare.ide.ui.internal.structureMergeViewer"
             label="EMFCompare Structure Merge Viewer">
       </viewer>
@@ -51,6 +51,14 @@
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text.EMFCompareTextContentMergeViewer"
             label="EMFCompare Text Merge Viewer">
       </viewer>
+      <contentTypeBinding
+            contentTypeId="org.eclipse.emf.ecore.xmi"
+            contentMergeViewerId="org.eclipse.emf.compare.ide.ui.internal.EObjectContentMergeViewer">
+      </contentTypeBinding>
+      <contentTypeBinding
+            contentTypeId="org.eclipse.emf.compare.content.type"
+            contentMergeViewerId="org.eclipse.emf.compare.ide.ui.internal.EObjectContentMergeViewer">
+      </contentTypeBinding>
    </extension>
    <extension
          point="org.eclipse.emf.edit.itemProviderAdapterFactories">
