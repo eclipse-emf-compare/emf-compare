@@ -21,6 +21,7 @@ import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.AbstractDifferenceFilter;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 
 /**
  * A filter used by default that filtered out refined GMF differences.
@@ -44,6 +45,19 @@ public class GMFRefinedElementsFilter extends AbstractDifferenceFilter {
 	};
 
 	/**
+	 * The predicate use by this filter when it is unselected.
+	 */
+	private static final Predicate<? super EObject> PREDICATE_WHEN_UNSELECTED = new Predicate<EObject>() {
+		public boolean apply(EObject input) {
+			EPackage p = input.eClass().getEPackage();
+			if (p != null) {
+				return p.getNsURI().startsWith("http://www.eclipse.org/emf/compare/diagram"); //$NON-NLS-1$
+			}
+			return false;
+		}
+	};
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter#isEnabled(org.eclipse.emf.compare.scope.IComparisonScope,
@@ -53,7 +67,7 @@ public class GMFRefinedElementsFilter extends AbstractDifferenceFilter {
 	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
 		if (scope != null) {
 			for (String nsURI : scope.getNsURIs()) {
-				if (nsURI.startsWith("http://www\\.eclipse\\.org/gmf/")) { //$NON-NLS-1$
+				if (nsURI.matches("http://www\\.eclipse\\.org/gmf/runtime/.*/notation")) {
 					return true;
 				}
 			}
@@ -69,6 +83,16 @@ public class GMFRefinedElementsFilter extends AbstractDifferenceFilter {
 	@Override
 	public Predicate<? super EObject> getPredicateWhenSelected() {
 		return PREDICATE_WHEN_SELECTED;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.AbstractDifferenceFilter#getPredicateWhenUnselected()
+	 */
+	@Override
+	public Predicate<? super EObject> getPredicateWhenUnselected() {
+		return PREDICATE_WHEN_UNSELECTED;
 	}
 
 }
