@@ -232,7 +232,7 @@ public class EMFCompare {
 		protected IConflictDetector conflictDetector;
 
 		/** The PostProcessorRegistry to use to find an IPostProcessor. */
-		protected IPostProcessor.Descriptor.Registry<?> registry;
+		protected IPostProcessor.Descriptor.Registry<?> postProcessorRegistry;
 
 		/**
 		 * Creates a new builder object.
@@ -308,7 +308,7 @@ public class EMFCompare {
 		 * @return this same builder to allow chained call.
 		 */
 		public Builder setPostProcessorRegistry(IPostProcessor.Descriptor.Registry<?> r) {
-			this.registry = checkNotNull(r);
+			this.postProcessorRegistry = checkNotNull(r);
 			return this;
 		}
 
@@ -330,14 +330,14 @@ public class EMFCompare {
 			if (equiEngine == null) {
 				equiEngine = new DefaultEquiEngine();
 			}
-			if (registry == null) {
-				registry = new PostProcessorDescriptorRegistryImpl();
+			if (postProcessorRegistry == null) {
+				postProcessorRegistry = new PostProcessorDescriptorRegistryImpl<Object>();
 			}
 			if (conflictDetector == null) {
 				conflictDetector = new DefaultConflictDetector();
 			}
 			return new EMFCompare(this.matchEngine, this.diffEngine, this.reqEngine, this.equiEngine,
-					this.conflictDetector, this.registry);
+					this.conflictDetector, this.postProcessorRegistry);
 		}
 	}
 
