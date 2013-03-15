@@ -28,6 +28,7 @@ import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.ProfileApplication;
@@ -123,12 +124,32 @@ public class UMLProfileApplicationChangeFactory extends AbstractDiffExtensionFac
 
 	@Override
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
-		return (input.getReference().equals(UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE)
-				|| (input.getReference().equals(EcorePackage.Literals.EANNOTATION__REFERENCES) && ((EAnnotation)MatchUtil
-						.getContainer(input.getMatch().getComparison(), input)).getSource().matches(
-						UML_VERSIONS)) || (input.getReference().equals(
-				EcorePackage.Literals.EMODEL_ELEMENT__EANNOTATIONS) && ((EAnnotation)input.getValue())
-				.getSource().matches(UML_VERSIONS)));
+		final boolean ret;
+		EReference reference = input.getReference();
+		if (reference == UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE) {
+			ret = true;
+		} else if (reference == EcorePackage.Literals.EANNOTATION__REFERENCES) {
+			Comparison comparison = input.getMatch().getComparison();
+			EAnnotation container = (EAnnotation)MatchUtil.getContainer(comparison, input);
+			ret = isSourceMatchesUMLVersion(container);
+		} else if (reference == EcorePackage.Literals.EMODEL_ELEMENT__EANNOTATIONS) {
+			EAnnotation eAnnotation = (EAnnotation)input.getValue();
+			ret = isSourceMatchesUMLVersion(eAnnotation);
+		} else {
+			ret = false;
+		}
+		return ret;
+	}
+
+	private static boolean isSourceMatchesUMLVersion(EAnnotation container) {
+		final boolean ret;
+		String source = container.getSource();
+		if (source != null) {
+			ret = source.matches(UML_VERSIONS);
+		} else {
+			ret = false;
+		}
+		return ret;
 	}
 
 	@Override
