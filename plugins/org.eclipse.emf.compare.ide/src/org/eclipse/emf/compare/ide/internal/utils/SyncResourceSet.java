@@ -131,9 +131,14 @@ public final class SyncResourceSet extends ResourceSetImpl {
 
 		// These two might be superfluous
 		loadOptions.put(XMLResource.OPTION_DEFER_IDREF_RESOLUTION, Boolean.TRUE);
-		final int expectedFeatureNames = 256;
-		loadOptions.put(XMLResource.OPTION_USE_XML_NAME_TO_FEATURE_MAP, Maps
-				.newHashMapWithExpectedSize(expectedFeatureNames));
+
+		/*
+		 * We don't use XMLResource.OPTION_USE_XML_NAME_TO_FEATURE_MAP whereas it could bring performance
+		 * improvements because we are loading the resources concurrently and this map could be used (put and
+		 * get) by several threads. Passing a ConcurrentMap here is not an option either as EMF sometimes
+		 * needs to put "null" values in there. see https://bugs.eclipse.org/bugs/show_bug.cgi?id=403425 for
+		 * more details.
+		 */
 	}
 
 	/**
