@@ -78,8 +78,7 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 				break;
 			default:
 				value = null;
-				new IllegalStateException();
-				break;
+				throw new IllegalStateException();
 		}
 
 		Match matchOfValue = resourceAttachmentChange.getMatch().getComparison().getMatch(value);
