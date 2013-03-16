@@ -18,7 +18,6 @@ import org.eclipse.emf.compare.impl.AttributeChangeImpl;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.util.FeatureMapUtil;
 
 /**
  * This specialization of the {@link AttributeChangeImpl} class allows us to define the derived features and
@@ -88,7 +87,7 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 	public String toString() {
 		EDataType eAttributeType = getAttribute().getEAttributeType();
 		final String valueString;
-		if (!FeatureMapUtil.isFeatureMap(getAttribute())) {
+		if (eAttributeType.isSerializable()) {
 			valueString = EcoreUtil.convertToString(eAttributeType, getValue());
 		} else {
 			valueString = getValue().toString();
