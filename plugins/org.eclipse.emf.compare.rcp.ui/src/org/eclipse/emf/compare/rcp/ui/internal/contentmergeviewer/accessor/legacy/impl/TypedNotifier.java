@@ -8,13 +8,13 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.editor;
+package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.impl;
 
-import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -24,15 +24,23 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class NotifierNode implements ITypedElement {
+public class TypedNotifier implements ITypedElement {
+
+	public static final String NODE_TYPE__EMF_RESOURCESET = "NODE_TYPE__EMF_RESOURCESET"; //$NON-NLS-1$
+
+	public static final String NODE_TYPE__EMF_RESOURCE = "NODE_TYPE__EMF_RESOURCE"; //$NON-NLS-1$
+
+	public static final String NODE_TYPE__EMF_EOBJECT = "NODE_TYPE__EMF_EOBJECT"; //$NON-NLS-1$
+
+	public static final String NODE_TYPE__EMF_COMPARISON = "NODE_TYPE__EMF_COMPARISON"; //$NON-NLS-1$
 
 	private final Notifier fNotifier;
 
 	private final AdapterFactory fAdapterFactory;
 
-	public NotifierNode(Notifier notifier, AdapterFactory adapterFactory) {
-		fNotifier = notifier;
+	public TypedNotifier(AdapterFactory adapterFactory, Notifier notifier) {
 		fAdapterFactory = adapterFactory;
+		fNotifier = notifier;
 	}
 
 	/**
@@ -61,11 +69,13 @@ public class NotifierNode implements ITypedElement {
 	 */
 	public String getType() {
 		if (fNotifier instanceof ResourceSet) {
-			return EMFCompareConstants.NODE_TYPE__EMF_RESOURCESET;
+			return NODE_TYPE__EMF_RESOURCESET;
 		} else if (fNotifier instanceof Resource) {
-			return EMFCompareConstants.NODE_TYPE__EMF_RESOURCE;
+			return NODE_TYPE__EMF_RESOURCE;
+		} else if (fNotifier instanceof Comparison) {
+			return NODE_TYPE__EMF_COMPARISON;
 		} else if (fNotifier instanceof EObject) {
-			return EMFCompareConstants.NODE_TYPE__EMF_EOBJECT;
+			return NODE_TYPE__EMF_EOBJECT;
 		} else {
 			return ITypedElement.UNKNOWN_TYPE;
 		}

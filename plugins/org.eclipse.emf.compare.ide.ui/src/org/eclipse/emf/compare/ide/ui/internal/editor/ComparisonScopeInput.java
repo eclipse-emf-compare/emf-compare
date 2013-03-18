@@ -18,6 +18,8 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.AccessorAdapter;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.impl.TypedNotifier;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.swt.graphics.Image;
 
@@ -107,7 +109,7 @@ public class ComparisonScopeInput implements ICompareInput {
 		if (scope.getOrigin() == null) {
 			return null;
 		}
-		return new NotifierNode(scope.getOrigin(), adapterFactory);
+		return AccessorAdapter.adapt(new TypedNotifier(adapterFactory, scope.getOrigin()));
 	}
 
 	/**
@@ -119,7 +121,7 @@ public class ComparisonScopeInput implements ICompareInput {
 		if (scope.getLeft() == null) {
 			return null;
 		}
-		return new NotifierNode(scope.getLeft(), adapterFactory);
+		return AccessorAdapter.adapt(new TypedNotifier(adapterFactory, scope.getLeft()));
 	}
 
 	/**
@@ -131,7 +133,7 @@ public class ComparisonScopeInput implements ICompareInput {
 		if (scope.getRight() == null) {
 			return null;
 		}
-		return new NotifierNode(scope.getRight(), adapterFactory);
+		return AccessorAdapter.adapt(new TypedNotifier(adapterFactory, scope.getRight()));
 	}
 
 	/**

@@ -18,7 +18,7 @@
          point="org.eclipse.compare.structureMergeViewers">
       <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerCreator"
-            extensions="NODE_TYPE__EMF_EOBJECT,NODE_TYPE__EMF_RESOURCE,NODE_TYPE__EMF_RESOURCESET"
+            extensions="NODE_TYPE__EMF_EOBJECT,NODE_TYPE__EMF_RESOURCE,NODE_TYPE__EMF_RESOURCESET,NODE_TYPE__EMF_COMPARISON"
             id="org.eclipse.emf.compare.ide.ui.internal.structureMergeViewer"
             label="EMFCompare Structure Merge Viewer">
       </viewer>

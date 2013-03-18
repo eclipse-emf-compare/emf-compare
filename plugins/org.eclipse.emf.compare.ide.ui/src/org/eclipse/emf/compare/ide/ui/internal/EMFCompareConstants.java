@@ -41,12 +41,4 @@ public final class EMFCompareConstants {
 
 	public static final String SELECTED_GROUP = EMFCompareIDEUIPlugin.PLUGIN_ID + ".SELECTED_GROUP"; //$NON-NLS-1$
 
-	// ITypedElement#getType()
-
-	public static final String NODE_TYPE__EMF_RESOURCESET = "NODE_TYPE__EMF_RESOURCESET"; //$NON-NLS-1$
-
-	public static final String NODE_TYPE__EMF_RESOURCE = "NODE_TYPE__EMF_RESOURCE"; //$NON-NLS-1$
-
-	public static final String NODE_TYPE__EMF_EOBJECT = "NODE_TYPE__EMF_EOBJECT"; //$NON-NLS-1$
-
 }

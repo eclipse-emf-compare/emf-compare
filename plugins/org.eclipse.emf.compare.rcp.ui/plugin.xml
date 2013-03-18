@@ -79,5 +79,9 @@
             class="org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.ResourceContentsAccessorFactory"
             ranking="10">
       </factory>
+      <factory
+            class="org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.ComparisonAccessorFactory"
+            ranking="10">
+      </factory>
    </extension>
 </plugin>
