@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.match.eobject;
+package org.eclipse.emf.compare.match.eobject.internal;
 
 import com.google.common.base.Function;
 import com.google.common.cache.CacheBuilder;
@@ -23,7 +23,10 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.match.eobject.EObjectIndex;
+import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher.DistanceFunction;
+import org.eclipse.emf.compare.match.eobject.ScopeQuery;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
@@ -33,7 +36,7 @@ import org.eclipse.emf.ecore.EObject;
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
-class ByTypeIndex implements EObjectIndex {
+public class ByTypeIndex implements EObjectIndex {
 	/**
 	 * All the type specific indexes, created on demand.
 	 */

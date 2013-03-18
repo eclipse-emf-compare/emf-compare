@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.match.eobject;
+package org.eclipse.emf.compare.match.eobject.internal;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -24,6 +24,9 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.match.eobject.EObjectIndex;
+import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher;
+import org.eclipse.emf.compare.match.eobject.ScopeQuery;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
 

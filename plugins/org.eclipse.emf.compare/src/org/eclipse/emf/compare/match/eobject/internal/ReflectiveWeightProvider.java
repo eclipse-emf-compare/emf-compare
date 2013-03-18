@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.match.eobject;
+package org.eclipse.emf.compare.match.eobject.internal;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -16,6 +16,7 @@ import com.google.common.collect.Sets;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.compare.match.eobject.WeightProvider;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EOperation;
