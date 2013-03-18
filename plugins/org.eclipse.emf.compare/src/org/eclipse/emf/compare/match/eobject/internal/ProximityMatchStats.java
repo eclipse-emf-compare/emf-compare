@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.match.eobject;
+package org.eclipse.emf.compare.match.eobject.internal;
 
 /**
  * A class responsible for tracking statistics about a given comparison process.

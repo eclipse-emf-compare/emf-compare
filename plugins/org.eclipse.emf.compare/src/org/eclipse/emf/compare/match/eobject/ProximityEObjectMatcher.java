@@ -26,6 +26,7 @@ import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.match.eobject.EObjectIndex.Side;
+import org.eclipse.emf.compare.match.eobject.internal.ByTypeIndex;
 import org.eclipse.emf.ecore.EObject;
 
 /**
