@@ -50,15 +50,14 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
-import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.actions.collapse.CollapseAllModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.actions.expand.ExpandAllModelAction;
-import org.eclipse.emf.compare.ide.ui.internal.actions.save.SaveComparisonModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
 import org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
+import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.FilterActionMenu;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.GroupActionMenu;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
@@ -92,6 +91,9 @@ import org.eclipse.team.core.subscribers.SubscriberMergeContext;
 import org.eclipse.team.internal.ui.mapping.ModelCompareEditorInput;
 import org.eclipse.team.ui.synchronize.ISynchronizeParticipant;
 import org.eclipse.team.ui.synchronize.ModelSynchronizeParticipant;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.menus.IMenuService;
+import org.eclipse.ui.services.IServiceLocator;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -131,8 +133,6 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	private DefaultGroupProvider defaultGroupProvider;
 
 	private FilterActionMenu filterActionMenu;
-
-	private SaveComparisonModelAction saveAction;
 
 	private EventBus eventBus;
 
@@ -326,11 +326,9 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				final CompareConfiguration config = getCompareConfiguration();
 				if (!syncModel.isLeftEditable()) {
 					config.setLeftEditable(false);
-					saveAction.setEnabled(false);
 				}
 				if (!syncModel.isRightEditable()) {
 					config.setRightEditable(false);
-					saveAction.setEnabled(false);
 				}
 
 				final IComparisonScope scope = syncModel.createMinimizedScope();
@@ -571,11 +569,18 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	@Override
 	protected void createToolItems(ToolBarManager toolbarManager) {
 		super.createToolItems(toolbarManager);
+
+		// Add extension point contributions to the structure merge viewer toolbar
+		IServiceLocator workbench = PlatformUI.getWorkbench();
+		IMenuService menuService = (IMenuService)workbench.getService(IMenuService.class);
+		if (menuService != null) {
+			menuService.populateContributionManager(toolbarManager,
+					"toolbar:org.eclipse.emf.compare.structuremergeviewer.toolbar");
+		}
+
 		groupActionMenu = new GroupActionMenu(getStructureMergeViewerGrouper(), getGroupsMenuManager(),
 				getDefaultGroupProvider());
 		filterActionMenu = new FilterActionMenu(getStructureMergeViewerFilter(), getFiltersMenuManager());
-		saveAction = new SaveComparisonModelAction(getCompareConfiguration());
-		toolbarManager.add(saveAction);
 		toolbarManager.add(new Separator());
 		toolbarManager.add(new ExpandAllModelAction(this));
 		toolbarManager.add(new CollapseAllModelAction(this));

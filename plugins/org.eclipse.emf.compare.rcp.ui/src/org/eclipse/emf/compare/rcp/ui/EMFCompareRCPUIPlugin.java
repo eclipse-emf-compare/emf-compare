@@ -104,8 +104,10 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 		accessorFactoryRegistry = new AccessorFactoryRegistryImpl();
 		accessorFactoryRegistryListener = new AccessorFactoryExtensionRegistryListener(PLUGIN_ID,
 				ACCESSOR_FACTORY_PPID, getLog(), accessorFactoryRegistry);
-		extensionRegistry.addListener(accessorFactoryRegistryListener, PLUGIN_ID + "." + ACCESSOR_FACTORY_PPID); //$NON-NLS-1$
+		extensionRegistry.addListener(accessorFactoryRegistryListener, PLUGIN_ID
+				+ "." + ACCESSOR_FACTORY_PPID); //$NON-NLS-1$
 		accessorFactoryRegistryListener.readRegistry(extensionRegistry);
+
 	}
 
 	/*

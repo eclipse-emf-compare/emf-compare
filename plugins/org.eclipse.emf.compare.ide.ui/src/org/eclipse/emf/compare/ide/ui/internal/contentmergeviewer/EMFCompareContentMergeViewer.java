@@ -29,12 +29,12 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
-import org.eclipse.emf.compare.ide.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
+import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
@@ -57,7 +57,10 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.menus.IMenuService;
+import org.eclipse.ui.services.IServiceLocator;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -237,8 +240,18 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 */
 	@Override
 	protected void createToolItems(ToolBarManager toolBarManager) {
+
+		// Add extension point contributions to the content merge viewer toolbar
+		IServiceLocator workbench = PlatformUI.getWorkbench();
+		IMenuService menuService = (IMenuService)workbench.getService(IMenuService.class);
+		if (menuService != null) {
+			menuService.populateContributionManager(toolBarManager,
+					"toolbar:org.eclipse.emf.compare.contentmergeviewer.toolbar");
+		}
+
 		// Copy actions
 		CompareConfiguration cc = getCompareConfiguration();
+
 		if (cc.isRightEditable()) {
 			Action copyLeftToRight = new Action() {
 				@Override
@@ -305,6 +318,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
 		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
+
 	}
 
 	protected CommandStackListener installCommandStackListener(final UndoAction undoAction,

@@ -52,10 +52,10 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  A class that implements org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGroupProvider.
+                  A class that implements org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.ide.ui.internal.actions.group.DifferenceGroupProvider"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider"/>
                </appinfo>
             </annotation>
          </attribute>

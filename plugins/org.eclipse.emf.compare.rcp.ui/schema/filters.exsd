@@ -52,10 +52,10 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  A class that implements org.eclipse.emf.compare.ide.ui.internal.actions.filter.FilterActionProvider.
+                  A class that implements org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.ide.ui.internal.actions.filter.FilterActionProvider"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter"/>
                </appinfo>
             </annotation>
          </attribute>
