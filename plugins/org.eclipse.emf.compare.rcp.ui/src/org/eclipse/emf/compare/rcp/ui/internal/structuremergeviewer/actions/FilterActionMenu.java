@@ -63,6 +63,7 @@ public class FilterActionMenu extends Action implements IMenuCreator {
 	 *            The comparison on which the filters will be applied.
 	 */
 	public void createActions(IComparisonScope scope, Comparison comparison) {
+		menuManager.removeAll();
 		IDifferenceFilter.Registry registry = EMFCompareRCPUIPlugin.getDefault().getFilterActionRegistry();
 		for (IDifferenceFilter filterProvider : registry.getFilters(scope, comparison)) {
 			FilterAction action = new FilterAction(filterProvider.getLabel(), structureMergeViewerFilter,

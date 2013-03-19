@@ -71,6 +71,7 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 	 *            The comparison which differences are to be split into groups.
 	 */
 	public void createActions(IComparisonScope scope, Comparison comparison) {
+		menuManager.removeAll();
 		final IAction defaultAction = new GroupAction(defaultGroupProvider.getLabel(),
 				structureMergeViewerGrouper, defaultGroupProvider);
 		defaultAction.setChecked(true);
