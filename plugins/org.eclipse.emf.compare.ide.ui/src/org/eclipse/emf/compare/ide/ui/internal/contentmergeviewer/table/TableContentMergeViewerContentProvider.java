@@ -136,25 +136,22 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 	}
 
 	public void saveLeftContent(Object element, byte[] bytes) {
-		if (element instanceof ICompareInput) {
-			ICompareInput node = (ICompareInput)element;
-			ITypedElement left = node.getLeft();
-			if (left instanceof ICompareAccessor) {
-				Comparison comparison = ((ICompareAccessor)left).getComparison();
-				EList<Match> matches = comparison.getMatches();
-				EObject leftEObject = null;
-				for (Match match : matches) {
-					leftEObject = match.getLeft();
-					if (leftEObject != null) {
-						break;
-					}
-				}
+		final Object left = getLeftContent(element);
+		if (left instanceof ICompareAccessor) {
+			Comparison comparison = ((ICompareAccessor)left).getComparison();
+			EList<Match> matches = comparison.getMatches();
+			EObject leftEObject = null;
+			for (Match match : matches) {
+				leftEObject = match.getLeft();
 				if (leftEObject != null) {
-					Resource eResource = leftEObject.eResource();
-					ResourceSet resourceSet = eResource.getResourceSet();
-					saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
-							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
+					break;
 				}
+			}
+			if (leftEObject != null) {
+				Resource eResource = leftEObject.eResource();
+				ResourceSet resourceSet = eResource.getResourceSet();
+				saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+						Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
 			}
 		}
 	}
@@ -195,25 +192,22 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 	}
 
 	public void saveRightContent(Object element, byte[] bytes) {
-		if (element instanceof ICompareInput) {
-			ICompareInput node = (ICompareInput)element;
-			ITypedElement right = node.getRight();
-			if (right instanceof ICompareAccessor) {
-				Comparison comparison = ((ICompareAccessor)right).getComparison();
-				EList<Match> matches = comparison.getMatches();
-				EObject rightEObject = null;
-				for (Match match : matches) {
-					rightEObject = match.getRight();
-					if (rightEObject != null) {
-						break;
-					}
-				}
+		final Object right = getRightContent(element);
+		if (right instanceof ICompareAccessor) {
+			Comparison comparison = ((ICompareAccessor)right).getComparison();
+			EList<Match> matches = comparison.getMatches();
+			EObject rightEObject = null;
+			for (Match match : matches) {
+				rightEObject = match.getRight();
 				if (rightEObject != null) {
-					Resource eResource = rightEObject.eResource();
-					ResourceSet resourceSet = eResource.getResourceSet();
-					saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
-							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
+					break;
 				}
+			}
+			if (rightEObject != null) {
+				Resource eResource = rightEObject.eResource();
+				ResourceSet resourceSet = eResource.getResourceSet();
+				saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+						Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
 			}
 		}
 	}
