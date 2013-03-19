@@ -16,8 +16,8 @@ import com.google.common.collect.ImmutableSet;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.provider.spec.MatchItemProviderSpec;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -34,7 +34,7 @@ public class SubDiffElementsFilter extends AbstractDifferenceFilter {
 	private static final Predicate<? super EObject> predicateWhenSelected = new Predicate<EObject>() {
 		public boolean apply(EObject input) {
 			boolean ret = false;
-			if (input instanceof Diff) {
+			if (input instanceof Diff && !(input instanceof ResourceAttachmentChange)) {
 				final Diff diff = (Diff)input;
 				final Conflict conflict = diff.getConflict();
 				if (conflict == null) {
