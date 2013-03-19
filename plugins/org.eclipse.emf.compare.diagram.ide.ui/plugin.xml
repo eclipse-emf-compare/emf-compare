@@ -39,7 +39,7 @@
            point="org.eclipse.emf.compare.rcp.ui.filters">
         <filter
               activeByDefault="true"
-              class="org.eclipse.emf.compare.diagram.ide.ui.structuremergeviewer.filters.GMFRefinedElementsFilter"
+              class="org.eclipse.emf.compare.diagram.ide.ui.internal.structuremergeviewer.filters.GMFRefinedElementsFilter"
               label="Diagram Refined elements">
         </filter>
      </extension>
