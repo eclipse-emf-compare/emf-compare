@@ -28,7 +28,6 @@ import org.eclipse.emf.compare.match.eobject.EObjectIndex;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher;
 import org.eclipse.emf.compare.match.eobject.ScopeQuery;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EcoreFactory;
 
 /**
  * This class is responsible for holding several version of EObjects from sides left, right or origins and
@@ -44,11 +43,6 @@ import org.eclipse.emf.ecore.EcoreFactory;
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class ProximityIndex implements EObjectIndex {
-	/**
-	 * Null object pattern, this object is returned when the index had to backtrack and as such could not even
-	 * try to find the match.
-	 */
-	private static final EObject BACKTRACK = EcoreFactory.eINSTANCE.createEClass();
 
 	/**
 	 * The distance function used to compare the Objects.
@@ -200,7 +194,7 @@ public class ProximityIndex implements EObjectIndex {
 				if (doubleCheck == eObj) {
 					stats.similaritySuccess();
 					best.eObject = entry.getValue();
-					best.distance = Double.valueOf(entry.getKey());
+					best.distance = entry.getKey().doubleValue();
 					break;
 				} else {
 					stats.failedDoubleCheck();
@@ -233,7 +227,6 @@ public class ProximityIndex implements EObjectIndex {
 			EObject fastCheck = it.next();
 			if (!readyForThisTest(inProgress, fastCheck)) {
 				stats.backtrack();
-				best.eObject = BACKTRACK;
 			} else {
 				stats.identicCompare();
 				if (meter.areIdentic(inProgress, eObj, fastCheck)) {
@@ -256,9 +249,8 @@ public class ProximityIndex implements EObjectIndex {
 	 * @return true if we have all the required information, false otherwise.
 	 */
 	private boolean readyForThisTest(Comparison inProgress, EObject fastCheck) {
-		if (fastCheck.eContainer() != null) {
-			return inProgress.getMatch(fastCheck.eContainer()) != null
-					|| scope.isInScope(fastCheck.eContainer());
+		if (fastCheck.eContainer() != null && scope.isInScope(fastCheck.eContainer())) {
+			return inProgress.getMatch(fastCheck.eContainer()) != null;
 		}
 		return true;
 	}
@@ -331,16 +323,16 @@ public class ProximityIndex implements EObjectIndex {
 	 * 
 	 * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
 	 */
-	class Candidate {
+	private static class Candidate {
 		/**
 		 * an EObject.
 		 */
-		EObject eObject;
+		protected EObject eObject;
 
 		/**
 		 * A distance.
 		 */
-		double distance = Double.MAX_VALUE;
+		protected double distance = Double.MAX_VALUE;
 
 		/**
 		 * return true of the candidate has an {@link EObject}.
