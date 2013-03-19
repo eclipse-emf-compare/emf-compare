@@ -16,8 +16,16 @@ Bundle-Activator: org.eclipse.emf.compare.uml2.internal.UMLComparePlugin
 Import-Package: com.google.common.base;version="[11.0.0,15.0.0)",
  com.google.common.collect;version="[11.0.0,15.0.0)",
  com.google.common.primitives;version="[11.0.0,15.0.0)"
-Export-Package: org.eclipse.emf.compare.uml2.internal;x-internal:=true,
- org.eclipse.emf.compare.uml2.internal.impl;x-internal:=true,
+Export-Package: org.eclipse.emf.compare.uml2.internal;
+  x-friends:="org.eclipse.emf.compare.uml2.edit,
+   org.eclipse.emf.compare.uml2.rcp,
+   org.eclipse.emf.compare.uml2.rcp.ui,
+   org.eclipse.emf.compare.uml2.tests",
+ org.eclipse.emf.compare.uml2.internal.impl;
+  x-friends:="org.eclipse.emf.compare.uml2.edit,
+   org.eclipse.emf.compare.uml2.rcp,
+   org.eclipse.emf.compare.uml2.rcp.ui,
+   org.eclipse.emf.compare.uml2.tests",
  org.eclipse.emf.compare.uml2.internal.merge;x-internal:=true,
  org.eclipse.emf.compare.uml2.internal.postprocessor;x-internal:=true,
  org.eclipse.emf.compare.uml2.internal.postprocessor.extension;x-internal:=true,
@@ -26,4 +34,8 @@ Export-Package: org.eclipse.emf.compare.uml2.internal;x-internal:=true,
  org.eclipse.emf.compare.uml2.internal.postprocessor.extension.sequence;x-internal:=true,
  org.eclipse.emf.compare.uml2.internal.postprocessor.extension.usecase;x-internal:=true,
  org.eclipse.emf.compare.uml2.internal.postprocessor.util;x-internal:=true,
- org.eclipse.emf.compare.uml2.internal.util;x-internal:=true
+ org.eclipse.emf.compare.uml2.internal.util;
+  x-friends:="org.eclipse.emf.compare.uml2.edit,
+   org.eclipse.emf.compare.uml2.rcp,
+   org.eclipse.emf.compare.uml2.rcp.ui,
+   org.eclipse.emf.compare.uml2.tests"
