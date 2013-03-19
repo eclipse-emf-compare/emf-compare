@@ -71,24 +71,25 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 	 *            The comparison which differences are to be split into groups.
 	 */
 	public void createActions(IComparisonScope scope, Comparison comparison) {
-		menuManager.removeAll();
-		final IAction defaultAction = new GroupAction(defaultGroupProvider.getLabel(),
-				structureMergeViewerGrouper, defaultGroupProvider);
-		defaultAction.setChecked(true);
-		menuManager.add(defaultAction);
-		IDifferenceGroupProvider.Registry registry = EMFCompareRCPUIPlugin.getDefault()
-				.getDifferenceGroupProviderRegistry();
-		boolean alreadyChecked = false;
-		for (IDifferenceGroupProvider dgp : registry.getGroupProviders(scope, comparison)) {
-			GroupAction action = new GroupAction(dgp.getLabel(), structureMergeViewerGrouper, dgp);
-			menuManager.add(action);
-			if (dgp.defaultSelected() && !alreadyChecked) {
-				defaultAction.setChecked(false);
-				action.setChecked(true);
-				alreadyChecked = true;
-				action.run();
-			}
+		if (menuManager.isEmpty()) {
+			final IAction defaultAction = new GroupAction(defaultGroupProvider.getLabel(),
+					structureMergeViewerGrouper, defaultGroupProvider);
+			defaultAction.setChecked(true);
+			menuManager.add(defaultAction);
+			IDifferenceGroupProvider.Registry registry = EMFCompareRCPUIPlugin.getDefault()
+					.getDifferenceGroupProviderRegistry();
+			boolean alreadyChecked = false;
+			for (IDifferenceGroupProvider dgp : registry.getGroupProviders(scope, comparison)) {
+				GroupAction action = new GroupAction(dgp.getLabel(), structureMergeViewerGrouper, dgp);
+				menuManager.add(action);
+				if (dgp.defaultSelected() && !alreadyChecked) {
+					defaultAction.setChecked(false);
+					action.setChecked(true);
+					alreadyChecked = true;
+					action.run();
+				}
 
+			}
 		}
 	}
 
