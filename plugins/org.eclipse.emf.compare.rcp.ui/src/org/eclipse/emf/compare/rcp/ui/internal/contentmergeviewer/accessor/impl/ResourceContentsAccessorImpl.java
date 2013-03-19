@@ -287,10 +287,14 @@ public class ResourceContentsAccessorImpl implements IResourceContentsAccessor {
 			initialResource = getResource(MergeViewerSide.LEFT);
 			expectedResource = getResource(MergeViewerSide.RIGHT);
 		}
-		final List<EObject> sourceList = initialResource.getContents();
-		final List<EObject> targetList = expectedResource.getContents();
+		if (expectedResource != null) {
+			final List<EObject> sourceList = initialResource.getContents();
+			final List<EObject> targetList = expectedResource.getContents();
 
-		return DiffUtil.findInsertionIndex(comparison, sourceList, targetList, expectedValue);
+			return DiffUtil.findInsertionIndex(comparison, sourceList, targetList, expectedValue);
+		} else {
+			return 0;
+		}
 	}
 
 	private Diff getDiffWithValue(Object value) {
