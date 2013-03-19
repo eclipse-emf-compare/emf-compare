@@ -65,17 +65,21 @@ public class SaveComparisonModelAction extends Action {
 		Shell parent = configuration.getContainer().getWorkbenchPart().getSite().getShell();
 
 		FileDialog fileDialog = new FileDialog(parent, SWT.SAVE);
-		File file = new File(fileDialog.open());
-		if (file.exists()) {
-			MessageDialog messageDialog = new MessageDialog(parent, "File already exists", null, "File \""
-					+ file.toString() + "\" already exists. Do you want to replace the existing one?",
-					MessageDialog.WARNING, DIALOG_BUTTON_LABELS.toArray(new String[0]), 1);
-			int open = messageDialog.open();
-			if (open == DIALOG_BUTTON_LABELS.indexOf("Replace")) {
+		String filePath = fileDialog.open();
+		if (filePath != null) {
+			File file = new File(filePath);
+			if (file.exists()) {
+				MessageDialog messageDialog = new MessageDialog(parent, "File already exists", null,
+						"File \"" + file.toString()
+								+ "\" already exists. Do you want to replace the existing one?",
+						MessageDialog.WARNING, DIALOG_BUTTON_LABELS.toArray(new String[0]), 1);
+				int open = messageDialog.open();
+				if (open == DIALOG_BUTTON_LABELS.indexOf("Replace")) {
+					saveComparison(file);
+				} // else do nothing
+			} else {
 				saveComparison(file);
-			} // else do nothing
-		} else {
-			saveComparison(file);
+			}
 		}
 
 		super.run();
