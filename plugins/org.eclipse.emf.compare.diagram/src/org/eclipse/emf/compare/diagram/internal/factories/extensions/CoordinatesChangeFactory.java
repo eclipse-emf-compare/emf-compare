@@ -19,6 +19,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterators;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.compare.AttributeChange;
@@ -90,12 +91,39 @@ public class CoordinatesChangeFactory extends NodeChangeFactory {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.internal.factories.extensions.NodeChangeFactory#getAllDifferencesForChange(org.eclipse.emf.compare.Diff)
+	 */
+	@Override
+	protected Collection<Diff> getAllDifferencesForChange(Diff input) {
+		Collection<Diff> diffs = super.getAllDifferencesForChange(input);
+		return Collections2.filter(diffs, new Predicate<Diff>() {
+			public boolean apply(Diff diff) {
+				return diff instanceof AttributeChange && isCoordinatesChange((AttributeChange)diff);
+			}
+		});
+	}
+
+	/**
 	 * It returns the predicate to check that the given difference is a macroscopic coordinates change.
 	 * 
 	 * @return The predicate.
 	 */
 	public static Predicate<? super Diff> isCoordinatesChangeExtension() {
 		return and(instanceOf(CoordinatesChange.class), ofKind(DifferenceKind.CHANGE));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#isRelatedToAnExtensionMove(org.eclipse.emf.compare.AttributeChange)
+	 */
+	@Override
+	protected boolean isRelatedToAnExtensionChange(AttributeChange input) {
+		return isCoordinatesChange(input)
+				&& Collections2.filter(input.getRefines(), isCoordinatesChangeExtension()).isEmpty()
+				&& isOverThreshold(input) && !isLeadedByMoveNode(input);
 	}
 
 	/**
@@ -123,15 +151,15 @@ public class CoordinatesChangeFactory extends NodeChangeFactory {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * It checks that the given attribute change concerns a change of coordinates.
 	 * 
-	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#isRelatedToAnExtensionMove(org.eclipse.emf.compare.AttributeChange)
+	 * @param input
+	 *            The difference.
+	 * @return True if it is a change of coordinates.
 	 */
-	@Override
-	protected boolean isRelatedToAnExtensionChange(AttributeChange input) {
-		return input.getAttribute().eContainer().equals(NotationPackage.eINSTANCE.getLocation())
-				&& Collections2.filter(input.getRefines(), isCoordinatesChangeExtension()).isEmpty()
-				&& isOverThreshold(input) && !isLeadedByMoveNode(input);
+	private static boolean isCoordinatesChange(AttributeChange input) {
+		return input.getAttribute() == NotationPackage.Literals.LOCATION__X
+				|| input.getAttribute() == NotationPackage.Literals.LOCATION__Y;
 	}
 
 	/**

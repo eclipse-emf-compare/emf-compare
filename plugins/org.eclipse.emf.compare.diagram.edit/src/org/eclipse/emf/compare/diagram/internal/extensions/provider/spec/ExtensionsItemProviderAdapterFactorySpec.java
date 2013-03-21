@@ -12,6 +12,8 @@ package org.eclipse.emf.compare.diagram.internal.extensions.provider.spec;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.diagram.internal.extensions.provider.ExtensionsItemProviderAdapterFactory;
+import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
+import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 
 /**
@@ -22,38 +24,61 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 public class ExtensionsItemProviderAdapterFactorySpec extends ExtensionsItemProviderAdapterFactory {
 
 	/** Item provider used for the Show change. */
-	ForwardingDiagramDiffItemProvider fShowItemProvider;
+	ShowItemProviderSpec fShowItemProvider;
 
 	/** Item provider used for the Hide change. */
-	ForwardingDiagramDiffItemProvider fHideItemProvider;
+	HideItemProviderSpec fHideItemProvider;
 
 	/** Item provider used for the Node change. */
 	NodeChangeItemProviderSpec fNodeChangeItemProvider;
 
 	/** Item provider used for the Edge change. */
-	ForwardingDiagramDiffItemProvider fEdgeChangeItemProvider;
+	EdgeChangeItemProviderSpec fEdgeChangeItemProvider;
 
 	/** Item provider used for the coordinates change. */
-	ForwardingDiagramDiffItemProvider fCoordinatesChangeItemProvider;
+	CoordinatesChangeItemProviderSpec fCoordinatesChangeItemProvider;
 
+	/**
+	 * Constructor.
+	 */
+	public ExtensionsItemProviderAdapterFactorySpec() {
+		super();
+		supportedTypes.add(IItemStyledLabelProvider.class);
+		supportedTypes.add(IItemDescriptionProvider.class);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.internal.extensions.provider.ExtensionsItemProviderAdapterFactory#createEdgeChangeAdapter()
+	 */
 	@Override
 	public Adapter createEdgeChangeAdapter() {
 		if (fEdgeChangeItemProvider == null) {
-			fEdgeChangeItemProvider = new ForwardingDiagramDiffItemProvider((ItemProviderAdapter)super
+			fEdgeChangeItemProvider = new EdgeChangeItemProviderSpec((ItemProviderAdapter)super
 					.createEdgeChangeAdapter());
 		}
 		return fEdgeChangeItemProvider;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.internal.extensions.provider.ExtensionsItemProviderAdapterFactory#createHideAdapter()
+	 */
 	@Override
 	public Adapter createHideAdapter() {
 		if (fHideItemProvider == null) {
-			fHideItemProvider = new ForwardingDiagramDiffItemProvider((ItemProviderAdapter)super
-					.createHideAdapter());
+			fHideItemProvider = new HideItemProviderSpec((ItemProviderAdapter)super.createHideAdapter());
 		}
 		return fHideItemProvider;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.internal.extensions.provider.ExtensionsItemProviderAdapterFactory#createNodeChangeAdapter()
+	 */
 	@Override
 	public Adapter createNodeChangeAdapter() {
 		if (fNodeChangeItemProvider == null) {
@@ -64,19 +89,28 @@ public class ExtensionsItemProviderAdapterFactorySpec extends ExtensionsItemProv
 		return fNodeChangeItemProvider;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.internal.extensions.provider.ExtensionsItemProviderAdapterFactory#createShowAdapter()
+	 */
 	@Override
 	public Adapter createShowAdapter() {
 		if (fShowItemProvider == null) {
-			fShowItemProvider = new ForwardingDiagramDiffItemProvider((ItemProviderAdapter)super
-					.createShowAdapter());
+			fShowItemProvider = new ShowItemProviderSpec((ItemProviderAdapter)super.createShowAdapter());
 		}
 		return fShowItemProvider;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.internal.extensions.provider.ExtensionsItemProviderAdapterFactory#createCoordinatesChangeAdapter()
+	 */
 	@Override
 	public Adapter createCoordinatesChangeAdapter() {
 		if (fCoordinatesChangeItemProvider == null) {
-			fCoordinatesChangeItemProvider = new ForwardingDiagramDiffItemProvider((ItemProviderAdapter)super
+			fCoordinatesChangeItemProvider = new CoordinatesChangeItemProviderSpec((ItemProviderAdapter)super
 					.createCoordinatesChangeAdapter());
 		}
 		return fCoordinatesChangeItemProvider;

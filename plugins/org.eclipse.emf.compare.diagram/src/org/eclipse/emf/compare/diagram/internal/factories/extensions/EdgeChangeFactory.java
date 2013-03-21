@@ -86,6 +86,21 @@ public class EdgeChangeFactory extends NodeChangeFactory {
 	}
 
 	/**
+	 * Predicate to check that the given difference is the main unit difference for this macroscopic add or
+	 * delete of edge.
+	 * 
+	 * @return The predicate.
+	 */
+	public static Predicate<? super Diff> isMainDiffForAddOrDeleteEdge() {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff difference) {
+				return difference instanceof ReferenceChange
+						&& (isRelatedToAnAddEdge((ReferenceChange)difference) || isRelatedToADeleteEdge((ReferenceChange)difference));
+			}
+		};
+	}
+
+	/**
 	 * Get all differences which are part of a change extension, from the given difference (being part of the
 	 * result).
 	 * 
@@ -217,23 +232,9 @@ public class EdgeChangeFactory extends NodeChangeFactory {
 		}
 		if (container instanceof Edge) {
 			result = Iterators.any(input.getMatch().getComparison().getDifferences(container).iterator(),
-					isRelatedToAddOrDelete());
+					isMainDiffForAddOrDeleteEdge());
 		}
 		return result;
-	}
-
-	/**
-	 * It returns the predicate to check that the given difference concerns an ADD or DELETE of node.
-	 * 
-	 * @return The predicate.
-	 */
-	private static Predicate<? super Diff> isRelatedToAddOrDelete() {
-		return new Predicate<Diff>() {
-			public boolean apply(Diff difference) {
-				return difference instanceof ReferenceChange
-						&& (isRelatedToAnAddEdge((ReferenceChange)difference) || isRelatedToADeleteEdge((ReferenceChange)difference));
-			}
-		};
 	}
 
 	/**

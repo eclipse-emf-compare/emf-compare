@@ -16,16 +16,16 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
-import org.eclipse.emf.compare.diagram.internal.extensions.NodeChange;
-import org.eclipse.emf.compare.diagram.internal.factories.extensions.NodeChangeFactory;
+import org.eclipse.emf.compare.diagram.internal.extensions.EdgeChange;
+import org.eclipse.emf.compare.diagram.internal.factories.extensions.EdgeChangeFactory;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 
 /**
- * Item provider for node changes.
+ * Item provider for edge changes.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class NodeChangeItemProviderSpec extends ForwardingDiagramDiffItemProvider {
+public class EdgeChangeItemProviderSpec extends ForwardingDiagramDiffItemProvider {
 
 	/**
 	 * Constructor.
@@ -33,7 +33,7 @@ public class NodeChangeItemProviderSpec extends ForwardingDiagramDiffItemProvide
 	 * @param delegate
 	 *            The origin item provider adapter.
 	 */
-	public NodeChangeItemProviderSpec(ItemProviderAdapter delegate) {
+	public EdgeChangeItemProviderSpec(ItemProviderAdapter delegate) {
 		super(delegate);
 	}
 
@@ -50,12 +50,11 @@ public class NodeChangeItemProviderSpec extends ForwardingDiagramDiffItemProvide
 		switch (kind) {
 			case ADD:
 			case DELETE:
-				diff = Iterators.find(diagramDiff.getRefinedBy().iterator(), NodeChangeFactory
-						.isMainDiffForAddOrDeleteNode(), null);
+				diff = Iterators.find(diagramDiff.getRefinedBy().iterator(), EdgeChangeFactory
+						.isMainDiffForAddOrDeleteEdge(), null);
 				break;
-			case MOVE:
-				diff = Iterators.find(diagramDiff.getRefinedBy().iterator(), NodeChangeFactory
-						.isMainDiffForMoveNode(), null);
+			case CHANGE:
+				result = "look"; //$NON-NLS-1$
 				break;
 			default:
 		}
@@ -63,7 +62,6 @@ public class NodeChangeItemProviderSpec extends ForwardingDiagramDiffItemProvide
 			result = ((ReferenceChange)diff).getReference().getName();
 		}
 		return result;
-
 	}
 
 	/**
@@ -73,7 +71,26 @@ public class NodeChangeItemProviderSpec extends ForwardingDiagramDiffItemProvide
 	 */
 	@Override
 	protected boolean isCandidateToAddChildren(Object object) {
-		return object instanceof NodeChange
-				&& (((NodeChange)object).getKind() == DifferenceKind.ADD || ((NodeChange)object).getKind() == DifferenceKind.DELETE);
+		return object instanceof EdgeChange
+				&& (((EdgeChange)object).getKind() == DifferenceKind.ADD || ((EdgeChange)object).getKind() == DifferenceKind.DELETE);
 	}
+
+	// /**
+	// * {@inheritDoc}
+	// *
+	// * @see
+	// org.eclipse.emf.compare.diagram.internal.extensions.provider.spec.ForwardingDiagramDiffItemProvider#getValueText(org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff)
+	// */
+	// @Override
+	// protected String getValueText(DiagramDiff diagramDiff) {
+	// EObject view = diagramDiff.getView();
+	// if (view instanceof Edge) {
+	// String sourceLabel = getValueText(((Edge)view).getSource().getElement());
+	// String targetLabel = getValueText(((Edge)view).getTarget().getElement());
+	//			return sourceLabel + " -> " + targetLabel; //$NON-NLS-1$
+	// } else {
+	// return super.getValueText(diagramDiff);
+	// }
+	// }
+
 }

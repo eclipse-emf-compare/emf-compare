@@ -52,6 +52,8 @@ import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramDiffAcce
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
 import org.eclipse.emf.compare.diagram.internal.extensions.CoordinatesChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
+import org.eclipse.emf.compare.diagram.internal.extensions.Hide;
+import org.eclipse.emf.compare.diagram.internal.extensions.Show;
 import org.eclipse.emf.compare.diagram.internal.factories.extensions.CoordinatesChangeFactory;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
@@ -699,18 +701,24 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		/** Registry of created phantoms, indexed by difference. */
 		private final Map<Diff, Phantom> fPhantomRegistry = new HashMap<Diff, Phantom>();
 
+		/** Predicate witch checks that the given difference is an ADD or DELETE of a graphical object. */
+		private Predicate<Diff> isAddOrDelete = and(instanceOf(DiagramDiff.class), or(
+				ofKind(DifferenceKind.ADD), ofKind(DifferenceKind.DELETE)));
+
+		/** Predicate witch checks that the given difference is a HIDE or REVEAL of a graphical object. */
+		private Predicate<Diff> isHideOrReveal = or(instanceOf(Show.class), instanceOf(Hide.class));
+
 		/**
 		 * {@inheritDoc}
 		 * 
 		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#goodCandidate()<br>
-		 *      Only the diagram differences ACTIVATE or DELETE are concerned by this display.
+		 *      Only the diagram differences ADD/REVEAL or DELETE/HIDE are concerned by this display.
 		 */
 		@Override
 		protected Predicate<Diff> goodCandidate() {
 			return new Predicate<Diff>() {
 				public boolean apply(Diff difference) {
-					return and(instanceOf(DiagramDiff.class),
-							or(ofKind(DifferenceKind.ADD), ofKind(DifferenceKind.DELETE))).apply(difference);
+					return or(isAddOrDelete, isHideOrReveal).apply(difference);
 				}
 			};
 		}
@@ -748,7 +756,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		@Override
 		protected MergeViewerSide getTargetSide(Match match, View referenceView) {
 			MergeViewerSide targetSide = null;
-			if (match.getLeft() == null) {
+			if (!isFigureExist((View)match.getLeft())) {
 				targetSide = MergeViewerSide.LEFT;
 			} else {
 				targetSide = MergeViewerSide.RIGHT;
@@ -837,6 +845,17 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		}
 
 		/**
+		 * It checks that the given view graphically exists.
+		 * 
+		 * @param view
+		 *            The view.
+		 * @return True if it exists.
+		 */
+		private boolean isFigureExist(View view) {
+			return view != null && view.isVisible();
+		}
+
+		/**
 		 * Get the view which has to be used as reference to build a phantom.<br>
 		 * The reference is the non null object among the given objects. In case of delete object, in the
 		 * context of three-way comparison, the reference will be the ancestor one (<code>originObj</code>).
@@ -851,9 +870,9 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 */
 		private View getReferenceView(View originObj, View leftView, View rightView) {
 			View referenceView;
-			if (originObj != null) {
+			if (isFigureExist(originObj)) {
 				referenceView = originObj;
-			} else if (leftView != null) {
+			} else if (isFigureExist(leftView)) {
 				referenceView = leftView;
 			} else {
 				referenceView = rightView;

@@ -23,7 +23,9 @@
                org.eclipse.emf.edit.provider.IStructuredItemContentProvider
                org.eclipse.emf.edit.provider.ITreeItemContentProvider
                org.eclipse.emf.edit.provider.IItemLabelProvider
-               org.eclipse.emf.edit.provider.IItemPropertySource"/>
+               org.eclipse.emf.edit.provider.IItemPropertySource
+               org.eclipse.emf.compare.provider.IItemStyledLabelProvider
+               org.eclipse.emf.compare.provider.IItemDescriptionLabelProvider"/>
    </extension>
 
 </plugin>

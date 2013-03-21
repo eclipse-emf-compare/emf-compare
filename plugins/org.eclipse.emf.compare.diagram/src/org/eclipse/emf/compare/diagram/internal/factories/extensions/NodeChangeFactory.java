@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.internal.factories.extensions;
 
+import com.google.common.base.Predicate;
+
 import java.util.Collection;
 
 import org.eclipse.emf.compare.Diff;
@@ -71,6 +73,36 @@ public class NodeChangeFactory extends AbstractDiagramChangeFactory {
 				extension.getRefinedBy().addAll(getAllContainedDifferences((ReferenceChange)refiningDiff));
 			}
 		}
+	}
+
+	/**
+	 * Predicate to check that the given difference is the main unit difference for this macroscopic add or
+	 * delete of node.
+	 * 
+	 * @return The predicate.
+	 */
+	public static Predicate<Diff> isMainDiffForAddOrDeleteNode() {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff difference) {
+				return difference instanceof ReferenceChange
+						&& (isRelatedToAnAddNode((ReferenceChange)difference) || isRelatedToADeleteNode((ReferenceChange)difference));
+			}
+		};
+	}
+
+	/**
+	 * Predicate to check that the given difference is the main unit difference for this macroscopic move of
+	 * node.
+	 * 
+	 * @return The predicate.
+	 */
+	public static Predicate<Diff> isMainDiffForMoveNode() {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff difference) {
+				return difference instanceof ReferenceChange
+						&& isRelatedToAMoveNode((ReferenceChange)difference);
+			}
+		};
 	}
 
 	/**
