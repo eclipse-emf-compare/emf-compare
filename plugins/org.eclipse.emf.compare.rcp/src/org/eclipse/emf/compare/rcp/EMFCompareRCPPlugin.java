@@ -14,21 +14,28 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptorRegistryImpl;
+import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryRegistryImpl;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
+import org.eclipse.emf.compare.provider.EMFCompareEditPlugin;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
+import org.eclipse.emf.compare.rcp.internal.adapterfactory.AdapterFactoryDescriptorRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.match.MatchEngineFactoryRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.merger.MergerExtensionRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryImpl;
 import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.postprocessor.PostProcessorFactoryRegistryListener;
 import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
+import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.osgi.framework.BundleContext;
 
 /**
+ * This is the central singleton for the EMF Compare RCP plugin.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class EMFCompareRCPPlugin extends Plugin {
@@ -36,6 +43,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	/** The plug-in ID. */
 	public static final String PLUGIN_ID = "org.eclipse.emf.compare.rcp"; //$NON-NLS-1$
 
+	/** The id of the post processor extension point. */
 	public static final String POST_PROCESSOR_PPID = "postProcessor"; //$NON-NLS-1$
 
 	/** The id of the load on demand policy extension point. */
@@ -47,11 +55,16 @@ public class EMFCompareRCPPlugin extends Plugin {
 	/** The id of the match extension point. */
 	public static final String MATCH_ENGINE_PPID = "matchEngine"; //$NON-NLS-1$
 
-	// This plugin is a singleton, so it's quite ok to keep the plugin in a static field.
+	/** The id of the adapter factory extension point. */
+	public static final String FACTORY_PPID = "adapterFactory"; //$NON-NLS-1$
+
+	/** This plugin is a singleton, so it's quite ok to keep the plugin in a static field. */
 	private static EMFCompareRCPPlugin plugin;
 
+	/** The registry that will hold references to all mergers. */
 	private IMerger.Registry mergerRegistry;
 
+	/** The registry listener that will be used to react to merger changes. */
 	private AbstractRegistryEventListener mergerRegistryListener;
 
 	/** The registry that will hold references to all {@link ILoadOnDemandPolicy}. **/
@@ -60,9 +73,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	/** The registry listener that will be used to react to load on demand policy changes. */
 	private AbstractRegistryEventListener loadOnDemandRegistryListener;
 
-	/**
-	 * The registry that will hold references to all post processors.
-	 */
+	/** The registry that will hold references to all post processors. */
 	private IPostProcessor.Descriptor.Registry<String> postProcessorDescriptorsRegistry;
 
 	/** The registry listener that will be used to react to post processor changes. */
@@ -74,6 +85,12 @@ public class EMFCompareRCPPlugin extends Plugin {
 	/** The registry listener that will be used to react to match engine changes. */
 	private MatchEngineFactoryRegistryListener matchEngineRegistryListener;
 
+	/** The registry that will hold references to all adapter factory descriptors. */
+	private RankedAdapterFactoryDescriptorRegistryImpl adapterFactoryRegistry;
+
+	/** The registry listener that will be used to react to adapter factory descriptor changes. */
+	private AbstractRegistryEventListener adapterFactoryRegistryListener;
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
@@ -83,6 +100,13 @@ public class EMFCompareRCPPlugin extends Plugin {
 		EMFCompareRCPPlugin.plugin = this;
 
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+		adapterFactoryRegistry = new RankedAdapterFactoryDescriptorRegistryImpl(
+				ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+		adapterFactoryRegistryListener = new AdapterFactoryDescriptorRegistryListener(
+				EMFCompareEditPlugin.PLUGIN_ID, FACTORY_PPID, getLog(), adapterFactoryRegistry);
+		registry.addListener(adapterFactoryRegistryListener, PLUGIN_ID + "." + FACTORY_PPID); //$NON-NLS-1$
+		adapterFactoryRegistryListener.readRegistry(registry);
 
 		matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
 		matchEngineRegistryListener = new MatchEngineFactoryRegistryListener(PLUGIN_ID, MATCH_ENGINE_PPID,
@@ -133,6 +157,20 @@ public class EMFCompareRCPPlugin extends Plugin {
 		registry.removeListener(matchEngineRegistryListener);
 		matchEngineRegistryListener = null;
 		matchEngineFactoryRegistry = null;
+
+		registry.removeListener(adapterFactoryRegistryListener);
+		adapterFactoryRegistryListener = null;
+		adapterFactoryRegistry = null;
+	}
+
+	/**
+	 * Returns the adapter factory descriptor registry to which extension will be registered.
+	 * 
+	 * @return the the adapter factory descriptor registry to which extension will be registered
+	 * @since 3.0
+	 */
+	public RankedAdapterFactoryDescriptor.Registry getAdapterFactoryRegistry() {
+		return adapterFactoryRegistry;
 	}
 
 	/**

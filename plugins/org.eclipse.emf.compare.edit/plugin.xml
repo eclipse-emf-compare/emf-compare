@@ -14,6 +14,9 @@
 
 <plugin>
 
+   <extension-point id="adapterFactory" name="%emf.compare.adapter.factory" schema="schema/adapterFactory.exsd"/>
+
+
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
             uri="http://www.eclipse.org/emf/compare"
@@ -27,5 +30,4 @@
                org.eclipse.emf.compare.provider.IItemStyledLabelProvider
                org.eclipse.emf.compare.provider.IItemDescriptionProvider"/>
    </extension>
-
 </plugin>

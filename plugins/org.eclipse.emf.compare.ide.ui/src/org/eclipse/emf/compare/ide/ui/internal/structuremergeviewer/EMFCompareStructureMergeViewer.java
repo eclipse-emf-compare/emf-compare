@@ -148,7 +148,9 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	public EMFCompareStructureMergeViewer(Composite parent, CompareConfiguration configuration) {
 		super(parent, configuration);
 
-		fAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+		fAdapterFactory = new ComposedAdapterFactory(EMFCompareRCPPlugin.getDefault()
+				.getAdapterFactoryRegistry());
+
 		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 

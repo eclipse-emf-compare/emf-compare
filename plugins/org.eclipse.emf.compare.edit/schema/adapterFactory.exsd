@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.emf.compare.rcp" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.eclipse.emf.compare.rcp" id="adapterFactory" name="EMF Compare Adapter Factory"/>
+      </appinfo>
+      <documentation>
+         The aim is to provide a mechanism that allow users to provide their own adapter factory with a specific rank. 
+With this mechanism you will able to provide, for example, your own CompareItemProviderAdapterFactory in order to provide your own labels of the emf compare metamodel, or provide your own EcoreItemProviderAdapterFactory if you just want to overrides the labels of ecore metamodel.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="factory" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="factory">
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The fully qualified Java class name of an emf compare adapter factory.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactory"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="uri" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The namespace URI of an EPackage or the fully qualified name of a Java package.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="supportedTypes" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A space separated list of fully qualified Java interface names representing the types of adapters supported by the emf compare adapter factory.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="ranking" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The lower the ranking of an extension, the lesser its priority as compared with others.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         3.0.0
+      </documentation>
+   </annotation>
+
+
+
+
+
+</schema>
