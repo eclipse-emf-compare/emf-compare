@@ -18,7 +18,7 @@ Contributors:
       <package
             uri="http://www.eclipse.org/emf/compare/uml2/2.0"
             class="org.eclipse.emf.compare.uml2.internal.UMLComparePackage"
-            genModel="model/uml2diff.genmodel"/>
+            genModel="model/uml2compare.genmodel"/>
    </extension>
    <extension
          point="org.eclipse.emf.compare.rcp.postProcessor">
