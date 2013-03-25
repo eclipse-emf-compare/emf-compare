@@ -46,7 +46,6 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.util.FileUtils;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.eclipse.team.core.subscribers.SubscriberScopeManager;
@@ -70,13 +69,9 @@ public class GitTestRepository {
 	 *             Thrown if we cannot write at the given location.
 	 */
 	public GitTestRepository(File gitDir) throws IOException {
-		// Create a repo...
-		FileRepository newRepository = new FileRepository(gitDir);
-		newRepository.create();
-		// ... but we'll use a cached instance
-		newRepository.close();
-
 		repository = Activator.getDefault().getRepositoryCache().lookupRepository(gitDir);
+		repository.create();
+
 		try {
 			workdirPrefix = repository.getWorkTree().getCanonicalPath();
 		} catch (IOException err) {
@@ -194,7 +189,7 @@ public class GitTestRepository {
 		}
 		startBranch = Repository.shortenRefName(startBranch);
 		updateRef.setNewObjectId(startAt);
-		updateRef.setRefLogMessage("branch: Created from " + startBranch, false); //$NON-NLS-1$
+		updateRef.setRefLogMessage("branch: Created from " + startBranch, false);
 		updateRef.update();
 	}
 
@@ -319,7 +314,7 @@ public class GitTestRepository {
 		if (pLen > pfxLen) {
 			return path.substring(pfxLen);
 		} else if (path.length() == pfxLen - 1) {
-			return ""; //$NON-NLS-1$
+			return "";
 		}
 		return null;
 	}
