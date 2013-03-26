@@ -123,6 +123,19 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 *            The difference.
 		 */
 		void revealDecorators(Diff difference);
+
+		/**
+		 * From a given difference, it removes the related decorators from cash.
+		 * 
+		 * @param difference
+		 *            The difference.
+		 */
+		void removeDecorators(Diff difference);
+
+		/**
+		 * It removes all the displayed decorators.
+		 */
+		void removeAll();
 	}
 
 	/**
@@ -381,6 +394,20 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 				revealDecorators((List<? extends AbstractDecorator>)decorators);
 			}
 		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.IDecoratorManager#removeDecorators(org.eclipse.emf.compare.Diff)
+		 */
+		public abstract void removeDecorators(Diff difference);
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.IDecoratorManager#removeAll()
+		 */
+		public abstract void removeAll();
 
 		/**
 		 * It reveals the given decorators.
@@ -815,6 +842,26 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			Phantom phantom = createPhantom(diff, referenceView, referenceFigure, targetSide);
 			fPhantomRegistry.put(diff, phantom);
 			return phantom;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#removeDecorators(org.eclipse.emf.compare.Diff)
+		 */
+		@Override
+		public void removeDecorators(Diff difference) {
+			fPhantomRegistry.remove(difference);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#removeAll()
+		 */
+		@Override
+		public void removeAll() {
+			fPhantomRegistry.clear();
 		}
 
 		/**
@@ -1385,6 +1432,26 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		/**
 		 * {@inheritDoc}
 		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#removeDecorators(org.eclipse.emf.compare.Diff)
+		 */
+		@Override
+		public void removeDecorators(Diff difference) {
+			fMarkerRegistry.remove(difference);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#removeAll()
+		 */
+		@Override
+		public void removeAll() {
+			fMarkerRegistry.clear();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
 		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#getDecorators(org.eclipse.emf.compare.Diff)
 		 */
 		@Override
@@ -1529,6 +1596,26 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		public void hideAll() {
 			fMarkerManager.hideAll();
 			fPhantomManager.hideAll();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.IDecoratorManager#removeDecorators(org.eclipse.emf.compare.Diff)
+		 */
+		public void removeDecorators(Diff difference) {
+			fMarkerManager.removeDecorators(difference);
+			fPhantomManager.removeDecorators(difference);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.IDecoratorManager#removeAll()
+		 */
+		public void removeAll() {
+			fMarkerManager.removeAll();
+			fPhantomManager.removeAll();
 		}
 
 	}
@@ -1749,9 +1836,9 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 								.iterator(), DiagramDiff.class);
 						while (diffs.hasNext()) {
 							DiagramDiff diagramDiff = diffs.next();
-							if (diagramDiff.getState() != DifferenceState.UNRESOLVED) {
-								fDecoratorsManager.hideDecorators(diagramDiff);
-							}
+							fDecoratorsManager.hideAll();
+							fDecoratorsManager.removeAll(); // force the computation for the next
+															// decorator reveal.
 						}
 					}
 				}
