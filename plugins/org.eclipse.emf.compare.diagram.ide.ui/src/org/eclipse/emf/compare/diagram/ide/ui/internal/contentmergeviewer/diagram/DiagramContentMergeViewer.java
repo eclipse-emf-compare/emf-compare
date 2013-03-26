@@ -37,8 +37,6 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Polyline;
 import org.eclipse.draw2d.PolylineConnection;
-import org.eclipse.draw2d.RectangleFigure;
-import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.command.Command;
@@ -50,6 +48,10 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.impl.CopyCommand;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramDiffAccessor;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
+import org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.figures.DecoratorFigure;
+import org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.figures.EdgeFigure;
+import org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.figures.NodeFigure;
+import org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.figures.NodeListFigure;
 import org.eclipse.emf.compare.diagram.internal.extensions.CoordinatesChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.extensions.Hide;
@@ -83,7 +85,6 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 
@@ -146,11 +147,17 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			/** The reference <code>View</code> for this decorator. */
 			protected View fOriginView;
 
-			/** The reference <code>IFigure</code> for this phantom. */
+			/** The reference <code>IFigure</code> for this decorator. */
 			protected IFigure fOriginFigure;
 
-			/** The <code>IFigure</code> representing this phantom. */
+			/** The <code>IFigure</code> representing this decorator. */
 			protected IFigure fFigure;
+
+			/**
+			 * The <code>DecoratorFigure</code> representing this decorator. It references
+			 * {@link AbstractDecorator#fFigure} through the accessor {@link DecoratorFigure#getMainFigure()}.
+			 */
+			protected DecoratorFigure fDecoratorFigure;
 
 			/** The layer on which the <code>figure</code> has to be drawn. */
 			protected IFigure fLayer;
@@ -167,7 +174,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			/**
 			 * Getter.
 			 * 
-			 * @return the originView {@link Phantom#fOriginView}.
+			 * @return the originView {@link AbstractDecorator#fOriginView}.
 			 */
 			public View getOriginView() {
 				return fOriginView;
@@ -177,7 +184,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			 * Setter.
 			 * 
 			 * @param originView
-			 *            {@link Phantom#fOriginView}.
+			 *            {@link AbstractDecorator#fOriginView}.
 			 */
 			public void setOriginView(View originView) {
 				this.fOriginView = originView;
@@ -186,7 +193,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			/**
 			 * Getter.
 			 * 
-			 * @return the originFigure {@link Phantom#fOriginFigure}.
+			 * @return the originFigure {@link AbstractDecorator#fOriginFigure}.
 			 */
 			public IFigure getOriginFigure() {
 				return fOriginFigure;
@@ -196,7 +203,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			 * Setter.
 			 * 
 			 * @param originFigure
-			 *            {@link Phantom#fOriginFigure}.
+			 *            {@link AbstractDecorator#fOriginFigure}.
 			 */
 			public void setOriginFigure(IFigure originFigure) {
 				this.fOriginFigure = originFigure;
@@ -205,26 +212,46 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			/**
 			 * Getter.
 			 * 
-			 * @return the figure {@link Phantom#fFigure}.
+			 * @return the figure {@link AbstractDecorator#fFigure}.
 			 */
 			public IFigure getFigure() {
 				return fFigure;
 			}
 
 			/**
+			 * Getter.
+			 * 
+			 * @return the decorator figure {@link AbstractDecorator#fDecoratorFigure}.
+			 */
+			public DecoratorFigure getDecoratorFigure() {
+				return fDecoratorFigure;
+			}
+
+			/**
 			 * Setter.
 			 * 
 			 * @param figure
-			 *            {@link Phantom#fFigure}.
+			 *            {@link AbstractDecorator#fFigure}.
 			 */
 			public void setFigure(IFigure figure) {
 				this.fFigure = figure;
 			}
 
 			/**
+			 * Setter.
+			 * 
+			 * @param figure
+			 *            {@link AbstractDecorator#fFigure}.
+			 */
+			public void setDecoratorFigure(DecoratorFigure figure) {
+				this.fDecoratorFigure = figure;
+				setFigure(figure.getMainFigure());
+			}
+
+			/**
 			 * Getter.
 			 * 
-			 * @return the layer {@link Phantom#fLayer}.
+			 * @return the layer {@link AbstractDecorator#fLayer}.
 			 */
 			public IFigure getLayer() {
 				return fLayer;
@@ -234,7 +261,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			 * Setter.
 			 * 
 			 * @param layer
-			 *            {@link Phantom#fLayer}.
+			 *            {@link AbstractDecorator#fLayer}.
 			 */
 			public void setLayer(IFigure layer) {
 				this.fLayer = layer;
@@ -243,7 +270,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			/**
 			 * Getter.
 			 * 
-			 * @return the side {@link Phantom#fSide}.
+			 * @return the side {@link AbstractDecorator#fSide}.
 			 */
 			public MergeViewerSide getSide() {
 				return fSide;
@@ -253,7 +280,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			 * Setter.
 			 * 
 			 * @param side
-			 *            {@link Phantom#fSide}.
+			 *            {@link AbstractDecorator#fSide}.
 			 */
 			public void setSide(MergeViewerSide side) {
 				this.fSide = side;
@@ -262,7 +289,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			/**
 			 * Getter.
 			 * 
-			 * @return the difference {@link Phantom#fDifference}.
+			 * @return the difference {@link AbstractDecorator#fDifference}.
 			 */
 			public Diff getDifference() {
 				return fDifference;
@@ -272,7 +299,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			 * Setter.
 			 * 
 			 * @param difference
-			 *            {@link Phantom#fDifference}.
+			 *            {@link AbstractDecorator#fDifference}.
 			 */
 			public void setDifference(Diff difference) {
 				this.fDifference = difference;
@@ -281,7 +308,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			/**
 			 * Getter.
 			 * 
-			 * @return the editPart {@link Phantom#fEditPart}.
+			 * @return the editPart {@link AbstractDecorator#fEditPart}.
 			 */
 			public EditPart getEditPart() {
 				return fEditPart;
@@ -291,7 +318,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			 * Setter.
 			 * 
 			 * @param editPart
-			 *            {@link Phantom#fEditPart}.
+			 *            {@link AbstractDecorator#fEditPart}.
 			 */
 			public void setEditPart(EditPart editPart) {
 				this.fEditPart = editPart;
@@ -537,6 +564,17 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 				}
 				translateCoordinates(referenceParentFigure, rootReferenceFigure, boundsToTranslate);
 			}
+		}
+
+		/**
+		 * It checks that the given view represents an element of a list.
+		 * 
+		 * @param view
+		 *            The view.
+		 * @return True it it is an element of a list.
+		 */
+		protected boolean isNodeList(View view) {
+			return view.eContainer() instanceof BasicCompartment;
 		}
 
 		/**
@@ -814,20 +852,12 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 				boolean isMain) {
 			super.handleAddDecorator(decorator, parent, toAdd, isMain);
 			// Set the highlight of the figure
-			Color strokeColor = null;
 			if (isMain) {
-				((Shape)toAdd).setLineWidth(((Shape)toAdd).getLineWidth() + 1);
-				strokeColor = getCompareColor().getStrokeColor(decorator.getDifference(), isThreeWay(),
-						false, true);
-				// figure.setBorder(new FocusBorder());
-
+				decorator.getDecoratorFigure().highlight();
 				getViewer(decorator.getSide()).getGraphicalViewer().reveal(toAdd);
 			} else {
-				strokeColor = getCompareColor().getStrokeColor(decorator.getDifference(), isThreeWay(),
-						false, false);
-
+				decorator.getDecoratorFigure().unhighlight();
 			}
-			toAdd.setForegroundColor(strokeColor);
 		}
 
 		@Override
@@ -836,11 +866,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			super.handleDeleteDecorator(decorator, parent, toDelete, isMain);
 			// Re-initialize the highlight of the figure
 			if (isMain) {
-				((Shape)toDelete).setLineWidth(((Shape)toDelete).getLineWidth() - 1);
-				Color strokeColor = getCompareColor().getStrokeColor(decorator.getDifference(), isThreeWay(),
-						false, false);
-				toDelete.setForegroundColor(strokeColor);
-				// figure.setBorder(null);
+				decorator.getDecoratorFigure().unhighlight();
 			}
 		}
 
@@ -903,15 +929,13 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			IFigure referenceLayer = getLayer(referenceView, referenceSide);
 			translateCoordinates(referenceFigure, referenceLayer, rect);
 
-			IFigure ghost = null;
+			DecoratorFigure ghost = null;
 
 			IFigure targetLayer = getLayer(referenceView, side);
 			Phantom phantom = new Phantom(targetLayer, side, referenceView, referenceFigure, diff);
 
 			// Container "list" case
-			if (referenceView.eContainer() instanceof BasicCompartment) {
-				ghost = new Polyline();
-
+			if (isNodeList(referenceView)) {
 				Diff refiningDiff = Iterators.find(diff.getRefinedBy().iterator(), and(
 						valueIs(referenceView), onFeature(NotationPackage.Literals.VIEW__PERSISTED_CHILDREN
 								.getName())));
@@ -936,8 +960,11 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 				// FIXME: Compute position from the y position of the first child + sum of height of the
 				// children.
 				int pos = rect.height * index + referenceParentBounds.y + 1;
+				Map<String, Object> parameters = new HashMap<String, Object>();
+				parameters.put(NodeListFigure.PARAM_Y_POS, Integer.valueOf(pos));
 
-				((Polyline)ghost).setEndpoints(new Point(rect.x, pos), new Point(rect.x + rect.width, pos));
+				ghost = new NodeListFigure(diff, isThreeWay(), getCompareColor(), referenceFigure, rect,
+						true, parameters);
 
 				// Edge case
 			} else if (referenceView instanceof Edge) {
@@ -946,32 +973,29 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 					EditPart edgeEditPart = createEdgeEditPart((Edge)referenceView, referenceSide, side);
 					if (edgeEditPart instanceof GraphicalEditPart) {
 						phantom.setEditPart(edgeEditPart);
-						ghost = ((GraphicalEditPart)edgeEditPart).getFigure();
-						ghost.getChildren().clear();
+
+						IFigure fig = ((GraphicalEditPart)edgeEditPart).getFigure();
+						fig.getChildren().clear();
+						ghost = new DecoratorFigure(diff, isThreeWay(), getCompareColor(), referenceFigure,
+								fig, true);
+
 					}
 					// Else, it creates only a polyline connection figure with the same properties as the
 					// reference
 				} else {
 					if (referenceFigure instanceof PolylineConnection) {
-						ghost = new PolylineConnection();
-						ghost.setBounds(rect);
-						((PolylineConnection)ghost).setPoints(((PolylineConnection)referenceFigure)
-								.getPoints().getCopy());
+						ghost = new EdgeFigure(diff, isThreeWay(), getCompareColor(), referenceFigure, rect,
+								true);
 					}
 				}
 			}
 
 			// Default case: Nodes
 			if (ghost == null) {
-				ghost = new RectangleFigure();
-				ghost.setBounds(rect);
+				ghost = new NodeFigure(diff, isThreeWay(), getCompareColor(), referenceFigure, rect, true);
 			}
 
-			if (ghost instanceof Shape) {
-				((Shape)ghost).setFill(false);
-			}
-
-			phantom.setFigure(ghost);
+			phantom.setDecoratorFigure(ghost);
 
 			translateWhenInsideContainerChange(phantom);
 
@@ -1269,12 +1293,6 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 */
 		private class Marker extends AbstractDecorator {
 
-			/** Thickness of the marker. */
-			public static final int THICKNESS = 6;
-
-			/** The alpha number for the figure. */
-			public static final int ALPHA = 30;
-
 			/**
 			 * Constructor.
 			 * 
@@ -1420,30 +1438,21 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			IFigure referenceLayer = getLayer(referenceView, side);
 			translateCoordinates(referenceFigure, referenceLayer, referenceBounds);
 
-			IFigure markerFigure = null;
+			DecoratorFigure markerFigure = null;
 
 			IFigure targetLayer = getLayer(referenceView, side);
 			Marker marker = new Marker(targetLayer, side, referenceView, referenceFigure, diff);
 
-			if (referenceView.eContainer() instanceof BasicCompartment) {
+			if (isNodeList(referenceView)) {
 
-				markerFigure = new RectangleFigure();
-				markerFigure.setBounds(referenceBounds);
+				markerFigure = new NodeListFigure(diff, isThreeWay(), getCompareColor(), referenceFigure,
+						referenceBounds, false);
 
 			} else if (referenceView instanceof Edge) {
 
 				if (referenceFigure instanceof PolylineConnection) {
-
-					markerFigure = new PolylineConnection();
-
-					markerFigure.setBounds(referenceBounds);
-
-					((PolylineConnection)markerFigure).setPoints(((PolylineConnection)referenceFigure)
-							.getPoints().getCopy());
-
-					int oldWidth = ((Shape)referenceFigure).getLineWidth();
-					int newWidth = oldWidth + Marker.THICKNESS * 2;
-					((PolylineConnection)markerFigure).setLineWidth(newWidth);
+					markerFigure = new EdgeFigure(diff, isThreeWay(), getCompareColor(), referenceFigure,
+							referenceBounds, false);
 				}
 
 			}
@@ -1451,23 +1460,11 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			// Default case: Nodes
 			if (markerFigure == null) {
 
-				markerFigure = new RectangleFigure();
-
-				referenceBounds.x -= Marker.THICKNESS;
-				referenceBounds.y -= Marker.THICKNESS;
-				referenceBounds.width += Marker.THICKNESS * 2;
-				referenceBounds.height += Marker.THICKNESS * 2;
-
-				markerFigure.setBounds(referenceBounds);
+				markerFigure = new NodeFigure(diff, isThreeWay(), getCompareColor(), referenceFigure,
+						referenceBounds, false);
 			}
 
-			Color strokeColor = getCompareColor().getStrokeColor(diff, isThreeWay(), false, true);
-			markerFigure.setForegroundColor(strokeColor);
-			markerFigure.setBackgroundColor(strokeColor);
-			// markerFigure.setBorder(new FocusBorder());
-			((Shape)markerFigure).setAlpha(Marker.ALPHA);
-
-			marker.setFigure(markerFigure);
+			marker.setDecoratorFigure(markerFigure);
 
 			return marker;
 		}
