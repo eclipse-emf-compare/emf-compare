@@ -11,8 +11,6 @@
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IEObjectAccessor;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;

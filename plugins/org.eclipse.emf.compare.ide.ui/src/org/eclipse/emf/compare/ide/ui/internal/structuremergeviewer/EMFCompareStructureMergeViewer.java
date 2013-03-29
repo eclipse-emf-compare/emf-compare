@@ -257,7 +257,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	};
 
 	/**
-	 * Team left us with absolutely no way to determiner whether our supplied input is the result of a
+	 * Team left us with absolutely no way to determine whether our supplied input is the result of a
 	 * synchronization or not.
 	 * <p>
 	 * In order to properly resolve the logical model of the resource currently being compared we need to know

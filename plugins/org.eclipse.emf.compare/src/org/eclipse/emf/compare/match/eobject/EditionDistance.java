@@ -74,7 +74,7 @@ public class EditionDistance implements DistanceFunction {
 	 */
 	// CHECKSTYLE:OFF we know these are magic numbers, so be it, they happens to have the same value but there
 	// is no semantic.
-	private double[] thresholds = {0, 0.6, 0.6, 0.55, 0.465 };
+	private double[] thresholds = {0d, 0.6d, 0.6d, 0.55d, 0.465d };
 
 	// CHECKSTYLE:ON
 	/**

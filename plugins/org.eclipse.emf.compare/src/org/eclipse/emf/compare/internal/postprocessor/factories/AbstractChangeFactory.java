@@ -41,76 +41,7 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 	 * Switch which returns the <code>DifferenceKind</code> of the matching diagram extension in relation to
 	 * the given difference.
 	 */
-	// CHECKSTYLE:OFF
-	private CompareSwitch<DifferenceKind> differenceKindCompareSwitch = new CompareSwitch<DifferenceKind>() {
-		// CHECKSTYLE:ON
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.util.CompareSwitch#caseAttributeChange(org.eclipse.emf.compare.AttributeChange)
-		 */
-		@Override
-		public DifferenceKind caseAttributeChange(AttributeChange object) {
-			DifferenceKind result;
-			if (isRelatedToAnExtensionAdd(object)) {
-				result = DifferenceKind.ADD;
-			} else if (isRelatedToAnExtensionDelete(object)) {
-				result = DifferenceKind.DELETE;
-			} else if (isRelatedToAnExtensionChange(object)) {
-				result = DifferenceKind.CHANGE;
-			} else if (isRelatedToAnExtensionMove(object)) {
-				result = DifferenceKind.MOVE;
-			} else {
-				result = super.caseAttributeChange(object);
-			}
-			return result;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.util.CompareSwitch#caseReferenceChange(org.eclipse.emf.compare.ReferenceChange)
-		 */
-		@Override
-		public DifferenceKind caseReferenceChange(ReferenceChange object) {
-			DifferenceKind result;
-			if (isRelatedToAnExtensionAdd(object)) {
-				result = DifferenceKind.ADD;
-			} else if (isRelatedToAnExtensionDelete(object)) {
-				result = DifferenceKind.DELETE;
-			} else if (isRelatedToAnExtensionChange(object)) {
-				result = DifferenceKind.CHANGE;
-			} else if (isRelatedToAnExtensionMove(object)) {
-				result = DifferenceKind.MOVE;
-			} else {
-				result = super.caseReferenceChange(object);
-			}
-			return result;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.util.CompareSwitch#caseResourceAttachmentChange(org.eclipse.emf.compare.ResourceAttachmentChange)
-		 */
-		@Override
-		public DifferenceKind caseResourceAttachmentChange(ResourceAttachmentChange object) {
-			DifferenceKind result;
-			if (isRelatedToAnExtensionAdd(object)) {
-				result = DifferenceKind.ADD;
-			} else if (isRelatedToAnExtensionDelete(object)) {
-				result = DifferenceKind.DELETE;
-			} else if (isRelatedToAnExtensionChange(object)) {
-				result = DifferenceKind.CHANGE;
-			} else if (isRelatedToAnExtensionMove(object)) {
-				result = DifferenceKind.MOVE;
-			} else {
-				result = super.caseResourceAttachmentChange(object);
-			}
-			return result;
-		}
-	};
+	private CompareSwitch<DifferenceKind> differenceKindCompareSwitch = new DifferenceKindCompareSwitch();
 
 	/**
 	 * {@inheritDoc}
@@ -460,4 +391,76 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 		return extensions;
 	}
 
+	/**
+	 * This can be used to determine the kind of an extension according to an input Diff.
+	 * 
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+	 */
+	private class DifferenceKindCompareSwitch extends CompareSwitch<DifferenceKind> {
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.util.CompareSwitch#caseAttributeChange(org.eclipse.emf.compare.AttributeChange)
+		 */
+		@Override
+		public DifferenceKind caseAttributeChange(AttributeChange object) {
+			DifferenceKind result;
+			if (isRelatedToAnExtensionAdd(object)) {
+				result = DifferenceKind.ADD;
+			} else if (isRelatedToAnExtensionDelete(object)) {
+				result = DifferenceKind.DELETE;
+			} else if (isRelatedToAnExtensionChange(object)) {
+				result = DifferenceKind.CHANGE;
+			} else if (isRelatedToAnExtensionMove(object)) {
+				result = DifferenceKind.MOVE;
+			} else {
+				result = super.caseAttributeChange(object);
+			}
+			return result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.util.CompareSwitch#caseReferenceChange(org.eclipse.emf.compare.ReferenceChange)
+		 */
+		@Override
+		public DifferenceKind caseReferenceChange(ReferenceChange object) {
+			DifferenceKind result;
+			if (isRelatedToAnExtensionAdd(object)) {
+				result = DifferenceKind.ADD;
+			} else if (isRelatedToAnExtensionDelete(object)) {
+				result = DifferenceKind.DELETE;
+			} else if (isRelatedToAnExtensionChange(object)) {
+				result = DifferenceKind.CHANGE;
+			} else if (isRelatedToAnExtensionMove(object)) {
+				result = DifferenceKind.MOVE;
+			} else {
+				result = super.caseReferenceChange(object);
+			}
+			return result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.util.CompareSwitch#caseResourceAttachmentChange(org.eclipse.emf.compare.ResourceAttachmentChange)
+		 */
+		@Override
+		public DifferenceKind caseResourceAttachmentChange(ResourceAttachmentChange object) {
+			DifferenceKind result;
+			if (isRelatedToAnExtensionAdd(object)) {
+				result = DifferenceKind.ADD;
+			} else if (isRelatedToAnExtensionDelete(object)) {
+				result = DifferenceKind.DELETE;
+			} else if (isRelatedToAnExtensionChange(object)) {
+				result = DifferenceKind.CHANGE;
+			} else if (isRelatedToAnExtensionMove(object)) {
+				result = DifferenceKind.MOVE;
+			} else {
+				result = super.caseResourceAttachmentChange(object);
+			}
+			return result;
+		}
+	}
 }

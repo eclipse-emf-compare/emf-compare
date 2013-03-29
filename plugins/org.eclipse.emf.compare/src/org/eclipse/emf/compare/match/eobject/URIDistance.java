@@ -60,7 +60,6 @@ public class URIDistance implements Function<EObject, Iterable<String>> {
 		locationCache = CacheBuilder.newBuilder().maximumSize(10000).build(CacheLoader.from(this));
 		fragmentsCache = CacheBuilder.newBuilder().maximumSize(10000).build(
 				CacheLoader.from(new EUriFragmentFunction()));
-		// CHECKSTYLE:ON
 	}
 
 	/**

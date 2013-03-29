@@ -53,6 +53,7 @@ public class EUriFragmentFunction implements Function<EObject, String> {
 	}
 
 	// CHECKSTYLE:OFF
+	// TODO Comment the checkstyle suppression. Was that copy/pasted from somewhere?
 	public String eURIFragmentSegment(EObject container, EStructuralFeature eStructuralFeature,
 			EObject eObject) {
 		if (eStructuralFeature == null) {
@@ -187,4 +188,5 @@ public class EUriFragmentFunction implements Function<EObject, String> {
 			"%18", "%19", "%1A", "%1B", "%1C", "%1D", "%1E", "%1F", "%20", null, "%22", "%23", null, "%25",
 			"%26", "%27", null, null, null, null, "%2C", null, null, "%2F", null, null, null, null, null,
 			null, null, null, null, null, "%3A", null, "%3C", null, "%3E", null, };
+	// CHECKSTYLE:ON
 }

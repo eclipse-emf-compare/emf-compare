@@ -96,7 +96,6 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	 * 
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#getAncestorMergeViewer()
 	 */
-	@SuppressWarnings("unchecked")
 	// see createMergeViewer() to see it is safe
 	@Override
 	protected TreeMergeViewer getAncestorMergeViewer() {
@@ -108,7 +107,6 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	 * 
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#getLeftMergeViewer()
 	 */
-	@SuppressWarnings("unchecked")
 	// see createMergeViewer() to see it is safe
 	@Override
 	protected TreeMergeViewer getLeftMergeViewer() {
@@ -120,7 +118,6 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	 * 
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#getRightMergeViewer()
 	 */
-	@SuppressWarnings("unchecked")
 	// see createMergeViewer() to see it is safe
 	@Override
 	protected TreeMergeViewer getRightMergeViewer() {
