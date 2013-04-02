@@ -69,9 +69,7 @@ public class NodeChangeFactory extends AbstractDiagramChangeFactory {
 		// Macroscopic change on a node is refined by the unit main change and unit children related changes.
 		extension.getRefinedBy().add(refiningDiff);
 		if (extensionKind != DifferenceKind.MOVE) {
-			if (refiningDiff instanceof ReferenceChange) {
-				extension.getRefinedBy().addAll(getAllContainedDifferences((ReferenceChange)refiningDiff));
-			}
+			extension.getRefinedBy().addAll(getAllContainedDifferences(refiningDiff));
 		}
 	}
 

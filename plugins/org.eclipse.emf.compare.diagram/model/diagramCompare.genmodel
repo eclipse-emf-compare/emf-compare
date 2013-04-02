@@ -17,5 +17,6 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diagramCompare.ecore#//DiagramDiff/semanticDiff"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diagramCompare.ecore#//DiagramDiff/view"/>
     </genClasses>
+    <genClasses ecoreClass="diagramCompare.ecore#//DiagramChange"/>
   </genPackages>
 </genmodel:GenModel>

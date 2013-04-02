@@ -199,6 +199,29 @@ public class ExtensionsItemProviderAdapterFactory extends ExtensionsAdapterFacto
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diagram.internal.extensions.DiagramChange} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected DiagramChangeItemProvider diagramChangeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diagram.internal.extensions.DiagramChange}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createDiagramChangeAdapter() {
+		if (diagramChangeItemProvider == null) {
+			diagramChangeItemProvider = new DiagramChangeItemProvider(this);
+		}
+
+		return diagramChangeItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -302,6 +325,7 @@ public class ExtensionsItemProviderAdapterFactory extends ExtensionsAdapterFacto
 		if (nodeChangeItemProvider != null) nodeChangeItemProvider.dispose();
 		if (coordinatesChangeItemProvider != null) coordinatesChangeItemProvider.dispose();
 		if (edgeChangeItemProvider != null) edgeChangeItemProvider.dispose();
+		if (diagramChangeItemProvider != null) diagramChangeItemProvider.dispose();
 	}
 
 }

@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.diagram.internal.extensions.impl;
 import org.eclipse.emf.compare.ComparePackage;
 
 import org.eclipse.emf.compare.diagram.internal.extensions.CoordinatesChange;
+import org.eclipse.emf.compare.diagram.internal.extensions.DiagramChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.extensions.EdgeChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsFactory;
@@ -76,6 +77,13 @@ public class ExtensionsPackageImpl extends EPackageImpl implements ExtensionsPac
 	 * @generated
 	 */
 	private EClass diagramDiffEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass diagramChangeEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -218,6 +226,15 @@ public class ExtensionsPackageImpl extends EPackageImpl implements ExtensionsPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getDiagramChange() {
+		return diagramChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ExtensionsFactory getExtensionsFactory() {
 		return (ExtensionsFactory)getEFactoryInstance();
 	}
@@ -254,6 +271,8 @@ public class ExtensionsPackageImpl extends EPackageImpl implements ExtensionsPac
 		diagramDiffEClass = createEClass(DIAGRAM_DIFF);
 		createEReference(diagramDiffEClass, DIAGRAM_DIFF__SEMANTIC_DIFF);
 		createEReference(diagramDiffEClass, DIAGRAM_DIFF__VIEW);
+
+		diagramChangeEClass = createEClass(DIAGRAM_CHANGE);
 	}
 
 	/**
@@ -294,6 +313,7 @@ public class ExtensionsPackageImpl extends EPackageImpl implements ExtensionsPac
 		coordinatesChangeEClass.getESuperTypes().add(this.getNodeChange());
 		edgeChangeEClass.getESuperTypes().add(this.getDiagramDiff());
 		diagramDiffEClass.getESuperTypes().add(theComparePackage.getDiff());
+		diagramChangeEClass.getESuperTypes().add(this.getDiagramDiff());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(showEClass, Show.class, "Show", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -309,6 +329,8 @@ public class ExtensionsPackageImpl extends EPackageImpl implements ExtensionsPac
 		initEClass(diagramDiffEClass, DiagramDiff.class, "DiagramDiff", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDiagramDiff_SemanticDiff(), theComparePackage.getDiff(), null, "semanticDiff", null, 0, 1, DiagramDiff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDiagramDiff_View(), theEcorePackage.getEObject(), null, "view", null, 0, 1, DiagramDiff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(diagramChangeEClass, DiagramChange.class, "DiagramChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

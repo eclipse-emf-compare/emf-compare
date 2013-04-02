@@ -69,6 +69,7 @@ public class ExtensionsFactoryImpl extends EFactoryImpl implements ExtensionsFac
 			case ExtensionsPackage.NODE_CHANGE: return createNodeChange();
 			case ExtensionsPackage.COORDINATES_CHANGE: return createCoordinatesChange();
 			case ExtensionsPackage.EDGE_CHANGE: return createEdgeChange();
+			case ExtensionsPackage.DIAGRAM_CHANGE: return createDiagramChange();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -122,6 +123,16 @@ public class ExtensionsFactoryImpl extends EFactoryImpl implements ExtensionsFac
 	public EdgeChange createEdgeChange() {
 		EdgeChangeImpl edgeChange = new EdgeChangeImpl();
 		return edgeChange;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DiagramChange createDiagramChange() {
+		DiagramChangeImpl diagramChange = new DiagramChangeImpl();
+		return diagramChange;
 	}
 
 	/**

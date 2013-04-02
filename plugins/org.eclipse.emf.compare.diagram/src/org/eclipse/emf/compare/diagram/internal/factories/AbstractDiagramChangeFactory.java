@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory;
+import org.eclipse.emf.compare.util.CompareSwitch;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -60,18 +61,35 @@ public abstract class AbstractDiagramChangeFactory extends AbstractChangeFactory
 	 * @return The view.
 	 */
 	public EObject setView(DiagramDiff extension, Diff refiningDiff) {
-		EObject view = null;
-		if (refiningDiff instanceof ReferenceChange) {
-			view = ((ReferenceChange)refiningDiff).getValue();
-		} else if (refiningDiff instanceof AttributeChange) {
-			Comparison comparison = refiningDiff.getMatch().getComparison();
-			view = MatchUtil.getContainer(comparison, refiningDiff);
-			while (view != null && !(view instanceof View)) {
-				view = view.eContainer();
+
+		CompareSwitch<EObject> getterValue = new CompareSwitch<EObject>() {
+
+			@Override
+			public EObject caseReferenceChange(ReferenceChange object) {
+				return object.getValue();
 			}
-		}
+
+			@Override
+			public EObject caseAttributeChange(AttributeChange object) {
+				Comparison comparison = object.getMatch().getComparison();
+				EObject view = MatchUtil.getContainer(comparison, object);
+				while (view != null && !(view instanceof View)) {
+					view = view.eContainer();
+				}
+				return view;
+			}
+
+			@Override
+			public EObject caseResourceAttachmentChange(
+					org.eclipse.emf.compare.ResourceAttachmentChange object) {
+				Comparison comparison = object.getMatch().getComparison();
+				return MatchUtil.getContainer(comparison, object);
+			}
+
+		};
+
+		EObject view = getterValue.doSwitch(refiningDiff);
 		extension.setView(view);
-		// FIXME: ResourceAttachmentChange ?
 		return view;
 	}
 

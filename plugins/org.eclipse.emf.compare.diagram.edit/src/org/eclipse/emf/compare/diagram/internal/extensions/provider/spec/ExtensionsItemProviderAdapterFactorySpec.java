@@ -38,6 +38,9 @@ public class ExtensionsItemProviderAdapterFactorySpec extends ExtensionsItemProv
 	/** Item provider used for the coordinates change. */
 	CoordinatesChangeItemProviderSpec fCoordinatesChangeItemProvider;
 
+	/** Item provider used for the diagram change. */
+	DiagramChangeItemProviderSpec fDiagramChangeItemProvider;
+
 	/**
 	 * Constructor.
 	 */
@@ -114,5 +117,19 @@ public class ExtensionsItemProviderAdapterFactorySpec extends ExtensionsItemProv
 					.createCoordinatesChangeAdapter());
 		}
 		return fCoordinatesChangeItemProvider;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.internal.extensions.provider.ExtensionsItemProviderAdapterFactory#createDiagramChangeAdapter()
+	 */
+	@Override
+	public Adapter createDiagramChangeAdapter() {
+		if (fDiagramChangeItemProvider == null) {
+			fDiagramChangeItemProvider = new DiagramChangeItemProviderSpec((ItemProviderAdapter)super
+					.createDiagramChangeAdapter());
+		}
+		return fDiagramChangeItemProvider;
 	}
 }

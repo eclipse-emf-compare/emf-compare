@@ -14,12 +14,13 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.isEmpty;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.emf.compare.provider.spec.MatchResourceItemProviderSpec;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -40,14 +41,8 @@ public class EmptyMatchedResourcesFilter extends AbstractDifferenceFilter {
 				Iterable<ResourceAttachmentChange> resourceAttachmentchanges = filter(differences,
 						ResourceAttachmentChange.class);
 				if (!isEmpty(resourceAttachmentchanges)) {
-					for (ResourceAttachmentChange rac : resourceAttachmentchanges) {
-						final String diffResourceURI = rac.getResourceURI();
-						if (!diffResourceURI.equals(((MatchResource)input).getLeftURI())
-								&& !diffResourceURI.equals(((MatchResource)input).getRightURI())
-								&& !diffResourceURI.equals(((MatchResource)input).getOriginURI())) {
-							return true;
-						}
-					}
+					return Iterables.all(resourceAttachmentchanges, MatchResourceItemProviderSpec
+							.uriDifferentFromAll((MatchResource)input));
 				} else {
 					return true;
 				}

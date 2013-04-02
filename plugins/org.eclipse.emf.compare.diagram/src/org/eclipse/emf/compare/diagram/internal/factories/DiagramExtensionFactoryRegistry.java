@@ -19,6 +19,7 @@ import java.util.Map;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.diagram.internal.CompareDiagramConfiguration;
 import org.eclipse.emf.compare.diagram.internal.factories.extensions.CoordinatesChangeFactory;
+import org.eclipse.emf.compare.diagram.internal.factories.extensions.DiagramChangeFactory;
 import org.eclipse.emf.compare.diagram.internal.factories.extensions.EdgeChangeFactory;
 import org.eclipse.emf.compare.diagram.internal.factories.extensions.HideFactory;
 import org.eclipse.emf.compare.diagram.internal.factories.extensions.NodeChangeFactory;
@@ -56,6 +57,7 @@ public final class DiagramExtensionFactoryRegistry {
 		factories.add(new NodeChangeFactory());
 		factories.add(new CoordinatesChangeFactory(configuration));
 		factories.add(new EdgeChangeFactory());
+		factories.add(new DiagramChangeFactory());
 
 		for (IChangeFactory iDiffExtensionFactory : factories) {
 			dataset.put(iDiffExtensionFactory.getExtensionKind(), iDiffExtensionFactory);

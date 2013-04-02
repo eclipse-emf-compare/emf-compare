@@ -88,8 +88,6 @@ public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider im
 			Comparison comparison = diagramDiff.getMatch().getComparison();
 			match = comparison.getMatch(view);
 			ret.addAll(match.getSubmatches());
-		}
-		if (match != null) {
 			ITreeItemContentProvider contentProvider = (ITreeItemContentProvider)getRootAdapterFactory()
 					.adapt(match, ITreeItemContentProvider.class);
 			if (contentProvider != null) {

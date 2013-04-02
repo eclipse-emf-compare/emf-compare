@@ -124,6 +124,14 @@ public class ExtensionsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ExtensionsPackage.DIAGRAM_CHANGE: {
+				DiagramChange diagramChange = (DiagramChange)theEObject;
+				T result = caseDiagramChange(diagramChange);
+				if (result == null) result = caseDiagramDiff(diagramChange);
+				if (result == null) result = caseDiff(diagramChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -215,6 +223,21 @@ public class ExtensionsSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseDiagramDiff(DiagramDiff object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Diagram Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Diagram Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDiagramChange(DiagramChange object) {
 		return null;
 	}
 
