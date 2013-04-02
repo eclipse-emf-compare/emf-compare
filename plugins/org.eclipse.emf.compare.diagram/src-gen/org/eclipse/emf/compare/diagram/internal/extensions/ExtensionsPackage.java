@@ -828,6 +828,134 @@ public interface ExtensionsPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diagram.internal.extensions.impl.DiagramChangeImpl <em>Diagram Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diagram.internal.extensions.impl.DiagramChangeImpl
+	 * @see org.eclipse.emf.compare.diagram.internal.extensions.impl.ExtensionsPackageImpl#getDiagramChange()
+	 * @generated
+	 */
+	int DIAGRAM_CHANGE = 6;
+
+	/**
+	 * The feature id for the '<em><b>Match</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_CHANGE__MATCH = DIAGRAM_DIFF__MATCH;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_CHANGE__REQUIRES = DIAGRAM_DIFF__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_CHANGE__REQUIRED_BY = DIAGRAM_DIFF__REQUIRED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Refines</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_CHANGE__REFINES = DIAGRAM_DIFF__REFINES;
+
+	/**
+	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_CHANGE__REFINED_BY = DIAGRAM_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_CHANGE__KIND = DIAGRAM_DIFF__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_CHANGE__SOURCE = DIAGRAM_DIFF__SOURCE;
+
+	/**
+	 * The feature id for the '<em><b>State</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_CHANGE__STATE = DIAGRAM_DIFF__STATE;
+
+	/**
+	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_CHANGE__EQUIVALENCE = DIAGRAM_DIFF__EQUIVALENCE;
+
+	/**
+	 * The feature id for the '<em><b>Conflict</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_CHANGE__CONFLICT = DIAGRAM_DIFF__CONFLICT;
+
+	/**
+	 * The feature id for the '<em><b>Semantic Diff</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_CHANGE__SEMANTIC_DIFF = DIAGRAM_DIFF__SEMANTIC_DIFF;
+
+	/**
+	 * The feature id for the '<em><b>View</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_CHANGE__VIEW = DIAGRAM_DIFF__VIEW;
+
+	/**
+	 * The number of structural features of the '<em>Diagram Change</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_CHANGE_FEATURE_COUNT = DIAGRAM_DIFF_FEATURE_COUNT + 0;
+
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diagram.internal.extensions.Show <em>Show</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -908,6 +1036,16 @@ public interface ExtensionsPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getDiagramDiff_View();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diagram.internal.extensions.DiagramChange <em>Diagram Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Diagram Change</em>'.
+	 * @see org.eclipse.emf.compare.diagram.internal.extensions.DiagramChange
+	 * @generated
+	 */
+	EClass getDiagramChange();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -1006,6 +1144,16 @@ public interface ExtensionsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference DIAGRAM_DIFF__VIEW = eINSTANCE.getDiagramDiff_View();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diagram.internal.extensions.impl.DiagramChangeImpl <em>Diagram Change</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diagram.internal.extensions.impl.DiagramChangeImpl
+		 * @see org.eclipse.emf.compare.diagram.internal.extensions.impl.ExtensionsPackageImpl#getDiagramChange()
+		 * @generated
+		 */
+		EClass DIAGRAM_CHANGE = eINSTANCE.getDiagramChange();
 
 	}
 

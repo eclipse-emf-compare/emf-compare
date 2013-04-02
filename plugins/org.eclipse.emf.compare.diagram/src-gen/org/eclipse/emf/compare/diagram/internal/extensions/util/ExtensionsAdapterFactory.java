@@ -102,6 +102,10 @@ public class ExtensionsAdapterFactory extends AdapterFactoryImpl {
 				return createDiagramDiffAdapter();
 			}
 			@Override
+			public Adapter caseDiagramChange(DiagramChange object) {
+				return createDiagramChangeAdapter();
+			}
+			@Override
 			public Adapter caseDiff(Diff object) {
 				return createDiffAdapter();
 			}
@@ -206,6 +210,20 @@ public class ExtensionsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createDiagramDiffAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diagram.internal.extensions.DiagramChange <em>Diagram Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diagram.internal.extensions.DiagramChange
+	 * @generated
+	 */
+	public Adapter createDiagramChangeAdapter() {
 		return null;
 	}
 

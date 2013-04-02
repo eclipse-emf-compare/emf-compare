@@ -75,6 +75,15 @@ public interface ExtensionsFactory extends EFactory {
 	EdgeChange createEdgeChange();
 
 	/**
+	 * Returns a new object of class '<em>Diagram Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Diagram Change</em>'.
+	 * @generated
+	 */
+	DiagramChange createDiagramChange();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

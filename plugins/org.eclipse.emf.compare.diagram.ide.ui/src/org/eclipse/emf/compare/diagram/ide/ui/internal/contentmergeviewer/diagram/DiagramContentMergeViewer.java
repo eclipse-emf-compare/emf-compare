@@ -381,8 +381,11 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 							decorators = new ArrayList();
 						}
 
-						decorators.add(createAndRegisterDecorator(difference, referenceView, referenceFigure,
-								targetSide));
+						AbstractDecorator decorator = createAndRegisterDecorator(difference, referenceView,
+								referenceFigure, targetSide);
+						if (decorator != null) {
+							decorators.add(decorator);
+						}
 					}
 
 				}
@@ -542,15 +545,17 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 *            The reference view.
 		 * @param side
 		 *            The side where the layer has to be found.
-		 * @return The layer figure.
+		 * @return The layer figure or null if the edit part of the diagram is not found.
 		 */
 		protected IFigure getLayer(View referenceView, MergeViewerSide side) {
 			Diagram referenceDiagram = referenceView.getDiagram();
 			Diagram targetDiagram = (Diagram)getMatchView(referenceDiagram, side);
 			DiagramMergeViewer targetViewer = getViewer(side);
-			IFigure targetLayer = LayerManager.Helper.find(targetViewer.getEditPart(targetDiagram)).getLayer(
-					getIDLayer(referenceView));
-			return targetLayer;
+			EditPart editPart = targetViewer.getEditPart(targetDiagram);
+			if (editPart != null) {
+				return LayerManager.Helper.find(editPart).getLayer(getIDLayer(referenceView));
+			}
+			return null;
 		}
 
 		/**
@@ -560,7 +565,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 * 
 		 * @param referenceView
 		 *            The reference view.
-		 * @return The ID of te layer.
+		 * @return The ID of the layer.
 		 */
 		protected Object getIDLayer(View referenceView) {
 			if (referenceView instanceof Edge) {
@@ -840,7 +845,9 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		protected Phantom createAndRegisterDecorator(Diff diff, View referenceView, IFigure referenceFigure,
 				MergeViewerSide targetSide) {
 			Phantom phantom = createPhantom(diff, referenceView, referenceFigure, targetSide);
-			fPhantomRegistry.put(diff, phantom);
+			if (phantom != null) {
+				fPhantomRegistry.put(diff, phantom);
+			}
 			return phantom;
 		}
 
@@ -964,89 +971,98 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 *            The reference figure as base for creation of the phantom.
 		 * @param side
 		 *            The side where the phantom has to be created.
-		 * @return The phantom.
+		 * @return The phantom or null if the target layer is not found.
 		 */
 		private Phantom createPhantom(Diff diff, View referenceView, IFigure referenceFigure,
 				MergeViewerSide side) {
 
-			MergeViewerSide referenceSide = getSide(referenceView);
-
-			Rectangle rect = referenceFigure.getBounds().getCopy();
-
-			IFigure referenceLayer = getLayer(referenceView, referenceSide);
-			translateCoordinates(referenceFigure, referenceLayer, rect);
-
-			DecoratorFigure ghost = null;
-
 			IFigure targetLayer = getLayer(referenceView, side);
-			Phantom phantom = new Phantom(targetLayer, side, referenceView, referenceFigure, diff);
+			if (targetLayer != null) {
+				MergeViewerSide referenceSide = getSide(referenceView);
 
-			// Container "list" case
-			if (isNodeList(referenceView)) {
-				Diff refiningDiff = Iterators.find(diff.getRefinedBy().iterator(), and(
-						valueIs(referenceView), onFeature(NotationPackage.Literals.VIEW__PERSISTED_CHILDREN
-								.getName())));
+				Rectangle rect = referenceFigure.getBounds().getCopy();
 
-				// FIXME: It has to manage visible views.
-				int index = DiffUtil.findInsertionIndex(getComparison(), refiningDiff,
-						side == MergeViewerSide.LEFT);
+				IFigure referenceLayer = getLayer(referenceView, referenceSide);
+				translateCoordinates(referenceFigure, referenceLayer, rect);
 
-				IFigure referenceParentFigure = referenceFigure.getParent();
-				Rectangle referenceParentBounds = referenceParentFigure.getBounds().getCopy();
-				translateCoordinates(referenceParentFigure, referenceLayer, referenceParentBounds);
+				DecoratorFigure ghost = null;
 
-				View parentView = (View)getMatchView(referenceView.eContainer(), side);
-				if (parentView != null) {
-					int nbElements = getVisibleViews(parentView).size();
-					if (index > nbElements) {
-						index = nbElements;
+				Phantom phantom = new Phantom(targetLayer, side, referenceView, referenceFigure, diff);
+
+				// Container "list" case
+				if (isNodeList(referenceView)) {
+					Diff refiningDiff = Iterators.find(diff.getRefinedBy().iterator(), and(
+							valueIs(referenceView),
+							onFeature(NotationPackage.Literals.VIEW__PERSISTED_CHILDREN.getName())));
+
+					// FIXME: It has to manage visible views.
+					int index = DiffUtil.findInsertionIndex(getComparison(), refiningDiff,
+							side == MergeViewerSide.LEFT);
+
+					IFigure referenceParentFigure = referenceFigure.getParent();
+					Rectangle referenceParentBounds = referenceParentFigure.getBounds().getCopy();
+					translateCoordinates(referenceParentFigure, referenceLayer, referenceParentBounds);
+
+					View parentView = (View)getMatchView(referenceView.eContainer(), side);
+					if (parentView != null) {
+						int nbElements = getVisibleViews(parentView).size();
+						// CHECKSTYLE:OFF
+						if (index > nbElements) {
+							// CHECKSTYLE:ON
+							index = nbElements;
+						}
+					}
+
+					// FIXME: The add of decorators modifies the physical coordinates of elements
+					// FIXME: Compute position from the y position of the first child + sum of height of the
+					// children.
+					int pos = rect.height * index + referenceParentBounds.y + 1;
+					Map<String, Object> parameters = new HashMap<String, Object>();
+					parameters.put(NodeListFigure.PARAM_Y_POS, Integer.valueOf(pos));
+
+					ghost = new NodeListFigure(diff, isThreeWay(), getCompareColor(), referenceFigure, rect,
+							true, parameters);
+
+					// Edge case
+				} else if (referenceView instanceof Edge) {
+					// If the edge phantom ties shapes where their coordinates changed
+					if (hasAnExtremityChange((Edge)referenceView, side)) {
+						EditPart edgeEditPart = createEdgeEditPart((Edge)referenceView, referenceSide, side);
+						// CHECKSTYLE:OFF
+						if (edgeEditPart instanceof GraphicalEditPart) {
+							// CHECKSTYLE:ON
+							phantom.setEditPart(edgeEditPart);
+
+							IFigure fig = ((GraphicalEditPart)edgeEditPart).getFigure();
+							fig.getChildren().clear();
+							ghost = new DecoratorFigure(diff, isThreeWay(), getCompareColor(),
+									referenceFigure, fig, true);
+
+						}
+						// Else, it creates only a polyline connection figure with the same properties as the
+						// reference
+					} else {
+						if (referenceFigure instanceof PolylineConnection) {
+							ghost = new EdgeFigure(diff, isThreeWay(), getCompareColor(), referenceFigure,
+									rect, true);
+						}
 					}
 				}
 
-				// FIXME: The add of decorators modifies the physical coordinates of elements
-				// FIXME: Compute position from the y position of the first child + sum of height of the
-				// children.
-				int pos = rect.height * index + referenceParentBounds.y + 1;
-				Map<String, Object> parameters = new HashMap<String, Object>();
-				parameters.put(NodeListFigure.PARAM_Y_POS, Integer.valueOf(pos));
-
-				ghost = new NodeListFigure(diff, isThreeWay(), getCompareColor(), referenceFigure, rect,
-						true, parameters);
-
-				// Edge case
-			} else if (referenceView instanceof Edge) {
-				// If the edge phantom ties shapes where their coordinates changed
-				if (hasAnExtremityChange((Edge)referenceView, side)) {
-					EditPart edgeEditPart = createEdgeEditPart((Edge)referenceView, referenceSide, side);
-					if (edgeEditPart instanceof GraphicalEditPart) {
-						phantom.setEditPart(edgeEditPart);
-
-						IFigure fig = ((GraphicalEditPart)edgeEditPart).getFigure();
-						fig.getChildren().clear();
-						ghost = new DecoratorFigure(diff, isThreeWay(), getCompareColor(), referenceFigure,
-								fig, true);
-
-					}
-					// Else, it creates only a polyline connection figure with the same properties as the
-					// reference
-				} else {
-					if (referenceFigure instanceof PolylineConnection) {
-						ghost = new EdgeFigure(diff, isThreeWay(), getCompareColor(), referenceFigure, rect,
-								true);
-					}
+				// Default case: Nodes
+				if (ghost == null) {
+					ghost = new NodeFigure(diff, isThreeWay(), getCompareColor(), referenceFigure, rect, true);
 				}
+
+				phantom.setDecoratorFigure(ghost);
+
+				translateWhenInsideContainerChange(phantom);
+
+				return phantom;
 			}
 
-			// Default case: Nodes
-			if (ghost == null) {
-				ghost = new NodeFigure(diff, isThreeWay(), getCompareColor(), referenceFigure, rect, true);
-			}
+			return null;
 
-			phantom.setDecoratorFigure(ghost);
-
-			translateWhenInsideContainerChange(phantom);
-
-			return phantom;
 		}
 
 		/**
@@ -1420,12 +1436,14 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		protected Marker createAndRegisterDecorator(Diff diff, View referenceView, IFigure referenceFigure,
 				MergeViewerSide targetSide) {
 			Marker marker = createMarker(diff, referenceView, referenceFigure, targetSide);
-			List<Marker> markers = fMarkerRegistry.get(diff);
-			if (markers == null) {
-				markers = new ArrayList<Marker>();
-				fMarkerRegistry.put(diff, markers);
+			if (marker != null) {
+				List<Marker> markers = fMarkerRegistry.get(diff);
+				if (markers == null) {
+					markers = new ArrayList<Marker>();
+					fMarkerRegistry.put(diff, markers);
+				}
+				markers.add(marker);
 			}
-			markers.add(marker);
 			return marker;
 		}
 
@@ -1496,44 +1514,47 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 *            The reference figure as base for creation of the marker.
 		 * @param side
 		 *            The side where the marker has to be created.
-		 * @return The phantom.
+		 * @return The phantom or null if the target layer is not found.
 		 */
 		private Marker createMarker(Diff diff, View referenceView, IFigure referenceFigure,
 				MergeViewerSide side) {
 
-			Rectangle referenceBounds = referenceFigure.getBounds().getCopy();
 			IFigure referenceLayer = getLayer(referenceView, side);
-			translateCoordinates(referenceFigure, referenceLayer, referenceBounds);
+			if (referenceLayer != null) {
+				Rectangle referenceBounds = referenceFigure.getBounds().getCopy();
+				translateCoordinates(referenceFigure, referenceLayer, referenceBounds);
 
-			DecoratorFigure markerFigure = null;
+				DecoratorFigure markerFigure = null;
 
-			IFigure targetLayer = getLayer(referenceView, side);
-			Marker marker = new Marker(targetLayer, side, referenceView, referenceFigure, diff);
+				Marker marker = new Marker(referenceLayer, side, referenceView, referenceFigure, diff);
 
-			if (isNodeList(referenceView)) {
+				if (isNodeList(referenceView)) {
 
-				markerFigure = new NodeListFigure(diff, isThreeWay(), getCompareColor(), referenceFigure,
-						referenceBounds, false);
+					markerFigure = new NodeListFigure(diff, isThreeWay(), getCompareColor(), referenceFigure,
+							referenceBounds, false);
 
-			} else if (referenceView instanceof Edge) {
+				} else if (referenceView instanceof Edge) {
 
-				if (referenceFigure instanceof PolylineConnection) {
-					markerFigure = new EdgeFigure(diff, isThreeWay(), getCompareColor(), referenceFigure,
+					if (referenceFigure instanceof PolylineConnection) {
+						markerFigure = new EdgeFigure(diff, isThreeWay(), getCompareColor(), referenceFigure,
+								referenceBounds, false);
+					}
+
+				}
+
+				// Default case: Nodes
+				if (markerFigure == null) {
+
+					markerFigure = new NodeFigure(diff, isThreeWay(), getCompareColor(), referenceFigure,
 							referenceBounds, false);
 				}
 
+				marker.setDecoratorFigure(markerFigure);
+				return marker;
 			}
 
-			// Default case: Nodes
-			if (markerFigure == null) {
+			return null;
 
-				markerFigure = new NodeFigure(diff, isThreeWay(), getCompareColor(), referenceFigure,
-						referenceBounds, false);
-			}
-
-			marker.setDecoratorFigure(markerFigure);
-
-			return marker;
 		}
 
 		/**

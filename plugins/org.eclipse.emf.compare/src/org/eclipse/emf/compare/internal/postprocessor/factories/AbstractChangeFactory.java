@@ -28,6 +28,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.util.CompareSwitch;
+import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -370,17 +371,40 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 	}
 
 	/**
-	 * Get all the add and delete changes on the objects contained in the one concerned by the given reference
-	 * change.
+	 * Get all the add and delete changes on the objects contained in the one concerned by the given
+	 * difference.
 	 * 
 	 * @param input
-	 *            The given reference change.
+	 *            The given difference.
 	 * @return The found differences.
 	 */
-	protected Set<Diff> getAllContainedDifferences(ReferenceChange input) {
+	protected Set<Diff> getAllContainedDifferences(Diff input) {
+		final Set<Diff> result = new HashSet<Diff>();
+
 		final Comparison comparison = input.getMatch().getComparison();
-		final Match match = comparison.getMatch(input.getValue());
-		final Set<Diff> result = getAllContainedDifferences(comparison, match);
+
+		CompareSwitch<EObject> valueGetter = new CompareSwitch<EObject>() {
+			@Override
+			public EObject caseReferenceChange(ReferenceChange object) {
+				return object.getValue();
+			}
+
+			@Override
+			public EObject caseResourceAttachmentChange(ResourceAttachmentChange object) {
+				return MatchUtil.getContainer(object.getMatch().getComparison(), object);
+			}
+
+			@Override
+			public EObject defaultCase(EObject object) {
+				return null;
+			}
+		};
+		EObject value = valueGetter.doSwitch(input);
+
+		if (value != null) {
+			final Match match = comparison.getMatch(value);
+			result.addAll(getAllContainedDifferences(comparison, match));
+		}
 
 		return result;
 	}
@@ -423,7 +447,7 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 			// Keep only unit changes...
 			if (!getExtensionKind().isInstance(candidate)) {
 				// ... which are not related to an other macroscopic ADD or DELETE of a graphical object.
-				if (!(candidate instanceof ReferenceChange && (isRelatedToAnExtensionAdd((ReferenceChange)candidate) || isRelatedToAnExtensionDelete((ReferenceChange)candidate)))) {
+				if (!isAMainRefiningDifference(candidate)) {
 					result.add(candidate);
 				} else if (candidate instanceof ReferenceChange
 						&& ((ReferenceChange)candidate).getReference().isContainment()) {
@@ -441,6 +465,33 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 		}
 
 		return result;
+	}
+
+	/**
+	 * It checks that the given difference is the main difference of a macroscopic change.
+	 * 
+	 * @param difference
+	 *            the difference to check.
+	 * @return True if the given difference is the main difference of a macroscopic change.
+	 */
+	private boolean isAMainRefiningDifference(Diff difference) {
+		CompareSwitch<Boolean> compareSwitch = new CompareSwitch<Boolean>() {
+			@Override
+			public Boolean caseReferenceChange(ReferenceChange object) {
+				return isRelatedToAnExtensionAdd(object) || isRelatedToAnExtensionDelete(object);
+			}
+
+			@Override
+			public Boolean caseResourceAttachmentChange(ResourceAttachmentChange object) {
+				return isRelatedToAnExtensionAdd(object) || isRelatedToAnExtensionDelete(object);
+			}
+
+			@Override
+			public Boolean defaultCase(EObject object) {
+				return Boolean.FALSE;
+			}
+		};
+		return compareSwitch.doSwitch(difference).booleanValue();
 	}
 
 	/**
