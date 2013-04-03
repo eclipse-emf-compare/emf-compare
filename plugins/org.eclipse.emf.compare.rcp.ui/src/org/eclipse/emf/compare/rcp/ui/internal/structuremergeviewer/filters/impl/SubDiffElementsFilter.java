@@ -14,6 +14,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 
 import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
@@ -37,7 +38,7 @@ public class SubDiffElementsFilter extends AbstractDifferenceFilter {
 			if (input instanceof Diff && !(input instanceof ResourceAttachmentChange)) {
 				final Diff diff = (Diff)input;
 				final Conflict conflict = diff.getConflict();
-				if (conflict == null) {
+				if (conflict == null || ConflictKind.PSEUDO == conflict.getKind()) {
 					final EObject grandParent = diff.getMatch().eContainer();
 					if (grandParent instanceof Match) {
 						ImmutableSet<EObject> containementDifferenceValues = MatchItemProviderSpec

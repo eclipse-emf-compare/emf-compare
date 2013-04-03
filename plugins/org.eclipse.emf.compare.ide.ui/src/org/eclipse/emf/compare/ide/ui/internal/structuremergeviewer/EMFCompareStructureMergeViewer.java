@@ -19,7 +19,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.EventObject;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -39,6 +42,9 @@ import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
@@ -151,7 +157,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		setLabelProvider(new DelegatingStyledCellLabelProvider(
 				new EMFCompareStructureMergeViewerLabelProvider(fAdapterFactory, this)));
 		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(fAdapterFactory,
-				structureMergeViewerGrouper, structureMergeViewerFilter));
+				structureMergeViewerGrouper, structureMergeViewerFilter, configuration));
 
 		if (parent instanceof CompareViewerSwitchingPane) {
 			fParent = (CompareViewerSwitchingPane)parent;
@@ -719,6 +725,39 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		} else {
 			// FIXME, should recompute the difference, something happened outside of this compare editor
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.AbstractTreeViewer#getSortedChildren(java.lang.Object)
+	 */
+	@Override
+	protected Object[] getSortedChildren(Object parentElementOrTreePath) {
+		Object[] result = super.getSortedChildren(parentElementOrTreePath);
+		if (parentElementOrTreePath instanceof Adapter
+				&& ((Adapter)parentElementOrTreePath).getTarget() instanceof Conflict) {
+
+			Collections.sort(Arrays.asList(result), new Comparator<Object>() {
+				public int compare(Object o1, Object o2) {
+					return getValue(o1) - getValue(o2);
+				}
+
+				public int getValue(Object o) {
+					int value = 0;
+					if (o instanceof Adapter && ((Adapter)o).getTarget() instanceof Diff) {
+						if (((Diff)((Adapter)o).getTarget()).getSource() == DifferenceSource.LEFT) {
+							value = 1;
+						} else {
+							value = 2;
+						}
+					}
+					return value;
+				}
+			});
+
+		}
+		return result;
 	}
 
 	/**

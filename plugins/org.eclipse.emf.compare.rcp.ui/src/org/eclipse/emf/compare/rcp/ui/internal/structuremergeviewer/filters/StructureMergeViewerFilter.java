@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
@@ -104,6 +105,9 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 			} else if (notifier instanceof MatchResource) {
 				final MatchResource matchResource = (MatchResource)notifier;
 				result = !predicate.apply(matchResource);
+			} else if (notifier instanceof Conflict) {
+				final Iterator<Diff> differences = ((Conflict)notifier).getDifferences().iterator();
+				result = Iterators.any(differences, not(predicate));
 			}
 		} else if (element instanceof IDifferenceGroup) {
 			final Iterator<? extends Diff> differences = ((IDifferenceGroup)element).getDifferences()

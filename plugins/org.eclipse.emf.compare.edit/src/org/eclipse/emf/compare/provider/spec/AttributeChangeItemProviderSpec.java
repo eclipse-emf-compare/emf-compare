@@ -36,7 +36,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider {
+public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider {
 
 	/** The elide length. */
 	private static final int ELIDE_LENGTH = 50;
