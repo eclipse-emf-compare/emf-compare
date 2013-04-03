@@ -37,8 +37,8 @@
   </licenses>
 
   <properties>
-    <tycho-version>0.17.0-SNAPSHOT</tycho-version>
-    <tycho-extras-version>0.17.0-SNAPSHOT</tycho-extras-version>
+    <tycho-version>0.17.0</tycho-version>
+    <tycho-extras-version>0.17.0</tycho-extras-version>
   </properties>
     
   <pluginRepositories>
