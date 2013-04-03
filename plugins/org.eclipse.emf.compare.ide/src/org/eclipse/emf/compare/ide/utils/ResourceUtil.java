@@ -20,8 +20,11 @@ import java.io.Reader;
 import java.util.Map;
 
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -64,14 +67,8 @@ public final class ResourceUtil {
 			final int endIndex = path.indexOf(resourceName) + resourceName.length();
 			path = path.substring(0, endIndex);
 		}
-		URI uri = URI.createURI(path, true);
-		if (!uri.isPlatformResource()) {
-			uri = URI.createPlatformResourceURI(path, true);
-		}
-		final Resource existing = resourceSet.getResource(uri, false);
-		if (existing != null) {
-			return existing;
-		}
+
+		final URI uri = createURIFor(storage);
 
 		InputStream stream = null;
 		Resource resource = null;
@@ -209,10 +206,29 @@ public final class ResourceUtil {
 			final int endIndex = path.indexOf(resourceName) + resourceName.length();
 			path = path.substring(0, endIndex);
 		}
+
+		// Given the two paths
+		// "g:/ws/project/test.ecore"
+		// "/project/test.ecore"
+		// We have no way to determine which is absolute and which should be platform:/resource
+		// Furthermore, "ws" could be a git repository, in which case we would be here with
+		// ws/project/test.ecore
 		URI uri = URI.createURI(path, true);
-		if (!uri.isPlatformResource()) {
-			uri = URI.createPlatformResourceURI(path, true);
+		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		if (root == null) {
+			return uri;
 		}
+
+		if (root.getFile(new Path(path)).exists()) {
+			uri = URI.createPlatformResourceURI(path, true);
+		} else {
+			// is it a file coming from a Git repository?
+			final int indexOfSeparator = path.indexOf('/');
+			if (indexOfSeparator > 0 && root.getFile(new Path(path.substring(indexOfSeparator))).exists()) {
+				uri = URI.createPlatformResourceURI(path.substring(indexOfSeparator), true);
+			}
+		}
+
 		return uri;
 	}
 

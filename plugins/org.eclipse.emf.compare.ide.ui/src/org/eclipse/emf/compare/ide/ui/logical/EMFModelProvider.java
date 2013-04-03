@@ -51,7 +51,6 @@ public class EMFModelProvider extends ModelProvider {
 			if (actualMonitor == null) {
 				actualMonitor = new NullProgressMonitor();
 			}
-			mapping.getTraversals(context, actualMonitor);
 			return new ResourceMapping[] {mapping, };
 		}
 		return super.getMappings(resource, context, monitor);

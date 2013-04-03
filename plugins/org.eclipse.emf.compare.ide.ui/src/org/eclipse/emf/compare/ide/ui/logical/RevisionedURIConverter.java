@@ -27,24 +27,20 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor.DiffSide;
 import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
 import org.eclipse.emf.ecore.resource.URIConverter;
-import org.eclipse.team.core.diff.IDiff;
-import org.eclipse.team.core.diff.IThreeWayDiff;
-import org.eclipse.team.core.history.IFileRevision;
-import org.eclipse.team.core.mapping.provider.ResourceDiff;
-import org.eclipse.team.core.subscribers.Subscriber;
 
 /**
- * This {@link URIConverter} will be used in order to fetch remote contents instead of local contents when
+ * This {@link URIConverter} will be used in order to fetch remote content instead of local content when
  * loading resources.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @Beta
 public final class RevisionedURIConverter extends StorageURIConverter {
-	/** The Subscriber from which we'll retrieve remote content for referenced resources. */
-	private Subscriber subscriber;
+	/** The accessor that will provide us with resource content. */
+	private IStorageProviderAccessor storageAccessor;
 
 	/** The side we are currently resolving. */
 	private DiffSide side;
@@ -54,14 +50,14 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 	 * 
 	 * @param delegate
 	 *            Our delegate URI converter.
-	 * @param subscriber
-	 *            The Subscriber that will provide synchronization information for these files.
+	 * @param storageAccessor
+	 *            The accessor that will provide synchronization information for the loaded files.
 	 * @param side
 	 *            The side we are currently resolving.
 	 */
-	public RevisionedURIConverter(URIConverter delegate, Subscriber subscriber, DiffSide side) {
+	public RevisionedURIConverter(URIConverter delegate, IStorageProviderAccessor storageAccessor, DiffSide side) {
 		super(delegate);
-		this.subscriber = subscriber;
+		this.storageAccessor = storageAccessor;
 		this.side = side;
 	}
 
@@ -130,59 +126,20 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 	 * @return The opened input stream. May be <code>null</code> if we failed to open it.
 	 */
 	private InputStream openRevisionStream(IResource targetFile) {
-		if (subscriber != null) {
-			IDiff diff = null;
+		if (storageAccessor == null) {
+			// FIXME can this happen? does it matter? Fall back to local content for now.
+		} else {
 			try {
-				diff = subscriber.getDiff(targetFile);
+				final IStorageProvider provider = storageAccessor.getStorageProvider(targetFile, side);
+
+				if (provider != null) {
+					final IStorage storage = provider.getStorage(new NullProgressMonitor());
+					getLoadedRevisions().add(storage);
+					return storage.getContents();
+				}
 			} catch (CoreException e) {
 				logError(e);
 			}
-
-			IFileRevision revision = null;
-			switch (side) {
-				case LEFT:
-					if (diff instanceof IThreeWayDiff) {
-						final IDiff change = ((IThreeWayDiff)diff).getLocalChange();
-						if (change instanceof ResourceDiff) {
-							revision = ((ResourceDiff)change).getAfterState();
-						}
-					} else if (diff instanceof ResourceDiff) {
-						revision = ((ResourceDiff)diff).getAfterState();
-					}
-					break;
-				case RIGHT:
-					if (diff instanceof IThreeWayDiff) {
-						final IDiff change = ((IThreeWayDiff)diff).getRemoteChange();
-						if (change instanceof ResourceDiff) {
-							revision = ((ResourceDiff)change).getAfterState();
-						}
-					} else if (diff instanceof ResourceDiff) {
-						revision = ((ResourceDiff)diff).getBeforeState();
-					}
-					break;
-				case ORIGIN:
-					if (diff instanceof IThreeWayDiff) {
-						final IDiff change = ((IThreeWayDiff)diff).getLocalChange();
-						if (change instanceof ResourceDiff) {
-							revision = ((ResourceDiff)change).getBeforeState();
-						}
-					}
-					break;
-				default:
-					break;
-			}
-
-			if (revision != null) {
-				try {
-					final IStorage storage = revision.getStorage(new NullProgressMonitor());
-					getLoadedRevisions().add(storage);
-					return storage.getContents();
-				} catch (CoreException e) {
-					logError(e);
-				}
-			}
-		} else {
-			// FIXME can this happen? does it matter?
 		}
 
 		return null;

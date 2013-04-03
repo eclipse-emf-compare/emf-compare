@@ -21,19 +21,17 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.eclipse.compare.IResourceProvider;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.internal.utils.NotLoadingResourceSet;
 import org.eclipse.emf.compare.ide.internal.utils.SyncResourceSet;
+import org.eclipse.emf.compare.ide.ui.internal.logical.StreamAccessorStorage;
+import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor;
+import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor.DiffSide;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
@@ -41,11 +39,6 @@ import org.eclipse.emf.compare.scope.FilterComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.team.core.diff.IDiff;
-import org.eclipse.team.core.diff.IThreeWayDiff;
-import org.eclipse.team.core.diff.ITwoWayDiff;
-import org.eclipse.team.core.history.IFileRevision;
-import org.eclipse.team.core.mapping.provider.ResourceDiff;
 import org.eclipse.team.core.subscribers.Subscriber;
 
 /**
@@ -126,81 +119,68 @@ public final class EMFSynchronizationModel {
 	 *            The subscriber that can be used to retrieve synchronization information between our
 	 *            resources. May be <code>null</code>.
 	 * @param left
-	 *            The resource which model is to be resolved.
+	 *            The storage that will be used as the starting point for the "left" logical model.
 	 * @param right
-	 *            The right resource if comparing local files.
+	 *            The storage that will be used as the starting point for the "right" logical model.
 	 * @param origin
-	 *            the origin resource if comparing local files.
+	 *            The storage, if any, that will be used as the starting point for a "common ancestor" logical
+	 *            model.
 	 * @return The resolved synchronization model.
 	 */
-	public static EMFSynchronizationModel createSynchronizationModel(Subscriber subscriber, IResource left,
-			IResource right, IResource origin) {
-		// History cannot be edited. Can we determine it here?
-		boolean canEditLeft = left != null;
-		boolean canEditRight = right != null;
+	public static EMFSynchronizationModel createSynchronizationModel(Subscriber subscriber, IStorage left,
+			IStorage right, IStorage origin) {
+		EMFSynchronizationModel syncModel;
 
-		// FIXME resource can be null if we've been provided three remote revisions.
-		// Find a way around that.
+		/*
+		 * No subscriber here means this comparison has not been launched through the synchronize view. We
+		 * assume that there is no need to resolve the logical model in such cases, and will simply load the
+		 * given content alone. Any cross-resource reference will be dereferenced towards either workspace
+		 * (local) or plugin content. Note that even if we _do_ need to load the model, that would not be
+		 * possible here as we have no synchronization information.
+		 */
+		if (subscriber == null) {
+			syncModel = loadSingle(left, right, origin);
+		} else {
+			// History cannot be edited. Can we determine it here?
+			final IStorageProviderAccessor storageAccessor = new SubscriberStorageAccessor(subscriber);
 
-		IFileRevision leftRevision = null;
-		IFileRevision rightRevision = null;
-		IFileRevision originRevision = null;
-		if (subscriber != null && left != null) {
-			try {
-				final IDiff diff = subscriber.getDiff(left);
-				if (diff instanceof IThreeWayDiff) {
-					final ITwoWayDiff localChange = ((IThreeWayDiff)diff).getLocalChange();
-					final ITwoWayDiff remoteChange = ((IThreeWayDiff)diff).getRemoteChange();
-
-					// right and origin found here should match what was passed as input to this method.
-					if (localChange instanceof ResourceDiff) {
-						leftRevision = ((ResourceDiff)localChange).getAfterState();
-						originRevision = ((ResourceDiff)localChange).getBeforeState();
-					}
-					if (remoteChange instanceof ResourceDiff) {
-						rightRevision = ((ResourceDiff)remoteChange).getAfterState();
-						// origin should match
-					}
-				} else if (diff instanceof ResourceDiff) {
-					leftRevision = ((ResourceDiff)diff).getAfterState();
-					rightRevision = ((ResourceDiff)diff).getBeforeState();
-				} else {
-					// Can this happen?
-				}
-			} catch (CoreException e) {
-				// FIXME log this
+			StorageTraversal leftTraversal = resolveTraversal(storageAccessor, left, DiffSide.SOURCE);
+			StorageTraversal rightTraversal = resolveTraversal(storageAccessor, right, DiffSide.REMOTE);
+			StorageTraversal originTraversal = null;
+			if (origin != null) {
+				originTraversal = resolveTraversal(storageAccessor, origin, DiffSide.ORIGIN);
 			}
-		} else if (subscriber != null) {
-			// FIXME we need to find the path of the resource from its ITypedElement
-		} else {
-			// FIXME can this be the case in a scenario where we need the logical model (i.e. more than one
-			// resource)?
+
+			syncModel = new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal, !left
+					.isReadOnly(), !right.isReadOnly());
 		}
 
-		final StorageTraversal leftTraversal;
-		final StorageTraversal rightTraversal;
+		return syncModel;
+	}
+
+	/**
+	 * We cannot resolve the logical model of these elements. Load them alone.
+	 * 
+	 * @param left
+	 *            Storage to be loaded as left.
+	 * @param right
+	 *            Storage to be loaded as right.
+	 * @param origin
+	 *            Common ancestor of left and right, if any.
+	 * @return The resolved synchronization model.
+	 */
+	private static EMFSynchronizationModel loadSingle(IStorage left, IStorage right, IStorage origin) {
+		final StorageTraversal leftTraversal = new StorageTraversal(Collections.singleton(left));
+		final StorageTraversal rightTraversal = new StorageTraversal(Collections.singleton(right));
 		final StorageTraversal originTraversal;
-		if (leftRevision == null) {
-			// Load it as a local model
-			leftTraversal = resolveTraversal(left);
+		if (origin != null) {
+			originTraversal = new StorageTraversal(Collections.singleton(origin));
 		} else {
-			leftTraversal = resolveTraversal(subscriber, leftRevision, DiffSide.LEFT);
-		}
-		if (rightRevision == null) {
-			// Load it as a local model
-			rightTraversal = resolveTraversal(right);
-		} else {
-			rightTraversal = resolveTraversal(subscriber, rightRevision, DiffSide.RIGHT);
-		}
-		if (originRevision == null) {
-			// Load it as a local model
-			originTraversal = resolveTraversal(origin);
-		} else {
-			originTraversal = resolveTraversal(subscriber, originRevision, DiffSide.ORIGIN);
+			originTraversal = new StorageTraversal(Sets.<IStorage> newLinkedHashSet());
 		}
 
-		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal, canEditLeft,
-				canEditRight);
+		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal,
+				!left.isReadOnly(), !right.isReadOnly());
 	}
 
 	/**
@@ -220,11 +200,16 @@ public final class EMFSynchronizationModel {
 	 */
 	public static EMFSynchronizationModel createSynchronizationModel(Subscriber subscriber,
 			ITypedElement left, ITypedElement right, ITypedElement origin) {
-		final IResource leftResource = findResource(left);
-		final IResource rightResource = findResource(right);
-		final IResource originResource = findResource(origin);
+		final IStorage leftStorage = StreamAccessorStorage.fromTypedElement(left);
+		final IStorage rightStorage = StreamAccessorStorage.fromTypedElement(right);
+		final IStorage originStorage;
+		if (origin != null) {
+			originStorage = StreamAccessorStorage.fromTypedElement(origin);
+		} else {
+			originStorage = null;
+		}
 
-		return createSynchronizationModel(subscriber, leftResource, rightResource, originResource);
+		return createSynchronizationModel(subscriber, leftStorage, rightStorage, originStorage);
 	}
 
 	public IComparisonScope createMinimizedScope() {
@@ -249,8 +234,10 @@ public final class EMFSynchronizationModel {
 		for (IStorage right : rightTraversal.getStorages()) {
 			urisInScope.add(createURIFor(right));
 		}
-		for (IStorage origin : originTraversal.getStorages()) {
-			urisInScope.add(createURIFor(origin));
+		if (originTraversal != null) {
+			for (IStorage origin : originTraversal.getStorages()) {
+				urisInScope.add(createURIFor(origin));
+			}
 		}
 
 		final FilterComparisonScope scope = new DefaultComparisonScope(leftResourceSet, rightResourceSet,
@@ -366,7 +353,7 @@ public final class EMFSynchronizationModel {
 	// package visibility as this will be used by our model provider
 	/* package */static StorageTraversal resolveTraversal(IResource start) {
 		if (!(start instanceof IFile)) {
-			return new StorageTraversal(Sets.<IFile> newLinkedHashSet());
+			return new StorageTraversal(Sets.<IStorage> newLinkedHashSet());
 		}
 
 		/*
@@ -386,106 +373,34 @@ public final class EMFSynchronizationModel {
 		return new StorageTraversal(Collections.singleton((IFile)start));
 	}
 
-	/**
-	 * Tries and resolve the resource traversal corresponding to the given starting point.
-	 * 
-	 * @param subscriber
-	 *            This will be used to retrieve the remote revisions of referenced files. Can be
-	 *            <code>null</code>.
-	 * @param start
-	 *            The revision that will be considered as the "starting point" of the traversal to resolve.
-	 * @param side
-	 *            Side we are currently resolving.
-	 * @return The resource traversal corresponding to the logical model that's been computed from the given
-	 *         starting point.
-	 */
-	private static StorageTraversal resolveTraversal(Subscriber subscriber, IFileRevision start, DiffSide side) {
+	private static StorageTraversal resolveTraversal(IStorageProviderAccessor storageAccessor,
+			IStorage start, DiffSide side) {
+		StorageTraversal traversal = new StorageTraversal(Sets.<IStorage> newLinkedHashSet());
 		if (start == null) {
-			return new StorageTraversal(Sets.<IFile> newLinkedHashSet());
+			return traversal;
 		}
 
-		// TODO how could we make this extensible?
-		StorageTraversal traversal = new StorageTraversal(Sets.<IFile> newLinkedHashSet());
 		final SyncResourceSet resourceSet = new SyncResourceSet();
 		final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
-				subscriber, side);
+				storageAccessor, side);
 		resourceSet.setURIConverter(converter);
-		try {
-			final IStorage startStorage = start.getStorage(new NullProgressMonitor());
-			if (resourceSet.resolveAll(startStorage)) {
-				final Set<IStorage> storages = Sets.newLinkedHashSet();
-				storages.add(startStorage);
-				final IPath startPath = startStorage.getFullPath();
-				for (IStorage loaded : converter.getLoadedRevisions()) {
-					if (!startPath.equals(loaded.getFullPath())) {
-						storages.add(loaded);
-					}
+
+		if (resourceSet.resolveAll(start)) {
+			final Set<IStorage> storages = Sets.newLinkedHashSet();
+			storages.add(start);
+			final IPath startPath = start.getFullPath();
+			for (IStorage loaded : converter.getLoadedRevisions()) {
+				if (!startPath.equals(loaded.getFullPath())) {
+					storages.add(loaded);
 				}
-				traversal = new StorageTraversal(storages);
-			} else {
-				// FIXME log
-				// We failed to load the starting point. simply return an empty traversal.
 			}
-		} catch (CoreException e) {
-			// FIXME ignore for now
+			traversal = new StorageTraversal(storages);
+		} else {
+			// FIXME log
+			// We failed to load the starting point. simply return an empty traversal.
 		}
+
 		return traversal;
-	}
-
-	/**
-	 * Try and determine the resource of the given element.
-	 * 
-	 * @param element
-	 *            The element for which we need an {@link IResource}.
-	 * @return The resource corresponding to the given {@code element} if we could find it, <code>null</code>
-	 *         otherwise.
-	 */
-	private static IResource findResource(ITypedElement element) {
-		if (element == null) {
-			return null;
-		}
-
-		// Can we adapt it directly?
-		IResource resource = adaptAs(element, IResource.class);
-		if (resource == null) {
-			// We know about some types ...
-			if (element instanceof IResourceProvider) {
-				resource = ((IResourceProvider)element).getResource();
-			}
-		}
-
-		return resource;
-	}
-
-	/**
-	 * Tries and adapt the given <em>object</em> to an instance of the given class.
-	 * 
-	 * @param <T>
-	 *            Type to which we need to adapt <em>object</em>.
-	 * @param object
-	 *            The object we need to coerce to a given {@link Class}.
-	 * @param clazz
-	 *            Class to which we are to adapt <em>object</em>.
-	 * @return <em>object</em> cast to type <em>T</em> if possible, <code>null</code> if not.
-	 */
-	@SuppressWarnings("unchecked")
-	private static <T> T adaptAs(Object object, Class<T> clazz) {
-		if (object == null) {
-			return null;
-		}
-
-		T result = null;
-		if (clazz.isInstance(object)) {
-			result = (T)object;
-		} else if (object instanceof IAdaptable) {
-			result = (T)((IAdaptable)object).getAdapter(clazz);
-		}
-
-		if (result == null) {
-			result = (T)Platform.getAdapterManager().getAdapter(object, clazz);
-		}
-
-		return result;
 	}
 
 	/**

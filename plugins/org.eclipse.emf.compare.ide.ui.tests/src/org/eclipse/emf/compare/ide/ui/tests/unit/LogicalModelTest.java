@@ -9,16 +9,24 @@
 package org.eclipse.emf.compare.ide.ui.tests.unit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor;
 import org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel;
+import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
+import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.ide.ui.tests.egit.CompareGitTestCase;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EClass;
@@ -56,11 +64,13 @@ public class LogicalModelTest extends CompareGitTestCase {
 
 	private IFile iFile1;
 
-	private IFile iFile2;
-
 	private Resource resource1;
 
 	private Resource resource2;
+
+	private String[] masterTipSynonyms;
+
+	private String[] branchTipSynonyms;
 
 	/**
 	 * We'll have seven commits during this test, roughly looking like this:
@@ -98,7 +108,6 @@ public class LogicalModelTest extends CompareGitTestCase {
 		final File file1 = repository.getOrCreateFile(iProject, "file1.ecore");
 		final File file2 = repository.getOrCreateFile(iProject, "file2.ecore");
 		iFile1 = repository.getIFile(iProject, file1);
-		iFile2 = repository.getIFile(iProject, file2);
 
 		resource1 = repository.connectResource(iProject, file1, resourceSet);
 		resource2 = repository.connectResource(iProject, file2, resourceSet);
@@ -157,14 +166,129 @@ public class LogicalModelTest extends CompareGitTestCase {
 		EcoreUtil.remove(findObject(resource2, CLASS4_NAME_PREFIX));
 		save(resource2);
 		commits[6] = repository.addAndCommit(iProject, "branch-commit-2", file2);
+
+		masterTipSynonyms = new String[] {MASTER, commits[4].getName(), };
+		branchTipSynonyms = new String[] {BRANCH, commits[6].getName(), Constants.HEAD, };
 	}
 
 	@Test
 	public void testCompareTipsFile1() throws Exception {
-		final Subscriber subscriber = repository.createSubscriberForComparison(MASTER, BRANCH, iFile1);
+		// 1 conflict (deleted third class)
+		// 6 diffs total (renamed both classes in both versions)
 
+		for (String masterTip : masterTipSynonyms) {
+			for (String branchTip : branchTipSynonyms) {
+				compareBothDirectionsAndCheck(iFile1, masterTip, branchTip, 1, 3, 3);
+			}
+		}
+	}
+
+	@Test
+	public void testCompareMasterTipWithBranchingPoint() throws Exception {
+		final String branchingPoint = commits[2].getName();
+		for (String masterTip : masterTipSynonyms) {
+			// No conflict : comparing a version with its ancestor
+			// 3 diffs : renamed class in both files, deleted the third
+
+			compareBothDirectionsAndCheck(iFile1, masterTip, branchingPoint, 0, 3, 0);
+		}
+	}
+
+	@Test
+	public void testCompareBranchTipWithBranchingPoint() throws Exception {
+		final String branchingPoint = commits[2].getName();
+		for (String branchTip : branchTipSynonyms) {
+			// No conflict : comparing a version with its ancestor
+			// 3 diffs : renamed class in both files, deleted the third
+
+			compareBothDirectionsAndCheck(iFile1, branchTip, branchingPoint, 0, 3, 0);
+		}
+	}
+
+	@Test
+	public void testCompareMasterTipWithInitial() throws Exception {
+		final String initialCommit = commits[0].getName();
+		for (String masterTip : masterTipSynonyms) {
+			// No conflict : comparing a version with its ancestor
+			// 2 diffs : renamed class in both files
+
+			compareBothDirectionsAndCheck(iFile1, masterTip, initialCommit, 0, 2, 0);
+		}
+	}
+
+	@Test
+	public void testCompareBranchTipWithInitial() throws Exception {
+		final String initialCommit = commits[0].getName();
+		for (String branchTip : branchTipSynonyms) {
+			// No conflict : comparing a version with its ancestor
+			// 2 diffs : renamed class in both files
+
+			compareBothDirectionsAndCheck(iFile1, branchTip, initialCommit, 0, 2, 0);
+		}
+	}
+
+	@Test
+	public void testCompareSecondToLastCommitBothBranch() throws Exception {
+		// no conflict
+		// 3 diffs : renamed two class on branch, removed the third on master
+		final String masterCommit = commits[3].getName();
+		final String branchCommit = commits[5].getName();
+
+		compareBothDirectionsAndCheck(iFile1, masterCommit, branchCommit, 0, 1, 2);
+	}
+
+	private void compareBothDirectionsAndCheck(IFile file, String source, String destination,
+			int expectedConflicts, int diffsInSource, int diffsInDestination) throws Exception {
+		Comparison compareResult = compare(source, destination, file);
+
+		assertEquals(expectedConflicts, compareResult.getConflicts().size());
+		assertDiffCount(compareResult.getDifferences(), diffsInSource, diffsInDestination);
+
+		compareResult = compare(destination, source, file);
+
+		assertEquals(expectedConflicts, compareResult.getConflicts().size());
+		assertDiffCount(compareResult.getDifferences(), diffsInDestination, diffsInSource);
+	}
+
+	private void assertDiffCount(List<Diff> differences, int expectedOutgoing, int expectedIncoming) {
+		assertEquals(expectedOutgoing + expectedIncoming, differences.size());
+
+		int outgoingCount = 0;
+		int incomingCount = 0;
+		for (Diff diff : differences) {
+			switch (diff.getSource()) {
+				case LEFT:
+					outgoingCount++;
+					break;
+				case RIGHT:
+					incomingCount++;
+					break;
+				default:
+					break;
+			}
+		}
+
+		assertEquals(expectedOutgoing, outgoingCount);
+		assertEquals(expectedIncoming, incomingCount);
+	}
+
+	private Comparison compare(String sourceRev, String targetRev, IFile file) throws Exception {
+		final Subscriber subscriber = repository.createSubscriberForComparison(sourceRev, targetRev, file);
+		final IStorageProviderAccessor accessor = new SubscriberStorageAccessor(subscriber);
+		final IStorageProvider sourceProvider = accessor.getStorageProvider(iFile1,
+				IStorageProviderAccessor.DiffSide.SOURCE);
+		final IStorageProvider remoteProvider = accessor.getStorageProvider(iFile1,
+				IStorageProviderAccessor.DiffSide.REMOTE);
+		final IStorageProvider ancestorProvider = accessor.getStorageProvider(iFile1,
+				IStorageProviderAccessor.DiffSide.ORIGIN);
+		assertNotNull(sourceProvider);
+		assertNotNull(remoteProvider);
+		assertNotNull(ancestorProvider);
+
+		final IProgressMonitor monitor = new NullProgressMonitor();
 		final EMFSynchronizationModel syncModel = EMFSynchronizationModel.createSynchronizationModel(
-				subscriber, iFile1, null, null);
+				subscriber, sourceProvider.getStorage(monitor), remoteProvider.getStorage(monitor),
+				ancestorProvider.getStorage(monitor));
 		final IComparisonScope scope = syncModel.createMinimizedScope();
 
 		final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
@@ -175,13 +299,7 @@ public class LogicalModelTest extends CompareGitTestCase {
 		assertEquals(2, rightResourceSet.getResources().size());
 		assertEquals(2, originResourceSet.getResources().size());
 
-		final Comparison compareResult = EMFCompare.builder().build().compare(scope, new BasicMonitor());
-		/*
-		 * Between the tips, we should have one pseudo conflict (removed the third class) and four differences
-		 * (renamed first and second class in both files).
-		 */
-		assertEquals(6, compareResult.getDifferences().size());
-		assertEquals(1, compareResult.getConflicts().size());
+		return EMFCompare.builder().build().compare(scope, new BasicMonitor());
 	}
 
 	/**
