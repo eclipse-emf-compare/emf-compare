@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -213,9 +214,9 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 			if (matchOfValue != null) {
 				Collection<?> children = getChildren(matchOfValue);
 				children.remove(referenceChange);
-				Iterable<?> filter = filter(children, fromSide(((Diff)object).getSource()));
+				Iterable<?> filter = filter(children,
+						fromSideOrInRealConflict(((Diff)object).getSource()));
 				Iterables.addAll(ret, filter);
-				// ret.addAll(children);
 			}
 		}
 
@@ -224,18 +225,25 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	}
 
 	/**
-	 * This can be used to check that a given Object originates from the given {@code source} side.
+	 * This can be used to check that a given Object originates from the given {@code source} side, and is not
+	 * in real conflict.
 	 * 
 	 * @param source
 	 *            The side from which we expect this diff to originate.
 	 * @return The created predicate.
 	 */
-	private Predicate<? super Object> fromSide(final DifferenceSource source) {
+	private Predicate<? super Object> fromSideOrInRealConflict(final DifferenceSource source) {
 		return new Predicate<Object>() {
 			public boolean apply(Object object) {
 				boolean ret = false;
 				if (object instanceof Diff) {
-					ret = source == ((Diff)object).getSource();
+					if (source == ((Diff)object).getSource()) {
+						ret = true;
+					} else if (((Diff)object).getConflict() != null) {
+						ret = ConflictKind.REAL == ((Diff)object).getConflict().getKind();
+					} else {
+						ret = true;
+					}
 				} else if (object instanceof Match) {
 					ret = true;
 				}

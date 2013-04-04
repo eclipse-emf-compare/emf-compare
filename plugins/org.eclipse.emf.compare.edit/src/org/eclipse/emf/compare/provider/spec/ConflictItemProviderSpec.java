@@ -10,12 +10,19 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.internal.EMFCompareEditMessages;
 import org.eclipse.emf.compare.provider.ConflictItemProvider;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
@@ -31,6 +38,24 @@ import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class ConflictItemProviderSpec extends ConflictItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider {
+
+	/**
+	 * Returns the sub diffs of a given diff.
+	 */
+	private static Function<Diff, Iterable<Diff>> getSubDiffs = new Function<Diff, Iterable<Diff>>() {
+		public Iterable<Diff> apply(Diff diff) {
+			if (diff instanceof ReferenceChange) {
+				Match match = diff.getMatch();
+				Match matchOfValue = diff.getMatch().getComparison().getMatch(
+						((ReferenceChange)diff).getValue());
+				if (!match.equals(matchOfValue) && match.getSubmatches().contains(matchOfValue)) {
+					final Iterable<Diff> subDiffs = matchOfValue.getAllDifferences();
+					return ImmutableSet.copyOf(subDiffs);
+				}
+			}
+			return ImmutableSet.of();
+		}
+	};
 
 	/**
 	 * Constructs a ComparisonItemProviderSpec with the given factory.
@@ -61,7 +86,21 @@ public class ConflictItemProviderSpec extends ConflictItemProvider implements II
 	public Collection<?> getChildren(Object object) {
 		Conflict conflict = (Conflict)object;
 		EList<Diff> differences = conflict.getDifferences();
-		return differences;
+		Collection<Diff> filteredDifferences = Sets.newLinkedHashSet();
+		for (Diff diff : differences) {
+			boolean subdiff = false;
+			for (Diff diffParent : differences) {
+				if (!diff.equals(diffParent) && Iterables.contains(getSubDiffs.apply(diffParent), diff)) {
+					subdiff = true;
+					break;
+				}
+			}
+			if (!subdiff) {
+				filteredDifferences.add(diff);
+			}
+		}
+
+		return filteredDifferences;
 	}
 
 	/**
