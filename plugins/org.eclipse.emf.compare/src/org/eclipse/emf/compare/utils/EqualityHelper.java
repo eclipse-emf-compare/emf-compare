@@ -39,6 +39,15 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	private final LoadingCache<EObject, URI> uriCache;
 
 	/**
+	 * {@link #matchingEObjects(EObject, EObject)} is called _a lot_ of successive times with the same first
+	 * parameter... we use this as a poor man's cache.
+	 */
+	private EObject lastMatchedEObject;
+
+	/** See #lastMatchedEObject. */
+	private Match lastMatch;
+
+	/**
 	 * Creates a new EqualityHelper.
 	 * 
 	 * @deprecated use the EqualityHelper(Cache) constructor instead.
@@ -146,7 +155,14 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	 *         otherwise.
 	 */
 	protected boolean matchingEObjects(EObject object1, EObject object2) {
-		final Match match = getTarget().getMatch(object1);
+		final Match match;
+		if (lastMatchedEObject == object1) {
+			match = lastMatch;
+		} else {
+			match = getTarget().getMatch(object1);
+			lastMatchedEObject = object1;
+			lastMatch = match;
+		}
 
 		final boolean equal;
 		// Match could be null if the value is out of the scope
