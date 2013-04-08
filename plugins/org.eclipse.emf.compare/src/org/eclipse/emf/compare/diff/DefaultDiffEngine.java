@@ -10,12 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff;
 
-import static com.google.common.base.Predicates.not;
 import static org.eclipse.emf.compare.utils.ReferenceUtil.getAsList;
 import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEGet;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import com.google.common.base.Optional;
 
 import java.util.Iterator;
 import java.util.List;
@@ -67,27 +65,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 */
 	public DefaultDiffEngine(IDiffProcessor processor) {
 		this.diffProcessor = processor;
-	}
-
-	/**
-	 * This predicate can be used to check whether a given element is contained within the given iterable
-	 * according to the semantics of {@link IEqualityHelper#matchingValues(Object, Object)} before returning
-	 * it.
-	 * 
-	 * @param comparison
-	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
-	 * @param iterable
-	 *            Iterable which content we are to check.
-	 * @param <E>
-	 *            Type of the reference iterable's content.
-	 * @return The useable predicate.
-	 */
-	protected <E> Predicate<E> containedIn(final Comparison comparison, final Iterable<E> iterable) {
-		return new Predicate<E>() {
-			public boolean apply(E input) {
-				return contains(comparison, iterable, input);
-			}
-		};
 	}
 
 	/**
@@ -271,71 +248,17 @@ public class DefaultDiffEngine implements IDiffEngine {
 		final List<Object> lcsOriginRight = DiffUtil.longestCommonSubsequence(comparison, originValues,
 				rightValues);
 
-		// TODO Can we shortcut in any way?
-
-		// Which values have "changed" in any way?
-		final Iterable<Object> changedLeft = Iterables.filter(leftValues, not(containedIn(comparison,
-				lcsOriginLeft)));
-		final Iterable<Object> changedRight = Iterables.filter(rightValues, not(containedIn(comparison,
-				lcsOriginRight)));
-
-		// Added or moved in left
-		for (Object diffCandidate : changedLeft) {
-			/*
-			 * This value is not in the LCS between origin and left, we thus know it has changed. We also know
-			 * that this is a containment reference.
-			 */
-			final Match candidateMatch = comparison.getMatch((EObject)diffCandidate);
-
-			if (contains(comparison, originValues, diffCandidate)) {
-				// This object is contained in both the left and origin lists. It can only have moved
-				if (checkOrdering) {
-					featureChange(match, reference, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
-				}
-			} else {
-				// This object is not contained in the origin list.
-				// If single-valued, this is either a CHANGE or a MOVE (moved from another container)
-				// If multi-valued references, ADD or MOVE
-				if (candidateMatch != null && candidateMatch.getOrigin() != null) {
-					featureChange(match, reference, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
-				} else {
-					featureChange(match, reference, diffCandidate, DifferenceKind.ADD, DifferenceSource.LEFT);
-				}
-			}
-		}
-
-		// Added or moved in right
-		for (Object diffCandidate : changedRight) {
-			/*
-			 * This value is not in the LCS between origin and right, we thus know it has changed. We also
-			 * know that this is a containment reference.
-			 */
-			final Match candidateMatch = comparison.getMatch((EObject)diffCandidate);
-
-			if (contains(comparison, originValues, diffCandidate)) {
-				// This object is contained in both the right and origin lists. It can only have moved
-				if (checkOrdering) {
-					featureChange(match, reference, diffCandidate, DifferenceKind.MOVE,
-							DifferenceSource.RIGHT);
-				}
-			} else {
-				// This object is not contained in the origin list.
-				// If single-valued, this is either a CHANGE or a MOVE (moved from another container)
-				// If multi-valued references, ADD or MOVE
-				if (candidateMatch != null && candidateMatch.getOrigin() != null) {
-					featureChange(match, reference, diffCandidate, DifferenceKind.MOVE,
-							DifferenceSource.RIGHT);
-				} else {
-					featureChange(match, reference, diffCandidate, DifferenceKind.ADD, DifferenceSource.RIGHT);
-				}
-			}
-		}
+		createContainmentDifferences(match, reference, checkOrdering, leftValues, lcsOriginLeft,
+				DifferenceSource.LEFT);
+		createContainmentDifferences(match, reference, checkOrdering, rightValues, lcsOriginRight,
+				DifferenceSource.RIGHT);
 
 		// deleted from either side
 		for (Object diffCandidate : originValues) {
 			/*
-			 * A value that is in the origin but not in the left/right either has been deleted or is a moved
-			 * element which previously was in this reference. We'll detect the move on its new reference.
+			 * A value that is in the origin but not in either left or right has been deleted or is a moved
+			 * element which previously was in this reference. If the latter, we'll detect it later on when
+			 * checking its new reference.
 			 */
 			final Match candidateMatch = comparison.getMatch((EObject)diffCandidate);
 			if (candidateMatch == null) {
@@ -351,6 +274,150 @@ public class DefaultDiffEngine implements IDiffEngine {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Called from {@link #computeContainmentDifferencesThreeWay(Match, EReference, boolean)} once our LCS
+	 * have been computed and we know what really changed. It will be used for both the left and right side.
+	 * 
+	 * @param match
+	 *            The match which sides we need to check for potential differences.
+	 * @param reference
+	 *            The containment reference which values are to be checked.
+	 * @param checkOrdering
+	 *            {@code true} if we should consider ordering changes on this reference, {@code false}
+	 *            otherwise.
+	 * @param values
+	 *            Value of that <code>reference</code> on the given <code>side</code>.
+	 * @param lcsWithOrigin
+	 *            LCS between the reference values on the given <code>side</code> and the values in origin.
+	 * @param side
+	 *            The side currently being compared.
+	 */
+	protected void createContainmentDifferences(Match match, EReference reference, boolean checkOrdering,
+			List<Object> values, List<Object> lcsWithOrigin, DifferenceSource side) {
+		final Comparison comparison = match.getComparison();
+
+		int lcsCursor = 0;
+		Optional<Match> lcsCurrent = getMatchIfPresent(comparison, lcsWithOrigin, lcsCursor);
+		for (Object diffCandidate : values) {
+			final Match candidateMatch = comparison.getMatch((EObject)diffCandidate);
+			// See bug 405000 for this strange iteration on the LCS
+			if (candidateMatch == null || lcsCurrent.orNull() == candidateMatch) {
+				lcsCursor++;
+				lcsCurrent = getMatchIfPresent(comparison, lcsWithOrigin, lcsCursor);
+				continue;
+			}
+
+			final EObject value;
+			if (side == DifferenceSource.LEFT) {
+				value = candidateMatch.getLeft();
+			} else {
+				value = candidateMatch.getRight();
+			}
+			final EObject originValue;
+			if (comparison.isThreeWay()) {
+				originValue = candidateMatch.getOrigin();
+			} else {
+				originValue = candidateMatch.getRight();
+			}
+
+			if (matchingContainment(comparison.getEqualityHelper(), value, originValue)) {
+				/*
+				 * Contained in both compared side and the origin, and not part of the LCS. It has moved
+				 * within its (containment) reference.
+				 */
+				if (checkOrdering) {
+					featureChange(match, reference, diffCandidate, DifferenceKind.MOVE, side);
+				}
+			} else {
+				/*
+				 * This element is in different containers in the compared side and origin (if it is in origin
+				 * at all).
+				 */
+				if (originValue != null) {
+					featureChange(match, reference, diffCandidate, DifferenceKind.MOVE, side);
+				} else {
+					featureChange(match, reference, diffCandidate, DifferenceKind.ADD, side);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Checks whether the two given EObjects are contained within the same object, under the same reference.
+	 * 
+	 * @param equalityHelper
+	 *            Our current equality helper.
+	 * @param o1
+	 *            First of the two EObjects to compare.
+	 * @param o2
+	 *            Second of the two EObjects to compare.
+	 * @return <code>true</code> if these two objects are contained within the same container, false
+	 *         otherwise.
+	 */
+	protected boolean matchingContainment(IEqualityHelper equalityHelper, EObject o1, EObject o2) {
+		if (o1 == null || o2 == null) {
+			return false;
+		}
+
+		boolean matchingContainment = false;
+
+		final EObject container1 = o1.eContainer();
+		final EObject container2 = o2.eContainer();
+		if (container1 != null && container2 != null) {
+			final EReference containing1 = o1.eContainmentFeature();
+			final EReference containing2 = o2.eContainmentFeature();
+			matchingContainment = (containing1 == containing2 || containing1.getName().equals(
+					containing2.getName()))
+					&& equalityHelper.matchingValues(o1.eContainer(), o2.eContainer());
+		}
+		return matchingContainment;
+	}
+
+	/**
+	 * This will be used in order to read the LCS synchronously with the iteration on its target lists'
+	 * values. This should be used cautiously since it will work on empty lists, null values and out-of-scope
+	 * objects.
+	 * 
+	 * @param comparison
+	 *            The current comparison.
+	 * @param list
+	 *            A list of EObjects. May be empty or contain out-of-scope values.
+	 * @param index
+	 *            Index of the object we seek within this list.
+	 * @return An optional containing the match of the object at the given index... or
+	 *         {@link Optional#absent()}.
+	 */
+	protected static Optional<Match> getMatchIfPresent(final Comparison comparison, List<Object> list,
+			int index) {
+		Optional<Match> value = Optional.absent();
+		if (list.size() > index) {
+			EObject current = (EObject)list.get(index);
+			if (current != null) {
+				value = Optional.fromNullable(comparison.getMatch(current));
+			}
+		}
+		return value;
+	}
+
+	/**
+	 * This will be used in order to read the LCS synchronously with the iteration on its target lists'
+	 * values. This should be used cautiously since it will work on empty lists, and null values contained in
+	 * the list are treated the same as an empty list and considered to be Optional.absent().
+	 * 
+	 * @param list
+	 *            A list of EObjects. May be empty or contain null or out-of-scope values.
+	 * @param index
+	 *            Index of the object we seek within this list.
+	 * @return An optional containing the object at the given index... or {@link Optional#absent()}.
+	 */
+	protected static Optional<Object> getIfPresent(List<Object> list, int index) {
+		Optional<Object> value = Optional.absent();
+		if (list.size() > index) {
+			value = Optional.fromNullable(list.get(index));
+		}
+		return value;
 	}
 
 	/**
@@ -377,35 +444,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 
 		final List<Object> lcs = DiffUtil.longestCommonSubsequence(comparison, rightValues, leftValues);
 
-		// TODO Can we shortcut in any way?
-
-		// Which values have "changed" in any way?
-		final Iterable<Object> changed = Iterables.filter(leftValues, not(containedIn(comparison, lcs)));
-
-		// Added or moved
-		for (Object diffCandidate : changed) {
-			/*
-			 * This value is not in the LCS between right and left, we thus know it has changed. We also know
-			 * that this is a containment reference.
-			 */
-			final Match candidateMatch = comparison.getMatch((EObject)diffCandidate);
-
-			if (contains(comparison, rightValues, diffCandidate)) {
-				// This object is contained in both the left and right lists. It can only have moved
-				if (checkOrdering) {
-					featureChange(match, reference, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
-				}
-			} else {
-				// This object is not contained in the right list.
-				// If single-valued, this is either a CHANGE or a MOVE (moved from another container)
-				// If multi-valued references, ADD or MOVE
-				if (candidateMatch != null && candidateMatch.getRight() != null) {
-					featureChange(match, reference, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
-				} else {
-					featureChange(match, reference, diffCandidate, DifferenceKind.ADD, DifferenceSource.LEFT);
-				}
-			}
-		}
+		createContainmentDifferences(match, reference, checkOrdering, leftValues, lcs, DifferenceSource.LEFT);
 
 		// deleted
 		for (Object diffCandidate : rightValues) {
@@ -516,6 +555,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 	protected void computeMultiValuedFeatureDifferencesThreeWay(Match match, EStructuralFeature feature,
 			boolean checkOrdering) {
 		final Comparison comparison = match.getComparison();
+		final IEqualityHelper equality = comparison.getEqualityHelper();
 
 		// We won't use iterables here since we need random access collections for fast LCS.
 		final List<Object> leftValues = getAsList(match.getLeft(), feature);
@@ -527,18 +567,18 @@ public class DefaultDiffEngine implements IDiffEngine {
 		final List<Object> lcsOriginRight = DiffUtil.longestCommonSubsequence(comparison, originValues,
 				rightValues);
 
-		// Which values have "changed" in any way?
-		final Iterable<Object> changedLeft = Iterables.filter(leftValues, not(containedIn(comparison,
-				lcsOriginLeft)));
-		final Iterable<Object> changedRight = Iterables.filter(rightValues, not(containedIn(comparison,
-				lcsOriginRight)));
+		// Any value that is _not_ in the LCS has changed.
 
-		// Added or moved in the left
-		for (Object diffCandidate : changedLeft) {
-			/*
-			 * This value is not in the LCS between origin and left, we thus know it has changed. If it is
-			 * present in the origin, this is a move. Otherwise, it has been added in the left list.
-			 */
+		int lcsCursor = 0;
+		Optional<Object> lcsCurrent = getIfPresent(lcsOriginLeft, lcsCursor);
+		for (Object diffCandidate : leftValues) {
+			// See bug 405000 for this strange iteration on the LCS
+			if (equality.matchingValues(diffCandidate, lcsCurrent.orNull())) {
+				lcsCursor++;
+				lcsCurrent = getIfPresent(lcsOriginLeft, lcsCursor);
+				continue;
+			}
+
 			if (contains(comparison, originValues, diffCandidate)) {
 				if (checkOrdering) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
@@ -548,12 +588,16 @@ public class DefaultDiffEngine implements IDiffEngine {
 			}
 		}
 
-		// Added or moved in the right
-		for (Object diffCandidate : changedRight) {
-			/*
-			 * This value is not in the LCS between origin and right, we thus know it has changed. If it is
-			 * present in the origin, this is a move. Otherwise, it has been added in the right list.
-			 */
+		lcsCursor = 0;
+		lcsCurrent = getIfPresent(lcsOriginRight, lcsCursor);
+		for (Object diffCandidate : rightValues) {
+			// See bug 405000 for this strange iteration on the LCS
+			if (equality.matchingValues(diffCandidate, lcsCurrent.orNull())) {
+				lcsCursor++;
+				lcsCurrent = getIfPresent(lcsOriginRight, lcsCursor);
+				continue;
+			}
+
 			if (contains(comparison, originValues, diffCandidate)) {
 				if (checkOrdering) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.RIGHT);
@@ -602,6 +646,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 	protected void computeMultiValuedFeatureDifferencesTwoWay(Match match, EStructuralFeature feature,
 			boolean checkOrdering) {
 		final Comparison comparison = match.getComparison();
+		final IEqualityHelper equality = comparison.getEqualityHelper();
 
 		// We won't use iterables here since we need random access collections for fast LCS.
 		final List<Object> leftValues = getAsList(match.getLeft(), feature);
@@ -609,15 +654,16 @@ public class DefaultDiffEngine implements IDiffEngine {
 
 		final List<Object> lcs = DiffUtil.longestCommonSubsequence(comparison, rightValues, leftValues);
 
-		// Which values have "changed" in any way?
-		final Iterable<Object> changed = Iterables.filter(leftValues, not(containedIn(comparison, lcs)));
+		int lcsCursor = 0;
+		Optional<Object> lcsCurrent = getIfPresent(lcs, lcsCursor);
+		for (Object diffCandidate : leftValues) {
+			// See bug 405000 for this strange iteration on the LCS
+			if (equality.matchingValues(diffCandidate, lcsCurrent.orNull())) {
+				lcsCursor++;
+				lcsCurrent = getIfPresent(lcs, lcsCursor);
+				continue;
+			}
 
-		// Added or moved
-		for (Object diffCandidate : changed) {
-			/*
-			 * This value is not in the LCS between right and left, we thus know it has changed. If it is
-			 * present in the right, this is a move. Otherwise, it has been added in the left list.
-			 */
 			if (contains(comparison, rightValues, diffCandidate)) {
 				if (checkOrdering) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);

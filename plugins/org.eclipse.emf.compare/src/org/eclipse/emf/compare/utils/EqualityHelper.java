@@ -16,6 +16,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Array;
 import java.util.concurrent.ExecutionException;
 
@@ -42,10 +43,10 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	 * {@link #matchingEObjects(EObject, EObject)} is called _a lot_ of successive times with the same first
 	 * parameter... we use this as a poor man's cache.
 	 */
-	private EObject lastMatchedEObject;
+	private WeakReference<EObject> lastMatchedEObject;
 
 	/** See #lastMatchedEObject. */
-	private Match lastMatch;
+	private WeakReference<Match> lastMatch;
 
 	/**
 	 * Creates a new EqualityHelper.
@@ -155,19 +156,13 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	 *         otherwise.
 	 */
 	protected boolean matchingEObjects(EObject object1, EObject object2) {
-		final Match match;
-		if (lastMatchedEObject == object1) {
-			match = lastMatch;
-		} else {
-			match = getTarget().getMatch(object1);
-			lastMatchedEObject = object1;
-			lastMatch = match;
-		}
+		final Match match = getMatch(object1);
 
 		final boolean equal;
 		// Match could be null if the value is out of the scope
 		if (match != null) {
 			equal = match.getLeft() == object2 || match.getRight() == object2 || match.getOrigin() == object2;
+			// use getTarget().getMatch() to avoid invalidating the cache here
 		} else if (getTarget().getMatch(object2) != null) {
 			equal = false;
 		} else if (object1.eClass() != object2.eClass()) {
@@ -177,6 +172,34 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 		}
 
 		return equal;
+	}
+
+	/**
+	 * Retrieves the match of the given EObject. This will cache the latest access so as to avoid a hashmap
+	 * lookup in the comparison's inverse cross referencer. This is most useful when computing the LCS of two
+	 * sequences, where we call {@link #matchingEObjects(EObject, EObject)} over and over with the same first
+	 * object.
+	 * 
+	 * @param o
+	 *            The object for which we need the associated Match.
+	 * @return Match of this EObject if any, <code>null</code> otherwise.
+	 */
+	protected Match getMatch(EObject o) {
+		final Match match;
+		if (lastMatchedEObject != null && lastMatchedEObject.get() == o) {
+			Match temp = lastMatch.get();
+			if (temp != null) {
+				match = temp;
+			} else {
+				match = getTarget().getMatch(o);
+				lastMatch = new WeakReference<Match>(match);
+			}
+		} else {
+			match = getTarget().getMatch(o);
+			lastMatchedEObject = new WeakReference<EObject>(o);
+			lastMatch = new WeakReference<Match>(match);
+		}
+		return match;
 	}
 
 	/**

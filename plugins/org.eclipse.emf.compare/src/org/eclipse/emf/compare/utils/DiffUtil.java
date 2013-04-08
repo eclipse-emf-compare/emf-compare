@@ -149,7 +149,6 @@ public final class DiffUtil {
 	 */
 	public static <E> List<E> longestCommonSubsequence(Comparison comparison, Iterable<E> ignoredElements,
 			List<E> sequence1, List<E> sequence2) {
-		// FIXME : merge the two "LCS" methods in one (only one line differs...)
 		final List<E> copy1 = Lists.newArrayList(sequence1);
 		final List<E> copy2 = Lists.newArrayList(sequence2);
 
@@ -157,47 +156,59 @@ public final class DiffUtil {
 		final List<E> prefix = trimPrefix(comparison, ignoredElements, copy1, copy2);
 		final List<E> suffix = trimSuffix(comparison, ignoredElements, copy1, copy2);
 
-		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
-		final int size1 = copy1.size();
-		final int size2 = copy2.size();
-
-		final int[][] matrix = new int[size1 + 1][size2 + 1];
-
-		// Compute the LCS matrix
-		for (int i = 1; i <= size1; i++) {
-			final E first = copy1.get(i - 1);
-			for (int j = 1; j <= size2; j++) {
-				final E second = copy2.get(j - 1);
-				if (equalityHelper.matchingValues(first, second)
-						&& !contains(comparison, equalityHelper, ignoredElements, second)) {
-					matrix[i][j] = 1 + matrix[i - 1][j - 1];
-				} else {
-					matrix[i][j] = Math.max(matrix[i - 1][j], matrix[i][j - 1]);
-				}
-			}
+		final List<E> subLCS;
+		// FIXME extract an interface for the LCS and properly separate these two differently typed
+		// implementations.
+		if (copy1.size() > Short.MAX_VALUE || copy2.size() > Short.MAX_VALUE) {
+			subLCS = intLongestCommonSubsequence(comparison, ignoredElements, copy1, copy2);
+		} else {
+			subLCS = shortLongestCommonSubsequence(comparison, ignoredElements, copy1, copy2);
 		}
 
-		// Traceback the matrix to create the final LCS
-		int current1 = size1;
-		int current2 = size2;
-		final List<E> result = Lists.newArrayList();
+		return ImmutableList.copyOf(Iterables.concat(prefix, subLCS, suffix));
+	}
 
-		while (current1 > 0 && current2 > 0) {
-			final int currentLength = matrix[current1][current2];
-			final int nextLeft = matrix[current1][current2 - 1];
-			final int nextUp = matrix[current1 - 1][current2];
-			if (currentLength > nextLeft && currentLength > nextUp) {
-				result.add(copy1.get(current1 - 1));
-				current1--;
-				current2--;
-			} else if (nextLeft >= nextUp) {
-				current2--;
-			} else {
-				current1--;
-			}
-		}
-
-		return ImmutableList.copyOf(Iterables.concat(prefix, Lists.reverse(result), suffix));
+	/**
+	 * This will compute the longest common subsequence between the two given Lists. We will use
+	 * {@link EqualityHelper#matchingValues(Comparison, Object, Object)} in order to try and match the values
+	 * from both lists two-by-two. This can thus be used both for reference values or attribute values. If
+	 * there are two subsequences of the same "longest" length, the first (according to the second argument)
+	 * will be returned.
+	 * <p>
+	 * For example, it the two given sequence are, in this order, <code>{"a", "b", "c", "d", "e"}</code> and
+	 * <code>{"c", "z", "d", "a", "b"}</code>, there are two "longest" subsequences : <code>{"a", "b"}</code>
+	 * and <code>{"c", "d"}</code>. The first of those two subsequences in the second list is
+	 * <code>{"c", "d"}</code>. On the other hand, the LCS of <code>{"a", "b", "c", "d", "e"}</code> and
+	 * <code>{"y", "c", "d", "e", "b"}</code> is <code>{"c", "d", "e"}</code>.
+	 * </p>
+	 * <p>
+	 * The following algorithm has been inferred from the wikipedia article on the Longest Common Subsequence,
+	 * http://en.wikipedia.org/wiki/Longest_common_subsequence_problem at the time of writing. It is
+	 * decomposed in two : we first compute the LCS matrix, then we backtrack through the input to determine
+	 * the LCS. Evaluation will be shortcut after the first part if the LCS is one of the two input sequences.
+	 * </p>
+	 * <p>
+	 * Note : we are not using Iterables as input in order to make use of the random access cost of
+	 * ArrayLists. This might also be converted to directly use arrays. This implementation will not play well
+	 * with LinkedLists or any List which needs to iterate over the values for each call to
+	 * {@link List#get(int)}, i.e any list which is not instanceof RandomAccess or does not satisfy its
+	 * contract.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param sequence1
+	 *            First of the two sequences to consider.
+	 * @param sequence2
+	 *            Second of the two sequences to consider.
+	 * @param <E>
+	 *            Type of the sequences content.
+	 * @return The LCS of the two given sequences. Will never be the same instance as one of the input
+	 *         sequences.
+	 */
+	public static <E> List<E> longestCommonSubsequence(Comparison comparison, List<E> sequence1,
+			List<E> sequence2) {
+		return longestCommonSubsequence(comparison, Collections.<E> emptyList(), sequence1, sequence2);
 	}
 
 	/**
@@ -325,34 +336,43 @@ public final class DiffUtil {
 	}
 
 	/**
-	 * This will compute the longest common subsequence between the two given Lists. We will use
-	 * {@link EqualityHelper#matchingValues(Comparison, Object, Object)} in order to try and match the values
-	 * from both lists two-by-two. This can thus be used both for reference values or attribute values. If
-	 * there are two subsequences of the same "longest" length, the first (according to the second argument)
-	 * will be returned.
-	 * <p>
-	 * For example, it the two given sequence are, in this order, <code>{"a", "b", "c", "d", "e"}</code> and
-	 * <code>{"c", "z", "d", "a", "b"}</code>, there are two "longest" subsequences : <code>{"a", "b"}</code>
-	 * and <code>{"c", "d"}</code>. The first of those two subsequences in the second list is
-	 * <code>{"c", "d"}</code>. On the other hand, the LCS of <code>{"a", "b", "c", "d", "e"}</code> and
-	 * <code>{"y", "c", "d", "e", "b"}</code> is <code>{"c", "d", "e"}</code>.
-	 * </p>
-	 * <p>
-	 * The following algorithm has been inferred from the wikipedia article on the Longest Common Subsequence,
-	 * http://en.wikipedia.org/wiki/Longest_common_subsequence_problem at the time of writing. It is
-	 * decomposed in two : we first compute the LCS matrix, then we backtrack through the input to determine
-	 * the LCS. Evaluation will be shortcut after the first part if the LCS is one of the two input sequences.
-	 * </p>
-	 * <p>
-	 * Note : we are not using Iterables as input in order to make use of the random access cost of
-	 * ArrayLists. This might also be converted to directly use arrays. This implementation will not play well
-	 * with LinkedLists or any List which needs to iterate over the values for each call to
-	 * {@link List#get(int)}, i.e any list which is not instanceof RandomAccess or does not satisfy its
-	 * contract.
-	 * </p>
+	 * Checks whether the given {@code sequence} contains the given {@code element} according to the semantics
+	 * of the given {@code equalityHelper}.
 	 * 
 	 * @param comparison
 	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param equalityHelper
+	 *            The {@link EqualityHelper} gives us the necessary semantics for Object matching.
+	 * @param sequence
+	 *            The sequence which elements we need to compare with {@code element}.
+	 * @param element
+	 *            The element we are seeking in {@code sequence}.
+	 * @param <E>
+	 *            Type of the sequence content.
+	 * @return {@code true} if the given {@code sequence} contains an element matching {@code element},
+	 *         {@code false} otherwise.
+	 * @see EqualityHelper#matchingValues(Comparison, Object, Object)
+	 */
+	private static <E> boolean contains(Comparison comparison, IEqualityHelper equalityHelper,
+			Iterable<E> sequence, E element) {
+		final Iterator<E> iterator = sequence.iterator();
+		while (iterator.hasNext()) {
+			E candidate = iterator.next();
+			if (equalityHelper.matchingValues(candidate, element)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * This is a classic, single-threaded implementation. We use shorts for the score matrix so as to limit
+	 * the memory cost (we know the max LCS length is not greater than Short#MAX_VALUE).
+	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param ignoredElements
+	 *            Specifies elements that should be excluded from the subsequences.
 	 * @param sequence1
 	 *            First of the two sequences to consider.
 	 * @param sequence2
@@ -362,9 +382,111 @@ public final class DiffUtil {
 	 * @return The LCS of the two given sequences. Will never be the same instance as one of the input
 	 *         sequences.
 	 */
-	public static <E> List<E> longestCommonSubsequence(Comparison comparison, List<E> sequence1,
-			List<E> sequence2) {
-		return longestCommonSubsequence(comparison, Collections.<E> emptyList(), sequence1, sequence2);
+	private static <E> List<E> shortLongestCommonSubsequence(Comparison comparison,
+			Iterable<E> ignoredElements, List<E> sequence1, List<E> sequence2) {
+		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+		final int size1 = sequence1.size();
+		final int size2 = sequence2.size();
+
+		final short[][] matrix = new short[size1 + 1][size2 + 1];
+
+		// Compute the LCS matrix
+		for (int i = 1; i <= size1; i++) {
+			final E first = sequence1.get(i - 1);
+			for (int j = 1; j <= size2; j++) {
+				final E second = sequence2.get(j - 1);
+				if (equalityHelper.matchingValues(first, second)
+						&& !contains(comparison, equalityHelper, ignoredElements, second)) {
+					matrix[i][j] = (short)(1 + matrix[i - 1][j - 1]);
+				} else {
+					matrix[i][j] = (short)(Math.max(matrix[i - 1][j], matrix[i][j - 1]));
+				}
+			}
+		}
+
+		// Traceback the matrix to create the final LCS
+		int current1 = size1;
+		int current2 = size2;
+		final List<E> result = Lists.newArrayList();
+
+		while (current1 > 0 && current2 > 0) {
+			final short currentLength = matrix[current1][current2];
+			final short nextLeft = matrix[current1][current2 - 1];
+			final short nextUp = matrix[current1 - 1][current2];
+			if (currentLength > nextLeft && currentLength > nextUp) {
+				result.add(sequence1.get(current1 - 1));
+				current1--;
+				current2--;
+			} else if (nextLeft >= nextUp) {
+				current2--;
+			} else {
+				current1--;
+			}
+		}
+
+		return Lists.reverse(result);
+	}
+
+	/**
+	 * This is a classic, single-threaded implementation. We know the max LCS length is greater than
+	 * Short#MAX_VALUE... the score matrix will thus be int-typed, resulting in a huge memory cost.
+	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param ignoredElements
+	 *            Specifies elements that should be excluded from the subsequences.
+	 * @param sequence1
+	 *            First of the two sequences to consider.
+	 * @param sequence2
+	 *            Second of the two sequences to consider.
+	 * @param <E>
+	 *            Type of the sequences content.
+	 * @return The LCS of the two given sequences. Will never be the same instance as one of the input
+	 *         sequences.
+	 */
+	private static <E> List<E> intLongestCommonSubsequence(Comparison comparison,
+			Iterable<E> ignoredElements, List<E> sequence1, List<E> sequence2) {
+		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+		final int size1 = sequence1.size();
+		final int size2 = sequence2.size();
+
+		final int[][] matrix = new int[size1 + 1][size2 + 1];
+
+		// Compute the LCS matrix
+		for (int i = 1; i <= size1; i++) {
+			final E first = sequence1.get(i - 1);
+			for (int j = 1; j <= size2; j++) {
+				final E second = sequence2.get(j - 1);
+				if (equalityHelper.matchingValues(first, second)
+						&& !contains(comparison, equalityHelper, ignoredElements, second)) {
+					matrix[i][j] = 1 + matrix[i - 1][j - 1];
+				} else {
+					matrix[i][j] = Math.max(matrix[i - 1][j], matrix[i][j - 1]);
+				}
+			}
+		}
+
+		// Traceback the matrix to create the final LCS
+		int current1 = size1;
+		int current2 = size2;
+		final List<E> result = Lists.newArrayList();
+
+		while (current1 > 0 && current2 > 0) {
+			final int currentLength = matrix[current1][current2];
+			final int nextLeft = matrix[current1][current2 - 1];
+			final int nextUp = matrix[current1 - 1][current2];
+			if (currentLength > nextLeft && currentLength > nextUp) {
+				result.add(sequence1.get(current1 - 1));
+				current1--;
+				current2--;
+			} else if (nextLeft >= nextUp) {
+				current2--;
+			} else {
+				current1--;
+			}
+		}
+
+		return Lists.reverse(result);
 	}
 
 	/*
@@ -803,36 +925,6 @@ public final class DiffUtil {
 		}
 
 		return sourceList;
-	}
-
-	/**
-	 * Checks whether the given {@code sequence} contains the given {@code element} according to the semantics
-	 * of the given {@code equalityHelper}.
-	 * 
-	 * @param comparison
-	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
-	 * @param equalityHelper
-	 *            The {@link EqualityHelper} gives us the necessary semantics for Object matching.
-	 * @param sequence
-	 *            The sequence which elements we need to compare with {@code element}.
-	 * @param element
-	 *            The element we are seeking in {@code sequence}.
-	 * @param <E>
-	 *            Type of the sequence content.
-	 * @return {@code true} if the given {@code sequence} contains an element matching {@code element},
-	 *         {@code false} otherwise.
-	 * @see EqualityHelper#matchingValues(Comparison, Object, Object)
-	 */
-	private static <E> boolean contains(Comparison comparison, IEqualityHelper equalityHelper,
-			Iterable<E> sequence, E element) {
-		final Iterator<E> iterator = sequence.iterator();
-		while (iterator.hasNext()) {
-			E candidate = iterator.next();
-			if (equalityHelper.matchingValues(candidate, element)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**
