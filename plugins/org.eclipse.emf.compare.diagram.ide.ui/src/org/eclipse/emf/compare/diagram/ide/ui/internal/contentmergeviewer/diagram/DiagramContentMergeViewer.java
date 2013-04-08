@@ -19,9 +19,11 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -77,7 +79,6 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
@@ -127,7 +128,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		void removeDecorators(Diff difference);
 
 		/**
-		 * It removes all the displayed decorators.
+		 * It removes all the displayed decorators from cache.
 		 */
 		void removeAll();
 	}
@@ -340,7 +341,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 *            The difference.
 		 */
 		public void hideDecorators(Diff difference) {
-			List<? extends AbstractDecorator> oldDecorators = getDecorators(difference);
+			Collection<? extends AbstractDecorator> oldDecorators = getDecorators(difference);
 			if (oldDecorators != null && !oldDecorators.isEmpty() && getComparison() != null) {
 				handleDecorators(oldDecorators, false, true);
 			}
@@ -354,7 +355,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 */
 		public void revealDecorators(Diff difference) {
 
-			List<? super AbstractDecorator> decorators = (List<? super AbstractDecorator>)getDecorators(difference);
+			Collection<? super AbstractDecorator> decorators = (Collection<? super AbstractDecorator>)getDecorators(difference);
 
 			// Create decorators only if they do not already exist and if the selected difference is a good
 			// candidate for that.
@@ -388,7 +389,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 
 			// The selected difference is a good candidate and decorators exist for it
 			if (decorators != null && !decorators.isEmpty()) {
-				revealDecorators((List<? extends AbstractDecorator>)decorators);
+				revealDecorators((Collection<? extends AbstractDecorator>)decorators);
+				// removeAll();
 			}
 		}
 
@@ -412,7 +414,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 * @param decorators
 		 *            The main decorators.
 		 */
-		protected void revealDecorators(List<? extends AbstractDecorator> decorators) {
+		protected void revealDecorators(Collection<? extends AbstractDecorator> decorators) {
 			handleDecorators(decorators, true, true);
 		}
 
@@ -443,7 +445,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 *            It indicates if the given decorators to handle are considered as the main ones (the ones
 		 *            directly linked to the selected difference).
 		 */
-		protected void handleDecorators(List<? extends AbstractDecorator> decorators, boolean isAdd,
+		protected void handleDecorators(Collection<? extends AbstractDecorator> decorators, boolean isAdd,
 				boolean areMain) {
 			for (AbstractDecorator decorator : decorators) {
 				handleDecorator(decorator, isAdd, areMain);
@@ -687,7 +689,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 *            The difference.
 		 * @return The list of main decorators.
 		 */
-		protected abstract List<? extends AbstractDecorator> getDecorators(Diff difference);
+		protected abstract Collection<? extends AbstractDecorator> getDecorators(Diff difference);
 
 	}
 
@@ -795,8 +797,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		}
 
 		/** Registry of created phantoms, indexed by difference. */
-		private final Map<Diff, Phantom> fPhantomRegistry = Collections
-				.synchronizedMap(new HashMap<Diff, Phantom>());
+		private final Map<Diff, Phantom> fPhantomRegistry = new HashMap<Diff, Phantom>();
 
 		/** Predicate witch checks that the given difference is an ADD or DELETE of a graphical object. */
 		private Predicate<Diff> isAddOrDelete = and(instanceOf(DiagramDiff.class), or(
@@ -1393,21 +1394,19 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.IDecoratorManager#hideAll()
 		 */
 		public void hideAll() {
-			synchronized(fPhantomRegistry) {
-				Collection<Phantom> phantoms = fPhantomRegistry.values();
-				synchronized(phantoms) {
-					Iterator<Phantom> visiblePhantoms = Iterators.filter(phantoms.iterator(),
-							new Predicate<Phantom>() {
-								public boolean apply(Phantom phantom) {
-									return phantom.getFigure().getParent() != null;
-								}
-							});
-					while (visiblePhantoms.hasNext()) {
-						Phantom phantom = (Phantom)visiblePhantoms.next();
-						handleDecorator(phantom, false, true);
-					}
-				}
+			Collection<Phantom> phantoms = fPhantomRegistry.values();
+
+			Iterator<Phantom> visiblePhantoms = Iterators.filter(phantoms.iterator(),
+					new Predicate<Phantom>() {
+						public boolean apply(Phantom phantom) {
+							return phantom.getFigure().getParent() != null;
+						}
+					});
+			while (visiblePhantoms.hasNext()) {
+				Phantom phantom = (Phantom)visiblePhantoms.next();
+				handleDecorator(phantom, false, true);
 			}
+
 		}
 	}
 
@@ -1454,8 +1453,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		}
 
 		/** Registry of created markers, indexed by difference. */
-		private Map<Diff, List<Marker>> fMarkerRegistry = Collections
-				.synchronizedMap(new HashMap<Diff, List<Marker>>());
+		private Multimap<Diff, Marker> fMarkerRegistry = HashMultimap.create();
 
 		/**
 		 * {@inheritDoc}
@@ -1511,12 +1509,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 				MergeViewerSide targetSide) {
 			Marker marker = createMarker(diff, referenceView, referenceFigure, targetSide);
 			if (marker != null) {
-				List<Marker> markers = fMarkerRegistry.get(diff);
-				if (markers == null) {
-					markers = Collections.synchronizedList(new ArrayList<Marker>());
-					fMarkerRegistry.put(diff, markers);
-				}
-				markers.add(marker);
+				fMarkerRegistry.put(diff, marker);
 			}
 			return marker;
 		}
@@ -1528,7 +1521,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 */
 		@Override
 		public void removeDecorators(Diff difference) {
-			fMarkerRegistry.remove(difference);
+			fMarkerRegistry.removeAll(difference);
 		}
 
 		/**
@@ -1547,7 +1540,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#getDecorators(org.eclipse.emf.compare.Diff)
 		 */
 		@Override
-		protected List<Marker> getDecorators(Diff difference) {
+		protected Collection<Marker> getDecorators(Diff difference) {
 			return fMarkerRegistry.get(difference);
 		}
 
@@ -1637,22 +1630,14 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.IDecoratorManager#hideAll()
 		 */
 		public void hideAll() {
-			synchronized(fMarkerRegistry) {
-				Collection<List<Marker>> listMarkers = fMarkerRegistry.values();
-				List<Marker> markers = Lists.newArrayList(Iterables.concat(listMarkers));
-				List<Marker> sMarkers = Collections.synchronizedList(markers);
-				synchronized(sMarkers) {
-					Iterator<Marker> visibleMarkers = Iterators.filter(sMarkers.iterator(),
-							new Predicate<Marker>() {
-								public boolean apply(Marker marker) {
-									return marker.getFigure().getParent() != null;
-								}
-							});
-					while (visibleMarkers.hasNext()) {
-						Marker marker = (Marker)visibleMarkers.next();
-						handleDecorator(marker, false, true);
-					}
+			Collection<Marker> listMarkers = fMarkerRegistry.values();
+			Iterable<Marker> visibleMarkers = Iterables.filter(listMarkers, new Predicate<Marker>() {
+				public boolean apply(Marker marker) {
+					return marker.getFigure().getParent() != null;
 				}
+			});
+			for (Marker marker : visibleMarkers) {
+				handleDecorator(marker, false, true);
 			}
 		}
 
@@ -1857,31 +1842,40 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void updateContent(Object ancestor, Object left, Object right) {
+
+		// Delete decorators at each selection of a difference (force the computation)
+		fDecoratorsManager.hideAll();
+		fDecoratorsManager.removeAll();
+
 		super.updateContent(ancestor, left, right);
 
 		getLeftMergeViewer().getGraphicalViewer().flush();
 		getRightMergeViewer().getGraphicalViewer().flush();
 		getAncestorMergeViewer().getGraphicalViewer().flush();
 
-		if (left instanceof IDiagramDiffAccessor) {
-			IDiagramDiffAccessor input = (IDiagramDiffAccessor)left;
+		if (left instanceof IDiagramNodeAccessor) {
 
-			// initialization: reset the current difference selection hiding potential visible phantoms
-			if (fCurrentSelectedDiff != null && fCurrentSelectedDiff.getState() != DifferenceState.MERGED) {
-				fDecoratorsManager.hideDecorators(fCurrentSelectedDiff);
-			}
+			// if (fCurrentSelectedDiff != null && fCurrentSelectedDiff.getState() != DifferenceState.MERGED)
+			// {
+			// fDecoratorsManager.hideDecorators(fCurrentSelectedDiff);
+			// }
+			// fCurrentSelectedDiff = null;
 
-			Diff diff = input.getDiff(); // equivalent to getInput().getTarget()
-			fCurrentSelectedDiff = diff;
+			// Compute and display the decorators related to the selected difference (if not merged and
+			// different from the current one)
+			if (left instanceof IDiagramDiffAccessor) {
+				IDiagramDiffAccessor input = (IDiagramDiffAccessor)left;
 
-			if (diff.getState() != DifferenceState.MERGED) {
-				fDecoratorsManager.revealDecorators(diff);
+				Diff diff = input.getDiff(); // equivalent to getInput().getTarget()
+
+				if (diff.getState() != DifferenceState.MERGED && diff != fCurrentSelectedDiff) {
+					fDecoratorsManager.revealDecorators(diff);
+				}
+
+				fCurrentSelectedDiff = diff;
+			} else {
+				fCurrentSelectedDiff = null;
 			}
-		} else if (left instanceof IDiagramNodeAccessor) {
-			if (fCurrentSelectedDiff != null && fCurrentSelectedDiff.getState() != DifferenceState.MERGED) {
-				fDecoratorsManager.hideDecorators(fCurrentSelectedDiff);
-			}
-			fCurrentSelectedDiff = null;
 		}
 
 		updateToolItems();
@@ -1896,6 +1890,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 	@Override
 	public void commandStackChanged(EventObject event) {
 		super.commandStackChanged(event);
+
+		// Delete decorators at each change of the input models (after merging or CTRL-Z, CTRL-Y)
 		Object source = event.getSource();
 		if (source instanceof CommandStack) {
 			Command command = ((CommandStack)source).getMostRecentCommand();
@@ -1910,16 +1906,6 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 				}
 			}
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-	 */
-	@Override
-	public void selectionChanged(SelectionChangedEvent event) {
-		// No selection synchronization (content to structure merge viewer).
 	}
 
 	/**
