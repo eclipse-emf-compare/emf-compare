@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.internal.accessor;
 
+import com.google.common.collect.Lists;
+
 import java.util.List;
 
 import org.eclipse.emf.compare.Comparison;
@@ -132,12 +134,15 @@ public class DiagramMatchAccessorImpl implements IDiagramNodeAccessor, ITypedEle
 		if (obj != null) {
 			diagram = getDiagram(obj);
 		} else {
-			obj = getEObject(side.opposite());
-			if (obj != null) {
-				diagram = getDiagram(obj);
-				if (diagram != null) {
-					Match diagramMatch = fComparison.getMatch(diagram);
-					diagram = (Diagram)getEObject(diagramMatch, side);
+			for (MergeViewerSide oppositeSide : getOtherSides(side)) {
+				obj = getEObject(oppositeSide);
+				if (obj != null) {
+					diagram = getDiagram(obj);
+					if (diagram != null) {
+						Match diagramMatch = fComparison.getMatch(diagram);
+						diagram = (Diagram)getEObject(diagramMatch, side);
+						break;
+					}
 				}
 			}
 		}
@@ -223,4 +228,30 @@ public class DiagramMatchAccessorImpl implements IDiagramNodeAccessor, ITypedEle
 	public List<Diff> getAllDiffs() {
 		return fComparison.getDifferences();
 	}
+
+	/**
+	 * Get the opposite sides of the given one.
+	 * 
+	 * @param side
+	 *            The given side.
+	 * @return the opposite ones.
+	 */
+	private List<MergeViewerSide> getOtherSides(MergeViewerSide side) {
+		List<MergeViewerSide> ret = null;
+		switch (side) {
+			case ANCESTOR:
+				ret = Lists.newArrayList(MergeViewerSide.LEFT, MergeViewerSide.RIGHT);
+				break;
+			case LEFT:
+				ret = Lists.newArrayList(MergeViewerSide.RIGHT, MergeViewerSide.ANCESTOR);
+				break;
+			case RIGHT:
+				ret = Lists.newArrayList(MergeViewerSide.LEFT, MergeViewerSide.ANCESTOR);
+				break;
+			default:
+				ret = Lists.newArrayList();
+		}
+		return ret;
+	}
+
 }

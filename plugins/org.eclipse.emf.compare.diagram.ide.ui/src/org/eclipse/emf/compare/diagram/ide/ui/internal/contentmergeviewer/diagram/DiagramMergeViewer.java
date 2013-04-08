@@ -29,7 +29,6 @@ import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.MouseWheelZoomHandler;
 import org.eclipse.gef.SelectionManager;
-import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.parts.DomainEventDispatcher;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
@@ -186,25 +185,44 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 	public void setInput(final Object input) {
 		if (input instanceof IDiagramNodeAccessor) {
 			Diagram diagram = ((IDiagramNodeAccessor)input).getOwnedDiagram();
-			initEditingDomain(diagram);
-			EditPart editPart = null;
-			View view = ((IDiagramNodeAccessor)input).getOwnedView();
-			if (view != null) {
-				editPart = getEditPart(view);
-			}
-			fGraphicalViewer.deselectAll();
-			// Selection only on matches.
-			if (!(input instanceof IDiagramDiffAccessor) && editPart != null) {
-				while (editPart != null && !editPart.isSelectable()) {
-					editPart = editPart.getParent();
+			if (diagram != null) {
+				initEditingDomain(diagram);
+				if (currentDiag != diagram) {
+					DiagramRootEditPart rootEditPart = new DiagramRootEditPart(diagram.getMeasurementUnit());
+					// rootEditPart.getZoomManager().setZoomAnimationStyle(ZoomManager.ANIMATE_NEVER);
+					// rootEditPart.getZoomManager().setZoom(ZOOM_FACTOR);
+					fGraphicalViewer.setRootEditPart(rootEditPart);
+					fGraphicalViewer.setContents(diagram);
 				}
-
-				if (editPart != null) {
-					setSelection(new StructuredSelection(editPart));
-					fGraphicalViewer.reveal(editPart);
+				View view = ((IDiagramNodeAccessor)input).getOwnedView();
+				EditPart editPart = getEditPart(view);
+				fGraphicalViewer.deselectAll();
+				// Selection only on matches.
+				if (!(input instanceof IDiagramDiffAccessor) && editPart != null) {
+					setSelection(editPart);
 				}
+			} else {
+				fGraphicalViewer.setContents((EditPart)null);
 			}
+			currentDiag = diagram;
+		}
+	}
 
+	/**
+	 * Set the selection of the first selectable object from the given edit part.
+	 * 
+	 * @param editPart
+	 *            The edit part.
+	 */
+	private void setSelection(EditPart editPart) {
+		EditPart ep = editPart;
+		while (ep != null && !ep.isSelectable()) {
+			ep = ep.getParent();
+		}
+
+		if (ep != null) {
+			setSelection(new StructuredSelection(ep));
+			fGraphicalViewer.reveal(ep);
 		}
 	}
 
@@ -226,31 +244,13 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 	}
 
 	/**
-	 * Get the editpart from the given view.
+	 * Return the editpart from the given view.
 	 * 
 	 * @param view
 	 *            The view.
 	 * @return The editpart.
 	 */
 	public EditPart getEditPart(final EObject view) {
-		final EditPart editPart = (EditPart)fGraphicalViewer.getEditPartRegistry().get(view);
-		if (editPart == null) {
-			Diagram diagram = null;
-			if (view instanceof Diagram) {
-				diagram = (Diagram)view;
-			} else if (view instanceof View) {
-				diagram = ((View)view).getDiagram();
-			}
-			if (diagram != null && !diagram.equals(currentDiag)) {
-				currentDiag = diagram;
-				fGraphicalViewer.getEditPartRegistry().clear();
-				final DiagramRootEditPart rootEditPart = new DiagramRootEditPart(diagram.getMeasurementUnit());
-				fGraphicalViewer.setRootEditPart(rootEditPart);
-				fGraphicalViewer.setContents(diagram);
-				rootEditPart.getZoomManager().setZoomAnimationStyle(ZoomManager.ANIMATE_NEVER);
-				rootEditPart.getZoomManager().setZoom(ZOOM_FACTOR);
-			}
-		}
 		return (EditPart)fGraphicalViewer.getEditPartRegistry().get(view);
 	}
 
