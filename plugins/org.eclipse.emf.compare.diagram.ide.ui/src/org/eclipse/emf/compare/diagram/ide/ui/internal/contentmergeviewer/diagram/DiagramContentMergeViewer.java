@@ -133,7 +133,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		void removeDecorators(Diff difference);
 
 		/**
-		 * It removes all the displayed decorators.
+		 * It removes all the displayed decorators from cash.
 		 */
 		void removeAll();
 	}
@@ -395,6 +395,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			// The selected difference is a good candidate and decorators exist for it
 			if (decorators != null && !decorators.isEmpty()) {
 				revealDecorators((List<? extends AbstractDecorator>)decorators);
+				// removeAll();
 			}
 		}
 
@@ -1811,25 +1812,24 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		getRightMergeViewer().getGraphicalViewer().flush();
 		getAncestorMergeViewer().getGraphicalViewer().flush();
 
-		if (left instanceof IDiagramDiffAccessor) {
-			IDiagramDiffAccessor input = (IDiagramDiffAccessor)left;
+		if (left instanceof IDiagramNodeAccessor) {
 
-			// initialization: reset the current difference selection hiding potential visible phantoms
-			if (fCurrentSelectedDiff != null && fCurrentSelectedDiff.getState() != DifferenceState.MERGED) {
-				fDecoratorsManager.hideDecorators(fCurrentSelectedDiff);
-			}
-
-			Diff diff = input.getDiff(); // equivalent to getInput().getTarget()
-			fCurrentSelectedDiff = diff;
-
-			if (diff.getState() != DifferenceState.MERGED) {
-				fDecoratorsManager.revealDecorators(diff);
-			}
-		} else if (left instanceof IDiagramNodeAccessor) {
 			if (fCurrentSelectedDiff != null && fCurrentSelectedDiff.getState() != DifferenceState.MERGED) {
 				fDecoratorsManager.hideDecorators(fCurrentSelectedDiff);
 			}
 			fCurrentSelectedDiff = null;
+
+			if (left instanceof IDiagramDiffAccessor) {
+				IDiagramDiffAccessor input = (IDiagramDiffAccessor)left;
+
+				Diff diff = input.getDiff(); // equivalent to getInput().getTarget()
+				fCurrentSelectedDiff = diff;
+
+				if (diff.getState() != DifferenceState.MERGED) {
+					fDecoratorsManager.revealDecorators(diff);
+				}
+			}
+
 		}
 
 		updateToolItems();
