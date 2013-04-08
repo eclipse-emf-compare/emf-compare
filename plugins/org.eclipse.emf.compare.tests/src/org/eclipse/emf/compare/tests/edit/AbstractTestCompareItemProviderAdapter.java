@@ -107,7 +107,7 @@ public class AbstractTestCompareItemProviderAdapter {
 
 	protected List<Notifier> eAllChildren(Notifier notifier) {
 		List<Notifier> ret = newArrayList();
-		ITreeItemContentProvider contentProvider = adaptAsITreItemContentProvider(notifier);
+		ITreeItemContentProvider contentProvider = adaptAsITreeItemContentProvider(notifier);
 		Iterable<Notifier> children = filter(contentProvider.getChildren(notifier), Notifier.class);
 		for (Notifier child : children) {
 			ret.add(child);
@@ -116,7 +116,7 @@ public class AbstractTestCompareItemProviderAdapter {
 		return ret;
 	}
 
-	protected ITreeItemContentProvider adaptAsITreItemContentProvider(Notifier notifier) {
+	protected ITreeItemContentProvider adaptAsITreeItemContentProvider(Notifier notifier) {
 		ITreeItemContentProvider contentProvider = (ITreeItemContentProvider)compareItemProviderAdapterFactory
 				.adapt(notifier, ITreeItemContentProvider.class);
 		return contentProvider;

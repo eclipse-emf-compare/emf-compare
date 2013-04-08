@@ -36,17 +36,17 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 	public void testGetChildren_AudioVisualItem() throws IOException {
 		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
 
-		Collection<?> ePackage_MatchChildren = adaptAsITreItemContentProvider(ePackageMatch).getChildren(
+		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch).getChildren(
 				ePackageMatch);
 		Match audioVisualItem_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name",
 				"AudioVisualItem");
-		Collection<?> audioVisualItem_MatchChildren = adaptAsITreItemContentProvider(audioVisualItem_Match)
+		Collection<?> audioVisualItem_MatchChildren = adaptAsITreeItemContentProvider(audioVisualItem_Match)
 				.getChildren(audioVisualItem_Match);
 
 		ReferenceChange titleReferenceChange = getReferenceChangeWithFeatureValue(
 				audioVisualItem_MatchChildren, "name", "title");
 
-		Collection<?> titleReferenceChange_Children = adaptAsITreItemContentProvider(titleReferenceChange)
+		Collection<?> titleReferenceChange_Children = adaptAsITreeItemContentProvider(titleReferenceChange)
 				.getChildren(titleReferenceChange);
 
 		assertEquals(1, titleReferenceChange_Children.size());
@@ -56,7 +56,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 
 		ReferenceChange titledItemReferenceChange = getReferenceChangeWithFeatureValue(
 				audioVisualItem_MatchChildren, "name", "TitledItem");
-		Collection<?> titledItemReferenceChange_Children = adaptAsITreItemContentProvider(
+		Collection<?> titledItemReferenceChange_Children = adaptAsITreeItemContentProvider(
 				titledItemReferenceChange).getChildren(titledItemReferenceChange);
 		assertEquals(0, titledItemReferenceChange_Children.size());
 	}
@@ -65,36 +65,36 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 	public void testGetChildren_Book() throws IOException {
 		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
 
-		Collection<?> ePackage_MatchChildren = adaptAsITreItemContentProvider(ePackageMatch).getChildren(
+		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch).getChildren(
 				ePackageMatch);
 		Match book_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "Book");
-		Collection<?> book_MatchChildren = adaptAsITreItemContentProvider(book_Match).getChildren(book_Match);
+		Collection<?> book_MatchChildren = adaptAsITreeItemContentProvider(book_Match).getChildren(book_Match);
 
 		ReferenceChange subtitleReferenceChange = getReferenceChangeWithFeatureValue(book_MatchChildren,
 				"name", "subtitle");
 
-		Collection<?> subtitleReferenceChange_Children = adaptAsITreItemContentProvider(
+		Collection<?> subtitleReferenceChange_Children = adaptAsITreeItemContentProvider(
 				subtitleReferenceChange).getChildren(subtitleReferenceChange);
 
 		assertEquals(1, subtitleReferenceChange_Children.size());
 		Notifier child = (Notifier)get(subtitleReferenceChange_Children, 0);
 		assertTrue(child instanceof ReferenceChange);
 		assertEquals(EcorePackage.Literals.ETYPED_ELEMENT__ETYPE, ((ReferenceChange)child).getReference());
-		assertTrue(adaptAsITreItemContentProvider(child).getChildren(child).isEmpty());
+		assertTrue(adaptAsITreeItemContentProvider(child).getChildren(child).isEmpty());
 
 		ReferenceChange titleReferenceChange = getReferenceChangeWithFeatureValue(book_MatchChildren, "name",
 				"title");
-		Collection<?> titleReferenceChange_Children = adaptAsITreItemContentProvider(titleReferenceChange)
+		Collection<?> titleReferenceChange_Children = adaptAsITreeItemContentProvider(titleReferenceChange)
 				.getChildren(titleReferenceChange);
 		assertEquals(1, titleReferenceChange_Children.size());
 		child = (Notifier)get(titleReferenceChange_Children, 0);
 		assertTrue(child instanceof ReferenceChange);
 		assertEquals(EcorePackage.Literals.ETYPED_ELEMENT__ETYPE, ((ReferenceChange)child).getReference());
-		assertTrue(adaptAsITreItemContentProvider(child).getChildren(child).isEmpty());
+		assertTrue(adaptAsITreeItemContentProvider(child).getChildren(child).isEmpty());
 
 		ReferenceChange titledItemReferenceChange = getReferenceChangeWithFeatureValue(book_MatchChildren,
 				"name", "TitledItem");
-		Collection<?> titledItemReferenceChange_Children = adaptAsITreItemContentProvider(
+		Collection<?> titledItemReferenceChange_Children = adaptAsITreeItemContentProvider(
 				titledItemReferenceChange).getChildren(titledItemReferenceChange);
 		assertEquals(0, titledItemReferenceChange_Children.size());
 	}
@@ -103,11 +103,11 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 	public void testGetChildren_Borrowable() throws IOException {
 		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
 
-		Collection<?> ePackage_MatchChildren = adaptAsITreItemContentProvider(ePackageMatch).getChildren(
+		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch).getChildren(
 				ePackageMatch);
 		Match borrowableCategory_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name",
 				"Borrowable");
-		Collection<?> borrowable_MatchChildren = adaptAsITreItemContentProvider(borrowableCategory_Match)
+		Collection<?> borrowable_MatchChildren = adaptAsITreeItemContentProvider(borrowableCategory_Match)
 				.getChildren(borrowableCategory_Match);
 
 		assertEquals(3, borrowable_MatchChildren.size());
@@ -117,10 +117,10 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 	public void testGetChildren_BookCategory() throws IOException {
 		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
 
-		Collection<?> ePackage_MatchChildren = adaptAsITreItemContentProvider(ePackageMatch).getChildren(
+		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch).getChildren(
 				ePackageMatch);
 		Match bookCategory_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "BookCategory");
-		Collection<?> bookCategory_MatchChildren = adaptAsITreItemContentProvider(bookCategory_Match)
+		Collection<?> bookCategory_MatchChildren = adaptAsITreeItemContentProvider(bookCategory_Match)
 				.getChildren(bookCategory_Match);
 
 		ReferenceChange dictionaryReferenceChange = getReferenceChangeWithFeatureValue(
@@ -132,13 +132,13 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 		ReferenceChange manhwaReferenceChange = getReferenceChangeWithFeatureValue(
 				bookCategory_MatchChildren, "name", "Manhwa");
 
-		assertTrue(adaptAsITreItemContentProvider(dictionaryReferenceChange).getChildren(
+		assertTrue(adaptAsITreeItemContentProvider(dictionaryReferenceChange).getChildren(
 				dictionaryReferenceChange).isEmpty());
-		assertTrue(adaptAsITreItemContentProvider(encyclopediaReferenceChange).getChildren(
+		assertTrue(adaptAsITreeItemContentProvider(encyclopediaReferenceChange).getChildren(
 				encyclopediaReferenceChange).isEmpty());
-		assertTrue(adaptAsITreItemContentProvider(mangaReferenceChange).getChildren(mangaReferenceChange)
+		assertTrue(adaptAsITreeItemContentProvider(mangaReferenceChange).getChildren(mangaReferenceChange)
 				.isEmpty());
-		assertTrue(adaptAsITreItemContentProvider(manhwaReferenceChange).getChildren(manhwaReferenceChange)
+		assertTrue(adaptAsITreeItemContentProvider(manhwaReferenceChange).getChildren(manhwaReferenceChange)
 				.isEmpty());
 	}
 
@@ -146,7 +146,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 	public void testGetChildren_Magazine1() throws IOException {
 		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
 
-		Collection<?> ePackage_MatchChildren = adaptAsITreItemContentProvider(ePackageMatch).getChildren(
+		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch).getChildren(
 				ePackageMatch);
 
 		Collection<?> magazineChildren = null;
@@ -154,7 +154,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 			EClass eClass = (EClass)referenceChange.getValue();
 			if ("Magazine".equals(eClass.getName())
 					&& "CirculatingItem".equals(eClass.getESuperTypes().get(0).getName())) {
-				magazineChildren = adaptAsITreItemContentProvider(referenceChange).getChildren(
+				magazineChildren = adaptAsITreeItemContentProvider(referenceChange).getChildren(
 						referenceChange);
 				assertEquals(3, magazineChildren.size());
 				break;
@@ -162,17 +162,17 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 		}
 		ReferenceChange magazineSuperTypeChange = getReferenceChangeWithFeatureValue(magazineChildren,
 				"name", "CirculatingItem");
-		assertTrue(adaptAsITreItemContentProvider(magazineSuperTypeChange).getChildren(
+		assertTrue(adaptAsITreeItemContentProvider(magazineSuperTypeChange).getChildren(
 				magazineSuperTypeChange).isEmpty());
 
 		ReferenceChange magazineSFChange1 = getReferenceChangeWithFeatureValue(magazineChildren, "name",
 				"pages");
-		assertEquals(1, adaptAsITreItemContentProvider(magazineSFChange1).getChildren(magazineSFChange1)
+		assertEquals(1, adaptAsITreeItemContentProvider(magazineSFChange1).getChildren(magazineSFChange1)
 				.size());
 
 		ReferenceChange magazineSFChange2 = getReferenceChangeWithFeatureValue(magazineChildren, "name",
 				"title");
-		assertEquals(1, adaptAsITreItemContentProvider(magazineSFChange2).getChildren(magazineSFChange2)
+		assertEquals(1, adaptAsITreeItemContentProvider(magazineSFChange2).getChildren(magazineSFChange2)
 				.size());
 	}
 
@@ -180,7 +180,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 	public void testGetChildren_Magazine2() throws IOException {
 		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
 
-		Collection<?> ePackage_MatchChildren = adaptAsITreItemContentProvider(ePackageMatch).getChildren(
+		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch).getChildren(
 				ePackageMatch);
 
 		Collection<?> magazineChildren = null;
@@ -188,7 +188,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 			EClass eClass = (EClass)referenceChange.getValue();
 			if ("Magazine".equals(eClass.getName())
 					&& "Periodical".equals(eClass.getESuperTypes().get(0).getName())) {
-				magazineChildren = adaptAsITreItemContentProvider(referenceChange).getChildren(
+				magazineChildren = adaptAsITreeItemContentProvider(referenceChange).getChildren(
 						referenceChange);
 				assertEquals(1, magazineChildren.size());
 				break;
@@ -196,7 +196,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 		}
 		ReferenceChange magazineSuperTypeChange = getReferenceChangeWithFeatureValue(magazineChildren,
 				"name", "Periodical");
-		assertTrue(adaptAsITreItemContentProvider(magazineSuperTypeChange).getChildren(
+		assertTrue(adaptAsITreeItemContentProvider(magazineSuperTypeChange).getChildren(
 				magazineSuperTypeChange).isEmpty());
 	}
 
@@ -204,11 +204,11 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 	public void testGetChildren_Periodical() throws IOException {
 		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
 
-		Collection<?> ePackage_MatchChildren = adaptAsITreItemContentProvider(ePackageMatch).getChildren(
+		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch).getChildren(
 				ePackageMatch);
 		ReferenceChange periodical_ReferenceChange = getReferenceChangeWithFeatureValue(
 				ePackage_MatchChildren, "name", "Periodical");
-		Collection<?> periodical_ReferenceChangeChildren = adaptAsITreItemContentProvider(
+		Collection<?> periodical_ReferenceChangeChildren = adaptAsITreeItemContentProvider(
 				periodical_ReferenceChange).getChildren(periodical_ReferenceChange);
 
 		assertEquals(5, periodical_ReferenceChangeChildren.size());
@@ -221,31 +221,31 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 		ReferenceChange titledItemChange = getReferenceChangeWithFeatureValue(
 				periodical_ReferenceChangeChildren, "name", "TitledItem");
 
-		Collection<?> issuesPerYearChildren = adaptAsITreItemContentProvider(issuesPerYearChange)
+		Collection<?> issuesPerYearChildren = adaptAsITreeItemContentProvider(issuesPerYearChange)
 				.getChildren(issuesPerYearChange);
 		assertEquals(1, issuesPerYearChildren.size());
 		ReferenceChange issuePerYearChild = (ReferenceChange)issuesPerYearChildren.iterator().next();
 		assertEquals(EcorePackage.Literals.ETYPED_ELEMENT__ETYPE, issuePerYearChild.getReference());
 
-		assertTrue(adaptAsITreItemContentProvider(itemChange).getChildren(itemChange).isEmpty());
-		assertTrue(adaptAsITreItemContentProvider(titledItemChange).getChildren(titledItemChange).isEmpty());
+		assertTrue(adaptAsITreeItemContentProvider(itemChange).getChildren(itemChange).isEmpty());
+		assertTrue(adaptAsITreeItemContentProvider(titledItemChange).getChildren(titledItemChange).isEmpty());
 	}
 
 	@Test
 	public void testGetChildren_Person() throws IOException {
 		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
 
-		Collection<?> ePackage_MatchChildren = adaptAsITreItemContentProvider(ePackageMatch).getChildren(
+		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch).getChildren(
 				ePackageMatch);
 		Match person_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "Person");
-		Collection<?> person_MatchChildren = adaptAsITreItemContentProvider(person_Match).getChildren(
+		Collection<?> person_MatchChildren = adaptAsITreeItemContentProvider(person_Match).getChildren(
 				person_Match);
 
 		assertEquals(3, person_MatchChildren.size());
 
 		ReferenceChange issuesPerYearChange = getReferenceChangeWithFeatureValue(person_MatchChildren,
 				"name", "firstName");
-		Collection<?> firstNameChildren = adaptAsITreItemContentProvider(issuesPerYearChange).getChildren(
+		Collection<?> firstNameChildren = adaptAsITreeItemContentProvider(issuesPerYearChange).getChildren(
 				issuesPerYearChange);
 		assertEquals(1, firstNameChildren.size());
 		ReferenceChange firstNameChild = (ReferenceChange)firstNameChildren.iterator().next();
@@ -253,7 +253,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 
 		ReferenceChange fullNameChange = getReferenceChangeWithFeatureValue(person_MatchChildren, "name",
 				"fullName");
-		Collection<?> fullNameChildren = adaptAsITreItemContentProvider(fullNameChange).getChildren(
+		Collection<?> fullNameChildren = adaptAsITreeItemContentProvider(fullNameChange).getChildren(
 				fullNameChange);
 		assertEquals(1, fullNameChildren.size());
 		ReferenceChange fullNameChild = (ReferenceChange)fullNameChildren.iterator().next();
@@ -261,7 +261,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 
 		ReferenceChange lastNameChange = getReferenceChangeWithFeatureValue(person_MatchChildren, "name",
 				"lastName");
-		Collection<?> lastNameChildren = adaptAsITreItemContentProvider(lastNameChange).getChildren(
+		Collection<?> lastNameChildren = adaptAsITreeItemContentProvider(lastNameChange).getChildren(
 				lastNameChange);
 		assertEquals(2, lastNameChildren.size());
 		Iterator<?> lastNameiterator = lastNameChildren.iterator();
@@ -275,21 +275,21 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 	public void testGetChildren_TitledItem() throws IOException {
 		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
 
-		Collection<?> ePackage_MatchChildren = adaptAsITreItemContentProvider(ePackageMatch).getChildren(
+		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch).getChildren(
 				ePackageMatch);
 
 		ReferenceChange titledItem_ReferenceChange = getReferenceChangeWithFeatureValue(
 				ePackage_MatchChildren, "name", "TitledItem");
-		Collection<?> titledItem_ReferenceChangeChildren = adaptAsITreItemContentProvider(
+		Collection<?> titledItem_ReferenceChangeChildren = adaptAsITreeItemContentProvider(
 				titledItem_ReferenceChange).getChildren(titledItem_ReferenceChange);
 		assertEquals(1, titledItem_ReferenceChangeChildren.size());
 
 		ReferenceChange title_Change = (ReferenceChange)titledItem_ReferenceChangeChildren.iterator().next();
-		Collection<?> title_ChangeChildren = adaptAsITreItemContentProvider(title_Change).getChildren(
+		Collection<?> title_ChangeChildren = adaptAsITreeItemContentProvider(title_Change).getChildren(
 				title_Change);
 		assertEquals(1, title_ChangeChildren.size());
 
 		ReferenceChange eType_Change = (ReferenceChange)title_ChangeChildren.iterator().next();
-		assertTrue(adaptAsITreItemContentProvider(eType_Change).getChildren(eType_Change).isEmpty());
+		assertTrue(adaptAsITreeItemContentProvider(eType_Change).getChildren(eType_Change).isEmpty());
 	}
 }

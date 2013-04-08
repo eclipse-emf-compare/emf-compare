@@ -38,7 +38,6 @@ import org.junit.BeforeClass;
 /**
  * The set up and tear down of this class were mostly copied from org.eclipse.egit.core.test.GitTestCase.
  */
-@SuppressWarnings("nls")
 public class CompareGitTestCase {
 	protected TestProject project;
 
