@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -895,15 +896,41 @@ public final class DiffUtil {
 	 * @since 3.0
 	 */
 	public static Function<Diff, Iterable<Diff>> getSubDiffs(final boolean leftToRight) {
+		return getSubDiffs(leftToRight, new LinkedHashSet<Diff>());
+	}
+
+	/**
+	 * When merging a {@link Diff}, returns the sub diffs of this given diff, and all associated diffs (see
+	 * {@link DiffUtil#getAssociatedDiffs(Iterable, boolean, Diff)}) of these sub diffs.
+	 * <p>
+	 * If the diff is an {@link AttributeChange} or a @{code ResourceAttachmentChange}, this method will
+	 * return an empty iterable.
+	 * </p>
+	 * <p>
+	 * If the diff is a {@link ReferenceChange} this method will return all differences contained in the match
+	 * that contains the value of the reference change, and all associated diffs of these differences.
+	 * </p>
+	 * 
+	 * @param leftToRight
+	 *            the direction of merge.
+	 * @param processedDiffs
+	 *            a set of diffs which have been already processed.
+	 * @return an iterable containing the sub diffs of this given diff, and all associated diffs of these sub
+	 *         diffs.
+	 * @since 3.0
+	 */
+	private static Function<Diff, Iterable<Diff>> getSubDiffs(final boolean leftToRight,
+			final LinkedHashSet<Diff> processedDiffs) {
 		return new Function<Diff, Iterable<Diff>>() {
 			public Iterable<Diff> apply(Diff diff) {
 				if (diff instanceof ReferenceChange) {
-					Match match = diff.getMatch();
 					Match matchOfValue = diff.getMatch().getComparison().getMatch(
 							((ReferenceChange)diff).getValue());
-					if (!match.equals(matchOfValue) && match.getSubmatches().contains(matchOfValue)) {
+					if (((ReferenceChange)diff).getReference().isContainment()) {
 						final Iterable<Diff> subDiffs = matchOfValue.getAllDifferences();
-						final Iterable<Diff> associatedDiffs = getAssociatedDiffs(diff, subDiffs, leftToRight);
+						addAll(processedDiffs, subDiffs);
+						final Iterable<Diff> associatedDiffs = getAssociatedDiffs(diff, subDiffs,
+								processedDiffs, leftToRight);
 						return ImmutableSet.copyOf(concat(subDiffs, associatedDiffs));
 					}
 				}
@@ -939,17 +966,19 @@ public final class DiffUtil {
 	 *            the given diff.
 	 * @param subDiffs
 	 *            the iterable of sub diffs for which we want the associated diffs.
+	 * @param processedDiffs
+	 *            a set of diffs which have been already processed.
 	 * @param leftToRight
 	 *            the direction of merge.
 	 * @return an iterable containing the associated diffs of these given sub diffs, and all sub diffs of
 	 *         these associated diffs.
 	 * @since 3.0
 	 */
-	public static Iterable<Diff> getAssociatedDiffs(final Diff diffRoot, Iterable<Diff> subDiffs,
-			boolean leftToRight) {
+	private static Iterable<Diff> getAssociatedDiffs(final Diff diffRoot, Iterable<Diff> subDiffs,
+			LinkedHashSet<Diff> processedDiffs, boolean leftToRight) {
 		Collection<Diff> associatedDiffs = new HashSet<Diff>();
 		for (Diff diff : subDiffs) {
-			final Collection<Diff> reqs = new HashSet<Diff>();
+			final Collection<Diff> reqs = new LinkedHashSet<Diff>();
 			if (leftToRight) {
 				if (diff.getSource() == DifferenceSource.LEFT) {
 					reqs.addAll(diff.getRequires());
@@ -966,12 +995,52 @@ public final class DiffUtil {
 			reqs.remove(diffRoot);
 			associatedDiffs.addAll(reqs);
 			for (Diff req : reqs) {
-				if (!Iterables.contains(subDiffs, req)) {
-					addAll(associatedDiffs, getSubDiffs(leftToRight).apply(req));
+				if (!Iterables.contains(subDiffs, req) && !processedDiffs.contains(req)) {
+					processedDiffs.add(req);
+					addAll(associatedDiffs, getSubDiffs(leftToRight, processedDiffs).apply(req));
 				}
 			}
 		}
 		return associatedDiffs;
+	}
+
+	/**
+	 * When merging a {@link Diff}, returns the associated diffs of the sub diffs of the diff, and all sub
+	 * diffs (see {@link DiffUtil#getSubDiffs(boolean)}) of these associated diffs.
+	 * <p>
+	 * The associated diffs of a diff are :
+	 * <p>
+	 * - {@link Diff#getRequiredBy()} if the source of the diff is the left side and the direction of the
+	 * merge is right to left.
+	 * </p>
+	 * <p>
+	 * - {@link Diff#getRequiredBy()} if the source of the diff is the right side and the direction of the
+	 * merge is left to right.
+	 * </p>
+	 * <p>
+	 * - {@link Diff#getRequires()} if the source of the diff is the left side and the direction of the merge
+	 * is left to right.
+	 * </p>
+	 * <p>
+	 * - {@link Diff#getRequires()} if the source of the diff is the right side and the direction of the merge
+	 * is right to left.
+	 * </p>
+	 * </p>
+	 * 
+	 * @param diffRoot
+	 *            the given diff.
+	 * @param subDiffs
+	 *            the iterable of sub diffs for which we want the associated diffs.
+	 * @param leftToRight
+	 *            the direction of merge.
+	 * @return an empty list.
+	 * @since 3.0
+	 * @deprecated
+	 */
+	@Deprecated
+	public static Iterable<Diff> getAssociatedDiffs(final Diff diffRoot, Iterable<Diff> subDiffs,
+			boolean leftToRight) {
+		return Collections.emptyList();
 	}
 
 	/**
