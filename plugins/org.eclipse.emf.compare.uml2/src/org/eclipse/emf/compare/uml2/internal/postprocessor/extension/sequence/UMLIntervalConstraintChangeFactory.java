@@ -21,7 +21,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.internal.IntervalConstraintChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
-import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.AbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -35,14 +35,15 @@ import org.eclipse.uml2.uml.ValueSpecification;
 /**
  * Factory for UMLIntervalConstraintChangeLeftTarget.
  */
-public class UMLIntervalConstraintChangeFactory extends AbstractDiffExtensionFactory {
+public class UMLIntervalConstraintChangeFactory extends AbstractUMLChangeFactory {
 
+	@Override
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return IntervalConstraintChange.class;
 	}
 
 	@Override
-	protected UMLDiff createExtension() {
+	public UMLDiff createExtension() {
 		return UMLCompareFactory.eINSTANCE.createIntervalConstraintChange();
 	}
 
@@ -83,6 +84,7 @@ public class UMLIntervalConstraintChangeFactory extends AbstractDiffExtensionFac
 	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
 		List<EObject> result = new ArrayList<EObject>();
 		if (discriminant instanceof IntervalConstraint) {
+			result.add(discriminant);
 			result.addAll(((IntervalConstraint)discriminant).getConstrainedElements());
 			ValueSpecification valueSpecification = ((IntervalConstraint)discriminant).getSpecification();
 			result.add(valueSpecification);

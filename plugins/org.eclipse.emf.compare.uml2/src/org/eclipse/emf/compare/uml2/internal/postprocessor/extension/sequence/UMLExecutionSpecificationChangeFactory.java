@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.internal.ExecutionSpecificationChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
-import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.AbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -30,14 +30,15 @@ import org.eclipse.uml2.uml.UMLPackage;
 /**
  * Factory for UMLExecutionSpecificationChangeLeft.
  */
-public class UMLExecutionSpecificationChangeFactory extends AbstractDiffExtensionFactory {
+public class UMLExecutionSpecificationChangeFactory extends AbstractUMLChangeFactory {
 
+	@Override
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return ExecutionSpecificationChange.class;
 	}
 
 	@Override
-	protected UMLDiff createExtension() {
+	public UMLDiff createExtension() {
 		return UMLCompareFactory.eINSTANCE.createExecutionSpecificationChange();
 	}
 
@@ -62,6 +63,7 @@ public class UMLExecutionSpecificationChangeFactory extends AbstractDiffExtensio
 	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
 		List<EObject> result = new ArrayList<EObject>();
 		if (discriminant instanceof ExecutionSpecification) {
+			result.add(discriminant);
 			result.add(((ExecutionSpecification)discriminant).getStart());
 			result.add(((ExecutionSpecification)discriminant).getFinish());
 			result.addAll(((ExecutionSpecification)discriminant).getCovereds());

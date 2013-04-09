@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.internal.GeneralizationSetChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
-import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.AbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.GeneralizationSet;
@@ -28,14 +28,15 @@ import org.eclipse.uml2.uml.UMLPackage;
 /**
  * Factory for UMLGeneralizationSetChangeLeftTarget.
  */
-public class UMLGeneralizationSetChangeFactory extends AbstractDiffExtensionFactory {
+public class UMLGeneralizationSetChangeFactory extends AbstractUMLChangeFactory {
 
+	@Override
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return GeneralizationSetChange.class;
 	}
 
 	@Override
-	protected UMLDiff createExtension() {
+	public UMLDiff createExtension() {
 		return UMLCompareFactory.eINSTANCE.createGeneralizationSetChange();
 	}
 
@@ -58,6 +59,7 @@ public class UMLGeneralizationSetChangeFactory extends AbstractDiffExtensionFact
 	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
 		List<EObject> result = new ArrayList<EObject>();
 		if (discriminant instanceof GeneralizationSet) {
+			result.add(discriminant);
 			result.addAll(((GeneralizationSet)discriminant).getGeneralizations());
 		}
 		return result;

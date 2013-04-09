@@ -153,19 +153,17 @@ public class AddGeneralizationSetTest extends AbstractTest {
 		if (kind.equals(TestKind.ADD)) {
 			addUMLGeneralizationSet = Iterators.find(differences.iterator(), and(
 					instanceOf(GeneralizationSetChange.class), ofKind(DifferenceKind.ADD)));
-			assertNotNull(addUMLGeneralizationSet);
-			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLGeneralizationSet.getRefinedBy().size()));
-			assertTrue(addUMLGeneralizationSet.getRefinedBy().contains(
-					addRefGeneralizationInGeneralizationSet1));
-			assertTrue(addUMLGeneralizationSet.getRefinedBy().contains(
-					addRefGeneralizationInGeneralizationSet2));
 		} else {
 			addUMLGeneralizationSet = Iterators.find(differences.iterator(), and(
 					instanceOf(GeneralizationSetChange.class), ofKind(DifferenceKind.DELETE)));
-			assertNotNull(addUMLGeneralizationSet);
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLGeneralizationSet.getRefinedBy().size()));
-			assertTrue(addUMLGeneralizationSet.getRefinedBy().contains(addGeneralizationSet));
 		}
+		assertNotNull(addUMLGeneralizationSet);
+		assertSame(Integer.valueOf(5), Integer.valueOf(addUMLGeneralizationSet.getRefinedBy().size()));
+		assertTrue(addUMLGeneralizationSet.getRefinedBy().contains(addRefGeneralizationInGeneralizationSet1));
+		assertTrue(addUMLGeneralizationSet.getRefinedBy().contains(addRefGeneralizationInGeneralizationSet2));
+		assertTrue(addUMLGeneralizationSet.getRefinedBy().contains(addGeneralizationSet));
+		assertTrue(addUMLGeneralizationSet.getRefinedBy().contains(addRefGeneralizationSetInClass0));
+		assertTrue(addUMLGeneralizationSet.getRefinedBy().contains(addRefGeneralizationSetInClass2));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {

@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.internal.MessageChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
-import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.AbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -32,14 +32,15 @@ import org.eclipse.uml2.uml.UMLPackage;
 /**
  * Factory for UMLGeneralizationSetChangeLeftTarget.
  */
-public class UMLMessageChangeFactory extends AbstractDiffExtensionFactory {
+public class UMLMessageChangeFactory extends AbstractUMLChangeFactory {
 
+	@Override
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return MessageChange.class;
 	}
 
 	@Override
-	protected UMLDiff createExtension() {
+	public UMLDiff createExtension() {
 		return UMLCompareFactory.eINSTANCE.createMessageChange();
 	}
 
@@ -64,6 +65,7 @@ public class UMLMessageChangeFactory extends AbstractDiffExtensionFactory {
 	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
 		List<EObject> result = new ArrayList<EObject>();
 		if (discriminant instanceof Message) {
+			result.add(discriminant);
 			final MessageEnd recvEvent = ((Message)discriminant).getReceiveEvent();
 			final MessageEnd sendEvent = ((Message)discriminant).getSendEvent();
 			if (recvEvent instanceof InteractionFragment) {

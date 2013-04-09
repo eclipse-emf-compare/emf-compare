@@ -30,7 +30,7 @@ public class UMLSubstitutionChangeFactory extends UMLDependencyChangeFactory {
 	}
 
 	@Override
-	protected UMLDiff createExtension() {
+	public UMLDiff createExtension() {
 		return UMLCompareFactory.eINSTANCE.createSubstitutionChange();
 	}
 

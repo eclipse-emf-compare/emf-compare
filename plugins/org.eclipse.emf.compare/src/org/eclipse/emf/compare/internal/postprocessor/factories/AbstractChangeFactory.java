@@ -129,8 +129,8 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 	public void fillRequiredDifferences(Comparison comparison, Diff extension) {
 		// Browse required and requiring unit differences to deduce the requirement link from and to the given
 		// extension.
-		List<Diff> requiredExtensions = new ArrayList<Diff>();
-		List<Diff> requiringExtensions = new ArrayList<Diff>();
+		Set<Diff> requiredExtensions = new HashSet<Diff>();
+		Set<Diff> requiringExtensions = new HashSet<Diff>();
 		Iterator<Diff> refiningDiffs = extension.getRefinedBy().iterator();
 		while (refiningDiffs.hasNext()) {
 			Diff refiningDiff = refiningDiffs.next();

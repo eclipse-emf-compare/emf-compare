@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor.extension.profile;
 
+import com.google.common.base.Predicate;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,7 +27,7 @@ import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
-import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.AbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
@@ -47,14 +49,15 @@ import org.eclipse.uml2.uml.util.UMLUtil;
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class UMLStereotypeApplicationChangeFactory extends AbstractDiffExtensionFactory {
+public class UMLStereotypeApplicationChangeFactory extends AbstractUMLChangeFactory {
 
+	@Override
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return StereotypeApplicationChange.class;
 	}
 
 	@Override
-	protected UMLDiff createExtension() {
+	public UMLDiff createExtension() {
 		return UMLCompareFactory.eINSTANCE.createStereotypeApplicationChange();
 	}
 
@@ -75,15 +78,17 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractDiffExtension
 	}
 
 	@Override
-	protected void fillRefiningDifferences(Comparison comparison, UMLDiff diffExtension, EObject discriminant) {
-		super.fillRefiningDifferences(comparison, diffExtension, discriminant);
+	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
+		super.setRefiningChanges(extension, extensionKind, refiningDiff);
 
-		final Iterator<Diff> changes = comparison.getMatch(discriminant).getDifferences().iterator();
+		EObject discriminant = getDiscriminantFromDiff(refiningDiff);
+
+		final Iterator<Diff> changes = refiningDiff.getMatch().getComparison().getMatch(discriminant)
+				.getDifferences().iterator();
 		while (changes.hasNext()) {
 			final Diff diff = changes.next();
-			if (diff instanceof AttributeChange || diff instanceof ResourceAttachmentChange
-					&& diff.getKind() == DifferenceKind.DELETE) {
-				diffExtension.getRefinedBy().add(diff);
+			if (diff instanceof AttributeChange || diff instanceof ResourceAttachmentChange) {
+				extension.getRefinedBy().add(diff);
 			}
 		}
 	}
@@ -91,7 +96,8 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractDiffExtension
 	@Override
 	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
 		// get the changed values linked to the related stereotype.
-		final List<EObject> result = new ArrayList<EObject>();
+		List<EObject> result = new ArrayList<EObject>();
+		result.add(discriminant);
 		final Iterator<EReference> features = discriminant.eClass().getEAllReferences().iterator();
 		while (features.hasNext()) {
 			final EStructuralFeature feature = features.next();
@@ -104,6 +110,16 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractDiffExtension
 			}
 		}
 		return result;
+	}
+
+	@Override
+	protected Predicate<Diff> keepOnlyDifferences() {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return !(input instanceof ReferenceChange && ((ReferenceChange)input).getReference()
+						.isContainment());
+			}
+		};
 	}
 
 	@Override
@@ -131,7 +147,8 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractDiffExtension
 	}
 
 	@Override
-	public void fillRequiredDifferences(Comparison comparison, UMLDiff extension) {
+	public void fillRequiredDifferences(Comparison comparison, Diff extension) {
+		super.fillRequiredDifferences(comparison, extension);
 		if (!(extension instanceof StereotypeApplicationChange)) {
 			return;
 		}

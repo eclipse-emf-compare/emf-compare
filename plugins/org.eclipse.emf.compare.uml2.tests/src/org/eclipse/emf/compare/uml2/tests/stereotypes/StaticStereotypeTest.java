@@ -808,23 +808,21 @@ public class StaticStereotypeTest extends AbstractTest {
 		if (kind.equals(TestKind.ADD)) {
 			addUMLProfileApplication = Iterators.find(differences.iterator(), and(
 					instanceOf(ProfileApplicationChange.class), ofKind(DifferenceKind.ADD)));
-			assertNotNull(addUMLProfileApplication);
-			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLProfileApplication.getRefinedBy().size()));
-			assertTrue(addUMLProfileApplication.getRefinedBy().contains(addReferencesInUMLAnnotation));
-			assertTrue(addUMLProfileApplication.getRefinedBy()
-					.contains(addAppliedProfileInProfileApplication));
 			addUMLStereotypeApplication = Iterators.find(differences.iterator(), and(
 					instanceOf(StereotypeApplicationChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
 			addUMLProfileApplication = Iterators.find(differences.iterator(), and(
 					instanceOf(ProfileApplicationChange.class), ofKind(DifferenceKind.DELETE)));
-			assertNotNull(addUMLProfileApplication);
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLProfileApplication.getRefinedBy().size()));
-			assertTrue(addUMLProfileApplication.getRefinedBy().contains(addProfileApplication));
 			addUMLStereotypeApplication = Iterators.find(differences.iterator(), and(
 					instanceOf(StereotypeApplicationChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLProfileApplication);
+		assertSame(Integer.valueOf(3), Integer.valueOf(addUMLProfileApplication.getRefinedBy().size()));
+		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addReferencesInUMLAnnotation));
+		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addAppliedProfileInProfileApplication));
+		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addProfileApplication));
+
+		assertNotNull(addUMLStereotypeApplication);
 		assertSame(Integer.valueOf(2), Integer.valueOf(addUMLStereotypeApplication.getRefinedBy().size()));
 		assertTrue(addUMLStereotypeApplication.getRefinedBy().contains(addStereotypeApplication));
 		assertTrue(addUMLStereotypeApplication.getRefinedBy().contains(addRefBaseClass));
@@ -977,23 +975,21 @@ public class StaticStereotypeTest extends AbstractTest {
 		if (kind.equals(TestKind.ADD)) {
 			addUMLProfileApplication = Iterators.find(differences.iterator(), and(
 					instanceOf(ProfileApplicationChange.class), ofKind(DifferenceKind.ADD)));
-			assertNotNull(addUMLProfileApplication);
-			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLProfileApplication.getRefinedBy().size()));
-			assertTrue(addUMLProfileApplication.getRefinedBy().contains(addReferencesInUMLAnnotation));
-			assertTrue(addUMLProfileApplication.getRefinedBy()
-					.contains(addAppliedProfileInProfileApplication));
 			addUMLStereotypeApplication = Iterators.find(differences.iterator(), and(
 					instanceOf(StereotypeApplicationChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
 			addUMLProfileApplication = Iterators.find(differences.iterator(), and(
 					instanceOf(ProfileApplicationChange.class), ofKind(DifferenceKind.DELETE)));
-			assertNotNull(addUMLProfileApplication);
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLProfileApplication.getRefinedBy().size()));
-			assertTrue(addUMLProfileApplication.getRefinedBy().contains(addProfileApplication));
 			addUMLStereotypeApplication = Iterators.find(differences.iterator(), and(
 					instanceOf(StereotypeApplicationChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLProfileApplication);
+		assertSame(Integer.valueOf(3), Integer.valueOf(addUMLProfileApplication.getRefinedBy().size()));
+		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addReferencesInUMLAnnotation));
+		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addAppliedProfileInProfileApplication));
+		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addProfileApplication));
+
+		assertNotNull(addUMLStereotypeApplication);
 		assertSame(Integer.valueOf(2), Integer.valueOf(addUMLStereotypeApplication.getRefinedBy().size()));
 		assertTrue(addUMLStereotypeApplication.getRefinedBy().contains(addStereotypeApplication));
 		assertTrue(addUMLStereotypeApplication.getRefinedBy().contains(addRefBaseClass));

@@ -150,6 +150,7 @@ public class ChangeAssociationTest extends AbstractTest {
 		Predicate<? super Diff> addRefTypeInPropertyClass2Description = null;
 		Predicate<? super Diff> addLiteralIntegerInClass2Description = null;
 		Predicate<? super Diff> addUnlimitedNaturalInClass2Description = null;
+		// duplicate diff: Association.memberEnd to Class2
 
 		if (kind.equals(TestKind.DELETE)) {
 			addPropertyClass2Description = removedFromReference("model.class1_class0_0", "ownedEnd",
@@ -198,6 +199,7 @@ public class ChangeAssociationTest extends AbstractTest {
 		assertTrue(changeUMLAssociation.getRefinedBy().contains(addUnlimitedNaturalInClass2));
 		assertTrue(changeUMLAssociation.getRefinedBy().contains(addRefAssociationInPropertyClass2));
 		assertTrue(changeUMLAssociation.getRefinedBy().contains(addPropertyClass2));
+		// duplicate diff: Association.memberEnd to Class2
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
@@ -223,6 +225,7 @@ public class ChangeAssociationTest extends AbstractTest {
 			assertTrue(addPropertyClass2.getRequires().contains(addUnlimitedNaturalInClass2));
 			assertTrue(addPropertyClass2.getRequires().contains(addRefAssociationInPropertyClass2));
 			assertTrue(addPropertyClass2.getRequires().contains(addRefTypeInPropertyClass2));
+			// duplicate diff: Association.memberEnd to Class2
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addRefAssociationInPropertyClass2.getRequires()
 					.size()));

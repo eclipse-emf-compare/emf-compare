@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor.extension.profile;
 
+import static com.google.common.base.Predicates.or;
+
+import com.google.common.base.Predicate;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -23,7 +27,7 @@ import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
-import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.AbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAnnotation;
@@ -41,16 +45,17 @@ import org.eclipse.uml2.uml.internal.impl.ProfileApplicationImpl;
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class UMLProfileApplicationChangeFactory extends AbstractDiffExtensionFactory {
+public class UMLProfileApplicationChangeFactory extends AbstractUMLChangeFactory {
 
 	private static final String UML_VERSIONS = "http://www.eclipse.org/uml2/\\d.0.0/UML";
 
+	@Override
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return ProfileApplicationChange.class;
 	}
 
 	@Override
-	protected UMLDiff createExtension() {
+	public UMLDiff createExtension() {
 		return UMLCompareFactory.eINSTANCE.createProfileApplicationChange();
 	}
 
@@ -100,6 +105,7 @@ public class UMLProfileApplicationChangeFactory extends AbstractDiffExtensionFac
 	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
 		List<EObject> result = new ArrayList<EObject>();
 		if (discriminant instanceof ProfileApplicationImpl) {
+			result.add(discriminant);
 			result.add(((ProfileApplicationImpl)discriminant).basicGetAppliedProfile());
 			for (EAnnotation annotation : (List<? extends EAnnotation>)ReferenceUtil.getAsList(discriminant,
 					EcorePackage.Literals.EMODEL_ELEMENT__EANNOTATIONS)) {
@@ -108,6 +114,16 @@ public class UMLProfileApplicationChangeFactory extends AbstractDiffExtensionFac
 			}
 		}
 		return result;
+	}
+
+	@Override
+	protected Predicate<Diff> keepOnlyDifferences() {
+		return or(super.keepOnlyDifferences(), new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input instanceof ReferenceChange
+						&& ((ReferenceChange)input).getValue().eClass().getEPackage() == EcorePackage.eINSTANCE;
+			}
+		});
 	}
 
 	@Override
@@ -153,7 +169,8 @@ public class UMLProfileApplicationChangeFactory extends AbstractDiffExtensionFac
 	}
 
 	@Override
-	public void fillRequiredDifferences(Comparison comparison, UMLDiff extension) {
+	public void fillRequiredDifferences(Comparison comparison, Diff extension) {
+		super.fillRequiredDifferences(comparison, extension);
 		if (extension instanceof ProfileApplicationChange) {
 			final ProfileApplicationChange profileApplicationChange = (ProfileApplicationChange)extension;
 			if (profileApplicationChange.getKind() == DifferenceKind.DELETE) {

@@ -19,21 +19,22 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.internal.DependencyChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
-import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.AbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.Dependency;
 import org.eclipse.uml2.uml.UMLPackage;
 
-public class UMLDependencyChangeFactory extends AbstractDiffExtensionFactory {
+public class UMLDependencyChangeFactory extends AbstractUMLChangeFactory {
 
+	@Override
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return DependencyChange.class;
 	}
 
 	@Override
-	protected UMLDiff createExtension() {
+	public UMLDiff createExtension() {
 		return UMLCompareFactory.eINSTANCE.createDependencyChange();
 	}
 
@@ -41,6 +42,7 @@ public class UMLDependencyChangeFactory extends AbstractDiffExtensionFactory {
 	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
 		List<EObject> result = new ArrayList<EObject>();
 		if (discriminant instanceof Dependency) {
+			result.add(discriminant);
 			result.addAll(((Dependency)discriminant).getClients());
 			result.addAll(((Dependency)discriminant).getSuppliers());
 		}

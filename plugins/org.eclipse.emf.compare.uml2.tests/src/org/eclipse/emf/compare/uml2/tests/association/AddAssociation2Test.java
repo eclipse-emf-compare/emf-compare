@@ -222,6 +222,7 @@ public class AddAssociation2Test extends AbstractTest {
 				addLiteralIntegerInClass0Description);
 		final Diff addUnlimitedNaturalInClass0 = Iterators.find(differences.iterator(),
 				addUnlimitedNaturalInClass0Description);
+		// duplicate diff: add Association.memberEnd to class1s
 
 		assertNotNull(addAssociation);
 		assertNotNull(addPropertyClass1);
@@ -242,28 +243,26 @@ public class AddAssociation2Test extends AbstractTest {
 		if (kind.equals(TestKind.ADD)) {
 			addUMLAssociation = Iterators.find(differences.iterator(), and(
 					instanceOf(AssociationChange.class), ofKind(DifferenceKind.ADD)));
-			assertNotNull(addUMLAssociation);
-			assertSame(Integer.valueOf(12), Integer.valueOf(addUMLAssociation.getRefinedBy().size()));
-
-			assertTrue(addUMLAssociation.getRefinedBy().contains(addAssociation));
-			assertTrue(addUMLAssociation.getRefinedBy().contains(addPropertyClass1));
-			assertTrue(addUMLAssociation.getRefinedBy().contains(addPropertyClass0));
-			assertTrue(addUMLAssociation.getRefinedBy().contains(addPropertyClass0InAssociation));
-			assertTrue(addUMLAssociation.getRefinedBy().contains(addRefAssociationInPropertyClass1));
-			assertTrue(addUMLAssociation.getRefinedBy().contains(addRefTypeInPropertyClass1));
-			assertTrue(addUMLAssociation.getRefinedBy().contains(addRefAssociationInPropertyClass0));
-			assertTrue(addUMLAssociation.getRefinedBy().contains(addRefTypeInPropertyClass0));
-			assertTrue(addUMLAssociation.getRefinedBy().contains(addLiteralIntegerInClass1));
-			assertTrue(addUMLAssociation.getRefinedBy().contains(addUnlimitedNaturalInClass1));
-			assertTrue(addUMLAssociation.getRefinedBy().contains(addLiteralIntegerInClass0));
-			assertTrue(addUMLAssociation.getRefinedBy().contains(addUnlimitedNaturalInClass0));
 		} else {
 			addUMLAssociation = Iterators.find(differences.iterator(), and(
 					instanceOf(AssociationChange.class), ofKind(DifferenceKind.DELETE)));
-			assertNotNull(addUMLAssociation);
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLAssociation.getRefinedBy().size()));
-			assertTrue(addUMLAssociation.getRefinedBy().contains(addAssociation));
 		}
+		assertNotNull(addUMLAssociation);
+		assertSame(Integer.valueOf(12), Integer.valueOf(addUMLAssociation.getRefinedBy().size()));
+
+		assertTrue(addUMLAssociation.getRefinedBy().contains(addAssociation));
+		assertTrue(addUMLAssociation.getRefinedBy().contains(addPropertyClass1));
+		assertTrue(addUMLAssociation.getRefinedBy().contains(addPropertyClass0));
+		assertTrue(addUMLAssociation.getRefinedBy().contains(addPropertyClass0InAssociation));
+		assertTrue(addUMLAssociation.getRefinedBy().contains(addRefAssociationInPropertyClass1));
+		assertTrue(addUMLAssociation.getRefinedBy().contains(addRefTypeInPropertyClass1));
+		assertTrue(addUMLAssociation.getRefinedBy().contains(addRefAssociationInPropertyClass0));
+		assertTrue(addUMLAssociation.getRefinedBy().contains(addRefTypeInPropertyClass0));
+		assertTrue(addUMLAssociation.getRefinedBy().contains(addLiteralIntegerInClass1));
+		assertTrue(addUMLAssociation.getRefinedBy().contains(addUnlimitedNaturalInClass1));
+		assertTrue(addUMLAssociation.getRefinedBy().contains(addLiteralIntegerInClass0));
+		assertTrue(addUMLAssociation.getRefinedBy().contains(addUnlimitedNaturalInClass0));
+		// duplicate diff: add Association.memberEnd to class1s
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
@@ -313,6 +312,7 @@ public class AddAssociation2Test extends AbstractTest {
 			assertTrue(addPropertyClass1.getRequires().contains(addUnlimitedNaturalInClass1));
 			assertTrue(addPropertyClass1.getRequires().contains(addRefAssociationInPropertyClass1));
 			assertTrue(addPropertyClass1.getRequires().contains(addRefTypeInPropertyClass1));
+			// duplicate diff: add Association.memberEnd to class1s
 
 			assertSame(Integer.valueOf(5), Integer.valueOf(addPropertyClass0.getRequires().size()));
 			assertTrue(addPropertyClass0.getRequires().contains(addLiteralIntegerInClass0));
@@ -333,6 +333,7 @@ public class AddAssociation2Test extends AbstractTest {
 			assertTrue(addAssociation.getRequires().contains(addRefAssociationInPropertyClass1));
 			assertTrue(addAssociation.getRequires().contains(addRefAssociationInPropertyClass0));
 			assertTrue(addPropertyClass0.getRequires().contains(addPropertyClass0InAssociation));
+			// duplicate diff: add Association.memberEnd to class1s
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLAssociation.getRequires().size()));
 

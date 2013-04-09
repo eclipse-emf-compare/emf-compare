@@ -30,7 +30,7 @@ public class UMLInterfaceRealizationChangeFactory extends UMLDependencyChangeFac
 	}
 
 	@Override
-	protected UMLDiff createExtension() {
+	public UMLDiff createExtension() {
 		return UMLCompareFactory.eINSTANCE.createInterfaceRealizationChange();
 	}
 

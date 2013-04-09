@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.internal.postprocessor.factories.IChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.clazz.UMLAssociationChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.clazz.UMLDependencyChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.clazz.UMLGeneralizationSetChangeFactory;
@@ -33,12 +34,12 @@ import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.usecase.UML
 /**
  * Registry of all {@link IDiffExtensionFactory}.
  */
-public final class DiffExtensionFactoryRegistry {
+public final class UMLExtensionFactoryRegistry {
 
 	/**
 	 * Constructor.
 	 */
-	private DiffExtensionFactoryRegistry() {
+	private UMLExtensionFactoryRegistry() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -50,10 +51,10 @@ public final class DiffExtensionFactoryRegistry {
 	 *            The UML2 difference engine.
 	 * @return an unmodifiable set of all {@link IDiffExtensionFactory}.
 	 */
-	public static Map<Class<? extends Diff>, IDiffExtensionFactory> createExtensionFactories() {
-		final Map<Class<? extends Diff>, IDiffExtensionFactory> dataset = new HashMap<Class<? extends Diff>, IDiffExtensionFactory>();
+	public static Map<Class<? extends Diff>, IChangeFactory> createExtensionFactories() {
+		final Map<Class<? extends Diff>, IChangeFactory> dataset = new HashMap<Class<? extends Diff>, IChangeFactory>();
 
-		List<IDiffExtensionFactory> factories = new ArrayList<IDiffExtensionFactory>();
+		List<IChangeFactory> factories = new ArrayList<IChangeFactory>();
 		factories.add(new UMLAssociationChangeFactory());
 		factories.add(new UMLDependencyChangeFactory());
 		factories.add(new UMLInterfaceRealizationChangeFactory());
@@ -67,7 +68,7 @@ public final class DiffExtensionFactoryRegistry {
 		factories.add(new UMLProfileApplicationChangeFactory());
 		factories.add(new UMLStereotypeApplicationChangeFactory());
 
-		for (IDiffExtensionFactory iDiffExtensionFactory : factories) {
+		for (IChangeFactory iDiffExtensionFactory : factories) {
 			dataset.put(iDiffExtensionFactory.getExtensionKind(), iDiffExtensionFactory);
 		}
 

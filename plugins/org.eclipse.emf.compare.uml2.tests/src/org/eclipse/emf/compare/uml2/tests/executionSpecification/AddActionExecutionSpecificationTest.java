@@ -199,26 +199,25 @@ public class AddActionExecutionSpecificationTest extends AbstractTest {
 		if (kind.equals(TestKind.ADD)) {
 			addUMLMessage = Iterators.find(differences.iterator(), and(
 					instanceOf(ExecutionSpecificationChange.class), ofKind(DifferenceKind.ADD)));
-			assertNotNull(addUMLMessage);
-			assertSame(Integer.valueOf(9), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
-			assertTrue(addUMLMessage.getRefinedBy().contains(addFinishInActionExecSpec));
-			assertTrue(addUMLMessage.getRefinedBy().contains(addStartInActionExecSpec));
-			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInFinish));
-			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInStart));
-			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInActionExecSpec));
-			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredByInLifeline1_1));
-			assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredByInLifeline1_2));
-			assertTrue(addUMLMessage.getRefinedBy().contains(addStart));
-			assertTrue(addUMLMessage.getRefinedBy().contains(addFinish));
 		} else {
 			addUMLMessage = Iterators.find(differences.iterator(), and(
 					instanceOf(ExecutionSpecificationChange.class), ofKind(DifferenceKind.DELETE)));
-			assertNotNull(addUMLMessage);
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
-			assertTrue(addUMLMessage.getRefinedBy().contains(addActionExecSpec));
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
-			assertTrue(addUMLMessage.getRefinedBy().contains(addActionExecSpec));
 		}
+		assertNotNull(addUMLMessage);
+		assertSame(Integer.valueOf(13), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
+		assertTrue(addUMLMessage.getRefinedBy().contains(addFinishInActionExecSpec));
+		assertTrue(addUMLMessage.getRefinedBy().contains(addStartInActionExecSpec));
+		assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInFinish));
+		assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInStart));
+		assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInActionExecSpec));
+		assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredByInLifeline1_1));
+		assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredByInLifeline1_2));
+		assertTrue(addUMLMessage.getRefinedBy().contains(addStart));
+		assertTrue(addUMLMessage.getRefinedBy().contains(addFinish));
+		assertTrue(addUMLMessage.getRefinedBy().contains(addActionExecSpec));
+		assertTrue(addUMLMessage.getRefinedBy().contains(addExecutionInFinish));
+		assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredByInLifeline1_3));
+		assertTrue(addUMLMessage.getRefinedBy().contains(addExecutionInStart));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {

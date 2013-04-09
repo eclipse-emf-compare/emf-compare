@@ -135,17 +135,16 @@ public class AddAbstractionTest extends AbstractTest {
 		if (kind.equals(TestKind.ADD)) {
 			addUMLDependency = Iterators.find(differences.iterator(), and(instanceOf(DependencyChange.class),
 					ofKind(DifferenceKind.ADD)));
-			assertNotNull(addUMLDependency);
-			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
-			assertTrue(addUMLDependency.getRefinedBy().contains(addRefClass1InAbstraction));
-			assertTrue(addUMLDependency.getRefinedBy().contains(addRefClass0InAbstraction));
 		} else {
 			addUMLDependency = Iterators.find(differences.iterator(), and(instanceOf(DependencyChange.class),
 					ofKind(DifferenceKind.DELETE)));
-			assertNotNull(addUMLDependency);
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
-			assertTrue(addUMLDependency.getRefinedBy().contains(addAbstraction));
 		}
+		assertNotNull(addUMLDependency);
+		assertSame(Integer.valueOf(4), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
+		assertTrue(addUMLDependency.getRefinedBy().contains(addRefClass1InAbstraction));
+		assertTrue(addUMLDependency.getRefinedBy().contains(addRefClass0InAbstraction));
+		assertTrue(addUMLDependency.getRefinedBy().contains(addAbstraction));
+		assertTrue(addUMLDependency.getRefinedBy().contains(addRefAbstractionInClass1));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {

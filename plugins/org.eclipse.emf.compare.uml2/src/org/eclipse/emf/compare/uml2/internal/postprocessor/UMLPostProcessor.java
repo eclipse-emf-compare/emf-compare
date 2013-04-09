@@ -29,10 +29,10 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.internal.postprocessor.factories.IChangeFactory;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
-import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.DiffExtensionFactoryRegistry;
-import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.IDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.UMLExtensionFactoryRegistry;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -42,7 +42,7 @@ import org.eclipse.uml2.common.util.SubsetSupersetEObjectEList;
 public class UMLPostProcessor implements IPostProcessor {
 
 	/** UML2 extensions factories. */
-	private Set<IDiffExtensionFactory> uml2ExtensionFactories;
+	private Set<IChangeFactory> uml2ExtensionFactories;
 
 	/**
 	 * UML has notions of "subset" and "superset" features, which can be multiply derived but can also hold
@@ -203,27 +203,6 @@ public class UMLPostProcessor implements IPostProcessor {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postEquivalences(Comparison comparison, Monitor monitor) {
-		removeDuplicateDiffs(comparison);
-
-		final Map<Class<? extends Diff>, IDiffExtensionFactory> mapUml2ExtensionFactories = DiffExtensionFactoryRegistry
-				.createExtensionFactories();
-		uml2ExtensionFactories = new HashSet<IDiffExtensionFactory>(mapUml2ExtensionFactories.values());
-
-		// Creation of the UML difference extensions
-		for (Diff diff : comparison.getDifferences()) {
-			applyManagedTypes(diff);
-		}
-
-		// Filling of the requirements link of the UML difference extensions
-		for (Diff umlDiff : comparison.getDifferences()) {
-			if (umlDiff instanceof UMLDiff) {
-				final Class<?> classDiffElement = umlDiff.eClass().getInstanceClass();
-				final IDiffExtensionFactory diffFactory = mapUml2ExtensionFactories.get(classDiffElement);
-				if (diffFactory != null) {
-					diffFactory.fillRequiredDifferences(comparison, (UMLDiff)umlDiff);
-				}
-			}
-		}
 	}
 
 	/**
@@ -243,6 +222,27 @@ public class UMLPostProcessor implements IPostProcessor {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postComparison(Comparison comparison, Monitor monitor) {
+		removeDuplicateDiffs(comparison);
+
+		final Map<Class<? extends Diff>, IChangeFactory> mapUml2ExtensionFactories = UMLExtensionFactoryRegistry
+				.createExtensionFactories();
+		uml2ExtensionFactories = new HashSet<IChangeFactory>(mapUml2ExtensionFactories.values());
+
+		// Creation of the UML difference extensions
+		for (Diff diff : comparison.getDifferences()) {
+			applyManagedTypes(diff);
+		}
+
+		// Filling of the requirements link of the UML difference extensions
+		for (Diff umlDiff : comparison.getDifferences()) {
+			if (umlDiff instanceof UMLDiff) {
+				final Class<?> classDiffElement = umlDiff.eClass().getInstanceClass();
+				final IChangeFactory diffFactory = mapUml2ExtensionFactories.get(classDiffElement);
+				if (diffFactory != null) {
+					diffFactory.fillRequiredDifferences(comparison, (UMLDiff)umlDiff);
+				}
+			}
+		}
 	}
 
 	/**
@@ -254,11 +254,14 @@ public class UMLPostProcessor implements IPostProcessor {
 	 *            The cross referencer.
 	 */
 	private void applyManagedTypes(Diff element) {
-		for (IDiffExtensionFactory factory : uml2ExtensionFactories) {
+		for (IChangeFactory factory : uml2ExtensionFactories) {
 			if (factory.handles(element)) {
 				final Diff extension = factory.create(element);
 				final Match match = factory.getParentMatch(element);
-				match.getDifferences().add(extension);
+				// FIXME: why the match may be null ? (see AddAssociation2Test.testMergeLtRA30UseCase)
+				if (match != null) {
+					match.getDifferences().add(extension);
+				}
 			}
 		}
 	}

@@ -117,16 +117,14 @@ public class AddIncludeTest extends AbstractTest {
 		if (kind.equals(TestKind.ADD)) {
 			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(IncludeChange.class),
 					ofKind(DifferenceKind.ADD)));
-			assertNotNull(addUMLExtend);
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLExtend.getRefinedBy().size()));
-			assertTrue(addUMLExtend.getRefinedBy().contains(addRefExtendedCaseInExtend));
 		} else {
 			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(IncludeChange.class),
 					ofKind(DifferenceKind.DELETE)));
-			assertNotNull(addUMLExtend);
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLExtend.getRefinedBy().size()));
-			assertTrue(addUMLExtend.getRefinedBy().contains(addExtend));
 		}
+		assertNotNull(addUMLExtend);
+		assertSame(Integer.valueOf(2), Integer.valueOf(addUMLExtend.getRefinedBy().size()));
+		assertTrue(addUMLExtend.getRefinedBy().contains(addRefExtendedCaseInExtend));
+		assertTrue(addUMLExtend.getRefinedBy().contains(addExtend));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {

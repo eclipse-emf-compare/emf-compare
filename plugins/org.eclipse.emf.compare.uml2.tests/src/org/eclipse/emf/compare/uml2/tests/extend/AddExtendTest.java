@@ -132,18 +132,16 @@ public class AddExtendTest extends AbstractTest {
 		if (kind.equals(TestKind.ADD)) {
 			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(ExtendChange.class),
 					ofKind(DifferenceKind.ADD)));
-			assertNotNull(addUMLExtend);
-			assertSame(Integer.valueOf(3), Integer.valueOf(addUMLExtend.getRefinedBy().size()));
-			assertTrue(addUMLExtend.getRefinedBy().contains(addRefExtendedCaseInExtend));
-			assertTrue(addUMLExtend.getRefinedBy().contains(addRefExtensionLocationInExtend));
-			assertTrue(addUMLExtend.getRefinedBy().contains(addExtensionPoint));
 		} else {
 			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(ExtendChange.class),
 					ofKind(DifferenceKind.DELETE)));
-			assertNotNull(addUMLExtend);
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLExtend.getRefinedBy().size()));
-			assertTrue(addUMLExtend.getRefinedBy().contains(addExtend));
 		}
+		assertNotNull(addUMLExtend);
+		assertSame(Integer.valueOf(4), Integer.valueOf(addUMLExtend.getRefinedBy().size()));
+		assertTrue(addUMLExtend.getRefinedBy().contains(addRefExtendedCaseInExtend));
+		assertTrue(addUMLExtend.getRefinedBy().contains(addRefExtensionLocationInExtend));
+		assertTrue(addUMLExtend.getRefinedBy().contains(addExtensionPoint));
+		assertTrue(addUMLExtend.getRefinedBy().contains(addExtend));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {

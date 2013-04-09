@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.internal.ExtendChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
-import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.AbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.Extend;
@@ -28,14 +28,15 @@ import org.eclipse.uml2.uml.UMLPackage;
 /**
  * Factory for UMLExtendChangeLeftTarget.
  */
-public class UMLExtendChangeFactory extends AbstractDiffExtensionFactory {
+public class UMLExtendChangeFactory extends AbstractUMLChangeFactory {
 
+	@Override
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return ExtendChange.class;
 	}
 
 	@Override
-	protected UMLDiff createExtension() {
+	public UMLDiff createExtension() {
 		return UMLCompareFactory.eINSTANCE.createExtendChange();
 	}
 
@@ -58,6 +59,7 @@ public class UMLExtendChangeFactory extends AbstractDiffExtensionFactory {
 	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
 		List<EObject> result = new ArrayList<EObject>();
 		if (discriminant instanceof Extend) {
+			result.add(discriminant);
 			result.add(((Extend)discriminant).getExtendedCase());
 			result.addAll(((Extend)discriminant).getExtensionLocations());
 		}

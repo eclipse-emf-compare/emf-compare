@@ -49,9 +49,9 @@ public class UMLMerger extends AbstractMerger {
 
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		diff.setState(DifferenceState.MERGED);
-		for (Diff refining : diff.getRefinedBy()) {
-			mergeDiff(refining, false, monitor);
-		}
+		// for (Diff refining : diff.getRefinedBy()) {
+		// mergeDiff(refining, false, monitor);
+		// }
 
 		if (diff.getSource() == DifferenceSource.LEFT) {
 			// merge all "requires" diffs
@@ -59,6 +59,10 @@ public class UMLMerger extends AbstractMerger {
 		} else {
 			// merge all "required by" diffs
 			mergeRequiredBy(diff, false, monitor);
+		}
+
+		for (Diff refining : diff.getRefinedBy()) {
+			mergeDiff(refining, false, monitor);
 		}
 	}
 
@@ -73,15 +77,19 @@ public class UMLMerger extends AbstractMerger {
 
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		diff.setState(DifferenceState.MERGED);
-		for (Diff refining : diff.getRefinedBy()) {
-			mergeDiff(refining, true, monitor);
-		}
+		// for (Diff refining : diff.getRefinedBy()) {
+		// mergeDiff(refining, true, monitor);
+		// }
 
 		if (diff.getSource() == DifferenceSource.LEFT) {
 			// merge all "required by" diffs
 			mergeRequiredBy(diff, true, monitor);
 		} else {
 			mergeRequires(diff, true, monitor);
+		}
+
+		for (Diff refining : diff.getRefinedBy()) {
+			mergeDiff(refining, true, monitor);
 		}
 	}
 
