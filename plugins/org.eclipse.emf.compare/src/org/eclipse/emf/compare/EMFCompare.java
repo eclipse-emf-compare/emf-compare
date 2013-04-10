@@ -334,7 +334,7 @@ public class EMFCompare {
 				equiEngine = new DefaultEquiEngine();
 			}
 			if (registry == null) {
-				registry = new PostProcessorDescriptorRegistryImpl();
+				registry = new PostProcessorDescriptorRegistryImpl<Object>();
 			}
 			if (conflictDetector == null) {
 				conflictDetector = new DefaultConflictDetector();
