@@ -87,11 +87,13 @@ public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider im
 			EObject view = diagramDiff.getView();
 			Comparison comparison = diagramDiff.getMatch().getComparison();
 			match = comparison.getMatch(view);
-			ret.addAll(match.getSubmatches());
-			ITreeItemContentProvider contentProvider = (ITreeItemContentProvider)getRootAdapterFactory()
-					.adapt(match, ITreeItemContentProvider.class);
-			if (contentProvider != null) {
-				ret.addAll(contentProvider.getChildren(match));
+			if (match != null) {
+				ret.addAll(match.getSubmatches());
+				ITreeItemContentProvider contentProvider = (ITreeItemContentProvider)getRootAdapterFactory()
+						.adapt(match, ITreeItemContentProvider.class);
+				if (contentProvider != null) {
+					ret.addAll(contentProvider.getChildren(match));
+				}
 			}
 		}
 		return ret;
