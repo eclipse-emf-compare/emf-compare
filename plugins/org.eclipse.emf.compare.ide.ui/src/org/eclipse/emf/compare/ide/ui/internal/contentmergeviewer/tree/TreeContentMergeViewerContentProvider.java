@@ -163,16 +163,7 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#isLeftEditable(java.lang.Object)
 	 */
 	public boolean isLeftEditable(Object element) {
-		boolean ret = false;
-		if (element instanceof MatchNode) {
-			ret = fCompareConfiguration.isLeftEditable();
-		} else {
-			Object left = getLeftContent(element);
-			if (left instanceof IEditableContent) {
-				ret = ((IEditableContent)left).isEditable();
-			}
-		}
-		return ret;
+		return fCompareConfiguration.isLeftEditable();
 	}
 
 	/**
@@ -233,23 +224,7 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#isRightEditable(java.lang.Object)
 	 */
 	public boolean isRightEditable(Object element) {
-		boolean editable = false;
-		if (element instanceof MatchNode) {
-			editable = fCompareConfiguration.isRightEditable();
-		} else if (element instanceof ICompareInput) {
-			Object right = ((ICompareInput)element).getRight();
-			if (right == null && element instanceof IDiffElement) {
-				// TODO: MBA use adapterfactory
-				IDiffContainer parent = ((IDiffElement)element).getParent();
-				if (parent instanceof ICompareInput) {
-					right = ((ICompareInput)parent).getRight();
-				}
-			}
-			if (right instanceof IEditableContent) {
-				editable = ((IEditableContent)right).isEditable();
-			}
-		}
-		return editable;
+		return fCompareConfiguration.isRightEditable();
 	}
 
 	/**
