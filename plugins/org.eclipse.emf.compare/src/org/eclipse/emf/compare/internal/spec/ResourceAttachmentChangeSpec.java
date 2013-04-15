@@ -27,6 +27,7 @@ public class ResourceAttachmentChangeSpec extends ResourceAttachmentChangeImpl {
 	 * 
 	 * @see org.eclipse.emf.compare.impl.DiffImpl#copyLeftToRight()
 	 */
+	@Deprecated
 	@Override
 	public void copyLeftToRight() {
 		/*
@@ -43,6 +44,7 @@ public class ResourceAttachmentChangeSpec extends ResourceAttachmentChangeImpl {
 	 * 
 	 * @see org.eclipse.emf.compare.impl.DiffImpl#copyRightToLeft()
 	 */
+	@Deprecated
 	@Override
 	public void copyRightToLeft() {
 		/*
