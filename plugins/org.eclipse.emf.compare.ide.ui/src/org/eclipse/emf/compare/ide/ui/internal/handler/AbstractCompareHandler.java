@@ -58,8 +58,8 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 
 		final CompareConfiguration configuration = new CompareConfiguration();
 		IMatchEngine.Factory eObjectMatchEngineFactory = new MatchEObjectEngineFactory();
-		eObjectMatchEngineFactory.setRanking(9);
-		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = EMFCompareRCPPlugin.getDefault()
+		eObjectMatchEngineFactory.setRanking(Integer.MAX_VALUE);
+		final IMatchEngine.Factory.Registry matchEngineFactoryRegistry = EMFCompareRCPPlugin.getDefault()
 				.getMatchEngineFactoryRegistry();
 		matchEngineFactoryRegistry.add(eObjectMatchEngineFactory);
 
@@ -68,7 +68,18 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 						EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build();
 		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
 		input = new ComparisonScopeEditorInput(configuration, editingDomain, adapterFactory, comparator,
-				scope);
+				scope) {
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see org.eclipse.compare.CompareEditorInput#handleDispose()
+			 */
+			@Override
+			protected void handleDispose() {
+				super.handleDispose();
+				matchEngineFactoryRegistry.remove(MatchEObjectEngineFactory.class.getName());
+			}
+		};
 
 		input.setTitle("Compare ('" + AdapterFactoryUtil.getText(adapterFactory, left) + "' - '"
 				+ AdapterFactoryUtil.getText(adapterFactory, right) + "')");
@@ -130,7 +141,9 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 		public boolean isMatchEngineFactoryFor(IComparisonScope scope) {
 			final Notifier left = scope.getLeft();
 			final Notifier right = scope.getRight();
-			if (left instanceof EObject && right instanceof EObject) {
+			final Notifier origin = scope.getOrigin();
+			if (left instanceof EObject && right instanceof EObject
+					&& (origin == null || origin instanceof EObject)) {
 				return true;
 			}
 			return false;
