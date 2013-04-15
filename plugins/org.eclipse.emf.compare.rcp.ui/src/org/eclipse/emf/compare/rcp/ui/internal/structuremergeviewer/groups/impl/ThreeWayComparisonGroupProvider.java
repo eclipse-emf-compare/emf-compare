@@ -59,16 +59,16 @@ public class ThreeWayComparisonGroupProvider implements IDifferenceGroupProvider
 	public Iterable<? extends IDifferenceGroup> getGroups(Comparison comparison) {
 		final List<Diff> diffs = comparison.getDifferences();
 
+		final IDifferenceGroup conflicts = new ConflictsGroupImpl(comparison, diffs, hasConflict(
+				ConflictKind.REAL, ConflictKind.PSEUDO), "Conflicts");
 		final IDifferenceGroup leftSide = new BasicDifferenceGroupImpl(comparison, diffs, Predicates.and(
 				fromSide(DifferenceSource.LEFT), Predicates.not(hasConflict(ConflictKind.REAL,
 						ConflictKind.PSEUDO))), "Left side");
 		final IDifferenceGroup rightSide = new BasicDifferenceGroupImpl(comparison, diffs, Predicates.and(
 				fromSide(DifferenceSource.RIGHT), Predicates.not(hasConflict(ConflictKind.REAL,
 						ConflictKind.PSEUDO))), "Right side");
-		final IDifferenceGroup conflicts = new ConflictsGroupImpl(comparison, diffs, hasConflict(
-				ConflictKind.REAL, ConflictKind.PSEUDO), "Conflicts");
 
-		return ImmutableList.of(leftSide, rightSide, conflicts);
+		return ImmutableList.of(conflicts, leftSide, rightSide);
 	}
 
 	/**

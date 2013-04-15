@@ -78,14 +78,9 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
-import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IElementComparer;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -112,9 +107,6 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	private Object fRoot;
 
 	private ICompareEditingDomain editingDomain;
-
-	/** The comparator used for this structure merge viewer */
-	private EMFCompareStructureMergeViewerComparator structureMergeViewerComparator;
 
 	/**
 	 * The difference filter that will be applied to the structure viewer. Note that this will be initialized
@@ -157,8 +149,6 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 
-		structureMergeViewerComparator = new EMFCompareStructureMergeViewerComparator();
-
 		setLabelProvider(new DelegatingStyledCellLabelProvider(
 				new EMFCompareStructureMergeViewerLabelProvider(fAdapterFactory, this)));
 		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(fAdapterFactory,
@@ -192,7 +182,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	 */
 	@Override
 	public ViewerComparator getComparator() {
-		return null;// structureMergeViewerComparator;
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -767,68 +757,5 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 
 		}
 		return result;
-	}
-
-	/**
-	 * Use our own {@link ViewerComparator} in order to manage {@link IStyledLabelProvider} and
-	 * {@link DelegatingStyledCellLabelProvider} cases.
-	 */
-	private static class EMFCompareStructureMergeViewerComparator extends ViewerComparator {
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer,
-		 *      java.lang.Object, java.lang.Object)
-		 */
-		@SuppressWarnings("unchecked")
-		@Override
-		public int compare(Viewer viewer, Object e1, Object e2) {
-			int cat1 = category(e1);
-			int cat2 = category(e2);
-
-			if (cat1 != cat2) {
-				return cat1 - cat2;
-			}
-
-			String name1 = getLabel(viewer, e1);
-			String name2 = getLabel(viewer, e2);
-
-			// use the comparator to compare the strings
-			return getComparator().compare(name1, name2);
-		}
-
-		/**
-		 * Returns the appropriate label of the given object based on the label provider of the given viewer.
-		 * 
-		 * @param viewer
-		 *            The given {@link Viewer}.
-		 * @param e1
-		 *            The given object for which we want the label.
-		 * @return The appropriate label based on the label provider of the given viewer.
-		 */
-		private String getLabel(Viewer viewer, Object e1) {
-			String name1;
-			if (viewer == null || !(viewer instanceof ContentViewer)) {
-				name1 = e1.toString();
-			} else {
-				IBaseLabelProvider prov = ((ContentViewer)viewer).getLabelProvider();
-				if (prov instanceof ILabelProvider) {
-					ILabelProvider lprov = (ILabelProvider)prov;
-					name1 = lprov.getText(e1);
-				} else if (prov instanceof IStyledLabelProvider) {
-					name1 = ((IStyledLabelProvider)prov).getStyledText(e1).getString();
-				} else if (prov instanceof DelegatingStyledCellLabelProvider) {
-					name1 = ((DelegatingStyledCellLabelProvider)prov).getStyledStringProvider()
-							.getStyledText(e1).getString();
-				} else {
-					name1 = e1.toString();
-				}
-			}
-			if (name1 == null) {
-				name1 = "";//$NON-NLS-1$
-			}
-			return name1;
-		}
 	}
 }
