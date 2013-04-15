@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,47 +18,56 @@ import org.eclipse.emf.compare.uml2.internal.SubstitutionChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.uml2.uml.Substitution;
 import org.eclipse.uml2.uml.UMLPackage;
 
+/**
+ * Factory for Substitution changes.
+ * 
+ * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+ */
 public class UMLSubstitutionChangeFactory extends UMLDependencyChangeFactory {
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.extension.clazz.UMLDependencyChangeFactory#getExtensionKind()
+	 */
 	@Override
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return SubstitutionChange.class;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.extension.clazz.UMLDependencyChangeFactory#createExtension()
+	 */
 	@Override
 	public UMLDiff createExtension() {
 		return UMLCompareFactory.eINSTANCE.createSubstitutionChange();
 	}
 
-	@Override
-	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
-		List<EObject> result = super.getPotentialChangedValuesFromDiscriminant(discriminant);
-		if (discriminant instanceof Substitution) {
-			result.add(((Substitution)discriminant).getContract());
-		}
-		return result;
-	}
-
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.extension.clazz.UMLDependencyChangeFactory#isRelatedToAnExtensionChange(org.eclipse.emf.compare.ReferenceChange)
+	 */
 	@Override
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
 		return super.isRelatedToAnExtensionChange(input)
 				|| input.getReference().equals(UMLPackage.Literals.SUBSTITUTION__CONTRACT);
 	}
 
-	@Override
-	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
-		return super.isRelatedToAnExtensionAdd(input)
-				&& ((Substitution)input.getValue()).getContract() != null;
-	}
-
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.extension.clazz.UMLDependencyChangeFactory#getManagedConcreteDiscriminantKind()
+	 */
 	@Override
 	protected List<EClass> getManagedConcreteDiscriminantKind() {
 		final List<EClass> result = new ArrayList<EClass>();
 		result.add(UMLPackage.Literals.SUBSTITUTION);
 		return result;
 	}
+
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,11 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor.extension.profile;
 
-import com.google.common.base.Predicate;
+import static com.google.common.base.Predicates.instanceOf;
 
-import java.util.ArrayList;
+import com.google.common.collect.Iterables;
+
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
@@ -30,12 +32,10 @@ import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil;
 import org.eclipse.emf.compare.utils.MatchUtil;
-import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
-import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.util.EcoreSwitch;
+import org.eclipse.emf.ecore.util.Switch;
 import org.eclipse.uml2.common.util.UML2Util;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Profile;
@@ -45,93 +45,135 @@ import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.util.UMLUtil;
 
 /**
- * Factory for UMLStereotypeApplicationRemoval.
+ * Factory for stereotype application changes.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public class UMLStereotypeApplicationChangeFactory extends AbstractUMLChangeFactory {
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#getExtensionKind()
+	 */
 	@Override
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return StereotypeApplicationChange.class;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#createExtension()
+	 */
 	@Override
 	public UMLDiff createExtension() {
 		return UMLCompareFactory.eINSTANCE.createStereotypeApplicationChange();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory#getDiscriminant(org.eclipse.emf.compare.Diff)
+	 */
 	@Override
-	protected EObject getDiscriminantFromDiff(Diff input) {
-		EObject result = null;
-		final DifferenceKind kind = getRelatedExtensionKind(input);
-		if (kind == DifferenceKind.ADD || kind == DifferenceKind.DELETE) {
-			if (input instanceof ReferenceChange) {
-				return ((ReferenceChange)input).getValue();
-			} else if (input instanceof ResourceAttachmentChange) {
-				return MatchUtil.getContainer(input.getMatch().getComparison(), input);
-			}
-		} else if (kind == DifferenceKind.CHANGE) {
-			return MatchUtil.getContainer(input.getMatch().getComparison(), input);
-		}
-		return result;
+	protected EObject getDiscriminant(Diff input) {
+		return Iterables.find(getDiscriminants(input), instanceOf(EObject.class), null);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory#getDiscriminantsGetter()
+	 */
 	@Override
-	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
-		super.setRefiningChanges(extension, extensionKind, refiningDiff);
-
-		EObject discriminant = getDiscriminantFromDiff(refiningDiff);
-
-		final Iterator<Diff> changes = refiningDiff.getMatch().getComparison().getMatch(discriminant)
-				.getDifferences().iterator();
-		while (changes.hasNext()) {
-			final Diff diff = changes.next();
-			if (diff instanceof AttributeChange || diff instanceof ResourceAttachmentChange) {
-				extension.getRefinedBy().add(diff);
-			}
-		}
-	}
-
-	@Override
-	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
-		// get the changed values linked to the related stereotype.
-		List<EObject> result = new ArrayList<EObject>();
-		result.add(discriminant);
-		final Iterator<EReference> features = discriminant.eClass().getEAllReferences().iterator();
-		while (features.hasNext()) {
-			final EStructuralFeature feature = features.next();
-			if (feature.isMany()) {
-				result.addAll((List<? extends EObject>)ReferenceUtil.getAsList(discriminant, feature));
-			} else {
-				if (((InternalEObject)discriminant).eGet(feature, false) != null) {
-					result.add((EObject)((InternalEObject)discriminant).eGet(feature, false));
+	protected Switch<Set<EObject>> getDiscriminantsGetter() {
+		return new EcoreSwitch<Set<EObject>>() {
+			@Override
+			public Set<EObject> defaultCase(EObject object) {
+				Set<EObject> result = new HashSet<EObject>();
+				if (object.eContainer() == null) {
+					result.add(object);
+				} else {
+					return defaultCaseForDiscriminantsGetter(this, object);
 				}
-			}
-		}
-		return result;
-	}
-
-	@Override
-	protected Predicate<Diff> keepOnlyDifferences() {
-		return new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				return !(input instanceof ReferenceChange && ((ReferenceChange)input).getReference()
-						.isContainment());
+				return result;
 			}
 		};
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory#setRefiningChanges(org.eclipse.emf.compare.Diff,
+	 *      org.eclipse.emf.compare.DifferenceKind, org.eclipse.emf.compare.Diff)
+	 */
+	@Override
+	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
+		super.setRefiningChanges(extension, extensionKind, refiningDiff);
+
+		EObject discriminant = getDiscriminant(refiningDiff);
+
+		if (discriminant != null) {
+			final Iterator<Diff> changes = refiningDiff.getMatch().getComparison().getMatch(discriminant)
+					.getDifferences().iterator();
+			while (changes.hasNext()) {
+				final Diff diff = changes.next();
+				if (diff instanceof AttributeChange || diff instanceof ResourceAttachmentChange) {
+					extension.getRefinedBy().add(diff);
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#isRelatedToAnExtensionChange(org.eclipse.emf.compare.AttributeChange)
+	 */
 	@Override
 	protected boolean isRelatedToAnExtensionChange(AttributeChange input) {
 		return UMLCompareUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory#isRelatedToAnExtensionChange(org.eclipse.emf.compare.ReferenceChange)
+	 */
 	@Override
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
 		return UMLCompareUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory#isRelatedToAnExtensionAdd(org.eclipse.emf.compare.ReferenceChange)
+	 */
+	@Override
+	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
+		// do nothing
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory#isRelatedToAnExtensionDelete(org.eclipse.emf.compare.ReferenceChange)
+	 */
+	@Override
+	protected boolean isRelatedToAnExtensionDelete(ReferenceChange input) {
+		// do nothing
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#isRelatedToAnExtensionAdd(org.eclipse.emf.compare.ResourceAttachmentChange)
+	 */
 	@Override
 	protected boolean isRelatedToAnExtensionAdd(ResourceAttachmentChange input) {
 		return input.getKind() == DifferenceKind.ADD
@@ -139,6 +181,11 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractUMLChangeFact
 						input)) != null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#isRelatedToAnExtensionDelete(org.eclipse.emf.compare.ResourceAttachmentChange)
+	 */
 	@Override
 	protected boolean isRelatedToAnExtensionDelete(ResourceAttachmentChange input) {
 		return input.getKind() == DifferenceKind.DELETE
@@ -146,6 +193,12 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractUMLChangeFact
 						input)) != null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#fillRequiredDifferences(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.compare.Diff)
+	 */
 	@Override
 	public void fillRequiredDifferences(Comparison comparison, Diff extension) {
 		super.fillRequiredDifferences(comparison, extension);
@@ -178,9 +231,14 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractUMLChangeFact
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory#getParentMatch(org.eclipse.emf.compare.Diff)
+	 */
 	@Override
 	public Match getParentMatch(Diff input) {
-		final EObject discriminant = getDiscriminantFromDiff(input);
+		final EObject discriminant = getDiscriminant(input);
 		if (discriminant != null) {
 			final Element element = UMLCompareUtil.getBaseElement(discriminant);
 			final Match match = input.getMatch().getComparison().getMatch(element);

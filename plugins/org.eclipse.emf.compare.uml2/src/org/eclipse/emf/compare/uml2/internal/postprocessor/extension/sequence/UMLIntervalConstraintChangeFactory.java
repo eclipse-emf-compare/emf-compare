@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,23 +10,23 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor.extension.sequence;
 
-import com.google.common.base.Predicate;
+import static com.google.common.base.Predicates.instanceOf;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.internal.IntervalConstraintChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory;
-import org.eclipse.emf.compare.utils.MatchUtil;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.util.Switch;
 import org.eclipse.uml2.uml.Interval;
 import org.eclipse.uml2.uml.IntervalConstraint;
 import org.eclipse.uml2.uml.UMLPackage;
@@ -35,108 +35,125 @@ import org.eclipse.uml2.uml.ValueSpecification;
 /**
  * Factory for UMLIntervalConstraintChangeLeftTarget.
  */
+/**
+ * Factory for interval constraint changes.
+ * 
+ * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+ */
 public class UMLIntervalConstraintChangeFactory extends AbstractUMLChangeFactory {
 
+	/**
+	 * Discriminants getter for the interval constraint change.
+	 * 
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+	 */
+	private class IntervalConstraintGetter extends DiscriminantsGetter {
+		/**
+		 * {@inheritDoc}<br>
+		 * Discriminants are the interval constraint and the min/max values of the specification interval.
+		 * 
+		 * @see org.eclipse.uml2.uml.util.UMLSwitch#caseIntervalConstraint(org.eclipse.uml2.uml.IntervalConstraint)
+		 */
+		@Override
+		public Set<EObject> caseIntervalConstraint(IntervalConstraint object) {
+			Set<EObject> result = new HashSet<EObject>();
+			result.add(object);
+			ValueSpecification value = object.getSpecification();
+			if (value instanceof Interval) {
+				ValueSpecification min = ((Interval)value).getMin();
+				if (min != null) {
+					result.add(min);
+				}
+				ValueSpecification max = ((Interval)value).getMax();
+				if (max != null) {
+					result.add(max);
+				}
+			}
+			return result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.uml2.uml.util.UMLSwitch#caseInterval(org.eclipse.uml2.uml.Interval)
+		 */
+		@Override
+		public Set<EObject> caseInterval(Interval object) {
+			Set<EObject> result = new HashSet<EObject>();
+			if (object.eContainer() instanceof IntervalConstraint) {
+				result.addAll(caseIntervalConstraint((IntervalConstraint)object.eContainer()));
+			}
+			return result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.uml2.uml.util.UMLSwitch#caseValueSpecification(org.eclipse.uml2.uml.ValueSpecification)
+		 */
+		@Override
+		public Set<EObject> caseValueSpecification(ValueSpecification object) {
+			Set<EObject> result = new HashSet<EObject>();
+			EObject container = object.eContainer();
+			if (container instanceof IntervalConstraint || container instanceof ValueSpecification) {
+				result.addAll(doSwitch(object.eContainer()));
+			} else {
+				final Setting setting = getInverseReferences(object,
+						new Predicate<EStructuralFeature.Setting>() {
+							public boolean apply(EStructuralFeature.Setting input) {
+								return ((input.getEStructuralFeature() == UMLPackage.Literals.INTERVAL__MIN || input
+										.getEStructuralFeature() == UMLPackage.Literals.INTERVAL__MAX))
+										&& input.getEObject().eContainer() instanceof IntervalConstraint;
+							}
+						});
+				if (setting != null) {
+					IntervalConstraint intervalConstraint = (IntervalConstraint)((Interval)setting
+							.getEObject()).eContainer();
+					result.addAll(caseIntervalConstraint(intervalConstraint));
+				}
+			}
+			return result;
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#getExtensionKind()
+	 */
 	@Override
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return IntervalConstraintChange.class;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#createExtension()
+	 */
 	@Override
 	public UMLDiff createExtension() {
 		return UMLCompareFactory.eINSTANCE.createIntervalConstraintChange();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory#getDiscriminant(org.eclipse.emf.compare.Diff)
+	 */
 	@Override
-	protected EObject getDiscriminantFromDiff(Diff input) {
-		EObject result = null;
-		final DifferenceKind kind = getRelatedExtensionKind(input);
-		if (kind == DifferenceKind.ADD || kind == DifferenceKind.DELETE) {
-			result = ((ReferenceChange)input).getValue();
-		} else if (kind == DifferenceKind.CHANGE) {
-			final EObject container = MatchUtil.getContainer(input.getMatch().getComparison(), input);
-			result = getIntervalContraint(container);
-		}
-		return result;
+	protected EObject getDiscriminant(Diff input) {
+		return Iterables.find(getDiscriminants(input), instanceOf(IntervalConstraint.class), null);
 	}
 
-	private IntervalConstraint getIntervalContraint(EObject object) {
-		if (object instanceof IntervalConstraint) {
-			return (IntervalConstraint)object;
-		} else if (object instanceof ValueSpecification && object.eContainer() instanceof IntervalConstraint) {
-			return (IntervalConstraint)object.eContainer();
-		} else if (object instanceof ValueSpecification && object.eContainer() instanceof ValueSpecification) {
-			return getIntervalContraint(object.eContainer());
-		} else if (object instanceof ValueSpecification) {
-			final Setting setting = getInverseReferences(object, new Predicate<EStructuralFeature.Setting>() {
-				public boolean apply(EStructuralFeature.Setting input) {
-					return ((input.getEStructuralFeature() == UMLPackage.Literals.INTERVAL__MIN || input
-							.getEStructuralFeature() == UMLPackage.Literals.INTERVAL__MAX))
-							&& input.getEObject().eContainer() instanceof IntervalConstraint;
-				}
-			});
-			return (IntervalConstraint)((Interval)setting.getEObject()).eContainer();
-		}
-		return null;
-	}
-
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory#getDiscriminantsGetter()
+	 */
 	@Override
-	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
-		List<EObject> result = new ArrayList<EObject>();
-		if (discriminant instanceof IntervalConstraint) {
-			result.add(discriminant);
-			result.addAll(((IntervalConstraint)discriminant).getConstrainedElements());
-			ValueSpecification valueSpecification = ((IntervalConstraint)discriminant).getSpecification();
-			result.add(valueSpecification);
-			if (valueSpecification instanceof Interval) {
-				final ValueSpecification min = ((Interval)valueSpecification).getMin();
-				final ValueSpecification max = ((Interval)valueSpecification).getMax();
-				result.add(min);
-				result.add(max);
-				result.addAll(min.eContents());
-				result.addAll(max.eContents());
-			}
-
-		}
-		return result;
-	}
-
-	@Override
-	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
-		return (input.getReference().equals(UMLPackage.Literals.CONSTRAINT__CONSTRAINED_ELEMENT)
-				|| input.getReference().equals(UMLPackage.Literals.CONSTRAINT__SPECIFICATION)
-				|| input.getReference().equals(UMLPackage.Literals.INTERVAL__MIN)
-				|| input.getReference().equals(UMLPackage.Literals.INTERVAL__MAX) || input.getReference()
-				.equals(UMLPackage.Literals.TIME_EXPRESSION__EXPR))
-				&& getManagedConcreteDiscriminantKind().contains(
-						MatchUtil.getContainer(input.getMatch().getComparison(), input).eClass());
-	}
-
-	@Override
-	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
-		return (input.getReference().isContainment() && input.getKind().equals(DifferenceKind.ADD)
-				&& input.getValue() instanceof IntervalConstraint
-				&& ((IntervalConstraint)input.getValue()).getConstrainedElements() != null
-				&& !((IntervalConstraint)input.getValue()).getConstrainedElements().isEmpty() && getManagedConcreteDiscriminantKind()
-				.contains(input.getValue().eClass()));
-	}
-
-	@Override
-	protected boolean isRelatedToAnExtensionDelete(ReferenceChange input) {
-		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.DELETE)
-				&& input.getValue() instanceof IntervalConstraint
-				&& getManagedConcreteDiscriminantKind().contains(input.getValue().eClass());
-	}
-
-	protected List<EClass> getManagedConcreteDiscriminantKind() {
-		final List<EClass> result = new ArrayList<EClass>();
-		result.add(UMLPackage.Literals.INTERVAL_CONSTRAINT);
-		result.add(UMLPackage.Literals.TIME_CONSTRAINT);
-		result.add(UMLPackage.Literals.INTERVAL);
-		result.add(UMLPackage.Literals.TIME_INTERVAL);
-		result.add(UMLPackage.Literals.VALUE_SPECIFICATION);
-		result.add(UMLPackage.Literals.TIME_EXPRESSION);
-		return result;
+	protected Switch<Set<EObject>> getDiscriminantsGetter() {
+		return new IntervalConstraintGetter();
 	}
 
 }

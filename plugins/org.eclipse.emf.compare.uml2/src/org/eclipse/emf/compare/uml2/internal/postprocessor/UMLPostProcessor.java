@@ -256,12 +256,18 @@ public class UMLPostProcessor implements IPostProcessor {
 	private void applyManagedTypes(Diff element) {
 		for (IChangeFactory factory : uml2ExtensionFactories) {
 			if (factory.handles(element)) {
-				final Diff extension = factory.create(element);
-				final Match match = factory.getParentMatch(element);
-				// FIXME: why the match may be null ? (see AddAssociation2Test.testMergeLtRA30UseCase)
-				if (match != null) {
-					match.getDifferences().add(extension);
+				Diff extension = factory.create(element);
+				// FIXME: Instantiation of UML extensions (intersections of predicates)
+				if (!extension.getRefinedBy().isEmpty()) {
+					final Match match = factory.getParentMatch(element);
+					// FIXME: why the match may be null ? (see AddAssociation2Test.testMergeLtRA30UseCase)
+					if (match != null) {
+						match.getDifferences().add(extension);
+					}
+				} else {
+					extension = null;
 				}
+
 			}
 		}
 	}

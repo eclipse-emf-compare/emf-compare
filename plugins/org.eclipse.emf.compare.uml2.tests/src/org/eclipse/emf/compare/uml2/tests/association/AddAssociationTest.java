@@ -58,6 +58,7 @@ public class AddAssociationTest extends AbstractTest {
 
 	@Test
 	@Ignore
+	// See UMLPostProcessor#removeDuplicateDiffs(Comparison)
 	public void testMergeLtRA10UseCase() throws IOException {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
@@ -77,6 +78,7 @@ public class AddAssociationTest extends AbstractTest {
 
 	@Test
 	@Ignore
+	// See UMLPostProcessor#removeDuplicateDiffs(Comparison)
 	public void testMergeRtLA11UseCase() throws IOException {
 		final Resource left = input.getA1Right();
 		final Resource right = input.getA1Left();
@@ -112,6 +114,7 @@ public class AddAssociationTest extends AbstractTest {
 
 	@Test
 	@Ignore
+	// See UMLPostProcessor#removeDuplicateDiffs(Comparison)
 	public void testMergeLtRA10UseCase3way() throws IOException {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
@@ -139,6 +142,7 @@ public class AddAssociationTest extends AbstractTest {
 
 	@Test
 	@Ignore
+	// See UMLPostProcessor#removeDuplicateDiffs(Comparison)
 	public void testMergeLtRA11UseCase3way() throws IOException {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();

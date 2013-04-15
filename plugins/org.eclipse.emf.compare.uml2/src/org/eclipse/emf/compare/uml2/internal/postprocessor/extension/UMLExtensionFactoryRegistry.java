@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,7 +32,9 @@ import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.usecase.UML
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.usecase.UMLIncludeChangeFactory;
 
 /**
- * Registry of all {@link IDiffExtensionFactory}.
+ * Registry of all {@link IDiffExtensionFactory} for UML.
+ * 
+ * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public final class UMLExtensionFactoryRegistry {
 
@@ -47,8 +49,6 @@ public final class UMLExtensionFactoryRegistry {
 	 * Creates and returns all {@link IDiffExtensionFactory} available in this plugin. The returned Set in
 	 * unmodifiable.
 	 * 
-	 * @param engine
-	 *            The UML2 difference engine.
 	 * @return an unmodifiable set of all {@link IDiffExtensionFactory}.
 	 */
 	public static Map<Class<? extends Diff>, IChangeFactory> createExtensionFactories() {

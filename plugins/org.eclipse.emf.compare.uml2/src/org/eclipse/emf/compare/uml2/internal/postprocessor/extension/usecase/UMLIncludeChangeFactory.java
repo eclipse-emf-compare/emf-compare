@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,76 +10,76 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor.extension.usecase;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.google.common.base.Predicates.instanceOf;
+
+import com.google.common.collect.Iterables;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.internal.IncludeChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory;
-import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.Switch;
 import org.eclipse.uml2.uml.Include;
-import org.eclipse.uml2.uml.UMLPackage;
 
 /**
- * Factory for UMLExtendChangeLeftTarget.
+ * Factory for include changes.
+ * 
+ * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public class UMLIncludeChangeFactory extends AbstractUMLChangeFactory {
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#getExtensionKind()
+	 */
 	@Override
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return IncludeChange.class;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#createExtension()
+	 */
 	@Override
 	public UMLDiff createExtension() {
 		return UMLCompareFactory.eINSTANCE.createIncludeChange();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory#getDiscriminant(org.eclipse.emf.compare.Diff)
+	 */
 	@Override
-	protected EObject getDiscriminantFromDiff(Diff input) {
-		EObject result = null;
-		final DifferenceKind kind = getRelatedExtensionKind(input);
-		if (kind == DifferenceKind.ADD || kind == DifferenceKind.DELETE) {
-			result = ((ReferenceChange)input).getValue();
-		} else if (kind == DifferenceKind.CHANGE) {
-			final EObject container = MatchUtil.getContainer(input.getMatch().getComparison(), input);
-			if (container instanceof Include) {
-				result = container;
+	protected EObject getDiscriminant(Diff input) {
+		return Iterables.find(getDiscriminants(input), instanceOf(Include.class), null);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory#getDiscriminantsGetter()
+	 */
+	@Override
+	protected Switch<Set<EObject>> getDiscriminantsGetter() {
+		return new DiscriminantsGetter() {
+
+			@Override
+			public Set<EObject> caseInclude(Include object) {
+				Set<EObject> result = new HashSet<EObject>();
+				result.add(object);
+				return result;
 			}
-		}
-		return result;
-	}
 
-	@Override
-	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
-		List<EObject> result = new ArrayList<EObject>();
-		if (discriminant instanceof Include) {
-			result.add(discriminant);
-			result.add(((Include)discriminant).getAddition());
-		}
-		return result;
-	}
-
-	@Override
-	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
-		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.ADD)
-				&& input.getValue() instanceof Include && ((Include)input.getValue()).getAddition() != null;
-	}
-
-	@Override
-	protected boolean isRelatedToAnExtensionDelete(ReferenceChange input) {
-		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.DELETE)
-				&& input.getValue() instanceof Include;
-	}
-
-	@Override
-	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
-		return input.getReference().equals(UMLPackage.Literals.INCLUDE__ADDITION);
+		};
 	}
 
 }

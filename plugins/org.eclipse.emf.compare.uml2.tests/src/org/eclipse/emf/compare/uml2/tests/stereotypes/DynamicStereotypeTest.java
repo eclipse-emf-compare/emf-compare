@@ -661,10 +661,11 @@ public class DynamicStereotypeTest extends AbstractTest {
 					instanceOf(StereotypeApplicationChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLProfileApplication);
-		assertSame(Integer.valueOf(3), Integer.valueOf(addUMLProfileApplication.getRefinedBy().size()));
+		assertSame(Integer.valueOf(4), Integer.valueOf(addUMLProfileApplication.getRefinedBy().size()));
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addReferencesInUMLAnnotation));
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addAppliedProfileInProfileApplication));
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addProfileApplication));
+		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addUMLAnnotation));
 
 		assertNotNull(addUMLStereotypeApplication);
 		assertSame(Integer.valueOf(2), Integer.valueOf(addUMLStereotypeApplication.getRefinedBy().size()));
@@ -828,10 +829,11 @@ public class DynamicStereotypeTest extends AbstractTest {
 					instanceOf(StereotypeApplicationChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLProfileApplication);
-		assertSame(Integer.valueOf(3), Integer.valueOf(addUMLProfileApplication.getRefinedBy().size()));
+		assertSame(Integer.valueOf(4), Integer.valueOf(addUMLProfileApplication.getRefinedBy().size()));
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addReferencesInUMLAnnotation));
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addAppliedProfileInProfileApplication));
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addProfileApplication));
+		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addUMLAnnotation));
 
 		assertNotNull(addUMLStereotypeApplication);
 		assertSame(Integer.valueOf(2), Integer.valueOf(addUMLStereotypeApplication.getRefinedBy().size()));

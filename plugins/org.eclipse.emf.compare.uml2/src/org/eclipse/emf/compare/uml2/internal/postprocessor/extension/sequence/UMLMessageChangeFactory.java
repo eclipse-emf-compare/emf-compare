@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,107 +10,125 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor.extension.sequence;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.google.common.base.Predicates.instanceOf;
+
+import com.google.common.collect.Iterables;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.internal.MessageChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory;
-import org.eclipse.emf.compare.utils.MatchUtil;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.Switch;
 import org.eclipse.uml2.uml.InteractionFragment;
+import org.eclipse.uml2.uml.Lifeline;
 import org.eclipse.uml2.uml.Message;
-import org.eclipse.uml2.uml.MessageEnd;
 import org.eclipse.uml2.uml.MessageOccurrenceSpecification;
-import org.eclipse.uml2.uml.UMLPackage;
 
 /**
- * Factory for UMLGeneralizationSetChangeLeftTarget.
+ * Factory for message changes.
+ * 
+ * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public class UMLMessageChangeFactory extends AbstractUMLChangeFactory {
 
+	/**
+	 * Discriminants getter for the message change.
+	 * 
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+	 */
+	private class MessageDiscriminantsGetter extends DiscriminantsGetter {
+		/**
+		 * {@inheritDoc}<br>
+		 * Discriminants are the message and its message ends.
+		 * 
+		 * @see org.eclipse.uml2.uml.util.UMLSwitch#caseMessage(org.eclipse.uml2.uml.Message)
+		 */
+		@Override
+		public Set<EObject> caseMessage(Message object) {
+			Set<EObject> result = new HashSet<EObject>();
+			result.add(object);
+			if (object.getSendEvent() != null) {
+				result.add(object.getSendEvent());
+			}
+			if (object.getReceiveEvent() != null) {
+				result.add(object.getReceiveEvent());
+			}
+			return result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.uml2.uml.util.UMLSwitch#caseMessageOccurrenceSpecification(org.eclipse.uml2.uml.MessageOccurrenceSpecification)
+		 */
+		@Override
+		public Set<EObject> caseMessageOccurrenceSpecification(MessageOccurrenceSpecification object) {
+			Set<EObject> result = new HashSet<EObject>();
+			Message message = object.getMessage();
+			if (message != null) {
+				result.addAll(caseMessage(message));
+			}
+			return result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.uml2.uml.util.UMLSwitch#caseLifeline(org.eclipse.uml2.uml.Lifeline)
+		 */
+		@Override
+		public Set<EObject> caseLifeline(Lifeline object) {
+			Set<EObject> result = new HashSet<EObject>();
+			for (InteractionFragment fragment : object.getCoveredBys()) {
+				result.addAll(doSwitch(fragment));
+			}
+			return result;
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#getExtensionKind()
+	 */
 	@Override
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return MessageChange.class;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#createExtension()
+	 */
 	@Override
 	public UMLDiff createExtension() {
 		return UMLCompareFactory.eINSTANCE.createMessageChange();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory#getDiscriminant(org.eclipse.emf.compare.Diff)
+	 */
 	@Override
-	protected EObject getDiscriminantFromDiff(Diff input) {
-		EObject result = null;
-		final DifferenceKind kind = getRelatedExtensionKind(input);
-		if (kind == DifferenceKind.ADD || kind == DifferenceKind.DELETE) {
-			result = ((ReferenceChange)input).getValue();
-		} else if (kind == DifferenceKind.CHANGE) {
-			final EObject container = MatchUtil.getContainer(input.getMatch().getComparison(), input);
-			if (container instanceof Message) {
-				result = container;
-			} else if (container instanceof MessageOccurrenceSpecification) {
-				result = ((MessageOccurrenceSpecification)container).getMessage();
-			}
-		}
-		return result;
+	protected EObject getDiscriminant(Diff input) {
+		return Iterables.find(getDiscriminants(input), instanceOf(Message.class), null);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory#getDiscriminantsGetter()
+	 */
 	@Override
-	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
-		List<EObject> result = new ArrayList<EObject>();
-		if (discriminant instanceof Message) {
-			result.add(discriminant);
-			final MessageEnd recvEvent = ((Message)discriminant).getReceiveEvent();
-			final MessageEnd sendEvent = ((Message)discriminant).getSendEvent();
-			if (recvEvent instanceof InteractionFragment) {
-				result.add(recvEvent);
-				result.addAll(((InteractionFragment)recvEvent).getCovereds());
-			}
-			if (sendEvent instanceof InteractionFragment) {
-				result.add(sendEvent);
-				result.addAll(((InteractionFragment)sendEvent).getCovereds());
-			}
-		}
-		return result;
-	}
-
-	protected List<EClass> getManagedConcreteDiscriminantKind() {
-		final List<EClass> result = new ArrayList<EClass>();
-		result.add(UMLPackage.Literals.MESSAGE);
-		result.add(UMLPackage.Literals.MESSAGE_OCCURRENCE_SPECIFICATION);
-		return result;
-	}
-
-	@Override
-	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
-		return (input.getReference().equals(UMLPackage.Literals.MESSAGE__RECEIVE_EVENT)
-				|| input.getReference().equals(UMLPackage.Literals.MESSAGE__SEND_EVENT) || input
-				.getReference().equals(UMLPackage.Literals.INTERACTION_FRAGMENT__COVERED))
-				&& getManagedConcreteDiscriminantKind().contains(
-						MatchUtil.getContainer(input.getMatch().getComparison(), input).eClass());
-	}
-
-	@Override
-	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
-		return (input.getReference().isContainment()
-				&& input.getKind().equals(DifferenceKind.ADD)
-				&& input.getValue() instanceof Message
-				&& (((Message)input.getValue()).getReceiveEvent() != null || ((Message)input.getValue())
-						.getSendEvent() != null) && getManagedConcreteDiscriminantKind().contains(
-				input.getValue().eClass()));
-	}
-
-	@Override
-	protected boolean isRelatedToAnExtensionDelete(ReferenceChange input) {
-		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.DELETE)
-				&& input.getValue() instanceof Message
-				&& getManagedConcreteDiscriminantKind().contains(input.getValue().eClass());
+	protected Switch<Set<EObject>> getDiscriminantsGetter() {
+		return new MessageDiscriminantsGetter();
 	}
 
 }

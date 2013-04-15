@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,98 +10,125 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor.extension.sequence;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.google.common.base.Predicates.instanceOf;
+
+import com.google.common.collect.Iterables;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.uml2.internal.ExecutionSpecificationChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory;
-import org.eclipse.emf.compare.utils.MatchUtil;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.Switch;
 import org.eclipse.uml2.uml.ExecutionOccurrenceSpecification;
 import org.eclipse.uml2.uml.ExecutionSpecification;
-import org.eclipse.uml2.uml.UMLPackage;
+import org.eclipse.uml2.uml.InteractionFragment;
+import org.eclipse.uml2.uml.Lifeline;
 
 /**
- * Factory for UMLExecutionSpecificationChangeLeft.
+ * Factory for execution specification changes.
+ * 
+ * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 public class UMLExecutionSpecificationChangeFactory extends AbstractUMLChangeFactory {
 
+	/**
+	 * Discriminants getter for the ExecutionSpecification change.
+	 * 
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+	 */
+	private class ExecutionSpecificationDiscriminantsGetter extends DiscriminantsGetter {
+
+		/**
+		 * {@inheritDoc}<br>
+		 * Discriminants are the Execution Specifications and the Occurrence Specifications.
+		 * 
+		 * @see org.eclipse.uml2.uml.util.UMLSwitch#caseExecutionSpecification(org.eclipse.uml2.uml.ExecutionSpecification)
+		 */
+		@Override
+		public Set<EObject> caseExecutionSpecification(ExecutionSpecification object) {
+			Set<EObject> result = new HashSet<EObject>();
+			result.add(object);
+			if (object.getStart() != null) {
+				result.add(object.getStart());
+			}
+			if (object.getFinish() != null) {
+				result.add(object.getFinish());
+			}
+			return result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.uml2.uml.util.UMLSwitch#caseExecutionOccurrenceSpecification(org.eclipse.uml2.uml.ExecutionOccurrenceSpecification)
+		 */
+		@Override
+		public Set<EObject> caseExecutionOccurrenceSpecification(ExecutionOccurrenceSpecification object) {
+			Set<EObject> result = new HashSet<EObject>();
+			if (object.getExecution() != null) {
+				result.addAll(caseExecutionSpecification(object.getExecution()));
+			}
+			return result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.uml2.uml.util.UMLSwitch#caseLifeline(org.eclipse.uml2.uml.Lifeline)
+		 */
+		@Override
+		public Set<EObject> caseLifeline(Lifeline object) {
+			Set<EObject> result = new HashSet<EObject>();
+			for (InteractionFragment fragment : object.getCoveredBys()) {
+				result.addAll(doSwitch(fragment));
+			}
+			return result;
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#getExtensionKind()
+	 */
 	@Override
 	public Class<? extends UMLDiff> getExtensionKind() {
 		return ExecutionSpecificationChange.class;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#createExtension()
+	 */
 	@Override
 	public UMLDiff createExtension() {
 		return UMLCompareFactory.eINSTANCE.createExecutionSpecificationChange();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory#getDiscriminant(org.eclipse.emf.compare.Diff)
+	 */
 	@Override
-	protected EObject getDiscriminantFromDiff(Diff input) {
-		EObject result = null;
-		final DifferenceKind kind = getRelatedExtensionKind(input);
-		if (kind == DifferenceKind.ADD || kind == DifferenceKind.DELETE) {
-			result = ((ReferenceChange)input).getValue();
-		} else if (kind == DifferenceKind.CHANGE) {
-			final EObject container = MatchUtil.getContainer(input.getMatch().getComparison(), input);
-			if (container instanceof ExecutionSpecification) {
-				result = container;
-			} else if (container instanceof ExecutionOccurrenceSpecification) {
-				result = ((ExecutionOccurrenceSpecification)container).getExecution();
-			}
-		}
-		return result;
+	protected EObject getDiscriminant(Diff input) {
+		return Iterables.find(getDiscriminants(input), instanceOf(ExecutionSpecification.class), null);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory#getDiscriminantsGetter()
+	 */
 	@Override
-	protected List<EObject> getPotentialChangedValuesFromDiscriminant(EObject discriminant) {
-		List<EObject> result = new ArrayList<EObject>();
-		if (discriminant instanceof ExecutionSpecification) {
-			result.add(discriminant);
-			result.add(((ExecutionSpecification)discriminant).getStart());
-			result.add(((ExecutionSpecification)discriminant).getFinish());
-			result.addAll(((ExecutionSpecification)discriminant).getCovereds());
-		}
-		return result;
+	protected Switch<Set<EObject>> getDiscriminantsGetter() {
+		return new ExecutionSpecificationDiscriminantsGetter();
 	}
 
-	protected List<EClass> getManagedConcreteDiscriminantKind() {
-		final List<EClass> result = new ArrayList<EClass>();
-		result.add(UMLPackage.Literals.ACTION_EXECUTION_SPECIFICATION);
-		result.add(UMLPackage.Literals.BEHAVIOR_EXECUTION_SPECIFICATION);
-		result.add(UMLPackage.Literals.EXECUTION_OCCURRENCE_SPECIFICATION);
-		return result;
-	}
-
-	@Override
-	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
-		return ((input.getReference().equals(UMLPackage.Literals.EXECUTION_SPECIFICATION__START)
-				|| input.getReference().equals(UMLPackage.Literals.EXECUTION_SPECIFICATION__FINISH) || input
-				.getReference().equals(UMLPackage.Literals.INTERACTION_FRAGMENT__COVERED)) && getManagedConcreteDiscriminantKind()
-				.contains(MatchUtil.getContainer(input.getMatch().getComparison(), input).eClass()));
-	}
-
-	@Override
-	protected boolean isRelatedToAnExtensionAdd(ReferenceChange input) {
-		return (input.getReference().isContainment() && input.getKind().equals(DifferenceKind.ADD)
-				&& input.getValue() instanceof ExecutionSpecification
-				&& ((ExecutionSpecification)input.getValue()).getStart() != null
-				&& ((ExecutionSpecification)input.getValue()).getFinish() != null
-				&& ((ExecutionSpecification)input.getValue()).getCovereds() != null
-				&& !((ExecutionSpecification)input.getValue()).getCovereds().isEmpty() && getManagedConcreteDiscriminantKind()
-				.contains(input.getValue().eClass()));
-	}
-
-	@Override
-	protected boolean isRelatedToAnExtensionDelete(ReferenceChange input) {
-		return input.getReference().isContainment() && input.getKind().equals(DifferenceKind.DELETE)
-				&& input.getValue() instanceof ExecutionSpecification
-				&& getManagedConcreteDiscriminantKind().contains(input.getValue().eClass());
-	}
 }
