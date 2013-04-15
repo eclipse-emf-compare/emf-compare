@@ -102,7 +102,7 @@ public class IndividualMergeTest extends AbstractTest {
 	}
 	
 	@Test
-	// ADD Edge
+	// DELETE Edge
 	public void testA1_DELETEEdgeLeftToRight() throws IOException {
 		final Resource right = input.getA1EdgeChangeLeft();
 		final Resource left = input.getA1EdgeChangeRight();
@@ -117,7 +117,7 @@ public class IndividualMergeTest extends AbstractTest {
 	}
 	
 	@Test
-	// ADD Edge
+	// DELETE Edge
 	public void testA1_DELETEEdgeRightToLeft() throws IOException {
 		final Resource right = input.getA1EdgeChangeLeft();
 		final Resource left = input.getA1EdgeChangeRight();
@@ -129,6 +129,22 @@ public class IndividualMergeTest extends AbstractTest {
 		getMergerRegistry().getHighestRankingMerger(edgeChange).copyRightToLeft(edgeChange, new BasicMonitor());
 
 		testA1_AllDifferencesMerged(left, right);
+	}
+	
+	@Test
+	// ADD Edge
+	public void testA2_ADDEdgeLeftToRight() throws IOException {
+		final Resource left = input.getA2EdgeChangeLeft();
+		final Resource right = input.getA2EdgeChangeRight();
+
+		Comparison comparison = buildComparison(left, right);
+
+		Diff edgeChange = testA2_EdgeChange(comparison, DifferenceKind.ADD);
+
+		getMergerRegistry().getHighestRankingMerger(edgeChange).copyLeftToRight(edgeChange, new BasicMonitor());
+
+		comparison = buildComparison(left, right);		
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
 
 	private void testA1_AllDifferencesMerged(Resource left, Resource right) {
@@ -145,6 +161,23 @@ public class IndividualMergeTest extends AbstractTest {
 	}
 	
 	private Diff testA1_EdgeChange(Comparison comparison, DifferenceKind kind) throws IOException {
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(32), Integer.valueOf(differences.size()));
+
+		assertSame(Integer.valueOf(1), Collections2.filter(differences, instanceOf(UMLDiff.class)).size());
+		assertSame(Integer.valueOf(1), Collections2.filter(differences, instanceOf(DiagramDiff.class)).size());
+		
+		final Diff associationChange = Iterators.find(differences.iterator(),
+				and(instanceOf(AssociationChange.class), ofKind(kind)), null);
+		final Diff edgeChange = Iterators.find(differences.iterator(),
+				and(instanceOf(EdgeChange.class), ofKind(kind)), null);
+		
+		assertNotNull(associationChange);
+		assertNotNull(edgeChange);
+		return edgeChange;
+	}
+	
+	private Diff testA2_EdgeChange(Comparison comparison, DifferenceKind kind) throws IOException {
 		final List<Diff> differences = comparison.getDifferences();
 		assertSame(Integer.valueOf(32), Integer.valueOf(differences.size()));
 

@@ -47,6 +47,14 @@ public class IndividualDiffInputData extends DiagramInputData {
 		return loadFromClassLoader("edges/a1/right.notation");
 	}
 	
+	public Resource getA2EdgeChangeLeft() throws IOException {
+		return loadFromClassLoader("edges/a2/left.notation");
+	}
+
+	public Resource getA2EdgeChangeRight() throws IOException {
+		return loadFromClassLoader("edges/a2/right.notation");
+	}
+	
 	@Override
 	protected Resource loadFromClassLoader(String string) throws IOException {
 		final URL fileURL = getClass().getResource(string);
