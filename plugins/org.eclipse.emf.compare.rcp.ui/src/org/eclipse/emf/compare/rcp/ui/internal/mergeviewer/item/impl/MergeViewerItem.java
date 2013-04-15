@@ -236,6 +236,9 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	protected final IMergeViewerItem.Container createBasicContainer(EObject eObject) {
 		IMergeViewerItem.Container ret = null;
 		Match parentMatch = fComparison.getMatch(eObject);
+		if (parentMatch == null) {
+			return null;
+		}
 		Object expectedValue = MergeViewerUtil.getEObject(parentMatch, fSide);
 		if (expectedValue != null) {
 			Iterable<ReferenceChange> containmentReferenceChanges = filter(filter(filter(parentMatch
