@@ -51,8 +51,26 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 	public ContainmentReferenceChangeAccessorImpl(AdapterFactory adapterFactory,
 			ReferenceChange referenceChange, MergeViewerSide side) {
 		super(adapterFactory, referenceChange, side);
-		final EObject rootContainer = EcoreUtil.getRootContainer(referenceChange.getValue());
-		this.fRootMatch = getComparison().getMatch(rootContainer);
+		final EObject value = referenceChange.getValue();
+		final EObject rootContainer = EcoreUtil.getRootContainer(value);
+		Match match = getComparison().getMatch(rootContainer);
+		if (match == null) {
+			match = getTopMostContainerWithMatch(value);
+		}
+		this.fRootMatch = match;
+
+	}
+
+	private Match getTopMostContainerWithMatch(final EObject value) {
+		EObject eContainer = value.eContainer();
+		Match eContainerMatch = getComparison().getMatch(eContainer);
+		Match match = eContainerMatch;
+		while (eContainer != null && eContainerMatch != null) {
+			eContainer = eContainer.eContainer();
+			match = eContainerMatch;
+			eContainerMatch = getComparison().getMatch(eContainer);
+		}
+		return match;
 	}
 
 	/**
