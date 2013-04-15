@@ -36,6 +36,7 @@ import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStackListener;
@@ -57,6 +58,7 @@ import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
 import org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
+import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.FilterActionMenu;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.GroupActionMenu;
@@ -73,6 +75,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
@@ -92,8 +95,12 @@ import org.eclipse.team.internal.ui.mapping.ModelCompareEditorInput;
 import org.eclipse.team.ui.synchronize.ISynchronizeParticipant;
 import org.eclipse.team.ui.synchronize.ModelSynchronizeParticipant;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.actions.CommandAction;
 import org.eclipse.ui.menus.IMenuService;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.services.IServiceLocator;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.Version;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -578,15 +585,33 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 					"toolbar:org.eclipse.emf.compare.structuremergeviewer.toolbar");
 		}
 
+		Bundle uiWorkbenchBundle = Platform.getBundle("org.eclipse.ui.workbench"); //$NON-NLS-1$
+		Version junoStart = Version.parseVersion("3.103");
+
+		// XXX MBA change to 3.105 once bug #366528 is fixed
+		Version keplerStart = Version.parseVersion("3.106");
+
+		if (uiWorkbenchBundle != null && uiWorkbenchBundle.getVersion().compareTo(junoStart) >= 0
+				&& uiWorkbenchBundle.getVersion().compareTo(keplerStart) < 0) {
+			IAction action = new CommandAction(PlatformUI.getWorkbench(),
+					"org.eclipse.emf.compare.rcp.ui.saveComparisonModel");
+			action.setToolTipText("Save Comparison model"); //$NON-NLS-1$
+			action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
+					EMFCompareRCPUIPlugin.PLUGIN_ID, "icons/full/toolb16/saveas_edit.gif"));
+			toolbarManager.add(action);
+		}
+
 		groupActionMenu = new GroupActionMenu(getStructureMergeViewerGrouper(), getGroupsMenuManager(),
 				getDefaultGroupProvider());
 		filterActionMenu = new FilterActionMenu(getStructureMergeViewerFilter(), getFiltersMenuManager());
+
 		toolbarManager.add(new Separator());
 		toolbarManager.add(new ExpandAllModelAction(this));
 		toolbarManager.add(new CollapseAllModelAction(this));
 		toolbarManager.add(new Separator());
 		toolbarManager.add(groupActionMenu);
 		toolbarManager.add(filterActionMenu);
+
 	}
 
 	/**
