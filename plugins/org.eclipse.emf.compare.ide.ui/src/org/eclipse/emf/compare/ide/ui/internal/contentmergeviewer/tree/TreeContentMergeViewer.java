@@ -42,6 +42,7 @@ import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
@@ -287,6 +288,13 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 						text = "proxy : " + ((InternalEObject)value).eProxyURI().toString();
 					} else if (mergeViewerItem.isInsertionPoint()) {
 						text = " ";
+					} else if (value == null
+							&& mergeViewerItem.getSideValue(side.opposite()) instanceof Resource) {
+						text = "Unknown resource";
+					} else if (value == null && mergeViewerItem.getLeft() == null
+							&& mergeViewerItem.getRight() == null
+							&& mergeViewerItem.getAncestor() instanceof Resource) {
+						text = "Unknown resource";
 					} else {
 						text = super.getText(value);
 					}
@@ -298,10 +306,17 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			@Override
 			public Image getImage(Object object) {
 				if (object instanceof IMergeViewerItem) {
-					if (((IMergeViewerItem)object).isInsertionPoint()) {
+					IMergeViewerItem mergeViewerItem = (IMergeViewerItem)object;
+					if (mergeViewerItem.isInsertionPoint()) {
 						return null;
+					} else if (mergeViewerItem.getSideValue(side) == null
+							&& mergeViewerItem.getSideValue(side.opposite()) instanceof Resource) {
+						return super.getImage(mergeViewerItem.getSideValue(side.opposite()));
+					} else if (mergeViewerItem.getLeft() == null && mergeViewerItem.getRight() == null
+							&& mergeViewerItem.getAncestor() instanceof Resource) {
+						return super.getImage(mergeViewerItem.getAncestor());
 					} else {
-						return super.getImage(((IMergeViewerItem)object).getSideValue(side));
+						return super.getImage(mergeViewerItem.getSideValue(side));
 					}
 				}
 				return super.getImage(object);
@@ -507,27 +522,31 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 				parent = ((IMergeViewerItem)data).getAncestor();
 			}
 
-			Match match = getComparison().getMatch((EObject)parent);
-			if (match != null) {
-				for (ReferenceChange referenceChange : filter(filter(match.getDifferences(),
-						ReferenceChange.class), EMFComparePredicates.ofKind(DifferenceKind.MOVE))) {
-					if (getLeftMergeViewer() == mergeTreeViewer) {
-						EObject eContainer = getComparison().getMatch(referenceChange.getValue()).getRight()
-								.eContainer(); // XXX: use itemProvider.getParent().
-						Match match2 = getComparison().getMatch(eContainer);
-						if (match2.getLeft() != parent) {
-							IMergeViewerItem.Container container = new MergeViewerItem.Container(
-									getComparison(), null, match2, MergeViewerSide.RIGHT, fAdapterFactory);
-							toBeExpanded.add(container);
-						}
-					} else if (getRightMergeViewer() == mergeTreeViewer) {
-						EObject eContainer = getComparison().getMatch(referenceChange.getValue()).getLeft()
-								.eContainer(); // XXX: use itemProvider.getParent().
-						Match match2 = getComparison().getMatch(eContainer);
-						if (match2.getRight() != parent) {
-							IMergeViewerItem.Container container = new MergeViewerItem.Container(
-									getComparison(), null, match2, MergeViewerSide.LEFT, fAdapterFactory);
-							toBeExpanded.add(container);
+			if (parent instanceof Resource) {
+				// ARI: Manage this case
+			} else if (parent instanceof EObject) {
+				Match match = getComparison().getMatch((EObject)parent);
+				if (match != null) {
+					for (ReferenceChange referenceChange : filter(filter(match.getDifferences(),
+							ReferenceChange.class), EMFComparePredicates.ofKind(DifferenceKind.MOVE))) {
+						if (getLeftMergeViewer() == mergeTreeViewer) {
+							EObject eContainer = getComparison().getMatch(referenceChange.getValue())
+									.getRight().eContainer(); // XXX: use itemProvider.getParent().
+							Match match2 = getComparison().getMatch(eContainer);
+							if (match2.getLeft() != parent) {
+								IMergeViewerItem.Container container = new MergeViewerItem.Container(
+										getComparison(), null, match2, MergeViewerSide.RIGHT, fAdapterFactory);
+								toBeExpanded.add(container);
+							}
+						} else if (getRightMergeViewer() == mergeTreeViewer) {
+							EObject eContainer = getComparison().getMatch(referenceChange.getValue())
+									.getLeft().eContainer(); // XXX: use itemProvider.getParent().
+							Match match2 = getComparison().getMatch(eContainer);
+							if (match2.getRight() != parent) {
+								IMergeViewerItem.Container container = new MergeViewerItem.Container(
+										getComparison(), null, match2, MergeViewerSide.LEFT, fAdapterFactory);
+								toBeExpanded.add(container);
+							}
 						}
 					}
 				}

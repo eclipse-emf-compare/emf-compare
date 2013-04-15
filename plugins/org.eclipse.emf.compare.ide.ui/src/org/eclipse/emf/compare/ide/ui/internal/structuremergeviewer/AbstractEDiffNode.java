@@ -18,7 +18,12 @@ import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.AccessorAdapter;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.IAccessorFactory;
@@ -153,12 +158,27 @@ public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareI
 	 */
 	public ITypedElement getAncestor() {
 		final ITypedElement ret;
-		IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
-		if (accessorFactory != null) {
-			org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
-					.createAncestor(getAdapterFactory(), getTarget());
-			if (typedElement != null) {
-				ret = AccessorAdapter.adapt(typedElement);
+		Notifier notifier = getTarget();
+		boolean isThreeWay = false;
+		if (notifier instanceof Diff) {
+			isThreeWay = ((Diff)notifier).getMatch().getComparison().isThreeWay();
+		} else if (notifier instanceof Match) {
+			isThreeWay = ((Match)notifier).getComparison().isThreeWay();
+		} else if (notifier instanceof Conflict) {
+			isThreeWay = true;
+		} else if (notifier instanceof MatchResource) {
+			isThreeWay = ((MatchResource)notifier).getComparison().isThreeWay();
+		}
+		if (isThreeWay) {
+			IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
+			if (accessorFactory != null) {
+				org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
+						.createAncestor(getAdapterFactory(), getTarget());
+				if (typedElement != null) {
+					ret = AccessorAdapter.adapt(typedElement);
+				} else {
+					ret = null;
+				}
 			} else {
 				ret = null;
 			}

@@ -29,6 +29,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.impl.TypeConst
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem.Container;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EObject;
@@ -87,8 +88,16 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 		for (Match match : matches) {
 			ResourceAttachmentChange diff = getFirst(filter(match.getDifferences(),
 					ResourceAttachmentChange.class), null);
-			ret.add(new MergeViewerItem.Container(getComparison(), diff, match.getLeft(), match.getRight(),
-					match.getOrigin(), getSide(), getAdapterFactory()));
+			Container container = null;
+			if (getSide() != MergeViewerSide.ANCESTOR
+					|| (getSide() == MergeViewerSide.ANCESTOR && match.getOrigin() != null)) {
+				container = new MergeViewerItem.Container(getComparison(), diff, match.getLeft(), match
+						.getRight(), match.getOrigin(), getSide(), getAdapterFactory());
+			}
+			if (container != null) {
+				ret.add(container);
+			}
+
 		}
 
 		return ret.build();

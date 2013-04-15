@@ -38,6 +38,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.spec.EObjectUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
@@ -47,6 +48,7 @@ import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 
@@ -166,6 +168,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		Object parent = treeItemContentProvider != null ? treeItemContentProvider.getParent(sideValue) : null;
 		if (parent instanceof EObject) {
 			ret = createBasicContainer((EObject)parent);
+		} else if (parent instanceof Resource) {
+			ret = createBasicContainer((Resource)parent);
 		}
 
 		return ret;
@@ -282,6 +286,73 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		return ret;
 	}
 
+	/**
+	 * Create an IMergeViewerItem for the given resource.
+	 * 
+	 * @param resource
+	 *            the given resource.
+	 * @return an IMergeViewerItem.
+	 */
+	protected final IMergeViewerItem.Container createBasicContainer(Resource resource) {
+		IMergeViewerItem.Container ret = null;
+		final Comparison comparison = getComparison();
+		final Diff diff = getDiff();
+		if (diff instanceof ResourceAttachmentChange) {
+			Resource left = MergeViewerUtil.getResource(comparison, MergeViewerSide.LEFT, diff);
+			Resource right = MergeViewerUtil.getResource(comparison, MergeViewerSide.RIGHT, diff);
+			Resource ancestor = MergeViewerUtil.getResource(comparison, MergeViewerSide.ANCESTOR, diff);
+			ret = new ResourceAttachmentChangeMergeViewerItem(comparison, null, left, right, ancestor,
+					getSide(), getAdapterFactory());
+			if (right != null && getSide() == MergeViewerSide.LEFT
+					&& resource.getURI().equals(right.getURI())) {
+				ret = createInsertionPoint((ResourceAttachmentChange)diff, fSide, fAdapterFactory);
+			} else if (left != null && getSide() == MergeViewerSide.RIGHT
+					&& resource.getURI().equals(left.getURI())) {
+				ret = createInsertionPoint((ResourceAttachmentChange)diff, fSide, fAdapterFactory);
+			}
+		}
+		// FIXME: manage case of diff instanceof ReferenceChange
+		return ret;
+	}
+
+	/**
+	 * Creates insertion point for the given ResourceAttachmentChange.
+	 * 
+	 * @param diff
+	 *            the given {@link ResourceAttachmentChange}.
+	 * @param side
+	 *            the side where the insertion point will be created.
+	 * @param adapterFactory
+	 *            an adapter factory used to create the IMergeViewerItem.
+	 * @return an insertion point (IMergeViewerItem).
+	 */
+	protected IMergeViewerItem.Container createInsertionPoint(ResourceAttachmentChange diff,
+			MergeViewerSide side, AdapterFactory adapterFactory) {
+		Object left = MergeViewerUtil.getResourceAttachmentChangeValue(diff, MergeViewerSide.LEFT);
+		Object right = MergeViewerUtil.getResourceAttachmentChangeValue(diff, MergeViewerSide.RIGHT);
+
+		IMergeViewerItem.Container insertionPoint = null;
+		if (left == null && right == null) {
+			// Do not display anything
+		} else {
+			final boolean leftEmptyBox = getSide() == MergeViewerSide.LEFT
+					&& (left == null || !MergeViewerUtil.getResourceContents(fComparison, getSide(), diff)
+							.contains(left));
+			final boolean rightEmptyBox = getSide() == MergeViewerSide.RIGHT
+					&& (right == null || !MergeViewerUtil.getResourceContents(fComparison, getSide(), diff)
+							.contains(right));
+			if (leftEmptyBox || rightEmptyBox) {
+				Object ancestor = MergeViewerUtil.getValueFromResourceAttachmentChange(diff, fComparison,
+						MergeViewerSide.ANCESTOR);
+
+				insertionPoint = new MergeViewerItem.Container(getComparison(), null, left, right, ancestor,
+						side, adapterFactory);
+			}
+		}
+
+		return insertionPoint;
+	}
+
 	protected final List<IMergeViewerItem> createInsertionPoints(Comparison comparison,
 			EStructuralFeature eStructuralFeature, final List<? extends IMergeViewerItem> values,
 			List<ReferenceChange> differences) {
@@ -375,7 +446,15 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		return ret;
 	}
 
-	private IMergeViewerItem createMergeViewerItemFrom(EObject eObject) {
+	/**
+	 * Creates an IMergeViewerItem from an EObject.
+	 * 
+	 * @param eObject
+	 *            the given eObject.
+	 * @return an IMergeViewerItem.
+	 */
+	protected IMergeViewerItem createMergeViewerItemFrom(EObject eObject) {
+
 		Match match = getComparison().getMatch(eObject);
 
 		ReferenceChange referenceChange = getFirst(filter(filter(getComparison().getDifferences(eObject),
@@ -432,6 +511,13 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		}
 
 		/**
+		 * @return the noItemsArr
+		 */
+		public static IMergeViewerItem[] getNoItemsArr() {
+			return NO_ITEMS_ARR;
+		}
+
+		/**
 		 * {@inheritDoc}
 		 * 
 		 * @see org.eclipse.emf.compare.rcp.ui.MergeViewerItem.item.impl.AbstractMergeViewerItem#getParent()
@@ -448,6 +534,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 					: null;
 			if (parent instanceof EObject) {
 				ret = createBasicContainer((EObject)parent);
+			} else if (parent instanceof Resource) {
+				ret = createBasicContainer((Resource)parent);
 			}
 
 			return ret;
@@ -490,6 +578,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			}
 
 			List<IMergeViewerItem> ret = newArrayList();
+
 			for (EStructuralFeature eStructuralFeature : childrenFeatures) {
 				List<Object> featureContent = ReferenceUtil.getAsList((EObject)sideValue, eStructuralFeature);
 				List<IMergeViewerItem> mergeViewerItem = createMergeViewerItemFrom(featureContent);
@@ -498,6 +587,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 							EMFComparePredicates.onFeature(eStructuralFeature.getName())));
 					ret.addAll(createInsertionPoints(getComparison(), eStructuralFeature, mergeViewerItem,
 							differencesOnFeature));
+
 				} else {
 					ret.addAll(mergeViewerItem);
 				}
