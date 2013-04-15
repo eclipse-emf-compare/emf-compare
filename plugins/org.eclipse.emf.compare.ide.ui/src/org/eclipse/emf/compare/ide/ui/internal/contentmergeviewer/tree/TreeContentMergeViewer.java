@@ -436,15 +436,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			IMergeViewerItem rightData = (IMergeViewerItem)rightItem.getData();
 			final Diff rightDiff = rightData.getDiff();
 			if (leftDiff == rightDiff) {
-				if (leftData instanceof IMergeViewerItem && leftData.isInsertionPoint()
-						&& rightData instanceof IMergeViewerItem) {
-					ret = rightItem;
-					break;
-				} else if (leftData instanceof IMergeViewerItem && rightData instanceof IMergeViewerItem
-						&& rightData.isInsertionPoint()) {
-					ret = rightItem;
-					break;
-				}
+				ret = rightItem;
 			} else if (rightData.getAncestor() == leftData.getAncestor()
 					&& rightData.getRight() == leftData.getRight()
 					&& rightData.getLeft() == leftData.getLeft()) {
