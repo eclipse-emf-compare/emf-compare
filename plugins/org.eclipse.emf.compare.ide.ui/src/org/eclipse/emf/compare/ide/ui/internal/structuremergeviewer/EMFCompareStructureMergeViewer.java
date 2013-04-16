@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
-import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Iterables.getFirst;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -26,7 +26,6 @@ import java.util.Comparator;
 import java.util.EventObject;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareViewerSwitchingPane;
@@ -745,10 +744,10 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			Collection<?> affectedObjects = mostRecentCommand.getAffectedObjects();
 			refresh(true);
 			if (!affectedObjects.isEmpty()) {
-				List<Object> adaptedAffectedObject = newArrayList();
-				for (Object affectedObject : affectedObjects) {
-					adaptedAffectedObject.add(fAdapterFactory.adapt(affectedObject, ICompareInput.class));
-				}
+				// MUST NOT call a setSelection with a list, o.e.compare does not handle it (cf
+				// org.eclipse.compare.CompareEditorInput#getElement(ISelection))
+				Object adaptedAffectedObject = fAdapterFactory.adapt(getFirst(affectedObjects, null),
+						ICompareInput.class);
 				setSelection(new StructuredSelection(adaptedAffectedObject), true);
 			}
 		} else {
