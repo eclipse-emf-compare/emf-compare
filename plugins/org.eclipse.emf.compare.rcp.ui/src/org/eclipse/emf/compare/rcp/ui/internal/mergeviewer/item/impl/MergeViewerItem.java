@@ -23,6 +23,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 
@@ -45,6 +47,7 @@ import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
+import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -502,12 +505,48 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		 * @return
 		 */
 		protected Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
-			Object[] children = MergeViewerUtil.getChildren(object, getAdapterFactory());
+			Collection<? extends EStructuralFeature> ret = getChildrenFeaturesFromItemProviderAdapter(object);
+
+			if (ret == null) {
+				ret = getChildrenFeaturesFromEClass(object);
+			}
+
+			return ret;
+		}
+
+		protected Collection<? extends EStructuralFeature> getChildrenFeaturesFromEClass(Object object) {
 			ImmutableSet.Builder<EStructuralFeature> features = ImmutableSet.builder();
-			for (Object child : children) {
-				features.add(((EObject)child).eContainingFeature());
+			for (EStructuralFeature feature : ((EObject)object).eClass().getEAllContainments()) {
+				features.add(feature);
 			}
 			return features.build();
+		}
+
+		@SuppressWarnings("unchecked")
+		protected Collection<? extends EStructuralFeature> getChildrenFeaturesFromItemProviderAdapter(
+				Object object) {
+			Collection<? extends EStructuralFeature> ret = null;
+
+			Object treeItemContentProvider = getAdapterFactory()
+					.adapt(object, ITreeItemContentProvider.class);
+
+			if (treeItemContentProvider instanceof ItemProviderAdapter) {
+				ItemProviderAdapter itemProviderAdapter = (ItemProviderAdapter)treeItemContentProvider;
+				Method method;
+				try {
+					method = itemProviderAdapter.getClass().getMethod("getChildrenFeatures", Object.class); //$NON-NLS-1$
+					method.setAccessible(true);
+					ret = (Collection<? extends EStructuralFeature>)method
+							.invoke(itemProviderAdapter, object);
+				} catch (SecurityException e) {
+				} catch (NoSuchMethodException e) {
+				} catch (IllegalArgumentException e) {
+				} catch (IllegalAccessException e) {
+				} catch (InvocationTargetException e) {
+				}
+			}
+
+			return ret;
 		}
 
 	}
