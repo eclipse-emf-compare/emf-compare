@@ -43,11 +43,6 @@
       </filter>
       <filter
             activeByDefault="true"
-            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.PseudoDeleteConflictsFilter"
-            label="Pseudo delete conflicts differences">
-      </filter>
-      <filter
-            activeByDefault="true"
             class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.IdenticalElementsFilter"
             label="Identical elements">
       </filter>
