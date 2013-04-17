@@ -17,8 +17,10 @@ import com.google.common.annotations.Beta;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.compare.ITypedElement;
@@ -170,11 +172,13 @@ public final class EMFSynchronizationModel {
 	 * @return The resolved synchronization model.
 	 */
 	private static EMFSynchronizationModel loadSingle(IStorage left, IStorage right, IStorage origin) {
-		final StorageTraversal leftTraversal = new StorageTraversal(Collections.singleton(left));
-		final StorageTraversal rightTraversal = new StorageTraversal(Collections.singleton(right));
+		final StorageTraversal leftTraversal = new StorageTraversal(new LinkedHashSet<IStorage>(Arrays
+				.asList(left)));
+		final StorageTraversal rightTraversal = new StorageTraversal(new LinkedHashSet<IStorage>(Arrays
+				.asList(right)));
 		final StorageTraversal originTraversal;
 		if (origin != null) {
-			originTraversal = new StorageTraversal(Collections.singleton(origin));
+			originTraversal = new StorageTraversal(new LinkedHashSet<IStorage>(Arrays.asList(origin)));
 		} else {
 			originTraversal = new StorageTraversal(Sets.<IStorage> newLinkedHashSet());
 		}
