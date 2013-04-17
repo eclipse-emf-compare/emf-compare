@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.logical;
+package org.eclipse.emf.compare.ide.ui.internal.logical;
 
 import com.google.common.annotations.Beta;
 
@@ -27,7 +27,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor.DiffSide;
+import org.eclipse.emf.compare.ide.ui.internal.logical.IStorageProviderAccessor.DiffSide;
 import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
 import org.eclipse.emf.ecore.resource.URIConverter;
 

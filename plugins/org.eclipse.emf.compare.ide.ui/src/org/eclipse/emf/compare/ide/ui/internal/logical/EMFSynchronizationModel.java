@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.logical;
+package org.eclipse.emf.compare.ide.ui.internal.logical;
 
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.binaryIdentical;
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.createURIFor;
@@ -31,9 +31,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.internal.utils.NotLoadingResourceSet;
 import org.eclipse.emf.compare.ide.internal.utils.SyncResourceSet;
-import org.eclipse.emf.compare.ide.ui.internal.logical.StreamAccessorStorage;
-import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor;
-import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor.DiffSide;
+import org.eclipse.emf.compare.ide.ui.internal.logical.IStorageProviderAccessor.DiffSide;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;

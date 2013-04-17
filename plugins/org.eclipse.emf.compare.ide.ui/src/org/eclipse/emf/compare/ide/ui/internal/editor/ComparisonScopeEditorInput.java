@@ -51,8 +51,6 @@ public class ComparisonScopeEditorInput extends AbstractEMFCompareEditorInput {
 	@Override
 	protected Object doPrepareInput(IProgressMonitor monitor) throws InvocationTargetException,
 			InterruptedException {
-		// FIXME: should not we compute the Comparison here and return the adaptation of the result as an
-		// ICompareInput
 		getCompareConfiguration().setProperty(EMFCompareConstants.COMPARATOR, comparator);
 		return new ComparisonScopeInput(scope, getAdapterFactory());
 	}

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.logical;
+package org.eclipse.emf.compare.ide.ui.internal.logical;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

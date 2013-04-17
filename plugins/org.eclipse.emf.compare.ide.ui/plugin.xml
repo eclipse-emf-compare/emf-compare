@@ -205,7 +205,7 @@
          name="EMF Compare"
          point="org.eclipse.core.resources.modelProviders">
       <modelProvider
-            class="org.eclipse.emf.compare.ide.ui.logical.EMFModelProvider">
+            class="org.eclipse.emf.compare.ide.ui.internal.logical.EMFModelProvider">
       </modelProvider>
       <enablement>
          <and>

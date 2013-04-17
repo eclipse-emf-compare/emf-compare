@@ -17,8 +17,6 @@ import java.security.PrivilegedAction;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
-import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.diff.IThreeWayDiff;
 import org.eclipse.team.core.history.IFileRevision;
@@ -62,8 +60,8 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor#getStorageProvider(org.eclipse.core.resources.IResource,
-	 *      org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor.DiffSide)
+	 * @see org.eclipse.emf.compare.ide.ui.internal.logical.IStorageProviderAccessor#getStorageProvider(org.eclipse.core.resources.IResource,
+	 *      org.eclipse.emf.compare.ide.ui.internal.logical.IStorageProviderAccessor.DiffSide)
 	 */
 	public IStorageProvider getStorageProvider(IResource resource, DiffSide side) throws CoreException {
 		final IStorageProvider provider;
