@@ -213,7 +213,12 @@ public final class ResourceUtil {
 		// We have no way to determine which is absolute and which should be platform:/resource
 		// Furthermore, "ws" could be a git repository, in which case we would be here with
 		// ws/project/test.ecore
-		URI uri = URI.createURI(path, true);
+		URI uri;
+		if (path.startsWith("file:/")) { //$NON-NLS-1$
+			uri = URI.createURI(path);
+		} else {
+			uri = URI.createFileURI(path);
+		}
 		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		if (root == null) {
 			return uri;
