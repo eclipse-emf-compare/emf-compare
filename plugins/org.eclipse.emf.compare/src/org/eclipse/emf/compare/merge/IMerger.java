@@ -155,7 +155,6 @@ public interface IMerger {
 	 * use through its GUI.
 	 */
 	public class RegistryImpl implements Registry {
-
 		/**
 		 * Map which references the registered mergers per their class name.
 		 */
@@ -178,14 +177,18 @@ public interface IMerger {
 		public static IMerger.Registry createStandaloneInstance() {
 			final IMerger.Registry registry = new RegistryImpl();
 
+			// We need our pseudo-conflict merger to have a slightly higher ranking than default.
+			final int defaultRanking = 10;
+			final int pseudoConflictRanking = 15;
+
 			final IMerger attributeMerger = new AttributeChangeMerger();
-			attributeMerger.setRanking(10);
+			attributeMerger.setRanking(defaultRanking);
 			final IMerger referenceMerger = new ReferenceChangeMerger();
-			referenceMerger.setRanking(10);
+			referenceMerger.setRanking(defaultRanking);
 			final IMerger resourceAttachmentMerger = new ResourceAttachmentChangeMerger();
-			resourceAttachmentMerger.setRanking(10);
+			resourceAttachmentMerger.setRanking(defaultRanking);
 			final IMerger pseudoConflictMerger = new PseudoConflictMerger();
-			pseudoConflictMerger.setRanking(15); // CHECKSTYLE:OFF
+			pseudoConflictMerger.setRanking(pseudoConflictRanking);
 
 			registry.add(attributeMerger);
 			registry.add(referenceMerger);
