@@ -185,7 +185,7 @@ public interface IMerger {
 			final IMerger resourceAttachmentMerger = new ResourceAttachmentChangeMerger();
 			resourceAttachmentMerger.setRanking(10);
 			final IMerger pseudoConflictMerger = new PseudoConflictMerger();
-			pseudoConflictMerger.setRanking(15);
+			pseudoConflictMerger.setRanking(15); // CHECKSTYLE:OFF
 
 			registry.add(attributeMerger);
 			registry.add(referenceMerger);

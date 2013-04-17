@@ -19,6 +19,9 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.ecore.EReference;
 
 /**
+ * A simple merger for pseudo conflict. It only mark the differences as merged without doing anything except
+ * browsing the requirements and the equivalences.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class PseudoConflictMerger extends AbstractMerger {
