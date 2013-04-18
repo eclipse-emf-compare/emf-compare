@@ -10,19 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
-import static com.google.common.collect.Lists.newArrayList;
-
-import java.util.Iterator;
-import java.util.List;
-
-import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -42,40 +32,6 @@ public class TreeMergeViewer extends TableOrTreeMergeViewer {
 	 */
 	public TreeMergeViewer(Composite parent, MergeViewerSide side, ICompareColor.Provider colorProvider) {
 		super(parent, side, colorProvider);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.impl.StructuredMergeViewer#setSelection(org.eclipse.jface.viewers.ISelection,
-	 *      boolean)
-	 */
-	@Override
-	public void setSelection(ISelection selection, boolean reveal) {
-		if (selection instanceof IStructuredSelection) {
-			List<Object> newSelection = newArrayList();
-			Iterator<?> iterator = ((IStructuredSelection)selection).iterator();
-			while (iterator.hasNext()) {
-				Object object = iterator.next();
-
-				if (object instanceof MergeViewerItem) {
-					MergeViewerItem item = (MergeViewerItem)object;
-					Diff diff = item.getDiff();
-					if (diff != null && diff.getKind() == DifferenceKind.MOVE) {
-						// we should select the other item (insertion point or matched object) related to this
-						// move in this very same merge viewer.
-						IMergeViewerItem opposite = item.cloneAsOpposite();
-						newSelection.add(opposite);
-					}
-				}
-
-				// always selection the given object in selection
-				newSelection.add(object);
-			}
-			super.setSelection(new StructuredSelection(newSelection), reveal);
-		} else {
-			super.setSelection(selection, reveal);
-		}
 	}
 
 	/**
