@@ -31,6 +31,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -294,6 +295,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			EObject value = (EObject)MergeViewerUtil.getDiffValue(diff);
 			Match match = getComparison().getMatch(value);
 
+			// create insertion point if we are on the opposite side of the source of an ADD or on the same
+			// side as the a DELETE
 			boolean b1 = diff.getSource() == DifferenceSource.LEFT && diff.getKind() == DifferenceKind.DELETE
 					&& getSide() == MergeViewerSide.LEFT;
 			boolean b2 = diff.getSource() == DifferenceSource.LEFT && diff.getKind() == DifferenceKind.ADD
@@ -303,13 +306,19 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			boolean b4 = diff.getSource() == DifferenceSource.RIGHT
 					&& diff.getKind() == DifferenceKind.DELETE && getSide() == MergeViewerSide.RIGHT;
 
-			if (b1 || b2 || b3 || b4) {
+			// do not duplicate insertion point for pseudo add conflict
+			// so we must only create one for pseudo delete conflict
+			boolean b5 = diff.getConflict() == null
+					|| (diff.getConflict().getKind() != ConflictKind.PSEUDO || diff.getKind() == DifferenceKind.DELETE);
+
+			if ((b1 || b2 || b3 || b4) && b5) {
 				IMergeViewerItem.Container insertionPoint = new MergeViewerItem.Container(getComparison(),
 						diff, match.getLeft(), match.getRight(), match.getOrigin(), getSide(),
 						getAdapterFactory());
 
 				final int insertionIndex;
 				if (match.getLeft() == null && match.getRight() == null) {
+					// pseudo conflict delete...
 					insertionIndex = ReferenceUtil.getAsList((EObject)getSideValue(MergeViewerSide.ANCESTOR),
 							eStructuralFeature).indexOf(value);
 				} else {
@@ -318,6 +327,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 				}
 
 				// offset the insertion by the number of previous insertion points in the list
+				// Can not b improved by keeping the number of created insertion points because the given
+				// "values" parameter may already contains some insertion points.
 				int realIndex = 0;
 				for (int index = 0; index < insertionIndex; realIndex++) {
 					if (!ret.get(realIndex).isInsertionPoint()) {
@@ -480,8 +491,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 
 			List<IMergeViewerItem> ret = newArrayList();
 			for (EStructuralFeature eStructuralFeature : childrenFeatures) {
-				List<Object> list = ReferenceUtil.getAsList((EObject)sideValue, eStructuralFeature);
-				List<IMergeViewerItem> mergeViewerItem = createMergeViewerItemFrom(list);
+				List<Object> featureContent = ReferenceUtil.getAsList((EObject)sideValue, eStructuralFeature);
+				List<IMergeViewerItem> mergeViewerItem = createMergeViewerItemFrom(featureContent);
 				if (getSide() != MergeViewerSide.ANCESTOR) {
 					List<ReferenceChange> differencesOnFeature = ImmutableList.copyOf(filter(differences,
 							EMFComparePredicates.onFeature(eStructuralFeature.getName())));
@@ -497,9 +508,6 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 
 		/**
 		 * Returns the list of children features to display within the UI.
-		 * <p>
-		 * Default implementation loops through all existing children and retain the order of appearance of
-		 * containing feature. Bad performance, but is giving the best visual result.
 		 * 
 		 * @param object
 		 * @return

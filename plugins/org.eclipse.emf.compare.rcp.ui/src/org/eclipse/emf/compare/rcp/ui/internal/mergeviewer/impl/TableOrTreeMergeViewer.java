@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 import com.google.common.base.Objects;
 
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceState;
@@ -289,13 +290,11 @@ public abstract class TableOrTreeMergeViewer extends StructuredMergeViewer {
 			if (element instanceof IMergeViewerItem) {
 				IMergeViewerItem item = (IMergeViewerItem)element;
 				Diff diff = item.getDiff();
-				if (diff != null && diff.getKind() == DifferenceKind.MOVE) {
-					hashCode = Objects.hashCode(item.getLeft(), item.getRight(), item.getAncestor(), diff,
-							Boolean.valueOf(item.isInsertionPoint()));
-				} else if (diff != null && diff.getConflict() != null && item.getRight() == null
-						&& item.getLeft() == null) {
-					hashCode = Objects.hashCode(item.getLeft(), item.getRight(), item.getAncestor(), diff
-							.getConflict());
+				if (diff != null && diff.getConflict() != null
+						&& diff.getConflict().getKind() == ConflictKind.PSEUDO) {
+					// we do not create only one item per diff in pseudo conflict, so we hash the conflict and
+					// not the diff
+					hashCode = Objects.hashCode(item.getAncestor(), diff.getConflict());
 				} else {
 					hashCode = Objects.hashCode(item.getLeft(), item.getRight(), item.getAncestor(), diff);
 				}
@@ -306,31 +305,29 @@ public abstract class TableOrTreeMergeViewer extends StructuredMergeViewer {
 		}
 
 		public boolean equals(Object a, Object b) {
+			final boolean ret;
 			if (a != b && a instanceof IMergeViewerItem && b instanceof IMergeViewerItem) {
 				IMergeViewerItem itemA = (IMergeViewerItem)a;
 				IMergeViewerItem itemB = (IMergeViewerItem)b;
 				Diff diffA = itemA.getDiff();
 				Diff diffB = itemB.getDiff();
-				if (diffA == diffB && diffA != null && diffA.getKind() == DifferenceKind.MOVE) {
-					return Objects.equal(itemA.getLeft(), itemB.getLeft())
-							&& Objects.equal(itemA.getRight(), itemB.getRight())
-							&& Objects.equal(itemA.getAncestor(), itemB.getAncestor())
-							&& Objects.equal(itemA.getClass(), itemB.getClass());
-				} else if (diffA != diffB && itemA.getRight() == null && itemA.getLeft() == null) {
-					// pseudo delete conflict
-					return Objects.equal(itemA.getLeft(), itemB.getLeft())
-							&& Objects.equal(itemA.getRight(), itemB.getRight())
-							&& Objects.equal(itemA.getAncestor(), itemB.getAncestor())
-							&& Objects.equal(itemA.getDiff().getConflict(), itemB.getDiff().getConflict());
+				if (diffA != null && diffA.getConflict() != null
+						&& diffA.getConflict().getKind() == ConflictKind.PSEUDO && diffB != null
+						&& diffB.getConflict() != null
+						&& diffB.getConflict().getKind() == ConflictKind.PSEUDO) {
+					// pseudo conflict
+					ret = Objects.equal(itemA.getAncestor(), itemB.getAncestor())
+							&& Objects.equal(diffA.getConflict(), diffB.getConflict());
 				} else {
-					return Objects.equal(itemA.getLeft(), itemB.getLeft())
+					ret = Objects.equal(itemA.getLeft(), itemB.getLeft())
 							&& Objects.equal(itemA.getRight(), itemB.getRight())
 							&& Objects.equal(itemA.getAncestor(), itemB.getAncestor())
-							&& Objects.equal(itemA.getDiff(), itemB.getDiff());
+							&& Objects.equal(diffA, diffB);
 				}
 			} else {
-				return Objects.equal(a, b);
+				ret = Objects.equal(a, b);
 			}
+			return ret;
 		}
 	}
 
