@@ -52,12 +52,7 @@ public class DiagramDiffAccessorImpl extends DiagramMatchAccessorImpl implements
 		return fDiff;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IEObjectAccessor#getEObject()
-	 */
-	public EObject getEObject() {
+	private EObject getEObject() {
 		if (fDiff instanceof DiagramDiff) {
 			return ((DiagramDiff)fDiff).getView();
 		}

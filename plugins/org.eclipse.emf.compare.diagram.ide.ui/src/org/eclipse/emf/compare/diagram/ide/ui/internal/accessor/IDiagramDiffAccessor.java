@@ -11,14 +11,13 @@
 package org.eclipse.emf.compare.diagram.ide.ui.internal.accessor;
 
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IEObjectAccessor;
 
 /**
  * Input for selection of elements related to a difference.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public interface IDiagramDiffAccessor extends IDiagramNodeAccessor, IEObjectAccessor {
+public interface IDiagramDiffAccessor extends IDiagramNodeAccessor {
 
 	/**
 	 * Get the difference related to this input.

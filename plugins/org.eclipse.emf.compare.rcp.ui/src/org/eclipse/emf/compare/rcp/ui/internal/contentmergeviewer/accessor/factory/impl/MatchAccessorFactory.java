@@ -12,7 +12,7 @@ package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.fact
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.EObjectAccessor;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.MatchAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class EObjectAccessorFactory extends AbstractAccessorFactory {
+public class MatchAccessorFactory extends AbstractAccessorFactory {
 
 	/**
 	 * {@inheritDoc}
@@ -40,7 +40,7 @@ public class EObjectAccessorFactory extends AbstractAccessorFactory {
 	public ITypedElement createLeft(AdapterFactory adapterFactory, Object target) {
 		EObject o = ((Match)target).getLeft();
 		if (o != null) {
-			return new EObjectAccessor(adapterFactory, (Match)target, MergeViewerSide.LEFT);
+			return new MatchAccessor(adapterFactory, (Match)target, MergeViewerSide.LEFT);
 		}
 		return null;
 	}
@@ -54,7 +54,7 @@ public class EObjectAccessorFactory extends AbstractAccessorFactory {
 	public ITypedElement createRight(AdapterFactory adapterFactory, Object target) {
 		EObject o = ((Match)target).getRight();
 		if (o != null) {
-			return new EObjectAccessor(adapterFactory, (Match)target, MergeViewerSide.RIGHT);
+			return new MatchAccessor(adapterFactory, (Match)target, MergeViewerSide.RIGHT);
 		}
 		return null;
 	}
@@ -68,7 +68,7 @@ public class EObjectAccessorFactory extends AbstractAccessorFactory {
 	public ITypedElement createAncestor(AdapterFactory adapterFactory, Object target) {
 		EObject o = ((Match)target).getOrigin();
 		if (o != null) {
-			return new EObjectAccessor(adapterFactory, (Match)target, MergeViewerSide.ANCESTOR);
+			return new MatchAccessor(adapterFactory, (Match)target, MergeViewerSide.ANCESTOR);
 		}
 		return null;
 	}

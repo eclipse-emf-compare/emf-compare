@@ -10,11 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.internal.accessor;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
@@ -92,21 +89,6 @@ public class DiagramMatchAccessorImpl implements IDiagramNodeAccessor, ITypedEle
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.compare.IStreamContentAccessor#getContents()
-	 */
-	public InputStream getContents() throws CoreException {
-		/*
-		 * #293926 : Whatever we return has no importance as long as it is not "null", this is only to make
-		 * CompareUIPlugin#guessType happy. However, it is only happy if what we return resembles a text. Note
-		 * that this bug has been fixed in 3.7.1, we're keeping this around for the compatibility with 3.5 and
-		 * 3.6.
-		 */
-		return new ByteArrayInputStream(new byte[] {' ' });
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor#getEObject(org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide)
 	 */
 	public EObject getEObject(MergeViewerSide side) {
@@ -150,7 +132,7 @@ public class DiagramMatchAccessorImpl implements IDiagramNodeAccessor, ITypedEle
 		if (obj != null) {
 			diagram = getDiagram(obj);
 		} else {
-			obj = getEObject(getOpposite(side));
+			obj = getEObject(side.opposite());
 			if (obj != null) {
 				diagram = getDiagram(obj);
 				if (diagram != null) {
@@ -218,7 +200,7 @@ public class DiagramMatchAccessorImpl implements IDiagramNodeAccessor, ITypedEle
 	public MergeViewerSide getOriginSide() {
 		EObject origin = getEObject(MergeViewerSide.ANCESTOR);
 		if (origin == null) {
-			return getOpposite(fSide);
+			return fSide.opposite();
 		} else {
 			return MergeViewerSide.ANCESTOR;
 		}
@@ -241,20 +223,4 @@ public class DiagramMatchAccessorImpl implements IDiagramNodeAccessor, ITypedEle
 	public List<Diff> getAllDiffs() {
 		return fComparison.getDifferences();
 	}
-
-	/**
-	 * Get the opposite side of the given one.
-	 * 
-	 * @param side
-	 *            The given side.
-	 * @return the opposite one.
-	 */
-	private MergeViewerSide getOpposite(MergeViewerSide side) {
-		if (side == MergeViewerSide.LEFT) {
-			return MergeViewerSide.RIGHT;
-		} else {
-			return MergeViewerSide.LEFT;
-		}
-	}
-
 }

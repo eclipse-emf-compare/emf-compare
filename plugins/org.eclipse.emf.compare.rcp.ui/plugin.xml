@@ -55,7 +55,7 @@
    <extension
          point="org.eclipse.emf.compare.rcp.ui.accessorFactory">
       <factory
-            class="org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.EObjectAccessorFactory"
+            class="org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.MatchAccessorFactory"
             ranking="10">
       </factory>
       <factory
