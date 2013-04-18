@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -118,7 +118,7 @@ public class EMFResourceMapping extends ResourceMapping {
 		 * detecting a traversal for a file that's been removed locally but is present on the repository is
 		 * not necessary at this point.
 		 */
-		return EMFSynchronizationModel.resolveTraversal(file);
+		return EMFSynchronizationModel.resolveTraversal(file, monitor);
 	}
 
 	/**

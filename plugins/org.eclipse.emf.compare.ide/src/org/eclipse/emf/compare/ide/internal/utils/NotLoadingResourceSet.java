@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,10 +22,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
@@ -47,32 +48,42 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 @Beta
 public final class NotLoadingResourceSet extends ResourceSetImpl {
-	/**
-	 * We provide this resource set with an initial set of resources that contains all "changed" fragments of
-	 * that logical model. We thus prevent any loading of further resources during that initial resolving.
-	 * However, merge and display operations may need to load more resources, and we don't want to prevent
-	 * that.
-	 */
-	private boolean initialResolving = true;
 
 	/**
-	 * Constructs a resource set to contain the resources described by the given traversal.
+	 * Constructs a resource set to contain the resources described by the given traversals.
 	 * 
-	 * @param traversal
-	 *            The traversal containing all resources we are to load.
+	 * @param traversals
+	 *            All traversals we are to load.
+	 * @param monitor
+	 *            the monitor to which progress will be reported.
+	 * @return resource set to containing the resources described by the given traversals.
 	 */
-	public NotLoadingResourceSet(StorageTraversal traversal) {
-		final Set<? extends IStorage> storages = traversal.getStorages();
-		setURIResourceMap(new HashMap<URI, Resource>(storages.size() << 1));
-		for (IStorage storage : storages) {
-			loadResource(storage, getLoadOptions());
+	public static NotLoadingResourceSet create(final StorageTraversal traversals, IProgressMonitor monitor) {
+		SubMonitor progress = SubMonitor.convert(monitor, "Create and resolve resource set", 100);
+		final NotLoadingResourceSet resourceSet = new NotLoadingResourceSet();
+
+		resourceSet.setURIResourceMap(new HashMap<URI, Resource>(traversals.getStorages().size() << 1));
+
+		// loading is 60% of the total work?
+		final int loadWorkPercentage = 60;
+		SubMonitor subMonitor = progress.newChild(loadWorkPercentage).setWorkRemaining(
+				traversals.getStorages().size());
+		for (IStorage storage : traversals.getStorages()) {
+			resourceSet.loadResource(storage, resourceSet.getLoadOptions());
+			subMonitor.worked(1);
 		}
-		// Then resolve all proxies between our "loaded" resources
-		List<Resource> resourcesCopy = newArrayList(getResources());
+
+		final int resolveWorkPercentage = 40;
+		subMonitor = progress.newChild(resolveWorkPercentage).setWorkRemaining(
+				resourceSet.getResources().size());
+		// Then resolve all proxies between our "loaded" resources.
+		List<Resource> resourcesCopy = newArrayList(resourceSet.getResources());
 		for (Resource res : resourcesCopy) {
-			resolve(res);
+			resourceSet.resolve(res);
+			subMonitor.worked(1);
 		}
-		initialResolving = false;
+
+		return resourceSet;
 	}
 
 	/**
@@ -83,14 +94,12 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 	 */
 	@Override
 	public Resource getResource(URI uri, boolean loadOnDemand) {
-		if (initialResolving) {
-			ILoadOnDemandPolicy.Registry registry = EMFCompareRCPPlugin.getDefault()
-					.getLoadOnDemandPolicyRegistry();
-			if (registry.hasAnyAuthorizingPolicy(uri)) {
-				return super.getResource(uri, true);
-			}
+		ILoadOnDemandPolicy.Registry registry = EMFCompareRCPPlugin.getDefault()
+				.getLoadOnDemandPolicyRegistry();
+		if (registry.hasAnyAuthorizingPolicy(uri)) {
+			return super.getResource(uri, true);
 		}
-		return super.getResource(uri, !initialResolving && loadOnDemand);
+		return super.getResource(uri, false);
 	}
 
 	/**

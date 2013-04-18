@@ -288,8 +288,8 @@ public class LogicalModelTest extends CompareGitTestCase {
 		final IProgressMonitor monitor = new NullProgressMonitor();
 		final EMFSynchronizationModel syncModel = EMFSynchronizationModel.createSynchronizationModel(
 				subscriber, sourceProvider.getStorage(monitor), remoteProvider.getStorage(monitor),
-				ancestorProvider.getStorage(monitor));
-		final IComparisonScope scope = syncModel.createMinimizedScope();
+				ancestorProvider.getStorage(monitor), new NullProgressMonitor());
+		final IComparisonScope scope = syncModel.createMinimizedScope(monitor);
 
 		final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
 		final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2011, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,8 +25,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.AbstractTreeIterator;
@@ -256,24 +258,29 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 * 
 	 * @param start
 	 *            The starting point from which we'll resolve cross resources references.
+	 * @param monitor
+	 *            the monitor to which progress will be reported
 	 * @return <code>true</code> if we could resolve the model, <code>false</code> if there was an error
 	 *         loading the starting point.
 	 */
-	public boolean resolveAll(IStorage start) {
+	public boolean resolveAll(IStorage start, IProgressMonitor monitor) {
+		SubMonitor progress = SubMonitor.convert(monitor, 100);
 		final Resource resource = ResourceUtil.loadResource(start, this, getLoadOptions());
 		if (resource == null || !resource.getErrors().isEmpty()) {
 			return false;
 		}
+		progress.worked(2);
 
 		// reset the demanded URI that was added by this first call
 		demandedURIs.clear();
 		// and make it "loaded" instead
 		loadedURIs.add(resource.getURI());
 
-		resolve(resource);
-		unload(resource);
+		resolve(resource, progress.newChild(2));
+		unload(resource, progress.newChild(2));
 
-		resolveAll();
+		final int remainingWork = 100 - 2 - 2 - 2;
+		resolveAll(progress.newChild(remainingWork));
 		return true;
 	}
 
@@ -284,36 +291,47 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 * 
 	 * @param resourceUri
 	 *            The URI of the "starting" resource from which we'll resolve all cross resources references.
+	 * @param monitor
+	 *            the monitor to which progress will be reported
 	 */
-	public void resolveAll(URI resourceUri) {
+	public void resolveAll(URI resourceUri, IProgressMonitor monitor) {
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 		Resource resource = super.getResource(resourceUri, true);
 		// reset the demanded URI that was added by this first call
 		demandedURIs.clear();
 		// and make it "loaded" instead
 		loadedURIs.add(resourceUri);
 
-		resolve(resource);
-		unload(resource);
+		resolve(resource, subMonitor.newChild(2));
+		unload(resource, subMonitor.newChild(2));
 
-		resolveAll();
+		final int remainingWork = 100 - 2 - 2;
+		resolveAll(subMonitor.newChild(remainingWork));
 	}
 
 	/**
 	 * We've loaded a first resource (from one of the {@link #resolveAll(IStorage)} or
 	 * {@link #resolveAll(URI)} calls). We will now resolve all of this starting point's cross resources
 	 * references.
+	 * 
+	 * @param monitor
+	 *            the monitor to which progress will be reported
 	 */
-	private void resolveAll() {
+	private void resolveAll(IProgressMonitor monitor) {
+		// no need to size this monitor as it will just report logarithmic progress (see javadoc)
+		final SubMonitor progress = SubMonitor.convert(monitor);
 		Set<URI> newURIs;
 		synchronized(demandedURIs) {
 			newURIs = new LinkedHashSet<URI>(demandedURIs);
 			demandedURIs.clear();
 		}
 		while (!newURIs.isEmpty()) {
+			// report logarithmic progress (see SubMonitor javadoc)
+			progress.setWorkRemaining(10000);
 			loadedURIs.addAll(newURIs);
 			final Set<Future<Object>> resolveThreads = Sets.newLinkedHashSet();
 			for (URI uri : newURIs) {
-				resolveThreads.add(pool.submit(new ResourceLoader(uri), Priority.LOW));
+				resolveThreads.add(pool.submit(new ResourceLoader(uri, progress.newChild(1)), Priority.LOW));
 			}
 			for (Future<Object> future : resolveThreads) {
 				try {
@@ -348,17 +366,25 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 * 
 	 * @param resource
 	 *            The resource for which we are to resolve all cross references.
+	 * @param monitor
+	 *            The monitor to which progress will be reported.
 	 */
-	private void resolve(Resource resource) {
+	private void resolve(Resource resource, IProgressMonitor monitor) {
 		resource.eSetDeliver(false);
 		final List<EObject> roots = ((InternalEList<EObject>)resource.getContents()).basicList();
 		final Iterator<EObject> resourceContent = roots.iterator();
 		resource.getContents().clear();
+
+		SubMonitor subMonitor = SubMonitor.convert(monitor, roots.size());
 		while (resourceContent.hasNext()) {
 			final EObject eObject = resourceContent.next();
 			resolveCrossReferences(eObject);
 			final TreeIterator<EObject> childContent = basicEAllContents(eObject);
+			// the process of one root is on tick
+			SubMonitor childMonitor = subMonitor.newChild(1);
 			while (childContent.hasNext()) {
+				// report logarithmic progress for each root processing (see javadoc)
+				childMonitor.setWorkRemaining(10000);
 				final EObject child = childContent.next();
 				if (child.eIsProxy()) {
 					final URI proxyURI = ((InternalEObject)child).eProxyURI();
@@ -366,6 +392,8 @@ public final class SyncResourceSet extends ResourceSetImpl {
 				} else {
 					resolveCrossReferences(child);
 				}
+				// report logarithmic progress (see javadoc)
+				childMonitor.worked(1);
 			}
 		}
 		resource.getContents().addAll(roots);
@@ -400,8 +428,11 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 * 
 	 * @param resource
 	 *            The resource we are to unload.
+	 * @param monitor
+	 *            The monitor to which progress will be reported.
 	 */
-	private void unload(final Resource resource) {
+	private void unload(final Resource resource, IProgressMonitor monitor) {
+		final SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
 		// only unload those resources that are located in the workspace
 		final URI uri = resource.getURI();
 		if (uri.isPlatformResource() || uri.isRelative() || uri.isFile()) {
@@ -414,6 +445,7 @@ public final class SyncResourceSet extends ResourceSetImpl {
 				final Runnable unloader = new Runnable() {
 					public void run() {
 						resource.unload();
+						subMonitor.worked(1);
 					}
 				};
 				pool.submit(unloader, Priority.NORMAL);
@@ -449,16 +481,22 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 */
 	private class ResourceLoader implements Runnable {
 		/** The uri of the EMF Resource we are to load from the disk. */
-		private URI uri;
+		private final URI uri;
+
+		/** The monitor to which progress will be reported. */
+		private final SubMonitor subMonitor;
 
 		/**
 		 * Constructs our loader thread given its target URI.
 		 * 
 		 * @param uri
 		 *            The uri of the EMF Resource this thread is to load from the disk.
+		 * @param monitor
+		 *            The monitor to which progress will be reported.
 		 */
-		public ResourceLoader(URI uri) {
+		public ResourceLoader(URI uri, IProgressMonitor monitor) {
 			this.uri = uri;
+			this.subMonitor = SubMonitor.convert(monitor, 2);
 		}
 
 		/**
@@ -468,8 +506,8 @@ public final class SyncResourceSet extends ResourceSetImpl {
 		 */
 		public void run() {
 			final Resource newResource = loadResource(uri);
-			resolve(newResource);
-			unload(newResource);
+			resolve(newResource, subMonitor.newChild(1));
+			unload(newResource, subMonitor.newChild(1));
 		}
 	}
 

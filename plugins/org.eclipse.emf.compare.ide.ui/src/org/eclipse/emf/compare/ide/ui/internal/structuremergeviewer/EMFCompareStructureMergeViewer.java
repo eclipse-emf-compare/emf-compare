@@ -16,7 +16,6 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
@@ -34,9 +33,12 @@ import org.eclipse.compare.structuremergeviewer.DiffTreeViewer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
@@ -78,7 +80,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -178,6 +179,8 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			eventBus = new EventBus();
 			eventBus.register(this);
 		}
+
+		inputChangedTask.setPriority(Job.LONG);
 	}
 
 	/**
@@ -230,7 +233,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		CompareConfiguration cc = getCompareConfiguration();
 		// The compare configuration is nulled when the viewer is disposed
 		if (cc != null) {
-			getCompareConfiguration().getContainer().runAsynchronously(inputChangedTask);
+			inputChangedTask.schedule();
 		}
 	}
 
@@ -244,10 +247,12 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		return fRoot;
 	}
 
-	private IRunnableWithProgress inputChangedTask = new IRunnableWithProgress() {
-		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	private Job inputChangedTask = new Job("Compute Model Differences") {
+		@Override
+		public IStatus run(IProgressMonitor monitor) {
 			SubMonitor subMonitor = SubMonitor.convert(monitor, "Computing Model Differences", 100);
 			compareInputChanged((ICompareInput)getInput(), subMonitor.newChild(100));
+			return Status.OK_STATUS;
 		}
 	};
 
@@ -308,13 +313,15 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			} else if (input instanceof ComparisonScopeInput) {
 				compareInputChanged((ComparisonScopeInput)input, monitor);
 			} else {
+				SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+
 				final ITypedElement left = input.getLeft();
 				final ITypedElement right = input.getRight();
 				final ITypedElement origin = input.getAncestor();
 
 				final Subscriber subscriber = getSubscriber();
 				final EMFSynchronizationModel syncModel = EMFSynchronizationModel.createSynchronizationModel(
-						subscriber, left, right, origin);
+						subscriber, left, right, origin, subMonitor.newChild(10));
 
 				// Double check : git allows modification of the index file ... but we cannot
 				final CompareConfiguration config = getCompareConfiguration();
@@ -325,13 +332,13 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 					config.setRightEditable(false);
 				}
 
-				final IComparisonScope scope = syncModel.createMinimizedScope();
+				final IComparisonScope scope = syncModel.createMinimizedScope(subMonitor.newChild(75));
 				final Comparison compareResult = EMFCompare
 						.builder()
 						.setMatchEngineFactoryRegistry(
 								EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry())
 						.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry())
-						.build().compare(scope, BasicMonitor.toMonitor(monitor));
+						.build().compare(scope, BasicMonitor.toMonitor(subMonitor.newChild(15)));
 
 				final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
 				final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();

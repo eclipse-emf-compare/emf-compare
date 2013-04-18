@@ -30,7 +30,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.internal.utils.NotLoadingResourceSet;
 import org.eclipse.emf.compare.ide.internal.utils.SyncResourceSet;
@@ -131,7 +133,8 @@ public final class EMFSynchronizationModel {
 	 * @return The resolved synchronization model.
 	 */
 	public static EMFSynchronizationModel createSynchronizationModel(Subscriber subscriber, IStorage left,
-			IStorage right, IStorage origin) {
+			IStorage right, IStorage origin, IProgressMonitor monitor) {
+		SubMonitor progress = SubMonitor.convert(monitor, "Create EMF Synchronization Model", 3);
 		EMFSynchronizationModel syncModel;
 
 		/*
@@ -142,17 +145,21 @@ public final class EMFSynchronizationModel {
 		 * possible here as we have no synchronization information.
 		 */
 		if (subscriber == null) {
-			syncModel = loadSingle(left, right, origin);
+			syncModel = loadSingle(left, right, origin, progress.newChild(3));
 		} else {
 			// History cannot be edited. Can we determine it here?
 			final IStorageProviderAccessor storageAccessor = new SubscriberStorageAccessor(subscriber);
 
-			StorageTraversal leftTraversal = resolveTraversal(storageAccessor, left, DiffSide.SOURCE);
-			StorageTraversal rightTraversal = resolveTraversal(storageAccessor, right, DiffSide.REMOTE);
+			StorageTraversal leftTraversal = resolveTraversal(storageAccessor, left, DiffSide.SOURCE,
+					progress.newChild(1));
+			StorageTraversal rightTraversal = resolveTraversal(storageAccessor, right, DiffSide.REMOTE,
+					progress.newChild(1));
 			StorageTraversal originTraversal = null;
 			if (origin != null) {
-				originTraversal = resolveTraversal(storageAccessor, origin, DiffSide.ORIGIN);
+				originTraversal = resolveTraversal(storageAccessor, origin, DiffSide.ORIGIN, progress
+						.newChild(1));
 			}
+			progress.setWorkRemaining(0);
 
 			syncModel = new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal, !left
 					.isReadOnly(), !right.isReadOnly());
@@ -172,7 +179,9 @@ public final class EMFSynchronizationModel {
 	 *            Common ancestor of left and right, if any.
 	 * @return The resolved synchronization model.
 	 */
-	private static EMFSynchronizationModel loadSingle(IStorage left, IStorage right, IStorage origin) {
+	private static EMFSynchronizationModel loadSingle(IStorage left, IStorage right, IStorage origin,
+			IProgressMonitor monitor) {
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 		final StorageTraversal leftTraversal = new StorageTraversal(new LinkedHashSet<IStorage>(Arrays
 				.asList(left)));
 		final StorageTraversal rightTraversal = new StorageTraversal(new LinkedHashSet<IStorage>(Arrays
@@ -184,6 +193,7 @@ public final class EMFSynchronizationModel {
 			originTraversal = new StorageTraversal(Sets.<IStorage> newLinkedHashSet());
 		}
 
+		subMonitor.worked(100);
 		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal,
 				!left.isReadOnly(), !right.isReadOnly());
 	}
@@ -199,15 +209,18 @@ public final class EMFSynchronizationModel {
 	 *            Resource to load as common ancestor of left and right, if any.
 	 * @return The resolved synchronization model.
 	 */
-	private static EMFSynchronizationModel loadLocal(IResource left, IResource right, IResource origin) {
-		final StorageTraversal leftTraversal = resolveTraversal(left);
-		final StorageTraversal rightTraversal = resolveTraversal(right);
+	private static EMFSynchronizationModel loadLocal(IResource left, IResource right, IResource origin,
+			IProgressMonitor monitor) {
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 3);
 		final StorageTraversal originTraversal;
 		if (origin != null) {
-			originTraversal = resolveTraversal(origin);
+			originTraversal = resolveTraversal(origin, subMonitor.newChild(1));
 		} else {
+			subMonitor.setWorkRemaining(2);
 			originTraversal = new StorageTraversal(Sets.<IStorage> newLinkedHashSet());
 		}
+		final StorageTraversal leftTraversal = resolveTraversal(left, subMonitor.newChild(1));
+		final StorageTraversal rightTraversal = resolveTraversal(right, subMonitor.newChild(1));
 
 		final boolean leftEditable = !left.getResourceAttributes().isReadOnly();
 		final boolean rightEditable = !right.getResourceAttributes().isReadOnly();
@@ -231,7 +244,8 @@ public final class EMFSynchronizationModel {
 	 * @return The created synchronization model.
 	 */
 	public static EMFSynchronizationModel createSynchronizationModel(Subscriber subscriber,
-			ITypedElement left, ITypedElement right, ITypedElement origin) {
+			ITypedElement left, ITypedElement right, ITypedElement origin, IProgressMonitor monitor) {
+		SubMonitor progress = SubMonitor.convert(monitor, "Create EMF Synchronization Model", 100);
 		if (subscriber == null) {
 			// Is this a local comparison?
 			final IResource leftResource = findResource(left);
@@ -239,7 +253,7 @@ public final class EMFSynchronizationModel {
 
 			if (leftResource != null && rightResource != null) {
 				// assume origin is local or null
-				return loadLocal(leftResource, rightResource, findResource(origin));
+				return loadLocal(leftResource, rightResource, findResource(origin), progress.newChild(100));
 			}
 		}
 
@@ -252,7 +266,8 @@ public final class EMFSynchronizationModel {
 			originStorage = null;
 		}
 
-		return createSynchronizationModel(subscriber, leftStorage, rightStorage, originStorage);
+		return createSynchronizationModel(subscriber, leftStorage, rightStorage, originStorage, progress
+				.newChild(100));
 	}
 
 	/**
@@ -311,20 +326,28 @@ public final class EMFSynchronizationModel {
 		return result;
 	}
 
-	public IComparisonScope createMinimizedScope() {
+	public IComparisonScope createMinimizedScope(IProgressMonitor monitor) {
+		SubMonitor subMonitor = SubMonitor.convert(monitor, "Create minimized scope", 100);
 		// Minimize the traversals to non-read-only resources with no binary identical counterparts.
-		minimize();
+		minimize(subMonitor.newChild(10));
+		return createScope(subMonitor.newChild(90));
+	}
 
+	public IComparisonScope createScope(IProgressMonitor monitor) {
+		SubMonitor progress = SubMonitor.convert(monitor, "Create Scope", 3);
 		// Create the left, right and origin resource sets.
-		final ResourceSet leftResourceSet = new NotLoadingResourceSet(leftTraversal);
-		final ResourceSet rightResourceSet = new NotLoadingResourceSet(rightTraversal);
+
 		final ResourceSet originResourceSet;
 		if (originTraversal == null || originTraversal.getStorages().isEmpty()) {
 			// FIXME why would an empty resource set yield a different result ?
 			originResourceSet = null;
+			progress.setWorkRemaining(2);
 		} else {
-			originResourceSet = new NotLoadingResourceSet(originTraversal);
+			originResourceSet = NotLoadingResourceSet.create(originTraversal, progress.newChild(1));
 		}
+		final ResourceSet leftResourceSet = NotLoadingResourceSet.create(leftTraversal, progress.newChild(1));
+		final ResourceSet rightResourceSet = NotLoadingResourceSet.create(rightTraversal, progress
+				.newChild(1));
 
 		final Set<URI> urisInScope = Sets.newLinkedHashSet();
 		for (IStorage left : leftTraversal.getStorages()) {
@@ -342,6 +365,7 @@ public final class EMFSynchronizationModel {
 		final FilterComparisonScope scope = new DefaultComparisonScope(leftResourceSet, rightResourceSet,
 				originResourceSet);
 		scope.setResourceSetContentFilter(isInScope(urisInScope));
+
 		return scope;
 	}
 
@@ -350,13 +374,15 @@ public final class EMFSynchronizationModel {
 	 * remove all resources that can be seen as binary identical (we match resources through exact equality of
 	 * their names) or read-only.
 	 */
-	public void minimize() {
+	public void minimize(IProgressMonitor monitor) {
+		SubMonitor progess = SubMonitor.convert(monitor, "Minimize synchronization model", 100);
 		final boolean threeWay = !originTraversal.getStorages().isEmpty();
 		// Copy the sets to update them as we go.
 		final Set<IStorage> leftCopy = Sets.newLinkedHashSet(leftTraversal.getStorages());
 		final Set<IStorage> rightCopy = Sets.newLinkedHashSet(rightTraversal.getStorages());
 		final Set<IStorage> originCopy = Sets.newLinkedHashSet(originTraversal.getStorages());
 
+		SubMonitor subMonitor = progess.newChild(98).setWorkRemaining(leftCopy.size());
 		for (IStorage left : leftCopy) {
 			final IStorage right = removeLikeNamedStorageFrom(left, rightCopy);
 			if (right != null && threeWay) {
@@ -376,20 +402,25 @@ public final class EMFSynchronizationModel {
 					leftTraversal.getStorages().remove(left);
 				}
 			}
+			subMonitor.worked(1);
 		}
 
+		subMonitor = progess.newChild(1).setWorkRemaining(rightCopy.size());
 		for (IStorage right : rightCopy) {
 			// These have no match on left. Remove if read only
 			if (right.isReadOnly()) {
 				rightTraversal.getStorages().remove(right);
 			}
+			subMonitor.worked(1);
 		}
 
+		subMonitor = progess.newChild(1).setWorkRemaining(rightCopy.size());
 		for (IStorage origin : originCopy) {
 			// These have no match on left and right. Remove if read only
 			if (origin.isReadOnly()) {
 				originTraversal.getStorages().remove(origin);
 			}
+			subMonitor.worked(1);
 		}
 	}
 
@@ -450,8 +481,10 @@ public final class EMFSynchronizationModel {
 	 *         starting point.
 	 */
 	// package visibility as this will be used by our model provider
-	/* package */static StorageTraversal resolveTraversal(IResource start) {
+	/* package */static StorageTraversal resolveTraversal(IResource start, IProgressMonitor monitor) {
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 		if (!(start instanceof IFile)) {
+			subMonitor.setWorkRemaining(0);
 			return new StorageTraversal(Sets.<IStorage> newLinkedHashSet());
 		}
 
@@ -463,17 +496,25 @@ public final class EMFSynchronizationModel {
 		final StorageURIConverter converter = new StorageURIConverter(resourceSet.getURIConverter());
 		resourceSet.setURIConverter(converter);
 
-		if (resourceSet.resolveAll((IFile)start)) {
+		if (resourceSet.resolveAll((IFile)start, subMonitor.newChild(95))) {
 			final Set<IStorage> storages = Sets.newLinkedHashSet(Sets.union(Collections
 					.singleton((IFile)start), converter.getLoadedRevisions()));
+			subMonitor.worked(5);
 			return new StorageTraversal(storages);
+		} else {
+			subMonitor.setWorkRemaining(5);
+			// FIXME log
+			// We failed to load the starting point. simply return an empty traversal.
 		}
+
+		subMonitor.worked(5);
 
 		return new StorageTraversal(Collections.singleton((IFile)start));
 	}
 
 	private static StorageTraversal resolveTraversal(IStorageProviderAccessor storageAccessor,
-			IStorage start, DiffSide side) {
+			IStorage start, DiffSide side, IProgressMonitor monitor) {
+		SubMonitor progress = SubMonitor.convert(monitor, 100);
 		StorageTraversal traversal = new StorageTraversal(Sets.<IStorage> newLinkedHashSet());
 		if (start == null) {
 			return traversal;
@@ -484,7 +525,7 @@ public final class EMFSynchronizationModel {
 				storageAccessor, side);
 		resourceSet.setURIConverter(converter);
 
-		if (resourceSet.resolveAll(start)) {
+		if (resourceSet.resolveAll(start, progress.newChild(95))) {
 			final Set<IStorage> storages = Sets.newLinkedHashSet();
 			storages.add(start);
 			final IPath startPath = start.getFullPath();
@@ -495,9 +536,12 @@ public final class EMFSynchronizationModel {
 			}
 			traversal = new StorageTraversal(storages);
 		} else {
+			progress.setWorkRemaining(5);
 			// FIXME log
 			// We failed to load the starting point. simply return an empty traversal.
 		}
+
+		progress.worked(5);
 
 		return traversal;
 	}

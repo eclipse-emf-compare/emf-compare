@@ -198,6 +198,8 @@ public class EMFCompare {
 			iPostProcessor.postComparison(comparison, monitor);
 		}
 
+		monitor.done();
+
 		return comparison;
 	}
 
