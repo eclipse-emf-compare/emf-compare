@@ -152,6 +152,8 @@ public class OverlayImageProvider {
 		if (match.getComparison().isThreeWay()) {
 			if (any(differences, hasConflict(ConflictKind.REAL))) {
 				path = "confinoutchg_ov.png";
+			} else if (any(differences, hasConflict(ConflictKind.PSEUDO))) {
+				path = "pconfinoutchg_ov";
 			} else if (ancestor == null) {
 				if (right == null) {
 					path = "r_outadd_ov";

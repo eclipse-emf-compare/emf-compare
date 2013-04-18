@@ -20,6 +20,7 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
@@ -75,6 +76,20 @@ public class ConflictItemProviderSpec extends ConflictItemProvider implements II
 	@Override
 	public String getText(Object object) {
 		return getStyledText(object).getString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.ConflictItemProvider#getImage(java.lang.Object)
+	 */
+	@Override
+	public Object getImage(Object object) {
+		if (((Conflict)object).getKind() == ConflictKind.PSEUDO) {
+			return overlayImage(object, getResourceLocator().getImage("full/obj16/PseudoConflict")); //$NON-NLS-1$
+		} else {
+			return overlayImage(object, getResourceLocator().getImage("full/obj16/Conflict")); //$NON-NLS-1$
+		}
 	}
 
 	/**
