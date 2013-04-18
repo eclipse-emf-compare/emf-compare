@@ -41,6 +41,7 @@ import org.eclipse.emf.compare.provider.ReferenceChangeItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -214,8 +215,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 			if (matchOfValue != null) {
 				Collection<?> children = getChildren(matchOfValue);
 				children.remove(referenceChange);
-				Iterable<?> filter = filter(children,
-						fromSideOrInRealConflict(((Diff)object).getSource()));
+				Iterable<?> filter = filter(children, fromSideOrInRealConflict(((Diff)object).getSource()));
 				Iterables.addAll(ret, filter);
 			}
 		}
@@ -237,10 +237,14 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 			public boolean apply(Object object) {
 				boolean ret = false;
 				if (object instanceof Diff) {
-					if (source == ((Diff)object).getSource()) {
+					Diff diff = (Diff)object;
+					if (source == diff.getSource()) {
 						ret = true;
-					} else if (((Diff)object).getConflict() != null) {
-						ret = ConflictKind.REAL == ((Diff)object).getConflict().getKind();
+					} else if (EMFComparePredicates.hasConflict(ConflictKind.REAL).apply(diff)) {
+						ret = true;
+					} else if (EMFComparePredicates.hasConflict(ConflictKind.PSEUDO).apply(diff)) {
+						ret = !(diff instanceof ReferenceChange) || (diff instanceof ReferenceChange
+								&& ((ReferenceChange)diff).getReference().isContainment());
 					} else {
 						ret = true;
 					}
