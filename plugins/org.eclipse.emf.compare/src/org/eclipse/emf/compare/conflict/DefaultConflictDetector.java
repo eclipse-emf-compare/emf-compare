@@ -16,12 +16,17 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.Monitor;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
@@ -145,7 +150,12 @@ public class DefaultConflictDetector implements IConflictDetector {
 		// [381143] Every Diff "under" a containment deletion conflicts with it.
 		if (diff.getKind() == DifferenceKind.DELETE) {
 			final Predicate<? super Diff> candidateFilter = new ConflictCandidateFilter(diff);
-			for (Diff extendedCandidate : Iterables.filter(valueMatch.getAllDifferences(), candidateFilter)) {
+			final DiffTreeIterator diffIterator = new DiffTreeIterator(valueMatch);
+			diffIterator.setFilter(candidateFilter);
+			diffIterator.setPruningFilter(isContainmentDelete());
+
+			while (diffIterator.hasNext()) {
+				Diff extendedCandidate = diffIterator.next();
 				if (isDeleteOrUnsetDiff(comparison, extendedCandidate)) {
 					conflictOn(comparison, diff, extendedCandidate, ConflictKind.PSEUDO);
 				} else {
@@ -153,6 +163,19 @@ public class DefaultConflictDetector implements IConflictDetector {
 				}
 			}
 		}
+	}
+
+	/**
+	 * This predicate will be <code>true</code> for any Match which represents a containment deletion.
+	 * 
+	 * @return A Predicate that will be met by containment deletions.
+	 */
+	private Predicate<? super Match> isContainmentDelete() {
+		return new Predicate<Match>() {
+			public boolean apply(Match input) {
+				return input.getOrigin() != null && (input.getLeft() == null || input.getRight() == null);
+			}
+		};
 	}
 
 	/**
@@ -598,14 +621,21 @@ public class DefaultConflictDetector implements IConflictDetector {
 		boolean deleteOrUnset = false;
 		if (diff.getKind() == DifferenceKind.DELETE) {
 			deleteOrUnset = true;
+		} else if (diff.getKind() == DifferenceKind.ADD) {
+			deleteOrUnset = false;
 		} else if (diff instanceof ReferenceChange) {
 			final EObject value = ((ReferenceChange)diff).getValue();
 			final Match valueMatch = comparison.getMatch(value);
 
-			deleteOrUnset = valueMatch != null && valueMatch.getOrigin() == value;
-			// } else if (diff instanceof ResourceAttachmentChange) {
-
-		} else if (diff.getKind() == DifferenceKind.CHANGE && diff instanceof AttributeChange) {
+			if (valueMatch == null) {
+				// out-of-scope value. fall back.
+				final Match match = diff.getMatch();
+				return diff.getSource() == DifferenceSource.RIGHT && match.getRight() == null
+						|| diff.getSource() == DifferenceSource.LEFT && match.getLeft() == null;
+			} else {
+				deleteOrUnset = valueMatch.getOrigin() == value;
+			}
+		} else if (diff instanceof AttributeChange) {
 			final EAttribute attribute = ((AttributeChange)diff).getAttribute();
 			final EObject expectedContainer;
 			if (diff.getSource() == DifferenceSource.LEFT) {
@@ -821,9 +851,14 @@ public class DefaultConflictDetector implements IConflictDetector {
 
 		/**
 		 * Checks if the given {@link Diff diff1} can be in conflict with the given {@link Diff diff2}.
-		 * Notably, we don't need to try and detect a conflict between two diffs if they one and the same or
-		 * if they have already been detected as a conflicting couple. Likewise, there can be no conflict if
-		 * the two diffs originate from the same side.
+		 * <p>
+		 * Notably, we don't need to try and detect a conflict between two diffs if they're one and the same
+		 * or if they have already been detected as a conflicting couple. Likewise, there can be no conflict
+		 * if the two diffs originate from the same side.
+		 * </p>
+		 * <p>
+		 * bug 381143 : we'll also remove any containment deletion diff on other Matches from here.
+		 * </p>
 		 * 
 		 * @param diff1
 		 *            First of the two differences to consider for conflict detection.
@@ -837,7 +872,178 @@ public class DefaultConflictDetector implements IConflictDetector {
 			}
 			final Conflict conflict = diff1.getConflict();
 
-			return conflict == null || !conflict.getDifferences().contains(diff2);
+			boolean canConflict = false;
+			if (conflict == null || !conflict.getDifferences().contains(diff2)) {
+				if (diff1.getMatch() != diff2.getMatch() && diff2 instanceof ReferenceChange
+						&& ((ReferenceChange)diff2).getReference().isContainment()) {
+					canConflict = !isDeleteOrUnsetDiff(diff2.getMatch().getComparison(), diff2);
+				} else {
+					canConflict = true;
+				}
+			}
+			return canConflict;
+		}
+	}
+
+	/**
+	 * A custom iterator that will walk a Match->submatch tree, and allow iteration over the Diffs of these
+	 * Matches.
+	 * <p>
+	 * Since we're walking over Matches but returning Diffs, this is not a good candidate for guava's filters.
+	 * We're providing the custom {@link DiffTreeIterator#setFilter(Predicate)} and
+	 * {@link DiffTreeIterator#setPruningFilter(Predicate)} to allow for filtering or pruning the the
+	 * iteration.
+	 * </p>
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
+	private static class DiffTreeIterator implements Iterator<Diff> {
+		/**
+		 * The tree iterator that will walk over our Match tree. Some of the paths can be pruned through the
+		 * use of a {@link #pruningFilter}.
+		 */
+		private final TreeIterator<Match> subMatchIterator;
+
+		/** An iterator over the differences of the current Match. */
+		private Iterator<Diff> diffIterator;
+
+		/** Current match. */
+		private Match current;
+
+		/** The Diff that will be returned by the next call to {@link #next()}. */
+		private Diff nextDiff;
+
+		/** Only Diffs that meet this criterion will be returned by this iterator. */
+		private Predicate<? super Diff> filter = Predicates.alwaysTrue();
+
+		/**
+		 * This particular filter can be used in order to prune a given Match and all of its differences and
+		 * sub-differences.
+		 */
+		private Predicate<? super Match> pruningFilter = Predicates.alwaysFalse();
+
+		/**
+		 * Constructs our iterator given the root of the Match tree to iterate over.
+		 * 
+		 * @param start
+		 *            Starting match of the tree we'll iterate over.
+		 */
+		public DiffTreeIterator(Match start) {
+			this.current = start;
+			this.subMatchIterator = new SubMatchIterator(start);
+			this.diffIterator = start.getDifferences().iterator();
+		}
+
+		/**
+		 * Sets the criterion that Diffs must meet to be returned by this iterator.
+		 * 
+		 * @param filter
+		 *            The filter differences must meet.
+		 */
+		public void setFilter(Predicate<? super Diff> filter) {
+			this.filter = filter;
+		}
+
+		/**
+		 * Sets the pruning filter for this iterator. Any Match that meets this criterion will be pruned along
+		 * with all of its differences and sub-differences.
+		 * 
+		 * @param pruningFilter
+		 *            The pruning filter for this iterator.
+		 */
+		public void setPruningFilter(Predicate<? super Match> pruningFilter) {
+			this.pruningFilter = pruningFilter;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see java.util.Iterator#hasNext()
+		 */
+		public boolean hasNext() {
+			if (nextDiff != null) {
+				return true;
+			}
+			if (!diffIterator.hasNext()) {
+				computeNextMatch();
+			}
+			while (nextDiff == null && diffIterator.hasNext()) {
+				final Diff next = diffIterator.next();
+				if (filter.apply(next)) {
+					nextDiff = next;
+				}
+			}
+			return nextDiff != null;
+		}
+
+		/**
+		 * Computes the next match within the sub-match tree, pruning those that may meet
+		 * {@link #pruningFilter}.
+		 */
+		private void computeNextMatch() {
+			final Match old = current;
+			while (current == old && subMatchIterator.hasNext()) {
+				final Match next = subMatchIterator.next();
+				if (pruningFilter.apply(next)) {
+					subMatchIterator.prune();
+				} else {
+					current = next;
+					diffIterator = current.getDifferences().iterator();
+				}
+			}
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see java.util.Iterator#next()
+		 */
+		public Diff next() {
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			}
+			final Diff next = nextDiff;
+			nextDiff = null;
+			return next;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see java.util.Iterator#remove()
+		 */
+		public void remove() {
+			diffIterator.remove();
+		}
+	}
+
+	/**
+	 * A custom TreeIterator that will iterate over the Match->submatch tree.
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
+	private static class SubMatchIterator extends AbstractTreeIterator<Match> {
+		/** Generated SUID. */
+		private static final long serialVersionUID = -1789806135599824529L;
+
+		/**
+		 * Constructs an iterator given the root of its tree.
+		 * 
+		 * @param start
+		 *            Starting match of the tree we'll iterate over.
+		 */
+		public SubMatchIterator(Match start) {
+			super(start);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.common.util.AbstractTreeIterator#getChildren(java.lang.Object)
+		 */
+		@Override
+		protected Iterator<? extends Match> getChildren(Object obj) {
+			return ((Match)obj).getSubmatches().iterator();
 		}
 	}
 }

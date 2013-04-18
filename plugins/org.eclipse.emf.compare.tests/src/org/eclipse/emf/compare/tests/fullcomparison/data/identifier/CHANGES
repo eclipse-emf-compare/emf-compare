@@ -103,7 +103,8 @@ Expected Differences
 	
 	Conflicts on :
 	1 and 15 : Not a generic conflict, relies on ecore-specific business rules : enum literals of the same enum with the same 'value'.
-	8, 31, 45, 19, 32 and 46 : REAL : locally deleted Periodical. However, we've remotely set "Periodical" as the super-type of Magazine. REAL conflict. We've removed title both locally and remotely, which is a PSEUDO conflict, but "nested" within the REAL one since it depends on it. 
+	8, 19 and 23 : REAL : locally deleted Periodical. However, we've remotely set "Periodical" as the super-type of Magazine.
+	31, 45, 32 and 46 : PSEUDO : We've removed title both locally and remotely, which is a PSEUDO conflict. 
 	12 and 27 : REAL : remote renaming of a locally deleted attribute
 	14 and 28 : REAL : renaming to different values
 	29, 30, 33 and 34 : PSEUDO : BookOnTape.reader removed from both sides, and thus its type unset on both sides.

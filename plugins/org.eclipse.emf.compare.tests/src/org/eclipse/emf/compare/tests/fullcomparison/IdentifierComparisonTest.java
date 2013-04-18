@@ -22,12 +22,17 @@ import static org.eclipse.emf.compare.tests.framework.EMFCompareAssert.assertCha
 import static org.eclipse.emf.compare.tests.framework.EMFCompareAssert.assertRemoved;
 import static org.eclipse.emf.compare.tests.framework.EMFCompareAssert.assertRemovedFromReference;
 
+import com.google.common.collect.Lists;
+
 import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.EMFCompareTestBase;
@@ -35,10 +40,12 @@ import org.eclipse.emf.compare.tests.framework.IdentifierMatchValidator;
 import org.eclipse.emf.compare.tests.framework.NotifierTuple;
 import org.eclipse.emf.compare.tests.framework.junit.EMFCompareTestRunner;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.BeforeMatch;
+import org.eclipse.emf.compare.tests.framework.junit.annotation.ConflictTest;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.DiffTest;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.MatchTest;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.UseCase;
 import org.eclipse.emf.compare.tests.fullcomparison.data.identifier.IdentifierMatchInputData;
+import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.runner.RunWith;
@@ -244,7 +251,129 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 					"length", DifferenceSource.LEFT);
 		}
 
-		// We should have no more differences that those
+		// We should have no more differences than those
 		assertTrue(differences.isEmpty());
+	}
+
+	@ConflictTest
+	public void testIdentifierConflictTest(@SuppressWarnings("unused") IComparisonScope scope,
+			Comparison comparison) {
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		if (!comparison.isThreeWay()) {
+			assertTrue(conflicts.isEmpty());
+			return;
+		}
+
+		assertEquals(5, conflicts.size());
+
+		Conflict periodicalConflict = null;
+		Conflict titleConflict = null;
+		Conflict lastNameConflict = null;
+		Conflict minutesLengthConflict = null;
+		Conflict readerConflict = null;
+
+		for (Conflict conflict : conflicts) {
+			for (Diff diff : conflict.getDifferences()) {
+				boolean breakLoop = false;
+				final Match match = diff.getMatch();
+				if (isMatchOf(match, "Periodical") && conflict.getDifferences().size() == 3) {
+					periodicalConflict = conflict;
+					breakLoop = true;
+				} else if (isMatchOf(match, "Periodical")) {
+					titleConflict = conflict;
+					breakLoop = true;
+				} else if (isMatchOf(match, "Person")) {
+					lastNameConflict = conflict;
+					breakLoop = true;
+				} else if (isMatchOf(match, "BookOnTape")) {
+					readerConflict = conflict;
+					breakLoop = true;
+				} else if (isMatchOf(match, "minutesLength")) {
+					minutesLengthConflict = conflict;
+					breakLoop = true;
+				}
+				if (breakLoop) {
+					break;
+				}
+			}
+		}
+
+		assertNotNull(periodicalConflict);
+		assertNotNull(titleConflict);
+		assertNotNull(lastNameConflict);
+		assertNotNull(minutesLengthConflict);
+		assertNotNull(readerConflict);
+
+		// These classic asserts will make the compiler happy.
+		assert periodicalConflict != null;
+		assert titleConflict != null;
+		assert lastNameConflict != null;
+		assert minutesLengthConflict != null;
+		assert readerConflict != null;
+
+		final List<Diff> periodicalDiffs = Lists.newArrayList(periodicalConflict.getDifferences());
+		assertSame(ConflictKind.REAL, periodicalConflict.getKind());
+		assertRemoved(periodicalDiffs, "extlibrary.Periodical", DifferenceSource.LEFT);
+		assertAddedToReference(periodicalDiffs, "extlibrary.Periodical", "eSuperTypes",
+				"extlibrary.TitledItem", DifferenceSource.RIGHT);
+		assertAddedToReference(periodicalDiffs, "extlibrary.Magazine", "eSuperTypes",
+				"extlibrary.Periodical", DifferenceSource.RIGHT);
+		assertTrue(periodicalDiffs.isEmpty());
+
+		final List<Diff> nameDiffs = Lists.newArrayList(lastNameConflict.getDifferences());
+		assertSame(ConflictKind.REAL, lastNameConflict.getKind());
+		assertRemoved(nameDiffs, "extlibrary.Person.lastName", DifferenceSource.LEFT);
+		assertChangedAttribute(nameDiffs, "extlibrary.Person.familyName", "name", "lastName", "familyName",
+				DifferenceSource.RIGHT);
+		assertTrue(nameDiffs.isEmpty());
+
+		final List<Diff> lengthDiffs = Lists.newArrayList(minutesLengthConflict.getDifferences());
+		assertSame(ConflictKind.REAL, minutesLengthConflict.getKind());
+		assertChangedAttribute(lengthDiffs, "extlibrary.AudioVisualItem.length", "name", "minutesLength",
+				"length", DifferenceSource.LEFT);
+		assertChangedAttribute(lengthDiffs, "extlibrary.AudioVisualItem.length", "name", "minutesLength",
+				"minutes", DifferenceSource.RIGHT);
+		assertTrue(lengthDiffs.isEmpty());
+
+		final List<Diff> titleDiffs = Lists.newArrayList(titleConflict.getDifferences());
+		assertSame(ConflictKind.PSEUDO, titleConflict.getKind());
+		assertRemoved(titleDiffs, "extlibrary.Periodical.title", DifferenceSource.LEFT);
+		assertChangedReference(titleDiffs, "extlibrary.Periodical.title", "eType", "ecore.EString", null,
+				DifferenceSource.LEFT);
+		assertChangedReference(titleDiffs, "extlibrary.Periodical.title", "eType", "ecore.EString", null,
+				DifferenceSource.RIGHT);
+		assertRemoved(titleDiffs, "extlibrary.Periodical.title", DifferenceSource.RIGHT);
+		assertTrue(titleDiffs.isEmpty());
+
+		final List<Diff> readerDiffs = Lists.newArrayList(readerConflict.getDifferences());
+		assertSame(ConflictKind.PSEUDO, readerConflict.getKind());
+		assertRemoved(readerDiffs, "extlibrary.BookOnTape.reader", DifferenceSource.LEFT);
+		assertRemoved(readerDiffs, "extlibrary.BookOnTape.reader", DifferenceSource.RIGHT);
+		assertChangedReference(readerDiffs, "extlibrary.BookOnTape.reader", "eType", "extlibrary.Person",
+				null, DifferenceSource.LEFT);
+		assertChangedReference(readerDiffs, "extlibrary.BookOnTape.reader", "eType", "extlibrary.Person",
+				null, DifferenceSource.RIGHT);
+		assertTrue(readerDiffs.isEmpty());
+	}
+
+	private boolean isMatchOf(Match match, String name) {
+		boolean isMatch = false;
+		if (match.getLeft() instanceof ENamedElement) {
+			if (((ENamedElement)match.getLeft()).getName().equals(name)) {
+				isMatch = true;
+			}
+		}
+		if (!isMatch && match.getRight() instanceof ENamedElement) {
+			if (((ENamedElement)match.getRight()).getName().equals(name)) {
+				isMatch = true;
+			}
+		}
+		if (!isMatch && match.getOrigin() instanceof ENamedElement) {
+			if (((ENamedElement)match.getOrigin()).getName().equals(name)) {
+				isMatch = true;
+			}
+		}
+		return isMatch;
 	}
 }

@@ -18,6 +18,7 @@ import junit.framework.Assert;
 
 import org.eclipse.emf.compare.tests.framework.NotifierTuple;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.BeforeMatch;
+import org.eclipse.emf.compare.tests.framework.junit.annotation.ConflictTest;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.DiffTest;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.MatchTest;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.UseCase;
@@ -89,6 +90,7 @@ public class UseCaseRunner extends BlockJUnit4ClassRunner {
 		final List<FrameworkMethod> allMethods = Lists.newArrayList(getTestClass().getAnnotatedMethods(
 				MatchTest.class));
 		allMethods.addAll(getTestClass().getAnnotatedMethods(DiffTest.class));
+		allMethods.addAll(getTestClass().getAnnotatedMethods(ConflictTest.class));
 
 		return allMethods;
 	}
@@ -115,6 +117,8 @@ public class UseCaseRunner extends BlockJUnit4ClassRunner {
 			result = new MatchStatement(testObject, useCaseStatement, befores, method);
 		} else if (method.getAnnotation(DiffTest.class) != null) {
 			result = new DiffStatement(testObject, useCaseStatement, method);
+		} else if (method.getAnnotation(ConflictTest.class) != null) {
+			result = new ConflictStatement(testObject, useCaseStatement, method);
 		} else {
 			// TODO merge test
 			result = null;
