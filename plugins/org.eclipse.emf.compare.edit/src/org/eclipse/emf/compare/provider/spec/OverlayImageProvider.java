@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
-import static com.google.common.collect.Iterables.any;
-import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Lists.newArrayList;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,7 +24,6 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedImage;
 
 /**
@@ -142,66 +137,71 @@ public class OverlayImageProvider {
 	// Nothing here has to be externalized
 	@SuppressWarnings("nls")
 	private String getImageOverlay(Match match) {
-		String path = null;
-		final EObject ancestor = match.getOrigin();
-		final EObject left = match.getLeft();
-		final EObject right = match.getRight();
-
-		final Iterable<Diff> differences = match.getAllDifferences();
-
-		if (match.getComparison().isThreeWay()) {
-			if (any(differences, hasConflict(ConflictKind.REAL))) {
-				path = "confinoutchg_ov.png";
-			} else if (any(differences, hasConflict(ConflictKind.PSEUDO))) {
-				path = "pconfinoutchg_ov";
-			} else if (ancestor == null) {
-				if (right == null) {
-					path = "r_outadd_ov";
-				} else if (left == null) {
-					path = "r_inadd_ov";
-				} else {
-					// pseudo conflict addition
-					// TODO we filter this by default, what to do if the filter is off?
-				}
-			} else if (left == null) {
-				if (right != null) {
-					path = "r_outdel_ov";
-				} else {
-					// pseudo conflict deletion
-					// TODO we filter this by default, what to do if the filter is off?
-				}
-			} else if (right == null) {
-				path = "r_indel_ov";
-			} else {
-				boolean hasLeftDiffs = any(differences, fromSide(DifferenceSource.LEFT));
-				boolean hasRightDiffs = any(differences, fromSide(DifferenceSource.RIGHT));
-
-				if (hasLeftDiffs && hasRightDiffs) {
-					path = "r_inoutchg_ov";
-				} else if (hasLeftDiffs) {
-					path = "r_outchg_ov";
-				} else if (hasRightDiffs) {
-					path = "r_inchg_ov";
-				}
-			}
-		} else {
-			if (left == null) {
-				path = "del_ov";
-			} else if (right == null) {
-				path = "add_ov";
-			} else if (!isEmpty(differences)) {
-				path = "chg_ov";
-			}
-		}
-
-		String ret = null;
-		if (path != null) {
-			ret = "full/ovr16/" + path;
-		}
-		return ret;
+		// String path = null;
+		// final EObject ancestor = match.getOrigin();
+		// final EObject left = match.getLeft();
+		// final EObject right = match.getRight();
+		//
+		// final Iterable<Diff> differences = match.getAllDifferences();
+		//
+		// if (match.getComparison().isThreeWay()) {
+		// if (any(differences, hasConflict(ConflictKind.REAL))) {
+		// path = "confinoutchg_ov.png";
+		// } else if (any(differences, hasConflict(ConflictKind.PSEUDO))) {
+		// path = "pconfinoutchg_ov";
+		// } else if (ancestor == null) {
+		// if (right == null) {
+		// path = "r_outadd_ov";
+		// } else if (left == null) {
+		// path = "r_inadd_ov";
+		// } else {
+		// // pseudo conflict addition
+		// // TODO we filter this by default, what to do if the filter is off?
+		// }
+		// } else if (left == null) {
+		// if (right != null) {
+		// path = "r_outdel_ov";
+		// } else {
+		// // pseudo conflict deletion
+		// // TODO we filter this by default, what to do if the filter is off?
+		// }
+		// } else if (right == null) {
+		// path = "r_indel_ov";
+		// } else {
+		// boolean hasLeftDiffs = any(differences, fromSide(DifferenceSource.LEFT));
+		// boolean hasRightDiffs = any(differences, fromSide(DifferenceSource.RIGHT));
+		//
+		// if (hasLeftDiffs && hasRightDiffs) {
+		// path = "r_inoutchg_ov";
+		// } else if (hasLeftDiffs) {
+		// path = "r_outchg_ov";
+		// } else if (hasRightDiffs) {
+		// path = "r_inchg_ov";
+		// }
+		// }
+		// } else {
+		// if (left == null) {
+		// path = "del_ov";
+		// } else if (right == null) {
+		// path = "add_ov";
+		// } else if (!isEmpty(differences)) {
+		// path = "chg_ov";
+		// }
+		// }
+		//
+		// String ret = null;
+		// if (path != null) {
+		// ret = "full/ovr16/" + path;
+		// }
+		return "full/ovr16/match_ov.png";
 	}
 
 	private final class ComposedImageExtension extends ComposedImage {
+
+		/**
+		 * 
+		 */
+		private static final int X_OFFSET = 10;
 
 		/**
 		 * @param images
@@ -219,7 +219,7 @@ public class OverlayImageProvider {
 		public List<Point> getDrawPoints(Size size) {
 			List<ComposedImage.Point> result = super.getDrawPoints(size);
 			if (result.size() > 1) {
-				result.get(1).x = 12;
+				result.get(1).x = X_OFFSET;
 				result.get(1).y = 2;
 			}
 			return result;

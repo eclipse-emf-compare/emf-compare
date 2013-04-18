@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.provider.spec;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
+import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Iterables.transform;
@@ -28,6 +29,7 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
@@ -37,6 +39,8 @@ import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -282,7 +286,13 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 	 * @since 3.0
 	 */
 	public IStyledString.IComposedStyledString getStyledText(Object object) {
-		return new ComposedStyledString(getText(object));
+		Match match = (Match)object;
+		ComposedStyledString styledString = new ComposedStyledString();
+		if (any(match.getAllDifferences(), EMFComparePredicates.hasState(DifferenceState.UNRESOLVED))) {
+			styledString.append("> ", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+		}
+		styledString.append(getText(object));
+		return styledString;
 	}
 
 	/**

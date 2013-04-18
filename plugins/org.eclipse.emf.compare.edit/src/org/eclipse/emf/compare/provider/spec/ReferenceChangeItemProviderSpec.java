@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.provider.spec;
 
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -31,6 +32,7 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
@@ -243,8 +245,9 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 					} else if (EMFComparePredicates.hasConflict(ConflictKind.REAL).apply(diff)) {
 						ret = true;
 					} else if (EMFComparePredicates.hasConflict(ConflictKind.PSEUDO).apply(diff)) {
-						ret = !(diff instanceof ReferenceChange) || (diff instanceof ReferenceChange
-								&& ((ReferenceChange)diff).getReference().isContainment());
+						ret = !(diff instanceof ReferenceChange)
+								|| (diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference()
+										.isContainment());
 					} else {
 						ret = true;
 					}
@@ -320,7 +323,21 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 
 		final String referenceText = getReferenceText(refChange);
 
-		ComposedStyledString ret = new ComposedStyledString(valueText);
+		ComposedStyledString ret = new ComposedStyledString();
+
+		if (refChange.getReference().isContainment()) {
+			EObject value = refChange.getValue();
+			Match match = refChange.getMatch().getComparison().getMatch(value);
+			if (match != null) {
+				Iterable<Diff> subDifferences = match.getAllDifferences();
+				if (refChange.getState() != DifferenceState.UNRESOLVED
+						&& any(subDifferences, EMFComparePredicates.hasState(DifferenceState.UNRESOLVED))) {
+					ret.append("> ", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+				}
+			}
+		}
+
+		ret.append(valueText);
 		ret.append(" [" + referenceText, Style.DECORATIONS_STYLER); //$NON-NLS-1$
 
 		switch (refChange.getKind()) {
