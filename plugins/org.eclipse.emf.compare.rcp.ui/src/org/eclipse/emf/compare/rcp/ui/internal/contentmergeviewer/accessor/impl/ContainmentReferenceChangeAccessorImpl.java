@@ -12,15 +12,11 @@ package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl
 
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.or;
-import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
-import static com.google.common.collect.Iterables.transform;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -72,8 +68,11 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 		EObject diffValue = (EObject)MergeViewerUtil.getDiffValue(initialDiff);
 		Match match = getComparison().getMatch(diffValue);
 
-		return new MergeViewerItem.Container(getComparison(), getInitialDiff(), match, getSide(),
-				getAdapterFactory());
+		if (match != null) {
+			return new MergeViewerItem.Container(getComparison(), getInitialDiff(), match, getSide(),
+					getAdapterFactory());
+		}
+		return null;
 	}
 
 	/**
@@ -94,23 +93,6 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 
 		return ret.build();
 	}
-
-	protected Iterable<? extends IMergeViewerItem> getAllItems() {
-		return concat(transform(getItems(), SELF_AND_ALL_ITEMS));
-
-	}
-
-	private static final Function<IMergeViewerItem, Iterable<? extends IMergeViewerItem>> SELF_AND_ALL_ITEMS = new Function<IMergeViewerItem, Iterable<? extends IMergeViewerItem>>() {
-		public Iterable<? extends IMergeViewerItem> apply(IMergeViewerItem item) {
-			if (item instanceof IMergeViewerItem.Container) {
-				List<IMergeViewerItem> children = Arrays.asList(((IMergeViewerItem.Container)item)
-						.getChildren());
-				return concat(ImmutableList.of(item), concat(transform(children, SELF_AND_ALL_ITEMS)));
-			} else {
-				return ImmutableList.of(item);
-			}
-		}
-	};
 
 	/**
 	 * {@inheritDoc}
