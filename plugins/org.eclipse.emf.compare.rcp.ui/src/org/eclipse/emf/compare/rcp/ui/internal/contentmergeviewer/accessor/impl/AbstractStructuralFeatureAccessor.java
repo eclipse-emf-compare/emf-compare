@@ -11,20 +11,15 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.filter;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IStructuralFeatureAccessor;
@@ -133,9 +128,7 @@ public abstract class AbstractStructuralFeatureAccessor implements IStructuralFe
 	protected ImmutableList<Diff> computeDifferences() {
 		List<Diff> siblingDifferences = fOwnerMatch.getDifferences();
 		// We'll display all diffs on the same reference, excluding the pseudo conflicts.
-		Predicate<? super Diff> diffFilter = and(onFeature(fStructuralFeature.getName()),
-				not(hasConflict(ConflictKind.PSEUDO)));
-		return ImmutableList.copyOf(filter(siblingDifferences, diffFilter));
+		return ImmutableList.copyOf(filter(siblingDifferences, onFeature(fStructuralFeature.getName())));
 	}
 
 	/**
