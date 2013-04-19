@@ -769,7 +769,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		}
 
 		/** Registry of created phantoms, indexed by difference. */
-		private final Map<Diff, Phantom> fPhantomRegistry = new HashMap<Diff, Phantom>();
+		private final Map<Diff, Phantom> fPhantomRegistry = Collections
+				.synchronizedMap(new HashMap<Diff, Phantom>());
 
 		/** Predicate witch checks that the given difference is an ADD or DELETE of a graphical object. */
 		private Predicate<Diff> isAddOrDelete = and(instanceOf(DiagramDiff.class), or(
@@ -1325,15 +1326,20 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.IDecoratorManager#hideAll()
 		 */
 		public void hideAll() {
-			Iterator<Phantom> visiblePhantoms = Iterators.filter(fPhantomRegistry.values().iterator(),
-					new Predicate<Phantom>() {
-						public boolean apply(Phantom phantom) {
-							return phantom.getFigure().getParent() != null;
-						}
-					});
-			while (visiblePhantoms.hasNext()) {
-				Phantom phantom = (Phantom)visiblePhantoms.next();
-				handleDecorator(phantom, false, true);
+			synchronized(fPhantomRegistry) {
+				Collection<Phantom> phantoms = fPhantomRegistry.values();
+				synchronized(phantoms) {
+					Iterator<Phantom> visiblePhantoms = Iterators.filter(phantoms.iterator(),
+							new Predicate<Phantom>() {
+								public boolean apply(Phantom phantom) {
+									return phantom.getFigure().getParent() != null;
+								}
+							});
+					while (visiblePhantoms.hasNext()) {
+						Phantom phantom = (Phantom)visiblePhantoms.next();
+						handleDecorator(phantom, false, true);
+					}
+				}
 			}
 		}
 	}
@@ -1381,7 +1387,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		}
 
 		/** Registry of created markers, indexed by difference. */
-		private Map<Diff, List<Marker>> fMarkerRegistry = new HashMap<Diff, List<Marker>>();
+		private Map<Diff, List<Marker>> fMarkerRegistry = Collections
+				.synchronizedMap(new HashMap<Diff, List<Marker>>());
 
 		/**
 		 * {@inheritDoc}
@@ -1439,7 +1446,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			if (marker != null) {
 				List<Marker> markers = fMarkerRegistry.get(diff);
 				if (markers == null) {
-					markers = new ArrayList<Marker>();
+					markers = Collections.synchronizedList(new ArrayList<Marker>());
 					fMarkerRegistry.put(diff, markers);
 				}
 				markers.add(marker);
@@ -1563,15 +1570,22 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.IDecoratorManager#hideAll()
 		 */
 		public void hideAll() {
-			Iterator<Marker> visibleMarkers = Iterators.filter(Iterables.concat(fMarkerRegistry.values())
-					.iterator(), new Predicate<Marker>() {
-				public boolean apply(Marker marker) {
-					return marker.getFigure().getParent() != null;
+			synchronized(fMarkerRegistry) {
+				Collection<List<Marker>> listMarkers = fMarkerRegistry.values();
+				List<Marker> markers = Lists.newArrayList(Iterables.concat(listMarkers));
+				List<Marker> sMarkers = Collections.synchronizedList(markers);
+				synchronized(sMarkers) {
+					Iterator<Marker> visibleMarkers = Iterators.filter(sMarkers.iterator(),
+							new Predicate<Marker>() {
+								public boolean apply(Marker marker) {
+									return marker.getFigure().getParent() != null;
+								}
+							});
+					while (visibleMarkers.hasNext()) {
+						Marker marker = (Marker)visibleMarkers.next();
+						handleDecorator(marker, false, true);
+					}
 				}
-			});
-			while (visibleMarkers.hasNext()) {
-				Marker marker = (Marker)visibleMarkers.next();
-				handleDecorator(marker, false, true);
 			}
 		}
 
@@ -1859,7 +1873,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 							DiagramDiff diagramDiff = diffs.next();
 							fDecoratorsManager.hideAll();
 							fDecoratorsManager.removeAll(); // force the computation for the next
-															// decorator reveal.
+							// decorator reveal.
 						}
 					}
 				}
