@@ -188,6 +188,6 @@ public class StereotypeApplicationChangeItemProviderSpec extends StereotypeAppli
 			targetLabel += AdapterFactoryUtil.getText(getRootAdapterFactory(), target);
 		}
 
-		return stereotypeText.append(" [" + targetLabel + " " + action + "]", Style.DECORATIONS_STYLER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return stereotypeText.append(" [stereotype " + action + "]", Style.DECORATIONS_STYLER); //$NON-NLS-1$ //$NON-NLS-2$ 
 	}
 }

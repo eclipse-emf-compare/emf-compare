@@ -359,17 +359,19 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 				&& input.getKind() == DifferenceKind.DELETE;
 	}
 
-	/**
-	 * {@inheritDoc}<br>
-	 * The given reference change is related to a macroscopic CHANGE if discriminants are found from the
-	 * business impacted object.
-	 * 
-	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#isRelatedToAnExtensionChange(org.eclipse.emf.compare.ReferenceChange)
-	 */
-	@Override
-	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
-		return !getDiscriminants(MatchUtil.getContainer(input.getMatch().getComparison(), input)).isEmpty();
-	}
+	// No UML macroscopic change anymore for any changes on discriminants.
+	// /**
+	// * {@inheritDoc}<br>
+	// * The given reference change is related to a macroscopic CHANGE if discriminants are found from the
+	// * business impacted object.
+	// *
+	// * @see
+	// org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#isRelatedToAnExtensionChange(org.eclipse.emf.compare.ReferenceChange)
+	// */
+	// @Override
+	// protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
+	// return !getDiscriminants(MatchUtil.getContainer(input.getMatch().getComparison(), input)).isEmpty();
+	// }
 
 	// TODO: Add isRelatedToAnExtensionChange(AttributeChange input)
 
