@@ -144,7 +144,9 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider imp
 		if (matchResource.eContainer() instanceof Comparison
 				&& ((Comparison)matchResource.eContainer()).isThreeWay()) {
 			final String originURI = matchResource.getOriginURI();
-			text += " (" + originURI.substring(commonBase.length()) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			if (originURI != null) {
+				text += " (" + originURI.substring(commonBase.length()) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			}
 		}
 		return text;
 	}
