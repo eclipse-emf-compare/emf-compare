@@ -3,8 +3,8 @@ package org.eclipse.emf.compare.uml2.tests.dependency;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
@@ -87,8 +87,8 @@ public class ChangeDependencyTest extends AbstractTest {
 	private void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
-		// We should have no less and no more than 2 differences
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		// We should have no less and no more than 1 differences
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
 
 		Predicate<? super Diff> addSupplierInDependencyDescription = null;
 
@@ -106,12 +106,14 @@ public class ChangeDependencyTest extends AbstractTest {
 		assertNotNull(addSupplierInDependency);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(DependencyChange.class)));
+		// No extension anymore
+		assertSame(Integer.valueOf(0), count(differences, instanceOf(DependencyChange.class)));
 		Diff changeUMLDependency = Iterators.find(differences.iterator(), and(
-				instanceOf(DependencyChange.class), ofKind(DifferenceKind.CHANGE)));
-		assertNotNull(changeUMLDependency);
-		assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLDependency.getRefinedBy().size()));
-		assertTrue(changeUMLDependency.getRefinedBy().contains(addSupplierInDependency));
+				instanceOf(DependencyChange.class), ofKind(DifferenceKind.CHANGE)), null);
+		assertNull(changeUMLDependency);
+		// assertNotNull(changeUMLDependency);
+		// assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLDependency.getRefinedBy().size()));
+		// assertTrue(changeUMLDependency.getRefinedBy().contains(addSupplierInDependency));
 
 		// CHECK REQUIREMENT
 		assertSame(Integer.valueOf(0), Integer.valueOf(addSupplierInDependency.getRequires().size()));
