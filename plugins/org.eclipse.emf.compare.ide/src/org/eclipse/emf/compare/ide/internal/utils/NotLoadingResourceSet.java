@@ -48,6 +48,14 @@ import org.eclipse.emf.ecore.util.InternalEList;
 @Beta
 public final class NotLoadingResourceSet extends ResourceSetImpl {
 	/**
+	 * We provide this resource set with an initial set of resources that contains all "changed" fragments of
+	 * that logical model. We thus prevent any loading of further resources during that initial resolving.
+	 * However, merge and display operations may need to load more resources, and we don't want to prevent
+	 * that.
+	 */
+	private boolean initialResolving = true;
+
+	/**
 	 * Constructs a resource set to contain the resources described by the given traversal.
 	 * 
 	 * @param traversal
@@ -64,6 +72,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 		for (Resource res : resourcesCopy) {
 			resolve(res);
 		}
+		initialResolving = false;
 	}
 
 	/**
@@ -74,12 +83,14 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 	 */
 	@Override
 	public Resource getResource(URI uri, boolean loadOnDemand) {
-		ILoadOnDemandPolicy.Registry registry = EMFCompareRCPPlugin.getDefault()
-				.getLoadOnDemandPolicyRegistry();
-		if (registry.hasAnyAuthorizingPolicy(uri)) {
-			return super.getResource(uri, true);
+		if (initialResolving) {
+			ILoadOnDemandPolicy.Registry registry = EMFCompareRCPPlugin.getDefault()
+					.getLoadOnDemandPolicyRegistry();
+			if (registry.hasAnyAuthorizingPolicy(uri)) {
+				return super.getResource(uri, true);
+			}
 		}
-		return super.getResource(uri, false);
+		return super.getResource(uri, !initialResolving && loadOnDemand);
 	}
 
 	/**

@@ -192,6 +192,11 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 		final Match match = diff.getMatch();
 		final Comparison comparison = match.getComparison();
 		final Resource expectedContainer = findOrCreateTargetResource(match, rightToLeft);
+		if (expectedContainer == null) {
+			// TODO log
+			diff.setState(DifferenceState.UNRESOLVED);
+			return;
+		}
 
 		final EObject sourceValue;
 		if (rightToLeft) {
@@ -225,8 +230,7 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 			 * and it will obviously already contain the object since we detected the resource change. In such
 			 * a case, we do not want to erase the already existing object or copy a duplicate in the target
 			 * resource. We'll simply change the "to-be-modified" object to point to that already existing one
-			 * through proxification and re-resolution. This is costly and clumsy, but this use case should be
-			 * sufficiently rare to not be noticed, we only want it to be functional.
+			 * through proxification and re-resolution.
 			 */
 			((InternalEObject)expectedValue).eSetProxyURI(sourceURI);
 			if (expectedContainer.getResourceSet() != null) {
