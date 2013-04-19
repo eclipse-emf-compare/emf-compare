@@ -77,8 +77,11 @@ public class OverlayImageProvider {
 		} else if (comparison.isThreeWay()) {
 			// "png" needs explicit declaration, "gif" does not
 			String extension = "";
-			if (conflict != null && conflict.getKind() == ConflictKind.REAL) {
+			if (conflict != null) {
 				extension = ".png";
+				if (conflict.getKind() == ConflictKind.PSEUDO) {
+					path += "p";
+				}
 				path += "conf";
 				if (source == DifferenceSource.RIGHT) {
 					path += "r_";
@@ -137,62 +140,6 @@ public class OverlayImageProvider {
 	// Nothing here has to be externalized
 	@SuppressWarnings("nls")
 	private String getImageOverlay(Match match) {
-		// String path = null;
-		// final EObject ancestor = match.getOrigin();
-		// final EObject left = match.getLeft();
-		// final EObject right = match.getRight();
-		//
-		// final Iterable<Diff> differences = match.getAllDifferences();
-		//
-		// if (match.getComparison().isThreeWay()) {
-		// if (any(differences, hasConflict(ConflictKind.REAL))) {
-		// path = "confinoutchg_ov.png";
-		// } else if (any(differences, hasConflict(ConflictKind.PSEUDO))) {
-		// path = "pconfinoutchg_ov";
-		// } else if (ancestor == null) {
-		// if (right == null) {
-		// path = "r_outadd_ov";
-		// } else if (left == null) {
-		// path = "r_inadd_ov";
-		// } else {
-		// // pseudo conflict addition
-		// // TODO we filter this by default, what to do if the filter is off?
-		// }
-		// } else if (left == null) {
-		// if (right != null) {
-		// path = "r_outdel_ov";
-		// } else {
-		// // pseudo conflict deletion
-		// // TODO we filter this by default, what to do if the filter is off?
-		// }
-		// } else if (right == null) {
-		// path = "r_indel_ov";
-		// } else {
-		// boolean hasLeftDiffs = any(differences, fromSide(DifferenceSource.LEFT));
-		// boolean hasRightDiffs = any(differences, fromSide(DifferenceSource.RIGHT));
-		//
-		// if (hasLeftDiffs && hasRightDiffs) {
-		// path = "r_inoutchg_ov";
-		// } else if (hasLeftDiffs) {
-		// path = "r_outchg_ov";
-		// } else if (hasRightDiffs) {
-		// path = "r_inchg_ov";
-		// }
-		// }
-		// } else {
-		// if (left == null) {
-		// path = "del_ov";
-		// } else if (right == null) {
-		// path = "add_ov";
-		// } else if (!isEmpty(differences)) {
-		// path = "chg_ov";
-		// }
-		// }
-		//
-		// String ret = null;
-		// if (path != null) {
-		// ret = "full/ovr16/" + path;
-		// }
 		return "full/ovr16/match_ov.png";
 	}
 
