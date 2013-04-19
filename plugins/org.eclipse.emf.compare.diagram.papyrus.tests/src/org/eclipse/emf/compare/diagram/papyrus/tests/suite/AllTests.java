@@ -10,18 +10,15 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus.tests.suite;
 
-import java.awt.print.Paper;
-
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
-import org.eclipse.emf.compare.diagram.papyrus.tests.merge.IndividualMergeTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.merge.EdgeMergeTest;
 import org.eclipse.emf.compare.tests.suite.CompareTestSuite;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -40,7 +37,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({IndividualMergeTest.class})
+@SuiteClasses({EdgeMergeTest.class})
 public class AllTests {
 
 	/**

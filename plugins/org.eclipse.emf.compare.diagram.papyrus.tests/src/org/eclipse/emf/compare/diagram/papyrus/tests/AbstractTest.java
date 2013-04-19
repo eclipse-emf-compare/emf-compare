@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus.tests;
 
+import static junit.framework.Assert.assertEquals;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -17,21 +19,30 @@ import java.util.regex.Pattern;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor;
+import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.merge.CompareDiagramMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
+import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.compare.uml2.internal.merge.UMLMerger;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.UMLPostProcessor;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.uml2.uml.NamedElement;
 import org.junit.After;
 import org.junit.Before;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
 @SuppressWarnings("nls")
@@ -111,6 +122,111 @@ public abstract class AbstractTest {
 			result.next();
 		}
 		return Integer.valueOf(count);
+	}
+	
+	protected void diffsChecking(Comparison comparison, int totalDiffsNb, ExpectedStat ... expectedStats) {
+		List<Diff> differences = comparison.getDifferences();
+		assertEquals(totalDiffsNb, differences.size());
+		for (ExpectedStat expectedStat : expectedStats) {
+			Predicate<Diff> p = expectedStat.p;
+			int nb = expectedStat.nb;
+			int result = Collections2.filter(differences, p).size();
+			
+			String message = buildAssertMessage(differences, p);
+			
+			assertEquals(message, nb, result);
+		}
+	}
+
+	private String buildAssertMessage(List<Diff> differences, Predicate<Diff> p) {
+		Diff diff = Iterables.find(differences, p, null);
+		String message = "";
+		if (diff != null) {
+			EClass clazz = getElementClass(diff);
+			if (clazz != null) {
+				message = clazz.getName() + " from " + diff.eClass().getName();
+			}
+		}
+		return message;
+	}
+	
+	protected class ExpectedStat {
+		public Predicate<Diff> p;
+		public int nb;
+		public ExpectedStat(Predicate<Diff> p, int nb) {
+			this.p = p;
+			this.nb = nb;
+		}
+	}
+	
+	protected static Predicate<Diff> nameIs(final String name) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				if (input instanceof UMLDiff) {
+					EObject element = ((UMLDiff)input).getDiscriminant();
+					if (element instanceof NamedElement) {
+						String eltName = ((NamedElement)element).getName();
+						return name.equals(eltName);
+					}
+				}
+				return false;
+			}
+			
+		};
+	}
+	
+	protected static Predicate<Diff> elementNameIs(final String name) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				if (input instanceof DiagramDiff) {
+					EObject obj = ((DiagramDiff)input).getView();
+					if (obj instanceof View) {
+						EObject element = ((View)((DiagramDiff)input).getView()).getElement();
+						if (element instanceof NamedElement) {
+							String eltName = ((NamedElement)element).getName();
+							return name.equals(eltName);
+						}
+					}
+				}
+				return false;
+			}
+			
+		};
+	}
+	
+	protected static Predicate<Diff> valueIs(final EClass clazz) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				if (input instanceof ReferenceChange) {
+					return ((ReferenceChange)input).getValue().eClass() == clazz;
+				}
+				return false;
+			}
+			
+		};
+	}
+	
+	protected static Predicate<Diff> elementClassIs(final EClass clazz) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return getElementClass(input) == clazz;
+			}
+			
+		};
+	}
+	
+	protected static EClass getElementClass(Diff diff) {
+		if (diff instanceof DiagramDiff) {
+			EObject obj = ((DiagramDiff)diff).getView();
+			if (obj instanceof View) {
+				EObject element = ((View)obj).getElement();
+				return element.eClass();
+			}
+		} else if (diff instanceof UMLDiff) {
+			EObject obj = ((UMLDiff)diff).getDiscriminant();
+			return obj.eClass();		
+		}
+		return null;
 	}
 	
 	protected abstract DiagramInputData getInput();

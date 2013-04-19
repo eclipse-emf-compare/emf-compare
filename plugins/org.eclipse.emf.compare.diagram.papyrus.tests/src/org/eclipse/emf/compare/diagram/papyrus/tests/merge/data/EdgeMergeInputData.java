@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,7 +37,7 @@ import org.eclipse.uml2.uml.internal.resource.UMLResourceFactoryImpl;
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 @SuppressWarnings("nls")
-public class IndividualDiffInputData extends DiagramInputData {
+public class EdgeMergeInputData extends DiagramInputData {
 	
 	public Resource getA1EdgeChangeLeft() throws IOException {
 		return loadFromClassLoader("edges/a1/left.notation");
@@ -53,6 +53,46 @@ public class IndividualDiffInputData extends DiagramInputData {
 
 	public Resource getA2EdgeChangeRight() throws IOException {
 		return loadFromClassLoader("edges/a2/right.notation");
+	}
+	
+	public Resource getA3EdgeChangeLeft() throws IOException {
+		return loadFromClassLoader("edges/a3/left.notation");
+	}
+
+	public Resource getA3EdgeChangeRight() throws IOException {
+		return loadFromClassLoader("edges/a3/right.notation");
+	}
+	
+	public Resource getA4EdgeChangeLeft() throws IOException {
+		return loadFromClassLoader("edges/a4/left.notation");
+	}
+
+	public Resource getA4EdgeChangeRight() throws IOException {
+		return loadFromClassLoader("edges/a4/right.notation");
+	}
+	
+	public Resource getA5EdgeChangeLeft() throws IOException {
+		return loadFromClassLoader("edges/a5/left.notation");
+	}
+
+	public Resource getA5EdgeChangeRight() throws IOException {
+		return loadFromClassLoader("edges/a5/right.notation");
+	}
+	
+	public Resource getA6EdgeChangeLeft() throws IOException {
+		return loadFromClassLoader("edges/a6/left.notation");
+	}
+
+	public Resource getA6EdgeChangeRight() throws IOException {
+		return loadFromClassLoader("edges/a6/right.notation");
+	}
+	
+	public Resource getA7EdgeChangeLeft() throws IOException {
+		return loadFromClassLoader("edges/a7/left.notation");
+	}
+
+	public Resource getA7EdgeChangeRight() throws IOException {
+		return loadFromClassLoader("edges/a7/right.notation");
 	}
 	
 	@Override
