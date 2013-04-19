@@ -23,11 +23,14 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.eclipse.compare.IResourceProvider;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.internal.utils.NotLoadingResourceSet;
 import org.eclipse.emf.compare.ide.internal.utils.SyncResourceSet;
@@ -186,6 +189,33 @@ public final class EMFSynchronizationModel {
 	}
 
 	/**
+	 * This will be called in the case of a local comparison.
+	 * 
+	 * @param left
+	 *            Resource to load as the left side.
+	 * @param right
+	 *            Resource to load as the right side.
+	 * @param origin
+	 *            Resource to load as common ancestor of left and right, if any.
+	 * @return The resolved synchronization model.
+	 */
+	private static EMFSynchronizationModel loadLocal(IResource left, IResource right, IResource origin) {
+		final StorageTraversal leftTraversal = resolveTraversal(left);
+		final StorageTraversal rightTraversal = resolveTraversal(right);
+		final StorageTraversal originTraversal;
+		if (origin != null) {
+			originTraversal = resolveTraversal(origin);
+		} else {
+			originTraversal = new StorageTraversal(Sets.<IStorage> newLinkedHashSet());
+		}
+
+		final boolean leftEditable = !left.getResourceAttributes().isReadOnly();
+		final boolean rightEditable = !right.getResourceAttributes().isReadOnly();
+		return new EMFSynchronizationModel(leftTraversal, rightTraversal, originTraversal, leftEditable,
+				rightEditable);
+	}
+
+	/**
 	 * Creates a synchronization model by resolving the full logical model of the given elements.
 	 * 
 	 * @param subscriber
@@ -202,6 +232,17 @@ public final class EMFSynchronizationModel {
 	 */
 	public static EMFSynchronizationModel createSynchronizationModel(Subscriber subscriber,
 			ITypedElement left, ITypedElement right, ITypedElement origin) {
+		if (subscriber == null) {
+			// Is this a local comparison?
+			final IResource leftResource = findResource(left);
+			final IResource rightResource = findResource(right);
+
+			if (leftResource != null && rightResource != null) {
+				// assume origin is local or null
+				return loadLocal(leftResource, rightResource, findResource(origin));
+			}
+		}
+
 		final IStorage leftStorage = StreamAccessorStorage.fromTypedElement(left);
 		final IStorage rightStorage = StreamAccessorStorage.fromTypedElement(right);
 		final IStorage originStorage;
@@ -212,6 +253,62 @@ public final class EMFSynchronizationModel {
 		}
 
 		return createSynchronizationModel(subscriber, leftStorage, rightStorage, originStorage);
+	}
+
+	/**
+	 * Try and determine the resource of the given element.
+	 * 
+	 * @param element
+	 *            The element for which we need an {@link IResource}.
+	 * @return The resource corresponding to the given {@code element} if we could find it, <code>null</code>
+	 *         otherwise.
+	 */
+	private static IResource findResource(ITypedElement element) {
+		if (element == null) {
+			return null;
+		}
+
+		// Can we adapt it directly?
+		IResource resource = adaptAs(element, IResource.class);
+		if (resource == null) {
+			// We know about some types ...
+			if (element instanceof IResourceProvider) {
+				resource = ((IResourceProvider)element).getResource();
+			}
+		}
+
+		return resource;
+	}
+
+	/**
+	 * Tries and adapt the given <em>object</em> to an instance of the given class.
+	 * 
+	 * @param <T>
+	 *            Type to which we need to adapt <em>object</em>.
+	 * @param object
+	 *            The object we need to coerce to a given {@link Class}.
+	 * @param clazz
+	 *            Class to which we are to adapt <em>object</em>.
+	 * @return <em>object</em> cast to type <em>T</em> if possible, <code>null</code> if not.
+	 */
+	@SuppressWarnings("unchecked")
+	private static <T> T adaptAs(Object object, Class<T> clazz) {
+		if (object == null) {
+			return null;
+		}
+
+		T result = null;
+		if (clazz.isInstance(object)) {
+			result = (T)object;
+		} else if (object instanceof IAdaptable) {
+			result = (T)((IAdaptable)object).getAdapter(clazz);
+		}
+
+		if (result == null) {
+			result = (T)Platform.getAdapterManager().getAdapter(object, clazz);
+		}
+
+		return result;
 	}
 
 	public IComparisonScope createMinimizedScope() {
