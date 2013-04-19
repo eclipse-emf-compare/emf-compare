@@ -375,7 +375,9 @@ public class AttributeChangeMerger extends AbstractMerger {
 	 *            The diff we are currently merging.
 	 * @param rightToLeft
 	 *            Tells us the direction of this merge operation.
+	 * @deprecated this has been refactored into {@link #changeValue(AttributeChange, boolean)}.
 	 */
+	@Deprecated
 	protected void resetInTarget(AttributeChange diff, boolean rightToLeft) {
 		final Match match = diff.getMatch();
 		final EStructuralFeature attribute = diff.getAttribute();
