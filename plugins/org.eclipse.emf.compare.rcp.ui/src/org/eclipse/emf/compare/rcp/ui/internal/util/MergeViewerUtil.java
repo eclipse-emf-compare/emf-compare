@@ -200,13 +200,16 @@ public final class MergeViewerUtil {
 				if (diffResourceURI.equals(resourceURI.toString())) {
 					return resource;
 				} else if (side == MergeViewerSide.RIGHT
-						&& diffResourceURI.equals(matchResource.getLeftURI())) {
+						&& (diffResourceURI.equals(matchResource.getLeftURI()) || diffResourceURI
+								.equals(matchResource.getOriginURI()))) {
 					return resource;
 				} else if (side == MergeViewerSide.LEFT
-						&& diffResourceURI.equals(matchResource.getRightURI())) {
+						&& (diffResourceURI.equals(matchResource.getRightURI()) || diffResourceURI
+								.equals(matchResource.getOriginURI()))) {
 					return resource;
 				} else if (side == MergeViewerSide.ANCESTOR
-						&& diffResourceURI.equals(matchResource.getOriginURI())) {
+						&& (diffResourceURI.equals(matchResource.getLeftURI()) || diffResourceURI
+								.equals(matchResource.getRightURI()))) {
 					return resource;
 				}
 			}

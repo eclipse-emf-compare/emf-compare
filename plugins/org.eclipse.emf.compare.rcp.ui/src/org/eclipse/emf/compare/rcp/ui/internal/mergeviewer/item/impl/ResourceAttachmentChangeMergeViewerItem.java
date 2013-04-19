@@ -210,7 +210,6 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 				}
 				ret.add(realIndex, insertionPoint);
 			}
-			// }
 		}
 		return ret;
 	}
