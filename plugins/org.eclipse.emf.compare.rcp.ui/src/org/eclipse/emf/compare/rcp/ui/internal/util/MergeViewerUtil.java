@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
@@ -30,7 +29,6 @@ import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -38,18 +36,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 public final class MergeViewerUtil {
 
 	private MergeViewerUtil() {
-	}
-
-	public static Diff getDiffWithValue(Iterable<Diff> differences, Object value, MergeViewerSide side) {
-		Diff ret = null;
-		for (Diff diff : differences) {
-			Object valueOfDiff = getValueFromDiff(diff, side);
-			if (valueOfDiff == value) {
-				ret = diff;
-				break;
-			}
-		}
-		return ret;
 	}
 
 	public static List<?> getValues(Diff diff, MergeViewerSide side) {
@@ -148,21 +134,6 @@ public final class MergeViewerUtil {
 			}
 		}
 		return ret;
-	}
-
-	public static Object getParent(Object object, AdapterFactory adapterFactory) {
-		ITreeItemContentProvider treeItemContentProvider = (ITreeItemContentProvider)adapterFactory.adapt(
-				object, ITreeItemContentProvider.class);
-
-		return treeItemContentProvider != null ? treeItemContentProvider.getParent(object) : null;
-	}
-
-	public static Object[] getChildren(Object object, AdapterFactory adapterFactory) {
-		ITreeItemContentProvider treeItemContentProvider = (ITreeItemContentProvider)adapterFactory.adapt(
-				object, ITreeItemContentProvider.class);
-
-		return (treeItemContentProvider != null ? treeItemContentProvider.getChildren(object)
-				: Collections.EMPTY_LIST).toArray();
 	}
 
 	/**
