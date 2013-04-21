@@ -69,12 +69,22 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 
 		ResourceAttachmentChange resourceAttachmentChange = (ResourceAttachmentChange)object;
 		final EObject value;
-		switch (resourceAttachmentChange.getSource()) {
+		DifferenceSource source = resourceAttachmentChange.getSource();
+		DifferenceKind kind = resourceAttachmentChange.getKind();
+		switch (source) {
 			case LEFT:
-				value = resourceAttachmentChange.getMatch().getLeft();
+				if (kind == DifferenceKind.ADD) {
+					value = resourceAttachmentChange.getMatch().getLeft();
+				} else {
+					value = resourceAttachmentChange.getMatch().getRight();
+				}
 				break;
 			case RIGHT:
-				value = resourceAttachmentChange.getMatch().getRight();
+				if (kind == DifferenceKind.ADD) {
+					value = resourceAttachmentChange.getMatch().getRight();
+				} else {
+					value = resourceAttachmentChange.getMatch().getLeft();
+				}
 				break;
 			default:
 				value = null;
