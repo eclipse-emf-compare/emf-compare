@@ -94,6 +94,14 @@ public abstract class AbstractTest {
 		return comparison;
 	}
 	
+	protected Comparison buildComparison(Resource left, Resource right, Resource origin) {
+		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(),
+				right.getResourceSet(), origin.getResourceSet());
+		Comparison comparison = EMFCompare.builder()
+				.setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
+		return comparison;
+	}
+	
 	@After
 	public void after() {
 		if (getInput() != null && getInput().getSets() != null) {
@@ -196,13 +204,9 @@ public abstract class AbstractTest {
 	
 	protected static Predicate<Diff> valueIs(final EClass clazz) {
 		return new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				if (input instanceof ReferenceChange) {
-					return ((ReferenceChange)input).getValue().eClass() == clazz;
-				}
-				return false;
+			public boolean apply(Diff input) {	
+				return getValue(input) != null && getValue(input).eClass() == clazz;
 			}
-			
 		};
 	}
 	
@@ -215,16 +219,27 @@ public abstract class AbstractTest {
 		};
 	}
 	
-	protected static EClass getElementClass(Diff diff) {
+	protected static EObject getValue(Diff diff) {
 		if (diff instanceof DiagramDiff) {
-			EObject obj = ((DiagramDiff)diff).getView();
-			if (obj instanceof View) {
-				EObject element = ((View)obj).getElement();
+			return ((DiagramDiff)diff).getView();
+		} else if (diff instanceof UMLDiff) {
+			return ((UMLDiff)diff).getDiscriminant();
+		} else if (diff instanceof ReferenceChange) {
+			return ((ReferenceChange)diff).getValue();
+		}
+		return null;
+	}
+	
+	protected static EClass getElementClass(Diff diff) {
+		EObject obj = getValue(diff);
+		if (obj instanceof View) {
+			EObject element = ((View)obj).getElement();
+			if (element != null) {
 				return element.eClass();
 			}
-		} else if (diff instanceof UMLDiff) {
-			EObject obj = ((UMLDiff)diff).getDiscriminant();
-			return obj.eClass();		
+		}
+		if (obj != null) {
+			return obj.eClass();
 		}
 		return null;
 	}

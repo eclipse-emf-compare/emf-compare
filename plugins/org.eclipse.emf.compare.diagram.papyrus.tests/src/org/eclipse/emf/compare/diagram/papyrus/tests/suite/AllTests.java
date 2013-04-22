@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import junit.textui.TestRunner;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.EdgeMergeTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.merge.NodeMergeTest;
 import org.eclipse.emf.compare.tests.suite.CompareTestSuite;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -37,7 +38,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({EdgeMergeTest.class})
+@SuiteClasses({EdgeMergeTest.class, NodeMergeTest.class})
 public class AllTests {
 
 	/**
