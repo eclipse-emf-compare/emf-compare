@@ -40,13 +40,6 @@
     <tycho-version>0.17.0</tycho-version>
     <tycho-extras-version>0.17.0</tycho-extras-version>
   </properties>
-    
-  <pluginRepositories>
-    <pluginRepository>
-      <id>tycho-snapshots</id>
-      <url>https://oss.sonatype.org/content/groups/public/</url>
-    </pluginRepository>
-  </pluginRepositories>
 
   <modules>
     <!-- Update Site -->
