@@ -137,17 +137,26 @@ $${thirdPartyJarsDir}/ant-contrib.jar          = ${thirdPartyJarsDir}/ant-contri
 	</target>
 
 	<target name="main" depends="init,load.properties,init.properties">
-
+		<property name="build.drop.directory" location="${downloads.area}/downloads/drops/${version}/${build.qualifier}" />
+		
+		<condition property="promote.build">
+			<not>
+				<available file="${build.drop.directory}" type="dir"  />
+			</not>
+		</condition>
+		
 		<!-- publish into drops ( Zips ) -->
-		<antcall target="-publish.build.drops" inheritall="true" />
+		<antcall target="-publish.build.drops" inheritall="true" if="${promote.build}" />
 
 		<!-- publish p2 repository -->
-		<antcall target="-publish.build.repository" inheritall="true" />
+		<antcall target="-publish.build.repository" inheritall="true" if="${promote.build}" />
+	</target>
+	
+	<target name="exit.promoter">
+		<echo message="Nothing to promote." />
 	</target>
 
 	<target name="-publish.build.drops">
-		<property name="build.drop.directory" location="${downloads.area}/downloads/drops/${version}/${build.qualifier}" />
-
 		<delete dir="${build.drop.directory}" />
 		<mkdir dir="${build.drop.directory}" />
 
