@@ -11,14 +11,17 @@
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl;
 
 import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Iterables.size;
+import static com.google.common.collect.Iterables.tryFind;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -258,8 +261,15 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 				throw new IllegalStateException("Should not have more than one ReferenceChange on each Match"); //$NON-NLS-1$
 			} else {
 				ReferenceChange referenceChange = getFirst(containmentReferenceChanges, null);
-				ret = new MergeViewerItem.Container(fComparison, referenceChange, parentMatch, fSide,
-						fAdapterFactory);
+				if (referenceChange == null) {
+					Optional<Diff> rac = tryFind(parentMatch.getDifferences(),
+							instanceOf(ResourceAttachmentChange.class));
+					ret = new MergeViewerItem.Container(fComparison, rac.orNull(), parentMatch, fSide,
+							fAdapterFactory);
+				} else {
+					ret = new MergeViewerItem.Container(fComparison, referenceChange, parentMatch, fSide,
+							fAdapterFactory);
+				}
 			}
 		} else {
 			expectedValue = MergeViewerUtil.getEObject(parentMatch, fSide.opposite());

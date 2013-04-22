@@ -77,6 +77,15 @@ public class ResourceContentsAccessorImpl implements IResourceContentsAccessor {
 		Diff initialDiff = fDiff;
 		EObject diffValue = (EObject)MergeViewerUtil.getResourceAttachmentChangeValue(
 				(ResourceAttachmentChange)initialDiff, getSide());
+		if (diffValue == null && MergeViewerSide.ANCESTOR != getSide()) {
+			if (MergeViewerSide.LEFT == getSide()) {
+				diffValue = (EObject)MergeViewerUtil.getResourceAttachmentChangeValue(
+						(ResourceAttachmentChange)initialDiff, MergeViewerSide.RIGHT);
+			} else {
+				diffValue = (EObject)MergeViewerUtil.getResourceAttachmentChangeValue(
+						(ResourceAttachmentChange)initialDiff, MergeViewerSide.LEFT);
+			}
+		}
 		Match match = getComparison().getMatch(diffValue);
 
 		if (match != null) {
