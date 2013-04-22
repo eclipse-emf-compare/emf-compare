@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 
 /**
@@ -220,32 +219,6 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 			match.setRight(expectedValue);
 		}
 
-		// double-check : is our target already present in the target resource?
-		final URI sourceURI = EcoreUtil.getURI(sourceValue);
-		if (expectedContainer.getEObject(sourceURI.fragment()) != null) {
-			/*
-			 * The only way for this use case to kick in is if we have both (or "all three") compared models
-			 * side-by-side during a local comparison. In such an event, the "new" resource can only be an
-			 * existing one (since relative paths will always resolve to the same location whatever the side),
-			 * and it will obviously already contain the object since we detected the resource change. In such
-			 * a case, we do not want to erase the already existing object or copy a duplicate in the target
-			 * resource. We'll simply change the "to-be-modified" object to point to that already existing one
-			 * through proxification and re-resolution.
-			 */
-			((InternalEObject)expectedValue).eSetProxyURI(sourceURI);
-			if (expectedContainer.getResourceSet() != null) {
-				EcoreUtil.resolveAll(expectedContainer.getResourceSet());
-			} else {
-				EcoreUtil.resolveAll(expectedContainer);
-			}
-			if (rightToLeft) {
-				match.setLeft(expectedContainer.getEObject(sourceURI.fragment()));
-			} else {
-				match.setRight(expectedContainer.getEObject(sourceURI.fragment()));
-			}
-			return;
-		}
-
 		// We have the container, reference and value. We need to know the insertion index.
 		final Resource initialResource = sourceValue.eResource();
 		final List<EObject> sourceList = initialResource.getContents();
@@ -297,7 +270,9 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 			// FIXME this will most likely fail with remote URIs : we'll need to make it local afterwards
 			if (targetURI == null) {
 				// We treat null as "no valid target". We'll cancel the merge operation.
-				return null;
+				// FIXME we need to rollback the current merge operation.
+				throw new RuntimeException("Couldn't create a valid target resource for "
+						+ sourceRes.getURI());
 			}
 
 			final List<MatchResource> matchedResources = comparison.getMatchedResources();
@@ -318,19 +293,20 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 						"ResourceAttachmentChangeSpec.MissingRS", targetURI.lastSegment())); //$NON-NLS-1$
 			}
 
-			// This resource might already exists
+			// This resource might already exists... in which case we cannot use it
 			if (targetSet.getURIConverter().exists(targetURI, Collections.emptyMap())) {
-				target = targetSet.getResource(targetURI, true);
+				// FIXME we need to rollback the current merge operation.
+				throw new RuntimeException("The resource '" + sourceRes.getURI()
+						+ "' already exists at that location.");
 			} else {
 				target = targetSet.createResource(targetURI);
-			}
 
-			if (rightToLeft) {
-				soughtMatch.setLeft(target);
-			} else {
-				soughtMatch.setRight(target);
+				if (rightToLeft) {
+					soughtMatch.setLeft(target);
+				} else {
+					soughtMatch.setRight(target);
+				}
 			}
-
 		}
 
 		return target;
@@ -356,10 +332,20 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 			sourceObject = match.getLeft();
 			targetObject = match.getRight();
 		}
+
+		final Resource currentResource;
+		if (targetObject == null) {
+			// A new root in a resource we don't have yet.
+			// Is this object container somewhere else (controlled)?
+			if (sourceObject.eContainer() != null) {
+				currentResource = sourceObject.eContainer().eResource();
+			} else {
+				return null;
+			}
+		} else {
+			currentResource = targetObject.eResource();
+		}
 		final Resource sourceResource = sourceObject.eResource();
-		// This is the resource that will change through this merge.
-		// We will only use it to determine a relative path for the real target resource.
-		final Resource currentResource = targetObject.eResource();
 
 		final MatchResource matchCurrent = getMatchResource(match.getComparison(), currentResource);
 		final Resource currentFromSourceSide;
