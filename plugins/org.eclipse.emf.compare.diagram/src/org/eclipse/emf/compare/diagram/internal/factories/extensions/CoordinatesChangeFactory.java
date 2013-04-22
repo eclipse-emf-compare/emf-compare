@@ -201,7 +201,10 @@ public class CoordinatesChangeFactory extends NodeChangeFactory {
 			final int rightY = ((Bounds)right).getY();
 			final int deltaX = Math.abs(leftX - rightX);
 			final int deltaY = Math.abs(leftY - rightY);
-			final int threshold = configuration.getMoveThreshold();
+			int threshold = 0;
+			if (configuration != null) {
+				threshold = configuration.getMoveThreshold();
+			}
 			return deltaX + deltaY > threshold;
 		}
 		return false;

@@ -10,10 +10,18 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.internal.factories.extensions;
 
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.instanceOf;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
+
 import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ReferenceChange;
@@ -22,8 +30,10 @@ import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsFactory;
 import org.eclipse.emf.compare.diagram.internal.extensions.NodeChange;
 import org.eclipse.emf.compare.diagram.internal.factories.AbstractDiagramChangeFactory;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Factory of node changes.
@@ -68,9 +78,52 @@ public class NodeChangeFactory extends AbstractDiagramChangeFactory {
 	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
 		// Macroscopic change on a node is refined by the unit main change and unit children related changes.
 		extension.getRefinedBy().add(refiningDiff);
-		if (extensionKind != DifferenceKind.MOVE) {
-			extension.getRefinedBy().addAll(getAllContainedDifferences(refiningDiff));
+		// if (extensionKind != DifferenceKind.MOVE) {
+		extension.getRefinedBy().addAll(getAllContainedDifferences(refiningDiff));
+		// }
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#fillRequiredDifferences(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.compare.Diff)
+	 */
+	@Override
+	public void fillRequiredDifferences(Comparison comparison, Diff extension) {
+		super.fillRequiredDifferences(comparison, extension);
+		fillRequiredDifferencesForMove(comparison, extension);
+	}
+
+	/**
+	 * MOVE case: The MOVE of a Node requires the MOVE of the semantic object.
+	 * 
+	 * @see NodeChangeFactory#fillRequiredDifferences(Comparison, Diff).
+	 * @param comparison
+	 *            the comparison.
+	 * @param extension
+	 *            the node change.
+	 */
+	private void fillRequiredDifferencesForMove(Comparison comparison, Diff extension) {
+		Set<Diff> requiredExtensions = new HashSet<Diff>();
+		Set<Diff> requiringExtensions = new HashSet<Diff>();
+		final Predicate<Diff> moveReference = and(instanceOf(ReferenceChange.class),
+				ofKind(DifferenceKind.MOVE));
+		Collection<Diff> refiningMoves = Collections2.filter(extension.getRefinedBy(), moveReference);
+		for (Diff diff : refiningMoves) {
+			EObject target = ((ReferenceChange)diff).getValue();
+			if (target instanceof View) {
+				EObject semanticTarget = ((View)target).getElement();
+				Collection<Diff> requiredDiffs = Collections2.filter(comparison
+						.getDifferences(semanticTarget), moveReference);
+				requiredExtensions.addAll(requiredDiffs);
+				// The graphical object and the semantic one are linked, they change their container both
+				// (difference case of ADD/DELETE)
+				requiringExtensions.addAll(requiredDiffs);
+			}
 		}
+		extension.getRequires().addAll(requiredExtensions);
+		extension.getRequiredBy().addAll(requiringExtensions);
 	}
 
 	/**

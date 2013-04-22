@@ -377,8 +377,9 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 		for (Diff candidate : match.getDifferences()) {
 			// Keep only unit changes...
 			if (!getExtensionKind().isInstance(candidate)) {
-				// ... which are not related to an other macroscopic ADD or DELETE of a graphical object.
-				if (!isAMainRefiningDifference(candidate)) {
+				// ... which are not related to an other macroscopic ADD or DELETE or MOVE of a graphical
+				// object.
+				if (getRelatedExtensionKind(candidate) == null) {
 					result.add(candidate);
 				} else if (candidate instanceof ReferenceChange
 						&& ((ReferenceChange)candidate).getReference().isContainment()) {
@@ -396,33 +397,6 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 		}
 
 		return result;
-	}
-
-	/**
-	 * It checks that the given difference is the main difference of a macroscopic change.
-	 * 
-	 * @param difference
-	 *            the difference to check.
-	 * @return True if the given difference is the main difference of a macroscopic change.
-	 */
-	private boolean isAMainRefiningDifference(Diff difference) {
-		CompareSwitch<Boolean> compareSwitch = new CompareSwitch<Boolean>() {
-			@Override
-			public Boolean caseReferenceChange(ReferenceChange object) {
-				return isRelatedToAnExtensionAdd(object) || isRelatedToAnExtensionDelete(object);
-			}
-
-			@Override
-			public Boolean caseResourceAttachmentChange(ResourceAttachmentChange object) {
-				return isRelatedToAnExtensionAdd(object) || isRelatedToAnExtensionDelete(object);
-			}
-
-			@Override
-			public Boolean defaultCase(EObject object) {
-				return Boolean.FALSE;
-			}
-		};
-		return compareSwitch.doSwitch(difference).booleanValue();
 	}
 
 	/**
