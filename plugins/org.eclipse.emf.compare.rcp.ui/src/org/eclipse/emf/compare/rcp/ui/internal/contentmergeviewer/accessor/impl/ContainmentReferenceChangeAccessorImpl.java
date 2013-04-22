@@ -93,11 +93,8 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 					|| (getSide() == MergeViewerSide.ANCESTOR && match.getOrigin() != null)) {
 				container = new MergeViewerItem.Container(getComparison(), diff, match.getLeft(), match
 						.getRight(), match.getOrigin(), getSide(), getAdapterFactory());
-			}
-			if (container != null) {
 				ret.add(container);
 			}
-
 		}
 
 		return ret.build();

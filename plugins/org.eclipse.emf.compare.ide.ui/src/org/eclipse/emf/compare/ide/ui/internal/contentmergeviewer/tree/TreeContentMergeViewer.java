@@ -522,9 +522,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 				parent = ((IMergeViewerItem)data).getAncestor();
 			}
 
-			if (parent instanceof Resource) {
-				// ARI: Manage this case
-			} else if (parent instanceof EObject) {
+			if (parent instanceof EObject) {
 				Match match = getComparison().getMatch((EObject)parent);
 				if (match != null) {
 					for (ReferenceChange referenceChange : filter(filter(match.getDifferences(),
