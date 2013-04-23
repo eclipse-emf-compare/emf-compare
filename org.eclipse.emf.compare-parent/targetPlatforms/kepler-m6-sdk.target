@@ -4,12 +4,12 @@
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.ecoretools.sdk.feature.group" version="1.2.0.201301291331"/>
 <unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="1.7.0.201212181759"/>
-<unit id="org.eclipse.gmf.feature.group" version="1.7.0.201212181845"/>
-<unit id="org.eclipse.gmf.runtime.sdk.feature.group" version="1.7.0.201212181845"/>
-<unit id="org.eclipse.uml2.sdk.feature.group" version="4.1.0.v20130204-1402"/>
-<unit id="org.eclipse.jdt.feature.group" version="3.9.0.v20121210-132935-8-8uFyYFNOfwKNWSo-XLNBDV3834"/>
-<unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="0.10.0.v201302061523"/>
-<unit id="org.eclipse.xtext.sdk.feature.group" version="2.4.0.v201302051002"/>
+<unit id="org.eclipse.gmf.feature.group" version="1.7.0.201303111642"/>
+<unit id="org.eclipse.gmf.runtime.sdk.feature.group" version="1.7.0.201303111642"/>
+<unit id="org.eclipse.uml2.sdk.feature.group" version="4.1.0.v20130318-0942"/>
+<unit id="org.eclipse.jdt.feature.group" version="3.9.0.v20130314-1330"/>
+<unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="0.10.0.v201303201648"/>
+<unit id="org.eclipse.xtext.sdk.feature.group" version="2.4.0.v201303201134"/>
 <repository location="http://download.eclipse.org/releases/kepler"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -30,6 +30,9 @@
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.guava" version="11.0.2.v201303041551"/>
 <unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
+<unit id="javaewah" version="0.5.6.v201210150900"/>
+<unit id="org.apache.commons.compress" version="1.4.1.v201301140946"/>
+<unit id="org.kohsuke.args4j" version="2.0.21.v201301150030"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20130308121626/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
