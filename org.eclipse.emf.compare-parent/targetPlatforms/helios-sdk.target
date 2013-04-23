@@ -4,14 +4,10 @@
 <target name="EMF Compare based on Helios SDK" sequenceNumber="28">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="false" type="InstallableUnit">
-<unit id="com.google.collect" version="1.0.0.v201003051000"/>
+<unit id="com.google.guava" version="11.0.2.v201303041551"/>
+<unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
 <unit id="org.junit" version="4.8.1.v4_8_1_v20100427-1100"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/updateSite"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.emfstore.fuzzy.feature.feature.group" version="0.9.3.M5"/>
-<unit id="org.eclipse.emf.emfstore.modelmutator.feature.feature.group" version="0.9.3.M5"/>
-<repository location="http://download.eclipse.org/emf-store/milestones/archive/0.9.3.M5"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20130308121626/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="false" type="InstallableUnit">
 <unit id="org.eclipse.platform.sdk" version="3.6.2.M20110210-1200"/>
