@@ -34,7 +34,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.ISources;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
@@ -57,7 +57,7 @@ public class SaveComparisonModel extends AbstractHandler {
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IEditorInput editorInput = HandlerUtil.getActiveEditorInput(event);
+		Object editorInput = HandlerUtil.getVariable(event, ISources.ACTIVE_EDITOR_INPUT_NAME);
 		if (editorInput instanceof CompareEditorInput) {
 			configuration = ((CompareEditorInput)editorInput).getCompareConfiguration();
 			Shell parent = configuration.getContainer().getWorkbenchPart().getSite().getShell();
