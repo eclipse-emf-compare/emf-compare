@@ -81,31 +81,32 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 			if (sideValue instanceof Resource) {
 				mergeViewerItems = createMergeViewerItemFrom(((Resource)sideValue).getContents());
 			}
-			EList<Diff> differences = getComparison().getDifferences();
-			List<ResourceAttachmentChange> racs = Lists.newArrayList(filter(differences,
-					ResourceAttachmentChange.class));
-			List<ResourceAttachmentChange> resourceAttachmentChanges = Lists.newArrayList(racs);
-			Object left = getLeft();
-			Object right = getRight();
-			Object ancestor = getAncestor();
-			// Removes resource attachment changes that are not linked with the current resources.
-			for (ResourceAttachmentChange resourceAttachmentChange : racs) {
-				if (left == null
-						|| (left instanceof Resource && !resourceAttachmentChange.getResourceURI().equals(
-								((Resource)left).getURI().toString()))) {
-					if (right == null
-							|| (right instanceof Resource && !resourceAttachmentChange.getResourceURI()
-									.equals(((Resource)right).getURI().toString()))) {
-						if (ancestor == null
-								|| (ancestor instanceof Resource && !resourceAttachmentChange
-										.getResourceURI().equals(((Resource)ancestor).getURI().toString()))) {
-							resourceAttachmentChanges.remove(resourceAttachmentChange);
+
+			if (getSide() != MergeViewerSide.ANCESTOR) {
+				EList<Diff> differences = getComparison().getDifferences();
+				List<ResourceAttachmentChange> racs = Lists.newArrayList(filter(differences,
+						ResourceAttachmentChange.class));
+				List<ResourceAttachmentChange> resourceAttachmentChanges = Lists.newArrayList(racs);
+				Object left = getLeft();
+				Object right = getRight();
+				Object ancestor = getAncestor();
+				// Removes resource attachment changes that are not linked with the current resources.
+				for (ResourceAttachmentChange resourceAttachmentChange : racs) {
+					if (left == null
+							|| (left instanceof Resource && !resourceAttachmentChange.getResourceURI()
+									.equals(((Resource)left).getURI().toString()))) {
+						if (right == null
+								|| (right instanceof Resource && !resourceAttachmentChange.getResourceURI()
+										.equals(((Resource)right).getURI().toString()))) {
+							if (ancestor == null
+									|| (ancestor instanceof Resource && !resourceAttachmentChange
+											.getResourceURI()
+											.equals(((Resource)ancestor).getURI().toString()))) {
+								resourceAttachmentChanges.remove(resourceAttachmentChange);
+							}
 						}
 					}
 				}
-			}
-
-			if (getSide() != MergeViewerSide.ANCESTOR) {
 				ret.addAll(createInsertionPoints(mergeViewerItems, resourceAttachmentChanges));
 			} else {
 				ret.addAll(mergeViewerItems);
