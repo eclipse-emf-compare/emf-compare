@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl;
 
-import static com.google.common.collect.Iterables.getFirst;
-
 import com.google.common.collect.ImmutableList;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -52,7 +50,8 @@ public class SingleStructuralFeatureAccessorImpl extends AbstractStructuralFeatu
 		Object ancestorValue = getValue(MergeViewerSide.ANCESTOR);
 
 		// there can be only one diff on !many structural feature.
-		Diff diff = getFirst(getDifferences(), null);
+		Diff diff = getInitialDiff();
+
 		final ImmutableList<? extends IMergeViewerItem> ret;
 		if (thisSideValue == null) {
 			IMergeViewerItem insertionPoint = new MergeViewerItem(getComparison(), diff, leftValue,
