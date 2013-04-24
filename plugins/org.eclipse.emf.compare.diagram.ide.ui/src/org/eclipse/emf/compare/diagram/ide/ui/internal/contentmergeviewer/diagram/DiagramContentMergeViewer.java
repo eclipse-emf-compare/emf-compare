@@ -77,7 +77,8 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editparts.LayerManager;
-import org.eclipse.gmf.runtime.notation.BasicCompartment;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ListItemEditPart;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -606,7 +607,39 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 * @return True it it is an element of a list.
 		 */
 		protected boolean isNodeList(View view) {
-			return view.eContainer() instanceof BasicCompartment;
+			DiagramMergeViewer viewer = getViewer(getSide(view));
+			EditPart part = viewer.getEditPart(view);
+			return isNodeList(part);
+		}
+
+		/**
+		 * It checks that the given part represents an element of a list.
+		 * 
+		 * @param part
+		 *            The part.
+		 * @return True it it represents an element of a list.
+		 */
+		private boolean isNodeList(EditPart part) {
+			return part instanceof ListItemEditPart || isInListContainer(part);
+
+		}
+
+		/**
+		 * It checks that the given part is in one representing a list container.
+		 * 
+		 * @param part
+		 *            The part.
+		 * @return True it it is in a part representing a list container.
+		 */
+		private boolean isInListContainer(EditPart part) {
+			EditPart parent = part.getParent();
+			while (parent != null) {
+				if (parent instanceof ListCompartmentEditPart) {
+					return true;
+				}
+				parent = parent.getParent();
+			}
+			return false;
 		}
 
 		/**
