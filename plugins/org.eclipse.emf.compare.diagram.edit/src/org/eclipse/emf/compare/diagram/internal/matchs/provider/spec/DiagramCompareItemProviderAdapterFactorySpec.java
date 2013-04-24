@@ -15,6 +15,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Style;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.runtime.notation.provider.NotationItemProviderAdapterFactory;
 import org.eclipse.gmf.runtime.notation.provider.ViewItemProvider;
@@ -39,6 +40,12 @@ public class DiagramCompareItemProviderAdapterFactorySpec extends NotationItemPr
 	 * instances.
 	 */
 	protected ViewItemProvider diagramItemProviderSpec;
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.gmf.runtime.notation.Diagram}
+	 * instances.
+	 */
+	protected Adapter styleItemProviderSpec;
 
 	/** The Specific switch to create adapters for ALL views and diagrams. */
 	// CHECKSTYLE:OFF
@@ -67,6 +74,15 @@ public class DiagramCompareItemProviderAdapterFactorySpec extends NotationItemPr
 
 		@Override
 		public Object defaultCase(EObject object) {
+			if (object instanceof Style) {
+				// For all instances of Style
+				if (styleItemProviderSpec == null) {
+					styleItemProviderSpec = new StyleItemProviderSpec(
+							DiagramCompareItemProviderAdapterFactorySpec.this);
+				}
+				return styleItemProviderSpec;
+			}
+
 			// delegate to the default notational switch
 			return modelSwitch.doSwitch(object);
 		}
