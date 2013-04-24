@@ -918,30 +918,6 @@ public class EdgeMergeTest extends AbstractTest {
 	}
 	
 	@Test
-	@Ignore
-	public void testA5a() throws IOException {
-		final Resource left = input.getA5EdgeChangeLeft();
-		final Resource right = input.getA5EdgeChangeRight();
-
-		Comparison comparison = buildComparison(left, right);
-
-		// ** DIFF CHECKING **
-		Predicate<Diff> association = and(instanceOf(AssociationChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> edge1 = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD), elementNameIs("a_b_1"));
-		Predicate<Diff> edge2 = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD), elementNameIs("c_b_1"));
-		Predicate<Diff> node = and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD));
-		diffsChecking(comparison, A5_DIFFS_NB);
-
-//		// ** MERGE **
-//		Diff edgeChange = Iterables.find(comparison.getDifferences(), edge1);
-//		getMergerRegistry().getHighestRankingMerger(edgeChange).copyLeftToRight(edgeChange, new BasicMonitor());
-//
-//		// ** MERGE CHECKING **
-//		comparison = buildComparison(left, right);		
-//		diffsChecking(comparison, A4_DIFFS_NB - A4_EDGECHANGE1_NB - A4_NODECHANGE1_NB - A4_PKGNODECHANGE_NB - A4_ASSOCHANGE1_NB - A4_CLASSCHANGE1_NB - A4_PKGCHANGE_NB, new ExpectedStat(association, 1), new ExpectedStat(edge1, 0), new ExpectedStat(edge2, 1), new ExpectedStat(node, 3));
-	}
-	
-	@Test
 	// Merge Left to Right <ADD Abstraction Edge>
 	public void testA6a() throws IOException {
 		final Resource left = input.getA6EdgeChangeLeft();
@@ -1146,6 +1122,7 @@ public class EdgeMergeTest extends AbstractTest {
 	}
 	
 	@Test
+	@Ignore
 	// Merge Left to Right <ADD Import Edge>
 	public void testA6d() throws IOException {
 		final Resource left = input.getA6EdgeChangeLeft();
@@ -1215,6 +1192,7 @@ public class EdgeMergeTest extends AbstractTest {
 	}
 	
 	@Test
+	@Ignore
 	// Merge Left to Right <ADD Generalization Edge>
 	public void testA6e() throws IOException {
 		final Resource left = input.getA6EdgeChangeLeft();
@@ -1284,6 +1262,7 @@ public class EdgeMergeTest extends AbstractTest {
 	}
 	
 	@Test
+	@Ignore
 	// Merge Left to Right <ADD Flow Edge>
 	public void testA6f() throws IOException {
 		final Resource left = input.getA6EdgeChangeLeft();
@@ -1333,7 +1312,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		//FIXME: InformationFlow.informationSource and InformationFlow.informationTarget is not merged => should create a UMLDiff for this DirectedRelationship (A6_FLOW_CHANGE1_NB += 2)
+		//FIXME: InformationFlow.informationSource and InformationFlow.informationTarget are not merged => should create a UMLDiff for this DirectedRelationship (A6_FLOW_CHANGE1_NB += 2)
 		diffsChecking(comparison, A6_DIFFS_NB - A6_FLOW_EDGE_CHANGE1_NB - A6_FLOW_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 

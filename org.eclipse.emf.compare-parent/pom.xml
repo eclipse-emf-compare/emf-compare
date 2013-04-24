@@ -97,6 +97,7 @@
     <!-- Papyrus -->
     <module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests</module>
   </modules>
 
   <build>
