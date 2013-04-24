@@ -140,7 +140,7 @@ public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider im
 		final DiagramDiff diagramDiff = (DiagramDiff)object;
 		Object image = null;
 		if (diagramDiff.getView() instanceof View) {
-			image = getImage(getRootAdapterFactory(), ((View)diagramDiff.getView()).getElement());
+			image = getImage(getRootAdapterFactory(), diagramDiff.getView());
 		} else {
 			image = super.getImage(object);
 		}
@@ -197,7 +197,7 @@ public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider im
 	protected String getValueText(EObject view) {
 		EObject reference = null;
 		if (view instanceof View) {
-			reference = ((View)view).getElement();
+			reference = view;
 		}
 		String value = AdapterFactoryUtil.getText(getRootAdapterFactory(), reference);
 		if (value == null) {
