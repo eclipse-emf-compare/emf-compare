@@ -40,7 +40,7 @@ import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.common.command.CommandStackListener;
+import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceState;
@@ -57,20 +57,13 @@ import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.extensions.Hide;
 import org.eclipse.emf.compare.diagram.internal.extensions.Show;
 import org.eclipse.emf.compare.diagram.internal.factories.extensions.CoordinatesChangeFactory;
-import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
-import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
-import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
-import org.eclipse.emf.transaction.TransactionalCommandStack;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
@@ -85,7 +78,6 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 
@@ -1693,23 +1685,11 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	private static final String BUNDLE_NAME = DiagramContentMergeViewer.class.getName();
 
-	/** The editing domain. */
-	private ICompareEditingDomain fEditingDomain;
-
-	/** Listener to manage the update of the decorators on events about the command stack. */
-	private CommandStackListener fDecoratorsCommandStackListener;
-
 	/** The phantom manager to use in the context of this viewer. */
 	private final DecoratorsManager fDecoratorsManager = new DecoratorsManager();
 
 	/** The current "opened" difference. */
 	private Diff fCurrentSelectedDiff;
-
-	/**
-	 * The adapter factory used to create the content and label provider for ancestor, left and right
-	 * {@link DiagramMergeViewer}.
-	 */
-	private final ComposedAdapterFactory fAdapterFactory;
 
 	/**
 	 * Creates a new {@link DiagramContentMergeViewer} by calling the super constructor with the given
@@ -1727,25 +1707,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	public DiagramContentMergeViewer(Composite parent, CompareConfiguration config) {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
-
-		fAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
-
 		buildControl(parent);
-		setContentProvider(new TreeContentMergeViewerContentProvider(config, getComparison()));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
-	 */
-	@Override
-	protected void handleDispose(DisposeEvent event) {
-		fEditingDomain.getCommandStack().removeCommandStackListener(fDecoratorsCommandStackListener);
-		fAdapterFactory.dispose();
-		super.handleDispose(event);
+		setContentProvider(new TreeContentMergeViewerContentProvider(config));
 	}
 
 	/**
@@ -1852,7 +1815,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void updateContent(Object ancestor, Object left, Object right) {
-		initStackListenerAndUpdateContent(ancestor, left, right);
+		super.updateContent(ancestor, left, right);
 
 		getLeftMergeViewer().getGraphicalViewer().flush();
 		getRightMergeViewer().getGraphicalViewer().flush();
@@ -1886,34 +1849,25 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#installCommandStackListener(org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction,
-	 *      org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction)
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#commandStackChanged(java.util.EventObject)
 	 */
 	@Override
-	protected CommandStackListener installCommandStackListener(UndoAction undoAction, RedoAction redoAction) {
-		CommandStackListener cmdStackListener = super.installCommandStackListener(undoAction, redoAction);
-		fEditingDomain = getEditingDomain();
-		fDecoratorsCommandStackListener = new CommandStackListener() {
-
-			public void commandStackChanged(EventObject event) {
-				Object source = event.getSource();
-				if (source instanceof TransactionalCommandStack) {
-					Command command = ((TransactionalCommandStack)source).getMostRecentCommand();
-					if (command instanceof CopyCommand) {
-						Iterator<DiagramDiff> diffs = Iterators.filter(command.getAffectedObjects()
-								.iterator(), DiagramDiff.class);
-						while (diffs.hasNext()) {
-							DiagramDiff diagramDiff = diffs.next();
-							fDecoratorsManager.hideAll();
-							fDecoratorsManager.removeAll(); // force the computation for the next
-							// decorator reveal.
-						}
-					}
+	public void commandStackChanged(EventObject event) {
+		super.commandStackChanged(event);
+		Object source = event.getSource();
+		if (source instanceof CommandStack) {
+			Command command = ((CommandStack)source).getMostRecentCommand();
+			if (command instanceof CopyCommand) {
+				Iterator<DiagramDiff> diffs = Iterators.filter(command.getAffectedObjects().iterator(),
+						DiagramDiff.class);
+				while (diffs.hasNext()) {
+					DiagramDiff diagramDiff = diffs.next();
+					fDecoratorsManager.hideAll();
+					fDecoratorsManager.removeAll(); // force the computation for the next
+					// decorator reveal.
 				}
 			}
-		};
-		fEditingDomain.getCommandStack().addCommandStackListener(fDecoratorsCommandStackListener);
-		return cmdStackListener;
+		}
 	}
 
 	/**

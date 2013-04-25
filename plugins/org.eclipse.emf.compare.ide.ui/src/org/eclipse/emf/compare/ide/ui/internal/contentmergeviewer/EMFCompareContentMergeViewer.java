@@ -45,6 +45,8 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -65,7 +67,7 @@ import org.eclipse.ui.services.IServiceLocator;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer implements ISelectionChangedListener, ICompareColor.Provider, IAdaptable {
+public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer implements ISelectionChangedListener, ICompareColor.Provider, IAdaptable, IPropertyChangeListener, CommandStackListener {
 
 	private static final String HANDLER_SERVICE = "fHandlerService";
 
@@ -98,8 +100,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	private final DynamicObject fDynamicObject;
 
-	private CommandStackListener fCommandStackListener;
-
 	private UndoAction undoAction;
 
 	private RedoAction redoAction;
@@ -112,6 +112,38 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	protected EMFCompareContentMergeViewer(int style, ResourceBundle bundle, CompareConfiguration cc) {
 		super(style, bundle, cc);
 		fDynamicObject = new DynamicObject(this);
+
+		editingDomainChange(null, getEditingDomain());
+		cc.addPropertyChangeListener(this);
+	}
+
+	public void propertyChange(PropertyChangeEvent event) {
+		if (EMFCompareConstants.EDITING_DOMAIN.equals(event.getProperty())) {
+			editingDomainChange((ICompareEditingDomain)event.getOldValue(), (ICompareEditingDomain)event
+					.getNewValue());
+		}
+	}
+
+	/**
+	 * @param oldValue
+	 * @param newValue
+	 */
+	protected void editingDomainChange(ICompareEditingDomain oldValue, ICompareEditingDomain newValue) {
+		if (oldValue != null) {
+			oldValue.getCommandStack().removeCommandStackListener(this);
+		}
+		if (newValue != oldValue) {
+			if (newValue != null) {
+				newValue.getCommandStack().addCommandStackListener(this);
+			}
+			if (undoAction != null) {
+				undoAction.setEditingDomain(newValue);
+			}
+			if (redoAction != null) {
+				redoAction.setEditingDomain(newValue);
+			}
+
+		}
 	}
 
 	/**
@@ -160,7 +192,10 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 */
 	@Override
 	protected void updateContent(Object ancestor, Object left, Object right) {
-		initStackListenerAndUpdateContent(ancestor, left, right);
+		fAncestor.setInput(ancestor);
+		fLeft.setInput(left);
+		fRight.setInput(right);
+
 		updateSelection(left);
 	}
 
@@ -178,19 +213,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		fLeft.setSelection(leftSelection, true); // others will synchronize on this one :)
 
 		getCenterControl().redraw();
-	}
-
-	protected void initStackListenerAndUpdateContent(Object ancestor, Object left, Object right) {
-		undoAction.setEditingDomain(getEditingDomain());
-		redoAction.setEditingDomain(getEditingDomain());
-
-		if (getEditingDomain() != null && fCommandStackListener == null) {
-			fCommandStackListener = installCommandStackListener(undoAction, redoAction);
-		}
-
-		fAncestor.setInput(ancestor);
-		fLeft.setInput(left);
-		fRight.setInput(right);
 	}
 
 	private ISelection createSelectionOrEmpty(final Object o) {
@@ -312,28 +334,24 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		undoAction = new UndoAction(getEditingDomain());
 		redoAction = new RedoAction(getEditingDomain());
 
-		if (getEditingDomain() != null && fCommandStackListener == null) {
-			fCommandStackListener = installCommandStackListener(undoAction, redoAction);
-		}
-
 		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
 		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
 
 	}
 
-	protected CommandStackListener installCommandStackListener(final UndoAction undoAction,
-			final RedoAction redoAction) {
-		CommandStackListener commandStackListener = new CommandStackListener() {
-			public void commandStackChanged(EventObject event) {
-				undoAction.update();
-				redoAction.update();
-				setLeftDirty(getEditingDomain().getCommandStack().isLeftSaveNeeded());
-				setRightDirty(getEditingDomain().getCommandStack().isRightSaveNeeded());
-				refresh();
-			}
-		};
-		getEditingDomain().getCommandStack().addCommandStackListener(commandStackListener);
-		return commandStackListener;
+	public void commandStackChanged(EventObject event) {
+		if (undoAction != null) {
+			undoAction.update();
+		}
+		if (redoAction != null) {
+			redoAction.update();
+		}
+		if (getEditingDomain() != null) {
+			setLeftDirty(getEditingDomain().getCommandStack().isLeftSaveNeeded());
+			setRightDirty(getEditingDomain().getCommandStack().isRightSaveNeeded());
+		}
+
+		refresh();
 	}
 
 	/**
@@ -349,12 +367,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 				leftToRight, EMFCompareRCPPlugin.getDefault().getMergerRegistry());
 
 		getEditingDomain().getCommandStack().execute(copyCommand);
-
-		// if (leftToRight) {
-		// setRightDirty(true);
-		// } else {
-		// setLeftDirty(true);
-		// }
 		refresh();
 	}
 
@@ -570,9 +582,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
-		if (fCommandStackListener != null && getEditingDomain() != null) {
-			getEditingDomain().getCommandStack().removeCommandStackListener(fCommandStackListener);
-		}
+		getCompareConfiguration().removePropertyChangeListener(this);
+		editingDomainChange(getEditingDomain(), null);
 		super.handleDispose(event);
 	}
 

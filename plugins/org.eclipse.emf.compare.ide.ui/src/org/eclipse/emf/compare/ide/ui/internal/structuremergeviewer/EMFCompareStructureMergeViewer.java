@@ -38,6 +38,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.BasicMonitor;
@@ -338,14 +339,14 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();
 				final ResourceSet originResourceSet = (ResourceSet)scope.getOrigin();
 
-				editingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
-						EMFCompareConstants.EDITING_DOMAIN);
-				if (editingDomain == null) {
-					editingDomain = EMFCompareEditingDomain.create(leftResourceSet, rightResourceSet,
-							originResourceSet);
-					getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);
+				if (editingDomain != null) {
+					editingDomain.getCommandStack().removeCommandStackListener(this);
+					editingDomain.dispose();
 				}
 
+				editingDomain = EMFCompareEditingDomain.create(leftResourceSet, rightResourceSet,
+						originResourceSet);
+				getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);
 				editingDomain.getCommandStack().addCommandStackListener(this);
 
 				compareInputChanged(scope, compareResult);
@@ -388,6 +389,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			if (editingDomain != null) {
 				editingDomain.getCommandStack().removeCommandStackListener(this);
 				getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, null);
+				editingDomain.dispose();
 				editingDomain = null;
 			}
 
@@ -733,7 +735,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	 * @see org.eclipse.emf.common.command.CommandStackListener#commandStackChanged(java.util.EventObject)
 	 */
 	public void commandStackChanged(EventObject event) {
-		Command mostRecentCommand = editingDomain.getCommandStack().getMostRecentCommand();
+		Command mostRecentCommand = ((CommandStack)event.getSource()).getMostRecentCommand();
 		if (mostRecentCommand instanceof ICompareCopyCommand) {
 			Collection<?> affectedObjects = mostRecentCommand.getAffectedObjects();
 			refresh(true);
