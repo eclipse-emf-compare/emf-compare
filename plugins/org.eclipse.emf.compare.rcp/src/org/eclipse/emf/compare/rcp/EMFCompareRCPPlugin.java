@@ -14,8 +14,8 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptorRegistryImpl;
 import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor;
+import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptorRegistryImpl;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryRegistryImpl;
 import org.eclipse.emf.compare.merge.IMerger;
@@ -97,6 +97,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 */
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
+		super.start(bundleContext);
 		EMFCompareRCPPlugin.plugin = this;
 
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -161,6 +162,8 @@ public class EMFCompareRCPPlugin extends Plugin {
 		registry.removeListener(adapterFactoryRegistryListener);
 		adapterFactoryRegistryListener = null;
 		adapterFactoryRegistry = null;
+
+		super.stop(bundleContext);
 	}
 
 	/**

@@ -45,8 +45,8 @@ public class EMFCompareIDEPlugin extends Plugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
 		plugin = null;
+		super.stop(context);
 	}
 
 	/**
