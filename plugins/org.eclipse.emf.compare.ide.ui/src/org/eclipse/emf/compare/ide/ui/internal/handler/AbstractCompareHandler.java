@@ -97,7 +97,11 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 			delegatingCommandStack = delegatingEditingDomain.getCommandStack();
 		}
 
-		return EMFCompareEditingDomain.create(left, right, origin, delegatingCommandStack);
+		if (delegatingCommandStack == null) {
+			return EMFCompareEditingDomain.create(left, right, origin);
+		} else {
+			return EMFCompareEditingDomain.create(left, right, origin, delegatingCommandStack);
+		}
 	}
 
 	private static EditingDomain getDelegatingEditingDomain(final IWorkbenchPart activePart, Notifier left,

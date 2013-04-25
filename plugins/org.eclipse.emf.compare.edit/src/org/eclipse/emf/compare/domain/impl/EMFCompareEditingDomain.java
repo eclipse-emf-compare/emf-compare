@@ -53,31 +53,13 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 			fNotifiers = ImmutableList.of(left, right, ancestor);
 		}
 
-		final ResourceSet leftRS = getResourceSet(left);
-		final ResourceSet rightRS = getResourceSet(right);
-
-		if (leftRS != null && rightRS != null) {
-			TransactionalEditingDomain leftTED = TransactionalEditingDomain.Factory.INSTANCE
-					.getEditingDomain(leftRS);
-			TransactionalEditingDomain rightTED = TransactionalEditingDomain.Factory.INSTANCE
-					.getEditingDomain(rightRS);
-			if (leftTED == null) {
-				leftTED = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(leftRS);
-			}
-			if (rightTED == null) {
-				rightTED = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(rightRS);
-			}
-			fCommandStack = new DualCompareCommandStack((BasicCommandStack)leftTED.getCommandStack(),
-					(BasicCommandStack)rightTED.getCommandStack());
-		} else {
-			fCommandStack = commandStack;
-		}
+		fCommandStack = commandStack;
 
 		fChangeRecorder = new ChangeRecorder();
 		fChangeRecorder.setResolveProxies(false);
 	}
 
-	public ResourceSet getResourceSet(Notifier notifier) {
+	private static ResourceSet getResourceSet(Notifier notifier) {
 		ResourceSet resourceSet = null;
 		if (notifier instanceof ResourceSet) {
 			resourceSet = (ResourceSet)notifier;
@@ -95,7 +77,27 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 	}
 
 	public static ICompareEditingDomain create(Notifier left, Notifier right, Notifier ancestor) {
-		return create(left, right, ancestor, new BasicCommandStack());
+		final ResourceSet leftRS = getResourceSet(left);
+		final ResourceSet rightRS = getResourceSet(right);
+
+		final CommandStack commandStack;
+		if (leftRS != null && rightRS != null) {
+			TransactionalEditingDomain leftTED = TransactionalEditingDomain.Factory.INSTANCE
+					.getEditingDomain(leftRS);
+			TransactionalEditingDomain rightTED = TransactionalEditingDomain.Factory.INSTANCE
+					.getEditingDomain(rightRS);
+			if (leftTED == null) {
+				leftTED = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(leftRS);
+			}
+			if (rightTED == null) {
+				rightTED = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(rightRS);
+			}
+			commandStack = new DualCompareCommandStack((BasicCommandStack)leftTED.getCommandStack(),
+					(BasicCommandStack)rightTED.getCommandStack());
+		} else {
+			commandStack = new BasicCommandStack();
+		}
+		return create(left, right, ancestor, commandStack);
 	}
 
 	public static ICompareEditingDomain create(Notifier left, Notifier right, Notifier ancestor,
