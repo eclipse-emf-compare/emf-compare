@@ -21,7 +21,7 @@ import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.StringAttributeChangeAccessor;
+import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -136,26 +136,19 @@ public class EMFCompareTextMergeViewerContentProvider implements IMergeViewerCon
 	}
 
 	public void saveLeftContent(Object element, byte[] bytes) {
-		if (element instanceof ICompareInput) {
-			ICompareInput node = (ICompareInput)element;
-			ITypedElement left = node.getLeft();
-			if (left instanceof StringAttributeChangeAccessor) {
-				Comparison comparison = ((StringAttributeChangeAccessor)left).getComparison();
-				EList<Match> matches = comparison.getMatches();
-				EObject leftEObject = null;
-				for (Match match : matches) {
-					leftEObject = match.getLeft();
-					if (leftEObject != null) {
-						break;
-					}
-				}
-				if (leftEObject != null) {
-					Resource eResource = leftEObject.eResource();
-					ResourceSet resourceSet = eResource.getResourceSet();
-					saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
-							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
-				}
+		EList<Match> matches = getComparison().getMatches();
+		EObject leftEObject = null;
+		for (Match match : matches) {
+			leftEObject = match.getLeft();
+			if (leftEObject != null) {
+				break;
 			}
+		}
+		if (leftEObject != null) {
+			Resource eResource = leftEObject.eResource();
+			ResourceSet resourceSet = eResource.getResourceSet();
+			saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+					Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
 		}
 	}
 
@@ -195,26 +188,28 @@ public class EMFCompareTextMergeViewerContentProvider implements IMergeViewerCon
 	}
 
 	public void saveRightContent(Object element, byte[] bytes) {
-		if (element instanceof ICompareInput) {
-			ICompareInput node = (ICompareInput)element;
-			ITypedElement right = node.getRight();
-			if (right instanceof StringAttributeChangeAccessor) {
-				Comparison comparison = ((StringAttributeChangeAccessor)right).getComparison();
-				EList<Match> matches = comparison.getMatches();
-				EObject rightEObject = null;
-				for (Match match : matches) {
-					rightEObject = match.getRight();
-					if (rightEObject != null) {
-						break;
-					}
-				}
-				if (rightEObject != null) {
-					Resource eResource = rightEObject.eResource();
-					ResourceSet resourceSet = eResource.getResourceSet();
-					saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
-							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
-				}
+		EList<Match> matches = getComparison().getMatches();
+		EObject leftEObject = null;
+		for (Match match : matches) {
+			leftEObject = match.getLeft();
+			if (leftEObject != null) {
+				break;
 			}
 		}
+		if (leftEObject != null) {
+			Resource eResource = leftEObject.eResource();
+			ResourceSet resourceSet = eResource.getResourceSet();
+			saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+					Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
+		}
+	}
+
+	/**
+	 * Returns the comparison object.
+	 * 
+	 * @return the comparison.
+	 */
+	public Comparison getComparison() {
+		return (Comparison)fCompareConfiguration.getProperty(EMFCompareConstants.COMPARE_RESULT);
 	}
 }
