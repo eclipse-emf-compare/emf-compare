@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Collections;
+import java.util.EventObject;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -24,6 +25,7 @@ import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.MergeSourceViewer;
 import org.eclipse.compare.internal.Utilities;
 import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.AttributeChange;
@@ -50,6 +52,7 @@ import org.eclipse.emf.edit.command.ChangeCommand;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -60,13 +63,13 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 
 	private static final String BUNDLE_NAME = EMFCompareTextMergeViewer.class.getName();
 
-	private final ICompareEditingDomain fEditingDomain;
-
 	private DynamicObject fDynamicObject;
 
 	private ActionContributionItem fCopyDiffLeftToRightItem;
 
 	private ActionContributionItem fCopyDiffRightToLeftItem;
+
+	private CommandStackListener fCommandStackListener;
 
 	/**
 	 * @param parent
@@ -74,9 +77,36 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 	 */
 	public EMFCompareTextMergeViewer(Composite parent, CompareConfiguration configuration) {
 		super(parent, configuration);
-		fEditingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
-				EMFCompareConstants.EDITING_DOMAIN);
 		setContentProvider(new EMFCompareTextMergeViewerContentProvider(configuration));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#updateContent(java.lang.Object,
+	 *      java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	protected void updateContent(Object ancestor, Object left, Object right) {
+		if (getEditingDomain() != null && fCommandStackListener == null) {
+			fCommandStackListener = new CommandStackListener() {
+				public void commandStackChanged(EventObject event) {
+					setLeftDirty(getEditingDomain().getCommandStack().isLeftSaveNeeded());
+					setRightDirty(getEditingDomain().getCommandStack().isRightSaveNeeded());
+					refresh();
+				}
+			};
+			getEditingDomain().getCommandStack().addCommandStackListener(fCommandStackListener);
+		}
+		super.updateContent(ancestor, left, right);
+	}
+
+	/**
+	 * @return the fEditingDomain
+	 */
+	protected final ICompareEditingDomain getEditingDomain() {
+		return (ICompareEditingDomain)getCompareConfiguration().getProperty(
+				EMFCompareConstants.EDITING_DOMAIN);
 	}
 
 	/**
@@ -91,9 +121,10 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 			final AttributeChange attributeChange = ((AttributeChangeNode)input).getTarget();
 			final Comparison comparison = attributeChange.getMatch().getComparison();
 
-			final Command copyCommand = fEditingDomain.createCopyAllNonConflictingCommand(comparison
-					.getDifferences(), leftToRight, EMFCompareRCPPlugin.getDefault().getMergerRegistry());
-			fEditingDomain.getCommandStack().execute(copyCommand);
+			final Command copyCommand = getEditingDomain().createCopyAllNonConflictingCommand(
+					comparison.getDifferences(), leftToRight,
+					EMFCompareRCPPlugin.getDefault().getMergerRegistry());
+			getEditingDomain().getCommandStack().execute(copyCommand);
 
 			refresh();
 		}
@@ -104,10 +135,10 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 		if (input instanceof AttributeChangeNode) {
 			final AttributeChange attributeChange = ((AttributeChangeNode)input).getTarget();
 
-			final Command copyCommand = fEditingDomain.createCopyCommand(Collections
-					.singletonList(attributeChange), leftToRight, EMFCompareRCPPlugin.getDefault()
-					.getMergerRegistry());
-			fEditingDomain.getCommandStack().execute(copyCommand);
+			final Command copyCommand = getEditingDomain().createCopyCommand(
+					Collections.singletonList(attributeChange), leftToRight,
+					EMFCompareRCPPlugin.getDefault().getMergerRegistry());
+			getEditingDomain().getCommandStack().execute(copyCommand);
 
 			refresh();
 		}
@@ -155,8 +186,8 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 		final boolean oldAndNewEquals = equalityHelper.matchingAttributeValues(newValue, oldValue);
 		if (eObject != null && !oldAndNewEquals && getCompareConfiguration().isLeftEditable()) {
 			// Save the change on left side
-			fEditingDomain.getCommandStack().execute(
-					new UpdateModelAndRejectDiffCommand(fEditingDomain.getChangeRecorder(), eObject,
+			getEditingDomain().getCommandStack().execute(
+					new UpdateModelAndRejectDiffCommand(getEditingDomain().getChangeRecorder(), eObject,
 							eAttribute, newValue, diff, isLeft));
 		}
 	}
@@ -304,6 +335,19 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer {
 	@Override
 	protected ResourceBundle getResourceBundle() {
 		return ResourceBundle.getBundle(BUNDLE_NAME);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
+	 */
+	@Override
+	protected void handleDispose(DisposeEvent event) {
+		if (fCommandStackListener != null && getEditingDomain() != null) {
+			getEditingDomain().getCommandStack().removeCommandStackListener(fCommandStackListener);
+		}
+		super.handleDispose(event);
 	}
 
 	/**
