@@ -17,7 +17,7 @@
 <repository location="http://download.eclipse.org/modeling/emf/emf/updates/milestones/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.egit.feature.group" version="3.0.0.201304231028"/>
+<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/egit/updates-nightly"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
