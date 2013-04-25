@@ -117,7 +117,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 		fSyncExpandedState = new AtomicBoolean();
 
 		buildControl(parent);
-		setContentProvider(new TreeContentMergeViewerContentProvider(config, getComparison()));
+		setContentProvider(new TreeContentMergeViewerContentProvider(config));
 	}
 
 	/**

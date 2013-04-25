@@ -45,9 +45,6 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 	 */
 	private final CompareConfiguration fCompareConfiguration;
 
-	/** The comparison currently being displayed. */
-	private final Comparison fComparison;
-
 	/**
 	 * Creates a new {@link TreeContentMergeViewerContentProvider} and stored the given
 	 * {@link CompareConfiguration}.
@@ -58,9 +55,8 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 	 * @param comparison
 	 *            the comparison that is to be displayed by this viewer.
 	 */
-	public TreeContentMergeViewerContentProvider(CompareConfiguration cc, Comparison comparison) {
+	public TreeContentMergeViewerContentProvider(CompareConfiguration cc) {
 		this.fCompareConfiguration = cc;
-		this.fComparison = comparison;
 	}
 
 	/**
@@ -253,10 +249,6 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 	 * @return the comparison.
 	 */
 	public Comparison getComparison() {
-		if (fComparison != null) {
-			return fComparison;
-		} else {
-			return (Comparison)fCompareConfiguration.getProperty(EMFCompareConstants.COMPARE_RESULT);
-		}
+		return (Comparison)fCompareConfiguration.getProperty(EMFCompareConstants.COMPARE_RESULT);
 	}
 }
