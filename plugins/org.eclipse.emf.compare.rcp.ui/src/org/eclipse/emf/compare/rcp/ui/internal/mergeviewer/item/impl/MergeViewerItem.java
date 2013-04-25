@@ -16,12 +16,10 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Iterables.size;
-import static com.google.common.collect.Iterables.tryFind;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -164,15 +162,18 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	public IMergeViewerItem.Container getParent() {
 		IMergeViewerItem.Container ret = null;
 
-		Object sideValue = getBestSideValue();
-		ITreeItemContentProvider treeItemContentProvider = (ITreeItemContentProvider)fAdapterFactory.adapt(
-				sideValue, ITreeItemContentProvider.class);
+		if (getDiff() instanceof ResourceAttachmentChange) {
+			ret = createBasicContainer((ResourceAttachmentChange)getDiff());
+		} else {
+			Object sideValue = getBestSideValue();
+			ITreeItemContentProvider treeItemContentProvider = (ITreeItemContentProvider)fAdapterFactory
+					.adapt(sideValue, ITreeItemContentProvider.class);
 
-		Object parent = treeItemContentProvider != null ? treeItemContentProvider.getParent(sideValue) : null;
-		if (parent instanceof EObject) {
-			ret = createBasicContainer((EObject)parent);
-		} else if (parent instanceof Resource) {
-			ret = createBasicContainer((Resource)parent);
+			Object parent = treeItemContentProvider != null ? treeItemContentProvider.getParent(sideValue)
+					: null;
+			if (parent instanceof EObject) {
+				ret = createBasicContainer((EObject)parent);
+			}
 		}
 
 		return ret;
@@ -252,115 +253,68 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		}
 		Object expectedValue = MergeViewerUtil.getEObject(parentMatch, fSide);
 		if (expectedValue != null) {
-			Iterable<ReferenceChange> containmentReferenceChanges = filter(filter(filter(parentMatch
-					.getDifferences(), ReferenceChange.class),
-					EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE), EMFComparePredicates
-					.valueIs(expectedValue));
+			Iterable<? extends Diff> diffs = getDiffsWithValue(expectedValue, parentMatch);
+			Diff diff = getFirst(diffs, null);
+			ret = new MergeViewerItem.Container(fComparison, diff, parentMatch, fSide, fAdapterFactory);
 
-			if (size(containmentReferenceChanges) > 1) {
-				throw new IllegalStateException("Should not have more than one ReferenceChange on each Match"); //$NON-NLS-1$
-			} else {
-				ReferenceChange referenceChange = getFirst(containmentReferenceChanges, null);
-				if (referenceChange == null) {
-					Optional<Diff> rac = tryFind(parentMatch.getDifferences(),
-							instanceOf(ResourceAttachmentChange.class));
-					ret = new MergeViewerItem.Container(fComparison, rac.orNull(), parentMatch, fSide,
-							fAdapterFactory);
-				} else {
-					ret = new MergeViewerItem.Container(fComparison, referenceChange, parentMatch, fSide,
-							fAdapterFactory);
-				}
-			}
 		} else {
 			expectedValue = MergeViewerUtil.getEObject(parentMatch, fSide.opposite());
-			if (expectedValue == null) {
-				expectedValue = MergeViewerUtil.getEObject(parentMatch, MergeViewerSide.ANCESTOR);
-			}
-
+			Iterable<? extends Diff> diffs = Lists.newArrayList();
 			if (expectedValue != null) {
-				Iterable<ReferenceChange> containmentReferenceChanges = filter(filter(filter(parentMatch
-						.getDifferences(), ReferenceChange.class),
-						EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE), EMFComparePredicates
-						.valueIs(expectedValue));
-				if (!isEmpty(containmentReferenceChanges)) {
-					if (size(containmentReferenceChanges) > 1) {
-						throw new IllegalStateException(
-								"Should not have more than one ReferenceChange on each Match"); //$NON-NLS-1$
-					} else {
-						ReferenceChange referenceChange = containmentReferenceChanges.iterator().next();
-						ret = createInsertionPoint(referenceChange, fSide, fAdapterFactory);
-					}
+				diffs = getDiffsWithValue(expectedValue, parentMatch);
+			}
+			if (isEmpty(diffs)) {
+				expectedValue = MergeViewerUtil.getEObject(parentMatch, MergeViewerSide.ANCESTOR);
+				if (expectedValue != null) {
+					diffs = getDiffsWithValue(expectedValue, parentMatch);
 				}
 			}
-		}
-		return ret;
-	}
 
-	/**
-	 * Create an IMergeViewerItem for the given resource.
-	 * 
-	 * @param resource
-	 *            the given resource.
-	 * @return an IMergeViewerItem.
-	 */
-	protected final IMergeViewerItem.Container createBasicContainer(Resource resource) {
-		IMergeViewerItem.Container ret = null;
-		final Comparison comparison = getComparison();
-		final Diff diff = getDiff();
-		if (diff instanceof ResourceAttachmentChange) {
-			Resource left = MergeViewerUtil.getResource(comparison, MergeViewerSide.LEFT, diff);
-			Resource right = MergeViewerUtil.getResource(comparison, MergeViewerSide.RIGHT, diff);
-			Resource ancestor = MergeViewerUtil.getResource(comparison, MergeViewerSide.ANCESTOR, diff);
-			ret = new ResourceAttachmentChangeMergeViewerItem(comparison, null, left, right, ancestor,
-					getSide(), getAdapterFactory());
-			if (right != null && getSide() == MergeViewerSide.LEFT
-					&& resource.getURI().equals(right.getURI())) {
-				ret = createInsertionPoint((ResourceAttachmentChange)diff, fSide, fAdapterFactory);
-			} else if (left != null && getSide() == MergeViewerSide.RIGHT
-					&& resource.getURI().equals(left.getURI())) {
-				ret = createInsertionPoint((ResourceAttachmentChange)diff, fSide, fAdapterFactory);
+			if (!isEmpty(diffs)) {
+				Diff diff = diffs.iterator().next();
+				ret = createInsertionPoint(diff, fSide, fAdapterFactory);
 			}
 		}
-		// FIXME: manage case of diff instanceof ReferenceChange
 		return ret;
 	}
 
 	/**
-	 * Creates insertion point for the given ResourceAttachmentChange.
+	 * Return an Iterable of {@link Diff} which are linked to the given expectedValue. Try to get containment
+	 * reference changes first, then if empty, try to get resource attachment changes.
+	 * 
+	 * @param expectedValue
+	 * @return
+	 */
+	private Iterable<? extends Diff> getDiffsWithValue(Object expectedValue, Match parentMatch) {
+		Iterable<? extends Diff> diffs = filter(filter(filter(fComparison.getDifferences(),
+				ReferenceChange.class), EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE),
+				EMFComparePredicates.valueIs(expectedValue));
+		if (size(diffs) > 1) {
+			throw new IllegalStateException("Should not have more than one ReferenceChange on each Match"); //$NON-NLS-1$
+		} else {
+			Diff referenceChange = getFirst(diffs, null);
+			if (referenceChange == null) {
+				diffs = filter(parentMatch.getDifferences(), instanceOf(ResourceAttachmentChange.class));
+			}
+		}
+		return diffs;
+	}
+
+	/**
+	 * Create an IMergeViewerItem for the parent of the given {@link ResourceAttachmentChange}.
 	 * 
 	 * @param diff
 	 *            the given {@link ResourceAttachmentChange}.
-	 * @param side
-	 *            the side where the insertion point will be created.
-	 * @param adapterFactory
-	 *            an adapter factory used to create the IMergeViewerItem.
-	 * @return an insertion point (IMergeViewerItem).
+	 * @return an IMergeViewerItem.
 	 */
-	protected IMergeViewerItem.Container createInsertionPoint(ResourceAttachmentChange diff,
-			MergeViewerSide side, AdapterFactory adapterFactory) {
-		Object left = MergeViewerUtil.getResourceAttachmentChangeValue(diff, MergeViewerSide.LEFT);
-		Object right = MergeViewerUtil.getResourceAttachmentChangeValue(diff, MergeViewerSide.RIGHT);
-
-		IMergeViewerItem.Container insertionPoint = null;
-		if (left == null && right == null) {
-			// Do not display anything
-		} else {
-			final boolean leftEmptyBox = getSide() == MergeViewerSide.LEFT
-					&& (left == null || !MergeViewerUtil.getResourceContents(fComparison, getSide(), diff)
-							.contains(left));
-			final boolean rightEmptyBox = getSide() == MergeViewerSide.RIGHT
-					&& (right == null || !MergeViewerUtil.getResourceContents(fComparison, getSide(), diff)
-							.contains(right));
-			if (leftEmptyBox || rightEmptyBox) {
-				Object ancestor = MergeViewerUtil.getValueFromResourceAttachmentChange(diff, fComparison,
-						MergeViewerSide.ANCESTOR);
-
-				insertionPoint = new MergeViewerItem.Container(getComparison(), null, left, right, ancestor,
-						side, adapterFactory);
-			}
-		}
-
-		return insertionPoint;
+	protected final IMergeViewerItem.Container createBasicContainer(ResourceAttachmentChange diff) {
+		final Comparison comparison = getComparison();
+		Resource left = MergeViewerUtil.getResource(comparison, MergeViewerSide.LEFT, diff);
+		Resource right = MergeViewerUtil.getResource(comparison, MergeViewerSide.RIGHT, diff);
+		Resource ancestor = MergeViewerUtil.getResource(comparison, MergeViewerSide.ANCESTOR, diff);
+		IMergeViewerItem.Container ret = new ResourceAttachmentChangeMergeViewerItem(comparison, null, left,
+				right, ancestor, getSide(), getAdapterFactory());
+		return ret;
 	}
 
 	protected final List<IMergeViewerItem> createInsertionPoints(Comparison comparison,
@@ -437,7 +391,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			final boolean rightEmptyBox = side == MergeViewerSide.RIGHT
 					&& (right == null || !MergeViewerUtil.getValues(diff, side).contains(right));
 			if (leftEmptyBox || rightEmptyBox) {
-				Object ancestor = MergeViewerUtil.getValues(diff, MergeViewerSide.ANCESTOR);
+				Object ancestor = MergeViewerUtil.getValueFromDiff(diff, MergeViewerSide.ANCESTOR);
 
 				insertionPoint = new MergeViewerItem.Container(getComparison(), diff, left, right, ancestor,
 						side, adapterFactory);
@@ -536,18 +490,19 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		public IMergeViewerItem.Container getParent() {
 			IMergeViewerItem.Container ret = null;
 
-			Object sideValue = getBestSideValue();
-			ITreeItemContentProvider treeItemContentProvider = (ITreeItemContentProvider)getAdapterFactory()
-					.adapt(sideValue, ITreeItemContentProvider.class);
+			if (getDiff() instanceof ResourceAttachmentChange) {
+				ret = createBasicContainer((ResourceAttachmentChange)getDiff());
+			} else {
+				Object sideValue = getBestSideValue();
+				ITreeItemContentProvider treeItemContentProvider = (ITreeItemContentProvider)getAdapterFactory()
+						.adapt(sideValue, ITreeItemContentProvider.class);
 
-			Object parent = treeItemContentProvider != null ? treeItemContentProvider.getParent(sideValue)
-					: null;
-			if (parent instanceof EObject) {
-				ret = createBasicContainer((EObject)parent);
-			} else if (parent instanceof Resource) {
-				ret = createBasicContainer((Resource)parent);
+				Object parent = treeItemContentProvider != null ? treeItemContentProvider
+						.getParent(sideValue) : null;
+				if (parent instanceof EObject) {
+					ret = createBasicContainer((EObject)parent);
+				}
 			}
-
 			return ret;
 		}
 
