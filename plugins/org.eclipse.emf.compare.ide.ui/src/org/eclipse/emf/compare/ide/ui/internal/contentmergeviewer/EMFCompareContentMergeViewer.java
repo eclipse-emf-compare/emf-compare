@@ -570,7 +570,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		}
 		boolean enableCopy = false;
 		if (diff != null) {
-			enableCopy = true;
+			enableCopy = diff.getState() == DifferenceState.UNRESOLVED;
 		}
 
 		if (fCopyDiffLeftToRightItem != null) {
