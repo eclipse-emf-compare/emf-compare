@@ -12,9 +12,12 @@ package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item;
 
 import com.google.common.base.Predicate;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -54,16 +57,20 @@ public interface IMergeViewerItem extends Adapter {
 		 * Returns whether this container has at least one child. In some cases this methods avoids having to
 		 * call the potential more costly <code>getChildren</code> method.
 		 * 
+		 * @param selectedFilters
+		 *            the active filters.
 		 * @return <code>true</code> if this container has at least one child
 		 */
-		boolean hasChildren();
+		boolean hasChildren(Collection<IDifferenceFilter> selectedFilters);
 
 		/**
 		 * Returns the children of this container. If this container has no children an empty array is
 		 * returned (not <code>null</code>).
 		 * 
+		 * @param selectedFilters
+		 *            the active filters.
 		 * @return the children of this container as an array
 		 */
-		IMergeViewerItem[] getChildren();
+		IMergeViewerItem[] getChildren(Collection<IDifferenceFilter> selectedFilters);
 	}
 }

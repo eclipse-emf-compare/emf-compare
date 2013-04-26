@@ -164,7 +164,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		setLabelProvider(new DelegatingStyledCellLabelProvider(
 				new EMFCompareStructureMergeViewerLabelProvider(fAdapterFactory, this)));
 		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(fAdapterFactory,
-				structureMergeViewerGrouper, structureMergeViewerFilter, configuration));
+				getStructureMergeViewerGrouper(), getStructureMergeViewerFilter(), configuration));
 
 		if (parent instanceof CompareViewerSwitchingPane) {
 			fParent = (CompareViewerSwitchingPane)parent;
@@ -207,7 +207,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		if (property == null) {
 			selectedFilters = new HashSet<IDifferenceFilter>();
 		} else {
-			selectedFilters = (Collection<IDifferenceFilter>)property;
+			selectedFilters = new HashSet<IDifferenceFilter>((Collection<IDifferenceFilter>)property);
 		}
 		switch (event.getAction()) {
 			case ACTIVATE:

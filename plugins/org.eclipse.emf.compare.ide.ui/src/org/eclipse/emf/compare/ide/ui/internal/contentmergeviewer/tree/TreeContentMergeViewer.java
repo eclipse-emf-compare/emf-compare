@@ -38,6 +38,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeVie
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.TreeMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EObject;
@@ -243,7 +244,8 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			@Override
 			public Object[] getChildren(Object object) {
 				if (object instanceof IMergeViewerItem.Container) {
-					IMergeViewerItem[] children = ((IMergeViewerItem.Container)object).getChildren();
+					IMergeViewerItem[] children = ((IMergeViewerItem.Container)object)
+							.getChildren(getSelectedFilters());
 
 					return children;
 				}
@@ -258,7 +260,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			@Override
 			public boolean hasChildren(Object object) {
 				if (object instanceof IMergeViewerItem.Container) {
-					return ((IMergeViewerItem.Container)object).hasChildren();
+					return ((IMergeViewerItem.Container)object).hasChildren(getSelectedFilters());
 				}
 				return super.hasChildren(object);
 			}
@@ -389,15 +391,23 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			final boolean selected = Iterables.any(selection, equalTo(leftItem));
 			IMergeViewerItem leftData = (IMergeViewerItem)leftItem.getData();
 			final Diff leftDiff = leftData.getDiff();
+			boolean doPaint = true;
+			for (IDifferenceFilter filter : getSelectedFilters()) {
+				if (filter.getPredicateWhenSelected().apply(leftDiff)) {
+					doPaint = false;
+					break;
+				}
+			}
+			if (doPaint) {
+				if (leftDiff != null && leftDiff.getState() == DifferenceState.UNRESOLVED) {
+					TreeItem rightItem = findRightTreeItemFromLeftDiff(rightItems, leftDiff, leftData);
 
-			if (leftDiff != null && leftDiff.getState() == DifferenceState.UNRESOLVED) {
-				TreeItem rightItem = findRightTreeItemFromLeftDiff(rightItems, leftDiff, leftData);
-
-				if (rightItem != null) {
-					final Color strokeColor = getCompareColor().getStrokeColor(leftDiff, isThreeWay(), false,
-							selected);
-					g.setForeground(strokeColor);
-					drawCenterLine(g, leftClientArea, rightClientArea, leftItem, rightItem);
+					if (rightItem != null) {
+						final Color strokeColor = getCompareColor().getStrokeColor(leftDiff, isThreeWay(),
+								false, selected);
+						g.setForeground(strokeColor);
+						drawCenterLine(g, leftClientArea, rightClientArea, leftItem, rightItem);
+					}
 				}
 			}
 		}

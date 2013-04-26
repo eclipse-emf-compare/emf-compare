@@ -113,6 +113,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	private RedoAction redoAction;
 
+	/** The list of active filters. */
+	private Collection<IDifferenceFilter> selectedFilters;
+
 	/**
 	 * @param style
 	 * @param bundle
@@ -123,6 +126,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		fDynamicObject = new DynamicObject(this);
 
 		editingDomainChange(null, getEditingDomain());
+		setSelectedFilters((Collection<IDifferenceFilter>)cc
+				.getProperty(EMFCompareConstants.SELECTED_FILTERS));
 		cc.addPropertyChangeListener(this);
 	}
 
@@ -130,6 +135,20 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		if (EMFCompareConstants.EDITING_DOMAIN.equals(event.getProperty())) {
 			editingDomainChange((ICompareEditingDomain)event.getOldValue(), (ICompareEditingDomain)event
 					.getNewValue());
+		} else if (EMFCompareConstants.SELECTED_FILTERS.equals(event.getProperty())) {
+			Object newValue = event.getNewValue();
+			if (newValue != null) {
+				setSelectedFilters((Collection<IDifferenceFilter>)newValue);
+
+				fLeft.setSelectedFilters((Collection<IDifferenceFilter>)newValue);
+				fRight.setSelectedFilters((Collection<IDifferenceFilter>)newValue);
+				fAncestor.setSelectedFilters((Collection<IDifferenceFilter>)newValue);
+
+				fLeft.refresh();
+				fRight.refresh();
+				fAncestor.refresh();
+				getCenterControl().redraw();
+			}
 		}
 	}
 
@@ -629,17 +648,36 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	@SuppressWarnings("unchecked")
 	protected boolean isSubDiffFilterActive() {
 		Object property = getCompareConfiguration().getProperty(EMFCompareConstants.SELECTED_FILTERS);
-		final Collection<IDifferenceFilter> selectedFilters;
+		final Collection<IDifferenceFilter> filters;
 		if (property == null) {
 			return false;
 		} else {
-			selectedFilters = (Collection<IDifferenceFilter>)property;
-			for (IDifferenceFilter iDifferenceFilter : selectedFilters) {
+			filters = (Collection<IDifferenceFilter>)property;
+			for (IDifferenceFilter iDifferenceFilter : filters) {
 				if (iDifferenceFilter instanceof CascadingDifferencesFilter) {
 					return true;
 				}
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Returns the active filters.
+	 * 
+	 * @return the selectedFilters.
+	 */
+	public Collection<IDifferenceFilter> getSelectedFilters() {
+		return selectedFilters;
+	}
+
+	/**
+	 * Set the list of selected filters.
+	 * 
+	 * @param selectedFilters
+	 *            the selectedFilters to set
+	 */
+	public void setSelectedFilters(Collection<IDifferenceFilter> selectedFilters) {
+		this.selectedFilters = selectedFilters;
 	}
 }

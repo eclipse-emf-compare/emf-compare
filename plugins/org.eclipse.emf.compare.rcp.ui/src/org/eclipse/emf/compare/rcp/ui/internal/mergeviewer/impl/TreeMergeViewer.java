@@ -119,5 +119,6 @@ public class TreeMergeViewer extends TableOrTreeMergeViewer {
 	@Override
 	public void refresh() {
 		fTreeViewer.refresh();
+		getStructuredViewer().getControl().redraw();
 	}
 }

@@ -45,6 +45,7 @@ import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.spec.EObjectUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
@@ -320,7 +321,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 
 	protected final List<IMergeViewerItem> createInsertionPoints(Comparison comparison,
 			EStructuralFeature eStructuralFeature, final List<? extends IMergeViewerItem> values,
-			List<Diff> differences) {
+			List<? extends Diff> differences) {
 		final List<IMergeViewerItem> ret = newArrayList(values);
 		final List<Object> sideContent = ReferenceUtil.getAsList((EObject)getSideValue(getSide()),
 				eStructuralFeature);
@@ -407,7 +408,9 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		List<IMergeViewerItem> ret = newArrayListWithCapacity(values.size());
 		for (Object value : values) {
 			IMergeViewerItem valueToAdd = createMergeViewerItemFrom((EObject)value);
-			ret.add(valueToAdd);
+			if (valueToAdd != null) {
+				ret.add(valueToAdd);
+			}
 		}
 		return ret;
 	}
@@ -443,6 +446,33 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 					throw new IllegalStateException();
 			}
 		}
+	}
+
+	/**
+	 * From a list of {@link Diff}s, returns the diffs which are not filtered by a filter of the given list of
+	 * {@link IDifferenceFilter}.
+	 * 
+	 * @param unfilteredDiffs
+	 *            the given list of unfiltered diffs.
+	 * @param filters
+	 *            the given list of IDifferenceFilter.
+	 * @return A filtered list of diffs.
+	 */
+	protected List<? extends Diff> filteredDiffs(List<? extends Diff> unfilteredDiffs,
+			Collection<IDifferenceFilter> filters) {
+		if (filters != null) {
+			List<Diff> filteredDiffs = Lists.newArrayList(unfilteredDiffs);
+			for (IDifferenceFilter filter : filters) {
+				for (Diff unfilteredDiff : unfilteredDiffs) {
+					if (filter.getPredicateWhenSelected().apply(unfilteredDiff)) {
+						filteredDiffs.remove(unfilteredDiff);
+					}
+				}
+			}
+			return filteredDiffs;
+		}
+		return unfilteredDiffs;
+
 	}
 
 	public static class Container extends MergeViewerItem implements IMergeViewerItem.Container {
@@ -513,8 +543,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		 * 
 		 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem.Container#hasChildren()
 		 */
-		public boolean hasChildren() {
-			return getChildren().length > 0;
+		public boolean hasChildren(Collection<IDifferenceFilter> filters) {
+			return getChildren(filters).length > 0;
 		}
 
 		@Override
@@ -528,7 +558,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		 * 
 		 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem.Container#getChildren()
 		 */
-		public IMergeViewerItem[] getChildren() {
+		public IMergeViewerItem[] getChildren(Collection<IDifferenceFilter> filters) {
 			Object sideValue = getSideValue(getSide());
 			EObject bestSideValue = (EObject)getBestSideValue();
 
@@ -550,10 +580,10 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 				List<Object> featureContent = ReferenceUtil.getAsList((EObject)sideValue, eStructuralFeature);
 				List<IMergeViewerItem> mergeViewerItem = createMergeViewerItemFrom(featureContent);
 				if (getSide() != MergeViewerSide.ANCESTOR) {
-					List<Diff> differencesOnFeature = ImmutableList.copyOf(filter(differences,
+					List<? extends Diff> differencesOnFeature = ImmutableList.copyOf(filter(differences,
 							onFeature(eStructuralFeature.getName())));
 					ret.addAll(createInsertionPoints(getComparison(), eStructuralFeature, mergeViewerItem,
-							differencesOnFeature));
+							filteredDiffs(differencesOnFeature, filters)));
 
 				} else {
 					ret.addAll(mergeViewerItem);
@@ -613,6 +643,5 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 
 			return ret;
 		}
-
 	}
 }

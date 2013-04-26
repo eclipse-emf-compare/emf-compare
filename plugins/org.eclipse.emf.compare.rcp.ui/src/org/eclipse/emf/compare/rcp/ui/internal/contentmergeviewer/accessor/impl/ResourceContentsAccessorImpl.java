@@ -157,5 +157,4 @@ public class ResourceContentsAccessorImpl implements IResourceContentsAccessor {
 	public String getType() {
 		return TypeConstants.TYPE__ERESOURCE_DIFF;
 	}
-
 }

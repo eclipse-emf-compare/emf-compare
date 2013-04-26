@@ -19,6 +19,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.SWT;
@@ -70,7 +71,6 @@ public abstract class TableOrTreeMergeViewer extends StructuredMergeViewer {
 
 		fMesureItemListener = new MesureItemListener();
 		getStructuredViewer().getControl().addListener(SWT.MeasureItem, fMesureItemListener);
-
 	}
 
 	/**
@@ -115,13 +115,21 @@ public abstract class TableOrTreeMergeViewer extends StructuredMergeViewer {
 
 		if (data instanceof IMergeViewerItem) {
 			IMergeViewerItem mergeViewerItem = ((IMergeViewerItem)data);
-			if (mergeViewerItem.isInsertionPoint()) {
-				paintItemDiffBox(event, itemWrapper, mergeViewerItem.getDiff(), getBoundsForInsertionPoint(
-						event, itemWrapper));
-			} else {
-				Diff diff = ((IMergeViewerItem)data).getDiff();
-				if (diff != null) {
-					paintItemDiffBox(event, itemWrapper, diff, getBounds(event, itemWrapper));
+			boolean doPaint = true;
+			Diff diff = mergeViewerItem.getDiff();
+			for (IDifferenceFilter filter : getSelectedFilters()) {
+				if (filter.getPredicateWhenSelected().apply(diff)) {
+					doPaint = false;
+					break;
+				}
+			}
+			if (doPaint) {
+				if (mergeViewerItem.isInsertionPoint()) {
+					paintItemDiffBox(event, itemWrapper, diff, getBoundsForInsertionPoint(event, itemWrapper));
+				} else {
+					if (diff != null) {
+						paintItemDiffBox(event, itemWrapper, diff, getBounds(event, itemWrapper));
+					}
 				}
 			}
 		}

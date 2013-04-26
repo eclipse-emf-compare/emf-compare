@@ -16,6 +16,7 @@ import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.collect.Lists;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -28,8 +29,9 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -50,7 +52,8 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 	 *      AdapterFactory adapterFactory)
 	 */
 	public ResourceAttachmentChangeMergeViewerItem(Comparison comparison, Diff diff, Resource left,
-			Resource right, Resource ancestor, MergeViewerSide side, AdapterFactory adapterFactory) {
+			Resource right, Resource ancestor, IMergeViewer.MergeViewerSide side,
+			AdapterFactory adapterFactory) {
 		super(comparison, diff, left, right, ancestor, side, adapterFactory);
 	}
 
@@ -61,7 +64,7 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 	 *      Diff, Match, MergeViewerSide, AdapterFactory)
 	 */
 	public ResourceAttachmentChangeMergeViewerItem(Comparison comparison, Diff diff, Match match,
-			MergeViewerSide side, AdapterFactory adapterFactory) {
+			IMergeViewer.MergeViewerSide side, AdapterFactory adapterFactory) {
 		super(comparison, diff, match, side, adapterFactory);
 	}
 
@@ -71,7 +74,7 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem.Container#getChildren()
 	 */
 	@Override
-	public IMergeViewerItem[] getChildren() {
+	public IMergeViewerItem[] getChildren(Collection<IDifferenceFilter> filters) {
 		Object sideValue = getSideValue(getSide());
 		Object bestSideValue = getBestSideValue();
 
@@ -83,7 +86,7 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 				mergeViewerItems = createMergeViewerItemFrom(((Resource)sideValue).getContents());
 			}
 
-			if (getSide() != MergeViewerSide.ANCESTOR) {
+			if (getSide() != IMergeViewer.MergeViewerSide.ANCESTOR) {
 				EList<Diff> differences = getComparison().getDifferences();
 				Iterable<ResourceAttachmentChange> racs = filter(differences, ResourceAttachmentChange.class);
 				List<ResourceAttachmentChange> resourceAttachmentChanges = Lists.newArrayList(racs);
@@ -101,7 +104,8 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 						resourceAttachmentChanges.remove(resourceAttachmentChange);
 					}
 				}
-				ret.addAll(createInsertionPoints(mergeViewerItems, resourceAttachmentChanges));
+				ret.addAll(createInsertionPoints(mergeViewerItems,
+						(List<ResourceAttachmentChange>)filteredDiffs(resourceAttachmentChanges, filters)));
 			} else {
 				ret.addAll(mergeViewerItems);
 			}
@@ -132,7 +136,10 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 		if (match != null) {
 			ResourceAttachmentChange rac = getFirst(filter(match.getDifferences(),
 					ResourceAttachmentChange.class), null);
-			return new MergeViewerItem.Container(getComparison(), rac, match, getSide(), getAdapterFactory());
+			if (rac != null) {
+				return new MergeViewerItem.Container(getComparison(), rac, match, getSide(),
+						getAdapterFactory());
+			}
 		}
 		return null;
 
@@ -152,21 +159,22 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 			final List<? extends IMergeViewerItem> values, final List<ResourceAttachmentChange> racs) {
 		List<IMergeViewerItem> ret = newArrayList(values);
 		for (ResourceAttachmentChange diff : Lists.reverse(racs)) {
-			boolean rightToLeft = (getSide() == MergeViewerSide.LEFT);
+			boolean rightToLeft = (getSide() == IMergeViewer.MergeViewerSide.LEFT);
 			Comparison comparison = getComparison();
 			Object left = MergeViewerUtil.getValueFromResourceAttachmentChange(diff, comparison,
-					MergeViewerSide.LEFT);
+					IMergeViewer.MergeViewerSide.LEFT);
 			Object right = MergeViewerUtil.getValueFromResourceAttachmentChange(diff, comparison,
-					MergeViewerSide.RIGHT);
+					IMergeViewer.MergeViewerSide.RIGHT);
 
 			boolean b1 = diff.getSource() == DifferenceSource.LEFT && diff.getKind() == DifferenceKind.DELETE
-					&& getSide() == MergeViewerSide.LEFT;
+					&& getSide() == IMergeViewer.MergeViewerSide.LEFT;
 			boolean b2 = diff.getSource() == DifferenceSource.LEFT && diff.getKind() == DifferenceKind.ADD
-					&& getSide() == MergeViewerSide.RIGHT;
+					&& getSide() == IMergeViewer.MergeViewerSide.RIGHT;
 			boolean b3 = diff.getSource() == DifferenceSource.RIGHT && diff.getKind() == DifferenceKind.ADD
-					&& getSide() == MergeViewerSide.LEFT;
+					&& getSide() == IMergeViewer.MergeViewerSide.LEFT;
 			boolean b4 = diff.getSource() == DifferenceSource.RIGHT
-					&& diff.getKind() == DifferenceKind.DELETE && getSide() == MergeViewerSide.RIGHT;
+					&& diff.getKind() == DifferenceKind.DELETE
+					&& getSide() == IMergeViewer.MergeViewerSide.RIGHT;
 
 			// do not duplicate insertion point for pseudo add conflict
 			// so we must only create one for pseudo delete conflict
@@ -175,17 +183,18 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 
 			if ((b1 || b2 || b3 || b4) && b5) {
 				Object ancestor = MergeViewerUtil.getValueFromResourceAttachmentChange(diff, comparison,
-						MergeViewerSide.ANCESTOR);
+						IMergeViewer.MergeViewerSide.ANCESTOR);
 				if (left != null
-						&& MergeViewerUtil.getResource(comparison, MergeViewerSide.LEFT, diff) == null) {
+						&& MergeViewerUtil.getResource(comparison, IMergeViewer.MergeViewerSide.LEFT, diff) == null) {
 					left = null;
 				}
 				if (right != null
-						&& MergeViewerUtil.getResource(comparison, MergeViewerSide.RIGHT, diff) == null) {
+						&& MergeViewerUtil.getResource(comparison, IMergeViewer.MergeViewerSide.RIGHT, diff) == null) {
 					right = null;
 				}
 				if (ancestor != null
-						&& MergeViewerUtil.getResource(comparison, MergeViewerSide.ANCESTOR, diff) == null) {
+						&& MergeViewerUtil.getResource(comparison, IMergeViewer.MergeViewerSide.ANCESTOR,
+								diff) == null) {
 					ancestor = null;
 				}
 				IMergeViewerItem insertionPoint = new MergeViewerItem.Container(comparison, diff, left,
@@ -193,8 +202,10 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 
 				final int insertionIndex;
 				if (left == null && right == null) {
-					insertionIndex = MergeViewerUtil.getResource(comparison, MergeViewerSide.ANCESTOR, diff)
-							.getContents().indexOf(ancestor);
+					Resource resource = MergeViewerUtil.getResource(comparison,
+							IMergeViewer.MergeViewerSide.ANCESTOR, diff);
+					List<EObject> contents = resource.getContents();
+					insertionIndex = contents.indexOf(ancestor);
 				} else {
 					insertionIndex = Math.min(findInsertionIndex(diff, rightToLeft), ret.size());
 				}
@@ -237,11 +248,15 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 		final Resource initialResource;
 		final Resource expectedResource;
 		if (rightToLeft) {
-			initialResource = MergeViewerUtil.getResource(comparison, MergeViewerSide.RIGHT, diff);
-			expectedResource = MergeViewerUtil.getResource(comparison, MergeViewerSide.LEFT, diff);
+			initialResource = MergeViewerUtil.getResource(comparison, IMergeViewer.MergeViewerSide.RIGHT,
+					diff);
+			expectedResource = MergeViewerUtil.getResource(comparison, IMergeViewer.MergeViewerSide.LEFT,
+					diff);
 		} else {
-			initialResource = MergeViewerUtil.getResource(comparison, MergeViewerSide.LEFT, diff);
-			expectedResource = MergeViewerUtil.getResource(comparison, MergeViewerSide.RIGHT, diff);
+			initialResource = MergeViewerUtil
+					.getResource(comparison, IMergeViewer.MergeViewerSide.LEFT, diff);
+			expectedResource = MergeViewerUtil.getResource(comparison, IMergeViewer.MergeViewerSide.RIGHT,
+					diff);
 		}
 		if (expectedResource != null) {
 			final List<EObject> sourceList = initialResource.getContents();
