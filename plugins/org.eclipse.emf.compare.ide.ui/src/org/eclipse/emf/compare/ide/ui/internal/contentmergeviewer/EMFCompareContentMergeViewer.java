@@ -135,6 +135,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		if (newValue != oldValue) {
 			if (newValue != null) {
 				newValue.getCommandStack().addCommandStackListener(this);
+				setLeftDirty(newValue.getCommandStack().isLeftSaveNeeded());
+				setRightDirty(newValue.getCommandStack().isRightSaveNeeded());
 			}
 			if (undoAction != null) {
 				undoAction.setEditingDomain(newValue);
@@ -142,7 +144,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			if (redoAction != null) {
 				redoAction.setEditingDomain(newValue);
 			}
-
 		}
 	}
 

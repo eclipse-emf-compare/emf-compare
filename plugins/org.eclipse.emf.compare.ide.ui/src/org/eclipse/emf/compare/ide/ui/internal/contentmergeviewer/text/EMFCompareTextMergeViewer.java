@@ -101,6 +101,8 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 		if (newValue != oldValue) {
 			if (newValue != null) {
 				newValue.getCommandStack().addCommandStackListener(this);
+				setLeftDirty(newValue.getCommandStack().isLeftSaveNeeded());
+				setRightDirty(newValue.getCommandStack().isRightSaveNeeded());
 			}
 		}
 	}

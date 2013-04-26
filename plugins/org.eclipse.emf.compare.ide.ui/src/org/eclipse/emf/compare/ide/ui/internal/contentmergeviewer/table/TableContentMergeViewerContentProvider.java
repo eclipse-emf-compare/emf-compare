@@ -22,7 +22,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.AccessorAdapter;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
+import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -136,19 +136,17 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 	}
 
 	public void saveLeftContent(Object element, byte[] bytes) {
-		final Object left = getLeftContent(element);
-		if (left instanceof ICompareAccessor) {
-			Comparison comparison = ((ICompareAccessor)left).getComparison();
-			EList<Match> matches = comparison.getMatches();
-			EObject leftEObject = null;
-			for (Match match : matches) {
-				leftEObject = match.getLeft();
-				if (leftEObject != null) {
-					break;
-				}
-			}
+		EList<Match> matches = getComparison().getMatches();
+		EObject leftEObject = null;
+		for (Match match : matches) {
+			leftEObject = match.getLeft();
 			if (leftEObject != null) {
-				Resource eResource = leftEObject.eResource();
+				break;
+			}
+		}
+		if (leftEObject != null) {
+			Resource eResource = leftEObject.eResource();
+			if (eResource != null) {
 				ResourceSet resourceSet = eResource.getResourceSet();
 				saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
 						Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
@@ -192,23 +190,30 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 	}
 
 	public void saveRightContent(Object element, byte[] bytes) {
-		final Object right = getRightContent(element);
-		if (right instanceof ICompareAccessor) {
-			Comparison comparison = ((ICompareAccessor)right).getComparison();
-			EList<Match> matches = comparison.getMatches();
-			EObject rightEObject = null;
-			for (Match match : matches) {
-				rightEObject = match.getRight();
-				if (rightEObject != null) {
-					break;
-				}
-			}
+		EList<Match> matches = getComparison().getMatches();
+		EObject rightEObject = null;
+		for (Match match : matches) {
+			rightEObject = match.getRight();
 			if (rightEObject != null) {
-				Resource eResource = rightEObject.eResource();
+				break;
+			}
+		}
+		if (rightEObject != null) {
+			Resource eResource = rightEObject.eResource();
+			if (eResource != null) {
 				ResourceSet resourceSet = eResource.getResourceSet();
 				saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
 						Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
 			}
 		}
+	}
+
+	/**
+	 * Returns the comparison object.
+	 * 
+	 * @return the comparison.
+	 */
+	public Comparison getComparison() {
+		return (Comparison)fCompareConfiguration.getProperty(EMFCompareConstants.COMPARE_RESULT);
 	}
 }

@@ -146,9 +146,11 @@ public class EMFCompareTextMergeViewerContentProvider implements IMergeViewerCon
 		}
 		if (leftEObject != null) {
 			Resource eResource = leftEObject.eResource();
-			ResourceSet resourceSet = eResource.getResourceSet();
-			saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
-					Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
+			if (eResource != null) {
+				ResourceSet resourceSet = eResource.getResourceSet();
+				saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+						Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
+			}
 		}
 	}
 
@@ -198,9 +200,11 @@ public class EMFCompareTextMergeViewerContentProvider implements IMergeViewerCon
 		}
 		if (leftEObject != null) {
 			Resource eResource = leftEObject.eResource();
-			ResourceSet resourceSet = eResource.getResourceSet();
-			saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
-					Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
+			if (eResource != null) {
+				ResourceSet resourceSet = eResource.getResourceSet();
+				saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+						Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
+			}
 		}
 	}
 
