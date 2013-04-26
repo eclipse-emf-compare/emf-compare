@@ -41,6 +41,7 @@ public interface ICompareEditingDomain {
 	/**
 	 * @since 3.0
 	 */
+	@Deprecated
 	Command createCopyAllNonConflictingCommand(List<? extends Diff> differences, boolean leftToRight,
 			IMerger.Registry mergerRegistry);
 

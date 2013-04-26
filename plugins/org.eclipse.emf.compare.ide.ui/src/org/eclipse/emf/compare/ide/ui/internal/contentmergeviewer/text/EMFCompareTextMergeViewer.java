@@ -10,10 +10,15 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
 
+import static com.google.common.collect.Iterables.filter;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Collections;
 import java.util.EventObject;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -32,6 +37,7 @@ import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
@@ -40,6 +46,7 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicOb
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.AttributeChangeNode;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
@@ -125,22 +132,44 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 	}
 
 	/**
+	 * @return the fComparison
+	 */
+	protected final Comparison getComparison() {
+		return (Comparison)getCompareConfiguration().getProperty(EMFCompareConstants.COMPARE_RESULT);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#copy(boolean)
 	 */
 	@Override
-	protected void copy(boolean leftToRight) {
-		Object input = getInput();
-		if (input instanceof AttributeChangeNode) {
-			final AttributeChange attributeChange = ((AttributeChangeNode)input).getTarget();
-			final Comparison comparison = attributeChange.getMatch().getComparison();
+	protected void copy(final boolean leftToRight) {
+		final List<Diff> differences;
 
-			final Command copyCommand = getEditingDomain().createCopyAllNonConflictingCommand(
-					comparison.getDifferences(), leftToRight,
+		if (getComparison().isThreeWay()) {
+			differences = ImmutableList.copyOf(filter(getComparison().getDifferences(),
+					new Predicate<Diff>() {
+						public boolean apply(Diff diff) {
+							final boolean unresolved = diff.getState() == DifferenceState.UNRESOLVED;
+							final boolean nonConflictual = diff.getConflict() == null;
+							final boolean fromLeftToRight = leftToRight
+									&& diff.getSource() == DifferenceSource.LEFT;
+							final boolean fromRightToLeft = !leftToRight
+									&& diff.getSource() == DifferenceSource.RIGHT;
+							return unresolved && nonConflictual && (fromLeftToRight || fromRightToLeft);
+						}
+					}));
+		} else {
+			differences = ImmutableList.copyOf(filter(getComparison().getDifferences(), EMFComparePredicates
+					.hasState(DifferenceState.UNRESOLVED)));
+		}
+
+		if (differences.size() > 0) {
+			final Command copyCommand = getEditingDomain().createCopyCommand(differences, leftToRight,
 					EMFCompareRCPPlugin.getDefault().getMergerRegistry());
-			getEditingDomain().getCommandStack().execute(copyCommand);
 
+			getEditingDomain().getCommandStack().execute(copyCommand);
 			refresh();
 		}
 	}

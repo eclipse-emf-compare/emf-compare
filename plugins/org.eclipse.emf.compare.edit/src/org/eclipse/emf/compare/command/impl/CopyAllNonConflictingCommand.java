@@ -31,8 +31,10 @@ import org.eclipse.emf.ecore.change.util.ChangeRecorder;
  * LEFT if copying from left to right) and <b>not</b> in a conflicting state.
  * </p>
  * 
+ * @deprecated should use {@link CopyCommand} instead and give already filtered differences.
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
+@Deprecated
 public class CopyAllNonConflictingCommand extends AbstractCopyCommand {
 
 	/**
