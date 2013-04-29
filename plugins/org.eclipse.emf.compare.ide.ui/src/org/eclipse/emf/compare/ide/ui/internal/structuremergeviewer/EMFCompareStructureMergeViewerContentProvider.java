@@ -311,8 +311,13 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 			if (!isPartOfTree.apply((Diff)object)) {
 				if (object instanceof ReferenceChange
 						&& ((ReferenceChange)object).getReference().isContainment()) {
-					ret = Iterables.any(((Diff)object).getMatch().getComparison().getMatch(
-							((ReferenceChange)object).getValue()).getAllDifferences(), isPartOfTree);
+					Match match = ((Diff)object).getMatch().getComparison().getMatch(
+							((ReferenceChange)object).getValue());
+					if (match != null) {
+						ret = Iterables.any(match.getAllDifferences(), isPartOfTree);
+					} else {
+						ret = false;
+					}
 				}
 			} else {
 				ret = true;
