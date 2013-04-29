@@ -42,7 +42,7 @@ public class ViewItemProviderSpec extends ViewItemProvider {
 	@Override
 	public String getText(Object object) {
 		View obj = (View)object;
-		return getEClassText(obj) + " on " + getElementText(obj);
+		return getEClassText(obj) + " " + getElementText(obj);
 	}
 
 	/**
