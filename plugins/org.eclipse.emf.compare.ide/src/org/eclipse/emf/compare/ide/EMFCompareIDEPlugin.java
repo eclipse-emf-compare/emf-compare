@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
@@ -59,6 +60,16 @@ public class EMFCompareIDEPlugin extends Plugin {
 	 */
 	public void log(int severity, String message) {
 		getLog().log(new Status(severity, PLUGIN_ID, message));
+	}
+
+	/**
+	 * Log the given exception to the logger of this plugin.
+	 * 
+	 * @param throwable
+	 *            the throwable to log.
+	 */
+	public void log(Throwable throwable) {
+		getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, throwable.getMessage(), throwable));
 	}
 
 	/**
