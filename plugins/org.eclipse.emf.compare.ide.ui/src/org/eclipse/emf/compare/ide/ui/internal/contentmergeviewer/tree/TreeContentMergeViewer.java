@@ -287,7 +287,11 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 					if (value instanceof EObject && ((EObject)value).eIsProxy()) {
 						text = "proxy : " + ((InternalEObject)value).eProxyURI().toString();
 					} else if (mergeViewerItem.isInsertionPoint()) {
-						text = " ";
+						// workaround for 406513: Windows specific issue. Only labels of (Tree/Table)Item are
+						// selectable on Windows platform. The labels of placeholders in (Tree/Table)Viewer
+						// are one whitespace. Placeholder are then selectable at the very left of itself.
+						// Add a 42 whitespaces label to workaround.
+						text = "                                          ";
 					} else if (value == null
 							&& mergeViewerItem.getSideValue(side.opposite()) instanceof Resource) {
 						text = "Unknown resource";
