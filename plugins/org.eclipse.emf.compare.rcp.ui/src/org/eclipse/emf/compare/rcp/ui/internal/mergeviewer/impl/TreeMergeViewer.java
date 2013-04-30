@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem.Container;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -84,6 +85,15 @@ public class TreeMergeViewer extends TableOrTreeMergeViewer {
 			getStructuredViewer().setInput(input);
 			IMergeViewerItem initialItem = ((ICompareAccessor)input).getInitialItem();
 			if (initialItem != null) {
+				if (oldInput instanceof ICompareAccessor) {
+					IMergeViewerItem initialOldItem = ((ICompareAccessor)oldInput).getInitialItem();
+					if (initialOldItem != null) {
+						Container parent = initialOldItem.getParent();
+						if (parent != null) {
+							setExpandedState(parent, false);
+						}
+					}
+				}
 				getStructuredViewer().setSelection(new StructuredSelection(initialItem), true);
 			}
 		} else {
