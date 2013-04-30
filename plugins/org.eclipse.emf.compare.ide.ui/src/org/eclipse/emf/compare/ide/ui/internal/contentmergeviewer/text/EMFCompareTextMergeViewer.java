@@ -12,23 +12,35 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
 
 import static com.google.common.collect.Iterables.filter;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.Closeables;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.EventObject;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareNavigator;
 import org.eclipse.compare.ICompareNavigator;
+import org.eclipse.compare.IStreamContentAccessor;
+import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.MergeSourceViewer;
 import org.eclipse.compare.internal.Utilities;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.Notifier;
@@ -40,10 +52,15 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.AttributeChangeNode;
+import org.eclipse.emf.compare.ide.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
@@ -61,9 +78,15 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.actions.ActionFactory;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -78,6 +101,14 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 
 	private ActionContributionItem fCopyDiffRightToLeftItem;
 
+	private final UndoAction fUndoAction;
+
+	private final RedoAction fRedoAction;
+
+	private final DelayedExecutor fDelayedExecutor;
+
+	private final ScheduledExecutorService fExecutorService;
+
 	/**
 	 * @param parent
 	 * @param configuration
@@ -85,6 +116,12 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 	public EMFCompareTextMergeViewer(Composite parent, CompareConfiguration configuration) {
 		super(parent, configuration);
 		setContentProvider(new EMFCompareTextMergeViewerContentProvider(configuration));
+
+		fRedoAction = new RedoAction();
+		fUndoAction = new UndoAction();
+
+		fExecutorService = Executors.newSingleThreadScheduledExecutor();
+		fDelayedExecutor = new DelayedExecutor(fExecutorService);
 
 		editingDomainChange(null, getEditingDomain());
 		configuration.addPropertyChangeListener(this);
@@ -98,6 +135,22 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#flushContent(java.lang.Object,
+	 *      org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	protected void flushContent(Object oldInput, IProgressMonitor monitor) {
+		try {
+			fExecutorService.awaitTermination(1, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			EMFCompareIDEUIPlugin.getDefault().log(e);
+		}
+		super.flushContent(oldInput, monitor);
+	}
+
+	/**
 	 * @param oldValue
 	 * @param newValue
 	 */
@@ -107,20 +160,65 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 		}
 		if (newValue != oldValue) {
 			if (newValue != null) {
-				newValue.getCommandStack().addCommandStackListener(this);
-				setLeftDirty(newValue.getCommandStack().isLeftSaveNeeded());
-				setRightDirty(newValue.getCommandStack().isRightSaveNeeded());
+				ICompareCommandStack commandStack = newValue.getCommandStack();
+				commandStack.addCommandStackListener(this);
+				setLeftDirty(commandStack.isLeftSaveNeeded());
+				setRightDirty(commandStack.isRightSaveNeeded());
 			}
+			fUndoAction.setEditingDomain(newValue);
+			fRedoAction.setEditingDomain(newValue);
 		}
 	}
 
+	@SuppressWarnings("resource")
 	public void commandStackChanged(EventObject event) {
+		if (fUndoAction != null) {
+			fUndoAction.update();
+		}
+		if (fRedoAction != null) {
+			fRedoAction.update();
+		}
 		if (getEditingDomain() != null) {
-			setLeftDirty(getEditingDomain().getCommandStack().isLeftSaveNeeded());
-			setRightDirty(getEditingDomain().getCommandStack().isRightSaveNeeded());
+			ICompareCommandStack commandStack = getEditingDomain().getCommandStack();
+			setLeftDirty(commandStack.isLeftSaveNeeded());
+			setRightDirty(commandStack.isRightSaveNeeded());
 		}
 
-		refresh();
+		IMergeViewerContentProvider contentProvider = (IMergeViewerContentProvider)getContentProvider();
+
+		final String leftValueFromModel = getString((IStreamContentAccessor)contentProvider
+				.getLeftContent(getInput()));
+		final String rightValueFromModel = getString((IStreamContentAccessor)contentProvider
+				.getRightContent(getInput()));
+
+		SWTUtil.safeAsyncExec(new Runnable() {
+			public void run() {
+				String leftValueFromWidget = new String(getContents(true), Charsets.UTF_8);
+				String rightValueFromWidget = new String(getContents(false), Charsets.UTF_8);
+				IEqualityHelper equalityHelper = getComparison().getEqualityHelper();
+				if (!equalityHelper.matchingAttributeValues(leftValueFromModel, leftValueFromWidget)
+						|| !equalityHelper.matchingAttributeValues(rightValueFromModel, rightValueFromWidget)) {
+					// only refresh if values are different to avoid select-all of the text.
+					refresh();
+				}
+			}
+		});
+	}
+
+	@SuppressWarnings("resource")
+	// closed by Closeables
+	private String getString(IStreamContentAccessor contentAccessor) {
+		String ret = null;
+		InputStream content = null;
+		try {
+			content = contentAccessor.getContents();
+			ret = new String(ByteStreams.toByteArray(content), Charsets.UTF_8);
+		} catch (CoreException e) {
+		} catch (IOException e) {
+		} finally {
+			Closeables.closeQuietly(content);
+		}
+		return ret;
 	}
 
 	/**
@@ -199,29 +297,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 		return false;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.ContentViewer#setInput(java.lang.Object)
-	 */
-	@Override
-	public void setInput(Object newInput) {
-		if (newInput == null) {
-			// When we leave the current input
-			Object oldInput = getInput();
-			if (oldInput instanceof AttributeChangeNode) {
-				final AttributeChange diff = ((AttributeChangeNode)oldInput).getTarget();
-				final EAttribute eAttribute = diff.getAttribute();
-				final Match match = diff.getMatch();
-				final IEqualityHelper equalityHelper = match.getComparison().getEqualityHelper();
-
-				updateModel(diff, eAttribute, equalityHelper, match.getLeft(), true);
-				updateModel(diff, eAttribute, equalityHelper, match.getRight(), false);
-			}
-		}
-		super.setInput(newInput);
-	}
-
 	private void updateModel(final AttributeChange diff, final EAttribute eAttribute,
 			final IEqualityHelper equalityHelper, final EObject eObject, boolean isLeft) {
 		final String oldValue = getStringValue(eObject, eAttribute);
@@ -258,6 +333,11 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 	}
 
 	@SuppressWarnings("restriction")
+	protected final MergeSourceViewer getAncestorSourceViewer() {
+		return (MergeSourceViewer)getDynamicObject().get("fAncestor"); //$NON-NLS-1$
+	}
+
+	@SuppressWarnings("restriction")
 	protected final MergeSourceViewer getLeftSourceViewer() {
 		return (MergeSourceViewer)getDynamicObject().get("fLeft"); //$NON-NLS-1$
 	}
@@ -267,8 +347,89 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 		return (MergeSourceViewer)getDynamicObject().get("fRight"); //$NON-NLS-1$
 	}
 
+	@SuppressWarnings("restriction")
+	protected final CompareHandlerService getHandlerService() {
+		return (CompareHandlerService)getDynamicObject().get("fHandlerService"); //$NON-NLS-1$
+	}
+
 	protected final void setHandlerService(@SuppressWarnings("restriction") CompareHandlerService service) {
 		getDynamicObject().set("fHandlerService", service); //$NON-NLS-1$
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#createControls(org.eclipse.swt.widgets.Composite)
+	 */
+	@Override
+	protected void createControls(Composite composite) {
+		super.createControls(composite);
+		attachListeners(getAncestorSourceViewer());
+		attachListeners(getLeftSourceViewer());
+		attachListeners(getRightSourceViewer());
+	}
+
+	protected void attachListeners(final MergeSourceViewer viewer) {
+		final StyledText textWidget = viewer.getSourceViewer().getTextWidget();
+		textWidget.addFocusListener(new FocusListener() {
+
+			public void focusLost(FocusEvent e) {
+				setActiveViewer(viewer, false);
+			}
+
+			public void focusGained(FocusEvent e) {
+				setActiveViewer(viewer, true);
+			}
+		});
+
+		textWidget.addVerifyListener(new VerifyListener() {
+			public void verifyText(VerifyEvent e) {
+				fDelayedExecutor.schedule(new Runnable() {
+					public void run() {
+						// When we leave the current input
+						Object oldInput = getInput();
+						if (oldInput instanceof AttributeChangeNode) {
+							final AttributeChange diff = ((AttributeChangeNode)oldInput).getTarget();
+							final EAttribute eAttribute = diff.getAttribute();
+							final Match match = diff.getMatch();
+							final IEqualityHelper equalityHelper = match.getComparison().getEqualityHelper();
+
+							updateModel(diff, eAttribute, equalityHelper, match.getLeft(), true);
+							updateModel(diff, eAttribute, equalityHelper, match.getRight(), false);
+						}
+					}
+				});
+			}
+		});
+	}
+
+	private void setActiveViewer(MergeSourceViewer viewer, boolean activate) {
+		// connectContributedActions(viewer, activate);
+		if (activate) {
+			// fFocusPart = viewer;
+			connectGlobalActions(viewer);
+		} else {
+			connectGlobalActions(null);
+		}
+	}
+
+	private void connectGlobalActions(final MergeSourceViewer part) {
+		if (getHandlerService() != null) {
+			if (part != null) {
+				part.updateActions();
+			}
+			getHandlerService().updatePaneActionHandlers(new Runnable() {
+				public void run() {
+					if (part == null) {
+						getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), null);
+						getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), null);
+					} else {
+						getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), fUndoAction);
+						getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), fRedoAction);
+					}
+				}
+			});
+		}
 	}
 
 	/**
@@ -388,7 +549,17 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
+		try {
+			fExecutorService.awaitTermination(1, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			EMFCompareIDEUIPlugin.getDefault().log(e);
+		}
+		fExecutorService.shutdown();
+
+		getCompareConfiguration().removePropertyChangeListener(this);
+
 		editingDomainChange(getEditingDomain(), null);
+
 		super.handleDispose(event);
 	}
 
