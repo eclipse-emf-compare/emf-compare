@@ -58,6 +58,7 @@ import org.eclipse.emf.compare.ide.ui.internal.actions.expand.ExpandAllModelActi
 import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
 import org.eclipse.emf.compare.ide.ui.internal.logical.EMFSynchronizationModel;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
+import org.eclipse.emf.compare.ide.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
@@ -88,7 +89,6 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.eclipse.team.core.subscribers.SubscriberMergeContext;
@@ -466,22 +466,15 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			message = "No Differences";
 		}
 
-		if (Display.getCurrent() != null) {
-			groupActionMenu.createActions(scope, comparison);
-			filterActionMenu.createActions(scope, comparison);
-			refreshAfterDiff(message, fRoot);
-			initialSelection();
-		} else {
-			final String theMessage = message;
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					groupActionMenu.createActions(scope, comparison);
-					filterActionMenu.createActions(scope, comparison);
-					refreshAfterDiff(theMessage, fRoot);
-					initialSelection();
-				}
-			});
-		}
+		final String theMessage = message;
+		SWTUtil.safeAsyncExec(new Runnable() {
+			public void run() {
+				groupActionMenu.createActions(scope, comparison);
+				filterActionMenu.createActions(scope, comparison);
+				refreshAfterDiff(theMessage, fRoot);
+				initialSelection();
+			}
+		});
 	}
 
 	/*
@@ -747,13 +740,22 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		Command mostRecentCommand = ((CommandStack)event.getSource()).getMostRecentCommand();
 		if (mostRecentCommand instanceof ICompareCopyCommand) {
 			Collection<?> affectedObjects = mostRecentCommand.getAffectedObjects();
-			refresh(true);
+
+			SWTUtil.safeAsyncExec(new Runnable() {
+				public void run() {
+					refresh(true);
+				}
+			});
 			if (!affectedObjects.isEmpty()) {
 				// MUST NOT call a setSelection with a list, o.e.compare does not handle it (cf
 				// org.eclipse.compare.CompareEditorInput#getElement(ISelection))
-				Object adaptedAffectedObject = fAdapterFactory.adapt(getFirst(affectedObjects, null),
+				final Object adaptedAffectedObject = fAdapterFactory.adapt(getFirst(affectedObjects, null),
 						ICompareInput.class);
-				setSelection(new StructuredSelection(adaptedAffectedObject), true);
+				SWTUtil.safeAsyncExec(new Runnable() {
+					public void run() {
+						setSelection(new StructuredSelection(adaptedAffectedObject), true);
+					}
+				});
 			}
 		} else {
 			// FIXME, should recompute the difference, something happened outside of this compare editor
