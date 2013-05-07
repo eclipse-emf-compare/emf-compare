@@ -29,6 +29,7 @@ import org.eclipse.emf.compare.match.eobject.EditionDistance;
 import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
 import org.eclipse.emf.compare.match.eobject.IdentifierEObjectMatcher;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher;
+import org.eclipse.emf.compare.match.eobject.internal.CachingDistance;
 import org.eclipse.emf.compare.match.resource.IResourceMatcher;
 import org.eclipse.emf.compare.match.resource.StrategyResourceMatcher;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -376,9 +377,10 @@ public class DefaultMatchEngine implements IMatchEngine {
 	public static IEObjectMatcher createDefaultEObjectMatcher(UseIdentifiers useIDs) {
 		final IEObjectMatcher matcher;
 		final EditionDistance editionDistance = new EditionDistance();
+		final CachingDistance cachedDistance = new CachingDistance(editionDistance);
 		switch (useIDs) {
 			case NEVER:
-				matcher = new ProximityEObjectMatcher(editionDistance);
+				matcher = new ProximityEObjectMatcher(cachedDistance);
 				break;
 			case ONLY:
 				matcher = new IdentifierEObjectMatcher();
@@ -387,7 +389,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 				// fall through to default
 			default:
 				// Use an ID matcher, delegating to proximity when no ID is available
-				final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(editionDistance);
+				final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(cachedDistance);
 				matcher = new IdentifierEObjectMatcher(contentMatcher);
 				break;
 

@@ -88,7 +88,6 @@ public class ProximityIndex implements EObjectIndex {
 		this.rights = Lists.newArrayList();
 		this.origins = Lists.newArrayList();
 		this.scope = matcher;
-
 	}
 
 	/**
