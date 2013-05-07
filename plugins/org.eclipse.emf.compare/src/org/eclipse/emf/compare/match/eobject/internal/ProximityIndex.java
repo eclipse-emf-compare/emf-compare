@@ -42,7 +42,13 @@ import org.eclipse.emf.ecore.EObject;
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
-public class ProximityIndex implements EObjectIndex {
+public class ProximityIndex implements EObjectIndex, MatchAheadOfTime {
+	/**
+	 * The number of elements until which the index will provide elements to match ahead of time. This is done
+	 * to avoid algorithm complexity explosion. This is clearly a tradeoff as matching ahead of time means
+	 * some "better match" might not be found.
+	 */
+	private static final int SEARCH_WINDOW = 1000;
 
 	/**
 	 * The distance function used to compare the Objects.
@@ -342,6 +348,17 @@ public class ProximityIndex implements EObjectIndex {
 		public boolean some() {
 			return eObject != null;
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Iterable<EObject> getValuesToMatchAhead(Side left) {
+		Collection<EObject> indexedValues = getValuesStillThere(left);
+		if (indexedValues.size() > SEARCH_WINDOW) {
+			return indexedValues;
+		}
+		return Collections.emptyList();
 	}
 
 }

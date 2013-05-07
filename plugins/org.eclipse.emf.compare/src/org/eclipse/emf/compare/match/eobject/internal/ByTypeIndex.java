@@ -31,7 +31,7 @@ import org.eclipse.emf.ecore.EObject;
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
-public class ByTypeIndex implements EObjectIndex {
+public class ByTypeIndex implements EObjectIndex, MatchAheadOfTime {
 	/**
 	 * All the type specific indexes, created on demand.
 	 */
@@ -138,6 +138,18 @@ public class ByTypeIndex implements EObjectIndex {
 	public void index(EObject eObjs, Side side) {
 		EObjectIndex typeSpecificIndex = getOrCreate(eObjs);
 		typeSpecificIndex.index(eObjs, side);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Iterable<EObject> getValuesToMatchAhead(Side side) {
+		List<Iterable<EObject>> allLists = Lists.newArrayList();
+		for (MatchAheadOfTime typeSpecificIndex : Iterables.filter(allIndexes.values(),
+				MatchAheadOfTime.class)) {
+			allLists.add(typeSpecificIndex.getValuesToMatchAhead(side));
+		}
+		return Iterables.concat(allLists);
 	}
 
 }
