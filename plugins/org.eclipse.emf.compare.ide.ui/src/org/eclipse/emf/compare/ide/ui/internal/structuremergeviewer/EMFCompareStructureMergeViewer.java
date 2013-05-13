@@ -584,7 +584,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		Version junoStart = Version.parseVersion("3.103");
 
 		// XXX MBA change to 3.105 once bug #366528 is fixed
-		Version keplerStart = Version.parseVersion("3.106");
+		Version keplerStart = Version.parseVersion("3.105");
 
 		if (uiWorkbenchBundle != null && uiWorkbenchBundle.getVersion().compareTo(junoStart) >= 0
 				&& uiWorkbenchBundle.getVersion().compareTo(keplerStart) < 0) {
