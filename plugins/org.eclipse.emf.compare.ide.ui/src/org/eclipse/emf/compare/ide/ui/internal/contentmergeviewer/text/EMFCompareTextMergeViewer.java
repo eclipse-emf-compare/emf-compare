@@ -21,6 +21,7 @@ import com.google.common.io.Closeables;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.EventObject;
 import java.util.List;
@@ -193,8 +194,8 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 
 		SWTUtil.safeAsyncExec(new Runnable() {
 			public void run() {
-				String leftValueFromWidget = new String(getContents(true), Charsets.UTF_8);
-				String rightValueFromWidget = new String(getContents(false), Charsets.UTF_8);
+				String leftValueFromWidget = getContents(true, Charsets.UTF_8.name());
+				String rightValueFromWidget = getContents(false, Charsets.UTF_8.name());
 				IEqualityHelper equalityHelper = getComparison().getEqualityHelper();
 				if (!equalityHelper.matchingAttributeValues(leftValueFromModel, leftValueFromWidget)
 						|| !equalityHelper.matchingAttributeValues(rightValueFromModel, rightValueFromWidget)) {
@@ -212,7 +213,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 		InputStream content = null;
 		try {
 			content = contentAccessor.getContents();
-			ret = new String(ByteStreams.toByteArray(content), Charsets.UTF_8);
+			ret = new String(ByteStreams.toByteArray(content), Charsets.UTF_8.name());
 		} catch (CoreException e) {
 		} catch (IOException e) {
 		} finally {
@@ -297,10 +298,20 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 		return false;
 	}
 
+	protected String getContents(boolean isLeft, String charsetName) {
+		try {
+			return new String(getContents(isLeft), Charsets.UTF_8.name());
+		} catch (UnsupportedEncodingException e) {
+			// UTF_8 is a standard charset guaranteed to be supported by all Java platform
+			// implementations
+		}
+		return null; // can not happen.
+	}
+
 	private void updateModel(final AttributeChange diff, final EAttribute eAttribute,
 			final IEqualityHelper equalityHelper, final EObject eObject, boolean isLeft) {
 		final String oldValue = getStringValue(eObject, eAttribute);
-		final String newValue = new String(getContents(isLeft));
+		String newValue = getContents(isLeft, Charsets.UTF_8.name());
 
 		final boolean oldAndNewEquals = equalityHelper.matchingAttributeValues(newValue, oldValue);
 		if (eObject != null && !oldAndNewEquals && getCompareConfiguration().isLeftEditable()) {
