@@ -63,6 +63,7 @@ import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.utils.DiffUtil;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
@@ -1017,13 +1018,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 
 				// Container "list" case
 				if (isNodeList(referenceView)) {
-					Diff refiningDiff = Iterators.find(diff.getRefinedBy().iterator(), and(
-							valueIs(referenceView),
-							onFeature(NotationPackage.Literals.VIEW__PERSISTED_CHILDREN.getName())));
 
-					// FIXME: It has to manage visible views.
-					int index = DiffUtil.findInsertionIndex(getComparison(), refiningDiff,
-							side == MergeViewerSide.LEFT);
+					int index = getIndex(diff, referenceView, side);
 
 					IFigure referenceParentFigure = referenceFigure.getParent();
 					Rectangle referenceParentBounds = referenceParentFigure.getBounds().getCopy();
@@ -1089,6 +1085,52 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 
 			return null;
 
+		}
+
+		/**
+		 * Get the index of the phantom to draw.
+		 * 
+		 * @param diff
+		 *            The related difference used as index for the main phantom.
+		 * @param referenceView
+		 *            The reference view to compute the phantom.
+		 * @param side
+		 *            The side where the phantom has to be drawn.
+		 * @return The index in the list where the phantom has to be drawn.
+		 */
+		private int getIndex(Diff diff, View referenceView, MergeViewerSide side) {
+			// Case for invisible objects
+			if (diff instanceof Hide || diff instanceof Show) {
+				List<Object> source = null;
+				List<Object> target = null;
+				Object newElement = null;
+				Match match = diff.getMatch();
+				List<Object> leftList = ReferenceUtil.getAsList(match.getLeft().eContainer(),
+						NotationPackage.Literals.VIEW__PERSISTED_CHILDREN);
+				List<Object> rightList = ReferenceUtil.getAsList(match.getRight().eContainer(),
+						NotationPackage.Literals.VIEW__PERSISTED_CHILDREN);
+				if (diff instanceof Hide) {
+					source = rightList;
+					target = leftList;
+					newElement = diff.getMatch().getRight();
+				} else {
+					source = leftList;
+					target = rightList;
+					newElement = diff.getMatch().getLeft();
+				}
+				Iterable<Object> ignoredElements = Iterables.filter(target, new Predicate() {
+					public boolean apply(Object input) {
+						return input instanceof View && !((View)input).isVisible();
+					}
+				});
+				return DiffUtil.findInsertionIndex(getComparison(), ignoredElements, source, target,
+						newElement);
+			}
+			// Case for deleted objects
+			Diff refiningDiff = Iterators.find(diff.getRefinedBy().iterator(), and(valueIs(referenceView),
+					onFeature(NotationPackage.Literals.VIEW__PERSISTED_CHILDREN.getName())));
+
+			return DiffUtil.findInsertionIndex(getComparison(), refiningDiff, side == MergeViewerSide.LEFT);
 		}
 
 		/**
