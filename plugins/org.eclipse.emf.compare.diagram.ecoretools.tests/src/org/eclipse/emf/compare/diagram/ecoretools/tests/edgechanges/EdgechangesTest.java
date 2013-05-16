@@ -61,6 +61,8 @@ public class EdgechangesTest extends AbstractTest {
 
 		assertSame(Integer.valueOf(1), edgeChange.getRefinedBy().size());
 		assertTrue(edgeChange.getRefinedBy().contains(attributeChange));
+		
+		testIntersections(comparison);
 	}
 
 	@Test
@@ -88,6 +90,8 @@ public class EdgechangesTest extends AbstractTest {
 
 		assertSame(Integer.valueOf(1), edgeChange.getRefinedBy().size());
 		assertTrue(edgeChange.getRefinedBy().contains(attributeChange));
+		
+		testIntersections(comparison);
 	}
 
 	@Test
@@ -116,6 +120,8 @@ public class EdgechangesTest extends AbstractTest {
 
 		assertSame(Integer.valueOf(3), edgeChange.getRefinedBy().size());
 		assertTrue(edgeChange.getRefinedBy().containsAll(diffs));
+		
+		testIntersections(comparison);
 
 	}
 
@@ -145,6 +151,8 @@ public class EdgechangesTest extends AbstractTest {
 
 		assertSame(Integer.valueOf(3), edgeChange.getRefinedBy().size());
 		assertTrue(edgeChange.getRefinedBy().containsAll(diffs));
+		
+		testIntersections(comparison);
 	}
 
 	@Test
@@ -173,6 +181,7 @@ public class EdgechangesTest extends AbstractTest {
 		assertSame(Integer.valueOf(1), edgeChange.getRefinedBy().size());
 		assertTrue(edgeChange.getRefinedBy().contains(attributeChange));
 
+		testIntersections(comparison);
 	}
 
 	@Test
@@ -200,6 +209,8 @@ public class EdgechangesTest extends AbstractTest {
 
 		assertSame(Integer.valueOf(1), edgeChange.getRefinedBy().size());
 		assertTrue(edgeChange.getRefinedBy().contains(attributeChange));
+		
+		testIntersections(comparison);
 	}
 
 	@Test
@@ -229,6 +240,8 @@ public class EdgechangesTest extends AbstractTest {
 
 		assertSame(Integer.valueOf(12), edgeChange.getRefinedBy().size());// 11 + the add of edge for convenience...
 		assertTrue(edgeChange.getRefinedBy().contains(addEdge)); // for convenience...
+		
+		testIntersections(comparison);
 
 	}
 
@@ -259,6 +272,8 @@ public class EdgechangesTest extends AbstractTest {
 		Diff deleteEdge = Iterators.find(differences.iterator(),
 				and(valueIsEdge, ofKind(DifferenceKind.DELETE)));
 		assertTrue(edgeChange.getRefinedBy().contains(deleteEdge));
+		
+		testIntersections(comparison);
 	}
 
 	@Override

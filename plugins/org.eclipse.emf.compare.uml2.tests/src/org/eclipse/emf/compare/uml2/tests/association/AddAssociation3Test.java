@@ -346,6 +346,8 @@ public class AddAssociation3Test extends AbstractTest {
 		assertNotNull(addPropertyClass1InAssociation.getEquivalence());
 		assertTrue(addPropertyClass1InAssociation.getEquivalence().getDifferences().contains(
 				addRefAssociationInPropertyClass1));
+
+		testIntersections(comparison);
 	}
 
 	private static Predicate<? super Diff> addedLowerValueIn(final String qualifiedName) {

@@ -708,6 +708,8 @@ public class DynamicStereotypeTest extends AbstractTest {
 		// CHECK EQUIVALENCE
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getEquivalences().size()));
 
+		testIntersections(comparison);
+
 	}
 
 	private void testAB2(TestKind kind, final Comparison comparison) {
@@ -728,6 +730,8 @@ public class DynamicStereotypeTest extends AbstractTest {
 
 		final Diff addAttribute = Iterators.find(differences.iterator(), addAttributeDescription);
 		assertNotNull(addAttribute);
+
+		testIntersections(comparison);
 
 	}
 
@@ -876,6 +880,8 @@ public class DynamicStereotypeTest extends AbstractTest {
 
 		// CHECK EQUIVALENCE
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getEquivalences().size()));
+
+		testIntersections(comparison);
 	}
 
 	private void testAB4(TestKind kind, final Comparison comparison) {
@@ -906,6 +912,7 @@ public class DynamicStereotypeTest extends AbstractTest {
 		assertNotNull(addStereotypeApplication);
 		assertNotNull(addUMLStereotypeApplication);
 
+		testIntersections(comparison);
 	}
 
 	private void testAB5(TestKind kind, final Comparison comparison) {
@@ -933,6 +940,8 @@ public class DynamicStereotypeTest extends AbstractTest {
 		assertSame(Integer.valueOf(2), Integer.valueOf(changeUMLStereotypeApplication.getRefinedBy().size()));
 		assertTrue(changeUMLStereotypeApplication.getRefinedBy().contains(changeAttribute1));
 		assertTrue(changeUMLStereotypeApplication.getRefinedBy().contains(changeAttribute2));
+
+		testIntersections(comparison);
 
 	}
 
@@ -965,6 +974,8 @@ public class DynamicStereotypeTest extends AbstractTest {
 		assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLStereotype.getRefinedBy().size()));
 		assertTrue(changeUMLStereotype.getRefinedBy().contains(addStereotypeRef));
 
+		testIntersections(comparison);
+
 	}
 
 	private void testAB7(TestKind kind, final Comparison comparison) {
@@ -990,6 +1001,8 @@ public class DynamicStereotypeTest extends AbstractTest {
 
 		assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLStereotype.getRefinedBy().size()));
 		assertTrue(changeUMLStereotype.getRefinedBy().contains(moveStereotypeRef));
+
+		testIntersections(comparison);
 
 	}
 
@@ -1025,6 +1038,7 @@ public class DynamicStereotypeTest extends AbstractTest {
 		assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLStereotype.getRefinedBy().size()));
 		assertTrue(changeUMLStereotype.getRefinedBy().contains(changeStereotypeRef));
 
+		testIntersections(comparison);
 	}
 
 	private void testAB9(TestKind kind, final Comparison comparison) {
@@ -1053,6 +1067,7 @@ public class DynamicStereotypeTest extends AbstractTest {
 		assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLStereotype.getRefinedBy().size()));
 		assertTrue(changeUMLStereotype.getRefinedBy().contains(changeStereotypeRef));
 
+		testIntersections(comparison);
 	}
 
 	private void testAB10(TestKind kind, final Comparison comparison) {
@@ -1086,6 +1101,7 @@ public class DynamicStereotypeTest extends AbstractTest {
 		assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLStereotype.getRefinedBy().size()));
 		assertTrue(changeUMLStereotype.getRefinedBy().contains(changeStereotypeRef));
 
+		testIntersections(comparison);
 	}
 
 	@Override

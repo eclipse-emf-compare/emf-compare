@@ -306,6 +306,8 @@ public class NodechangesTest extends AbstractTest {
 		assertFalse("No resource attachment changes expected",
 				Iterators.filter(differences.iterator(), instanceOf(ResourceAttachmentChange.class))
 						.hasNext());
+		
+		testIntersections(comparison);
 	}
 
 	@Test
@@ -528,6 +530,7 @@ public class NodechangesTest extends AbstractTest {
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addRefElementInEAnnotationView));
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addBoundsInEAnnotationView));
 
+		testIntersections(comparison);
 	}
 
 	@Test
@@ -643,6 +646,8 @@ public class NodechangesTest extends AbstractTest {
 		assertFalse("No resource attachment changes expected",
 				Iterators.filter(differences.iterator(), instanceOf(ResourceAttachmentChange.class))
 						.hasNext());
+		
+		testIntersections(comparison);
 	}
 
 	@Override

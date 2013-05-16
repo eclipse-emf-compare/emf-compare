@@ -222,6 +222,8 @@ public class AddGeneralizationSetTest extends AbstractTest {
 		assertTrue(addRefGeneralizationInGeneralizationSet2.getEquivalence().getDifferences().contains(
 				addRefGeneralizationSetInClass2));
 
+		testIntersections(comparison);
+
 	}
 
 	public static Predicate<? super Diff> removedFromReference1(final String qualifiedName,

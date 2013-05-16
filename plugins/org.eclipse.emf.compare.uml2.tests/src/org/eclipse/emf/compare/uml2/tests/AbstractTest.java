@@ -10,9 +10,11 @@
  */
 package org.eclipse.emf.compare.uml2.tests;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
 import java.util.Iterator;
@@ -149,4 +151,13 @@ public abstract class AbstractTest {
 		assertTrue("Comparison#getDifferences() must be empty after copyAllRightToLeft", comparisonAfter
 				.getDifferences().isEmpty());
 	}
+
+	protected void testIntersections(Comparison comparison) {
+		assertFalse(Iterables.any(comparison.getDifferences(), new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input.getRefines().size() > 1;
+			}
+		}));
+	}
+
 }

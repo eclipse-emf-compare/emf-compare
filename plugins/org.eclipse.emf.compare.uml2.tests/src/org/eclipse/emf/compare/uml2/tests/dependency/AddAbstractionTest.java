@@ -183,6 +183,8 @@ public class AddAbstractionTest extends AbstractTest {
 		assertTrue(addRefClass1InAbstraction.getEquivalence().getDifferences().contains(
 				addRefAbstractionInClass1));
 
+		testIntersections(comparison);
+
 	}
 
 	@Override

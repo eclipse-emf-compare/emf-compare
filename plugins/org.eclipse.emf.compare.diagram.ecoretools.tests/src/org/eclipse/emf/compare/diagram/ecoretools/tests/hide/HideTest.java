@@ -59,6 +59,7 @@ public class HideTest extends AbstractTest {
 		assertSame(Integer.valueOf(1), Integer.valueOf(hide.getRefinedBy().size()));
 		assertTrue(hide.getRefinedBy().contains(attributeChange));
 		
+		testIntersections(comparison);	
 	}
 
 	@Override

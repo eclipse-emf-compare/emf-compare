@@ -376,6 +376,8 @@ public class AddAssociationTest extends AbstractTest {
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUnlimitedNaturalInClass1.getRequires().size()));
 			assertSame(Integer.valueOf(0), Integer.valueOf(addLiteralIntegerInClass2.getRequires().size()));
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUnlimitedNaturalInClass2.getRequires().size()));
+
+			testIntersections(comparison);
 		}
 	}
 

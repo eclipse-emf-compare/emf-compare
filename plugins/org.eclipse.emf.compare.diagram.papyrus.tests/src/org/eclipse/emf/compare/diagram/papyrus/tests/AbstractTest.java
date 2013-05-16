@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.diagram.papyrus.tests;
 
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.Iterator;
 import java.util.List;
@@ -144,6 +145,7 @@ public abstract class AbstractTest {
 			
 			assertEquals(message, nb, result);
 		}
+		testIntersections(comparison);
 	}
 
 	private String buildAssertMessage(List<Diff> differences, Predicate<Diff> p) {
@@ -245,5 +247,13 @@ public abstract class AbstractTest {
 	}
 	
 	protected abstract DiagramInputData getInput();
+	
+	protected void testIntersections(Comparison comparison) {
+		assertFalse(Iterables.any(comparison.getDifferences(), new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input.getRefines().size() > 1;
+			}
+		}));
+	}
 
 }

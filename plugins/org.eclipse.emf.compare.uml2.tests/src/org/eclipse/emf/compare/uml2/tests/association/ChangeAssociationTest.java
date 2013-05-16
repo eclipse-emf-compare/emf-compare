@@ -237,6 +237,8 @@ public class ChangeAssociationTest extends AbstractTest {
 			assertSame(Integer.valueOf(0), Integer.valueOf(addLiteralIntegerInClass2.getRequires().size()));
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUnlimitedNaturalInClass2.getRequires().size()));
 		}
+
+		testIntersections(comparison);
 	}
 
 	private static Predicate<? super Diff> addedLowerValueIn(final String qualifiedName) {

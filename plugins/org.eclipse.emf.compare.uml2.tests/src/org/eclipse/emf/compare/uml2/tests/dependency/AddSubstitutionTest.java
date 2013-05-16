@@ -193,6 +193,8 @@ public class AddSubstitutionTest extends AbstractTest {
 		assertTrue(addClientInInterfaceRealization.getEquivalence().getDifferences().contains(
 				addInterfaceRealization));
 		// duplicate diff NamedElement.clientDependency to Substitution0
+
+		testIntersections(comparison);
 	}
 
 	@Override
