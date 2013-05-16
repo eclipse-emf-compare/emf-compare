@@ -352,7 +352,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 						getAdapterFactory());
 
 				final int insertionIndex;
-				if (match.getLeft() == null && match.getRight() == null) {
+				if (match.getLeft() == null && match.getRight() == null && diff.getConflict() != null
+						&& diff.getConflict().getKind() == ConflictKind.PSEUDO) {
 					// pseudo conflict delete...
 					insertionIndex = ReferenceUtil.getAsList((EObject)getSideValue(MergeViewerSide.ANCESTOR),
 							eStructuralFeature).indexOf(value);
