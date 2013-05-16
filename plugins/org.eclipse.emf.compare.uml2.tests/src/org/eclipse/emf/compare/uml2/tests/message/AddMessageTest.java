@@ -457,6 +457,8 @@ public class AddMessageTest extends AbstractTest {
 		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
 				addCoveredByInLifeline1));
 
+		testIntersections(comparison);
+
 	}
 
 	private void testAB2(TestKind kind, final Comparison comparison) {
@@ -595,6 +597,8 @@ public class AddMessageTest extends AbstractTest {
 
 		assertFalse("No move expected", Iterators.filter(differences.iterator(), ofKind(DifferenceKind.MOVE))
 				.hasNext());
+
+		testIntersections(comparison);
 	}
 
 	private void testAB3(TestKind kind, final Comparison comparison) {
@@ -733,6 +737,8 @@ public class AddMessageTest extends AbstractTest {
 
 		assertFalse("No move expected", Iterators.filter(differences.iterator(), ofKind(DifferenceKind.MOVE))
 				.hasNext());
+
+		testIntersections(comparison);
 	}
 
 	@Override

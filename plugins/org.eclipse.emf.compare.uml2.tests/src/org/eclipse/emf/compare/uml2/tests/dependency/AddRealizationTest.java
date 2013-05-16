@@ -183,6 +183,8 @@ public class AddRealizationTest extends AbstractTest {
 		assertTrue(addRefClass0InDependency.getEquivalence().getDifferences().contains(
 				addRefDependencyInClass0));
 
+		testIntersections(comparison);
+
 	}
 
 	@Override

@@ -327,6 +327,8 @@ public class AddActionExecutionSpecificationTest extends AbstractTest {
 		assertTrue(addCoveredInActionExecSpec.getEquivalence().getDifferences().contains(
 				addCoveredByInLifeline1_3));
 
+		testIntersections(comparison);
+
 	}
 
 	@Override

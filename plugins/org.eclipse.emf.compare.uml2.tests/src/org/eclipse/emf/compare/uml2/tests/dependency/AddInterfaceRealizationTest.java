@@ -191,6 +191,8 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 		assertTrue(addClientInInterfaceRealization.getEquivalence().getDifferences().contains(
 				addInterfaceRealization));
 		// duplicate diff: NamedElement.clientDependency to InterfaceRealization0
+
+		testIntersections(comparison);
 	}
 
 	@Override

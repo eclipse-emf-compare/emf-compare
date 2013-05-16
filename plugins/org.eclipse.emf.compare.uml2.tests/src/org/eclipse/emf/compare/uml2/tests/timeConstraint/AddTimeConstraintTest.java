@@ -243,6 +243,8 @@ public class AddTimeConstraintTest extends AbstractTest {
 		// CHECK EQUIVALENCE
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getEquivalences().size()));
 
+		testIntersections(comparison);
+
 	}
 
 	@Override

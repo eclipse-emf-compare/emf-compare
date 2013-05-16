@@ -10,10 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ecoretools.tests;
 
+import static org.junit.Assert.assertFalse;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor;
@@ -26,6 +29,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
 @SuppressWarnings("nls")
@@ -85,5 +89,13 @@ public abstract class AbstractTest {
 	}
 	
 	protected abstract DiagramInputData getInput();
+	
+	protected void testIntersections(Comparison comparison) {
+		assertFalse(Iterables.any(comparison.getDifferences(), new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input.getRefines().size() > 1;
+			}
+		}));
+	}
 
 }

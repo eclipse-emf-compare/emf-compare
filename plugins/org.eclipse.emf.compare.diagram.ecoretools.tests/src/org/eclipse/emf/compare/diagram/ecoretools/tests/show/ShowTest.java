@@ -59,6 +59,7 @@ public class ShowTest extends AbstractTest {
 		assertSame(Integer.valueOf(1), Integer.valueOf(show.getRefinedBy().size()));
 		assertTrue(show.getRefinedBy().contains(attributeChange));
 		
+		testIntersections(comparison);
 	}
 
 	@Override
