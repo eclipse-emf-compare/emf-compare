@@ -22,12 +22,13 @@ import org.eclipse.emf.compare.provider.spec.MatchItemProviderSpec;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * A filter used by default that filtered out sub differences.
+ * A filter used by default that filtered out cascading differences (differences located under differences,
+ * also known as sub differences).
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class SubDiffElementsFilter extends AbstractDifferenceFilter {
+public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 
 	/**
 	 * The predicate use by this filter when it is selected.

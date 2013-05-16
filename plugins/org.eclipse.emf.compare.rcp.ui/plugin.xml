@@ -48,8 +48,8 @@
       </filter>
       <filter
             activeByDefault="true"
-            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.SubDiffElementsFilter"
-            label="Sub diff elements">
+            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter"
+            label="Cascading differences">
       </filter>
    </extension>
    <extension

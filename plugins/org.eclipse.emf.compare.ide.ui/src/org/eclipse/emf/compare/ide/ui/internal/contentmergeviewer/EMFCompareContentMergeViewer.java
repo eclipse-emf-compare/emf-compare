@@ -48,7 +48,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.SubDiffElementsFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -630,7 +630,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		} else {
 			selectedFilters = (Collection<IDifferenceFilter>)property;
 			for (IDifferenceFilter iDifferenceFilter : selectedFilters) {
-				if (iDifferenceFilter instanceof SubDiffElementsFilter) {
+				if (iDifferenceFilter instanceof CascadingDifferencesFilter) {
 					return true;
 				}
 			}
