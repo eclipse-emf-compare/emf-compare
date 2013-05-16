@@ -185,7 +185,8 @@ public class EdgeChangeFactory extends NodeChangeFactory {
 	protected boolean isRelatedToAnExtensionChange(AttributeChange input) {
 		return (input.getAttribute().eContainer().equals(NotationPackage.eINSTANCE.getRelativeBendpoints()) || input
 				.getAttribute().equals(NotationPackage.eINSTANCE.getIdentityAnchor_Id()))
-				&& input.getRefines().isEmpty();
+				&&
+				/* isContainerBasedOnSemanticEdge(input) && */input.getRefines().isEmpty();
 	}
 
 	/**
@@ -195,8 +196,9 @@ public class EdgeChangeFactory extends NodeChangeFactory {
 	 */
 	@Override
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
-		return input.getValue() instanceof IdentityAnchor && input.getReference().isContainment()
-				&& input.getRefines().isEmpty() && !isLeadedByAddOrDeleteEdge(input);
+		return input.getValue() instanceof IdentityAnchor && input.getReference().isContainment() &&
+		/* isContainerBasedOnSemanticEdge(input) && */input.getRefines().isEmpty()
+				&& !isLeadedByAddOrDeleteEdge(input);
 	}
 
 	/**
@@ -248,5 +250,39 @@ public class EdgeChangeFactory extends NodeChangeFactory {
 		return input.getReference().isContainment() && input.getValue() instanceof Edge
 				&& ReferenceUtil.safeEGet(input.getValue(), NotationPackage.Literals.VIEW__ELEMENT) != null;
 	}
+
+	// FIXME: It could be a solution for:
+	// /emf.compare.q7.tests/tests/diagram/class/conflicts/changeEdge_deleteEdgeTarget/result/bugs.txt
+	// /**
+	// * It checks that the parent of the value of the given difference is a view attached to a semantic
+	// object.
+	// *
+	// * @param input
+	// * The difference.
+	// * @return True if the difference matches with the predicate.
+	// */
+	// private static boolean isContainerBasedOnSemanticEdge(ReferenceChange input) {
+	// EObject container = input.getValue().eContainer();
+	// return isBasedOnASemanticObject(container);
+	// }
+	//
+	// /**
+	// * It checks that the parent of the object containing the value of the given difference is a view
+	// attached
+	// * to a semantic object.
+	// *
+	// * @param input
+	// * The difference.
+	// * @return True if the difference matches with the predicate.
+	// */
+	// private static boolean isContainerBasedOnSemanticEdge(AttributeChange input) {
+	// EObject container = MatchUtil.getContainer(input.getMatch().getComparison(), input).eContainer();
+	// return isBasedOnASemanticObject(container);
+	// }
+	//
+	// private static boolean isBasedOnASemanticObject(EObject container) {
+	// return container instanceof View
+	// && ReferenceUtil.safeEGet(container, NotationPackage.Literals.VIEW__ELEMENT) != null;
+	// }
 
 }
