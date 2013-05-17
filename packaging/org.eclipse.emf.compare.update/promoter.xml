@@ -23,7 +23,7 @@
 	-->
 
 	<property name="downloads.project.root" value="modeling/emf/compare" />
-	<property name="build.root" value="/shared/jobs/emf-compare-master/lastSuccessful/archive/packaging/org.eclipse.emf.compare.update/target/" />
+	<property name="build.root" value="/shared/jobs/emf-compare-2.1/lastSuccessful/archive/packaging/org.eclipse.emf.compare.update/target/" />
 	<property name="project.name" value="EMF Compare" />
 	<property name="final.updatesite.name" value="emf-compare-update" />
 	<property name="build.root.updatesite.name" value="org.eclipse.emf.compare.update.zip" />
