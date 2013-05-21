@@ -12,8 +12,8 @@ Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.gmf.runtime.diagram.ui,
  org.eclipse.emf.compare;bundle-version="2.0.0",
  org.eclipse.emf.compare.ide;bundle-version="3.0.0"
-Import-Package: com.google.common.base;version="10.0.1",
- com.google.common.collect;version="10.0.1"
+Import-Package: com.google.common.base;version="[11.0.0,15.0.0)",
+ com.google.common.collect;version="[11.0.0,15.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.emf.compare.diagram.internal.CompareDiagramPlugin
 Export-Package: org.eclipse.emf.compare.diagram.internal;
