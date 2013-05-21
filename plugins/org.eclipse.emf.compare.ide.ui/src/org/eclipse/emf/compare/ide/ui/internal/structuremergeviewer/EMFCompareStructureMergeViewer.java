@@ -10,8 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.getFirst;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
+import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
@@ -25,6 +30,7 @@ import java.util.Comparator;
 import java.util.EventObject;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareViewerSwitchingPane;
@@ -43,10 +49,13 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
@@ -81,14 +90,26 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.IElementComparer;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.eclipse.team.core.subscribers.SubscriberMergeContext;
@@ -107,6 +128,12 @@ import org.osgi.framework.Version;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements CommandStackListener {
+
+	private static final String REQUIRED_DIFF_COLOR = "RequiredDiffColor";
+
+	private static final String UNMERGEABLE_DIFF_COLOR = "UnmergeableDiffColor";
+
+	private static final String OPTIONAL_DIFF_COLOR = "OptionalDiffColor";
 
 	private final ICompareInputChangeListener fCompareInputChangeListener;
 
@@ -142,6 +169,8 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 
 	private EventBus eventBus;
 
+	private Listener fEraseItemListener;
+
 	/**
 	 * @param parent
 	 * @param configuration
@@ -172,6 +201,19 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			}
 		};
 
+		addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				getControl().redraw();
+			}
+		});
+
+		fEraseItemListener = new Listener() {
+			public void handleEvent(Event event) {
+				EMFCompareStructureMergeViewer.this.handleEraseItemEvent(event);
+			}
+		};
+		getControl().addListener(SWT.EraseItem, fEraseItemListener);
+
 		// Wrap the defined comparer in our own.
 		setComparer(new DiffNodeComparer(super.getComparer()));
 
@@ -179,6 +221,10 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			eventBus = new EventBus();
 			eventBus.register(this);
 		}
+
+		JFaceResources.getColorRegistry().put(REQUIRED_DIFF_COLOR, new RGB(215, 255, 200));
+		JFaceResources.getColorRegistry().put(UNMERGEABLE_DIFF_COLOR, new RGB(255, 254, 200));
+		JFaceResources.getColorRegistry().put(OPTIONAL_DIFF_COLOR, new RGB(193, 210, 230));
 
 		inputChangedTask.setPriority(Job.LONG);
 	}
@@ -726,6 +772,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			ci.removeCompareInputChangeListener(fCompareInputChangeListener);
 		}
 		compareInputChanged((ICompareInput)null);
+		getControl().removeListener(SWT.EraseItem, fEraseItemListener);
 		fAdapterFactory.dispose();
 
 		super.handleDispose(event);
@@ -794,4 +841,125 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		}
 		return result;
 	}
+
+	/**
+	 * Handle the erase item event. When select a difference in the structure merge viewer, highlight required
+	 * differences with a specific color, and highlight unmergeable differences with another color.
+	 * 
+	 * @param event
+	 *            the erase item event.
+	 */
+	protected void handleEraseItemEvent(Event event) {
+		ISelection selection = getSelection();
+		Object firstElement = ((IStructuredSelection)selection).getFirstElement();
+		if (firstElement instanceof Adapter) {
+			Notifier target = ((Adapter)firstElement).getTarget();
+			if (target instanceof Diff) {
+				TreeItem item = (TreeItem)event.item;
+				Object dataTreeItem = item.getData();
+				if (dataTreeItem instanceof Adapter) {
+					final List<Diff> requires = getRequires((Diff)target);
+					final List<Diff> unmergeables = getUnmergeables((Diff)target);
+					final List<Diff> optionals = getOptionals(((Diff)target));
+					final GC g = event.gc;
+					if (requires.contains(((Adapter)dataTreeItem).getTarget())) {
+						paintItemBackground(g, item, JFaceResources.getColorRegistry().get(
+								REQUIRED_DIFF_COLOR));
+					} else if (unmergeables.contains(((Adapter)dataTreeItem).getTarget())) {
+						paintItemBackground(g, item, JFaceResources.getColorRegistry().get(
+								UNMERGEABLE_DIFF_COLOR));
+					} else if (optionals.contains(((Adapter)dataTreeItem).getTarget())) {
+						paintItemBackground(g, item, JFaceResources.getColorRegistry().get(
+								OPTIONAL_DIFF_COLOR));
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Paint the background of the given item with the given color.
+	 * 
+	 * @param g
+	 *            the GC associated to the item.
+	 * @param item
+	 *            the given item.
+	 * @param color
+	 *            the given color.
+	 */
+	private void paintItemBackground(GC g, TreeItem item, Color color) {
+		Rectangle itemBounds = item.getBounds();
+		Tree tree = item.getParent();
+		Rectangle areaBounds = tree.getClientArea();
+		g.setClipping(areaBounds.x, itemBounds.y, areaBounds.width, itemBounds.height);
+		g.setBackground(color);
+		g.fillRectangle(areaBounds.x, itemBounds.y, areaBounds.width, itemBounds.height);
+	}
+
+	/**
+	 * Get the list of all required differences for merge of the given difference (required, required of
+	 * required...).
+	 * 
+	 * @param diff
+	 *            the given difference.
+	 * @return the list of all required differences.
+	 */
+	private List<Diff> getRequires(Diff diff) {
+		List<Diff> requires = Lists.newArrayList();
+		for (Diff require : diff.getRequires()) {
+			requires.add(require);
+			requires.addAll(getRequires(require));
+		}
+		return requires;
+	}
+
+	/**
+	 * Get the list of all optional differences for merge of the given difference (optional, optional of
+	 * optional...).
+	 * 
+	 * @param diff
+	 *            the given difference.
+	 * @return the list of all optional differences.
+	 */
+	private List<Diff> getOptionals(Diff diff) {
+		List<Diff> optionals = Lists.newArrayList();
+		for (Diff optional : diff.getRequiredBy()) {
+			optionals.add(optional);
+			optionals.addAll(getOptionals(optional));
+		}
+		return optionals;
+	}
+
+	/**
+	 * Get the list of unmergeable differences after the merge of the given difference.
+	 * 
+	 * @param diff
+	 *            the given difference.
+	 * @return the list of unmergeable differences.
+	 */
+	private List<Diff> getUnmergeables(Diff diff) {
+		List<Diff> unmergeables = Lists.newArrayList();
+		Conflict conflict = diff.getConflict();
+		if (conflict != null && conflict.getKind() == ConflictKind.REAL) {
+			for (Diff diffConflict : conflict.getDifferences()) {
+				if (and(fromSide(DifferenceSource.LEFT),
+						or(ofKind(DifferenceKind.ADD), ofKind(DifferenceKind.CHANGE))).apply(diff)) {
+					if (and(fromSide(DifferenceSource.RIGHT),
+							or(ofKind(DifferenceKind.DELETE), ofKind(DifferenceKind.CHANGE))).apply(
+							diffConflict)) {
+						unmergeables.add(diffConflict);
+					}
+				} else if (and(fromSide(DifferenceSource.LEFT),
+						or(ofKind(DifferenceKind.DELETE), ofKind(DifferenceKind.CHANGE))).apply(diff)) {
+					if (and(fromSide(DifferenceSource.RIGHT),
+							or(ofKind(DifferenceKind.ADD), ofKind(DifferenceKind.CHANGE)))
+							.apply(diffConflict)) {
+						unmergeables.add(diffConflict);
+					}
+				}
+			}
+		}
+		return unmergeables;
+	}
+
 }

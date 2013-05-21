@@ -15,6 +15,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
@@ -24,6 +25,8 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.internal.merge.IMergeData;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedImage;
 
 /**
@@ -71,7 +74,24 @@ public class OverlayImageProvider {
 		String path = "full/ovr16/";
 
 		if (diff.getState() == DifferenceState.MERGED) {
-			path += "merged_ov";
+			Adapter adapter = EcoreUtil.getExistingAdapter(diff, IMergeData.class);
+			if (adapter != null) {
+				if (((IMergeData)adapter).hasBeenMergedToLeft()) {
+					if (source == DifferenceSource.LEFT) {
+						path += "removed_ov";
+					} else {
+						path += "merged_ov";
+					}
+				} else {
+					if (source == DifferenceSource.LEFT) {
+						path += "merged_ov";
+					} else {
+						path += "removed_ov";
+					}
+				}
+			} else {
+				path += "merged_ov";
+			}
 		} else if (diff.getState() == DifferenceState.DISCARDED) {
 			path += "removed_ov";
 		} else if (comparison.isThreeWay()) {

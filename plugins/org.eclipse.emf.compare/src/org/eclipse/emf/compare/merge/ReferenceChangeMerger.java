@@ -61,6 +61,9 @@ public class ReferenceChangeMerger extends AbstractMerger {
 
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		diff.setState(DifferenceState.MERGED);
+		// Set the merge way for the diff
+		setMergeDataForDiff(diff, true);
+
 		if (diff.getEquivalence() != null) {
 			boolean continueMerge = handleEquivalences(diff, false, monitor);
 			if (!continueMerge) {
@@ -157,6 +160,9 @@ public class ReferenceChangeMerger extends AbstractMerger {
 
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		diff.setState(DifferenceState.MERGED);
+		// Set the merge way for the diff
+		setMergeDataForDiff(diff, false);
+
 		if (diff.getEquivalence() != null) {
 			boolean continueMerge = handleEquivalences(diff, true, monitor);
 			if (!continueMerge) {

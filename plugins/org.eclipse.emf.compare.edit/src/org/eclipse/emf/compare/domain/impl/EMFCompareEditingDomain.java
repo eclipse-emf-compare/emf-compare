@@ -20,7 +20,9 @@ import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.impl.CompareCommandStack;
 import org.eclipse.emf.compare.command.impl.CopyAllNonConflictingCommand;
@@ -32,6 +34,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 /**
@@ -159,6 +162,19 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 		ImmutableSet<Notifier> notifiers = notifiersBuilder.addAll(fNotifiers).build();
 
 		return new CopyCommand(fChangeRecorder, notifiers, differences, leftToRight, mergerRegistry);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.domain.ICompareEditingDomain#createChangeStateCommand(org.eclipse.emf.compare.Diff,
+	 *      boolean)
+	 * @since 3.0
+	 */
+	public Command createChangeStateCommand(Diff diff, boolean leftToRight) {
+
+		return SetCommand
+				.create(null, diff, ComparePackage.eINSTANCE.getDiff_State(), DifferenceState.MERGED);
 	}
 
 	/**

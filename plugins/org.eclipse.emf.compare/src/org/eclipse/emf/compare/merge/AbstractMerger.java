@@ -12,8 +12,11 @@ package org.eclipse.emf.compare.merge;
 
 import java.util.List;
 
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.internal.merge.IMergeData;
+import org.eclipse.emf.compare.internal.merge.MergeDataAdapter;
 import org.eclipse.emf.compare.utils.EMFCompareCopier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -185,6 +188,27 @@ public abstract class AbstractMerger implements IMerger {
 			} else {
 				list.add(insertionIndex, value);
 			}
+		}
+	}
+
+	/**
+	 * Set the merge way for the given diff. after a merge, it allows to know the way of the merge.
+	 * 
+	 * @param diff
+	 *            the given diff.
+	 * @param leftToRight
+	 *            the way of the merge.
+	 */
+	protected void setMergeDataForDiff(Diff diff, boolean leftToRight) {
+		Adapter adapter = EcoreUtil.getExistingAdapter(diff, IMergeData.class);
+		if (adapter != null) {
+			if (leftToRight) {
+				((IMergeData)adapter).setMergedToRight();
+			} else {
+				((IMergeData)adapter).setMergedToLeft();
+			}
+		} else {
+			diff.eAdapters().add(new MergeDataAdapter(leftToRight));
 		}
 	}
 }
