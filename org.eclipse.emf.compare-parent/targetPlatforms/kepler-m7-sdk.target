@@ -35,7 +35,7 @@
 <unit id="javaewah" version="0.5.6.v201210150900"/>
 <unit id="org.apache.commons.compress" version="1.4.1.v201301140946"/>
 <unit id="org.kohsuke.args4j" version="2.0.21.v201301150030"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20130308121626/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.emfstore.modelmutator.feature.feature.group" version="0.9.3.M5"/>
