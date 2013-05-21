@@ -43,6 +43,10 @@ public final class EMFCompareConstants {
 
 	public static final String SELECTED_GROUP = EMFCompareRCPUIPlugin.PLUGIN_ID + ".SELECTED_GROUP"; //$NON-NLS-1$
 
+	public static final String SMV_SELECTION = EMFCompareRCPUIPlugin.PLUGIN_ID + ".SMV_SELECTION"; //$NON-NLS-1$
+
+	public static final String MERGE_WAY = EMFCompareRCPUIPlugin.PLUGIN_ID + ".MERGE_WAY"; //$NON-NLS-1$
+
 	// ITypedElement#getType()
 
 	public static final String NODE_TYPE__EMF_RESOURCESET = "NODE_TYPE__EMF_RESOURCESET"; //$NON-NLS-1$

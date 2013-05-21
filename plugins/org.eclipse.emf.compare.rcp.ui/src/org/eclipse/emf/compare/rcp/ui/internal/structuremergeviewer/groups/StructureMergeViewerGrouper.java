@@ -91,8 +91,8 @@ public final class StructureMergeViewerGrouper {
 		if (this.provider != provider) {
 			this.provider = provider;
 			filteredGroups = null;
-			eventBus.post(provider);
 			refreshViewers();
+			eventBus.post(provider);
 		}
 	}
 

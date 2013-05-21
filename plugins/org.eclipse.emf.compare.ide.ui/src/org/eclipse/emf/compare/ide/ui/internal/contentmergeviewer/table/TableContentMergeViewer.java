@@ -10,14 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;
 
-import static com.google.common.collect.Iterables.addAll;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
@@ -35,9 +30,7 @@ import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -104,40 +97,6 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	@Override
 	protected byte[] getContents(boolean left) {
 		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#copyDiff(boolean)
-	 */
-	@Override
-	protected void copyDiff(boolean leftToRight) {
-		final Diff diffToCopy = getDiffToCopy(getRightMergeViewer());
-		if (diffToCopy != null) {
-			List<Diff> diffsToCopy = new ArrayList<Diff>();
-			diffsToCopy.add(diffToCopy);
-			if (isSubDiffFilterActive()) {
-				addAll(diffsToCopy, ComparisonUtil.getSubDiffs(leftToRight).apply(diffToCopy));
-			}
-			Command copyCommand = getEditingDomain().createCopyCommand(diffsToCopy, leftToRight,
-					EMFCompareRCPPlugin.getDefault().getMergerRegistry());
-
-			getEditingDomain().getCommandStack().execute(copyCommand);
-			refresh();
-		}
-	}
-
-	private Diff getDiffToCopy(AbstractMergeViewer abstractMergeViewer) {
-		Diff diffToCopy = null;
-		ISelection selection = abstractMergeViewer.getSelection();
-		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
-			Object firstElement = ((IStructuredSelection)selection).getFirstElement();
-			if (firstElement instanceof IMergeViewerItem) {
-				diffToCopy = ((IMergeViewerItem)firstElement).getDiff();
-			}
-		}
-		return diffToCopy;
 	}
 
 	/**

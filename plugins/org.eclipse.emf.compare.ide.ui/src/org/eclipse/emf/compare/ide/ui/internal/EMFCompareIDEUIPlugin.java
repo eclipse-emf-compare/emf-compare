@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -18,6 +22,8 @@ import org.eclipse.emf.compare.ide.ui.internal.logical.IModelResolverRegistry;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ModelResolverRegistryImpl;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ModelResolverRegistryListener;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -41,6 +47,9 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 
 	/** Registry of model resolvers. */
 	private IModelResolverRegistry modelResolverRegistry;
+
+	/** keep track of resources that should be freed when exiting. */
+	private static Map<String, Image> resourcesMapper = new HashMap<String, Image>();
 
 	/** Default constructor. */
 	public EMFCompareIDEUIPlugin() {
@@ -87,6 +96,62 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	 */
 	public static EMFCompareIDEUIPlugin getDefault() {
 		return plugin;
+	}
+
+	/**
+	 * <p>
+	 * returns a plugin image. The returned image does not need to be explicitly disposed.
+	 * </p>
+	 * 
+	 * @param imagePath
+	 *            : plugin relative path to the image
+	 * @return Image : plugin hosted image
+	 */
+	public static Image getImage(String imagePath) {
+		Image image = resourcesMapper.get(imagePath);
+		if (image == null) {
+			ImageDescriptor imageDescriptor = imageDescriptorFromPlugin(PLUGIN_ID, imagePath);
+			image = imageDescriptor.createImage();
+			resourcesMapper.put(imagePath, image);
+		}
+		return image;
+	}
+
+	/**
+	 * <p>
+	 * returns a plugin image descriptor.
+	 * </p>
+	 * 
+	 * @param imagePath
+	 *            : plugin relative path to the image
+	 * @return ImageDescriptor : image descriptor.
+	 */
+	public static ImageDescriptor getImageDescriptor(String imagePath) {
+		return imageDescriptorFromPlugin(PLUGIN_ID, imagePath);
+	}
+
+	/**
+	 * Dispose image with the given id.
+	 * 
+	 * @param id
+	 *            : dispose system resources associated with the image with the given id.
+	 */
+	public static void disposeImage(String id) {
+		Image image = resourcesMapper.remove(id);
+		if (image != null) {
+			image.dispose();
+		}
+	}
+
+	/**
+	 * dispose system resources associated with cached images.
+	 */
+	public static void disposeCachedImages() {
+		Iterator<Image> iterator = resourcesMapper.values().iterator();
+		while (iterator.hasNext()) {
+			iterator.next().dispose();
+		}
+		resourcesMapper.clear();
 	}
 
 	/**

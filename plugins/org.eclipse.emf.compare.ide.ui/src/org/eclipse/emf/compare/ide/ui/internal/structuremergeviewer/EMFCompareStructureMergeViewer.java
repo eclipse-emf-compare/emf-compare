@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,31 +12,23 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
 import static com.google.common.collect.Iterables.getFirst;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.EventObject;
-import java.util.HashSet;
 import java.util.Iterator;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.compare.CompareViewerSwitchingPane;
+import org.eclipse.compare.INavigatable;
 import org.eclipse.compare.ITypedElement;
-import org.eclipse.compare.structuremergeviewer.DiffTreeViewer;
+import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -46,17 +38,14 @@ import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Conflict;
-import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.ui.internal.actions.collapse.CollapseAllModelAction;
-import org.eclipse.emf.compare.ide.ui.internal.actions.expand.ExpandAllModelAction;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
 import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
@@ -69,14 +58,6 @@ import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.FilterActionMenu;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.GroupActionMenu;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilterSelectionChangeEvent;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -84,70 +65,56 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
-import org.eclipse.jface.viewers.IElementComparer;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.ITreeViewerListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.ViewerComparator;
-import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.eclipse.team.core.subscribers.SubscriberMergeContext;
 import org.eclipse.team.internal.ui.mapping.ModelCompareEditorInput;
 import org.eclipse.team.ui.synchronize.ISynchronizeParticipant;
 import org.eclipse.team.ui.synchronize.ModelSynchronizeParticipant;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.actions.CommandAction;
-import org.eclipse.ui.menus.IMenuService;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.services.IServiceLocator;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.Version;
+import org.eclipse.ui.actions.ActionFactory;
 
 /**
- * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * Implementation of {@link AbstractViewerWrapper}.
+ * 
+ * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
-public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements CommandStackListener {
+public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implements CommandStackListener {
 
-	private final ICompareInputChangeListener fCompareInputChangeListener;
+	private static final int TREE_RULER_WIDTH = 17;
 
-	private final ComposedAdapterFactory fAdapterFactory;
+	private ComposedAdapterFactory fAdapterFactory;
 
-	private final CompareViewerSwitchingPane fParent;
+	/** The tree ruler associated with this viewer. */
+	private EMFCompareDiffTreeRuler treeRuler;
 
-	private Object fRoot;
+	private ICompareInputChangeListener fCompareInputChangeListener;
 
-	/**
-	 * The difference filter that will be applied to the structure viewer. Note that this will be initialized
-	 * from {@link #createToolItems(ToolBarManager)} since that method is called from the super-constructor
-	 * and we cannot init ourselves beforehand.
-	 */
-	private StructureMergeViewerFilter structureMergeViewerFilter;
+	/** The expand/collapse item listener. */
+	private ITreeViewerListener fWrappedTreeListener;
 
-	/**
-	 * This will be used by our adapter factory in order to group together the differences located under the
-	 * Comparison. Note that this will be initialized from {@link #createToolItems(ToolBarManager)} since that
-	 * method is called from the super-constructor and we cannot init ourselves beforehand.
-	 */
-	private StructureMergeViewerGrouper structureMergeViewerGrouper;
+	/** The compare configuration property change listener. */
+	private IPropertyChangeListener fCompareConfigurationPropertyChangeListener;
 
-	private MenuManager groupsMenuManager;
+	/** The tree viewer. */
+	private EMFCompareDiffTreeViewer diffTreeViewer;
 
-	private MenuManager filtersMenuManager;
+	private UndoAction undoAction;
 
-	private GroupActionMenu groupActionMenu;
+	private RedoAction redoAction;
 
-	private DefaultGroupProvider defaultGroupProvider;
-
-	private FilterActionMenu filterActionMenu;
-
-	private EventBus eventBus;
+	private CompareHandlerService fHandlerService;
 
 	/**
 	 * When comparing EObjects from a resource, the resource involved doesn't need to be unload by EMF
@@ -156,11 +123,27 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	private boolean resourcesShouldBeUnload;
 
 	/**
+	 * Constructor.
+	 * 
 	 * @param parent
-	 * @param configuration
+	 *            the SWT parent control under which to create the viewer's SWT control.
+	 * @param config
+	 *            a compare configuration the newly created viewer might want to use.
 	 */
-	public EMFCompareStructureMergeViewer(Composite parent, CompareConfiguration configuration) {
-		super(parent, configuration);
+	public EMFCompareStructureMergeViewer(Composite parent, CompareConfiguration config) {
+		super(parent, config);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see 
+	 *      org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.ViewerWrapper.createControl(Composite,
+	 *      CompareConfiguration)
+	 */
+	@Override
+	protected Control createControl(Composite parent, CompareConfiguration config) {
+		Composite control = new Composite(parent, SWT.NONE);
 
 		fAdapterFactory = new ComposedAdapterFactory(EMFCompareRCPPlugin.getDefault()
 				.getAdapterFactoryRegistry());
@@ -168,16 +151,25 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 
-		setLabelProvider(new DelegatingStyledCellLabelProvider(
-				new EMFCompareStructureMergeViewerLabelProvider(fAdapterFactory, this)));
-		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(fAdapterFactory,
-				getStructureMergeViewerGrouper(), getStructureMergeViewerFilter(), configuration));
-
-		if (parent instanceof CompareViewerSwitchingPane) {
-			fParent = (CompareViewerSwitchingPane)parent;
-		} else {
-			fParent = null;
-		}
+		GridLayout layout = new GridLayout(2, false);
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		layout.horizontalSpacing = 0;
+		layout.verticalSpacing = 0;
+		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+		control.setLayout(layout);
+		control.setLayoutData(data);
+		diffTreeViewer = new EMFCompareDiffTreeViewer(control, fAdapterFactory, config);
+		setViewer(diffTreeViewer);
+		control.setData(INavigatable.NAVIGATOR_PROPERTY, diffTreeViewer.getControl().getData(
+				INavigatable.NAVIGATOR_PROPERTY));
+		diffTreeViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, false, true);
+		layoutData.widthHint = TREE_RULER_WIDTH;
+		layoutData.minimumWidth = TREE_RULER_WIDTH;
+		treeRuler = new EMFCompareDiffTreeRuler(control, SWT.NONE, layoutData.widthHint, diffTreeViewer,
+				config);
+		treeRuler.setLayoutData(layoutData);
 
 		fCompareInputChangeListener = new ICompareInputChangeListener() {
 			public void compareInputChanged(ICompareInput input) {
@@ -185,54 +177,155 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			}
 		};
 
-		// Wrap the defined comparer in our own.
-		setComparer(new DiffNodeComparer(super.getComparer()));
+		fWrappedTreeListener = new ITreeViewerListener() {
 
-		if (eventBus == null) {
-			eventBus = new EventBus();
-			eventBus.register(this);
-		}
+			public void treeExpanded(TreeExpansionEvent event) {
+				treeRuler.redraw();
+			}
 
-		inputChangedTask.setPriority(Job.LONG);
+			public void treeCollapsed(TreeExpansionEvent event) {
+				treeRuler.redraw();
+			}
+		};
+		diffTreeViewer.addTreeListener(fWrappedTreeListener);
+
+		fCompareConfigurationPropertyChangeListener = new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				if (EMFCompareConstants.MERGE_WAY.equals(event.getProperty()) && event.getNewValue() != null) {
+					diffTreeViewer.configurationPropertyChanged();
+					treeRuler.computeConsequences();
+					treeRuler.redraw();
+				} else if (EMFCompareConstants.SELECTED_FILTERS.equals(event.getProperty())
+						&& event.getNewValue() != null) {
+					diffTreeViewer.createChildrenSilently(diffTreeViewer.getTree());
+					treeRuler.computeConsequences();
+					treeRuler.redraw();
+				} else if (EMFCompareConstants.SELECTED_GROUP.equals(event.getProperty())
+						&& event.getNewValue() != null) {
+					diffTreeViewer.createChildrenSilently(diffTreeViewer.getTree());
+					treeRuler.computeConsequences();
+					treeRuler.redraw();
+				}
+			}
+		};
+		getCompareConfiguration().addPropertyChangeListener(fCompareConfigurationPropertyChangeListener);
+
+		fHandlerService = CompareHandlerService.createFor(getCompareConfiguration().getContainer(),
+				diffTreeViewer.getControl().getShell());
+
+		// inputChangedTask.setPriority(Job.LONG);
+
+		return control;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.jface.viewers.StructuredViewer#getComparator()
+	 * @see org.eclipse.jface.viewers.Viewer#fireSelectionChanged(SelectionChangedEvent)
 	 */
 	@Override
-	public ViewerComparator getComparator() {
-		return null;
+	protected void fireSelectionChanged(SelectionChangedEvent event) {
+		super.fireSelectionChanged(event);
+		treeRuler.selectionChanged(event);
+		treeRuler.redraw();
 	}
 
-	@SuppressWarnings("unchecked")
-	@Subscribe
-	public void recordFilterSelectionChange(IDifferenceFilterSelectionChangeEvent event) {
-		final Object property = getCompareConfiguration().getProperty(EMFCompareConstants.SELECTED_FILTERS);
-		final Collection<IDifferenceFilter> selectedFilters;
-		if (property == null) {
-			selectedFilters = new HashSet<IDifferenceFilter>();
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.Viewer#inputChanged(Object, Object)
+	 */
+	@Override
+	protected void inputChanged(Object input, Object oldInput) {
+		if (oldInput instanceof ICompareInput) {
+			ICompareInput old = (ICompareInput)oldInput;
+			old.removeCompareInputChangeListener(fCompareInputChangeListener);
+		}
+		if (input instanceof ICompareInput) {
+			ICompareInput ci = (ICompareInput)input;
+			ci.addCompareInputChangeListener(fCompareInputChangeListener);
+
+			// Hack to display a message in the tree viewer while the differences are being computed.
+			TreeItem item = new TreeItem(diffTreeViewer.getTree(), SWT.NONE);
+			item.setText("Computing model differences...");
+
+			compareInputChanged(ci);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.AbstractViewerWrapper#handleDispose(DisposeEvent)
+	 */
+	@Override
+	protected void handleDispose(DisposeEvent event) {
+		if (fHandlerService != null) {
+			fHandlerService.dispose();
+		}
+		getCompareConfiguration().removePropertyChangeListener(fCompareConfigurationPropertyChangeListener);
+		diffTreeViewer.removeTreeListener(fWrappedTreeListener);
+		Object input = getInput();
+		if (input instanceof ICompareInput) {
+			ICompareInput ci = (ICompareInput)input;
+			ci.removeCompareInputChangeListener(fCompareInputChangeListener);
+		}
+		compareInputChanged((ICompareInput)null);
+		treeRuler.handleDispose();
+		fAdapterFactory.dispose();
+		super.handleDispose(event);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.command.CommandStackListener#commandStackChanged(java.util.EventObject)
+	 */
+	public void commandStackChanged(EventObject event) {
+		if (undoAction != null) {
+			undoAction.update();
+		}
+		if (redoAction != null) {
+			redoAction.update();
+		}
+
+		Command mostRecentCommand = ((CommandStack)event.getSource()).getMostRecentCommand();
+		if (mostRecentCommand instanceof ICompareCopyCommand) {
+			Collection<?> affectedObjects = mostRecentCommand.getAffectedObjects();
+
+			SWTUtil.safeAsyncExec(new Runnable() {
+				public void run() {
+					refresh(true);
+					diffTreeViewer.createChildrenSilently(diffTreeViewer.getTree());
+					treeRuler.computeConsequences();
+					treeRuler.redraw();
+				}
+			});
+			if (!affectedObjects.isEmpty()) {
+				// MUST NOT call a setSelection with a list, o.e.compare does not handle it (cf
+				// org.eclipse.compare.CompareEditorInput#getElement(ISelection))
+				final Object adaptedAffectedObject = fAdapterFactory.adapt(getFirst(affectedObjects, null),
+						ICompareInput.class);
+				SWTUtil.safeAsyncExec(new Runnable() {
+					public void run() {
+						setSelectionToWidget(new StructuredSelection(adaptedAffectedObject), true);
+					}
+				});
+			}
 		} else {
-			selectedFilters = new HashSet<IDifferenceFilter>((Collection<IDifferenceFilter>)property);
+			// FIXME, should recompute the difference, something happened outside of this compare editor
 		}
-		switch (event.getAction()) {
-			case ACTIVATE:
-				selectedFilters.add(event.getFilter());
-				break;
-			case DEACTIVATE:
-				selectedFilters.remove(event.getFilter());
-				break;
-			default:
-				throw new IllegalStateException();
-		}
-		getCompareConfiguration().setProperty(EMFCompareConstants.SELECTED_FILTERS, selectedFilters);
+
 	}
 
-	@Subscribe
-	public void recordGroupProviderSelectionChange(IDifferenceGroupProvider differenceGroupProvider) {
-		getCompareConfiguration().setProperty(EMFCompareConstants.SELECTED_GROUP, differenceGroupProvider);
-	}
+	private Job inputChangedTask = new Job("Compute Model Differences") {
+		@Override
+		public IStatus run(IProgressMonitor monitor) {
+			SubMonitor subMonitor = SubMonitor.convert(monitor, "Computing Model Differences", 100);
+			compareInputChanged((ICompareInput)getInput(), subMonitor.newChild(100));
+			return Status.OK_STATUS;
+		}
+	};
 
 	/**
 	 * Triggered by fCompareInputChangeListener and {@link #inputChanged(Object, Object)}.
@@ -250,24 +343,199 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.StructuredViewer#getRoot()
-	 */
-	@Override
-	protected Object getRoot() {
-		return fRoot;
+	void compareInputChanged(ComparisonNode input, IProgressMonitor monitor) {
+		ICompareEditingDomain editingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
+				EMFCompareConstants.EDITING_DOMAIN);
+		editingDomain.getCommandStack().addCommandStackListener(this);
+
+		compareInputChanged(null, input.getTarget());
 	}
 
-	private Job inputChangedTask = new Job("Compute Model Differences") {
-		@Override
-		public IStatus run(IProgressMonitor monitor) {
-			SubMonitor subMonitor = SubMonitor.convert(monitor, "Computing Model Differences", 100);
-			compareInputChanged((ICompareInput)getInput(), subMonitor.newChild(100));
-			return Status.OK_STATUS;
+	void compareInputChanged(ComparisonScopeInput input, IProgressMonitor monitor) {
+		ICompareEditingDomain editingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
+				EMFCompareConstants.EDITING_DOMAIN);
+		editingDomain.getCommandStack().addCommandStackListener(this);
+
+		EMFCompare comparator = (EMFCompare)getCompareConfiguration().getProperty(
+				EMFCompareConstants.COMPARATOR);
+
+		IComparisonScope comparisonScope = input.getComparisonScope();
+		Comparison comparison = comparator.compare(comparisonScope, BasicMonitor.toMonitor(monitor));
+		compareInputChanged(input.getComparisonScope(), comparison);
+	}
+
+	void compareInputChanged(final IComparisonScope scope, final Comparison comparison) {
+		if (!getControl().isDisposed()) { // guard against disposal
+			diffTreeViewer.setRoot(fAdapterFactory.adapt(comparison, ICompareInput.class));
+			getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, comparison);
+
+			String message = null;
+			if (comparison.getDifferences().isEmpty()) {
+				message = "No Differences";
+			}
+
+			final String theMessage = message;
+			SWTUtil.safeAsyncExec(new Runnable() {
+				public void run() {
+					if (diffTreeViewer.getGroupActionMenu() != null) {
+						diffTreeViewer.getGroupActionMenu().createActions(scope, comparison);
+					}
+					if (diffTreeViewer.getFilterActionMenu() != null) {
+						diffTreeViewer.getFilterActionMenu().createActions(scope, comparison);
+					}
+					diffTreeViewer.refreshAfterDiff(theMessage, diffTreeViewer.getRoot());
+					// Mandatory for the EMFCompareDiffTreeRuler, all TreeItems must have been created
+					diffTreeViewer.createChildrenSilently(diffTreeViewer.getTree());
+					diffTreeViewer.initialSelection();
+				}
+			});
+
+			ICompareEditingDomain editingDomain = (ICompareEditingDomain)getCompareConfiguration()
+					.getProperty(EMFCompareConstants.EDITING_DOMAIN);
+
+			undoAction = new UndoAction(editingDomain);
+			redoAction = new RedoAction(editingDomain);
+
+			fHandlerService.setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
+			fHandlerService.setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
 		}
-	};
+	}
+
+	void compareInputChanged(ICompareInput input, IProgressMonitor monitor) {
+		if (input != null) {
+			if (input instanceof ComparisonNode) {
+				resourcesShouldBeUnload = false;
+				compareInputChanged((ComparisonNode)input, monitor);
+			} else if (input instanceof ComparisonScopeInput) {
+				resourcesShouldBeUnload = false;
+				compareInputChanged((ComparisonScopeInput)input, monitor);
+			} else {
+				resourcesShouldBeUnload = true;
+				SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+
+				final ITypedElement left = input.getLeft();
+				final ITypedElement right = input.getRight();
+				final ITypedElement origin = input.getAncestor();
+
+				final IComparisonScope scope = buildComparisonScope(left, right, origin, subMonitor
+						.newChild(85));
+				final Comparison compareResult = EMFCompare
+						.builder()
+						.setMatchEngineFactoryRegistry(
+								EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry())
+						.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry())
+						.build().compare(scope, BasicMonitor.toMonitor(subMonitor.newChild(15)));
+
+				final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
+				final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();
+				final ResourceSet originResourceSet = (ResourceSet)scope.getOrigin();
+
+				if (getCompareConfiguration() != null) {
+					ICompareEditingDomain editingDomain = (ICompareEditingDomain)getCompareConfiguration()
+							.getProperty(EMFCompareConstants.EDITING_DOMAIN);
+					if (editingDomain != null) {
+						editingDomain.getCommandStack().removeCommandStackListener(this);
+						editingDomain.dispose();
+					}
+
+					editingDomain = EMFCompareEditingDomain.create(leftResourceSet, rightResourceSet,
+							originResourceSet);
+					editingDomain.getCommandStack().addCommandStackListener(this);
+					getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);
+				}
+
+				compareInputChanged(scope, compareResult);
+			}
+		} else {
+			ResourceSet leftResourceSet = null;
+			ResourceSet rightResourceSet = null;
+			ResourceSet originResourceSet = null;
+
+			if (diffTreeViewer.getRoot() != null) {
+				Comparison comparison = (Comparison)((Adapter)diffTreeViewer.getRoot()).getTarget();
+				Iterator<Match> matchIt = comparison.getMatches().iterator();
+				if (comparison.isThreeWay()) {
+					while (matchIt.hasNext()
+							&& (leftResourceSet == null || rightResourceSet == null || originResourceSet == null)) {
+						Match match = matchIt.next();
+						if (leftResourceSet == null) {
+							leftResourceSet = getResourceSet(match.getLeft());
+						}
+						if (rightResourceSet == null) {
+							rightResourceSet = getResourceSet(match.getRight());
+						}
+						if (originResourceSet == null) {
+							originResourceSet = getResourceSet(match.getOrigin());
+						}
+					}
+				} else {
+					while (matchIt.hasNext() && (leftResourceSet == null || rightResourceSet == null)) {
+						Match match = matchIt.next();
+						if (leftResourceSet == null) {
+							leftResourceSet = getResourceSet(match.getLeft());
+						}
+						if (rightResourceSet == null) {
+							rightResourceSet = getResourceSet(match.getRight());
+						}
+					}
+				}
+			}
+
+			ICompareEditingDomain editingDomain = (ICompareEditingDomain)getCompareConfiguration()
+					.getProperty(EMFCompareConstants.EDITING_DOMAIN);
+			if (editingDomain != null) {
+				editingDomain.getCommandStack().removeCommandStackListener(this);
+				getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, null);
+				editingDomain.dispose();
+				editingDomain = null;
+			}
+
+			if (resourcesShouldBeUnload) {
+				unload(leftResourceSet);
+				unload(rightResourceSet);
+				unload(originResourceSet);
+			}
+
+			if (getCompareConfiguration() != null) {
+				getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, null);
+				getCompareConfiguration().setProperty(EMFCompareConstants.SELECTED_FILTERS, null);
+				getCompareConfiguration().setProperty(EMFCompareConstants.SELECTED_GROUP, null);
+				getCompareConfiguration().setProperty(EMFCompareConstants.MERGE_WAY, null);
+				getCompareConfiguration().setProperty(EMFCompareConstants.SMV_SELECTION, null);
+			}
+			diffTreeViewer.setRoot(null);
+		}
+	}
+
+	/**
+	 * Constructs the comparison scope corresponding to the given typed elements.
+	 * 
+	 * @param left
+	 *            Left of the compared elements.
+	 * @param right
+	 *            Right of the compared elements.
+	 * @param origin
+	 *            Common ancestor of the <code>left</code> and <code>right</code> compared elements.
+	 * @param monitor
+	 *            Monitor to report progress on.
+	 * @return The created comparison scope.
+	 */
+	private IComparisonScope buildComparisonScope(ITypedElement left, ITypedElement right,
+			ITypedElement origin, IProgressMonitor monitor) {
+		IStorageProviderAccessor storageAccessor = null;
+		if (getSubscriber() != null) {
+			storageAccessor = new SubscriberStorageAccessor(getSubscriber());
+		}
+		IStorage leftStorage = PlatformElementUtil.findFile(left);
+		if (leftStorage == null) {
+			leftStorage = StreamAccessorStorage.fromTypedElement(left);
+		}
+		IModelResolver resolver = EMFCompareIDEUIPlugin.getDefault().getModelResolverRegistry()
+				.getBestResolverFor(leftStorage);
+		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
+				new IdenticalResourceMinimizer(), storageAccessor);
+		return scopeBuilder.build(left, right, origin, monitor);
+	}
 
 	/**
 	 * Team left us with absolutely no way to determine whether our supplied input is the result of a
@@ -319,162 +587,6 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		return null;
 	}
 
-	void compareInputChanged(ICompareInput input, IProgressMonitor monitor) {
-		if (input != null) {
-			if (input instanceof ComparisonNode) {
-				resourcesShouldBeUnload = false;
-				compareInputChanged((ComparisonNode)input, monitor);
-			} else if (input instanceof ComparisonScopeInput) {
-				resourcesShouldBeUnload = false;
-				compareInputChanged((ComparisonScopeInput)input, monitor);
-			} else {
-				resourcesShouldBeUnload = true;
-				SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
-
-				final ITypedElement left = input.getLeft();
-				final ITypedElement right = input.getRight();
-				final ITypedElement origin = input.getAncestor();
-
-				final IComparisonScope scope = buildComparisonScope(left, right, origin, subMonitor
-						.newChild(85));
-
-				final Comparison compareResult = EMFCompare
-						.builder()
-						.setMatchEngineFactoryRegistry(
-								EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry())
-						.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry())
-						.build().compare(scope, BasicMonitor.toMonitor(subMonitor.newChild(15)));
-
-				final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
-				final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();
-				final ResourceSet originResourceSet = (ResourceSet)scope.getOrigin();
-
-				if (getCompareConfiguration() != null) {
-					ICompareEditingDomain editingDomain = (ICompareEditingDomain)getCompareConfiguration()
-							.getProperty(EMFCompareConstants.EDITING_DOMAIN);
-					if (editingDomain != null) {
-						editingDomain.getCommandStack().removeCommandStackListener(this);
-						editingDomain.dispose();
-					}
-
-					editingDomain = EMFCompareEditingDomain.create(leftResourceSet, rightResourceSet,
-							originResourceSet);
-					editingDomain.getCommandStack().addCommandStackListener(this);
-					getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);
-				}
-
-				compareInputChanged(scope, compareResult);
-			}
-		} else {
-			ResourceSet leftResourceSet = null;
-			ResourceSet rightResourceSet = null;
-			ResourceSet originResourceSet = null;
-
-			if (fRoot != null) {
-				Comparison comparison = (Comparison)((Adapter)fRoot).getTarget();
-				Iterator<Match> matchIt = comparison.getMatches().iterator();
-				if (comparison.isThreeWay()) {
-					while (matchIt.hasNext()
-							&& (leftResourceSet == null || rightResourceSet == null || originResourceSet == null)) {
-						Match match = matchIt.next();
-						if (leftResourceSet == null) {
-							leftResourceSet = getResourceSet(match.getLeft());
-						}
-						if (rightResourceSet == null) {
-							rightResourceSet = getResourceSet(match.getRight());
-						}
-						if (originResourceSet == null) {
-							originResourceSet = getResourceSet(match.getOrigin());
-						}
-					}
-				} else {
-					while (matchIt.hasNext() && (leftResourceSet == null || rightResourceSet == null)) {
-						Match match = matchIt.next();
-						if (leftResourceSet == null) {
-							leftResourceSet = getResourceSet(match.getLeft());
-						}
-						if (rightResourceSet == null) {
-							rightResourceSet = getResourceSet(match.getRight());
-						}
-					}
-				}
-			}
-
-			ICompareEditingDomain editingDomain = (ICompareEditingDomain)getCompareConfiguration()
-					.getProperty(EMFCompareConstants.EDITING_DOMAIN);
-			if (editingDomain != null) {
-				editingDomain.getCommandStack().removeCommandStackListener(this);
-				getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, null);
-				editingDomain.dispose();
-				editingDomain = null;
-			}
-
-			if (resourcesShouldBeUnload) {
-				unload(leftResourceSet);
-				unload(rightResourceSet);
-				unload(originResourceSet);
-			}
-
-			if (getCompareConfiguration() != null) {
-				getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, null);
-				getCompareConfiguration().setProperty(EMFCompareConstants.SELECTED_FILTERS, null);
-				getCompareConfiguration().setProperty(EMFCompareConstants.SELECTED_GROUP, null);
-			}
-			fRoot = null;
-		}
-	}
-
-	/**
-	 * Constructs the comparison scope corresponding to the given typed elements.
-	 * 
-	 * @param left
-	 *            Left of the compared elements.
-	 * @param right
-	 *            Right of the compared elements.
-	 * @param origin
-	 *            Common ancestor of the <code>left</code> and <code>right</code> compared elements.
-	 * @param monitor
-	 *            Monitor to report progress on.
-	 * @return The created comparison scope.
-	 */
-	private IComparisonScope buildComparisonScope(ITypedElement left, ITypedElement right,
-			ITypedElement origin, IProgressMonitor monitor) {
-		IStorageProviderAccessor storageAccessor = null;
-		if (getSubscriber() != null) {
-			storageAccessor = new SubscriberStorageAccessor(getSubscriber());
-		}
-		IStorage leftStorage = PlatformElementUtil.findFile(left);
-		if (leftStorage == null) {
-			leftStorage = StreamAccessorStorage.fromTypedElement(left);
-		}
-		IModelResolver resolver = EMFCompareIDEUIPlugin.getDefault().getModelResolverRegistry()
-				.getBestResolverFor(leftStorage);
-		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
-				new IdenticalResourceMinimizer(), storageAccessor);
-		return scopeBuilder.build(left, right, origin, monitor);
-	}
-
-	void compareInputChanged(ComparisonNode input, IProgressMonitor monitor) {
-		ICompareEditingDomain editingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
-				EMFCompareConstants.EDITING_DOMAIN);
-		editingDomain.getCommandStack().addCommandStackListener(this);
-
-		compareInputChanged(null, input.getTarget());
-	}
-
-	void compareInputChanged(ComparisonScopeInput input, IProgressMonitor monitor) {
-		ICompareEditingDomain editingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
-				EMFCompareConstants.EDITING_DOMAIN);
-		editingDomain.getCommandStack().addCommandStackListener(this);
-
-		EMFCompare comparator = (EMFCompare)getCompareConfiguration().getProperty(
-				EMFCompareConstants.COMPARATOR);
-
-		IComparisonScope comparisonScope = input.getComparisonScope();
-		Comparison comparison = comparator.compare(comparisonScope, BasicMonitor.toMonitor(monitor));
-		compareInputChanged(input.getComparisonScope(), comparison);
-	}
-
 	private static void unload(ResourceSet resourceSet) {
 		if (resourceSet != null) {
 			for (Resource resource : resourceSet.getResources()) {
@@ -492,345 +604,5 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			}
 		}
 		return null;
-	}
-
-	void compareInputChanged(final IComparisonScope scope, final Comparison comparison) {
-		if (!getControl().isDisposed()) { // guard against disposal
-			fRoot = fAdapterFactory.adapt(comparison, ICompareInput.class);
-			getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, comparison);
-
-			String message = null;
-			if (comparison.getDifferences().isEmpty()) {
-				message = "No Differences";
-			}
-
-			final String theMessage = message;
-			SWTUtil.safeAsyncExec(new Runnable() {
-				public void run() {
-					groupActionMenu.createActions(scope, comparison);
-					filterActionMenu.createActions(scope, comparison);
-					refreshAfterDiff(theMessage, fRoot);
-					initialSelection();
-				}
-			});
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.AbstractTreeViewer#isExpandable(java.lang.Object)
-	 */
-	@Override
-	public boolean isExpandable(Object parent) {
-		if (hasFilters()) {
-			// workaround for 65762
-			return hasFilteredChildren(parent);
-		}
-		return super.isExpandable(parent);
-	}
-
-	/**
-	 * Public method to test if a element has any children that passed the filters
-	 * 
-	 * @param parent
-	 *            the element to test
-	 * @return return <code>true</code> if the element has at least a child that passed the filters
-	 */
-	public final boolean hasFilteredChildren(Object parent) {
-		Object[] rawChildren = getRawChildren(parent);
-		return containsNonFiltered(rawChildren, parent);
-	}
-
-	private boolean containsNonFiltered(Object[] elements, Object parent) {
-		if (elements.length == 0) {
-			return false;
-		}
-		if (!hasFilters()) {
-			return true;
-		}
-		ViewerFilter[] filters = getFilters();
-		for (int i = 0; i < elements.length; i++) {
-			Object object = elements[i];
-			if (!isFiltered(object, parent, filters)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * All element filter tests must go through this method. Can be overridden by subclasses.
-	 * 
-	 * @param object
-	 *            the object to filter
-	 * @param parent
-	 *            the parent
-	 * @param filters
-	 *            the filters to apply
-	 * @return true if the element is filtered
-	 */
-	protected boolean isFiltered(Object object, Object parent, ViewerFilter[] filters) {
-		for (int i = 0; i < filters.length; i++) {
-			ViewerFilter filter = filters[i];
-			if (!filter.select(this, parent, object)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private void refreshAfterDiff(String message, Object root) {
-		if (getControl().isDisposed()) {
-			return;
-		}
-
-		if (fParent != null) {
-			fParent.setTitleArgument(message);
-		}
-
-		refresh(root);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.StructuredViewer#setComparer(org.eclipse.jface.viewers.IElementComparer)
-	 */
-	@Override
-	public void setComparer(IElementComparer comparer) {
-		// Wrap this new comparer in our own
-		super.setComparer(new DiffNodeComparer(comparer));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.structuremergeviewer.DiffTreeViewer#createToolItems(org.eclipse.jface.action.ToolBarManager)
-	 */
-	@Override
-	protected void createToolItems(ToolBarManager toolbarManager) {
-		super.createToolItems(toolbarManager);
-
-		// Add extension point contributions to the structure merge viewer toolbar
-		IServiceLocator workbench = PlatformUI.getWorkbench();
-		IMenuService menuService = (IMenuService)workbench.getService(IMenuService.class);
-		if (menuService != null) {
-			menuService.populateContributionManager(toolbarManager,
-					"toolbar:org.eclipse.emf.compare.structuremergeviewer.toolbar"); //$NON-NLS-1$
-		}
-
-		Bundle uiWorkbenchBundle = Platform.getBundle("org.eclipse.ui.workbench"); //$NON-NLS-1$
-		Version junoStart = Version.parseVersion("3.103"); //$NON-NLS-1$
-
-		// XXX MBA change to 3.105 once bug #366528 is fixed
-		Version keplerStart = Version.parseVersion("3.105"); //$NON-NLS-1$
-
-		if (uiWorkbenchBundle != null && uiWorkbenchBundle.getVersion().compareTo(junoStart) >= 0
-				&& uiWorkbenchBundle.getVersion().compareTo(keplerStart) < 0) {
-			IAction action = new CommandAction(PlatformUI.getWorkbench(),
-					"org.eclipse.emf.compare.ide.ui.saveComparisonModel"); //$NON-NLS-1$
-			action.setToolTipText("Save Comparison model");
-			action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-					EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/saveas_edit.gif")); //$NON-NLS-1$
-			toolbarManager.add(action);
-		}
-
-		groupActionMenu = new GroupActionMenu(getStructureMergeViewerGrouper(), getGroupsMenuManager(),
-				getDefaultGroupProvider());
-		filterActionMenu = new FilterActionMenu(getStructureMergeViewerFilter(), getFiltersMenuManager());
-
-		toolbarManager.add(new Separator());
-		toolbarManager.add(new ExpandAllModelAction(this));
-		toolbarManager.add(new CollapseAllModelAction(this));
-		toolbarManager.add(new Separator());
-		toolbarManager.add(groupActionMenu);
-		toolbarManager.add(filterActionMenu);
-
-	}
-
-	/**
-	 * Returns the viewer filter that is to be applied on the structure viewer.
-	 * <p>
-	 * Note that this will be called from {@link #createToolItems(ToolBarManager)}, which is called from the
-	 * super-constructor, when we have had no time to initialize the {@link #structureMergeViewerFilter}
-	 * field.
-	 * </p>
-	 * 
-	 * @return The difference filter that is to be applied on the structure viewer.
-	 */
-	protected StructureMergeViewerFilter getStructureMergeViewerFilter() {
-		if (structureMergeViewerFilter == null) {
-			if (eventBus == null) {
-				eventBus = new EventBus();
-				eventBus.register(this);
-			}
-			structureMergeViewerFilter = new StructureMergeViewerFilter(eventBus);
-			structureMergeViewerFilter.install(this);
-		}
-		return structureMergeViewerFilter;
-	}
-
-	/**
-	 * Returns the viewer grouper that is to be applied on the structure viewer.
-	 * <p>
-	 * Note that this will be called from {@link #createToolItems(ToolBarManager)}, which is called from the
-	 * super-constructor, when we have had no time to initialize the {@link #structureMergeViewerGrouper}
-	 * field.
-	 * </p>
-	 * 
-	 * @return The viewer grouper grouper that is to be applied on the structure viewer.
-	 */
-	protected StructureMergeViewerGrouper getStructureMergeViewerGrouper() {
-		if (structureMergeViewerGrouper == null) {
-			if (eventBus == null) {
-				eventBus = new EventBus();
-				eventBus.register(this);
-			}
-			structureMergeViewerGrouper = new StructureMergeViewerGrouper(eventBus);
-			structureMergeViewerGrouper.install(this);
-		}
-		return structureMergeViewerGrouper;
-	}
-
-	/**
-	 * Returns the menu manager that is to be applied to groups on the structure viewer.
-	 * 
-	 * @return The menu manager that is to be applied to groups on the structure viewer.
-	 */
-	public MenuManager getGroupsMenuManager() {
-		if (groupsMenuManager == null) {
-			groupsMenuManager = new MenuManager();
-		}
-		return groupsMenuManager;
-	}
-
-	/**
-	 * Returns the menu manager that is to be applied to filters on the structure viewer.
-	 * 
-	 * @return The menu manager that is to be applied to filters on the structure viewer.
-	 */
-	public MenuManager getFiltersMenuManager() {
-		if (filtersMenuManager == null) {
-			filtersMenuManager = new MenuManager();
-		}
-		return filtersMenuManager;
-	}
-
-	/**
-	 * Returns the default group provider that is to be applied on the structure viewer.
-	 * 
-	 * @return The default group provider that is to be applied on the structure viewer.
-	 */
-	public DefaultGroupProvider getDefaultGroupProvider() {
-		if (defaultGroupProvider == null) {
-			defaultGroupProvider = new DefaultGroupProvider();
-		}
-		return defaultGroupProvider;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.structuremergeviewer.DiffTreeViewer#inputChanged(java.lang.Object,
-	 *      java.lang.Object)
-	 */
-	@Override
-	protected void inputChanged(Object input, Object oldInput) {
-		if (oldInput instanceof ICompareInput) {
-			ICompareInput old = (ICompareInput)oldInput;
-			old.removeCompareInputChangeListener(fCompareInputChangeListener);
-		}
-		if (input instanceof ICompareInput) {
-			ICompareInput ci = (ICompareInput)input;
-			ci.addCompareInputChangeListener(fCompareInputChangeListener);
-
-			// Hack to display a message in the tree viewer while the differences are being computed.
-			TreeItem item = new TreeItem(getTree(), SWT.NONE);
-			item.setText("Computing model differences...");
-
-			compareInputChanged(ci);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.structuremergeviewer.DiffTreeViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
-	 */
-	@Override
-	protected void handleDispose(DisposeEvent event) {
-		Object input = getInput();
-		if (input instanceof ICompareInput) {
-			ICompareInput ci = (ICompareInput)input;
-			ci.removeCompareInputChangeListener(fCompareInputChangeListener);
-		}
-		compareInputChanged((ICompareInput)null);
-		fAdapterFactory.dispose();
-
-		super.handleDispose(event);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.common.command.CommandStackListener#commandStackChanged(java.util.EventObject)
-	 */
-	public void commandStackChanged(EventObject event) {
-		Command mostRecentCommand = ((CommandStack)event.getSource()).getMostRecentCommand();
-		if (mostRecentCommand instanceof ICompareCopyCommand) {
-			Collection<?> affectedObjects = mostRecentCommand.getAffectedObjects();
-
-			SWTUtil.safeAsyncExec(new Runnable() {
-				public void run() {
-					refresh(true);
-				}
-			});
-			if (!affectedObjects.isEmpty()) {
-				// MUST NOT call a setSelection with a list, o.e.compare does not handle it (cf
-				// org.eclipse.compare.CompareEditorInput#getElement(ISelection))
-				final Object adaptedAffectedObject = fAdapterFactory.adapt(getFirst(affectedObjects, null),
-						ICompareInput.class);
-				SWTUtil.safeAsyncExec(new Runnable() {
-					public void run() {
-						setSelectionToWidget(new StructuredSelection(adaptedAffectedObject), true);
-					}
-				});
-			}
-		} else {
-			// FIXME, should recompute the difference, something happened outside of this compare editor
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.AbstractTreeViewer#getSortedChildren(java.lang.Object)
-	 */
-	@Override
-	protected Object[] getSortedChildren(Object parentElementOrTreePath) {
-		Object[] result = super.getSortedChildren(parentElementOrTreePath);
-		if (parentElementOrTreePath instanceof Adapter
-				&& ((Adapter)parentElementOrTreePath).getTarget() instanceof Conflict) {
-
-			Collections.sort(Arrays.asList(result), new Comparator<Object>() {
-				public int compare(Object o1, Object o2) {
-					return getValue(o1) - getValue(o2);
-				}
-
-				public int getValue(Object o) {
-					int value = 0;
-					if (o instanceof Adapter && ((Adapter)o).getTarget() instanceof Diff) {
-						if (((Diff)((Adapter)o).getTarget()).getSource() == DifferenceSource.LEFT) {
-							value = 1;
-						} else {
-							value = 2;
-						}
-					}
-					return value;
-				}
-			});
-
-		}
-		return result;
 	}
 }

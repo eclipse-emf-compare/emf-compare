@@ -27,7 +27,6 @@ import com.google.common.collect.Multimap;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1714,34 +1713,6 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 	@Override
 	public DiagramMergeViewer getRightMergeViewer() {
 		return (DiagramMergeViewer)super.getRightMergeViewer();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#copyDiff(boolean)
-	 */
-	@Override
-	protected void copyDiff(boolean leftToRight) {
-		/*
-		 * FIXME change this! For the moment we always do a new setInput() on the content viewer whenever we
-		 * select a Diagram Difference. This is meant to change so that we use selection synchronization
-		 * instead. This code will break whenever we implement that change.
-		 */
-		if (fCurrentSelectedDiff != null) {
-			final Command command = getEditingDomain().createCopyCommand(
-					Collections.singletonList(fCurrentSelectedDiff), leftToRight,
-					EMFCompareRCPPlugin.getDefault().getMergerRegistry());
-			getEditingDomain().getCommandStack().execute(command);
-
-			if (leftToRight) {
-				setRightDirty(true);
-			} else {
-				setLeftDirty(true);
-			}
-			// refresh();
-		}
-
 	}
 
 	/**

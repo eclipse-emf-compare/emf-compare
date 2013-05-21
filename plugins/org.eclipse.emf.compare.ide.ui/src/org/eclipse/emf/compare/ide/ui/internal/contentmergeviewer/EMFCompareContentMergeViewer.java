@@ -23,11 +23,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.compare.CompareNavigator;
-import org.eclipse.compare.ICompareNavigator;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
-import org.eclipse.compare.internal.Utilities;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStackListener;
@@ -51,8 +48,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -90,10 +85,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	private IMergeViewer fLeft;
 
 	private IMergeViewer fRight;
-
-	private ActionContributionItem fCopyDiffLeftToRightItem;
-
-	private ActionContributionItem fCopyDiffRightToLeftItem;
 
 	private final AtomicBoolean fSyncingSelections = new AtomicBoolean(false);
 
@@ -292,66 +283,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 					"toolbar:org.eclipse.emf.compare.contentmergeviewer.toolbar");
 		}
 
-		// Copy actions
-		CompareConfiguration cc = getCompareConfiguration();
-
-		if (cc.isRightEditable()) {
-			Action copyLeftToRight = new Action() {
-				@Override
-				public void run() {
-					copyDiff(true);
-					// Select next diff
-					navigate(true);
-				}
-			};
-			Utilities.initAction(copyLeftToRight, getResourceBundle(), "action.CopyDiffLeftToRight."); //$NON-NLS-1$
-			copyLeftToRight.setEnabled(false);
-			fCopyDiffLeftToRightItem = new ActionContributionItem(copyLeftToRight);
-			fCopyDiffLeftToRightItem.setVisible(true);
-			toolBarManager.appendToGroup("merge", fCopyDiffLeftToRightItem); //$NON-NLS-1$
-			getHandlerService().registerAction(copyLeftToRight, "org.eclipse.compare.copyLeftToRight"); //$NON-NLS-1$
-		}
-
-		if (cc.isLeftEditable()) {
-			Action copyRightToLeft = new Action() {
-				@Override
-				public void run() {
-					copyDiff(false);
-					// Select next diff
-					navigate(true);
-				}
-			};
-			Utilities.initAction(copyRightToLeft, getResourceBundle(), "action.CopyDiffRightToLeft."); //$NON-NLS-1$
-			copyRightToLeft.setEnabled(false);
-			fCopyDiffRightToLeftItem = new ActionContributionItem(copyRightToLeft);
-			fCopyDiffRightToLeftItem.setVisible(true);
-			toolBarManager.appendToGroup("merge", fCopyDiffRightToLeftItem); //$NON-NLS-1$
-			getHandlerService().registerAction(copyRightToLeft, "org.eclipse.compare.copyRightToLeft"); //$NON-NLS-1$
-		}
-
-		// Navigation
-		final Action nextDiff = new Action() {
-			@Override
-			public void run() {
-				navigate(true);
-			}
-		};
-		Utilities.initAction(nextDiff, getResourceBundle(), "action.NextDiff.");
-		ActionContributionItem contributionNextDiff = new ActionContributionItem(nextDiff);
-		contributionNextDiff.setVisible(true);
-		toolBarManager.appendToGroup("navigation", contributionNextDiff);
-
-		final Action previousDiff = new Action() {
-			@Override
-			public void run() {
-				navigate(false);
-			}
-		};
-		Utilities.initAction(previousDiff, getResourceBundle(), "action.PrevDiff.");
-		ActionContributionItem contributionPreviousDiff = new ActionContributionItem(previousDiff);
-		contributionPreviousDiff.setVisible(true);
-		toolBarManager.appendToGroup("navigation", contributionPreviousDiff);
-
 		undoAction = new UndoAction(getEditingDomain());
 		redoAction = new RedoAction(getEditingDomain());
 
@@ -414,29 +345,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			refresh();
 		}
 	}
-
-	/**
-	 * Called by the framework to navigate to the next (or previous) difference. This will open the content
-	 * viewer for the next (or previous) diff displayed in the structure viewer.
-	 * 
-	 * @param next
-	 *            <code>true</code> if we are to open the next structure viewer's diff, <code>false</code> if
-	 *            we should go to the previous instead.
-	 */
-	protected void navigate(boolean next) {
-		final Control control = getControl();
-		if (control != null && !control.isDisposed()) {
-			final ICompareNavigator navigator = getCompareConfiguration().getContainer().getNavigator();
-			if (navigator instanceof CompareNavigator && ((CompareNavigator)navigator).hasChange(next)) {
-				navigator.selectChange(next);
-			}
-		}
-	}
-
-	/**
-	 * 
-	 */
-	protected abstract void copyDiff(boolean leftToRight);
 
 	/**
 	 * {@inheritDoc}
@@ -564,36 +472,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			} finally {
 				fSyncingSelections.set(false);
 			}
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#updateToolItems()
-	 */
-	@Override
-	protected void updateToolItems() {
-		super.updateToolItems();
-
-		manageCopyActionsActivation();
-	}
-
-	protected void manageCopyActionsActivation() {
-		Diff diff = getDiffFrom(getRightMergeViewer());
-		if (diff == null) {
-			diff = getDiffFrom(getLeftMergeViewer());
-		}
-		boolean enableCopy = false;
-		if (diff != null) {
-			enableCopy = diff.getState() == DifferenceState.UNRESOLVED;
-		}
-
-		if (fCopyDiffLeftToRightItem != null) {
-			fCopyDiffLeftToRightItem.getAction().setEnabled(enableCopy);
-		}
-		if (fCopyDiffRightToLeftItem != null) {
-			fCopyDiffRightToLeftItem.getAction().setEnabled(enableCopy);
 		}
 	}
 

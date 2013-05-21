@@ -23,6 +23,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
@@ -97,8 +99,19 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 		if (element instanceof Adapter) {
 			ret = getAdapterFactory().adapt(super.getParent(((Adapter)element).getTarget()),
 					ICompareInput.class);
+			if (ret instanceof ComparisonNode) {
+				Comparison root = ((ComparisonNode)ret).getTarget();
+				final Iterable<? extends IDifferenceGroup> groups = fViewerGrouper.getGroups(root);
+				Collection<IDifferenceGroup> parentGroups = new LinkedHashSet<IDifferenceGroup>();
+				for (IDifferenceGroup iDifferenceGroup : groups) {
+					parentGroups.add(iDifferenceGroup);
+				}
+				if (!parentGroups.isEmpty()) {
+					ret = parentGroups;
+				}
+			}
 		} else if (element instanceof IDifferenceGroup) {
-			ret = ((IDifferenceGroup)element).getComparison();
+			ret = getAdapterFactory().adapt(((IDifferenceGroup)element).getComparison(), ICompareInput.class);
 		} else {
 			ret = null;
 		}
@@ -298,7 +311,7 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 	 *            the given differences.
 	 * @return true if the object should be contained in the given differences, false otherwise.
 	 */
-	private boolean isPartOfGroup(Object object, final Iterable<? extends Diff> differences) {
+	public static boolean isPartOfGroup(Object object, final Iterable<? extends Diff> differences) {
 		final Predicate<? super EObject> isPartOfTree = new Predicate<EObject>() {
 			public boolean apply(EObject input) {
 				return Iterables.contains(differences, input);
@@ -380,7 +393,7 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 		 * 
 		 * @return the wrapped AbstractEDiffNode.
 		 */
-		private AbstractEDiffNode delegate() {
+		public AbstractEDiffNode delegate() {
 			return fDelegate;
 		}
 
@@ -509,6 +522,16 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 		 */
 		public boolean isAdapterForType(Object type) {
 			return delegate().isAdapterForType(type);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			return delegate().equals(obj);
+		}
+
+		@Override
+		public int hashCode() {
+			return delegate().hashCode();
 		}
 	}
 }

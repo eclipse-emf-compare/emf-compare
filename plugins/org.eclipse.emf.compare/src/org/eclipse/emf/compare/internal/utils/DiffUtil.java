@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.utils;
 
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.or;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableList;
@@ -27,6 +32,8 @@ import java.util.Set;
 
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -863,6 +870,127 @@ public final class DiffUtil {
 		ignoredElements = Lists.newArrayList(ignoredElements);
 
 		return DiffUtil.findInsertionIndex(comparison, ignoredElements, sourceList, targetList, value);
+	}
+
+	/**
+	 * Get the list of all required differences for merge of the given difference (required, required of
+	 * required...).
+	 * 
+	 * @param diff
+	 *            the given difference.
+	 * @param leftToRight
+	 *            the way of merge.
+	 * @param originalDiffSource
+	 *            the source of the given diff.
+	 * @return the list of all required differences.
+	 * @since 3.0
+	 */
+	public static Set<Diff> getRequires(Diff diff, boolean leftToRight, DifferenceSource originalDiffSource) {
+		return getRequires(diff, diff, leftToRight, originalDiffSource, Sets.newHashSet());
+	}
+
+	/**
+	 * Get the list of all required differences for merge of the given original difference (required, required
+	 * of required...).
+	 * 
+	 * @param currentDiff
+	 *            the current difference being processed.
+	 * @param originalDiff
+	 *            the original given difference.
+	 * @param leftToRight
+	 *            the way of merge.
+	 * @param originalDiffSource
+	 *            the source of the given diff.
+	 * @param processedDiffs
+	 *            the list of already processed diffs.
+	 * @return the list of all required differences.
+	 * @since 3.0
+	 */
+	private static Set<Diff> getRequires(Diff currentDiff, Diff originalDiff, boolean leftToRight,
+			DifferenceSource originalDiffSource, Set<Object> processedDiffs) {
+		Set<Diff> requires = Sets.newHashSet();
+		final List<Diff> diffRequires;
+		if (leftToRight) {
+			if (DifferenceSource.LEFT == originalDiffSource) {
+				diffRequires = currentDiff.getRequires();
+			} else if (DifferenceSource.RIGHT == originalDiffSource) {
+				diffRequires = currentDiff.getRequiredBy();
+			} else {
+				diffRequires = Collections.emptyList();
+			}
+		} else {
+			if (DifferenceSource.RIGHT == originalDiffSource) {
+				diffRequires = currentDiff.getRequires();
+			} else if (DifferenceSource.LEFT == originalDiffSource) {
+				diffRequires = currentDiff.getRequiredBy();
+			} else {
+				diffRequires = Collections.emptyList();
+			}
+		}
+		diffRequires.addAll(currentDiff.getRefinedBy());
+		for (Diff require : diffRequires) {
+			if (!originalDiff.equals(require) && !processedDiffs.contains(require)) {
+				processedDiffs.add(require);
+				requires.add(require);
+				requires.addAll(getRequires(require, originalDiff, leftToRight, originalDiffSource,
+						processedDiffs));
+			}
+		}
+		return requires;
+	}
+
+	/**
+	 * Get the list of unmergeable differences after the merge of the given difference.
+	 * 
+	 * @param diff
+	 *            the given difference.
+	 * @param leftToRight
+	 *            the way of merge.
+	 * @return the list of unmergeable differences.
+	 * @since 3.0
+	 */
+	public static Set<Diff> getUnmergeables(Diff diff, boolean leftToRight) {
+		Set<Diff> unmergeables = Sets.newHashSet();
+		Conflict conflict = diff.getConflict();
+		if (conflict != null && conflict.getKind() == ConflictKind.REAL) {
+			for (Diff diffConflict : conflict.getDifferences()) {
+				if (leftToRight
+						&& and(fromSide(DifferenceSource.LEFT),
+								or(ofKind(DifferenceKind.ADD), ofKind(DifferenceKind.CHANGE))).apply(diff)) {
+					if (and(fromSide(DifferenceSource.RIGHT),
+							or(ofKind(DifferenceKind.DELETE), ofKind(DifferenceKind.CHANGE))).apply(
+							diffConflict)) {
+						unmergeables.add(diffConflict);
+					}
+				} else if (leftToRight
+						&& and(fromSide(DifferenceSource.LEFT),
+								or(ofKind(DifferenceKind.DELETE), ofKind(DifferenceKind.CHANGE))).apply(diff)) {
+					if (and(fromSide(DifferenceSource.RIGHT),
+							or(ofKind(DifferenceKind.ADD), ofKind(DifferenceKind.CHANGE)))
+							.apply(diffConflict)) {
+						unmergeables.add(diffConflict);
+					}
+				} else if (!leftToRight
+						&& and(fromSide(DifferenceSource.RIGHT),
+								or(ofKind(DifferenceKind.DELETE), ofKind(DifferenceKind.CHANGE))).apply(diff)) {
+					if (and(fromSide(DifferenceSource.LEFT),
+							or(ofKind(DifferenceKind.ADD), ofKind(DifferenceKind.CHANGE)))
+							.apply(diffConflict)) {
+						unmergeables.add(diffConflict);
+					}
+				} else if (!leftToRight
+						&& and(fromSide(DifferenceSource.RIGHT),
+								or(ofKind(DifferenceKind.ADD), ofKind(DifferenceKind.CHANGE))).apply(diff)) {
+					if (and(fromSide(DifferenceSource.LEFT),
+							or(ofKind(DifferenceKind.DELETE), ofKind(DifferenceKind.CHANGE))).apply(
+							diffConflict)) {
+						unmergeables.add(diffConflict);
+					}
+				}
+
+			}
+		}
+		return unmergeables;
 	}
 
 	/**

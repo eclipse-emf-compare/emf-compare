@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler;
+package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.propertytester;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
@@ -17,13 +17,14 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
 /**
- * A property tester linked with {@link SaveComparisonModel}. It tests the editable property of both model
- * sides.
+ * A property tester linked with
+ * {@link org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.handler.AbstractMergedTo}. It returns
+ * true when both model sides are editable.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class ModelSaveablePropertyTester extends PropertyTester {
+public class MergedToPropertyTester extends PropertyTester {
 
 	/**
 	 * {@inheritDoc}
@@ -36,14 +37,12 @@ public class ModelSaveablePropertyTester extends PropertyTester {
 			IEditorInput i = ((IEditorPart)receiver).getEditorInput();
 			if (i instanceof CompareEditorInput) {
 				CompareConfiguration configuration = ((CompareEditorInput)i).getCompareConfiguration();
-				if (!configuration.isLeftEditable() || !configuration.isRightEditable()) {
-					return false;
-				} else if (((CompareEditorInput)i).isDirty()) {
-					return false;
+				if (configuration.isLeftEditable() && configuration.isRightEditable()) {
+					return true;
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 
 }
