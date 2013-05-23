@@ -344,17 +344,19 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();
 				final ResourceSet originResourceSet = (ResourceSet)scope.getOrigin();
 
-				ICompareEditingDomain editingDomain = (ICompareEditingDomain)getCompareConfiguration()
-						.getProperty(EMFCompareConstants.EDITING_DOMAIN);
-				if (editingDomain != null) {
-					editingDomain.getCommandStack().removeCommandStackListener(this);
-					editingDomain.dispose();
-				}
+				if (getCompareConfiguration() != null) {
+					ICompareEditingDomain editingDomain = (ICompareEditingDomain)getCompareConfiguration()
+							.getProperty(EMFCompareConstants.EDITING_DOMAIN);
+					if (editingDomain != null) {
+						editingDomain.getCommandStack().removeCommandStackListener(this);
+						editingDomain.dispose();
+					}
 
-				editingDomain = EMFCompareEditingDomain.create(leftResourceSet, rightResourceSet,
-						originResourceSet);
-				editingDomain.getCommandStack().addCommandStackListener(this);
-				getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);
+					editingDomain = EMFCompareEditingDomain.create(leftResourceSet, rightResourceSet,
+							originResourceSet);
+					editingDomain.getCommandStack().addCommandStackListener(this);
+					getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);
+				}
 
 				compareInputChanged(scope, compareResult);
 			}
@@ -458,23 +460,25 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	}
 
 	void compareInputChanged(final IComparisonScope scope, final Comparison comparison) {
-		fRoot = fAdapterFactory.adapt(comparison, ICompareInput.class);
-		getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, comparison);
+		if (!getControl().isDisposed()) { // guard against disposal
+			fRoot = fAdapterFactory.adapt(comparison, ICompareInput.class);
+			getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, comparison);
 
-		String message = null;
-		if (comparison.getDifferences().isEmpty()) {
-			message = "No Differences";
-		}
-
-		final String theMessage = message;
-		SWTUtil.safeAsyncExec(new Runnable() {
-			public void run() {
-				groupActionMenu.createActions(scope, comparison);
-				filterActionMenu.createActions(scope, comparison);
-				refreshAfterDiff(theMessage, fRoot);
-				initialSelection();
+			String message = null;
+			if (comparison.getDifferences().isEmpty()) {
+				message = "No Differences";
 			}
-		});
+
+			final String theMessage = message;
+			SWTUtil.safeAsyncExec(new Runnable() {
+				public void run() {
+					groupActionMenu.createActions(scope, comparison);
+					filterActionMenu.createActions(scope, comparison);
+					refreshAfterDiff(theMessage, fRoot);
+					initialSelection();
+				}
+			});
+		}
 	}
 
 	/*
