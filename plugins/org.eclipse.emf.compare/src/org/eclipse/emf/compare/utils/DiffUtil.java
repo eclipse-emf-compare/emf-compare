@@ -394,12 +394,20 @@ public final class DiffUtil {
 		for (int i = 1; i <= size1; i++) {
 			final E first = sequence1.get(i - 1);
 			for (int j = 1; j <= size2; j++) {
-				final E second = sequence2.get(j - 1);
-				if (equalityHelper.matchingValues(first, second)
-						&& !contains(comparison, equalityHelper, ignoredElements, second)) {
-					matrix[i][j] = (short)(1 + matrix[i - 1][j - 1]);
+				// assume array dereferencing and arithmetics faster than equals
+				final short current = matrix[i - 1][j - 1];
+				final short nextIfNoMatch = (short)Math.max(matrix[i - 1][j], matrix[i][j - 1]);
+
+				if (nextIfNoMatch > current) {
+					matrix[i][j] = nextIfNoMatch;
 				} else {
-					matrix[i][j] = (short)(Math.max(matrix[i - 1][j], matrix[i][j - 1]));
+					final E second = sequence2.get(j - 1);
+					if (equalityHelper.matchingValues(first, second)
+							&& !contains(comparison, equalityHelper, ignoredElements, second)) {
+						matrix[i][j] = (short)(1 + current);
+					} else {
+						matrix[i][j] = nextIfNoMatch;
+					}
 				}
 			}
 		}
@@ -456,12 +464,20 @@ public final class DiffUtil {
 		for (int i = 1; i <= size1; i++) {
 			final E first = sequence1.get(i - 1);
 			for (int j = 1; j <= size2; j++) {
-				final E second = sequence2.get(j - 1);
-				if (equalityHelper.matchingValues(first, second)
-						&& !contains(comparison, equalityHelper, ignoredElements, second)) {
-					matrix[i][j] = 1 + matrix[i - 1][j - 1];
+				// assume array dereferencing and arithmetics faster than equals
+				final int current = matrix[i - 1][j - 1];
+				final int nextIfNoMatch = Math.max(matrix[i - 1][j], matrix[i][j - 1]);
+
+				if (nextIfNoMatch > current) {
+					matrix[i][j] = nextIfNoMatch;
 				} else {
-					matrix[i][j] = Math.max(matrix[i - 1][j], matrix[i][j - 1]);
+					final E second = sequence2.get(j - 1);
+					if (equalityHelper.matchingValues(first, second)
+							&& !contains(comparison, equalityHelper, ignoredElements, second)) {
+						matrix[i][j] = 1 + current;
+					} else {
+						matrix[i][j] = nextIfNoMatch;
+					}
 				}
 			}
 		}
