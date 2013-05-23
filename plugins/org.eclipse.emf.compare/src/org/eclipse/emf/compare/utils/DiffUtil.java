@@ -263,12 +263,8 @@ public final class DiffUtil {
 				}
 			}
 		}
-		for (int i = 1; i < start1; i++) {
-			sequence1.remove(0);
-		}
-		for (int i = 1; i < start2; i++) {
-			sequence2.remove(0);
-		}
+		sequence1.subList(0, start1 - 1).clear();
+		sequence2.subList(0, start2 - 1).clear();
 
 		return prefix;
 	}
@@ -325,12 +321,8 @@ public final class DiffUtil {
 				}
 			}
 		}
-		for (int i = size1; i > end1; i--) {
-			sequence1.remove(sequence1.size() - 1);
-		}
-		for (int i = size2; i > end2; i--) {
-			sequence2.remove(sequence2.size() - 1);
-		}
+		sequence1.subList(end1, size1).clear();
+		sequence2.subList(end2, size2).clear();
 
 		return Lists.reverse(suffix);
 	}
