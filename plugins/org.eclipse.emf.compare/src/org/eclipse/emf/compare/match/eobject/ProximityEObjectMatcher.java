@@ -12,12 +12,12 @@ package org.eclipse.emf.compare.match.eobject;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.BasicMonitor;
@@ -114,16 +114,13 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 		subMonitor = new BasicMonitor();
 		subMonitor.beginTask("matching objects", nbElements);
 
-		Iterator<EObject> todo = index.getValuesStillThere(Side.LEFT).iterator();
-		while (todo.hasNext()) {
-			Iterator<EObject> remainingResult = matchList(comparison, todo, subMonitor).iterator();
-			todo = remainingResult;
-
+		Iterable<EObject> todo = index.getValuesStillThere(Side.LEFT);
+		while (todo.iterator().hasNext()) {
+			todo = matchList(comparison, todo, subMonitor);
 		}
-		todo = index.getValuesStillThere(Side.RIGHT).iterator();
-		while (todo.hasNext()) {
-			Iterator<EObject> remainingResult = matchList(comparison, todo, subMonitor).iterator();
-			todo = remainingResult;
+		todo = index.getValuesStillThere(Side.RIGHT);
+		while (todo.iterator().hasNext()) {
+			todo = matchList(comparison, todo, subMonitor);
 		}
 
 		for (EObject notFound : index.getValuesStillThere(Side.RIGHT)) {
@@ -148,27 +145,55 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 	 * 
 	 * @param comparison
 	 *            the comparison being built.
-	 * @param todo
+	 * @param todoList
 	 *            the list of objects to process.
 	 * @param monitor
 	 *            a monitor to track progress.
-	 * @return the list of
+	 * @return the list of EObjects which could not be processed for some reason.
 	 */
-	private Iterable<EObject> matchList(Comparison comparison, Iterator<EObject> todo, Monitor monitor) {
-		List<EObject> remainingResult = Lists.newArrayList();
-		while (todo.hasNext()) {
-			EObject next = todo.next();
-			if (next.eContainer() == null || comparison.getMatch(next.eContainer()) != null
-					|| !isInScope(next.eContainer())) {
-				if (!tryToMatch(comparison, next)) {
-					remainingResult.add(next);
-				}
-				monitor.worked(1);
-			} else {
-				remainingResult.add(next);
+	private Iterable<EObject> matchList(Comparison comparison, Iterable<EObject> todoList, Monitor monitor) {
+		Set<EObject> remaining = Sets.newLinkedHashSet();
+		Iterator<EObject> containersAndTodo = todoList.iterator();
+		while (containersAndTodo.hasNext()) {
+			EObject next = containersAndTodo.next();
+			if (!matchEObjectAndItsContainers(comparison, next)) {
+				remaining.add(next);
 			}
 		}
-		return remainingResult;
+		return remaining;
+	}
+
+	/**
+	 * This method might call itself recursively going up to the containers which are in the scope. It will
+	 * first make sure all the containers of a given EObject are already matched, and then match the EObject.
+	 * The process might fail for some reason (for instance, a prerequisite container of RIGHT has not been
+	 * processed yet). In that case it will return false.
+	 * 
+	 * @param comparison
+	 *            the comparison being built.
+	 * @param eObject
+	 *            any EObject.
+	 * @return true if the while matching has been completed, false if not.
+	 */
+	private boolean matchEObjectAndItsContainers(Comparison comparison, EObject eObject) {
+		boolean completed = true;
+		if (comparison.getMatch(eObject) == null) {
+			EObject container = eObject.eContainer();
+			if (container != null && isInScope(container)) {
+				/*
+				 * Let's first match all the container chain, if the container has been already matched the
+				 * call to matchEObjectAndItsContainers() will directly return true.
+				 */
+				completed = matchEObjectAndItsContainers(comparison, container);
+			}
+			/*
+			 * No point in trying to match the EObject if the container has not been matched already .
+			 */
+			if (completed) {
+				completed = tryToMatch(comparison, eObject);
+			}
+		}
+		return completed;
 	}
 
 	/**
