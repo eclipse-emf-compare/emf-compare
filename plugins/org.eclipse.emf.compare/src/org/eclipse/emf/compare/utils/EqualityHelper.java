@@ -123,6 +123,10 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 		} else if (isNullOrEmptyString(converted1) && isNullOrEmptyString(converted2)) {
 			// Special case, consider that the empty String is equal to null (unset attributes)
 			equal = true;
+		} else if (converted1 instanceof String || converted1 instanceof Integer
+				|| converted1 instanceof Boolean) {
+			// primitives and String are much more common than arrays... and isArray() is expensive.
+			equal = converted1.equals(converted2);
 		} else if (converted1 != null && converted1.getClass().isArray() && converted2 != null
 				&& converted2.getClass().isArray()) {
 			// [299641] compare arrays by their content instead of instance equality
