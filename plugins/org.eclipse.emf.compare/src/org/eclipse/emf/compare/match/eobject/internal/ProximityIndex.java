@@ -11,16 +11,16 @@
 package org.eclipse.emf.compare.match.eobject.internal;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.SortedMap;
 
 import org.eclipse.emf.compare.Comparison;
@@ -52,17 +52,17 @@ public class ProximityIndex implements EObjectIndex {
 	/**
 	 * the left objects still present in the index.
 	 */
-	private List<EObject> lefts;
+	private Set<EObject> lefts;
 
 	/**
 	 * the right objects still present in the index.
 	 */
-	private List<EObject> rights;
+	private Set<EObject> rights;
 
 	/**
 	 * the origin objects still present in the index.
 	 */
-	private List<EObject> origins;
+	private Set<EObject> origins;
 
 	/**
 	 * An object able to tell us whether an object is in the scope or not.
@@ -84,9 +84,9 @@ public class ProximityIndex implements EObjectIndex {
 	 */
 	public ProximityIndex(ProximityEObjectMatcher.DistanceFunction meter, ScopeQuery matcher) {
 		this.meter = meter;
-		this.lefts = Lists.newArrayList();
-		this.rights = Lists.newArrayList();
-		this.origins = Lists.newArrayList();
+		this.lefts = Sets.newLinkedHashSet();
+		this.rights = Sets.newLinkedHashSet();
+		this.origins = Sets.newLinkedHashSet();
 		this.scope = matcher;
 	}
 
@@ -140,7 +140,7 @@ public class ProximityIndex implements EObjectIndex {
 	 */
 	private EObject findTheClosest(Comparison inProgress, final EObject eObj, final Side originalSide,
 			final Side sideToFind, boolean shouldDoubleCheck) {
-		List<EObject> storageToSearchFor = lefts;
+		Set<EObject> storageToSearchFor = lefts;
 		switch (sideToFind) {
 			case RIGHT:
 				storageToSearchFor = rights;
@@ -218,7 +218,7 @@ public class ProximityIndex implements EObjectIndex {
 	 *            the list of possible matches.
 	 * @return a candidate instance wrapping the found match Object (if found)
 	 */
-	private Candidate findIdenticMatch(Comparison inProgress, final EObject eObj, List<EObject> candidates) {
+	private Candidate findIdenticMatch(Comparison inProgress, final EObject eObj, Set<EObject> candidates) {
 		Iterator<EObject> it = candidates.iterator();
 		Candidate best = new Candidate();
 
