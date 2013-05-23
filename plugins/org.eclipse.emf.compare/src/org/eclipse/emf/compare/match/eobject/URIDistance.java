@@ -20,6 +20,7 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
@@ -157,11 +158,11 @@ public class URIDistance implements Function<EObject, Iterable<String>> {
 			result = "0"; //$NON-NLS-1$
 		}
 
+		final List<String> resultList = Lists.newArrayList(result);
 		if (input.eContainer() != null) {
-			return Iterables.concat(Lists.newArrayList(result), locationCache
-					.getUnchecked(input.eContainer()));
+			Iterables.addAll(resultList, locationCache.getUnchecked(input.eContainer()));
 		}
-		return Lists.newArrayList(result);
+		return resultList;
 	}
 
 	/**

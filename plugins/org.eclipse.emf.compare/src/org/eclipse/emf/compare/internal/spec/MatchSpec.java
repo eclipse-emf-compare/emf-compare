@@ -23,6 +23,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.impl.MatchImpl;
+import org.eclipse.emf.compare.internal.SubMatchIterable;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -32,20 +33,6 @@ import org.eclipse.emf.ecore.EObject;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class MatchSpec extends MatchImpl {
-
-	/**
-	 * Function returning {@link #getSubmatches() all sub matches} of the given match.
-	 */
-	private static final Function<Match, Iterable<Match>> ALL_SUBMATCHES = new Function<Match, Iterable<Match>>() {
-		public Iterable<Match> apply(Match match) {
-			if (match == null) {
-				return Lists.newArrayList();
-			}
-			final Iterable<Match> allSubmatches = concat(transform(match.getSubmatches(), ALL_SUBMATCHES));
-			return concat(match.getSubmatches(), allSubmatches);
-		}
-	};
-
 	/**
 	 * Function returning {@link #getDifferences() all DIFFERENCES} of the given match.
 	 */
@@ -86,7 +73,7 @@ public class MatchSpec extends MatchImpl {
 	 */
 	@Override
 	public Iterable<Match> getAllSubmatches() {
-		return ALL_SUBMATCHES.apply(this);
+		return new SubMatchIterable(this);
 	}
 
 	/**
