@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.match.eobject;
 
 import com.google.common.base.Predicate;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Sets;
 
@@ -590,13 +589,6 @@ public class EditionDistance implements DistanceFunction {
 	 * {@inheritDoc}
 	 */
 	public double getThresholdAmount(EObject eObj) {
-
-		Predicate<EStructuralFeature> featureFilter = new Predicate<EStructuralFeature>() {
-
-			public boolean apply(EStructuralFeature feat) {
-				return weights.getWeight(feat) != 0;
-			}
-		};
 		// When can you safely says these are not the same EObjects *at all* ?
 		// lets consider every feature which is set, and add this in the max distance.
 		// and then tweak the max value adding half a location change
@@ -605,18 +597,15 @@ public class EditionDistance implements DistanceFunction {
 		// assess the quality of further changes.
 		int max = 0;
 		int nbFeatures = 0;
-		for (EReference feat : Iterables.filter(eObj.eClass().getEAllReferences(), featureFilter)) {
-			if (eObj.eIsSet(feat)) {
-				max += weights.getWeight(feat);
+
+		for (EStructuralFeature feat : eObj.eClass().getEAllStructuralFeatures()) {
+			int featureWeight = weights.getWeight(feat);
+			if (featureWeight != 0 && eObj.eIsSet(feat)) {
+				max += featureWeight;
 				nbFeatures++;
 			}
 		}
-		for (EAttribute feat : Iterables.filter(eObj.eClass().getEAllAttributes(), featureFilter)) {
-			if (eObj.eIsSet(feat)) {
-				max += weights.getWeight(feat);
-				nbFeatures++;
-			}
-		}
+
 		// max = max + (locationChangeCoef * weights.getParentWeight(eObj));
 		max = max + weights.getContainingFeatureWeight(eObj);
 
@@ -624,7 +613,7 @@ public class EditionDistance implements DistanceFunction {
 	}
 
 	/**
-	 * return a ratio to appli on the amount of maximum un-similarity amount depending on the number of
+	 * return a ratio to apply on the amount of maximum un-similarity amount depending on the number of
 	 * features which are considered.
 	 * 
 	 * @param nbFeatures
