@@ -58,9 +58,8 @@ public class URIDistance implements Function<EObject, Iterable<String>> {
 	 * Create a new {@link URIDistance}.
 	 */
 	public URIDistance() {
-		locationCache = CacheBuilder.newBuilder().maximumSize(10000).build(CacheLoader.from(this));
-		fragmentsCache = CacheBuilder.newBuilder().maximumSize(10000).build(
-				CacheLoader.from(new EUriFragmentFunction()));
+		locationCache = CacheBuilder.newBuilder().build(CacheLoader.from(this));
+		fragmentsCache = CacheBuilder.newBuilder().build(CacheLoader.from(new EUriFragmentFunction()));
 	}
 
 	/**
