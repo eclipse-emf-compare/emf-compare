@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.AttributeChange;
@@ -40,6 +39,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.internal.SubMatchIterator;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
@@ -1014,36 +1014,6 @@ public class DefaultConflictDetector implements IConflictDetector {
 		 */
 		public void remove() {
 			diffIterator.remove();
-		}
-	}
-
-	/**
-	 * A custom TreeIterator that will iterate over the Match->submatch tree.
-	 * 
-	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
-	 */
-	private static class SubMatchIterator extends AbstractTreeIterator<Match> {
-		/** Generated SUID. */
-		private static final long serialVersionUID = -1789806135599824529L;
-
-		/**
-		 * Constructs an iterator given the root of its tree.
-		 * 
-		 * @param start
-		 *            Starting match of the tree we'll iterate over.
-		 */
-		public SubMatchIterator(Match start) {
-			super(start);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.common.util.AbstractTreeIterator#getChildren(java.lang.Object)
-		 */
-		@Override
-		protected Iterator<? extends Match> getChildren(Object obj) {
-			return ((Match)obj).getSubmatches().iterator();
 		}
 	}
 }
