@@ -17,6 +17,8 @@ import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Iterables.transform;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentReferenceChange;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -40,7 +42,6 @@ import org.eclipse.emf.compare.provider.MatchItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
-import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -50,25 +51,6 @@ import org.eclipse.emf.ecore.EObject;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class MatchItemProviderSpec extends MatchItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider {
-
-	/**
-	 * A predicate to know if the given {@link ReferenceChange} is a reference of type containment.
-	 */
-	private static final Predicate<ReferenceChange> CONTAINMENT_REFERENCE_CHANGE = new Predicate<ReferenceChange>() {
-		public boolean apply(ReferenceChange input) {
-			return input.getReference().isContainment();
-		}
-	};
-
-	/**
-	 * A function returning the {@link ReferenceChange#getValue()} of the given {@link ReferenceChange}.
-	 */
-	private static final Function<ReferenceChange, EObject> VALUE = new Function<ReferenceChange, EObject>() {
-		public EObject apply(ReferenceChange input) {
-			return input.getValue();
-		}
-	};
-
 	/** The image provider used with this item provider. */
 	private final OverlayImageProvider overlayProvider;
 
@@ -198,10 +180,17 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 	 */
 	public static ImmutableSet<EObject> containmentReferencesValues(Match match) {
 		EList<Diff> differences = match.getDifferences();
-		Iterable<ReferenceChange> containmentReferenceChanges = filter(filter(differences,
-				ReferenceChange.class), CONTAINMENT_REFERENCE_CHANGE);
+
+		Iterable<Diff> containmentReferenceChanges = filter(differences, containmentReferenceChange());
+
+		final Function<Diff, EObject> valueGetter = new Function<Diff, EObject>() {
+			public EObject apply(Diff input) {
+				return ((ReferenceChange)input).getValue();
+			}
+		};
 		ImmutableSet<EObject> containementDifferenceValues = ImmutableSet.copyOf(transform(
-				containmentReferenceChanges, VALUE));
+				containmentReferenceChanges, valueGetter));
+
 		return containementDifferenceValues;
 	}
 
@@ -288,7 +277,7 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		Match match = (Match)object;
 		ComposedStyledString styledString = new ComposedStyledString();
-		if (any(match.getAllDifferences(), EMFComparePredicates.hasState(DifferenceState.UNRESOLVED))) {
+		if (any(match.getAllDifferences(), hasState(DifferenceState.UNRESOLVED))) {
 			styledString.append("> ", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 		}
 		styledString.append(getText(object));

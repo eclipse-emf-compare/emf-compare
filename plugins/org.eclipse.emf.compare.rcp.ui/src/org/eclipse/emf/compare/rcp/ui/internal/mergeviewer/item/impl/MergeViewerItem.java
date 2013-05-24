@@ -18,6 +18,8 @@ import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentReferenceChange;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
@@ -251,7 +253,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		if (parentMatch == null) {
 			return null;
 		}
-		Object expectedValue = MergeViewerUtil.getEObject(parentMatch, fSide);
+		EObject expectedValue = MergeViewerUtil.getEObject(parentMatch, fSide);
 		if (expectedValue != null) {
 			Iterable<? extends Diff> diffs = getDiffsWithValue(expectedValue, parentMatch);
 			Diff diff = getFirst(diffs, null);
@@ -285,10 +287,9 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	 * @param expectedValue
 	 * @return
 	 */
-	private Iterable<? extends Diff> getDiffsWithValue(Object expectedValue, Match parentMatch) {
-		Iterable<? extends Diff> diffs = filter(filter(filter(fComparison.getDifferences(),
-				ReferenceChange.class), EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE),
-				EMFComparePredicates.valueIs(expectedValue));
+	private Iterable<? extends Diff> getDiffsWithValue(EObject expectedValue, Match parentMatch) {
+		Iterable<? extends Diff> diffs = filter(fComparison.getDifferences(expectedValue),
+				containmentReferenceChange());
 		if (size(diffs) > 1) {
 			throw new IllegalStateException("Should not have more than one ReferenceChange on each Match"); //$NON-NLS-1$
 		} else {
@@ -319,7 +320,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 
 	protected final List<IMergeViewerItem> createInsertionPoints(Comparison comparison,
 			EStructuralFeature eStructuralFeature, final List<? extends IMergeViewerItem> values,
-			List<ReferenceChange> differences) {
+			List<Diff> differences) {
 		final List<IMergeViewerItem> ret = newArrayList(values);
 		final List<Object> sideContent = ReferenceUtil.getAsList((EObject)getSideValue(getSide()),
 				eStructuralFeature);
@@ -422,8 +423,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 
 		Match match = getComparison().getMatch(eObject);
 
-		ReferenceChange referenceChange = getFirst(filter(filter(getComparison().getDifferences(eObject),
-				ReferenceChange.class), EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE), null);
+		ReferenceChange referenceChange = (ReferenceChange)getFirst(filter(getComparison().getDifferences(
+				eObject), containmentReferenceChange()), null);
 		if (match != null) {
 			return new MergeViewerItem.Container(getComparison(), referenceChange, match, getSide(),
 					getAdapterFactory());
@@ -534,11 +535,11 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			final Collection<? extends EStructuralFeature> childrenFeatures = getChildrenFeatures(bestSideValue);
 
 			Match match = getComparison().getMatch(bestSideValue);
-			final ImmutableList<ReferenceChange> differences;
+			final ImmutableList<Diff> differences;
 			if (match != null) {
-				differences = ImmutableList.copyOf(filter(filter(match.getDifferences(),
-						ReferenceChange.class), and(EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE,
-						EMFComparePredicates.hasState(DifferenceState.UNRESOLVED))));
+				differences = ImmutableList.copyOf(filter(match.getDifferences(), and(
+						containmentReferenceChange(), EMFComparePredicates
+								.hasState(DifferenceState.UNRESOLVED))));
 			} else {
 				differences = ImmutableList.of();
 			}
@@ -549,8 +550,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 				List<Object> featureContent = ReferenceUtil.getAsList((EObject)sideValue, eStructuralFeature);
 				List<IMergeViewerItem> mergeViewerItem = createMergeViewerItemFrom(featureContent);
 				if (getSide() != MergeViewerSide.ANCESTOR) {
-					List<ReferenceChange> differencesOnFeature = ImmutableList.copyOf(filter(differences,
-							EMFComparePredicates.onFeature(eStructuralFeature.getName())));
+					List<Diff> differencesOnFeature = ImmutableList.copyOf(filter(differences,
+							onFeature(eStructuralFeature.getName())));
 					ret.addAll(createInsertionPoints(getComparison(), eStructuralFeature, mergeViewerItem,
 							differencesOnFeature));
 
