@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl;
 
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentReferenceChange;
 
 import com.google.common.collect.ImmutableList;
 
@@ -31,14 +30,12 @@ import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem.Container;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
-import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFeatureAccessor {
-
 	/**
 	 * 
 	 */
@@ -53,9 +50,7 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 	@Override
 	protected ImmutableList<Diff> computeDifferences() {
 		List<Diff> allDifferences = getComparison().getDifferences();
-		return ImmutableList.<Diff> copyOf(filter(filter(allDifferences, ReferenceChange.class),
-				or(EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE,
-						instanceOf(ResourceAttachmentChange.class))));
+		return ImmutableList.<Diff> copyOf(filter(allDifferences, containmentReferenceChange()));
 	}
 
 	/**

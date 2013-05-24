@@ -39,17 +39,6 @@ import org.eclipse.emf.ecore.EcorePackage;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class EMFComparePredicates {
-
-	/**
-	 * Filters out {@link ReferenceChange} when its {@link ReferenceChange#getReference() reference} is
-	 * {@link EReference#isContainment() containment}.
-	 */
-	public static final Predicate<? super ReferenceChange> CONTAINMENT_REFERENCE_CHANGE = new Predicate<ReferenceChange>() {
-		public boolean apply(ReferenceChange referenceChange) {
-			return referenceChange.getReference().isContainment();
-		}
-	};
-
 	/**
 	 * This class does not need to be instantiated.
 	 */
@@ -753,6 +742,20 @@ public final class EMFComparePredicates {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
 				return input != null && Arrays.asList(states).contains(input.getState());
+			}
+		};
+	}
+
+	/**
+	 * This can be used to check whether a givan diff is a containment reference change.
+	 * 
+	 * @return The created predicate.
+	 */
+	public static Predicate<? super Diff> containmentReferenceChange() {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input instanceof ReferenceChange
+						&& ((ReferenceChange)input).getReference().isContainment();
 			}
 		};
 	}
