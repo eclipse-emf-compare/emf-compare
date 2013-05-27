@@ -5,7 +5,7 @@
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.guava" version="11.0.2.v201303041551"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20130308121626/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.emfstore.fuzzy.feature.feature.group" version="0.9.3.M5"/>

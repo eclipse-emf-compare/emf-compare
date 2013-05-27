@@ -2,21 +2,18 @@
 <?pde version="3.8"?><target name="EMF Compare based on Kepler SDK" sequenceNumber="0">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.sdk.ide" version="4.3.0.I20130502-0800"/>
-<unit id="org.eclipse.emf.sdk.feature.group" version="2.9.0.v20130506-0438"/>
+<unit id="org.eclipse.sdk.ide" version="4.3.0.I20130516-2200"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.9.0.v20130521-0350"/>
 <unit id="org.eclipse.emf.ecoretools.sdk.feature.group" version="1.2.0.201301291331"/>
-<unit id="org.eclipse.gmf.runtime.sdk.feature.group" version="1.7.0.201305071937"/>
-<unit id="org.eclipse.uml2.sdk.feature.group" version="4.1.0.v20130506-1015"/>
-<unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="0.10.0.v201305071539"/>
+<unit id="org.eclipse.gmf.runtime.sdk.feature.group" version="1.7.0.201305221926"/>
+<unit id="org.eclipse.uml2.sdk.feature.group" version="4.1.0.v20130520-2024"/>
+<unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="0.10.0.v201305220958"/>
 <unit id="org.eclipse.egit.feature.group" version="3.0.0.201305080800-m7"/>
 <repository location="http://download.eclipse.org/releases/kepler"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
-<unit id="org.eclipse.swtbot.ide.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
-<unit id="org.eclipse.swtbot.eclipse.test.junit4.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
-<unit id="org.eclipse.swtbot.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
-<repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>
+<unit id="org.junit4" version="4.8.1.v20100525"/>
+<repository location="http://download.eclipse.org/releases/helios"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.guava" version="11.0.2.v201303041551"/>
