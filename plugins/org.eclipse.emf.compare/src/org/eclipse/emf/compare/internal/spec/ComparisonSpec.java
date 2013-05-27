@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.internal.spec;
 
 import static com.google.common.collect.Iterables.filter;
 
-import com.google.common.base.Predicate;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -28,7 +27,6 @@ import java.util.Set;
 import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.impl.ComparisonImpl;
@@ -119,23 +117,21 @@ public class ComparisonSpec extends ComparisonImpl {
 	 */
 	@Override
 	public Match getMatch(EObject element) {
-		if (element == null) {
-			return null;
+		if (element != null) {
+			if (matchCrossReferencer == null) {
+				matchCrossReferencer = new MatchCrossReferencer();
+				eAdapters().add(matchCrossReferencer);
+			}
+
+			final Collection<EStructuralFeature.Setting> settings = matchCrossReferencer
+					.getInverseReferences(element, false);
+			for (EStructuralFeature.Setting setting : settings) {
+				if (setting.getEObject() instanceof Match) {
+					return (Match)setting.getEObject();
+				}
+			}
 		}
-
-		if (matchCrossReferencer == null) {
-			matchCrossReferencer = new MatchCrossReferencer();
-			eAdapters().add(matchCrossReferencer);
-		}
-		Iterable<EObject> crossRefs = filter(getInverse(element, matchCrossReferencer),
-				new Predicate<EObject>() {
-
-					public boolean apply(EObject input) {
-						return input.eClass() == ComparePackage.eINSTANCE.getMatch();
-					}
-				});
-
-		return (Match)Iterables.getFirst(crossRefs, null);
+		return null;
 	}
 
 	/**
