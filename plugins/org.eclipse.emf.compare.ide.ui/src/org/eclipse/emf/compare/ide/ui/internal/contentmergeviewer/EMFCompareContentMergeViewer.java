@@ -40,6 +40,7 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicOb
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
+import org.eclipse.emf.compare.ide.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
@@ -360,7 +361,11 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			setRightDirty(getEditingDomain().getCommandStack().isRightSaveNeeded());
 		}
 
-		refresh();
+		SWTUtil.safeAsyncExec(new Runnable() {
+			public void run() {
+				refresh();
+			}
+		});
 	}
 
 	/**
