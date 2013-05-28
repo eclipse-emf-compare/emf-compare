@@ -52,6 +52,11 @@ public class DiagramDiffAccessorImpl extends DiagramMatchAccessorImpl implements
 		return fDiff;
 	}
 
+	/**
+	 * It returns the view of the diagram difference.
+	 * 
+	 * @return The view of the diagram difference.
+	 */
 	private EObject getEObject() {
 		if (fDiff instanceof DiagramDiff) {
 			return ((DiagramDiff)fDiff).getView();
