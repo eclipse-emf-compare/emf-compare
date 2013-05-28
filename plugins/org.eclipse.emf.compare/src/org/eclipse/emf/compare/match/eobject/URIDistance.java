@@ -12,15 +12,14 @@ package org.eclipse.emf.compare.match.eobject;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
@@ -41,12 +40,17 @@ public class URIDistance implements Function<EObject, Iterable<String>> {
 	/**
 	 * A computing cache for the locations.
 	 */
-	private LoadingCache<EObject, Iterable<String>> locationCache;
+	private Map<EObject, Iterable<String>> locationCache;
 
 	/**
 	 * A computing cache for the uri fragments.
 	 */
-	private LoadingCache<EObject, String> fragmentsCache;
+	private Map<EObject, String> fragmentsCache;
+
+	/**
+	 * The function used to compute the fragment of an {@link EObject}.
+	 */
+	private Function<EObject, String> fragmentComputation;
 
 	/**
 	 * An optional comparison to retrieve matches already computed. This will impact the way the uri is
@@ -58,8 +62,9 @@ public class URIDistance implements Function<EObject, Iterable<String>> {
 	 * Create a new {@link URIDistance}.
 	 */
 	public URIDistance() {
-		locationCache = CacheBuilder.newBuilder().build(CacheLoader.from(this));
-		fragmentsCache = CacheBuilder.newBuilder().build(CacheLoader.from(new EUriFragmentFunction()));
+		locationCache = Maps.newHashMap();
+		fragmentsCache = Maps.newHashMap();
+		fragmentComputation = new EUriFragmentFunction();
 	}
 
 	/**
@@ -85,8 +90,8 @@ public class URIDistance implements Function<EObject, Iterable<String>> {
 	 * @return The number of changes to transform one uri to another one.
 	 */
 	public int proximity(EObject a, EObject b) {
-		Iterable<String> aPath = locationCache.getUnchecked(a);
-		Iterable<String> bPath = locationCache.getUnchecked(b);
+		Iterable<String> aPath = getOrComputeLocation(a);
+		Iterable<String> bPath = getOrComputeLocation(b);
 		return proximity(aPath, bPath);
 	}
 
@@ -158,10 +163,26 @@ public class URIDistance implements Function<EObject, Iterable<String>> {
 		}
 
 		final List<String> resultList = Lists.newArrayList(result);
-		if (input.eContainer() != null) {
-			Iterables.addAll(resultList, locationCache.getUnchecked(input.eContainer()));
+		if (container != null) {
+			Iterables.addAll(resultList, getOrComputeLocation(container));
 		}
 		return resultList;
+	}
+
+	/**
+	 * The method return the location of an EObject represented as a list of fragments.
+	 * 
+	 * @param container
+	 *            any EObject.
+	 * @return a list of fragments.
+	 */
+	private Iterable<String> getOrComputeLocation(EObject container) {
+		Iterable<String> result = locationCache.get(container);
+		if (result == null) {
+			result = apply(container);
+			locationCache.put(container, result);
+		}
+		return result;
 	}
 
 	/**
@@ -172,7 +193,12 @@ public class URIDistance implements Function<EObject, Iterable<String>> {
 	 * @return a String representation of its containing fragment.
 	 */
 	public String retrieveFragment(EObject input) {
-		return fragmentsCache.getUnchecked(input);
+		String result = fragmentsCache.get(input);
+		if (result == null) {
+			result = fragmentComputation.apply(input);
+			fragmentsCache.put(input, result);
+		}
+		return result;
 	}
 
 	/**
