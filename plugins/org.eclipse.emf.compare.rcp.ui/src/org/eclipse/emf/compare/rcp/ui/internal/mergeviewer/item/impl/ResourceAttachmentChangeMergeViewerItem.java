@@ -30,6 +30,7 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
@@ -166,22 +167,32 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 			Object right = MergeViewerUtil.getValueFromResourceAttachmentChange(diff, comparison,
 					IMergeViewer.MergeViewerSide.RIGHT);
 
-			boolean b1 = diff.getSource() == DifferenceSource.LEFT && diff.getKind() == DifferenceKind.DELETE
-					&& getSide() == IMergeViewer.MergeViewerSide.LEFT;
-			boolean b2 = diff.getSource() == DifferenceSource.LEFT && diff.getKind() == DifferenceKind.ADD
-					&& getSide() == IMergeViewer.MergeViewerSide.RIGHT;
-			boolean b3 = diff.getSource() == DifferenceSource.RIGHT && diff.getKind() == DifferenceKind.ADD
-					&& getSide() == IMergeViewer.MergeViewerSide.LEFT;
-			boolean b4 = diff.getSource() == DifferenceSource.RIGHT
-					&& diff.getKind() == DifferenceKind.DELETE
-					&& getSide() == IMergeViewer.MergeViewerSide.RIGHT;
+			DifferenceSource source = diff.getSource();
+			DifferenceKind kind = diff.getKind();
+			DifferenceState state = diff.getState();
+			boolean b1 = source == DifferenceSource.LEFT && kind == DifferenceKind.DELETE
+					&& getSide() == MergeViewerSide.LEFT && DifferenceState.MERGED != state;
+			boolean b2 = source == DifferenceSource.LEFT && kind == DifferenceKind.ADD
+					&& getSide() == MergeViewerSide.RIGHT && DifferenceState.MERGED != state;
+			boolean b3 = source == DifferenceSource.RIGHT && kind == DifferenceKind.ADD
+					&& getSide() == MergeViewerSide.LEFT && DifferenceState.MERGED != state;
+			boolean b4 = source == DifferenceSource.RIGHT && kind == DifferenceKind.DELETE
+					&& getSide() == MergeViewerSide.RIGHT && DifferenceState.MERGED != state;
 
+			boolean b5 = DifferenceState.MERGED == state && source == DifferenceSource.LEFT
+					&& kind == DifferenceKind.ADD && right == null;
+			boolean b6 = DifferenceState.MERGED == state && source == DifferenceSource.LEFT
+					&& kind == DifferenceKind.DELETE && left == null;
+			boolean b7 = DifferenceState.MERGED == state && source == DifferenceSource.RIGHT
+					&& kind == DifferenceKind.ADD && left == null;
+			boolean b8 = DifferenceState.MERGED == state && source == DifferenceSource.RIGHT
+					&& kind == DifferenceKind.DELETE && right == null;
 			// do not duplicate insertion point for pseudo add conflict
 			// so we must only create one for pseudo delete conflict
-			boolean b5 = diff.getConflict() == null
-					|| (diff.getConflict().getKind() != ConflictKind.PSEUDO || diff.getKind() == DifferenceKind.DELETE);
+			boolean b9 = diff.getConflict() == null
+					|| (diff.getConflict().getKind() != ConflictKind.PSEUDO || kind == DifferenceKind.DELETE);
 
-			if ((b1 || b2 || b3 || b4) && b5) {
+			if ((b1 || b2 || b3 || b4 || b5 || b6 || b7 || b8) && b9) {
 				Object ancestor = MergeViewerUtil.getValueFromResourceAttachmentChange(diff, comparison,
 						IMergeViewer.MergeViewerSide.ANCESTOR);
 				if (left != null
@@ -197,11 +208,17 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 								diff) == null) {
 					ancestor = null;
 				}
+				if (b5 || b8) {
+					left = null;
+				}
+				if (b6 || b7) {
+					right = null;
+				}
 				IMergeViewerItem insertionPoint = new MergeViewerItem.Container(comparison, diff, left,
 						right, ancestor, getSide(), getAdapterFactory());
 
 				final int insertionIndex;
-				if (left == null && right == null) {
+				if (left == null && right == null && ancestor != null) {
 					Resource resource = MergeViewerUtil.getResource(comparison,
 							IMergeViewer.MergeViewerSide.ANCESTOR, diff);
 					List<EObject> contents = resource.getContents();

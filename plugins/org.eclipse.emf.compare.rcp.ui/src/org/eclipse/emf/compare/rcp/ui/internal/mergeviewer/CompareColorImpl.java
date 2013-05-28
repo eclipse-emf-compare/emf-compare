@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -197,7 +197,7 @@ public class CompareColorImpl implements RemovalListener<RGB, Color>, ICompareCo
 		if (isThreeWay && !isIgnoreAncestor) {
 			boolean requiredConflictForWayOfMerge = false;
 
-			if (diff.getConflict() == null && !requiredConflictForWayOfMerge) {
+			if (diff != null && diff.getConflict() == null && !requiredConflictForWayOfMerge) {
 				switch (diff.getSource()) {
 					case RIGHT:
 						if (fLeftIsLocal) {

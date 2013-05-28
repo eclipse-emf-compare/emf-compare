@@ -19,7 +19,6 @@ import java.util.ResourceBundle;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
@@ -316,7 +315,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			}
 			final Diff leftDiff = ((IMergeViewerItem)leftItem.getData()).getDiff();
 
-			if (leftDiff != null && leftDiff.getState() == DifferenceState.UNRESOLVED) {
+			if (leftDiff != null) {
 				TableItem rightItem = findRightTableItemFromLeftDiff(rightItems, leftDiff);
 
 				if (rightItem != null) {

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl;
 
-import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
@@ -48,7 +47,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.compare.utils.DiffUtil;
-import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -334,31 +332,45 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 
 			// create insertion point if we are on the opposite side of the source of an ADD or on the same
 			// side as the a DELETE
-			boolean b1 = diff.getSource() == DifferenceSource.LEFT && diff.getKind() == DifferenceKind.DELETE
-					&& getSide() == MergeViewerSide.LEFT;
-			boolean b2 = diff.getSource() == DifferenceSource.LEFT && diff.getKind() == DifferenceKind.ADD
-					&& getSide() == MergeViewerSide.RIGHT;
-			boolean b3 = diff.getSource() == DifferenceSource.RIGHT && diff.getKind() == DifferenceKind.ADD
-					&& getSide() == MergeViewerSide.LEFT;
-			boolean b4 = diff.getSource() == DifferenceSource.RIGHT
-					&& diff.getKind() == DifferenceKind.DELETE && getSide() == MergeViewerSide.RIGHT;
+			DifferenceSource source = diff.getSource();
+			DifferenceKind kind = diff.getKind();
+			DifferenceState state = diff.getState();
+			boolean b1 = source == DifferenceSource.LEFT && kind == DifferenceKind.DELETE
+					&& getSide() == MergeViewerSide.LEFT && DifferenceState.MERGED != state;
+			boolean b2 = source == DifferenceSource.LEFT && kind == DifferenceKind.ADD
+					&& getSide() == MergeViewerSide.RIGHT && DifferenceState.MERGED != state;
+			boolean b3 = source == DifferenceSource.RIGHT && kind == DifferenceKind.ADD
+					&& getSide() == MergeViewerSide.LEFT && DifferenceState.MERGED != state;
+			boolean b4 = source == DifferenceSource.RIGHT
+					&& kind == DifferenceKind.DELETE && getSide() == MergeViewerSide.RIGHT
+					&& DifferenceState.MERGED != state;
+
+			boolean b5 = (match == null || match.getLeft() == null && match.getRight() == null)
+					&& DifferenceState.MERGED == state;
 
 			// do not duplicate insertion point for pseudo add conflict
 			// so we must only create one for pseudo delete conflict
-			boolean b5 = diff.getConflict() == null
-					|| (diff.getConflict().getKind() != ConflictKind.PSEUDO || diff.getKind() == DifferenceKind.DELETE);
+			boolean b6 = diff.getConflict() == null
+					|| (diff.getConflict().getKind() != ConflictKind.PSEUDO || kind == DifferenceKind.DELETE);
 
-			if ((b1 || b2 || b3 || b4) && b5) {
-				IMergeViewerItem.Container insertionPoint = new MergeViewerItem.Container(getComparison(),
-						diff, match.getLeft(), match.getRight(), match.getOrigin(), getSide(),
-						getAdapterFactory());
+			if ((b1 || b2 || b3 || b4 || b5) && b6) {
+				if (match == null && DifferenceState.MERGED == state) {
+					EObject bestSideValue = (EObject)getBestSideValue();
+					match = getComparison().getMatch(bestSideValue);
+					match = getMatchWithNullValues(match);
+				}
+				if (match != null) {
+					IMergeViewerItem.Container insertionPoint = new MergeViewerItem.Container(
+							getComparison(), diff, match.getLeft(), match.getRight(), match.getOrigin(),
+							getSide(), getAdapterFactory());
 
 				final int insertionIndex;
 				if (match.getLeft() == null && match.getRight() == null && diff.getConflict() != null
 						&& diff.getConflict().getKind() == ConflictKind.PSEUDO) {
 					// pseudo conflict delete...
-					insertionIndex = ReferenceUtil.getAsList((EObject)getSideValue(MergeViewerSide.ANCESTOR),
-							eStructuralFeature).indexOf(value);
+						insertionIndex = ReferenceUtil.getAsList(
+								(EObject)getSideValue(MergeViewerSide.ANCESTOR), eStructuralFeature).indexOf(
+								value);
 				} else {
 					insertionIndex = Math.min(DiffUtil.findInsertionIndex(comparison, oppositeContent,
 							sideContent, value), ret.size());
@@ -377,7 +389,26 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 				ret.add(realIndex, insertionPoint);
 			}
 		}
+		}
 		return ret;
+	}
+
+	/**
+	 * After merging a diff which will lead to have an insertion point on both sides, the match associated
+	 * with this diff will be unreacheable because its left and right sides will be null. This method will
+	 * find this match.
+	 * 
+	 * @param match
+	 *            the given match.
+	 * @return the match associated with the given merged diff.
+	 */
+	private Match getMatchWithNullValues(Match match) {
+		for (Match subMatch : match.getSubmatches()) {
+			if (subMatch.getLeft() == null && subMatch.getRight() == null) {
+				return subMatch;
+			}
+		}
+		return null;
 	}
 
 	private IMergeViewerItem.Container createInsertionPoint(Diff diff, MergeViewerSide side,
@@ -567,9 +598,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			Match match = getComparison().getMatch(bestSideValue);
 			final ImmutableList<Diff> differences;
 			if (match != null) {
-				differences = ImmutableList.copyOf(filter(match.getDifferences(), and(
-						containmentReferenceChange(), EMFComparePredicates
-								.hasState(DifferenceState.UNRESOLVED))));
+				differences = ImmutableList.copyOf(filter(match.getDifferences(),
+						containmentReferenceChange()));
 			} else {
 				differences = ImmutableList.of();
 			}
@@ -611,8 +641,10 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 
 		protected Collection<? extends EStructuralFeature> getChildrenFeaturesFromEClass(Object object) {
 			ImmutableSet.Builder<EStructuralFeature> features = ImmutableSet.builder();
+			if (object instanceof EObject) {
 			for (EStructuralFeature feature : ((EObject)object).eClass().getEAllContainments()) {
 				features.add(feature);
+			}
 			}
 			return features.build();
 		}

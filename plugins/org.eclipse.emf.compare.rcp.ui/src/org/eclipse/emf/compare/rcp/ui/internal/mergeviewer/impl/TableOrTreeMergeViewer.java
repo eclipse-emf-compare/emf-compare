@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
@@ -137,10 +136,6 @@ public abstract class TableOrTreeMergeViewer extends StructuredMergeViewer {
 
 	private void paintItemDiffBox(Event event, TableOrTreeItemWrapper itemWrapper, Diff diff, Rectangle bounds) {
 		event.detail &= ~SWT.HOT;
-
-		if (diff.getState() == DifferenceState.DISCARDED || diff.getState() == DifferenceState.MERGED) {
-			return;
-		}
 
 		GC g = event.gc;
 		Color oldBackground = g.getBackground();
@@ -303,6 +298,8 @@ public abstract class TableOrTreeMergeViewer extends StructuredMergeViewer {
 					// we do not create only one item per diff in pseudo conflict, so we hash the conflict and
 					// not the diff
 					hashCode = Objects.hashCode(item.getAncestor(), diff.getConflict());
+				} else if (diff != null && item.getLeft() == null && item.getRight() == null) {
+					hashCode = Objects.hashCode(item.getAncestor(), diff);
 				} else {
 					hashCode = Objects.hashCode(item.getLeft(), item.getRight(), item.getAncestor(), diff);
 				}
@@ -326,6 +323,9 @@ public abstract class TableOrTreeMergeViewer extends StructuredMergeViewer {
 					// pseudo conflict
 					ret = Objects.equal(itemA.getAncestor(), itemB.getAncestor())
 							&& Objects.equal(diffA.getConflict(), diffB.getConflict());
+				} else if (diffA != null && diffB != null && itemA.getLeft() == null
+						&& itemA.getRight() == null && itemB.getLeft() == null && itemB.getRight() == null) {
+					ret = Objects.equal(diffA, diffB);
 				} else {
 					ret = Objects.equal(itemA.getLeft(), itemB.getLeft())
 							&& Objects.equal(itemA.getRight(), itemB.getRight())

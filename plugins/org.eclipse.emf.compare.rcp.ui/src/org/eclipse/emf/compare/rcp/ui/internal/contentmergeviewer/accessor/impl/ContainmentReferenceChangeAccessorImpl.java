@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
@@ -64,9 +65,30 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 		EObject diffValue = (EObject)MergeViewerUtil.getDiffValue(initialDiff);
 		Match match = getComparison().getMatch(diffValue);
 
+		if (match == null && DifferenceState.MERGED == initialDiff.getState()
+				&& MergeViewerSide.ANCESTOR != getSide()) {
+			match = getMatchWithNullValues(initialDiff.getMatch());
+		}
 		if (match != null) {
 			return new MergeViewerItem.Container(getComparison(), getInitialDiff(), match, getSide(),
 					getAdapterFactory());
+		}
+		return null;
+	}
+
+	/**
+	 * After merging a diff which will lead to have an insertion point on both sides, the match associated
+	 * with this diff will be unreacheable because its left and right sides will be null. This method will
+	 * find this match.
+	 * 
+	 * @param match
+	 * @return the match associated with the given merged diff.
+	 */
+	private Match getMatchWithNullValues(Match match) {
+		for (Match subMatch : match.getSubmatches()) {
+			if (subMatch.getLeft() == null && subMatch.getRight() == null) {
+				return subMatch;
+			}
 		}
 		return null;
 	}

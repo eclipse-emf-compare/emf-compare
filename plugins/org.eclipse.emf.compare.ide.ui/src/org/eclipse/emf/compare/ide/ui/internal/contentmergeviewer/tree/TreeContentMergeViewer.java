@@ -27,7 +27,6 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
@@ -399,7 +398,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 				}
 			}
 			if (doPaint) {
-				if (leftDiff != null && leftDiff.getState() == DifferenceState.UNRESOLVED) {
+			if (leftDiff != null) {
 					TreeItem rightItem = findRightTreeItemFromLeftDiff(rightItems, leftDiff, leftData);
 
 					if (rightItem != null) {
@@ -470,7 +469,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			IMergeViewerItem rightData = (IMergeViewerItem)rightItem.getData();
 			final Diff rightDiff = rightData.getDiff();
 			if (leftDiff == rightDiff) {
-				ret = rightItem;
+				return rightItem;
 			} else if (rightData.getAncestor() == leftData.getAncestor()
 					&& rightData.getRight() == leftData.getRight()
 					&& rightData.getLeft() == leftData.getLeft()) {

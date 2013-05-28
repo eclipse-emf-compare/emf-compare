@@ -15,6 +15,9 @@ import com.google.common.collect.ImmutableList;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IResourceContentsAccessor;
@@ -77,6 +80,31 @@ public class ResourceContentsAccessorImpl implements IResourceContentsAccessor {
 		Diff initialDiff = fDiff;
 		EObject diffValue = (EObject)MergeViewerUtil.getResourceAttachmentChangeValue(
 				(ResourceAttachmentChange)initialDiff, getSide());
+		if (DifferenceState.MERGED == initialDiff.getState()) {
+			Object left = MergeViewerUtil.getValueFromResourceAttachmentChange(
+					(ResourceAttachmentChange)initialDiff, getComparison(), MergeViewerSide.LEFT);
+			Object right = MergeViewerUtil.getValueFromResourceAttachmentChange(
+					(ResourceAttachmentChange)initialDiff, getComparison(), MergeViewerSide.RIGHT);
+			DifferenceSource source = initialDiff.getSource();
+			DifferenceKind kind = initialDiff.getKind();
+			boolean b5 = source == DifferenceSource.LEFT && kind == DifferenceKind.ADD && right == null;
+			boolean b6 = source == DifferenceSource.LEFT && kind == DifferenceKind.DELETE && left == null;
+			boolean b7 = source == DifferenceSource.RIGHT && kind == DifferenceKind.ADD && left == null;
+			boolean b8 = source == DifferenceSource.RIGHT && kind == DifferenceKind.DELETE && right == null;
+			if (b5 || b8) {
+				left = null;
+			}
+			if (b6 || b7) {
+				right = null;
+			}
+			if (b5 || b8 || b6 || b7) {
+				Object ancestor = MergeViewerUtil.getValueFromResourceAttachmentChange(
+						(ResourceAttachmentChange)initialDiff, getComparison(), MergeViewerSide.ANCESTOR);
+				return new MergeViewerItem.Container(getComparison(), initialDiff, left, right, ancestor,
+						getSide(), fAdapterFactory);
+			}
+
+		}
 		if (diffValue == null && MergeViewerSide.ANCESTOR != getSide()) {
 			if (MergeViewerSide.LEFT == getSide()) {
 				diffValue = (EObject)MergeViewerUtil.getResourceAttachmentChangeValue(
