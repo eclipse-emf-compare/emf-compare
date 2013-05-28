@@ -10,17 +10,12 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.eobject.internal;
 
-import com.google.common.base.Function;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.match.eobject.EObjectIndex;
@@ -40,12 +35,17 @@ public class ByTypeIndex implements EObjectIndex {
 	/**
 	 * All the type specific indexes, created on demand.
 	 */
-	private LoadingCache<String, EObjectIndex> allIndexes;
+	private Map<String, EObjectIndex> allIndexes;
 
 	/**
 	 * The distance function to use to create the delegates indexes.
 	 */
 	private DistanceFunction meter;
+
+	/**
+	 * An instance responsible for telling whether something is in the scope or not.
+	 */
+	private ScopeQuery scope;
 
 	/**
 	 * Create a new instance using the given {@link DistanceFunction} to instantiate delegate indexes on
@@ -58,12 +58,8 @@ public class ByTypeIndex implements EObjectIndex {
 	 */
 	public ByTypeIndex(ProximityEObjectMatcher.DistanceFunction meter, final ScopeQuery scope) {
 		this.meter = meter;
-		this.allIndexes = CacheBuilder.newBuilder().build(
-				CacheLoader.from(new Function<String, EObjectIndex>() {
-					public EObjectIndex apply(String input) {
-						return new ProximityIndex(ByTypeIndex.this.meter, scope);
-					}
-				}));
+		this.scope = scope;
+		this.allIndexes = Maps.newHashMap();
 	}
 
 	/**
@@ -73,7 +69,7 @@ public class ByTypeIndex implements EObjectIndex {
 	 */
 	public Iterable<EObject> getValuesStillThere(Side side) {
 		List<Iterable<EObject>> allLists = Lists.newArrayList();
-		for (EObjectIndex typeSpecificIndex : allIndexes.asMap().values()) {
+		for (EObjectIndex typeSpecificIndex : allIndexes.values()) {
 			allLists.add(typeSpecificIndex.getValuesStillThere(side));
 		}
 		return Iterables.concat(allLists);
@@ -86,12 +82,25 @@ public class ByTypeIndex implements EObjectIndex {
 	 *      org.eclipse.emf.compare.match.eobject.EObjectIndex.Side, int)
 	 */
 	public Map<Side, EObject> findClosests(Comparison inProgress, EObject obj, Side side) {
-		try {
-			EObjectIndex typeSpecificIndex = allIndexes.get(eClassKey(obj));
-			return typeSpecificIndex.findClosests(inProgress, obj, side);
-		} catch (ExecutionException e) {
-			return Collections.emptyMap();
+		EObjectIndex typeSpecificIndex = getOrCreate(obj);
+		return typeSpecificIndex.findClosests(inProgress, obj, side);
+	}
+
+	/**
+	 * Get the index used to store this object, create a new one if needed.
+	 * 
+	 * @param obj
+	 *            any EObject.
+	 * @return the index used to store this object, create a new one if needed.
+	 */
+	private EObjectIndex getOrCreate(EObject obj) {
+		String key = eClassKey(obj);
+		EObjectIndex found = allIndexes.get(key);
+		if (found == null) {
+			found = new ProximityIndex(meter, scope);
+			allIndexes.put(key, found);
 		}
+		return found;
 	}
 
 	/**
@@ -116,13 +125,8 @@ public class ByTypeIndex implements EObjectIndex {
 	 *      org.eclipse.emf.compare.match.eobject.EObjectIndex.Side)
 	 */
 	public void remove(EObject obj, Side side) {
-		try {
-			EObjectIndex typeSpecificIndex = allIndexes.get(eClassKey(obj));
-			typeSpecificIndex.remove(obj, side);
-		} catch (ExecutionException e) {
-			// We could not compute the indices to remove.
-			// They'll remain as 'unmatch' later on.
-		}
+		EObjectIndex typeSpecificIndex = getOrCreate(obj);
+		typeSpecificIndex.remove(obj, side);
 	}
 
 	/**
@@ -132,12 +136,8 @@ public class ByTypeIndex implements EObjectIndex {
 	 *      org.eclipse.emf.compare.match.eobject.EObjectIndex.Side)
 	 */
 	public void index(EObject eObjs, Side side) {
-		try {
-			EObjectIndex typeSpecificIndex = allIndexes.get(eClassKey(eObjs));
-			typeSpecificIndex.index(eObjs, side);
-		} catch (ExecutionException e) {
-			// Could not index this object.
-		}
+		EObjectIndex typeSpecificIndex = getOrCreate(eObjs);
+		typeSpecificIndex.index(eObjs, side);
 	}
 
 }
