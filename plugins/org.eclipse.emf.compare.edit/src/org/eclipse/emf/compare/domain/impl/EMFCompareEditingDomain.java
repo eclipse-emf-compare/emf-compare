@@ -94,6 +94,7 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 			}
 			commandStack = new DualCompareCommandStack((BasicCommandStack)leftTED.getCommandStack(),
 					(BasicCommandStack)rightTED.getCommandStack());
+			return new EMFCompareEditingDomain(left, right, ancestor, (ICompareCommandStack)commandStack);
 		} else {
 			commandStack = new BasicCommandStack();
 		}
