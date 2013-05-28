@@ -766,7 +766,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 						ICompareInput.class);
 				SWTUtil.safeAsyncExec(new Runnable() {
 					public void run() {
-						setSelection(new StructuredSelection(adaptedAffectedObject), true);
+						setSelectionToWidget(new StructuredSelection(adaptedAffectedObject), true);
 					}
 				});
 			}
