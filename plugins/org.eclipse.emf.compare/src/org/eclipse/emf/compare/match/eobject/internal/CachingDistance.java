@@ -10,8 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.eobject.internal;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Maps;
+
+import java.util.Map;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher.DistanceFunction;
@@ -24,10 +25,6 @@ import org.eclipse.emf.ecore.EObject;
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class CachingDistance implements DistanceFunction {
-	/**
-	 * The maximum number of entries kept in the cache.
-	 */
-	private static final int MAX_CACHE_SIZE = 100000;
 
 	/**
 	 * The wrapped function.
@@ -37,7 +34,7 @@ public class CachingDistance implements DistanceFunction {
 	/**
 	 * The cache keeping the previous results.
 	 */
-	private Cache<Pair, Double> distanceCache;
+	private Map<Pair, Double> distanceCache;
 
 	/**
 	 * Create a new caching distance.
@@ -47,7 +44,7 @@ public class CachingDistance implements DistanceFunction {
 	 */
 	public CachingDistance(DistanceFunction wrapped) {
 		this.wrapped = wrapped;
-		distanceCache = CacheBuilder.newBuilder().maximumSize(MAX_CACHE_SIZE).build();
+		distanceCache = Maps.newHashMap();
 	}
 
 	/**
@@ -55,7 +52,7 @@ public class CachingDistance implements DistanceFunction {
 	 */
 	public double distance(Comparison inProgress, EObject a, EObject b) {
 		Pair key = new Pair(a, b);
-		Double previousResult = distanceCache.getIfPresent(key);
+		Double previousResult = distanceCache.get(key);
 		if (previousResult == null) {
 			double dist = wrapped.distance(inProgress, a, b);
 			distanceCache.put(key, dist);
