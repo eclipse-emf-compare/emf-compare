@@ -30,6 +30,6 @@
          point="org.eclipse.core.contenttype.contentTypes">
       <file-association
             content-type="org.eclipse.emf.compare.content.type"
-            file-names="*.di"/>
+            file-extensions="di"/>
    </extension>
 </plugin>
