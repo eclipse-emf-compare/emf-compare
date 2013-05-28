@@ -502,9 +502,9 @@ public class EditionDistance implements DistanceFunction {
 			 * we consider two null containers as being the "same".
 			 */
 			boolean matching = aContainer == null && bContainer == null;
-			Match mA = inProgress.getMatch(aContainer);
-			Match mB = inProgress.getMatch(bContainer);
 			if (!matching) {
+				Match mA = inProgress.getMatch(aContainer);
+				Match mB = inProgress.getMatch(bContainer);
 				if (mA == null && mB == null) {
 					/*
 					 * The Objects have to be out of scope then.
