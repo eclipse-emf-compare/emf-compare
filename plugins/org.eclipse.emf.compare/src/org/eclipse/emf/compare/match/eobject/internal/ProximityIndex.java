@@ -248,8 +248,9 @@ public class ProximityIndex implements EObjectIndex {
 	 * @return true if we have all the required information, false otherwise.
 	 */
 	private boolean readyForThisTest(Comparison inProgress, EObject fastCheck) {
-		if (fastCheck.eContainer() != null && scope.isInScope(fastCheck.eContainer())) {
-			return inProgress.getMatch(fastCheck.eContainer()) != null;
+		EObject eContainer = fastCheck.eContainer();
+		if (eContainer != null && scope.isInScope(eContainer)) {
+			return inProgress.getMatch(eContainer) != null;
 		}
 		return true;
 	}
