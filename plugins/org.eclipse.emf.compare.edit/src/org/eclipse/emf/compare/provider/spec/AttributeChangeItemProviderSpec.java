@@ -28,7 +28,11 @@ import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.FeatureMap;
+import org.eclipse.emf.ecore.util.FeatureMapUtil;
 
 /**
  * Specialized {@link AttributeChangeItemProvider} returning nice output for {@link #getText(Object)} and
@@ -105,8 +109,21 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 	 * @return a nice text from the the given {@link AttributeChange}.
 	 */
 	protected String getValueText(final AttributeChange attChange) {
-		String value = EcoreUtil.convertToString(attChange.getAttribute().getEAttributeType(), attChange
-				.getValue());
+		String value;
+		if (FeatureMapUtil.isFeatureMap(attChange.getAttribute())) {
+			FeatureMap.Entry entry = (FeatureMap.Entry)attChange.getValue();
+			EStructuralFeature entryFeature = entry.getEStructuralFeature();
+			if (entryFeature instanceof EAttribute) {
+				value = EcoreUtil.convertToString(((EAttribute)entryFeature).getEAttributeType(), attChange
+						.getValue());
+			} else {
+				value = AdapterFactoryUtil.getText(getRootAdapterFactory(), entry.getValue());
+			}
+		} else {
+			value = EcoreUtil.convertToString(attChange.getAttribute().getEAttributeType(), attChange
+					.getValue());
+		}
+
 		if (value == null) {
 			value = "<null>"; //$NON-NLS-1$
 		} else {
