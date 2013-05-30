@@ -37,7 +37,7 @@ class DelayedExecutor {
 	 */
 	public void schedule(Runnable run) {
 		if (currentFuture != null && !currentFuture.isDone()) {
-			currentFuture.cancel(true);
+			currentFuture.cancel(false);
 		}
 		final ScheduledFuture<?> future = executor.schedule(run, DELAY, TimeUnit.MILLISECONDS);
 		currentFuture = future;
