@@ -137,7 +137,8 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 				ret = styledText;
 			}
 		} else if (element instanceof IDifferenceGroup) {
-			StyledStringConverter stringConverter = new StyledStringConverter();
+			StyledStringConverter stringConverter = new StyledStringConverter(getDefaultFont(),
+					getDefaultForeground(), getDefaultBackground());
 			return stringConverter.toJFaceStyledString(((IDifferenceGroup)element).getStyledName());
 		} else {
 			ret = new StyledString(super.getText(element));
@@ -160,7 +161,7 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 	 * @throws NullPointerException
 	 *             if <code>adapterFactory</code> is null.
 	 */
-	private static StyledString getStyledText(final AdapterFactory adapterFactory, final Object object) {
+	private StyledString getStyledText(final AdapterFactory adapterFactory, final Object object) {
 		Preconditions.checkNotNull(adapterFactory);
 		if (object == null) {
 			return null;
@@ -168,7 +169,8 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 		StyledString ret = null;
 		Object itemStyledLabelProvider = adapterFactory.adapt(object, IItemStyledLabelProvider.class);
 		if (itemStyledLabelProvider instanceof IItemStyledLabelProvider) {
-			StyledStringConverter stringConverter = new StyledStringConverter();
+			StyledStringConverter stringConverter = new StyledStringConverter(getDefaultFont(),
+					getDefaultForeground(), getDefaultBackground());
 			ret = stringConverter.toJFaceStyledString(((IItemStyledLabelProvider)itemStyledLabelProvider)
 					.getStyledText(object));
 		}

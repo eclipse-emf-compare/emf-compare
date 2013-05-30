@@ -12,6 +12,8 @@ package org.eclipse.emf.compare.provider.spec;
 
 import static com.google.common.collect.Lists.newArrayList;
 
+import com.google.common.base.Strings;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -29,10 +31,13 @@ import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
+import org.eclipse.emf.edit.provider.IItemFontProvider;
 
 /**
  * Specialized {@link AttributeChangeItemProvider} returning nice output for {@link #getText(Object)} and
@@ -110,24 +115,27 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 	 */
 	protected String getValueText(final AttributeChange attChange) {
 		String value;
+		Object attValue = attChange.getValue();
 		if (FeatureMapUtil.isFeatureMap(attChange.getAttribute())) {
-			FeatureMap.Entry entry = (FeatureMap.Entry)attChange.getValue();
+			FeatureMap.Entry entry = (FeatureMap.Entry)attValue;
 			EStructuralFeature entryFeature = entry.getEStructuralFeature();
 			if (entryFeature instanceof EAttribute) {
-				value = EcoreUtil.convertToString(((EAttribute)entryFeature).getEAttributeType(), attChange
-						.getValue());
+				value = EcoreUtil.convertToString(((EAttribute)entryFeature).getEAttributeType(), attValue);
 			} else {
 				value = AdapterFactoryUtil.getText(getRootAdapterFactory(), entry.getValue());
 			}
 		} else {
-			value = EcoreUtil.convertToString(attChange.getAttribute().getEAttributeType(), attChange
-					.getValue());
+			value = EcoreUtil.convertToString(attChange.getAttribute().getEAttributeType(), attValue);
 		}
 
-		if (value == null) {
-			value = "<null>"; //$NON-NLS-1$
+		if (Strings.isNullOrEmpty(value)) {
+			if (attValue instanceof EObject && ((EObject)attValue).eIsProxy()) {
+				value = "proxy : " + ((InternalEObject)attValue).eProxyURI().toString();
+			} else {
+				value = "<null>"; //$NON-NLS-1$
+			}
 		} else {
-			value = Strings.elide(value, ELIDE_LENGTH, "..."); //$NON-NLS-1$
+			value = org.eclipse.emf.compare.provider.spec.Strings.elide(value, ELIDE_LENGTH, "..."); //$NON-NLS-1$
 		}
 		return value;
 	}
@@ -179,7 +187,14 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 
 		final String attributeText = getAttributeText(attChange);
 
-		ComposedStyledString ret = new ComposedStyledString(valueText);
+		ComposedStyledString ret = new ComposedStyledString();
+		final Object attChangeValue = attChange.getValue();
+		if (attChangeValue instanceof EObject && ((EObject)attChangeValue).eIsProxy()) {
+			Style italic = Style.builder().setFont(IItemFontProvider.ITALIC_FONT).build();
+			ret.append(valueText, italic);
+		} else {
+			ret.append(valueText);
+		}
 		ret.append(" [" + attributeText, Style.DECORATIONS_STYLER); //$NON-NLS-1$
 
 		switch (attChange.getKind()) {
