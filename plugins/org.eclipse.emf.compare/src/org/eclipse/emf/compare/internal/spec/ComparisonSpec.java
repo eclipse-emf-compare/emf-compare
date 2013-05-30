@@ -13,7 +13,6 @@ package org.eclipse.emf.compare.internal.spec;
 import static com.google.common.collect.Iterables.filter;
 
 import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
@@ -29,6 +28,7 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.impl.ComparisonImpl;
 import org.eclipse.emf.compare.internal.DiffCrossReferencer;
 import org.eclipse.emf.compare.internal.MatchCrossReferencer;
@@ -87,25 +87,25 @@ public class ComparisonSpec extends ComparisonImpl {
 		}
 
 		final EList<Diff> result;
-		Iterable<Diff> diffOnElement = filter(getInverse(element, diffCrossReferencer), Diff.class);
 		final Match match = getMatch(element);
 		if (match != null) {
-			Iterable<Diff> left = ImmutableList.of();
-			Iterable<Diff> right = ImmutableList.of();
-			Iterable<Diff> origin = ImmutableList.of();
+			List<Iterable<? extends EObject>> lists = Lists.newArrayList();
+			lists.add(getInverse(element, diffCrossReferencer));
 			if (match.getLeft() != null) {
-				left = filter(getInverse(match.getLeft(), diffCrossReferencer), Diff.class);
+				lists.add(getInverse(match.getLeft(), diffCrossReferencer));
 			}
 			if (match.getRight() != null) {
-				right = filter(getInverse(match.getRight(), diffCrossReferencer), Diff.class);
+				lists.add(getInverse(match.getRight(), diffCrossReferencer));
 			}
 			if (match.getOrigin() != null) {
-				origin = filter(getInverse(match.getOrigin(), diffCrossReferencer), Diff.class);
+				lists.add(getInverse(match.getOrigin(), diffCrossReferencer));
 			}
-			Set<Diff> crossRefs = ImmutableSet.copyOf(Iterables.concat(diffOnElement, left, right, origin));
+			lists.add(filter(match.getDifferences(), ResourceAttachmentChange.class));
+			Set<Diff> crossRefs = ImmutableSet.copyOf(filter(Iterables.concat(lists), Diff.class));
 			result = new BasicEList<Diff>(crossRefs);
 		} else {
-			result = new BasicEList<Diff>(ImmutableSet.copyOf(diffOnElement));
+			result = new BasicEList<Diff>(ImmutableSet.copyOf(filter(
+					getInverse(element, diffCrossReferencer), Diff.class)));
 		}
 		return result;
 	}

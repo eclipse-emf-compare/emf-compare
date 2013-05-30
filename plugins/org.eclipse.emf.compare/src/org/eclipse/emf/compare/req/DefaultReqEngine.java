@@ -15,9 +15,11 @@ import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.filter;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -164,9 +166,8 @@ public class DefaultReqEngine implements IReqEngine {
 	 *            The given difference.
 	 * @return The found differences.
 	 */
-	private Set<ReferenceChange> getDELOriginValueOnContainmentRefSingle(Comparison comparison,
-			Diff sourceDifference) {
-		Set<ReferenceChange> result = new HashSet<ReferenceChange>();
+	private Set<Diff> getDELOriginValueOnContainmentRefSingle(Comparison comparison, Diff sourceDifference) {
+		Set<Diff> result = new HashSet<Diff>();
 		if (!(sourceDifference instanceof ReferenceChange)) {
 			return result;
 		}
@@ -196,15 +197,43 @@ public class DefaultReqEngine implements IReqEngine {
 	 *            The given kind.
 	 * @return The found differences.
 	 */
-	private Set<ReferenceChange> getDifferenceOnGivenObject(Comparison comparison, EObject object,
-			DifferenceKind kind) {
-		final Set<ReferenceChange> result = new HashSet<ReferenceChange>();
-		for (ReferenceChange diff : filter(comparison.getDifferences(object), ReferenceChange.class)) {
-			if (diff.getKind() == kind && diff.getReference().isContainment()) {
-				result.add(diff);
-			}
+	private Set<Diff> getDifferenceOnGivenObject(Comparison comparison, EObject object, DifferenceKind kind) {
+		final Set<Diff> result = new LinkedHashSet<Diff>();
+		for (Diff diff : filter(comparison.getDifferences(object), isRequiredContainmentChange(object, kind))) {
+			result.add(diff);
 		}
 		return result;
+	}
+
+	/**
+	 * Will be used to filter out of a list of differences all those that relate to containment changes on the
+	 * given object (a containment reference change or a resource attachment change if the given object has no
+	 * direct container.
+	 * 
+	 * @param object
+	 *            The object for which we seek containmnent differences.
+	 * @param kind
+	 *            The kind of difference we seek.
+	 * @return The created predicate.
+	 */
+	private Predicate<? super Diff> isRequiredContainmentChange(final EObject object,
+			final DifferenceKind kind) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				if (input.getKind() != kind) {
+					return false;
+				}
+
+				boolean result = false;
+				if (input instanceof ReferenceChange
+						&& ((ReferenceChange)input).getReference().isContainment()) {
+					result = true;
+				} else if (input instanceof ResourceAttachmentChange && object.eContainer() == null) {
+					result = true;
+				}
+				return result;
+			}
+		};
 	}
 
 	/**
@@ -219,9 +248,9 @@ public class DefaultReqEngine implements IReqEngine {
 	 *            The kind of requested differences.
 	 * @return The found differences.
 	 */
-	private Set<ReferenceChange> getDifferenceOnGivenObject(Comparison comparison, List<EObject> objects,
+	private Set<Diff> getDifferenceOnGivenObject(Comparison comparison, List<EObject> objects,
 			DifferenceKind kind) {
-		Set<ReferenceChange> result = new HashSet<ReferenceChange>();
+		Set<Diff> result = new HashSet<Diff>();
 		for (EObject object : objects) {
 			result.addAll(getDifferenceOnGivenObject(comparison, object, kind));
 		}
