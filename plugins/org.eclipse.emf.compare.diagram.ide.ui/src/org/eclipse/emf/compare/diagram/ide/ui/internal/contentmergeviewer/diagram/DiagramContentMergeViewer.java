@@ -837,7 +837,11 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			EObject rightObj = match.getRight();
 
 			if (leftObj instanceof View || rightObj instanceof View) {
-				result.add(getReferenceView((View)originObj, (View)leftObj, (View)rightObj));
+				View referenceView = getReferenceView((View)originObj, (View)leftObj, (View)rightObj);
+				// It may be null if it is hidden
+				if (referenceView != null) {
+					result.add(referenceView);
+				}
 			}
 
 			return result;
@@ -1394,19 +1398,11 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.IDecoratorManager#hideAll()
 		 */
 		public void hideAll() {
-			Collection<Phantom> phantoms = fPhantomRegistry.values();
-
-			Iterator<Phantom> visiblePhantoms = Iterators.filter(phantoms.iterator(),
-					new Predicate<Phantom>() {
-						public boolean apply(Phantom phantom) {
-							return phantom.getFigure().getParent() != null;
-						}
-					});
-			while (visiblePhantoms.hasNext()) {
-				Phantom phantom = (Phantom)visiblePhantoms.next();
-				handleDecorator(phantom, false, true);
+			for (Phantom phantom : fPhantomRegistry.values()) {
+				if (phantom.getFigure().getParent() != null) {
+					handleDecorator(phantom, false, true);
+				}
 			}
-
 		}
 	}
 
@@ -1630,14 +1626,10 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.IDecoratorManager#hideAll()
 		 */
 		public void hideAll() {
-			Collection<Marker> listMarkers = fMarkerRegistry.values();
-			Iterable<Marker> visibleMarkers = Iterables.filter(listMarkers, new Predicate<Marker>() {
-				public boolean apply(Marker marker) {
-					return marker.getFigure().getParent() != null;
+			for (Marker marker : fMarkerRegistry.values()) {
+				if (marker.getFigure().getParent() != null) {
+					handleDecorator(marker, false, true);
 				}
-			});
-			for (Marker marker : visibleMarkers) {
-				handleDecorator(marker, false, true);
 			}
 		}
 
