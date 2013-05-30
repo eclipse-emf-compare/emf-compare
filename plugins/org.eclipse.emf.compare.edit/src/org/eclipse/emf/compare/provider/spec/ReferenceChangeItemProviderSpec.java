@@ -48,6 +48,8 @@ import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.edit.provider.IItemFontProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
@@ -171,9 +173,14 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	 * @return a nice text from the the given {@link ReferenceChange}.
 	 */
 	protected String getValueText(final ReferenceChange refChange) {
-		String value = AdapterFactoryUtil.getText(getRootAdapterFactory(), refChange.getValue());
-		if (value == null) {
-			value = "<null>"; //$NON-NLS-1$
+		EObject refChangeValue = refChange.getValue();
+		String value = AdapterFactoryUtil.getText(getRootAdapterFactory(), refChangeValue);
+		if (Strings.isNullOrEmpty(value)) {
+			if (refChangeValue.eIsProxy()) {
+				value = "proxy : " + ((InternalEObject)refChangeValue).eProxyURI().toString();
+			} else {
+				value = "<null>"; //$NON-NLS-1$
+			}
 		} else {
 			value = org.eclipse.emf.compare.provider.spec.Strings.elide(value, ELIDE_LENGTH, "..."); //$NON-NLS-1$
 		}
@@ -336,8 +343,13 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 				}
 			}
 		}
-
-		ret.append(valueText);
+		final EObject refChangeValue = refChange.getValue();
+		if (refChangeValue.eIsProxy()) {
+			Style italic = Style.builder().setFont(IItemFontProvider.ITALIC_FONT).build();
+			ret.append(valueText, italic);
+		} else {
+			ret.append(valueText);
+		}
 		ret.append(" [" + referenceText, Style.DECORATIONS_STYLER); //$NON-NLS-1$
 
 		switch (refChange.getKind()) {

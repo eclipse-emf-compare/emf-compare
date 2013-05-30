@@ -29,8 +29,16 @@ import org.eclipse.swt.graphics.TextStyle;
  */
 public class StyledStringConverter {
 
-	public StyledStringConverter() {
+	private final Font defaultFont;
 
+	private final Color defaultForeground;
+
+	private final Color defaultBackground;
+
+	public StyledStringConverter(Font defaultFont, Color defaultForeground, Color defaultBackground) {
+		this.defaultFont = defaultFont;
+		this.defaultForeground = defaultForeground;
+		this.defaultBackground = defaultBackground;
 	}
 
 	public StyledString toJFaceStyledString(IComposedStyledString composedStyledString) {
@@ -110,11 +118,11 @@ public class StyledStringConverter {
 		};
 	}
 
-	private static Color getColor(URI colorURI) {
-		return ExtendedColorRegistry.INSTANCE.getColor(null, null, colorURI);
+	private Color getColor(URI colorURI) {
+		return ExtendedColorRegistry.INSTANCE.getColor(defaultForeground, defaultBackground, colorURI);
 	}
 
-	private static Font getFont(URI fontURI) {
-		return ExtendedFontRegistry.INSTANCE.getFont(null, fontURI);
+	private Font getFont(URI fontURI) {
+		return ExtendedFontRegistry.INSTANCE.getFont(defaultFont, fontURI);
 	}
 }
