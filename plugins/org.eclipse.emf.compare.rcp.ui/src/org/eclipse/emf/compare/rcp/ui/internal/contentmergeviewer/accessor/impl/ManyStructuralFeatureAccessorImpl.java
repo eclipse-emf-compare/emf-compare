@@ -77,6 +77,16 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 		Object left = matchingValue(object, MergeViewerSide.LEFT);
 		Object right = matchingValue(object, MergeViewerSide.RIGHT);
 		Object ancestor = matchingValue(object, MergeViewerSide.ANCESTOR);
+		final boolean leftEmptyBox = !getFeatureValues(MergeViewerSide.LEFT).contains(left);
+		final boolean rightEmptyBox = !getFeatureValues(MergeViewerSide.RIGHT).contains(right);
+		if (leftEmptyBox || rightEmptyBox) {
+			if (leftEmptyBox) {
+				left = null;
+			}
+			if (rightEmptyBox) {
+				right = null;
+			}
+		}
 		return new MergeViewerItem(getComparison(), diff, left, right, ancestor, getSide(),
 				getAdapterFactory());
 	}
@@ -98,7 +108,12 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 						&& (right == null || !getFeatureValues(getSide()).contains(right));
 				if (leftEmptyBox || rightEmptyBox) {
 					Object ancestor = getValueFromDiff(diff, MergeViewerSide.ANCESTOR);
-
+					if (leftEmptyBox) {
+						left = null;
+					}
+					if (rightEmptyBox) {
+						right = null;
+					}
 					IMergeViewerItem insertionPoint = new MergeViewerItem(getComparison(), diff, left, right,
 							ancestor, getSide(), getAdapterFactory());
 
