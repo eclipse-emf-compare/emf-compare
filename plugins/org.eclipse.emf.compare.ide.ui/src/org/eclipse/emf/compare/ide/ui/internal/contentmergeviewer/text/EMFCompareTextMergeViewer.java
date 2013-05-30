@@ -87,6 +87,7 @@ import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.actions.ActionFactory;
 
 /**
@@ -211,13 +212,15 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 	private String getString(IStreamContentAccessor contentAccessor) {
 		String ret = null;
 		InputStream content = null;
-		try {
-			content = contentAccessor.getContents();
-			ret = new String(ByteStreams.toByteArray(content), Charsets.UTF_8.name());
-		} catch (CoreException e) {
-		} catch (IOException e) {
-		} finally {
-			Closeables.closeQuietly(content);
+		if (contentAccessor != null) {
+			try {
+				content = contentAccessor.getContents();
+				ret = new String(ByteStreams.toByteArray(content), Charsets.UTF_8.name());
+			} catch (CoreException e) {
+			} catch (IOException e) {
+			} finally {
+				Closeables.closeQuietly(content);
+			}
 		}
 		return ret;
 	}
@@ -309,9 +312,11 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 	}
 
 	private void updateModel(final AttributeChange diff, final EAttribute eAttribute,
-			final IEqualityHelper equalityHelper, final EObject eObject, boolean isLeft) {
+			final IEqualityHelper equalityHelper, final EObject eObject, final boolean isLeft) {
 		final String oldValue = getStringValue(eObject, eAttribute);
-		String newValue = getContents(isLeft, Charsets.UTF_8.name());
+		GetContentRunnable runnable = new GetContentRunnable(isLeft);
+		Display.getDefault().syncExec(runnable);
+		String newValue = (String)runnable.getResult();
 
 		final boolean oldAndNewEquals = equalityHelper.matchingAttributeValues(newValue, oldValue);
 		if (eObject != null && !oldAndNewEquals && getCompareConfiguration().isLeftEditable()) {
@@ -572,6 +577,33 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 		editingDomainChange(getEditingDomain(), null);
 
 		super.handleDispose(event);
+	}
+
+	/**
+	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+	 */
+	private final class GetContentRunnable implements Runnable {
+		/**
+		 * 
+		 */
+		private final boolean isLeft;
+
+		private String result;
+
+		/**
+		 * @param isLeft
+		 */
+		private GetContentRunnable(boolean isLeft) {
+			this.isLeft = isLeft;
+		}
+
+		public void run() {
+			result = getContents(isLeft, Charsets.UTF_8.name());
+		}
+
+		public Object getResult() {
+			return result;
+		}
 	}
 
 	/**
