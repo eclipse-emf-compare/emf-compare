@@ -586,7 +586,10 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 				Rectangle boundsToTranslate) {
 			IFigure referenceParentFigure = referenceFigure.getParent();
 			if (referenceParentFigure != null && referenceFigure != rootReferenceFigure) {
-				if (referenceParentFigure.isCoordinateSystem()) {
+				// rootReferenceFigure may be located to (-x,0)... We consider that the root reference is
+				// always (0,0)
+				if (referenceParentFigure.isCoordinateSystem()
+						&& referenceParentFigure != rootReferenceFigure) {
 					boundsToTranslate.x += referenceParentFigure.getBounds().x;
 					boundsToTranslate.y += referenceParentFigure.getBounds().y;
 				}
