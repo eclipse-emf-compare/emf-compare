@@ -435,7 +435,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		}
 
 		/**
-		 * It manages the display of the given decorators.
+		 * It manages the display of the given decorators.<br>
 		 * 
 		 * @param decorators
 		 *            The decorators to handle.
@@ -466,23 +466,11 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		protected void handleDecorator(AbstractDecorator decorator, boolean isAdd, boolean isMain) {
 			IFigure layer = decorator.getLayer();
 			IFigure figure = decorator.getFigure();
-			EditPart editpart = decorator.getEditPart();
-			if (editpart == null) {
-				if (isAdd && !layer.getChildren().contains(figure)) {
-					handleAddDecorator(decorator, layer, figure, isMain);
-				} else if (layer.getChildren().contains(figure)) {
-					handleDeleteDecorator(decorator, layer, figure, isMain);
-				}
-			} else {
-				if (isAdd && !editpart.isActive()) {
-					editpart.activate();
-					handleAddDecorator(decorator, layer, figure, isMain);
-				} else if (editpart.isActive()) {
-					editpart.deactivate();
-					handleDeleteDecorator(decorator, layer, figure, isMain);
-				}
+			if (isAdd) {
+				handleAddDecorator(decorator, layer, figure, isMain);
+			} else if (layer.getChildren().contains(figure)) {
+				handleDeleteDecorator(decorator, layer, figure);
 			}
-
 		}
 
 		/**
@@ -500,7 +488,12 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 */
 		protected void handleAddDecorator(AbstractDecorator decorator, IFigure parent, IFigure toAdd,
 				boolean isMain) {
-			parent.add(toAdd);
+			if (decorator.getEditPart() != null) {
+				decorator.getEditPart().activate();
+			}
+			if (!parent.getChildren().contains(toAdd)) {
+				parent.add(toAdd);
+			}
 		}
 
 		/**
@@ -512,13 +505,14 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 *            The parent figure which has to get the figure to hide (<code>toDelete</code>)
 		 * @param toDelete
 		 *            The figure to hide.
-		 * @param isMain
-		 *            It indicates if the given decorator to hide is considered as the main one (the one
-		 *            directly linked to the selected difference).
 		 */
-		protected void handleDeleteDecorator(AbstractDecorator decorator, IFigure parent, IFigure toDelete,
-				boolean isMain) {
-			parent.remove(toDelete);
+		protected void handleDeleteDecorator(AbstractDecorator decorator, IFigure parent, IFigure toDelete) {
+			if (decorator.getEditPart() != null) {
+				decorator.getEditPart().deactivate();
+			}
+			if (parent.getChildren().contains(toDelete)) {
+				parent.remove(toDelete);
+			}
 		}
 
 		/**
@@ -740,7 +734,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 
 			/**
 			 * Get the decorator dependencies of this one. The dependencies are the decorator ancestors plus
-			 * the extremities of an edge decorator.
+			 * the extremities of an edge decorator.<br>
+			 * DO NOT CALL in an iterate of {@link PhantomManager#fPhantomRegistry}
 			 * 
 			 * @return The list of found decorators.
 			 */
@@ -922,7 +917,9 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		}
 
 		/**
-		 * {@inheritDoc}
+		 * {@inheritDoc}.<br>
+		 * DO NOT CALL on a phantom within an iteration on the phantom registry.
+		 * {@link PhantomManager#fPhantomRegistry}
 		 * 
 		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#handleDecorator(org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager.AbstractDecorator,
 		 *      boolean)
@@ -945,16 +942,6 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 				decorator.getDecoratorFigure().highlight();
 				getViewer(decorator.getSide()).getGraphicalViewer().reveal(toAdd);
 			} else {
-				decorator.getDecoratorFigure().unhighlight();
-			}
-		}
-
-		@Override
-		protected void handleDeleteDecorator(AbstractDecorator decorator, IFigure parent, IFigure toDelete,
-				boolean isMain) {
-			super.handleDeleteDecorator(decorator, parent, toDelete, isMain);
-			// Re-initialize the highlight of the figure
-			if (isMain) {
 				decorator.getDecoratorFigure().unhighlight();
 			}
 		}
@@ -1231,42 +1218,6 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		}
 
 		/**
-		 * Get all the ancestor matches from the given difference.
-		 * 
-		 * @param difference
-		 *            The difference.
-		 * @return the list of ancestor matches.
-		 */
-		private List<Match> getMatchAncestors(Diff difference) {
-			List<Match> result = new ArrayList<Match>();
-			EObject match = difference.getMatch();
-			while (match != null) {
-				if (match instanceof Match) {
-					result.add((Match)match);
-				}
-				match = match.eContainer();
-			}
-			return result;
-		}
-
-		/**
-		 * Get all the differences above the given one.
-		 * 
-		 * @param difference
-		 *            The difference.
-		 * @return the list of parent differences.
-		 */
-		private List<Diff> getDiffAncestors(Diff difference) {
-			List<Diff> result = new ArrayList<Diff>();
-			Iterator<Match> matches = getMatchAncestors(difference).iterator();
-			while (matches.hasNext()) {
-				Match match = matches.next();
-				result.addAll(match.getDifferences());
-			}
-			return result;
-		}
-
-		/**
 		 * It checks that the given edge is linked to graphical objects subjected to coordinate changes, on
 		 * the given side.
 		 * 
@@ -1402,9 +1353,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 */
 		public void hideAll() {
 			for (Phantom phantom : fPhantomRegistry.values()) {
-				if (phantom.getFigure().getParent() != null) {
-					handleDecorator(phantom, false, true);
-				}
+				handleDeleteDecorator(phantom, phantom.getLayer(), phantom.getFigure());
 			}
 		}
 	}
@@ -1630,9 +1579,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 */
 		public void hideAll() {
 			for (Marker marker : fMarkerRegistry.values()) {
-				if (marker.getFigure().getParent() != null) {
-					handleDecorator(marker, false, true);
-				}
+				handleDeleteDecorator(marker, marker.getLayer(), marker.getFigure());
 			}
 		}
 
