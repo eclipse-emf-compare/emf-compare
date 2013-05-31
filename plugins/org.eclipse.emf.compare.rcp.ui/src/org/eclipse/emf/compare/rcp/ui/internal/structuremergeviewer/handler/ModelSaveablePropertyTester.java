@@ -38,6 +38,8 @@ public class ModelSaveablePropertyTester extends PropertyTester {
 				CompareConfiguration configuration = ((CompareEditorInput)i).getCompareConfiguration();
 				if (!configuration.isLeftEditable() || !configuration.isRightEditable()) {
 					return false;
+				} else if (((CompareEditorInput)i).isDirty()) {
+					return false;
 				}
 			}
 		}
