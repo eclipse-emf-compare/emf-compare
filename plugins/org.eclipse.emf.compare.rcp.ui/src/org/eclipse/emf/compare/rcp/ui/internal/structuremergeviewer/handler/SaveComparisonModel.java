@@ -16,16 +16,20 @@ import com.google.common.collect.ImmutableList;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.NotSerializableException;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
+import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
@@ -36,6 +40,8 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.statushandlers.StatusAdapter;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * Handler that manages the save of the comparison model.
@@ -100,9 +106,16 @@ public class SaveComparisonModel extends AbstractHandler {
 		resource.getContents().add(comparisonCopy);
 		try {
 			resource.save(newHashMap());
+		} catch (RuntimeException e) {
+			if (e.getCause() instanceof NotSerializableException) {
+				final Status status = new Status(IStatus.ERROR, EMFCompareRCPUIPlugin.PLUGIN_ID,
+						EMFCompareRCPUIMessages.getString("resource.not.serializable"), e); //$NON-NLS-1$
+				StatusManager.getManager().handle(new StatusAdapter(status), StatusManager.SHOW);
+			} else {
+				EMFCompareRCPUIPlugin.getDefault().log(e);
+			}
 		} catch (IOException e) {
 			EMFCompareRCPUIPlugin.getDefault().log(e);
 		}
 	}
-
 }
