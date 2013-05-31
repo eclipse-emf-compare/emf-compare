@@ -221,6 +221,10 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		if (reference.isContainment()) {
 			Match matchOfValue = referenceChange.getMatch().getComparison().getMatch(
 					referenceChange.getValue());
+			if (matchOfValue == null && DifferenceState.MERGED == referenceChange.getState()) {
+				Match parentMatch = referenceChange.getMatch();
+				matchOfValue = getMatchWithNullValues(parentMatch);
+			}
 			if (matchOfValue != null) {
 				Collection<?> children = getChildren(matchOfValue);
 				children.remove(referenceChange);
@@ -231,6 +235,24 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 
 		return ImmutableList.copyOf(filter(ret, not(instanceOf(ResourceAttachmentChange.class))));
 
+	}
+
+	/**
+	 * After merging a diff which will lead to have an insertion point on both sides, the match associated
+	 * with this diff will be unreacheable because its left and right sides will be null. This method will
+	 * find this match.
+	 * 
+	 * @param match
+	 *            the given match.
+	 * @return the match associated with the given merged diff.
+	 */
+	private Match getMatchWithNullValues(Match match) {
+		for (Match subMatch : match.getSubmatches()) {
+			if (subMatch.getLeft() == null && subMatch.getRight() == null) {
+				return subMatch;
+			}
+		}
+		return null;
 	}
 
 	/**
