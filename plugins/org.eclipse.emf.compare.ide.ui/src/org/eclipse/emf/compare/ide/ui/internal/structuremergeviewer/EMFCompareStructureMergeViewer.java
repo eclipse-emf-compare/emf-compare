@@ -143,6 +143,12 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	private EventBus eventBus;
 
 	/**
+	 * When comparing EObjects from a resource, the resource involved doesn't need to be unload by EMF
+	 * Compare.
+	 */
+	private boolean resourcesShouldBeUnload;
+
+	/**
 	 * @param parent
 	 * @param configuration
 	 */
@@ -309,10 +315,13 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 	void compareInputChanged(ICompareInput input, IProgressMonitor monitor) {
 		if (input != null) {
 			if (input instanceof ComparisonNode) {
+				resourcesShouldBeUnload = false;
 				compareInputChanged((ComparisonNode)input, monitor);
 			} else if (input instanceof ComparisonScopeInput) {
+				resourcesShouldBeUnload = false;
 				compareInputChanged((ComparisonScopeInput)input, monitor);
 			} else {
+				resourcesShouldBeUnload = true;
 				SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 
 				final ITypedElement left = input.getLeft();
@@ -404,11 +413,11 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				editingDomain = null;
 			}
 
-			// FIXME: should unload only if input.getLeft/Right/Ancestor (previously stored in field) are
-			// instanceof ResourceNode
-			unload(leftResourceSet);
-			unload(rightResourceSet);
-			unload(originResourceSet);
+			if (resourcesShouldBeUnload) {
+				unload(leftResourceSet);
+				unload(rightResourceSet);
+				unload(originResourceSet);
+			}
 
 			if (getCompareConfiguration() != null) {
 				getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, null);
