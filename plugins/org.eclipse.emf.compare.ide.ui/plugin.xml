@@ -68,6 +68,51 @@
             uri="http://www.eclipse.org/emf/compare">
       </factory>
    </extension>
+      <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="true"
+            locationURI="popup:compareWithMenu?after=compareWithGroup">
+         <command
+               commandId="org.eclipse.emf.compare.ide.ui.compareInDialog"
+               label="Each Other &lt;EObject&gt; (in Dialog)"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.emf.compare.ide.ui.compareInEditor"
+               label="Each Other &lt;EObject&gt; (in Editor)"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any">
+         <menu
+               id="compareWithMenu"
+               label="Compare With">
+            <separator
+                  name="compareWithGroup">
+            </separator>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.emf.compare.structuremergeviewer.toolbar">
+         <command
+               commandId="org.eclipse.emf.compare.ide.ui.saveComparisonModel"
+               icon="icons/full/toolb16/saveas_edit.gif"
+               label="%save.model.name"
+               style="push"
+               tooltip="%save.model.tooltip">
+         </command>
+      </menuContribution>
+   </extension>
    <extension
          point="org.eclipse.ui.commands">
       <command
@@ -83,6 +128,10 @@
       <command
             id="org.eclipse.team.ui.compareWithEachOther"
             name="Each Other">
+      </command>
+      <command
+            id="org.eclipse.emf.compare.ide.ui.saveComparisonModel"
+            name="%save.model.command.name">
       </command>
    </extension>
    <extension
@@ -165,40 +214,19 @@
             </with>
          </activeWhen>
       </handler>
-   </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="true"
-            locationURI="popup:compareWithMenu?after=compareWithGroup">
-         <command
-               commandId="org.eclipse.emf.compare.ide.ui.compareInDialog"
-               label="Each Other &lt;EObject&gt; (in Dialog)"
-               style="push">
-            <visibleWhen
-                  checkEnabled="true">
-            </visibleWhen>
-         </command>
-         <command
-               commandId="org.eclipse.emf.compare.ide.ui.compareInEditor"
-               label="Each Other &lt;EObject&gt; (in Editor)"
-               style="push">
-            <visibleWhen
-                  checkEnabled="true">
-            </visibleWhen>
-         </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:org.eclipse.ui.popup.any">
-         <menu
-               id="compareWithMenu"
-               label="Compare With">
-            <separator
-                  name="compareWithGroup">
-            </separator>
-         </menu>
-      </menuContribution>
+      <handler
+            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.SaveComparisonModel"
+            commandId="org.eclipse.emf.compare.ide.ui.saveComparisonModel">
+         <enabledWhen>
+            <with
+                  variable="activeEditor">
+               <test
+                     property="emfcompare.isSaveable">
+               </test>
+            </with>
+         
+         </enabledWhen>
+      </handler>
    </extension>
    <extension
          id="org.eclipse.emf.compare.model.provider"
@@ -226,5 +254,15 @@
             </or>
          </and>
       </enablement>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.ModelSaveablePropertyTester"
+            id="org.eclipse.emf.compare.ide.ui.modelSaveable"
+            namespace="emfcompare"
+            properties="isSaveable"
+            type="java.lang.Object">
+      </propertyTester>
    </extension>
 </plugin>
