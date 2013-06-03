@@ -53,6 +53,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.actions.collapse.CollapseAllModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.actions.expand.ExpandAllModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
@@ -60,7 +61,6 @@ import org.eclipse.emf.compare.ide.ui.internal.logical.EMFSynchronizationModel;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
 import org.eclipse.emf.compare.ide.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
-import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.FilterActionMenu;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.GroupActionMenu;
@@ -602,10 +602,10 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		if (uiWorkbenchBundle != null && uiWorkbenchBundle.getVersion().compareTo(junoStart) >= 0
 				&& uiWorkbenchBundle.getVersion().compareTo(keplerStart) < 0) {
 			IAction action = new CommandAction(PlatformUI.getWorkbench(),
-					"org.eclipse.emf.compare.rcp.ui.saveComparisonModel");
+					"org.eclipse.emf.compare.ide.ui.saveComparisonModel");
 			action.setToolTipText("Save Comparison model"); //$NON-NLS-1$
 			action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-					EMFCompareRCPUIPlugin.PLUGIN_ID, "icons/full/toolb16/saveas_edit.gif"));
+					EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/saveas_edit.gif"));
 			toolbarManager.add(action);
 		}
 
