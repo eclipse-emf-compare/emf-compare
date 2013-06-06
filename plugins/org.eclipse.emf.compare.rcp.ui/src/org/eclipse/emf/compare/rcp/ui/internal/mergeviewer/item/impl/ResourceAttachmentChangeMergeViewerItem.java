@@ -204,7 +204,7 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 				// Can not b improved by keeping the number of created insertion points because the given
 				// "values" parameter may already contains some insertion points.
 				int realIndex = 0;
-				for (int index = 0; index < insertionIndex; realIndex++) {
+				for (int index = 0; index < insertionIndex && realIndex < ret.size(); realIndex++) {
 					if (!ret.get(realIndex).isInsertionPoint()) {
 						index++;
 					}

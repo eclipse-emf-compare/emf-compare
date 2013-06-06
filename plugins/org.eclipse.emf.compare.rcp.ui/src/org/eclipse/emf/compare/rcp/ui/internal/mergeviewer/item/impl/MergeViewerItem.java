@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -367,7 +367,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 				// Can not b improved by keeping the number of created insertion points because the given
 				// "values" parameter may already contains some insertion points.
 				int realIndex = 0;
-				for (int index = 0; index < insertionIndex; realIndex++) {
+				for (int index = 0; index < insertionIndex && realIndex < ret.size(); realIndex++) {
 					if (!ret.get(realIndex).isInsertionPoint()) {
 						index++;
 					}
