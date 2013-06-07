@@ -13,12 +13,14 @@ package org.eclipse.emf.compare.diagram.papyrus.tests;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor;
@@ -32,6 +34,7 @@ import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.compare.uml2.internal.merge.UMLMerger;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.UMLPostProcessor;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -42,6 +45,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
@@ -147,8 +151,26 @@ public abstract class AbstractTest {
 		}
 		testIntersections(comparison);
 	}
+	
+	// FIXME: See Bug 410737
+	protected void diffsCheckingBug410737(Comparison comparison, int totalDiffsNb, ExpectedStat ... expectedStats) {
+		List<Diff> diffs = comparison.getDifferences();
+		Collection<Diff> differences = Collections2.filter(diffs, Predicates.not(EMFComparePredicates.ofKind(DifferenceKind.MOVE)));
+		
+		assertEquals(totalDiffsNb, differences.size());
+		for (ExpectedStat expectedStat : expectedStats) {
+			Predicate<Diff> p = expectedStat.p;
+			int nb = expectedStat.nb;
+			int result = Collections2.filter(differences, p).size();
+			
+			String message = buildAssertMessage(differences, p);
+			
+			assertEquals(message, nb, result);
+		}
+		testIntersections(comparison);
+	}
 
-	private String buildAssertMessage(List<Diff> differences, Predicate<Diff> p) {
+	private String buildAssertMessage(Collection<Diff> differences, Predicate<Diff> p) {
 		Diff diff = Iterables.find(differences, p, null);
 		String message = "";
 		if (diff != null) {

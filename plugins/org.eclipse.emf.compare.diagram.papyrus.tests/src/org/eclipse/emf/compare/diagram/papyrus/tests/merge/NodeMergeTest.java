@@ -109,7 +109,7 @@ public class NodeMergeTest extends AbstractTest {
 
 	private static final int A1_ELTCHANGES_NB = 8 * A1_ELTCHANGE1_NB;
 
-	private static final int A1_ASSOCHANGE1_NB = 13;
+	private static final int A1_ASSOCHANGE1_NB = 14;
 
 	private static final int A1_ASSOCHANGES_NB = 3 * A1_ASSOCHANGE1_NB;
 
@@ -1338,7 +1338,8 @@ public class NodeMergeTest extends AbstractTest {
 	}
 	
 	@Test
-	@Ignore // bug in core (data set sent to MBA 2013-04-22)
+	@Ignore
+	// FIXME See Bug 406402
 	// Successive merges right to left of NodeLists
 	public void testA4b() throws IOException {
 		final Resource left = input.getA4NodeChangeLeft();
@@ -1424,7 +1425,8 @@ public class NodeMergeTest extends AbstractTest {
 	}
 	
 	@Test
-	@Ignore // bug in core (data set sent to MBA 2013-04-22)
+	@Ignore
+	// FIXME See Bug 406402
 	// Successive merges left to right of NodeLists
 	public void testA4c() throws IOException {
 		final Resource left = input.getA4NodeChangeLeft();

@@ -396,18 +396,20 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getDiff_Refines() {
+	public EReference getDiff_Implies() {
 		return (EReference)diffEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getDiff_RefinedBy() {
+	public EReference getDiff_ImpliedBy() {
 		return (EReference)diffEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -415,23 +417,23 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getDiff_Refines() {
+		return (EReference)diffEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDiff_RefinedBy() {
+		return (EReference)diffEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getDiff_Kind() {
-		return (EAttribute)diffEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getDiff_Source() {
-		return (EAttribute)diffEClass.getEStructuralFeatures().get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getDiff_State() {
 		return (EAttribute)diffEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -439,8 +441,24 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getDiff_Source() {
+		return (EAttribute)diffEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiff_State() {
+		return (EAttribute)diffEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getDiff_Equivalence() {
-		return (EReference)diffEClass.getEStructuralFeatures().get(8);
+		return (EReference)diffEClass.getEStructuralFeatures().get(10);
 	}
 
 	/**
@@ -448,7 +466,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * @generated
 	 */
 	public EReference getDiff_Conflict() {
-		return (EReference)diffEClass.getEStructuralFeatures().get(9);
+		return (EReference)diffEClass.getEStructuralFeatures().get(11);
 	}
 
 	/**
@@ -656,6 +674,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		createEReference(diffEClass, DIFF__MATCH);
 		createEReference(diffEClass, DIFF__REQUIRES);
 		createEReference(diffEClass, DIFF__REQUIRED_BY);
+		createEReference(diffEClass, DIFF__IMPLIES);
+		createEReference(diffEClass, DIFF__IMPLIED_BY);
 		createEReference(diffEClass, DIFF__REFINES);
 		createEReference(diffEClass, DIFF__REFINED_BY);
 		createEAttribute(diffEClass, DIFF__KIND);
@@ -859,6 +879,16 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 				this.getDiff(),
 				this.getDiff_Requires(),
 				"requiredBy", null, 0, -1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getDiff_Implies(),
+				this.getDiff(),
+				this.getDiff_ImpliedBy(),
+				"implies", null, 0, -1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getDiff_ImpliedBy(),
+				this.getDiff(),
+				this.getDiff_Implies(),
+				"impliedBy", null, 0, -1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getDiff_Refines(),
 				this.getDiff(),

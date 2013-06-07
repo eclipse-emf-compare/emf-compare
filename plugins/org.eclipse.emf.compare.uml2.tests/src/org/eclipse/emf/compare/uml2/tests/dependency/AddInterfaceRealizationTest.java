@@ -83,12 +83,13 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 6 differences
-		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(6), Integer.valueOf(differences.size()));
 
 		Predicate<? super Diff> addInterfaceRealizationDescription = null;
 		Predicate<? super Diff> addClientInInterfaceRealizationDescription = null;
 		Predicate<? super Diff> addSupplierInInterfaceRealizationDescription = null;
 		Predicate<? super Diff> addContractInInterfaceRealizationDescription = null;
+		Predicate<? super Diff> addClientDependencyInClass0Description = null;
 
 		if (kind.equals(TestKind.DELETE)) {
 			//addInterfaceRealizationDescription = removed("model.Class0.InterfaceRealization0"); //$NON-NLS-1$
@@ -100,6 +101,8 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 					"model.Class0.InterfaceRealization0", "supplier", "model.Interface0");
 			addContractInInterfaceRealizationDescription = changedReference(
 					"model.Class0.InterfaceRealization0", "contract", "model.Interface0", null);
+			addClientDependencyInClass0Description = removedFromReference("model.Class0", "clientDependency",
+					"model.Class0.InterfaceRealization0");
 		} else {
 			//addInterfaceRealizationDescription = added("model.Class0.InterfaceRealization0"); //$NON-NLS-1$
 			addInterfaceRealizationDescription = addedToReference(
@@ -110,6 +113,8 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 					"model.Class0.InterfaceRealization0", "supplier", "model.Interface0");
 			addContractInInterfaceRealizationDescription = changedReference(
 					"model.Class0.InterfaceRealization0", "contract", null, "model.Interface0");
+			addClientDependencyInClass0Description = addedToReference("model.Class0", "clientDependency",
+					"model.Class0.InterfaceRealization0");
 		}
 
 		final Diff addInterfaceRealization = Iterators.find(differences.iterator(),
@@ -120,12 +125,14 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 				addSupplierInInterfaceRealizationDescription);
 		final Diff addContractInInterfaceRealization = Iterators.find(differences.iterator(),
 				addContractInInterfaceRealizationDescription);
-		// duplicate diff: NamedElement.clientDependency to InterfaceRealization0
+		final Diff addClientDependencyInClass0 = Iterators.find(differences.iterator(),
+				addClientDependencyInClass0Description);
 
 		assertNotNull(addInterfaceRealization);
 		assertNotNull(addClientInInterfaceRealization);
 		assertNotNull(addSupplierInInterfaceRealization);
 		assertNotNull(addContractInInterfaceRealization);
+		assertNotNull(addClientDependencyInClass0);
 
 		// CHECK EXTENSION
 		assertSame(Integer.valueOf(1), count(differences, instanceOf(InterfaceRealizationChange.class)));
@@ -138,12 +145,12 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 					instanceOf(InterfaceRealizationChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLDependency);
-		assertSame(Integer.valueOf(4), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
+		assertSame(Integer.valueOf(5), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addInterfaceRealization));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addClientInInterfaceRealization));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addSupplierInInterfaceRealization));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addContractInInterfaceRealization));
-		// duplicate diff: NamedElement.clientDependency to InterfaceRealization0
+		assertTrue(addUMLDependency.getRefinedBy().contains(addClientDependencyInClass0));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
@@ -167,11 +174,11 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 			assertSame(Integer.valueOf(0), Integer.valueOf(addContractInInterfaceRealization.getRequires()
 					.size()));
 
-			assertSame(Integer.valueOf(3), Integer.valueOf(addInterfaceRealization.getRequires().size()));
+			assertSame(Integer.valueOf(4), Integer.valueOf(addInterfaceRealization.getRequires().size()));
 			assertTrue(addInterfaceRealization.getRequires().contains(addClientInInterfaceRealization));
 			assertTrue(addInterfaceRealization.getRequires().contains(addSupplierInInterfaceRealization));
 			assertTrue(addInterfaceRealization.getRequires().contains(addContractInInterfaceRealization));
-			// duplicate diff: NamedElement.clientDependency to InterfaceRealization0
+			assertTrue(addInterfaceRealization.getRequires().contains(addClientDependencyInClass0));
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
 		}
@@ -183,8 +190,9 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 		assertSame(Integer.valueOf(2), Integer.valueOf(addClientInInterfaceRealization.getEquivalence()
 				.getDifferences().size()));
 		assertTrue(addClientInInterfaceRealization.getEquivalence().getDifferences().contains(
-				addInterfaceRealization));
-		// duplicate diff: NamedElement.clientDependency to InterfaceRealization0
+				addClientInInterfaceRealization));
+		assertTrue(addClientInInterfaceRealization.getEquivalence().getDifferences().contains(
+				addClientDependencyInClass0));
 
 		testIntersections(comparison);
 	}

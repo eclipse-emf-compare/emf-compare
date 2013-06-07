@@ -31,6 +31,9 @@ import org.eclipse.emf.compare.uml2.tests.executionSpecification.AddActionExecut
 import org.eclipse.emf.compare.uml2.tests.executionSpecification.AddBehaviorExecutionSpecificationTest;
 import org.eclipse.emf.compare.uml2.tests.extend.AddExtendTest;
 import org.eclipse.emf.compare.uml2.tests.generalizationSet.AddGeneralizationSetTest;
+import org.eclipse.emf.compare.uml2.tests.implications.ImplicationsAssociationTest;
+import org.eclipse.emf.compare.uml2.tests.implications.ImplicationsInterfaceRealizationTest;
+import org.eclipse.emf.compare.uml2.tests.implications.ImplicationsTransitionTest;
 import org.eclipse.emf.compare.uml2.tests.include.AddIncludeTest;
 import org.eclipse.emf.compare.uml2.tests.merge.ExtensionMergeTest;
 import org.eclipse.emf.compare.uml2.tests.message.AddMessageTest;
@@ -55,7 +58,8 @@ import org.junit.runners.Suite.SuiteClasses;
 		AddSubstitutionTest.class, AddUsageTest.class, AddMessageTest.class,
 		AddActionExecutionSpecificationTest.class, AddBehaviorExecutionSpecificationTest.class,
 		AddIncludeTest.class, AddTimeConstraintTest.class, ProfileTest.class, DynamicStereotypeTest.class,
-		StaticStereotypeTest.class })
+		StaticStereotypeTest.class, ImplicationsAssociationTest.class, ImplicationsTransitionTest.class,
+		ImplicationsInterfaceRealizationTest.class })
 public class AllTests {
 
 	/**

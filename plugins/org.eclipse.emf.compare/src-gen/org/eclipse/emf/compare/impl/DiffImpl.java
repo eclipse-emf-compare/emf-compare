@@ -46,6 +46,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getMatch <em>Match</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getRequires <em>Requires</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getRequiredBy <em>Required By</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getImplies <em>Implies</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getImpliedBy <em>Implied By</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getRefines <em>Refines</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getRefinedBy <em>Refined By</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getKind <em>Kind</em>}</li>
@@ -87,6 +89,26 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	 * @ordered
 	 */
 	protected EList<Diff> requiredBy;
+
+	/**
+	 * The cached value of the '{@link #getImplies() <em>Implies</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getImplies()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Diff> implies;
+
+	/**
+	 * The cached value of the '{@link #getImpliedBy() <em>Implied By</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getImpliedBy()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Diff> impliedBy;
 
 	/**
 	 * The cached value of the '{@link #getRefines() <em>Refines</em>}' reference list.
@@ -276,6 +298,32 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 					ComparePackage.DIFF__REQUIRED_BY, ComparePackage.DIFF__REQUIRES);
 		}
 		return requiredBy;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<Diff> getImplies() {
+		if (implies == null) {
+			implies = new EObjectWithInverseResolvingEList.ManyInverse<Diff>(Diff.class, this,
+					ComparePackage.DIFF__IMPLIES, ComparePackage.DIFF__IMPLIED_BY);
+		}
+		return implies;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<Diff> getImpliedBy() {
+		if (impliedBy == null) {
+			impliedBy = new EObjectWithInverseResolvingEList.ManyInverse<Diff>(Diff.class, this,
+					ComparePackage.DIFF__IMPLIED_BY, ComparePackage.DIFF__IMPLIES);
+		}
+		return impliedBy;
 	}
 
 	/**
@@ -556,6 +604,12 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 			case ComparePackage.DIFF__REQUIRED_BY:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getRequiredBy()).basicAdd(otherEnd,
 						msgs);
+			case ComparePackage.DIFF__IMPLIES:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getImplies()).basicAdd(otherEnd,
+						msgs);
+			case ComparePackage.DIFF__IMPLIED_BY:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getImpliedBy()).basicAdd(otherEnd,
+						msgs);
 			case ComparePackage.DIFF__REFINES:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getRefines()).basicAdd(otherEnd,
 						msgs);
@@ -590,6 +644,10 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 				return ((InternalEList<?>)getRequires()).basicRemove(otherEnd, msgs);
 			case ComparePackage.DIFF__REQUIRED_BY:
 				return ((InternalEList<?>)getRequiredBy()).basicRemove(otherEnd, msgs);
+			case ComparePackage.DIFF__IMPLIES:
+				return ((InternalEList<?>)getImplies()).basicRemove(otherEnd, msgs);
+			case ComparePackage.DIFF__IMPLIED_BY:
+				return ((InternalEList<?>)getImpliedBy()).basicRemove(otherEnd, msgs);
 			case ComparePackage.DIFF__REFINES:
 				return ((InternalEList<?>)getRefines()).basicRemove(otherEnd, msgs);
 			case ComparePackage.DIFF__REFINED_BY:
@@ -631,6 +689,10 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 				return getRequires();
 			case ComparePackage.DIFF__REQUIRED_BY:
 				return getRequiredBy();
+			case ComparePackage.DIFF__IMPLIES:
+				return getImplies();
+			case ComparePackage.DIFF__IMPLIED_BY:
+				return getImpliedBy();
 			case ComparePackage.DIFF__REFINES:
 				return getRefines();
 			case ComparePackage.DIFF__REFINED_BY:
@@ -672,6 +734,14 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 			case ComparePackage.DIFF__REQUIRED_BY:
 				getRequiredBy().clear();
 				getRequiredBy().addAll((Collection<? extends Diff>)newValue);
+				return;
+			case ComparePackage.DIFF__IMPLIES:
+				getImplies().clear();
+				getImplies().addAll((Collection<? extends Diff>)newValue);
+				return;
+			case ComparePackage.DIFF__IMPLIED_BY:
+				getImpliedBy().clear();
+				getImpliedBy().addAll((Collection<? extends Diff>)newValue);
 				return;
 			case ComparePackage.DIFF__REFINES:
 				getRefines().clear();
@@ -717,6 +787,12 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 			case ComparePackage.DIFF__REQUIRED_BY:
 				getRequiredBy().clear();
 				return;
+			case ComparePackage.DIFF__IMPLIES:
+				getImplies().clear();
+				return;
+			case ComparePackage.DIFF__IMPLIED_BY:
+				getImpliedBy().clear();
+				return;
 			case ComparePackage.DIFF__REFINES:
 				getRefines().clear();
 				return;
@@ -756,6 +832,10 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 				return requires != null && !requires.isEmpty();
 			case ComparePackage.DIFF__REQUIRED_BY:
 				return requiredBy != null && !requiredBy.isEmpty();
+			case ComparePackage.DIFF__IMPLIES:
+				return implies != null && !implies.isEmpty();
+			case ComparePackage.DIFF__IMPLIED_BY:
+				return impliedBy != null && !impliedBy.isEmpty();
 			case ComparePackage.DIFF__REFINES:
 				return refines != null && !refines.isEmpty();
 			case ComparePackage.DIFF__REFINED_BY:

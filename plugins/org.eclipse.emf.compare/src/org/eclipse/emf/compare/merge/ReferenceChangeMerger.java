@@ -12,6 +12,9 @@ package org.eclipse.emf.compare.merge;
 
 import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEIsSet;
 
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,7 +26,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.utils.DiffUtil;
+import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -61,83 +64,27 @@ public class ReferenceChangeMerger extends AbstractMerger {
 
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		diff.setState(DifferenceState.MERGED);
-		if (diff.getEquivalence() != null) {
-			boolean continueMerge = handleEquivalences(diff, false, monitor);
-			if (!continueMerge) {
-				return;
-			}
-		}
 
 		if (diff.getSource() == DifferenceSource.LEFT) {
 			// merge all "requires" diffs
 			mergeRequires(diff, false, monitor);
-
-			switch (diff.getKind()) {
-				case ADD:
-					// Create the same element in right
-					addInTarget(diff, false);
-					break;
-				case DELETE:
-					// Delete that same element from right
-					removeFromTarget(diff, false);
-					break;
-				case MOVE:
-					moveElement(diff, false);
-					break;
-				case CHANGE:
-					// Is it an unset?
-					if (diff.getMatch().getLeft() != null) {
-						final EObject leftValue = (EObject)diff.getMatch().getLeft().eGet(
-								diff.getReference(), false);
-						if (leftValue == null) {
-							removeFromTarget(diff, false);
-						} else {
-							addInTarget(diff, false);
-						}
-					} else {
-						// we have no left, and the source is on the left. Can only be an unset
-						removeFromTarget(diff, false);
-					}
-					break;
-				default:
-					break;
-			}
+			handleImplies(diff, false, monitor);
 		} else {
 			// merge all "required by" diffs
 			mergeRequiredBy(diff, false, monitor);
+			handleImpliedBy(diff, false, monitor);
+		}
 
-			switch (diff.getKind()) {
-				case ADD:
-					// We have a ADD on right. we need to revert this addition
-					removeFromTarget(diff, false);
-					break;
-				case DELETE:
-					// DELETE in the right. We need to re-create this element
-					addInTarget(diff, false);
-					break;
-				case MOVE:
-					moveElement(diff, false);
-					break;
-				case CHANGE:
-					// Is it an unset?
-					if (diff.getMatch().getRight() != null) {
-						final EObject rightValue = (EObject)diff.getMatch().getRight().eGet(
-								diff.getReference(), false);
-						if (rightValue == null) {
-							// Value has been unset in the right, and we are merging towards right.
-							// We need to re-add this element
-							addInTarget(diff, false);
-						} else {
-							// We'll actually need to "reset" this reference to its original value
-							resetInTarget(diff, false);
-						}
-					} else {
-						// we have no right, and the source is on the right. Can only be an unset
-						addInTarget(diff, false);
-					}
-					break;
-				default:
-					break;
+		boolean hasToBeMerged = true;
+		if (diff.getEquivalence() != null) {
+			hasToBeMerged = handleEquivalences(diff, false, monitor);
+		}
+
+		if (hasToBeMerged) {
+			if (diff.getSource() == DifferenceSource.LEFT) {
+				accept(diff, false);
+			} else {
+				reject(diff, false);
 			}
 		}
 	}
@@ -157,82 +104,160 @@ public class ReferenceChangeMerger extends AbstractMerger {
 
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		diff.setState(DifferenceState.MERGED);
-		if (diff.getEquivalence() != null) {
-			boolean continueMerge = handleEquivalences(diff, true, monitor);
-			if (!continueMerge) {
-				return;
-			}
-		}
 
 		if (diff.getSource() == DifferenceSource.LEFT) {
 			// merge all "required by" diffs
 			mergeRequiredBy(diff, true, monitor);
-
-			switch (diff.getKind()) {
-				case ADD:
-					// We have a ADD on left, thus nothing in right. We need to revert the addition
-					removeFromTarget(diff, true);
-					break;
-				case DELETE:
-					// DELETE in the left, thus an element in right. We need to re-create that element
-					addInTarget(diff, true);
-					break;
-				case MOVE:
-					moveElement(diff, true);
-					break;
-				case CHANGE:
-					// Is it an unset?
-					if (diff.getMatch().getLeft() != null) {
-						final EObject leftValue = (EObject)diff.getMatch().getLeft().eGet(
-								diff.getReference(), false);
-						if (leftValue == null) {
-							// Value has been unset in the right, and we are merging towards right.
-							// We need to re-add this element
-							addInTarget(diff, true);
-						} else {
-							// We'll actually need to "reset" this reference to its original value
-							resetInTarget(diff, true);
-						}
-					} else {
-						// we have no left, and the source is on the left. Can only be an unset
-						addInTarget(diff, true);
-					}
-					break;
-				default:
-					break;
-			}
+			handleImpliedBy(diff, true, monitor);
 		} else {
 			// merge all "requires" diffs
 			mergeRequires(diff, true, monitor);
+			handleImplies(diff, true, monitor);
+		}
 
-			switch (diff.getKind()) {
-				case ADD:
-					addInTarget(diff, true);
-					break;
-				case DELETE:
-					removeFromTarget(diff, true);
-					break;
-				case MOVE:
-					moveElement(diff, true);
-					break;
-				case CHANGE:
-					// Is it an unset?
-					if (diff.getMatch().getRight() != null) {
-						final EObject rightValue = (EObject)diff.getMatch().getRight().eGet(
-								diff.getReference(), false);
-						if (rightValue == null) {
-							removeFromTarget(diff, true);
-						} else {
-							addInTarget(diff, true);
-						}
-					} else {
-						// we have no right, and the source is on the right. Can only be an unset
-						removeFromTarget(diff, true);
-					}
-					break;
-				default:
-					break;
+		boolean hasToBeMerged = true;
+		if (diff.getEquivalence() != null) {
+			hasToBeMerged = handleEquivalences(diff, true, monitor);
+		}
+
+		if (hasToBeMerged) {
+			if (diff.getSource() == DifferenceSource.LEFT) {
+				reject(diff, true);
+			} else {
+				accept(diff, true);
 			}
+		}
+	}
+
+	/**
+	 * Merge the given difference rejecting it.
+	 * 
+	 * @param diff
+	 *            The difference to merge.
+	 * @param rightToLeft
+	 *            The direction of the merge.
+	 */
+	private void reject(final ReferenceChange diff, boolean rightToLeft) {
+		DifferenceSource source = diff.getSource();
+		switch (diff.getKind()) {
+			case ADD:
+				// We have a ADD on left, thus nothing in right. We need to revert the addition
+				removeFromTarget(diff, rightToLeft);
+				break;
+			case DELETE:
+				// DELETE in the left, thus an element in right. We need to re-create that element
+				addInTarget(diff, rightToLeft);
+				break;
+			case MOVE:
+				moveElement(diff, rightToLeft);
+				break;
+			case CHANGE:
+				EObject container = null;
+				if (source == DifferenceSource.LEFT) {
+					container = diff.getMatch().getLeft();
+
+				} else {
+					container = diff.getMatch().getRight();
+				}
+				// Is it an unset?
+				if (container != null) {
+					final EObject leftValue = (EObject)container.eGet(diff.getReference(), false);
+					if (leftValue == null) {
+						// Value has been unset in the right, and we are merging towards right.
+						// We need to re-add this element
+						addInTarget(diff, rightToLeft);
+					} else {
+						// We'll actually need to "reset" this reference to its original value
+						resetInTarget(diff, rightToLeft);
+					}
+				} else {
+					// we have no left, and the source is on the left. Can only be an unset
+					addInTarget(diff, rightToLeft);
+				}
+				break;
+			default:
+				break;
+		}
+	}
+
+	/**
+	 * Merge the given difference accepting it.
+	 * 
+	 * @param diff
+	 *            The difference to merge.
+	 * @param rightToLeft
+	 *            The direction of the merge.
+	 */
+	private void accept(final ReferenceChange diff, boolean rightToLeft) {
+		DifferenceSource source = diff.getSource();
+		switch (diff.getKind()) {
+			case ADD:
+				// Create the same element in right
+				addInTarget(diff, rightToLeft);
+				break;
+			case DELETE:
+				// Delete that same element from right
+				removeFromTarget(diff, rightToLeft);
+				break;
+			case MOVE:
+				moveElement(diff, rightToLeft);
+				break;
+			case CHANGE:
+				EObject container = null;
+				if (source == DifferenceSource.LEFT) {
+					container = diff.getMatch().getLeft();
+				} else {
+					container = diff.getMatch().getRight();
+				}
+				// Is it an unset?
+				if (container != null) {
+					final EObject leftValue = (EObject)container.eGet(diff.getReference(), false);
+					if (leftValue == null) {
+						removeFromTarget(diff, rightToLeft);
+					} else {
+						addInTarget(diff, rightToLeft);
+					}
+				} else {
+					// we have no left, and the source is on the left. Can only be an unset
+					removeFromTarget(diff, rightToLeft);
+				}
+				break;
+			default:
+				break;
+		}
+	}
+
+	/**
+	 * Mark as MERGED all the implied differences recursively from the given one.
+	 * 
+	 * @param diff
+	 *            The difference from which the implications have to be marked.
+	 * @param rightToLeft
+	 *            The direction of the merge.
+	 * @param monitor
+	 *            Monitor.
+	 */
+	private void handleImplies(Diff diff, boolean rightToLeft, Monitor monitor) {
+		for (Diff implied : diff.getImplies()) {
+			implied.setState(DifferenceState.MERGED);
+			handleImplies(implied, rightToLeft, monitor);
+		}
+	}
+
+	/**
+	 * Mark as MERGED all the implying differences recursively from the given one.
+	 * 
+	 * @param diff
+	 *            The difference from which the implications have to be marked.
+	 * @param rightToLeft
+	 *            The direction of the merge.
+	 * @param monitor
+	 *            Monitor.
+	 */
+	private void handleImpliedBy(Diff diff, boolean rightToLeft, Monitor monitor) {
+		for (Diff impliedBy : diff.getImpliedBy()) {
+			impliedBy.setState(DifferenceState.MERGED);
+			handleImpliedBy(impliedBy, rightToLeft, monitor);
 		}
 	}
 
@@ -621,6 +646,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 		final EReference reference = diff.getReference();
 		boolean continueMerge = true;
 		for (Diff equivalent : diff.getEquivalence().getDifferences()) {
+			// For 1..*, merge diff on many-valued to preserve ordering
 			if (equivalent instanceof ReferenceChange
 					&& reference.getEOpposite() == ((ReferenceChange)equivalent).getReference()
 					&& equivalent.getState() == DifferenceState.UNRESOLVED) {
@@ -631,36 +657,49 @@ public class ReferenceChangeMerger extends AbstractMerger {
 					mergeDiff(equivalent, rightToLeft, monitor);
 					continueMerge = false;
 				}
-			} else if (diff.getSource() == DifferenceSource.LEFT) {
-				// This can happen when merging subset/supersets... see AddInterfaceTest#testA50UseCase
-				/*
-				 * This should be removed (or we should make sure that we can never be here) when bug 398402
-				 * is fixed.
-				 */
-				if (rightToLeft && diff.getRequiredBy().contains(equivalent)) {
-					mergeDiff(equivalent, rightToLeft, monitor);
-					continueMerge = false;
-				} else if (!rightToLeft && diff.getRequires().contains(equivalent)) {
-					mergeDiff(equivalent, rightToLeft, monitor);
-					continueMerge = false;
+			}
+
+			/*
+			 * If one of the equivalent differences is implied or implying (depending on the merge direction)
+			 * a merged diff, then we have a dependency loop : the "current" difference has already been
+			 * merged because of this implication. This will allow us to break out of that loop.
+			 */
+			if (rightToLeft) {
+				if (diff.getSource() == DifferenceSource.LEFT) {
+					continueMerge = continueMerge
+							&& !containsAny(diff.getRequiredBy(), equivalent.getImplies());
+				} else {
+					continueMerge = continueMerge
+							&& !containsAny(diff.getRequires(), equivalent.getImpliedBy());
 				}
-			} else if (diff.getSource() == DifferenceSource.RIGHT) {
-				// This can happen when merging subset/supersets... see AddInterfaceTest#testA50UseCase
-				/*
-				 * This should be removed (or we should make sure that we can never be here) when bug 398402
-				 * is fixed.
-				 */
-				if (rightToLeft && diff.getRequires().contains(equivalent)) {
-					mergeDiff(equivalent, rightToLeft, monitor);
-					continueMerge = false;
-				} else if (!rightToLeft && diff.getRequiredBy().contains(equivalent)) {
-					mergeDiff(equivalent, rightToLeft, monitor);
-					continueMerge = false;
+			} else {
+				if (diff.getSource() == DifferenceSource.LEFT) {
+					continueMerge = continueMerge
+							&& !containsAny(diff.getRequires(), equivalent.getImpliedBy());
+				} else {
+					continueMerge = continueMerge
+							&& !containsAny(diff.getRequiredBy(), equivalent.getImplies());
 				}
 			}
+
 			equivalent.setState(DifferenceState.MERGED);
 		}
 		return continueMerge;
+	}
+
+	/**
+	 * Utility method to check that the first sequence contains one of the elements of the second sequence at
+	 * least.
+	 * 
+	 * @param sequence1
+	 *            The first sequence.
+	 * @param sequence2
+	 *            The second sequence.
+	 * @return True if the given first sequence contains one of the elements of the second sequence at least.
+	 *         false otherwise.
+	 */
+	private boolean containsAny(List<? extends EObject> sequence1, List<? extends EObject> sequence2) {
+		return Iterables.any(sequence2, Predicates.in(sequence1));
 	}
 
 	/**

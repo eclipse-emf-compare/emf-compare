@@ -30,6 +30,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
@@ -38,7 +39,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.TreeMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
-import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -181,7 +181,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			List<Diff> diffsToCopy = new ArrayList<Diff>();
 			diffsToCopy.add(diffToCopy);
 			if (isSubDiffFilterActive()) {
-				addAll(diffsToCopy, DiffUtil.getSubDiffs(leftToRight).apply(diffToCopy));
+				addAll(diffsToCopy, ComparisonUtil.getSubDiffs(leftToRight).apply(diffToCopy));
 			}
 			Command copyCommand = getEditingDomain().createCopyCommand(diffsToCopy, leftToRight,
 					EMFCompareRCPPlugin.getDefault().getMergerRegistry());
@@ -398,7 +398,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 				}
 			}
 			if (doPaint) {
-			if (leftDiff != null) {
+				if (leftDiff != null) {
 					TreeItem rightItem = findRightTreeItemFromLeftDiff(rightItems, leftDiff, leftData);
 
 					if (rightItem != null) {

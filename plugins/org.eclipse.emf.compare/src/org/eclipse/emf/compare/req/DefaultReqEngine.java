@@ -13,6 +13,8 @@ package org.eclipse.emf.compare.req;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.filter;
+import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isAddOrSetDiff;
+import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Predicate;
@@ -27,7 +29,6 @@ import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
@@ -77,8 +78,11 @@ public class DefaultReqEngine implements IReqEngine {
 		DifferenceKind kind = difference.getKind();
 
 		if (value != null) {
+			boolean isAddition = isAddOrSetDiff(difference);
+			boolean isDeletion = !isAddition && isDeleteOrUnsetDiff(difference);
+
 			// ADD object
-			if (kind == DifferenceKind.ADD && isContainment(difference)) {
+			if (isAddition && isContainment(difference)) {
 
 				// -> requires ADD on the container of the object
 				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, value.eContainer(),
@@ -88,8 +92,7 @@ public class DefaultReqEngine implements IReqEngine {
 				requiredDifferences.addAll(getDELOriginValueOnContainmentRefSingle(comparison, difference));
 
 				// ADD reference
-			} else if ((kind == DifferenceKind.ADD || isChangeAdd(comparison, difference))
-					&& !isContainment(difference)) {
+			} else if (isAddition) {
 
 				// -> requires ADD of the value of the reference (target object)
 				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, value, DifferenceKind.ADD));
@@ -104,7 +107,7 @@ public class DefaultReqEngine implements IReqEngine {
 						instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.ADD))));
 
 				// DELETE object
-			} else if (kind == DifferenceKind.DELETE && isContainment(difference)) {
+			} else if (isDeletion && isContainment(difference)) {
 
 				// -> requires DELETE of the outgoing references and contained objects
 				requiredDifferences.addAll(getDELOutgoingReferences(comparison, difference));
@@ -118,8 +121,7 @@ public class DefaultReqEngine implements IReqEngine {
 				// reference cases.
 
 				// DELETE reference
-			} else if ((kind == DifferenceKind.DELETE || isChangeDelete(difference))
-					&& !isContainment(difference)) {
+			} else if (isDeletion) {
 
 				// -> is required by DELETE of the target object
 				requiredByDifferences.addAll(getDifferenceOnGivenObject(comparison, value,
@@ -139,8 +141,7 @@ public class DefaultReqEngine implements IReqEngine {
 						DifferenceKind.MOVE));
 
 				// CHANGE reference
-			} else if (kind == DifferenceKind.CHANGE && !isChangeAdd(comparison, difference)
-					&& !isChangeDelete(difference)) {
+			} else if (kind == DifferenceKind.CHANGE && !isAddition && !isDeletion) {
 
 				// -> is required by DELETE of the origin target object
 				requiredByDifferences.addAll(getDifferenceOnGivenObject(comparison, MatchUtil.getOriginValue(
@@ -276,7 +277,7 @@ public class DefaultReqEngine implements IReqEngine {
 			final Match valueMatch = comparison.getMatch(value);
 			if (valueMatch != null) {
 				for (ReferenceChange candidate : filter(valueMatch.getDifferences(), ReferenceChange.class)) {
-					if (candidate.getKind() == DifferenceKind.DELETE || isChangeDelete(candidate)) {
+					if (candidate.getKind() == DifferenceKind.DELETE || isDeleteOrUnsetDiff(candidate)) {
 						result.add(candidate);
 					}
 				}
@@ -312,59 +313,6 @@ public class DefaultReqEngine implements IReqEngine {
 						}
 
 					}
-				}
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Check if the given <code>difference</code> is a CHANGE from a null value on a mono-valued reference.
-	 * 
-	 * @param comparison
-	 *            The comparison this engine is expected to complete.
-	 * @param difference
-	 *            The given difference.
-	 * @return True if it is a CHANGE from a null value.
-	 */
-	private static boolean isChangeAdd(Comparison comparison, Diff difference) {
-		boolean result = false;
-		if (difference instanceof ReferenceChange) {
-			EReference reference = ((ReferenceChange)difference).getReference();
-			if (!reference.isMany() && !reference.isContainment()) {
-				Match match = difference.getMatch();
-				if (comparison.isThreeWay()) {
-					final EObject origin = match.getOrigin();
-					result = origin == null || ReferenceUtil.safeEGet(origin, reference) == null;
-				} else {
-					// two way can't have "remote" diffs. This is an addition if right is null
-					final EObject right = match.getRight();
-					result = right == null || ReferenceUtil.safeEGet(right, reference) == null;
-				}
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Check if the given <code>difference</code> is a CHANGE to a null value on a mono-valued reference.
-	 * 
-	 * @param difference
-	 *            The given difference.
-	 * @return True if it is a CHANGE to a null value.
-	 */
-	private static boolean isChangeDelete(Diff difference) {
-		boolean result = false;
-		if (difference instanceof ReferenceChange) {
-			EReference reference = ((ReferenceChange)difference).getReference();
-			if (!reference.isMany() && !reference.isContainment()) {
-				Match match = difference.getMatch();
-				if (difference.getSource() == DifferenceSource.LEFT) {
-					final EObject left = match.getLeft();
-					result = left == null || ReferenceUtil.safeEGet(left, reference) == null;
-				} else {
-					final EObject right = match.getRight();
-					result = right == null || ReferenceUtil.safeEGet(right, reference) == null;
 				}
 			}
 		}

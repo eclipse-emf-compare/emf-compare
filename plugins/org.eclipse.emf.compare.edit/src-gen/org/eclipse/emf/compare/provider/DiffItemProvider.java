@@ -74,6 +74,8 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 
 			addRequiresPropertyDescriptor(object);
 			addRequiredByPropertyDescriptor(object);
+			addImpliesPropertyDescriptor(object);
+			addImpliedByPropertyDescriptor(object);
 			addRefinesPropertyDescriptor(object);
 			addRefinedByPropertyDescriptor(object);
 			addKindPropertyDescriptor(object);
@@ -117,6 +119,36 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 						getString(
 								"_UI_PropertyDescriptor_description", "_UI_Diff_requiredBy_feature", "_UI_Diff_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						ComparePackage.Literals.DIFF__REQUIRED_BY, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Implies feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addImpliesPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(), getString("_UI_Diff_implies_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_Diff_implies_feature", "_UI_Diff_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ComparePackage.Literals.DIFF__IMPLIES, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Implied By feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addImpliedByPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+						.getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_Diff_impliedBy_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_Diff_impliedBy_feature", "_UI_Diff_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						ComparePackage.Literals.DIFF__IMPLIED_BY, true, false, true, null, null, null));
 	}
 
 	/**

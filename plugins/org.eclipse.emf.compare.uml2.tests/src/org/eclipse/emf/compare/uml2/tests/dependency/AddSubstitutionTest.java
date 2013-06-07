@@ -85,15 +85,15 @@ public class AddSubstitutionTest extends AbstractTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 6 differences
-		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(6), Integer.valueOf(differences.size()));
 
 		Predicate<? super Diff> addInterfaceRealizationDescription = null;
 		Predicate<? super Diff> addClientInInterfaceRealizationDescription = null;
 		Predicate<? super Diff> addSupplierInInterfaceRealizationDescription = null;
 		Predicate<? super Diff> addContractInInterfaceRealizationDescription = null;
+		Predicate<? super Diff> addClientDependencyInClass0Description = null;
 
 		if (kind.equals(TestKind.DELETE)) {
-			//addInterfaceRealizationDescription = removed("model.Class0.Substitution0"); //$NON-NLS-1$
 			addInterfaceRealizationDescription = removedFromReference("model.Class0", "substitution",
 					"model.Class0.Substitution0");
 			addClientInInterfaceRealizationDescription = removedFromReference("model.Class0.Substitution0",
@@ -102,8 +102,9 @@ public class AddSubstitutionTest extends AbstractTest {
 					"supplier", "model.Class1");
 			addContractInInterfaceRealizationDescription = changedReference("model.Class0.Substitution0",
 					"contract", "model.Class1", null);
+			addClientDependencyInClass0Description = removedFromReference("model.Class0", "clientDependency",
+					"model.Class0.Substitution0");
 		} else {
-			//addInterfaceRealizationDescription = added("model.Class0.Substitution0"); //$NON-NLS-1$
 			addInterfaceRealizationDescription = addedToReference(
 					"model.Class0", "substitution", "model.Class0.Substitution0"); //$NON-NLS-1$
 			addClientInInterfaceRealizationDescription = addedToReference("model.Class0.Substitution0",
@@ -112,6 +113,8 @@ public class AddSubstitutionTest extends AbstractTest {
 					"supplier", "model.Class1");
 			addContractInInterfaceRealizationDescription = changedReference("model.Class0.Substitution0",
 					"contract", null, "model.Class1");
+			addClientDependencyInClass0Description = addedToReference("model.Class0", "clientDependency",
+					"model.Class0.Substitution0");
 		}
 
 		final Diff addInterfaceRealization = Iterators.find(differences.iterator(),
@@ -122,12 +125,14 @@ public class AddSubstitutionTest extends AbstractTest {
 				addSupplierInInterfaceRealizationDescription);
 		final Diff addContractInInterfaceRealization = Iterators.find(differences.iterator(),
 				addContractInInterfaceRealizationDescription);
-		// duplicate diff NamedElement.clientDependency to Substitution0
+		final Diff addClientDependencyInClass0 = Iterators.find(differences.iterator(),
+				addClientDependencyInClass0Description);
 
 		assertNotNull(addInterfaceRealization);
 		assertNotNull(addClientInInterfaceRealization);
 		assertNotNull(addSupplierInInterfaceRealization);
 		assertNotNull(addContractInInterfaceRealization);
+		assertNotNull(addClientDependencyInClass0);
 
 		// CHECK EXTENSION
 		assertSame(Integer.valueOf(1), count(differences, instanceOf(SubstitutionChange.class)));
@@ -140,12 +145,12 @@ public class AddSubstitutionTest extends AbstractTest {
 					instanceOf(SubstitutionChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLDependency);
-		assertSame(Integer.valueOf(4), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
+		assertSame(Integer.valueOf(5), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addClientInInterfaceRealization));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addSupplierInInterfaceRealization));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addContractInInterfaceRealization));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addInterfaceRealization));
-		// duplicate diff NamedElement.clientDependency to Substitution0
+		assertTrue(addUMLDependency.getRefinedBy().contains(addClientDependencyInClass0));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
@@ -169,11 +174,11 @@ public class AddSubstitutionTest extends AbstractTest {
 			assertSame(Integer.valueOf(0), Integer.valueOf(addContractInInterfaceRealization.getRequires()
 					.size()));
 
-			assertSame(Integer.valueOf(3), Integer.valueOf(addInterfaceRealization.getRequires().size()));
+			assertSame(Integer.valueOf(4), Integer.valueOf(addInterfaceRealization.getRequires().size()));
 			assertTrue(addInterfaceRealization.getRequires().contains(addClientInInterfaceRealization));
 			assertTrue(addInterfaceRealization.getRequires().contains(addSupplierInInterfaceRealization));
 			assertTrue(addInterfaceRealization.getRequires().contains(addContractInInterfaceRealization));
-			// duplicate diff NamedElement.clientDependency to Substitution0
+			assertTrue(addInterfaceRealization.getRequires().contains(addClientDependencyInClass0));
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
 		}
@@ -185,8 +190,9 @@ public class AddSubstitutionTest extends AbstractTest {
 		assertSame(Integer.valueOf(2), Integer.valueOf(addClientInInterfaceRealization.getEquivalence()
 				.getDifferences().size()));
 		assertTrue(addClientInInterfaceRealization.getEquivalence().getDifferences().contains(
-				addInterfaceRealization));
-		// duplicate diff NamedElement.clientDependency to Substitution0
+				addClientInInterfaceRealization));
+		assertTrue(addClientInInterfaceRealization.getEquivalence().getDifferences().contains(
+				addClientDependencyInClass0));
 
 		testIntersections(comparison);
 	}

@@ -29,6 +29,8 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.emf.compare.Diff#getMatch <em>Match</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getRequires <em>Requires</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getRequiredBy <em>Required By</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getImplies <em>Implies</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getImpliedBy <em>Implied By</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getRefines <em>Refines</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getRefinedBy <em>Refined By</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getKind <em>Kind</em>}</li>
@@ -111,6 +113,42 @@ public interface Diff extends EObject {
 	 * @generated
 	 */
 	EList<Diff> getRequiredBy();
+
+	/**
+	 * Returns the value of the '<em><b>Implies</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.emf.compare.Diff}.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.compare.Diff#getImpliedBy <em>Implied By</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Implies</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Implies</em>' reference list.
+	 * @see org.eclipse.emf.compare.ComparePackage#getDiff_Implies()
+	 * @see org.eclipse.emf.compare.Diff#getImpliedBy
+	 * @model opposite="impliedBy"
+	 * @generated
+	 */
+	EList<Diff> getImplies();
+
+	/**
+	 * Returns the value of the '<em><b>Implied By</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.emf.compare.Diff}.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.compare.Diff#getImplies <em>Implies</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Implied By</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Implied By</em>' reference list.
+	 * @see org.eclipse.emf.compare.ComparePackage#getDiff_ImpliedBy()
+	 * @see org.eclipse.emf.compare.Diff#getImplies
+	 * @model opposite="implies"
+	 * @generated
+	 */
+	EList<Diff> getImpliedBy();
 
 	/**
 	 * Returns the value of the '<em><b>Refines</b></em>' reference list.
@@ -292,9 +330,6 @@ public interface Diff extends EObject {
 	 * <!-- end-model-doc -->
 	 * @model
 	 * @generated
-	 * @deprecated Use
-	 *             {@link org.eclipse.emf.compare.merge.IMerger#copyRightToLeft(org.eclipse.emf.compare.Diff, org.eclipse.emf.common.util.Monitor)}
-	 *             instead. See javadoc of IMerger.Registry for usage instructions.
 	 */
 	@Deprecated
 	void copyRightToLeft();
@@ -307,9 +342,6 @@ public interface Diff extends EObject {
 	 * <!-- end-model-doc -->
 	 * @model
 	 * @generated
-	 * @deprecated Use
-	 *             {@link org.eclipse.emf.compare.merge.IMerger#copyLeftToRight(org.eclipse.emf.compare.Diff, org.eclipse.emf.common.util.Monitor)}
-	 *             instead. See javadoc of IMerger.Registry for usage instructions.
 	 */
 	@Deprecated
 	void copyLeftToRight();

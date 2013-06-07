@@ -320,13 +320,31 @@ public interface ComparePackage extends EPackage {
 	int DIFF__REQUIRED_BY = 2;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF__IMPLIES = 3;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF__IMPLIED_BY = 4;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF__REFINES = 3;
+	int DIFF__REFINES = 5;
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
@@ -335,7 +353,7 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF__REFINED_BY = 4;
+	int DIFF__REFINED_BY = 6;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -344,7 +362,7 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF__KIND = 5;
+	int DIFF__KIND = 7;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' attribute.
@@ -353,7 +371,7 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF__SOURCE = 6;
+	int DIFF__SOURCE = 8;
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
@@ -362,7 +380,7 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF__STATE = 7;
+	int DIFF__STATE = 9;
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
@@ -371,7 +389,7 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF__EQUIVALENCE = 8;
+	int DIFF__EQUIVALENCE = 10;
 
 	/**
 	 * The feature id for the '<em><b>Conflict</b></em>' reference.
@@ -380,7 +398,7 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF__CONFLICT = 9;
+	int DIFF__CONFLICT = 11;
 
 	/**
 	 * The number of structural features of the '<em>Diff</em>' class.
@@ -389,7 +407,7 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF_FEATURE_COUNT = 10;
+	int DIFF_FEATURE_COUNT = 12;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.impl.ResourceAttachmentChangeImpl <em>Resource Attachment Change</em>}' class.
@@ -427,6 +445,24 @@ public interface ComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int RESOURCE_ATTACHMENT_CHANGE__REQUIRED_BY = DIFF__REQUIRED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESOURCE_ATTACHMENT_CHANGE__IMPLIES = DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESOURCE_ATTACHMENT_CHANGE__IMPLIED_BY = DIFF__IMPLIED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
@@ -545,6 +581,24 @@ public interface ComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int REFERENCE_CHANGE__REQUIRED_BY = DIFF__REQUIRED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE__IMPLIES = DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE__IMPLIED_BY = DIFF__IMPLIED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
@@ -672,6 +726,24 @@ public interface ComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int ATTRIBUTE_CHANGE__REQUIRED_BY = DIFF__REQUIRED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE__IMPLIES = DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE__IMPLIED_BY = DIFF__IMPLIED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
@@ -1147,6 +1219,28 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 */
 	EReference getDiff_RequiredBy();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.Diff#getImplies <em>Implies</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Implies</em>'.
+	 * @see org.eclipse.emf.compare.Diff#getImplies()
+	 * @see #getDiff()
+	 * @generated
+	 */
+	EReference getDiff_Implies();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.Diff#getImpliedBy <em>Implied By</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Implied By</em>'.
+	 * @see org.eclipse.emf.compare.Diff#getImpliedBy()
+	 * @see #getDiff()
+	 * @generated
+	 */
+	EReference getDiff_ImpliedBy();
 
 	/**
 	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.Diff#getRefines <em>Refines</em>}'.
@@ -1648,6 +1742,22 @@ public interface ComparePackage extends EPackage {
 		 * @generated
 		 */
 		EReference DIFF__REQUIRED_BY = eINSTANCE.getDiff_RequiredBy();
+
+		/**
+		 * The meta object literal for the '<em><b>Implies</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIFF__IMPLIES = eINSTANCE.getDiff_Implies();
+
+		/**
+		 * The meta object literal for the '<em><b>Implied By</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIFF__IMPLIED_BY = eINSTANCE.getDiff_ImpliedBy();
 
 		/**
 		 * The meta object literal for the '<em><b>Refines</b></em>' reference list feature.

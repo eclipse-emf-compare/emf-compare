@@ -189,6 +189,10 @@
         <details key="documentation" value="This will reference all differences that depend on this one for their merging."/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="implies" upperBound="-1"
+        eType="#//Diff" eOpposite="#//Diff/impliedBy"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="impliedBy" upperBound="-1"
+        eType="#//Diff" eOpposite="#//Diff/implies"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="refines" upperBound="-1"
         eType="#//Diff" eOpposite="#//Diff/refinedBy">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

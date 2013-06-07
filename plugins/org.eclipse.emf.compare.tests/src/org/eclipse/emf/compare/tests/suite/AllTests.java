@@ -17,6 +17,7 @@ import junit.textui.TestRunner;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.tests.command.CommandStackTestSuite;
 import org.eclipse.emf.compare.tests.conflict.ConflictDetectionTest;
+import org.eclipse.emf.compare.tests.diff.ComparisonUtilTest;
 import org.eclipse.emf.compare.tests.diff.DiffUtilTest;
 import org.eclipse.emf.compare.tests.diff.LCSPerformanceTest;
 import org.eclipse.emf.compare.tests.diff.URIDistanceTest;
@@ -52,11 +53,11 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({CompareTestSuite.class, DefaultComparisonScopeTest.class, IdentifierComparisonTest.class,
 		ExtLibraryTest.class, ConflictDetectionTest.class, ReqComputingTest.class, EquiComputingTest.class,
-		DiffUtilTest.class, LCSPerformanceTest.class, MultipleMergeTest.class, PostProcessorTest.class,
-		IndividualMergeTest.class, ExtensionMergeTest.class, IndividualMergeOutOfScopeValuesTest.class,
-		ProximityComparisonTest.class, DynamicInstanceComparisonTest.class, URIDistanceTest.class,
-		FragmentationTest.class, AllEditTests.class, CommandStackTestSuite.class,
-		MatchEngineFactoryRegistryTest.class })
+		DiffUtilTest.class, ComparisonUtilTest.class, LCSPerformanceTest.class, MultipleMergeTest.class,
+		PostProcessorTest.class, IndividualMergeTest.class, ExtensionMergeTest.class,
+		IndividualMergeOutOfScopeValuesTest.class, ProximityComparisonTest.class,
+		DynamicInstanceComparisonTest.class, URIDistanceTest.class, FragmentationTest.class,
+		AllEditTests.class, CommandStackTestSuite.class, MatchEngineFactoryRegistryTest.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.

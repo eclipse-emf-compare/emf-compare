@@ -20,13 +20,13 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.TableMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
-import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -118,7 +118,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			List<Diff> diffsToCopy = new ArrayList<Diff>();
 			diffsToCopy.add(diffToCopy);
 			if (isSubDiffFilterActive()) {
-				addAll(diffsToCopy, DiffUtil.getSubDiffs(leftToRight).apply(diffToCopy));
+				addAll(diffsToCopy, ComparisonUtil.getSubDiffs(leftToRight).apply(diffToCopy));
 			}
 			Command copyCommand = getEditingDomain().createCopyCommand(diffsToCopy, leftToRight,
 					EMFCompareRCPPlugin.getDefault().getMergerRegistry());

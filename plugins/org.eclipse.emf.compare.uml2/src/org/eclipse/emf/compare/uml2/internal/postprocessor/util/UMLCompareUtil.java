@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,8 +10,15 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor.util;
 
-import org.eclipse.emf.ecore.EClass;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+
+import java.util.Collections;
+import java.util.Iterator;
+
+import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Extension;
@@ -22,7 +29,12 @@ import org.eclipse.uml2.uml.util.UMLUtil;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class UMLCompareUtil {
+public final class UMLCompareUtil {
+
+	/** Constructor. */
+	private UMLCompareUtil() {
+	}
+
 	/**
 	 * Retrieves the base element for the specified stereotype application, i.e. the element to which the
 	 * stereotype is applied.
@@ -37,25 +49,83 @@ public class UMLCompareUtil {
 	 * @return The base element.
 	 */
 	public static Element getBaseElement(EObject stereotypeApplication) {
+		if (stereotypeApplication == null) {
+			return null;
+		}
+
 		Element baseElement = UMLUtil.getBaseElement(stereotypeApplication);
-		if (baseElement == null) {
-			if (stereotypeApplication != null) {
-				EClass eClass = stereotypeApplication.eClass();
-				for (EStructuralFeature eStructuralFeature : eClass.getEAllStructuralFeatures()) {
-
-					if (eStructuralFeature.getName().startsWith(Extension.METACLASS_ROLE_PREFIX)) {
-
-						Object value = stereotypeApplication.eGet(eStructuralFeature);
-
-						if (value instanceof Element) {
-							return (Element)value;
-						}
-					}
+		final Iterator<EStructuralFeature> features = stereotypeApplication.eClass()
+				.getEAllStructuralFeatures().iterator();
+		while (features.hasNext() && baseElement == null) {
+			final EStructuralFeature feature = features.next();
+			if (feature.getName().startsWith(Extension.METACLASS_ROLE_PREFIX)) {
+				final Object value = stereotypeApplication.eGet(feature);
+				if (value instanceof Element) {
+					baseElement = (Element)value;
 				}
 			}
 		}
 
 		return baseElement;
+	}
+
+	/**
+	 * From the given EReference, it returns the list of EReference which are superset and non union.
+	 * 
+	 * @param reference
+	 *            The EReference subset from which is requested the non union superset.
+	 * @return The list of EReference non union superset.
+	 */
+	public static Iterable<EReference> getNonUnionSupersetReferences(EReference reference) {
+		return Iterables.filter(getSupersetReferences(reference), isNonUnionReference());
+	}
+
+	private static Predicate<? super EReference> isNonUnionReference() {
+		return new Predicate<EReference>() {
+			public boolean apply(EReference input) {
+				return input != null
+						&& !Iterables.any(input.getEAnnotations(), UMLUtilForCompare.isUnionAnnotation());
+			}
+		};
+	}
+
+	/**
+	 * From the given EReference, it returns the list of EReference which are superset.
+	 * 
+	 * @param reference
+	 *            The EReference subset from which is requested the superset.
+	 * @return The list of EReference superset.
+	 */
+	private static Iterable<EReference> getSupersetReferences(EReference reference) {
+		EAnnotation subsetsAnnotation = Iterables.find(reference.getEAnnotations(), UMLUtilForCompare
+				.isSubsetsAnnotation(), null);
+		if (subsetsAnnotation != null) {
+			return Iterables.filter(subsetsAnnotation.getReferences(), EReference.class);
+		}
+		return Collections.emptyList();
+	}
+
+	/**
+	 * This extends UMLUtil to get the name of the used annotations for subsets and unions.
+	 * 
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+	 */
+	private static class UMLUtilForCompare extends UMLUtil {
+		public static Predicate<? super EAnnotation> isSubsetsAnnotation() {
+			return new Predicate<EAnnotation>() {
+				public boolean apply(EAnnotation input) {
+					return input != null && input.getSource().equals(ANNOTATION__SUBSETS);
+				}
+			};
+		}
+
+		public static Predicate<? super EAnnotation> isUnionAnnotation() {
+			return new Predicate<EAnnotation>() {
+				public boolean apply(EAnnotation input) {
+					return input != null && input.getSource().equals(ANNOTATION__UNION);
+				}
+			};
+		}
 	}
 
 }

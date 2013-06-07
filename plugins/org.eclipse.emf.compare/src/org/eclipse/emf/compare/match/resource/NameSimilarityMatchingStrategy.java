@@ -22,7 +22,7 @@ import java.util.Set;
 
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.MatchResource;
-import org.eclipse.emf.compare.utils.DiffUtil;
+import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.ecore.resource.Resource;
 
 /**

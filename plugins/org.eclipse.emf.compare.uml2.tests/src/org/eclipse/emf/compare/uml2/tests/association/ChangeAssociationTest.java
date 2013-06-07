@@ -138,14 +138,14 @@ public class ChangeAssociationTest extends AbstractTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
-		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(6), Integer.valueOf(differences.size()));
 
 		Predicate<? super Diff> addPropertyClass2Description = null;
 		Predicate<? super Diff> addRefAssociationInPropertyClass2Description = null;
 		Predicate<? super Diff> addRefTypeInPropertyClass2Description = null;
 		Predicate<? super Diff> addLiteralIntegerInClass2Description = null;
 		Predicate<? super Diff> addUnlimitedNaturalInClass2Description = null;
-		// duplicate diff: Association.memberEnd to Class2
+		Predicate<? super Diff> addPropertyClass2InAssociationDescription = null;
 
 		if (kind.equals(TestKind.DELETE)) {
 			addPropertyClass2Description = removedFromReference("model.class1_class0_0", "ownedEnd",
@@ -156,6 +156,8 @@ public class ChangeAssociationTest extends AbstractTest {
 					"model.Class2", null);
 			addLiteralIntegerInClass2Description = removedLowerValueIn("model.class1_class0_0.Class2");
 			addUnlimitedNaturalInClass2Description = removedUpperValueIn("model.class1_class0_0.Class2");
+			addPropertyClass2InAssociationDescription = removedFromReference("model.class1_class0_0",
+					"memberEnd", "model.class1_class0_0.Class2");
 		} else {
 			addPropertyClass2Description = addedToReference("model.class1_class0_0", "ownedEnd",
 					"model.class1_class0_0.Class2");
@@ -165,6 +167,8 @@ public class ChangeAssociationTest extends AbstractTest {
 					null, "model.Class2");
 			addLiteralIntegerInClass2Description = addedLowerValueIn("model.class1_class0_0.Class2");
 			addUnlimitedNaturalInClass2Description = addedUpperValueIn("model.class1_class0_0.Class2");
+			addPropertyClass2InAssociationDescription = addedToReference("model.class1_class0_0",
+					"memberEnd", "model.class1_class0_0.Class2");
 		}
 
 		final Diff addPropertyClass2 = Iterators.find(differences.iterator(), addPropertyClass2Description);
@@ -176,12 +180,15 @@ public class ChangeAssociationTest extends AbstractTest {
 				addLiteralIntegerInClass2Description);
 		final Diff addUnlimitedNaturalInClass2 = Iterators.find(differences.iterator(),
 				addUnlimitedNaturalInClass2Description);
+		final Diff addPropertyClass2InAssociation = Iterators.find(differences.iterator(),
+				addPropertyClass2InAssociationDescription);
 
 		assertNotNull(addPropertyClass2);
 		assertNotNull(addRefAssociationInPropertyClass2);
 		assertNotNull(addRefTypeInPropertyClass2);
 		assertNotNull(addLiteralIntegerInClass2);
 		assertNotNull(addUnlimitedNaturalInClass2);
+		assertNotNull(addPropertyClass2InAssociation);
 
 		// CHECK EXTENSION
 		// No extension anymore
@@ -196,7 +203,6 @@ public class ChangeAssociationTest extends AbstractTest {
 		// assertTrue(changeUMLAssociation.getRefinedBy().contains(addUnlimitedNaturalInClass2));
 		// assertTrue(changeUMLAssociation.getRefinedBy().contains(addRefAssociationInPropertyClass2));
 		// assertTrue(changeUMLAssociation.getRefinedBy().contains(addPropertyClass2));
-		// duplicate diff: Association.memberEnd to Class2
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
@@ -217,12 +223,12 @@ public class ChangeAssociationTest extends AbstractTest {
 			assertSame(Integer.valueOf(1), Integer.valueOf(addUnlimitedNaturalInClass2.getRequires().size()));
 			assertTrue(addUnlimitedNaturalInClass2.getRequires().contains(addPropertyClass2));
 		} else {
-			assertSame(Integer.valueOf(4), Integer.valueOf(addPropertyClass2.getRequires().size()));
+			assertSame(Integer.valueOf(5), Integer.valueOf(addPropertyClass2.getRequires().size()));
 			assertTrue(addPropertyClass2.getRequires().contains(addLiteralIntegerInClass2));
 			assertTrue(addPropertyClass2.getRequires().contains(addUnlimitedNaturalInClass2));
 			assertTrue(addPropertyClass2.getRequires().contains(addRefAssociationInPropertyClass2));
 			assertTrue(addPropertyClass2.getRequires().contains(addRefTypeInPropertyClass2));
-			// duplicate diff: Association.memberEnd to Class2
+			assertTrue(addPropertyClass2.getRequires().contains(addPropertyClass2InAssociation));
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addRefAssociationInPropertyClass2.getRequires()
 					.size()));

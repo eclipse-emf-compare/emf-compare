@@ -33,6 +33,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -54,7 +55,7 @@ public abstract class AbstractTest {
 
 	private EMFCompare emfCompare;
 
-	private static final IMerger.Registry mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
+	private IMerger.Registry mergerRegistry;
 
 	@BeforeClass
 	public static void fillRegistries() {
@@ -63,19 +64,20 @@ public abstract class AbstractTest {
 
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("uml", //$NON-NLS-1$
 				new UMLResourceFactoryImpl());
-
-		final IMerger umlMerger = new UMLMerger();
-		umlMerger.setRanking(11);
-		mergerRegistry.add(umlMerger);
 	}
 
 	@Before
 	public void before() {
-		PostProcessorDescriptorRegistryImpl<String> registry = new PostProcessorDescriptorRegistryImpl<String>();
-		registry.put(UMLPostProcessor.class.getName(), new TestPostProcessor.TestPostProcessorDescriptor(
-				Pattern.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null, new UMLPostProcessor(),
-				20));
-		emfCompare = EMFCompare.builder().setPostProcessorRegistry(registry).build();
+		final IPostProcessor.Descriptor.Registry<String> postProcessorRegistry = new PostProcessorDescriptorRegistryImpl<String>();
+		postProcessorRegistry.put(UMLPostProcessor.class.getName(),
+				new TestPostProcessor.TestPostProcessorDescriptor(Pattern
+						.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null,
+						new UMLPostProcessor(), 20));
+		emfCompare = EMFCompare.builder().setPostProcessorRegistry(postProcessorRegistry).build();
+		mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
+		final IMerger umlMerger = new UMLMerger();
+		umlMerger.setRanking(11);
+		mergerRegistry.add(umlMerger);
 	}
 
 	protected EMFCompare getCompare() {
@@ -89,6 +91,10 @@ public abstract class AbstractTest {
 	protected Comparison compare(Notifier left, Notifier right, Notifier origin) {
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		return getCompare().compare(scope);
+	}
+
+	protected IMerger.Registry getMergerRegistry() {
+		return mergerRegistry;
 	}
 
 	protected enum TestKind {
