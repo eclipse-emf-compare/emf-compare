@@ -40,14 +40,19 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 				final Diff diff = (Diff)input;
 				final Conflict conflict = diff.getConflict();
 				if (conflict == null || ConflictKind.PSEUDO == conflict.getKind()) {
-					final EObject grandParent = diff.getMatch().eContainer();
+					final Match match = diff.getMatch();
+					final EObject grandParent = match.eContainer();
 					if (grandParent instanceof Match) {
 						ImmutableSet<EObject> containementDifferenceValues = MatchItemProviderSpec
 								.containmentReferencesValues((Match)grandParent);
 						if (MatchItemProviderSpec.matchOfContainmentDiff(containementDifferenceValues).apply(
-								diff.getMatch())) {
+								match)) {
+							ret = true;
+						} else if (match.getLeft() == null && match.getRight() == null
+								&& match.getOrigin() == null) {
 							ret = true;
 						}
+
 					}
 				}
 			}
