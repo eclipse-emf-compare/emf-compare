@@ -171,7 +171,12 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected void copyDiff(boolean leftToRight) {
-		final Diff diffToCopy = getDiffToCopy(getRightMergeViewer());
+		final Diff diffToCopy;
+		if (leftToRight) {
+			diffToCopy = getDiffToCopy(getLeftMergeViewer());
+		} else {
+			diffToCopy = getDiffToCopy(getRightMergeViewer());
+		}
 		if (diffToCopy != null) {
 			List<Diff> diffsToCopy = new ArrayList<Diff>();
 			diffsToCopy.add(diffToCopy);
