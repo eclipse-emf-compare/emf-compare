@@ -191,15 +191,15 @@ public class EMFCompareTextMergeViewerContentProvider implements IMergeViewerCon
 
 	public void saveRightContent(Object element, byte[] bytes) {
 		EList<Match> matches = getComparison().getMatches();
-		EObject leftEObject = null;
+		EObject rightEObject = null;
 		for (Match match : matches) {
-			leftEObject = match.getLeft();
-			if (leftEObject != null) {
+			rightEObject = match.getRight();
+			if (rightEObject != null) {
 				break;
 			}
 		}
-		if (leftEObject != null) {
-			Resource eResource = leftEObject.eResource();
+		if (rightEObject != null) {
+			Resource eResource = rightEObject.eResource();
 			if (eResource != null) {
 				ResourceSet resourceSet = eResource.getResourceSet();
 				saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
