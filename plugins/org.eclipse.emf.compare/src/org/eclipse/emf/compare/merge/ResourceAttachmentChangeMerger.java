@@ -303,8 +303,10 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 
 				if (rightToLeft) {
 					soughtMatch.setLeft(target);
+					soughtMatch.setLeftURI(target.getURI().toString());
 				} else {
 					soughtMatch.setRight(target);
+					soughtMatch.setRightURI(target.getURI().toString());
 				}
 			}
 		}
@@ -337,8 +339,14 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 		if (targetObject == null) {
 			// A new root in a resource we don't have yet.
 			// Is this object container somewhere else (controlled)?
-			if (sourceObject.eContainer() != null) {
-				currentResource = sourceObject.eContainer().eResource();
+			final EObject sourceContainer = sourceObject.eContainer();
+			if (sourceContainer != null) {
+				final Match containerMatch = match.getComparison().getMatch(sourceContainer);
+				if (rightToLeft) {
+					currentResource = containerMatch.getLeft().eResource();
+				} else {
+					currentResource = containerMatch.getRight().eResource();
+				}
 			} else {
 				return null;
 			}

@@ -25,6 +25,7 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
@@ -84,27 +85,20 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 
 			if (getSide() != MergeViewerSide.ANCESTOR) {
 				EList<Diff> differences = getComparison().getDifferences();
-				List<ResourceAttachmentChange> racs = Lists.newArrayList(filter(differences,
-						ResourceAttachmentChange.class));
+				Iterable<ResourceAttachmentChange> racs = filter(differences, ResourceAttachmentChange.class);
 				List<ResourceAttachmentChange> resourceAttachmentChanges = Lists.newArrayList(racs);
 				Object left = getLeft();
 				Object right = getRight();
 				Object ancestor = getAncestor();
-				// Removes resource attachment changes that are not linked with the current resources.
 				for (ResourceAttachmentChange resourceAttachmentChange : racs) {
-					if (left == null
-							|| (left instanceof Resource && !resourceAttachmentChange.getResourceURI()
-									.equals(((Resource)left).getURI().toString()))) {
-						if (right == null
-								|| (right instanceof Resource && !resourceAttachmentChange.getResourceURI()
-										.equals(((Resource)right).getURI().toString()))) {
-							if (ancestor == null
-									|| (ancestor instanceof Resource && !resourceAttachmentChange
-											.getResourceURI()
-											.equals(((Resource)ancestor).getURI().toString()))) {
-								resourceAttachmentChanges.remove(resourceAttachmentChange);
-							}
-						}
+					// filter out merged reference changes
+					if (resourceAttachmentChange.getState() == DifferenceState.MERGED) {
+						// Remove resource attachment changes that are not linked with the current resources.
+						resourceAttachmentChanges.remove(resourceAttachmentChange);
+					} else if (isUnrelated(resourceAttachmentChange, left)
+							&& isUnrelated(resourceAttachmentChange, right)
+							&& isUnrelated(resourceAttachmentChange, ancestor)) {
+						resourceAttachmentChanges.remove(resourceAttachmentChange);
 					}
 				}
 				ret.addAll(createInsertionPoints(mergeViewerItems, resourceAttachmentChanges));
@@ -115,7 +109,12 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 		}
 
 		return ret.toArray(getNoItemsArr());
+	}
 
+	private boolean isUnrelated(ResourceAttachmentChange change, Object resource) {
+		return resource == null
+				|| (resource instanceof Resource && !change.getResourceURI().equals(
+						((Resource)resource).getURI().toString()));
 	}
 
 	/**
