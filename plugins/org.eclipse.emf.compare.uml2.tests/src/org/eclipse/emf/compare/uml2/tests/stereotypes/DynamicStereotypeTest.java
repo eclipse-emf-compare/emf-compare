@@ -814,9 +814,9 @@ public class DynamicStereotypeTest extends AbstractTest {
 			assertSame(Integer.valueOf(1), Integer.valueOf(addReferencesInUMLAnnotation.getRequires().size()));
 			assertTrue(addReferencesInUMLAnnotation.getRequires().contains(addUMLAnnotation));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLProfileApplication.getRequires().size()));
+			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLProfileApplication.getRequires().size()));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLStereotypeApplication.getRequires().size()));
+			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLStereotypeApplication.getRequires().size()));
 			assertTrue(addUMLStereotypeApplication.getRequires().contains(addUMLProfileApplication));
 
 		} else {

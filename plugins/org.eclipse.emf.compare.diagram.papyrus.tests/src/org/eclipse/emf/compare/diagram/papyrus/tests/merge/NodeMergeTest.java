@@ -1041,6 +1041,43 @@ public class NodeMergeTest extends AbstractTest {
 	}
 
 	@Test
+	// Merge right to left <ADD ClassC> -> merge <ADD classA_classC_1>, merge <ADD classC_classB_1>, merge <ADD nodeC>, merge <ADD edgeToNodeC>, merge <ADD edgeFromNodeC>
+	public void testA1m() throws IOException {
+		final Resource left = input.getA1NodeChangeLeft();
+		final Resource right = input.getA1NodeChangeRight();
+
+		Comparison comparison = buildComparison(left, right);
+
+		DifferenceKind kind = DifferenceKind.ADD;
+
+		// ** DIFF CHECKING **
+		Predicate<Diff> assoToClassC = and(instanceOf(AssociationChange.class), ofKind(kind),
+				nameIs("classA_classC_1"));
+		Predicate<Diff> assoFromClassC = and(instanceOf(AssociationChange.class), ofKind(kind),
+				nameIs("classC_classB_1"));
+		Predicate<Diff> classC = and(instanceOf(ReferenceChange.class), ofKind(kind),
+				valueNameMatches("ClassC"));
+		
+		Predicate<Diff> edgeToNodeC = and(instanceOf(EdgeChange.class), ofKind(kind),
+				elementNameIs("classA_classC_1"));
+		Predicate<Diff> edgeFromNodeC = and(instanceOf(EdgeChange.class), ofKind(kind),
+				elementNameIs("classC_classB_1"));	
+		Predicate<Diff> nodeC = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("ClassC"));
+
+		// ** MERGE **
+		Diff classCDiff = Iterables.find(comparison.getDifferences(), classC);
+		getMergerRegistry().getHighestRankingMerger(classCDiff).copyRightToLeft(classCDiff, new BasicMonitor());
+
+		// ** MERGE CHECKING **
+		comparison = buildComparison(left, right);
+		diffsChecking(comparison, A1_DIFFS_NB - A1_ELTCHANGE1_NB - 2 * A1_ASSOCHANGE1_NB - A1_CLASSNODECHANGE1_NB - 2 * A1_EDGECHANGE1_NB,
+				new ExpectedStat(assoToClassC, 0),
+				new ExpectedStat(classC, 0),
+				new ExpectedStat(edgeToNodeC, 0),
+				new ExpectedStat(nodeC, 0));
+	}
+	
+	@Test
 	// Merge left to right <MOVE NodeA> -> merge <ADD NodePackage> (and merge <MOVE A>, merge <ADD Package>)
 	public void testA2a() throws IOException {
 		final Resource left = input.getA2NodeChangeLeft();
