@@ -127,22 +127,56 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 	 *      org.eclipse.emf.compare.Diff)
 	 */
 	public void fillRequiredDifferences(Comparison comparison, Diff extension) {
-		// Browse required and requiring unit differences to deduce the requirement link from and to the given
-		// extension.
+		fillRequiredDifferencesForMacroToMacro(extension);
+		fillRequiredDifferencesForUnitToMacro(extension);
+	}
+
+	/**
+	 * Browse required and requiring unit differences to deduce the requirement link between this macroscopic
+	 * change and other ones.
+	 * 
+	 * @param macro
+	 *            The macroscopic change.
+	 */
+	private void fillRequiredDifferencesForMacroToMacro(Diff macro) {
 		Set<Diff> requiredExtensions = new HashSet<Diff>();
 		Set<Diff> requiringExtensions = new HashSet<Diff>();
-		Iterator<Diff> refiningDiffs = extension.getRefinedBy().iterator();
-		while (refiningDiffs.hasNext()) {
-			Diff refiningDiff = refiningDiffs.next();
+		for (Diff refiningDiff : macro.getRefinedBy()) {
 			requiredExtensions.addAll(getDistinctRefinedDifferences(refiningDiff.getRequires()));
 			requiringExtensions.addAll(getDistinctRefinedDifferences(refiningDiff.getRequiredBy()));
 		}
 		// Keep only difference extensions as the given one
-		requiredExtensions.remove(extension);
-		requiringExtensions.remove(extension);
+		requiredExtensions.remove(macro);
+		requiringExtensions.remove(macro);
 
-		extension.getRequires().addAll(requiredExtensions);
-		extension.getRequiredBy().addAll(requiringExtensions);
+		macro.getRequires().addAll(requiredExtensions);
+		macro.getRequiredBy().addAll(requiringExtensions);
+	}
+
+	/**
+	 * Browse required and requiring unit differences to deduce the requirement link between this macroscopic
+	 * change and other external unit differences.
+	 * 
+	 * @param macro
+	 *            The macroscopic change.
+	 */
+	private void fillRequiredDifferencesForUnitToMacro(Diff macro) {
+		Set<Diff> requiredExtensions = new HashSet<Diff>();
+		Set<Diff> requiringExtensions = new HashSet<Diff>();
+		for (Diff refiningDiff : macro.getRefinedBy()) {
+			for (Diff unit : refiningDiff.getRequires()) {
+				if (unit.getRefines().isEmpty()) {
+					requiredExtensions.add(unit);
+				}
+			}
+			for (Diff unit : refiningDiff.getRequiredBy()) {
+				if (unit.getRefines().isEmpty()) {
+					requiringExtensions.add(unit);
+				}
+			}
+		}
+		macro.getRequires().addAll(requiredExtensions);
+		macro.getRequiredBy().addAll(requiringExtensions);
 	}
 
 	/**
