@@ -143,7 +143,7 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 			Comparison target = ((ComparisonNode)element).getTarget();
 			final Iterable<? extends IDifferenceGroup> groups = fViewerGrouper.getGroups(target);
 			if (!isEmpty(groups)) {
-				ret = Iterables.toArray(groups, IDifferenceGroup.class);
+				ret = toArray(groups, IDifferenceGroup.class);
 			} else {
 				Iterable<ICompareInput> compareInputs = adapt(super.getChildren(((Adapter)element)
 						.getTarget()), getAdapterFactory(), ICompareInput.class);
