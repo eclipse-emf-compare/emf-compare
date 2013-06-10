@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,21 +10,28 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.provider.spec;
 
+import com.google.common.base.Preconditions;
+
 import java.util.Collection;
 
+import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.ForwardingItemProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
+import org.eclipse.emf.compare.provider.spec.OverlayImageProvider;
 import org.eclipse.emf.compare.provider.spec.Strings;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
+import org.eclipse.emf.compare.uml2.internal.provider.UMLDiffItemProvider;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
+import org.eclipse.uml2.uml.Element;
 
 /**
  * Specialized ForwardingItemProvider for UML.
@@ -38,6 +45,9 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider implem
 	 */
 	private static final int MAX_LENGTH = 50;
 
+	/** The image provider used with this item provider. */
+	private OverlayImageProvider overlayProvider;
+
 	/**
 	 * This constructs an instance from an adapter.
 	 * 
@@ -46,6 +56,9 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider implem
 	 */
 	public ForwardingUMLDiffItemProvider(ItemProviderAdapter delegate) {
 		super(delegate);
+		if (delegate instanceof UMLDiffItemProvider) {
+			overlayProvider = new OverlayImageProvider(((UMLDiffItemProvider)delegate()).getResourceLocator());
+		}
 	}
 
 	/**
@@ -108,13 +121,45 @@ public class ForwardingUMLDiffItemProvider extends ForwardingItemProvider implem
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.provider.ReferenceChangeItemProvider#getImage(java.lang.Object)
+	 * @see org.eclipse.emf.compare.provider.ForwardingItemProvider#getImage(java.lang.Object)
 	 */
 	@Override
 	public Object getImage(Object object) {
 		final UMLDiff umlDiff = (UMLDiff)object;
-		Object image = AdapterFactoryUtil.getImage(getRootAdapterFactory(), umlDiff.getDiscriminant());
+		Object image = null;
+		if (umlDiff.getDiscriminant() instanceof Element) {
+			image = getImage(getRootAdapterFactory(), umlDiff.getDiscriminant());
+		} else {
+			image = super.getImage(object);
+		}
+		if (overlayProvider != null && image != null) {
+			image = overlayProvider.getComposedImage(umlDiff, image);
+		}
 		return image;
+	}
+
+	/**
+	 * Returns the image of the given <code>object</code> by adapting it to {@link IItemLabelProvider} and
+	 * asking for its {@link IItemLabelProvider#getImage(Object) text}. Returns null if <code>object</code> is
+	 * null.
+	 * 
+	 * @param adapterFactory
+	 *            the adapter factory to adapt from
+	 * @param object
+	 *            the object from which we want a image
+	 * @return the image, or null if object is null.
+	 * @throws NullPointerException
+	 *             if <code>adapterFactory</code> is null.
+	 */
+	private static Object getImage(AdapterFactory adapterFactory, Object object) {
+		Preconditions.checkNotNull(adapterFactory);
+		if (object != null) {
+			Object adapter = adapterFactory.adapt(object, IItemLabelProvider.class);
+			if (adapter instanceof IItemLabelProvider) {
+				return ((IItemLabelProvider)adapter).getImage(object);
+			}
+		}
+		return null;
 	}
 
 	/**
