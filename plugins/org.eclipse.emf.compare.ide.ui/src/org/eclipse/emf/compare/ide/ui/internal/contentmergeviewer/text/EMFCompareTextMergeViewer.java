@@ -103,9 +103,9 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 
 	private ActionContributionItem fCopyDiffRightToLeftItem;
 
-	private final UndoAction fUndoAction;
+	private UndoAction fUndoAction;
 
-	private final RedoAction fRedoAction;
+	private RedoAction fRedoAction;
 
 	private final DelayedExecutor fDelayedExecutor;
 
@@ -118,9 +118,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 	public EMFCompareTextMergeViewer(Composite parent, CompareConfiguration configuration) {
 		super(parent, configuration);
 		setContentProvider(new EMFCompareTextMergeViewerContentProvider(configuration));
-
-		fRedoAction = new RedoAction();
-		fUndoAction = new UndoAction();
 
 		fExecutorService = Executors.newSingleThreadScheduledExecutor();
 		fDelayedExecutor = new DelayedExecutor(fExecutorService);
@@ -167,12 +164,15 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 				setLeftDirty(commandStack.isLeftSaveNeeded());
 				setRightDirty(commandStack.isRightSaveNeeded());
 			}
-			fUndoAction.setEditingDomain(newValue);
-			fRedoAction.setEditingDomain(newValue);
+			if (fUndoAction != null) {
+				fUndoAction.setEditingDomain(newValue);
+			}
+			if (fRedoAction != null) {
+				fRedoAction.setEditingDomain(newValue);
+			}
 		}
 	}
 
-	@SuppressWarnings("resource")
 	public void commandStackChanged(EventObject event) {
 		if (fUndoAction != null) {
 			fUndoAction.update();
@@ -515,6 +515,12 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 		ActionContributionItem contributionPreviousDiff = new ActionContributionItem(previousDiff);
 		contributionPreviousDiff.setVisible(true);
 		toolBarManager.appendToGroup("navigation", contributionPreviousDiff);
+
+		fRedoAction = new RedoAction(getEditingDomain());
+		fUndoAction = new UndoAction(getEditingDomain());
+
+		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), fUndoAction);
+		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), fRedoAction);
 	}
 
 	/**
