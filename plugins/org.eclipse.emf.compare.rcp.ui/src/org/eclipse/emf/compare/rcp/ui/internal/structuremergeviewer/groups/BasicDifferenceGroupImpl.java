@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups;
 
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
@@ -45,15 +47,6 @@ public class BasicDifferenceGroupImpl implements IDifferenceGroup {
 
 	/** The comparison that is the parent of this group. */
 	protected final Comparison comparison;
-
-	/**
-	 * A predicate to know if the given {@link Diff} is in an UNRESOLVED state.
-	 */
-	private static final Predicate<Diff> unresolved = new Predicate<Diff>() {
-		public boolean apply(Diff input) {
-			return DifferenceState.UNRESOLVED == input.getState();
-		}
-	};
 
 	/**
 	 * Instantiates this group given the comparison and filter that should be used in order to determine its
@@ -146,7 +139,8 @@ public class BasicDifferenceGroupImpl implements IDifferenceGroup {
 	 */
 	public IStyledString.IComposedStyledString getStyledName() {
 		final IStyledString.IComposedStyledString ret = new ComposedStyledString(getName());
-		int unresolvedDiffs = Iterables.size(Iterables.filter(getDifferences(), unresolved));
+		int unresolvedDiffs = Iterables.size(Iterables.filter(getDifferences(),
+				hasState(DifferenceState.UNRESOLVED)));
 		ret.append(" [" + unresolvedDiffs + " unresolved difference", Style.DECORATIONS_STYLER);
 		if (unresolvedDiffs > 1) {
 			ret.append("s", Style.DECORATIONS_STYLER);
