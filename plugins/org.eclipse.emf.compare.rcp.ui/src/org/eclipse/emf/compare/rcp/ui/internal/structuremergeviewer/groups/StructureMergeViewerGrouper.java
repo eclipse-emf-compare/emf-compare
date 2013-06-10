@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,6 +45,12 @@ public final class StructureMergeViewerGrouper {
 	private EventBus eventBus;
 
 	/**
+	 * Caches the result of {@link #getGroups(Comparison)}. We need the groups to be identical between calls
+	 * in order for the viewer to be able to keep its expanded state.
+	 */
+	private Iterable<? extends IDifferenceGroup> filteredGroups;
+
+	/**
 	 * Constructs the difference grouper.
 	 * 
 	 * @param eventBus
@@ -68,9 +74,10 @@ public final class StructureMergeViewerGrouper {
 			return ImmutableList.of();
 		}
 
-		final Iterable<? extends IDifferenceGroup> groups = provider.getGroups(comparison);
-		final Iterable<? extends IDifferenceGroup> filteredGroups = Iterables.filter(groups,
-				new NonEmptyGroup());
+		if (filteredGroups == null) {
+			final Iterable<? extends IDifferenceGroup> groups = provider.getGroups(comparison);
+			filteredGroups = Iterables.filter(groups, new NonEmptyGroup());
+		}
 		return filteredGroups;
 	}
 
@@ -83,6 +90,7 @@ public final class StructureMergeViewerGrouper {
 	public void setProvider(IDifferenceGroupProvider provider) {
 		if (this.provider != provider) {
 			this.provider = provider;
+			filteredGroups = null;
 			eventBus.post(provider);
 			refreshViewers();
 		}
