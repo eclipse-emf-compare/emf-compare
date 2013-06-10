@@ -16,13 +16,28 @@ public class RedoAction extends Action {
 		setEditingDomain(domain);
 	}
 
+	/**
+	 * Do not use this, will be removed in the next version.
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
 	public RedoAction() {
 		super(EMFEditUIPlugin.INSTANCE.getString("_UI_Redo_menu_item", new Object[] {"" })); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
 	public void run() {
-		domain.getCommandStack().redo();
+		if (domain != null) {
+			domain.getCommandStack().redo();
+		} else {
+			/*
+			 * FIXME : Domain may be null since we never unregister the actions from the handler service. It
+			 * is set to null from #setEditingDomain(ICompareEditingDomain) when we switch to another content
+			 * viewer. In such cases, we "may" reach this run() before the new viwer is fully displayed and
+			 * its action initialized with a proper editing domain.
+			 */
+		}
 	}
 
 	public void setEditingDomain(ICompareEditingDomain domain) {
@@ -33,6 +48,10 @@ public class RedoAction extends Action {
 	}
 
 	public void update() {
+		if (domain == null) {
+			return;
+		}
+
 		setEnabled(domain.getCommandStack().canRedo());
 
 		Command redoCommand = domain.getCommandStack().getRedoCommand();
