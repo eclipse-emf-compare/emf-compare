@@ -13,9 +13,14 @@ package org.eclipse.emf.compare.ide.ui.internal.logical;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
 import org.eclipse.team.core.variants.IResourceVariant;
 
-/** Allows access to the underlying IResourceVariant's storage. */
+/**
+ * Allows access to the underlying IResourceVariant's storage.
+ * 
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ */
 public class ResourceVariantStorageProvider implements IStorageProvider {
 	/** Wrapped variant. */
 	private final IResourceVariant variant;
@@ -33,7 +38,7 @@ public class ResourceVariantStorageProvider implements IStorageProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.logical.IStorageProvider#getStorage(org.eclipse.core.runtime.IProgressMonitor)
+	 * @see org.eclipse.emf.compare.ide.ui.logical.IStorageProvider#getStorage(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public IStorage getStorage(IProgressMonitor monitor) throws CoreException {
 		return variant.getStorage(monitor);

@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
  */
 public final class EMFCompareIDEUIMessages {
 	/** Fully qualified path to the properties file in which to seek the keys. */
-	private static final String BUNDLE_NAME = "org.eclipse.emf.compare.ide.ui.ide_ui_messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.emf.compare.ide.ui.internal.ide_ui_messages"; //$NON-NLS-1$
 
 	/** Contains the locale specific {@link String}s needed by this plug-in. */
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);

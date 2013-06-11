@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.logical;
+package org.eclipse.emf.compare.ide.ui.logical;
 
 import com.google.common.annotations.Beta;
 
@@ -19,6 +19,8 @@ import org.eclipse.core.runtime.CoreException;
  * This will be used by URI Converters in order to retrieve the storages for the files it seeks. The URI
  * Converter usually only knows about local resources, it will thus ask for its storage accessor for the
  * proper remote content.
+ * 
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @Beta
 public interface IStorageProviderAccessor {
@@ -32,8 +34,9 @@ public interface IStorageProviderAccessor {
 	 *            Side of the content we seek.
 	 * @return The content for the given side of the given resource.
 	 * @throws CoreException
+	 *             Thrown if the underlying provider cannot be retrieved.
 	 */
-	public IStorageProvider getStorageProvider(IResource resource, DiffSide side) throws CoreException;
+	IStorageProvider getStorageProvider(IResource resource, DiffSide side) throws CoreException;
 
 	/** Used by the resolution process to determine the side of the revision to fetch. */
 	public static enum DiffSide {

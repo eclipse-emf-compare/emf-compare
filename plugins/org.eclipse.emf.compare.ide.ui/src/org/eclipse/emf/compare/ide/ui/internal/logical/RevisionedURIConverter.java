@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
-import com.google.common.annotations.Beta;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -27,7 +25,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.ui.internal.logical.IStorageProviderAccessor.DiffSide;
+import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
+import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
+import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor.DiffSide;
 import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
 import org.eclipse.emf.ecore.resource.URIConverter;
 
@@ -37,7 +37,6 @@ import org.eclipse.emf.ecore.resource.URIConverter;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-@Beta
 public final class RevisionedURIConverter extends StorageURIConverter {
 	/** The accessor that will provide us with resource content. */
 	private IStorageProviderAccessor storageAccessor;
@@ -55,7 +54,8 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 	 * @param side
 	 *            The side we are currently resolving.
 	 */
-	public RevisionedURIConverter(URIConverter delegate, IStorageProviderAccessor storageAccessor, DiffSide side) {
+	public RevisionedURIConverter(URIConverter delegate, IStorageProviderAccessor storageAccessor,
+			DiffSide side) {
 		super(delegate);
 		this.storageAccessor = storageAccessor;
 		this.side = side;
@@ -64,7 +64,7 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.util.DelegatingURIConverter#createInputStream(org.eclipse.emf.common.util.URI,
+	 * @see org.eclipse.emf.compare.ide.utils.StorageURIConverter#createInputStream(org.eclipse.emf.common.util.URI,
 	 *      java.util.Map)
 	 */
 	@SuppressWarnings("resource")

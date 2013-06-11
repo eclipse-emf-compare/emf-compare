@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.logical;
+package org.eclipse.emf.compare.ide.ui.logical;
 
 import com.google.common.annotations.Beta;
 
@@ -16,7 +16,11 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-/** Used by the logical model to wrap types that can provide IStorages. */
+/**
+ * Used by the logical model to wrap types that can provide IStorages.
+ * 
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ */
 @Beta
 public interface IStorageProvider {
 	/**
@@ -26,6 +30,7 @@ public interface IStorageProvider {
 	 *            Monitor on which to report progress information.
 	 * @return The underlying storage of this provider.
 	 * @throws CoreException
+	 *             Thrown if the underlying storage cannot be retrieved.
 	 */
-	public IStorage getStorage(IProgressMonitor monitor) throws CoreException;
+	IStorage getStorage(IProgressMonitor monitor) throws CoreException;
 }

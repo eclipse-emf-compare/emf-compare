@@ -57,9 +57,13 @@ import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.actions.collapse.CollapseAllModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.actions.expand.ExpandAllModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
-import org.eclipse.emf.compare.ide.ui.internal.logical.EMFSynchronizationModel;
+import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
+import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
+import org.eclipse.emf.compare.ide.ui.internal.logical.LogicalModelResolver;
+import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
 import org.eclipse.emf.compare.ide.ui.internal.util.SWTUtil;
+import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.FilterActionMenu;
@@ -328,20 +332,15 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				final ITypedElement right = input.getRight();
 				final ITypedElement origin = input.getAncestor();
 
-				final Subscriber subscriber = getSubscriber();
-				final EMFSynchronizationModel syncModel = EMFSynchronizationModel.createSynchronizationModel(
-						subscriber, left, right, origin, subMonitor.newChild(10));
-
-				// Double check : git allows modification of the index file ... but we cannot
-				final CompareConfiguration config = getCompareConfiguration();
-				if (!syncModel.isLeftEditable()) {
-					config.setLeftEditable(false);
+				IStorageProviderAccessor storageAccessor = null;
+				if (getSubscriber() != null) {
+					storageAccessor = new SubscriberStorageAccessor(getSubscriber());
 				}
-				if (!syncModel.isRightEditable()) {
-					config.setRightEditable(false);
-				}
+				final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(
+						new LogicalModelResolver(), new IdenticalResourceMinimizer(), storageAccessor);
+				final IComparisonScope scope = scopeBuilder.build(left, right, origin, subMonitor
+						.newChild(85));
 
-				final IComparisonScope scope = syncModel.createMinimizedScope(subMonitor.newChild(75));
 				final Comparison compareResult = EMFCompare
 						.builder()
 						.setMatchEngineFactoryRegistry(

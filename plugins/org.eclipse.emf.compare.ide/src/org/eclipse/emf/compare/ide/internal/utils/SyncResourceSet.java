@@ -83,9 +83,10 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
  * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ * @noextend This class is not intended to be subclassed by clients.
  */
 @Beta
-public final class SyncResourceSet extends ResourceSetImpl {
+public class SyncResourceSet extends ResourceSetImpl {
 	/**
 	 * Keeps track of the URIs that have been demanded by the resolving of a resource. This cache will be
 	 * invalidated when we start resolving this new set of resources.
@@ -152,8 +153,8 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	@Override
 	public Resource getResource(URI uri, boolean loadOnDemand) {
 		// Never load resources from here... But we can't simply return "null" if the resource has already
-		// been loaded once,
-		// since the XMLHandler would recursively call this till the stack overflow otherwise.
+		// been loaded once, since the XMLHandler would recursively call this till the stack overflow
+		// otherwise.
 		Resource demanded = uriCache.get(uri);
 		if (!loadedURIs.contains(uri) && demanded == null) {
 			final EPackage ePackage = getPackageRegistry().getEPackage(uri.toString());
@@ -211,7 +212,7 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 *            The URI to load as a resource.
 	 * @return The loaded Resource.
 	 */
-	public Resource loadResource(URI uri) {
+	protected Resource loadResource(URI uri) {
 		/*
 		 * Don't use super.getResource : we know the resource does not exist yet as there will only be one
 		 * "load" call for each given URI. The super implementation iterates over loaded resources before
@@ -264,24 +265,33 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	 *         loading the starting point.
 	 */
 	public boolean resolveAll(IStorage start, IProgressMonitor monitor) {
-		SubMonitor progress = SubMonitor.convert(monitor, 100);
-		final Resource resource = ResourceUtil.loadResource(start, this, getLoadOptions());
-		if (resource == null || !resource.getErrors().isEmpty()) {
-			return false;
+		final boolean result;
+		final URI expectedURI = ResourceUtil.createURIFor(start);
+		if (loadedURIs.contains(expectedURI)) {
+			result = true;
+		} else {
+			SubMonitor progress = SubMonitor.convert(monitor, 100);
+			final Resource resource = loadResource(expectedURI);
+			if (resource == null || !resource.getErrors().isEmpty()) {
+				result = false;
+			} else {
+				progress.worked(2);
+
+				// reset the demanded URI that was added by this first call
+				demandedURIs.clear();
+				// and make it "loaded" instead
+				loadedURIs.add(resource.getURI());
+
+				resolve(resource, progress.newChild(2));
+				unload(resource, progress.newChild(2));
+
+				final int remainingWork = 100 - 2 - 2 - 2;
+				resolveAll(progress.newChild(remainingWork));
+
+				result = true;
+			}
 		}
-		progress.worked(2);
-
-		// reset the demanded URI that was added by this first call
-		demandedURIs.clear();
-		// and make it "loaded" instead
-		loadedURIs.add(resource.getURI());
-
-		resolve(resource, progress.newChild(2));
-		unload(resource, progress.newChild(2));
-
-		final int remainingWork = 100 - 2 - 2 - 2;
-		resolveAll(progress.newChild(remainingWork));
-		return true;
+		return result;
 	}
 
 	/**
@@ -352,17 +362,8 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	}
 
 	/**
-	 * Retrieve the set of all URIs that have been loaded by {@link #resolveAll()}.
-	 * 
-	 * @return The set of all URIs that have been loaded by {@link #resolveAll()}.
-	 */
-	public Set<URI> getLoadedURIs() {
-		return loadedURIs;
-	}
-
-	/**
-	 * This will resolve all cross references of the given resource, then unload it. It will then swap the
-	 * loaded resource with a new, empty one with the same URI.
+	 * This will resolve all cross references of the given resource, never actually loading other resources
+	 * (their URIs are collected within {@link #demandedURIs}.
 	 * 
 	 * @param resource
 	 *            The resource for which we are to resolve all cross references.
@@ -378,25 +379,38 @@ public final class SyncResourceSet extends ResourceSetImpl {
 		SubMonitor subMonitor = SubMonitor.convert(monitor, roots.size());
 		while (resourceContent.hasNext()) {
 			final EObject eObject = resourceContent.next();
-			resolveCrossReferences(eObject);
+			resolveCrossReferences(resource, eObject);
 			final TreeIterator<EObject> childContent = basicEAllContents(eObject);
-			// the process of one root is on tick
+			// the process of one root is one tick
 			SubMonitor childMonitor = subMonitor.newChild(1);
 			while (childContent.hasNext()) {
 				// report logarithmic progress for each root processing (see javadoc)
 				childMonitor.setWorkRemaining(10000);
 				final EObject child = childContent.next();
 				if (child.eIsProxy()) {
-					final URI proxyURI = ((InternalEObject)child).eProxyURI();
-					getResource(proxyURI.trimFragment(), false);
+					resolveCrossReference(resource, child);
 				} else {
-					resolveCrossReferences(child);
+					resolveCrossReferences(resource, child);
 				}
 				// report logarithmic progress (see javadoc)
 				childMonitor.worked(1);
 			}
 		}
 		resource.getContents().addAll(roots);
+	}
+
+	/**
+	 * Resolve a given proxy's reference. This will only be called on proxy EObjects (
+	 * <code>proxy.eIsProxy()</code> is true).
+	 * 
+	 * @param resource
+	 *            Resource containing this proxy.
+	 * @param proxy
+	 *            The proxy to resolve.
+	 */
+	protected void resolveCrossReference(Resource resource, EObject proxy) {
+		final URI proxyURI = ((InternalEObject)proxy).eProxyURI();
+		getResource(proxyURI.trimFragment(), false);
 	}
 
 	/**
@@ -456,17 +470,18 @@ public final class SyncResourceSet extends ResourceSetImpl {
 	/**
 	 * Resolves the cross references of the given EObject.
 	 * 
+	 * @param resource
+	 *            Resource containing this EObject.
 	 * @param eObject
 	 *            The EObject for which we are to resolve the cross references.
 	 */
-	private void resolveCrossReferences(EObject eObject) {
+	private void resolveCrossReferences(Resource resource, EObject eObject) {
 		final Iterator<EObject> objectChildren = ((InternalEList<EObject>)eObject.eCrossReferences())
 				.basicIterator();
 		while (objectChildren.hasNext()) {
 			final EObject eObj = objectChildren.next();
 			if (eObj.eIsProxy()) {
-				final URI proxyURI = ((InternalEObject)eObj).eProxyURI();
-				getResource(proxyURI.trimFragment(), false);
+				resolveCrossReference(resource, eObj);
 			}
 		}
 	}

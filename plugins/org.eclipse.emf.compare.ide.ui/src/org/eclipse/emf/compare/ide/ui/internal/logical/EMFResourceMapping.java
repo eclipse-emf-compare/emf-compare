@@ -118,7 +118,7 @@ public class EMFResourceMapping extends ResourceMapping {
 		 * detecting a traversal for a file that's been removed locally but is present on the repository is
 		 * not necessary at this point.
 		 */
-		return EMFSynchronizationModel.resolveTraversal(file, monitor);
+		return new ProjectModelResolver().resolveLocalModel(file, monitor);
 	}
 
 	/**

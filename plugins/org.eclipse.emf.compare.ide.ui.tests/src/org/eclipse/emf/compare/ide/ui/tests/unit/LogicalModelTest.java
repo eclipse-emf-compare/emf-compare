@@ -13,20 +13,29 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
+import org.eclipse.compare.CompareUI;
+import org.eclipse.compare.IEncodedStreamContentAccessor;
+import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.ide.ui.internal.logical.EMFSynchronizationModel;
-import org.eclipse.emf.compare.ide.ui.internal.logical.IStorageProvider;
-import org.eclipse.emf.compare.ide.ui.internal.logical.IStorageProviderAccessor;
+import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
+import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
+import org.eclipse.emf.compare.ide.ui.internal.logical.LogicalModelResolver;
 import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor;
+import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
+import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.ide.ui.tests.egit.CompareGitTestCase;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EClass;
@@ -38,6 +47,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.junit.Before;
 import org.junit.Test;
@@ -273,6 +283,7 @@ public class LogicalModelTest extends CompareGitTestCase {
 	}
 
 	private Comparison compare(String sourceRev, String targetRev, IFile file) throws Exception {
+		final String fullPath = file.getFullPath().toString();
 		final Subscriber subscriber = repository.createSubscriberForComparison(sourceRev, targetRev, file);
 		final IStorageProviderAccessor accessor = new SubscriberStorageAccessor(subscriber);
 		final IStorageProvider sourceProvider = accessor.getStorageProvider(iFile1,
@@ -286,10 +297,13 @@ public class LogicalModelTest extends CompareGitTestCase {
 		assertNotNull(ancestorProvider);
 
 		final IProgressMonitor monitor = new NullProgressMonitor();
-		final EMFSynchronizationModel syncModel = EMFSynchronizationModel.createSynchronizationModel(
-				subscriber, sourceProvider.getStorage(monitor), remoteProvider.getStorage(monitor),
-				ancestorProvider.getStorage(monitor), new NullProgressMonitor());
-		final IComparisonScope scope = syncModel.createMinimizedScope(monitor);
+		final IStorageProviderAccessor storageAccessor = new SubscriberStorageAccessor(subscriber);
+		final ITypedElement left = new StorageTypedElement(sourceProvider.getStorage(monitor), fullPath);
+		final ITypedElement right = new StorageTypedElement(remoteProvider.getStorage(monitor), fullPath);
+		final ITypedElement origin = new StorageTypedElement(ancestorProvider.getStorage(monitor), fullPath);
+		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(new LogicalModelResolver(),
+				new IdenticalResourceMinimizer(), storageAccessor);
+		final IComparisonScope scope = scopeBuilder.build(left, right, origin, monitor);
 
 		final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
 		final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();
@@ -343,5 +357,58 @@ public class LogicalModelTest extends CompareGitTestCase {
 		assertTrue(targetObject instanceof EClass);
 
 		((EClass)sourceObject).getESuperTypes().add((EClass)targetObject);
+	}
+
+	/** Mostly copied from org.eclipse.team.internal.ui.StorageTypedElement. */
+	private class StorageTypedElement implements ITypedElement, IEncodedStreamContentAccessor, IAdaptable {
+		private final IStorage storage;
+
+		private final String fullPath;
+
+		public StorageTypedElement(IStorage storage, String fullPath) {
+			this.storage = storage;
+			this.fullPath = fullPath;
+		}
+
+		public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+			if (adapter == IStorage.class) {
+				return storage;
+			}
+			return storage.getAdapter(adapter);
+		}
+
+		public String getCharset() throws CoreException {
+			if (storage instanceof IEncodedStreamContentAccessor) {
+				return ((IEncodedStreamContentAccessor)storage).getCharset();
+			}
+			return null;
+		}
+
+		public InputStream getContents() throws CoreException {
+			return storage.getContents();
+		}
+
+		public Image getImage() {
+			return CompareUI.getImage(getType());
+		}
+
+		public String getName() {
+			return fullPath;
+		}
+
+		public String getType() {
+			String name = getName();
+			if (name != null) {
+				int index = name.lastIndexOf('.');
+				if (index == -1) {
+					return ""; //$NON-NLS-1$
+				}
+				if (index == (name.length() - 1)) {
+					return ""; //$NON-NLS-1$
+				}
+				return name.substring(index + 1);
+			}
+			return ITypedElement.FOLDER_TYPE;
+		}
 	}
 }

@@ -10,29 +10,33 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
+import static org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil.adaptAs;
+import static org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil.findFile;
+
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URI;
 
-import org.eclipse.compare.IResourceProvider;
 import org.eclipse.compare.ISharedDocumentAdapter;
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.team.core.variants.CachedResourceVariant;
 import org.eclipse.team.core.variants.IResourceVariant;
 import org.eclipse.ui.IEditorInput;
 
-/** This implementation of IStorage simply wraps a stream content accessor. */
+/**
+ * This implementation of IStorage simply wraps a stream content accessor.
+ * 
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ */
 public class StreamAccessorStorage implements IStorage {
 	/** The wrapped accessor. */
 	private final IStreamContentAccessor accessor;
@@ -171,35 +175,6 @@ public class StreamAccessorStorage implements IStorage {
 	}
 
 	/**
-	 * Try and determine the resource of the given element.
-	 * 
-	 * @param element
-	 *            The element for which we need an {@link IFile}.
-	 * @return The resource corresponding to the given {@code element} if we could find it, <code>null</code>
-	 *         otherwise or if the resource is not a file.
-	 */
-	private static IFile findFile(ITypedElement element) {
-		if (element == null) {
-			return null;
-		}
-
-		// Can we adapt it directly?
-		IResource resource = adaptAs(element, IResource.class);
-		if (resource == null) {
-			// We know about some types ...
-			if (element instanceof IResourceProvider) {
-				resource = ((IResourceProvider)element).getResource();
-			}
-		}
-
-		if (resource instanceof IFile) {
-			return (IFile)resource;
-		}
-		// Try with IFile in case adapter only checked for class equality
-		return adaptAs(element, IFile.class);
-	}
-
-	/**
 	 * Try and determine the file revision of the given element.
 	 * 
 	 * @param element
@@ -241,36 +216,5 @@ public class StreamAccessorStorage implements IStorage {
 		}
 
 		return revision;
-	}
-
-	/**
-	 * Tries and adapt the given <em>object</em> to an instance of the given class.
-	 * 
-	 * @param <T>
-	 *            Type to which we need to adapt <em>object</em>.
-	 * @param object
-	 *            The object we need to coerce to a given {@link Class}.
-	 * @param clazz
-	 *            Class to which we are to adapt <em>object</em>.
-	 * @return <em>object</em> cast to type <em>T</em> if possible, <code>null</code> if not.
-	 */
-	@SuppressWarnings("unchecked")
-	private static <T> T adaptAs(Object object, Class<T> clazz) {
-		if (object == null) {
-			return null;
-		}
-
-		T result = null;
-		if (clazz.isInstance(object)) {
-			result = (T)object;
-		} else if (object instanceof IAdaptable) {
-			result = (T)((IAdaptable)object).getAdapter(clazz);
-		}
-
-		if (result == null) {
-			result = (T)Platform.getAdapterManager().getAdapter(object, clazz);
-		}
-
-		return result;
 	}
 }
