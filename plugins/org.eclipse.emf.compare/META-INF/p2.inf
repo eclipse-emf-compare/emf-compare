@@ -1,0 +1,3 @@
+provides.0.namespace = org.eclipse.equinox.p2.iu
+provides.0.name = org.eclipse.emf.compare.ui
+provides.0.version = $version$
