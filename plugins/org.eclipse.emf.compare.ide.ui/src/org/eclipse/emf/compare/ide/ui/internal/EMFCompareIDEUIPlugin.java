@@ -10,8 +10,14 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal;
 
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.compare.ide.ui.internal.logical.IModelResolverRegistry;
+import org.eclipse.emf.compare.ide.ui.internal.logical.ModelResolverRegistryImpl;
+import org.eclipse.emf.compare.ide.ui.internal.logical.ModelResolverRegistryListener;
+import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -32,8 +38,17 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	/** Plug-in's shared instance. */
 	private static EMFCompareIDEUIPlugin plugin;
 
+	/** Model resolvers extension point. */
+	private static final String MODEL_RESOLVER_PPID = "modelResolvers"; //$NON-NLS-1$
+
 	/** Manages the images that were loaded by EMF Compare. */
 	private LocalResourceManager fResourceManager;
+
+	/** Listener for the model resolver extension point. */
+	private AbstractRegistryEventListener modelResolverRegistryListener;
+
+	/** Registry of model resolvers. */
+	private IModelResolverRegistry modelResolverRegistry;
 
 	/** Default constructor. */
 	public EMFCompareIDEUIPlugin() {
@@ -50,6 +65,12 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 
+		final IExtensionRegistry globalRegistry = Platform.getExtensionRegistry();
+		modelResolverRegistry = new ModelResolverRegistryImpl();
+		modelResolverRegistryListener = new ModelResolverRegistryListener(PLUGIN_ID, MODEL_RESOLVER_PPID,
+				getLog(), modelResolverRegistry);
+		globalRegistry.addListener(modelResolverRegistryListener);
+		modelResolverRegistryListener.readRegistry(globalRegistry);
 	}
 
 	/**
@@ -63,6 +84,10 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 			fResourceManager.dispose();
 		}
 
+		final IExtensionRegistry globalRegistry = Platform.getExtensionRegistry();
+		globalRegistry.removeListener(modelResolverRegistryListener);
+		modelResolverRegistry.clear();
+
 		plugin = null;
 		super.stop(context);
 	}
@@ -74,6 +99,15 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	 */
 	public static EMFCompareIDEUIPlugin getDefault() {
 		return plugin;
+	}
+
+	/**
+	 * Returns the registry containing all known model resolvers.
+	 * 
+	 * @return The registry containing all known model resolvers.
+	 */
+	public IModelResolverRegistry getModelResolverRegistry() {
+		return modelResolverRegistry;
 	}
 
 	public ImageDescriptor getImageDescriptor(String path) {

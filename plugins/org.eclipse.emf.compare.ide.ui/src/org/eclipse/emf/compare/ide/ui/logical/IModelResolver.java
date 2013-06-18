@@ -20,6 +20,9 @@ import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 /**
  * This can be used in order to tell EMF Compare how the logical model of a given file can be resolved in its
  * entirety.
+ * <p>
+ * Clients can subclass {@link AbstractModelResolver} instead.
+ * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -78,4 +81,33 @@ public interface IModelResolver {
 	 * @return A traversal corresponding to all resources composing the given file's logical model.
 	 */
 	StorageTraversal resolveLocalModel(IResource resource, IProgressMonitor monitor);
+
+	/**
+	 * Ranking of this model resolver. Will be used by EMF Compare to determine which resolver is best for
+	 * which kind of resource.
+	 * 
+	 * @return The ranking of this resolver.
+	 */
+	int getRanking();
+
+	/**
+	 * Sets the ranking of this resolver to the given value. Mainly used by the extension point registration.
+	 * 
+	 * @param newRanking
+	 *            New ranking for this model resolver.
+	 */
+	void setRanking(int newRanking);
+
+	/**
+	 * This will be used in order to determine whether this resolver can be used for the given storage. For
+	 * each given storage, the resolver with the highest ranking will be selected for resolution. This test
+	 * should be fast.
+	 * 
+	 * @param sourceStorage
+	 *            The resource we're trying to resolve the logical model of. This will always be the "source"
+	 *            or "left" variant of the compared resource.
+	 * @return <code>true</code> if this resolver is capable of handling the given storage, <code>false</code>
+	 *         otherwise.
+	 */
+	boolean canResolve(IStorage sourceStorage);
 }

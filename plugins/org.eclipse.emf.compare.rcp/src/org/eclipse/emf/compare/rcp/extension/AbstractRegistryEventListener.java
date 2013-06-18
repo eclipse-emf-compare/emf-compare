@@ -213,6 +213,21 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 	}
 
 	/**
+	 * Logs the given error with a human-readable error message.
+	 * 
+	 * @param element
+	 *            The element from which originates the error.
+	 * @param errorMessage
+	 *            Human-readable cause of this exception.
+	 * @param cause
+	 *            Actual exception that is to be logged.
+	 */
+	protected void log(IConfigurationElement element, String errorMessage, Throwable cause) {
+		log.log(new Status(IStatus.ERROR, element.getDeclaringExtension().getContributor().getName(),
+				errorMessage, cause));
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.core.runtime.IRegistryEventListener#added(org.eclipse.core.runtime.IExtension[])

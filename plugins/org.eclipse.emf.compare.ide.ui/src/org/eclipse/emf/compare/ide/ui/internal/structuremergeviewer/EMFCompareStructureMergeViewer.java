@@ -32,6 +32,7 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.DiffTreeViewer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -59,10 +60,12 @@ import org.eclipse.emf.compare.ide.ui.internal.actions.expand.ExpandAllModelActi
 import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
 import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
-import org.eclipse.emf.compare.ide.ui.internal.logical.LogicalModelResolver;
+import org.eclipse.emf.compare.ide.ui.internal.logical.StreamAccessorStorage;
 import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
+import org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil;
 import org.eclipse.emf.compare.ide.ui.internal.util.SWTUtil;
+import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
@@ -332,13 +335,7 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 				final ITypedElement right = input.getRight();
 				final ITypedElement origin = input.getAncestor();
 
-				IStorageProviderAccessor storageAccessor = null;
-				if (getSubscriber() != null) {
-					storageAccessor = new SubscriberStorageAccessor(getSubscriber());
-				}
-				final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(
-						new LogicalModelResolver(), new IdenticalResourceMinimizer(), storageAccessor);
-				final IComparisonScope scope = scopeBuilder.build(left, right, origin, subMonitor
+				final IComparisonScope scope = buildComparisonScope(left, right, origin, subMonitor
 						.newChild(85));
 
 				final Comparison compareResult = EMFCompare
@@ -425,6 +422,36 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 			}
 			fRoot = null;
 		}
+	}
+
+	/**
+	 * Constructs the comparison scope corresponding to the given typed elements.
+	 * 
+	 * @param left
+	 *            Left of the compared elements.
+	 * @param right
+	 *            Right of the compared elements.
+	 * @param origin
+	 *            Common ancestor of the <code>left</code> and <code>right</code> compared elements.
+	 * @param monitor
+	 *            Monitor to report progress on.
+	 * @return The created comparison scope.
+	 */
+	private IComparisonScope buildComparisonScope(ITypedElement left, ITypedElement right,
+			ITypedElement origin, IProgressMonitor monitor) {
+		IStorageProviderAccessor storageAccessor = null;
+		if (getSubscriber() != null) {
+			storageAccessor = new SubscriberStorageAccessor(getSubscriber());
+		}
+		IStorage leftStorage = PlatformElementUtil.findFile(left);
+		if (leftStorage == null) {
+			leftStorage = StreamAccessorStorage.fromTypedElement(left);
+		}
+		IModelResolver resolver = EMFCompareIDEUIPlugin.getDefault().getModelResolverRegistry()
+				.getBestResolverFor(leftStorage);
+		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
+				new IdenticalResourceMinimizer(), storageAccessor);
+		return scopeBuilder.build(left, right, origin, monitor);
 	}
 
 	void compareInputChanged(ComparisonNode input, IProgressMonitor monitor) {

@@ -152,6 +152,20 @@ public class ProjectModelResolver extends LogicalModelResolver {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.logical.LogicalModelResolver#canResolve(org.eclipse.core.resources.IStorage)
+	 */
+	@Override
+	public boolean canResolve(IStorage sourceStorage) {
+		if (sourceStorage instanceof IFile) {
+			IFile file = (IFile)sourceStorage;
+			return file.getProject().isAccessible() && ((IFile)sourceStorage).exists();
+		}
+		return false;
+	}
+
+	/**
 	 * This will be used to resolve the traversal of a file's logical model, given the resource visitor that
 	 * has been used to browse the scope for potential dependencies (by default, the scope is the resource's
 	 * project).

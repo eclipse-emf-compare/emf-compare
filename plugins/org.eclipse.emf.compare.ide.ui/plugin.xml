@@ -13,6 +13,7 @@
 -->
 
 <plugin>
+   <extension-point id="modelResolvers" name="Model Resolvers" schema="schema/modelResolvers.exsd"/>
    
    <extension
          point="org.eclipse.compare.structureMergeViewers">
@@ -264,5 +265,16 @@
             properties="isSaveable"
             type="java.lang.Object">
       </propertyTester>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.ide.ui.modelResolvers">
+      <resolver
+            class="org.eclipse.emf.compare.ide.ui.internal.logical.LogicalModelResolver"
+            ranking="0">
+      </resolver>
+      <resolver
+            class="org.eclipse.emf.compare.ide.ui.internal.logical.ProjectModelResolver"
+            ranking="1">
+      </resolver>
    </extension>
 </plugin>

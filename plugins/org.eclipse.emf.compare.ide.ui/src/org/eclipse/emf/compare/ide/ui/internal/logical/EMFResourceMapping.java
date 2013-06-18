@@ -26,6 +26,7 @@ import org.eclipse.core.resources.mapping.ResourceTraversal;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -118,7 +119,8 @@ public class EMFResourceMapping extends ResourceMapping {
 		 * detecting a traversal for a file that's been removed locally but is present on the repository is
 		 * not necessary at this point.
 		 */
-		return new ProjectModelResolver().resolveLocalModel(file, monitor);
+		return EMFCompareIDEUIPlugin.getDefault().getModelResolverRegistry().getBestResolverFor(file)
+				.resolveLocalModel(file, monitor);
 	}
 
 	/**

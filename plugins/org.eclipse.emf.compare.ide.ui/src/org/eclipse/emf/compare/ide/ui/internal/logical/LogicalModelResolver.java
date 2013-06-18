@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.compare.ide.internal.utils.SyncResourceSet;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
+import org.eclipse.emf.compare.ide.ui.logical.AbstractModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor.DiffSide;
@@ -37,7 +38,7 @@ import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class LogicalModelResolver implements IModelResolver {
+public class LogicalModelResolver extends AbstractModelResolver {
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -123,6 +124,16 @@ public class LogicalModelResolver implements IModelResolver {
 		syncModel = new SynchronizationModel(leftTraversal, rightTraversal, originTraversal);
 
 		return syncModel;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.logical.IModelResolver#canResolve(org.eclipse.core.resources.IStorage)
+	 */
+	public boolean canResolve(IStorage sourceStorage) {
+		// This is our default resolver. It should be able to handle any case.
+		return true;
 	}
 
 	/**
