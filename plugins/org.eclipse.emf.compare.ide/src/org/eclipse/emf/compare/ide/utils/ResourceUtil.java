@@ -19,13 +19,17 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
@@ -257,6 +261,61 @@ public final class ResourceUtil {
 				}
 			}
 		}
+	}
+
+	/**
+	 * This will return <code>true</code> if and only if the given IFile has the given <em>contentTypeId</em>
+	 * configured (as returned by {@link IContentTypeManager#findContentTypesFor(InputStream, String)
+	 * Platform.getContentTypeManager().findContentTypesFor(InputStream, String)}.
+	 * 
+	 * @param resource
+	 *            The resource from which to test the content types.
+	 * @param contentTypeId
+	 *            Fully qualified identifier of the content type this <em>resource</em> has to feature.
+	 * @return <code>true</code> if the given {@link IFile} has the given content type.
+	 */
+	public static boolean hasContentType(IFile resource, String contentTypeId) {
+		IContentTypeManager ctManager = Platform.getContentTypeManager();
+		IContentType expected = ctManager.getContentType(contentTypeId);
+		if (expected == null) {
+			return false;
+		}
+
+		final IContentType[] contentTypes = getContentTypes(resource);
+
+		boolean hasContentType = false;
+		for (int i = 0; i < contentTypes.length && !hasContentType; i++) {
+			if (contentTypes[i].isKindOf(expected)) {
+				hasContentType = true;
+			}
+		}
+		return hasContentType;
+	}
+
+	/**
+	 * Returns the whole list of content types of the given IFile, or an empty array if none.
+	 * 
+	 * @param file
+	 *            The file we need the content types of.
+	 * @return All content types associated with the given file, an empty array if none.
+	 */
+	@SuppressWarnings("resource")
+	private static IContentType[] getContentTypes(IFile file) {
+		IContentTypeManager ctManager = Platform.getContentTypeManager();
+
+		InputStream resourceContent = null;
+		IContentType[] contentTypes = new IContentType[0];
+		try {
+			resourceContent = file.getContents();
+			contentTypes = ctManager.findContentTypesFor(resourceContent, file.getName());
+		} catch (CoreException e) {
+			ctManager.findContentTypesFor(file.getName());
+		} catch (IOException e) {
+			ctManager.findContentTypesFor(file.getName());
+		} finally {
+			Closeables.closeQuietly(resourceContent);
+		}
+		return contentTypes;
 	}
 
 	/**

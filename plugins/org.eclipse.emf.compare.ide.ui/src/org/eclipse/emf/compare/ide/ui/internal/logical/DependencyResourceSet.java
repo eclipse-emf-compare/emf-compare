@@ -27,31 +27,41 @@ import org.eclipse.emf.ecore.resource.Resource;
  */
 public class DependencyResourceSet extends SyncResourceSet {
 	/** Keeps track of the dependency tree discovered through this resource set. */
-	private final Graph<URI> graph = new Graph<URI>();
+	private final Graph<URI> graph;
 
 	/**
-	 * Returns an iterable over all the URIs that compose the logical model of the given one, whether they are
-	 * parents of children of the resource at that location. Note that only resources located in the workspace
-	 * are considered.
+	 * Constructs a resource set given the dependency graph it will populate.
 	 * 
-	 * @param uri
-	 *            Uri we need the dependency graph for.
-	 * @return An iterable over the logical model of <code>uri</code>.
+	 * @param graph
+	 *            The dependency graph we'll populate as we resolve new references.
 	 */
-	public Iterable<URI> getDependencyGraph(URI uri) {
-		return graph.getSubgraphContaining(uri);
+	public DependencyResourceSet(Graph<URI> graph) {
+		this.graph = graph;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.internal.utils.SyncResourceSet#loadResource(org.eclipse.emf.common.util.URI)
+	 * @see org.eclipse.emf.compare.ide.internal.utils.SyncResourceSet#createResource(org.eclipse.emf.common.util.URI)
 	 */
 	@Override
-	protected Resource loadResource(URI uri) {
-		Resource loaded = super.loadResource(uri);
-		graph.add(loaded.getURI());
-		return loaded;
+	public synchronized Resource createResource(URI uri) {
+		final Resource resource = super.createResource(uri);
+		graph.add(uri);
+		return resource;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.internal.utils.SyncResourceSet#createResource(org.eclipse.emf.common.util.URI,
+	 *      java.lang.String)
+	 */
+	@Override
+	public synchronized Resource createResource(URI uri, String contentType) {
+		final Resource resource = super.createResource(uri, contentType);
+		graph.add(uri);
+		return resource;
 	}
 
 	/**

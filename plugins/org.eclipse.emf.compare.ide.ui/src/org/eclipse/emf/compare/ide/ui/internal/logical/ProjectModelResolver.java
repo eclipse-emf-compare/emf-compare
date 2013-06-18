@@ -11,11 +11,12 @@
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
 import static org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil.adaptAs;
+import static org.eclipse.emf.compare.ide.utils.ResourceUtil.createURIFor;
+import static org.eclipse.emf.compare.ide.utils.ResourceUtil.hasContentType;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -24,23 +25,23 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor.DiffSide;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
-import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
 
@@ -55,6 +56,51 @@ import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ProjectModelResolver extends LogicalModelResolver {
+	/** Content types of the files to consider as potential models. */
+	private static final String[] MODEL_CONTENT_TYPES = new String[] {
+			"org.eclipse.emf.compare.content.type", "org.eclipse.emf.ecore", //$NON-NLS-1$ //$NON-NLS-2$
+			"org.eclipse.emf.ecore.xmi", }; //$NON-NLS-1$
+
+	/**
+	 * Keeps track of the discovered dependency graph. Model resolvers are created from the extension point
+	 * registry, we can thus keep this graph around to avoid multiple crawlings of the same IProject. Team,
+	 * and the EMFResourceMapping, tend to be over-enthusiast with the resolution of model traversals. For
+	 * example, a single "right-click -> compare with -> commit..." with EGit ends up calling 8 distinct times
+	 * for the resource traversal of the selected resource.
+	 */
+	private Graph<URI> dependencyGraph;
+
+	/**
+	 * This resolver will keep a resource listener over the workspace in order to keep its dependencies graph
+	 * in sync.
+	 */
+	private ModelResourceListener resourceListener;
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.logical.AbstractModelResolver#initialize()
+	 */
+	@Override
+	public void initialize() {
+		super.initialize();
+		this.dependencyGraph = new Graph<URI>();
+		this.resourceListener = new ModelResourceListener();
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(this.resourceListener);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.logical.AbstractModelResolver#dispose()
+	 */
+	@Override
+	public void dispose() {
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(this.resourceListener);
+		this.resourceListener = null;
+		this.dependencyGraph = null;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -69,19 +115,18 @@ public class ProjectModelResolver extends LogicalModelResolver {
 			return super.resolveLocalModels(left, right, origin, monitor);
 		}
 
-		final IProject project = left.getProject();
-		final ModelResourceVisitor modelVisitor = new ModelResourceVisitor(monitor);
-		try {
-			project.accept(modelVisitor);
-		} catch (CoreException e) {
-			// TODO log
+		updateChangedDependencies(monitor);
+		updateDependencies((IFile)left, monitor);
+		updateDependencies((IFile)right, monitor);
+		if (origin instanceof IFile) {
+			updateDependencies((IFile)origin, monitor);
 		}
 
-		final Set<IStorage> leftTraversal = resolveTraversal((IFile)left, modelVisitor, monitor);
-		final Set<IStorage> rightTraversal = resolveTraversal((IFile)right, modelVisitor, monitor);
+		final Set<IStorage> leftTraversal = resolveTraversal((IFile)left, monitor);
+		final Set<IStorage> rightTraversal = resolveTraversal((IFile)right, monitor);
 		final Set<IStorage> originTraversal;
 		if (origin instanceof IFile) {
-			originTraversal = resolveTraversal((IFile)origin, modelVisitor, monitor);
+			originTraversal = resolveTraversal((IFile)origin, monitor);
 		} else {
 			originTraversal = Collections.emptySet();
 		}
@@ -105,16 +150,10 @@ public class ProjectModelResolver extends LogicalModelResolver {
 			return super.resolveModels(storageAccessor, leftFile, right, origin, monitor);
 		}
 
-		final IProject project = leftFile.getProject();
-		final ModelResourceVisitor modelVisitor = new ModelResourceVisitor(storageAccessor, DiffSide.SOURCE,
-				monitor);
-		try {
-			project.accept(modelVisitor);
-		} catch (CoreException e) {
-			// TODO log
-		}
+		updateChangedDependencies(monitor);
+		updateDependencies(leftFile, storageAccessor, monitor);
 
-		final Set<IStorage> leftTraversal = resolveTraversal(leftFile, modelVisitor, monitor);
+		final Set<IStorage> leftTraversal = resolveTraversal(leftFile, monitor);
 		final Set<IStorage> rightTraversal = resolveTraversal(storageAccessor, DiffSide.REMOTE,
 				leftTraversal, monitor);
 		final Set<IStorage> originTraversal;
@@ -140,15 +179,10 @@ public class ProjectModelResolver extends LogicalModelResolver {
 			return super.resolveLocalModel(start, monitor);
 		}
 
-		final IProject project = start.getProject();
-		final ModelResourceVisitor modelVisitor = new ModelResourceVisitor(monitor);
-		try {
-			project.accept(modelVisitor);
-		} catch (CoreException e) {
-			// TODO log
-		}
+		updateChangedDependencies(monitor);
+		updateDependencies((IFile)start, monitor);
 
-		return new StorageTraversal(resolveTraversal((IFile)start, modelVisitor, monitor));
+		return new StorageTraversal(resolveTraversal((IFile)start, monitor));
 	}
 
 	/**
@@ -166,35 +200,126 @@ public class ProjectModelResolver extends LogicalModelResolver {
 	}
 
 	/**
-	 * This will be used to resolve the traversal of a file's logical model, given the resource visitor that
-	 * has been used to browse the scope for potential dependencies (by default, the scope is the resource's
-	 * project).
+	 * Updates the dependency graph for the given file.
+	 * 
+	 * @param file
+	 *            File which dependencies we are to update.
+	 * @param monitor
+	 *            Monitor to report progress on.
+	 */
+	private void updateDependencies(IFile file, IProgressMonitor monitor) {
+		final URI startURI = createURIFor(file);
+		if (!dependencyGraph.contains(startURI)) {
+			final IProject project = file.getProject();
+			final ModelResourceVisitor modelVisitor = new ModelResourceVisitor(dependencyGraph, monitor);
+			try {
+				project.accept(modelVisitor);
+			} catch (CoreException e) {
+				EMFCompareIDEUIPlugin.getDefault().log(e);
+			}
+		}
+	}
+
+	/**
+	 * Updates the dependency graph for the given file.
+	 * 
+	 * @param file
+	 *            File which dependencies we are to update.
+	 * @param storageAccessor
+	 *            The accessor that can be used to retrieve synchronization information between our resources.
+	 * @param monitor
+	 *            Monitor to report progress on.
+	 */
+	private void updateDependencies(IFile file, IStorageProviderAccessor storageAccessor,
+			IProgressMonitor monitor) {
+		final URI leftURI = createURIFor(file);
+		if (!dependencyGraph.contains(leftURI)) {
+			final IProject project = file.getProject();
+			final ModelResourceVisitor modelVisitor = new ModelResourceVisitor(storageAccessor,
+					DiffSide.SOURCE, dependencyGraph, monitor);
+			try {
+				project.accept(modelVisitor);
+			} catch (CoreException e) {
+				// TODO log
+			}
+		}
+	}
+
+	/**
+	 * Checks all dependencies that have changed since we last checked (as returned by the
+	 * {@link #resourceListener}).
+	 * 
+	 * @param monitor
+	 *            Monitor to report progress on.
+	 */
+	private void updateChangedDependencies(IProgressMonitor monitor) {
+		final Set<URI> removedURIs = resourceListener.popRemovedURIs();
+		final Set<URI> changedURIs = Sets.difference(resourceListener.popChangedURIs(), removedURIs);
+
+		for (URI removed : removedURIs) {
+			dependencyGraph.remove(removed);
+		}
+
+		for (URI changed : changedURIs) {
+			dependencyGraph.remove(changed);
+
+			final IFile file = getFileAt(changed);
+			updateDependencies(file, monitor);
+		}
+	}
+
+	/**
+	 * Checks whether the given file has one of the content types described in {@link #MODEL_CONTENT_TYPES}.
+	 * 
+	 * @param file
+	 *            The file which contents are to be checked.
+	 * @return <code>true</code> if this file has one of the "model" content types.
+	 */
+	protected static final boolean hasModelType(IFile file) {
+		boolean isModel = false;
+		for (int i = 0; i < MODEL_CONTENT_TYPES.length && !isModel; i++) {
+			isModel = hasContentType(file, MODEL_CONTENT_TYPES[i]);
+		}
+		return isModel;
+	}
+
+	/**
+	 * This will be used to resolve the traversal of a file's logical model, according to
+	 * {@link #dependencyGraph}.
 	 * 
 	 * @param resource
 	 *            The resource for which we need the full logical model.
-	 * @param visitor
-	 *            A resource visitor that has already browsed the scope for potential dependencies.
 	 * @param monitor
 	 *            Monitor on which to report progress to the user.
 	 * @return The set of all storages that compose the logical model of <code>resource</code>.
 	 */
-	private Set<IStorage> resolveTraversal(IFile resource, ModelResourceVisitor visitor,
-			IProgressMonitor monitor) {
-		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+	private Set<IStorage> resolveTraversal(IFile resource, IProgressMonitor monitor) {
 		final Set<IStorage> traversal = new LinkedHashSet<IStorage>();
-		final Iterable<URI> uris = visitor.getDependencyGraph(resource);
+		final URI startURI = createURIFor(resource);
+		final Iterable<URI> uris = dependencyGraph.getSubgraphContaining(startURI);
 		for (URI uri : uris) {
-			final StringBuilder path = new StringBuilder();
-			List<String> segments = uri.segmentsList();
-			if (uri.isPlatformResource()) {
-				segments = segments.subList(1, segments.size());
-			}
-			for (String segment : segments) {
-				path.append(segment).append('/');
-			}
-			traversal.add(root.getFile(new Path(path.toString())));
+			traversal.add(getFileAt(uri));
 		}
 		return traversal;
+	}
+
+	/**
+	 * Returns the IFile located at the given URI.
+	 * 
+	 * @param uri
+	 *            URI we need the file for.
+	 * @return The IFile located at the given URI.
+	 */
+	private IFile getFileAt(URI uri) {
+		final StringBuilder path = new StringBuilder();
+		List<String> segments = uri.segmentsList();
+		if (uri.isPlatformResource()) {
+			segments = segments.subList(1, segments.size());
+		}
+		for (String segment : segments) {
+			path.append(segment).append('/');
+		}
+		return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(path.toString()));
 	}
 
 	/**
@@ -217,7 +342,7 @@ public class ProjectModelResolver extends LogicalModelResolver {
 	 */
 	private Set<IStorage> resolveTraversal(IStorageProviderAccessor storageAccessor, DiffSide side,
 			Set<IStorage> localTraversal, IProgressMonitor monitor) {
-		final DependencyResourceSet resourceSet = new DependencyResourceSet();
+		final DependencyResourceSet resourceSet = new DependencyResourceSet(dependencyGraph);
 		final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
 				storageAccessor, side);
 		resourceSet.setURIConverter(converter);
@@ -229,19 +354,23 @@ public class ProjectModelResolver extends LogicalModelResolver {
 			try {
 				final IStorageProvider remoteStorageProvider = storageAccessor.getStorageProvider(localFile,
 						side);
-				final IStorage start = remoteStorageProvider.getStorage(monitor);
+				if (remoteStorageProvider != null) {
+					final IStorage start = remoteStorageProvider.getStorage(monitor);
 
-				if (resourceSet.resolveAll(start, monitor)) {
-					if (!contains(storages, start)) {
-						storages.add(start);
-					}
-					for (IStorage loaded : converter.getLoadedRevisions()) {
-						if (!contains(storages, loaded)) {
-							storages.add(loaded);
+					if (resourceSet.resolveAll(start, monitor)) {
+						if (!contains(storages, start)) {
+							storages.add(start);
 						}
+						for (IStorage loaded : converter.getLoadedRevisions()) {
+							if (!contains(storages, loaded)) {
+								storages.add(loaded);
+							}
+						}
+					} else {
+						// failed to load a remote version of this resource
 					}
 				} else {
-					// failed to load a remote version of this resource
+					// file only exist locally
 				}
 			} catch (CoreException e) {
 				// failed to load a remote version of this resource
@@ -256,11 +385,6 @@ public class ProjectModelResolver extends LogicalModelResolver {
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
 	 */
 	private static class ModelResourceVisitor implements IResourceVisitor {
-		/** Content types of the files to consider as potential parents. */
-		private static final String[] MODEL_CONTENT_TYPES = new String[] {
-				"org.eclipse.emf.compare.content.type", "org.eclipse.emf.ecore", //$NON-NLS-1$ //$NON-NLS-2$
-				"org.eclipse.emf.ecore.xmi", }; //$NON-NLS-1$
-
 		/** Resource Set in which we should load the temporary resources. */
 		private final DependencyResourceSet resourceSet;
 
@@ -271,11 +395,13 @@ public class ProjectModelResolver extends LogicalModelResolver {
 		/**
 		 * Instantiates a resource visitor.
 		 * 
+		 * @param graph
+		 *            The dependency graph that is to be populated/completed.
 		 * @param monitor
 		 *            The monitor to report progress on.
 		 */
-		public ModelResourceVisitor(IProgressMonitor monitor) {
-			this.resourceSet = new DependencyResourceSet();
+		public ModelResourceVisitor(Graph<URI> graph, IProgressMonitor monitor) {
+			this.resourceSet = new DependencyResourceSet(graph);
 			this.monitor = monitor;
 			final StorageURIConverter converter = new StorageURIConverter(resourceSet.getURIConverter());
 			this.resourceSet.setURIConverter(converter);
@@ -289,28 +415,18 @@ public class ProjectModelResolver extends LogicalModelResolver {
 		 * @param side
 		 *            Side of the resources. Used in conjunction with the storage accessor to fetch proper
 		 *            content.
+		 * @param graph
+		 *            The dependency graph that is to be populated/completed.
 		 * @param monitor
 		 *            The monitor to report progress on.
 		 */
 		public ModelResourceVisitor(IStorageProviderAccessor storageAccessor, DiffSide side,
-				IProgressMonitor monitor) {
-			this.resourceSet = new DependencyResourceSet();
+				Graph<URI> graph, IProgressMonitor monitor) {
+			this.resourceSet = new DependencyResourceSet(graph);
 			this.monitor = monitor;
 			final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
 					storageAccessor, side);
 			this.resourceSet.setURIConverter(converter);
-		}
-
-		/**
-		 * Returns an iterable over all of the URIs that compose the given IFile's logical model.
-		 * 
-		 * @param resource
-		 *            The file for which we need the resolved model.
-		 * @return An iterable over all of the URIs that compose the given IFile's logical model.
-		 */
-		public Iterable<URI> getDependencyGraph(IFile resource) {
-			final URI uri = ResourceUtil.createURIFor(resource);
-			return resourceSet.getDependencyGraph(uri);
 		}
 
 		/**
@@ -321,12 +437,7 @@ public class ProjectModelResolver extends LogicalModelResolver {
 		public boolean visit(IResource resource) throws CoreException {
 			if (resource instanceof IFile) {
 				IFile file = (IFile)resource;
-				boolean isModel = false;
-				for (int i = 0; i < MODEL_CONTENT_TYPES.length && !isModel; i++) {
-					isModel = hasContentType(file, MODEL_CONTENT_TYPES[i]);
-				}
-
-				if (isModel) {
+				if (hasModelType(file)) {
 					resourceSet.resolveAll(file, monitor);
 					return true;
 				}
@@ -334,55 +445,108 @@ public class ProjectModelResolver extends LogicalModelResolver {
 			}
 			return true;
 		}
+	}
+
+	/**
+	 * This will listen to workspace changes and react to all changes on "model" resources as determined by
+	 * {@link ProjectModelResolver#MODEL_CONTENT_TYPES}.
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
+	 */
+	private static class ModelResourceListener implements IResourceChangeListener {
+		/** Keeps track of the URIs that need to be reparsed when next we need the dependencies graph . */
+		protected Set<URI> changedURIs;
+
+		/** Tracks the files that have been removed. */
+		protected Set<URI> removedURIs;
+
+		/** Initializes this listener. */
+		public ModelResourceListener() {
+			this.changedURIs = new LinkedHashSet<URI>();
+			this.removedURIs = new LinkedHashSet<URI>();
+		}
 
 		/**
-		 * This will return <code>true</code> if and only if the given IFile has the given
-		 * <em>contentTypeId</em> configured (as returned by
-		 * {@link IContentTypeManager#findContentTypesFor(InputStream, String)
-		 * Platform.getContentTypeManager().findContentTypesFor(InputStream, String)}.
+		 * {@inheritDoc}
 		 * 
-		 * @param resource
-		 *            The resource from which to test the content types.
-		 * @param contentTypeId
-		 *            Fully qualified identifier of the content type this <em>resource</em> has to feature.
-		 * @return <code>true</code> if the given {@link IFile} has the given content type.
+		 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
 		 */
-		@SuppressWarnings("resource")
-		private boolean hasContentType(IFile resource, String contentTypeId) {
-			IContentTypeManager ctManager = Platform.getContentTypeManager();
-			IContentType expected = ctManager.getContentType(contentTypeId);
-			if (expected == null) {
-				return false;
+		public void resourceChanged(IResourceChangeEvent event) {
+			final IResourceDelta delta = event.getDelta();
+			if (delta == null) {
+				return;
 			}
 
-			InputStream resourceContent = null;
-			IContentType[] contentTypes = null;
 			try {
-				resourceContent = resource.getContents();
-				contentTypes = ctManager.findContentTypesFor(resourceContent, resource.getName());
+				delta.accept(new ModelResourceDeltaVisitor());
 			} catch (CoreException e) {
-				ctManager.findContentTypesFor(resource.getName());
-			} catch (IOException e) {
-				ctManager.findContentTypesFor(resource.getName());
-			} finally {
-				if (resourceContent != null) {
-					try {
-						resourceContent.close();
-					} catch (IOException e) {
-						// would have already been caught by the outer try, leave the stream open
-					}
-				}
+				EMFCompareIDEUIPlugin.getDefault().log(e);
 			}
+		}
 
-			boolean hasContentType = false;
-			if (contentTypes != null) {
-				for (int i = 0; i < contentTypes.length && !hasContentType; i++) {
-					if (contentTypes[i].isKindOf(expected)) {
-						hasContentType = true;
+		/**
+		 * Retrieves the set of all changed URIs since we last updated the dependencies graph, and clears it
+		 * for subsequent calls.
+		 * 
+		 * @return The set of all changed URIs since we last updated the dependencies graph.
+		 */
+		public Set<URI> popChangedURIs() {
+			final Set<URI> changed;
+			synchronized(changedURIs) {
+				changed = ImmutableSet.copyOf(changedURIs);
+				changedURIs.clear();
+			}
+			return changed;
+		}
+
+		/**
+		 * Retrieves the set of all removed URIs since we last updated the dependencies graph, and clears it
+		 * for subsequent calls.
+		 * 
+		 * @return The set of all removed URIs since we last updated the dependencies graph.
+		 */
+		public Set<URI> popRemovedURIs() {
+			final Set<URI> removed;
+			synchronized(removedURIs) {
+				removed = ImmutableSet.copyOf(removedURIs);
+				removedURIs.clear();
+			}
+			return removed;
+		}
+
+		/**
+		 * Visits a resource delta to collect the changed and removed files' URIs.
+		 * 
+		 * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
+		 */
+		private class ModelResourceDeltaVisitor implements IResourceDeltaVisitor {
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
+			 */
+			public boolean visit(IResourceDelta delta) throws CoreException {
+				if (delta.getFlags() == IResourceDelta.MARKERS
+						|| delta.getResource().getType() != IResource.FILE) {
+					return true;
+				}
+
+				final IFile file = (IFile)delta.getResource();
+				if (hasModelType(file)) {
+					final URI fileURI = createURIFor(file);
+					if (delta.getKind() == IResourceDelta.REMOVED) {
+						synchronized(removedURIs) {
+							removedURIs.add(fileURI);
+						}
+					} else if ((delta.getKind() & (IResourceDelta.CHANGED | IResourceDelta.ADDED)) != 0) {
+						synchronized(changedURIs) {
+							changedURIs.add(fileURI);
+						}
 					}
 				}
+
+				return true;
 			}
-			return hasContentType;
 		}
 	}
 }

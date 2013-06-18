@@ -85,6 +85,8 @@ public class ModelResolverRegistryListener extends AbstractRegistryEventListener
 			}
 			resolver.setRanking(ranking);
 
+			resolver.initialize();
+
 			registry.addResolver(className, resolver);
 			return true;
 		}
@@ -99,7 +101,10 @@ public class ModelResolverRegistryListener extends AbstractRegistryEventListener
 	@Override
 	protected boolean removedValid(IConfigurationElement element) {
 		final String className = element.getAttribute(ATTRIBUTE_CLASS);
-		registry.removeResolver(className);
+		IModelResolver resolver = registry.removeResolver(className);
+		if (resolver != null) {
+			resolver.dispose();
+		}
 		return true;
 	}
 

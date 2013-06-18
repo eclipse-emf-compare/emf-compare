@@ -32,13 +32,27 @@ import java.util.Set;
  *            Kind of elements used as this graph's nodes.
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class Graph<E> {
+public final class Graph<E> {
 	/** Keeps track of this graph's individual nodes. */
-	private Map<E, Node<E>> nodes;
+	private final Map<E, Node<E>> nodes;
 
 	/** Constructs an empty graph. */
 	public Graph() {
 		this.nodes = new LinkedHashMap<E, Node<E>>();
+	}
+
+	/**
+	 * Checks whether this graph already contains the given element.
+	 * 
+	 * @param element
+	 *            Element we need to check.
+	 * @return <code>true</code> if this graph already contains the given elment, <code>false</code>
+	 *         otherwise.
+	 */
+	public boolean contains(E element) {
+		synchronized(nodes) {
+			return nodes.containsKey(element);
+		}
 	}
 
 	/**
@@ -50,13 +64,31 @@ public class Graph<E> {
 	 * @return <code>true</code> if this element did not previously exist in the graph.
 	 */
 	public boolean add(E element) {
-		Node<E> node = nodes.get(element);
-		if (node == null) {
-			node = new Node<E>(element);
-			nodes.put(element, node);
-			return true;
+		synchronized(nodes) {
+			Node<E> node = nodes.get(element);
+			if (node == null) {
+				node = new Node<E>(element);
+				nodes.put(element, node);
+				return true;
+			}
+			return false;
 		}
-		return false;
+	}
+
+	/**
+	 * Removes the given element's node from this graph. This will effectively break all connections to that
+	 * node.
+	 * 
+	 * @param element
+	 *            The element which is to be removed from this graph.
+	 */
+	public void remove(E element) {
+		synchronized(nodes) {
+			final Node<E> node = nodes.remove(element);
+			if (node != null) {
+				node.breakConnections();
+			}
+		}
 	}
 
 	/**
@@ -69,19 +101,21 @@ public class Graph<E> {
 	 *            The set of elements to connect to the given parent.
 	 */
 	public void createConnections(E element, Set<E> connections) {
-		Node<E> node = nodes.get(element);
-		if (node == null) {
-			node = new Node<E>(element);
-			nodes.put(element, node);
-		}
-
-		for (E newConnection : connections) {
-			Node<E> connectedNode = nodes.get(newConnection);
-			if (connectedNode == null) {
-				connectedNode = new Node<E>(newConnection);
-				nodes.put(newConnection, connectedNode);
+		synchronized(nodes) {
+			Node<E> node = nodes.get(element);
+			if (node == null) {
+				node = new Node<E>(element);
+				nodes.put(element, node);
 			}
-			node.connectTo(connectedNode);
+
+			for (E newConnection : connections) {
+				Node<E> connectedNode = nodes.get(newConnection);
+				if (connectedNode == null) {
+					connectedNode = new Node<E>(newConnection);
+					nodes.put(newConnection, connectedNode);
+				}
+				node.connectTo(connectedNode);
+			}
 		}
 	}
 
@@ -94,11 +128,13 @@ public class Graph<E> {
 	 *         that element is not present in this graph.
 	 */
 	public Iterable<E> getSubgraphContaining(E element) {
-		final Node<E> node = nodes.get(element);
-		if (node != null) {
-			return new SubgraphBuilder<E>(node).build();
+		synchronized(nodes) {
+			final Node<E> node = nodes.get(element);
+			if (node != null) {
+				return new SubgraphBuilder<E>(node).build();
+			}
+			return Collections.emptyList();
 		}
-		return Collections.emptyList();
 	}
 
 	/**
@@ -110,10 +146,10 @@ public class Graph<E> {
 	 */
 	private static class Node<K> {
 		/** Underlying data of this Node. */
-		private K element;
+		private final K element;
 
 		/** Nodes that are connected with this one. */
-		private Set<Node<K>> connectedNodes;
+		private final Set<Node<K>> connectedNodes;
 
 		/**
 		 * Construct a new Node for the given element.
@@ -147,6 +183,19 @@ public class Graph<E> {
 		}
 
 		/**
+		 * Breaks the connection from the given other node to this one.
+		 * 
+		 * @param other
+		 *            The node which connection to this one is to be broken.
+		 */
+		public void breakConnections() {
+			for (Node<K> connected : this.connectedNodes) {
+				connected.connectedNodes.remove(this);
+			}
+			this.connectedNodes.clear();
+		}
+
+		/**
 		 * Returns the underlying data of this Node.
 		 * 
 		 * @return The underlying data of this Node.
@@ -165,10 +214,10 @@ public class Graph<E> {
 	 */
 	private static class SubgraphBuilder<L> {
 		/** The Node that will be used as a starting point of the iteration. */
-		private Node<L> start;
+		private final Node<L> start;
 
 		/** Keeps track of the elements we've already iterated over. */
-		protected Set<L> set;
+		protected final Set<L> set;
 
 		/**
 		 * Constructs a new iterable given the starting point in the target subgraph.
