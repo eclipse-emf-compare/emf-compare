@@ -18,11 +18,6 @@ import org.eclipse.emf.compare.ide.ui.internal.logical.IModelResolverRegistry;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ModelResolverRegistryImpl;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ModelResolverRegistryListener;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.resource.LocalResourceManager;
-import org.eclipse.jface.resource.ResourceManager;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -40,9 +35,6 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 
 	/** Model resolvers extension point. */
 	private static final String MODEL_RESOLVER_PPID = "modelResolvers"; //$NON-NLS-1$
-
-	/** Manages the images that were loaded by EMF Compare. */
-	private LocalResourceManager fResourceManager;
 
 	/** Listener for the model resolver extension point. */
 	private AbstractRegistryEventListener modelResolverRegistryListener;
@@ -80,10 +72,6 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		if (fResourceManager != null) {
-			fResourceManager.dispose();
-		}
-
 		final IExtensionRegistry globalRegistry = Platform.getExtensionRegistry();
 		globalRegistry.removeListener(modelResolverRegistryListener);
 		modelResolverRegistry.clear();
@@ -110,32 +98,6 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		return modelResolverRegistry;
 	}
 
-	public ImageDescriptor getImageDescriptor(String path) {
-		return imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID, path);
-	}
-
-	public Image getImage(ImageDescriptor descriptor) {
-		ResourceManager rm = getResourceManager();
-		return rm.createImage(descriptor);
-	}
-
-	/**
-	 * Loads an image from this plugin's path and returns it.
-	 * 
-	 * @param path
-	 *            Path to the image we are to load.
-	 * @return The loaded image.
-	 */
-	public Image getImage(String path) {
-		final ImageDescriptor descriptor = imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID, path);
-		Image result = null;
-		if (descriptor != null) {
-			ResourceManager rm = getResourceManager();
-			result = rm.createImage(descriptor);
-		}
-		return result;
-	}
-
 	/**
 	 * Log an {@link Exception} in the {@link #getLog() current logger}.
 	 * 
@@ -145,30 +107,4 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	public void log(Throwable e) {
 		getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, e.getMessage(), e));
 	}
-
-	/**
-	 * Log the given message with the give severity level. Severity is one of {@link IStatus#INFO},
-	 * {@link IStatus#WARNING} and {@link IStatus#ERROR}.
-	 * 
-	 * @param severity
-	 *            the severity of the message
-	 * @param message
-	 *            the message
-	 */
-	public void log(int severity, String message) {
-		getLog().log(new Status(severity, PLUGIN_ID, message));
-	}
-
-	/**
-	 * Returns the resource manager for this plugin, creating it if needed.
-	 * 
-	 * @return The resource manager for this plugin, creating it if needed.
-	 */
-	private ResourceManager getResourceManager() {
-		if (fResourceManager == null) {
-			fResourceManager = new LocalResourceManager(JFaceResources.getResources());
-		}
-		return fResourceManager;
-	}
-
 }

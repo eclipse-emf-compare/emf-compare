@@ -616,22 +616,22 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		IMenuService menuService = (IMenuService)workbench.getService(IMenuService.class);
 		if (menuService != null) {
 			menuService.populateContributionManager(toolbarManager,
-					"toolbar:org.eclipse.emf.compare.structuremergeviewer.toolbar");
+					"toolbar:org.eclipse.emf.compare.structuremergeviewer.toolbar"); //$NON-NLS-1$
 		}
 
 		Bundle uiWorkbenchBundle = Platform.getBundle("org.eclipse.ui.workbench"); //$NON-NLS-1$
-		Version junoStart = Version.parseVersion("3.103");
+		Version junoStart = Version.parseVersion("3.103"); //$NON-NLS-1$
 
 		// XXX MBA change to 3.105 once bug #366528 is fixed
-		Version keplerStart = Version.parseVersion("3.105");
+		Version keplerStart = Version.parseVersion("3.105"); //$NON-NLS-1$
 
 		if (uiWorkbenchBundle != null && uiWorkbenchBundle.getVersion().compareTo(junoStart) >= 0
 				&& uiWorkbenchBundle.getVersion().compareTo(keplerStart) < 0) {
 			IAction action = new CommandAction(PlatformUI.getWorkbench(),
-					"org.eclipse.emf.compare.ide.ui.saveComparisonModel");
-			action.setToolTipText("Save Comparison model"); //$NON-NLS-1$
+					"org.eclipse.emf.compare.ide.ui.saveComparisonModel"); //$NON-NLS-1$
+			action.setToolTipText("Save Comparison model");
 			action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-					EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/saveas_edit.gif"));
+					EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/saveas_edit.gif")); //$NON-NLS-1$
 			toolbarManager.add(action);
 		}
 

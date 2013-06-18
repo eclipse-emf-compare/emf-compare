@@ -80,14 +80,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	private static final String HANDLER_SERVICE = "fHandlerService";
 
-	protected static final int HORIZONTAL = 1;
-
-	protected static final int VERTICAL = 2;
-
-	protected static final double HSPLIT = 0.5;
-
-	protected static final double VSPLIT = 0.3;
-
 	/**
 	 * Width of center bar
 	 */

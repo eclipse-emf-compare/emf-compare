@@ -34,12 +34,6 @@ import org.eclipse.swt.graphics.Image;
  */
 public class TableContentMergeViewerContentProvider implements IMergeViewerContentProvider {
 
-	public static final char ANCESTOR_CONTRIBUTOR = 'A';
-
-	public static final char RIGHT_CONTRIBUTOR = 'R';
-
-	public static final char LEFT_CONTRIBUTOR = 'L';
-
 	private CompareConfiguration fCompareConfiguration;
 
 	private String fAncestorError;
