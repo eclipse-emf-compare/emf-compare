@@ -16,12 +16,10 @@ import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEIsSet;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -45,134 +43,56 @@ public class AttributeChangeMerger extends AbstractMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.merge.IMerger#copyLeftToRight(org.eclipse.emf.compare.Diff,
-	 *      org.eclipse.emf.common.util.Monitor)
+	 * @see org.eclipse.emf.compare.merge.AbstractMerger#accept(org.eclipse.emf.compare.Diff, boolean)
 	 */
-	public void copyLeftToRight(Diff target, Monitor monitor) {
-		// Don't merge an already merged (or discarded) diff
-		if (target.getState() != DifferenceState.UNRESOLVED) {
-			return;
-		}
-		final AttributeChange diff = (AttributeChange)target;
-
-		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
-		diff.setState(DifferenceState.MERGED);
-		if (diff.getEquivalence() != null) {
-			for (Diff equivalent : diff.getEquivalence().getDifferences()) {
-				equivalent.setState(DifferenceState.MERGED);
-			}
-		}
-
-		if (diff.getSource() == DifferenceSource.LEFT) {
-			// merge all "requires" diffs
-			mergeRequires(diff, false, monitor);
-
-			switch (diff.getKind()) {
-				case ADD:
-					// Create the same element in right
-					addInTarget(diff, false);
-					break;
-				case DELETE:
-					// Delete that same element from right
-					removeFromTarget(diff, false);
-					break;
-				case MOVE:
-					moveElement(diff, false);
-					break;
-				case CHANGE:
-					changeValue(diff, false);
-					break;
-				default:
-					break;
-			}
-		} else {
-			// merge all "required by" diffs
-			mergeRequiredBy(diff, false, monitor);
-
-			switch (diff.getKind()) {
-				case ADD:
-					// We have a ADD on right. we need to revert this addition
-					removeFromTarget(diff, false);
-					break;
-				case DELETE:
-					// DELETE in the right. We need to re-create this element
-					addInTarget(diff, false);
-					break;
-				case MOVE:
-					moveElement(diff, false);
-					break;
-				case CHANGE:
-					changeValue(diff, false);
-					break;
-				default:
-					break;
-			}
+	@Override
+	protected void accept(final Diff diff, boolean rightToLeft) {
+		AttributeChange attributeChange = (AttributeChange)diff;
+		switch (diff.getKind()) {
+			case ADD:
+				// Create the same element in right
+				addInTarget(attributeChange, rightToLeft);
+				break;
+			case DELETE:
+				// Delete that same element from right
+				removeFromTarget(attributeChange, rightToLeft);
+				break;
+			case MOVE:
+				moveElement(attributeChange, rightToLeft);
+				break;
+			case CHANGE:
+				changeValue(attributeChange, rightToLeft);
+				break;
+			default:
+				break;
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.merge.IMerger#copyRightToLeft(org.eclipse.emf.compare.Diff,
-	 *      org.eclipse.emf.common.util.Monitor)
+	 * @see org.eclipse.emf.compare.merge.AbstractMerger#reject(org.eclipse.emf.compare.Diff, boolean)
 	 */
-	public void copyRightToLeft(Diff target, Monitor monitor) {
-		// Don't merge an already merged (or discarded) diff
-		if (target.getState() != DifferenceState.UNRESOLVED) {
-			return;
-		}
-		final AttributeChange diff = (AttributeChange)target;
-
-		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
-		diff.setState(DifferenceState.MERGED);
-		if (diff.getEquivalence() != null) {
-			for (Diff equivalent : diff.getEquivalence().getDifferences()) {
-				equivalent.setState(DifferenceState.MERGED);
-			}
-		}
-
-		if (diff.getSource() == DifferenceSource.LEFT) {
-			// merge all "required by" diffs
-			mergeRequiredBy(diff, true, monitor);
-
-			switch (diff.getKind()) {
-				case ADD:
-					// We have a ADD on left, thus nothing in right. We need to revert the addition
-					removeFromTarget(diff, true);
-					break;
-				case DELETE:
-					// DELETE in the left, thus an element in right. We need to re-create that element
-					addInTarget(diff, true);
-					break;
-				case MOVE:
-					moveElement(diff, true);
-					break;
-				case CHANGE:
-					changeValue(diff, true);
-					break;
-				default:
-					break;
-			}
-		} else {
-			// merge all "requires" diffs
-			mergeRequires(diff, true, monitor);
-
-			switch (diff.getKind()) {
-				case ADD:
-					addInTarget(diff, true);
-					break;
-				case DELETE:
-					removeFromTarget(diff, true);
-					break;
-				case MOVE:
-					moveElement(diff, true);
-					break;
-				case CHANGE:
-					changeValue(diff, true);
-					break;
-				default:
-					break;
-			}
+	@Override
+	protected void reject(Diff diff, boolean rightToLeft) {
+		AttributeChange attributeChange = (AttributeChange)diff;
+		switch (diff.getKind()) {
+			case ADD:
+				// We have a ADD on right. we need to revert this addition
+				removeFromTarget(attributeChange, rightToLeft);
+				break;
+			case DELETE:
+				// DELETE in the right. We need to re-create this element
+				addInTarget(attributeChange, rightToLeft);
+				break;
+			case MOVE:
+				moveElement(attributeChange, rightToLeft);
+				break;
+			case CHANGE:
+				changeValue(attributeChange, rightToLeft);
+				break;
+			default:
+				break;
 		}
 	}
 

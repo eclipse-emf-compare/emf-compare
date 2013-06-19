@@ -13,15 +13,12 @@ package org.eclipse.emf.compare.merge;
 import static com.google.common.collect.Iterators.filter;
 import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEIsSet;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -29,7 +26,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.internal.utils.DiffUtil;
+import org.eclipse.emf.compare.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -55,86 +52,6 @@ public class ReferenceChangeMerger extends AbstractMerger {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.merge.IMerger#copyLeftToRight(org.eclipse.emf.compare.Diff,
-	 *      org.eclipse.emf.common.util.Monitor)
-	 */
-	public void copyLeftToRight(Diff target, Monitor monitor) {
-		// Don't merge an already merged (or discarded) diff
-		if (target.getState() != DifferenceState.UNRESOLVED) {
-			return;
-		}
-		final ReferenceChange diff = (ReferenceChange)target;
-
-		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
-		diff.setState(DifferenceState.MERGED);
-
-		if (diff.getSource() == DifferenceSource.LEFT) {
-			// merge all "requires" diffs
-			mergeRequires(diff, false, monitor);
-			handleImplies(diff, false, monitor);
-		} else {
-			// merge all "required by" diffs
-			mergeRequiredBy(diff, false, monitor);
-			handleImpliedBy(diff, false, monitor);
-		}
-
-		boolean hasToBeMerged = true;
-		if (diff.getEquivalence() != null) {
-			hasToBeMerged = handleEquivalences(diff, false, monitor);
-		}
-
-		if (hasToBeMerged) {
-			if (diff.getSource() == DifferenceSource.LEFT) {
-				accept(diff, false);
-			} else {
-				reject(diff, false);
-			}
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.merge.IMerger#copyRightToLeft(org.eclipse.emf.compare.Diff,
-	 *      org.eclipse.emf.common.util.Monitor)
-	 */
-	public void copyRightToLeft(Diff target, Monitor monitor) {
-		// Don't merge an already merged (or discarded) diff
-		if (target.getState() != DifferenceState.UNRESOLVED) {
-			return;
-		}
-		final ReferenceChange diff = (ReferenceChange)target;
-
-		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
-		diff.setState(DifferenceState.MERGED);
-
-		if (diff.getSource() == DifferenceSource.LEFT) {
-			// merge all "required by" diffs
-			mergeRequiredBy(diff, true, monitor);
-			handleImpliedBy(diff, true, monitor);
-		} else {
-			// merge all "requires" diffs
-			mergeRequires(diff, true, monitor);
-			handleImplies(diff, true, monitor);
-		}
-
-		boolean hasToBeMerged = true;
-		if (diff.getEquivalence() != null) {
-			hasToBeMerged = handleEquivalences(diff, true, monitor);
-		}
-
-		if (hasToBeMerged) {
-			if (diff.getSource() == DifferenceSource.LEFT) {
-				reject(diff, true);
-			} else {
-				accept(diff, true);
-			}
-		}
-	}
-
-	/**
 	 * Merge the given difference rejecting it.
 	 * 
 	 * @param diff
@@ -142,42 +59,44 @@ public class ReferenceChangeMerger extends AbstractMerger {
 	 * @param rightToLeft
 	 *            The direction of the merge.
 	 */
-	private void reject(final ReferenceChange diff, boolean rightToLeft) {
-		DifferenceSource source = diff.getSource();
-		switch (diff.getKind()) {
+	@Override
+	protected void reject(final Diff diff, boolean rightToLeft) {
+		ReferenceChange referenceChange = (ReferenceChange)diff;
+		DifferenceSource source = referenceChange.getSource();
+		switch (referenceChange.getKind()) {
 			case ADD:
 				// We have a ADD on left, thus nothing in right. We need to revert the addition
-				removeFromTarget(diff, rightToLeft);
+				removeFromTarget(referenceChange, rightToLeft);
 				break;
 			case DELETE:
 				// DELETE in the left, thus an element in right. We need to re-create that element
-				addInTarget(diff, rightToLeft);
+				addInTarget(referenceChange, rightToLeft);
 				break;
 			case MOVE:
-				moveElement(diff, rightToLeft);
+				moveElement(referenceChange, rightToLeft);
 				break;
 			case CHANGE:
 				EObject container = null;
 				if (source == DifferenceSource.LEFT) {
-					container = diff.getMatch().getLeft();
+					container = referenceChange.getMatch().getLeft();
 
 				} else {
-					container = diff.getMatch().getRight();
+					container = referenceChange.getMatch().getRight();
 				}
 				// Is it an unset?
 				if (container != null) {
-					final EObject leftValue = (EObject)container.eGet(diff.getReference(), false);
+					final EObject leftValue = (EObject)container.eGet(referenceChange.getReference(), false);
 					if (leftValue == null) {
 						// Value has been unset in the right, and we are merging towards right.
 						// We need to re-add this element
-						addInTarget(diff, rightToLeft);
+						addInTarget(referenceChange, rightToLeft);
 					} else {
 						// We'll actually need to "reset" this reference to its original value
-						resetInTarget(diff, rightToLeft);
+						resetInTarget(referenceChange, rightToLeft);
 					}
 				} else {
 					// we have no left, and the source is on the left. Can only be an unset
-					addInTarget(diff, rightToLeft);
+					addInTarget(referenceChange, rightToLeft);
 				}
 				break;
 			default:
@@ -193,76 +112,44 @@ public class ReferenceChangeMerger extends AbstractMerger {
 	 * @param rightToLeft
 	 *            The direction of the merge.
 	 */
-	private void accept(final ReferenceChange diff, boolean rightToLeft) {
+	@Override
+	protected void accept(final Diff diff, boolean rightToLeft) {
+		ReferenceChange referenceChange = (ReferenceChange)diff;
 		DifferenceSource source = diff.getSource();
 		switch (diff.getKind()) {
 			case ADD:
 				// Create the same element in right
-				addInTarget(diff, rightToLeft);
+				addInTarget(referenceChange, rightToLeft);
 				break;
 			case DELETE:
 				// Delete that same element from right
-				removeFromTarget(diff, rightToLeft);
+				removeFromTarget(referenceChange, rightToLeft);
 				break;
 			case MOVE:
-				moveElement(diff, rightToLeft);
+				moveElement(referenceChange, rightToLeft);
 				break;
 			case CHANGE:
 				EObject container = null;
 				if (source == DifferenceSource.LEFT) {
-					container = diff.getMatch().getLeft();
+					container = referenceChange.getMatch().getLeft();
 				} else {
-					container = diff.getMatch().getRight();
+					container = referenceChange.getMatch().getRight();
 				}
 				// Is it an unset?
 				if (container != null) {
-					final EObject leftValue = (EObject)container.eGet(diff.getReference(), false);
+					final EObject leftValue = (EObject)container.eGet(referenceChange.getReference(), false);
 					if (leftValue == null) {
-						removeFromTarget(diff, rightToLeft);
+						removeFromTarget(referenceChange, rightToLeft);
 					} else {
-						addInTarget(diff, rightToLeft);
+						addInTarget(referenceChange, rightToLeft);
 					}
 				} else {
 					// we have no left, and the source is on the left. Can only be an unset
-					removeFromTarget(diff, rightToLeft);
+					removeFromTarget(referenceChange, rightToLeft);
 				}
 				break;
 			default:
 				break;
-		}
-	}
-
-	/**
-	 * Mark as MERGED all the implied differences recursively from the given one.
-	 * 
-	 * @param diff
-	 *            The difference from which the implications have to be marked.
-	 * @param rightToLeft
-	 *            The direction of the merge.
-	 * @param monitor
-	 *            Monitor.
-	 */
-	private void handleImplies(Diff diff, boolean rightToLeft, Monitor monitor) {
-		for (Diff implied : diff.getImplies()) {
-			implied.setState(DifferenceState.MERGED);
-			handleImplies(implied, rightToLeft, monitor);
-		}
-	}
-
-	/**
-	 * Mark as MERGED all the implying differences recursively from the given one.
-	 * 
-	 * @param diff
-	 *            The difference from which the implications have to be marked.
-	 * @param rightToLeft
-	 *            The direction of the merge.
-	 * @param monitor
-	 *            Monitor.
-	 */
-	private void handleImpliedBy(Diff diff, boolean rightToLeft, Monitor monitor) {
-		for (Diff impliedBy : diff.getImpliedBy()) {
-			impliedBy.setState(DifferenceState.MERGED);
-			handleImpliedBy(impliedBy, rightToLeft, monitor);
 		}
 	}
 
@@ -629,72 +516,6 @@ public class ReferenceChangeMerger extends AbstractMerger {
 	}
 
 	/**
-	 * Handles the equivalences of this difference.
-	 * <p>
-	 * Note that in certain cases, we'll merge our opposite instead of merging this diff. Specifically, we'll
-	 * do that for one-to-many eOpposites : we'll merge the 'many' side instead of the 'unique' one. This
-	 * allows us not to worry about the order of the references on that 'many' side.
-	 * </p>
-	 * <p>
-	 * This is called before the merge of <code>this</code>. In short, if this returns <code>false</code>, we
-	 * won't carry on merging <code>this</code> after returning.
-	 * </p>
-	 * 
-	 * @param diff
-	 *            The diff we are currently merging.
-	 * @param rightToLeft
-	 *            Direction of the merge.
-	 * @param monitor
-	 *            The monitor to use in order to report progress information.
-	 * @return <code>true</code> if the current difference should still be merged after handling its
-	 *         equivalences, <code>false</code> if it should be considered "already merged".
-	 */
-	protected boolean handleEquivalences(ReferenceChange diff, boolean rightToLeft, Monitor monitor) {
-		final EReference reference = diff.getReference();
-		boolean continueMerge = true;
-		for (Diff equivalent : diff.getEquivalence().getDifferences()) {
-			// For 1..*, merge diff on many-valued to preserve ordering
-			if (equivalent instanceof ReferenceChange
-					&& reference.getEOpposite() == ((ReferenceChange)equivalent).getReference()
-					&& equivalent.getState() == DifferenceState.UNRESOLVED) {
-				// This equivalence is on our eOpposite. Should we merge it instead of 'this'?
-				final boolean mergeEquivalence = !reference.isMany()
-						&& ((ReferenceChange)equivalent).getReference().isMany();
-				if (mergeEquivalence) {
-					mergeDiff(equivalent, rightToLeft, monitor);
-					continueMerge = false;
-				}
-			}
-
-			/*
-			 * If one of the equivalent differences is implied or implying (depending on the merge direction)
-			 * a merged diff, then we have a dependency loop : the "current" difference has already been
-			 * merged because of this implication. This will allow us to break out of that loop.
-			 */
-			if (rightToLeft) {
-				if (diff.getSource() == DifferenceSource.LEFT) {
-					continueMerge = continueMerge
-							&& !containsAny(diff.getRequiredBy(), equivalent.getImplies());
-				} else {
-					continueMerge = continueMerge
-							&& !containsAny(diff.getRequires(), equivalent.getImpliedBy());
-				}
-			} else {
-				if (diff.getSource() == DifferenceSource.LEFT) {
-					continueMerge = continueMerge
-							&& !containsAny(diff.getRequires(), equivalent.getImpliedBy());
-				} else {
-					continueMerge = continueMerge
-							&& !containsAny(diff.getRequiredBy(), equivalent.getImplies());
-				}
-			}
-
-			equivalent.setState(DifferenceState.MERGED);
-		}
-		return continueMerge;
-	}
-
-	/**
 	 * In the case of many-to-many eOpposite references, EMF will simply report the difference made on one
 	 * side of the equivalence to the other, without considering ordering in any way. In such cases, we'll
 	 * iterate over our equivalences after the merge, and double-check the ordering ourselves, fixing it as
@@ -805,21 +626,6 @@ public class ReferenceChangeMerger extends AbstractMerger {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Utility method to check that the first sequence contains one of the elements of the second sequence at
-	 * least.
-	 * 
-	 * @param sequence1
-	 *            The first sequence.
-	 * @param sequence2
-	 *            The second sequence.
-	 * @return True if the given first sequence contains one of the elements of the second sequence at least.
-	 *         false otherwise.
-	 */
-	private boolean containsAny(List<? extends EObject> sequence1, List<? extends EObject> sequence2) {
-		return Iterables.any(sequence2, Predicates.in(sequence1));
 	}
 
 	/**

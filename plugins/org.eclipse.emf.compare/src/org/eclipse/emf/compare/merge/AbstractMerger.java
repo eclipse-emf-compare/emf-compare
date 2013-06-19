@@ -10,12 +10,19 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
+import static com.google.common.base.Predicates.in;
+import static com.google.common.collect.Iterables.any;
+
 import java.util.List;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.utils.EMFCompareCopier;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -73,6 +80,116 @@ public abstract class AbstractMerger implements IMerger {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.merge.IMerger#copyLeftToRight(org.eclipse.emf.compare.Diff,
+	 *      org.eclipse.emf.common.util.Monitor)
+	 */
+	public void copyLeftToRight(Diff target, Monitor monitor) {
+		// Don't merge an already merged (or discarded) diff
+		if (target.getState() != DifferenceState.UNRESOLVED) {
+			return;
+		}
+
+		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
+		target.setState(DifferenceState.MERGED);
+
+		if (target.getSource() == DifferenceSource.LEFT) {
+			// merge all "requires" diffs
+			mergeRequires(target, false, monitor);
+			handleImplies(target, false, monitor);
+		} else {
+			// merge all "required by" diffs
+			mergeRequiredBy(target, false, monitor);
+			handleImpliedBy(target, false, monitor);
+		}
+
+		for (Diff refining : target.getRefinedBy()) {
+			mergeDiff(refining, false, monitor);
+		}
+
+		boolean hasToBeMerged = true;
+		if (target.getEquivalence() != null) {
+			hasToBeMerged = handleEquivalences(target, false, monitor);
+		}
+
+		if (hasToBeMerged) {
+			if (target.getSource() == DifferenceSource.LEFT) {
+				accept(target, false);
+			} else {
+				reject(target, false);
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.merge.IMerger#copyRightToLeft(org.eclipse.emf.compare.Diff,
+	 *      org.eclipse.emf.common.util.Monitor)
+	 */
+	public void copyRightToLeft(Diff target, Monitor monitor) {
+		// Don't merge an already merged (or discarded) diff
+		if (target.getState() != DifferenceState.UNRESOLVED) {
+			return;
+		}
+
+		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
+		target.setState(DifferenceState.MERGED);
+
+		if (target.getSource() == DifferenceSource.LEFT) {
+			// merge all "required by" diffs
+			mergeRequiredBy(target, true, monitor);
+			handleImpliedBy(target, true, monitor);
+		} else {
+			// merge all "requires" diffs
+			mergeRequires(target, true, monitor);
+			handleImplies(target, true, monitor);
+		}
+
+		for (Diff refining : target.getRefinedBy()) {
+			mergeDiff(refining, true, monitor);
+		}
+
+		boolean hasToBeMerged = true;
+		if (target.getEquivalence() != null) {
+			hasToBeMerged = handleEquivalences(target, true, monitor);
+		}
+
+		if (hasToBeMerged) {
+			if (target.getSource() == DifferenceSource.LEFT) {
+				reject(target, true);
+			} else {
+				accept(target, true);
+			}
+		}
+	}
+
+	/**
+	 * Accept the given difference. This may be overridden by clients.
+	 * 
+	 * @param diff
+	 *            the difference to merge
+	 * @param rightToLeft
+	 *            the direction of the merge
+	 */
+	protected void accept(final Diff diff, boolean rightToLeft) {
+
+	}
+
+	/**
+	 * Reject the given difference. This may be overridden by clients.
+	 * 
+	 * @param diff
+	 *            the difference to merge
+	 * @param rightToLeft
+	 *            the direction of the merge
+	 */
+	protected void reject(final Diff diff, boolean rightToLeft) {
+
+	}
+
+	/**
 	 * This will merge all {@link Diff#getRequiredBy() differences that require} {@code diff} in the given
 	 * direction.
 	 * 
@@ -89,6 +206,42 @@ public abstract class AbstractMerger implements IMerger {
 		for (Diff dependency : diff.getRequiredBy()) {
 			// TODO: what to do when state = Discarded but is required?
 			mergeDiff(dependency, rightToLeft, monitor);
+		}
+	}
+
+	/**
+	 * Mark as {@link DifferenceState#MERGED merged} all the implied differences recursively from the given
+	 * one.
+	 * 
+	 * @param diff
+	 *            The difference from which the implications have to be marked.
+	 * @param rightToLeft
+	 *            The direction of the merge.
+	 * @param monitor
+	 *            Monitor.
+	 */
+	protected void handleImplies(Diff diff, boolean rightToLeft, Monitor monitor) {
+		for (Diff implied : diff.getImplies()) {
+			implied.setState(DifferenceState.MERGED);
+			handleImplies(implied, rightToLeft, monitor);
+		}
+	}
+
+	/**
+	 * Mark as {@link DifferenceState#MERGED merged} all the implying differences recursively from the given
+	 * one.
+	 * 
+	 * @param diff
+	 *            The difference from which the implications have to be marked.
+	 * @param rightToLeft
+	 *            The direction of the merge.
+	 * @param monitor
+	 *            Monitor.
+	 */
+	protected void handleImpliedBy(Diff diff, boolean rightToLeft, Monitor monitor) {
+		for (Diff impliedBy : diff.getImpliedBy()) {
+			impliedBy.setState(DifferenceState.MERGED);
+			handleImpliedBy(impliedBy, rightToLeft, monitor);
 		}
 	}
 
@@ -131,6 +284,71 @@ public abstract class AbstractMerger implements IMerger {
 			final IMerger delegate = getRegistry().getHighestRankingMerger(diff);
 			delegate.copyLeftToRight(diff, monitor);
 		}
+	}
+
+	/**
+	 * Handles the equivalences of this difference.
+	 * <p>
+	 * Note that in certain cases, we'll merge our opposite instead of merging this diff. Specifically, we'll
+	 * do that for one-to-many eOpposites : we'll merge the 'many' side instead of the 'unique' one. This
+	 * allows us not to worry about the order of the references on that 'many' side.
+	 * </p>
+	 * <p>
+	 * This is called before the merge of <code>this</code>. In short, if this returns <code>false</code>, we
+	 * won't carry on merging <code>this</code> after returning.
+	 * </p>
+	 * 
+	 * @param diff
+	 *            The diff we are currently merging.
+	 * @param rightToLeft
+	 *            Direction of the merge.
+	 * @param monitor
+	 *            The monitor to use in order to report progress information.
+	 * @return <code>true</code> if the current difference should still be merged after handling its
+	 *         equivalences, <code>false</code> if it should be considered "already merged".
+	 */
+	protected boolean handleEquivalences(Diff diff, boolean rightToLeft, Monitor monitor) {
+		boolean continueMerge = true;
+		for (Diff equivalent : diff.getEquivalence().getDifferences()) {
+			// For 1..*, merge diff on many-valued to preserve ordering
+			if (diff instanceof ReferenceChange && equivalent instanceof ReferenceChange) {
+				final EReference reference = ((ReferenceChange)diff).getReference();
+				final EReference equivalentReference = ((ReferenceChange)equivalent).getReference();
+
+				if (reference.getEOpposite() == equivalentReference
+						&& equivalent.getState() == DifferenceState.UNRESOLVED) {
+					// This equivalence is on our eOpposite. Should we merge it instead of 'this'?
+					final boolean mergeEquivalence = !reference.isMany()
+							&& ((ReferenceChange)equivalent).getReference().isMany();
+					if (mergeEquivalence) {
+						mergeDiff(equivalent, rightToLeft, monitor);
+						continueMerge = false;
+					}
+				}
+			}
+
+			/*
+			 * If one of the equivalent differences is implied or implying (depending on the merge direction)
+			 * a merged diff, then we have a dependency loop : the "current" difference has already been
+			 * merged because of this implication. This will allow us to break out of that loop.
+			 */
+			if (rightToLeft) {
+				if (diff.getSource() == DifferenceSource.LEFT) {
+					continueMerge = continueMerge && !any(equivalent.getImplies(), in(diff.getRequiredBy()));
+				} else {
+					continueMerge = continueMerge && !any(equivalent.getImpliedBy(), in(diff.getRequires()));
+				}
+			} else {
+				if (diff.getSource() == DifferenceSource.LEFT) {
+					continueMerge = continueMerge && !any(equivalent.getImpliedBy(), in(diff.getRequires()));
+				} else {
+					continueMerge = continueMerge && !any(equivalent.getImplies(), in(diff.getRequiredBy()));
+				}
+			}
+
+			equivalent.setState(DifferenceState.MERGED);
+		}
+		return continueMerge;
 	}
 
 	/**
