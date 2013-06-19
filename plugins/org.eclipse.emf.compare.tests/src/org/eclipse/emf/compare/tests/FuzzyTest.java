@@ -29,6 +29,7 @@ import org.eclipse.emf.compare.match.eobject.URIDistance;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -69,7 +70,8 @@ public class FuzzyTest {
 	public void detectingNoDifferenceOnACopy() {
 		Assert.assertNotNull(root);
 		EObject backup = EcoreUtil.copy(root);
-		Comparison result = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(root, backup));
+		Comparison result = EMFCompare.builder().build().compare(
+				new DefaultComparisonScope(root, backup, null));
 		Assert.assertEquals(0, result.getDifferences().size());
 	}
 
@@ -86,7 +88,8 @@ public class FuzzyTest {
 		EObject mutated = EcoreUtil.copy(root);
 		removeAllDuplicateCrossReferencesFrom(root);
 
-		Comparison result = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(root, backup));
+		Comparison result = EMFCompare.builder().build().compare(
+				new DefaultComparisonScope(root, backup, null));
 		int nbDiffs = result.getDifferences().size();
 		final IBatchMerger merger = new BatchMerger(mergerRegistry);
 		merger.copyAllRightToLeft(result.getDifferences(), new BasicMonitor());
@@ -95,7 +98,8 @@ public class FuzzyTest {
 			assertSame(delta.getState(), DifferenceState.MERGED);
 		}
 
-		Comparison valid = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(root, backup));
+		Comparison valid = EMFCompare.builder().build().compare(
+				new DefaultComparisonScope(root, backup, null));
 		List<Diff> differences = valid.getDifferences();
 
 		Set<String> urisToDebug = Sets.newLinkedHashSet();
@@ -111,7 +115,7 @@ public class FuzzyTest {
 			 * restart
 			 */
 			root = EcoreUtil.copy(mutated);
-			result = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(root, backup));
+			result = EMFCompare.builder().build().compare(new DefaultComparisonScope(root, backup, null));
 			for (Diff diff : result.getDifferences()) {
 				if (diff.getMatch().getRight() != null) {
 					String uri = new URIDistance().apply(diff.getMatch().getRight()).toString();
@@ -140,12 +144,14 @@ public class FuzzyTest {
 		util.mutate(createConfig());
 		removeAllDuplicateCrossReferencesFrom(root);
 
-		Comparison result = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(root, backup));
+		Comparison result = EMFCompare.builder().build().compare(
+				new DefaultComparisonScope(root, backup, null));
 		int nbDiffs = result.getDifferences().size();
 		final IBatchMerger merger = new BatchMerger(mergerRegistry);
 		merger.copyAllLeftToRight(result.getDifferences(), new BasicMonitor());
 
-		Comparison valid = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(root, backup));
+		Comparison valid = EMFCompare.builder().build().compare(
+				new DefaultComparisonScope(root, backup, null));
 		List<Diff> differences = valid.getDifferences();
 		Assert.assertEquals("We still have differences after merging all of them (had " + nbDiffs
 				+ " to merge in the beginning)", 0, differences.size());

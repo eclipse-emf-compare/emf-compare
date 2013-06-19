@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.postprocess.data.PostProcessInputData;
@@ -48,7 +49,7 @@ public class PostProcessorTest {
 		final Resource left = input.getLeft();
 		final Resource right = input.getRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		final Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getMatches().size()));
@@ -200,7 +201,7 @@ public class PostProcessorTest {
 	public void testOrderingPostProcessors() throws IOException {
 		final Resource left = input.getLeft();
 		final Resource right = input.getRight();
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 
 		PostProcessorDescriptorRegistryImpl registry = new PostProcessorDescriptorRegistryImpl();
 		registry.put(TestPostProcessor1.class.getName(), new TestPostProcessorDescriptor(Pattern.compile(""),
@@ -233,7 +234,7 @@ public class PostProcessorTest {
 		registry.put(TestPostProcessor.class.getName(), new TestPostProcessorDescriptor(nsURI, resourceURI,
 				new TestPostProcessor(), 10));
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		return EMFCompare.builder().setPostProcessorRegistry(registry).build().compare(scope);
 	}
 

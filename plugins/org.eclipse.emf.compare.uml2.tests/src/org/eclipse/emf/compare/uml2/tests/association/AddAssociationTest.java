@@ -23,8 +23,6 @@ import java.util.List;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.internal.AssociationChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
@@ -43,8 +41,7 @@ public class AddAssociationTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right);
 		testAB1(TestKind.ADD, comparison);
 	}
 
@@ -71,8 +68,7 @@ public class AddAssociationTest extends AbstractTest {
 		final Resource left = input.getA1Right();
 		final Resource right = input.getA1Left();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right);
 		testAB1(TestKind.DELETE, comparison);
 	}
 
@@ -99,8 +95,7 @@ public class AddAssociationTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, right);
 		testAB1(TestKind.ADD, comparison);
 	}
 
@@ -127,8 +122,7 @@ public class AddAssociationTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, left);
 		testAB1(TestKind.DELETE, comparison);
 	}
 

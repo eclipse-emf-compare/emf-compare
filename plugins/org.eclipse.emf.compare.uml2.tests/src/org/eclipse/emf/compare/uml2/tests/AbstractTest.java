@@ -34,6 +34,7 @@ import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
@@ -79,6 +80,15 @@ public abstract class AbstractTest {
 
 	protected EMFCompare getCompare() {
 		return emfCompare;
+	}
+
+	protected Comparison compare(Notifier left, Notifier right) {
+		return compare(left, right, null);
+	}
+
+	protected Comparison compare(Notifier left, Notifier right, Notifier origin) {
+		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
+		return getCompare().compare(scope);
 	}
 
 	protected enum TestKind {
@@ -131,7 +141,7 @@ public abstract class AbstractTest {
 	protected abstract AbstractInputData getInput();
 
 	protected void testMergeLeftToRight(Notifier left, Notifier right, Notifier origin) {
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		final Comparison comparisonBefore = getCompare().compare(scope);
 		EList<Diff> differences = comparisonBefore.getDifferences();
 		final IBatchMerger merger = new BatchMerger(mergerRegistry);
@@ -142,7 +152,7 @@ public abstract class AbstractTest {
 	}
 
 	protected void testMergeRightToLeft(Notifier left, Notifier right, Notifier origin) {
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		final Comparison comparisonBefore = getCompare().compare(scope);
 		EList<Diff> differences = comparisonBefore.getDifferences();
 		final IBatchMerger merger = new BatchMerger(mergerRegistry);

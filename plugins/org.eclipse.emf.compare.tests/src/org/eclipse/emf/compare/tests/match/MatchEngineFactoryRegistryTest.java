@@ -16,10 +16,10 @@ import static junit.framework.Assert.assertTrue;
 
 import java.io.IOException;
 
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryImpl;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryRegistryImpl;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.fullcomparison.data.identifier.IdentifierMatchInputData;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -38,7 +38,7 @@ public class MatchEngineFactoryRegistryTest {
 				.createStandaloneInstance();
 
 		// Get the appropriate MatchEngineFactory.
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		IMatchEngine.Factory factory = registry.getHighestRankingMatchEngineFactory(scope);
 
 		assertTrue(factory instanceof MatchEngineFactoryImpl);

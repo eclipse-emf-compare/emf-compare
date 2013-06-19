@@ -32,6 +32,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.fullcomparison.data.identifier.IdentifierMatchInputData;
 import org.eclipse.emf.compare.utils.DiffUtil;
@@ -485,7 +486,7 @@ public class DiffUtilTest {
 		final Resource right = inputData.getExtlibraryRight();
 
 		// 2-way
-		IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 		List<Diff> differences = comparison.getDifferences();
 
@@ -521,7 +522,7 @@ public class DiffUtilTest {
 		assertEquals(5, Iterables.size(subDiffs));
 
 		// 3-way
-		scope = EMFCompare.createDefaultScope(left, right, origin);
+		scope = new DefaultComparisonScope(left, right, origin);
 		comparison = EMFCompare.builder().build().compare(scope);
 		differences = comparison.getDifferences();
 

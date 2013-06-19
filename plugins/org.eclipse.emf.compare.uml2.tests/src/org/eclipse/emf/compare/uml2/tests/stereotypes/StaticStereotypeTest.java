@@ -22,10 +22,8 @@ import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
@@ -58,8 +56,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB1Left();
 		final Resource right = input.getB1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right);
 		testAB1(TestKind.ADD, comparison);
 	}
 
@@ -84,8 +81,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB1Left();
 		final Resource right = input.getB1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(right, left);
 		testAB1(TestKind.DELETE, comparison);
 	}
 
@@ -110,8 +106,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB1Left();
 		final Resource right = input.getB1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, right);
 		testAB1(TestKind.ADD, comparison);
 	}
 
@@ -136,8 +131,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB1Left();
 		final Resource right = input.getB1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, left);
 		testAB1(TestKind.DELETE, comparison);
 	}
 
@@ -162,8 +156,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB2Left();
 		final Resource right = input.getB2Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right);
 		testAB2(TestKind.ADD, comparison);
 	}
 
@@ -188,8 +181,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB2Left();
 		final Resource right = input.getB2Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(right, left);
 		testAB2(TestKind.DELETE, comparison);
 	}
 
@@ -214,8 +206,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB2Left();
 		final Resource right = input.getB2Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, right);
 		testAB2(TestKind.ADD, comparison);
 	}
 
@@ -240,8 +231,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB2Left();
 		final Resource right = input.getB2Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, left);
 		testAB2(TestKind.DELETE, comparison);
 	}
 
@@ -266,8 +256,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB3Left();
 		final Resource right = input.getB3Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right);
 		testAB3(TestKind.ADD, comparison);
 	}
 
@@ -292,8 +281,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB3Left();
 		final Resource right = input.getB3Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(right, left);
 		testAB3(TestKind.DELETE, comparison);
 	}
 
@@ -318,8 +306,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB3Left();
 		final Resource right = input.getB3Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, right);
 		testAB3(TestKind.ADD, comparison);
 	}
 
@@ -344,8 +331,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB3Left();
 		final Resource right = input.getB3Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, left);
 		testAB3(TestKind.DELETE, comparison);
 	}
 
@@ -370,8 +356,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB4Left();
 		final Resource right = input.getB4Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right);
 		testAB4(TestKind.ADD, comparison);
 
 		testMergeRightToLeft(left, right, null);
@@ -383,8 +368,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB4Left();
 		final Resource right = input.getB4Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(right, left);
 		testAB4(TestKind.DELETE, comparison);
 
 		testMergeRightToLeft(right, left, null);
@@ -396,8 +380,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB4Left();
 		final Resource right = input.getB4Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, right);
 		testAB4(TestKind.ADD, comparison);
 
 		testMergeRightToLeft(left, right, right);
@@ -409,8 +392,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB4Left();
 		final Resource right = input.getB4Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, left);
 		testAB4(TestKind.DELETE, comparison);
 
 		testMergeRightToLeft(left, right, left);
@@ -422,8 +404,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB5Left();
 		final Resource right = input.getB5Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right);
 		testAB5(TestKind.ADD, comparison);
 
 		testMergeRightToLeft(left, right, null);
@@ -435,8 +416,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB5Left();
 		final Resource right = input.getB5Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(right, left);
 		testAB5(TestKind.DELETE, comparison);
 
 		testMergeRightToLeft(right, left, null);
@@ -448,8 +428,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB5Left();
 		final Resource right = input.getB5Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, right);
 		testAB5(TestKind.ADD, comparison);
 
 		testMergeRightToLeft(left, right, right);
@@ -461,8 +440,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB5Left();
 		final Resource right = input.getB5Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, left);
 		testAB5(TestKind.DELETE, comparison);
 
 		testMergeRightToLeft(left, right, left);
@@ -474,8 +452,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB6Left();
 		final Resource right = input.getB6Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right);
 		testAB6(TestKind.ADD, comparison);
 
 		testMergeRightToLeft(left, right, null);
@@ -487,8 +464,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB6Left();
 		final Resource right = input.getB6Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(right, left);
 		testAB6(TestKind.DELETE, comparison);
 
 		testMergeRightToLeft(right, left, null);
@@ -500,8 +476,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB6Left();
 		final Resource right = input.getB6Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, right);
 		testAB6(TestKind.ADD, comparison);
 
 		testMergeRightToLeft(left, right, right);
@@ -513,8 +488,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB6Left();
 		final Resource right = input.getB6Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, left);
 		testAB6(TestKind.DELETE, comparison);
 
 		testMergeRightToLeft(left, right, left);
@@ -526,8 +500,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB7Left();
 		final Resource right = input.getB7Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right);
 		testAB7(TestKind.ADD, comparison);
 
 		testMergeRightToLeft(left, right, null);
@@ -539,8 +512,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB7Left();
 		final Resource right = input.getB7Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(right, left);
 		testAB7(TestKind.DELETE, comparison);
 
 		testMergeRightToLeft(right, left, null);
@@ -552,8 +524,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB7Left();
 		final Resource right = input.getB7Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, right);
 		testAB7(TestKind.ADD, comparison);
 
 		testMergeRightToLeft(left, right, right);
@@ -565,8 +536,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB7Left();
 		final Resource right = input.getB7Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, left);
 		testAB7(TestKind.DELETE, comparison);
 
 		testMergeRightToLeft(left, right, left);
@@ -578,8 +548,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB8Left();
 		final Resource right = input.getB8Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right);
 		testAB8(TestKind.ADD, comparison);
 
 		testMergeRightToLeft(left, right, null);
@@ -591,8 +560,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB8Left();
 		final Resource right = input.getB8Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(right, left);
 		testAB8(TestKind.DELETE, comparison);
 
 		testMergeRightToLeft(right, left, null);
@@ -604,8 +572,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB8Left();
 		final Resource right = input.getB8Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, right);
 		testAB8(TestKind.ADD, comparison);
 
 		testMergeRightToLeft(left, right, right);
@@ -617,8 +584,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB8Left();
 		final Resource right = input.getB8Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, left);
 		testAB8(TestKind.DELETE, comparison);
 
 		testMergeRightToLeft(left, right, left);
@@ -630,8 +596,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB9Left();
 		final Resource right = input.getB9Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right);
 		testAB9(TestKind.ADD, comparison);
 
 		testMergeRightToLeft(left, right, null);
@@ -643,8 +608,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB9Left();
 		final Resource right = input.getB9Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(right, left);
 		testAB9(TestKind.DELETE, comparison);
 
 		testMergeRightToLeft(right, left, null);
@@ -656,8 +620,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB9Left();
 		final Resource right = input.getB9Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, right);
 		testAB9(TestKind.ADD, comparison);
 
 		testMergeRightToLeft(left, right, right);
@@ -669,8 +632,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB9Left();
 		final Resource right = input.getB9Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, left);
 		testAB9(TestKind.DELETE, comparison);
 
 		testMergeRightToLeft(left, right, left);
@@ -682,8 +644,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB10Left();
 		final Resource right = input.getB10Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right);
 		testAB10(TestKind.ADD, comparison);
 
 		testMergeRightToLeft(left, right, null);
@@ -695,8 +656,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB10Left();
 		final Resource right = input.getB10Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(right, left);
 		testAB10(TestKind.DELETE, comparison);
 
 		testMergeRightToLeft(right, left, null);
@@ -708,8 +668,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB10Left();
 		final Resource right = input.getB10Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, right);
 		testAB10(TestKind.ADD, comparison);
 
 		testMergeRightToLeft(left, right, right);
@@ -721,8 +680,7 @@ public class StaticStereotypeTest extends AbstractTest {
 		final Resource left = input.getB10Left();
 		final Resource right = input.getB10Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, left);
 		testAB10(TestKind.DELETE, comparison);
 
 		testMergeRightToLeft(left, right, left);

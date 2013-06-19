@@ -16,12 +16,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
+import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -51,11 +54,13 @@ public abstract class AbstractTest {
 		return emfCompare;
 	}
 	
-	/**
-	 * @return the postProcessorRegistry
-	 */
-	protected IPostProcessor.Descriptor.Registry<?> getPostProcessorRegistry() {
-		return postProcessorRegistry;
+	protected Comparison compare(Notifier left, Notifier right) {
+		return compare(left, right, null);
+	}
+
+	protected Comparison compare(Notifier left, Notifier right, Notifier origin) {
+		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
+		return getCompare().compare(scope);
 	}
 	
 	@After

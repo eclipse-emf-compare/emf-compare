@@ -26,6 +26,7 @@ import org.eclipse.emf.compare.diagram.internal.extensions.CoordinatesChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.NodeChange;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Before;
@@ -54,27 +55,18 @@ public class NodechangesTest extends AbstractTest {
 				
 	}
 	
-	@Override
-	protected IPostProcessor.Descriptor.Registry<?> getPostProcessorRegistry() {
-		throw new UnsupportedOperationException("do not call this in IDE context");
-	}
-	
 	@Test
 	public void testA10UseCase() throws IOException {
-		
 		CompareDiagramIDEUIPlugin.getDefault().getPreferenceStore().setValue(CompareDiagramConstants.PREFERENCES_KEY_MOVE_THRESHOLD, 0);
 		
 		testMove(true);
-		
 	}
 	
 	@Test
 	public void testA11UseCase() throws IOException {
-		
 		CompareDiagramIDEUIPlugin.getDefault().getPreferenceStore().setValue(CompareDiagramConstants.PREFERENCES_KEY_MOVE_THRESHOLD, 200);
 		
 		testMove(false);
-		
 	}
 	
 	@Test
@@ -83,7 +75,7 @@ public class NodechangesTest extends AbstractTest {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right.getResourceSet());
+		final IComparisonScope scope = new DefaultComparisonScope(left.getResourceSet(), right.getResourceSet(), null);
 		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(
 				EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build().compare(scope);
 		
@@ -100,11 +92,10 @@ public class NodechangesTest extends AbstractTest {
 	}
 	
 	private void testMove(boolean overDetectionThreshold) throws IOException {
-		
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(), right.getResourceSet());
+		final IComparisonScope scope = new DefaultComparisonScope(left.getResourceSet(), right.getResourceSet(), null);
 		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(
 				EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build().compare(scope);
 		

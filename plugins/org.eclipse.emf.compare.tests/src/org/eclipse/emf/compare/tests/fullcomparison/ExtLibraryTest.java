@@ -32,6 +32,7 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.fullcomparison.data.identifier.IdentifierMatchInputData;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -53,7 +54,7 @@ public class ExtLibraryTest {
 		final Resource origin = inputData.getExtlibraryOrigin();
 		final Resource right = inputData.getExtlibraryRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		final Comparison comparison = EMFCompare.builder().build().compare(scope);
 		final List<Diff> differences = comparison.getDifferences();
 

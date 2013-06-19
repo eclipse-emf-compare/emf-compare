@@ -41,10 +41,8 @@ public class EdgechangesTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(),
+		final Comparison comparison = compare(left.getResourceSet(),
 				right.getResourceSet());
-		final Comparison comparison = EMFCompare.builder()
-				.setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -70,10 +68,8 @@ public class EdgechangesTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(),
+		final Comparison comparison = compare(right.getResourceSet(),
 				left.getResourceSet());
-		final Comparison comparison = EMFCompare.builder()
-				.setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -99,10 +95,8 @@ public class EdgechangesTest extends AbstractTest {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(),
-				right.getResourceSet());
-		final Comparison comparison = EMFCompare.builder()
-				.setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
+		final Comparison comparison = compare(left.getResourceSet(),
+						right.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -130,10 +124,8 @@ public class EdgechangesTest extends AbstractTest {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(),
-				left.getResourceSet());
-		final Comparison comparison = EMFCompare.builder()
-				.setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
+		final Comparison comparison = compare(right.getResourceSet(),
+						left.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -160,10 +152,8 @@ public class EdgechangesTest extends AbstractTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(),
-				right.getResourceSet());
-		final Comparison comparison = EMFCompare.builder()
-				.setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
+		final Comparison comparison = compare(left.getResourceSet(),
+						right.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -189,10 +179,8 @@ public class EdgechangesTest extends AbstractTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(),
-				left.getResourceSet());
-		final Comparison comparison = EMFCompare.builder()
-				.setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
+		final Comparison comparison = compare(right.getResourceSet(),
+						left.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -218,10 +206,8 @@ public class EdgechangesTest extends AbstractTest {
 		final Resource left = input.getA4Left();
 		final Resource right = input.getA4Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(),
-				right.getResourceSet());
-		final Comparison comparison = EMFCompare.builder()
-				.setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
+		final Comparison comparison = compare(left.getResourceSet(),
+						right.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -250,10 +236,8 @@ public class EdgechangesTest extends AbstractTest {
 		final Resource left = input.getA4Left();
 		final Resource right = input.getA4Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(),
-				left.getResourceSet());
-		final Comparison comparison = EMFCompare.builder()
-				.setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
+		final Comparison comparison = compare(right.getResourceSet(),
+						left.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -287,30 +271,4 @@ public class EdgechangesTest extends AbstractTest {
 					&& ((ReferenceChange)input).getReference().isContainment();
 		}
 	};
-
-	private static Predicate<? super Diff> valueUnder(final Diff container) {
-		return new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				if (input instanceof ReferenceChange) {
-					final ReferenceChange diff = (ReferenceChange)input;
-					if (diff.getReference().isContainment()) {
-						return diff.getValue() == MatchUtil.getValue(container);
-					} else {
-						return MatchUtil.getContainer(diff.getMatch().getComparison(), diff) == MatchUtil
-								.getValue(container);
-					}
-				}
-				return false;
-			}
-		};
-	}
-
-	private static Predicate<? super Diff> refinedBy(final Diff refining) {
-		return new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				return input.getRefinedBy().contains(refining);
-			}
-		};
-	}
-
 }

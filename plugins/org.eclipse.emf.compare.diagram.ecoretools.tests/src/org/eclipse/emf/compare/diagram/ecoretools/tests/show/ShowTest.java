@@ -37,8 +37,7 @@ public class ShowTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
+		final Comparison comparison = compare(left, right);
 		
 		final List<Diff> differences = comparison.getDifferences();
 

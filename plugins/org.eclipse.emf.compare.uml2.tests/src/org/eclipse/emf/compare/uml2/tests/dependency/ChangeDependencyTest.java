@@ -18,8 +18,6 @@ import java.util.List;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.internal.DependencyChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
@@ -37,8 +35,7 @@ public class ChangeDependencyTest extends AbstractTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right);
 		testAB1(TestKind.ADD, comparison);
 
 		testMergeLeftToRight(left, right, null);
@@ -50,8 +47,7 @@ public class ChangeDependencyTest extends AbstractTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(right, left);
 		testAB1(TestKind.DELETE, comparison);
 
 		testMergeLeftToRight(right, left, null);
@@ -63,8 +59,7 @@ public class ChangeDependencyTest extends AbstractTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, right);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, right);
 		testAB1(TestKind.ADD, comparison);
 
 		testMergeLeftToRight(left, right, right);
@@ -76,8 +71,7 @@ public class ChangeDependencyTest extends AbstractTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, left);
-		final Comparison comparison = getCompare().compare(scope);
+		final Comparison comparison = compare(left, right, left);
 		testAB1(TestKind.DELETE, comparison);
 
 		testMergeLeftToRight(left, right, left);

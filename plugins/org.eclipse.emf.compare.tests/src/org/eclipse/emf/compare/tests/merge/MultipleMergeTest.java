@@ -40,6 +40,7 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.conflict.data.ConflictInputData;
 import org.eclipse.emf.compare.tests.equi.data.EquiInputData;
@@ -63,7 +64,7 @@ public class MultipleMergeTest {
 		final Resource origin = conflictInput.getComplexOrigin();
 		final Resource right = conflictInput.getComplexRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -182,7 +183,7 @@ public class MultipleMergeTest {
 		final Resource origin = conflictInput.getComplexOrigin();
 		final Resource right = conflictInput.getComplexRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		final Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -273,7 +274,7 @@ public class MultipleMergeTest {
 		final Resource origin = conflictInput.getComplexOrigin();
 		final Resource right = conflictInput.getComplexRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		final Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -363,7 +364,7 @@ public class MultipleMergeTest {
 		final Resource origin = conflictInput.getComplexOrigin();
 		final Resource right = conflictInput.getComplexRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		final Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -456,7 +457,7 @@ public class MultipleMergeTest {
 		final Resource left = equivalenceInput.getA1Left();
 		final Resource right = equivalenceInput.getA1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -508,7 +509,7 @@ public class MultipleMergeTest {
 		final Resource left = equivalenceInput.getA1Left();
 		final Resource right = equivalenceInput.getA1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -556,7 +557,7 @@ public class MultipleMergeTest {
 		final Resource left = equivalenceInput.getA4Left();
 		final Resource right = equivalenceInput.getA4Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -593,7 +594,7 @@ public class MultipleMergeTest {
 		final Resource left = equivalenceInput.getA4Left();
 		final Resource right = equivalenceInput.getA4Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -630,7 +631,7 @@ public class MultipleMergeTest {
 		final Resource left = equivalenceInput.getA5Left();
 		final Resource right = equivalenceInput.getA5Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -699,7 +700,7 @@ public class MultipleMergeTest {
 		final Resource left = equivalenceInput.getA5Left();
 		final Resource right = equivalenceInput.getA5Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -778,7 +779,7 @@ public class MultipleMergeTest {
 		final Resource left = equivalenceInput.getC2Left();
 		final Resource right = equivalenceInput.getC2Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -816,7 +817,7 @@ public class MultipleMergeTest {
 		final Resource left = equivalenceInput.getC2Left();
 		final Resource right = equivalenceInput.getC2Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -859,7 +860,7 @@ public class MultipleMergeTest {
 		final Resource left = equivalenceInput.getC2Left();
 		final Resource right = equivalenceInput.getC2Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -907,7 +908,7 @@ public class MultipleMergeTest {
 		final Resource left = equivalenceInput.getC4Left();
 		final Resource right = equivalenceInput.getC4Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -962,7 +963,7 @@ public class MultipleMergeTest {
 		final Resource left = equivalenceInput.getC4Left();
 		final Resource right = equivalenceInput.getC4Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();

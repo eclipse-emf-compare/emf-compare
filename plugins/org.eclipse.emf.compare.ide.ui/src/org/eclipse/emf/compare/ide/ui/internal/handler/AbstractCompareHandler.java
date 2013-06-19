@@ -37,6 +37,7 @@ import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryImpl;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.EObject;
@@ -66,7 +67,7 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 		EMFCompare comparator = EMFCompare.builder()
 				.setMatchEngineFactoryRegistry(matchEngineFactoryRegistry).setPostProcessorRegistry(
 						EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build();
-		IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		input = new ComparisonScopeEditorInput(configuration, editingDomain, adapterFactory, comparator,
 				scope) {
 			/**

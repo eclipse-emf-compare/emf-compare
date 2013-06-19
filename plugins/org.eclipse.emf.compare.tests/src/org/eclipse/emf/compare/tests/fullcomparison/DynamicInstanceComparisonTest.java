@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.fullcomparison.data.dynamic.DynamicInstancesInputData;
 import org.eclipse.emf.compare.tests.suite.AllTests;
@@ -32,6 +33,7 @@ import org.junit.Test;
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
+@SuppressWarnings("nls")
 public class DynamicInstanceComparisonTest {
 
 	DynamicInstancesInputData data = new DynamicInstancesInputData();
@@ -54,22 +56,23 @@ public class DynamicInstanceComparisonTest {
 
 	@Test
 	public void compare2Ways() throws IOException {
-		Comparison result = EMFCompare.builder().build().compare(EMFCompare.createDefaultScope(left, right));
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
+		Comparison result = EMFCompare.builder().build().compare(scope);
 		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1, result
 				.getDifferences().size());
 	}
 
 	@Test
 	public void compare3Ways() throws IOException {
-		Comparison result = EMFCompare.builder().build().compare(
-				EMFCompare.createDefaultScope(left, right, origin));
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
+		Comparison result = EMFCompare.builder().build().compare(scope);
 		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1, result
 				.getDifferences().size());
 	}
 
 	@Test
 	public void copyLeftToRight() throws IOException {
-		IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison result = EMFCompare.builder().build().compare(scope);
 		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1, result
 				.getDifferences().size());
@@ -83,7 +86,7 @@ public class DynamicInstanceComparisonTest {
 
 	@Test
 	public void copyRightToLeft() throws IOException {
-		IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison result = EMFCompare.builder().build().compare(scope);
 		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1, result
 				.getDifferences().size());

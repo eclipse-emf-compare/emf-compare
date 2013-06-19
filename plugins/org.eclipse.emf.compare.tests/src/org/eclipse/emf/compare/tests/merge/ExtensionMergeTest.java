@@ -30,6 +30,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.merge.AbstractMerger;
 import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.merge.data.IndividualDiffInputData;
 import org.eclipse.emf.ecore.EObject;
@@ -47,7 +48,7 @@ public class ExtensionMergeTest {
 		final Resource left = input.getAttributeMonoChangeLeft();
 		final Resource right = input.getAttributeMonoChangeRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();

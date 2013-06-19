@@ -35,6 +35,7 @@ import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryImpl;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryRegistryImpl;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.EMFCompareAssert;
 import org.eclipse.emf.compare.tests.framework.EMFCompareTestBase;
@@ -66,7 +67,7 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		v1.getEClassifiers().clear();
 		v2.getEClassifiers().clear();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(v1, v2);
+		final IComparisonScope scope = new DefaultComparisonScope(v1, v2, null);
 		Comparison result = EMFCompare.builder().build().compare(scope);
 		assertAllMatched(Lists.newArrayList(v1), result);
 		assertEquals("We are supposed to have zero diffs", 0, result.getDifferences().size());
@@ -76,7 +77,7 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 	public void matchingSmallRenameChanges() throws Exception {
 		Resource left = inputData.getCompareLeft();
 		Resource right = inputData.getCompareRight();
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
 		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
 		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
@@ -90,7 +91,7 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		EPackage v1 = EcoreUtil.copy(EcorePackage.eINSTANCE);
 		EPackage v2 = EcoreUtil.copy(EcorePackage.eINSTANCE);
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(v1, v2);
+		final IComparisonScope scope = new DefaultComparisonScope(v1, v2, null);
 		Comparison result = EMFCompare.builder().build().compare(scope);
 
 		assertAllMatched(Lists.newArrayList(v1), result);
@@ -104,7 +105,7 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		EPackage v2 = EcoreUtil.copy(EcorePackage.eINSTANCE);
 		v2.setName("renamed");
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(v1, v2);
+		final IComparisonScope scope = new DefaultComparisonScope(v1, v2, null);
 		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
 		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
 		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
@@ -115,8 +116,8 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 
 	@Test
 	public void packageAddDelete() throws Exception {
-		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData.getPackageAddDeleteLeft(),
-				inputData.getPackageAddDeleteRight());
+		final IComparisonScope scope = new DefaultComparisonScope(inputData.getPackageAddDeleteLeft(),
+				inputData.getPackageAddDeleteRight(), null);
 		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
 		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
 		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
@@ -132,8 +133,9 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 
 	@Test
 	public void packageAddRemoveNoRename() throws Exception {
-		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData
-				.getPackageAddRemoveNoRenameLeft(), inputData.getPackageAddRemoveNoRenameRight());
+		final IComparisonScope scope = new DefaultComparisonScope(
+				inputData.getPackageAddRemoveNoRenameLeft(), inputData.getPackageAddRemoveNoRenameRight(),
+				null);
 		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
 		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
 		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
@@ -149,8 +151,8 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 
 	@Test
 	public void alwaysTakeTheClosestNoMatterTheIterationOrder() throws Exception {
-		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData.getVerySmallLeft(), inputData
-				.getVerySmallRight());
+		final IComparisonScope scope = new DefaultComparisonScope(inputData.getVerySmallLeft(), inputData
+				.getVerySmallRight(), null);
 		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
 		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
 		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
@@ -163,8 +165,8 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 
 	@Test
 	public void addRemoveAndNotRename() throws Exception {
-		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData.get391657Left(), inputData
-				.get391657Right());
+		final IComparisonScope scope = new DefaultComparisonScope(inputData.get391657Left(), inputData
+				.get391657Right(), null);
 		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
 		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
 		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
@@ -178,7 +180,7 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 
 	@Test
 	public void resourceRootChange() throws Exception {
-		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData.get390666Left(), inputData
+		final IComparisonScope scope = new DefaultComparisonScope(inputData.get390666Left(), inputData
 				.get390666Right(), inputData.get390666Ancestor());
 		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
 		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
@@ -196,8 +198,8 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		 * See bug #391798 : moving elements a lot in a reference (like in changing index) should not affect
 		 * the matching very much.
 		 */
-		final IComparisonScope scope = EMFCompare.createDefaultScope(inputData.get391798Left(), inputData
-				.get391798Right());
+		final IComparisonScope scope = new DefaultComparisonScope(inputData.get391798Left(), inputData
+				.get391798Right(), null);
 		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
 		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
 		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)

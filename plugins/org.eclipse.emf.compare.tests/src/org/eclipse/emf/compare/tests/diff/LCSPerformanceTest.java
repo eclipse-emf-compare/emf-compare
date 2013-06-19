@@ -26,6 +26,7 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.nodes.Node;
 import org.eclipse.emf.compare.tests.nodes.NodesFactory;
@@ -70,7 +71,7 @@ public class LCSPerformanceTest {
 		final Node rightRoot = (Node)right.getContents().get(0);
 		assertTrue(rightRoot.eContents().size() == 200);
 
-		IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> additions = Lists.newArrayList();
@@ -106,7 +107,7 @@ public class LCSPerformanceTest {
 	@Ignore
 	@Test(timeout = 40000)
 	public void copyLeftToRight() {
-		IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final IMerger.Registry registry = IMerger.RegistryImpl.createStandaloneInstance();
@@ -130,7 +131,7 @@ public class LCSPerformanceTest {
 	@Ignore
 	@Test(timeout = 3000)
 	public void copyRightToLeft() {
-		IComparisonScope scope = EMFCompare.createDefaultScope(left, right);
+		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final IMerger.Registry registry = IMerger.RegistryImpl.createStandaloneInstance();

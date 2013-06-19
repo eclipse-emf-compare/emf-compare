@@ -35,6 +35,7 @@ import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.fragmentation.data.FragmentationInputData;
 import org.eclipse.emf.ecore.EObject;
@@ -74,7 +75,7 @@ public class FragmentationTest {
 		assertSame(Integer.valueOf(2), Integer.valueOf(originSet.getResources().size()));
 		assertSame(Integer.valueOf(2), Integer.valueOf(rightSet.getResources().size()));
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(leftSet, rightSet, originSet);
+		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -104,7 +105,7 @@ public class FragmentationTest {
 		EcoreUtil.resolveAll(originSet);
 		EcoreUtil.resolveAll(rightSet);
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(leftSet, rightSet, originSet);
+		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -132,7 +133,7 @@ public class FragmentationTest {
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				EMFCompare.createDefaultScope(leftSet, rightSet));
+				new DefaultComparisonScope(leftSet, rightSet, null));
 		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
 
 		// but there should be two diffs (a pseudo conflict resource change) when compared with origin
@@ -159,7 +160,7 @@ public class FragmentationTest {
 		EcoreUtil.resolveAll(originSet);
 		EcoreUtil.resolveAll(rightSet);
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(leftSet, rightSet, originSet);
+		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -180,7 +181,7 @@ public class FragmentationTest {
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				EMFCompare.createDefaultScope(leftSet, rightSet));
+				new DefaultComparisonScope(leftSet, rightSet, null));
 		assertTrue(lrCompare.getDifferences().isEmpty());
 
 		// And since we've undone the resource change, there are no diffs with origin either
@@ -194,7 +195,7 @@ public class FragmentationTest {
 		final Resource origin = input.getUncontrolOrigin();
 		final Resource right = input.getUncontrolRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		// At the resource level, we cannot match an object with the 'proxy' root.
@@ -235,7 +236,7 @@ public class FragmentationTest {
 		final Resource origin = input.getUncontrolOrigin();
 		final Resource right = input.getUncontrolRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -268,7 +269,7 @@ public class FragmentationTest {
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				EMFCompare.createDefaultScope(left, right));
+				new DefaultComparisonScope(left, right, null));
 		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
 
 		// but there should be four diffs (conflicting 2-by-2) when compared with origin :
@@ -287,7 +288,7 @@ public class FragmentationTest {
 		final Resource origin = input.getUncontrolOrigin();
 		final Resource right = input.getUncontrolRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -320,7 +321,7 @@ public class FragmentationTest {
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				EMFCompare.createDefaultScope(left, right));
+				new DefaultComparisonScope(left, right, null));
 		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
 
 		// And since we've undone the changes, there are no diffs with origin either
@@ -350,7 +351,7 @@ public class FragmentationTest {
 		assertSame(Integer.valueOf(1), Integer.valueOf(originSet.getResources().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(rightSet.getResources().size()));
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(leftSet, rightSet, originSet);
+		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -382,7 +383,7 @@ public class FragmentationTest {
 		EcoreUtil.resolveAll(originSet);
 		EcoreUtil.resolveAll(rightSet);
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(leftSet, rightSet, originSet);
+		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -403,7 +404,7 @@ public class FragmentationTest {
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				EMFCompare.createDefaultScope(leftSet, rightSet));
+				new DefaultComparisonScope(leftSet, rightSet, null));
 		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
 
 		// but there should be two diffs (a pseudo conflict resource change) when compared with origin
@@ -428,7 +429,7 @@ public class FragmentationTest {
 		EcoreUtil.resolveAll(originSet);
 		EcoreUtil.resolveAll(rightSet);
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(leftSet, rightSet, originSet);
+		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -456,7 +457,7 @@ public class FragmentationTest {
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				EMFCompare.createDefaultScope(leftSet, rightSet));
+				new DefaultComparisonScope(leftSet, rightSet, null));
 		assertTrue(lrCompare.getDifferences().isEmpty());
 
 		// And since we've undone the resource change, there are no diffs with origin either
@@ -470,7 +471,7 @@ public class FragmentationTest {
 		final Resource origin = input.getControlOrigin();
 		final Resource right = input.getControlRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		// At the resource level, we cannot match an object with the 'proxy' root.
@@ -511,7 +512,7 @@ public class FragmentationTest {
 		final Resource origin = input.getControlOrigin();
 		final Resource right = input.getControlRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -544,7 +545,7 @@ public class FragmentationTest {
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				EMFCompare.createDefaultScope(left, right));
+				new DefaultComparisonScope(left, right, null));
 		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
 
 		// but there should be four diffs (conflicting 2-by-2) when compared with origin :
@@ -563,7 +564,7 @@ public class FragmentationTest {
 		final Resource origin = input.getControlOrigin();
 		final Resource right = input.getControlRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -596,7 +597,7 @@ public class FragmentationTest {
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				EMFCompare.createDefaultScope(left, right));
+				new DefaultComparisonScope(left, right, null));
 		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
 
 		// And since we've undone the changes, there are no diffs with origin either
@@ -626,7 +627,7 @@ public class FragmentationTest {
 		assertSame(Integer.valueOf(1), Integer.valueOf(originSet.getResources().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(rightSet.getResources().size()));
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(leftSet, rightSet, originSet);
+		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -656,7 +657,7 @@ public class FragmentationTest {
 		EcoreUtil.resolveAll(originSet);
 		EcoreUtil.resolveAll(rightSet);
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(leftSet, rightSet, originSet);
+		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -677,7 +678,7 @@ public class FragmentationTest {
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				EMFCompare.createDefaultScope(leftSet, rightSet));
+				new DefaultComparisonScope(leftSet, rightSet, null));
 		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
 
 		// but there should be two diffs (a pseudo conflict resource change) when compared with origin
@@ -702,7 +703,7 @@ public class FragmentationTest {
 		EcoreUtil.resolveAll(originSet);
 		EcoreUtil.resolveAll(rightSet);
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(leftSet, rightSet, originSet);
+		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -730,7 +731,7 @@ public class FragmentationTest {
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				EMFCompare.createDefaultScope(leftSet, rightSet));
+				new DefaultComparisonScope(leftSet, rightSet, null));
 		assertTrue(lrCompare.getDifferences().isEmpty());
 
 		// And since we've undone the resource change, there are no diffs with origin either
@@ -744,7 +745,7 @@ public class FragmentationTest {
 		final Resource origin = input.getControlOriginFolder();
 		final Resource right = input.getControlRightFolder();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		// At the resource level, we cannot match an object with the 'proxy' root.
@@ -785,7 +786,7 @@ public class FragmentationTest {
 		final Resource origin = input.getControlOriginFolder();
 		final Resource right = input.getControlRightFolder();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -818,7 +819,7 @@ public class FragmentationTest {
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				EMFCompare.createDefaultScope(left, right));
+				new DefaultComparisonScope(left, right, null));
 		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
 
 		// but there should be four diffs (conflicting 2-by-2) when compared with origin :
@@ -837,7 +838,7 @@ public class FragmentationTest {
 		final Resource origin = input.getControlOriginFolder();
 		final Resource right = input.getControlRightFolder();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -870,7 +871,7 @@ public class FragmentationTest {
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				EMFCompare.createDefaultScope(left, right));
+				new DefaultComparisonScope(left, right, null));
 		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
 
 		// And since we've undone the changes, there are no diffs with origin either
@@ -900,7 +901,7 @@ public class FragmentationTest {
 		assertSame(Integer.valueOf(1), Integer.valueOf(originSet.getResources().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(rightSet.getResources().size()));
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(leftSet, rightSet, originSet);
+		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -930,7 +931,7 @@ public class FragmentationTest {
 		EcoreUtil.resolveAll(originSet);
 		EcoreUtil.resolveAll(rightSet);
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(leftSet, rightSet, originSet);
+		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -943,7 +944,7 @@ public class FragmentationTest {
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				EMFCompare.createDefaultScope(leftSet, rightSet));
+				new DefaultComparisonScope(leftSet, rightSet, null));
 		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
 
 		// but there should be two diffs (a pseudo conflict deletion) when compared with origin
@@ -968,7 +969,7 @@ public class FragmentationTest {
 		EcoreUtil.resolveAll(originSet);
 		EcoreUtil.resolveAll(rightSet);
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(leftSet, rightSet, originSet);
+		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -989,7 +990,7 @@ public class FragmentationTest {
 		final Resource origin = input.getDeletedRootOrigin();
 		final Resource right = input.getDeletedRootRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -1011,7 +1012,7 @@ public class FragmentationTest {
 		final Resource origin = input.getDeletedRootOrigin();
 		final Resource right = input.getDeletedRootRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -1024,7 +1025,7 @@ public class FragmentationTest {
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				EMFCompare.createDefaultScope(left, right));
+				new DefaultComparisonScope(left, right, null));
 		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
 
 		// but there should be two diffs (a pseudo conflict deletion) when compared with origin
@@ -1041,7 +1042,7 @@ public class FragmentationTest {
 		final Resource origin = input.getDeletedRootOrigin();
 		final Resource right = input.getDeletedRootRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -1082,7 +1083,7 @@ public class FragmentationTest {
 		assertSame(Integer.valueOf(1), Integer.valueOf(originSet.getResources().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(rightSet.getResources().size()));
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(leftSet, rightSet, originSet);
+		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -1112,7 +1113,7 @@ public class FragmentationTest {
 		EcoreUtil.resolveAll(originSet);
 		EcoreUtil.resolveAll(rightSet);
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(leftSet, rightSet, originSet);
+		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -1125,7 +1126,7 @@ public class FragmentationTest {
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				EMFCompare.createDefaultScope(leftSet, rightSet));
+				new DefaultComparisonScope(leftSet, rightSet, null));
 		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
 
 		// but there should be two diffs (a pseudo conflict addition) when compared with origin
@@ -1150,7 +1151,7 @@ public class FragmentationTest {
 		EcoreUtil.resolveAll(originSet);
 		EcoreUtil.resolveAll(rightSet);
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(leftSet, rightSet, originSet);
+		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -1175,7 +1176,7 @@ public class FragmentationTest {
 		assertSame(Integer.valueOf(1), Integer.valueOf(origin.getContents().size()));
 		assertSame(Integer.valueOf(1), Integer.valueOf(right.getContents().size()));
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -1197,7 +1198,7 @@ public class FragmentationTest {
 		final Resource origin = input.getNewRootOrigin();
 		final Resource right = input.getNewRootRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
@@ -1210,7 +1211,7 @@ public class FragmentationTest {
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				EMFCompare.createDefaultScope(left, right));
+				new DefaultComparisonScope(left, right, null));
 		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
 
 		// but there should be two diffs (a pseudo conflict addition) when compared with origin
@@ -1227,7 +1228,7 @@ public class FragmentationTest {
 		final Resource origin = input.getNewRootOrigin();
 		final Resource right = input.getNewRootRight();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();

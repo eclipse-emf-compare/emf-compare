@@ -56,10 +56,8 @@ public class NodechangesTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(),
+		final Comparison comparison = compare(left.getResourceSet(),
 				right.getResourceSet());
-		final Comparison comparison = EMFCompare.builder()
-				.setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -315,10 +313,8 @@ public class NodechangesTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(right.getResourceSet(),
+		final Comparison comparison = compare(right.getResourceSet(),
 				left.getResourceSet());
-		final Comparison comparison = EMFCompare.builder()
-				.setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -538,10 +534,8 @@ public class NodechangesTest extends AbstractTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left.getResourceSet(),
-				right.getResourceSet());
-		final Comparison comparison = EMFCompare.builder()
-				.setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
+		final Comparison comparison = compare(left.getResourceSet(),
+						right.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 

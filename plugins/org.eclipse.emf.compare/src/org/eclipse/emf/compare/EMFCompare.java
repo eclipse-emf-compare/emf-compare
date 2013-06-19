@@ -108,7 +108,10 @@ public class EMFCompare {
 	 *            The right notifier of this scope.
 	 * @return The newly created scope, as used as default by EMF Compare.
 	 * @see DefaultComparisonScope
+	 * @deprecated this was only a delegation to the publicly accessible {@link DefaultComparisonScope}... it
+	 *             will be removed in a subsequent release.
 	 */
+	@Deprecated
 	public static IComparisonScope createDefaultScope(Notifier left, Notifier right) {
 		return new DefaultComparisonScope(left, right, null);
 	}
@@ -129,7 +132,10 @@ public class EMFCompare {
 	 *            The common ancestor of {@code left} and {@code right}.
 	 * @return The newly created scope, as used as default by EMF Compare.
 	 * @see DefaultComparisonScope
+	 * @deprecated this was only a delegation to the publicly accessible {@link DefaultComparisonScope}... it
+	 *             will be removed in a subsequent release.
 	 */
+	@Deprecated
 	public static IComparisonScope createDefaultScope(Notifier left, Notifier right, Notifier origin) {
 		return new DefaultComparisonScope(left, right, origin);
 	}

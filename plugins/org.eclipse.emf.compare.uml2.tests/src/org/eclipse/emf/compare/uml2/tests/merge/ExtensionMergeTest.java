@@ -19,12 +19,12 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.merge.AttributeChangeMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.ReferenceChangeMerger;
 import org.eclipse.emf.compare.merge.ResourceAttachmentChangeMerger;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
@@ -54,7 +54,7 @@ public class ExtensionMergeTest extends AbstractTest {
 	 */
 	@Override
 	protected void testMergeRightToLeft(Notifier left, Notifier right, Notifier origin) {
-		final IComparisonScope scope = EMFCompare.createDefaultScope(left, right, origin);
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		final Comparison comparisonBefore = getCompare().compare(scope);
 		EList<Diff> differences = comparisonBefore.getDifferences();
 		final IMerger.Registry registry = IMerger.RegistryImpl.createStandaloneInstance();

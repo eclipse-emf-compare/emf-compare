@@ -28,6 +28,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.provider.CompareItemProviderAdapterFactory;
 import org.eclipse.emf.compare.provider.spec.CompareItemProviderAdapterFactorySpec;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.edit.data.ResourceScopeProvider;
 import org.eclipse.emf.ecore.EObject;
@@ -52,7 +53,7 @@ public class AbstractTestCompareItemProviderAdapter {
 	 * @throws IOException
 	 */
 	protected static Comparison getComparison(ResourceScopeProvider scopeProvider) throws IOException {
-		IComparisonScope scope = EMFCompare.createDefaultScope(scopeProvider.getLeft(), scopeProvider
+		final IComparisonScope scope = new DefaultComparisonScope(scopeProvider.getLeft(), scopeProvider
 				.getRight(), scopeProvider.getOrigin());
 		return EMFCompare.builder().build().compare(scope);
 	}
