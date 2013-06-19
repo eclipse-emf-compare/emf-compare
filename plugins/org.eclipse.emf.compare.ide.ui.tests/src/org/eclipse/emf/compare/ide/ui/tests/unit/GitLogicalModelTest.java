@@ -10,20 +10,13 @@ package org.eclipse.emf.compare.ide.ui.tests.unit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.List;
 
-import org.eclipse.compare.CompareUI;
-import org.eclipse.compare.IEncodedStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.BasicMonitor;
@@ -36,10 +29,10 @@ import org.eclipse.emf.compare.ide.ui.internal.logical.LogicalModelResolver;
 import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
+import org.eclipse.emf.compare.ide.ui.tests.StorageTypedElement;
 import org.eclipse.emf.compare.ide.ui.tests.egit.CompareGitTestCase;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -47,32 +40,23 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.junit.Before;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class LogicalModelTest extends CompareGitTestCase {
+public class GitLogicalModelTest extends CompareGitTestCase {
 	private static final String MASTER = Constants.R_HEADS + Constants.MASTER;
 
 	private static final String BRANCH = Constants.R_HEADS + "branch";
-
-	private static final String PACKAGE_NAME_PREFIX = "package";
-
-	private static final String CLASS1_NAME_PREFIX = "Class_A";
-
-	private static final String CLASS2_NAME_PREFIX = "Class_B";
-
-	private static final String CLASS3_NAME_PREFIX = "Class_C";
-
-	private static final String CLASS4_NAME_PREFIX = "Class_D";
 
 	private static final String FILE1_SUFFIX = "_file1";
 
 	private static final String FILE2_SUFFIX = "_file2";
 
 	private IFile iFile1;
+
+	private IFile iFile2;
 
 	private Resource resource1;
 
@@ -115,12 +99,13 @@ public class LogicalModelTest extends CompareGitTestCase {
 		final IProject iProject = project.getProject();
 		final ResourceSet resourceSet = new ResourceSetImpl();
 
-		final File file1 = repository.getOrCreateFile(iProject, "file1.ecore");
-		final File file2 = repository.getOrCreateFile(iProject, "file2.ecore");
-		iFile1 = repository.getIFile(iProject, file1);
+		final File file1 = project.getOrCreateFile(iProject, "file1.ecore");
+		final File file2 = project.getOrCreateFile(iProject, "file2.ecore");
+		iFile1 = project.getIFile(iProject, file1);
+		iFile2 = project.getIFile(iProject, file2);
 
-		resource1 = repository.connectResource(iProject, file1, resourceSet);
-		resource2 = repository.connectResource(iProject, file2, resourceSet);
+		resource1 = connectResource(iFile1, resourceSet);
+		resource2 = connectResource(iFile2, resourceSet);
 
 		resource1.getContents().add(createBasicModel(FILE1_SUFFIX));
 		resource2.getContents().add(createBasicModel(FILE2_SUFFIX));
@@ -129,18 +114,18 @@ public class LogicalModelTest extends CompareGitTestCase {
 		makeCrossReference(resource2, resource1, CLASS2_NAME_PREFIX, CLASS2_NAME_PREFIX);
 
 		save(resource1, resource2);
-		commits[0] = repository.addAndCommit(iProject, "master-commit-1", file1, file2);
+		commits[0] = repository.addAndCommit(project, "master-commit-1", file1, file2);
 
 		// Second commit: add class in second resource
 		EPackage packFile2 = (EPackage)findObject(resource2, PACKAGE_NAME_PREFIX);
 		final EClass newClassFile2 = createClass(packFile2, CLASS3_NAME_PREFIX + FILE2_SUFFIX);
 		save(resource2);
-		commits[1] = repository.addAndCommit(iProject, "master-commit-2", file2);
+		commits[1] = repository.addAndCommit(project, "master-commit-2", file2);
 
 		// Third: rename that new class
 		newClassFile2.setName(CLASS4_NAME_PREFIX + FILE2_SUFFIX);
 		save(resource2);
-		commits[2] = repository.addAndCommit(iProject, "master-commit-3", file2);
+		commits[2] = repository.addAndCommit(project, "master-commit-3", file2);
 
 		// Branching point, though stay on master for now
 		repository.createBranch(MASTER, BRANCH);
@@ -148,7 +133,7 @@ public class LogicalModelTest extends CompareGitTestCase {
 		// fourth commit: remove the new class
 		packFile2.getEClassifiers().remove(newClassFile2);
 		save(resource2);
-		commits[3] = repository.addAndCommit(iProject, "master-commit-4", file2);
+		commits[3] = repository.addAndCommit(project, "master-commit-4", file2);
 
 		// fifth and last commit on master: rename second class in both files
 		final EClass classBFile1 = (EClass)findObject(resource1, CLASS2_NAME_PREFIX);
@@ -156,7 +141,7 @@ public class LogicalModelTest extends CompareGitTestCase {
 		classBFile1.setName(CLASS3_NAME_PREFIX + FILE1_SUFFIX);
 		classBFile2.setName(CLASS3_NAME_PREFIX + FILE2_SUFFIX);
 		save(resource1, resource2);
-		commits[4] = repository.addAndCommit(iProject, "master-commit-5", file1, file2);
+		commits[4] = repository.addAndCommit(project, "master-commit-5", file1, file2);
 
 		// checkout the branch now
 		repository.checkoutBranch(BRANCH);
@@ -169,13 +154,13 @@ public class LogicalModelTest extends CompareGitTestCase {
 		classAFile1.setName(CLASS3_NAME_PREFIX + FILE1_SUFFIX);
 		classAFile2.setName(CLASS3_NAME_PREFIX + FILE2_SUFFIX);
 		save(resource1, resource2);
-		commits[5] = repository.addAndCommit(iProject, "branch-commit-1", file1, file2);
+		commits[5] = repository.addAndCommit(project, "branch-commit-1", file1, file2);
 
 		// second commit of the branch : delete the new (third) class
 		// We've reloaded the resource, our reference to the class must be reinitialized
 		EcoreUtil.remove(findObject(resource2, CLASS4_NAME_PREFIX));
 		save(resource2);
-		commits[6] = repository.addAndCommit(iProject, "branch-commit-2", file2);
+		commits[6] = repository.addAndCommit(project, "branch-commit-2", file2);
 
 		masterTipSynonyms = new String[] {MASTER, commits[4].getName(), };
 		branchTipSynonyms = new String[] {BRANCH, commits[6].getName(), Constants.HEAD, };
@@ -314,101 +299,5 @@ public class LogicalModelTest extends CompareGitTestCase {
 		assertEquals(2, originResourceSet.getResources().size());
 
 		return EMFCompare.builder().build().compare(scope, new BasicMonitor());
-	}
-
-	/**
-	 * The base model for both our files will be one package containing two classes. There are no references
-	 * and no attributes set, save for the name of these objects.
-	 * 
-	 * @param nameSuffix
-	 *            Suffix that will be appended to all names for this model.
-	 * @return A basic model to be used by these tests.
-	 */
-	private EPackage createBasicModel(String nameSuffix) {
-		EPackage root = createPackage(null, PACKAGE_NAME_PREFIX + nameSuffix);
-		createClass(root, CLASS1_NAME_PREFIX + nameSuffix);
-		createClass(root, CLASS2_NAME_PREFIX + nameSuffix);
-		return root;
-	}
-
-	/**
-	 * Create a cross-resource reference through the "superType" reference of a given EClass.
-	 * <p>
-	 * The source EClass will be searched within the {@code source} Resource and its name should have a set
-	 * prefix. Similarly, the target EClass will be searched withi the {@code target} Resource.
-	 * </p>
-	 * 
-	 * @param source
-	 *            Resource within which we'll search for our source EClass (the class which will have a
-	 *            superType).
-	 * @param target
-	 *            Resource within which we'll search for our target EClass (the superType).
-	 * @param sourceNamePrefix
-	 *            Prefix (or exact name) of the source EClass.
-	 * @param targetNamePrefix
-	 *            Prefix (or exact name) of the target EClass.
-	 */
-	private void makeCrossReference(Resource source, Resource target, String sourceNamePrefix,
-			String targetNamePrefix) {
-		final EObject sourceObject = findObject(source, sourceNamePrefix);
-		final EObject targetObject = findObject(target, targetNamePrefix);
-
-		assertTrue(sourceObject instanceof EClass);
-		assertTrue(targetObject instanceof EClass);
-
-		((EClass)sourceObject).getESuperTypes().add((EClass)targetObject);
-	}
-
-	/** Mostly copied from org.eclipse.team.internal.ui.StorageTypedElement. */
-	private class StorageTypedElement implements ITypedElement, IEncodedStreamContentAccessor, IAdaptable {
-		private final IStorage storage;
-
-		private final String fullPath;
-
-		public StorageTypedElement(IStorage storage, String fullPath) {
-			this.storage = storage;
-			this.fullPath = fullPath;
-		}
-
-		public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
-			if (adapter == IStorage.class) {
-				return storage;
-			}
-			return storage.getAdapter(adapter);
-		}
-
-		public String getCharset() throws CoreException {
-			if (storage instanceof IEncodedStreamContentAccessor) {
-				return ((IEncodedStreamContentAccessor)storage).getCharset();
-			}
-			return null;
-		}
-
-		public InputStream getContents() throws CoreException {
-			return storage.getContents();
-		}
-
-		public Image getImage() {
-			return CompareUI.getImage(getType());
-		}
-
-		public String getName() {
-			return fullPath;
-		}
-
-		public String getType() {
-			String name = getName();
-			if (name != null) {
-				int index = name.lastIndexOf('.');
-				if (index == -1) {
-					return ""; //$NON-NLS-1$
-				}
-				if (index == (name.length() - 1)) {
-					return ""; //$NON-NLS-1$
-				}
-				return name.substring(index + 1);
-			}
-			return ITypedElement.FOLDER_TYPE;
-		}
 	}
 }

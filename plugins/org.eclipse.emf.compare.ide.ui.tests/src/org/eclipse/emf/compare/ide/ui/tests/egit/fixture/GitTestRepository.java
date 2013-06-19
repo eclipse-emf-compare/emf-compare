@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -33,10 +32,7 @@ import org.eclipse.egit.core.synchronize.GitSubscriberMergeContext;
 import org.eclipse.egit.core.synchronize.GitSubscriberResourceMappingContext;
 import org.eclipse.egit.core.synchronize.dto.GitSynchronizeData;
 import org.eclipse.egit.core.synchronize.dto.GitSynchronizeDataSet;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
+import org.eclipse.emf.compare.ide.ui.tests.workspace.TestProject;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -46,7 +42,6 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.util.FileUtils;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.eclipse.team.core.subscribers.SubscriberScopeManager;
 
@@ -86,7 +81,7 @@ public class GitTestRepository {
 	/**
 	 * Track, add to index and finally commit the given files.
 	 * 
-	 * @param project
+	 * @param testProject
 	 *            The project within which this file is located.
 	 * @param commitMessage
 	 *            Message with which to commit this file.
@@ -94,9 +89,10 @@ public class GitTestRepository {
 	 *            The files to add and commit.
 	 * @return The RevCommit corresponding to this operation.
 	 */
-	public RevCommit addAndCommit(IProject project, String commitMessage, File... files) throws Exception {
+	public RevCommit addAndCommit(TestProject testProject, String commitMessage, File... files)
+			throws Exception {
 		track(files);
-		addToIndex(project, files);
+		addToIndex(testProject, files);
 		return commit(commitMessage);
 	}
 
@@ -116,14 +112,14 @@ public class GitTestRepository {
 	/**
 	 * Adds the given files to the index.
 	 * 
-	 * @param project
+	 * @param testProject
 	 *            Project that contains these files.
 	 * @param files
 	 *            Files to add to the index.
 	 */
-	public void addToIndex(IProject project, File... files) throws Exception {
+	public void addToIndex(TestProject testProject, File... files) throws Exception {
 		for (File file : files) {
-			addToIndex(getIFile(project, file));
+			addToIndex(testProject.getIFile(testProject.getProject(), file));
 		}
 	}
 
@@ -241,73 +237,6 @@ public class GitTestRepository {
 		return context.getSubscriber();
 	}
 
-	/**
-	 * Create or get a file for the given path.
-	 * 
-	 * @param project
-	 *            Instance of project inside which a file will be created.
-	 * @param path
-	 *            Project-relative path for the new file.
-	 * @return Newly created file
-	 */
-	public File getOrCreateFile(IProject project, String path) throws IOException {
-		String fullPath = project.getLocation().append(path).toOSString();
-		int lastSeparator = fullPath.lastIndexOf(File.separator);
-		FileUtils.mkdirs(new File(fullPath.substring(0, lastSeparator)), true);
-
-		File file = new File(fullPath);
-		if (!file.exists()) {
-			FileUtils.createNewFile(file);
-		}
-
-		return file;
-	}
-
-	/**
-	 * Find an IFile corresponding to the given java.io.File within the given project.
-	 * 
-	 * @param project
-	 *            The project within which we're searching for a file.
-	 * @param file
-	 *            java.io.File for which we're searching a corresponding eclipse IFile.
-	 * @return The IFile we found for the given file.
-	 */
-	public IFile getIFile(IProject project, File file) throws CoreException {
-		String relativePath = getRepoRelativePath(file.getAbsolutePath());
-
-		String quotedProjectName = Pattern.quote(project.getName());
-		relativePath = relativePath.replaceFirst(quotedProjectName, "");
-
-		IFile iFile = project.getFile(relativePath);
-		iFile.refreshLocal(0, new NullProgressMonitor());
-
-		return iFile;
-	}
-
-	/**
-	 * Connects an EMF resource to the given File within the given project. The resource will be created with
-	 * a workspace-relative "{@code platform:/resource}" URI.
-	 * 
-	 * @param project
-	 *            The project within which the given file is located.
-	 * @param file
-	 *            The file we're attaching an EMF Resource on.
-	 * @param resourceSet
-	 *            The resource set in which the new Resource will be created.
-	 * @return The created EMF Resource.
-	 */
-	public Resource connectResource(IProject project, File file, ResourceSet resourceSet)
-			throws CoreException {
-		String relativePath = getRepoRelativePath(file.getAbsolutePath());
-
-		String quotedProjectName = Pattern.quote(project.getName());
-		relativePath = relativePath.replaceFirst(".*(" + quotedProjectName + ")", "$1");
-
-		URI uri = URI.createPlatformResourceURI(relativePath, true);
-
-		return createResource(uri, resourceSet);
-	}
-
 	private String getRepoRelativePath(String path) {
 		final int pfxLen = workdirPrefix.length();
 		final int pLen = path.length();
@@ -317,17 +246,6 @@ public class GitTestRepository {
 			return "";
 		}
 		return null;
-	}
-
-	private static Resource createResource(URI modelURI, ResourceSet resourceSet) {
-		final Resource resource = new XMIResourceImpl(modelURI) {
-			@Override
-			protected boolean useUUIDs() {
-				return true;
-			}
-		};
-		resourceSet.getResources().add(resource);
-		return resource;
 	}
 
 	/**

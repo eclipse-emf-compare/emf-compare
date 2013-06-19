@@ -14,13 +14,13 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.textui.TestRunner;
 
-import org.eclipse.emf.compare.ide.ui.tests.unit.LogicalModelTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalModelTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({LogicalModelTest.class, })
+@SuiteClasses({GitLogicalModelTest.class, })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.
