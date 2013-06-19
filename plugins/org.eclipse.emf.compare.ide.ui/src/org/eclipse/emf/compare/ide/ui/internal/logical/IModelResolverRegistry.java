@@ -46,8 +46,9 @@ public interface IModelResolverRegistry {
 	 * 
 	 * @param key
 	 *            Identifier of the resolver we are to remove from this registry.
+	 * @return The removed resolver, if any.
 	 */
-	void removeResolver(String key);
+	IModelResolver removeResolver(String key);
 
 	/** Clears out this registry from all registered resolvers. */
 	void clear();

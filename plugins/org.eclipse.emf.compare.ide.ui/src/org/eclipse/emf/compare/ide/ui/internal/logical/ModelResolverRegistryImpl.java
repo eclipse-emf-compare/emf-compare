@@ -78,8 +78,8 @@ public final class ModelResolverRegistryImpl implements IModelResolverRegistry {
 	 * 
 	 * @see org.eclipse.emf.compare.ide.ui.internal.logical.IModelResolverRegistry#removeResolver(java.lang.String)
 	 */
-	public void removeResolver(String key) {
-		resolvers.remove(key);
+	public IModelResolver removeResolver(String key) {
+		return resolvers.remove(key);
 	}
 
 	/**

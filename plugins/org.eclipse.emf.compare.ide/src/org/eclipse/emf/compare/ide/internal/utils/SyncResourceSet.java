@@ -349,7 +349,8 @@ public class SyncResourceSet extends ResourceSetImpl {
 				} catch (InterruptedException e) {
 					// Ignore
 				} catch (ExecutionException e) {
-					final IStatus status = new Status(IStatus.ERROR, EMFCompareIDEPlugin.PLUGIN_ID, e
+					// TODO does this need to be logged when the underlying exception is IO?
+					final IStatus status = new Status(IStatus.WARNING, EMFCompareIDEPlugin.PLUGIN_ID, e
 							.getMessage(), e);
 					EMFCompareIDEPlugin.getDefault().getLog().log(status);
 				}

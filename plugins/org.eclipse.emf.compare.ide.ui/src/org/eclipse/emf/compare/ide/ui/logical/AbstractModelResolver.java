@@ -40,4 +40,22 @@ public abstract class AbstractModelResolver implements IModelResolver {
 	public void setRanking(int newRanking) {
 		this.ranking = newRanking;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.logical.IModelResolver#initialize()
+	 */
+	public void initialize() {
+		// Empty implementation
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.logical.IModelResolver#dispose()
+	 */
+	public void dispose() {
+		// Empty implementation
+	}
 }

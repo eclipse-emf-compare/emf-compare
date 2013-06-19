@@ -110,4 +110,16 @@ public interface IModelResolver {
 	 *         otherwise.
 	 */
 	boolean canResolve(IStorage sourceStorage);
+
+	/**
+	 * This will be called as soon as the class is created by the registry. Clients can override if they need
+	 * to set up their resolver for use.
+	 */
+	void initialize();
+
+	/**
+	 * This will be called when the contributing plugin of this class is about to be stopped. Clients can
+	 * override to get rid of any state they've maintained within their resolver.
+	 */
+	void dispose();
 }
