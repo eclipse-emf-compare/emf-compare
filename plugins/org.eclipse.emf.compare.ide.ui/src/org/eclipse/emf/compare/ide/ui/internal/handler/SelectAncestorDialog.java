@@ -1,3 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2000, 2013 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Matt McCutchen (hashproduct+eclipse@gmail.com) - Bug 35390 Three-way compare cannot select (mis-selects) )ancestor resource
+ *     Aleksandra Wozniak (aleksandra.k.wozniak@gmail.com) - Bug 239959
+ *     Mikael Barbero (mikael.barbero@obeo.fr) - adapted to EMF Compare
+ *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.handler;
 
 import org.eclipse.compare.internal.CompareMessages;
@@ -18,6 +31,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+/* Initially copy/pasted from org.eclipse.compare.internal.ResourceCompareInput.SelectAncestorDialog. */
 public class SelectAncestorDialog extends MessageDialog {
 	private Notifier[] notifiers;
 

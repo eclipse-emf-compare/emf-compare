@@ -18,11 +18,11 @@ import java.util.List;
 import org.eclipse.emf.common.command.AbstractCommand;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
-import org.eclipse.emf.compare.command.DelagatingCommandStack;
+import org.eclipse.emf.compare.command.DelegatingCommandStack;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 
-public class CompareCommandStack extends DelagatingCommandStack implements ICompareCommandStack {
+public class CompareCommandStack extends DelegatingCommandStack implements ICompareCommandStack {
 
 	private final CompareSideCommandStack rightCommandStack;
 
@@ -47,7 +47,7 @@ public class CompareCommandStack extends DelagatingCommandStack implements IComp
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.command.DelagatingCommandStack#execute(org.eclipse.emf.common.command.Command)
+	 * @see org.eclipse.emf.compare.command.DelegatingCommandStack#execute(org.eclipse.emf.common.command.Command)
 	 */
 	@Override
 	public void execute(Command command) {

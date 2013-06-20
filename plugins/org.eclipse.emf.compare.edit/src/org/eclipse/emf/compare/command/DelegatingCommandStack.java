@@ -14,11 +14,7 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
 
-/**
- * @deprecated use DelegatingCommandStack instead.
- */
-@Deprecated
-public abstract class DelagatingCommandStack implements CommandStack {
+public abstract class DelegatingCommandStack implements CommandStack {
 
 	protected abstract CommandStack delegate();
 
