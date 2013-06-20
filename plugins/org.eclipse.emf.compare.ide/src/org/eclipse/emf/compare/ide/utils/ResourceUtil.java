@@ -197,6 +197,18 @@ public final class ResourceUtil {
 	}
 
 	/**
+	 * Create the URI with which we'll load the given IFile as an EMF resource.
+	 * 
+	 * @param file
+	 *            The file for which we need an EMF URI.
+	 * @return The created URI.
+	 */
+	public static URI createURIFor(IFile file) {
+		// whether it exists or not (no longer), use platform:/resource
+		return URI.createPlatformResourceURI(file.getFullPath().toString(), true);
+	}
+
+	/**
 	 * Create the URI with which we'll load the given IStorage as an EMF resource.
 	 * 
 	 * @param storage
@@ -204,6 +216,10 @@ public final class ResourceUtil {
 	 * @return The created URI.
 	 */
 	public static URI createURIFor(IStorage storage) {
+		if (storage instanceof IFile) {
+			return createURIFor((IFile)storage);
+		}
+
 		final String resourceName = storage.getName();
 		String path = storage.getFullPath().toString();
 		if (!path.endsWith(resourceName)) {
@@ -223,18 +239,17 @@ public final class ResourceUtil {
 		} else {
 			uri = URI.createFileURI(path);
 		}
-		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		if (root == null) {
-			return uri;
-		}
 
-		if (root.getFile(new Path(path)).exists()) {
-			uri = URI.createPlatformResourceURI(path, true);
-		} else {
-			// is it a file coming from a Git repository?
-			final int indexOfSeparator = path.indexOf('/');
-			if (indexOfSeparator > 0 && root.getFile(new Path(path.substring(indexOfSeparator))).exists()) {
-				uri = URI.createPlatformResourceURI(path.substring(indexOfSeparator), true);
+		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		if (root != null) {
+			if (root.getFile(new Path(path)).exists()) {
+				uri = URI.createPlatformResourceURI(path, true);
+			} else {
+				// is it a file coming from a Git repository?
+				final int indexOfSeparator = path.indexOf('/');
+				if (indexOfSeparator > 0 && root.getFile(new Path(path.substring(indexOfSeparator))).exists()) {
+					uri = URI.createPlatformResourceURI(path.substring(indexOfSeparator), true);
+				}
 			}
 		}
 

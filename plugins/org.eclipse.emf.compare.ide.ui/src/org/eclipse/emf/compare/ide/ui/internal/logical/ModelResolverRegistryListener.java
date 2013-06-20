@@ -69,7 +69,7 @@ public class ModelResolverRegistryListener extends AbstractRegistryEventListener
 				resolver = (IModelResolver)element.createExecutableExtension(ATTRIBUTE_CLASS);
 			} catch (CoreException e) {
 				final String message = EMFCompareIDEUIMessages.getString(
-						"ModelResolveRegistry.invalidResolver", className); //$NON-NLS-1$
+						"ModelResolverRegistry.invalidResolver", className); //$NON-NLS-1$
 				log(element, message, e);
 				return false;
 			}
@@ -81,7 +81,7 @@ public class ModelResolverRegistryListener extends AbstractRegistryEventListener
 				ranking = Integer.parseInt(rankingStr);
 			} catch (NumberFormatException e) {
 				log(IStatus.ERROR, element, EMFCompareIDEUIMessages.getString(
-						"ModelResolveRegistry.invalidRanking", className, rankingStr)); //$NON-NLS-1$
+						"ModelResolverRegistry.invalidRanking", className, rankingStr)); //$NON-NLS-1$
 			}
 			resolver.setRanking(ranking);
 

@@ -10,7 +10,12 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Iterators.concat;
+
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
 import java.util.Collections;
@@ -21,8 +26,14 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.AbstractTreeIterator;
+
 /**
  * This structure will be used to maintain a undirected graph of elements.
+ * <p>
+ * This boils down to maintaining a list of children and parents of each node, updating them in sync with each
+ * other.
+ * </p>
  * <p>
  * Take note that the elements of this graph are not necessarily all connected together. This can be used to
  * represent a set of trees, a set of undirected graphs, a set of roots with no children...
@@ -92,15 +103,15 @@ public final class Graph<E> {
 	}
 
 	/**
-	 * Connects the given set of elements to another. Note that nodes will be created for all new elements if
-	 * they do not exist yet.
+	 * Connects the given set of elements to a given parent. Note that nodes will be created for all new
+	 * elements if they do not exist yet.
 	 * 
 	 * @param element
-	 *            The element that is to be connected with others.
-	 * @param connections
+	 *            The element that is to be connected with new children.
+	 * @param newChildren
 	 *            The set of elements to connect to the given parent.
 	 */
-	public void createConnections(E element, Set<E> connections) {
+	public void addChildren(E element, Set<E> newChildren) {
 		synchronized(nodes) {
 			Node<E> node = nodes.get(element);
 			if (node == null) {
@@ -108,15 +119,46 @@ public final class Graph<E> {
 				nodes.put(element, node);
 			}
 
-			for (E newConnection : connections) {
-				Node<E> connectedNode = nodes.get(newConnection);
-				if (connectedNode == null) {
-					connectedNode = new Node<E>(newConnection);
-					nodes.put(newConnection, connectedNode);
+			for (E newChild : newChildren) {
+				Node<E> childNode = nodes.get(newChild);
+				if (childNode == null) {
+					childNode = new Node<E>(newChild);
+					nodes.put(newChild, childNode);
 				}
-				node.connectTo(connectedNode);
+				node.connectChild(childNode);
 			}
 		}
+	}
+
+	/**
+	 * Checks if the given element is a parent of the given potential child, directly or not.
+	 * 
+	 * @param parent
+	 *            Element that could be a parent of <code>potentialChild</code>.
+	 * @param potentialChild
+	 *            The potential child of <code>parent</code>.
+	 */
+	public boolean hasChild(E parent, E potentialChild) {
+		synchronized(nodes) {
+			final Node<E> node = nodes.get(potentialChild);
+			if (node != null) {
+				return Iterables.any(node.getAllParents(), is(parent));
+			}
+			return false;
+		}
+	}
+
+	/**
+	 * This predicate will be used to check if a Node's element is the given one.
+	 * 
+	 * @return The constructed predicate.
+	 */
+	private Predicate<? super Node<E>> is(final E element) {
+		return new Predicate<Node<E>>() {
+			public boolean apply(Node<E> input) {
+				return input != null && input.getElement() == element;
+			}
+		};
 	}
 
 	/**
@@ -127,11 +169,30 @@ public final class Graph<E> {
 	 * @return An iterable over all elements of the subgraph containing the given element, an empty list if
 	 *         that element is not present in this graph.
 	 */
-	public Iterable<E> getSubgraphContaining(E element) {
+	public Iterable<E> getSubgraphOf(E element) {
+		return getBoundedSubgraphOf(element, Collections.<E> emptySet());
+	}
+
+	/**
+	 * Returns an iterable over all elements of the subgraph containing the given element and ending at the
+	 * given boundaries.
+	 * 
+	 * @param element
+	 *            Element we need the subgraph of.
+	 * @param endPoints
+	 *            Boundaries of the need subgraph.
+	 * @return An iterable over all elements of the subgraph containing the given element, an empty list if
+	 *         that element is not present in this graph.
+	 */
+	public Iterable<E> getBoundedSubgraphOf(E element, Set<E> endPoints) {
 		synchronized(nodes) {
 			final Node<E> node = nodes.get(element);
 			if (node != null) {
-				return new SubgraphBuilder<E>(node).build();
+				Set<E> boundaries = endPoints;
+				if (boundaries == null) {
+					boundaries = Collections.emptySet();
+				}
+				return new SubgraphBuilder<E>(node, boundaries).build();
 			}
 			return Collections.emptyList();
 		}
@@ -148,8 +209,11 @@ public final class Graph<E> {
 		/** Underlying data of this Node. */
 		private final K element;
 
-		/** Nodes that are connected with this one. */
-		private final Set<Node<K>> connectedNodes;
+		/** Nodes that are connected with this one as a parent. */
+		private final Set<Node<K>> children;
+
+		/** Nodes that are connected with this one as a child. */
+		private final Set<Node<K>> parents;
 
 		/**
 		 * Construct a new Node for the given element.
@@ -159,40 +223,60 @@ public final class Graph<E> {
 		 */
 		public Node(K element) {
 			this.element = element;
-			this.connectedNodes = new LinkedHashSet<Node<K>>();
+			this.parents = new LinkedHashSet<Node<K>>();
+			this.children = new LinkedHashSet<Node<K>>();
 		}
 
 		/**
-		 * Returns all other Nodes connected to this one.
+		 * Returns all children nodes of this one.
 		 * 
-		 * @return All other Nodes connected to this one.
+		 * @return All children nodes of this one.
 		 */
-		public Set<Node<K>> getConnections() {
-			return Collections.unmodifiableSet(connectedNodes);
+		public Set<Node<K>> getChildren() {
+			return Collections.unmodifiableSet(children);
 		}
 
 		/**
-		 * Registers a link between the given Node and this one.
+		 * Returns all parent nodes of this one.
+		 * 
+		 * @return All parent nodes of this one.
+		 */
+		public Set<Node<K>> getParents() {
+			return Collections.unmodifiableSet(parents);
+		}
+
+		/**
+		 * Returns all direct and indirect parents of this node.
+		 * 
+		 * @return All direct and indirect parents of this node.
+		 */
+		public Iterable<Node<K>> getAllParents() {
+			return new ParentsIterable<K>(this);
+		}
+
+		/**
+		 * Registers the given element as a child of this one.
 		 * 
 		 * @param other
 		 *            The Node that is to be connected to this one.
 		 */
-		public void connectTo(Node<K> other) {
-			this.connectedNodes.add(other);
-			other.connectedNodes.add(this);
+		public void connectChild(Node<K> child) {
+			this.children.add(child);
+			child.parents.add(this);
 		}
 
 		/**
-		 * Breaks the connection from the given other node to this one.
-		 * 
-		 * @param other
-		 *            The node which connection to this one is to be broken.
+		 * Breaks all connections of this node.
 		 */
 		public void breakConnections() {
-			for (Node<K> connected : this.connectedNodes) {
-				connected.connectedNodes.remove(this);
+			for (Node<K> parent : this.parents) {
+				parent.children.remove(this);
 			}
-			this.connectedNodes.clear();
+			for (Node<K> child : this.children) {
+				child.parents.remove(this);
+			}
+			this.parents.clear();
+			this.children.clear();
 		}
 
 		/**
@@ -219,16 +303,24 @@ public final class Graph<E> {
 		/** Keeps track of the elements we've already iterated over. */
 		protected final Set<L> set;
 
+		/** Nodes that will be considered as boundaries for this subgraph. */
+		protected final Set<L> endPoints;
+
 		/**
-		 * Constructs a new iterable given the starting point in the target subgraph.
+		 * Constructs a new iterable given the starting point the target subgraph and the elements that will
+		 * be considered as (excluded) boundaries of that subgraph.
 		 * 
 		 * @param start
 		 *            Starting point of the iteration.
+		 * @param endPoints
+		 *            Excluded boundaries of the target subgraph. Iteration will be pruned on these, along
+		 *            with their own subgraphs.
 		 */
-		public SubgraphBuilder(Node<L> start) {
+		public SubgraphBuilder(Node<L> start, Set<L> endPoints) {
 			this.start = start;
 			this.set = new LinkedHashSet<L>();
 			this.set.add(start.getElement());
+			this.endPoints = checkNotNull(endPoints);
 		}
 
 		/**
@@ -245,6 +337,10 @@ public final class Graph<E> {
 		 * connected Nodes; all the while avoiding data we've already iterated over.
 		 * <p>
 		 * This kind of iterator does not support {@link #remove() removal}.
+		 * </p>
+		 * <p>
+		 * Note : this is not a static class as we're building the external SubgraphBuilder's set through this
+		 * (and checking for already iterated over elements).
 		 * </p>
 		 * 
 		 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
@@ -270,7 +366,7 @@ public final class Graph<E> {
 			 */
 			public NodeIterator(Node<L> node) {
 				this.next = node.getElement();
-				this.nodesIterator = node.getConnections().iterator();
+				this.nodesIterator = concat(node.getParents().iterator(), node.getChildren().iterator());
 				prepareNextIterator();
 			}
 
@@ -328,10 +424,12 @@ public final class Graph<E> {
 				if (nodesIterator.hasNext()) {
 					Node<L> nextNode = nodesIterator.next();
 					while (SubgraphBuilder.this.set.contains(nextNode.getElement())
+							&& !SubgraphBuilder.this.endPoints.contains(nextNode.getElement())
 							&& nodesIterator.hasNext()) {
 						nextNode = nodesIterator.next();
 					}
-					if (SubgraphBuilder.this.set.add(nextNode.getElement())) {
+					if (!SubgraphBuilder.this.endPoints.contains(nextNode.getElement())
+							&& SubgraphBuilder.this.set.add(nextNode.getElement())) {
 						nextNodeIterator = new NodeIterator(nextNode);
 					} else {
 						nextNodeIterator = Iterators.emptyIterator();
@@ -340,6 +438,65 @@ public final class Graph<E> {
 					nextNodeIterator = Iterators.emptyIterator();
 				}
 			}
+		}
+	}
+
+	/**
+	 * A custom Iterable that will iterate over the Node->parent Node tree of a given Node.
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
+	private static class ParentsIterable<M> implements Iterable<Node<M>> {
+		/** The leaf of the Node->parent tree for which this iterable has been constructed. */
+		private final Node<M> start;
+
+		/**
+		 * Constructs an iterable given the root of its tree
+		 * 
+		 * @param start
+		 */
+		public ParentsIterable(Node<M> start) {
+			this.start = start;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see java.lang.Iterable#iterator()
+		 */
+		public Iterator<Node<M>> iterator() {
+			return new ParentsIterator<M>(start);
+		}
+	}
+
+	/**
+	 * A custom TreeIterator that will iterate over the Node->parent Node tree.
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
+	private static class ParentsIterator<N> extends AbstractTreeIterator<Node<N>> {
+		/** Generated SUID. */
+		private static final long serialVersionUID = -4476850344598138970L;
+
+		/**
+		 * Construct an iterator given the root (well, "leaf") of its tree.
+		 * 
+		 * @param start
+		 *            Start node of the tree we'll iterate over.
+		 */
+		public ParentsIterator(Node<N> start) {
+			super(start);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.common.util.AbstractTreeIterator#getChildren(java.lang.Object)
+		 */
+		@SuppressWarnings("unchecked")
+		@Override
+		protected Iterator<? extends Node<N>> getChildren(Object obj) {
+			return ((Node<N>)obj).getParents().iterator();
 		}
 	}
 }

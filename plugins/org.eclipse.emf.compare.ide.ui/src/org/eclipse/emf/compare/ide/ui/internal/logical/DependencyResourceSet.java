@@ -76,7 +76,7 @@ public class DependencyResourceSet extends SyncResourceSet {
 		URI parent = resource.getURI();
 		URI child = ((InternalEObject)proxy).eProxyURI().trimFragment();
 		if (parent.isPlatformResource() && child.isPlatformResource()) {
-			graph.createConnections(parent, Collections.singleton(child));
+			graph.addChildren(parent, Collections.singleton(child));
 		}
 	}
 }

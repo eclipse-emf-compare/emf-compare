@@ -10,11 +10,14 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
+import static com.google.common.collect.Sets.difference;
+import static com.google.common.collect.Sets.intersection;
 import static org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil.adaptAs;
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.createURIFor;
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.hasContentType;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
 import java.util.Collections;
@@ -34,8 +37,11 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
@@ -122,17 +128,79 @@ public class ProjectModelResolver extends LogicalModelResolver {
 			updateDependencies((IFile)origin, monitor);
 		}
 
-		final Set<IStorage> leftTraversal = resolveTraversal((IFile)left, monitor);
-		final Set<IStorage> rightTraversal = resolveTraversal((IFile)right, monitor);
+		final Set<IFile> startingPoints;
+		if (origin != null) {
+			startingPoints = ImmutableSet.of((IFile)left, (IFile)right, (IFile)origin);
+		} else {
+			startingPoints = ImmutableSet.of((IFile)left, (IFile)right);
+		}
+
+		final Set<IStorage> leftTraversal = resolveTraversal((IFile)left, difference(startingPoints,
+				Collections.singleton(left)), monitor);
+		final Set<IStorage> rightTraversal = resolveTraversal((IFile)right, difference(startingPoints,
+				Collections.singleton(right)), monitor);
 		final Set<IStorage> originTraversal;
 		if (origin instanceof IFile) {
-			originTraversal = resolveTraversal((IFile)origin, monitor);
+			originTraversal = resolveTraversal((IFile)origin, difference(startingPoints, Collections
+					.singleton(origin)), monitor);
 		} else {
 			originTraversal = Collections.emptySet();
 		}
 
-		return new SynchronizationModel(new StorageTraversal(leftTraversal), new StorageTraversal(
-				rightTraversal), new StorageTraversal(originTraversal));
+		/*
+		 * If one resource of the logical model was pointing to both (or "all three") of our starting
+		 * elements, we'll have way too many things in our traversal. We need to remove the intersection
+		 * before going any further.
+		 */
+		Set<IStorage> intersection = intersection(leftTraversal, rightTraversal);
+		if (!originTraversal.isEmpty()) {
+			intersection = intersection(intersection, originTraversal);
+		}
+		logCoherenceThreats(startingPoints, intersection);
+
+		final Set<IStorage> actualLeft = difference(leftTraversal, intersection);
+		final Set<IStorage> actualRight = difference(rightTraversal, intersection);
+		final Set<IStorage> actualOrigin = difference(originTraversal, intersection);
+		return new SynchronizationModel(new StorageTraversal(actualLeft), new StorageTraversal(actualRight),
+				new StorageTraversal(actualOrigin));
+	}
+
+	/**
+	 * When executing local comparisons, we resolve the full logical model of both (or "all three of") the
+	 * compared files.
+	 * <p>
+	 * If there is one resource in the scope that references all of these starting points, then we'll have
+	 * perfectly identical logical models for all comparison sides. Because of that, we need to constrain the
+	 * logical model of each starting point to only parts that are not accessible from other starting points.
+	 * This might cause coherence issues as merging could thus "break" references from other files to our
+	 * compared ones.
+	 * </p>
+	 * <p>
+	 * This method will be used to browse the files that are removed from the logical model, and log a warning
+	 * for the files that are removed even though they are "parents" of one of the starting points.
+	 * </p>
+	 * 
+	 * @param startingPoints
+	 *            Starting points of the comparison.
+	 * @param removedFromModel
+	 *            All files that have been removed from the comparison scope.
+	 */
+	private void logCoherenceThreats(Set<IFile> startingPoints, Set<IStorage> removedFromModel) {
+		final Set<URI> coherenceThreats = new LinkedHashSet<URI>();
+		for (IStorage start : startingPoints) {
+			final URI startURI = createURIFor(start);
+			for (IStorage removed : removedFromModel) {
+				final URI removedURI = createURIFor(removed);
+				if (dependencyGraph.hasChild(removedURI, startURI)) {
+					coherenceThreats.add(removedURI);
+				}
+			}
+		}
+
+		final String message = EMFCompareIDEUIMessages.getString("ModelResolver.coherenceWarning"); //$NON-NLS-1$
+		final String details = Iterables.toString(coherenceThreats);
+		EMFCompareIDEUIPlugin.getDefault().getLog().log(
+				new Status(IStatus.WARNING, EMFCompareIDEUIPlugin.PLUGIN_ID, message + '\n' + details));
 	}
 
 	/**
@@ -296,7 +364,37 @@ public class ProjectModelResolver extends LogicalModelResolver {
 	private Set<IStorage> resolveTraversal(IFile resource, IProgressMonitor monitor) {
 		final Set<IStorage> traversal = new LinkedHashSet<IStorage>();
 		final URI startURI = createURIFor(resource);
-		final Iterable<URI> uris = dependencyGraph.getSubgraphContaining(startURI);
+
+		final Iterable<URI> uris = dependencyGraph.getSubgraphOf(startURI);
+		for (URI uri : uris) {
+			traversal.add(getFileAt(uri));
+		}
+		return traversal;
+	}
+
+	/**
+	 * This will be used to resolve the traversal of a file's logical model, according to
+	 * {@link #dependencyGraph}.
+	 * 
+	 * @param resource
+	 *            The resource for which we need the full logical model.
+	 * @param bounds
+	 *            The resources constituting starting points of "other" logical models. This will be used to
+	 *            constrain the dependency sub-graph.
+	 * @param monitor
+	 *            Monitor on which to report progress to the user.
+	 * @return The set of all storages that compose the logical model of <code>resource</code>.
+	 */
+	private Set<IStorage> resolveTraversal(IFile resource, Set<IFile> bounds, IProgressMonitor monitor) {
+		final Set<IStorage> traversal = new LinkedHashSet<IStorage>();
+		final URI startURI = createURIFor(resource);
+
+		final Set<URI> uriBounds = new LinkedHashSet<URI>(bounds.size());
+		for (IFile bound : bounds) {
+			uriBounds.add(createURIFor(bound));
+		}
+
+		final Iterable<URI> uris = dependencyGraph.getBoundedSubgraphOf(startURI, uriBounds);
 		for (URI uri : uris) {
 			traversal.add(getFileAt(uri));
 		}
@@ -532,13 +630,14 @@ public class ProjectModelResolver extends LogicalModelResolver {
 				}
 
 				final IFile file = (IFile)delta.getResource();
-				if (hasModelType(file)) {
-					final URI fileURI = createURIFor(file);
-					if (delta.getKind() == IResourceDelta.REMOVED) {
-						synchronized(removedURIs) {
-							removedURIs.add(fileURI);
-						}
-					} else if ((delta.getKind() & (IResourceDelta.CHANGED | IResourceDelta.ADDED)) != 0) {
+				final URI fileURI = createURIFor(file);
+				// We can't check the content type of a removed resource
+				if (delta.getKind() == IResourceDelta.REMOVED) {
+					synchronized(removedURIs) {
+						removedURIs.add(fileURI);
+					}
+				} else if (hasModelType(file)) {
+					if ((delta.getKind() & (IResourceDelta.CHANGED | IResourceDelta.ADDED)) != 0) {
 						synchronized(changedURIs) {
 							changedURIs.add(fileURI);
 						}
