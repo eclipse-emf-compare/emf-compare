@@ -58,8 +58,8 @@ public class StreamAccessorStorage implements IStorage {
 	}
 
 	/**
-	 * Creates a StreamAccessorStorage given the input typed element. Note that the given typed element -must-
-	 * implement {@link IStreamContentAccessor} as well.
+	 * This is a short-hand for {@link #fromTypedElement(String, ITypedElement)}. This second one should be
+	 * preferred in case the given element is remote and we need a proper path for it.
 	 * 
 	 * @param element
 	 *            The typed element for which we need to create a wrapper.
@@ -69,15 +69,30 @@ public class StreamAccessorStorage implements IStorage {
 	 */
 	public static StreamAccessorStorage fromTypedElement(ITypedElement element)
 			throws IllegalArgumentException {
+		return fromTypedElement(null, element);
+	}
+
+	/**
+	 * Creates a StreamAccessorStorage given the input typed element. Note that the given typed element -must-
+	 * implement {@link IStreamContentAccessor} as well.
+	 * 
+	 * @param storagePath
+	 *            The full path to this storage, can be <code>null</code>.
+	 * @param element
+	 *            The typed element for which we need to create a wrapper.
+	 * @return The wrapped typed element.
+	 * @throws IllegalArgumentException
+	 *             If the given element does not implement {@link IStreamContentAccessor}.
+	 */
+	public static StreamAccessorStorage fromTypedElement(String storagePath, ITypedElement element)
+			throws IllegalArgumentException {
 		if (!(element instanceof IStreamContentAccessor)) {
 			throw new IllegalArgumentException();
 		}
 
 		final String fullPath;
-		final IFile file = findFile(element);
-
-		if (file != null) {
-			fullPath = file.getFullPath().toString();
+		if (storagePath != null) {
+			fullPath = storagePath;
 		} else {
 			final IFileRevision revision = findFileRevision(element);
 			String tmp = null;

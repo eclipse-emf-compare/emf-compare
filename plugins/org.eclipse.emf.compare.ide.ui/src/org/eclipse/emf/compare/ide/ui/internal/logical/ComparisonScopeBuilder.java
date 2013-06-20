@@ -152,11 +152,19 @@ public final class ComparisonScopeBuilder {
 			ITypedElement left, ITypedElement right, ITypedElement origin, IProgressMonitor monitor) {
 		SubMonitor progress = SubMonitor.convert(monitor, EMFCompareIDEUIMessages
 				.getString("EMFSynchronizationModel.resolving"), 100); //$NON-NLS-1$
-		final IStorage leftStorage = StreamAccessorStorage.fromTypedElement(left);
-		final IStorage rightStorage = StreamAccessorStorage.fromTypedElement(right);
+
+		// Can we find a local file to associate a proper path to our storages?
+		final IFile localFile = findFile(left);
+		String path = null;
+		if (localFile != null) {
+			path = localFile.getFullPath().toString();
+		}
+
+		final IStorage leftStorage = StreamAccessorStorage.fromTypedElement(path, left);
+		final IStorage rightStorage = StreamAccessorStorage.fromTypedElement(path, right);
 		final IStorage originStorage;
 		if (origin != null) {
-			originStorage = StreamAccessorStorage.fromTypedElement(origin);
+			originStorage = StreamAccessorStorage.fromTypedElement(path, origin);
 		} else {
 			originStorage = null;
 		}

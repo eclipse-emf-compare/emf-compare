@@ -221,7 +221,7 @@ public class ProjectModelResolver extends LogicalModelResolver {
 		updateChangedDependencies(monitor);
 		updateDependencies(leftFile, storageAccessor, monitor);
 
-		final Set<IStorage> leftTraversal = resolveTraversal(leftFile, monitor);
+		final Set<IStorage> leftTraversal = resolveLocalTraversal(storageAccessor, leftFile, monitor);
 		final Set<IStorage> rightTraversal = resolveTraversal(storageAccessor, DiffSide.REMOTE,
 				leftTraversal, monitor);
 		final Set<IStorage> originTraversal;
@@ -368,6 +368,37 @@ public class ProjectModelResolver extends LogicalModelResolver {
 		final Iterable<URI> uris = dependencyGraph.getSubgraphOf(startURI);
 		for (URI uri : uris) {
 			traversal.add(getFileAt(uri));
+		}
+		return traversal;
+	}
+
+	/**
+	 * This will be used in case of remote comparisons to resolve the local side's traversal (if there is a
+	 * local side).
+	 * 
+	 * @param storageAccessor
+	 *            The accessor that can be used to retrieve synchronization information between our resources.
+	 * @param resource
+	 *            The resource for which we need the full logical model.
+	 * @param monitor
+	 *            Monitor on which to report progress to the user.
+	 * @return The set of all storages that compose the logical model of <code>resource</code>.
+	 */
+	private Set<IStorage> resolveLocalTraversal(IStorageProviderAccessor storageAccessor, IFile resource,
+			IProgressMonitor monitor) {
+		final Set<IStorage> traversal = new LinkedHashSet<IStorage>();
+		final URI startURI = createURIFor(resource);
+
+		final Iterable<URI> uris = dependencyGraph.getSubgraphOf(startURI);
+		for (URI uri : uris) {
+			final IFile file = getFileAt(uri);
+			try {
+				if (!storageAccessor.isInSync(file)) {
+					traversal.add(file);
+				}
+			} catch (CoreException e) {
+				// swallow
+			}
 		}
 		return traversal;
 	}

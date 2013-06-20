@@ -85,6 +85,15 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor#isInSync(org.eclipse.core.resources.IResource)
+	 */
+	public boolean isInSync(IResource resource) throws CoreException {
+		return subscriber.getDiff(resource) == null;
+	}
+
+	/**
 	 * Finds and returns the "origin" variant of the given IResource as provided by the underlying subscriber.
 	 * 
 	 * @param resource
@@ -94,7 +103,8 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 	 */
 	private IStorageProvider getOriginVariant(IResource resource) throws CoreException {
 		if (originTree != null) {
-			return wrapStorageProvider(originTree.getResourceVariant(resource));
+			return wrapStorageProvider(resource.getFullPath().toString(), originTree
+					.getResourceVariant(resource));
 		}
 
 		final IDiff diff = subscriber.getDiff(resource);
@@ -111,7 +121,8 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 	 */
 	private IStorageProvider getSourceVariant(IResource resource) throws CoreException {
 		if (sourceTree != null) {
-			return wrapStorageProvider(sourceTree.getResourceVariant(resource));
+			return wrapStorageProvider(resource.getFullPath().toString(), sourceTree
+					.getResourceVariant(resource));
 		}
 
 		final IDiff diff = subscriber.getDiff(resource);
@@ -126,9 +137,10 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 	 * @return The "remote" variant of the given IResource.
 	 * @throws CoreException
 	 */
-	public IStorageProvider getRemoteVariant(IResource resource) throws CoreException {
+	private IStorageProvider getRemoteVariant(IResource resource) throws CoreException {
 		if (remoteTree != null) {
-			return wrapStorageProvider(remoteTree.getResourceVariant(resource));
+			return wrapStorageProvider(resource.getFullPath().toString(), remoteTree
+					.getResourceVariant(resource));
 		}
 
 		final IDiff diff = subscriber.getDiff(resource);
@@ -152,13 +164,15 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 	/**
 	 * Wraps the given resource variant as an {@link IStorageProvider}.
 	 * 
+	 * @param path
+	 *            Path of that storage.
 	 * @param revision
 	 *            The wrapped resource variant.
 	 * @return The wrapping storage provider.
 	 */
-	private static IStorageProvider wrapStorageProvider(IResourceVariant variant) {
+	private static IStorageProvider wrapStorageProvider(String path, IResourceVariant variant) {
 		if (variant != null) {
-			return new ResourceVariantStorageProvider(variant);
+			return new ResourceVariantStorageProvider(path, variant);
 		}
 		return null;
 	}
@@ -254,6 +268,7 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 					try {
 						final Method method;
 						if (methodName.contains("Source")) { //$NON-NLS-1$
+							// Only available on git, only from 3.0
 							method = teamSubscriber.getClass().getDeclaredMethod(methodName);
 						} else {
 							method = ResourceVariantTreeSubscriber.class.getDeclaredMethod(methodName);

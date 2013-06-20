@@ -38,6 +38,18 @@ public interface IStorageProviderAccessor {
 	 */
 	IStorageProvider getStorageProvider(IResource resource, DiffSide side) throws CoreException;
 
+	/**
+	 * Checks whether the given resource is considered "in sync".
+	 * 
+	 * @param resource
+	 *            The resource to check.
+	 * @return <code>true</code> if this resource is in sync with its remote variant, <code>false</code>
+	 *         otherwise.
+	 * @throws CoreException
+	 *             Thrown if we cannot get the diff for this resource.
+	 */
+	boolean isInSync(IResource resource) throws CoreException;
+
 	/** Used by the resolution process to determine the side of the revision to fetch. */
 	public static enum DiffSide {
 		/** Source side. Usually denotes "left" or "local" content. */
