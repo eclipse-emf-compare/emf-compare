@@ -65,6 +65,7 @@
     <module>../packaging/org.eclipse.emf.compare.rcp.ui-feature</module>
     <module>../plugins/org.eclipse.emf.compare.rcp</module>
     <module>../plugins/org.eclipse.emf.compare.rcp.ui</module>
+    <module>../plugins/org.eclipse.emf.compare.rcp.ui.tests</module>
 
     <!-- UML -->
     <module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
