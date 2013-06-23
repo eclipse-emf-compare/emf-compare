@@ -47,7 +47,7 @@ public class TestComparisonItemProviderSpec extends AbstractTestCompareItemProvi
 
 		Collection<?> children = itemProvider.getChildren(comparison);
 
-		assertEquals(2, children.size());
+		assertEquals(7, children.size());
 		assertEquals(1, size(filter(children, Match.class)));
 		assertEquals(1, size(filter(children, MatchResource.class)));
 	}

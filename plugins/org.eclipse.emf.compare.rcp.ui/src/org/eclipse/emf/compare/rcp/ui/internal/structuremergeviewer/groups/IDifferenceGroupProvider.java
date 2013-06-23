@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups;
 
-
-
 import java.util.Collection;
 
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 
@@ -24,7 +23,7 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  * @since 3.0
  */
-public interface IDifferenceGroupProvider {
+public interface IDifferenceGroupProvider extends Adapter {
 
 	/**
 	 * This will be called internally by the grouping actions in order to determine how the differences should
@@ -36,7 +35,7 @@ public interface IDifferenceGroupProvider {
 	 * @return The collection of difference groups that are to be displayed in the structural viewer. An empty
 	 *         group will not be displayed at all. If {@code null}, we'll fall back to the default behavior.
 	 */
-	Iterable<? extends IDifferenceGroup> getGroups(Comparison comparison);
+	Collection<? extends IDifferenceGroup> getGroups(Comparison comparison);
 
 	/**
 	 * A human-readable label for this group. This will be displayed in the EMF Compare UI.

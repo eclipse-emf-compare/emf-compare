@@ -60,7 +60,7 @@ import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.AttributeChangeNode;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.CompareInputAdapter;
 import org.eclipse.emf.compare.ide.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
@@ -278,8 +278,10 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 
 	protected void copyDiff(boolean leftToRight) {
 		Object input = getInput();
-		if (input instanceof AttributeChangeNode) {
-			final AttributeChange attributeChange = ((AttributeChangeNode)input).getTarget();
+		if (input instanceof CompareInputAdapter
+				&& ((CompareInputAdapter)input).getComparisonObject() instanceof AttributeChange) {
+			final AttributeChange attributeChange = (AttributeChange)((CompareInputAdapter)input)
+					.getComparisonObject();
 
 			final Command copyCommand = getEditingDomain().createCopyCommand(
 					Collections.singletonList(attributeChange), leftToRight,
@@ -404,8 +406,9 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 					public void run() {
 						// When we leave the current input
 						Object oldInput = getInput();
-						if (oldInput instanceof AttributeChangeNode) {
-							final AttributeChange diff = ((AttributeChangeNode)oldInput).getTarget();
+						if (oldInput instanceof CompareInputAdapter) {
+							final AttributeChange diff = (AttributeChange)((CompareInputAdapter)oldInput)
+									.getComparisonObject();
 							final EAttribute eAttribute = diff.getAttribute();
 							final Match match = diff.getMatch();
 							final IEqualityHelper equalityHelper = match.getComparison().getEqualityHelper();

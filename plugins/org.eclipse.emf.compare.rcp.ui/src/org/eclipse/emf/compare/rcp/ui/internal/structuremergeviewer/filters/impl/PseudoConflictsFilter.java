@@ -16,9 +16,9 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
  * A filter used by default that filtered out pseudo conflicts differences.
@@ -34,11 +34,13 @@ public class PseudoConflictsFilter extends AbstractDifferenceFilter {
 	private static final Predicate<? super EObject> predicateWhenSelected = new Predicate<EObject>() {
 		public boolean apply(EObject input) {
 			boolean ret = false;
-			if (input instanceof Diff) {
-				Diff diff = (Diff)input;
-				Conflict conflict = diff.getConflict();
-				if (conflict != null && conflict.getKind() == ConflictKind.PSEUDO) {
-					ret = true;
+			if (input instanceof TreeNode) {
+				TreeNode treeNode = (TreeNode)input;
+				EObject data = treeNode.getData();
+				if (data instanceof Diff) {
+					Diff diff = (Diff)data;
+					Conflict conflict = diff.getConflict();
+					ret = conflict != null && conflict.getKind() == ConflictKind.PSEUDO;
 				}
 			}
 			return ret;

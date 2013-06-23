@@ -25,7 +25,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public abstract class AbstractMergedAllTo extends AbstractHandler {
+public abstract class AbstractMergeAllHandler extends AbstractHandler {
 
 	/** The compare configuration object used to get the compare model. */
 	private CompareConfiguration configuration;

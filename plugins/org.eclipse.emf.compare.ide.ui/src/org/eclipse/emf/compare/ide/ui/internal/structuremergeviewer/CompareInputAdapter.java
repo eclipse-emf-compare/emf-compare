@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
@@ -25,9 +24,11 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.AccessorAdapter;
+import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.IAccessorFactory;
-import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.swt.graphics.Image;
@@ -35,10 +36,10 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareInput {
+public abstract class CompareInputAdapter extends AdapterImpl implements ICompareInput {
 
 	/**
-	 * 
+	 * Store the listeners for notifications.
 	 */
 	private final ListenerList fListener;
 
@@ -53,11 +54,16 @@ public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareI
 	 * @param adapterFactory
 	 *            the factory.
 	 */
-	public AbstractEDiffNode(AdapterFactory adapterFactory) {
+	public CompareInputAdapter(AdapterFactory adapterFactory) {
 		fAdapterFactory = adapterFactory;
 		fListener = new ListenerList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#isAdapterForType(java.lang.Object)
+	 */
 	@Override
 	public boolean isAdapterForType(Object type) {
 		return type == fAdapterFactory;
@@ -100,12 +106,19 @@ public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareI
 				final ICompareInputChangeListener listener = (ICompareInputChangeListener)listeners[i];
 				SafeRunnable runnable = new SafeRunnable() {
 					public void run() throws Exception {
-						listener.compareInputChanged(AbstractEDiffNode.this);
+						listener.compareInputChanged(CompareInputAdapter.this);
 					}
 				};
 				SafeRunner.run(runnable);
 			}
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public EObject getComparisonObject() {
+		return ((TreeNode)getTarget()).getData();
 	}
 
 	/**
@@ -117,10 +130,15 @@ public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareI
 
 	}
 
+	/**
+	 * Returns the appropriate {@link IAccessorFactory} from the accessor factory registry.
+	 * 
+	 * @return the appropriate {@link IAccessorFactory}.
+	 */
 	protected IAccessorFactory getAccessorFactoryForTarget() {
 		IAccessorFactory.Registry factoryRegistry = EMFCompareRCPUIPlugin.getDefault()
 				.getAccessorFactoryRegistry();
-		return factoryRegistry.getHighestRankingFactory(getTarget());
+		return factoryRegistry.getHighestRankingFactory(getComparisonObject());
 	}
 
 	/**
@@ -129,26 +147,40 @@ public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareI
 	 * @see org.eclipse.compare.ITypedElement#getImage()
 	 */
 	public Image getImage() {
-		Image ret = null;
-		Adapter adapter = getAdapterFactory().adapt(target, IItemLabelProvider.class);
-		if (adapter instanceof IItemLabelProvider) {
-			Object imageObject = ((IItemLabelProvider)adapter).getImage(target);
-			ret = ExtendedImageRegistry.getInstance().getImage(imageObject);
-		}
-		return ret;
+		Object imageObject = AdapterFactoryUtil.getImage(getAdapterFactory(), getComparisonObject());
+		return ExtendedImageRegistry.getInstance().getImage(imageObject);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getKind()
+	 */
 	public int getKind() {
+		Notifier notifier = getComparisonObject();
+		boolean isThreeWay = false;
+		if (notifier instanceof Diff) {
+			isThreeWay = ((Diff)notifier).getMatch().getComparison().isThreeWay();
+		} else if (notifier instanceof Match) {
+			isThreeWay = ((Match)notifier).getComparison().isThreeWay();
+		} else if (notifier instanceof Conflict) {
+			isThreeWay = true;
+		} else if (notifier instanceof MatchResource) {
+			isThreeWay = ((MatchResource)notifier).getComparison().isThreeWay();
+		}
+		if (isThreeWay) {
+			return Differencer.CONFLICTING;
+		}
 		return Differencer.NO_CHANGE;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getName()
+	 */
 	public String getName() {
-		String ret = null;
-		Adapter adapter = getAdapterFactory().adapt(target, IItemLabelProvider.class);
-		if (adapter instanceof IItemLabelProvider) {
-			ret = ((IItemLabelProvider)adapter).getText(target);
-		}
-		return ret;
+		return AdapterFactoryUtil.getText(getAdapterFactory(), getComparisonObject());
 	}
 
 	/**
@@ -158,7 +190,7 @@ public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareI
 	 */
 	public ITypedElement getAncestor() {
 		final ITypedElement ret;
-		Notifier notifier = getTarget();
+		Notifier notifier = getComparisonObject();
 		boolean isThreeWay = false;
 		if (notifier instanceof Diff) {
 			isThreeWay = ((Diff)notifier).getMatch().getComparison().isThreeWay();
@@ -173,7 +205,7 @@ public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareI
 			IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
 			if (accessorFactory != null) {
 				org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
-						.createAncestor(getAdapterFactory(), getTarget());
+						.createAncestor(getAdapterFactory(), getComparisonObject());
 				if (typedElement != null) {
 					ret = AccessorAdapter.adapt(typedElement);
 				} else {
@@ -198,7 +230,7 @@ public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareI
 		IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
 		if (accessorFactory != null) {
 			org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
-					.createLeft(getAdapterFactory(), getTarget());
+					.createLeft(getAdapterFactory(), getComparisonObject());
 			if (typedElement != null) {
 				ret = AccessorAdapter.adapt(typedElement);
 			} else {
@@ -220,7 +252,7 @@ public abstract class AbstractEDiffNode extends AdapterImpl implements ICompareI
 		IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
 		if (accessorFactory != null) {
 			org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
-					.createRight(getAdapterFactory(), getTarget());
+					.createRight(getAdapterFactory(), getComparisonObject());
 			if (typedElement != null) {
 				ret = AccessorAdapter.adapt(typedElement);
 			} else {

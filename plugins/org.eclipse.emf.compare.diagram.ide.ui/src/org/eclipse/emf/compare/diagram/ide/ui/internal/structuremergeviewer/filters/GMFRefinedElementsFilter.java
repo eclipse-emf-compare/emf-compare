@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
  * A filter used by default that filtered out refined GMF differences.
@@ -36,9 +37,12 @@ public class GMFRefinedElementsFilter extends AbstractDifferenceFilter {
 	 */
 	private static final Predicate<? super EObject> PREDICATE_WHEN_SELECTED = new Predicate<EObject>() {
 		public boolean apply(EObject input) {
-			if (input instanceof Diff) {
-				Diff diff = (Diff)input;
-				return Iterables.any(diff.getRefines(), instanceOf(DiagramDiff.class));
+			if (input instanceof TreeNode) {
+				EObject data = ((TreeNode)input).getData();
+				if (data instanceof Diff) {
+					Diff diff = (Diff)data;
+					return Iterables.any(diff.getRefines(), instanceOf(DiagramDiff.class));
+				}
 			}
 			return false;
 		}
@@ -49,9 +53,14 @@ public class GMFRefinedElementsFilter extends AbstractDifferenceFilter {
 	 */
 	private static final Predicate<? super EObject> PREDICATE_WHEN_UNSELECTED = new Predicate<EObject>() {
 		public boolean apply(EObject input) {
-			EPackage p = input.eClass().getEPackage();
-			if (p != null) {
-				return p.getNsURI().startsWith("http://www.eclipse.org/emf/compare/diagram"); //$NON-NLS-1$
+			if (input instanceof TreeNode) {
+				EObject data = ((TreeNode)input).getData();
+				if (data != null) {
+					EPackage p = input.eClass().getEPackage();
+					if (p != null) {
+						return p.getNsURI().startsWith("http://www.eclipse.org/emf/compare/diagram"); //$NON-NLS-1$
+					}
+				}
 			}
 			return false;
 		}
@@ -67,7 +76,7 @@ public class GMFRefinedElementsFilter extends AbstractDifferenceFilter {
 	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
 		if (scope != null) {
 			for (String nsURI : scope.getNsURIs()) {
-				if (nsURI.matches("http://www\\.eclipse\\.org/gmf/runtime/.*/notation")) {
+				if (nsURI.matches("http://www\\.eclipse\\.org/gmf/runtime/.*/notation")) { //$NON-NLS-1$
 					return true;
 				}
 			}

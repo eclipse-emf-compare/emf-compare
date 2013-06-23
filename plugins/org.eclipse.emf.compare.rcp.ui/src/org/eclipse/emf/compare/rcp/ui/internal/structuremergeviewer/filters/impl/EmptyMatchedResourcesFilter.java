@@ -10,18 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl;
 
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.isEmpty;
-
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.MatchResource;
-import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.provider.spec.MatchResourceItemProviderSpec;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
  * A filter used by default that filtered out matched elements.
@@ -36,18 +29,14 @@ public class EmptyMatchedResourcesFilter extends AbstractDifferenceFilter {
 	 */
 	private static final Predicate<? super EObject> predicateWhenSelected = new Predicate<EObject>() {
 		public boolean apply(EObject input) {
-			if (input instanceof MatchResource) {
-				EList<Diff> differences = ((MatchResource)input).getComparison().getDifferences();
-				Iterable<ResourceAttachmentChange> resourceAttachmentchanges = filter(differences,
-						ResourceAttachmentChange.class);
-				if (!isEmpty(resourceAttachmentchanges)) {
-					return Iterables.all(resourceAttachmentchanges, MatchResourceItemProviderSpec
-							.uriDifferentFromAll((MatchResource)input));
-				} else {
-					return true;
+			boolean ret = false;
+			if (input instanceof TreeNode) {
+				TreeNode treeNode = (TreeNode)input;
+				if (treeNode.getData() instanceof MatchResource) {
+					ret = treeNode.getChildren().isEmpty();
 				}
 			}
-			return false;
+			return ret;
 		}
 	};
 

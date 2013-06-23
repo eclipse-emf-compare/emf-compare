@@ -31,16 +31,14 @@ public class GroupAction extends Action {
 	/**
 	 * Instantiates our action given its target grouper.
 	 * 
-	 * @param text
-	 *            Will be used as the action's tooltip.
 	 * @param structureMergeViewerGrouper
 	 *            The grouper to which we'll provide our DifferenceGroupProvider.
 	 * @param provider
 	 *            The group provider associated with this action.
 	 */
-	public GroupAction(String text, StructureMergeViewerGrouper structureMergeViewerGrouper,
+	public GroupAction(StructureMergeViewerGrouper structureMergeViewerGrouper,
 			IDifferenceGroupProvider provider) {
-		super(text, IAction.AS_RADIO_BUTTON);
+		super(provider.getLabel(), IAction.AS_RADIO_BUTTON);
 		this.structureMergeViewerGrouper = structureMergeViewerGrouper;
 		this.provider = provider;
 	}

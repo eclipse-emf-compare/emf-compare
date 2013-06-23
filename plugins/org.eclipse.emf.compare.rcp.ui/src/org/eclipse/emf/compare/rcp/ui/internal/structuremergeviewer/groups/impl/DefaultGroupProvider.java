@@ -10,9 +10,15 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl;
 
-import java.util.Collections;
+import static com.google.common.base.Predicates.alwaysTrue;
 
+import com.google.common.collect.ImmutableList;
+
+import java.util.Collection;
+
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -23,16 +29,31 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class DefaultGroupProvider implements IDifferenceGroupProvider {
+public class DefaultGroupProvider extends AdapterImpl implements IDifferenceGroupProvider {
+
+	/** The unique group provided by this provider. */
+	private IDifferenceGroup group;
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
 	 */
-	public Iterable<? extends IDifferenceGroup> getGroups(Comparison comparison) {
+	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
+		if (group == null) {
+			group = new BasicDifferenceGroupImpl(comparison, alwaysTrue());
+		}
+		return ImmutableList.of(group);
+	}
 
-		return Collections.emptyList();
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#isAdapterForType(java.lang.Object)
+	 */
+	@Override
+	public boolean isAdapterForType(Object type) {
+		return type == IDifferenceGroupProvider.class;
 	}
 
 	/**
@@ -80,5 +101,4 @@ public class DefaultGroupProvider implements IDifferenceGroupProvider {
 	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
 		return true;
 	}
-
 }

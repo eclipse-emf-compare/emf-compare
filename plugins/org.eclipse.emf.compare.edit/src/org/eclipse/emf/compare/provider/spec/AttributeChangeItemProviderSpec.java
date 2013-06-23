@@ -10,17 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
-import static com.google.common.collect.Lists.newArrayList;
-
 import com.google.common.base.Strings;
-
-import java.util.Collection;
-import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.AttributeChange;
-import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
@@ -138,24 +132,6 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 			value = org.eclipse.emf.compare.provider.spec.Strings.elide(value, ELIDE_LENGTH, "..."); //$NON-NLS-1$
 		}
 		return value;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getChildren(java.lang.Object)
-	 */
-	@Override
-	public Collection<?> getChildren(Object object) {
-		Collection<?> children = super.getChildren(object);
-		List<? super Object> ret = newArrayList(children);
-		AttributeChange attributeChange = (AttributeChange)object;
-		Conflict conflict = attributeChange.getConflict();
-		if (conflict != null) {
-			// ret.add(conflict);
-		}
-
-		return ret;
 	}
 
 	/**

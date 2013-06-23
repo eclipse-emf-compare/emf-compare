@@ -10,29 +10,25 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters;
 
-import static com.google.common.base.Predicates.not;
+import static com.google.common.base.Predicates.or;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Conflict;
-import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilterSelectionChangeEvent.Action;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.GroupItemProviderAdapter;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -56,13 +52,13 @@ import org.eclipse.swt.events.DisposeListener;
  */
 public class StructureMergeViewerFilter extends ViewerFilter {
 	/** The set of predicates known by this filter. */
-	private Set<Predicate<? super EObject>> predicates = Sets.newLinkedHashSet();
+	private final Set<Predicate<? super EObject>> predicates;
 
 	/** List of all TreeViewers on which this filter is applied. */
-	private List<TreeViewer> viewers = Lists.newArrayList();
+	private final List<TreeViewer> viewers;
 
 	/** The {@link EventBus} associated with this filter. */
-	private EventBus eventBus;
+	private final EventBus eventBus;
 
 	/**
 	 * Constructs the difference filter.
@@ -72,6 +68,8 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 */
 	public StructureMergeViewerFilter(EventBus eventBus) {
 		this.eventBus = eventBus;
+		this.predicates = Sets.newLinkedHashSet();
+		this.viewers = Lists.newArrayList();
 	}
 
 	/**
@@ -85,44 +83,51 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 		if (getPredicates().isEmpty()) {
 			return true;
 		}
-		boolean result = false;
-		final Predicate<? super EObject> predicate = Predicates.or(getPredicates());
 
-		if (getPredicates().isEmpty()) {
-			result = true;
+		boolean result = true;
+		final Predicate<? super EObject> predicate = or(getPredicates());
+
+		if (element instanceof GroupItemProviderAdapter) {
+			result = ((GroupItemProviderAdapter)element).hasChildren(element);
 		} else if (element instanceof Adapter) {
 			Notifier notifier = ((Adapter)element).getTarget();
-			if (notifier instanceof Diff) {
-				final Diff diff = (Diff)notifier;
-				result = !predicate.apply(diff);
-			} else if (notifier instanceof Match) {
-				final Match match = (Match)notifier;
-				result = !predicate.apply(match);
-				if (result && !Iterables.isEmpty(match.getAllDifferences())) {
-					final Iterator<Diff> differences = match.getAllDifferences().iterator();
-					return Iterators.any(differences, not(predicate));
-				}
-			} else if (notifier instanceof MatchResource) {
-				final MatchResource matchResource = (MatchResource)notifier;
-				result = !predicate.apply(matchResource);
-			} else if (notifier instanceof Conflict) {
-				final Iterator<Diff> differences = ((Conflict)notifier).getDifferences().iterator();
-				result = Iterators.any(differences, not(predicate));
+			if (notifier instanceof EObject) {
+				EObject eObject = (EObject)notifier;
+
+				// Keep node only if it is not filtered or if it is a Match with only filtered children.
+				result = keepNode(eObject, predicate);
 			}
-		} else if (element instanceof IDifferenceGroup) {
-			final Iterator<? extends Diff> differences = ((IDifferenceGroup)element).getDifferences()
-					.iterator();
-			result = Iterators.any(differences, not(predicate));
-		} else if (element instanceof Adapter && ((Adapter)element).getTarget() instanceof EObject) {
-			/*
-			 * Same code as the DiffNode case... extracted here as this is aimed at handling the cases not
-			 * known at the time of writing (and the case of the "MatchResource" elements).
-			 */
-			final EObject target = (EObject)((Adapter)element).getTarget();
-			result = !predicate.apply(target);
 		}
 
 		return result;
+	}
+
+	/**
+	 * Keep node only if it is not filtered or if it is a Match with only filtered children.
+	 * 
+	 * @param eObject
+	 *            the node we want to keep.
+	 * @param predicate
+	 *            the predicate used to keep the node or not.
+	 * @return true if the node has to be keeped, false otherwise.
+	 */
+	private boolean keepNode(EObject eObject, final Predicate<? super EObject> predicate) {
+		boolean result = !predicate.apply(eObject);
+		Collection<EObject> eContents = eObject.eContents();
+		if (result && !eContents.isEmpty() && eObject instanceof TreeNode) {
+			EObject data = ((TreeNode)eObject).getData();
+			if ((data instanceof Match || data instanceof Conflict)) {
+				result = false;
+				for (EObject child : eContents) {
+					if (keepNode(child, predicate)) {
+						result = true;
+						break;
+					}
+				}
+			}
+		}
+		return result;
+
 	}
 
 	/**

@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 
@@ -45,12 +42,6 @@ public final class StructureMergeViewerGrouper {
 	private EventBus eventBus;
 
 	/**
-	 * Caches the result of {@link #getGroups(Comparison)}. We need the groups to be identical between calls
-	 * in order for the viewer to be able to keep its expanded state.
-	 */
-	private Iterable<? extends IDifferenceGroup> filteredGroups;
-
-	/**
 	 * Constructs the difference grouper.
 	 * 
 	 * @param eventBus
@@ -70,15 +61,7 @@ public final class StructureMergeViewerGrouper {
 	 *         {@link Iterable} if we have no group provider set.
 	 */
 	public Iterable<? extends IDifferenceGroup> getGroups(final Comparison comparison) {
-		if (provider == null) {
-			return ImmutableList.of();
-		}
-
-		if (filteredGroups == null) {
-			final Iterable<? extends IDifferenceGroup> groups = provider.getGroups(comparison);
-			filteredGroups = Iterables.filter(groups, new NonEmptyGroup());
-		}
-		return filteredGroups;
+		return provider.getGroups(comparison);
 	}
 
 	/**
@@ -90,9 +73,8 @@ public final class StructureMergeViewerGrouper {
 	public void setProvider(IDifferenceGroupProvider provider) {
 		if (this.provider != provider) {
 			this.provider = provider;
-			filteredGroups = null;
-			refreshViewers();
 			eventBus.post(provider);
+			refreshViewers();
 		}
 	}
 
@@ -135,21 +117,5 @@ public final class StructureMergeViewerGrouper {
 	 */
 	public void uninstall(TreeViewer viewer) {
 		viewers.remove(viewer);
-	}
-
-	/**
-	 * This predicate will be used to filter the empty groups out of the displayed list.
-	 * 
-	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
-	 */
-	private static class NonEmptyGroup implements Predicate<IDifferenceGroup> {
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see com.google.common.base.Predicate#apply(java.lang.Object)
-		 */
-		public boolean apply(IDifferenceGroup input) {
-			return input != null && !Iterables.isEmpty(input.getDifferences());
-		}
 	}
 }

@@ -10,15 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
-import com.google.common.base.Preconditions;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.ide.ui.internal.util.StyledStringConverter;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
-import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
+import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
@@ -33,6 +29,8 @@ import org.eclipse.swt.graphics.Image;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelProvider.FontAndColorProvider implements IStyledLabelProvider {
+
+	protected StyledStringConverter styledStringConverter;
 
 	/**
 	 * Constructor calling super {@link #FontAndColorProvider(AdapterFactory, Viewer)}.
@@ -103,15 +101,10 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 	@Override
 	public Image getImage(Object element) {
 		final Image ret;
-		if (element instanceof Adapter) {
+		if (element instanceof ItemProviderAdapter) {
+			ret = super.getImage(element);
+		} else if (element instanceof Adapter) {
 			ret = super.getImage(((Adapter)element).getTarget());
-		} else if (element instanceof IDifferenceGroup) {
-			final Image groupImage = ((IDifferenceGroup)element).getImage();
-			if (groupImage != null) {
-				ret = groupImage;
-			} else {
-				ret = EMFCompareRCPUIPlugin.getImage("icons/full/toolb16/group.gif"); //$NON-NLS-1$ 
-			}
 		} else {
 			ret = super.getImage(element);
 		}
@@ -128,23 +121,14 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 	 */
 	public StyledString getStyledText(Object element) {
 		final StyledString ret;
-		if (element instanceof Adapter) {
-			Notifier target = ((Adapter)element).getTarget();
-			StyledString styledText = getStyledText(getAdapterFactory(), target);
-			if (styledText == null) {
-				ret = new StyledString(super.getText(target));
-			} else {
-				ret = styledText;
-			}
-		} else if (element instanceof IDifferenceGroup) {
-			StyledStringConverter stringConverter = new StyledStringConverter(getDefaultFont(),
-					getDefaultForeground(), getDefaultBackground());
-			return stringConverter.toJFaceStyledString(((IDifferenceGroup)element).getStyledName());
+		if (element instanceof ItemProviderAdapter) {
+			ret = getStyledTextFromObject(element);
+		} else if (element instanceof Adapter) {
+			ret = getStyledTextFromObject(((Adapter)element).getTarget());
 		} else {
-			ret = new StyledString(super.getText(element));
+			ret = getStyledTextFromObject(element);
 		}
 		return ret;
-
 	}
 
 	/**
@@ -153,27 +137,35 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 	 * {@link IItemStyledLabelProvider#getStyledText(Object) text}. Returns null if <code>object</code> is
 	 * null.
 	 * 
-	 * @param adapterFactory
-	 *            the adapter factory to adapt from
 	 * @param object
 	 *            the object from which we want a text
 	 * @return the text, or null if object is null.
 	 * @throws NullPointerException
 	 *             if <code>adapterFactory</code> is null.
 	 */
-	private StyledString getStyledText(final AdapterFactory adapterFactory, final Object object) {
-		Preconditions.checkNotNull(adapterFactory);
+	private StyledString getStyledTextFromObject(final Object object) {
 		if (object == null) {
 			return null;
 		}
 		StyledString ret = null;
-		Object itemStyledLabelProvider = adapterFactory.adapt(object, IItemStyledLabelProvider.class);
+		Object itemStyledLabelProvider = getAdapterFactory().adapt(object, IItemStyledLabelProvider.class);
 		if (itemStyledLabelProvider instanceof IItemStyledLabelProvider) {
-			StyledStringConverter stringConverter = new StyledStringConverter(getDefaultFont(),
-					getDefaultForeground(), getDefaultBackground());
-			ret = stringConverter.toJFaceStyledString(((IItemStyledLabelProvider)itemStyledLabelProvider)
-					.getStyledText(object));
+			ret = getStyledStringConverter().toJFaceStyledString(
+					((IItemStyledLabelProvider)itemStyledLabelProvider).getStyledText(object));
 		}
 		return ret;
+	}
+
+	/**
+	 * Returns the StyledStringConverter used to convert emf compare styled strings to jface styled strings.
+	 * 
+	 * @return the styledStringConverter.
+	 */
+	protected StyledStringConverter getStyledStringConverter() {
+		if (styledStringConverter == null) {
+			styledStringConverter = new StyledStringConverter(getDefaultFont(), getDefaultForeground(),
+					getDefaultBackground());
+		}
+		return styledStringConverter;
 	}
 }

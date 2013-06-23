@@ -19,6 +19,8 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.util.EMFCompareUIHandlerUtil;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.handlers.HandlerUtil;
 
@@ -28,7 +30,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public abstract class AbstractMergedTo extends AbstractHandler {
+public abstract class AbstractMergeHandler extends AbstractHandler {
 
 	/** The compare configuration object used to get the compare model. */
 	private CompareConfiguration configuration;
@@ -44,11 +46,14 @@ public abstract class AbstractMergedTo extends AbstractHandler {
 			setConfiguration(((CompareEditorInput)editorInput).getCompareConfiguration());
 			Object diffNode = ((CompareEditorInput)editorInput).getSelectedEdition();
 			if (diffNode instanceof Adapter) {
-				Notifier diff = ((Adapter)diffNode).getTarget();
-				if (diff instanceof Diff) {
-					copyDiff((Diff)diff);
-					// Select next diff
-					EMFCompareUIHandlerUtil.navigate(true, configuration);
+				Notifier target = ((Adapter)diffNode).getTarget();
+				if (target instanceof TreeNode) {
+					EObject data = ((TreeNode)target).getData();
+					if (data instanceof Diff) {
+						copyDiff((Diff)data);
+						// Select next diff
+						EMFCompareUIHandlerUtil.navigate(true, configuration);
+					}
 				}
 			}
 		}

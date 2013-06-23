@@ -10,9 +10,15 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups;
 
+import com.google.common.base.Function;
+
+import java.util.List;
+
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -23,13 +29,7 @@ import org.eclipse.swt.graphics.Image;
  * @see BasicDifferenceGroupImpl
  * @since 3.0
  */
-public interface IDifferenceGroup {
-	/**
-	 * Returns all differences that should be considered a part of this group.
-	 * 
-	 * @return All differences that should be considered a part of this group.
-	 */
-	Iterable<? extends Diff> getDifferences();
+public interface IDifferenceGroup extends Adapter {
 
 	/**
 	 * Returns the {@link Comparison} in which this group is defined.
@@ -59,4 +59,20 @@ public interface IDifferenceGroup {
 	 *         be used instead.
 	 */
 	Image getImage();
+
+	/**
+	 * The list of TreeNode containded in this group.
+	 * 
+	 * @return the list of TreeNode containded in this group.
+	 */
+	List<? extends TreeNode> getGroupTree();
+
+	/**
+	 * Function that retrieve the data of the given TreeNode.
+	 */
+	public static final Function<EObject, EObject> TREE_NODE_DATA = new Function<EObject, EObject>() {
+		public EObject apply(EObject node) {
+			return node instanceof TreeNode ? ((TreeNode)node).getData() : node;
+		}
+	};
 }

@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -44,6 +45,9 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.Stru
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
@@ -156,8 +160,7 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 
 		setLabelProvider(new DelegatingStyledCellLabelProvider(
 				new EMFCompareStructureMergeViewerLabelProvider(adapterFactory, this)));
-		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(adapterFactory,
-				getStructureMergeViewerGrouper(), getStructureMergeViewerFilter(), configuration));
+		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(adapterFactory));
 
 		if (parent instanceof CompareViewerSwitchingPane) {
 			fParent = (CompareViewerSwitchingPane)parent;
@@ -187,7 +190,7 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		getControl().addListener(SWT.EraseItem, fEraseItemListener);
 
 		// Wrap the defined comparer in our own.
-		setComparer(new DiffNodeComparer(super.getComparer()));
+		setComparer(new CompareInputComparer(super.getComparer()));
 
 		if (eventBus == null) {
 			eventBus = new EventBus();
@@ -239,6 +242,13 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 
 	@Subscribe
 	public void recordGroupProviderSelectionChange(IDifferenceGroupProvider differenceGroupProvider) {
+		EList<Adapter> eAdapters = ((Adapter)fRoot).getTarget().eAdapters();
+		IDifferenceGroupProvider oldDifferenceGroupProvider = (IDifferenceGroupProvider)EcoreUtil.getAdapter(
+				eAdapters, IDifferenceGroupProvider.class);
+		if (oldDifferenceGroupProvider != null) {
+			eAdapters.remove(oldDifferenceGroupProvider);
+		}
+		eAdapters.add(differenceGroupProvider);
 		getCompareConfiguration().setProperty(EMFCompareConstants.SELECTED_GROUP, differenceGroupProvider);
 	}
 
@@ -367,7 +377,7 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	@Override
 	public void setComparer(IElementComparer comparer) {
 		// Wrap this new comparer in our own
-		super.setComparer(new DiffNodeComparer(comparer));
+		super.setComparer(new CompareInputComparer(comparer));
 	}
 
 	/**
@@ -522,10 +532,7 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	 * @return The default group provider that is to be applied on the structure viewer.
 	 */
 	public DefaultGroupProvider getDefaultGroupProvider() {
-		if (defaultGroupProvider == null) {
-			defaultGroupProvider = new DefaultGroupProvider();
-		}
-		return defaultGroupProvider;
+		return new DefaultGroupProvider();
 	}
 
 	/**
@@ -548,28 +555,38 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	@Override
 	protected Object[] getSortedChildren(Object parentElementOrTreePath) {
 		Object[] result = super.getSortedChildren(parentElementOrTreePath);
-		if (parentElementOrTreePath instanceof Adapter
-				&& ((Adapter)parentElementOrTreePath).getTarget() instanceof Conflict) {
-
-			Collections.sort(Arrays.asList(result), new Comparator<Object>() {
-				public int compare(Object o1, Object o2) {
-					return getValue(o1) - getValue(o2);
-				}
-
-				public int getValue(Object o) {
-					int value = 0;
-					if (o instanceof Adapter && ((Adapter)o).getTarget() instanceof Diff) {
-						if (((Diff)((Adapter)o).getTarget()).getSource() == DifferenceSource.LEFT) {
-							value = 1;
-						} else {
-							value = 2;
+		if (parentElementOrTreePath instanceof Adapter) {
+			Notifier target = ((Adapter)parentElementOrTreePath).getTarget();
+			if (target instanceof TreeNode) {
+				EObject data = ((TreeNode)target).getData();
+				if (data instanceof Conflict) {
+					Collections.sort(Arrays.asList(result), new Comparator<Object>() {
+						public int compare(Object o1, Object o2) {
+							return getValue(o1) - getValue(o2);
 						}
-					}
-					return value;
-				}
-			});
 
+						public int getValue(Object o) {
+							int value = 0;
+							if (o instanceof Adapter) {
+								Notifier n = ((Adapter)o).getTarget();
+								if (n instanceof TreeNode) {
+									EObject d = ((TreeNode)n).getData();
+									if (d instanceof Diff) {
+										if (((Diff)d).getSource() == DifferenceSource.LEFT) {
+											value = 1;
+										} else {
+											value = 2;
+										}
+									}
+								}
+							}
+							return value;
+						}
+					});
+				}
+			}
 		}
+
 		return result;
 	}
 
@@ -585,35 +602,42 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		Object firstElement = ((IStructuredSelection)selection).getFirstElement();
 		if (firstElement instanceof Adapter) {
 			Notifier target = ((Adapter)firstElement).getTarget();
-			if (target instanceof Diff) {
-				TreeItem item = (TreeItem)event.item;
-				Object dataTreeItem = item.getData();
-				if (dataTreeItem instanceof Adapter) {
-					final Set<Diff> unmergeables;
-					final Set<Diff> requires;
-					Boolean leftToRight = (Boolean)getCompareConfiguration().getProperty(
-							EMFCompareConstants.MERGE_WAY);
-					boolean ltr = false;
-					if (leftToRight == null || leftToRight.booleanValue()) {
-						ltr = true;
-					}
-					boolean leftEditable = getCompareConfiguration().isLeftEditable();
-					boolean rightEditable = getCompareConfiguration().isRightEditable();
-					boolean bothSidesEditable = leftEditable && rightEditable;
-					Diff diff = (Diff)target;
-					if ((ltr && (leftEditable || bothSidesEditable))
-							|| (!ltr && (rightEditable && !leftEditable))) {
-						requires = DiffUtil.getRequires(diff, true, diff.getSource());
-						unmergeables = DiffUtil.getUnmergeables(diff, true);
-					} else {
-						requires = DiffUtil.getRequires(diff, false, diff.getSource());
-						unmergeables = DiffUtil.getUnmergeables(diff, false);
-					}
-					final GC g = event.gc;
-					if (requires.contains(((Adapter)dataTreeItem).getTarget())) {
-						paintItemBackground(g, item, requiredDiffColor);
-					} else if (unmergeables.contains(((Adapter)dataTreeItem).getTarget())) {
-						paintItemBackground(g, item, unmergeableDiffColor);
+			if (target instanceof TreeNode) {
+				EObject selectionData = ((TreeNode)target).getData();
+				if (selectionData instanceof Diff) {
+					TreeItem item = (TreeItem)event.item;
+					Object dataTreeItem = item.getData();
+					if (dataTreeItem instanceof Adapter) {
+						Notifier targetItem = ((Adapter)dataTreeItem).getTarget();
+						if (targetItem instanceof TreeNode) {
+							EObject dataItem = ((TreeNode)targetItem).getData();
+							final Set<Diff> unmergeables;
+							final Set<Diff> requires;
+							Boolean leftToRight = (Boolean)getCompareConfiguration().getProperty(
+									EMFCompareConstants.MERGE_WAY);
+							boolean ltr = false;
+							if (leftToRight == null || leftToRight.booleanValue()) {
+								ltr = true;
+							}
+							boolean leftEditable = getCompareConfiguration().isLeftEditable();
+							boolean rightEditable = getCompareConfiguration().isRightEditable();
+							boolean bothSidesEditable = leftEditable && rightEditable;
+							Diff diff = (Diff)selectionData;
+							if ((ltr && (leftEditable || bothSidesEditable))
+									|| (!ltr && (rightEditable && !leftEditable))) {
+								requires = DiffUtil.getRequires(diff, true, diff.getSource());
+								unmergeables = DiffUtil.getUnmergeables(diff, true);
+							} else {
+								requires = DiffUtil.getRequires(diff, false, diff.getSource());
+								unmergeables = DiffUtil.getUnmergeables(diff, false);
+							}
+							final GC g = event.gc;
+							if (requires.contains(dataItem)) {
+								paintItemBackground(g, item, requiredDiffColor);
+							} else if (unmergeables.contains(dataItem)) {
+								paintItemBackground(g, item, unmergeableDiffColor);
+							}
+						}
 					}
 				}
 			}

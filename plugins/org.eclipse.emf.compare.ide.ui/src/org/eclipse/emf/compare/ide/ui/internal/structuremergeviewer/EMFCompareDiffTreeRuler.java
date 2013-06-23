@@ -31,6 +31,8 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -216,9 +218,12 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 			Object element = ((IStructuredSelection)selection).getFirstElement();
 			if (element instanceof Adapter) {
 				Object target = ((Adapter)element).getTarget();
-				if (target instanceof Diff) {
-					selectedDiff = (Diff)target;
-					computeConsequences();
+				if (target instanceof TreeNode) {
+					EObject data = ((TreeNode)target).getData();
+					if (data instanceof Diff) {
+						selectedDiff = (Diff)data;
+						computeConsequences();
+					}
 				}
 			}
 		}
@@ -274,8 +279,11 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 		Object data = item.getData();
 		if (data instanceof Adapter) {
 			Notifier target = ((Adapter)data).getTarget();
-			if (diffs.contains(target)) {
-				diffItems.put((Diff)target, item);
+			if (target instanceof TreeNode) {
+				EObject treeNodeData = ((TreeNode)target).getData();
+				if (diffs.contains(treeNodeData)) {
+					diffItems.put((Diff)treeNodeData, item);
+				}
 			}
 		}
 		for (TreeItem child : item.getItems()) {
@@ -496,13 +504,15 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	 */
 	private TreeItem getDeepestVisibleTreeItem(final TreeItem currentItem, final TreeItem deepestVisibleItem) {
 		TreeItem item = null;
-		TreeItem parent = currentItem.getParentItem();
-		if (parent == null) {
-			item = deepestVisibleItem;
-		} else if (parent.getExpanded()) {
-			item = getDeepestVisibleTreeItem(parent, deepestVisibleItem);
-		} else {
-			item = getDeepestVisibleTreeItem(parent, parent);
+		if (!currentItem.isDisposed()) {
+			TreeItem parent = currentItem.getParentItem();
+			if (parent == null) {
+				item = deepestVisibleItem;
+			} else if (parent.getExpanded()) {
+				item = getDeepestVisibleTreeItem(parent, deepestVisibleItem);
+			} else {
+				item = getDeepestVisibleTreeItem(parent, parent);
+			}
 		}
 		return item;
 	}

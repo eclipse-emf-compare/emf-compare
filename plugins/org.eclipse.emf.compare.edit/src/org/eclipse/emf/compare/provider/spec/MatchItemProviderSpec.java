@@ -10,31 +10,12 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.base.Predicates.not;
-import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.any;
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.isEmpty;
-import static com.google.common.collect.Iterables.transform;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentReferenceChange;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-
-import java.util.Collection;
-
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
@@ -42,7 +23,6 @@ import org.eclipse.emf.compare.provider.MatchItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * Specialized {@link MatchItemProvider} returning nice output for {@link #getText(Object)} and
@@ -116,156 +96,6 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 		}
 
 		return ret;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getChildren(java.lang.Object)
-	 */
-	@Override
-	public Collection<?> getChildren(Object object) {
-		Match match = (Match)object;
-		Iterable<?> filteredChildren = getChildrenIterable(match);
-		return ImmutableList.copyOf(filteredChildren);
-	}
-
-	/**
-	 * Returns the children that will be displayed under the given Match.
-	 * 
-	 * @param match
-	 *            the given Match.
-	 * @return an iterable of children that will be displayed under the given Match.
-	 * @since 3.0
-	 */
-	public Iterable<?> getChildrenIterable(Match match) {
-		ImmutableSet<EObject> containementDifferenceValues = containmentReferencesValues(match);
-
-		@SuppressWarnings("unchecked")
-		Predicate<Object> childrenFilter = not(or(matchOfContainmentDiff(containementDifferenceValues),
-				emptyMatch(), instanceOf(ResourceAttachmentChange.class)));
-
-		Iterable<?> filteredChildren = filter(super.getChildren(match), childrenFilter);
-		return filteredChildren;
-	}
-
-	/**
-	 * Returns the filtered children (children without those who don't have children) that will be displayed
-	 * under the given Match.
-	 * 
-	 * @param match
-	 *            the given Match.
-	 * @return an iterable of the filtered children (children without those who don't have children) that will
-	 *         be displayed under the given Match.
-	 * @since 3.0
-	 */
-	public Iterable<?> getFilteredChildren(Match match) {
-		ImmutableSet<EObject> containementDifferenceValues = containmentReferencesValues(match);
-
-		@SuppressWarnings("unchecked")
-		Predicate<Object> childrenFilter = not(or(matchOfContainmentDiff(containementDifferenceValues),
-				matchWithNoChildren(), emptyMatch(), instanceOf(ResourceAttachmentChange.class)));
-
-		Iterable<?> filteredChildren = filter(super.getChildren(match), childrenFilter);
-		return filteredChildren;
-	}
-
-	/**
-	 * Returns the containment references values of the given Match.
-	 * 
-	 * @param match
-	 *            the given Match.
-	 * @return the containment references values of the given Match.
-	 * @since 3.0
-	 */
-	public static ImmutableSet<EObject> containmentReferencesValues(Match match) {
-		EList<Diff> differences = match.getDifferences();
-
-		Iterable<Diff> containmentReferenceChanges = filter(differences, containmentReferenceChange());
-
-		final Function<Diff, EObject> valueGetter = new Function<Diff, EObject>() {
-			public EObject apply(Diff input) {
-				return ((ReferenceChange)input).getValue();
-			}
-		};
-		ImmutableSet<EObject> containementDifferenceValues = ImmutableSet.copyOf(transform(
-				containmentReferenceChanges, valueGetter));
-
-		return containementDifferenceValues;
-	}
-
-	/**
-	 * A predicate to know if the given object is a {@link Match} containing a {@link Diff} of type
-	 * containment.
-	 * 
-	 * @param containementDifferenceValues
-	 *            the list of containment values.
-	 * @return a predicate to know if the given object is a {@link Match} containing a {@link Diff} of type
-	 *         containment.
-	 * @since 3.0
-	 */
-	public static Predicate<? super Object> matchOfContainmentDiff(
-			final ImmutableSet<? extends EObject> containementDifferenceValues) {
-		return new Predicate<Object>() {
-			public boolean apply(Object input) {
-				boolean ret = false;
-				if (input instanceof Match) {
-					Match match = (Match)input;
-					if (containementDifferenceValues.contains(match.getLeft())
-							|| containementDifferenceValues.contains(match.getRight())
-							|| containementDifferenceValues.contains(match.getOrigin())) {
-						ret = true;
-					}
-				}
-				return ret;
-			}
-		};
-	}
-
-	/**
-	 * A predicate to know if the given object is a {@link Match} with no children.
-	 * 
-	 * @return A predicate to know if the given object is a {@link Match} with no children.
-	 */
-	private Predicate<? super Object> matchWithNoChildren() {
-		return new Predicate<Object>() {
-			public boolean apply(Object input) {
-				boolean ret = false;
-				if (input instanceof Match) {
-					Match match = (Match)input;
-					ret = Iterables.isEmpty(MatchItemProviderSpec.this.getFilteredChildren(match));
-				}
-				return ret;
-			}
-		};
-	}
-
-	/**
-	 * A predicate to know if the given object is an empty match (no left, right and origin).
-	 * 
-	 * @return A predicate to know if the given object is an empty match (no left, right and origin).
-	 */
-	private static Predicate<? super Object> emptyMatch() {
-		return new Predicate<Object>() {
-			public boolean apply(Object input) {
-				if (input instanceof Match) {
-					final Match match = (Match)input;
-					return match.getLeft() == null && match.getRight() == null && match.getOrigin() == null;
-				}
-				return false;
-			}
-		};
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#hasChildren(java.lang.Object)
-	 */
-	@Override
-	public boolean hasChildren(Object object) {
-		Match match = (Match)object;
-		return !isEmpty(getChildrenIterable(match));
 	}
 
 	/**

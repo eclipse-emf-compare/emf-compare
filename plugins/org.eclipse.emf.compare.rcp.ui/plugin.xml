@@ -28,6 +28,11 @@
             class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.ThreeWayComparisonGroupProvider"
             label="By Side">
       </group>
+      <group
+            activeByDefault="false"
+            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.ByResourceGroupProvider"
+            label="By Resource">
+      </group>
    </extension>
    <extension
          point="org.eclipse.emf.compare.rcp.ui.filters">
@@ -82,5 +87,20 @@
             class="org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.ContainmentReferenceChangeAccessorFactory"
             ranking="15">
       </factory>
+   </extension>
+   
+      <extension point="org.eclipse.emf.compare.edit.adapterFactory">
+      <factory
+      		ranking="10"
+            uri="http://www.eclipse.org/emf/2002/Tree"
+            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeItemProviderAdapterFactorySpec"
+            supportedTypes=
+              "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
+               org.eclipse.emf.edit.provider.IStructuredItemContentProvider
+               org.eclipse.emf.edit.provider.ITreeItemContentProvider
+               org.eclipse.emf.edit.provider.IItemLabelProvider
+               org.eclipse.emf.edit.provider.IItemPropertySource
+               org.eclipse.emf.compare.provider.IItemStyledLabelProvider
+               org.eclipse.emf.compare.provider.IItemDescriptionProvider"/>
    </extension>
 </plugin>

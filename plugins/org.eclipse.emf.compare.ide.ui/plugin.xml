@@ -64,9 +64,9 @@
    <extension
          point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
-            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.CompareNodeAdapterFactory"
+            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeCompareInputAdapterFactory"
             supportedTypes="org.eclipse.compare.structuremergeviewer.ICompareInput"
-            uri="http://www.eclipse.org/emf/compare">
+            uri="http://www.eclipse.org/emf/2002/Tree">
       </factory>
    </extension>
       <extension
@@ -505,7 +505,7 @@
          </enabledWhen>
       </handler>
       <handler
-            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.MergedToRight"
+            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.MergeToRightHandler"
             commandId="org.eclipse.emf.compare.ide.ui.mergedToRight">
          <activeWhen>
             <with
@@ -530,7 +530,7 @@
          </enabledWhen>
       </handler>
       <handler
-            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.MergedAllToRight"
+            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.MergeAllToRightHandler"
             commandId="org.eclipse.emf.compare.ide.ui.mergedAllToRight">
          <activeWhen>
             <with
@@ -542,7 +542,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.MergedToLeft"
+            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.MergeToLeftHandler"
             commandId="org.eclipse.emf.compare.ide.ui.mergedToLeft">
          <activeWhen>
             <with
@@ -567,7 +567,7 @@
          </enabledWhen>
       </handler>
       <handler
-            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.MergedAllToLeft"
+            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.MergeAllToLeftHandler"
             commandId="org.eclipse.emf.compare.ide.ui.mergedAllToLeft">
          <activeWhen>
             <with

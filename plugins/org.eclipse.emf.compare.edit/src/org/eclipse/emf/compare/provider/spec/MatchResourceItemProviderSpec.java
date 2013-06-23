@@ -13,15 +13,9 @@ package org.eclipse.emf.compare.provider.spec;
 import static com.google.common.base.Predicates.not;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterators;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
@@ -48,42 +42,6 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider imp
 	 */
 	public MatchResourceItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getChildren(java.lang.Object)
-	 */
-	@Override
-	public Collection<?> getChildren(Object object) {
-		Collection<Object> children = new ArrayList<Object>();
-		MatchResource matchResource = (MatchResource)object;
-		Comparison comparison = matchResource.getComparison();
-		for (Diff diff : Collections2.filter(comparison.getDifferences(), isCandidate(matchResource))) {
-			children.add(diff);
-		}
-		return children;
-	}
-
-	/**
-	 * Predicate to check that the current difference is candidate to be added under the given
-	 * <code>MatchResource</code>.
-	 * 
-	 * @param matchResource
-	 *            The match resource.
-	 * @return The predicate.
-	 */
-	private Predicate<Diff> isCandidate(final MatchResource matchResource) {
-		return new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				if (input instanceof ResourceAttachmentChange) {
-					return uriEqualToOneAtLeast(matchResource).apply((ResourceAttachmentChange)input);
-				} else {
-					return Iterators.any(input.getRefinedBy().iterator(), isCandidate(matchResource));
-				}
-			}
-		};
 	}
 
 	/**

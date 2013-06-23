@@ -17,6 +17,8 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorInput;
@@ -46,9 +48,12 @@ public class DiffSelectedPropertyTester extends PropertyTester {
 				if (selection instanceof IStructuredSelection) {
 					Object element = ((IStructuredSelection)selection).getFirstElement();
 					if (element instanceof Adapter) {
-						Notifier diffNode = ((Adapter)element).getTarget();
-						if (diffNode instanceof Diff) {
-							return true;
+						Notifier target = ((Adapter)element).getTarget();
+						if (target instanceof TreeNode) {
+							EObject data = ((TreeNode)target).getData();
+							if (data instanceof Diff) {
+								return true;
+							}
 						}
 					}
 				}

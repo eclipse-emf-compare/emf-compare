@@ -72,15 +72,15 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 	 */
 	public void createActions(IComparisonScope scope, Comparison comparison) {
 		if (menuManager.isEmpty()) {
-			final IAction defaultAction = new GroupAction(defaultGroupProvider.getLabel(),
-					structureMergeViewerGrouper, defaultGroupProvider);
+			final IAction defaultAction = new GroupAction(structureMergeViewerGrouper, defaultGroupProvider);
 			defaultAction.setChecked(true);
+			defaultAction.run(); // must run to activate the adapter factory
 			menuManager.add(defaultAction);
 			IDifferenceGroupProvider.Registry registry = EMFCompareRCPUIPlugin.getDefault()
 					.getDifferenceGroupProviderRegistry();
 			boolean alreadyChecked = false;
 			for (IDifferenceGroupProvider dgp : registry.getGroupProviders(scope, comparison)) {
-				GroupAction action = new GroupAction(dgp.getLabel(), structureMergeViewerGrouper, dgp);
+				GroupAction action = new GroupAction(structureMergeViewerGrouper, dgp);
 				menuManager.add(action);
 				if (dgp.defaultSelected() && !alreadyChecked) {
 					defaultAction.setChecked(false);

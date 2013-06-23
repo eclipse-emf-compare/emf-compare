@@ -35,7 +35,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
-import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
@@ -51,7 +50,6 @@ import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
 import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
 import org.eclipse.emf.compare.ide.ui.internal.logical.StreamAccessorStorage;
 import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
 import org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil;
 import org.eclipse.emf.compare.ide.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
@@ -65,6 +63,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
+import org.eclipse.emf.edit.tree.TreeFactory;
+import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ITreeViewerListener;
@@ -92,8 +92,10 @@ import org.eclipse.ui.actions.ActionFactory;
  */
 public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implements CommandStackListener {
 
+	/** The width of the tree ruler. */
 	private static final int TREE_RULER_WIDTH = 17;
 
+	/** The adapter factory. */
 	private ComposedAdapterFactory fAdapterFactory;
 
 	/** The tree ruler associated with this viewer. */
@@ -110,10 +112,13 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 	/** The tree viewer. */
 	private EMFCompareDiffTreeViewer diffTreeViewer;
 
+	/** The undo action. */
 	private UndoAction undoAction;
 
+	/** The redo action. */
 	private RedoAction redoAction;
 
+	/** The compare handler service. */
 	private CompareHandlerService fHandlerService;
 
 	/**
@@ -251,6 +256,7 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 
 			compareInputChanged(ci);
 		}
+		getViewer().setInput(input);
 	}
 
 	/**
@@ -304,13 +310,17 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 			if (!affectedObjects.isEmpty()) {
 				// MUST NOT call a setSelection with a list, o.e.compare does not handle it (cf
 				// org.eclipse.compare.CompareEditorInput#getElement(ISelection))
-				final Object adaptedAffectedObject = fAdapterFactory.adapt(getFirst(affectedObjects, null),
-						ICompareInput.class);
-				SWTUtil.safeAsyncExec(new Runnable() {
-					public void run() {
-						setSelectionToWidget(new StructuredSelection(adaptedAffectedObject), true);
-					}
-				});
+				Object first = getFirst(affectedObjects, null);
+				if (first instanceof EObject) {
+					TreeNode treeNode = TreeFactory.eINSTANCE.createTreeNode();
+					treeNode.setData((EObject)first);
+					final Object adaptedAffectedObject = fAdapterFactory.adapt(treeNode, ICompareInput.class);
+					SWTUtil.safeAsyncExec(new Runnable() {
+						public void run() {
+							setSelectionToWidget(new StructuredSelection(adaptedAffectedObject), true);
+						}
+					});
+				}
 			}
 		} else {
 			// FIXME, should recompute the difference, something happened outside of this compare editor
@@ -343,12 +353,12 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 		}
 	}
 
-	void compareInputChanged(ComparisonNode input, IProgressMonitor monitor) {
+	void compareInputChanged(CompareInputAdapter input, IProgressMonitor monitor) {
 		ICompareEditingDomain editingDomain = (ICompareEditingDomain)getCompareConfiguration().getProperty(
 				EMFCompareConstants.EDITING_DOMAIN);
 		editingDomain.getCommandStack().addCommandStackListener(this);
 
-		compareInputChanged(null, input.getTarget());
+		compareInputChanged(null, (Comparison)input.getComparisonObject());
 	}
 
 	void compareInputChanged(ComparisonScopeInput input, IProgressMonitor monitor) {
@@ -366,7 +376,11 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 
 	void compareInputChanged(final IComparisonScope scope, final Comparison comparison) {
 		if (!getControl().isDisposed()) { // guard against disposal
-			diffTreeViewer.setRoot(fAdapterFactory.adapt(comparison, ICompareInput.class));
+			TreeNode treeNode = TreeFactory.eINSTANCE.createTreeNode();
+			treeNode.setData(comparison);
+			treeNode.eAdapters().add(diffTreeViewer.getDefaultGroupProvider());
+
+			diffTreeViewer.setRoot(fAdapterFactory.adapt(treeNode, ICompareInput.class));
 			getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, comparison);
 
 			String message = null;
@@ -403,9 +417,9 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 
 	void compareInputChanged(ICompareInput input, IProgressMonitor monitor) {
 		if (input != null) {
-			if (input instanceof ComparisonNode) {
+			if (input instanceof CompareInputAdapter) {
 				resourcesShouldBeUnload = false;
-				compareInputChanged((ComparisonNode)input, monitor);
+				compareInputChanged((CompareInputAdapter)input, monitor);
 			} else if (input instanceof ComparisonScopeInput) {
 				resourcesShouldBeUnload = false;
 				compareInputChanged((ComparisonScopeInput)input, monitor);
@@ -452,7 +466,8 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 			ResourceSet originResourceSet = null;
 
 			if (diffTreeViewer.getRoot() != null) {
-				Comparison comparison = (Comparison)((Adapter)diffTreeViewer.getRoot()).getTarget();
+				Comparison comparison = (Comparison)((CompareInputAdapter)diffTreeViewer.getRoot())
+						.getComparisonObject();
 				Iterator<Match> matchIt = comparison.getMatches().iterator();
 				if (comparison.isThreeWay()) {
 					while (matchIt.hasNext()

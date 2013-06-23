@@ -46,9 +46,9 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 		Match ePackageMatch = getEcoreA1_EPackageMatch();
 
 		Collection<?> ePackageMatchChildren = itemProvider.getChildren(ePackageMatch);
-		assertEquals(18, ePackageMatchChildren.size());
+		assertEquals(22, ePackageMatchChildren.size());
 		assertEquals(4, size(filter(ePackageMatchChildren, Diff.class)));
-		assertEquals(14, size(filter(ePackageMatchChildren, Match.class)));
+		assertEquals(18, size(filter(ePackageMatchChildren, Match.class)));
 	}
 
 	static Match getEcoreA1_EPackageMatch() throws IOException {
@@ -64,13 +64,13 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 		Match ePackageMatch = getEcoreA1_EPackageMatch();
 
 		Collection<?> ePackage_MatchChildren = itemProvider.getChildren(ePackageMatch);
-		Match audioVisualItem_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name",
-				"AudioVisualItem");
+		Match audioVisualItem_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", //$NON-NLS-1$
+				"AudioVisualItem"); //$NON-NLS-1$
 		Collection<?> audioVisualItem_MatchChildren = itemProvider.getChildren(audioVisualItem_Match);
 
-		assertEquals(4, audioVisualItem_MatchChildren.size());
+		assertEquals(5, audioVisualItem_MatchChildren.size());
 		assertEquals(2, size(filter(audioVisualItem_MatchChildren, Diff.class)));
-		assertEquals(2, size(filter(audioVisualItem_MatchChildren, Match.class)));
+		assertEquals(3, size(filter(audioVisualItem_MatchChildren, Match.class)));
 	}
 
 	@Test
@@ -78,11 +78,11 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 		Match ePackageMatch = getEcoreA1_EPackageMatch();
 
 		Collection<?> ePackage_MatchChildren = itemProvider.getChildren(ePackageMatch);
-		Match audioVisualItem_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name",
-				"AudioVisualItem");
+		Match audioVisualItem_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", //$NON-NLS-1$
+				"AudioVisualItem"); //$NON-NLS-1$
 		Collection<?> audioVisualItem_MatchChildren = itemProvider.getChildren(audioVisualItem_Match);
-		Match audioVisualItem_legnth_Match = getMatchWithFeatureValue(audioVisualItem_MatchChildren, "name",
-				"length");
+		Match audioVisualItem_legnth_Match = getMatchWithFeatureValue(audioVisualItem_MatchChildren, "name", //$NON-NLS-1$
+				"length"); //$NON-NLS-1$
 		Collection<?> audioVisualItem_legnth_MatchChildren = itemProvider
 				.getChildren(audioVisualItem_legnth_Match);
 
@@ -96,12 +96,12 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 		Match ePackageMatch = getEcoreA1_EPackageMatch();
 
 		Collection<?> ePackage_MatchChildren = itemProvider.getChildren(ePackageMatch);
-		Match book_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "Book");
+		Match book_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "Book"); //$NON-NLS-1$ //$NON-NLS-2$
 		Collection<?> book_MatchChildren = itemProvider.getChildren(book_Match);
 
-		assertEquals(6, book_MatchChildren.size());
+		assertEquals(8, book_MatchChildren.size());
 		assertEquals(3, size(filter(book_MatchChildren, Diff.class)));
-		assertEquals(3, size(filter(book_MatchChildren, Match.class)));
+		assertEquals(5, size(filter(book_MatchChildren, Match.class)));
 	}
 
 	@Test
@@ -109,12 +109,12 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 		Match ePackageMatch = getEcoreA1_EPackageMatch();
 
 		Collection<?> ePackage_MatchChildren = itemProvider.getChildren(ePackageMatch);
-		Match bookCategory_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "BookCategory");
+		Match bookCategory_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "BookCategory"); //$NON-NLS-1$ //$NON-NLS-2$
 		Collection<?> bookCategory_MatchChildren = itemProvider.getChildren(bookCategory_Match);
 
-		assertEquals(7, bookCategory_MatchChildren.size());
+		assertEquals(11, bookCategory_MatchChildren.size());
 		assertEquals(4, size(filter(bookCategory_MatchChildren, Diff.class)));
-		assertEquals(3, size(filter(bookCategory_MatchChildren, Match.class)));
+		assertEquals(7, size(filter(bookCategory_MatchChildren, Match.class)));
 	}
 
 	@Test
@@ -122,7 +122,7 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 		Match ePackageMatch = getEcoreA1_EPackageMatch();
 
 		Collection<?> ePackage_MatchChildren = itemProvider.getChildren(ePackageMatch);
-		Match borrowable_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "Borrowable");
+		Match borrowable_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "Borrowable"); //$NON-NLS-1$ //$NON-NLS-2$
 		Collection<?> borrowable_MatchChildren = itemProvider.getChildren(borrowable_Match);
 
 		assertEquals(3, borrowable_MatchChildren.size());
@@ -135,11 +135,11 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 		Match ePackageMatch = getEcoreA1_EPackageMatch();
 
 		Collection<?> ePackage_MatchChildren = itemProvider.getChildren(ePackageMatch);
-		Match person_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "Person");
+		Match person_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "Person"); //$NON-NLS-1$ //$NON-NLS-2$
 		Collection<?> person_MatchChildren = itemProvider.getChildren(person_Match);
 
-		assertEquals(3, person_MatchChildren.size());
+		assertEquals(6, person_MatchChildren.size());
 		assertEquals(3, size(filter(person_MatchChildren, Diff.class)));
-		assertEquals(0, size(filter(person_MatchChildren, Match.class)));
+		assertEquals(3, size(filter(person_MatchChildren, Match.class)));
 	}
 }

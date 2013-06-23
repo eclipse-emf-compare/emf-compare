@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -74,6 +74,26 @@ public final class AdapterFactoryUtil {
 		Object adapter = adapterFactory.adapt(object, IItemLabelProvider.class);
 		if (adapter instanceof IItemLabelProvider) {
 			return ((IItemLabelProvider)adapter).getImage(object);
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the StyledText for the given object and the given adapter factory.
+	 * 
+	 * @param adapterFactory
+	 *            the given adapter factory.
+	 * @param object
+	 *            the given object.
+	 * @return the StyledText as an Object.
+	 */
+	public static Object getStyledText(AdapterFactory adapterFactory, Object object) {
+		Preconditions.checkNotNull(adapterFactory);
+		if (object != null) {
+			Object adapter = adapterFactory.adapt(object, IItemStyledLabelProvider.class);
+			if (adapter instanceof IItemStyledLabelProvider) {
+				return ((IItemStyledLabelProvider)adapter).getStyledText(object);
+			}
 		}
 		return null;
 	}

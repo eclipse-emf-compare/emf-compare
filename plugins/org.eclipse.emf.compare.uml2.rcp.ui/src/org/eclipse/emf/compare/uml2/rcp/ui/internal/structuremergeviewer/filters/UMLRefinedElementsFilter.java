@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
  * A filter used by default that to filtered out refined UML differences.
@@ -34,11 +35,14 @@ public class UMLRefinedElementsFilter extends AbstractDifferenceFilter {
 	/**
 	 * The predicate use by this filter when it is selected.
 	 */
-	private static final Predicate<? super EObject> predicateWhenSelected = new Predicate<EObject>() {
+	private static final Predicate<? super EObject> PREDICATE_WHEN_SELECTED = new Predicate<EObject>() {
 		public boolean apply(EObject input) {
-			if (input instanceof Diff) {
-				Diff diff = (Diff)input;
-				return Iterables.any(diff.getRefines(), instanceOf(UMLDiff.class));
+			if (input instanceof TreeNode) {
+				EObject data = ((TreeNode)input).getData();
+				if (data instanceof Diff) {
+					Diff diff = (Diff)data;
+					return Iterables.any(diff.getRefines(), instanceOf(UMLDiff.class));
+				}
 			}
 			return false;
 		}
@@ -47,11 +51,16 @@ public class UMLRefinedElementsFilter extends AbstractDifferenceFilter {
 	/**
 	 * The predicate use by this filter when it is unselected.
 	 */
-	private static final Predicate<? super EObject> predicateWhenUnselected = new Predicate<EObject>() {
+	private static final Predicate<? super EObject> PREDICATE_WHEN_UNSELECTED = new Predicate<EObject>() {
 		public boolean apply(EObject input) {
-			EPackage p = input.eClass().getEPackage();
-			if (p != null) {
-				return p.getNsURI().startsWith("http://www.eclipse.org/emf/compare/uml2"); //$NON-NLS-1$
+			if (input instanceof TreeNode) {
+				EObject data = ((TreeNode)input).getData();
+				if (data != null) {
+					EPackage p = data.eClass().getEPackage();
+					if (p != null) {
+						return p.getNsURI().startsWith("http://www.eclipse.org/emf/compare/uml2"); //$NON-NLS-1$
+					}
+				}
 			}
 			return false;
 		}
@@ -82,7 +91,7 @@ public class UMLRefinedElementsFilter extends AbstractDifferenceFilter {
 	 */
 	@Override
 	public Predicate<? super EObject> getPredicateWhenSelected() {
-		return predicateWhenSelected;
+		return PREDICATE_WHEN_SELECTED;
 	}
 
 	/**
@@ -92,6 +101,6 @@ public class UMLRefinedElementsFilter extends AbstractDifferenceFilter {
 	 */
 	@Override
 	public Predicate<? super EObject> getPredicateWhenUnselected() {
-		return predicateWhenUnselected;
+		return PREDICATE_WHEN_UNSELECTED;
 	}
 }

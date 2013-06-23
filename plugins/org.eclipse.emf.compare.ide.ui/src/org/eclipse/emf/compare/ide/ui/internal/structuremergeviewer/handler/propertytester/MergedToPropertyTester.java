@@ -18,7 +18,7 @@ import org.eclipse.ui.IEditorPart;
 
 /**
  * A property tester linked with
- * {@link org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.handler.AbstractMergedTo}. It returns
+ * {@link org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.AbstractMergeHandler.AbstractMergedTo}. It returns
  * true when both model sides are editable.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>

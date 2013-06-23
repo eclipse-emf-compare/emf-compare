@@ -10,32 +10,18 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.any;
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Lists.newArrayList;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
@@ -46,11 +32,9 @@ import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.edit.provider.IItemFontProvider;
-import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
  * Specialized {@link ReferenceChangeItemProvider} returning nice output for {@link #getText(Object)} and
@@ -203,124 +187,6 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		Object ret = overlayImage(object, diffImage);
 
 		return ret;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getChildren(java.lang.Object)
-	 */
-	@Override
-	public Collection<?> getChildren(Object object) {
-		Collection<?> superChildren = super.getChildren(object);
-		List<? super Object> ret = newArrayList(superChildren);
-
-		ReferenceChange referenceChange = (ReferenceChange)object;
-		EReference reference = referenceChange.getReference();
-
-		if (reference.isContainment()) {
-			Match matchOfValue = referenceChange.getMatch().getComparison().getMatch(
-					referenceChange.getValue());
-			if (matchOfValue == null && DifferenceState.MERGED == referenceChange.getState()) {
-				Match parentMatch = referenceChange.getMatch();
-				matchOfValue = getMatchWithNullValues(parentMatch);
-			}
-			if (matchOfValue != null) {
-				Collection<?> children = getChildren(matchOfValue);
-				children.remove(referenceChange);
-				Iterable<?> filter = filter(children, fromSideOrInRealConflict(((Diff)object).getSource()));
-				Iterables.addAll(ret, filter);
-			}
-		}
-
-		return ImmutableList.copyOf(filter(ret, not(instanceOf(ResourceAttachmentChange.class))));
-
-	}
-
-	/**
-	 * After merging a diff which will lead to have an insertion point on both sides, the match associated
-	 * with this diff will be unreacheable because its left and right sides will be null. This method will
-	 * find this match.
-	 * 
-	 * @param match
-	 *            the given match.
-	 * @return the match associated with the given merged diff.
-	 */
-	private Match getMatchWithNullValues(Match match) {
-		for (Match subMatch : match.getSubmatches()) {
-			if (subMatch.getLeft() == null && subMatch.getRight() == null) {
-				return subMatch;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * This can be used to check that a given Object originates from the given {@code source} side, and is not
-	 * in real conflict.
-	 * 
-	 * @param source
-	 *            The side from which we expect this diff to originate.
-	 * @return The created predicate.
-	 */
-	private Predicate<? super Object> fromSideOrInRealConflict(final DifferenceSource source) {
-		return new Predicate<Object>() {
-			public boolean apply(Object object) {
-				boolean ret = false;
-				if (object instanceof Diff) {
-					Diff diff = (Diff)object;
-					if (source == diff.getSource()) {
-						ret = true;
-					} else if (EMFComparePredicates.hasConflict(ConflictKind.REAL).apply(diff)) {
-						ret = true;
-					} else if (EMFComparePredicates.hasConflict(ConflictKind.PSEUDO).apply(diff)) {
-						ret = !(diff instanceof ReferenceChange)
-								|| (diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference()
-										.isContainment());
-					} else {
-						ret = true;
-					}
-				} else if (object instanceof Match) {
-					ret = true;
-				}
-				return ret;
-			}
-		};
-	}
-
-	/**
-	 * Returns the children of the given {@link Match}.
-	 * 
-	 * @param matchOfValue
-	 *            the given {@link Match}.
-	 * @return the children of the given {@link Match}.
-	 */
-	private Collection<?> getChildren(Match matchOfValue) {
-		final Collection<?> children;
-		ITreeItemContentProvider matchItemContentProvider = (ITreeItemContentProvider)adapterFactory.adapt(
-				matchOfValue, ITreeItemContentProvider.class);
-		if (matchItemContentProvider != null) {
-			Collection<?> itemProviderChildren = matchItemContentProvider.getChildren(matchOfValue);
-			if (itemProviderChildren instanceof ImmutableCollection<?>) {
-				children = newArrayList(itemProviderChildren);
-			} else {
-				children = itemProviderChildren;
-			}
-
-			Iterator<?> childrenIterator = children.iterator();
-			while (childrenIterator.hasNext()) {
-				Object child = childrenIterator.next();
-				if (child instanceof Match) {
-					if (!matchItemContentProvider.hasChildren(child)) {
-						childrenIterator.remove();
-					}
-				}
-
-			}
-		} else {
-			children = ImmutableList.of();
-		}
-		return children;
 	}
 
 	/**

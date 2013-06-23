@@ -10,20 +10,19 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler;
 
-import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.util.EMFCompareUIHandlerUtil;
 
 /**
- * Handler that manages a merge from right to left of a difference in case of both sides of the comparison are
- * editable.
+ * Handler that manages a merge from left to right of all non-conflicting differences in case of both sides of
+ * the comparison are editable.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class MergedToLeft extends AbstractMergedTo {
+public class MergeAllToRightHandler extends AbstractMergeAllHandler {
 
 	@Override
-	protected void copyDiff(Diff diff) {
-		EMFCompareUIHandlerUtil.copyDiff(diff, false, getConfiguration());
+	protected void copyAllDiffs() {
+		EMFCompareUIHandlerUtil.copyAllDiffs(true, getConfiguration());
 	}
 }

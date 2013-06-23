@@ -10,15 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
-import static com.google.common.collect.Lists.newArrayList;
-
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableList;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -31,8 +22,6 @@ import org.eclipse.emf.compare.provider.ResourceAttachmentChangeItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
  * Specialized {@link ResourceAttachmentChangeItemProvider} returning nice output for {@link #getText(Object)}
@@ -55,85 +44,6 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 	public ResourceAttachmentChangeItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 		overlayProvider = new OverlayImageProvider(getResourceLocator());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.provider.ResourceAttachmentChangeItemProvider#getChildren(java.lang.Object)
-	 */
-	@Override
-	public Collection<?> getChildren(Object object) {
-		Collection<?> superChildren = super.getChildren(object);
-		List<? super Object> ret = newArrayList(superChildren);
-
-		ResourceAttachmentChange resourceAttachmentChange = (ResourceAttachmentChange)object;
-		final EObject value;
-		DifferenceSource source = resourceAttachmentChange.getSource();
-		DifferenceKind kind = resourceAttachmentChange.getKind();
-		switch (source) {
-			case LEFT:
-				if (kind == DifferenceKind.ADD) {
-					value = resourceAttachmentChange.getMatch().getLeft();
-				} else {
-					value = resourceAttachmentChange.getMatch().getRight();
-				}
-				break;
-			case RIGHT:
-				if (kind == DifferenceKind.ADD) {
-					value = resourceAttachmentChange.getMatch().getRight();
-				} else {
-					value = resourceAttachmentChange.getMatch().getLeft();
-				}
-				break;
-			default:
-				value = null;
-				throw new IllegalStateException();
-		}
-
-		Match matchOfValue = resourceAttachmentChange.getMatch().getComparison().getMatch(value);
-		if (matchOfValue != null) {
-			Collection<?> children = getChildren(matchOfValue);
-			children.remove(resourceAttachmentChange);
-			ret.addAll(children);
-		}
-
-		return ImmutableList.copyOf(ret);
-	}
-
-	/**
-	 * Returns the children of the given {@link Match}.
-	 * 
-	 * @param matchOfValue
-	 *            the given {@link Match}.
-	 * @return the children of the given {@link Match}.
-	 */
-	private Collection<?> getChildren(Match matchOfValue) {
-		final Collection<?> children;
-		ITreeItemContentProvider matchItemContentProvider = (ITreeItemContentProvider)adapterFactory.adapt(
-				matchOfValue, ITreeItemContentProvider.class);
-		if (matchItemContentProvider != null) {
-			Collection<?> itemProviderChildren = matchItemContentProvider.getChildren(matchOfValue);
-			if (itemProviderChildren instanceof ImmutableCollection<?>) {
-				children = newArrayList(itemProviderChildren);
-			} else {
-				children = itemProviderChildren;
-			}
-
-			Iterator<?> childrenIterator = children.iterator();
-			while (childrenIterator.hasNext()) {
-				Object child = childrenIterator.next();
-				if (child instanceof Match) {
-					if (!matchItemContentProvider.hasChildren(child)) {
-						childrenIterator.remove();
-					}
-				}
-
-			}
-		} else {
-			children = ImmutableList.of();
-		}
-		return children;
 	}
 
 	/**
@@ -177,7 +87,8 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
 	 */
 	public IComposedStyledString getStyledText(Object object) {
-		final Match match = ((ResourceAttachmentChange)object).getMatch();
+		ResourceAttachmentChange resourceAttachmentChange = (ResourceAttachmentChange)object;
+		final Match match = resourceAttachmentChange.getMatch();
 		String value = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getLeft());
 		if (value == null) {
 			value = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getRight());
@@ -190,12 +101,20 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 		}
 
 		ComposedStyledString ret = new ComposedStyledString(value);
+		ret.append(" [", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+		switch (resourceAttachmentChange.getKind()) {
+			case ADD:
+				ret.append("controlled in ", Style.DECORATIONS_STYLER);
+				break;
+			case DELETE:
+				ret.append("uncontrolled from ", Style.DECORATIONS_STYLER);
+				break;
+			default:
+				break;
+		}
+		ret.append(resourceAttachmentChange.getResourceURI(), Style.DECORATIONS_STYLER);
 
-		DifferenceKind labelValue = ((ResourceAttachmentChange)object).getKind();
-		String label = labelValue == null ? "" : labelValue.toString().toLowerCase(); //$NON-NLS-1$
-
-		return ret.append(" [resource contents " + label + "]", Style.DECORATIONS_STYLER); //$NON-NLS-1$ //$NON-NLS-2$
-
+		return ret.append("]", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 	}
 
 	/**

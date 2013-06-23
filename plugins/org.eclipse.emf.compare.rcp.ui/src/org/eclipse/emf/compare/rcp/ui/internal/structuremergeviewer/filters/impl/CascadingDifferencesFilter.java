@@ -10,16 +10,23 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl;
 
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.Iterators.any;
+import static com.google.common.collect.Iterators.transform;
+
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableSet;
+
+import java.util.Iterator;
 
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.provider.spec.MatchItemProviderSpec;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
  * A filter used by default that filtered out cascading differences (differences located under differences,
@@ -36,29 +43,40 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 	private static final Predicate<? super EObject> predicateWhenSelected = new Predicate<EObject>() {
 		public boolean apply(EObject input) {
 			boolean ret = false;
-			if (input instanceof Diff && !(input instanceof ResourceAttachmentChange)) {
-				final Diff diff = (Diff)input;
-				final Conflict conflict = diff.getConflict();
-				if (conflict == null || ConflictKind.PSEUDO == conflict.getKind()) {
-					final Match match = diff.getMatch();
-					final EObject grandParent = match.eContainer();
-					if (grandParent instanceof Match) {
-						ImmutableSet<EObject> containementDifferenceValues = MatchItemProviderSpec
-								.containmentReferencesValues((Match)grandParent);
-						if (MatchItemProviderSpec.matchOfContainmentDiff(containementDifferenceValues).apply(
-								match)) {
-							ret = true;
-						} else if (match.getLeft() == null && match.getRight() == null
-								&& match.getOrigin() == null) {
-							ret = true;
-						}
-
-					}
+			if (input instanceof TreeNode) {
+				TreeNode treeNode = (TreeNode)input;
+				EObject data = treeNode.getData();
+				TreeNode parent = treeNode.getParent();
+				EObject parentData = (parent != null ? parent.getData() : null);
+				if (parentData instanceof Diff && !(parentData instanceof ResourceAttachmentChange)
+						&& data instanceof Diff) {
+					Iterator<EObject> eAllDataContents = transform(treeNode.eAllContents(),
+							IDifferenceGroup.TREE_NODE_DATA);
+					return CASCADING_DIFF.apply(data) && !any(eAllDataContents, not(CASCADING_DIFF));
 				}
 			}
 			return ret;
 		}
 	};
+
+	/**
+	 * Predicate to know if the given diff is a conflictual diff.
+	 */
+	private static final Predicate<EObject> IS_NON_CONFLICTUAL_DIFF = new Predicate<EObject>() {
+		public boolean apply(EObject eObject) {
+			if (eObject instanceof Diff) {
+				Conflict conflict = ((Diff)eObject).getConflict();
+				return conflict == null || ConflictKind.PSEUDO == conflict.getKind();
+			}
+			return false;
+		}
+	};
+
+	/**
+	 * Predicate to know if the given diff respects the requirements of a cascading diff.
+	 */
+	private static final Predicate<EObject> CASCADING_DIFF = and(IS_NON_CONFLICTUAL_DIFF,
+			not(instanceOf(ResourceAttachmentChange.class)));
 
 	/**
 	 * {@inheritDoc}

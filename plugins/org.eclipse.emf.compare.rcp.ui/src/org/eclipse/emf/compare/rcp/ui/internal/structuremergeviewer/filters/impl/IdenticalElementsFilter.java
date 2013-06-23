@@ -10,16 +10,14 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl;
 
+import static com.google.common.collect.Iterators.any;
+
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 
-import java.util.Iterator;
-
-import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.provider.spec.MatchItemProviderSpec;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
  * A filter used by default that filtered out identical elements.
@@ -34,19 +32,23 @@ public class IdenticalElementsFilter extends AbstractDifferenceFilter {
 	 */
 	private static final Predicate<? super EObject> predicateWhenSelected = new Predicate<EObject>() {
 		public boolean apply(EObject input) {
-			if (input instanceof Match) {
-				Match match = (Match)input;
-				Iterator<Adapter> adapters = match.eAdapters().iterator();
-				while (adapters.hasNext()) {
-					Adapter adapter = adapters.next();
-					if (adapter instanceof MatchItemProviderSpec) {
-						MatchItemProviderSpec matchItem = (MatchItemProviderSpec)adapter;
-						return Iterables.isEmpty(matchItem.getFilteredChildren((match)));
-					}
+			if (input instanceof TreeNode) {
+				TreeNode treeNode = (TreeNode)input;
+				EObject data = treeNode.getData();
+				if (data instanceof Match) {
+					return !any(treeNode.eAllContents(), DATA_IS_DIFF);
 				}
-				return Iterables.isEmpty(match.getAllDifferences());
 			}
 			return false;
+		}
+	};
+
+	/**
+	 * Predicate to know if the given TreeNode is a diff.
+	 */
+	private static final Predicate<EObject> DATA_IS_DIFF = new Predicate<EObject>() {
+		public boolean apply(EObject treeNode) {
+			return treeNode instanceof TreeNode && ((TreeNode)treeNode).getData() instanceof Diff;
 		}
 	};
 

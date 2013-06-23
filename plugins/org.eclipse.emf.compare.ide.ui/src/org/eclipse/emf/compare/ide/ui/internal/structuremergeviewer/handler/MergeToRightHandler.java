@@ -20,7 +20,7 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.util
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class MergedToRight extends AbstractMergedTo {
+public class MergeToRightHandler extends AbstractMergeHandler {
 
 	@Override
 	protected void copyDiff(Diff diff) {

@@ -13,11 +13,12 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
-import java.util.List;
+import java.util.Collection;
 
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
@@ -31,7 +32,7 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  * @since 3.0
  */
-public class KindGroupProvider implements IDifferenceGroupProvider {
+public class KindGroupProvider extends AdapterImpl implements IDifferenceGroupProvider {
 
 	/** A human-readable label for this group provider. This will be displayed in the EMF Compare UI. */
 	private String label;
@@ -39,24 +40,54 @@ public class KindGroupProvider implements IDifferenceGroupProvider {
 	/** The initial activation state of the group provider. */
 	private boolean activeByDefault;
 
+	/** The groups provided by this provider. */
+	private ImmutableList<IDifferenceGroup> differenceGroups;
+
+	/** The comparison object. */
+	private Comparison comp;
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#isAdapterForType(java.lang.Object)
+	 */
+	@Override
+	public boolean isAdapterForType(Object type) {
+		return type == IDifferenceGroupProvider.class;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
 	 */
-	public Iterable<? extends IDifferenceGroup> getGroups(Comparison comparison) {
-		final List<Diff> diffs = comparison.getDifferences();
-
-		final IDifferenceGroup additions = new BasicDifferenceGroupImpl(comparison, diffs,
-				ofKind(DifferenceKind.ADD), "Additions");
-		final IDifferenceGroup deletions = new BasicDifferenceGroupImpl(comparison, diffs,
-				ofKind(DifferenceKind.DELETE), "Deletions");
-		final IDifferenceGroup changes = new BasicDifferenceGroupImpl(comparison, diffs,
-				ofKind(DifferenceKind.CHANGE), "Changes");
-		final IDifferenceGroup moves = new BasicDifferenceGroupImpl(comparison, diffs,
-				ofKind(DifferenceKind.MOVE), "Moves");
-
-		return ImmutableList.of(additions, deletions, changes, moves);
+	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
+		if (differenceGroups == null || !comparison.equals(comp)) {
+			this.comp = comparison;
+			final IDifferenceGroup additions = new BasicDifferenceGroupImpl(comparison,
+					ofKind(DifferenceKind.ADD), "Additions");
+			final IDifferenceGroup deletions = new BasicDifferenceGroupImpl(comparison,
+					ofKind(DifferenceKind.DELETE), "Deletions");
+			final IDifferenceGroup changes = new BasicDifferenceGroupImpl(comparison,
+					ofKind(DifferenceKind.CHANGE), "Changes");
+			final IDifferenceGroup moves = new BasicDifferenceGroupImpl(comparison,
+					ofKind(DifferenceKind.MOVE), "Moves");
+			Collection<IDifferenceGroup> groups = Lists.newArrayList();
+			if (!additions.getGroupTree().isEmpty()) {
+				groups.add(additions);
+			}
+			if (!deletions.getGroupTree().isEmpty()) {
+				groups.add(deletions);
+			}
+			if (!changes.getGroupTree().isEmpty()) {
+				groups.add(changes);
+			}
+			if (!moves.getGroupTree().isEmpty()) {
+				groups.add(moves);
+			}
+			differenceGroups = ImmutableList.copyOf(groups);
+		}
+		return differenceGroups;
 	}
 
 	/**
@@ -104,5 +135,4 @@ public class KindGroupProvider implements IDifferenceGroupProvider {
 	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
 		return true;
 	}
-
 }
