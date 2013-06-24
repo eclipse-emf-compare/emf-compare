@@ -44,7 +44,7 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 	 * @see org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer#minimize(org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public SynchronizationModel minimize(SynchronizationModel syncModel, IProgressMonitor monitor) {
+	public void minimize(SynchronizationModel syncModel, IProgressMonitor monitor) {
 		SubMonitor progess = SubMonitor.convert(monitor, EMFCompareIDEUIMessages
 				.getString("EMFSynchronizationModel.minimizing"), 100); //$NON-NLS-1$
 
@@ -65,13 +65,13 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 				final IStorage origin = removeLikeNamedStorageFrom(left, originCopy);
 
 				if (origin != null && equals(left, right, origin)) {
-					leftTraversal.getStorages().remove(left);
-					rightTraversal.getStorages().remove(right);
-					originTraversal.getStorages().remove(origin);
+					leftTraversal.removeStorage(left);
+					rightTraversal.removeStorage(right);
+					originTraversal.removeStorage(origin);
 				}
 			} else if (right != null && equals(left, right)) {
-				leftTraversal.getStorages().remove(left);
-				rightTraversal.getStorages().remove(right);
+				leftTraversal.removeStorage(left);
+				rightTraversal.removeStorage(right);
 			} else if (right == null) {
 				// This file has no match. remove it if read only
 				if (left.isReadOnly()) {
@@ -85,7 +85,7 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 		for (IStorage right : rightCopy) {
 			// These have no match on left. Remove if read only
 			if (right.isReadOnly()) {
-				rightTraversal.getStorages().remove(right);
+				rightTraversal.removeStorage(right);
 			}
 			subMonitor.worked(1);
 		}
@@ -94,12 +94,10 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 		for (IStorage origin : originCopy) {
 			// These have no match on left and right. Remove if read only
 			if (origin.isReadOnly()) {
-				originTraversal.getStorages().remove(origin);
+				originTraversal.removeStorage(origin);
 			}
 			subMonitor.worked(1);
 		}
-
-		return new SynchronizationModel(leftTraversal, rightTraversal, originTraversal);
 	}
 
 	/**

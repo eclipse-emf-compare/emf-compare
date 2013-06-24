@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.ide.ui.internal.logical;
 
 import static com.google.common.collect.Sets.difference;
 import static com.google.common.collect.Sets.intersection;
+import static com.google.common.collect.Sets.newLinkedHashSet;
 import static org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil.adaptAs;
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.createURIFor;
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.hasContentType;
@@ -158,9 +159,9 @@ public class ProjectModelResolver extends LogicalModelResolver {
 		}
 		logCoherenceThreats(startingPoints, intersection);
 
-		final Set<IStorage> actualLeft = difference(leftTraversal, intersection);
-		final Set<IStorage> actualRight = difference(rightTraversal, intersection);
-		final Set<IStorage> actualOrigin = difference(originTraversal, intersection);
+		final Set<IStorage> actualLeft = newLinkedHashSet(difference(leftTraversal, intersection));
+		final Set<IStorage> actualRight = newLinkedHashSet(difference(rightTraversal, intersection));
+		final Set<IStorage> actualOrigin = newLinkedHashSet(difference(originTraversal, intersection));
 		return new SynchronizationModel(new StorageTraversal(actualLeft), new StorageTraversal(actualRight),
 				new StorageTraversal(actualOrigin));
 	}

@@ -34,7 +34,6 @@ public interface IModelMinimizer {
 	 *            The traversal, if any, corresponding to the common ancestor of left and right sides.
 	 * @param monitor
 	 *            Monitor on which to report progress to the user.
-	 * @return The minimized model.
 	 */
-	SynchronizationModel minimize(SynchronizationModel syncModel, IProgressMonitor monitor);
+	void minimize(SynchronizationModel syncModel, IProgressMonitor monitor);
 }

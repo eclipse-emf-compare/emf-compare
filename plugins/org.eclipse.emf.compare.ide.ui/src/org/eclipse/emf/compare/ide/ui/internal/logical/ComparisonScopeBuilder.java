@@ -254,8 +254,8 @@ public final class ComparisonScopeBuilder {
 	private IComparisonScope createMinimizedScope(SynchronizationModel syncModel, IProgressMonitor monitor) {
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 		// Minimize the traversals to non-read-only resources with no binary identical counterparts.
-		SynchronizationModel minimizedModel = minimizer.minimize(syncModel, subMonitor.newChild(10));
-		return createScope(minimizedModel, subMonitor.newChild(90));
+		minimizer.minimize(syncModel, subMonitor.newChild(10));
+		return createScope(syncModel, subMonitor.newChild(90));
 	}
 
 	/**

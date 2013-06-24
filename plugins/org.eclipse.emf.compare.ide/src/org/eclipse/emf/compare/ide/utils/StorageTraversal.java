@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.ide.utils;
 import com.google.common.annotations.Beta;
 import com.google.common.collect.Lists;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -53,7 +54,17 @@ public class StorageTraversal implements IAdaptable {
 	 * @return The set of resources that are part of this traversal.
 	 */
 	public Set<? extends IStorage> getStorages() {
-		return storages;
+		return new LinkedHashSet<IStorage>(storages);
+	}
+
+	/**
+	 * Removes the given storage from this traversal.
+	 * 
+	 * @param storage
+	 *            The storage to be removed.
+	 */
+	public void removeStorage(IStorage storage) {
+		storages.remove(storage);
 	}
 
 	/**
