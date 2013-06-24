@@ -1,5 +1,6 @@
 package org.eclipse.emf.compare.uml2.tests.implications;
 
+import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -19,11 +20,11 @@ import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
-import org.eclipse.emf.compare.uml2.internal.InterfaceRealizationChange;
-import org.eclipse.emf.compare.uml2.internal.SubstitutionChange;
+import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.implications.data.ImplicationsInputData;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.uml2.uml.UMLPackage;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
@@ -106,10 +107,12 @@ public class ImplicationsInterfaceRealizationTest extends AbstractTest {
 				addSupplierInSubstitutionDescription, null);
 		diffs.addClientDependencyInClass02 = Iterators.find(differences.iterator(),
 				addClientDependencyInClass0Description2, null);
-		diffs.addUMLInterfaceRealization = Iterators.find(differences.iterator(),
-				instanceOf(InterfaceRealizationChange.class), null);
-		diffs.addUMLSubstitution = Iterators.find(differences.iterator(),
-				instanceOf(SubstitutionChange.class), null);
+		diffs.addUMLInterfaceRealization = Iterators.find(differences.iterator(), and(
+				instanceOf(DirectedRelationshipChange.class),
+				discriminantInstanceOf(UMLPackage.Literals.INTERFACE_REALIZATION)), null);
+		diffs.addUMLSubstitution = Iterators.find(differences.iterator(), and(
+				instanceOf(DirectedRelationshipChange.class),
+				discriminantInstanceOf(UMLPackage.Literals.SUBSTITUTION)), null);
 		return diffs;
 	}
 
@@ -162,10 +165,11 @@ public class ImplicationsInterfaceRealizationTest extends AbstractTest {
 	}
 
 	private void checkMergeAddClientInInterfaceRealization(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 3, comparison.getDifferences().size());
+		assertEquals(NB_DIFFS - 4, comparison.getDifferences().size());
 		assertNull(diffs.addClientInInterfaceRealization);
 		assertNull(diffs.addInterfaceRealization);
 		assertNull(diffs.addClientDependencyInClass0);
+		assertNull(diffs.addUMLInterfaceRealization);
 	}
 
 	@Test
@@ -236,10 +240,11 @@ public class ImplicationsInterfaceRealizationTest extends AbstractTest {
 	}
 
 	private void checkMergeAddClientDependencyInClass0(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 3, comparison.getDifferences().size());
+		assertEquals(NB_DIFFS - 4, comparison.getDifferences().size());
 		assertNull(diffs.addClientDependencyInClass0);
 		assertNull(diffs.addClientInInterfaceRealization);
 		assertNull(diffs.addInterfaceRealization);
+		assertNull(diffs.addUMLInterfaceRealization);
 	}
 
 	@Test
@@ -310,10 +315,11 @@ public class ImplicationsInterfaceRealizationTest extends AbstractTest {
 	}
 
 	private void checkMergeAddInterfaceRealization(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 3, comparison.getDifferences().size());
+		assertEquals(NB_DIFFS - 4, comparison.getDifferences().size());
 		assertNull(diffs.addInterfaceRealization);
 		assertNull(diffs.addClientDependencyInClass0);
 		assertNull(diffs.addClientInInterfaceRealization);
+		assertNull(diffs.addUMLInterfaceRealization);
 	}
 
 	@Test

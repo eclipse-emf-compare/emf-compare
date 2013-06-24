@@ -20,7 +20,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
-import org.eclipse.emf.compare.uml2.internal.InterfaceRealizationChange;
+import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.dependency.data.DependencyInputData;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -135,14 +135,14 @@ public class AddInterfaceRealizationTest extends AbstractTest {
 		assertNotNull(addClientDependencyInClass0);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(InterfaceRealizationChange.class)));
+		assertSame(Integer.valueOf(1), count(differences, instanceOf(DirectedRelationshipChange.class)));
 		Diff addUMLDependency = null;
 		if (kind.equals(TestKind.ADD)) {
 			addUMLDependency = Iterators.find(differences.iterator(), and(
-					instanceOf(InterfaceRealizationChange.class), ofKind(DifferenceKind.ADD)));
+					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
 			addUMLDependency = Iterators.find(differences.iterator(), and(
-					instanceOf(InterfaceRealizationChange.class), ofKind(DifferenceKind.DELETE)));
+					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLDependency);
 		assertSame(Integer.valueOf(5), Integer.valueOf(addUMLDependency.getRefinedBy().size()));

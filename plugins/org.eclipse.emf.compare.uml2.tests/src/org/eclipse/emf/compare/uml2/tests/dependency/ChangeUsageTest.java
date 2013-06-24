@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
-import org.eclipse.emf.compare.uml2.internal.DependencyChange;
+import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.dependency.data.DependencyInputData;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -101,9 +101,9 @@ public class ChangeUsageTest extends AbstractTest {
 
 		// CHECK EXTENSION
 		// no extension any more
-		assertSame(Integer.valueOf(0), count(differences, instanceOf(DependencyChange.class)));
+		assertSame(Integer.valueOf(0), count(differences, instanceOf(DirectedRelationshipChange.class)));
 		Diff changeUMLDependency = Iterators.find(differences.iterator(), and(
-				instanceOf(DependencyChange.class), ofKind(DifferenceKind.CHANGE)), null);
+				instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.CHANGE)), null);
 		assertNull(changeUMLDependency);
 		// assertNotNull(changeUMLDependency);
 		// assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLDependency.getRefinedBy().size()));

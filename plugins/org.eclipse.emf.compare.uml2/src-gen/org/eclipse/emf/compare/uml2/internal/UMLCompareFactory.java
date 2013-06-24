@@ -39,33 +39,6 @@ public interface UMLCompareFactory extends EFactory {
 	AssociationChange createAssociationChange();
 
 	/**
-	 * Returns a new object of class '<em>Dependency Change</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Dependency Change</em>'.
-	 * @generated
-	 */
-	DependencyChange createDependencyChange();
-
-	/**
-	 * Returns a new object of class '<em>Interface Realization Change</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Interface Realization Change</em>'.
-	 * @generated
-	 */
-	InterfaceRealizationChange createInterfaceRealizationChange();
-
-	/**
-	 * Returns a new object of class '<em>Substitution Change</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Substitution Change</em>'.
-	 * @generated
-	 */
-	SubstitutionChange createSubstitutionChange();
-
-	/**
 	 * Returns a new object of class '<em>Extend Change</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -73,15 +46,6 @@ public interface UMLCompareFactory extends EFactory {
 	 * @generated
 	 */
 	ExtendChange createExtendChange();
-
-	/**
-	 * Returns a new object of class '<em>Include Change</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Include Change</em>'.
-	 * @generated
-	 */
-	IncludeChange createIncludeChange();
 
 	/**
 	 * Returns a new object of class '<em>Generalization Set Change</em>'.
@@ -154,6 +118,15 @@ public interface UMLCompareFactory extends EFactory {
 	 * @generated
 	 */
 	ProfileApplicationChange createProfileApplicationChange();
+
+	/**
+	 * Returns a new object of class '<em>Directed Relationship Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Directed Relationship Change</em>'.
+	 * @generated
+	 */
+	DirectedRelationshipChange createDirectedRelationshipChange();
 
 	/**
 	 * Returns the package supported by this factory.

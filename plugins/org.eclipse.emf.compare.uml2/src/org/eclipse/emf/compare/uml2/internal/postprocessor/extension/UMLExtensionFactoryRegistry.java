@@ -19,17 +19,13 @@ import java.util.Map;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.internal.postprocessor.factories.IChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.clazz.UMLAssociationChangeFactory;
-import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.clazz.UMLDependencyChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.clazz.UMLGeneralizationSetChangeFactory;
-import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.clazz.UMLInterfaceRealizationChangeFactory;
-import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.clazz.UMLSubstitutionChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.profile.UMLProfileApplicationChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.profile.UMLStereotypeApplicationChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.sequence.UMLExecutionSpecificationChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.sequence.UMLIntervalConstraintChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.sequence.UMLMessageChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.usecase.UMLExtendChangeFactory;
-import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.usecase.UMLIncludeChangeFactory;
 
 /**
  * Registry of all {@link IDiffExtensionFactory} for UML.
@@ -56,14 +52,11 @@ public final class UMLExtensionFactoryRegistry {
 
 		List<IChangeFactory> factories = new ArrayList<IChangeFactory>();
 		factories.add(new UMLAssociationChangeFactory());
-		factories.add(new UMLDependencyChangeFactory());
-		factories.add(new UMLInterfaceRealizationChangeFactory());
-		factories.add(new UMLSubstitutionChangeFactory());
+		factories.add(new UMLDirectedRelationshipFactory());
 		factories.add(new UMLGeneralizationSetChangeFactory());
 		factories.add(new UMLExtendChangeFactory());
 		factories.add(new UMLMessageChangeFactory());
 		factories.add(new UMLExecutionSpecificationChangeFactory());
-		factories.add(new UMLIncludeChangeFactory());
 		factories.add(new UMLIntervalConstraintChangeFactory());
 		factories.add(new UMLProfileApplicationChangeFactory());
 		factories.add(new UMLStereotypeApplicationChangeFactory());

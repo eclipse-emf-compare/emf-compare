@@ -39,9 +39,11 @@ import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
+import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.compare.uml2.internal.merge.UMLMerger;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.UMLPostProcessor;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -141,6 +143,15 @@ public abstract class AbstractTest {
 				}
 				return false;
 			}
+		};
+	}
+
+	protected static Predicate<Diff> discriminantInstanceOf(final EClass clazz) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input instanceof UMLDiff && clazz.isInstance(((UMLDiff)input).getDiscriminant());
+			}
+
 		};
 	}
 

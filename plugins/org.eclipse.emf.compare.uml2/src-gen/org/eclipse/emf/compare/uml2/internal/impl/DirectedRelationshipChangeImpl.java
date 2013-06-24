@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,38 +10,36 @@
  */
 package org.eclipse.emf.compare.uml2.internal.impl;
 
-import org.eclipse.emf.compare.uml2.internal.DependencyChange;
+import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
-
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Dependency Change</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Directed Relationship Change</b></em>
+ * '. <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
-public class DependencyChangeImpl extends UMLDiffImpl implements DependencyChange {
+public class DirectedRelationshipChangeImpl extends UMLDiffImpl implements DirectedRelationshipChange {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	protected DependencyChangeImpl() {
+	protected DirectedRelationshipChangeImpl() {
 		super();
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return UMLComparePackage.Literals.DEPENDENCY_CHANGE;
+		return UMLComparePackage.Literals.DIRECTED_RELATIONSHIP_CHANGE;
 	}
 
-} //DependencyChangeImpl
+} // DirectedRelationshipChangeImpl

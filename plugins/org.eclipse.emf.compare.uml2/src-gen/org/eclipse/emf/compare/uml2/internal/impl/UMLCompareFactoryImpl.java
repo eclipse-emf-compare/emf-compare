@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,46 +10,52 @@
  */
 package org.eclipse.emf.compare.uml2.internal.impl;
 
-import org.eclipse.emf.compare.uml2.internal.*;
-
+import org.eclipse.emf.compare.uml2.internal.AssociationChange;
+import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
+import org.eclipse.emf.compare.uml2.internal.ExecutionSpecificationChange;
+import org.eclipse.emf.compare.uml2.internal.ExtendChange;
+import org.eclipse.emf.compare.uml2.internal.GeneralizationSetChange;
+import org.eclipse.emf.compare.uml2.internal.IntervalConstraintChange;
+import org.eclipse.emf.compare.uml2.internal.MessageChange;
+import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
+import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
+import org.eclipse.emf.compare.uml2.internal.StereotypePropertyChange;
+import org.eclipse.emf.compare.uml2.internal.StereotypeReferenceChange;
+import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
+import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Factory</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFactory {
 	/**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Creates the default factory implementation. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static UMLCompareFactory init() {
 		try {
-			UMLCompareFactory theUMLCompareFactory = (UMLCompareFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/emf/compare/uml2/2.0"); //$NON-NLS-1$ 
+			UMLCompareFactory theUMLCompareFactory = (UMLCompareFactory)EPackage.Registry.INSTANCE
+					.getEFactory("http://www.eclipse.org/emf/compare/uml2/2.0"); //$NON-NLS-1$ 
 			if (theUMLCompareFactory != null) {
 				return theUMLCompareFactory;
 			}
-		}
-		catch (Exception exception) {
+		} catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new UMLCompareFactoryImpl();
 	}
 
 	/**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public UMLCompareFactoryImpl() {
@@ -57,35 +63,44 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case UMLComparePackage.ASSOCIATION_CHANGE: return createAssociationChange();
-			case UMLComparePackage.DEPENDENCY_CHANGE: return createDependencyChange();
-			case UMLComparePackage.INTERFACE_REALIZATION_CHANGE: return createInterfaceRealizationChange();
-			case UMLComparePackage.SUBSTITUTION_CHANGE: return createSubstitutionChange();
-			case UMLComparePackage.EXTEND_CHANGE: return createExtendChange();
-			case UMLComparePackage.INCLUDE_CHANGE: return createIncludeChange();
-			case UMLComparePackage.GENERALIZATION_SET_CHANGE: return createGeneralizationSetChange();
-			case UMLComparePackage.EXECUTION_SPECIFICATION_CHANGE: return createExecutionSpecificationChange();
-			case UMLComparePackage.INTERVAL_CONSTRAINT_CHANGE: return createIntervalConstraintChange();
-			case UMLComparePackage.MESSAGE_CHANGE: return createMessageChange();
-			case UMLComparePackage.STEREOTYPE_PROPERTY_CHANGE: return createStereotypePropertyChange();
-			case UMLComparePackage.STEREOTYPE_APPLICATION_CHANGE: return createStereotypeApplicationChange();
-			case UMLComparePackage.STEREOTYPE_REFERENCE_CHANGE: return createStereotypeReferenceChange();
-			case UMLComparePackage.PROFILE_APPLICATION_CHANGE: return createProfileApplicationChange();
+			case UMLComparePackage.ASSOCIATION_CHANGE:
+				return createAssociationChange();
+			case UMLComparePackage.EXTEND_CHANGE:
+				return createExtendChange();
+			case UMLComparePackage.GENERALIZATION_SET_CHANGE:
+				return createGeneralizationSetChange();
+			case UMLComparePackage.EXECUTION_SPECIFICATION_CHANGE:
+				return createExecutionSpecificationChange();
+			case UMLComparePackage.INTERVAL_CONSTRAINT_CHANGE:
+				return createIntervalConstraintChange();
+			case UMLComparePackage.MESSAGE_CHANGE:
+				return createMessageChange();
+			case UMLComparePackage.STEREOTYPE_PROPERTY_CHANGE:
+				return createStereotypePropertyChange();
+			case UMLComparePackage.STEREOTYPE_APPLICATION_CHANGE:
+				return createStereotypeApplicationChange();
+			case UMLComparePackage.STEREOTYPE_REFERENCE_CHANGE:
+				return createStereotypeReferenceChange();
+			case UMLComparePackage.PROFILE_APPLICATION_CHANGE:
+				return createProfileApplicationChange();
+			case UMLComparePackage.DIRECTED_RELATIONSHIP_CHANGE:
+				return createDirectedRelationshipChange();
 			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+				throw new IllegalArgumentException(
+						"The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public AssociationChange createAssociationChange() {
@@ -94,38 +109,8 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DependencyChange createDependencyChange() {
-		DependencyChangeImpl dependencyChange = new DependencyChangeImpl();
-		return dependencyChange;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public InterfaceRealizationChange createInterfaceRealizationChange() {
-		InterfaceRealizationChangeImpl interfaceRealizationChange = new InterfaceRealizationChangeImpl();
-		return interfaceRealizationChange;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public SubstitutionChange createSubstitutionChange() {
-		SubstitutionChangeImpl substitutionChange = new SubstitutionChangeImpl();
-		return substitutionChange;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ExtendChange createExtendChange() {
@@ -134,18 +119,8 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public IncludeChange createIncludeChange() {
-		IncludeChangeImpl includeChange = new IncludeChangeImpl();
-		return includeChange;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public GeneralizationSetChange createGeneralizationSetChange() {
@@ -154,8 +129,8 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ExecutionSpecificationChange createExecutionSpecificationChange() {
@@ -164,8 +139,8 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IntervalConstraintChange createIntervalConstraintChange() {
@@ -174,8 +149,8 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public MessageChange createMessageChange() {
@@ -184,8 +159,8 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public StereotypePropertyChange createStereotypePropertyChange() {
@@ -194,8 +169,8 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public StereotypeApplicationChange createStereotypeApplicationChange() {
@@ -204,8 +179,8 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public StereotypeReferenceChange createStereotypeReferenceChange() {
@@ -214,8 +189,8 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ProfileApplicationChange createProfileApplicationChange() {
@@ -224,8 +199,18 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public DirectedRelationshipChange createDirectedRelationshipChange() {
+		DirectedRelationshipChangeImpl directedRelationshipChange = new DirectedRelationshipChangeImpl();
+		return directedRelationshipChange;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public UMLComparePackage getUMLComparePackage() {
@@ -233,8 +218,8 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @deprecated
 	 * @generated
 	 */
@@ -243,4 +228,4 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 		return UMLComparePackage.eINSTANCE;
 	}
 
-} //UMLCompareFactoryImpl
+} // UMLCompareFactoryImpl

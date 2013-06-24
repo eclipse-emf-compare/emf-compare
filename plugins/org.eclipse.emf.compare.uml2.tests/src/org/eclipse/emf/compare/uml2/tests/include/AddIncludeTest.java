@@ -20,7 +20,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
-import org.eclipse.emf.compare.uml2.internal.IncludeChange;
+import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractTest;
 import org.eclipse.emf.compare.uml2.tests.include.data.IncludeInputData;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -106,14 +106,14 @@ public class AddIncludeTest extends AbstractTest {
 		assertNotNull(addRefExtendedCaseInExtend);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(IncludeChange.class)));
+		assertSame(Integer.valueOf(1), count(differences, instanceOf(DirectedRelationshipChange.class)));
 		Diff addUMLExtend = null;
 		if (kind.equals(TestKind.ADD)) {
-			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(IncludeChange.class),
-					ofKind(DifferenceKind.ADD)));
+			addUMLExtend = Iterators.find(differences.iterator(), and(
+					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
-			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(IncludeChange.class),
-					ofKind(DifferenceKind.DELETE)));
+			addUMLExtend = Iterators.find(differences.iterator(), and(
+					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLExtend);
 		assertSame(Integer.valueOf(2), Integer.valueOf(addUMLExtend.getRefinedBy().size()));

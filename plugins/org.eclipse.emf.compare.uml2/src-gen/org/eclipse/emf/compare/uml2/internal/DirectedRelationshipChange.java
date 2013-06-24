@@ -13,13 +13,13 @@ package org.eclipse.emf.compare.uml2.internal;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Include Change</b></em>'.
+ * A representation of the model object '<em><b>Directed Relationship Change</b></em>'.
  * <!-- end-user-doc -->
  *
  *
- * @see org.eclipse.emf.compare.uml2.internal.UMLComparePackage#getIncludeChange()
+ * @see org.eclipse.emf.compare.uml2.internal.UMLComparePackage#getDirectedRelationshipChange()
  * @model
  * @generated
  */
-public interface IncludeChange extends UMLDiff {
-} // IncludeChange
+public interface DirectedRelationshipChange extends UMLDiff {
+} // DirectedRelationshipChange

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,17 +23,11 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 
 	ForwardingUMLDiffItemProvider fAssociationChangeItemProvider;
 
-	ForwardingUMLDiffItemProvider fDependencyChangeItemProvider;
-
 	ForwardingUMLDiffItemProvider fExecutionSpecificationChangeItemProvider;
 
 	ForwardingUMLDiffItemProvider fExtendChangeItemProvider;
 
 	ForwardingUMLDiffItemProvider fGeneralizationSetChangeItemProvider;
-
-	ForwardingUMLDiffItemProvider fIncludeChangeItemProvider;
-
-	ForwardingUMLDiffItemProvider fInterfaceRealizationChangeItemProvider;
 
 	ForwardingUMLDiffItemProvider fIntervalConstraintChangeItemProvider;
 
@@ -47,7 +41,7 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 
 	ForwardingUMLDiffItemProvider fStereotypeReferenceChangeItemProvider;
 
-	ForwardingUMLDiffItemProvider fSubstitutionChangeItemProvider;
+	ForwardingUMLDiffItemProvider fDirectedRelationshipChangeItemProvider;
 
 	public UMLCompareAdapterFactorySpec() {
 		super();
@@ -66,48 +60,6 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 					.createAssociationChangeAdapter());
 		}
 		return fAssociationChangeItemProvider;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.uml2.provider.UMLCompareItemProviderAdapterFactory#createDependencyChangeAdapter()
-	 */
-	@Override
-	public Adapter createDependencyChangeAdapter() {
-		if (fDependencyChangeItemProvider == null) {
-			fDependencyChangeItemProvider = new ForwardingUMLDiffItemProvider((ItemProviderAdapter)super
-					.createDependencyChangeAdapter());
-		}
-		return fDependencyChangeItemProvider;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.uml2.provider.UMLCompareItemProviderAdapterFactory#createInterfaceRealizationChangeAdapter()
-	 */
-	@Override
-	public Adapter createInterfaceRealizationChangeAdapter() {
-		if (fInterfaceRealizationChangeItemProvider == null) {
-			fInterfaceRealizationChangeItemProvider = new ForwardingUMLDiffItemProvider(
-					(ItemProviderAdapter)super.createInterfaceRealizationChangeAdapter());
-		}
-		return fInterfaceRealizationChangeItemProvider;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.uml2.provider.UMLCompareItemProviderAdapterFactory#createSubstitutionChangeAdapter()
-	 */
-	@Override
-	public Adapter createSubstitutionChangeAdapter() {
-		if (fSubstitutionChangeItemProvider == null) {
-			fSubstitutionChangeItemProvider = new ForwardingUMLDiffItemProvider((ItemProviderAdapter)super
-					.createSubstitutionChangeAdapter());
-		}
-		return fSubstitutionChangeItemProvider;
 	}
 
 	/**
@@ -238,15 +190,15 @@ public class UMLCompareAdapterFactorySpec extends UMLCompareItemProviderAdapterF
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.uml2.provider.UMLCompareItemProviderAdapterFactory#createIncludeChangeAdapter()
+	 * @see org.eclipse.emf.compare.uml2.internal.provider.UMLCompareItemProviderAdapterFactory#createDirectedRelationshipChangeAdapter()
 	 */
 	@Override
-	public Adapter createIncludeChangeAdapter() {
-		if (fIncludeChangeItemProvider == null) {
-			fIncludeChangeItemProvider = new ForwardingUMLDiffItemProvider((ItemProviderAdapter)super
-					.createIncludeChangeAdapter());
+	public Adapter createDirectedRelationshipChangeAdapter() {
+		if (fDirectedRelationshipChangeItemProvider == null) {
+			fDirectedRelationshipChangeItemProvider = new ForwardingUMLDiffItemProvider(
+					(ItemProviderAdapter)super.createDirectedRelationshipChangeAdapter());
 		}
-		return fIncludeChangeItemProvider;
+		return fDirectedRelationshipChangeItemProvider;
 	}
 
 }

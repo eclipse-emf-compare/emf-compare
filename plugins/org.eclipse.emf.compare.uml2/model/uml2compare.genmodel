@@ -14,11 +14,7 @@
       presentationPackageSuffix="internal.presentation" testsPackageSuffix="internal.tests"
       ecorePackage="uml2compare.ecore#/">
     <genClasses xsi:type="genmodel:GenClass" ecoreClass="uml2compare.ecore#//AssociationChange"/>
-    <genClasses xsi:type="genmodel:GenClass" ecoreClass="uml2compare.ecore#//DependencyChange"/>
-    <genClasses xsi:type="genmodel:GenClass" ecoreClass="uml2compare.ecore#//InterfaceRealizationChange"/>
-    <genClasses xsi:type="genmodel:GenClass" ecoreClass="uml2compare.ecore#//SubstitutionChange"/>
     <genClasses xsi:type="genmodel:GenClass" ecoreClass="uml2compare.ecore#//ExtendChange"/>
-    <genClasses xsi:type="genmodel:GenClass" ecoreClass="uml2compare.ecore#//IncludeChange"/>
     <genClasses xsi:type="genmodel:GenClass" ecoreClass="uml2compare.ecore#//GeneralizationSetChange"/>
     <genClasses xsi:type="genmodel:GenClass" ecoreClass="uml2compare.ecore#//ExecutionSpecificationChange"/>
     <genClasses xsi:type="genmodel:GenClass" ecoreClass="uml2compare.ecore#//IntervalConstraintChange"/>
@@ -36,6 +32,7 @@
       <genFeatures xsi:type="genmodel:GenFeature" notify="false" createChild="false"
           propertySortChoices="true" ecoreFeature="ecore:EReference uml2compare.ecore#//ProfileApplicationChange/profile"/>
     </genClasses>
+    <genClasses xsi:type="genmodel:GenClass" ecoreClass="uml2compare.ecore#//DirectedRelationshipChange"/>
     <genClasses xsi:type="genmodel:GenClass" image="false" ecoreClass="uml2compare.ecore#//UMLDiff">
       <genFeatures xsi:type="genmodel:GenFeature" notify="false" createChild="false"
           propertySortChoices="true" ecoreFeature="ecore:EReference uml2compare.ecore#//UMLDiff/discriminant"/>

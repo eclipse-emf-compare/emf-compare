@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.diagram.papyrus.tests.merge;
 
 import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.instanceOf;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
@@ -27,9 +28,7 @@ import org.eclipse.emf.compare.diagram.papyrus.tests.AbstractTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.DiagramInputData;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.data.EdgeMergeInputData;
 import org.eclipse.emf.compare.uml2.internal.AssociationChange;
-import org.eclipse.emf.compare.uml2.internal.DependencyChange;
-import org.eclipse.emf.compare.uml2.internal.InterfaceRealizationChange;
-import org.eclipse.emf.compare.uml2.internal.SubstitutionChange;
+import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.uml2.uml.UMLPackage;
@@ -111,11 +110,11 @@ public class EdgeMergeTest extends AbstractTest {
 	private static final int A6_DEPENDENCY_CHANGES_NB = 8 * A6_DEPENDENCY_CHANGE1_NB + 2 * A6_SUBSTITUTION_CHANGE1_NB + A6_IREAL_CHANGE1_NB;
 	private static final int A6_ASSO_CHANGE1_NB = 14;
 	private static final int A6_ASSO_CHANGES_NB = 2 * A6_ASSO_CHANGE1_NB;
-	private static final int A6_IMPORT_CHANGE1_NB = 2;
+	private static final int A6_IMPORT_CHANGE1_NB = 3;
 	private static final int A6_IMPORT_CHANGES_NB = 2 * A6_IMPORT_CHANGE1_NB;
-	private static final int A6_FLOW_CHANGE1_NB = 3;
+	private static final int A6_FLOW_CHANGE1_NB = 4;
 	private static final int A6_FLOW_CHANGES_NB = 2 * A6_FLOW_CHANGE1_NB;
-	private static final int A6_GENERAL_CHANGE1_NB = 2;
+	private static final int A6_GENERAL_CHANGE1_NB = 3;
 	private static final int A6_GENERAL_CHANGES_NB = 2 * A6_GENERAL_CHANGE1_NB;
 	private static final int A6_DIFFS_NB = A6_NODECHANGES_NB + A6_DEPENDENCY_EDGE_CHANGES_NB + A6_ASSO_EDGE_CHANGES_NB + A6_IMPORT_EDGE_CHANGES_NB + A6_FLOW_EDGE_CHANGES_NB + A6_GENERAL_EDGE_CHANGES_NB + A6_CLASSCHANGES_NB + A6_DEPENDENCY_CHANGES_NB + A6_ASSO_CHANGES_NB + A6_IMPORT_CHANGES_NB + A6_FLOW_CHANGES_NB + A6_GENERAL_CHANGES_NB;
 	
@@ -928,10 +927,10 @@ public class EdgeMergeTest extends AbstractTest {
 		Comparison comparison = buildComparison(left, right);
 
 		// ** DIFF CHECKING **
-		Predicate<Diff> substitutions = and(instanceOf(SubstitutionChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> interfaceRealizations = and(instanceOf(InterfaceRealizationChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> substitutions = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.SUBSTITUTION), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> interfaceRealizations = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.INTERFACE_REALIZATION), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> associations = and(instanceOf(AssociationChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> dependencies = and(instanceOf(DependencyChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> dependencies = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.DEPENDENCY), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> nodes = and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edges = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edgeAbstraction = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD), elementClassIs(UMLPackage.Literals.ABSTRACTION));
@@ -949,7 +948,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages. Details below:
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages. Details below:
 				new ExpectedStat(nodes, 2),
 				new ExpectedStat(edges, 19), // 13 + 2 imports + 2 generalizations + 2 information flows (no UMLDiff for them). Details below:
 				new ExpectedStat(edgeAbstraction, 2),
@@ -973,7 +972,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2),
-				new ExpectedStat(dependencies, 7), // ** -1
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 7), // ** -1
 				new ExpectedStat(nodes, 1), // ** -1
 				new ExpectedStat(edgeAbstraction, 1), // ** -1
 				new ExpectedStat(edgeAssociation, 2),
@@ -996,10 +995,10 @@ public class EdgeMergeTest extends AbstractTest {
 		Comparison comparison = buildComparison(left, right);
 
 		// ** DIFF CHECKING **
-		Predicate<Diff> substitutions = and(instanceOf(SubstitutionChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> interfaceRealizations = and(instanceOf(InterfaceRealizationChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> substitutions = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.SUBSTITUTION), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> interfaceRealizations = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.INTERFACE_REALIZATION), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> associations = and(instanceOf(AssociationChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> dependencies = and(instanceOf(DependencyChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> dependencies = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.DEPENDENCY), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> nodes = and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edges = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edgeAbstraction = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD), elementClassIs(UMLPackage.Literals.ABSTRACTION));
@@ -1017,9 +1016,9 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
 				new ExpectedStat(nodes, 2),
-				new ExpectedStat(edges, 19), // 13 + 2 imports + 2 generalizations + 2 information flows (no UMLDiff for them). Details below:
+				new ExpectedStat(edges, 19), // 13 + 2 imports + 2 generalizations + 2 information flows. Details below:
 				new ExpectedStat(edgeAbstraction, 2),
 				new ExpectedStat(edgeAssociation, 2),
 				new ExpectedStat(edgeDependency, 2),
@@ -1041,7 +1040,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 1), // ** -1
-				new ExpectedStat(dependencies, 8),
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 8),
 				new ExpectedStat(nodes, 1), // ** -1
 				new ExpectedStat(edgeAbstraction, 2), 
 				new ExpectedStat(edgeAssociation, 1), // ** -1
@@ -1064,10 +1063,10 @@ public class EdgeMergeTest extends AbstractTest {
 		Comparison comparison = buildComparison(left, right);
 
 		// ** DIFF CHECKING **
-		Predicate<Diff> substitutions = and(instanceOf(SubstitutionChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> interfaceRealizations = and(instanceOf(InterfaceRealizationChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> substitutions = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.SUBSTITUTION), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> interfaceRealizations = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.INTERFACE_REALIZATION), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> associations = and(instanceOf(AssociationChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> dependencies = and(instanceOf(DependencyChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> dependencies = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.DEPENDENCY), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> nodes = and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edges = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edgeAbstraction = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD), elementClassIs(UMLPackage.Literals.ABSTRACTION));
@@ -1085,7 +1084,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
 				new ExpectedStat(nodes, 2),
 				new ExpectedStat(edges, 19), // 13 + 2 imports + 2 generalizations + 2 information flows (no UMLDiff for them). Details below:
 				new ExpectedStat(edgeAbstraction, 2),
@@ -1109,7 +1108,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 7), // ** -1
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 7), // ** -1
 				new ExpectedStat(nodes, 1), // ** -1
 				new ExpectedStat(edgeAbstraction, 2), 
 				new ExpectedStat(edgeAssociation, 2), 
@@ -1124,8 +1123,6 @@ public class EdgeMergeTest extends AbstractTest {
 	}
 	
 	@Test
-	@Ignore
-	// FIXME See Bug 406405
 	// Merge Left to Right <ADD Import Edge>
 	public void testA6d() throws IOException {
 		final Resource left = input.getA6EdgeChangeLeft();
@@ -1134,10 +1131,10 @@ public class EdgeMergeTest extends AbstractTest {
 		Comparison comparison = buildComparison(left, right);
 
 		// ** DIFF CHECKING **
-		Predicate<Diff> substitutions = and(instanceOf(SubstitutionChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> interfaceRealizations = and(instanceOf(InterfaceRealizationChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> substitutions = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.SUBSTITUTION), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> interfaceRealizations = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.INTERFACE_REALIZATION), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> associations = and(instanceOf(AssociationChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> dependencies = and(instanceOf(DependencyChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> dependencies = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.DEPENDENCY), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> nodes = and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edges = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edgeAbstraction = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD), elementClassIs(UMLPackage.Literals.ABSTRACTION));
@@ -1155,9 +1152,9 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
 				new ExpectedStat(nodes, 2),
-				new ExpectedStat(edges, 19), // 13 + 2 imports + 2 generalizations + 2 information flows (no UMLDiff for them). Details below:
+				new ExpectedStat(edges, 19), // 13 + 2 imports + 2 generalizations + 2 information flows. Details below:
 				new ExpectedStat(edgeAbstraction, 2),
 				new ExpectedStat(edgeAssociation, 2),
 				new ExpectedStat(edgeDependency, 2),
@@ -1181,7 +1178,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 8),
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 8),
 				new ExpectedStat(nodes, 1), // ** -1
 				new ExpectedStat(edgeAbstraction, 2), 
 				new ExpectedStat(edgeAssociation, 2), 
@@ -1196,8 +1193,6 @@ public class EdgeMergeTest extends AbstractTest {
 	}
 	
 	@Test
-	@Ignore
-	// FIXME See Bug 406405
 	// Merge Left to Right <ADD Generalization Edge>
 	public void testA6e() throws IOException {
 		final Resource left = input.getA6EdgeChangeLeft();
@@ -1206,10 +1201,10 @@ public class EdgeMergeTest extends AbstractTest {
 		Comparison comparison = buildComparison(left, right);
 
 		// ** DIFF CHECKING **
-		Predicate<Diff> substitutions = and(instanceOf(SubstitutionChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> interfaceRealizations = and(instanceOf(InterfaceRealizationChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> substitutions = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.SUBSTITUTION), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> interfaceRealizations = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.INTERFACE_REALIZATION), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> associations = and(instanceOf(AssociationChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> dependencies = and(instanceOf(DependencyChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> dependencies = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.DEPENDENCY), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> nodes = and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edges = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edgeAbstraction = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD), elementClassIs(UMLPackage.Literals.ABSTRACTION));
@@ -1227,7 +1222,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
 				new ExpectedStat(nodes, 2),
 				new ExpectedStat(edges, 19), // 13 + 2 imports + 2 generalizations + 2 information flows (no UMLDiff for them). Details below:
 				new ExpectedStat(edgeAbstraction, 2),
@@ -1253,7 +1248,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 8),
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 8),
 				new ExpectedStat(nodes, 1), // ** -1
 				new ExpectedStat(edgeAbstraction, 2), 
 				new ExpectedStat(edgeAssociation, 2), 
@@ -1268,8 +1263,6 @@ public class EdgeMergeTest extends AbstractTest {
 	}
 	
 	@Test
-	@Ignore
-	// FIXME See Bug 406405
 	// Merge Left to Right <ADD Flow Edge>
 	public void testA6f() throws IOException {
 		final Resource left = input.getA6EdgeChangeLeft();
@@ -1278,10 +1271,10 @@ public class EdgeMergeTest extends AbstractTest {
 		Comparison comparison = buildComparison(left, right);
 
 		// ** DIFF CHECKING **
-		Predicate<Diff> substitutions = and(instanceOf(SubstitutionChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> interfaceRealizations = and(instanceOf(InterfaceRealizationChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> substitutions = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.SUBSTITUTION), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> interfaceRealizations = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.INTERFACE_REALIZATION), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> associations = and(instanceOf(AssociationChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> dependencies = and(instanceOf(DependencyChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> dependencies = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.DEPENDENCY), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> nodes = and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edges = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edgeAbstraction = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD), elementClassIs(UMLPackage.Literals.ABSTRACTION));
@@ -1299,7 +1292,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
 				new ExpectedStat(nodes, 2),
 				new ExpectedStat(edges, 19), // 13 + 2 imports + 2 generalizations + 2 information flows (no UMLDiff for them). Details below:
 				new ExpectedStat(edgeAbstraction, 2),
@@ -1325,7 +1318,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 8),
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 8),
 				new ExpectedStat(nodes, 1), // ** -1
 				new ExpectedStat(edgeAbstraction, 2), 
 				new ExpectedStat(edgeAssociation, 2), 
@@ -1348,10 +1341,10 @@ public class EdgeMergeTest extends AbstractTest {
 		Comparison comparison = buildComparison(left, right);
 
 		// ** DIFF CHECKING **
-		Predicate<Diff> substitutions = and(instanceOf(SubstitutionChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> interfaceRealizations = and(instanceOf(InterfaceRealizationChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> substitutions = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.SUBSTITUTION), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> interfaceRealizations = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.INTERFACE_REALIZATION), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> associations = and(instanceOf(AssociationChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> dependencies = and(instanceOf(DependencyChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> dependencies = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.DEPENDENCY), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> nodes = and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edges = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edgeAbstraction = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD), elementClassIs(UMLPackage.Literals.ABSTRACTION));
@@ -1369,7 +1362,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
 				new ExpectedStat(nodes, 2),
 				new ExpectedStat(edges, 19), // 13 + 2 imports + 2 generalizations + 2 information flows (no UMLDiff for them). Details below:
 				new ExpectedStat(edgeAbstraction, 2),
@@ -1393,7 +1386,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 0), // ** -1
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 8),
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 8),
 				new ExpectedStat(nodes, 1), // ** -1
 				new ExpectedStat(edgeAbstraction, 2), 
 				new ExpectedStat(edgeAssociation, 2), 
@@ -1416,10 +1409,10 @@ public class EdgeMergeTest extends AbstractTest {
 		Comparison comparison = buildComparison(left, right);
 
 		// ** DIFF CHECKING **
-		Predicate<Diff> substitutions = and(instanceOf(SubstitutionChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> interfaceRealizations = and(instanceOf(InterfaceRealizationChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> substitutions = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.SUBSTITUTION), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> interfaceRealizations = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.INTERFACE_REALIZATION), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> associations = and(instanceOf(AssociationChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> dependencies = and(instanceOf(DependencyChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> dependencies = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.DEPENDENCY), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> nodes = and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edges = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edgeAbstraction = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD), elementClassIs(UMLPackage.Literals.ABSTRACTION));
@@ -1437,7 +1430,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
 				new ExpectedStat(nodes, 2),
 				new ExpectedStat(edges, 19), // 13 + 2 imports + 2 generalizations + 2 information flows (no UMLDiff for them). Details below:
 				new ExpectedStat(edgeAbstraction, 2),
@@ -1461,7 +1454,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1),
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 7), // ** -1
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 7), // ** -1
 				new ExpectedStat(nodes, 1), // ** -1
 				new ExpectedStat(edgeAbstraction, 2), 
 				new ExpectedStat(edgeAssociation, 2), 
@@ -1484,10 +1477,10 @@ public class EdgeMergeTest extends AbstractTest {
 		Comparison comparison = buildComparison(left, right);
 
 		// ** DIFF CHECKING **
-		Predicate<Diff> substitutions = and(instanceOf(SubstitutionChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> interfaceRealizations = and(instanceOf(InterfaceRealizationChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> substitutions = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.SUBSTITUTION), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> interfaceRealizations = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.INTERFACE_REALIZATION), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> associations = and(instanceOf(AssociationChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> dependencies = and(instanceOf(DependencyChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> dependencies = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.DEPENDENCY), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> nodes = and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edges = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edgeAbstraction = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD), elementClassIs(UMLPackage.Literals.ABSTRACTION));
@@ -1505,7 +1498,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
 				new ExpectedStat(nodes, 2),
 				new ExpectedStat(edges, 19), // 13 + 2 imports + 2 generalizations + 2 information flows (no UMLDiff for them). Details below:
 				new ExpectedStat(edgeAbstraction, 2),
@@ -1529,7 +1522,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 1), // ** -1
 				new ExpectedStat(interfaceRealizations, 1),
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 8), 
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 8), 
 				new ExpectedStat(nodes, 1), // ** -1
 				new ExpectedStat(edgeAbstraction, 2), 
 				new ExpectedStat(edgeAssociation, 2), 
@@ -1552,10 +1545,10 @@ public class EdgeMergeTest extends AbstractTest {
 		Comparison comparison = buildComparison(left, right);
 
 		// ** DIFF CHECKING **
-		Predicate<Diff> substitutions = and(instanceOf(SubstitutionChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> interfaceRealizations = and(instanceOf(InterfaceRealizationChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> substitutions = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.SUBSTITUTION), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> interfaceRealizations = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.INTERFACE_REALIZATION), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> associations = and(instanceOf(AssociationChange.class), ofKind(DifferenceKind.ADD));
-		Predicate<Diff> dependencies = and(instanceOf(DependencyChange.class), ofKind(DifferenceKind.ADD));
+		Predicate<Diff> dependencies = and(instanceOf(DirectedRelationshipChange.class), discriminantInstanceOf(UMLPackage.Literals.DEPENDENCY), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> nodes = and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edges = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD));
 		Predicate<Diff> edgeAbstraction = and(instanceOf(EdgeChange.class), ofKind(DifferenceKind.ADD), elementClassIs(UMLPackage.Literals.ABSTRACTION));
@@ -1573,7 +1566,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 8), // 2 abstractions + 2 dependencies + 2 realizations + 2 usages.
 				new ExpectedStat(nodes, 2),
 				new ExpectedStat(edges, 19), // 13 + 2 imports + 2 generalizations + 2 information flows (no UMLDiff for them). Details below:
 				new ExpectedStat(edgeAbstraction, 2),
@@ -1597,7 +1590,7 @@ public class EdgeMergeTest extends AbstractTest {
 				new ExpectedStat(substitutions, 2),
 				new ExpectedStat(interfaceRealizations, 1),
 				new ExpectedStat(associations, 2), 
-				new ExpectedStat(dependencies, 7), // ** -1
+				new ExpectedStat(and(dependencies, not(substitutions), not(interfaceRealizations)), 7), // ** -1
 				new ExpectedStat(nodes, 1), // ** -1
 				new ExpectedStat(edgeAbstraction, 2), 
 				new ExpectedStat(edgeAssociation, 2), 

@@ -243,6 +243,15 @@ public abstract class AbstractTest {
 		};
 	}
 	
+	protected static Predicate<Diff> discriminantInstanceOf(final EClass clazz) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input instanceof UMLDiff && clazz.isInstance(((UMLDiff)input).getDiscriminant());
+			}
+			
+		};
+	}
+	
 	protected static EObject getValue(Diff diff) {
 		if (diff instanceof DiagramDiff) {
 			return ((DiagramDiff)diff).getView();
