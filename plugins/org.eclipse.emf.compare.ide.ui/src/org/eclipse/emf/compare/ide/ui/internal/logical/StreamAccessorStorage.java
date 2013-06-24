@@ -94,6 +94,27 @@ public class StreamAccessorStorage implements IStorage {
 		if (storagePath != null) {
 			fullPath = storagePath;
 		} else {
+			fullPath = findPath(element);
+		}
+
+		return new StreamAccessorStorage((IStreamContentAccessor)element, fullPath);
+	}
+
+	/**
+	 * This will tries and find a path for the given typed element. If that element can be adapted as an
+	 * IResource, we'll use that resource's path. Otherwise, we'll try and adapt it to a File Revision and use
+	 * that revision's path.
+	 * 
+	 * @param element
+	 *            The element for which we need a path.
+	 * @return A path for the given element.
+	 */
+	private static String findPath(ITypedElement element) {
+		final String fullPath;
+		final IFile file = findFile(element);
+		if (file != null) {
+			fullPath = file.getFullPath().toString();
+		} else {
 			final IFileRevision revision = findFileRevision(element);
 			String tmp = null;
 			if (revision != null) {
@@ -116,8 +137,7 @@ public class StreamAccessorStorage implements IStorage {
 				fullPath = element.getName();
 			}
 		}
-
-		return new StreamAccessorStorage((IStreamContentAccessor)element, fullPath);
+		return fullPath;
 	}
 
 	/**
