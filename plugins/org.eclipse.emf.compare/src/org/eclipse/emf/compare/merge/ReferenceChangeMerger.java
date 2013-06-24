@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
+import static com.google.common.collect.Iterators.filter;
 import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEIsSet;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 
 import java.util.Iterator;
 import java.util.List;
@@ -22,14 +24,17 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
@@ -486,6 +491,8 @@ public class ReferenceChangeMerger extends AbstractMerger {
 						.getValue()));
 			}
 		}
+
+		checkImpliedDiffsOrdering(diff, rightToLeft);
 	}
 
 	/**
@@ -685,6 +692,119 @@ public class ReferenceChangeMerger extends AbstractMerger {
 			equivalent.setState(DifferenceState.MERGED);
 		}
 		return continueMerge;
+	}
+
+	/**
+	 * In the case of many-to-many eOpposite references, EMF will simply report the difference made on one
+	 * side of the equivalence to the other, without considering ordering in any way. In such cases, we'll
+	 * iterate over our equivalences after the merge, and double-check the ordering ourselves, fixing it as
+	 * needed.
+	 * <p>
+	 * Note that both implied and equivalent diffs will be double-checked from here.
+	 * </p>
+	 * 
+	 * @param diff
+	 *            The diff we are currently merging.
+	 * @param rightToLeft
+	 *            Direction of the merge.
+	 */
+	protected void checkImpliedDiffsOrdering(ReferenceChange diff, boolean rightToLeft) {
+		final EReference reference = diff.getReference();
+		final List<Diff> mergedImplications;
+		if (rightToLeft) {
+			if (diff.getSource() == DifferenceSource.LEFT) {
+				mergedImplications = diff.getImpliedBy();
+			} else {
+				mergedImplications = diff.getImplies();
+			}
+		} else {
+			if (diff.getSource() == DifferenceSource.LEFT) {
+				mergedImplications = diff.getImplies();
+			} else {
+				mergedImplications = diff.getImpliedBy();
+			}
+		}
+
+		Iterator<Diff> impliedDiffs = mergedImplications.iterator();
+		if (reference.isMany() && diff.getEquivalence() != null) {
+			impliedDiffs = Iterators.concat(impliedDiffs, diff.getEquivalence().getDifferences().iterator());
+		}
+		final Iterator<ReferenceChange> impliedReferenceChanges = filter(impliedDiffs, ReferenceChange.class);
+
+		while (impliedReferenceChanges.hasNext()) {
+			final ReferenceChange implied = impliedReferenceChanges.next();
+			if (implied != diff && implied.getState() == DifferenceState.MERGED) {
+				if (implied.getReference().isMany() && implied.getKind() != DifferenceKind.MOVE) {
+					internalCheckOrdering(implied, rightToLeft);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Checks a particular difference for the ordering of its target values. This will be used to double-check
+	 * that equivalent differences haven't been "broken" by EMF by not preserving their value order.
+	 * <p>
+	 * Should only be used on <u>merged</u> differences which target <u>many-valued</u> references.
+	 * </p>
+	 * 
+	 * @param diff
+	 *            The diff that is to be checked.
+	 * @param rightToLeft
+	 *            Direction of the merge that took place.
+	 */
+	private void internalCheckOrdering(ReferenceChange diff, boolean rightToLeft) {
+		final EStructuralFeature feature = diff.getReference();
+		final EObject value = diff.getValue();
+		final Match match = diff.getMatch();
+		final Comparison comparison = match.getComparison();
+		final Match valueMatch = comparison.getMatch(value);
+
+		final EObject sourceContainer;
+		final EObject targetContainer;
+		final EObject newValue;
+		if (rightToLeft) {
+			sourceContainer = match.getRight();
+			targetContainer = match.getLeft();
+			newValue = valueMatch.getLeft();
+		} else {
+			sourceContainer = match.getLeft();
+			targetContainer = match.getRight();
+			newValue = valueMatch.getRight();
+		}
+
+		final List<Object> sourceList = ReferenceUtil.getAsList(sourceContainer, feature);
+		final List<Object> targetList = ReferenceUtil.getAsList(targetContainer, feature);
+
+		final List<Object> lcs = DiffUtil.longestCommonSubsequence(comparison, sourceList, targetList);
+		if (lcs.contains(valueMatch.getLeft()) || lcs.contains(valueMatch.getRight())) {
+			// Ordering is correct on this one
+			return;
+		}
+
+		int insertionIndex = DiffUtil.findInsertionIndex(comparison, sourceList, targetList, value);
+		if (insertionIndex >= 0) {
+			/*
+			 * We've used unresolving views of the eobject lists since we didn't know whether there was
+			 * actually any work to do. Use the real list now.
+			 */
+			@SuppressWarnings("unchecked")
+			final List<EObject> changedList = (List<EObject>)targetContainer.eGet(feature);
+			if (changedList instanceof EList<?>) {
+				if (insertionIndex > changedList.size()) {
+					((EList<EObject>)changedList).move(changedList.size() - 1, newValue);
+				} else {
+					((EList<EObject>)changedList).move(insertionIndex, newValue);
+				}
+			} else {
+				changedList.remove(newValue);
+				if (insertionIndex > changedList.size()) {
+					changedList.add(newValue);
+				} else {
+					changedList.add(insertionIndex, newValue);
+				}
+			}
+		}
 	}
 
 	/**

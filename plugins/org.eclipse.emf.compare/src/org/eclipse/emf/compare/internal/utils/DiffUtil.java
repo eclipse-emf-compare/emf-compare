@@ -46,8 +46,6 @@ import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * This utility class will be used to provide similarity implementations.
@@ -540,7 +538,6 @@ public final class DiffUtil {
 			List<E> source, List<E> target, E newElement) {
 		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
 
-		// We assume that "newElement" is in source but not in the target yet
 		final List<E> lcs;
 		if (ignoredElements != null) {
 			lcs = longestCommonSubsequence(comparison, ignoredElements, source, target);
@@ -797,7 +794,6 @@ public final class DiffUtil {
 	 *         inferred from {@code rightToLeft}.
 	 * @see #findInsertionIndex(Comparison, Iterable, List, List, Object)
 	 */
-	@SuppressWarnings("unchecked")
 	public static int findInsertionIndex(Comparison comparison, Diff diff, boolean rightToLeft) {
 		final EStructuralFeature feature;
 		final Object value;
@@ -846,23 +842,7 @@ public final class DiffUtil {
 		}
 
 		final List<Object> sourceList = getSourceList(diff, feature, rightToLeft);
-		final List<Object> targetList;
-
-		if (expectedContainer != null) {
-			final List<Object> temp = (List<Object>)ReferenceUtil.safeEGet(expectedContainer, feature);
-			if (feature == EcorePackage.Literals.ECLASS__ESUPER_TYPES
-					|| feature == EcorePackage.Literals.EOPERATION__EEXCEPTIONS) {
-				// workaround 394286
-				targetList = temp;
-			} else if (temp instanceof InternalEList<?>) {
-				// EMF ignores the "resolve" flag for containment lists...
-				targetList = ((InternalEList<Object>)temp).basicList();
-			} else {
-				targetList = temp;
-			}
-		} else {
-			targetList = ImmutableList.of();
-		}
+		final List<Object> targetList = ReferenceUtil.getAsList(expectedContainer, feature);
 
 		Iterable<Object> ignoredElements = Iterables.concat(computeIgnoredElements(targetList, diff),
 				Collections.singleton(value));
@@ -1007,7 +987,6 @@ public final class DiffUtil {
 	 * @return The list that should be used as a source for this merge. May be empty, but never
 	 *         <code>null</code>.
 	 */
-	@SuppressWarnings("unchecked")
 	private static List<Object> getSourceList(Diff diff, EStructuralFeature feature, boolean rightToLeft) {
 		final Match match = diff.getMatch();
 		final List<Object> sourceList;
@@ -1035,21 +1014,7 @@ public final class DiffUtil {
 			}
 		}
 
-		if (expectedContainer != null) {
-			final List<Object> temp = (List<Object>)ReferenceUtil.safeEGet(expectedContainer, feature);
-			if (feature == EcorePackage.Literals.ECLASS__ESUPER_TYPES
-					|| feature == EcorePackage.Literals.EOPERATION__EEXCEPTIONS) {
-				// workaround 394286
-				sourceList = temp;
-			} else if (temp instanceof InternalEList<?>) {
-				// EMF ignores the "resolve" flag for containment lists...
-				sourceList = ((InternalEList<Object>)temp).basicList();
-			} else {
-				sourceList = temp;
-			}
-		} else {
-			sourceList = ImmutableList.of();
-		}
+		sourceList = ReferenceUtil.getAsList(expectedContainer, feature);
 
 		return sourceList;
 	}

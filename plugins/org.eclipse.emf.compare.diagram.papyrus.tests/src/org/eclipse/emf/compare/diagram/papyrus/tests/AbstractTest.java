@@ -152,24 +152,6 @@ public abstract class AbstractTest {
 		testIntersections(comparison);
 	}
 	
-	// FIXME: See Bug 410737
-	protected void diffsCheckingBug410737(Comparison comparison, int totalDiffsNb, ExpectedStat ... expectedStats) {
-		List<Diff> diffs = comparison.getDifferences();
-		Collection<Diff> differences = Collections2.filter(diffs, Predicates.not(EMFComparePredicates.ofKind(DifferenceKind.MOVE)));
-		
-		assertEquals(totalDiffsNb, differences.size());
-		for (ExpectedStat expectedStat : expectedStats) {
-			Predicate<Diff> p = expectedStat.p;
-			int nb = expectedStat.nb;
-			int result = Collections2.filter(differences, p).size();
-			
-			String message = buildAssertMessage(differences, p);
-			
-			assertEquals(message, nb, result);
-		}
-		testIntersections(comparison);
-	}
-
 	private String buildAssertMessage(Collection<Diff> differences, Predicate<Diff> p) {
 		Diff diff = Iterables.find(differences, p, null);
 		String message = "";

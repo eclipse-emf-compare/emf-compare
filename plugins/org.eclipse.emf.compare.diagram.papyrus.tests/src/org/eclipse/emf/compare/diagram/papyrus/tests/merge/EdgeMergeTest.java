@@ -143,7 +143,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);	
-		diffsCheckingBug410737(comparison, 0); // all diffs merged
+		diffsChecking(comparison, 0); // all diffs merged
 	}
 	
 	@Test
@@ -165,7 +165,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsCheckingBug410737(comparison, A1_DIFFS_NB - A1_EDGECHANGE_NB, new ExpectedStat(association, 1), new ExpectedStat(edge, 0)); // only graphical diffs merged
+		diffsChecking(comparison, A1_DIFFS_NB - A1_EDGECHANGE_NB, new ExpectedStat(association, 1), new ExpectedStat(edge, 0)); // only graphical diffs merged
 	}
 	
 	@Test
@@ -187,7 +187,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsCheckingBug410737(comparison, A1_DIFFS_NB - A1_EDGECHANGE_NB, new ExpectedStat(association, 1), new ExpectedStat(edge, 0)); // only graphical diffs merged
+		diffsChecking(comparison, A1_DIFFS_NB - A1_EDGECHANGE_NB, new ExpectedStat(association, 1), new ExpectedStat(edge, 0)); // only graphical diffs merged
 	}
 	
 	@Test
@@ -209,7 +209,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, 0); // all diffs merged
+		diffsChecking(comparison, 0); // all diffs merged
 	}
 	
 	@Test
@@ -231,7 +231,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A1_DIFFS_NB - A1_ASSOCHANGE_NB); // only 13 semantic diffs merged
+		diffsChecking(comparison, A1_DIFFS_NB - A1_ASSOCHANGE_NB); // only 13 semantic diffs merged
 	}
 	
 	@Test
@@ -253,7 +253,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, 0); // all diffs merged
+		diffsChecking(comparison, 0); // all diffs merged
 	}
 	
 	@Test
@@ -275,7 +275,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, 0); // all diffs merged
+		diffsChecking(comparison, 0); // all diffs merged
 	}
 	
 	@Test
@@ -297,7 +297,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A1_DIFFS_NB - A1_ASSOCHANGE_NB); // only 13 semantic diffs merged
+		diffsChecking(comparison, A1_DIFFS_NB - A1_ASSOCHANGE_NB); // only 13 semantic diffs merged
 	}
 	
 	@Test
@@ -320,7 +320,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, 0); // all diffs merged
+		diffsChecking(comparison, 0); // all diffs merged
 	}
 	
 	@Test
@@ -343,7 +343,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsCheckingBug410737(comparison, A2_DIFFS_NB - A2_EDGECHANGE_NB, new ExpectedStat(association, 1), new ExpectedStat(edge, 0), new ExpectedStat(node, 1));
+		diffsChecking(comparison, A2_DIFFS_NB - A2_EDGECHANGE_NB, new ExpectedStat(association, 1), new ExpectedStat(edge, 0), new ExpectedStat(node, 1));
 	}
 	
 	@Test
@@ -366,7 +366,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsCheckingBug410737(comparison, A2_DIFFS_NB - A2_EDGECHANGE_NB, new ExpectedStat(association, 1), new ExpectedStat(edge, 0), new ExpectedStat(node, 1));
+		diffsChecking(comparison, A2_DIFFS_NB - A2_EDGECHANGE_NB, new ExpectedStat(association, 1), new ExpectedStat(edge, 0), new ExpectedStat(node, 1));
 	}
 	
 	@Test
@@ -389,7 +389,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, 0); // all diffs merged
+		diffsChecking(comparison, 0); // all diffs merged
 	}
 	
 	@Test
@@ -412,7 +412,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A2_DIFFS_NB - A2_ASSOCHANGE_NB - A2_CLASSCHANGE_NB, new ExpectedStat(association, 0), new ExpectedStat(edge, 1), new ExpectedStat(node, 1));
+		diffsChecking(comparison, A2_DIFFS_NB - A2_ASSOCHANGE_NB - A2_CLASSCHANGE_NB, new ExpectedStat(association, 0), new ExpectedStat(edge, 1), new ExpectedStat(node, 1));
 	}
 	
 	@Test
@@ -435,7 +435,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsCheckingBug410737(comparison, A2_DIFFS_NB - A2_ASSOCHANGE_NB - A2_EDGECHANGE_NB, new ExpectedStat(association, 0), new ExpectedStat(edge, 0), new ExpectedStat(node, 1));
+		diffsChecking(comparison, A2_DIFFS_NB - A2_ASSOCHANGE_NB - A2_EDGECHANGE_NB, new ExpectedStat(association, 0), new ExpectedStat(edge, 0), new ExpectedStat(node, 1));
 	}
 	
 	@Test
@@ -458,7 +458,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsCheckingBug410737(comparison, A2_DIFFS_NB - A2_ASSOCHANGE_NB - A2_EDGECHANGE_NB, new ExpectedStat(association, 0), new ExpectedStat(edge, 0), new ExpectedStat(node, 1));
+		diffsChecking(comparison, A2_DIFFS_NB - A2_ASSOCHANGE_NB - A2_EDGECHANGE_NB, new ExpectedStat(association, 0), new ExpectedStat(edge, 0), new ExpectedStat(node, 1));
 	}
 	
 	@Test
@@ -481,7 +481,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A2_DIFFS_NB - A2_ASSOCHANGE_NB - A2_CLASSCHANGE_NB, new ExpectedStat(association, 0), new ExpectedStat(edge, 1), new ExpectedStat(node, 1));
+		diffsChecking(comparison, A2_DIFFS_NB - A2_ASSOCHANGE_NB - A2_CLASSCHANGE_NB, new ExpectedStat(association, 0), new ExpectedStat(edge, 1), new ExpectedStat(node, 1));
 	}
 	
 	@Test
@@ -504,7 +504,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, 0); // all diffs merged
+		diffsChecking(comparison, 0); // all diffs merged
 	}
 	
 	@Test
@@ -527,7 +527,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsCheckingBug410737(comparison, A3_DIFFS_NB - A3_EDGECHANGE_NB, new ExpectedStat(association, 1), new ExpectedStat(edge, 0), new ExpectedStat(node, 2));
+		diffsChecking(comparison, A3_DIFFS_NB - A3_EDGECHANGE_NB, new ExpectedStat(association, 1), new ExpectedStat(edge, 0), new ExpectedStat(node, 2));
 	}
 	
 	@Test
@@ -550,7 +550,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsCheckingBug410737(comparison, A3_DIFFS_NB - A3_EDGECHANGE_NB, new ExpectedStat(association, 1), new ExpectedStat(edge, 0), new ExpectedStat(node, 2));
+		diffsChecking(comparison, A3_DIFFS_NB - A3_EDGECHANGE_NB, new ExpectedStat(association, 1), new ExpectedStat(edge, 0), new ExpectedStat(node, 2));
 	}
 	
 	@Test
@@ -573,7 +573,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, 0); // all diffs merged
+		diffsChecking(comparison, 0); // all diffs merged
 	}
 	
 	@Test
@@ -596,7 +596,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A3_DIFFS_NB - A3_ASSOCHANGE_NB - A3_CLASSCHANGE_NB, new ExpectedStat(association, 0), new ExpectedStat(edge, 1), new ExpectedStat(node, 2));
+		diffsChecking(comparison, A3_DIFFS_NB - A3_ASSOCHANGE_NB - A3_CLASSCHANGE_NB, new ExpectedStat(association, 0), new ExpectedStat(edge, 1), new ExpectedStat(node, 2));
 	}
 	
 	@Test
@@ -619,7 +619,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsCheckingBug410737(comparison, A3_DIFFS_NB - A3_ASSOCHANGE_NB - A3_EDGECHANGE_NB, new ExpectedStat(association, 0), new ExpectedStat(edge, 0), new ExpectedStat(node, 2));
+		diffsChecking(comparison, A3_DIFFS_NB - A3_ASSOCHANGE_NB - A3_EDGECHANGE_NB, new ExpectedStat(association, 0), new ExpectedStat(edge, 0), new ExpectedStat(node, 2));
 	}
 	
 	@Test
@@ -642,7 +642,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsCheckingBug410737(comparison, A3_DIFFS_NB - A3_ASSOCHANGE_NB - A3_EDGECHANGE_NB, new ExpectedStat(association, 0), new ExpectedStat(edge, 0), new ExpectedStat(node, 2));
+		diffsChecking(comparison, A3_DIFFS_NB - A3_ASSOCHANGE_NB - A3_EDGECHANGE_NB, new ExpectedStat(association, 0), new ExpectedStat(edge, 0), new ExpectedStat(node, 2));
 	}
 	
 	@Test
@@ -665,7 +665,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A3_DIFFS_NB - A3_ASSOCHANGE_NB - A3_CLASSCHANGE_NB, new ExpectedStat(association, 0), new ExpectedStat(edge, 1), new ExpectedStat(node, 2));
+		diffsChecking(comparison, A3_DIFFS_NB - A3_ASSOCHANGE_NB - A3_CLASSCHANGE_NB, new ExpectedStat(association, 0), new ExpectedStat(edge, 1), new ExpectedStat(node, 2));
 	}
 	
 	@Test
@@ -689,7 +689,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A4_DIFFS_NB - A4_EDGECHANGE1_NB - A4_NODECHANGE1_NB - A4_PKGNODECHANGE_NB - A4_ASSOCHANGE1_NB - A4_CLASSCHANGE1_NB - A4_PKGCHANGE_NB, new ExpectedStat(association, 1), new ExpectedStat(edge1, 0), new ExpectedStat(edge2, 1), new ExpectedStat(node, 3));
+		diffsChecking(comparison, A4_DIFFS_NB - A4_EDGECHANGE1_NB - A4_NODECHANGE1_NB - A4_PKGNODECHANGE_NB - A4_ASSOCHANGE1_NB - A4_CLASSCHANGE1_NB - A4_PKGCHANGE_NB, new ExpectedStat(association, 1), new ExpectedStat(edge1, 0), new ExpectedStat(edge2, 1), new ExpectedStat(node, 3));
 	}
 	
 	@Test
@@ -713,7 +713,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsCheckingBug410737(comparison, A4_DIFFS_NB - A4_EDGECHANGE1_NB, new ExpectedStat(association, 2), new ExpectedStat(edge1, 0), new ExpectedStat(edge2, 1), new ExpectedStat(node, 5));
+		diffsChecking(comparison, A4_DIFFS_NB - A4_EDGECHANGE1_NB, new ExpectedStat(association, 2), new ExpectedStat(edge1, 0), new ExpectedStat(edge2, 1), new ExpectedStat(node, 5));
 	}
 	
 	@Test
@@ -737,7 +737,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsCheckingBug410737(comparison, A4_DIFFS_NB - A4_EDGECHANGE1_NB, new ExpectedStat(association, 2), new ExpectedStat(edge1, 0), new ExpectedStat(edge2, 1), new ExpectedStat(node, 5));
+		diffsChecking(comparison, A4_DIFFS_NB - A4_EDGECHANGE1_NB, new ExpectedStat(association, 2), new ExpectedStat(edge1, 0), new ExpectedStat(edge2, 1), new ExpectedStat(node, 5));
 	}
 	
 	@Test
@@ -761,7 +761,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A4_DIFFS_NB - A4_EDGECHANGE1_NB - A4_NODECHANGE1_NB - A4_PKGNODECHANGE_NB - A4_ASSOCHANGE1_NB - A4_CLASSCHANGE1_NB - A4_PKGCHANGE_NB, new ExpectedStat(association, 1), new ExpectedStat(edge1, 0), new ExpectedStat(edge2, 1), new ExpectedStat(node, 3));
+		diffsChecking(comparison, A4_DIFFS_NB - A4_EDGECHANGE1_NB - A4_NODECHANGE1_NB - A4_PKGNODECHANGE_NB - A4_ASSOCHANGE1_NB - A4_CLASSCHANGE1_NB - A4_PKGCHANGE_NB, new ExpectedStat(association, 1), new ExpectedStat(edge1, 0), new ExpectedStat(edge2, 1), new ExpectedStat(node, 3));
 	}
 	
 	@Test
@@ -786,7 +786,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A4_DIFFS_NB - A4_ASSOCHANGE1_NB - A4_CLASSCHANGE1_NB - A4_PKGCHANGE_NB, new ExpectedStat(asso1, 0), new ExpectedStat(asso2, 1), new ExpectedStat(edge1, 1), new ExpectedStat(edge2, 1), new ExpectedStat(node, 5));
+		diffsChecking(comparison, A4_DIFFS_NB - A4_ASSOCHANGE1_NB - A4_CLASSCHANGE1_NB - A4_PKGCHANGE_NB, new ExpectedStat(asso1, 0), new ExpectedStat(asso2, 1), new ExpectedStat(edge1, 1), new ExpectedStat(edge2, 1), new ExpectedStat(node, 5));
 	}
 	
 	@Test
@@ -811,7 +811,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsCheckingBug410737(comparison, A4_DIFFS_NB - A4_ASSOCHANGE1_NB - A4_EDGECHANGE1_NB, new ExpectedStat(asso1, 0), new ExpectedStat(asso2, 1), new ExpectedStat(edge1, 0), new ExpectedStat(edge2, 1), new ExpectedStat(node, 5));
+		diffsChecking(comparison, A4_DIFFS_NB - A4_ASSOCHANGE1_NB - A4_EDGECHANGE1_NB, new ExpectedStat(asso1, 0), new ExpectedStat(asso2, 1), new ExpectedStat(edge1, 0), new ExpectedStat(edge2, 1), new ExpectedStat(node, 5));
 	}
 	
 	@Test
@@ -836,7 +836,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsCheckingBug410737(comparison, A4_DIFFS_NB - A4_ASSOCHANGE1_NB - A4_EDGECHANGE1_NB, new ExpectedStat(asso1, 0), new ExpectedStat(asso2, 1), new ExpectedStat(edge1, 0), new ExpectedStat(edge2, 1), new ExpectedStat(node, 5));
+		diffsChecking(comparison, A4_DIFFS_NB - A4_ASSOCHANGE1_NB - A4_EDGECHANGE1_NB, new ExpectedStat(asso1, 0), new ExpectedStat(asso2, 1), new ExpectedStat(edge1, 0), new ExpectedStat(edge2, 1), new ExpectedStat(node, 5));
 	}
 	
 	@Test
@@ -861,7 +861,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A4_DIFFS_NB - A4_ASSOCHANGE1_NB - A4_CLASSCHANGE1_NB - A4_PKGCHANGE_NB, new ExpectedStat(asso1, 0), new ExpectedStat(asso2, 1), new ExpectedStat(edge1, 1), new ExpectedStat(edge2, 1), new ExpectedStat(node, 5));
+		diffsChecking(comparison, A4_DIFFS_NB - A4_ASSOCHANGE1_NB - A4_CLASSCHANGE1_NB - A4_PKGCHANGE_NB, new ExpectedStat(asso1, 0), new ExpectedStat(asso2, 1), new ExpectedStat(edge1, 1), new ExpectedStat(edge2, 1), new ExpectedStat(node, 5));
 	}
 	
 	@Test
@@ -888,7 +888,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A4_DIFFS_NB - A4_NODECHANGE1_NB - A4_PKGNODECHANGE_NB - A4_CLASSCHANGE1_NB - A4_PKGCHANGE_NB, new ExpectedStat(asso1, 1), new ExpectedStat(asso2, 1), new ExpectedStat(edge1, 1), new ExpectedStat(edge2, 1), new ExpectedStat(nodeB, 0), new ExpectedStat(nodeSubB, 1), new ExpectedStat(nodePropB, 1));
+		diffsChecking(comparison, A4_DIFFS_NB - A4_NODECHANGE1_NB - A4_PKGNODECHANGE_NB - A4_CLASSCHANGE1_NB - A4_PKGCHANGE_NB, new ExpectedStat(asso1, 1), new ExpectedStat(asso2, 1), new ExpectedStat(edge1, 1), new ExpectedStat(edge2, 1), new ExpectedStat(nodeB, 0), new ExpectedStat(nodeSubB, 1), new ExpectedStat(nodePropB, 1));
 	}
 	
 	@Test
@@ -915,7 +915,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A4_DIFFS_NB - A4_NODECHANGE1_NB - 2 * A4_EDGECHANGE1_NB - A4_PROPNODECHANGE_NB - A4_SUBNODECHANGE_NB, new ExpectedStat(asso1, 1), new ExpectedStat(asso2, 1), new ExpectedStat(edge1, 0), new ExpectedStat(edge2, 0), new ExpectedStat(nodeB, 0), new ExpectedStat(nodeSubB, 0), new ExpectedStat(nodePropB, 0));
+		diffsChecking(comparison, A4_DIFFS_NB - A4_NODECHANGE1_NB - 2 * A4_EDGECHANGE1_NB - A4_PROPNODECHANGE_NB - A4_SUBNODECHANGE_NB, new ExpectedStat(asso1, 1), new ExpectedStat(asso2, 1), new ExpectedStat(edge1, 0), new ExpectedStat(edge2, 0), new ExpectedStat(nodeB, 0), new ExpectedStat(nodeSubB, 0), new ExpectedStat(nodePropB, 0));
 	}
 	
 	@Test
@@ -968,7 +968,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A6_DIFFS_NB - A6_DEPENDENCY_EDGE_CHANGE1_NB - A6_DEPENDENCY_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
+		diffsChecking(comparison, A6_DIFFS_NB - A6_DEPENDENCY_EDGE_CHANGE1_NB - A6_DEPENDENCY_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2),
@@ -1036,7 +1036,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A6_DIFFS_NB - A6_ASSO_EDGE_CHANGE1_NB - A6_ASSO_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
+		diffsChecking(comparison, A6_DIFFS_NB - A6_ASSO_EDGE_CHANGE1_NB - A6_ASSO_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 1), // ** -1
@@ -1104,7 +1104,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A6_DIFFS_NB - A6_DEPENDENCY_EDGE_CHANGE1_NB - A6_DEPENDENCY_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
+		diffsChecking(comparison, A6_DIFFS_NB - A6_DEPENDENCY_EDGE_CHANGE1_NB - A6_DEPENDENCY_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2), 
@@ -1174,7 +1174,7 @@ public class EdgeMergeTest extends AbstractTest {
 		comparison = buildComparison(left, right);		
 		//FIXME: ElementImport.importedElement is not merged => should create a UMLDiff for this DirectedRelationship (A6_IMPORT_CHANGE1_NB += 1)
 		// See Bug 406405
-		diffsCheckingBug410737(comparison, A6_DIFFS_NB - A6_IMPORT_EDGE_CHANGE1_NB - A6_IMPORT_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
+		diffsChecking(comparison, A6_DIFFS_NB - A6_IMPORT_EDGE_CHANGE1_NB - A6_IMPORT_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2), 
@@ -1244,7 +1244,7 @@ public class EdgeMergeTest extends AbstractTest {
 		comparison = buildComparison(left, right);		
 		//FIXME: Generalization.general is not merged => should create a UMLDiff for this DirectedRelationship (A6_GENERAL_CHANGE1_NB += 1)
 		// See Bug 406405
-		diffsCheckingBug410737(comparison, A6_DIFFS_NB - A6_GENERAL_EDGE_CHANGE1_NB - A6_GENERAL_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
+		diffsChecking(comparison, A6_DIFFS_NB - A6_GENERAL_EDGE_CHANGE1_NB - A6_GENERAL_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1), 
 				new ExpectedStat(associations, 2), 
@@ -1382,7 +1382,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A6_DIFFS_NB - A6_DEPENDENCY_EDGE_CHANGE1_NB - A6_IREAL_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
+		diffsChecking(comparison, A6_DIFFS_NB - A6_DEPENDENCY_EDGE_CHANGE1_NB - A6_IREAL_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 0), // ** -1
 				new ExpectedStat(associations, 2), 
@@ -1450,7 +1450,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A6_DIFFS_NB - A6_DEPENDENCY_EDGE_CHANGE1_NB - A6_DEPENDENCY_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
+		diffsChecking(comparison, A6_DIFFS_NB - A6_DEPENDENCY_EDGE_CHANGE1_NB - A6_DEPENDENCY_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
 				new ExpectedStat(substitutions, 2), 
 				new ExpectedStat(interfaceRealizations, 1),
 				new ExpectedStat(associations, 2), 
@@ -1518,7 +1518,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);	
-		diffsCheckingBug410737(comparison, A6_DIFFS_NB - A6_DEPENDENCY_EDGE_CHANGE1_NB - A6_SUBSTITUTION_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
+		diffsChecking(comparison, A6_DIFFS_NB - A6_DEPENDENCY_EDGE_CHANGE1_NB - A6_SUBSTITUTION_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
 				new ExpectedStat(substitutions, 1), // ** -1
 				new ExpectedStat(interfaceRealizations, 1),
 				new ExpectedStat(associations, 2), 
@@ -1586,7 +1586,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);	
-		diffsCheckingBug410737(comparison, A6_DIFFS_NB - A6_DEPENDENCY_EDGE_CHANGE1_NB - A6_DEPENDENCY_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
+		diffsChecking(comparison, A6_DIFFS_NB - A6_DEPENDENCY_EDGE_CHANGE1_NB - A6_DEPENDENCY_CHANGE1_NB - A6_NODECHANGE1_NB - A6_CLASSCHANGE1_NB, 
 				new ExpectedStat(substitutions, 2),
 				new ExpectedStat(interfaceRealizations, 1),
 				new ExpectedStat(associations, 2), 
@@ -1631,7 +1631,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A7_DIFFS_NB - A7_EDGECHANGE1_NB, 
+		diffsChecking(comparison, A7_DIFFS_NB - A7_EDGECHANGE1_NB, 
 				new ExpectedStat(edges, 2), // ** -1
 				new ExpectedStat(edgeTarget, 1), 
 				new ExpectedStat(assoTarget, 1));
@@ -1664,7 +1664,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A7_DIFFS_NB - A7_EDGECHANGE1_NB, 
+		diffsChecking(comparison, A7_DIFFS_NB - A7_EDGECHANGE1_NB, 
 				new ExpectedStat(edges, 2), // ** -1
 				new ExpectedStat(edgeTarget, 1), 
 				new ExpectedStat(assoTarget, 1));
@@ -1697,7 +1697,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A7_DIFFS_NB - A7_EDGECHANGE1_NB, 
+		diffsChecking(comparison, A7_DIFFS_NB - A7_EDGECHANGE1_NB, 
 				new ExpectedStat(edges, 2), // ** -1
 				new ExpectedStat(edgeTarget, 1), 
 				new ExpectedStat(assoTarget, 1));
@@ -1730,7 +1730,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);		
-		diffsCheckingBug410737(comparison, A7_DIFFS_NB - A7_EDGE_TARGET_CHANGE_NB, 
+		diffsChecking(comparison, A7_DIFFS_NB - A7_EDGE_TARGET_CHANGE_NB, 
 				new ExpectedStat(edges, 3), 
 				new ExpectedStat(edgeTarget, 0), // ** -1
 				new ExpectedStat(assoTarget, 1));
