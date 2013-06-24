@@ -198,10 +198,12 @@ public class ProjectModelResolver extends LogicalModelResolver {
 			}
 		}
 
-		final String message = EMFCompareIDEUIMessages.getString("ModelResolver.coherenceWarning"); //$NON-NLS-1$
-		final String details = Iterables.toString(coherenceThreats);
-		EMFCompareIDEUIPlugin.getDefault().getLog().log(
-				new Status(IStatus.WARNING, EMFCompareIDEUIPlugin.PLUGIN_ID, message + '\n' + details));
+		if (!coherenceThreats.isEmpty()) {
+			final String message = EMFCompareIDEUIMessages.getString("ModelResolver.coherenceWarning"); //$NON-NLS-1$
+			final String details = Iterables.toString(coherenceThreats);
+			EMFCompareIDEUIPlugin.getDefault().getLog().log(
+					new Status(IStatus.WARNING, EMFCompareIDEUIPlugin.PLUGIN_ID, message + '\n' + details));
+		}
 	}
 
 	/**
