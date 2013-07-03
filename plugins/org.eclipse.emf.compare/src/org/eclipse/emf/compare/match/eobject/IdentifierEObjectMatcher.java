@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -111,16 +111,14 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 				rightEObjectsNoID, originEObjectsNoID);
 
 		Iterables.addAll(comparison.getMatches(), matches);
-		if (delegate.isPresent()) {
 
-			delegate.get().createMatches(comparison, leftEObjectsNoID.iterator(),
-					rightEObjectsNoID.iterator(), originEObjectsNoID.iterator(), monitor);
+		if (delegate.isPresent()) {
+			doDelegation(comparison, leftEObjectsNoID, rightEObjectsNoID, originEObjectsNoID, monitor);
 		} else {
 			for (EObject eObject : leftEObjectsNoID) {
 				Match match = CompareFactory.eINSTANCE.createMatch();
 				match.setLeft(eObject);
 				matches.add(match);
-
 			}
 			for (EObject eObject : rightEObjectsNoID) {
 				Match match = CompareFactory.eINSTANCE.createMatch();
@@ -137,6 +135,26 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 	}
 
 	/**
+	 * Execute matching process for the delegated IEObjectMatcher
+	 * 
+	 * @param comparison
+	 *            the comparison object that contains the matches
+	 * @param monitor
+	 *            the monitor instance to track the matching progress
+	 * @param leftEObjectsNoID
+	 *            remaining left objects after matching
+	 * @param rightEObjectsNoID
+	 *            remaining right objects after matching
+	 * @param originEObjectsNoID
+	 *            remaining origin objects after matching
+	 */
+	protected void doDelegation(Comparison comparison, final List<EObject> leftEObjectsNoID,
+			final List<EObject> rightEObjectsNoID, final List<EObject> originEObjectsNoID, Monitor monitor) {
+		delegate.get().createMatches(comparison, leftEObjectsNoID.iterator(), rightEObjectsNoID.iterator(),
+				originEObjectsNoID.iterator(), monitor);
+	}
+
+	/**
 	 * Matches the EObject per ID.
 	 * 
 	 * @param leftEObjects
@@ -148,9 +166,9 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 	 * @param leftEObjectsNoID
 	 *            remaining left objects after matching
 	 * @param rightEObjectsNoID
-	 *            remaining left objects after matching
+	 *            remaining right objects after matching
 	 * @param originEObjectsNoID
-	 *            remaining left objects after matching
+	 *            remaining origin objects after matching
 	 * @return the match built in the process.
 	 */
 	protected Set<Match> matchPerId(Iterator<? extends EObject> leftEObjects,
