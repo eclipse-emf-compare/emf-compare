@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -621,7 +621,7 @@ public class EditionDistance implements DistanceFunction {
 	 * @return a ratio to appli on the amount of maximum un-similarity amount depending on the number of
 	 *         features which are considered.
 	 */
-	private double getThresholdRatio(int nbFeatures) {
+	protected double getThresholdRatio(int nbFeatures) {
 		if (nbFeatures >= thresholds.length) {
 			// CHECKSTYLE:OFF
 			return 0.465d;
