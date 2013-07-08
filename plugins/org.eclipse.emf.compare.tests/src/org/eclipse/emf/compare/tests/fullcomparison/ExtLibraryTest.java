@@ -36,7 +36,6 @@ import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.fullcomparison.data.identifier.IdentifierMatchInputData;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -48,7 +47,6 @@ public class ExtLibraryTest {
 	private IdentifierMatchInputData inputData = new IdentifierMatchInputData();
 
 	@Test
-	@Ignore
 	public void testConflicts() throws IOException {
 		final Resource left = inputData.getExtlibraryLeft();
 		final Resource origin = inputData.getExtlibraryOrigin();
@@ -119,41 +117,48 @@ public class ExtLibraryTest {
 
 		final Predicate<? super Diff> rightSetPeriodicalSupertype = and(fromSide(DifferenceSource.RIGHT),
 				addedToReference("extlibrary.Magazine", "eSuperTypes", "extlibrary.Periodical"));
-		final Predicate<? super Diff> rightRemovedTitle = and(fromSide(DifferenceSource.RIGHT),
-				removed("extlibrary.Periodical.title"));
-		final Predicate<? super Diff> rightUnsetTitleType = and(fromSide(DifferenceSource.RIGHT),
-				changedReference("extlibrary.Periodical.title", "eType", "ecore.EString", null));
+		final Predicate<? super Diff> rightSetTitledItemSupertype = and(fromSide(DifferenceSource.RIGHT),
+				addedToReference("extlibrary.Periodical", "eSuperTypes", "extlibrary.TitledItem"));
 		final Predicate<? super Diff> leftRemovedPeriodical = and(fromSide(DifferenceSource.LEFT),
 				removed("extlibrary.Periodical"));
+
+		final Diff rightSetPeriodicalSupertypeDiff = Iterators.find(differences.iterator(),
+				rightSetPeriodicalSupertype);
+		final Diff rightSetTitledItemSupertypeDiff = Iterators.find(differences.iterator(),
+				rightSetTitledItemSupertype);
+		final Diff leftRemovedPeriodicalDiff = Iterators.find(differences.iterator(), leftRemovedPeriodical);
+
+		final Conflict periodicalConflict = rightSetPeriodicalSupertypeDiff.getConflict();
+		assertNotNull(periodicalConflict);
+		assertSame(Integer.valueOf(3), Integer.valueOf(periodicalConflict.getDifferences().size()));
+		assertTrue(periodicalConflict.getDifferences().contains(leftRemovedPeriodicalDiff));
+		assertTrue(periodicalConflict.getDifferences().contains(rightSetPeriodicalSupertypeDiff));
+		assertTrue(periodicalConflict.getDifferences().contains(rightSetTitledItemSupertypeDiff));
+		assertSame(ConflictKind.REAL, periodicalConflict.getKind());
+
 		final Predicate<? super Diff> leftRemovedTitle = and(fromSide(DifferenceSource.LEFT),
 				removed("extlibrary.Periodical.title"));
 		final Predicate<? super Diff> leftUnsetTitleType = and(fromSide(DifferenceSource.LEFT),
 				changedReference("extlibrary.Periodical.title", "eType", "ecore.EString", null));
+		final Predicate<? super Diff> rightRemovedTitle = and(fromSide(DifferenceSource.RIGHT),
+				removed("extlibrary.Periodical.title"));
+		final Predicate<? super Diff> rightUnsetTitleType = and(fromSide(DifferenceSource.RIGHT),
+				changedReference("extlibrary.Periodical.title", "eType", "ecore.EString", null));
 
-		final Diff rightSetPeriodicalSupertypeDiff = Iterators.find(differences.iterator(),
-				rightSetPeriodicalSupertype);
-		final Diff rightRemovedTitleDiff = Iterators.find(differences.iterator(), rightRemovedTitle);
-		final Diff rightUnsetTitleTypeDiff = Iterators.find(differences.iterator(), rightUnsetTitleType);
-		final Diff leftRemovedPeriodicalDiff = Iterators.find(differences.iterator(), leftRemovedPeriodical);
 		final Diff leftRemovedTitleDiff = Iterators.find(differences.iterator(), leftRemovedTitle);
 		final Diff leftUnsetTitleTypeDiff = Iterators.find(differences.iterator(), leftUnsetTitleType);
+		final Diff rightRemovedTitleDiff = Iterators.find(differences.iterator(), rightRemovedTitle);
+		final Diff rightUnsetTitleTypeDiff = Iterators.find(differences.iterator(), rightUnsetTitleType);
 
-		final Conflict periodicalConflict = rightSetPeriodicalSupertypeDiff.getConflict();
-		assertNotNull(periodicalConflict);
-		/*
-		 * The test fails. An easy fix is to set the number of diffs in conflicts here to "7" instead of "6".
-		 * This is wrong. The conflict detection should not set "all diffs under a containment delete" in
-		 * conflict with "the containment delete". See [381143] for details and fix this test accordingly.
-		 */
-		assertSame(Integer.valueOf(6), Integer.valueOf(periodicalConflict.getDifferences().size()));
-		assertTrue(periodicalConflict.getDifferences().contains(rightSetPeriodicalSupertypeDiff));
-		assertTrue(periodicalConflict.getDifferences().contains(rightRemovedTitleDiff));
-		assertTrue(periodicalConflict.getDifferences().contains(rightUnsetTitleTypeDiff));
-		assertTrue(periodicalConflict.getDifferences().contains(leftRemovedPeriodicalDiff));
-		assertTrue(periodicalConflict.getDifferences().contains(leftRemovedTitleDiff));
-		assertTrue(periodicalConflict.getDifferences().contains(leftUnsetTitleTypeDiff));
-		assertSame(ConflictKind.REAL, periodicalConflict.getKind());
+		final Conflict titleConflict = leftRemovedTitleDiff.getConflict();
+		assertNotNull(titleConflict);
+		assertSame(Integer.valueOf(4), Integer.valueOf(titleConflict.getDifferences().size()));
+		assertTrue(titleConflict.getDifferences().contains(leftRemovedTitleDiff));
+		assertTrue(titleConflict.getDifferences().contains(leftUnsetTitleTypeDiff));
+		assertTrue(titleConflict.getDifferences().contains(rightRemovedTitleDiff));
+		assertTrue(titleConflict.getDifferences().contains(rightUnsetTitleTypeDiff));
+		assertSame(ConflictKind.PSEUDO, titleConflict.getKind());
 
-		assertSame(Integer.valueOf(4), comparison.getConflicts());
+		assertSame(Integer.valueOf(5), Integer.valueOf(comparison.getConflicts().size()));
 	}
 }
