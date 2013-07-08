@@ -14,10 +14,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.compare.internal.CompareEditor;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.compare.ide.ui.internal.editor.PropertySheetAdapterFactory;
 import org.eclipse.emf.compare.ide.ui.internal.logical.IModelResolverRegistry;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ModelResolverRegistryImpl;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ModelResolverRegistryListener;
@@ -72,6 +74,8 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 				getLog(), modelResolverRegistry);
 		globalRegistry.addListener(modelResolverRegistryListener);
 		modelResolverRegistryListener.readRegistry(globalRegistry);
+
+		Platform.getAdapterManager().registerAdapters(new PropertySheetAdapterFactory(), CompareEditor.class);
 	}
 
 	/**

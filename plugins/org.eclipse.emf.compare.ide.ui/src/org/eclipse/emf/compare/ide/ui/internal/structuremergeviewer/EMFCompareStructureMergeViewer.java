@@ -155,6 +155,7 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 
 		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
+		config.setProperty(EMFCompareConstants.COMPOSED_ADAPTER_FACTORY, fAdapterFactory);
 
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginWidth = 0;

@@ -47,6 +47,11 @@ public final class EMFCompareConstants {
 
 	public static final String MERGE_WAY = EMFCompareRCPUIPlugin.PLUGIN_ID + ".MERGE_WAY"; //$NON-NLS-1$
 
+	public static final String COMPOSED_ADAPTER_FACTORY = EMFCompareRCPUIPlugin.PLUGIN_ID
+			+ ".COMPOSED_ADAPTER_FACTORY"; //$NON-NLS-1$
+
+	public static final String PROPERTY_SHEET = EMFCompareRCPUIPlugin.PLUGIN_ID + ".PROPERTY_SHEET"; //$NON-NLS-1$
+
 	// ITypedElement#getType()
 
 	public static final String NODE_TYPE__EMF_RESOURCESET = "NODE_TYPE__EMF_RESOURCESET"; //$NON-NLS-1$
