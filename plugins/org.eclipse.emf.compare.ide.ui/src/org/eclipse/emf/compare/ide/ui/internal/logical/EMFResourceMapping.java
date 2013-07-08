@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2013 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.Sets;
 
-import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
@@ -27,9 +26,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
 /**
  * This will be used to represent an EMF resource's mapping. It will allow us to properly resolve the whole
@@ -69,10 +66,7 @@ public class EMFResourceMapping extends ResourceMapping {
 	 */
 	@Override
 	public Object getModelObject() {
-		if (file.exists()) {
-			return ResourceUtil.loadResource(file, new ResourceSetImpl(), Collections.emptyMap());
-		}
-		return new Object();
+		return file;
 	}
 
 	/**
