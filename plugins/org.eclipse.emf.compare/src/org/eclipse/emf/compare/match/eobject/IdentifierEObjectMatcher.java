@@ -135,7 +135,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 	}
 
 	/**
-	 * Execute matching process for the delegated IEObjectMatcher
+	 * Execute matching process for the delegated IEObjectMatcher.
 	 * 
 	 * @param comparison
 	 *            the comparison object that contains the matches
