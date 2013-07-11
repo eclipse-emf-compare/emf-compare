@@ -16,6 +16,7 @@ import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.compare.internal.spec.AttributeChangeSpec;
 import org.eclipse.emf.compare.internal.spec.ComparisonSpec;
+import org.eclipse.emf.compare.internal.spec.ConflictSpec;
 import org.eclipse.emf.compare.internal.spec.MatchSpec;
 import org.eclipse.emf.compare.internal.spec.ReferenceChangeSpec;
 import org.eclipse.emf.compare.internal.spec.ResourceAttachmentChangeSpec;
@@ -203,10 +204,10 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public Conflict createConflict() {
-		ConflictImpl conflict = new ConflictImpl();
+		ConflictImpl conflict = new ConflictSpec();
 		return conflict;
 	}
 
