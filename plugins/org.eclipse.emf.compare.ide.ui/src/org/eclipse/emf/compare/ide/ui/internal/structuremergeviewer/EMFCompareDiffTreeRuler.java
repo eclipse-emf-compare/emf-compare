@@ -597,7 +597,7 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	private TreeItem getLastVisibleItem(TreeItem item) {
 		TreeItem lastVisibleItem = null;
 		int directChildren = item.getItemCount();
-		if (directChildren == 0) {
+		if (directChildren == 0 || !item.getExpanded()) {
 			lastVisibleItem = item;
 		} else {
 			TreeItem lastDirectChildren = item.getItem(directChildren - 1);
