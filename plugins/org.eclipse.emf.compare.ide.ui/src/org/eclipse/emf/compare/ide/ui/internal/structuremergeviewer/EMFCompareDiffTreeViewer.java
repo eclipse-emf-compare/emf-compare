@@ -408,12 +408,7 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 
 		if (uiWorkbenchBundle != null && uiWorkbenchBundle.getVersion().compareTo(junoStart) >= 0
 				&& uiWorkbenchBundle.getVersion().compareTo(keplerStart) < 0) {
-			IAction action = new CommandAction(PlatformUI.getWorkbench(),
-					"org.eclipse.emf.compare.ide.ui.saveComparisonModel"); //$NON-NLS-1$
-			action.setToolTipText("Save Comparison model"); //$NON-NLS-1$
-			action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-					EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/saveas_edit.gif")); //$NON-NLS-1$
-			toolbarManager.add(action);
+			addActionsForJuno(toolbarManager);
 		}
 
 		groupActionMenu = new GroupActionMenu(getStructureMergeViewerGrouper(), getGroupsMenuManager(),
@@ -426,6 +421,77 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		toolbarManager.add(new Separator());
 		toolbarManager.add(groupActionMenu);
 		toolbarManager.add(filterActionMenu);
+	}
+
+	/**
+	 * Add the compare merge/navigation actions to the structure merge viewer toolbar.
+	 * 
+	 * @param toolbarManager
+	 *            the given toolbar.
+	 */
+	public void addActionsForJuno(ToolBarManager toolbarManager) {
+		boolean bothSidesEditable = getCompareConfiguration().isLeftEditable()
+				&& getCompareConfiguration().isRightEditable();
+		addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.dropdown", //$NON-NLS-1$
+				"Select the way of merge", "icons/full/toolb16/left_to_right.gif", true); //$NON-NLS-2$
+		toolbarManager.add(new Separator());
+		if (bothSidesEditable) {
+			addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.mergedToRight", //$NON-NLS-1$
+					"Copy Current Change From Left To Right", "icons/full/toolb16/merge_to_right.gif", true); //$NON-NLS-2$
+			addSMVAction(
+					toolbarManager,
+					"org.eclipse.emf.compare.ide.ui.mergedAllToRight", //$NON-NLS-1$
+					"Copy All Non-Conflicting Changes From Left To Right", "icons/full/toolb16/merge_all_to_right.gif", true); //$NON-NLS-2$
+			toolbarManager.add(new Separator());
+			addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.mergedToLeft", //$NON-NLS-1$
+					"Copy Current Change From Right To Left", "icons/full/toolb16/merge_to_left.gif", true); //$NON-NLS-2$
+			addSMVAction(
+					toolbarManager,
+					"org.eclipse.emf.compare.ide.ui.mergedAllToLeft", //$NON-NLS-1$
+					"Copy All Non-Conflicting Changes From Right To Left", "icons/full/toolb16/merge_all_to_left.gif", true); //$NON-NLS-2$
+		} else {
+			addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.acceptChange", //$NON-NLS-1$
+					"Accept Change", "icons/full/toolb16/accept_change.gif", true); //$NON-NLS-2$
+			addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.acceptAllChanges", //$NON-NLS-1$
+					"Accept All Non-Conflicting Changes", "icons/full/toolb16/accept_all_changes.gif", true); //$NON-NLS-2$
+			toolbarManager.add(new Separator());
+			addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.rejectChange", //$NON-NLS-1$
+					"Reject Change", "icons/full/toolb16/reject_change.gif", true); //$NON-NLS-2$
+			addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.rejectAllChanges", //$NON-NLS-1$
+					"Reject All Non-Conflicting Changes", "icons/full/toolb16/reject_all_changes.gif", true); //$NON-NLS-2$
+		}
+		toolbarManager.add(new Separator());
+		addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.nextDiff", //$NON-NLS-1$
+				"Next Difference", "icons/full/toolb16/next_diff.gif", true); //$NON-NLS-2$
+		addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.previousDiff", //$NON-NLS-1$
+				"Previous Difference", "icons/full/toolb16/prev_diff.gif", true); //$NON-NLS-2$
+		toolbarManager.add(new Separator());
+		addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.saveComparisonModel", //$NON-NLS-1$
+				"Save Comparison Model", "icons/full/toolb16/saveas_edit.gif", true); //$NON-NLS-2$
+	}
+
+	/**
+	 * Add the given action to the structure merge viewer toolbar.
+	 * 
+	 * @param tb
+	 *            the given toolbar.
+	 * @param actionId
+	 *            the id of the action to add.
+	 * @param tooltip
+	 *            the tooltip of the action to add.
+	 * @param imagePath
+	 *            the image path of the action to add.
+	 * @param activated
+	 *            the initial state of the action to add.
+	 */
+	private void addSMVAction(ToolBarManager tb, String actionId, String tooltip, String imagePath,
+			boolean activated) {
+		IAction action = new CommandAction(PlatformUI.getWorkbench(), actionId);
+		action.setToolTipText(tooltip);
+		action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
+				imagePath));
+		action.setEnabled(activated);
+		tb.add(action);
 	}
 
 	/**

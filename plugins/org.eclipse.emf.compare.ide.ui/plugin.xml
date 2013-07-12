@@ -444,14 +444,9 @@
          <enabledWhen>
             <with
                   variable="activeEditor">
-               <and>
-                  <test
-                        property="emfcompare.diffSelected">
-                  </test>
-                  <test
-                        property="emfcompare.leftToRightSide">
-                  </test>
-               </and>
+               <test
+                     property="emfcompare.diffSelected">
+               </test>
             </with>
          </enabledWhen>
       </handler>
@@ -481,14 +476,9 @@
          <enabledWhen>
             <with
                   variable="activeEditor">
-               <and>
-                  <test
-                        property="emfcompare.diffSelected">
-                  </test>
-                  <test
-                        property="emfcompare.rightToLeftSide">
-                  </test>
-               </and>
+               <test
+                     property="emfcompare.diffSelected">
+               </test>
             </with>
          </enabledWhen>
       </handler>
@@ -518,14 +508,9 @@
          <enabledWhen>
             <with
                   variable="activeEditor">
-               <and>
-                  <test
-                        property="emfcompare.diffSelected">
-                  </test>
-                  <test
-                        property="emfcompare.leftToRightSide">
-                  </test>
-               </and>
+               <test
+                     property="emfcompare.diffSelected">
+               </test>
             </with>
          </enabledWhen>
       </handler>
@@ -555,14 +540,9 @@
          <enabledWhen>
             <with
                   variable="activeEditor">
-               <and>
-                  <test
-                        property="emfcompare.diffSelected">
-                  </test>
-                  <test
-                        property="emfcompare.rightToLeftSide">
-                  </test>
-               </and>
+               <test
+                     property="emfcompare.diffSelected">
+               </test>
             </with>
          </enabledWhen>
       </handler>
@@ -666,20 +646,6 @@
             id="org.eclipse.emf.compare.ide.ui.diffSelected"
             namespace="emfcompare"
             properties="diffSelected"
-            type="java.lang.Object">
-      </propertyTester>
-      <propertyTester
-            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.propertytester.LeftToRightSidePropertyTester"
-            id="org.eclipse.emf.compare.ide.ui.leftToRightSide"
-            namespace="emfcompare"
-            properties="leftToRightSide"
-            type="java.lang.Object">
-      </propertyTester>
-      <propertyTester
-            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.propertytester.RightToLeftSidePropertyTester"
-            id="org.eclipse.emf.compare.ide.ui.rightToLeftSide"
-            namespace="emfcompare"
-            properties="rightToLeftSide"
             type="java.lang.Object">
       </propertyTester>
    </extension>

@@ -27,8 +27,10 @@ import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.util.EMFCompareUIHandlerUtil;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.edit.command.ChangeCommand;
+import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.handlers.HandlerUtil;
 
@@ -53,27 +55,30 @@ public abstract class AbstractAcceptRejectChange extends AbstractHandler {
 			configuration = ((CompareEditorInput)editorInput).getCompareConfiguration();
 			Object diffNode = ((CompareEditorInput)editorInput).getSelectedEdition();
 			if (diffNode instanceof Adapter) {
-				Notifier diff = ((Adapter)diffNode).getTarget();
-				if (diff instanceof Diff) {
-					boolean rightEditableOnly = !configuration.isLeftEditable()
-							&& configuration.isRightEditable();
-					boolean leftEditableOnly = configuration.isLeftEditable()
-							&& !configuration.isRightEditable();
-					if (leftEditableOnly) {
-						if (isCopyDiffCase((Diff)diff, false)) {
-							EMFCompareUIHandlerUtil.copyDiff((Diff)diff, false, configuration);
-						} else {
-							changeStateFromUnresolvedToMerged((Diff)diff, true);
+				Notifier target = ((Adapter)diffNode).getTarget();
+				if (target instanceof TreeNode) {
+					EObject data = ((TreeNode)target).getData();
+					if (data instanceof Diff) {
+						boolean rightEditableOnly = !configuration.isLeftEditable()
+								&& configuration.isRightEditable();
+						boolean leftEditableOnly = configuration.isLeftEditable()
+								&& !configuration.isRightEditable();
+						if (leftEditableOnly) {
+							if (isCopyDiffCase((Diff)data, false)) {
+								EMFCompareUIHandlerUtil.copyDiff((Diff)data, false, configuration);
+							} else {
+								changeStateFromUnresolvedToMerged((Diff)data, true);
+							}
+						} else if (rightEditableOnly) {
+							if (isCopyDiffCase((Diff)data, true)) {
+								EMFCompareUIHandlerUtil.copyDiff((Diff)data, true, configuration);
+							} else {
+								changeStateFromUnresolvedToMerged((Diff)data, false);
+							}
 						}
-					} else if (rightEditableOnly) {
-						if (isCopyDiffCase((Diff)diff, true)) {
-							EMFCompareUIHandlerUtil.copyDiff((Diff)diff, true, configuration);
-						} else {
-							changeStateFromUnresolvedToMerged((Diff)diff, false);
-						}
+						// Select next diff
+						EMFCompareUIHandlerUtil.navigate(true, configuration);
 					}
-					// Select next diff
-					EMFCompareUIHandlerUtil.navigate(true, configuration);
 				}
 			}
 		}
