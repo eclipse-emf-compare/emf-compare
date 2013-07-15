@@ -164,9 +164,11 @@ public class UMLPostProcessor implements IPostProcessor {
 		for (EReference superSet : UMLCompareUtil.getNonUnionSupersetReferences(reference)) {
 			Comparison comparison = diff.getMatch().getComparison();
 			for (Diff superSetDiff : comparison.getDifferences(superSet)) {
+				// Only keep diffs on the same ref and value where parent matches
 				if (superSetDiff instanceof ReferenceChange
 						&& ((ReferenceChange)superSetDiff).getReference() == superSet
-						&& ((ReferenceChange)superSetDiff).getValue() == diff.getValue()) {
+						&& ((ReferenceChange)superSetDiff).getValue() == diff.getValue()
+						&& ((ReferenceChange)superSetDiff).getMatch() == diff.getMatch()) {
 					if (isAddOrSetDiff(diff) && isAddOrSetDiff(superSetDiff)) {
 						diff.getImplies().add(superSetDiff);
 					} else if (isDeleteOrUnsetDiff(diff) && isDeleteOrUnsetDiff(superSetDiff)) {
