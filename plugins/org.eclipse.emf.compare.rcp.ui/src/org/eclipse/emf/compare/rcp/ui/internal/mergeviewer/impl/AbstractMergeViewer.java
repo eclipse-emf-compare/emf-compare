@@ -16,6 +16,7 @@ import java.util.Collection;
 
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.jface.viewers.ContentViewer;
 
 /**
@@ -24,6 +25,9 @@ import org.eclipse.jface.viewers.ContentViewer;
 public abstract class AbstractMergeViewer extends ContentViewer implements IMergeViewer {
 
 	private final MergeViewerSide fSide;
+
+	/** The active group. */
+	private IDifferenceGroupProvider selectedGroup;
 
 	/** The list of active filters. */
 	private Collection<IDifferenceFilter> selectedFilters;
@@ -42,6 +46,27 @@ public abstract class AbstractMergeViewer extends ContentViewer implements IMerg
 	 */
 	public MergeViewerSide getSide() {
 		return fSide;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer#getSelectedGroup()
+	 */
+	public IDifferenceGroupProvider getSelectedGroup() {
+		if (selectedGroup != null) {
+			return selectedGroup;
+		}
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer#setSelectedGroup(IDifferenceGroupProvider)
+	 */
+	public void setSelectedGroup(IDifferenceGroupProvider group) {
+		this.selectedGroup = group;
 	}
 
 	/**

@@ -81,7 +81,7 @@ public class MergeViewerItemTest {
 		assertEquals(titledItemMVI.getRight(), titledItemValue);
 		assertTrue(titledItemMVI.isInsertionPoint());
 		
-		IMergeViewerItem[] children = titledItemMVI.getChildren(null);
+		IMergeViewerItem[] children = titledItemMVI.getChildren(null, null);
 		
 		assertTrue(children.length == 1);
 		
@@ -104,7 +104,7 @@ public class MergeViewerItemTest {
 		assertEquals(titledItemMVI.getRight(), titledItemValue);
 		assertFalse(titledItemMVI.isInsertionPoint());
 		
-		children = titledItemMVI.getChildren(null);
+		children = titledItemMVI.getChildren(null, null);
 		
 		assertTrue(children.length == 1);
 		

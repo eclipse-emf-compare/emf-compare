@@ -50,6 +50,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -112,6 +113,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	private RedoAction redoAction;
 
+	/** The active group provider. */
+	private IDifferenceGroupProvider selectedGroup;
+
 	/** The list of active filters. */
 	private Collection<IDifferenceFilter> selectedFilters;
 
@@ -131,6 +135,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		fDynamicObject = new DynamicObject(this);
 
 		editingDomainChange(null, getEditingDomain());
+		setSelectedGroup((IDifferenceGroupProvider)cc.getProperty(EMFCompareConstants.SELECTED_GROUP));
 		setSelectedFilters((Collection<IDifferenceFilter>)cc
 				.getProperty(EMFCompareConstants.SELECTED_FILTERS));
 		configuration = cc;
@@ -153,10 +158,31 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 				fRight.setSelectedFilters((Collection<IDifferenceFilter>)newValue);
 				fAncestor.setSelectedFilters((Collection<IDifferenceFilter>)newValue);
 
+				IDifferenceGroupProvider group = getSelectedGroup();
+				if (group != null) {
+					if (fLeft.getSelectedGroup() == null) {
+						fLeft.setSelectedGroup(group);
+					}
+					if (fRight.getSelectedGroup() == null) {
+						fRight.setSelectedGroup(group);
+					}
+					if (fAncestor.getSelectedGroup() == null) {
+						fAncestor.setSelectedGroup(group);
+					}
+				}
 				fLeft.refresh();
 				fRight.refresh();
 				fAncestor.refresh();
 				getCenterControl().redraw();
+			}
+		} else if (EMFCompareConstants.SELECTED_GROUP.equals(event.getProperty())) {
+			Object newValue = event.getNewValue();
+			if (newValue != null) {
+				setSelectedGroup((IDifferenceGroupProvider)newValue);
+
+				fLeft.setSelectedGroup((IDifferenceGroupProvider)newValue);
+				fRight.setSelectedGroup((IDifferenceGroupProvider)newValue);
+				fAncestor.setSelectedGroup((IDifferenceGroupProvider)newValue);
 			}
 		}
 	}
@@ -664,6 +690,25 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Returns the active group.
+	 * 
+	 * @return the selected group provider.
+	 */
+	public IDifferenceGroupProvider getSelectedGroup() {
+		return selectedGroup;
+	}
+
+	/**
+	 * Set the selected group.
+	 * 
+	 * @param group
+	 *            the group provider to set.
+	 */
+	public void setSelectedGroup(IDifferenceGroupProvider group) {
+		this.selectedGroup = group;
 	}
 
 	/**

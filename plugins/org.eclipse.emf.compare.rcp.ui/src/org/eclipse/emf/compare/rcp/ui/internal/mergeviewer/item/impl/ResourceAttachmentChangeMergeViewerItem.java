@@ -34,6 +34,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -75,7 +76,8 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem.Container#getChildren()
 	 */
 	@Override
-	public IMergeViewerItem[] getChildren(Collection<IDifferenceFilter> filters) {
+	public IMergeViewerItem[] getChildren(IDifferenceGroupProvider group,
+			Collection<IDifferenceFilter> filters) {
 		Object sideValue = getSideValue(getSide());
 		Object bestSideValue = getBestSideValue();
 
@@ -106,7 +108,8 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 					}
 				}
 				ret.addAll(createInsertionPoints(mergeViewerItems,
-						(List<ResourceAttachmentChange>)filteredDiffs(resourceAttachmentChanges, filters)));
+						(List<ResourceAttachmentChange>)filteredDiffs(resourceAttachmentChanges, filters,
+								group)));
 			} else {
 				ret.addAll(mergeViewerItems);
 			}

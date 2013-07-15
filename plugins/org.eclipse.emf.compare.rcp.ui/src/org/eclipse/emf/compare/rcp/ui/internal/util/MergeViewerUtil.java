@@ -24,11 +24,14 @@ import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -276,5 +279,48 @@ public final class MergeViewerUtil {
 			}
 		}
 		return ret;
+	}
+
+	/**
+	 * Function that retrieve the TreeNode of the given data.
+	 */
+	public static TreeNode getTreeNode(final Comparison comparison,
+			final IDifferenceGroupProvider groupProvider, final EObject data) {
+		if (data != null) {
+			Collection<? extends IDifferenceGroup> groups = groupProvider.getGroups(comparison);
+			for (IDifferenceGroup group : groups) {
+				List<? extends TreeNode> groupTree = group.getGroupTree();
+				for (TreeNode treeNode : groupTree) {
+					EObject treeNodeData = IDifferenceGroup.TREE_NODE_DATA.apply(treeNode);
+					if (data.equals(treeNodeData)) {
+						return treeNode;
+					} else {
+						for (TreeNode child : treeNode.getChildren()) {
+							TreeNode tn = getTreeNode(child, data);
+							if (tn != null) {
+								return tn;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	private static TreeNode getTreeNode(final TreeNode treeNode, final EObject data) {
+		EObject treeNodeData = IDifferenceGroup.TREE_NODE_DATA.apply(treeNode);
+		if (data.equals(treeNodeData)) {
+			return treeNode;
+		} else {
+			for (TreeNode child : treeNode.getChildren()) {
+				TreeNode tn = getTreeNode(child, data);
+				if (tn != null) {
+					return tn;
+				}
+			}
+		}
+		return null;
 	}
 }

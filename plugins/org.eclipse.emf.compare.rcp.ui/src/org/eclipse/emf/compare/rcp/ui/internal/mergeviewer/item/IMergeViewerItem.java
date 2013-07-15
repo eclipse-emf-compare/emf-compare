@@ -18,6 +18,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -57,20 +58,25 @@ public interface IMergeViewerItem extends Adapter {
 		 * Returns whether this container has at least one child. In some cases this methods avoids having to
 		 * call the potential more costly <code>getChildren</code> method.
 		 * 
+		 * @param group
+		 *            the active group provider.
 		 * @param selectedFilters
 		 *            the active filters.
 		 * @return <code>true</code> if this container has at least one child
 		 */
-		boolean hasChildren(Collection<IDifferenceFilter> selectedFilters);
+		boolean hasChildren(IDifferenceGroupProvider group, Collection<IDifferenceFilter> selectedFilters);
 
 		/**
 		 * Returns the children of this container. If this container has no children an empty array is
 		 * returned (not <code>null</code>).
 		 * 
+		 * @param group
+		 *            the active group provider.
 		 * @param selectedFilters
 		 *            the active filters.
 		 * @return the children of this container as an array
 		 */
-		IMergeViewerItem[] getChildren(Collection<IDifferenceFilter> selectedFilters);
+		IMergeViewerItem[] getChildren(IDifferenceGroupProvider group,
+				Collection<IDifferenceFilter> selectedFilters);
 	}
 }
