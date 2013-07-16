@@ -31,7 +31,8 @@ import org.eclipse.emf.compare.EMFCompareMessages;
  * default mergers are provided by EMF Compare, but they can be sub-classed and extended by clients through
  * the extension point "org.eclipse.emf.compare.ide.mergerExtension".
  * <p>
- * Clients can either implement the whole merger contract or extend {@link AbstractMerger} instead.
+ * Clients are encouraged to subclass AbstractMerger instead of implementing IMerger so that they can benefit
+ * from a maximum of the common procedures.
  * </p>
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>

@@ -13,11 +13,9 @@ package org.eclipse.emf.compare.merge;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.Match;
@@ -48,116 +46,46 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.merge.IMerger#copyLeftToRight(org.eclipse.emf.compare.Diff,
-	 *      org.eclipse.emf.common.util.Monitor)
+	 * @see org.eclipse.emf.compare.merge.AbstractMerger#accept(org.eclipse.emf.compare.Diff, boolean)
 	 */
-	public void copyLeftToRight(Diff target, Monitor monitor) {
-		// Don't merge an already merged (or discarded) diff
-		if (target.getState() != DifferenceState.UNRESOLVED) {
-			return;
-		}
-		final ResourceAttachmentChange diff = (ResourceAttachmentChange)target;
-
-		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
-		diff.setState(DifferenceState.MERGED);
-		if (diff.getEquivalence() != null) {
-			for (Diff equivalent : diff.getEquivalence().getDifferences()) {
-				equivalent.setState(DifferenceState.MERGED);
-			}
-		}
-
-		if (diff.getSource() == DifferenceSource.LEFT) {
-			// merge all "requires" diffs
-			mergeRequires(diff, false, monitor);
-
-			switch (diff.getKind()) {
-				case ADD:
-					// Create the same root in right
-					addInTarget(diff, false);
-					break;
-				case DELETE:
-					// Delete that same root from right
-					removeFromTarget(diff, false);
-					break;
-				default:
-					// other cases are unknown at the time of writing
-					break;
-			}
-		} else {
-			// merge all "required by" diffs
-			mergeRequiredBy(diff, false, monitor);
-
-			switch (diff.getKind()) {
-				case ADD:
-					// Revert the addition of this root
-					removeFromTarget(diff, false);
-					break;
-				case DELETE:
-					// re-create this element
-					addInTarget(diff, false);
-					break;
-				default:
-					// other cases are unknown at the time of writing
-					break;
-			}
+	@Override
+	protected void accept(Diff diff, boolean rightToLeft) {
+		ResourceAttachmentChange resourceAttachmentChange = (ResourceAttachmentChange)diff;
+		switch (diff.getKind()) {
+			case ADD:
+				// Create the same root in right
+				addInTarget(resourceAttachmentChange, rightToLeft);
+				break;
+			case DELETE:
+				// Delete that same root from right
+				removeFromTarget(resourceAttachmentChange, rightToLeft);
+				break;
+			default:
+				// other cases are unknown at the time of writing
+				break;
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.merge.IMerger#copyRightToLeft(org.eclipse.emf.compare.Diff,
-	 *      org.eclipse.emf.common.util.Monitor)
+	 * @see org.eclipse.emf.compare.merge.AbstractMerger#reject(org.eclipse.emf.compare.Diff, boolean)
 	 */
-	public void copyRightToLeft(Diff target, Monitor monitor) {
-		// Don't merge an already merged (or discarded) diff
-		if (target.getState() != DifferenceState.UNRESOLVED) {
-			return;
-		}
-		final ResourceAttachmentChange diff = (ResourceAttachmentChange)target;
-
-		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
-		diff.setState(DifferenceState.MERGED);
-		if (diff.getEquivalence() != null) {
-			for (Diff equivalent : diff.getEquivalence().getDifferences()) {
-				equivalent.setState(DifferenceState.MERGED);
-			}
-		}
-
-		if (diff.getSource() == DifferenceSource.LEFT) {
-			// merge all "required by" diffs
-			mergeRequiredBy(diff, true, monitor);
-
-			switch (diff.getKind()) {
-				case ADD:
-					// Revert the addition of this root
-					removeFromTarget(diff, true);
-					break;
-				case DELETE:
-					// re-create this element
-					addInTarget(diff, true);
-					break;
-				default:
-					// other cases are unknown at the time of writing
-					break;
-			}
-		} else {
-			// merge all "requires" diffs
-			mergeRequires(diff, true, monitor);
-
-			switch (diff.getKind()) {
-				case ADD:
-					// Create the same root in left
-					addInTarget(diff, true);
-					break;
-				case DELETE:
-					// Delete that same root from left
-					removeFromTarget(diff, true);
-					break;
-				default:
-					// other cases are unknown at the time of writing
-					break;
-			}
+	@Override
+	protected void reject(Diff diff, boolean rightToLeft) {
+		ResourceAttachmentChange resourceAttachmentChange = (ResourceAttachmentChange)diff;
+		switch (diff.getKind()) {
+			case ADD:
+				// Revert the addition of this root
+				removeFromTarget(resourceAttachmentChange, rightToLeft);
+				break;
+			case DELETE:
+				// re-create this element
+				addInTarget(resourceAttachmentChange, rightToLeft);
+				break;
+			default:
+				// other cases are unknown at the time of writing
+				break;
 		}
 	}
 
