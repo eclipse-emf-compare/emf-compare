@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions;
 
+import com.google.common.collect.Lists;
+
+import java.util.Collection;
+
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
@@ -66,15 +70,17 @@ public class FilterActionMenu extends Action implements IMenuCreator {
 		if (menuManager.isEmpty()) {
 			IDifferenceFilter.Registry registry = EMFCompareRCPUIPlugin.getDefault()
 					.getFilterActionRegistry();
-			for (IDifferenceFilter filterProvider : registry.getFilters(scope, comparison)) {
-				FilterAction action = new FilterAction(filterProvider.getLabel(), structureMergeViewerFilter,
-						filterProvider);
-				if (filterProvider.defaultSelected()) {
+			Collection<IDifferenceFilter> filters = registry.getFilters(scope, comparison);
+			Collection<IDifferenceFilter> filtersSelected = Lists.newArrayList();
+			for (IDifferenceFilter filter : filters) {
+				FilterAction action = new FilterAction(filter.getLabel(), structureMergeViewerFilter, filter);
+				if (filter.defaultSelected()) {
 					action.setChecked(true);
-					action.run();
+					filtersSelected.add(filter);
 				}
 				menuManager.add(action);
 			}
+			structureMergeViewerFilter.addFilters(filtersSelected);
 		}
 	}
 

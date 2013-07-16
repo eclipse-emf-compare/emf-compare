@@ -127,7 +127,24 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 			}
 		}
 		return result;
+	}
 
+	/**
+	 * Add the predicates of the given {@link IDifferenceFilter}s.
+	 * 
+	 * @param filters
+	 *            The given {@link IDifferenceFilter}s.
+	 */
+	public void addFilters(Collection<IDifferenceFilter> filters) {
+		for (IDifferenceFilter filter : filters) {
+			getPredicates().remove(filter.getPredicateWhenUnselected());
+			getPredicates().add(filter.getPredicateWhenSelected());
+		}
+		refreshViewers();
+		for (IDifferenceFilter filter : filters) {
+			eventBus.post(new IDifferenceFilterSelectionChangeEvent.DefaultFilterSelectionChangeEvent(filter,
+					Action.ACTIVATE));
+		}
 	}
 
 	/**
