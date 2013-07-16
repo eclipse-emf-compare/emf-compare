@@ -34,13 +34,17 @@ public class DefaultGroupProvider extends AdapterImpl implements IDifferenceGrou
 	/** The unique group provided by this provider. */
 	private IDifferenceGroup group;
 
+	/** The comparison object. */
+	private Comparison comp;
+
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
 	 */
 	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
-		if (group == null) {
+		if (group == null || !comparison.equals(comp)) {
+			this.comp = comparison;
 			group = new BasicDifferenceGroupImpl(comparison, alwaysTrue());
 		}
 		return ImmutableList.of(group);

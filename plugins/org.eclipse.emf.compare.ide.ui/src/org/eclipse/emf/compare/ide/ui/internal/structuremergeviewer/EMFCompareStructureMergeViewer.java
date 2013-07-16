@@ -56,6 +56,7 @@ import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -377,9 +378,14 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 
 	void compareInputChanged(final IComparisonScope scope, final Comparison comparison) {
 		if (!getControl().isDisposed()) { // guard against disposal
+			IDifferenceGroupProvider selectedGroup = (IDifferenceGroupProvider)getCompareConfiguration()
+					.getProperty(EMFCompareConstants.SELECTED_GROUP);
 			TreeNode treeNode = TreeFactory.eINSTANCE.createTreeNode();
 			treeNode.setData(comparison);
-			treeNode.eAdapters().add(diffTreeViewer.getDefaultGroupProvider());
+			if (selectedGroup == null) {
+				selectedGroup = diffTreeViewer.getDefaultGroupProvider();
+			}
+			treeNode.eAdapters().add(selectedGroup);
 
 			diffTreeViewer.setRoot(fAdapterFactory.adapt(treeNode, ICompareInput.class));
 			getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, comparison);

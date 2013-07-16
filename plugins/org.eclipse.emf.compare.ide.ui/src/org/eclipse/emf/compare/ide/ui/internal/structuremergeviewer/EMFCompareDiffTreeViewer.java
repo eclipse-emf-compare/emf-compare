@@ -127,8 +127,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 
 	private GroupActionMenu groupActionMenu;
 
-	private DefaultGroupProvider defaultGroupProvider;
-
 	private FilterActionMenu filterActionMenu;
 
 	private EventBus eventBus;
