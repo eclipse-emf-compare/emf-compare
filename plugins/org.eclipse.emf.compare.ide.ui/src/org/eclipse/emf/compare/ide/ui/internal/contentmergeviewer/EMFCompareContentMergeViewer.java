@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -26,6 +27,7 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.compare.Comparison;
@@ -45,9 +47,17 @@ import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -63,10 +73,16 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.menus.IMenuService;
+import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.services.IServiceLocator;
+import org.eclipse.ui.views.properties.PropertySheet;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -99,6 +115,12 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	/** The list of active filters. */
 	private Collection<IDifferenceFilter> selectedFilters;
 
+	/** The compare configuration object. */
+	private CompareConfiguration configuration;
+
+	/** The AdapterFactoryContentProvider useful to fill in the property sheet page. */
+	private final AdapterFactoryContentProvider fAdapterFactoryContentProvider;
+
 	/**
 	 * @param style
 	 * @param bundle
@@ -111,7 +133,11 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		editingDomainChange(null, getEditingDomain());
 		setSelectedFilters((Collection<IDifferenceFilter>)cc
 				.getProperty(EMFCompareConstants.SELECTED_FILTERS));
-		cc.addPropertyChangeListener(this);
+		configuration = cc;
+		configuration.addPropertyChangeListener(this);
+		ComposedAdapterFactory adapterFactory = (ComposedAdapterFactory)configuration
+				.getProperty(EMFCompareConstants.COMPOSED_ADAPTER_FACTORY);
+		fAdapterFactoryContentProvider = new AdapterFactoryContentProvider(adapterFactory);
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
@@ -466,11 +492,119 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		if (fSyncingSelections.compareAndSet(false, true)) { // prevents stack overflow :)
 			try {
 				ISelection selection = event.getSelection();
+				updatePropertiesView(selection);
 				fLeft.setSelection(selection, true);
 				fRight.setSelection(selection, true);
 				fAncestor.setSelection(selection, true);
 			} finally {
 				fSyncingSelections.set(false);
+			}
+		}
+
+	}
+
+	/**
+	 * Update the properties view with the given selection.
+	 * 
+	 * @param selection
+	 *            the given selection.
+	 */
+	private void updatePropertiesView(ISelection selection) {
+		if (selection instanceof StructuredSelection) {
+			StructuredSelection structuredSelection = (StructuredSelection)selection;
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			ExtendedPropertySheetPage propertySheetPage = getExtendedPropertySheetPage(page);
+			if (propertySheetPage != null) {
+				StructuredSelection selectionForPropertySheet = null;
+				IWorkbenchPart activePart = page.getActivePart();
+				Object firstElement = structuredSelection.getFirstElement();
+				if (firstElement instanceof MergeViewerItem) {
+					MergeViewerItem mergeViewerItem = (MergeViewerItem)firstElement;
+					MergeViewerSide side = mergeViewerItem.getSide();
+					Object newSelectedObject = mergeViewerItem.getSideValue(side);
+					propertySheetPage.setPropertySourceProvider(fAdapterFactoryContentProvider);
+					if (newSelectedObject != null) {
+						if (newSelectedObject instanceof EObject) {
+							manageReadOnly((EObject)newSelectedObject, side);
+						}
+						selectionForPropertySheet = new StructuredSelection(newSelectedObject);
+						propertySheetPage.selectionChanged(activePart, selectionForPropertySheet);
+					}
+				}
+				if (selectionForPropertySheet == null) {
+					selectionForPropertySheet = new StructuredSelection(new Object());
+					propertySheetPage.selectionChanged(activePart, selectionForPropertySheet);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Returns the extended property sheet page.
+	 * 
+	 * @return the extended property sheet page.
+	 */
+	private ExtendedPropertySheetPage getExtendedPropertySheetPage(IWorkbenchPage activePage) {
+		ExtendedPropertySheetPage propertyPage = null;
+		if (activePage != null) {
+			IViewPart view = activePage.findView("org.eclipse.ui.views.PropertySheet"); //$NON-NLS-1$
+			if (view != null) {
+				if (view instanceof PropertySheet) {
+					PropertySheet propertySheet = (PropertySheet)view;
+					IPage currentPage = propertySheet.getCurrentPage();
+					if (currentPage instanceof ExtendedPropertySheetPage) {
+						propertyPage = (ExtendedPropertySheetPage)currentPage;
+					} else {
+						IEditorPart activeEditor = activePage.getActiveEditor();
+						if (activeEditor != null
+								&& Platform.getAdapterManager().hasAdapter(activeEditor,
+										"org.eclipse.ui.views.properties.IPropertySheetPage")) { //$NON-NLS-1$
+							propertySheet.partActivated(activePage.getActivePart());
+						}
+					}
+
+				}
+			}
+		}
+		return propertyPage;
+	}
+
+	/**
+	 * Manages the read-only state of the properties sheet page for the given selected object.
+	 * 
+	 * @param selectedObject
+	 *            the given selected object.
+	 * @param side
+	 *            the side of the selected object.
+	 */
+	private void manageReadOnly(EObject selectedObject, MergeViewerSide side) {
+		if (MergeViewerSide.LEFT == side) {
+			if (!configuration.isLeftEditable()) {
+				setToReadOnly(selectedObject);
+			}
+		} else if (MergeViewerSide.RIGHT == side) {
+			if (!configuration.isRightEditable()) {
+				setToReadOnly(selectedObject);
+			}
+		} else if (MergeViewerSide.ANCESTOR == side) {
+			setToReadOnly(selectedObject);
+		}
+	}
+
+	/**
+	 * Sets the resource of the selected object to read-only in the appropriate editing domain.
+	 * 
+	 * @param selectedObject
+	 *            the given selected object.
+	 */
+	private void setToReadOnly(EObject selectedObject) {
+		EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(selectedObject);
+		if (editingDomain instanceof AdapterFactoryEditingDomain) {
+			Resource r = selectedObject.eResource();
+			Map<Resource, Boolean> resourceToReadOnlyMap = ((AdapterFactoryEditingDomain)editingDomain)
+					.getResourceToReadOnlyMap();
+			if (!resourceToReadOnlyMap.containsKey(r)) {
+				resourceToReadOnlyMap.put(r, Boolean.TRUE);
 			}
 		}
 	}
