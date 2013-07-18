@@ -56,7 +56,7 @@ public class GMFRefinedElementsFilter extends AbstractDifferenceFilter {
 			if (input instanceof TreeNode) {
 				EObject data = ((TreeNode)input).getData();
 				if (data != null) {
-					EPackage p = input.eClass().getEPackage();
+					EPackage p = data.eClass().getEPackage();
 					if (p != null) {
 						return p.getNsURI().startsWith("http://www.eclipse.org/emf/compare/diagram"); //$NON-NLS-1$
 					}
