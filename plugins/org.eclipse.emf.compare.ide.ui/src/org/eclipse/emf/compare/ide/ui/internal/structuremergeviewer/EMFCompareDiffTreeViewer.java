@@ -685,10 +685,8 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 							}
 							boolean leftEditable = getCompareConfiguration().isLeftEditable();
 							boolean rightEditable = getCompareConfiguration().isRightEditable();
-							boolean bothSidesEditable = leftEditable && rightEditable;
 							Diff diff = (Diff)selectionData;
-							if ((ltr && (leftEditable || bothSidesEditable))
-									|| (!ltr && (rightEditable && !leftEditable))) {
+							if (ltr || (!ltr && (rightEditable && !leftEditable))) {
 								requires = DiffUtil.getRequires(diff, true, diff.getSource());
 								unmergeables = DiffUtil.getUnmergeables(diff, true);
 							} else {

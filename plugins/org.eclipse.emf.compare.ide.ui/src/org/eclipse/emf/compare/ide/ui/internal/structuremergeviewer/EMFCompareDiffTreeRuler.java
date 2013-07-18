@@ -242,8 +242,7 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 			}
 			boolean leftEditable = fConfiguration.isLeftEditable();
 			boolean rightEditable = fConfiguration.isRightEditable();
-			boolean bothSidesEditable = leftEditable && rightEditable;
-			if ((ltr && (leftEditable || bothSidesEditable)) || (!ltr && (rightEditable && !leftEditable))) {
+			if (ltr || (!ltr && (rightEditable && !leftEditable))) {
 				requires = DiffUtil.getRequires(selectedDiff, true, selectedDiff.getSource());
 				unmergeables = DiffUtil.getUnmergeables(selectedDiff, true);
 			} else {
