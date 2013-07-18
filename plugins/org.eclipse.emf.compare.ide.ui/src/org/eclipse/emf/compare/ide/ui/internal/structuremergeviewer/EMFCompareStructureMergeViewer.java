@@ -138,6 +138,7 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 	 */
 	public EMFCompareStructureMergeViewer(Composite parent, CompareConfiguration config) {
 		super(parent, config);
+		inputChangedTask.setPriority(Job.LONG);
 	}
 
 	/**
@@ -220,8 +221,6 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 		fHandlerService = CompareHandlerService.createFor(getCompareConfiguration().getContainer(),
 				diffTreeViewer.getControl().getShell());
 
-		// inputChangedTask.setPriority(Job.LONG);
-
 		return control;
 	}
 
@@ -258,7 +257,6 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 
 			compareInputChanged(ci);
 		}
-		getViewer().setInput(input);
 	}
 
 	/**
