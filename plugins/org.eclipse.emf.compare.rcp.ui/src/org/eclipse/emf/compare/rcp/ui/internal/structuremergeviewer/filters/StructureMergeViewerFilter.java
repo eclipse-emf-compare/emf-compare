@@ -25,6 +25,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilterSelectionChangeEvent.Action;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.GroupItemProviderAdapter;
 import org.eclipse.emf.ecore.EObject;
@@ -116,7 +117,7 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 		Collection<EObject> eContents = eObject.eContents();
 		if (result && !eContents.isEmpty() && eObject instanceof TreeNode) {
 			EObject data = ((TreeNode)eObject).getData();
-			if ((data instanceof Match || data instanceof Conflict)) {
+			if (data instanceof Match || data instanceof Conflict || data instanceof MatchResource) {
 				result = false;
 				for (EObject child : eContents) {
 					if (keepNode(child, predicate)) {

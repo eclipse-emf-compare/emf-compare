@@ -16,6 +16,7 @@
    <extension-point id="groups" name="EMF Compare Groups" schema="schema/groups.exsd"/>
    <extension-point id="filters" name="EMF Compare Filters" schema="schema/filters.exsd"/>
    <extension-point id="accessorFactory" name="Accessor Factory" schema="schema/accessorFactory.exsd"/>
+   <extension-point id="differenceGroupExtender" name="EMF Compare Difference Group Extender" schema="schema/differenceGroupExtender.exsd"/>
    <extension
          point="org.eclipse.emf.compare.rcp.ui.groups">
       <group

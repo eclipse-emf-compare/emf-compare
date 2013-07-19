@@ -16,7 +16,6 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
-import org.eclipse.emf.compare.diagram.internal.extensions.NodeChange;
 import org.eclipse.emf.compare.diagram.internal.factories.extensions.NodeChangeFactory;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 
@@ -64,16 +63,5 @@ public class NodeChangeItemProviderSpec extends ForwardingDiagramDiffItemProvide
 		}
 		return result;
 
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.diagram.internal.extensions.provider.spec.ForwardingDiagramDiffItemProvider#isCandidateToAddChildren(java.lang.Object)
-	 */
-	@Override
-	protected boolean isCandidateToAddChildren(Object object) {
-		return object instanceof NodeChange
-				&& (((NodeChange)object).getKind() == DifferenceKind.ADD || ((NodeChange)object).getKind() == DifferenceKind.DELETE);
 	}
 }

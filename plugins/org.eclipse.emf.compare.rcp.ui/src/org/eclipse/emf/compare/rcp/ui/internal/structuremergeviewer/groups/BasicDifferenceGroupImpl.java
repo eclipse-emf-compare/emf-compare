@@ -43,6 +43,7 @@ import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender.IDifferenceGroupExtender;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeFactory;
 import org.eclipse.emf.edit.tree.TreeNode;
@@ -73,6 +74,10 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 
 	/** The list of children of this group. */
 	protected List<TreeNode> children;
+
+	/** The registry of difference group extenders. */
+	private final IDifferenceGroupExtender.Registry registry = EMFCompareRCPUIPlugin.getDefault()
+			.getDifferenceGroupExtenderRegistry();
 
 	/**
 	 * Instantiates this group given the comparison and filter that should be used in order to determine its
@@ -206,7 +211,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 		if (children == null) {
 			children = newArrayList();
 			for (Match match : comparison.getMatches()) {
-				List<? extends TreeNode> buildSubTree = buildSubTree(null, match);
+				List<? extends TreeNode> buildSubTree = buildSubTree((Match)null, match);
 				if (buildSubTree != null) {
 					children.addAll(buildSubTree);
 				}
@@ -229,10 +234,38 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 * @return the sub tree of the given MatchResource.
 	 */
 	protected TreeNode buildSubTree(MatchResource matchResource) {
-		if (filter.equals(Predicates.alwaysTrue())) {
-			return wrap(matchResource);
+		TreeNode treeNode = wrap(matchResource);
+		for (Match match : comparison.getMatches()) {
+			treeNode.getChildren().addAll(buildSubTree(matchResource, match));
 		}
-		return null;
+		return treeNode;
+	}
+
+	/**
+	 * Build the sub tree of the given Match that is a root of the given MatchResource.
+	 * 
+	 * @param matchResource
+	 *            the given MatchResource.
+	 * @param match
+	 *            the given Match.
+	 * @return the sub tree of the given Match that is a root of the given MatchResource.
+	 */
+	protected List<TreeNode> buildSubTree(MatchResource matchResource, Match match) {
+		List<TreeNode> ret = newArrayList();
+		if (isRootOfResourceURI(match.getLeft(), matchResource.getLeftURI())
+				|| isRootOfResourceURI(match.getRight(), matchResource.getRightURI())
+				|| isRootOfResourceURI(match.getOrigin(), matchResource.getOriginURI())) {
+			Collection<Diff> resourceAttachmentChanges = filter(match.getDifferences(),
+					resourceAttachmentChange());
+			for (Diff diff : resourceAttachmentChanges) {
+				ret.add(wrap(diff));
+			}
+		} else {
+			for (Match subMatch : match.getSubmatches()) {
+				ret.addAll(buildSubTree(matchResource, subMatch));
+			}
+		}
+		return ret;
 	}
 
 	/**
@@ -244,7 +277,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 *            the given Match.
 	 * @return the sub tree of the given Match.
 	 */
-	protected List<TreeNode> buildSubTree(Match parentMatch, Match match) {
+	public List<TreeNode> buildSubTree(Match parentMatch, Match match) {
 		final List<TreeNode> ret = Lists.newArrayList();
 		boolean isContainment = false;
 
@@ -260,16 +293,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 				ret.add(wrap(match));
 			}
 		} else {
-			Collection<Diff> resourceAttachmentChanges = filter(match.getDifferences(),
-					resourceAttachmentChange());
-			if (!resourceAttachmentChanges.isEmpty()) {
-				for (Diff diff : resourceAttachmentChanges) {
-					ret.add(wrap(diff));
-				}
-			} else {
-				ret.add(wrap(match));
-			}
-
+			ret.add(wrap(match));
 		}
 
 		Collection<TreeNode> toRemove = Lists.newArrayList();
@@ -279,7 +303,10 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			for (Diff diff : filter(match.getDifferences(), and(filter, not(or(containmentReferenceChange(),
 					resourceAttachmentChange()))))) {
 				hasDiff = true;
-				treeNode.getChildren().add(wrap(diff));
+				TreeNode buildSubTree = buildSubTree(diff);
+				if (buildSubTree != null) {
+					treeNode.getChildren().add(buildSubTree);
+				}
 			}
 			for (Match subMatch : match.getSubmatches()) {
 				List<TreeNode> buildSubTree = buildSubTree(match, subMatch);
@@ -290,12 +317,50 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			}
 			if (!(isContainment || hasDiff || hasNonEmptySubMatch || filter.equals(Predicates.alwaysTrue()))) {
 				toRemove.add(treeNode);
+			} else {
+				for (IDifferenceGroupExtender ext : registry.getExtenders()) {
+					if (ext.handle(treeNode)) {
+						ext.addChildren(treeNode);
+					}
+				}
 			}
+
 		}
 
 		ret.removeAll(toRemove);
 
 		return ret;
+	}
+
+	/**
+	 * Build the sub tree for the given {@link Diff}.
+	 * 
+	 * @param diff
+	 *            the given diff.
+	 * @return the sub tree of the given diff.
+	 */
+	protected TreeNode buildSubTree(Diff diff) {
+		TreeNode treeNode = wrap(diff);
+		for (IDifferenceGroupExtender ext : registry.getExtenders()) {
+			if (ext.handle(treeNode)) {
+				ext.addChildren(treeNode);
+			}
+		}
+		return treeNode;
+	}
+
+	/**
+	 * Check if the resource of the given object as the same uri as the given uri.
+	 * 
+	 * @param eObject
+	 *            the given object.
+	 * @param uri
+	 *            the given uri.
+	 * @return true if the resource of the given object as the same uri as the given uri, false otherwise.
+	 */
+	protected boolean isRootOfResourceURI(EObject eObject, String uri) {
+		return eObject != null && uri != null && eObject.eResource() != null
+				&& uri.equals(eObject.eResource().getURI().toString());
 	}
 
 	/**

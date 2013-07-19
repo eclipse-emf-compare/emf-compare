@@ -16,7 +16,6 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
-import org.eclipse.emf.compare.diagram.internal.extensions.EdgeChange;
 import org.eclipse.emf.compare.diagram.internal.factories.extensions.EdgeChangeFactory;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 
@@ -63,34 +62,5 @@ public class EdgeChangeItemProviderSpec extends ForwardingDiagramDiffItemProvide
 		}
 		return result;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.diagram.internal.extensions.provider.spec.ForwardingDiagramDiffItemProvider#isCandidateToAddChildren(java.lang.Object)
-	 */
-	@Override
-	protected boolean isCandidateToAddChildren(Object object) {
-		return object instanceof EdgeChange
-				&& (((EdgeChange)object).getKind() == DifferenceKind.ADD || ((EdgeChange)object).getKind() == DifferenceKind.DELETE);
-	}
-
-	// /**
-	// * {@inheritDoc}
-	// *
-	// * @see
-	// org.eclipse.emf.compare.diagram.internal.extensions.provider.spec.ForwardingDiagramDiffItemProvider#getValueText(org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff)
-	// */
-	// @Override
-	// protected String getValueText(DiagramDiff diagramDiff) {
-	// EObject view = diagramDiff.getView();
-	// if (view instanceof Edge) {
-	// String sourceLabel = getValueText(((Edge)view).getSource().getElement());
-	// String targetLabel = getValueText(((Edge)view).getTarget().getElement());
-	//			return sourceLabel + " -> " + targetLabel; //$NON-NLS-1$
-	// } else {
-	// return super.getValueText(diagramDiff);
-	// }
-	// }
 
 }
