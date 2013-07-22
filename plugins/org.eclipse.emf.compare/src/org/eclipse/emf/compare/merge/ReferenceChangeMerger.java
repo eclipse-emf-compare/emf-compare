@@ -137,7 +137,8 @@ public class ReferenceChangeMerger extends AbstractMerger {
 				}
 				// Is it an unset?
 				if (container != null) {
-					final EObject leftValue = (EObject)container.eGet(referenceChange.getReference(), false);
+					final EObject leftValue = (EObject)ReferenceUtil.safeEGet(container, referenceChange
+							.getReference());
 					if (leftValue == null) {
 						removeFromTarget(referenceChange, rightToLeft);
 					} else {
@@ -500,7 +501,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 				|| !safeEIsSet(originContainer, reference)) {
 			targetContainer.eUnset(reference);
 		} else {
-			final EObject originalValue = (EObject)originContainer.eGet(reference);
+			final EObject originalValue = (EObject)ReferenceUtil.safeEGet(originContainer, reference);
 			final Match valueMatch = match.getComparison().getMatch(originalValue);
 			final EObject expectedValue;
 			if (valueMatch == null) {
