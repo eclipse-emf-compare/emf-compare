@@ -248,6 +248,8 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 			old.removeCompareInputChangeListener(fCompareInputChangeListener);
 		}
 		if (input instanceof ICompareInput) {
+			getViewer().setInput(input); // set input of EMFCompareDiffTreeViewer (useful for next/previous
+											// diff buttons)
 			ICompareInput ci = (ICompareInput)input;
 			ci.addCompareInputChangeListener(fCompareInputChangeListener);
 
