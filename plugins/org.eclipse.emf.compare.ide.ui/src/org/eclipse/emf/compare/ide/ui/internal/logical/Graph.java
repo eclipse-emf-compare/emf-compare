@@ -485,7 +485,7 @@ public final class Graph<E> {
 		 *            Start node of the tree we'll iterate over.
 		 */
 		public ParentsIterator(Node<N> start) {
-			super(start);
+			super(start, false);
 		}
 
 		/**

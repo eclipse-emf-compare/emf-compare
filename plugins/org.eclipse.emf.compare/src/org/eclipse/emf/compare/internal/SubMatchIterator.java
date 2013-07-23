@@ -31,7 +31,7 @@ public class SubMatchIterator extends AbstractTreeIterator<Match> {
 	 *            Starting match of the tree we'll iterate over.
 	 */
 	public SubMatchIterator(Match start) {
-		super(start);
+		super(start, false);
 	}
 
 	/**
