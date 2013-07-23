@@ -415,7 +415,7 @@ public class EditionDistance implements DistanceFunction {
 					 * we just want to pick the same positioned object if two exactly similar objects are
 					 * candidates in the same container.
 					 */
-					changes += 1;
+					changes += 5;
 				}
 
 			}
