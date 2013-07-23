@@ -12,12 +12,9 @@ package org.eclipse.emf.compare.diagram.internal.extensions.provider.spec;
 
 import com.google.common.collect.Iterators;
 
-import java.util.Collection;
-
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.diagram.internal.extensions.DiagramChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.factories.extensions.DiagramChangeFactory;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
@@ -62,30 +59,5 @@ public class DiagramChangeItemProviderSpec extends ForwardingDiagramDiffItemProv
 		}
 		return result;
 
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.diagram.internal.extensions.provider.spec.ForwardingDiagramDiffItemProvider#isCandidateToAddChildren(java.lang.Object)
-	 */
-	@Override
-	protected boolean isCandidateToAddChildren(Object object) {
-		return object instanceof DiagramChange
-				&& (((DiagramChange)object).getKind() == DifferenceKind.ADD || ((DiagramChange)object)
-						.getKind() == DifferenceKind.DELETE);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @see org.eclipse.emf.compare.diagram.internal.extensions.provider.spec.ForwardingDiagramDiffItemProvider#getChildren(java.lang.Object)
-	 */
-	@Override
-	public Collection<?> getChildren(Object object) {
-		Collection<?> result = super.getChildren(object);
-		if (isCandidateToAddChildren(object)) {
-			result.remove(object);
-		}
-		return result;
 	}
 }

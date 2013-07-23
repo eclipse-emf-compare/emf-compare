@@ -12,15 +12,10 @@ package org.eclipse.emf.compare.diagram.internal.extensions.provider.spec;
 
 import com.google.common.base.Preconditions;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.extensions.provider.DiagramDiffItemProvider;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
@@ -33,7 +28,6 @@ import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledStrin
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
-import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -71,43 +65,6 @@ public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider im
 			overlayProvider = new OverlayImageProvider(((DiagramDiffItemProvider)delegate())
 					.getResourceLocator());
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.provider.ForwardingItemProvider#getChildren(java.lang.Object)
-	 */
-	@Override
-	public Collection<?> getChildren(Object object) {
-		final Collection<Object> ret = new ArrayList<Object>();
-		Match match = null;
-		if (isCandidateToAddChildren(object)) {
-			DiagramDiff diagramDiff = (DiagramDiff)object;
-			EObject view = diagramDiff.getView();
-			Comparison comparison = diagramDiff.getMatch().getComparison();
-			match = comparison.getMatch(view);
-			if (match != null) {
-				ret.addAll(match.getSubmatches());
-				ITreeItemContentProvider contentProvider = (ITreeItemContentProvider)getRootAdapterFactory()
-						.adapt(match, ITreeItemContentProvider.class);
-				if (contentProvider != null) {
-					ret.addAll(contentProvider.getChildren(match));
-				}
-			}
-		}
-		return ret;
-	}
-
-	/**
-	 * It checks that the given object can hold children.
-	 * 
-	 * @param object
-	 *            The object.
-	 * @return True if it can hold children.
-	 */
-	protected boolean isCandidateToAddChildren(Object object) {
-		return false;
 	}
 
 	/**
