@@ -16,6 +16,7 @@ import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentReferenceChange;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentMoveReferenceChange;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
@@ -29,6 +30,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
@@ -213,8 +215,6 @@ public class ByResourceGroupProvider extends AdapterImpl implements IDifferenceG
 					for (Diff diff : containmentChanges) {
 						ret.add(wrap(diff));
 					}
-				} else {
-					ret.add(wrap(match));
 				}
 			} else {
 				Collection<Diff> resourceAttachmentChanges = filter(match.getDifferences(),
@@ -223,9 +223,10 @@ public class ByResourceGroupProvider extends AdapterImpl implements IDifferenceG
 					for (Diff diff : resourceAttachmentChanges) {
 						ret.add(wrap(diff));
 					}
-				} else {
-					ret.add(wrap(match));
 				}
+			}
+			if (ret.isEmpty() && !matchWithLeftAndRightInDifferentContainer(match)) {
+				ret.add(wrap(match));
 			}
 
 			Collection<TreeNode> toRemove = Lists.newArrayList();
@@ -242,6 +243,20 @@ public class ByResourceGroupProvider extends AdapterImpl implements IDifferenceG
 					if (!buildSubTree.isEmpty()) {
 						hasNonEmptySubMatch = true;
 						treeNode.getChildren().addAll(buildSubTree);
+					}
+				}
+				for (Diff diff : filter(match.getDifferences(), and(filter, containmentMoveReferenceChange()))) {
+					if (!containsChildrenWithDataEqualsToDiff(treeNode, diff)) {
+						TreeNode buildSubTree = buildSubTree(diff);
+						if (buildSubTree != null) {
+							hasDiff = true;
+							treeNode.getChildren().add(buildSubTree);
+							List<TreeNode> matchSubTree = buildSubTree((Match)null, getComparison().getMatch(
+									((ReferenceChange)diff).getValue()));
+							for (TreeNode matchSubTreeNode : matchSubTree) {
+								buildSubTree.getChildren().addAll(matchSubTreeNode.getChildren());
+							}
+						}
 					}
 				}
 				if (!(isContainment || hasDiff || hasNonEmptySubMatch || filter.equals(Predicates

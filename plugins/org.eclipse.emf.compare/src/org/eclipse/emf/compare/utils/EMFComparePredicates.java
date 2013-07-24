@@ -747,7 +747,7 @@ public final class EMFComparePredicates {
 	}
 
 	/**
-	 * This can be used to check whether a givan diff is a containment reference change.
+	 * This can be used to check whether a given diff is a containment reference change.
 	 * 
 	 * @return The created predicate.
 	 */
@@ -755,6 +755,21 @@ public final class EMFComparePredicates {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
 				return input instanceof ReferenceChange
+						&& ((ReferenceChange)input).getReference().isContainment();
+			}
+		};
+	}
+
+	/**
+	 * This can be used to check whether a given diff is a containment move reference change.
+	 * 
+	 * @return The created predicate.
+	 * @since 3.0
+	 */
+	public static Predicate<? super Diff> containmentMoveReferenceChange() {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input instanceof ReferenceChange && DifferenceKind.MOVE == input.getKind()
 						&& ((ReferenceChange)input).getReference().isContainment();
 			}
 		};
