@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +22,7 @@ import java.util.Map;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.match.eobject.internal.AccessBasedLRUCache;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -62,8 +62,8 @@ public class URIDistance implements Function<EObject, Iterable<String>> {
 	 * Create a new {@link URIDistance}.
 	 */
 	public URIDistance() {
-		locationCache = Maps.newHashMap();
-		fragmentsCache = Maps.newHashMap();
+		locationCache = new AccessBasedLRUCache<EObject, Iterable<String>>(1000, 1000, .75F);
+		fragmentsCache = new AccessBasedLRUCache<EObject, String>(1000, 1000, .75F);
 		fragmentComputation = new EUriFragmentFunction();
 	}
 

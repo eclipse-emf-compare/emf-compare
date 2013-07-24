@@ -10,12 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.eobject;
 
-import com.google.common.collect.Maps;
-
 import java.util.Map;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher.DistanceFunction;
+import org.eclipse.emf.compare.match.eobject.internal.AccessBasedLRUCache;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -44,7 +43,7 @@ public class CachingDistance implements DistanceFunction {
 	 */
 	public CachingDistance(DistanceFunction wrapped) {
 		this.wrapped = wrapped;
-		distanceCache = Maps.newHashMap();
+		distanceCache = new AccessBasedLRUCache<Pair, Double>(10000, 1000, .75F);
 	}
 
 	/**
