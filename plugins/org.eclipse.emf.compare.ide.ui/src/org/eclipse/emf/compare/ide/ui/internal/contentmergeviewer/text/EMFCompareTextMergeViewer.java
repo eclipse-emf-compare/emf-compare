@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
 
-import static com.google.common.collect.Iterables.filter;
-
 import com.google.common.base.Charsets;
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
@@ -22,9 +18,7 @@ import com.google.common.io.Closeables;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Collections;
 import java.util.EventObject;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.Executors;
@@ -39,10 +33,8 @@ import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.MergeSourceViewer;
-import org.eclipse.compare.internal.Utilities;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.EList;
@@ -50,7 +42,6 @@ import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
@@ -62,9 +53,7 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoActio
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.CompareInputAdapter;
 import org.eclipse.emf.compare.ide.ui.internal.util.SWTUtil;
-import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
-import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
@@ -74,17 +63,14 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.ChangeCommand;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.ActionContributionItem;
-import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.text.ITextListener;
+import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -98,10 +84,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 	private static final String BUNDLE_NAME = EMFCompareTextMergeViewer.class.getName();
 
 	private DynamicObject fDynamicObject;
-
-	private ActionContributionItem fCopyDiffLeftToRightItem;
-
-	private ActionContributionItem fCopyDiffRightToLeftItem;
 
 	private UndoAction fUndoAction;
 
@@ -241,58 +223,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#copy(boolean)
-	 */
-	@Override
-	protected void copy(final boolean leftToRight) {
-		final List<Diff> differences;
-
-		if (getComparison().isThreeWay()) {
-			differences = ImmutableList.copyOf(filter(getComparison().getDifferences(),
-					new Predicate<Diff>() {
-						public boolean apply(Diff diff) {
-							final boolean unresolved = diff.getState() == DifferenceState.UNRESOLVED;
-							final boolean nonConflictual = diff.getConflict() == null;
-							final boolean fromLeftToRight = leftToRight
-									&& diff.getSource() == DifferenceSource.LEFT;
-							final boolean fromRightToLeft = !leftToRight
-									&& diff.getSource() == DifferenceSource.RIGHT;
-							return unresolved && nonConflictual && (fromLeftToRight || fromRightToLeft);
-						}
-					}));
-		} else {
-			differences = ImmutableList.copyOf(filter(getComparison().getDifferences(), EMFComparePredicates
-					.hasState(DifferenceState.UNRESOLVED)));
-		}
-
-		if (differences.size() > 0) {
-			final Command copyCommand = getEditingDomain().createCopyCommand(differences, leftToRight,
-					EMFCompareRCPPlugin.getDefault().getMergerRegistry());
-
-			getEditingDomain().getCommandStack().execute(copyCommand);
-			refresh();
-		}
-	}
-
-	protected void copyDiff(boolean leftToRight) {
-		Object input = getInput();
-		if (input instanceof CompareInputAdapter
-				&& ((CompareInputAdapter)input).getComparisonObject() instanceof AttributeChange) {
-			final AttributeChange attributeChange = (AttributeChange)((CompareInputAdapter)input)
-					.getComparisonObject();
-
-			final Command copyCommand = getEditingDomain().createCopyCommand(
-					Collections.singletonList(attributeChange), leftToRight,
-					EMFCompareRCPPlugin.getDefault().getMergerRegistry());
-			getEditingDomain().getCommandStack().execute(copyCommand);
-
-			refresh();
-		}
-	}
-
-	/**
 	 * Inhibits this method to avoid asking to save on each input change!!
 	 * 
 	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#doSave(java.lang.Object,
@@ -400,26 +330,30 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 			}
 		});
 
-		textWidget.addVerifyListener(new VerifyListener() {
-			public void verifyText(VerifyEvent e) {
-				fDelayedExecutor.schedule(new Runnable() {
-					public void run() {
-						// When we leave the current input
-						Object oldInput = getInput();
-						if (oldInput instanceof CompareInputAdapter) {
-							final AttributeChange diff = (AttributeChange)((CompareInputAdapter)oldInput)
-									.getComparisonObject();
-							final EAttribute eAttribute = diff.getAttribute();
-							final Match match = diff.getMatch();
-							final IEqualityHelper equalityHelper = match.getComparison().getEqualityHelper();
+		viewer.getSourceViewer().addTextListener(new ITextListener() {
+			public void textChanged(TextEvent event) {
+				final Object oldInput = getInput();
+				if (event.getDocumentEvent() != null && oldInput instanceof CompareInputAdapter) {
+					fDelayedExecutor.schedule(new Runnable() {
+						public void run() {
+							// When we leave the current input
+							if (oldInput instanceof CompareInputAdapter) {
+								final AttributeChange diff = (AttributeChange)((CompareInputAdapter)oldInput)
+										.getComparisonObject();
+								final EAttribute eAttribute = diff.getAttribute();
+								final Match match = diff.getMatch();
+								final IEqualityHelper equalityHelper = match.getComparison()
+										.getEqualityHelper();
 
-							updateModel(diff, eAttribute, equalityHelper, match.getLeft(), true);
-							updateModel(diff, eAttribute, equalityHelper, match.getRight(), false);
+								updateModel(diff, eAttribute, equalityHelper, match.getLeft(), true);
+								updateModel(diff, eAttribute, equalityHelper, match.getRight(), false);
+							}
 						}
-					}
-				});
+					});
+				}
 			}
 		});
+
 	}
 
 	private void setActiveViewer(MergeSourceViewer viewer, boolean activate) {
@@ -449,81 +383,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 				}
 			});
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#createToolItems(org.eclipse.jface.action.ToolBarManager)
-	 */
-	@SuppressWarnings("restriction")
-	@Override
-	protected void createToolItems(ToolBarManager toolBarManager) {
-		// avoid super to avoid NPE in org.eclipse.compare.internal.ViewerDescriptor.createViewer
-		CompareHandlerService handlerService = CompareHandlerService.createFor(getCompareConfiguration()
-				.getContainer(), getLeftSourceViewer().getSourceViewer().getControl().getShell());
-		setHandlerService(handlerService);
-
-		// Copy actions
-		CompareConfiguration cc = getCompareConfiguration();
-		if (cc.isRightEditable()) {
-			Action copyLeftToRight = new Action() {
-				@Override
-				public void run() {
-					copyDiff(true);
-					navigate(true);
-				}
-			};
-			Utilities.initAction(copyLeftToRight, getResourceBundle(), "action.CopyDiffLeftToRight."); //$NON-NLS-1$
-			fCopyDiffLeftToRightItem = new ActionContributionItem(copyLeftToRight);
-			fCopyDiffLeftToRightItem.setVisible(true);
-			toolBarManager.appendToGroup("merge", fCopyDiffLeftToRightItem); //$NON-NLS-1$
-			handlerService.registerAction(copyLeftToRight, "org.eclipse.compare.copyLeftToRight"); //$NON-NLS-1$
-		}
-
-		if (cc.isLeftEditable()) {
-			Action copyRightToLeft = new Action() {
-				@Override
-				public void run() {
-					copyDiff(false);
-					navigate(true);
-				}
-			};
-			Utilities.initAction(copyRightToLeft, getResourceBundle(), "action.CopyDiffRightToLeft."); //$NON-NLS-1$
-			fCopyDiffRightToLeftItem = new ActionContributionItem(copyRightToLeft);
-			fCopyDiffRightToLeftItem.setVisible(true);
-			toolBarManager.appendToGroup("merge", fCopyDiffRightToLeftItem); //$NON-NLS-1$
-			handlerService.registerAction(copyRightToLeft, "org.eclipse.compare.copyRightToLeft"); //$NON-NLS-1$
-		}
-
-		// Navigation
-		final Action nextDiff = new Action() {
-			@Override
-			public void run() {
-				endOfContentReached(true);
-			}
-		};
-		Utilities.initAction(nextDiff, getResourceBundle(), "action.NextDiff.");
-		ActionContributionItem contributionNextDiff = new ActionContributionItem(nextDiff);
-		contributionNextDiff.setVisible(true);
-		toolBarManager.appendToGroup("navigation", contributionNextDiff);
-
-		final Action previousDiff = new Action() {
-			@Override
-			public void run() {
-				endOfContentReached(false);
-			}
-		};
-		Utilities.initAction(previousDiff, getResourceBundle(), "action.PrevDiff.");
-		ActionContributionItem contributionPreviousDiff = new ActionContributionItem(previousDiff);
-		contributionPreviousDiff.setVisible(true);
-		toolBarManager.appendToGroup("navigation", contributionPreviousDiff);
-
-		fRedoAction = new RedoAction(getEditingDomain());
-		fUndoAction = new UndoAction(getEditingDomain());
-
-		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), fUndoAction);
-		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), fRedoAction);
 	}
 
 	/**

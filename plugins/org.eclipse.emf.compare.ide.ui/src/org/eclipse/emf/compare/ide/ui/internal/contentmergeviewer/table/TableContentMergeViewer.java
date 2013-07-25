@@ -15,8 +15,6 @@ import java.util.ResourceBundle;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
-import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
-import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeViewer;
@@ -29,6 +27,10 @@ import org.eclipse.emf.edit.provider.IItemFontProvider;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -282,6 +284,28 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 							selected);
 					g.setForeground(strokeColor);
 					drawCenterLine(g, leftClientArea, rightClientArea, leftItem, rightItem);
+				}
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#createToolItems(org.eclipse.jface.action.ToolBarManager)
+	 */
+	@Override
+	protected void createToolItems(ToolBarManager toolBarManager) {
+		super.createToolItems(toolBarManager);
+		IContributionItem[] items = toolBarManager.getItems();
+		for (IContributionItem iContributionItem : items) {
+			if (iContributionItem instanceof ActionContributionItem) {
+				IAction action = ((ActionContributionItem)iContributionItem).getAction();
+				String id = action.getActionDefinitionId();
+				if ("org.eclipse.compare.copyAllLeftToRight".equals(id)) {
+					toolBarManager.remove(iContributionItem);
+				} else if ("org.eclipse.compare.copyAllRightToLeft".equals(id)) {
+					toolBarManager.remove(iContributionItem);
 				}
 			}
 		}
