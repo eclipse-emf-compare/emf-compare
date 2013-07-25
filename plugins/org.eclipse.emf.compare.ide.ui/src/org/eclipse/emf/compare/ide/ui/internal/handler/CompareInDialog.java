@@ -18,7 +18,10 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -70,9 +73,17 @@ public class CompareInDialog extends AbstractCompareHandler {
 				}
 			}
 
-			final CompareEditorInput input = createCompareEditorInput(activePart, adapterFactory, left,
-					right, origin);
-			CompareUI.openCompareDialog(input);
+			if (left instanceof EObject
+					&& right instanceof EObject
+					&& (EcoreUtil.isAncestor((EObject)left, (EObject)right) || EcoreUtil.isAncestor(
+							(EObject)right, (EObject)left))) {
+				MessageDialog.openInformation(activePart.getSite().getShell(), "EMF Compare",
+						"Can't run a comparison between an object and one of its ancestor.");
+			} else {
+				final CompareEditorInput input = createCompareEditorInput(activePart, adapterFactory, left,
+						right, origin);
+				CompareUI.openCompareDialog(input);
+			}
 		}
 
 		return null; // Reserved for future use, MUST be null.
