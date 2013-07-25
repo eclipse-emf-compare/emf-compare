@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl;
 
 import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.addAll;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.isEmpty;
@@ -50,6 +51,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDiff
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
@@ -596,7 +598,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			Object sideValue = getSideValue(getSide());
 			EObject bestSideValue = (EObject)getBestSideValue();
 
-			final Collection<? extends EStructuralFeature> childrenFeatures = getChildrenFeatures(bestSideValue);
+			final Collection<? extends EReference> childrenFeatures = getChildrenFeatures(bestSideValue);
 
 			Match match = getComparison().getMatch(bestSideValue);
 			final ImmutableList<Diff> differences;
@@ -632,20 +634,22 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		 * @param object
 		 * @return
 		 */
-		protected Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
-			Collection<? extends EStructuralFeature> ret = getChildrenFeaturesFromItemProviderAdapter(object);
-
-			if (ret == null) {
+		protected Collection<EReference> getChildrenFeatures(Object object) {
+			Collection<EReference> ret = Lists.newArrayList();
+			Collection<? extends EStructuralFeature> childrenFeaturesFromItemProviderAdapter = getChildrenFeaturesFromItemProviderAdapter(object);
+			if (childrenFeaturesFromItemProviderAdapter == null) {
 				ret = getChildrenFeaturesFromEClass(object);
+			} else {
+				addAll(ret, filter(childrenFeaturesFromItemProviderAdapter, EReference.class));
 			}
 
 			return ret;
 		}
 
-		protected Collection<? extends EStructuralFeature> getChildrenFeaturesFromEClass(Object object) {
-			ImmutableSet.Builder<EStructuralFeature> features = ImmutableSet.builder();
+		protected Collection<EReference> getChildrenFeaturesFromEClass(Object object) {
+			ImmutableSet.Builder<EReference> features = ImmutableSet.builder();
 			if (object instanceof EObject) {
-				for (EStructuralFeature feature : ((EObject)object).eClass().getEAllContainments()) {
+				for (EReference feature : ((EObject)object).eClass().getEAllContainments()) {
 					features.add(feature);
 				}
 			}
