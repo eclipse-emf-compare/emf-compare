@@ -24,32 +24,20 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
-import org.eclipse.emf.compare.uml2.tests.AbstractTest;
+import org.eclipse.emf.compare.uml2.tests.AbstractDynamicProfileTest;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.data.dynamic.DynamicStereotypeInputData;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.uml2.uml.UMLPackage;
-import org.junit.After;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class DynamicStereotypeTest extends AbstractTest {
+public class DynamicStereotypeTest extends AbstractDynamicProfileTest {
 
 	private DynamicStereotypeInputData input = new DynamicStereotypeInputData();
-
-	@After
-	public void cleanup() {
-		for (ResourceSet set : input.getSets()) {
-			for (Resource res : set.getResources()) {
-				res.unload();
-			}
-			set.getResources().clear();
-		}
-	}
 
 	@Test
 	public void testA10UseCase() throws IOException {
@@ -1063,7 +1051,7 @@ public class DynamicStereotypeTest extends AbstractTest {
 	}
 
 	@Override
-	protected AbstractInputData getInput() {
+	protected AbstractUMLInputData getInput() {
 		return input;
 	}
 

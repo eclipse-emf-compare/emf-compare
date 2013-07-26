@@ -18,15 +18,15 @@ import java.util.List;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
-import org.eclipse.emf.compare.uml2.tests.AbstractTest;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.dependency.data.DependencyInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class ChangeDependencyTest extends AbstractTest {
+public class ChangeDependencyTest extends AbstractUMLTest {
 
 	private DependencyInputData input = new DependencyInputData();
 
@@ -120,7 +120,7 @@ public class ChangeDependencyTest extends AbstractTest {
 	}
 
 	@Override
-	protected AbstractInputData getInput() {
+	protected AbstractUMLInputData getInput() {
 		return input;
 	}
 

@@ -2,10 +2,10 @@ package org.eclipse.emf.compare.uml2.tests.message.data;
 
 import java.io.IOException;
 
-import org.eclipse.emf.compare.tests.framework.AbstractInputData;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 
-public class MessageInputData extends AbstractInputData {
+public class MessageInputData extends AbstractUMLInputData {
 	public Resource getA1Left() throws IOException {
 		return loadFromClassLoader("a1/left.uml"); //$NON-NLS-1$
 	}

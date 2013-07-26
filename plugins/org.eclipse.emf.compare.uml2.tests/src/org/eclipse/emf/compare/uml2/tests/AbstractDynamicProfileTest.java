@@ -1,0 +1,43 @@
+package org.eclipse.emf.compare.uml2.tests;
+
+import org.eclipse.emf.common.EMFPlugin;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.uml2.uml.UMLPlugin;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+
+public abstract class AbstractDynamicProfileTest extends AbstractUMLProfileTest {
+
+	static URI registeredURI;
+
+	static Object registeredPackage;
+
+	@BeforeClass
+	public static void initEPackageNsURIToProfileLocationMap() {
+		if (!EMFPlugin.IS_ECLIPSE_RUNNING) {
+			// It is required to link the EPackage to the UML package of the UML Profile
+			UMLPlugin
+					.getEPackageNsURIToProfileLocationMap()
+					.put("http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile",
+							URI.createURI("pathmap://UML_COMPARE_TESTS_PROFILE/uml2.compare.testprofile.profile.uml#_hZFTgIwkEeC_FYHMbTTxXw")); //$NON-NLS-1$
+		} else {
+			registeredURI = UMLPlugin.getEPackageNsURIToProfileLocationMap().remove(
+					UML2CompareTestProfilePackage.eNS_URI);
+			registeredPackage = EPackage.Registry.INSTANCE.remove(UML2CompareTestProfilePackage.eNS_URI);
+		}
+	}
+
+	@AfterClass
+	public static void resetEPackageNsURIToProfileLocationMap() {
+		if (!EMFPlugin.IS_ECLIPSE_RUNNING) {
+			UMLPlugin.getEPackageNsURIToProfileLocationMap().remove(
+					"http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile");
+		} else {
+			UMLPlugin.getEPackageNsURIToProfileLocationMap().put(UML2CompareTestProfilePackage.eNS_URI,
+					registeredURI);
+			EPackage.Registry.INSTANCE.put(UML2CompareTestProfilePackage.eNS_URI, registeredPackage);
+		}
+	}
+}

@@ -19,14 +19,14 @@ import java.util.List;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.tests.framework.AbstractInputData;
-import org.eclipse.emf.compare.uml2.tests.AbstractTest;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.implications.data.ImplicationsInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class ImplicationsTransitionTest extends AbstractTest {
+public class ImplicationsTransitionTest extends AbstractUMLTest {
 
 	private static final int NB_DIFFS = 6;
 
@@ -885,7 +885,7 @@ public class ImplicationsTransitionTest extends AbstractTest {
 	}
 
 	@Override
-	protected AbstractInputData getInput() {
+	protected AbstractUMLInputData getInput() {
 		return input;
 	}
 

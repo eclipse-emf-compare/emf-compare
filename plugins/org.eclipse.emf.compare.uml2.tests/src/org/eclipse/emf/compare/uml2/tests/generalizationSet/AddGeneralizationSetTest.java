@@ -20,9 +20,9 @@ import java.util.List;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.internal.GeneralizationSetChange;
-import org.eclipse.emf.compare.uml2.tests.AbstractTest;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.generalizationSet.data.GeneralizationSetInputData;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -30,7 +30,7 @@ import org.eclipse.uml2.uml.UMLPackage;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class AddGeneralizationSetTest extends AbstractTest {
+public class AddGeneralizationSetTest extends AbstractUMLTest {
 
 	private GeneralizationSetInputData input = new GeneralizationSetInputData();
 
@@ -253,7 +253,7 @@ public class AddGeneralizationSetTest extends AbstractTest {
 	}
 
 	@Override
-	protected AbstractInputData getInput() {
+	protected AbstractUMLInputData getInput() {
 		return input;
 	}
 

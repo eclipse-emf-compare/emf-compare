@@ -2,10 +2,10 @@ package org.eclipse.emf.compare.uml2.tests.stereotypes.data.static_;
 
 import java.io.IOException;
 
-import org.eclipse.emf.compare.uml2.tests.ProfilesInputData;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 
-public class StaticStereotypeInputData extends ProfilesInputData {
+public class StaticStereotypeInputData extends AbstractUMLInputData {
 
 	public Resource getB1Left() throws IOException {
 		return loadFromClassLoader("b1/left.uml"); //$NON-NLS-1$

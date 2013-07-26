@@ -21,15 +21,15 @@ import java.util.List;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.internal.ExecutionSpecificationChange;
-import org.eclipse.emf.compare.uml2.tests.AbstractTest;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.executionSpecification.data.ExecutionSpecificationInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class AddActionExecutionSpecificationTest extends AbstractTest {
+public class AddActionExecutionSpecificationTest extends AbstractUMLTest {
 
 	private ExecutionSpecificationInputData input = new ExecutionSpecificationInputData();
 
@@ -326,7 +326,7 @@ public class AddActionExecutionSpecificationTest extends AbstractTest {
 	}
 
 	@Override
-	protected AbstractInputData getInput() {
+	protected AbstractUMLInputData getInput() {
 		return input;
 	}
 

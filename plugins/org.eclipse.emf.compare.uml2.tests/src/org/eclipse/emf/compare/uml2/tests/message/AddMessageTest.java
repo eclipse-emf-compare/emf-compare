@@ -25,15 +25,15 @@ import java.util.List;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.internal.MessageChange;
-import org.eclipse.emf.compare.uml2.tests.AbstractTest;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.message.data.MessageInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class AddMessageTest extends AbstractTest {
+public class AddMessageTest extends AbstractUMLTest {
 
 	private MessageInputData input = new MessageInputData();
 
@@ -724,7 +724,7 @@ public class AddMessageTest extends AbstractTest {
 	}
 
 	@Override
-	protected AbstractInputData getInput() {
+	protected AbstractUMLInputData getInput() {
 		return input;
 	}
 

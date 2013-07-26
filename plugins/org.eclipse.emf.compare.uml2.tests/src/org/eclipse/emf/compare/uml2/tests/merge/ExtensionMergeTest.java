@@ -26,16 +26,16 @@ import org.eclipse.emf.compare.merge.ReferenceChangeMerger;
 import org.eclipse.emf.compare.merge.ResourceAttachmentChangeMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.compare.uml2.internal.merge.UMLMerger;
-import org.eclipse.emf.compare.uml2.tests.AbstractTest;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.association.data.AssociationInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class ExtensionMergeTest extends AbstractTest {
+public class ExtensionMergeTest extends AbstractUMLTest {
 	private AssociationInputData input = new AssociationInputData();
 
 	@Test
@@ -49,7 +49,7 @@ public class ExtensionMergeTest extends AbstractTest {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.uml2.tests.AbstractTest#testMergeRightToLeft(org.eclipse.emf.common.notify.Notifier,
+	 * @see org.eclipse.emf.compare.uml2.tests.AbstractUMLTest#testMergeRightToLeft(org.eclipse.emf.common.notify.Notifier,
 	 *      org.eclipse.emf.common.notify.Notifier, org.eclipse.emf.common.notify.Notifier)
 	 */
 	@Override
@@ -82,7 +82,7 @@ public class ExtensionMergeTest extends AbstractTest {
 	}
 
 	@Override
-	protected AbstractInputData getInput() {
+	protected AbstractUMLInputData getInput() {
 		return input;
 	}
 

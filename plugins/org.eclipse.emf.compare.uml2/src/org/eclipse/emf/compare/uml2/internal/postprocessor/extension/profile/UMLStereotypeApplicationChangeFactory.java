@@ -119,7 +119,8 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractUMLChangeFact
 					.getDifferences().iterator();
 			while (changes.hasNext()) {
 				final Diff diff = changes.next();
-				if (diff instanceof AttributeChange || diff instanceof ResourceAttachmentChange) {
+				if (diff instanceof AttributeChange || diff instanceof ReferenceChange
+						|| diff instanceof ResourceAttachmentChange) {
 					extension.getRefinedBy().add(diff);
 				}
 			}
@@ -213,18 +214,32 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractUMLChangeFact
 				// FIXME this is not the place to set this, it should be done at creation time.
 				stereotypeApplicationChange.setStereotype(stereotype);
 				final Profile profile = stereotype.getProfile();
-				final Iterator<Setting> settings = UML2Util.getInverseReferences(profile).iterator();
-				while (settings.hasNext()) {
-					final Setting setting = settings.next();
-					if (setting.getEStructuralFeature() == UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE) {
-						final ProfileApplication profileApplication = (ProfileApplication)setting
-								.getEObject();
-						for (Diff diff : comparison.getDifferences(profileApplication)) {
-							if (diff instanceof ProfileApplicationChange
-									&& diff.getKind() == DifferenceKind.ADD) {
-								stereotypeApplicationChange.getRequires().add(diff);
-							}
-						}
+				fillRequirements(comparison, stereotypeApplicationChange, profile);
+			}
+		}
+	}
+
+	/**
+	 * It fills the requirements of the given stereotype application change from the profile related to the
+	 * stereotype application.
+	 * 
+	 * @param comparison
+	 *            the comparison.
+	 * @param stereotypeApplicationChange
+	 *            The stereotype application to set.
+	 * @param profile
+	 *            The profile related to the stereotype application.
+	 */
+	private void fillRequirements(Comparison comparison,
+			final StereotypeApplicationChange stereotypeApplicationChange, final Profile profile) {
+		final Iterator<Setting> settings = UML2Util.getInverseReferences(profile).iterator();
+		while (settings.hasNext()) {
+			final Setting setting = settings.next();
+			if (setting.getEStructuralFeature() == UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE) {
+				final ProfileApplication profileApplication = (ProfileApplication)setting.getEObject();
+				for (Diff diff : comparison.getDifferences(profileApplication)) {
+					if (diff instanceof ProfileApplicationChange && diff.getKind() == DifferenceKind.ADD) {
+						stereotypeApplicationChange.getRequires().add(diff);
 					}
 				}
 			}

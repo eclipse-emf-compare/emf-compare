@@ -14,7 +14,6 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.textui.TestRunner;
 
-import org.eclipse.emf.compare.tests.suite.CompareTestSuite;
 import org.eclipse.emf.compare.uml2.tests.association.AddAssociation2Test;
 import org.eclipse.emf.compare.uml2.tests.association.AddAssociation3Test;
 import org.eclipse.emf.compare.uml2.tests.association.AddAssociationTest;
@@ -37,7 +36,8 @@ import org.eclipse.emf.compare.uml2.tests.implications.ImplicationsTransitionTes
 import org.eclipse.emf.compare.uml2.tests.include.AddIncludeTest;
 import org.eclipse.emf.compare.uml2.tests.merge.ExtensionMergeTest;
 import org.eclipse.emf.compare.uml2.tests.message.AddMessageTest;
-import org.eclipse.emf.compare.uml2.tests.profiles.ProfileTest;
+import org.eclipse.emf.compare.uml2.tests.profiles.DynamicProfileTest;
+import org.eclipse.emf.compare.uml2.tests.profiles.StaticProfileTest;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.DynamicStereotypeTest;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.StaticStereotypeTest;
 import org.eclipse.emf.compare.uml2.tests.timeConstraint.AddTimeConstraintTest;
@@ -57,9 +57,9 @@ import org.junit.runners.Suite.SuiteClasses;
 		AddGeneralizationSetTest.class, AddInterfaceRealizationTest.class, AddRealizationTest.class,
 		AddSubstitutionTest.class, AddUsageTest.class, AddMessageTest.class,
 		AddActionExecutionSpecificationTest.class, AddBehaviorExecutionSpecificationTest.class,
-		AddIncludeTest.class, AddTimeConstraintTest.class, ProfileTest.class, DynamicStereotypeTest.class,
-		StaticStereotypeTest.class, ImplicationsAssociationTest.class, ImplicationsTransitionTest.class,
-		ImplicationsInterfaceRealizationTest.class })
+		AddIncludeTest.class, AddTimeConstraintTest.class, StaticProfileTest.class, DynamicProfileTest.class,
+		StaticStereotypeTest.class, DynamicStereotypeTest.class, ImplicationsAssociationTest.class,
+		ImplicationsTransitionTest.class, ImplicationsInterfaceRealizationTest.class })
 public class AllTests {
 
 	/**
@@ -77,7 +77,7 @@ public class AllTests {
 	 * @generated
 	 */
 	public static Test suite() {
-		return new JUnit4TestAdapter(CompareTestSuite.class);
+		return new JUnit4TestAdapter(AllTests.class);
 	}
 
 }

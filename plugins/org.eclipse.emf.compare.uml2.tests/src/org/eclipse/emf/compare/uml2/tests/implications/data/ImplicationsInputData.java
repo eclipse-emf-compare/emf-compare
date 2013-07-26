@@ -2,13 +2,13 @@ package org.eclipse.emf.compare.uml2.tests.implications.data;
 
 import java.io.IOException;
 
-import org.eclipse.emf.compare.tests.framework.AbstractInputData;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.uml2.uml.resources.util.UMLResourcesUtil;
 
-public class ImplicationsInputData extends AbstractInputData {
+public class ImplicationsInputData extends AbstractUMLInputData {
 	public Resource getA1Left() throws IOException {
 		return loadFromClassLoader("a1/left.uml", createResourceSet()); //$NON-NLS-1$
 	}
