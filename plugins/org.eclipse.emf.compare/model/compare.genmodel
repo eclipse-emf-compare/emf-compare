@@ -36,12 +36,14 @@
       <genTypeParameters ecoreTypeParameter="compare.ecore#//EIterable/T"/>
     </genDataTypes>
     <genDataTypes ecoreDataType="compare.ecore#//IEqualityHelper"/>
+    <genDataTypes ecoreDataType="compare.ecore#//Diagnostic"/>
     <genClasses ecoreClass="compare.ecore#//Comparison">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/matchedResources"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/matches"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/conflicts"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/equivalences"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//Comparison/threeWay"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//Comparison/diagnostic"/>
       <genOperations ecoreOperation="compare.ecore#//Comparison/getDifferences"/>
       <genOperations ecoreOperation="compare.ecore#//Comparison/getDifferences.1">
         <genParameters ecoreParameter="compare.ecore#//Comparison/getDifferences.1/element"/>

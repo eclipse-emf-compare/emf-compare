@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.diff.DiffBuilder;
 import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.equi.DefaultEquiEngine;
 import org.eclipse.emf.compare.equi.IEquiEngine;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryRegistryImpl;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
@@ -168,45 +169,102 @@ public class EMFCompare {
 		final Comparison comparison = matchEngineFactoryRegistry.getHighestRankingMatchEngineFactory(scope)
 				.getMatchEngine().match(scope, monitor);
 
+		if (hasToStop(comparison, monitor)) {
+			return comparison;
+		}
+
 		List<IPostProcessor> postProcessors = postProcessorDescriptorRegistry.getPostProcessors(scope);
 
 		for (IPostProcessor iPostProcessor : postProcessors) {
 			iPostProcessor.postMatch(comparison, monitor);
+
+			if (hasToStop(comparison, monitor)) {
+				return comparison;
+			}
 		}
 
 		diffEngine.diff(comparison, monitor);
 
+		if (hasToStop(comparison, monitor)) {
+			return comparison;
+		}
+
 		for (IPostProcessor iPostProcessor : postProcessors) {
 			iPostProcessor.postDiff(comparison, monitor);
+
+			if (hasToStop(comparison, monitor)) {
+				return comparison;
+			}
 		}
 
 		reqEngine.computeRequirements(comparison, monitor);
 
+		if (hasToStop(comparison, monitor)) {
+			return comparison;
+		}
+
 		for (IPostProcessor iPostProcessor : postProcessors) {
 			iPostProcessor.postRequirements(comparison, monitor);
+
+			if (hasToStop(comparison, monitor)) {
+				return comparison;
+			}
 		}
 
 		equiEngine.computeEquivalences(comparison, monitor);
 
+		if (hasToStop(comparison, monitor)) {
+			return comparison;
+		}
+
 		for (IPostProcessor iPostProcessor : postProcessors) {
 			iPostProcessor.postEquivalences(comparison, monitor);
+
+			if (hasToStop(comparison, monitor)) {
+				return comparison;
+			}
 		}
 
 		if (comparison.isThreeWay() && conflictDetector != null) {
 			conflictDetector.detect(comparison, monitor);
 
+			if (hasToStop(comparison, monitor)) {
+				return comparison;
+			}
+
 			for (IPostProcessor iPostProcessor : postProcessors) {
 				iPostProcessor.postConflicts(comparison, monitor);
+
+				if (hasToStop(comparison, monitor)) {
+					return comparison;
+				}
 			}
 		}
 
 		for (IPostProcessor iPostProcessor : postProcessors) {
 			iPostProcessor.postComparison(comparison, monitor);
+
+			if (hasToStop(comparison, monitor)) {
+				return comparison;
+			}
 		}
 
 		monitor.done();
 
 		return comparison;
+	}
+
+	/**
+	 * It checks if the comparison has to be stopped.
+	 * 
+	 * @param comparison
+	 *            The comparison.
+	 * @param monitor
+	 *            The monitor.
+	 * @return True if the comparison has to be stopped. False otherwise.
+	 */
+	private static boolean hasToStop(Comparison comparison, Monitor monitor) {
+		return monitor.isCanceled() || ComparisonUtil.containsErrors(comparison);
 	}
 
 	/**

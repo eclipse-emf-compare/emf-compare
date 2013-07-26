@@ -21,7 +21,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.compare.AttributeChange;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -161,6 +163,21 @@ public final class ComparisonUtil {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * It checks the comparison contains errors.
+	 * 
+	 * @param comparison
+	 *            The comparison.
+	 * @return True if it contains errors, false otherwise.
+	 */
+	public static boolean containsErrors(Comparison comparison) {
+		Diagnostic diagnostic = comparison.getDiagnostic();
+		if (diagnostic != null) {
+			return diagnostic.getSeverity() > Diagnostic.WARNING;
+		}
+		return false;
 	}
 
 	/**

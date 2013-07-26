@@ -56,6 +56,8 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="threeWay" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="diagnostic" eType="#//Diagnostic"
+        transient="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MatchResource">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -393,5 +395,7 @@
     <eTypeParameters name="T"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="IEqualityHelper" instanceClassName="org.eclipse.emf.compare.utils.IEqualityHelper"
+      serializable="false"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Diagnostic" instanceClassName="org.eclipse.emf.common.util.Diagnostic"
       serializable="false"/>
 </ecore:EPackage>

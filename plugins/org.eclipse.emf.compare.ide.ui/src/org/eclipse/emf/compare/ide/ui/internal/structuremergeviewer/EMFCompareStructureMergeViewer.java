@@ -35,7 +35,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
+import org.eclipse.emf.common.ui.dialogs.DiagnosticDialog;
 import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
@@ -54,6 +56,7 @@ import org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil;
 import org.eclipse.emf.compare.ide.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
@@ -375,6 +378,9 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 
 		IComparisonScope comparisonScope = input.getComparisonScope();
 		Comparison comparison = comparator.compare(comparisonScope, BasicMonitor.toMonitor(monitor));
+
+		reportErrors(comparison);
+
 		compareInputChanged(input.getComparisonScope(), comparison);
 	}
 
@@ -448,6 +454,8 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 								EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry())
 						.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry())
 						.build().compare(scope, BasicMonitor.toMonitor(subMonitor.newChild(15)));
+
+				reportErrors(compareResult);
 
 				final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
 				final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();
@@ -528,6 +536,17 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 				getCompareConfiguration().setProperty(EMFCompareConstants.SMV_SELECTION, null);
 			}
 			diffTreeViewer.setRoot(null);
+		}
+	}
+
+	private void reportErrors(final Comparison comparison) {
+		if (ComparisonUtil.containsErrors(comparison)) {
+			SWTUtil.safeAsyncExec(new Runnable() {
+				public void run() {
+					DiagnosticDialog.open(getControl().getShell(), "Comparison report", //$NON-NLS-1$
+							"Some issues were detected.", (Diagnostic)comparison.getDiagnostic()); //$NON-NLS-1$
+				}
+			});
 		}
 	}
 
