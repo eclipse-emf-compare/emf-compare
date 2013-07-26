@@ -121,8 +121,26 @@ public class ResourceContentsAccessorImpl implements IResourceContentsAccessor {
 		Match match = getComparison().getMatch(diffValue);
 
 		if (match != null) {
-			return new MergeViewerItem.Container(getComparison(), initialDiff, match, getSide(),
-					fAdapterFactory);
+			Object left = match.getLeft();
+			Object right = match.getRight();
+			Object ancestor = match.getOrigin();
+			// Manage case where the resource attachment change is between an existing resource and an unknown
+			// resource
+			if (MergeViewerUtil.getResource(getComparison(), MergeViewerSide.LEFT,
+					(ResourceAttachmentChange)initialDiff) == null) {
+				left = null;
+			}
+			if (MergeViewerUtil.getResource(getComparison(), MergeViewerSide.RIGHT,
+					(ResourceAttachmentChange)initialDiff) == null) {
+				right = null;
+			}
+			if (MergeViewerUtil.getResource(getComparison(), MergeViewerSide.ANCESTOR,
+					(ResourceAttachmentChange)initialDiff) == null) {
+				ancestor = null;
+			}
+
+			return new MergeViewerItem.Container(getComparison(), initialDiff, left, right, ancestor,
+					getSide(), fAdapterFactory);
 		}
 		return null;
 	}

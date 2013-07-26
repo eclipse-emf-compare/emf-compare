@@ -141,7 +141,22 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 			ResourceAttachmentChange rac = getFirst(filter(match.getDifferences(),
 					ResourceAttachmentChange.class), null);
 			if (rac != null) {
-				return new MergeViewerItem.Container(getComparison(), rac, match, getSide(),
+				Object left = match.getLeft();
+				Object right = match.getRight();
+				Object ancestor = match.getOrigin();
+				// Manage case where the resource attachment change is between an existing resource and an
+				// unknown resource
+				if (MergeViewerUtil.getResource(getComparison(), MergeViewerSide.LEFT, rac) == null) {
+					left = null;
+				}
+				if (MergeViewerUtil.getResource(getComparison(), MergeViewerSide.RIGHT, rac) == null) {
+					right = null;
+				}
+				if (MergeViewerUtil.getResource(getComparison(), MergeViewerSide.ANCESTOR, rac) == null) {
+					ancestor = null;
+				}
+
+				return new MergeViewerItem.Container(getComparison(), rac, left, right, ancestor, getSide(),
 						getAdapterFactory());
 			}
 		}
