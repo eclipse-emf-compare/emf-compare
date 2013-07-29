@@ -63,6 +63,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.ChangeCommand;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -383,6 +384,23 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 				}
 			});
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#createToolItems(org.eclipse.jface.action.ToolBarManager)
+	 */
+	@SuppressWarnings("restriction")
+	@Override
+	protected void createToolItems(ToolBarManager toolBarManager) {
+		super.createToolItems(toolBarManager);
+				
+		fRedoAction = new RedoAction(getEditingDomain());
+		fUndoAction = new UndoAction(getEditingDomain());
+
+		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), fUndoAction);
+		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), fRedoAction);
 	}
 
 	/**
