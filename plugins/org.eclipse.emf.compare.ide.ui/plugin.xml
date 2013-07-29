@@ -129,13 +129,19 @@
             </visibleWhen>
          </command>
          <command
-               commandId="org.eclipse.emf.compare.ide.ui.acceptAllChanges"
-               icon="icons/full/toolb16/accept_all_changes.gif"
-               label="%accept.all.changes"
+               commandId="org.eclipse.emf.compare.ide.ui.rejectChange"
+               icon="icons/full/toolb16/reject_change.gif"
+               label="%reject.change"
                style="push"
-               tooltip="%accept.all.changes.tooltip">
+               tooltip="%reject.change.tooltip">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
+               <with
+                     variable="activeEditor">
+                  <test
+                        property="emfcompare.hasReadOnlySide">
+                  </test>
+               </with>
             </visibleWhen>
          </command>
          <command
@@ -155,11 +161,11 @@
             </visibleWhen>
          </command>
          <command
-               commandId="org.eclipse.emf.compare.ide.ui.mergedAllToRight"
-               icon="icons/full/toolb16/merge_all_to_right.gif"
-               label="%merged.all.to.right"
+               commandId="org.eclipse.emf.compare.ide.ui.mergedToLeft"
+               icon="icons/full/toolb16/merge_to_left.gif"
+               label="%merged.to.left"
                style="push"
-               tooltip="%merged.all.to.right.tooltip">
+               tooltip="%merged.to.left.tooltip">
             <visibleWhen
                   checkEnabled="false">
                <with
@@ -175,19 +181,13 @@
                visible="true">
          </separator>
          <command
-               commandId="org.eclipse.emf.compare.ide.ui.rejectChange"
-               icon="icons/full/toolb16/reject_change.gif"
-               label="%reject.change"
+               commandId="org.eclipse.emf.compare.ide.ui.acceptAllChanges"
+               icon="icons/full/toolb16/accept_all_changes.gif"
+               label="%accept.all.changes"
                style="push"
-               tooltip="%reject.change.tooltip">
+               tooltip="%accept.all.changes.tooltip">
             <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeEditor">
-                  <test
-                        property="emfcompare.hasReadOnlySide">
-                  </test>
-               </with>
+                  checkEnabled="true">
             </visibleWhen>
          </command>
          <command
@@ -201,11 +201,11 @@
             </visibleWhen>
          </command>
          <command
-               commandId="org.eclipse.emf.compare.ide.ui.mergedToLeft"
-               icon="icons/full/toolb16/merge_to_left.gif"
-               label="%merged.to.left"
+               commandId="org.eclipse.emf.compare.ide.ui.mergedAllToRight"
+               icon="icons/full/toolb16/merge_all_to_right.gif"
+               label="%merged.all.to.right"
                style="push"
-               tooltip="%merged.to.left.tooltip">
+               tooltip="%merged.all.to.right.tooltip">
             <visibleWhen
                   checkEnabled="false">
                <with
