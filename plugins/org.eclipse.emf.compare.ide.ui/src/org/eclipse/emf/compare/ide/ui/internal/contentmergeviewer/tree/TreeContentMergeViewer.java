@@ -111,7 +111,8 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	public TreeContentMergeViewer(Composite parent, CompareConfiguration config) {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
-		fAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+		fAdapterFactory = new ComposedAdapterFactory(EMFCompareRCPPlugin.getDefault()
+				.getAdapterFactoryRegistry());
 		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 		fSyncExpandedState = new AtomicBoolean();
