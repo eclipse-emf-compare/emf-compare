@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.diagram.internal.matchs.provider.spec;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Style;
@@ -27,7 +26,7 @@ import org.eclipse.gmf.runtime.notation.util.NotationSwitch;
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class DiagramCompareItemProviderAdapterFactorySpec extends NotationItemProviderAdapterFactory implements RankedAdapterFactory {
+public class DiagramCompareItemProviderAdapterFactorySpec extends NotationItemProviderAdapterFactory {
 
 	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.gmf.runtime.notation.View}
@@ -88,9 +87,6 @@ public class DiagramCompareItemProviderAdapterFactorySpec extends NotationItemPr
 		}
 	};
 
-	/** ranking of the factory. */
-	private int ranking;
-
 	/**
 	 * Constructor calling super {@link #CompareItemProviderAdapterFactory()}.
 	 */
@@ -107,23 +103,4 @@ public class DiagramCompareItemProviderAdapterFactorySpec extends NotationItemPr
 	public Adapter createAdapter(Notifier target) {
 		return (Adapter)modelSwitchSpec.doSwitch((EObject)target);
 	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactory#getRanking()
-	 */
-	public int getRanking() {
-		return ranking;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactory#setRanking(int)
-	 */
-	public void setRanking(int ranking) {
-		this.ranking = ranking;
-	}
-
 }

@@ -21,9 +21,8 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptorRegistryImpl;
-import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactory;
 import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor;
+import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptorRegistryImpl;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.spec.CompareItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.provider.spec.ComparisonItemProviderSpec;
@@ -79,9 +78,11 @@ public class EMFCompareAdapterFactoryTest {
 
 		AdapterFactory adapterFactory;
 
+		int ranking;
+
 		public TestEMFCompareAdapterFactoryDescriptor(AdapterFactory adapterFactory, int ranking) {
 			this.adapterFactory = adapterFactory;
-			((RankedAdapterFactory)adapterFactory).setRanking(ranking);
+			this.ranking = ranking;
 		}
 
 		public AdapterFactory createAdapterFactory() {
@@ -89,7 +90,7 @@ public class EMFCompareAdapterFactoryTest {
 		}
 
 		public int getRanking() {
-			return ((RankedAdapterFactory)adapterFactory).getRanking();
+			return ranking;
 		}
 
 	}
@@ -97,21 +98,7 @@ public class EMFCompareAdapterFactoryTest {
 	/**
 	 * Specialized CompareItemProviderAdapterFactorySpec, used for test ranking.
 	 */
-	public class CompareItemProviderAdapterFactorySpec2 extends CompareItemProviderAdapterFactorySpec implements RankedAdapterFactory {
-
-		private int ranking;
-
-		public CompareItemProviderAdapterFactorySpec2() {
-			super();
-		}
-
-		public int getRanking() {
-			return ranking;
-		}
-
-		public void setRanking(int ranking) {
-			this.ranking = ranking;
-		}
+	public class CompareItemProviderAdapterFactorySpec2 extends CompareItemProviderAdapterFactorySpec {
 
 		@Override
 		public Adapter createComparisonAdapter() {
@@ -141,21 +128,7 @@ public class EMFCompareAdapterFactoryTest {
 	/**
 	 * Specialized CompareItemProviderAdapterFactorySpec, used for test ranking.
 	 */
-	public class CompareItemProviderAdapterFactorySpec3 extends CompareItemProviderAdapterFactorySpec implements RankedAdapterFactory {
-
-		private int ranking;
-
-		public CompareItemProviderAdapterFactorySpec3() {
-			super();
-		}
-
-		public int getRanking() {
-			return ranking;
-		}
-
-		public void setRanking(int ranking) {
-			this.ranking = ranking;
-		}
+	public class CompareItemProviderAdapterFactorySpec3 extends CompareItemProviderAdapterFactorySpec {
 
 		@Override
 		public Adapter createComparisonAdapter() {

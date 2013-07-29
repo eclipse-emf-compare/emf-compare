@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.rcp.internal.adapterfactory;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactory;
 import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor;
 import org.eclipse.emf.compare.rcp.extension.PluginClassDescriptor;
 
@@ -50,7 +49,6 @@ public class RankedAdapterFactoryDescriptorImpl extends PluginClassDescriptor<Ad
 	public AdapterFactory createAdapterFactory() {
 		if (factory == null) {
 			factory = this.createInstance();
-			((RankedAdapterFactory)factory).setRanking(ranking);
 		}
 		return factory;
 	}

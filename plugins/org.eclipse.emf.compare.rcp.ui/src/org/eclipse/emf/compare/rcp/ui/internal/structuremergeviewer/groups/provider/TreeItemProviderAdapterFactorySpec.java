@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider;
 
 import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactory;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.edit.tree.provider.TreeItemProviderAdapterFactory;
@@ -19,10 +18,7 @@ import org.eclipse.emf.edit.tree.provider.TreeItemProviderAdapterFactory;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class TreeItemProviderAdapterFactorySpec extends TreeItemProviderAdapterFactory implements RankedAdapterFactory {
-
-	/** The ranking of this adapter factory. */
-	private int ranking;
+public class TreeItemProviderAdapterFactorySpec extends TreeItemProviderAdapterFactory {
 
 	/**
 	 * Constructor.
@@ -41,23 +37,5 @@ public class TreeItemProviderAdapterFactorySpec extends TreeItemProviderAdapterF
 	@Override
 	public Adapter createTreeNodeAdapter() {
 		return new TreeNodeItemProviderSpec(this);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactory#getRanking()
-	 */
-	public int getRanking() {
-		return ranking;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactory#setRanking(int)
-	 */
-	public void setRanking(int ranking) {
-		this.ranking = ranking;
 	}
 }
