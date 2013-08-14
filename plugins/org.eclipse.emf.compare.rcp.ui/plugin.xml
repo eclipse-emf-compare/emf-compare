@@ -25,7 +25,7 @@
             label="By Kind">
       </group>
       <group
-            activeByDefault="false"
+            activeByDefault="true"
             class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.ThreeWayComparisonGroupProvider"
             label="By Side">
       </group>
