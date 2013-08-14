@@ -174,8 +174,8 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 				new EMFCompareStructureMergeViewerLabelProvider(adapterFactory, this)));
 		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(adapterFactory));
 
-		if (parent instanceof CompareViewerSwitchingPane) {
-			fParent = (CompareViewerSwitchingPane)parent;
+		if (parent.getParent() instanceof CompareViewerSwitchingPane) {
+			fParent = (CompareViewerSwitchingPane)parent.getParent();
 		} else {
 			fParent = null;
 		}

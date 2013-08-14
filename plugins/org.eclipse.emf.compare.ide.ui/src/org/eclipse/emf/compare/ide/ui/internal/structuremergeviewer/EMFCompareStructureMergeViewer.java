@@ -20,6 +20,7 @@ import java.util.EventObject;
 import java.util.Iterator;
 
 import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.INavigatable;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.internal.CompareHandlerService;
@@ -176,6 +177,7 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 		setViewer(diffTreeViewer);
 		control.setData(INavigatable.NAVIGATOR_PROPERTY, diffTreeViewer.getControl().getData(
 				INavigatable.NAVIGATOR_PROPERTY));
+		control.setData(CompareUI.COMPARE_VIEWER_TITLE, "Model differences");
 		diffTreeViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, false, true);
 		layoutData.widthHint = TREE_RULER_WIDTH;
@@ -400,7 +402,9 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 
 			String message = null;
 			if (comparison.getDifferences().isEmpty()) {
-				message = "No Differences";
+				message = "No difference";
+			} else {
+				message = comparison.getDifferences().size() + " differences";
 			}
 
 			final String theMessage = message;
