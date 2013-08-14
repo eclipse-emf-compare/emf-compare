@@ -10,9 +10,12 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
+import static com.google.common.collect.Iterables.any;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.internal.EMFCompareEditMessages;
 import org.eclipse.emf.compare.provider.ConflictItemProvider;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
@@ -20,6 +23,7 @@ import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 
 /**
  * Specialized {@link ConflictItemProvider} returning nice output for {@link #getText(Object)} and
@@ -70,17 +74,18 @@ public class ConflictItemProviderSpec extends ConflictItemProvider implements II
 	 */
 	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		Conflict conflict = (Conflict)object;
-		int size = conflict.getDifferences().size();
-		String kind = conflict.getKind().getName().toLowerCase();
-		ComposedStyledString ret = new ComposedStyledString(kind.substring(0, 1).toUpperCase()
-				+ kind.substring(1) + " " + EMFCompareEditMessages.getString("conflict")); //$NON-NLS-1$ //$NON-NLS-2$
+		ComposedStyledString ret = new ComposedStyledString();
 
-		ret.append(
-				" [" + size + " " + EMFCompareEditMessages.getString("difference"), Style.DECORATIONS_STYLER); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-		if (size > 1) {
-			ret.append(EMFCompareEditMessages.getString("plural"), Style.DECORATIONS_STYLER); //$NON-NLS-1$
+		if (any(conflict.getDifferences(), EMFComparePredicates.hasState(DifferenceState.UNRESOLVED))) {
+			ret.append("> ", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 		}
-		ret.append("]", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+
+		if (conflict.getKind() == ConflictKind.PSEUDO) {
+			ret.append(EMFCompareEditMessages.getString("pseudoconflict")); //$NON-NLS-1$
+		} else {
+			ret.append(EMFCompareEditMessages.getString("conflict")); //$NON-NLS-1$ 
+		}
+
 		return ret;
 	}
 
