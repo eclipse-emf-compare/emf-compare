@@ -400,14 +400,6 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 			diffTreeViewer.setRoot(fAdapterFactory.adapt(treeNode, ICompareInput.class));
 			getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, comparison);
 
-			String message = null;
-			if (comparison.getDifferences().isEmpty()) {
-				message = "No difference";
-			} else {
-				message = comparison.getDifferences().size() + " differences";
-			}
-
-			final String theMessage = message;
 			SWTUtil.safeAsyncExec(new Runnable() {
 				public void run() {
 					if (diffTreeViewer.getGroupActionMenu() != null) {
@@ -416,9 +408,9 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 					if (diffTreeViewer.getFilterActionMenu() != null) {
 						diffTreeViewer.getFilterActionMenu().createActions(scope, comparison);
 					}
-					diffTreeViewer.refreshAfterDiff(theMessage, diffTreeViewer.getRoot());
 					// Mandatory for the EMFCompareDiffTreeRuler, all TreeItems must have been created
 					diffTreeViewer.createChildrenSilently(diffTreeViewer.getTree());
+					diffTreeViewer.refreshAfterDiff(diffTreeViewer.getRoot());
 					diffTreeViewer.initialSelection();
 				}
 			});

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
+import static com.google.common.collect.Sets.newHashSet;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
@@ -38,6 +40,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -68,6 +71,7 @@ import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -471,6 +475,7 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 			default:
 				throw new IllegalStateException();
 		}
+		refreshAfterDiff(getRoot());
 		getCompareConfiguration().setProperty(EMFCompareConstants.SELECTED_FILTERS, selectedFilters);
 	}
 
@@ -483,6 +488,7 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 			eAdapters.remove(oldDifferenceGroupProvider);
 		}
 		eAdapters.add(differenceGroupProvider);
+		refreshAfterDiff(getRoot());
 		getCompareConfiguration().setProperty(EMFCompareConstants.SELECTED_GROUP, differenceGroupProvider);
 	}
 
@@ -591,16 +597,54 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		return false;
 	}
 
-	public void refreshAfterDiff(String message, Object root) {
+	public void refreshAfterDiff(Object root) {
 		if (getControl().isDisposed()) {
 			return;
 		}
 
 		if (fParent != null) {
-			fParent.setTitleArgument(message);
+			ITreeContentProvider contentProvider = (ITreeContentProvider)getContentProvider();
+			int displayedDiff = getMatchCount(contentProvider, contentProvider.getElements(getRoot()));
+			Comparison comparison = (Comparison)getCompareConfiguration().getProperty(
+					EMFCompareConstants.COMPARE_RESULT);
+			int computedDiff = comparison.getDifferences().size();
+			int filteredDiff = computedDiff - displayedDiff;
+			fParent.setTitleArgument(computedDiff + " differences – " + filteredDiff
+					+ " differences filtered from view");
 		}
 
 		refresh(root);
+	}
+
+	private int getMatchCount(ITreeContentProvider cp, Object[] elements) {
+		Set<Diff> diffs = newHashSet();
+		getMatchCount(cp, elements, diffs);
+		return diffs.size();
+	}
+
+	/**
+	 * @param cp
+	 * @param children
+	 * @param diffs
+	 * @return
+	 */
+	private void getMatchCount(ITreeContentProvider cp, Object[] elements, Set<Diff> diffs) {
+		ViewerFilter[] filters = getFilters();
+		for (int j = 0; j < elements.length; j++) {
+			Object element = elements[j];
+			if (!isFiltered(element, null, filters) && element instanceof Adapter) {
+				Notifier target = ((Adapter)element).getTarget();
+				if (target instanceof TreeNode) {
+					TreeNode treeNode = (TreeNode)target;
+					EObject data = treeNode.getData();
+					if (data instanceof Diff) {
+						diffs.add((Diff)data);
+					}
+				}
+			}
+			Object[] children = cp.getChildren(element);
+			getMatchCount(cp, children, diffs);
+		}
 	}
 
 	/**
