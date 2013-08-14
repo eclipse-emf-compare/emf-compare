@@ -38,19 +38,19 @@
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerCreator"
             extensions="org.eclipse.emf.compare.rcp.ui.eTreeDiff,org.eclipse.emf.compare.rcp.ui.eMatch,org.eclipse.emf.compare.rcp.ui.eResourceDiff"
             id="org.eclipse.emf.compare.ide.ui.internal.EObjectContentMergeViewer"
-            label="EMFCompare Content Merge Viewer">
+            label="Model Compare (Containment Features)">
       </viewer>
       <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table.TableContentMergeViewerCreator"
             extensions="org.eclipse.emf.compare.rcp.ui.eListDiff"
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EObjectListContentMergeViewer"
-            label="EMFCompare Content Merge Viewer">
+            label="Model Compare (Non Containment Feature)">
       </viewer>
       <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text.EMFCompareTextMergeViewerCreator"
             extensions="org.eclipse.emf.compare.rcp.ui.eTextDiff"
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text.EMFCompareTextContentMergeViewer"
-            label="EMFCompare Text Merge Viewer">
+            label="Model Compare (Text Feature)">
       </viewer>
       <contentTypeBinding
             contentTypeId="org.eclipse.emf.ecore.xmi"

@@ -1,31 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.diagram.ide.ui.papyrus;singleton:=true
+Bundle-Name: %pluginName
+Bundle-Vendor: %providerName
 Bundle-Version: 2.2.0.qualifier
-Bundle-Activator: org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.PapyrusIDEUICompare
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.compare,
- org.eclipse.emf.compare.diagram,
- org.eclipse.emf.compare.diagram.ide.ui,
- org.eclipse.emf.compare.ide.ui,
- org.eclipse.gmf.runtime.notation,
- org.eclipse.papyrus.uml.diagram.activity,
- org.eclipse.papyrus.uml.diagram.clazz,
- org.eclipse.papyrus.uml.diagram.communication,
- org.eclipse.papyrus.uml.diagram.component,
- org.eclipse.papyrus.uml.diagram.composite,
- org.eclipse.papyrus.uml.diagram.deployment,
- org.eclipse.papyrus.uml.diagram.profile,
- org.eclipse.papyrus.uml.diagram.sequence,
- org.eclipse.papyrus.uml.diagram.statemachine,
- org.eclipse.papyrus.uml.diagram.usecase,
- org.eclipse.gmf.runtime.diagram.ui,
- org.eclipse.papyrus.uml.diagram.common,
- org.eclipse.papyrus.infra.emf.diagram.common;bundle-version="0.9.1",
+Require-Bundle: org.eclipse.emf.compare.diagram.ide.ui;bundle-version="3.0.0",
+ org.eclipse.gmf.runtime.diagram.ui;bundle-version="0.9.1",
+ org.eclipse.papyrus.uml.diagram.common;bundle-version="0.9.1",
  org.eclipse.papyrus.infra.gmfdiag.common;bundle-version="0.9.1",
  org.eclipse.papyrus.infra.core;bundle-version="0.9.1"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Bundle-Vendor: %providerName
-Export-Package: org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal;x-internal:=true

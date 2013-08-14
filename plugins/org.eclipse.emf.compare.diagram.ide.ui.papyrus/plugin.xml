@@ -14,22 +14,9 @@
 
 <plugin>
    <extension
-         point="org.eclipse.compare.contentMergeViewers">
-      <viewer
-            class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.DiagramContentMergeViewerCreator"
-            extensions="diagramcompare_match, diagramcompare_diff, di, notation"
-            id="org.eclipse.emf.compare.ui.papyrus.contentviewer"
-            label="Papyrus Content Merge Viewer">
-      </viewer>
-      <contentTypeBinding
-            contentMergeViewerId="org.eclipse.emf.compare.ui.papyrus.contentviewer"
-            contentTypeId="org.eclipse.emf.compare.content.type">
-      </contentTypeBinding>
-   </extension>
-   <extension
          point="org.eclipse.core.contenttype.contentTypes">
       <file-association
             content-type="org.eclipse.emf.compare.content.type"
-            file-extensions="di"/>
+            file-extensions="di,notation"/>
    </extension>
 </plugin>

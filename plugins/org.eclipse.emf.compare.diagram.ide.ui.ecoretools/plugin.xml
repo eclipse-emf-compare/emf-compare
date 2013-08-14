@@ -14,25 +14,6 @@
 
 <plugin>
    <extension
-         point="org.eclipse.compare.contentMergeViewers">
-      <viewer
-            class="org.eclipse.emf.compare.diagram.ide.ui.ecoretools.internal.DiagramContentMergeViewerCreator"
-            extensions="diagramcompare_match, ecorediag"
-            id="org.eclipse.emf.compare.ide.ui.internal.ViewContentMergeViewer"
-            label="Ecoretools Content Merge Viewer">
-      </viewer>
-      <contentTypeBinding
-            contentMergeViewerId="org.eclipse.emf.compare.ide.ui.internal.ViewContentMergeViewer"
-            contentTypeId="org.eclipse.emf.compare.content.type">
-      </contentTypeBinding>
-      <viewer
-            class="org.eclipse.emf.compare.diagram.ide.ui.ecoretools.internal.DiagramContentMergeViewerCreator"
-            extensions="diagramcompare_diff, ecorediag"
-            id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.ViewListContentMergeViewer"
-            label="Ecoretools Content Merge Viewer">
-      </viewer>
-   </extension>
-   <extension
          point="org.eclipse.core.contenttype.contentTypes">
       <file-association
             content-type="org.eclipse.emf.compare.content.type"
