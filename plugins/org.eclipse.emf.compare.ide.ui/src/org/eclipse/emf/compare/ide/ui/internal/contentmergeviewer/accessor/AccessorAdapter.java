@@ -16,12 +16,20 @@ import java.io.InputStream;
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.graphics.Image;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.Version;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public final class AccessorAdapter implements ITypedElement, IStreamContentAccessor {
+
+	/**
+	 * Fix for #293926 has been release in org.eclipse.compare 3.5.201.R37x_v20110817-0800
+	 */
+	private static final Version BUG_293926_VERSION = Version.parseVersion("3.5.201"); //$NON-NLS-1$
 
 	private final Object target;
 
@@ -56,7 +64,14 @@ public final class AccessorAdapter implements ITypedElement, IStreamContentAcces
 		 * that this bug has been fixed in 3.7.1, we're keeping this around for the compatibility with 3.5 and
 		 * 3.6.
 		 */
-		return new ByteArrayInputStream(new byte[] {' ' });
+		Bundle compareBundle = Platform.getBundle("org.eclipse.compare"); //$NON-NLS-1$
+		Version compareBundleVersion = compareBundle.getVersion();
+		if (compareBundleVersion.compareTo(BUG_293926_VERSION) < 0) {
+			// workaround for before before indigo SR1 - 3.7.1
+			return new ByteArrayInputStream(new byte[] {' ' });
+		} else {
+			return null;
+		}
 	}
 
 	/**
