@@ -30,13 +30,14 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDiff
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
+import org.eclipse.emf.edit.provider.IItemColorProvider;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.emf.edit.tree.provider.TreeNodeItemProvider;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements IItemStyledLabelProvider {
+public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements IItemStyledLabelProvider, IItemColorProvider {
 
 	/***/
 	private final Map<IDifferenceGroup, GroupItemProviderAdapter> fGroupAdapters = Maps.newHashMap();
@@ -124,5 +125,49 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 		TreeNode treeNode = (TreeNode)object;
 		EObject data = treeNode.getData();
 		return (IComposedStyledString)AdapterFactoryUtil.getStyledText(getRootAdapterFactory(), data);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getBackground(java.lang.Object)
+	 */
+	@Override
+	public Object getBackground(Object object) {
+		TreeNode treeNode = ((TreeNode)object);
+		return itemDelegator.getBackground(treeNode.getData());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getForeground(java.lang.Object)
+	 */
+	@Override
+	public Object getForeground(Object object) {
+		TreeNode treeNode = ((TreeNode)object);
+		return itemDelegator.getForeground(treeNode.getData());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getBackground(java.lang.Object, int)
+	 */
+	@Override
+	public Object getBackground(Object object, int columnIndex) {
+		TreeNode treeNode = ((TreeNode)object);
+		return itemDelegator.getBackground(treeNode.getData(), columnIndex);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getForeground(java.lang.Object, int)
+	 */
+	@Override
+	public Object getForeground(Object object, int columnIndex) {
+		TreeNode treeNode = ((TreeNode)object);
+		return itemDelegator.getForeground(treeNode.getData(), columnIndex);
 	}
 }
