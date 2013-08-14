@@ -648,20 +648,22 @@ public final class DiffUtil {
 			}
 		}
 
-		// Do we have duplicates before A in the lcs?
-		final Multiset<E> dupesLCS = HashMultiset.create(lcs.subList(0, lcsIndexOfSubsequenceStart + 1));
-		final E subsequenceStart = lcs.get(lcsIndexOfSubsequenceStart);
-		int duplicatesToGo = dupesLCS.count(subsequenceStart) - 1;
+		if (lcsIndexOfSubsequenceStart > 0) {
+			// Do we have duplicates before A in the lcs?
+			final Multiset<E> dupesLCS = HashMultiset.create(lcs.subList(0, lcsIndexOfSubsequenceStart + 1));
+			final E subsequenceStart = lcs.get(lcsIndexOfSubsequenceStart);
+			int duplicatesToGo = dupesLCS.count(subsequenceStart) - 1;
 
-		// Then, find the index of "A" in target
-		for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
-			final E targetElement = target.get(i);
+			// Then, find the index of "A" in target
+			for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
+				final E targetElement = target.get(i);
 
-			if (equalityHelper.matchingValues(targetElement, subsequenceStart)) {
-				if (duplicatesToGo > 0) {
-					duplicatesToGo--;
-				} else {
-					insertionIndex = i + 1;
+				if (equalityHelper.matchingValues(targetElement, subsequenceStart)) {
+					if (duplicatesToGo > 0) {
+						duplicatesToGo--;
+					} else {
+						insertionIndex = i + 1;
+					}
 				}
 			}
 		}
