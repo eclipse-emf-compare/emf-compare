@@ -11,8 +11,7 @@
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl;
 
 import static com.google.common.base.Predicates.and;
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.size;
+import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Iterators.filter;
 import static com.google.common.collect.Iterators.transform;
@@ -179,21 +178,17 @@ public class ThreeWayComparisonGroupProvider extends AdapterImpl implements IDif
 		 */
 		@Override
 		public IComposedStyledString getStyledName() {
-			final IStyledString.IComposedStyledString ret = new ComposedStyledString(getName());
+			final IStyledString.IComposedStyledString ret = new ComposedStyledString();
 			Iterator<EObject> eAllContents = concat(transform(getGroupTree().iterator(), E_ALL_CONTENTS));
 			Iterator<EObject> eAllData = transform(eAllContents, TREE_NODE_DATA);
 			UnmodifiableIterator<Diff> eAllDiffData = filter(eAllData, Diff.class);
 			Collection<Diff> diffs = Sets.newHashSet(eAllDiffData);
-			int unresolvedRealDiffs = size(filter(diffs, and(hasState(DifferenceState.UNRESOLVED),
-					hasConflict(ConflictKind.REAL))));
-			int unresolvedPseudoDiffs = size(filter(diffs, and(hasState(DifferenceState.UNRESOLVED),
-					hasConflict(ConflictKind.PSEUDO))));
-			ret.append(" [" + unresolvedRealDiffs + " real and " + unresolvedPseudoDiffs
-					+ " pseudo unresolved difference", Style.DECORATIONS_STYLER);
-			if (unresolvedRealDiffs + unresolvedPseudoDiffs > 1) {
-				ret.append("s", Style.DECORATIONS_STYLER);
+			boolean unresolvedDiffs = any(diffs, and(hasState(DifferenceState.UNRESOLVED), hasConflict(
+					ConflictKind.REAL, ConflictKind.PSEUDO)));
+			if (unresolvedDiffs) {
+				ret.append("> ", Style.DECORATIONS_STYLER);
 			}
-			ret.append("]", Style.DECORATIONS_STYLER);
+			ret.append(getName());
 			return ret;
 		}
 

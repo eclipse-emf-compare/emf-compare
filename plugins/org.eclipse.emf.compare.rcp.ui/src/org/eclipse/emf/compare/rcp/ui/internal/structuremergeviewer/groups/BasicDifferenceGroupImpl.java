@@ -14,8 +14,8 @@ import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Iterators.any;
 import static com.google.common.collect.Iterators.concat;
-import static com.google.common.collect.Iterators.size;
 import static com.google.common.collect.Iterators.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentMoveReferenceChange;
@@ -173,16 +173,15 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup#getStyledName()
 	 */
 	public IStyledString.IComposedStyledString getStyledName() {
-		final IStyledString.IComposedStyledString ret = new ComposedStyledString(getName());
+		final IStyledString.IComposedStyledString ret = new ComposedStyledString();
 		Iterator<EObject> eAllContents = concat(transform(getGroupTree().iterator(), E_ALL_CONTENTS));
 		Iterator<EObject> eAllData = transform(eAllContents, TREE_NODE_DATA);
-		int unresolvedDiffs = size(Iterators.filter(Iterators.filter(eAllData, Diff.class),
-				hasState(DifferenceState.UNRESOLVED)));
-		ret.append(" [" + unresolvedDiffs + " unresolved difference", Style.DECORATIONS_STYLER);
-		if (unresolvedDiffs > 1) {
-			ret.append("s", Style.DECORATIONS_STYLER);
+		boolean unresolvedDiffs = any(Iterators.filter(eAllData, Diff.class),
+				hasState(DifferenceState.UNRESOLVED));
+		if (unresolvedDiffs) {
+			ret.append("> ", Style.DECORATIONS_STYLER);
 		}
-		ret.append("]", Style.DECORATIONS_STYLER);
+		ret.append(getName());
 		return ret;
 	}
 
