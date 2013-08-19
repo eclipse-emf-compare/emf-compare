@@ -19,7 +19,7 @@
 
   <groupId>org.eclipse.emf.compare</groupId>
   <artifactId>emf.compare-parent</artifactId>
-  <version>2.1.0-SNAPSHOT</version>
+  <version>2.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <licenses>
@@ -37,8 +37,8 @@
   </licenses>
 
   <properties>
-    <tycho-version>0.17.0</tycho-version>
-    <tycho-extras-version>0.17.0</tycho-extras-version>
+    <tycho-version>0.18.1</tycho-version>
+    <tycho-extras-version>0.18.1</tycho-extras-version>
   </properties>
 
   <modules>
@@ -278,7 +278,7 @@
               <artifact>
                 <groupId>org.eclipse.emf.compare</groupId>
                 <artifactId>emf.compare-parent</artifactId>
-                <version>2.1.0-SNAPSHOT</version>
+                <version>2.2.0-SNAPSHOT</version>
                 <classifier>targetPlatforms/kepler-sdk</classifier>
               </artifact>
             </target>
@@ -304,7 +304,7 @@
               <artifact>
                 <groupId>org.eclipse.emf.compare</groupId>
                 <artifactId>emf.compare-parent</artifactId>
-                <version>2.1.0-SNAPSHOT</version>
+                <version>2.2.0-SNAPSHOT</version>
                 <classifier>targetPlatforms/juno-4.2-sdk</classifier>
               </artifact>
             </target>
@@ -353,7 +353,7 @@
                             <artifact>
                                 <groupId>org.eclipse.emf.compare</groupId>
                                 <artifactId>org.eclipse.emf.compare</artifactId>
-                                <version>2.1.0-SNAPSHOT</version>
+                                <version>2.2.0-SNAPSHOT</version>
                                 <classifier>target_platforms/helios-sdk</classifier>
                             </artifact>
                         </target>
@@ -396,7 +396,7 @@
                             <artifact>
                                 <groupId>org.eclipse.emf.compare</groupId>
                                 <artifactId>org.eclipse.emf.compare</artifactId>
-                                <version>2.1.0-SNAPSHOT</version>
+                                <version>2.2.0-SNAPSHOT</version>
                                 <classifier>target_platforms/galileo-sdk</classifier>
                             </artifact>
                         </target>
