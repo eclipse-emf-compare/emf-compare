@@ -648,7 +648,7 @@ public final class DiffUtil {
 			}
 		}
 
-		if (lcsIndexOfSubsequenceStart > 0) {
+		if (lcsIndexOfSubsequenceStart > -1) {
 			// Do we have duplicates before A in the lcs?
 			final Multiset<E> dupesLCS = HashMultiset.create(lcs.subList(0, lcsIndexOfSubsequenceStart + 1));
 			final E subsequenceStart = lcs.get(lcsIndexOfSubsequenceStart);
