@@ -38,6 +38,7 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Polyline;
 import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.command.Command;
@@ -61,7 +62,6 @@ import org.eclipse.emf.compare.diagram.internal.factories.extensions.Coordinates
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
-import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
@@ -744,35 +744,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 				if (fOriginView instanceof Edge) {
 					View source = ((Edge)fOriginView).getSource();
 					View target = ((Edge)fOriginView).getTarget();
-					result.addAll(getOrCreateRelatedDecorators(source));
-					result.addAll(getOrCreateRelatedDecorators(target));
-				}
-				return result;
-			}
-
-			/**
-			 * From the given view, get or create the related phantoms.
-			 * 
-			 * @param referenceView
-			 *            The given view.
-			 * @return The list of phantoms.
-			 */
-			private List<Phantom> getOrCreateRelatedDecorators(EObject referenceView) {
-				List<Phantom> result = new ArrayList<Phantom>();
-				Collection<Diff> changes = Collections2.filter(getComparison().getDifferences(referenceView),
-						goodCandidate());
-				for (Diff change : changes) {
-					Phantom phantom = fPhantomRegistry.get(change);
-					if (phantom == null) {
-						IFigure referenceFigure = PhantomManager.this.getFigure((View)referenceView);
-						if (referenceFigure != null) {
-							phantom = createAndRegisterDecorator(change, (View)referenceView,
-									referenceFigure, fSide);
-						}
-					}
-					if (phantom != null) {
-						result.add(phantom);
-					}
+					result.addAll(getOrCreateRelatedPhantoms(source, fSide));
+					result.addAll(getOrCreateRelatedPhantoms(target, fSide));
 				}
 				return result;
 			}
@@ -786,7 +759,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 				List<AbstractDecorator> result = new ArrayList<AbstractDecorator>();
 				EObject parentOriginView = fOriginView.eContainer();
 				while (parentOriginView != null) {
-					result.addAll(getOrCreateRelatedDecorators(parentOriginView));
+					result.addAll(getOrCreateRelatedPhantoms(parentOriginView, fSide));
 					parentOriginView = parentOriginView.eContainer();
 				}
 				return result;
@@ -813,9 +786,39 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		protected Predicate<Diff> goodCandidate() {
 			return new Predicate<Diff>() {
 				public boolean apply(Diff difference) {
-					return or(isAddOrDelete, isHideOrReveal).apply(difference);
+					return or(isAddOrDelete, isHideOrReveal).apply(difference)
+							&& difference.getState() == DifferenceState.UNRESOLVED;
 				}
 			};
+		}
+
+		/**
+		 * From the given view, get or create the related phantoms in the given side.
+		 * 
+		 * @param referenceView
+		 *            The given view.
+		 * @param side
+		 *            The given side.
+		 * @return The list of phantoms.
+		 */
+		private List<Phantom> getOrCreateRelatedPhantoms(EObject referenceView, MergeViewerSide side) {
+			List<Phantom> result = new ArrayList<Phantom>();
+			Collection<Diff> changes = Collections2.filter(getComparison().getDifferences(referenceView),
+					goodCandidate());
+			for (Diff change : changes) {
+				Phantom phantom = fPhantomRegistry.get(change);
+				if (phantom == null) {
+					IFigure referenceFigure = PhantomManager.this.getFigure((View)referenceView);
+					if (referenceFigure != null) {
+						phantom = createAndRegisterDecorator(change, (View)referenceView, referenceFigure,
+								side);
+					}
+				}
+				if (phantom != null) {
+					result.add(phantom);
+				}
+			}
+			return result;
 		}
 
 		/**
@@ -1258,7 +1261,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		}
 
 		/**
-		 * It creates and returns a new edit part from the given edge. This edit part listens the reference
+		 * It creates and returns a new edit part from the given edge. This edit part listens to the reference
 		 * edge but is attached to the controllers of the target (phantom) side.
 		 * 
 		 * @param referenceEdge
@@ -1274,27 +1277,107 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			EditPart edgeEditPartReference = getViewer(referenceSide).getEditPart(referenceEdge);
 			EditPart edgeEditPart = null;
 			if (edgeEditPartReference instanceof ConnectionEditPart) {
-				edgeEditPart = createEditPartForPhantoms(referenceEdge, referenceSide, targetSide);
+
+				edgeEditPart = getOrCreatePhantomEditPart(referenceEdge, referenceSide, targetSide);
+
 				if (edgeEditPart instanceof ConnectionEditPart) {
-					View source = (View)((ConnectionEditPart)edgeEditPartReference).getSource().getModel();
-					if (source == null) {
-						source = referenceEdge.getSource();
+
+					View edgeSourceReference = (View)((ConnectionEditPart)edgeEditPartReference).getSource()
+							.getModel();
+					if (edgeSourceReference == null) {
+						edgeSourceReference = referenceEdge.getSource();
 					}
-					View target = (View)((ConnectionEditPart)edgeEditPartReference).getTarget().getModel();
-					if (target == null) {
-						target = referenceEdge.getTarget();
+					View edgeTargetReference = (View)((ConnectionEditPart)edgeEditPartReference).getTarget()
+							.getModel();
+					if (edgeTargetReference == null) {
+						edgeTargetReference = referenceEdge.getTarget();
 					}
-					EditPart sourceEp = createEditPartForPhantoms(source, referenceSide, targetSide);
-					((AbstractGraphicalEditPart)sourceEp).activate();
-					((AbstractGraphicalEditPart)sourceEp).getFigure();
-					((ConnectionEditPart)edgeEditPart).setSource(sourceEp);
-					EditPart targetEp = createEditPartForPhantoms(target, referenceSide, targetSide);
-					((AbstractGraphicalEditPart)targetEp).activate();
-					((AbstractGraphicalEditPart)targetEp).getFigure();
-					((ConnectionEditPart)edgeEditPart).setTarget(targetEp);
+
+					EditPart edgeSourceEp = getOrCreateExtremityPhantomEditPart(
+							((ConnectionEditPart)edgeEditPartReference).getSource(), referenceSide,
+							targetSide);
+
+					((ConnectionEditPart)edgeEditPart).setSource(edgeSourceEp);
+
+					EditPart edgeTargetEp = getOrCreateExtremityPhantomEditPart(
+							((ConnectionEditPart)edgeEditPartReference).getTarget(), referenceSide,
+							targetSide);
+
+					((ConnectionEditPart)edgeEditPart).setTarget(edgeTargetEp);
+
 				}
 			}
 			return edgeEditPart;
+		}
+
+		/**
+		 * From the given edit part, it retrieves the matched one, from the given target side. If the
+		 * retrieved edit part is not linked to a GMF object, in the target side, a phantom GEF edit part is
+		 * returned which will locate a rectangle invisible figure in the same location as the related
+		 * phantom.
+		 * 
+		 * @param referenceEdgeExtremityEp
+		 *            The reference edit part for one of the extremities of an edge.
+		 * @param referenceSide
+		 *            The side of the reference.
+		 * @param targetSide
+		 *            The other side, where the phantom has to be drawn.
+		 * @return The phantom edit part used to attach the extremity of an edge phantom.
+		 */
+		private EditPart getOrCreateExtremityPhantomEditPart(EditPart referenceEdgeExtremityEp,
+				MergeViewerSide referenceSide, MergeViewerSide targetSide) {
+			View referenceExtremityView = (View)referenceEdgeExtremityEp.getModel();
+
+			EditPart edgeExtremityEp = getOrCreatePhantomEditPart(referenceExtremityView, referenceSide,
+					targetSide);
+
+			if (isPhantomEditPart((AbstractGraphicalEditPart)edgeExtremityEp)) {
+
+				final AbstractGraphicalEditPart edgeExtremityEpParent = (AbstractGraphicalEditPart)edgeExtremityEp
+						.getParent();
+
+				List<Phantom> phantoms = getOrCreateRelatedPhantoms(referenceExtremityView, targetSide);
+				if (!phantoms.isEmpty()) {
+					Phantom phantomToTarget = phantoms.get(0);
+					final IFigure figureToTarget = phantomToTarget.getFigure();
+
+					edgeExtremityEp = new AbstractGraphicalEditPart() {
+
+						@Override
+						protected void createEditPolicies() {
+						}
+
+						@Override
+						protected IFigure createFigure() {
+							RectangleFigure fig = new RectangleFigure();
+							fig.setBounds(figureToTarget.getBounds());
+							fig.setParent(edgeExtremityEpParent.getFigure());
+							return fig;
+						}
+					};
+
+					edgeExtremityEp.setParent(edgeExtremityEpParent);
+				}
+
+				((AbstractGraphicalEditPart)edgeExtremityEp).activate();
+				((AbstractGraphicalEditPart)edgeExtremityEp).getFigure();
+			}
+
+			return edgeExtremityEp;
+		}
+
+		/**
+		 * It checks if the given edit part is related to a phantom edit part (created for nothing, without
+		 * link to a GMF object in the target side).
+		 * 
+		 * @param editPart
+		 *            The edit part to check.
+		 * @return True if it is a phantom edit part, false otherwise.
+		 */
+		private boolean isPhantomEditPart(AbstractGraphicalEditPart editPart) {
+			Rectangle targetBounds = editPart.getFigure().getBounds();
+			return targetBounds.x == 0 && targetBounds.y == 0 && targetBounds.width == 0
+					&& targetBounds.height == 0;
 		}
 
 		/**
@@ -1309,7 +1392,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 *            The side where the edit part has to be created to draw the related phantom.
 		 * @return The new edit part.
 		 */
-		private EditPart createEditPartForPhantoms(EObject referenceView, MergeViewerSide referenceSide,
+		private EditPart getOrCreatePhantomEditPart(EObject referenceView, MergeViewerSide referenceSide,
 				MergeViewerSide targetSide) {
 			EditPart editPartParent = null;
 			EditPart editPart = null;
@@ -1324,7 +1407,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 				editPartParent = getViewer(targetSide).getEditPart(viewParent);
 			}
 			if (editPartParent == null) {
-				editPartParent = createEditPartForPhantoms((EObject)referenceViewParent, referenceSide,
+				editPartParent = getOrCreatePhantomEditPart((EObject)referenceViewParent, referenceSide,
 						targetSide);
 
 			}
@@ -1334,11 +1417,13 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 					editPart = getViewer(targetSide).getEditPart(view);
 				}
 				if (editPart == null) {
+
 					editPart = getViewer(targetSide).getGraphicalViewer().getEditPartFactory()
 							.createEditPart(editPartParent, referenceView);
 					editPart.setParent(editPartParent);
 					getViewer(targetSide).getGraphicalViewer().getEditPartRegistry().put(referenceView,
 							editPart);
+
 				}
 
 			}
