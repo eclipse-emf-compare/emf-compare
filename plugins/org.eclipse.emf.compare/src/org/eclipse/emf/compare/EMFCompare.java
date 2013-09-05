@@ -12,6 +12,7 @@ package org.eclipse.emf.compare;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
@@ -169,89 +170,164 @@ public class EMFCompare {
 		final Comparison comparison = matchEngineFactoryRegistry.getHighestRankingMatchEngineFactory(scope)
 				.getMatchEngine().match(scope, monitor);
 
-		if (hasToStop(comparison, monitor)) {
-			return comparison;
-		}
-
 		List<IPostProcessor> postProcessors = postProcessorDescriptorRegistry.getPostProcessors(scope);
 
-		for (IPostProcessor iPostProcessor : postProcessors) {
-			iPostProcessor.postMatch(comparison, monitor);
+		postMatch(comparison, postProcessors, monitor);
 
-			if (hasToStop(comparison, monitor)) {
-				return comparison;
-			}
-		}
+		if (!hasToStop(comparison, monitor)) {
+			diffEngine.diff(comparison, monitor);
+			postDiff(comparison, postProcessors, monitor);
 
-		diffEngine.diff(comparison, monitor);
+			if (!hasToStop(comparison, monitor)) {
+				reqEngine.computeRequirements(comparison, monitor);
+				postRequirements(comparison, postProcessors, monitor);
 
-		if (hasToStop(comparison, monitor)) {
-			return comparison;
-		}
+				if (!hasToStop(comparison, monitor)) {
+					equiEngine.computeEquivalences(comparison, monitor);
+					postEquivalences(comparison, postProcessors, monitor);
 
-		for (IPostProcessor iPostProcessor : postProcessors) {
-			iPostProcessor.postDiff(comparison, monitor);
+					detectConflicts(comparison, postProcessors, monitor);
 
-			if (hasToStop(comparison, monitor)) {
-				return comparison;
-			}
-		}
-
-		reqEngine.computeRequirements(comparison, monitor);
-
-		if (hasToStop(comparison, monitor)) {
-			return comparison;
-		}
-
-		for (IPostProcessor iPostProcessor : postProcessors) {
-			iPostProcessor.postRequirements(comparison, monitor);
-
-			if (hasToStop(comparison, monitor)) {
-				return comparison;
-			}
-		}
-
-		equiEngine.computeEquivalences(comparison, monitor);
-
-		if (hasToStop(comparison, monitor)) {
-			return comparison;
-		}
-
-		for (IPostProcessor iPostProcessor : postProcessors) {
-			iPostProcessor.postEquivalences(comparison, monitor);
-
-			if (hasToStop(comparison, monitor)) {
-				return comparison;
-			}
-		}
-
-		if (comparison.isThreeWay() && conflictDetector != null) {
-			conflictDetector.detect(comparison, monitor);
-
-			if (hasToStop(comparison, monitor)) {
-				return comparison;
-			}
-
-			for (IPostProcessor iPostProcessor : postProcessors) {
-				iPostProcessor.postConflicts(comparison, monitor);
-
-				if (hasToStop(comparison, monitor)) {
-					return comparison;
+					postComparison(comparison, postProcessors, monitor);
 				}
-			}
-		}
-
-		for (IPostProcessor iPostProcessor : postProcessors) {
-			iPostProcessor.postComparison(comparison, monitor);
-
-			if (hasToStop(comparison, monitor)) {
-				return comparison;
 			}
 		}
 
 		monitor.done();
 
 		return comparison;
+	}
+
+	/**
+	 * Launches the conflict detection engine, if any has been given and if the comparison is three way.
+	 * 
+	 * @param comparison
+	 *            the comparison in which the conflict has to be detected
+	 * @param postProcessors
+	 *            the list of post processors to be used after conflict detection
+	 * @param monitor
+	 *            monitor to report progress to or cancellation
+	 */
+	private void detectConflicts(final Comparison comparison, List<IPostProcessor> postProcessors,
+			final Monitor monitor) {
+		if (!hasToStop(comparison, monitor) && comparison.isThreeWay() && conflictDetector != null) {
+			conflictDetector.detect(comparison, monitor);
+			postConflicts(comparison, postProcessors, monitor);
+		}
+	}
+
+	/**
+	 * Post processes the comparison after the match engine has been applied.
+	 * 
+	 * @param comparison
+	 *            the comparison on which the post processors has to be applied
+	 * @param postProcessors
+	 *            the list of post processors to be use
+	 * @param monitor
+	 *            monitor to report progress to or cancellation
+	 */
+	private void postMatch(final Comparison comparison, List<IPostProcessor> postProcessors,
+			final Monitor monitor) {
+		Iterator<IPostProcessor> processorsIterator = postProcessors.iterator();
+		while (!hasToStop(comparison, monitor) && processorsIterator.hasNext()) {
+			final IPostProcessor iPostProcessor = processorsIterator.next();
+			iPostProcessor.postMatch(comparison, monitor);
+		}
+	}
+
+	/**
+	 * Post processes the comparison after the diff engine has been applied.
+	 * 
+	 * @param comparison
+	 *            the comparison on which the post processors has to be applied
+	 * @param postProcessors
+	 *            the list of post processors to be use
+	 * @param monitor
+	 *            monitor to report progress to or cancellation
+	 */
+	private void postDiff(final Comparison comparison, List<IPostProcessor> postProcessors,
+			final Monitor monitor) {
+		Iterator<IPostProcessor> processorsIterator = postProcessors.iterator();
+		while (!hasToStop(comparison, monitor) && processorsIterator.hasNext()) {
+			final IPostProcessor iPostProcessor = processorsIterator.next();
+			iPostProcessor.postDiff(comparison, monitor);
+		}
+	}
+
+	/**
+	 * Post processes the comparison after the requirement engine has been applied.
+	 * 
+	 * @param comparison
+	 *            the comparison on which the post processors has to be applied
+	 * @param postProcessors
+	 *            the list of post processors to be use
+	 * @param monitor
+	 *            monitor to report progress to or cancellation
+	 */
+	private void postRequirements(final Comparison comparison, List<IPostProcessor> postProcessors,
+			final Monitor monitor) {
+		Iterator<IPostProcessor> processorsIterator = postProcessors.iterator();
+		while (!hasToStop(comparison, monitor) && processorsIterator.hasNext()) {
+			final IPostProcessor iPostProcessor = processorsIterator.next();
+			iPostProcessor.postRequirements(comparison, monitor);
+		}
+	}
+
+	/**
+	 * Post processes the comparison after the equivalence engine has been applied.
+	 * 
+	 * @param comparison
+	 *            the comparison on which the post processors has to be applied
+	 * @param postProcessors
+	 *            the list of post processors to be use
+	 * @param monitor
+	 *            monitor to report progress to or cancellation
+	 */
+	private void postEquivalences(final Comparison comparison, List<IPostProcessor> postProcessors,
+			final Monitor monitor) {
+		Iterator<IPostProcessor> processorsIterator = postProcessors.iterator();
+		while (!hasToStop(comparison, monitor) && processorsIterator.hasNext()) {
+			final IPostProcessor iPostProcessor = processorsIterator.next();
+			iPostProcessor.postEquivalences(comparison, monitor);
+		}
+	}
+
+	/**
+	 * Post processes the comparison after the conflict engine has been applied.
+	 * 
+	 * @param comparison
+	 *            the comparison on which the post processors has to be applied
+	 * @param postProcessors
+	 *            the list of post processors to be use
+	 * @param monitor
+	 *            monitor to report progress to or cancellation
+	 */
+	private void postConflicts(final Comparison comparison, List<IPostProcessor> postProcessors,
+			final Monitor monitor) {
+		Iterator<IPostProcessor> processorsIterator = postProcessors.iterator();
+		while (!hasToStop(comparison, monitor) && processorsIterator.hasNext()) {
+			final IPostProcessor iPostProcessor = processorsIterator.next();
+			iPostProcessor.postConflicts(comparison, monitor);
+		}
+	}
+
+	/**
+	 * Post processes the comparison after it has been computed.
+	 * 
+	 * @param comparison
+	 *            the comparison on which the post processors has to be applied
+	 * @param postProcessors
+	 *            the list of post processors to be use
+	 * @param monitor
+	 *            monitor to report progress to or cancellation
+	 */
+	private void postComparison(final Comparison comparison, List<IPostProcessor> postProcessors,
+			final Monitor monitor) {
+		Iterator<IPostProcessor> processorsIterator = postProcessors.iterator();
+		while (!hasToStop(comparison, monitor) && processorsIterator.hasNext()) {
+			final IPostProcessor iPostProcessor = processorsIterator.next();
+			iPostProcessor.postComparison(comparison, monitor);
+		}
 	}
 
 	/**
