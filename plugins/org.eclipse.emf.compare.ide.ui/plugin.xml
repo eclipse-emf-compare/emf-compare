@@ -111,6 +111,31 @@
                id="org.eclipse.emf.compare.ide.ui.setdropdown"
                style="pulldown"
                tooltip="%dropdown.tooltip">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeEditor">
+                  <test
+                        property="emfcompare.bothSidesWriteable">
+                  </test>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.emf.compare.ide.ui.dropdown.acceptreject"
+               icon="icons/full/toolb16/accept.gif"
+               id="org.eclipse.emf.compare.ide.ui.setdropdown.acceptreject"
+               style="pulldown"
+               tooltip="%dropdown.accept.tooltip">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeEditor">
+                  <test
+                        property="emfcompare.hasReadOnlySide">
+                  </test>
+               </with>
+            </visibleWhen>
          </command>
          <command
                commandId="org.eclipse.emf.compare.ide.ui.acceptChange"
@@ -276,6 +301,20 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.emf.compare.ide.ui.setdropdown.acceptreject">
+         <command
+               commandId="org.eclipse.emf.compare.ide.ui.dropdown.accept"
+               icon="icons/full/toolb16/accept.gif"
+               style="push">
+         </command>
+         <command
+               commandId="org.eclipse.emf.compare.ide.ui.dropdown.reject"
+               icon="icons/full/toolb16/reject.gif"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -304,6 +343,18 @@
       <command
             id="org.eclipse.emf.compare.ide.ui.dropdown.rtl"
             name="Right to Left">
+      </command>
+      <command
+            id="org.eclipse.emf.compare.ide.ui.dropdown.acceptreject"
+            name="org.eclipse.emf.compare.ide.ui.dropdown.acceptreject">
+      </command>
+      <command
+            id="org.eclipse.emf.compare.ide.ui.dropdown.accept"
+            name="Show consequences of accepting merge">
+      </command>
+      <command
+            id="org.eclipse.emf.compare.ide.ui.dropdown.reject"
+            name="Show consequences of rejecting merge">
       </command>
       <command
             id="org.eclipse.emf.compare.ide.ui.acceptChange"
@@ -581,6 +632,14 @@
       <handler
             class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.DropDownHandler"
             commandId="org.eclipse.emf.compare.ide.ui.dropdown">
+         <activeWhen>
+            <with
+                  variable="activeEditor">
+               <test
+                     property="emfcompare.bothSidesWriteable">
+               </test>
+            </with>
+         </activeWhen>
       </handler>
       <handler
             class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.DropDownLeftToRight"
@@ -589,6 +648,26 @@
       <handler
             class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.DropDownRightToLeft"
             commandId="org.eclipse.emf.compare.ide.ui.dropdown.rtl">
+      </handler>
+      <handler
+            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.DropDownAcceptRejectHandler"
+            commandId="org.eclipse.emf.compare.ide.ui.dropdown.acceptreject">
+         <enabledWhen>
+            <with
+                  variable="activeEditor">
+               <test
+                     property="emfcompare.hasReadOnlySide">
+               </test>
+            </with>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.DropDownAcceptRejectLeftToRight"
+            commandId="org.eclipse.emf.compare.ide.ui.dropdown.accept">
+      </handler>
+      <handler
+            class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.DropDownAcceptRejectRightToLeft"
+            commandId="org.eclipse.emf.compare.ide.ui.dropdown.reject">
       </handler>
    </extension>
    <extension
