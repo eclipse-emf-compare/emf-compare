@@ -55,7 +55,7 @@ public class EMFResourceMapping extends ResourceMapping {
 	 */
 	public EMFResourceMapping(IFile file, String providerId) {
 		checkNotNull(file);
-		this.file = file;
+		this.file = new ForwardingFile(file);
 		this.providerId = providerId;
 	}
 
