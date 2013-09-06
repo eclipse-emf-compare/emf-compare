@@ -25,7 +25,6 @@ import org.eclipse.core.resources.mapping.ResourceTraversal;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 
 /**
@@ -55,7 +54,7 @@ public class EMFResourceMapping extends ResourceMapping {
 	 */
 	public EMFResourceMapping(IFile file, String providerId) {
 		checkNotNull(file);
-		this.file = file;
+		this.file = new ForwardingFile(file);
 		this.providerId = providerId;
 	}
 
