@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer;
 
 import java.util.Collection;
 
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.jface.viewers.IInputSelectionProvider;
@@ -104,6 +105,28 @@ public interface IMergeViewer extends IInputSelectionProvider {
 					return ANCESTOR;
 				default:
 					throw new IllegalStateException(); // happy compiler :)
+			}
+		}
+
+		public static MergeViewerSide getValueFrom(DifferenceSource source) {
+			switch (source) {
+				case LEFT:
+					return LEFT;
+				case RIGHT:
+					return RIGHT;
+				default:
+					throw new IllegalStateException();
+			}
+		}
+
+		public DifferenceSource convertToDifferenceSource() {
+			switch (this) {
+				case LEFT:
+					return DifferenceSource.LEFT;
+				case RIGHT:
+					return DifferenceSource.RIGHT;
+				default:
+					throw new IllegalStateException();
 			}
 		}
 	}
