@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -236,5 +236,101 @@ public class IndividualDiffInputData extends AbstractInputData {
 
 	public Resource getReferenceMultiMoveRightOutOfScope() throws IOException {
 		return loadFromClassLoader("outofscope/referencemultimove/right.nodes");
+	}
+
+	public Resource getLeftAddRightDeleteLeftConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftadd_rightdelete/left.ecore");
+	}
+
+	public Resource getLeftAddRightDeleteOriginConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftadd_rightdelete/origin.ecore");
+	}
+
+	public Resource getLeftAddRightDeleteRightConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftadd_rightdelete/right.ecore");
+	}
+
+	public Resource getLeftDeleteRightAddLeftConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftdelete_rightadd/left.ecore");
+	}
+
+	public Resource getLeftDeleteRightAddOriginConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftdelete_rightadd/origin.ecore");
+	}
+
+	public Resource getLeftDeleteRightAddRightConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftdelete_rightadd/right.ecore");
+	}
+
+	public Resource getLeftDeleteRightSetLeftConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftdelete_rightset/left.ecore");
+	}
+
+	public Resource getLeftDeleteRightSetOriginConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftdelete_rightset/origin.ecore");
+	}
+
+	public Resource getLeftDeleteRightSetRightConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftdelete_rightset/right.ecore");
+	}
+
+	public Resource getLeftSetRightDeleteLeftConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftset_rightdelete/left.ecore");
+	}
+
+	public Resource getLeftSetRightDeleteOriginConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftset_rightdelete/origin.ecore");
+	}
+
+	public Resource getLeftSetRightDeleteRightConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftset_rightdelete/right.ecore");
+	}
+
+	public Resource getLeftSetRightUnsetLeftConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftset_rightunset/left.ecore");
+	}
+
+	public Resource getLeftSetRightUnsetOriginConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftset_rightunset/origin.ecore");
+	}
+
+	public Resource getLeftSetRightUnsetRightConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftset_rightunset/right.ecore");
+	}
+
+	public Resource getLeftUnsetRightSetLeftConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftunset_rightset/left.ecore");
+	}
+
+	public Resource getLeftUnsetRightSetOriginConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftunset_rightset/origin.ecore");
+	}
+
+	public Resource getLeftUnsetRightSetRightConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftunset_rightset/right.ecore");
+	}
+
+	public Resource getLeftDeleteRightMoveLeftConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftdelete_rightmove/left.ecore");
+	}
+
+	public Resource getLeftDeleteRightMoveOriginConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftdelete_rightmove/origin.ecore");
+	}
+
+	public Resource getLeftDeleteRightMoveRightConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftdelete_rightmove/right.ecore");
+	}
+
+	public Resource getLeftMoveRightDeleteLeftConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftmove_rightdelete/left.ecore");
+	}
+
+	public Resource getLeftMoveRightDeleteOriginConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftmove_rightdelete/origin.ecore");
+	}
+
+	public Resource getLeftMoveRightDeleteRightConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftmove_rightdelete/right.ecore");
 	}
 }

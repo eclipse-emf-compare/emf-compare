@@ -148,7 +148,7 @@ public class MultipleMergeTest {
 		final ReferenceChange diff12 = (ReferenceChange)Iterators.find(differences.iterator(), and(
 				fromSide(DifferenceSource.RIGHT), removed("Root.Node5")));
 		mergerRegistry.getHighestRankingMerger(diff12).copyLeftToRight(diff12, new BasicMonitor());
-		assertValueIndexIs(diff12, false, 6);
+		assertValueIndexIs(diff12, false, -1);
 		mergerRegistry.getHighestRankingMerger(diff5).copyLeftToRight(diff5, new BasicMonitor());
 		assertValueIndexIs(diff5, false, -1);
 
@@ -255,7 +255,7 @@ public class MultipleMergeTest {
 				fromSide(DifferenceSource.RIGHT), removed("Root.Node5")));
 		// revert remove
 		mergerRegistry.getHighestRankingMerger(diff12).copyLeftToRight(diff12, new BasicMonitor());
-		assertValueIndexIs(diff12, false, 5);
+		assertValueIndexIs(diff12, false, -1);
 		// apply remove
 		mergerRegistry.getHighestRankingMerger(diff5).copyLeftToRight(diff5, new BasicMonitor());
 		assertValueIndexIs(diff5, false, -1);
@@ -334,7 +334,7 @@ public class MultipleMergeTest {
 				fromSide(DifferenceSource.RIGHT), removed("Root.Node5")));
 		// revert remove in left
 		mergerRegistry.getHighestRankingMerger(diff5).copyRightToLeft(diff5, new BasicMonitor());
-		assertValueIndexIs(diff5, true, 8);
+		assertValueIndexIs(diff5, true, -1);
 		mergerRegistry.getHighestRankingMerger(diff12).copyRightToLeft(diff12, new BasicMonitor());
 		assertValueIndexIs(diff12, true, -1);
 
@@ -383,7 +383,7 @@ public class MultipleMergeTest {
 				fromSide(DifferenceSource.RIGHT), removed("Root.Node5")));
 		// revert remove in left
 		mergerRegistry.getHighestRankingMerger(diff5).copyRightToLeft(diff5, new BasicMonitor());
-		assertValueIndexIs(diff5, true, 5);
+		assertValueIndexIs(diff5, true, -1);
 		mergerRegistry.getHighestRankingMerger(diff12).copyRightToLeft(diff12, new BasicMonitor());
 		assertValueIndexIs(diff12, true, -1);
 

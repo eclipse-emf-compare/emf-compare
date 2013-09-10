@@ -178,9 +178,11 @@ public interface IMerger {
 		public static IMerger.Registry createStandaloneInstance() {
 			final IMerger.Registry registry = new RegistryImpl();
 
-			// We need our pseudo-conflict merger to have a slightly higher ranking than default.
+			// We need our pseudo-conflict merger and conflict merger to have a slightly higher ranking than
+			// default.
 			final int defaultRanking = 10;
 			final int pseudoConflictRanking = 15;
+			final int conflictRanking = 15;
 
 			final IMerger attributeMerger = new AttributeChangeMerger();
 			attributeMerger.setRanking(defaultRanking);
@@ -190,10 +192,14 @@ public interface IMerger {
 			resourceAttachmentMerger.setRanking(defaultRanking);
 			final IMerger pseudoConflictMerger = new PseudoConflictMerger();
 			pseudoConflictMerger.setRanking(pseudoConflictRanking);
+			final IMerger conflictMerger = new ConflictMerger();
+			conflictMerger.setRanking(conflictRanking);
 
 			registry.add(attributeMerger);
 			registry.add(referenceMerger);
 			registry.add(resourceAttachmentMerger);
+			registry.add(pseudoConflictMerger);
+			registry.add(conflictMerger);
 
 			return registry;
 		}

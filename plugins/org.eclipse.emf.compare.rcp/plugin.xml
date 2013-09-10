@@ -43,6 +43,10 @@
             class="org.eclipse.emf.compare.merge.PseudoConflictMerger"
             ranking="15">
       </merger>
+      <merger
+            class="org.eclipse.emf.compare.merge.ConflictMerger"
+            ranking="15">
+      </merger>
    </extension>
    <extension
          point="org.eclipse.core.contenttype.contentTypes">

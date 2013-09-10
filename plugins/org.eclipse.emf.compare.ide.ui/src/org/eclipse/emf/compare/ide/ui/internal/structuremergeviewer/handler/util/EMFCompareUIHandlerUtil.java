@@ -26,7 +26,9 @@ import org.eclipse.compare.ICompareNavigator;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
@@ -90,6 +92,7 @@ public final class EMFCompareUIHandlerUtil {
 		if (diffToCopy != null) {
 			List<Diff> diffsToCopy = new ArrayList<Diff>();
 			diffsToCopy.add(diffToCopy);
+			// Add merge data for required diffs
 			for (Diff require : DiffUtil.getRequires(diffToCopy, leftToRight, diffToCopy.getSource())) {
 				EMFCompareUIHandlerUtil.setMergeDataForDiff(require, leftToRight, configuration
 						.isLeftEditable(), configuration.isRightEditable());
@@ -98,15 +101,48 @@ public final class EMFCompareUIHandlerUtil {
 				addAll(diffsToCopy, org.eclipse.emf.compare.utils.DiffUtil.getSubDiffs(leftToRight).apply(
 						diffToCopy));
 			}
+			// Add merge data for subs diffs
 			for (Diff diff : diffsToCopy) {
 				EMFCompareUIHandlerUtil.setMergeDataForDiff(diff, leftToRight,
 						configuration.isLeftEditable(), configuration.isRightEditable());
 			}
+			// Add merge data for diffs in conflicts
+			addMergeDataForConflictedDiffs(diffToCopy, leftToRight, configuration);
+
+			// Execute merge
 			ICompareEditingDomain editingDomain = (ICompareEditingDomain)configuration
 					.getProperty(EMFCompareConstants.EDITING_DOMAIN);
 			Command copyCommand = editingDomain.createCopyCommand(diffsToCopy, leftToRight,
 					EMFCompareRCPPlugin.getDefault().getMergerRegistry());
 			editingDomain.getCommandStack().execute(copyCommand);
+		}
+	}
+
+	/**
+	 * Add merge data for diffs in conflict with the given diff.
+	 * 
+	 * @param diffToCopy
+	 *            the given diff.
+	 * @param leftToRight
+	 *            the way of merge.
+	 * @param configuration
+	 *            the compare configuration object.
+	 */
+	private static void addMergeDataForConflictedDiffs(Diff diffToCopy, boolean leftToRight,
+			CompareConfiguration configuration) {
+		Conflict conflict = diffToCopy.getConflict();
+		if (conflict != null) {
+			for (Diff conflictedDiff : conflict.getDifferences()) {
+				if (diffToCopy != conflictedDiff) {
+					if (diffToCopy.getKind() != DifferenceKind.MOVE
+							&& ((diffToCopy.getSource() == DifferenceSource.LEFT && conflictedDiff
+									.getSource() == DifferenceSource.RIGHT) || (diffToCopy.getSource() == DifferenceSource.RIGHT && conflictedDiff
+									.getSource() == DifferenceSource.LEFT))) {
+						EMFCompareUIHandlerUtil.setMergeDataForDiff(conflictedDiff, leftToRight,
+								configuration.isLeftEditable(), configuration.isRightEditable());
+					}
+				}
+			}
 		}
 	}
 
