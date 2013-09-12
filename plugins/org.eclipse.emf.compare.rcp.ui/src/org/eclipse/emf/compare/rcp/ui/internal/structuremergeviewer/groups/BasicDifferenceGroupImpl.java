@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups;
 
 import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Collections2.filter;
@@ -26,6 +27,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
@@ -331,6 +333,8 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			}
 			if (!(isContainment || hasDiff || hasNonEmptySubMatch || filter.equals(Predicates.alwaysTrue()))) {
 				toRemove.add(treeNode);
+			} else if (!isContainment && isMatchWithOnlyResourceAttachmentChanges(match)) {
+				toRemove.add(treeNode);
 			} else {
 				for (IDifferenceGroupExtender ext : registry.getExtenders()) {
 					if (ext.handle(treeNode)) {
@@ -450,5 +454,22 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 		treeNode.setData(data);
 		treeNode.eAdapters().add(this);
 		return treeNode;
+	}
+
+	/**
+	 * @param match
+	 * @return
+	 */
+	private boolean isMatchWithOnlyResourceAttachmentChanges(Match match) {
+		boolean ret = false;
+		Iterable<Diff> allDifferences = match.getAllDifferences();
+		if (Iterables.isEmpty(allDifferences)) {
+			ret = false;
+		} else if (Iterables.all(allDifferences, instanceOf(ResourceAttachmentChange.class))) {
+			if (match.getSubmatches() == null || match.getSubmatches().isEmpty()) {
+				ret = true;
+			}
+		}
+		return ret;
 	}
 }
