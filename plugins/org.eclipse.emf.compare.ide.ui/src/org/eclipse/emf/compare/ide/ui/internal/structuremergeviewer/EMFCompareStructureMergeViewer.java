@@ -212,12 +212,10 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 					treeRuler.redraw();
 				} else if (EMFCompareConstants.SELECTED_FILTERS.equals(event.getProperty())
 						&& event.getNewValue() != null) {
-					diffTreeViewer.createChildrenSilently(diffTreeViewer.getTree());
 					treeRuler.computeConsequences();
 					treeRuler.redraw();
 				} else if (EMFCompareConstants.SELECTED_GROUP.equals(event.getProperty())
 						&& event.getNewValue() != null) {
-					diffTreeViewer.createChildrenSilently(diffTreeViewer.getTree());
 					treeRuler.computeConsequences();
 					treeRuler.redraw();
 				}
@@ -311,7 +309,6 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 			SWTUtil.safeAsyncExec(new Runnable() {
 				public void run() {
 					refresh(true);
-					diffTreeViewer.createChildrenSilently(diffTreeViewer.getTree());
 					treeRuler.computeConsequences();
 					treeRuler.redraw();
 				}

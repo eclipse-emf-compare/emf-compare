@@ -261,6 +261,9 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	 */
 	private void associateTreeItems(List<Diff> diffs) {
 		Tree tree = fTreeViewer.getTree();
+		if (fTreeViewer instanceof EMFCompareDiffTreeViewer) {
+			((EMFCompareDiffTreeViewer)fTreeViewer).createChildrenSilently(tree);
+		}
 		for (TreeItem item : tree.getItems()) {
 			associateTreeItem(item, diffs);
 		}
