@@ -40,7 +40,6 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
@@ -313,7 +312,7 @@ public class ThreeWayComparisonGroupProvider extends AdapterImpl implements IDif
 
 		/**
 		 * Checks whether the given diff corresponds to a containment change. This holds true for differences
-		 * on containment references' values, but also for resource attachment changes.
+		 * on containment references' values.
 		 * 
 		 * @param diff
 		 *            The diff to consider.
@@ -321,8 +320,7 @@ public class ThreeWayComparisonGroupProvider extends AdapterImpl implements IDif
 		 *         <code>false</code> otherwise.
 		 */
 		private boolean isContainment(Diff diff) {
-			return diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment()
-					|| diff instanceof ResourceAttachmentChange;
+			return diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment();
 		}
 	}
 

@@ -256,8 +256,8 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 		if (isRootOfResourceURI(match.getLeft(), matchResource.getLeftURI())
 				|| isRootOfResourceURI(match.getRight(), matchResource.getRightURI())
 				|| isRootOfResourceURI(match.getOrigin(), matchResource.getOriginURI())) {
-			Collection<Diff> resourceAttachmentChanges = filter(match.getDifferences(),
-					resourceAttachmentChange());
+			Collection<Diff> resourceAttachmentChanges = filter(match.getDifferences(), and(filter,
+					resourceAttachmentChange()));
 			for (Diff diff : resourceAttachmentChanges) {
 				ret.add(wrap(diff));
 			}
