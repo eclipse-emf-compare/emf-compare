@@ -50,6 +50,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getImpliedBy <em>Implied By</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getRefines <em>Refines</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getRefinedBy <em>Refined By</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getPrimeRefining <em>Prime Refining</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getKind <em>Kind</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getSource <em>Source</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.DiffImpl#getState <em>State</em>}</li>
@@ -129,6 +130,16 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	 * @ordered
 	 */
 	protected EList<Diff> refinedBy;
+
+	/**
+	 * The cached value of the '{@link #getPrimeRefining() <em>Prime Refining</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPrimeRefining()
+	 * @generated
+	 * @ordered
+	 */
+	protected Diff primeRefining;
 
 	/**
 	 * The default value of the '{@link #getKind() <em>Kind</em>}' attribute.
@@ -350,6 +361,33 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 					ComparePackage.DIFF__REFINED_BY, ComparePackage.DIFF__REFINES);
 		}
 		return refinedBy;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Diff getPrimeRefining() {
+		if (primeRefining != null && primeRefining.eIsProxy()) {
+			InternalEObject oldPrimeRefining = (InternalEObject)primeRefining;
+			primeRefining = (Diff)eResolveProxy(oldPrimeRefining);
+			if (primeRefining != oldPrimeRefining) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							ComparePackage.DIFF__PRIME_REFINING, oldPrimeRefining, primeRefining));
+			}
+		}
+		return primeRefining;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Diff basicGetPrimeRefining() {
+		return primeRefining;
 	}
 
 	/**
@@ -697,6 +735,10 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 				return getRefines();
 			case ComparePackage.DIFF__REFINED_BY:
 				return getRefinedBy();
+			case ComparePackage.DIFF__PRIME_REFINING:
+				if (resolve)
+					return getPrimeRefining();
+				return basicGetPrimeRefining();
 			case ComparePackage.DIFF__KIND:
 				return getKind();
 			case ComparePackage.DIFF__SOURCE:
@@ -840,6 +882,8 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 				return refines != null && !refines.isEmpty();
 			case ComparePackage.DIFF__REFINED_BY:
 				return refinedBy != null && !refinedBy.isEmpty();
+			case ComparePackage.DIFF__PRIME_REFINING:
+				return primeRefining != null;
 			case ComparePackage.DIFF__KIND:
 				return kind != KIND_EDEFAULT;
 			case ComparePackage.DIFF__SOURCE:

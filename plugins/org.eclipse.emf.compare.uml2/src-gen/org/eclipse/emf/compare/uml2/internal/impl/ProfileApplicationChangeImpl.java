@@ -11,20 +11,16 @@
 package org.eclipse.emf.compare.uml2.internal.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
-
+import org.eclipse.emf.compare.uml2.internal.spec.UMLDiffSpec;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.uml2.uml.Profile;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Profile Application Change</b></em>'.
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Profile Application Change</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
@@ -35,7 +31,7 @@ import org.eclipse.uml2.uml.Profile;
  *
  * @generated
  */
-public class ProfileApplicationChangeImpl extends UMLDiffImpl implements ProfileApplicationChange {
+public class ProfileApplicationChangeImpl extends UMLDiffSpec implements ProfileApplicationChange {
 	/**
 	 * The cached value of the '{@link #getProfile() <em>Profile</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -47,8 +43,7 @@ public class ProfileApplicationChangeImpl extends UMLDiffImpl implements Profile
 	protected Profile profile;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected ProfileApplicationChangeImpl() {
@@ -56,8 +51,7 @@ public class ProfileApplicationChangeImpl extends UMLDiffImpl implements Profile
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -66,8 +60,7 @@ public class ProfileApplicationChangeImpl extends UMLDiffImpl implements Profile
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public Profile getProfile() {
@@ -83,8 +76,7 @@ public class ProfileApplicationChangeImpl extends UMLDiffImpl implements Profile
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public Profile basicGetProfile() {
@@ -92,8 +84,7 @@ public class ProfileApplicationChangeImpl extends UMLDiffImpl implements Profile
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setProfile(Profile newProfile) {
@@ -104,8 +95,7 @@ public class ProfileApplicationChangeImpl extends UMLDiffImpl implements Profile
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -119,8 +109,7 @@ public class ProfileApplicationChangeImpl extends UMLDiffImpl implements Profile
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -134,8 +123,7 @@ public class ProfileApplicationChangeImpl extends UMLDiffImpl implements Profile
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -149,8 +137,7 @@ public class ProfileApplicationChangeImpl extends UMLDiffImpl implements Profile
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -162,4 +149,4 @@ public class ProfileApplicationChangeImpl extends UMLDiffImpl implements Profile
 		return super.eIsSet(featureID);
 	}
 
-} //ProfileApplicationChangeImpl
+} // ProfileApplicationChangeImpl

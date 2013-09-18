@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<loophole:GenGapModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:loophole="org.eclipselabs.emf.loophole:1.0.0" customClassNamePattern="{0}Spec" customModelDirectory="/org.eclipse.emf.compare.uml2/src" customEditDirectory="/org.eclipse.emf.compare.uml2.edit/src-man">
+  <genModel href="uml2compare.genmodel#/"/>
+  <genGapPackages customClassPackageSuffix="internal.spec" customProviderPackageSuffix="internal.provider">
+    <genPackage href="uml2compare.genmodel#//uml2"/>
+  </genGapPackages>
+</loophole:GenGapModel>

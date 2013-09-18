@@ -102,6 +102,24 @@ public interface UMLComparePackage extends EPackage {
 	int UML_DIFF__REQUIRED_BY = ComparePackage.DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DIFF__IMPLIES = ComparePackage.DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DIFF__IMPLIED_BY = ComparePackage.DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -118,6 +136,15 @@ public interface UMLComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_DIFF__REFINED_BY = ComparePackage.DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DIFF__PRIME_REFINING = ComparePackage.DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -229,6 +256,24 @@ public interface UMLComparePackage extends EPackage {
 	int ASSOCIATION_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ASSOCIATION_CHANGE__IMPLIES = UML_DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ASSOCIATION_CHANGE__IMPLIED_BY = UML_DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -245,6 +290,15 @@ public interface UMLComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int ASSOCIATION_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ASSOCIATION_CHANGE__PRIME_REFINING = UML_DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -356,6 +410,24 @@ public interface UMLComparePackage extends EPackage {
 	int EXTEND_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTEND_CHANGE__IMPLIES = UML_DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTEND_CHANGE__IMPLIED_BY = UML_DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -372,6 +444,15 @@ public interface UMLComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int EXTEND_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTEND_CHANGE__PRIME_REFINING = UML_DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -483,6 +564,24 @@ public interface UMLComparePackage extends EPackage {
 	int GENERALIZATION_SET_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERALIZATION_SET_CHANGE__IMPLIES = UML_DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERALIZATION_SET_CHANGE__IMPLIED_BY = UML_DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -499,6 +598,15 @@ public interface UMLComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int GENERALIZATION_SET_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERALIZATION_SET_CHANGE__PRIME_REFINING = UML_DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -610,6 +718,24 @@ public interface UMLComparePackage extends EPackage {
 	int EXECUTION_SPECIFICATION_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXECUTION_SPECIFICATION_CHANGE__IMPLIES = UML_DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXECUTION_SPECIFICATION_CHANGE__IMPLIED_BY = UML_DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -626,6 +752,15 @@ public interface UMLComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int EXECUTION_SPECIFICATION_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXECUTION_SPECIFICATION_CHANGE__PRIME_REFINING = UML_DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -737,6 +872,24 @@ public interface UMLComparePackage extends EPackage {
 	int INTERVAL_CONSTRAINT_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERVAL_CONSTRAINT_CHANGE__IMPLIES = UML_DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERVAL_CONSTRAINT_CHANGE__IMPLIED_BY = UML_DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -753,6 +906,15 @@ public interface UMLComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int INTERVAL_CONSTRAINT_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERVAL_CONSTRAINT_CHANGE__PRIME_REFINING = UML_DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -864,6 +1026,24 @@ public interface UMLComparePackage extends EPackage {
 	int MESSAGE_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MESSAGE_CHANGE__IMPLIES = UML_DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MESSAGE_CHANGE__IMPLIED_BY = UML_DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -880,6 +1060,15 @@ public interface UMLComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int MESSAGE_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MESSAGE_CHANGE__PRIME_REFINING = UML_DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -991,6 +1180,24 @@ public interface UMLComparePackage extends EPackage {
 	int STEREOTYPE_PROPERTY_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STEREOTYPE_PROPERTY_CHANGE__IMPLIES = UML_DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STEREOTYPE_PROPERTY_CHANGE__IMPLIED_BY = UML_DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1007,6 +1214,15 @@ public interface UMLComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int STEREOTYPE_PROPERTY_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STEREOTYPE_PROPERTY_CHANGE__PRIME_REFINING = UML_DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -1127,6 +1343,24 @@ public interface UMLComparePackage extends EPackage {
 	int STEREOTYPE_APPLICATION_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STEREOTYPE_APPLICATION_CHANGE__IMPLIES = UML_DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STEREOTYPE_APPLICATION_CHANGE__IMPLIED_BY = UML_DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1143,6 +1377,15 @@ public interface UMLComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int STEREOTYPE_APPLICATION_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STEREOTYPE_APPLICATION_CHANGE__PRIME_REFINING = UML_DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -1263,6 +1506,24 @@ public interface UMLComparePackage extends EPackage {
 	int STEREOTYPE_REFERENCE_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STEREOTYPE_REFERENCE_CHANGE__IMPLIES = UML_DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STEREOTYPE_REFERENCE_CHANGE__IMPLIED_BY = UML_DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1279,6 +1540,15 @@ public interface UMLComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int STEREOTYPE_REFERENCE_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STEREOTYPE_REFERENCE_CHANGE__PRIME_REFINING = UML_DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -1390,6 +1660,24 @@ public interface UMLComparePackage extends EPackage {
 	int PROFILE_APPLICATION_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROFILE_APPLICATION_CHANGE__IMPLIES = UML_DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROFILE_APPLICATION_CHANGE__IMPLIED_BY = UML_DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1406,6 +1694,15 @@ public interface UMLComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int PROFILE_APPLICATION_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROFILE_APPLICATION_CHANGE__PRIME_REFINING = UML_DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -1527,6 +1824,24 @@ public interface UMLComparePackage extends EPackage {
 	int DIRECTED_RELATIONSHIP_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIRECTED_RELATIONSHIP_CHANGE__IMPLIES = UML_DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIRECTED_RELATIONSHIP_CHANGE__IMPLIED_BY = UML_DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1543,6 +1858,15 @@ public interface UMLComparePackage extends EPackage {
 	 * @ordered
 	 */
 	int DIRECTED_RELATIONSHIP_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIRECTED_RELATIONSHIP_CHANGE__PRIME_REFINING = UML_DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.

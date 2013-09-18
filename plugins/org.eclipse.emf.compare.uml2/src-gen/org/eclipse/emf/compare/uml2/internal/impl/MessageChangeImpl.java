@@ -12,22 +12,20 @@ package org.eclipse.emf.compare.uml2.internal.impl;
 
 import org.eclipse.emf.compare.uml2.internal.MessageChange;
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
-
+import org.eclipse.emf.compare.uml2.internal.spec.UMLDiffSpec;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Message Change</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Message Change</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
-public class MessageChangeImpl extends UMLDiffImpl implements MessageChange {
+public class MessageChangeImpl extends UMLDiffSpec implements MessageChange {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected MessageChangeImpl() {
@@ -35,8 +33,7 @@ public class MessageChangeImpl extends UMLDiffImpl implements MessageChange {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -44,4 +41,4 @@ public class MessageChangeImpl extends UMLDiffImpl implements MessageChange {
 		return UMLComparePackage.Literals.MESSAGE_CHANGE;
 	}
 
-} //MessageChangeImpl
+} // MessageChangeImpl

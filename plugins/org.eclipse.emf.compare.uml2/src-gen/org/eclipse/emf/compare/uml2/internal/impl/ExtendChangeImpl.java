@@ -12,22 +12,20 @@ package org.eclipse.emf.compare.uml2.internal.impl;
 
 import org.eclipse.emf.compare.uml2.internal.ExtendChange;
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
-
+import org.eclipse.emf.compare.uml2.internal.spec.UMLDiffSpec;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Extend Change</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Extend Change</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
-public class ExtendChangeImpl extends UMLDiffImpl implements ExtendChange {
+public class ExtendChangeImpl extends UMLDiffSpec implements ExtendChange {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected ExtendChangeImpl() {
@@ -35,8 +33,7 @@ public class ExtendChangeImpl extends UMLDiffImpl implements ExtendChange {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -44,4 +41,4 @@ public class ExtendChangeImpl extends UMLDiffImpl implements ExtendChange {
 		return UMLComparePackage.Literals.EXTEND_CHANGE;
 	}
 
-} //ExtendChangeImpl
+} // ExtendChangeImpl

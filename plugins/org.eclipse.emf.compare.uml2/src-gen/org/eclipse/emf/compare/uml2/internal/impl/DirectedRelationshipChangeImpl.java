@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.uml2.internal.impl;
 
 import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
+import org.eclipse.emf.compare.uml2.internal.spec.UMLDiffSpec;
 import org.eclipse.emf.ecore.EClass;
 
 /**
@@ -19,13 +20,12 @@ import org.eclipse.emf.ecore.EClass;
  * '. <!-- end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
-public class DirectedRelationshipChangeImpl extends UMLDiffImpl implements DirectedRelationshipChange {
+public class DirectedRelationshipChangeImpl extends UMLDiffSpec implements DirectedRelationshipChange {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected DirectedRelationshipChangeImpl() {
@@ -34,7 +34,6 @@ public class DirectedRelationshipChangeImpl extends UMLDiffImpl implements Direc
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

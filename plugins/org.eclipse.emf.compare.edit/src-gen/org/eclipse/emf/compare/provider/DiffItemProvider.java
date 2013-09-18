@@ -78,6 +78,7 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 			addImpliedByPropertyDescriptor(object);
 			addRefinesPropertyDescriptor(object);
 			addRefinedByPropertyDescriptor(object);
+			addPrimeRefiningPropertyDescriptor(object);
 			addKindPropertyDescriptor(object);
 			addSourcePropertyDescriptor(object);
 			addStatePropertyDescriptor(object);
@@ -179,6 +180,23 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 						getString(
 								"_UI_PropertyDescriptor_description", "_UI_Diff_refinedBy_feature", "_UI_Diff_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						ComparePackage.Literals.DIFF__REFINED_BY, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Prime Refining feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addPrimeRefiningPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+						.getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_Diff_primeRefining_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_Diff_primeRefining_feature", "_UI_Diff_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						ComparePackage.Literals.DIFF__PRIME_REFINING, false, false, false, null, null, null));
 	}
 
 	/**

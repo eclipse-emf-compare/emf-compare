@@ -12,22 +12,20 @@ package org.eclipse.emf.compare.uml2.internal.impl;
 
 import org.eclipse.emf.compare.uml2.internal.GeneralizationSetChange;
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
-
+import org.eclipse.emf.compare.uml2.internal.spec.UMLDiffSpec;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Generalization Set Change</b></em>'.
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Generalization Set Change</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
-public class GeneralizationSetChangeImpl extends UMLDiffImpl implements GeneralizationSetChange {
+public class GeneralizationSetChangeImpl extends UMLDiffSpec implements GeneralizationSetChange {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected GeneralizationSetChangeImpl() {
@@ -35,8 +33,7 @@ public class GeneralizationSetChangeImpl extends UMLDiffImpl implements Generali
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -44,4 +41,4 @@ public class GeneralizationSetChangeImpl extends UMLDiffImpl implements Generali
 		return UMLComparePackage.Literals.GENERALIZATION_SET_CHANGE;
 	}
 
-} //GeneralizationSetChangeImpl
+} // GeneralizationSetChangeImpl

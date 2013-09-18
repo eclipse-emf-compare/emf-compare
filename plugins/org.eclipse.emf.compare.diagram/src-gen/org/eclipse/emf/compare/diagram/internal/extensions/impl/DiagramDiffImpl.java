@@ -11,24 +11,20 @@
 package org.eclipse.emf.compare.diagram.internal.extensions.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
+import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Diff;
-
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
-
 import org.eclipse.emf.compare.impl.DiffImpl;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Diagram Diff</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Diagram Diff</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -41,9 +37,9 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 	/**
-	 * The cached value of the '{@link #getSemanticDiff() <em>Semantic Diff</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getSemanticDiff() <em>Semantic Diff</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getSemanticDiff()
 	 * @generated
 	 * @ordered
@@ -52,8 +48,8 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 
 	/**
 	 * The cached value of the '{@link #getView() <em>View</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @see #getView()
 	 * @generated
 	 * @ordered
@@ -61,8 +57,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 	protected EObject view;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected DiagramDiffImpl() {
@@ -70,8 +65,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -80,8 +74,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public Diff getSemanticDiff() {
@@ -97,8 +90,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public Diff basicGetSemanticDiff() {
@@ -106,8 +98,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setSemanticDiff(Diff newSemanticDiff) {
@@ -118,8 +109,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EObject getView() {
@@ -135,8 +125,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EObject basicGetView() {
@@ -144,8 +133,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setView(EObject newView) {
@@ -156,8 +144,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -174,8 +161,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -192,8 +178,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -210,8 +195,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -225,4 +209,4 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 		return super.eIsSet(featureID);
 	}
 
-} //DiagramDiffImpl
+} // DiagramDiffImpl

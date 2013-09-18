@@ -12,22 +12,20 @@ package org.eclipse.emf.compare.uml2.internal.impl;
 
 import org.eclipse.emf.compare.uml2.internal.StereotypeReferenceChange;
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
-
+import org.eclipse.emf.compare.uml2.internal.spec.UMLDiffSpec;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Stereotype Reference Change</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Stereotype Reference Change</b></em>
+ * '. <!-- end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
-public class StereotypeReferenceChangeImpl extends UMLDiffImpl implements StereotypeReferenceChange {
+public class StereotypeReferenceChangeImpl extends UMLDiffSpec implements StereotypeReferenceChange {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected StereotypeReferenceChangeImpl() {
@@ -35,8 +33,7 @@ public class StereotypeReferenceChangeImpl extends UMLDiffImpl implements Stereo
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -44,4 +41,4 @@ public class StereotypeReferenceChangeImpl extends UMLDiffImpl implements Stereo
 		return UMLComparePackage.Literals.STEREOTYPE_REFERENCE_CHANGE;
 	}
 
-} //StereotypeReferenceChangeImpl
+} // StereotypeReferenceChangeImpl

@@ -12,22 +12,20 @@ package org.eclipse.emf.compare.uml2.internal.impl;
 
 import org.eclipse.emf.compare.uml2.internal.ExecutionSpecificationChange;
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
-
+import org.eclipse.emf.compare.uml2.internal.spec.UMLDiffSpec;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Execution Specification Change</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '
+ * <em><b>Execution Specification Change</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
-public class ExecutionSpecificationChangeImpl extends UMLDiffImpl implements ExecutionSpecificationChange {
+public class ExecutionSpecificationChangeImpl extends UMLDiffSpec implements ExecutionSpecificationChange {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected ExecutionSpecificationChangeImpl() {
@@ -35,8 +33,7 @@ public class ExecutionSpecificationChangeImpl extends UMLDiffImpl implements Exe
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -44,4 +41,4 @@ public class ExecutionSpecificationChangeImpl extends UMLDiffImpl implements Exe
 		return UMLComparePackage.Literals.EXECUTION_SPECIFICATION_CHANGE;
 	}
 
-} //ExecutionSpecificationChangeImpl
+} // ExecutionSpecificationChangeImpl

@@ -12,22 +12,20 @@ package org.eclipse.emf.compare.uml2.internal.impl;
 
 import org.eclipse.emf.compare.uml2.internal.AssociationChange;
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
-
+import org.eclipse.emf.compare.uml2.internal.spec.UMLDiffSpec;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Association Change</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Association Change</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
-public class AssociationChangeImpl extends UMLDiffImpl implements AssociationChange {
+public class AssociationChangeImpl extends UMLDiffSpec implements AssociationChange {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected AssociationChangeImpl() {
@@ -35,8 +33,7 @@ public class AssociationChangeImpl extends UMLDiffImpl implements AssociationCha
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -44,4 +41,4 @@ public class AssociationChangeImpl extends UMLDiffImpl implements AssociationCha
 		return UMLComparePackage.Literals.ASSOCIATION_CHANGE;
 	}
 
-} //AssociationChangeImpl
+} // AssociationChangeImpl

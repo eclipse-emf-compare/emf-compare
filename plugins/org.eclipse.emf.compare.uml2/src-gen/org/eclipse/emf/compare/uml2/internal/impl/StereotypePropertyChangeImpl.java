@@ -11,20 +11,16 @@
 package org.eclipse.emf.compare.uml2.internal.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.compare.uml2.internal.StereotypePropertyChange;
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
-
+import org.eclipse.emf.compare.uml2.internal.spec.UMLDiffSpec;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.uml2.uml.Stereotype;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Stereotype Property Change</b></em>'.
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Stereotype Property Change</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
@@ -35,11 +31,11 @@ import org.eclipse.uml2.uml.Stereotype;
  *
  * @generated
  */
-public class StereotypePropertyChangeImpl extends UMLDiffImpl implements StereotypePropertyChange {
+public class StereotypePropertyChangeImpl extends UMLDiffSpec implements StereotypePropertyChange {
 	/**
 	 * The cached value of the '{@link #getStereotype() <em>Stereotype</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * @see #getStereotype()
 	 * @generated
 	 * @ordered
@@ -47,8 +43,7 @@ public class StereotypePropertyChangeImpl extends UMLDiffImpl implements Stereot
 	protected Stereotype stereotype;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected StereotypePropertyChangeImpl() {
@@ -56,8 +51,7 @@ public class StereotypePropertyChangeImpl extends UMLDiffImpl implements Stereot
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -66,8 +60,7 @@ public class StereotypePropertyChangeImpl extends UMLDiffImpl implements Stereot
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public Stereotype getStereotype() {
@@ -83,8 +76,7 @@ public class StereotypePropertyChangeImpl extends UMLDiffImpl implements Stereot
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public Stereotype basicGetStereotype() {
@@ -92,8 +84,7 @@ public class StereotypePropertyChangeImpl extends UMLDiffImpl implements Stereot
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setStereotype(Stereotype newStereotype) {
@@ -104,8 +95,7 @@ public class StereotypePropertyChangeImpl extends UMLDiffImpl implements Stereot
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -119,8 +109,7 @@ public class StereotypePropertyChangeImpl extends UMLDiffImpl implements Stereot
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -134,8 +123,7 @@ public class StereotypePropertyChangeImpl extends UMLDiffImpl implements Stereot
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -149,8 +137,7 @@ public class StereotypePropertyChangeImpl extends UMLDiffImpl implements Stereot
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -162,4 +149,4 @@ public class StereotypePropertyChangeImpl extends UMLDiffImpl implements Stereot
 		return super.eIsSet(featureID);
 	}
 
-} //StereotypePropertyChangeImpl
+} // StereotypePropertyChangeImpl

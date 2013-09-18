@@ -33,6 +33,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.emf.compare.Diff#getImpliedBy <em>Implied By</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getRefines <em>Refines</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getRefinedBy <em>Refined By</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getPrimeRefining <em>Prime Refining</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getKind <em>Kind</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getSource <em>Source</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.Diff#getState <em>State</em>}</li>
@@ -183,6 +184,21 @@ public interface Diff extends EObject {
 	 * @generated
 	 */
 	EList<Diff> getRefinedBy();
+
+	/**
+	 * Returns the value of the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Prime Refining</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Prime Refining</em>' reference.
+	 * @see org.eclipse.emf.compare.ComparePackage#getDiff_PrimeRefining()
+	 * @model transient="true" changeable="false" derived="true"
+	 * @generated
+	 */
+	Diff getPrimeRefining();
 
 	/**
 	 * Returns the value of the '<em><b>Kind</b></em>' attribute.

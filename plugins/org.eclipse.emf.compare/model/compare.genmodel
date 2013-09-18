@@ -80,6 +80,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Diff/impliedBy"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Diff/refines"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Diff/refinedBy"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference compare.ecore#//Diff/primeRefining"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//Diff/kind"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//Diff/source"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//Diff/state"/>

@@ -19,6 +19,7 @@ import static com.google.common.collect.Iterators.any;
 import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Iterators.transform;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentMoveReferenceChange;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentReferenceChange;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
@@ -34,8 +35,10 @@ import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
@@ -78,6 +81,9 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 
 	/** The list of children of this group. */
 	protected List<TreeNode> children;
+
+	/** The list of already processed refined diffs. */
+	protected List<Diff> extensionDiffProcessed;
 
 	/** The registry of difference group extenders. */
 	private final IDifferenceGroupExtender.Registry registry = EMFCompareRCPUIPlugin.getDefault()
@@ -213,6 +219,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	public List<? extends TreeNode> getGroupTree() {
 		if (children == null) {
 			children = newArrayList();
+			extensionDiffProcessed = newArrayList();
 			for (Match match : comparison.getMatches()) {
 				List<? extends TreeNode> buildSubTree = buildSubTree((Match)null, match);
 				if (buildSubTree != null) {
@@ -284,6 +291,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 		final List<TreeNode> ret = Lists.newArrayList();
 		boolean isContainment = false;
 
+		// Manage containment reference changes
 		if (parentMatch != null) {
 			Collection<Diff> containmentChanges = filter(parentMatch.getDifferences(),
 					containmentReferenceForMatch(match));
@@ -291,6 +299,18 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 				isContainment = true;
 				for (Diff diff : containmentChanges) {
 					ret.add(wrap(diff));
+					EList<Diff> refines = diff.getRefines();
+
+					for (Diff refine : refines) {
+						Diff mainDiff = refine.getPrimeRefining();
+						if (mainDiff != null && mainDiff == diff && !extensionDiffProcessed.contains(refine)) {
+							TreeNode buildSubTree2 = buildSubTree(refine);
+							if (buildSubTree2 != null) {
+								ret.add(buildSubTree2);
+								extensionDiffProcessed.add(refine);
+							}
+						}
+					}
 				}
 			}
 		}
@@ -302,21 +322,30 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 		for (TreeNode treeNode : ret) {
 			boolean hasDiff = false;
 			boolean hasNonEmptySubMatch = false;
+			Set<Match> alreadyProcessedSubMatch = newHashSet();
+			// Manage non-containment changes
 			for (Diff diff : filter(match.getDifferences(), and(filter, not(or(containmentReferenceChange(),
 					resourceAttachmentChange()))))) {
+				if (diff.getPrimeRefining() != null && !extensionDiffProcessed.contains(diff)) {
+					continue;
+				}
 				hasDiff = true;
 				TreeNode buildSubTree = buildSubTree(diff);
 				if (buildSubTree != null) {
 					treeNode.getChildren().add(buildSubTree);
 				}
 			}
+			// Manage sub matches
 			for (Match subMatch : match.getSubmatches()) {
-				List<TreeNode> buildSubTree = buildSubTree(match, subMatch);
-				if (!buildSubTree.isEmpty()) {
-					hasNonEmptySubMatch = true;
-					treeNode.getChildren().addAll(buildSubTree);
+				if (!alreadyProcessedSubMatch.contains(subMatch)) {
+					List<TreeNode> buildSubTree = buildSubTree(match, subMatch);
+					if (!buildSubTree.isEmpty()) {
+						hasNonEmptySubMatch = true;
+						treeNode.getChildren().addAll(buildSubTree);
+					}
 				}
 			}
+			// Manage move changes
 			for (Diff diff : filter(match.getDifferences(), and(filter, containmentMoveReferenceChange()))) {
 				if (!containsChildrenWithDataEqualsToDiff(treeNode, diff)) {
 					TreeNode buildSubTree = buildSubTree(diff);
@@ -342,7 +371,6 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 					}
 				}
 			}
-
 		}
 
 		ret.removeAll(toRemove);

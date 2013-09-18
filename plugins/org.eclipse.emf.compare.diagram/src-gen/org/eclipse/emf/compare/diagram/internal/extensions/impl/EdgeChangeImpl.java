@@ -12,22 +12,20 @@ package org.eclipse.emf.compare.diagram.internal.extensions.impl;
 
 import org.eclipse.emf.compare.diagram.internal.extensions.EdgeChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
-
+import org.eclipse.emf.compare.diagram.internal.extensions.spec.DiagramDiffSpec;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Edge Change</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Edge Change</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
-public class EdgeChangeImpl extends DiagramDiffImpl implements EdgeChange {
+public class EdgeChangeImpl extends DiagramDiffSpec implements EdgeChange {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected EdgeChangeImpl() {
@@ -35,8 +33,7 @@ public class EdgeChangeImpl extends DiagramDiffImpl implements EdgeChange {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -44,4 +41,4 @@ public class EdgeChangeImpl extends DiagramDiffImpl implements EdgeChange {
 		return ExtensionsPackage.Literals.EDGE_CHANGE;
 	}
 
-} //EdgeChangeImpl
+} // EdgeChangeImpl

@@ -12,22 +12,19 @@ package org.eclipse.emf.compare.diagram.internal.extensions.impl;
 
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
 import org.eclipse.emf.compare.diagram.internal.extensions.Show;
-
+import org.eclipse.emf.compare.diagram.internal.extensions.spec.DiagramDiffSpec;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Show</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Show</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
-public class ShowImpl extends DiagramDiffImpl implements Show {
+public class ShowImpl extends DiagramDiffSpec implements Show {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected ShowImpl() {
@@ -35,8 +32,7 @@ public class ShowImpl extends DiagramDiffImpl implements Show {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -44,4 +40,4 @@ public class ShowImpl extends DiagramDiffImpl implements Show {
 		return ExtensionsPackage.Literals.SHOW;
 	}
 
-} //ShowImpl
+} // ShowImpl

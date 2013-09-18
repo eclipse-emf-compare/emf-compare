@@ -12,22 +12,20 @@ package org.eclipse.emf.compare.diagram.internal.extensions.impl;
 
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
-
+import org.eclipse.emf.compare.diagram.internal.extensions.spec.DiagramDiffSpec;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Diagram Change</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Diagram Change</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
-public class DiagramChangeImpl extends DiagramDiffImpl implements DiagramChange {
+public class DiagramChangeImpl extends DiagramDiffSpec implements DiagramChange {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected DiagramChangeImpl() {
@@ -35,8 +33,7 @@ public class DiagramChangeImpl extends DiagramDiffImpl implements DiagramChange 
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -44,4 +41,4 @@ public class DiagramChangeImpl extends DiagramDiffImpl implements DiagramChange 
 		return ExtensionsPackage.Literals.DIAGRAM_CHANGE;
 	}
 
-} //DiagramChangeImpl
+} // DiagramChangeImpl

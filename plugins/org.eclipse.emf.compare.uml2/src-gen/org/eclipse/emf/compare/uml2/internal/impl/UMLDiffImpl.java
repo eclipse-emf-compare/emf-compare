@@ -11,38 +11,35 @@
 package org.eclipse.emf.compare.uml2.internal.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.impl.DiffImpl;
-
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>UML Diff</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>UML Diff</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.uml2.internal.impl.UMLDiffImpl#getDiscriminant <em>Discriminant</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.uml2.internal.impl.UMLDiffImpl#getEReference <em>EReference</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.uml2.internal.impl.UMLDiffImpl#getDiscriminant <em>Discriminant</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.uml2.internal.impl.UMLDiffImpl#getEReference <em>EReference</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 	/**
-	 * The cached value of the '{@link #getDiscriminant() <em>Discriminant</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getDiscriminant() <em>Discriminant</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getDiscriminant()
 	 * @generated
 	 * @ordered
@@ -51,8 +48,8 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 
 	/**
 	 * The cached value of the '{@link #getEReference() <em>EReference</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * @see #getEReference()
 	 * @generated
 	 * @ordered
@@ -60,8 +57,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 	protected EReference eReference;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected UMLDiffImpl() {
@@ -69,8 +65,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -79,8 +74,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EObject getDiscriminant() {
@@ -96,8 +90,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EObject basicGetDiscriminant() {
@@ -105,8 +98,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setDiscriminant(EObject newDiscriminant) {
@@ -117,8 +109,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getEReference() {
@@ -134,8 +125,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference basicGetEReference() {
@@ -143,8 +133,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setEReference(EReference newEReference) {
@@ -155,8 +144,20 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
+	 */
+	public boolean isMainDiff(Diff diff) {
+		if (diff instanceof ReferenceChange) {
+			EObject value = ((ReferenceChange)diff).getValue();
+			return value == getDiscriminant();
+		}
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -173,8 +174,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -191,8 +191,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -209,8 +208,7 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -224,4 +222,4 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 		return super.eIsSet(featureID);
 	}
 
-} //UMLDiffImpl
+} // UMLDiffImpl

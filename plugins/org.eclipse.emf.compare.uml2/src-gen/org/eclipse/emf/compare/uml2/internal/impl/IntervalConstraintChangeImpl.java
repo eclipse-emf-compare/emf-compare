@@ -12,22 +12,20 @@ package org.eclipse.emf.compare.uml2.internal.impl;
 
 import org.eclipse.emf.compare.uml2.internal.IntervalConstraintChange;
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
-
+import org.eclipse.emf.compare.uml2.internal.spec.UMLDiffSpec;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Interval Constraint Change</b></em>'.
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Interval Constraint Change</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
-public class IntervalConstraintChangeImpl extends UMLDiffImpl implements IntervalConstraintChange {
+public class IntervalConstraintChangeImpl extends UMLDiffSpec implements IntervalConstraintChange {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected IntervalConstraintChangeImpl() {
@@ -35,8 +33,7 @@ public class IntervalConstraintChangeImpl extends UMLDiffImpl implements Interva
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -44,4 +41,4 @@ public class IntervalConstraintChangeImpl extends UMLDiffImpl implements Interva
 		return UMLComparePackage.Literals.INTERVAL_CONSTRAINT_CHANGE;
 	}
 
-} //IntervalConstraintChangeImpl
+} // IntervalConstraintChangeImpl

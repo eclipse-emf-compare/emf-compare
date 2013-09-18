@@ -34,102 +34,90 @@ import org.eclipse.uml2.uml.UMLPackage;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
- * 
  * @generated
  */
 public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass associationChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass extendChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass generalizationSetChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass executionSpecificationChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass intervalConstraintChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass messageChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass stereotypePropertyChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass stereotypeApplicationChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass stereotypeReferenceChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass profileApplicationChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass directedRelationshipChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass umlDiffEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
-	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package package URI value.
-	 * <p>
-	 * Note: the correct way to create the package is via the static factory method {@link #init init()},
-	 * which also performs initialization of the package, or returns the registered package, if one already
-	 * exists. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
+	 * package URI value.
+	 * <p>Note: the correct way to create the package is via the static
+	 * factory method {@link #init init()}, which also performs
+	 * initialization of the package, or returns the registered package,
+	 * if one already exists.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see org.eclipse.emf.compare.uml2.internal.UMLComparePackage#eNS_URI
 	 * @see #init()
@@ -141,33 +129,26 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private static boolean isInited = false;
 
 	/**
-	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it
-	 * depends.
-	 * <p>
-	 * This method is used to initialize {@link UMLComparePackage#eINSTANCE} when that field is accessed.
-	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the
-	 * package. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
 	 * 
+	 * <p>This method is used to initialize {@link UMLComparePackage#eINSTANCE} when that field is accessed.
+	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #eNS_URI
 	 * @see #createPackageContents()
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
 	public static UMLComparePackage init() {
-		if (isInited) {
-			return (UMLComparePackage)EPackage.Registry.INSTANCE.getEPackage(UMLComparePackage.eNS_URI);
-		}
+		if (isInited) return (UMLComparePackage)EPackage.Registry.INSTANCE.getEPackage(UMLComparePackage.eNS_URI);
 
 		// Obtain or create and register package
-		UMLComparePackageImpl theUMLComparePackage = (UMLComparePackageImpl)(EPackage.Registry.INSTANCE
-				.get(eNS_URI) instanceof UMLComparePackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI)
-				: new UMLComparePackageImpl());
+		UMLComparePackageImpl theUMLComparePackage = (UMLComparePackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof UMLComparePackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new UMLComparePackageImpl());
 
 		isInited = true;
 
@@ -184,6 +165,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 		// Mark meta-data to indicate it can't be changed
 		theUMLComparePackage.freeze();
 
+  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(UMLComparePackage.eNS_URI, theUMLComparePackage);
 		return theUMLComparePackage;
@@ -191,7 +173,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getAssociationChange() {
@@ -200,7 +181,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getExtendChange() {
@@ -209,7 +189,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getGeneralizationSetChange() {
@@ -218,7 +197,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getExecutionSpecificationChange() {
@@ -227,7 +205,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getIntervalConstraintChange() {
@@ -236,7 +213,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getMessageChange() {
@@ -245,7 +221,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getStereotypePropertyChange() {
@@ -254,7 +229,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getStereotypePropertyChange_Stereotype() {
@@ -263,7 +237,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getStereotypeApplicationChange() {
@@ -272,7 +245,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getStereotypeApplicationChange_Stereotype() {
@@ -281,7 +253,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getStereotypeReferenceChange() {
@@ -290,7 +261,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getProfileApplicationChange() {
@@ -299,7 +269,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getProfileApplicationChange_Profile() {
@@ -308,7 +277,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getDirectedRelationshipChange() {
@@ -317,7 +285,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getUMLDiff() {
@@ -326,7 +293,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getUMLDiff_Discriminant() {
@@ -335,7 +301,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getUMLDiff_EReference() {
@@ -344,7 +309,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public UMLCompareFactory getUMLCompareFactory() {
@@ -353,21 +317,18 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private boolean isCreated = false;
 
 	/**
-	 * Creates the meta-model objects for the package. This method is guarded to have no affect on any
-	 * invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates the meta-model objects for the package.  This method is
+	 * guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void createPackageContents() {
-		if (isCreated) {
-			return;
-		}
+		if (isCreated) return;
 		isCreated = true;
 
 		// Create classes and their features
@@ -403,21 +364,18 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private boolean isInitialized = false;
 
 	/**
-	 * Complete the initialization of the package and its meta-model. This method is guarded to have no affect
-	 * on any invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Complete the initialization of the package and its meta-model.  This
+	 * method is guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void initializePackageContents() {
-		if (isInitialized) {
-			return;
-		}
+		if (isInitialized) return;
 		isInitialized = true;
 
 		// Initialize package
@@ -427,10 +385,8 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 		// Obtain other dependent packages
 		UMLPackage theUMLPackage = (UMLPackage)EPackage.Registry.INSTANCE.getEPackage(UMLPackage.eNS_URI);
-		ComparePackage theComparePackage = (ComparePackage)EPackage.Registry.INSTANCE
-				.getEPackage(ComparePackage.eNS_URI);
-		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE
-				.getEPackage(EcorePackage.eNS_URI);
+		ComparePackage theComparePackage = (ComparePackage)EPackage.Registry.INSTANCE.getEPackage(ComparePackage.eNS_URI);
+		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 
 		// Create type parameters
 
@@ -451,66 +407,34 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 		umlDiffEClass.getESuperTypes().add(theComparePackage.getDiff());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(associationChangeEClass, AssociationChange.class,
-				"AssociationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(associationChangeEClass, AssociationChange.class, "AssociationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(extendChangeEClass, ExtendChange.class,
-				"ExtendChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(extendChangeEClass, ExtendChange.class, "ExtendChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(generalizationSetChangeEClass, GeneralizationSetChange.class,
-				"GeneralizationSetChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(generalizationSetChangeEClass, GeneralizationSetChange.class, "GeneralizationSetChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(executionSpecificationChangeEClass, ExecutionSpecificationChange.class,
-				"ExecutionSpecificationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(executionSpecificationChangeEClass, ExecutionSpecificationChange.class, "ExecutionSpecificationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(intervalConstraintChangeEClass, IntervalConstraintChange.class,
-				"IntervalConstraintChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(intervalConstraintChangeEClass, IntervalConstraintChange.class, "IntervalConstraintChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(messageChangeEClass, MessageChange.class,
-				"MessageChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(messageChangeEClass, MessageChange.class, "MessageChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(stereotypePropertyChangeEClass, StereotypePropertyChange.class,
-				"StereotypePropertyChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getStereotypePropertyChange_Stereotype(),
-				theUMLPackage.getStereotype(),
-				null,
-				"stereotype", null, 0, 1, StereotypePropertyChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(stereotypePropertyChangeEClass, StereotypePropertyChange.class, "StereotypePropertyChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getStereotypePropertyChange_Stereotype(), theUMLPackage.getStereotype(), null, "stereotype", null, 0, 1, StereotypePropertyChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(stereotypeApplicationChangeEClass, StereotypeApplicationChange.class,
-				"StereotypeApplicationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getStereotypeApplicationChange_Stereotype(),
-				theUMLPackage.getStereotype(),
-				null,
-				"stereotype", null, 0, 1, StereotypeApplicationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(stereotypeApplicationChangeEClass, StereotypeApplicationChange.class, "StereotypeApplicationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getStereotypeApplicationChange_Stereotype(), theUMLPackage.getStereotype(), null, "stereotype", null, 0, 1, StereotypeApplicationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(stereotypeReferenceChangeEClass, StereotypeReferenceChange.class,
-				"StereotypeReferenceChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(stereotypeReferenceChangeEClass, StereotypeReferenceChange.class, "StereotypeReferenceChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(profileApplicationChangeEClass, ProfileApplicationChange.class,
-				"ProfileApplicationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getProfileApplicationChange_Profile(),
-				theUMLPackage.getProfile(),
-				null,
-				"profile", null, 0, 1, ProfileApplicationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(profileApplicationChangeEClass, ProfileApplicationChange.class, "ProfileApplicationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getProfileApplicationChange_Profile(), theUMLPackage.getProfile(), null, "profile", null, 0, 1, ProfileApplicationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(directedRelationshipChangeEClass, DirectedRelationshipChange.class,
-				"DirectedRelationshipChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(directedRelationshipChangeEClass, DirectedRelationshipChange.class, "DirectedRelationshipChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlDiffEClass, UMLDiff.class,
-				"UMLDiff", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getUMLDiff_Discriminant(),
-				theEcorePackage.getEObject(),
-				null,
-				"discriminant", null, 0, 1, UMLDiff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getUMLDiff_EReference(),
-				theEcorePackage.getEReference(),
-				null,
-				"eReference", null, 0, 1, UMLDiff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(umlDiffEClass, UMLDiff.class, "UMLDiff", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getUMLDiff_Discriminant(), theEcorePackage.getEObject(), null, "discriminant", null, 0, 1, UMLDiff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getUMLDiff_EReference(), theEcorePackage.getEReference(), null, "eReference", null, 0, 1, UMLDiff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);

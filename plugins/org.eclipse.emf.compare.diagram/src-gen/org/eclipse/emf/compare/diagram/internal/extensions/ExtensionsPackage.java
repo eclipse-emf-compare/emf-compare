@@ -102,6 +102,24 @@ public interface ExtensionsPackage extends EPackage {
 	int DIAGRAM_DIFF__REQUIRED_BY = ComparePackage.DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_DIFF__IMPLIES = ComparePackage.DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_DIFF__IMPLIED_BY = ComparePackage.DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -118,6 +136,15 @@ public interface ExtensionsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DIAGRAM_DIFF__REFINED_BY = ComparePackage.DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_DIFF__PRIME_REFINING = ComparePackage.DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -229,6 +256,24 @@ public interface ExtensionsPackage extends EPackage {
 	int SHOW__REQUIRED_BY = DIAGRAM_DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SHOW__IMPLIES = DIAGRAM_DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SHOW__IMPLIED_BY = DIAGRAM_DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -245,6 +290,15 @@ public interface ExtensionsPackage extends EPackage {
 	 * @ordered
 	 */
 	int SHOW__REFINED_BY = DIAGRAM_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SHOW__PRIME_REFINING = DIAGRAM_DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -356,6 +410,24 @@ public interface ExtensionsPackage extends EPackage {
 	int HIDE__REQUIRED_BY = DIAGRAM_DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HIDE__IMPLIES = DIAGRAM_DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HIDE__IMPLIED_BY = DIAGRAM_DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -372,6 +444,15 @@ public interface ExtensionsPackage extends EPackage {
 	 * @ordered
 	 */
 	int HIDE__REFINED_BY = DIAGRAM_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HIDE__PRIME_REFINING = DIAGRAM_DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -483,6 +564,24 @@ public interface ExtensionsPackage extends EPackage {
 	int NODE_CHANGE__REQUIRED_BY = DIAGRAM_DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_CHANGE__IMPLIES = DIAGRAM_DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_CHANGE__IMPLIED_BY = DIAGRAM_DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -499,6 +598,15 @@ public interface ExtensionsPackage extends EPackage {
 	 * @ordered
 	 */
 	int NODE_CHANGE__REFINED_BY = DIAGRAM_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_CHANGE__PRIME_REFINING = DIAGRAM_DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -610,6 +718,24 @@ public interface ExtensionsPackage extends EPackage {
 	int COORDINATES_CHANGE__REQUIRED_BY = NODE_CHANGE__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COORDINATES_CHANGE__IMPLIES = NODE_CHANGE__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COORDINATES_CHANGE__IMPLIED_BY = NODE_CHANGE__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -626,6 +752,15 @@ public interface ExtensionsPackage extends EPackage {
 	 * @ordered
 	 */
 	int COORDINATES_CHANGE__REFINED_BY = NODE_CHANGE__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COORDINATES_CHANGE__PRIME_REFINING = NODE_CHANGE__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -737,6 +872,24 @@ public interface ExtensionsPackage extends EPackage {
 	int EDGE_CHANGE__REQUIRED_BY = DIAGRAM_DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE_CHANGE__IMPLIES = DIAGRAM_DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE_CHANGE__IMPLIED_BY = DIAGRAM_DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -753,6 +906,15 @@ public interface ExtensionsPackage extends EPackage {
 	 * @ordered
 	 */
 	int EDGE_CHANGE__REFINED_BY = DIAGRAM_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE_CHANGE__PRIME_REFINING = DIAGRAM_DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -865,6 +1027,24 @@ public interface ExtensionsPackage extends EPackage {
 	int DIAGRAM_CHANGE__REQUIRED_BY = DIAGRAM_DIFF__REQUIRED_BY;
 
 	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_CHANGE__IMPLIES = DIAGRAM_DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_CHANGE__IMPLIED_BY = DIAGRAM_DIFF__IMPLIED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -881,6 +1061,15 @@ public interface ExtensionsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DIAGRAM_CHANGE__REFINED_BY = DIAGRAM_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_CHANGE__PRIME_REFINING = DIAGRAM_DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.

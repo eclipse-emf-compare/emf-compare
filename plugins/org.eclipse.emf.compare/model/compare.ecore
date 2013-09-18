@@ -207,6 +207,8 @@
         <details key="documentation" value="This will reference the higher-level difference that shadows this one, if any."/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="primeRefining" eType="#//Diff"
+        changeable="false" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" lowerBound="1" eType="#//DifferenceKind">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Describes the kind of this difference, whether it is an addition, deletion, change, or move."/>
