@@ -13,22 +13,34 @@ package org.eclipse.emf.compare.command;
 import org.eclipse.emf.common.command.CommandStack;
 
 /**
+ * An extended {@link CommandStack command stack} that knows about each save state of the comparison.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public interface ICompareCommandStack extends CommandStack {
 
 	/**
-	 * @return
+	 * Returns whether the left model has changes since {@link #leftSaveIsDone} was call the last.
+	 * 
+	 * @return whether the left model has changes since {@link #leftSaveIsDone} was call the last.
 	 */
 	boolean isLeftSaveNeeded();
 
 	/**
-	 * @return
+	 * Returns whether the right model has changes since {@link #rightSaveIsDone} was call the last.
+	 * 
+	 * @return whether the right model has changes since {@link #rightSaveIsDone} was call the last.
 	 */
 	boolean isRightSaveNeeded();
 
+	/**
+	 * Called after a save of the left model has been successfully performed.
+	 */
 	void leftSaveIsDone();
 
+	/**
+	 * Called after a save of the right model has been successfully performed.
+	 */
 	void rightSaveIsDone();
 
 }

@@ -22,22 +22,42 @@ import org.eclipse.emf.compare.command.DelegatingCommandStack;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 
+/**
+ * A simple {@link ICompareCommandStack} that delegate execution to another command stack but keep
+ * informations about execution to properly reply to {@link ICompareCommandStack} protocol.
+ * <p>
+ * This implementation is not robust. If an error occurs during execution of a command, the whole state will
+ * be corrupted and the undo/redo may have an unknown behavior.
+ * 
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ */
 public class CompareCommandStack extends DelegatingCommandStack implements ICompareCommandStack {
 
+	/** The data structure to keep info of command executed on the right side. */
 	private final CompareSideCommandStack rightCommandStack;
 
+	/** The data structure to keep info of command executed on the left side. */
 	private final CompareSideCommandStack leftCommandStack;
 
+	/** The command to which we delegate to. */
 	private final CommandStack delegate;
 
-	public CompareCommandStack(CommandStack delegate) {
-		this.delegate = delegate;
+	/**
+	 * Creates a new instance that delegates to the given {@code commandStack}.
+	 * 
+	 * @param commandStack
+	 *            the command stack to which this instance will delegate.
+	 */
+	public CompareCommandStack(CommandStack commandStack) {
+		this.delegate = commandStack;
 		this.rightCommandStack = new CompareSideCommandStack();
 		this.leftCommandStack = new CompareSideCommandStack();
 	}
 
 	/**
-	 * @return the delegate
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.command.DelegatingCommandStack#delegate()
 	 */
 	@Override
 	protected CommandStack delegate() {
@@ -156,23 +176,55 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 		rightCommandStack.saveIsDone();
 	}
 
+	/**
+	 * Simple data structure acting like a command stack but without any execution capability. It is used to
+	 * record execution of {@link ICompareCopyCommand} on each side.
+	 * 
+	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+	 */
 	public static class CompareSideCommandStack {
 
+		/**
+		 * This will force the {@link #isSaveNeeded()} to return <code>true</code>.
+		 */
+		private static final int IS_SAVE_NEEDED_WILL_BE_TRUE = -2;
+
+		/**
+		 * The list of commands.
+		 */
 		private final List<ICompareCopyCommand> commandList;
 
+		/**
+		 * The current position within the list from which the next execute, undo, or redo, will be performed.
+		 */
 		private int top;
 
+		/**
+		 * The command most recently executed, undone, or redone.
+		 */
 		private Command mostRecentCommand;
 
+		/**
+		 * The value of {@link #top} when {@link #saveIsDone} is called.
+		 */
 		private int saveIndex = -1;
 
+		/**
+		 * Creates a new empty instance.
+		 */
 		public CompareSideCommandStack() {
 			commandList = newArrayList();
 			top = -1;
 		}
 
+		/**
+		 * Record the execution of the given command.
+		 * 
+		 * @param command
+		 *            the command to record.
+		 */
 		public void executed(ICompareCopyCommand command) {
-			// If the command is executable, record and execute it.
+			// If the command is executable, record it.
 			//
 			if (command != null) {
 				if (command.canExecute()) {
@@ -199,22 +251,31 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 					if (saveIndex >= top) {
 						// This forces isSaveNeded to always be true.
 						//
-						saveIndex = -2;
+						saveIndex = IS_SAVE_NEEDED_WILL_BE_TRUE;
 					}
 				}
 			}
 		}
 
+		/**
+		 * Record that the top of the command list has been undone.
+		 */
 		public void undone() {
 			Command command = commandList.get(top--);
 			mostRecentCommand = command;
 		}
 
+		/**
+		 * Record that the top of the command list has been redone.
+		 */
 		public void redone() {
 			Command command = commandList.get(++top);
 			mostRecentCommand = command;
 		}
 
+		/**
+		 * Disposes all the commands in the stack.
+		 */
 		public void flushed() {
 			// Clear the list.
 			//
@@ -244,39 +305,66 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 		 * @return whether the model has changes since <code>saveIsDone</code> was call the last.
 		 */
 		public boolean isSaveNeeded() {
-			// Only if we are at the remembered index do we NOT need to save.
-			//
-			// return top != saveIndex;
+			boolean ret = false;
 
 			if (saveIndex < -1) {
-				return true;
+				ret = true;
 			}
 
-			if (top > saveIndex) {
-				for (int i = top; i > saveIndex; --i) {
-					if (!(commandList.get(i) instanceof AbstractCommand.NonDirtying)) {
-						return true;
+			if (!ret) {
+				if (top > saveIndex) {
+					for (int i = top; !ret && i > saveIndex; --i) {
+						if (!(commandList.get(i) instanceof AbstractCommand.NonDirtying)) {
+							ret = true;
+						}
 					}
-				}
-			} else {
-				for (int i = saveIndex; i > top; --i) {
-					if (!(commandList.get(i) instanceof AbstractCommand.NonDirtying)) {
-						return true;
+				} else {
+					for (int i = saveIndex; !ret && i > top; --i) {
+						if (!(commandList.get(i) instanceof AbstractCommand.NonDirtying)) {
+							ret = true;
+						}
 					}
 				}
 			}
 
-			return false;
+			return ret;
 		}
 
+		/**
+		 * Returns the command that will be undone if {@link #undo} is called.
+		 * 
+		 * @return the command that will be undone if {@link #undo} is called.
+		 */
 		public Command getUndoCommand() {
-			return top == -1 || top == commandList.size() ? null : (Command)commandList.get(top);
+			final Command undoCommand;
+			if (top == -1 || top == commandList.size()) {
+				undoCommand = null;
+			} else {
+				undoCommand = commandList.get(top);
+			}
+			return undoCommand;
 		}
 
+		/**
+		 * Returns the command that will be redone if {@link #redo} is called.
+		 * 
+		 * @return the command that will be redone if {@link #redo} is called.
+		 */
 		public Command getRedoCommand() {
-			return top + 1 >= commandList.size() ? null : (Command)commandList.get(top + 1);
+			final Command redoCommand;
+			if (top + 1 >= commandList.size()) {
+				redoCommand = null;
+			} else {
+				redoCommand = commandList.get(top + 1);
+			}
+			return redoCommand;
 		}
 
+		/**
+		 * Returns the command most recently executed, undone, or redone.
+		 * 
+		 * @return the command most recently executed, undone, or redone.
+		 */
 		public Command getMostRecentCommand() {
 			return mostRecentCommand;
 		}

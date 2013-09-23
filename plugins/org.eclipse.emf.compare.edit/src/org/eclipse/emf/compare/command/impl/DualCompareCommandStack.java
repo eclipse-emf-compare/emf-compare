@@ -23,20 +23,57 @@ import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 
+/**
+ * {@link ICompareCommandStack} implementation that will delegates to two given command stacks; one for each
+ * side of the comparison.
+ * <p>
+ * This implementation is not robust. If an error occurs during execution of a command, the whole state will
+ * be corrupted and the undo/redo may have an unknown behavior.
+ * 
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ */
 public class DualCompareCommandStack implements ICompareCommandStack {
 
+	/**
+	 * This value forces isSaveNeded to always be true.
+	 */
+	private static final int IS_SAVE_NEEDED_WILL_BE_TRUE = -2;
+
+	/** The left command stack. */
 	private final BasicCommandStack leftCommandStack;
 
+	/** The right command stack. */
 	private final BasicCommandStack rightCommandStack;
 
+	/**
+	 * The list of command stack; it will record the stack of which command stack has been used to execute the
+	 * commands.
+	 */
 	private final List<BasicCommandStack> commandStackStack;
 
+	/**
+	 * The current position within the list from which the next execute, undo, or redo, will be performed.
+	 */
 	private int top;
 
+	/**
+	 * The command stack on which a command has been most recently executed, undone, or redone.
+	 */
 	private BasicCommandStack mostRecentCommandStack;
 
+	/**
+	 * The value of {@link #top} when {@link #saveIsDone} is called.
+	 */
 	private int saveIndex = -1;
 
+	/**
+	 * Creates an instance that delegates to two given {@link BasicCommandStack}.
+	 * 
+	 * @param leftCommandStack
+	 *            the left command stack.
+	 * @param rightCommandStack
+	 *            the right command stack.
+	 */
 	public DualCompareCommandStack(BasicCommandStack leftCommandStack, BasicCommandStack rightCommandStack) {
 		this.leftCommandStack = Preconditions.checkNotNull(leftCommandStack);
 		this.rightCommandStack = Preconditions.checkNotNull(rightCommandStack);
@@ -81,9 +118,7 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 			// way back to the beginning.
 			//
 			if (saveIndex >= top) {
-				// This forces isSaveNeded to always be true.
-				//
-				saveIndex = -2;
+				saveIndex = IS_SAVE_NEEDED_WILL_BE_TRUE;
 			}
 
 			commandStack.execute(compareCommand);
@@ -127,8 +162,13 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 	 * @see org.eclipse.emf.common.command.CommandStack#getUndoCommand()
 	 */
 	public Command getUndoCommand() {
-		return top == -1 || top == commandStackStack.size() ? null : commandStackStack.get(top)
-				.getUndoCommand();
+		final Command undoCommand;
+		if (top == -1 || top == commandStackStack.size()) {
+			undoCommand = null;
+		} else {
+			undoCommand = commandStackStack.get(top).getUndoCommand();
+		}
+		return undoCommand;
 	}
 
 	/**
@@ -137,8 +177,13 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 	 * @see org.eclipse.emf.common.command.CommandStack#getRedoCommand()
 	 */
 	public Command getRedoCommand() {
-		return top + 1 >= commandStackStack.size() ? null : commandStackStack.get(top + 1)
-				.getRedoCommand();
+		final Command redoCommand;
+		if (top + 1 >= commandStackStack.size()) {
+			redoCommand = null;
+		} else {
+			redoCommand = commandStackStack.get(top + 1).getRedoCommand();
+		}
+		return redoCommand;
 	}
 
 	/**
