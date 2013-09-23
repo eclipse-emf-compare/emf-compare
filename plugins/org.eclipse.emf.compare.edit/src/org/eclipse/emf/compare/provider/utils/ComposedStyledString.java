@@ -19,20 +19,38 @@ import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledStrin
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 
 /**
+ * Composed styled string implementation backed by an {@link java.util.ArrayList}.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class ComposedStyledString implements IComposedStyledString {
 
+	/** the backing list. */
 	private final List<IStyledString> content;
 
+	/** Creates a new empty instance. */
 	public ComposedStyledString() {
 		content = newArrayList();
 	}
 
+	/**
+	 * Creates a new instance with the given text without style.
+	 * 
+	 * @param text
+	 *            the text.
+	 */
 	public ComposedStyledString(String text) {
 		this(text, Style.NO_STYLE);
 	}
 
+	/**
+	 * Creates a new instance with the given text and the given style.
+	 * 
+	 * @param text
+	 *            the text.
+	 * @param style
+	 *            the style of the text.
+	 */
 	public ComposedStyledString(String text, Style style) {
 		this();
 		append(text, style);
@@ -81,25 +99,44 @@ public class ComposedStyledString implements IComposedStyledString {
 		return content.iterator();
 	}
 
+	/**
+	 * Private implementation of {@link IStyledString} backed by the tuple String and Style.
+	 * 
+	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+	 */
 	private static final class StyledString implements IStyledString {
+		/** The string. */
 		private final String str;
 
+		/** The style. */
 		private final Style style;
 
+		/**
+		 * Creates a new styled string.
+		 * 
+		 * @param str
+		 *            the text value
+		 * @param style
+		 *            the style.
+		 */
 		StyledString(String str, Style style) {
 			this.str = str;
 			this.style = style;
 		}
 
 		/**
-		 * @return the str
+		 * Returns the string value.
+		 * 
+		 * @return the string value.
 		 */
 		public String getString() {
 			return str;
 		}
 
 		/**
-		 * @return the style
+		 * Returns the style.
+		 * 
+		 * @return the style.
 		 */
 		public Style getStyle() {
 			return style;

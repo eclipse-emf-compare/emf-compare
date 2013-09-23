@@ -22,6 +22,9 @@ import org.eclipse.emf.edit.provider.IItemLabelProvider;
  */
 public final class AdapterFactoryUtil {
 
+	/**
+	 * Prevents instantiation.
+	 */
 	private AdapterFactoryUtil() {
 		// prevents instantiation
 	}
@@ -45,11 +48,12 @@ public final class AdapterFactoryUtil {
 			return null;
 		}
 
+		String ret = null;
 		Object itemLabelProvider = adapterFactory.adapt(object, IItemLabelProvider.class);
 		if (itemLabelProvider instanceof IItemLabelProvider) {
-			return ((IItemLabelProvider)itemLabelProvider).getText(object);
+			ret = ((IItemLabelProvider)itemLabelProvider).getText(object);
 		}
-		return null;
+		return ret;
 	}
 
 	/**
@@ -71,11 +75,12 @@ public final class AdapterFactoryUtil {
 			return null;
 		}
 
+		Object ret = null;
 		Object adapter = adapterFactory.adapt(object, IItemLabelProvider.class);
 		if (adapter instanceof IItemLabelProvider) {
-			return ((IItemLabelProvider)adapter).getImage(object);
+			ret = ((IItemLabelProvider)adapter).getImage(object);
 		}
-		return null;
+		return ret;
 	}
 
 	/**
