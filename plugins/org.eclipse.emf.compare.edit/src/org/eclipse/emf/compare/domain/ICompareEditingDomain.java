@@ -26,8 +26,6 @@ import org.eclipse.emf.ecore.change.util.ChangeRecorder;
  */
 public interface ICompareEditingDomain {
 
-	void dispose();
-
 	/**
 	 * Returns the associated {@link ICompareCommandStack}.
 	 * 
@@ -58,13 +56,6 @@ public interface ICompareEditingDomain {
 	 * @since 3.0
 	 */
 	Command createCopyCommand(List<? extends Diff> differences, boolean leftToRight,
-			IMerger.Registry mergerRegistry);
-
-	/**
-	 * @since 3.0
-	 */
-	@Deprecated
-	Command createCopyAllNonConflictingCommand(List<? extends Diff> differences, boolean leftToRight,
 			IMerger.Registry mergerRegistry);
 
 }

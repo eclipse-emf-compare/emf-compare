@@ -67,6 +67,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.provider.IDisposable;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.tree.TreeFactory;
@@ -459,7 +460,9 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 							.getProperty(EMFCompareConstants.EDITING_DOMAIN);
 					if (editingDomain != null) {
 						editingDomain.getCommandStack().removeCommandStackListener(this);
-						editingDomain.dispose();
+						if (editingDomain instanceof IDisposable) {
+							((IDisposable)editingDomain).dispose();
+						}
 					}
 
 					editingDomain = EMFCompareEditingDomain.create(leftResourceSet, rightResourceSet,
@@ -511,7 +514,9 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 			if (editingDomain != null) {
 				editingDomain.getCommandStack().removeCommandStackListener(this);
 				getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, null);
-				editingDomain.dispose();
+				if (editingDomain instanceof IDisposable) {
+					((IDisposable)editingDomain).dispose();
+				}
 				editingDomain = null;
 			}
 

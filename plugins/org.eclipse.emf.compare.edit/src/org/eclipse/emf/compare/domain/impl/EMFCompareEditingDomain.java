@@ -23,7 +23,6 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.impl.CompareCommandStack;
-import org.eclipse.emf.compare.command.impl.CopyAllNonConflictingCommand;
 import org.eclipse.emf.compare.command.impl.CopyCommand;
 import org.eclipse.emf.compare.command.impl.DualCompareCommandStack;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
@@ -269,24 +268,7 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.domain.ICompareEditingDomain#createCopyAllNonConflictingCommand(java.util.List,
-	 *      boolean, org.eclipse.emf.compare.merge.IMerger.Registry)
-	 * @since 3.0
-	 */
-	public Command createCopyAllNonConflictingCommand(List<? extends Diff> differences, boolean leftToRight,
-			IMerger.Registry mergerRegistry) {
-		ImmutableSet.Builder<Notifier> notifiersBuilder = ImmutableSet.builder();
-		for (Diff diff : differences) {
-			notifiersBuilder.add(diff.getMatch().getComparison());
-		}
-		ImmutableSet<Notifier> notifiers = notifiersBuilder.addAll(fNotifiers).build();
-
-		return new CopyAllNonConflictingCommand(fChangeRecorder, notifiers, differences, leftToRight,
-				mergerRegistry);
-	}
-
-	/**
-	 * @since 3.0
+	 * @see org.eclipse.emf.compare.domain.ICompareEditingDomain#getChangeRecorder()
 	 */
 	public ChangeRecorder getChangeRecorder() {
 		return fChangeRecorder;
