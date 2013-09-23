@@ -14,6 +14,7 @@ import static com.google.common.collect.Sets.newHashSet;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.UnmodifiableIterator;
@@ -965,13 +966,24 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 							}
 							boolean leftEditable = getCompareConfiguration().isLeftEditable();
 							boolean rightEditable = getCompareConfiguration().isRightEditable();
-							Diff diff = (Diff)selectionData;
-							if (ltr || (!ltr && (rightEditable && !leftEditable))) {
-								requires = DiffUtil.getRequires(diff, true, diff.getSource());
-								unmergeables = DiffUtil.getUnmergeables(diff, true);
-							} else {
-								requires = DiffUtil.getRequires(diff, false, diff.getSource());
-								unmergeables = DiffUtil.getUnmergeables(diff, false);
+							Diff selectedDiff = (Diff)selectionData;
+							if (rightEditable) {
+								if (leftEditable) { // RW both sides
+									requires = DiffUtil.getRequires(selectedDiff, ltr);
+									unmergeables = DiffUtil.getUnmergeables(selectedDiff, ltr);
+								} else { // !leftEditable
+									requires = DiffUtil.getRequires(selectedDiff, !ltr);
+									unmergeables = DiffUtil.getUnmergeables(selectedDiff, !ltr);
+								}
+							} else { // !rightEditable
+								if (leftEditable) {
+									requires = DiffUtil.getRequires(selectedDiff, ltr);
+									unmergeables = DiffUtil.getUnmergeables(selectedDiff, ltr);
+								} else { // R-Only both
+									// nothing
+									requires = ImmutableSet.of();
+									unmergeables = ImmutableSet.of();
+								}
 							}
 							final GC g = event.gc;
 							if (requires.contains(dataItem)) {

@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -242,12 +243,24 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 			}
 			boolean leftEditable = fConfiguration.isLeftEditable();
 			boolean rightEditable = fConfiguration.isRightEditable();
-			if (ltr || (!ltr && (rightEditable && !leftEditable))) {
-				requires = DiffUtil.getRequires(selectedDiff, true, selectedDiff.getSource());
-				unmergeables = DiffUtil.getUnmergeables(selectedDiff, true);
-			} else {
-				requires = DiffUtil.getRequires(selectedDiff, false, selectedDiff.getSource());
-				unmergeables = DiffUtil.getUnmergeables(selectedDiff, false);
+
+			if (rightEditable) {
+				if (leftEditable) { // RW both sides
+					requires = DiffUtil.getRequires(selectedDiff, ltr);
+					unmergeables = DiffUtil.getUnmergeables(selectedDiff, ltr);
+				} else { // !leftEditable
+					requires = DiffUtil.getRequires(selectedDiff, !ltr);
+					unmergeables = DiffUtil.getUnmergeables(selectedDiff, !ltr);
+				}
+			} else { // !rightEditable
+				if (leftEditable) {
+					requires = DiffUtil.getRequires(selectedDiff, ltr);
+					unmergeables = DiffUtil.getUnmergeables(selectedDiff, ltr);
+				} else { // R-Only both
+					// nothing
+					requires = ImmutableSet.of();
+					unmergeables = ImmutableSet.of();
+				}
 			}
 			associateTreeItems(Lists.newLinkedList(Iterables.concat(requires, unmergeables)));
 		}

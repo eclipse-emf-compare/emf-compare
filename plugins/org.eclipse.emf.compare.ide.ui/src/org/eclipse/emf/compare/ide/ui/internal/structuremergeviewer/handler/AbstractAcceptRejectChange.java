@@ -149,7 +149,7 @@ public abstract class AbstractAcceptRejectChange extends AbstractHandler {
 		public AcceptRejectChangeCommand(ChangeRecorder changeRecorder, Diff difference, boolean leftToRight,
 				CompareConfiguration configuration) {
 			super(changeRecorder, ImmutableSet.<Notifier> builder().add(difference).addAll(
-					DiffUtil.getRequires(difference, leftToRight, difference.getSource())).build());
+					DiffUtil.getRequires(difference, leftToRight)).build());
 			this.difference = difference;
 			this.leftToRight = leftToRight;
 			this.configuration = configuration;
@@ -162,7 +162,7 @@ public abstract class AbstractAcceptRejectChange extends AbstractHandler {
 		 */
 		@Override
 		public void doExecute() {
-			for (Diff require : DiffUtil.getRequires(difference, leftToRight, difference.getSource())) {
+			for (Diff require : DiffUtil.getRequires(difference, leftToRight)) {
 				EMFCompareUIHandlerUtil.setMergeDataForDiff(require, leftToRight, configuration
 						.isLeftEditable(), configuration.isRightEditable());
 				require.setState(DifferenceState.MERGED);

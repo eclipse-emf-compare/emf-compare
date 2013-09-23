@@ -93,7 +93,7 @@ public final class EMFCompareUIHandlerUtil {
 			List<Diff> diffsToCopy = new ArrayList<Diff>();
 			diffsToCopy.add(diffToCopy);
 			// Add merge data for required diffs
-			for (Diff require : DiffUtil.getRequires(diffToCopy, leftToRight, diffToCopy.getSource())) {
+			for (Diff require : DiffUtil.getRequires(diffToCopy, leftToRight)) {
 				EMFCompareUIHandlerUtil.setMergeDataForDiff(require, leftToRight, configuration
 						.isLeftEditable(), configuration.isRightEditable());
 			}

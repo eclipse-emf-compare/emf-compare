@@ -862,13 +862,11 @@ public final class DiffUtil {
 	 *            the given difference.
 	 * @param leftToRight
 	 *            the way of merge.
-	 * @param originalDiffSource
-	 *            the source of the given diff.
 	 * @return the list of all required differences.
 	 * @since 3.0
 	 */
-	public static Set<Diff> getRequires(Diff diff, boolean leftToRight, DifferenceSource originalDiffSource) {
-		return getRequires(diff, diff, leftToRight, originalDiffSource, Sets.newHashSet());
+	public static Set<Diff> getRequires(Diff diff, boolean leftToRight) {
+		return getRequires(diff, diff, leftToRight, Sets.newHashSet());
 	}
 
 	/**
@@ -881,16 +879,15 @@ public final class DiffUtil {
 	 *            the original given difference.
 	 * @param leftToRight
 	 *            the way of merge.
-	 * @param originalDiffSource
-	 *            the source of the given diff.
 	 * @param processedDiffs
 	 *            the list of already processed diffs.
 	 * @return the list of all required differences.
 	 * @since 3.0
 	 */
-	private static Set<Diff> getRequires(Diff currentDiff, Diff originalDiff, boolean leftToRight,
-			DifferenceSource originalDiffSource, Set<Object> processedDiffs) {
+	private static Set<Diff> getRequires(Diff currentDiff, final Diff originalDiff, boolean leftToRight,
+			Set<Object> processedDiffs) {
 		Set<Diff> requires = Sets.newHashSet();
+		DifferenceSource originalDiffSource = originalDiff.getSource();
 		final List<Diff> diffRequires;
 		if (leftToRight) {
 			if (DifferenceSource.LEFT == originalDiffSource) {
@@ -914,8 +911,7 @@ public final class DiffUtil {
 			if (!originalDiff.equals(require) && !processedDiffs.contains(require)) {
 				processedDiffs.add(require);
 				requires.add(require);
-				requires.addAll(getRequires(require, originalDiff, leftToRight, originalDiffSource,
-						processedDiffs));
+				requires.addAll(getRequires(require, originalDiff, leftToRight, processedDiffs));
 			}
 		}
 		return requires;
