@@ -1,0 +1,126 @@
+The [http://www.eclipse.org/emf/compare EMF Compare] project is part of EMF (Eclipse Modeling Framework). 
+
+[[Image:./../images/Emf_logo.png]]
+
+EMF Compare brings model comparison to the EMF framework, this tool provides generic support for any kind of metamodel in order to compare and merge models. The objectives of this component are to provide a stable and efficient generic implementation of model comparison and to provide an extensible framework for specific needs. 
+
+= Overview =
+
+[[Image:./../images/EMF_Compare_Process_Full.png|thumb|center|800px]]
+
+The above figure represents the comparison process of EMF Compare. It can be roughly divided in 6 main phases.
+; Model Resolving
+: From a given "starting point" (the file a user decided to compare), finding all other fragments required for the comparison of the whole logical model.
+; Matching
+: Iterating over the two (or three) loaded logical models in order to map elements together two-by-two (or three-by-three). For example, determine that class ''Class1'' from the first model corresponds to class ''Class1''' from the second model.
+; Differencing
+: The matching phase told us which elements were matching together. The differencing phase will browse through these mappings and determine whether the two (or three) elements are equal or if they present differences (for example, the name of the class changed from ''Class1'' to ''Class1''').
+; Equivalences
+: The differencing phases detected a number of differences between the compared models. However, two distinct differences might actually represent the same change. This phase will browse through all differences and link them together when they can be seen as equivalent (for example, differences on opposite references).
+; Requirements
+: For the purpose of merging differences, there might be dependencies between them. For example, the addition of a class ''C1'' in package ''P1'' depends on the addition of package ''P1'' itself. During this phase, we'll browse through all detected differences and link them together when we determine that one cannot be merged without the other.
+; Conflicts
+: When we're comparing our file with one from a Version Control System (CVS, SVN, Git, Clearcase...), there might actually be conflicts between the changes we've made locally, and the changes that were made to the file on the remote repository. This phase will browse through all detected differences and detect these conflicts.
+
+
+The Model resolving phase itself can be further decomposed in its own two distinct phases. More on the logical model and its resolution can be found on [[./../developer/Logical%20Model.html|the dedicated page]].
+
+[[Image:./../images/EMF_Compare_Model_Resolving.png|thumb|center|800px]]
+
+== Compatibility ==
+
+The EMF Compare development team does its best to maintain downward compatibility towards Galileo (3.5). Following is the compatibility chart : 
+
+{| border="1"
+|-
+! EMF Compare 
+! bgcolor="#cccccc" align="center" | Eclipse 4.3 - EMF 2.9
+! align="center" | Eclipse 4.2 - EMF 2.8
+! align="center" | Eclipse 3.8 - EMF 2.8 
+! align="center" | Eclipse 3.7 - EMF 2.7 
+! align="center" | Eclipse 3.6 - EMF 2.6 
+! align="center" | Eclipse 3.5 - EMF 2.5 
+! align="center" | Eclipse 3.4 - EMF 2.4
+! align="center" | Eclipse 3.3 - EMF 2.3
+! align="center" | Eclipse 3.2 - EMF 2.2 
+|-
+| bgcolor="#cccccc" align="center" | 2.1
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+|-
+| align="center" | 2.0
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+|-
+| align="center" | 1.3
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+|-
+| align="center" | 1.2 
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+|-
+| align="center" | 1.1 
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+|-
+| align="center" | 1.0 
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+|}
+
+An empty cell indicates that the compatibility hasn't been tested for a particular combination.
+
+== Team ==
+
+The project developers are: 
+
+* Cedric Brun ([http://www.obeo.fr Obeo]), project lead 
+* Laurent Goubet ([http://www.obeo.fr Obeo])
+* Mikael Barbero ([http://www.obeo.fr Obeo]) 
+* Cedric Notot ([http://www.obeo.fr Obeo])
+* Axel Richard ([http://www.obeo.fr Obeo])
+
+More information about the code aspects and activity of this project can be found on the [http://www.eclipse.org/projects/project.php?id=modeling.emf.compare project page]

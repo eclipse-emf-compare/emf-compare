@@ -1,0 +1,304 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Logical Model</title>
+		<link type="text/css" rel="stylesheet" href="/help/topic/org.eclipse.emf.compare.doc/doc/resources/bootstrap.css"/>
+		<link type="text/css" rel="stylesheet" href="/help/topic/org.eclipse.emf.compare.doc/doc/resources/custom.css"/>
+	</head>
+	<body>
+		<h1 id="Logical_Model">Logical Model</h1>
+		<h2 id="What_is_a_logical_model_.3F">What is a logical model ?</h2>
+		<p>We name "logical model" a set of 
+			<b>physical resources</b> that form a coherent business-related model. For example, we could say that a given Java class forms a coherent logical model only when it is linked with all of its imported classes.
+		</p>
+		<p>In the case of EMF, we name a 
+			<i>logical resource</i> (or 
+			<i>model</i>) the EMF resource loaded in memory, as opposed to a 
+			<i>physical resource</i> (or 
+			<i>file</i>) that is merely the serialization of this model on disk. A given EMF model can reference a number of other models, and it will be incoherent, or even sometimes corrupted, if these other models are not loaded in memory. In EMF, a given model can be serialized as a single file, 
+			<i>fragmented</i> in multiple files on disk, or 
+			<i>reference</i> multiple files. The logical model is only coherent when the whole set of its physical files is accessible.
+		</p>
+		<p>If we take it in reverse, a logical model is a set of elements that reference each other :</p>
+		<table>
+			<tr>
+				<td align="center">
+					<img align="middle" border="1" src="./../images/Logical_Model.png"/>
+				</td>
+			</tr>
+			<tr>
+				<td align="center">A Logical Model is a set of inter-related elements.</td>
+			</tr>
+		</table>
+		<p>When these elements are serialized on disk, they may be split across multiple files, as long as the references between these files can be resolved :</p>
+		<table>
+			<tr>
+				<td align="center">
+					<img align="middle" border="1" src="./../images/Logical_Model_Split.png"/>
+				</td>
+			</tr>
+			<tr>
+				<td align="center">Logical Model split in the files 
+					<i>A</i>, 
+					<i>B</i>, 
+					<i>C</i>, 
+					<i>D</i>, 
+					<i>E</i>, 
+					<i>F</i> and 
+					<i>G</i>.
+				</td>
+			</tr>
+		</table>
+		<h2 id="Eclipse_Team">Eclipse Team</h2>
+		<p>The Eclipse Team project (referred as "Team" in this document) provides an API named "model providers". This API allows implementers to define the semantics of what is a "logical model" in his case. In short, it allows us to link any number of physical resources to a given "starting" file.</p>
+		<p>Technically, this is done through an extension point that can be implemented by anyone and that will adapt a file (a workspace 
+			<i>IResource</i>) to a set of files (a Team 
+			<i>ResourceTraversal</i>). The model providers can be queried by anyone who calls actions on workspace files in order to determine if this action can be done against a single file or if it should be executed against a set of files.
+		</p>
+		<h2 id="Limitations">Limitations</h2>
+		<p>Team only provides the API to define logical models. It is then the responsibility of its clients to properly query the model provider when calling an action. In the context of EMF Compare, we are interested in the "compare" actions. These actions are contributed by the repository providers (CVS, EGit, Subversive, Subclipse, Clearcase...). It is their responsibility, within the code of these actions, to query the model providers in order to determine if the selected files can be compared alone... or if they need to be compared along with a set of others.</p>
+		<ul>
+			<li>The CVS plugin does not consistently use it. For example, when using "compare with &gt; latest from HEAD" on a file that is part of a logical model, it will 'see' the logical model and open the "synchronize" perspective instead of a compare editor : this is what's expected. However, when the user, from the synchronization view, asks to see the differences (right-click then select 'open in compare editor')... CVS will not query the logical model, comparing the file alone (see also 
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=345415">bug 345415</a>).
+			</li>
+			<li>The EGit, Subversive and Subclipse plugins never query the model providers for any comparison action.</li>
+		</ul>
+		<h1 id="EMF_Compare">EMF Compare</h1>
+		<p>In the case of EMF Compare, the above limitations were a show-stopper. EMF models cannot simply be reduced to single files as that would totally break their consistency when trying to merge them.</p>
+		<h2 id="Chosen_solution">Chosen solution</h2>
+		<p>EMF Compare now uses its own implementation aiming at this same goal, that we named 
+			<i>synchronization model</i>. In short, instead of expecting the repository providers to query the model providers, EMF Compare will take the file (or set of files) that it is fed and expand it to the full logical model by querying the synchronization model.
+		</p>
+		<p>This custom implementation also allows us to not only resolve the whole logical model of a given physical file, but also to determine which 
+			<b>parts</b> of this model should be included in the comparison scope. Indeed, under the semantics of EMF, if we can determine that two physical files are binary identical in their two distinct revisions, then we also know that the part of the logical model they represent are identical themselves. There would be no need to compare them. This allows us to save both time and memory, killing two birds with one stone.
+		</p>
+		<h2 id="How_it_works">How it works</h2>
+		<p>When the user selects a file 
+			<i>A</i> in his workspace and asks to compare it with a remote revision (for example, the "latest from HEAD"), the repository provider (CVS in this case) fetches the remote content of 
+			<i>A</i> in the selected revision (we'll call it 
+			<i>A</i>'). Once the remote revision fetched, the repository provider considers his work finished and feeds EMF Compare the two files (A and A') and lets it begin his own work. This is fine and dandy when the logical model of A only spans a single file ... but if A references another file B, then the comparison will not be coherent as EMF Compare operates on the logical model, not on its serialized form.
+		</p>
+		<p>Thus, EMF Compare will not immediately launch the comparison of the files it is fed. Before any further work, it will query the synchronization model with these files in order to expand them to their whole logical model.</p>
+		<ul>
+			<li>In the case of a local file (A), it will load it as an EMF 
+				<i>Resource</i> and resolve all of its cross references. During the resolution process, we'll be able to track all of the "other" files required by the "starting point" A. In the example above, we'll end up with a set containing both A and B.
+			</li>
+			<li>In the case of a remote file (A'), it will try and load the streamed revision of the resource, then query the repository provider for the other files needed by A' in the correct revision. A revision is deemed "correct" if it precedes (or is equal to) the revision of A' that we have initially been fed. This will lead us to a set containing A' and B'.</li>
+		</ul>
+		<p>Once the full logical model is resolved, EMF Compare can properly do the comparison work. Since we know of all fiels that compose our model, we'll also be able to safely merge differences without compromising the coherence of the whole.</p>
+		<p>However, even if we can launch EMF Compare at this point, the synchronization model also offers us one more possibility. EMF models can span thousands of physical files sometimes amounting to such a huge number of elements that it would not fit into the machine's memory if we tried to load it as a whole. The synchronization model knows how to retrieve the content of all of these files; it can also be used to 
+			<i>minimize</i> the set to only those which really did change. Indeed, we consider that files that are binary identical wield yield fragments of the logical model that will also be strictly identical. By removing these "identical" fragments, we can drastically limit the size of the logical model we'll load into memory, compacting it to a size that will fit before we launch the comparison on the remaining fragments.
+		</p>
+		<p>In other words, the synchronization model allows us to compare models with a time and memory cost that is relative to the size of the actual changeset instead of having it depend on the input models size.</p>
+		<h3 id="Example">Example</h3>
+		<p>Let's consider the following sample :</p>
+		<table border="1" cellpadding="5" cellspacing="0">
+			<tr>
+				<th align="center" colspan="2">Origin</th>
+			</tr>
+			<tr>
+				<td align="center" colspan="2">
+					<img align="middle" border="0" src="./../images/EMFC_Logic_origin.png"/>
+				</td>
+			</tr>
+			<tr>
+				<th align="center">Left</th>
+				<th align="center">Right</th>
+			</tr>
+			<tr>
+				<td>
+					<img align="middle" border="0" src="./../images/EMFC_Logic_left.png"/>
+				</td>
+				<td>
+					<img align="middle" border="0" src="./../images/EMFC_Logic_right.png"/>
+				</td>
+			</tr>
+		</table>
+		<p>Each of the three sides is an EMF model composed of 7 fragments. 
+			<i>Origin</i> is the common ancestor of 
+			<i>left</i> and 
+			<i>right</i>. The blue-colored fragments are those that actually present differences (so D and G have been modified in the "left" copy while only B has been modified in the "right" copy).
+		</p>
+		<p>In order to compare these three models together, we would normally need to load all 21 fragments in memory. However, with the help of the synchronization model we can narrow it down to the modified fragments only. What we'll really load, then, are the following fragments for each three sides :</p>
+		<p>
+			<img align="middle" border="0" src="./../images/EMFC_Logic_loaded_fragments.png"/>
+		</p>
+		<p>In other words, we are actually only loading 9 fragments out of the initial 21. This amounts to 58% less memory usage if we consider all fragments to be of equal "weight". And this is only for small models; the ratio of saved memory really going up for extremely large models. Of course, all of these objects that we are not loading in memory are all objects that we no longer need to compare, bringing an incredible performance boost along with the memory gain.</p>
+		<h3 id="Some_numbers">Some numbers</h3>
+		<p>When we got EMF Compare 1.3 out, we did some performance snapshots of what we had on some UML models with known counts of elements. Here were the specifications of the structure of the three test models. "fragments" are the number of fragmented files, the rest are the UML elements contained by the samples (spread out within the fragments) :</p>
+		<table border="1" cellspacing="0">
+			<tr>
+				<th>&nbsp;</th>
+				<th>Small</th>
+				<th>Nominal</th>
+				<th>Large</th>
+			</tr>
+			<tr>
+				<td>Fragments</td>
+				<td>99</td>
+				<td>399</td>
+				<td>947</td>
+			</tr>
+			<tr>
+				<td>Size on disk (MB)</td>
+				<td>1.37</td>
+				<td>8.56</td>
+				<td>49.9</td>
+			</tr>
+			<tr></tr>
+			<tr>
+				<td>Packages</td>
+				<td>97</td>
+				<td>389</td>
+				<td>880</td>
+			</tr>
+			<tr>
+				<td>Classes</td>
+				<td>140</td>
+				<td>578</td>
+				<td>2169</td>
+			</tr>
+			<tr>
+				<td>Primitive Types</td>
+				<td>581</td>
+				<td>5370</td>
+				<td>17152</td>
+			</tr>
+			<tr>
+				<td>Data Types</td>
+				<td>599</td>
+				<td>5781</td>
+				<td>18637</td>
+			</tr>
+			<tr>
+				<td>State Machines</td>
+				<td>55</td>
+				<td>209</td>
+				<td>1311</td>
+			</tr>
+			<tr>
+				<td>States</td>
+				<td>202</td>
+				<td>765</td>
+				<td>10156</td>
+			</tr>
+			<tr>
+				<td>Dependencies</td>
+				<td>235</td>
+				<td>2522</td>
+				<td>8681</td>
+			</tr>
+			<tr>
+				<td>Transitions</td>
+				<td>798</td>
+				<td>3106</td>
+				<td>49805</td>
+			</tr>
+			<tr>
+				<td>Operations</td>
+				<td>1183</td>
+				<td>5903</td>
+				<td>46029</td>
+			</tr>
+			<tr>
+				<td>
+					<b>Total element count</b>
+				</td>
+				<td>3890</td>
+				<td>24623</td>
+				<td>154820</td>
+			</tr>
+		</table>
+		<p>Following are the time and memory required to compare each of the model sizes (the model is copied, randomly modified, then the copy is compared with its original) with two versions of EMF Compare. The 'old' 1.3, and the 2.1 that fully uses the logical model capabilities.</p>
+		<h4 id="EMF_Compare_1.3">EMF Compare 1.3</h4>
+		<p>Note that these were "CPU time" measures : we used a Java profiler to measure the duration of the comparison process, without regard to the actual wall time : we measured the time that the CPU was active during this process. As EMF Compare 1 was not multi-threaded, this means that these figures are slightly lower than the time actually perceived by the user for the same action. (See 
+			<a href="http://en.wikipedia.org/wiki/Wall_clock_time">Wall Time</a> and 
+			<a href="http://en.wikipedia.org/wiki/System_time">System Time</a> on wikipedia.)
+		</p>
+		<table border="1" cellspacing="0">
+			<tr>
+				<th>&nbsp;</th>
+				<th>Small</th>
+				<th>Nominal</th>
+				<th>Large</th>
+			</tr>
+			<tr>
+				<td>Time (seconds)</td>
+				<td>6</td>
+				<td>22</td>
+				<td>125</td>
+			</tr>
+			<tr>
+				<td>Maximum Heap (MB)</td>
+				<td>555</td>
+				<td>1019</td>
+				<td>2100</td>
+			</tr>
+		</table>
+		<p>These figures could be broken down in the following three main phases : </p>
+		<p>
+			<img align="middle" border="0" src="./../images/EMFC_1.3_Perf_Breakdown.png"/>
+		</p>
+		<p>This meant that the memory management of EMF Compare was really limiting as soon as we were dealing with large models (more than 2GB of heap space needed to load models that "weigh" 50 MB on disk). Furthermore, the main time sink was the differencing process, and that could also be narrowed down to the fact that there were plainly too many object to compare : for two-way comparisons, we were loading the model twice, for three-way comparisons, three instances of the model were loaded in memory. Not only that, but we were iterating twice on all models (one for matching, one for differencing).</p>
+		<p>The full report can be downloaded from 
+			<a href="http://www.eclipse.org/emf/compare/doc/compare_scalability.pdf">here</a>.
+		</p>
+		<h4 id="EMF_Compare_2.1">EMF Compare 2.1</h4>
+		<p>Note that these are "wall time" measures : we used a stopwatch to time the duration of the comparison, from a click on the "compare with &gt; each other" action to the opening of the comparison editor.</p>
+		<table border="1" cellspacing="0">
+			<tr>
+				<th>&nbsp;</th>
+				<th>Small</th>
+				<th>Nominal</th>
+				<th>Large</th>
+			</tr>
+			<tr>
+				<td>Time (seconds)</td>
+				<td>5</td>
+				<td>13</td>
+				<td>48</td>
+			</tr>
+			<tr>
+				<td>Maximum Heap (MB)</td>
+				<td>262</td>
+				<td>318</td>
+				<td>422</td>
+			</tr>
+		</table>
+		<p>These figures can be broken down in 5 main phases :</p>
+		<ol>
+			<li>Model Resolving : From a given "starting point" (in the example above, fragment 
+				<i>A</i>), finding all other fragments required for the comparison of the whole logical model.
+			</li>
+			<li>Scope Narrowing : From the set of fragments composing the logical model, finding those that actually 
+				<i>can</i> present differences (
+				<i>B</i>, 
+				<i>D</i> and 
+				<i>G</i> in the above example), then loading these fragments in memory.
+			</li>
+			<li>Matching : Iterating over the two (or three) loaded logical models in order to map elements together two-by-two (or three-by-three).</li>
+			<li>Differencing : The matching phase told us which elements were matching together (Class C1 in the left logical model with Class C1' in the right logical model for example). The differencing phase will try and determine whether those two elements are equal or if they present differences (for example, the name of the class changed from 
+				<i>C1</i> to 
+				<i>C1</i>')
+			</li>
+			<li>Post-processing : Now that we know all differences between the models, we still need to determine equivalences -two differences that represent the same change (for example, differences on opposite references)-, requirements -a difference depends on another (for example, the addition of a class C1 in package P1 depends on the addition of package P1)-, conflicts -a conflictual change has been made in the 
+				<i>left</i> and 
+				<i>right</i> models as compared to the origin...
+			</li>
+		</ol>
+		<p>
+			<img align="middle" border="0" src="./../images/EMFC_2.1_Perf_Breakdown.png"/>
+		</p>
+		<p>Okay, this graph does not leave much to interpretation. The model resolving time totally dwarfs the other comparison phases. That was actually our aim for EMF Compare 2 : 
+			<i>model resolving</i> represents the bulk of the I/O operations of EMF Compare, and we aimed at reducing the actual comparison to the utmost minimum time. So not only are we greatly improving the memory cost (only 400MB of heap space to compare something that required more than 2GB with EMF Compare 1), but we also reduced the comparison time (and the scalability) to a great extent.
+		</p>
+		<h2 id="Limitations_2">Limitations</h2>
+		<p>The use of our own implementation effectively allows us to bypass some of the aforementioned limitations since we no longer rely on the repository providers in our specific case.</p>
+		<p>However, if we can enforce the coherence of the models during the comparison, this approach still does not take into account the other aspects of collaboration with models. Even if comparing and merging two linked models is fine, it is still the repository provider's responsibility to query Team's model providers in order to "commit", "push", or even "replace" the models as a whole instead of acting on single physical files. Thus, most of the limitations mentioned above still hold, though we fixed those that applied to comparison actions.</p>
+		<h2 id="Improvement_Axes">Improvement Axes</h2>
+		<p>As shown with the 
+			<a href="Logical%20Model.html#EMF_Compare_2.1">above graphs</a>, the most important remaining time sink is the resolution of the logical model. This is partly due to the I/O operations performed during this phase, but first and foremost it is due to the parsing of the XMI representation of the files we used (UML fragments) as EMF models. EMF Compare needs to actually load all fragments of the logical model as EMF model fragments in order to determine their cross-resource references, which represent other parts of the logical model that will need in turn. This phase could be improved by parsing the raw XMI data to find all of these cross-resource references without parsing the actual EMF elements of which they are a part.
+		</p>
+	</body>
+</html>

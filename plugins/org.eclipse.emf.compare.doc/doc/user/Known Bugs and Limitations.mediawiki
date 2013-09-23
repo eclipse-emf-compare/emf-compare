@@ -1,0 +1,45 @@
+= Known Bugs and Limitations =
+
+== Project names and location ==
+
+'''Project names should match their location'''
+
+=== Cause ===
+
+If you need to compare models that:
+* reference another model in the same project (or another project which also meets the following point), and
+* are located in a project which name (as seen in their '.project' file) does not match their containing folder's name (case sensitive).
+
+Due to [https://bugs.eclipse.org/bugs/show_bug.cgi?id=354801 Bug 354801], we cannot properly support models that are located in Eclipse projects which identifier is distinct from their containing folder, case included. For example, if you have a project named ''EcoreModels'', it '''must''' be contained in a folder named ''EcoreModels''. Any other name, even if changing only the case, such as ''ecoreModels'', will cause issues when comparing fragmented models (or any model which references another).
+
+Note that this only applies to comparisons launched from within Eclipse, which would trigger the opening of the EMF Compare user interface.
+
+=== Observed Symptoms ===
+
+Symptoms vary, but they often include a NullPointerException somewhere in EMFSynchronizationModel such as :
+
+ Caused by: java.lang.NullPointerException
+ at org.eclipse.emf.compare.ide.ui.logical.RevisionedURIConverter.<init>(RevisionedURIConverter.java:108)
+ at org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel.resolveTraversal(EMFSynchronizationModel.java:464)
+ at org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel.createSynchronizationModel(EMFSynchronizationModel.java:165)
+ at org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewer.compareInputChanged(EMFCompareStructureMergeViewer.java:258)
+
+== Models out of the workspace ==
+
+'''The models should be imported within the workspace'''
+
+=== Cause ===
+
+Trying to compare models that are not present in the current Eclipse workspace from either the ''Git repositories'' perspective, or from the ''Git Staging'' view.
+
+Note that this only applies to comparisons launched from within Eclipse, which would trigger the opening of the EMF Compare user interface.
+
+=== Observed Symptoms ===
+
+Symptoms are mostly the same here as they would be with the limitation mentionned above regarding project names, and they usually include the same NullPointerException:
+
+ Caused by: java.lang.NullPointerException
+ at org.eclipse.emf.compare.ide.ui.logical.RevisionedURIConverter.<init>(RevisionedURIConverter.java:108)
+ at org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel.resolveTraversal(EMFSynchronizationModel.java:464)
+ at org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel.createSynchronizationModel(EMFSynchronizationModel.java:165)
+ at org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewer.compareInputChanged(EMFCompareStructureMergeViewer.java:258)

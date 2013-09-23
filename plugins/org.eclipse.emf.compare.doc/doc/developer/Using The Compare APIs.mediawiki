@@ -1,0 +1,207 @@
+= Using The Compare APIs =
+
+The main entry point of EMF Compare is the ''org.eclipse.emf.compare.EMFCompare'' class. It is what should be used in order to configure and launch a comparison. That is not all though. Once you have compared two models, you want to query the differences, maybe merge some of them, display the comparison result in the comparison editor... The following section will list the main entry points for each of these actions, along with a brief description of what can be done and what should be avoided.
+
+Most of these examples are set-up as "standalone" examples, and will include extra instructions for IDE use: pay attention to the environment in which you are using EMF Compare. Are you using it from an Eclipse plugin, in which case you'd like all of the extra features provided through extension points and contribution to be available to you? Or are you using it from a standalone environment, in which case you'd need to reduce the dependencies to the bare minimum and avoid OSGi-related code and extensions?
+
+== Compare two models ==
+
+=== Loading your models ===
+
+Whether you wish to compare two or three models, the first thing you need is to load them. We won't detail in-depth how to do that as this is standard EMF practice, you might want to look at EMF tutorial for detailled instructions on this point. Here, we'll use a simple method that loads an xmi file at a given URL into a resourceSet, expecting the given URL to be an absolute file URL:
+
+<source lang="java">
+public void load(String absolutePath, ResourceSet resourceSet) {
+  URI uri = URI.createFileURI(absolutePath);
+
+  resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
+
+  // Resource will be loaded within the resource set
+  resourceSet.getResource(uri, true);
+}
+</source>
+
+=== Creating the comparison scope ===
+
+EMF Compare uses a scoping mechanism to determine which elements should be compared, and which others should be ignored. Any element that is outside of the comparison scope will be ignored by the comparison engine and left alone (if it is a proxy, it won't even be loaded). As such, extra care should be taken to determine the proper scope of the comparison or customize the IEqualityHelper to handle the specific elements you remove from the scope. Refer to the [[./Core%20Concepts.html#Comparison Scope|appropriate section]] above for more on the scoping mechanism.
+
+By default, the only thing that EMF Compare considers "out of scope" are Ecore's "EGenericType" elements. These are usually meaningless as far as comparison is concerned (as they are located in derived references and will be merged along with their "true" difference anyway). Other than that, Please note that EMF Compare will leave unresolved proxies alone: more on this can be found in the [[./Core%20Concepts.html#Proxy Resolution|related section]].
+
+The default scope can be easily created through:
+
+<source lang="java">
+IComparisonScope scope = EMFCompare.createDefaultScope(resourceSet1, resourceSet2);
+</source>
+
+=== Configuring the comparison ===
+
+EMF Compare can be customized in a number of ways, the most important of which were described [[./Default%20Behavior%20and%20Extensibility.html|above]]. Most of them re-use the same entry point, the ''org.eclipse.emf.compare.EMFCompare'' class. We won't customize much here, please see the afore-mentionned section for extensibility means.
+
+All we will tell EMF Compare is not to use identifiers, and rely on its proximity algorithms instead (after all, we're comparing plain XMI files):
+
+<source lang="java">
+IEObjectMatcher matcher = DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER);
+IComparisonFactory comparisonFactory = new DefaultComparisonFactory(new DefaultEqualityHelperFactory());
+ 
+IMatchEngine.Factory matchEngineFactory = new MatchEngineFactoryImpl(matcher, comparisonFactory);
+matchEngineFactory.setRanking(20);
+IMatchEngine.Factory.Registry matchEngineRegistry = new MatchEngineFactoryRegistryImpl();
+matchEngineRegistry.add(factory);
+
+EMFCompare comparator = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineRegistry).build();
+
+</source>
+
+=== Putting it all together ===
+
+The following takes two input xmi files, loads them in their own resource sets, then calls the comparison without using identifiers:
+
+<source lang="java">
+public Comparison compare(File model1, File model2) {
+	// Load the two input models
+	ResourceSet resourceSet1 = new ResourceSetImpl();
+	ResourceSet resourceSet2 = new ResourceSetImpl();
+	String xmi1 = "path/to/first/model.xmi";
+	String xmi2 = "path/to/second/model.xmi";
+	load(xmi1, resourceSet1);
+	load(xmi2, resourceSet2);
+
+	// Configure EMF Compare
+	IEObjectMatcher matcher = DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER);
+	IComparisonFactory comparisonFactory = new DefaultComparisonFactory(new DefaultEqualityHelperFactory());
+	IMatchEngine.Factory matchEngineFactory = new MatchEngineFactoryImpl(matcher, comparisonFactory);
+        matchEngineFactory.setRanking(20);
+        IMatchEngine.Factory.Registry matchEngineRegistry = new MatchEngineFactoryRegistryImpl();
+        matchEngineRegistry.add(matchEngineFactory);
+	EMFCompare comparator = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineRegistry).build();
+
+	// Compare the two models
+	IComparisonScope scope = EMFCompare.createDefaultScope(resourceSet1, resourceSet2);
+	return comparator.compare(scope);
+}
+
+private void load(String absolutePath, ResourceSet resourceSet) {
+  URI uri = URI.createFileURI(absolutePath);
+
+  resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
+
+  // Resource will be loaded within the resource set
+  resourceSet.getResource(uri, true);
+}
+</source>
+
+=== Comparing from an Eclipse plugin ===
+
+The above example is for standalone usage, and as such will require extra work if you wish to compare UML models, benefit from EMF Compare extensions, provide your own mergers... The following represents the same example, but uses IDE-specific utilities (can you spot the two differences?):
+
+<source lang="java">
+public Comparison compare(File model1, File model2) {
+	// Load the two input models
+	ResourceSet resourceSet1 = new ResourceSetImpl();
+	ResourceSet resourceSet2 = new ResourceSetImpl();
+	String xmi1 = "path/to/first/model.xmi";
+	String xmi2 = "path/to/second/model.xmi";
+	load(xmi1, resourceSet1);
+	load(xmi2, resourceSet2);
+
+	// Configure EMF Compare
+	IEObjectMatcher matcher = DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER);
+	IComparisonFactory comparisonFactory = new DefaultComparisonFactory(new DefaultEqualityHelperFactory());
+	IMatchEngine matchEngine = new DefaultMatchEngine(matcher, comparisonFactory);
+        IMatchEngine.Factory.Registry matchEngineRegistry = EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry();
+        IPostProcessor.Descriptor.Registry<String> postProcessorRegistry = EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry();
+	EMFCompare comparator = EMFCompare.builder()
+                                           .setMatchEngineFactoryRegistry(matchEngineRegistry)
+                                           .setPostProcessorRegistry(postProcessorRegistry)
+                                           .build();
+
+	// Compare the two models
+	IComparisonScope scope = EMFCompare.createDefaultScope(resourceSet1, resourceSet2);
+	return comparator.compare(scope);
+}
+
+private void load(String absolutePath, ResourceSet resourceSet) {
+  URI uri = URI.createFileURI(absolutePath);
+
+  // Resource will be loaded within the resource set
+  resourceSet.getResource(uri, true);
+}
+</source>
+
+== Query the differences ==
+
+Once you have the result of a comparison (in the form of a ''Comparison'' object), what you are interested in are most likely the differences between your models. We will detail the merging process later on it its own section, but before anything we need to retrieve the list of differences of interest. Within the Comparison model, differences are spread under the elements on which they've been detected, more precisely, under the ''Match'' of the element on which they were detected.
+
+Let's use a complex example as reference. Consider the three following models:
+
+{| border="1" cellpadding="5" cellspacing="0" align="center"
+|-
+! colspan="2" align="center" | Origin
+|-
+| colspan="2" align="center" | [[Image:./../images/EMF_Compare_Origin_Model.png|center]]
+|-
+! align="center" | Left
+! align="center" | Right
+|-
+| [[Image:./../images/EMF_Compare_Use_Compare_Master.png|center]]
+| [[Image:./../images/EMF_Compare_Use_Compare_5.png|center]]
+|}
+
+=== All differences ===
+
+What we need is usually to retrieve the list of ''all'' differences, wherever they were detected, or whatever their source (the left model, or the right model). Instead of iterating all over the Comparison model to collect them, you can use:
+
+<source lang="java">
+List<Diff> differences = comparison.getDifferences();
+</source>
+
+=== Differences related to element X ===
+
+Sometimes, we need to retrieve all of the differences that were detected on (or that are related to) a given model element. For example, with the above example, we might want to retrieve the list of all differences that relate to ''Borrowable''. Well, there are a number of them, which can all be collected through:
+
+<source lang="java">
+// borrowable is a reference on the like-named EObject
+List<Diff> differencesOnBorrowable = comparison.getDifferences(borrowable);
+</source>
+
+This will return a list containing a number of differences:
+
+* ''Borrowable'' has been added in the right model
+* ''copies'' has been added to reference ''ownedProperties'' of Borrowable
+* ''Borrowable'' has been added to the generalization reference of ''Book''
+* ''Borrowable'' has been added as the ''borrowed'' target of an association with ''Person''
+
+In other words, this method will return differences '''under''' the target (here, ''copies'' has been added), as well as differences which '''changed value''' is the target.
+
+=== Filtering differences ===
+
+EMF Compare depends on guava for many of its internals. A number of "common" difference filtering predicates have been extracted to the ''org.eclipse.emf.compare.utils.EMFComparePredicates'' utility class. Using this class, it is trivial to filter the list of differences so as to keep only those we are interested in. For example, what if we wish to retrieve the list of all '''non-conflictual''' differences that originate from the '''left''' side? (This is the case when you use the "copy all non-conflicting from left to right" action from the comparison editor for example.)
+
+<source lang="java">
+// Construct the predicate
+Predicate<? super Diff> predicate = and(fromSide(DifferenceSource.LEFT), not(hasConflict(ConflictKind.REAL, ConflictKind.PSEUDO));
+// Filter out the diff that do not satisfy the predicate
+Iterable<Diff> nonConflictualDifferencesFromLeft = filter(comparison.getDifferences(), predicate);
+</source>
+
+Note that for clarity, we've made static references to a number of methods here. This particular snippet requires the following imports:
+
+<source lang="java">
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.Iterables.filter;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
+</source>
+
+We strongly encourage you to look around more in these classes: ''Predicates'' provides a number of basic, general-purpose predicates while ''EMFComparePredicates'' provides EMF Compare specific predicates used throughout both core and user-interface of EMF Compare.
+
+== Merge differences ==
+
+PENDING how to re-implement ''copyDiff'' and ''copyAllNonConflicting''
+
+entry points: org.eclipse.emf.compare.merge.IMerger and org.eclipse.emf.compare.merge.IBatchMerger
+
+== Open a compare editor ==
+
+PENDING description of the need (dialog and editor), link to [[./How%20To%20Open%20Compare%20Dialog%20With%20Comparison|appropriate page]]

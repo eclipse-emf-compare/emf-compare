@@ -1,0 +1,7 @@
+= EMF Compare Developer Guide =
+
+You will find the following sections:
+* [[Architecture.html|Architecture]]
+* [[Core%20Concepts.html|Core Concepts]]
+* [[Default%20Behavior%20and%20Extensibility.html|Default Behavior and Extensibility]]
+* [[Using%20The%20Compare%20APIs.html|Using The Compare APIs]]

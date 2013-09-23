@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Overview</title>
+		<link type="text/css" rel="stylesheet" href="/help/topic/org.eclipse.emf.compare.doc/doc/resources/bootstrap.css"/>
+		<link type="text/css" rel="stylesheet" href="/help/topic/org.eclipse.emf.compare.doc/doc/resources/custom.css"/>
+	</head>
+	<body>
+		<p>The 
+			<a href="http://www.eclipse.org/emf/compare">EMF Compare</a> project is part of EMF (Eclipse Modeling Framework). 
+		</p>
+		<p>
+			<img border="0" src="./../images/Emf_logo.png"/>
+		</p>
+		<p>EMF Compare brings model comparison to the EMF framework, this tool provides generic support for any kind of metamodel in order to compare and merge models. The objectives of this component are to provide a stable and efficient generic implementation of model comparison and to provide an extensible framework for specific needs. </p>
+		<h1 id="Overview">Overview</h1>
+		<p>
+			<div class="thumb middle">
+				<div class="thumbinner" style="width:802px;">
+					<a href="./../images/EMF_Compare_Process_Full.png" class="image">
+						<img class="thumbimage" width="800" align="middle" border="0" src="./../images/EMF_Compare_Process_Full.png"/>
+					</a>
+				</div>
+			</div>
+		</p>
+		<p>The above figure represents the comparison process of EMF Compare. It can be roughly divided in 6 main phases.</p>
+		<dl>
+			<dt>Model Resolving</dt>
+			<dd>From a given "starting point" (the file a user decided to compare), finding all other fragments required for the comparison of the whole logical model.</dd>
+			<dt>Matching</dt>
+			<dd>Iterating over the two (or three) loaded logical models in order to map elements together two-by-two (or three-by-three). For example, determine that class 
+				<i>Class1</i> from the first model corresponds to class 
+				<i>Class1</i>' from the second model.
+			</dd>
+			<dt>Differencing</dt>
+			<dd>The matching phase told us which elements were matching together. The differencing phase will browse through these mappings and determine whether the two (or three) elements are equal or if they present differences (for example, the name of the class changed from 
+				<i>Class1</i> to 
+				<i>Class1</i>').
+			</dd>
+			<dt>Equivalences</dt>
+			<dd>The differencing phases detected a number of differences between the compared models. However, two distinct differences might actually represent the same change. This phase will browse through all differences and link them together when they can be seen as equivalent (for example, differences on opposite references).</dd>
+			<dt>Requirements</dt>
+			<dd>For the purpose of merging differences, there might be dependencies between them. For example, the addition of a class 
+				<i>C1</i> in package 
+				<i>P1</i> depends on the addition of package 
+				<i>P1</i> itself. During this phase, we'll browse through all detected differences and link them together when we determine that one cannot be merged without the other.
+			</dd>
+			<dt>Conflicts</dt>
+			<dd>When we're comparing our file with one from a Version Control System (CVS, SVN, Git, Clearcase...), there might actually be conflicts between the changes we've made locally, and the changes that were made to the file on the remote repository. This phase will browse through all detected differences and detect these conflicts.</dd>
+		</dl>
+		<p>The Model resolving phase itself can be further decomposed in its own two distinct phases. More on the logical model and its resolution can be found on 
+			<a href="./../developer/Logical%20Model.html" title="./../developer/Logical%20Model.html">the dedicated page</a>.
+		</p>
+		<p>
+			<div class="thumb middle">
+				<div class="thumbinner" style="width:802px;">
+					<a href="./../images/EMF_Compare_Model_Resolving.png" class="image">
+						<img class="thumbimage" width="800" align="middle" border="0" src="./../images/EMF_Compare_Model_Resolving.png"/>
+					</a>
+				</div>
+			</div>
+		</p>
+		<h2 id="Compatibility">Compatibility</h2>
+		<p>The EMF Compare development team does its best to maintain downward compatibility towards Galileo (3.5). Following is the compatibility chart : </p>
+		<table border="1">
+			<tr>
+				<th>EMF Compare </th>
+				<th bgcolor="#cccccc" align="center">Eclipse 4.3 - EMF 2.9</th>
+				<th align="center">Eclipse 4.2 - EMF 2.8</th>
+				<th align="center">Eclipse 3.8 - EMF 2.8 </th>
+				<th align="center">Eclipse 3.7 - EMF 2.7 </th>
+				<th align="center">Eclipse 3.6 - EMF 2.6 </th>
+				<th align="center">Eclipse 3.5 - EMF 2.5 </th>
+				<th align="center">Eclipse 3.4 - EMF 2.4</th>
+				<th align="center">Eclipse 3.3 - EMF 2.3</th>
+				<th align="center">Eclipse 3.2 - EMF 2.2 </th>
+			</tr>
+			<tr>
+				<td bgcolor="#cccccc" align="center">2.1</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#9d261d">&nbsp;</td>
+				<td bgcolor="#9d261d">&nbsp;</td>
+				<td bgcolor="#9d261d">&nbsp;</td>
+			</tr>
+			<tr>
+				<td align="center">2.0</td>
+				<td bgcolor="#ffffff">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#9d261d">&nbsp;</td>
+				<td bgcolor="#9d261d">&nbsp;</td>
+				<td bgcolor="#9d261d">&nbsp;</td>
+			</tr>
+			<tr>
+				<td align="center">1.3</td>
+				<td bgcolor="#9d261d">&nbsp;</td>
+				<td bgcolor="#9d261d">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#9d261d">&nbsp;</td>
+				<td bgcolor="#9d261d">&nbsp;</td>
+				<td bgcolor="#9d261d">&nbsp;</td>
+			</tr>
+			<tr>
+				<td align="center">1.2 </td>
+				<td bgcolor="#ffffff">&nbsp;</td>
+				<td bgcolor="#ffffff">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#9d261d">&nbsp;</td>
+				<td bgcolor="#9d261d">&nbsp;</td>
+			</tr>
+			<tr>
+				<td align="center">1.1 </td>
+				<td bgcolor="#ffffff">&nbsp;</td>
+				<td bgcolor="#ffffff">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#9d261d">&nbsp;</td>
+				<td bgcolor="#9d261d">&nbsp;</td>
+			</tr>
+			<tr>
+				<td align="center">1.0 </td>
+				<td bgcolor="#ffffff">&nbsp;</td>
+				<td bgcolor="#ffffff">&nbsp;</td>
+				<td bgcolor="#ffffff">&nbsp;</td>
+				<td bgcolor="#ffffff">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#46a546">&nbsp;</td>
+				<td bgcolor="#9d261d">&nbsp;</td>
+			</tr>
+		</table>
+		<p>An empty cell indicates that the compatibility hasn't been tested for a particular combination.</p>
+		<h2 id="Team">Team</h2>
+		<p>The project developers are: </p>
+		<ul>
+			<li>Cedric Brun (
+				<a href="http://www.obeo.fr">Obeo</a>), project lead 
+			</li>
+			<li>Laurent Goubet (
+				<a href="http://www.obeo.fr">Obeo</a>)
+			</li>
+			<li>Mikael Barbero (
+				<a href="http://www.obeo.fr">Obeo</a>) 
+			</li>
+			<li>Cedric Notot (
+				<a href="http://www.obeo.fr">Obeo</a>)
+			</li>
+			<li>Axel Richard (
+				<a href="http://www.obeo.fr">Obeo</a>)
+			</li>
+		</ul>
+		<p>More information about the code aspects and activity of this project can be found on the 
+			<a href="http://www.eclipse.org/projects/project.php?id=modeling.emf.compare">project page</a>
+		</p>
+	</body>
+</html>

@@ -1,0 +1,102 @@
+= How To Open Compare Dialog With Comparison =
+
+This is only valid since release 2.1M4. 
+
+In this page you will learn how to open a dialog displaying the result of a comparison. 
+
+== Preparing the input  ==
+
+The first thing to do is to choose an EMF Compare sub-implementation of the class of [http://help.eclipse.org/juno/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fcompare%2FCompareEditorInput.html CompareEditorInput]. 
+
+Two implementations are provided: 
+
+*''ComparisonEditorInput'', that should be use when you want to display a pre-computed Comparison (the results of EMFCompare).
+*''ComparisonScopeEditorInput'', that should be use when you want to open the compare editor or dialog and to let it perform the comparison.
+
+Both are available from the '''org.eclipse.emf.compare.ide.ui''' plug-in, in the package '''org.eclipse.emf.compare.ide.ui.internal.editor'''. This is still provisional API so we may break it any time.
+
+== Preparing the configuration  ==
+
+When instantiating an EMF Compare specific implementation of CompareEditorInput, you have to give it at least three paramaters:
+
+*a [http://help.eclipse.org/juno/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fcompare%2FCompareConfiguration.html CompareConfiguration]. This is a standard CompareConfiguration (no specific implementation needed) so you just instantiated it like this:
+
+<source lang="java">
+CompareConfiguration configuration = new CompareConfiguration();
+</source>
+
+*an EMFCompareEditingDomain. It is not an implementation of [http://download.eclipse.org/modeling/emf/emf/javadoc/2.5.0/org/eclipse/emf/edit/domain/EditingDomain.html EditingDomain] from EMF. It shares similar concepts (it has a command stack, it can create some commands) but is much simpler. You can create it through the factory method:
+
+<source lang="java">
+// ancestor may be null
+ICompareEditingDomain editingDomain = EMFCompareEditingDomain.create(left, right, ancestor); 
+</source>
+
+You can even give your own command(s) stack(s) if you need to know about executed merge commands. 
+
+* An [http://download.eclipse.org/modeling/emf/emf/javadoc/2.5.0/org/eclipse/emf/common/notify/AdapterFactory.html AdapterFactory] used by the framework to adapt EObjects to be nicely displayed. Most of the time, a [http://download.eclipse.org/modeling/emf/emf/javadoc/2.5.0/org/eclipse/emf/edit/provider/ComposedAdapterFactory.html ComposedAdapterFactory] with the global registry is sufficient as created in the example below:
+
+<source lang="java">
+AdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+</source>
+
+Depending on the choosen sub-implementation of CompareEditorInput, you may need to provide additional parameters.
+
+=== ComparisonEditorInput ===
+
+You must provide a Comparison object, the result of the comparison computation of EMFCompare.
+
+<source lang="java">
+EMFCompare comparator = EMFCompare.builder().build();
+Comparison comparison = comparator.compare(EMFCompare.createDefaultScope(left, right, ancestor));
+</source>
+
+=== ComparisonScopeEditorInput ===
+
+You must provide the comparator (instance of EMFCompare) and the scope of the comparison.
+
+<source lang="java">
+EMFCompare comparator = EMFCompare.builder().build();
+IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor);
+</source>
+
+== Opening the compare UI  ==
+
+Then, you can call the black magic method from Eclipse Compare framework. You have two choices. You may either open the compare UI wihtin a modal dialog or within an editor. Just call one of the two following methods: 
+
+* [http://help.eclipse.org/juno/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fcompare%2FCompareUI.html&anchor=openCompareEditorOnPage(org.eclipse.compare.CompareEditorInput,%20org.eclipse.ui.IWorkbenchPage) CompareUI.openCompareEditorOnPage(CompareEditorInput, IWorkbenchPage)], to open an editor. 
+*[http://help.eclipse.org/juno/topic/org.eclipse.platform.doc.isv/reference/api/org/eclipse/compare/CompareUI.html#openCompareDialog(org.eclipse.compare.CompareEditorInput) CompareUI.openCompareDialog(CompareEditorInput)], to open a modal dialog.
+
+== End-to-end examples ==
+
+=== With pre-computed comparison ===
+
+<source lang="java">
+public void compare(Notifier left, Notifier right, Notifier ancestor) {
+    EMFCompare comparator = EMFCompare.builder().build();
+    Comparison comparison = comparator.compare(EMFCompare.createDefaultScope(left, right, ancestor));
+
+    ICompareEditingDomain editingDomain = EMFCompareEditingDomain.create(left, right, ancestor);
+    AdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+    CompareEditorInput input = new ComparisonEditorInput(new CompareConfiguration(), comparison, editingDomain, adapterFactory);
+
+    CompareUI.openCompareDialog(input); // or CompareUI.openCompareEditor(input);
+}
+</source>
+
+=== With a comparison scope ===
+
+<source lang="java">
+public void compare(Notifier left, Notifier right, Notifier ancestor) {
+    EMFCompare comparator = EMFCompare.builder().build();
+    IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor));
+
+    ICompareEditingDomain editingDomain = EMFCompareEditingDomain.create(left, right, ancestor);
+    AdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+    CompareEditorInput input = new ComparisonScopeEditorInput(new CompareConfiguration(), 
+        editingDomain, adapterFactory, comparator, scope);
+
+    CompareUI.openCompareDialog(input); // or CompareUI.openCompareEditor(input);
+}
+</source>
+

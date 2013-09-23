@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='utf-8' ?>
-<toc topic="tutorials/Architecture.html" label="Architecture">
-	<topic href="tutorials/Architecture.html" label="EMF Compare Architecture">
-		<topic href="tutorials/Architecture.html#Comparisonprocess" label="Comparison process"></topic>
-		<topic href="tutorials/Architecture.html#PluginsArchitecture" label="Plugins Architecture"></topic>
-		<topic href="tutorials/Architecture.html#APIs" label="API's"></topic>
-	</topic>
-</toc>

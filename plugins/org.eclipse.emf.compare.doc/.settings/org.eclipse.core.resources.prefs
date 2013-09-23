@@ -1,10 +1,4 @@
 eclipse.preferences.version=1
-encoding//tutorials/Architecture-toc.xml=utf-8
-encoding//tutorials/Architecture.html=utf-8
-encoding//tutorials/EMF_Compare_Export_Tutorial-toc.xml=utf-8
-encoding//tutorials/EMF_Compare_Export_Tutorial.html=utf-8
-encoding//tutorials/User_Guide-toc.xml=utf-8
-encoding//tutorials/User_Guide.html=utf-8
-encoding//tutorials/Using_Compare_Services-toc.xml=utf-8
-encoding//tutorials/Using_Compare_Services.html=utf-8
+encoding//doc/developer/Logical\ Model.html=utf-8
+encoding//doc/overview/Overview.html=utf-8
 encoding/<project>=UTF-8

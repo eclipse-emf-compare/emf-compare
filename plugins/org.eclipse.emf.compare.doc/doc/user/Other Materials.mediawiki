@@ -1,0 +1,3 @@
+= Other Materials =
+
+*[http://www.eclipse.org/emf/compare/doc/features/videos/index.html Videos of 2011 new features]
