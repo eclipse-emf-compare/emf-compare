@@ -32,7 +32,7 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory.Descriptor;
 public class RankedAdapterFactoryDescriptorRegistryImpl extends ForwardingListMultimap<Collection<?>, ComposedAdapterFactory.Descriptor> implements RankedAdapterFactoryDescriptor.Registry {
 
 	/** The delegate registry. */
-	private ComposedAdapterFactory.Descriptor.Registry delegateRegistry;
+	private final ComposedAdapterFactory.Descriptor.Registry delegateRegistry;
 
 	/** The store of registered adapter factory descriptors. */
 	private final ListMultimap<Collection<?>, ComposedAdapterFactory.Descriptor> map;
@@ -78,15 +78,16 @@ public class RankedAdapterFactoryDescriptorRegistryImpl extends ForwardingListMu
 			ComposedAdapterFactory.Descriptor highestRanking = descriptors.next();
 			while (descriptors.hasNext()) {
 				ComposedAdapterFactory.Descriptor descriptor = descriptors.next();
-				if (descriptor instanceof RankedAdapterFactoryDescriptor) {
-					if (highestRanking instanceof RankedAdapterFactoryDescriptor) {
-						if (((RankedAdapterFactoryDescriptor)descriptor).getRanking() > ((RankedAdapterFactoryDescriptor)highestRanking)
-								.getRanking()) {
-							highestRanking = descriptor;
-						}
-					} else {
+				if (descriptor instanceof RankedAdapterFactoryDescriptor
+						&& highestRanking instanceof RankedAdapterFactoryDescriptor) {
+					if (((RankedAdapterFactoryDescriptor)descriptor).getRanking() > ((RankedAdapterFactoryDescriptor)highestRanking)
+							.getRanking()) {
 						highestRanking = descriptor;
 					}
+				} else if (descriptor instanceof RankedAdapterFactoryDescriptor) {
+					// previous highestRanking was not ranked, so it is overriden by any
+					// RankedAdapterFactoryDescriptor.
+					highestRanking = descriptor;
 				}
 			}
 			ret = highestRanking;
@@ -94,8 +95,11 @@ public class RankedAdapterFactoryDescriptorRegistryImpl extends ForwardingListMu
 
 		if (ret != null) {
 			put(types, ret);
+		} else {
+			ret = delegatedGetDescriptor(types);
 		}
-		return ret == null ? delegatedGetDescriptor(types) : ret;
+
+		return ret;
 	}
 
 	/**
@@ -118,7 +122,7 @@ public class RankedAdapterFactoryDescriptorRegistryImpl extends ForwardingListMu
 	 * @see com.google.common.collect.ForwardingListMultimap#delegate()
 	 */
 	@Override
-	public ListMultimap<Collection<?>, ComposedAdapterFactory.Descriptor> delegate() {
+	protected ListMultimap<Collection<?>, ComposedAdapterFactory.Descriptor> delegate() {
 		return map;
 	}
 
