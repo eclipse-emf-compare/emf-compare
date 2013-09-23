@@ -77,11 +77,19 @@ public class OverlayImageProvider {
 			Adapter adapter = EcoreUtil.getExistingAdapter(diff, IDiffMergeData.class);
 			if (adapter != null) {
 				IDiffMergeData iMergeData = (IDiffMergeData)adapter;
-				if (iMergeData.isLeftEditable() && !iMergeData.isRightEditable()) {
+				if (!iMergeData.isLeftEditable() || !iMergeData.isRightEditable()) {
 					if (iMergeData.hasBeenMergedToLeft()) {
-						path += "removed_ov";
+						if (diff.getSource() == DifferenceSource.LEFT) {
+							path += "removed_ov";
+						} else {
+							path += "merged_ov";
+						}
 					} else {
-						path += "merged_ov";
+						if (diff.getSource() == DifferenceSource.LEFT) {
+							path += "merged_ov";
+						} else {
+							path += "removed_ov";
+						}
 					}
 				} else if (iMergeData.isLeftEditable() && iMergeData.isRightEditable()) {
 					if (iMergeData.hasBeenMergedToLeft()) {
