@@ -17,7 +17,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.AttributeChangeItemProvider;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
@@ -31,6 +30,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
+import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
 import org.eclipse.emf.edit.provider.IItemFontProvider;
 
 /**
@@ -47,6 +47,9 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 	/** The image provider used with this item provider. */
 	private final OverlayImageProvider overlayProvider;
 
+	/** The item delegator for attribute change values. */
+	private final AdapterFactoryItemDelegator itemDelegator;
+
 	/**
 	 * Constructs an AttributeChangeItemProviderSpec with the given factory.
 	 * 
@@ -55,6 +58,7 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 	 */
 	public AttributeChangeItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+		itemDelegator = new AdapterFactoryItemDelegator(getRootAdapterFactory());
 		overlayProvider = new OverlayImageProvider(getResourceLocator());
 	}
 
@@ -66,8 +70,7 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 	@Override
 	public Object getImage(Object object) {
 		AttributeChange attributeChange = (AttributeChange)object;
-		Object attributeChangeValueImage = AdapterFactoryUtil.getImage(getRootAdapterFactory(),
-				attributeChange.getValue());
+		Object attributeChangeValueImage = itemDelegator.getImage(attributeChange.getValue());
 
 		if (attributeChangeValueImage == null) {
 			attributeChangeValueImage = super.getImage(object);
@@ -116,7 +119,7 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 			if (entryFeature instanceof EAttribute) {
 				value = EcoreUtil.convertToString(((EAttribute)entryFeature).getEAttributeType(), attValue);
 			} else {
-				value = AdapterFactoryUtil.getText(getRootAdapterFactory(), entry.getValue());
+				value = itemDelegator.getText(entry.getValue());
 			}
 		} else {
 			value = EcoreUtil.convertToString(attChange.getAttribute().getEAttributeType(), attValue);

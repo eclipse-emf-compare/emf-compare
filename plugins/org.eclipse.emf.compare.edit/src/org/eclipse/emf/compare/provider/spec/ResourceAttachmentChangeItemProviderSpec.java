@@ -15,13 +15,13 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.ResourceAttachmentChangeItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
+import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
 
 /**
  * Specialized {@link ResourceAttachmentChangeItemProvider} returning nice output for {@link #getText(Object)}
@@ -35,6 +35,9 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 	/** The image provider used with this item provider. */
 	private final OverlayImageProvider overlayProvider;
 
+	/** Item delegator for resources. */
+	private final AdapterFactoryItemDelegator itemDelegator;
+
 	/**
 	 * Constructor calling super {@link #ResourceAttachmentChangeItemProvider(AdapterFactory)}.
 	 * 
@@ -43,6 +46,7 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 	 */
 	public ResourceAttachmentChangeItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+		itemDelegator = new AdapterFactoryItemDelegator(getRootAdapterFactory());
 		overlayProvider = new OverlayImageProvider(getResourceLocator());
 	}
 
@@ -54,12 +58,12 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 	@Override
 	public Object getImage(Object object) {
 		final Match match = ((ResourceAttachmentChange)object).getMatch();
-		Object ret = AdapterFactoryUtil.getImage(getRootAdapterFactory(), match.getLeft());
+		Object ret = itemDelegator.getImage(match.getLeft());
 		if (ret == null) {
-			ret = AdapterFactoryUtil.getImage(getRootAdapterFactory(), match.getRight());
+			ret = itemDelegator.getImage(match.getRight());
 		}
 		if (ret == null) {
-			ret = AdapterFactoryUtil.getImage(getRootAdapterFactory(), match.getOrigin());
+			ret = itemDelegator.getImage(match.getOrigin());
 		}
 		if (ret == null) {
 			ret = super.getImage(object);
@@ -89,12 +93,12 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 	public IComposedStyledString getStyledText(Object object) {
 		ResourceAttachmentChange resourceAttachmentChange = (ResourceAttachmentChange)object;
 		final Match match = resourceAttachmentChange.getMatch();
-		String value = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getLeft());
+		String value = itemDelegator.getText(match.getLeft());
 		if (value == null) {
-			value = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getRight());
+			value = itemDelegator.getText(match.getRight());
 		}
 		if (value == null) {
-			value = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getOrigin());
+			value = itemDelegator.getText(match.getOrigin());
 		}
 		if (value == null) {
 			value = super.getText(object);
@@ -125,12 +129,12 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 	public String getDescription(Object object) {
 		final ResourceAttachmentChange rac = (ResourceAttachmentChange)object;
 		final Match match = rac.getMatch();
-		String ret = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getLeft());
+		String ret = itemDelegator.getText(match.getLeft());
 		if (ret == null) {
-			ret = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getRight());
+			ret = itemDelegator.getText(match.getRight());
 		}
 		if (ret == null) {
-			ret = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getOrigin());
+			ret = itemDelegator.getText(match.getOrigin());
 		}
 		if (ret == null) {
 			ret = super.getText(object);

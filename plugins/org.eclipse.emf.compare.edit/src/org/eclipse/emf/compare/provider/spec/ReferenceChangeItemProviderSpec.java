@@ -22,7 +22,6 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.ReferenceChangeItemProvider;
@@ -34,6 +33,7 @@ import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
 import org.eclipse.emf.edit.provider.IItemFontProvider;
 
 /**
@@ -50,6 +50,9 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	/** The image provider used with this item provider. */
 	private final OverlayImageProvider overlayProvider;
 
+	/** The item delegator for reference change values. */
+	private final AdapterFactoryItemDelegator itemDelegator;
+
 	/**
 	 * Constructor calling super {@link #ReferenceChangeItemProvider(AdapterFactory)}.
 	 * 
@@ -58,6 +61,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	 */
 	public ReferenceChangeItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+		itemDelegator = new AdapterFactoryItemDelegator(getRootAdapterFactory());
 		overlayProvider = new OverlayImageProvider(getResourceLocator());
 	}
 
@@ -71,6 +75,15 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		return getStyledText(object).getString();
 	}
 
+	/**
+	 * Returns the change text for the given diff on the given feature.
+	 * 
+	 * @param diff
+	 *            the diff representing the change.
+	 * @param feature
+	 *            the feature that changed.
+	 * @return the change text for the given diff on the given feature.
+	 */
 	static String changeText(final Diff diff, EStructuralFeature feature) {
 		DifferenceSource source = diff.getSource();
 		Match matchOfInterrest = diff.getMatch();
@@ -158,7 +171,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	 */
 	protected String getValueText(final ReferenceChange refChange) {
 		EObject refChangeValue = refChange.getValue();
-		String value = AdapterFactoryUtil.getText(getRootAdapterFactory(), refChangeValue);
+		String value = itemDelegator.getText(refChangeValue);
 		if (Strings.isNullOrEmpty(value)) {
 			if (refChangeValue.eIsProxy()) {
 				value = "proxy : " + ((InternalEObject)refChangeValue).eProxyURI().toString();
@@ -180,8 +193,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	public Object getImage(Object object) {
 		ReferenceChange refChange = (ReferenceChange)object;
 
-		Object refChangeValueImage = AdapterFactoryUtil.getImage(getRootAdapterFactory(), refChange
-				.getValue());
+		Object refChangeValueImage = itemDelegator.getImage(refChange.getValue());
 
 		Object diffImage = overlayProvider.getComposedImage(refChange, refChangeValueImage);
 		Object ret = overlayImage(object, diffImage);

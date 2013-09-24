@@ -24,7 +24,7 @@ import org.eclipse.emf.compare.provider.MatchResourceItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
 
 /**
  * Specialized {@link MatchResourceItemProvider} returning nice output for {@link #getText(Object)} and
@@ -34,6 +34,9 @@ import org.eclipse.emf.edit.provider.IItemLabelProvider;
  */
 public class MatchResourceItemProviderSpec extends MatchResourceItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider {
 
+	/** The item delegator for matched resources. */
+	private final AdapterFactoryItemDelegator itemDelegator;
+
 	/**
 	 * Constructor calling super {@link #MatchResourceItemProviderSpec(AdapterFactory)}.
 	 * 
@@ -42,6 +45,7 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider imp
 	 */
 	public MatchResourceItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+		itemDelegator = new AdapterFactoryItemDelegator(getRootAdapterFactory());
 	}
 
 	/**
@@ -127,10 +131,7 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider imp
 		}
 
 		if (resource != null) {
-			IItemLabelProvider itemLabelProvider = (IItemLabelProvider)getRootAdapterFactory().adapt(
-					resource, IItemLabelProvider.class);
-
-			image = itemLabelProvider.getImage(resource);
+			image = itemDelegator.getImage(resource);
 			if (image == null) {
 				image = super.getImage(object);
 			}

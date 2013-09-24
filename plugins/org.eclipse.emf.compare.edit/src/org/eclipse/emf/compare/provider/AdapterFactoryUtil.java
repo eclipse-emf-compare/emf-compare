@@ -19,7 +19,9 @@ import org.eclipse.emf.edit.provider.IItemLabelProvider;
  * Some utility methods to work with {@link AdapterFactory}.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @deprecated Use {@link org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator} instead.
  */
+@Deprecated
 public final class AdapterFactoryUtil {
 
 	/**

@@ -37,33 +37,51 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 
 /**
+ * A simple implementation that forward every call to a delegating instance.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @deprecated Use {@link org.eclipse.emf.edit.provider.IItemProviderDecorator} and
+ *             {@link org.eclipse.emf.edit.provider.DecoratorAdapterFactory} instead.
  */
+@Deprecated
 public class ForwardingItemProvider implements Adapter.Internal, IChangeNotifier, IDisposable, CreateChildCommand.Helper, ResourceLocator, IEditingDomainItemProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource, IItemColorProvider, IItemFontProvider {
 
-	private ItemProviderAdapter fDelegate;
+	/** The instance to delegate to. */
+	private final ItemProviderAdapter fDelegate;
 
 	/**
-	 * @param adapterFactory
+	 * Creates a new instance that delegate to the given object.
+	 * 
+	 * @param delegate
+	 *            the object to delegate to.
 	 */
 	public ForwardingItemProvider(ItemProviderAdapter delegate) {
 		this.fDelegate = delegate;
 	}
 
 	/**
-	 * @return the fDelegate
+	 * Returns the object to delegate to.
+	 * 
+	 * @return the object to delegate to.
 	 */
 	protected ItemProviderAdapter delegate() {
 		return fDelegate;
 	}
 
 	/**
+	 * This provides access to the factory.
 	 * 
+	 * @return the adapter factory.
 	 */
 	public AdapterFactory getAdapterFactory() {
 		return delegate().getAdapterFactory();
 	}
 
+	/**
+	 * This convenience method returns the first adapter factory that doesn't have a parent, i.e., the root.
+	 * 
+	 * @return the first adapter factory that doesn't have a parent, i.e., the root.
+	 */
 	protected AdapterFactory getRootAdapterFactory() {
 		if (delegate().getAdapterFactory() instanceof ComposeableAdapterFactory) {
 			return ((ComposeableAdapterFactory)delegate().getAdapterFactory()).getRootAdapterFactory();

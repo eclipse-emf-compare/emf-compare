@@ -16,13 +16,13 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
+import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
 
 /**
  * Specialized {@link MatchItemProvider} returning nice output for {@link #getText(Object)} and
@@ -34,6 +34,9 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 	/** The image provider used with this item provider. */
 	private final OverlayImageProvider overlayProvider;
 
+	/** The item delegator for match objects. */
+	private final AdapterFactoryItemDelegator itemDelegator;
+
 	/**
 	 * Constructor calling super {@link #MatchItemProvider(AdapterFactory)}.
 	 * 
@@ -42,6 +45,7 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 	 */
 	public MatchItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+		itemDelegator = new AdapterFactoryItemDelegator(getRootAdapterFactory());
 		overlayProvider = new OverlayImageProvider(getResourceLocator());
 	}
 
@@ -53,14 +57,14 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 	@Override
 	public Object getImage(Object object) {
 		Match match = (Match)object;
-		Object ret = AdapterFactoryUtil.getImage(getRootAdapterFactory(), match.getLeft());
+		Object ret = itemDelegator.getImage(match.getLeft());
 
 		if (ret == null) {
-			ret = AdapterFactoryUtil.getImage(getRootAdapterFactory(), match.getRight());
+			ret = itemDelegator.getImage(match.getRight());
 		}
 
 		if (ret == null) {
-			ret = AdapterFactoryUtil.getImage(getRootAdapterFactory(), match.getOrigin());
+			ret = itemDelegator.getImage(match.getOrigin());
 		}
 
 		if (ret == null) {
@@ -81,14 +85,14 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 	@Override
 	public String getText(Object object) {
 		Match match = (Match)object;
-		String ret = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getLeft());
+		String ret = itemDelegator.getText(match.getLeft());
 
 		if (ret == null) {
-			ret = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getRight());
+			ret = itemDelegator.getText(match.getRight());
 		}
 
 		if (ret == null) {
-			ret = AdapterFactoryUtil.getText(getRootAdapterFactory(), match.getOrigin());
+			ret = itemDelegator.getText(match.getOrigin());
 		}
 
 		if (ret == null) {
