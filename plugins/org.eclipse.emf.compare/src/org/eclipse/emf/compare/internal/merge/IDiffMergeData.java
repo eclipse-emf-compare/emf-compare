@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.merge;
 
+import org.eclipse.emf.compare.DifferenceSource;
+
 /**
  * Interface implemented by {@link org.eclipse.emf.compare.internal.merge.DiffMergeDataAdapter}. It helps to
  * know the way of merge and the editable sides of a difference.
@@ -31,6 +33,13 @@ public interface IDiffMergeData {
 	 * @return true if the difference has been merged from left to right, false otherwise.
 	 */
 	boolean hasBeenMergedToRight();
+
+	/**
+	 * Returns on which side the difference has been merged to.
+	 * 
+	 * @return on which side the difference has been merged to
+	 */
+	DifferenceSource mergedTo();
 
 	/**
 	 * Set the way of merge.

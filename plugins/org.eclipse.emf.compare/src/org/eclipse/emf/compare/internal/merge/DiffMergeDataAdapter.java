@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.internal.merge;
 
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.compare.DifferenceSource;
 
 /**
  * Adapter that help to know the way of merge and the editable sides of a difference.
@@ -113,4 +114,16 @@ public class DiffMergeDataAdapter extends AdapterImpl implements IDiffMergeData 
 		return type == IDiffMergeData.class;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.merge.IDiffMergeData#mergedTo()
+	 */
+	public DifferenceSource mergedTo() {
+		if (leftToRight) {
+			return DifferenceSource.RIGHT;
+		} else {
+			return DifferenceSource.LEFT;
+		}
+	}
 }
