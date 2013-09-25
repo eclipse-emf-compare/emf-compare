@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,21 +11,21 @@
 package org.eclipse.emf.compare.internal.spec;
 
 import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterators.addAll;
+import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.UniqueEList;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
@@ -37,6 +37,7 @@ import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -89,23 +90,15 @@ public class ComparisonSpec extends ComparisonImpl {
 		final EList<Diff> result;
 		final Match match = getMatch(element);
 		if (match != null) {
-			List<Iterable<? extends EObject>> lists = Lists.newArrayList();
-			lists.add(getInverse(element, diffCrossReferencer));
-			if (match.getLeft() != null) {
-				lists.add(getInverse(match.getLeft(), diffCrossReferencer));
-			}
-			if (match.getRight() != null) {
-				lists.add(getInverse(match.getRight(), diffCrossReferencer));
-			}
-			if (match.getOrigin() != null) {
-				lists.add(getInverse(match.getOrigin(), diffCrossReferencer));
-			}
-			lists.add(filter(match.getDifferences(), ResourceAttachmentChange.class));
-			Set<Diff> crossRefs = ImmutableSet.copyOf(filter(Iterables.concat(lists), Diff.class));
-			result = new BasicEList<Diff>(crossRefs);
+			result = getInverseReferences(match);
 		} else {
-			result = new BasicEList<Diff>(ImmutableSet.copyOf(filter(
-					getInverse(element, diffCrossReferencer), Diff.class)));
+			final Collection<EStructuralFeature.Setting> settings = diffCrossReferencer
+					.getNonNavigableInverseReferences(element, false);
+			result = new BasicEList<Diff>(settings.size());
+			for (EStructuralFeature.Setting setting : settings) {
+				EObject eObject = setting.getEObject();
+				result.add((Diff)eObject);
+			}
 		}
 		return result;
 	}
@@ -124,33 +117,94 @@ public class ComparisonSpec extends ComparisonImpl {
 			}
 
 			final Collection<EStructuralFeature.Setting> settings = matchCrossReferencer
-					.getInverseReferences(element, false);
-			for (EStructuralFeature.Setting setting : settings) {
-				if (setting.getEObject() instanceof Match) {
-					return (Match)setting.getEObject();
-				}
+					.getNonNavigableInverseReferences(element, false);
+
+			Iterator<Setting> settingsIterator = settings.iterator();
+			if (settingsIterator.hasNext()) {
+				// cast to Match without testing
+				// the matchCrossReferencer will only return Match from #getNonNavigableInverseReferences
+				return (Match)settingsIterator.next().getEObject();
 			}
 		}
+
 		return null;
 	}
 
 	/**
-	 * Returns an {@link Iterable} of EObject being inverse references of the given {@code element} stored by
-	 * the {@code adapter}.
+	 * Returns an {@link EList} of Diff being inverse references of sides of the given {@code match} as stored
+	 * by {@link #diffCrossReferencer}.
 	 * 
-	 * @param element
+	 * @param match
 	 *            the target of the search cross references.
-	 * @param adapter
-	 *            the {@link ECrossReferenceAdapter} to use to look for inverse references.
-	 * @return a possibly empty {@link Iterable} of inverse references.
+	 * @return a possibly empty {@link EList} of inverse references.
 	 */
-	private Iterable<EObject> getInverse(EObject element, ECrossReferenceAdapter adapter) {
-		final Collection<EStructuralFeature.Setting> settings = adapter.getInverseReferences(element, false);
-		final List<EObject> eObjects = Lists.newArrayList();
+	private EList<Diff> getInverseReferences(Match match) {
+		final Collection<EStructuralFeature.Setting> leftInverseReference = safGetNonNavigableInverseReferences(
+				match.getLeft(), diffCrossReferencer);
+		final Collection<EStructuralFeature.Setting> rightInverseReference = safGetNonNavigableInverseReferences(
+				match.getRight(), diffCrossReferencer);
+		final Collection<EStructuralFeature.Setting> originInverseReference = safGetNonNavigableInverseReferences(
+				match.getOrigin(), diffCrossReferencer);
+
+		// creates a list eagerly as we have to know the size beforehand and we will iterate on it later.
+		List<ResourceAttachmentChange> resourceAttachmentChanges = newArrayList(filter(
+				match.getDifferences(), ResourceAttachmentChange.class));
+
+		final int maxExpectedSize = leftInverseReference.size() + rightInverseReference.size()
+				+ originInverseReference.size() + resourceAttachmentChanges.size();
+		EList<Diff> result = new UniqueEList.FastCompare<Diff>(maxExpectedSize);
+
+		addSettingEObjectsTo(result, leftInverseReference);
+		addSettingEObjectsTo(result, rightInverseReference);
+		addSettingEObjectsTo(result, originInverseReference);
+
+		addAll(result, resourceAttachmentChanges.iterator());
+
+		return result;
+	}
+
+	/**
+	 * Iterates on the given {@code settings} and retrieve the asociated EObject before adding it to
+	 * {@code addTo} List.
+	 * <p>
+	 * It <b>modifies</b> the {@code addTo} {@link List} and <b>expect</b> the settings to all be from
+	 * {@link Diff}. This method only reason to exists is to factorize a loop and <em>should not</em> be used
+	 * outside {@link #getInverseReferences(Match)}.
+	 * 
+	 * @param addTo
+	 *            the list to which {@link Setting}'s {@link EObject} will be added.
+	 * @param settings
+	 *            the list of {@link Setting} to iterate on.
+	 */
+	private static void addSettingEObjectsTo(List<Diff> addTo,
+			final Collection<EStructuralFeature.Setting> settings) {
 		for (EStructuralFeature.Setting setting : settings) {
-			eObjects.add(setting.getEObject());
+			// cast to Diff without testing
+			// the diffCrossReferencer will only return Diff from #getNonNavigableInverseReferences
+			addTo.add((Diff)setting.getEObject());
 		}
-		return eObjects;
+	}
+
+	/**
+	 * Returns the inverse reference of the given {@code eObject} regarding the given {@code crossReferencer}.
+	 * It is {@code safe} to call it with <code>null</code> {@code eObject}: it will return an empty
+	 * collection.
+	 * 
+	 * @param eObject
+	 *            the target of the search cross references.
+	 * @param crossReferencer
+	 *            the cross referencer adapter to use for searching.
+	 * @return a possibly empty {@link EList} of inverse references.
+	 */
+	private Collection<EStructuralFeature.Setting> safGetNonNavigableInverseReferences(EObject eObject,
+			ECrossReferenceAdapter crossReferencer) {
+		final Collection<EStructuralFeature.Setting> inverseReference;
+		if (eObject != null) {
+			inverseReference = crossReferencer.getNonNavigableInverseReferences(eObject, false);
+		} else {
+			inverseReference = ImmutableList.of();
+		}
+		return inverseReference;
 	}
 
 	/**
