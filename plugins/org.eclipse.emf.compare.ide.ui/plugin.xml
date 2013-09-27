@@ -212,7 +212,13 @@
                style="push"
                tooltip="%accept.all.changes.tooltip">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
+               <with
+                     variable="activeEditor">
+                  <test
+                        property="emfcompare.hasReadOnlySide">
+                  </test>
+               </with>
             </visibleWhen>
          </command>
          <command
@@ -222,7 +228,13 @@
                style="push"
                tooltip="%reject.all.changes.tooltip">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
+               <with
+                     variable="activeEditor">
+                  <test
+                        property="emfcompare.hasReadOnlySide">
+                  </test>
+               </with>
             </visibleWhen>
          </command>
          <command
@@ -504,14 +516,14 @@
       <handler
             class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.AcceptAllChanges"
             commandId="org.eclipse.emf.compare.ide.ui.acceptAllChanges">
-         <enabledWhen>
+         <activeWhen>
             <with
                   variable="activeEditor">
                <test
                      property="emfcompare.hasReadOnlySide">
                </test>
             </with>
-         </enabledWhen>
+         </activeWhen>
       </handler>
       <handler
             class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.RejectChange"
@@ -536,14 +548,14 @@
       <handler
             class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.RejectAllChanges"
             commandId="org.eclipse.emf.compare.ide.ui.rejectAllChanges">
-         <enabledWhen>
+         <activeWhen>
             <with
                   variable="activeEditor">
                <test
                      property="emfcompare.hasReadOnlySide">
                </test>
             </with>
-         </enabledWhen>
+         </activeWhen>
       </handler>
       <handler
             class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.MergeToRightHandler"
