@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -94,13 +96,13 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 		ResourceAttachmentChange resourceAttachmentChange = (ResourceAttachmentChange)object;
 		final Match match = resourceAttachmentChange.getMatch();
 		String value = itemDelegator.getText(match.getLeft());
-		if (value == null) {
+		if (isNullOrEmpty(value)) {
 			value = itemDelegator.getText(match.getRight());
 		}
-		if (value == null) {
+		if (isNullOrEmpty(value)) {
 			value = itemDelegator.getText(match.getOrigin());
 		}
-		if (value == null) {
+		if (isNullOrEmpty(value)) {
 			value = super.getText(object);
 		}
 
@@ -130,13 +132,13 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 		final ResourceAttachmentChange rac = (ResourceAttachmentChange)object;
 		final Match match = rac.getMatch();
 		String ret = itemDelegator.getText(match.getLeft());
-		if (ret == null) {
+		if (isNullOrEmpty(ret)) {
 			ret = itemDelegator.getText(match.getRight());
 		}
-		if (ret == null) {
+		if (isNullOrEmpty(ret)) {
 			ret = itemDelegator.getText(match.getOrigin());
 		}
-		if (ret == null) {
+		if (isNullOrEmpty(ret)) {
 			ret = super.getText(object);
 		}
 

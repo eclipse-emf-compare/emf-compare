@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
-import com.google.common.base.Strings;
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
@@ -125,7 +125,7 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 			value = EcoreUtil.convertToString(attChange.getAttribute().getEAttributeType(), attValue);
 		}
 
-		if (Strings.isNullOrEmpty(value)) {
+		if (isNullOrEmpty(value)) {
 			if (attValue instanceof EObject && ((EObject)attValue).eIsProxy()) {
 				value = "proxy : " + ((InternalEObject)attValue).eProxyURI().toString();
 			} else {

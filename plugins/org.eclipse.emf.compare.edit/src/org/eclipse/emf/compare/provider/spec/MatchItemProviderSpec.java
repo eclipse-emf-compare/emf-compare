@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Iterables.any;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
@@ -87,15 +88,15 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 		Match match = (Match)object;
 		String ret = itemDelegator.getText(match.getLeft());
 
-		if (ret == null) {
+		if (isNullOrEmpty(ret)) {
 			ret = itemDelegator.getText(match.getRight());
 		}
 
-		if (ret == null) {
+		if (isNullOrEmpty(ret)) {
 			ret = itemDelegator.getText(match.getOrigin());
 		}
 
-		if (ret == null) {
+		if (isNullOrEmpty(ret)) {
 			ret = super.getText(object);
 		}
 

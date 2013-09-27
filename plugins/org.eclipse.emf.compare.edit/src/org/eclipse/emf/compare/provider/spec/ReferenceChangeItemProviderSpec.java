@@ -10,9 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Iterables.any;
-
-import com.google.common.base.Strings;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
@@ -145,7 +144,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	 */
 	private static boolean isStringAndNullOrEmpty(Object s) {
 		if (s instanceof String) {
-			return Strings.isNullOrEmpty((String)s);
+			return isNullOrEmpty((String)s);
 		} else {
 			return false;
 		}
@@ -172,7 +171,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	protected String getValueText(final ReferenceChange refChange) {
 		EObject refChangeValue = refChange.getValue();
 		String value = itemDelegator.getText(refChangeValue);
-		if (Strings.isNullOrEmpty(value)) {
+		if (isNullOrEmpty(value)) {
 			if (refChangeValue.eIsProxy()) {
 				value = "proxy : " + ((InternalEObject)refChangeValue).eProxyURI().toString();
 			} else {
