@@ -21,4 +21,5 @@ Bundle-ActivationPolicy: lazy
 Import-Package: com.google.common.base;version="[11.0.0,15.0.0)",
  org.eclipse.emf.compare.provider
 Export-Package: org.eclipse.emf.compare.uml2.internal.provider;x-internal:=true,
- org.eclipse.emf.compare.uml2.internal.provider.spec;x-internal:=true
+ org.eclipse.emf.compare.uml2.internal.provider.custom;x-internal:=true,
+ org.eclipse.emf.compare.uml2.internal.provider.decorator;x-internal:=true
