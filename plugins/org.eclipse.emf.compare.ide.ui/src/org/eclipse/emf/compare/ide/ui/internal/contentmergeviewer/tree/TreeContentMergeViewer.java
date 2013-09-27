@@ -27,6 +27,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
+import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
@@ -358,7 +359,8 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 				for (IDifferenceFilter filter : getSelectedFilters()) {
 					TreeNode treeNode = MergeViewerUtil.getTreeNode(getComparison(), getSelectedGroup(),
 							leftDiff);
-					if (filter.getPredicateWhenSelected().apply(treeNode)) {
+					if (filter.getPredicateWhenSelected().apply(treeNode)
+							&& !DiffUtil.isPrimeRefining(treeNode.getData())) {
 						doPaint = false;
 						break;
 					}

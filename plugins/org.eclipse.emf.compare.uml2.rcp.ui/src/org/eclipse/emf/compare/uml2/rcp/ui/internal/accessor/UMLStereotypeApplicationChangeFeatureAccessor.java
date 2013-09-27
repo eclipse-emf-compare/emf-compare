@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,9 @@ package org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.Iterables.filter;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
 import com.google.common.base.Predicate;
@@ -23,13 +26,16 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.ManyStructuralFeatureAccessorImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
+import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -47,7 +53,7 @@ import org.eclipse.uml2.uml.util.UMLUtil;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class UMLStereotypeApplicationChangeFeatureAccessor extends UMLManyStructuralFeatureAccessor {
+public class UMLStereotypeApplicationChangeFeatureAccessor extends ManyStructuralFeatureAccessorImpl {
 
 	private final static EReference STEREOTYPE_APPLICATION = EcoreFactory.eINSTANCE.createEReference();
 
@@ -113,6 +119,42 @@ public class UMLStereotypeApplicationChangeFeatureAccessor extends UMLManyStruct
 			// return it anyway.
 		}
 		return superValue;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.AbstractStructuralFeatureAccessor#getAffectedFeature(org.eclipse.emf.compare.Diff)
+	 */
+	@Override
+	protected EStructuralFeature getAffectedFeature(Diff diff) {
+		if (diff instanceof UMLDiff) {
+			return ((UMLDiff)diff).getEReference();
+		}
+		return super.getAffectedFeature(diff);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.ManyStructuralFeatureAccessorImpl#getDiffValue(org.eclipse.emf.compare.Diff)
+	 */
+	@Override
+	protected Object getDiffValue(Diff diff) {
+		if (diff instanceof UMLDiff) {
+			return ((UMLDiff)diff).getDiscriminant();
+		}
+		return super.getDiffValue(diff);
+	}
+
+	@Override
+	protected ImmutableList<Diff> computeDifferences() {
+		List<Diff> siblingDifferences = getInitialDiff().getMatch().getDifferences();
+		// We'll display all diffs of the same type, excluding the pseudo conflicts.
+		Predicate<? super Diff> diffFilter = not(hasConflict(ConflictKind.PSEUDO));
+
+		return ImmutableList.copyOf(filter(filter(siblingDifferences, diffFilter), getInitialDiff()
+				.getClass()));
 	}
 
 	/**

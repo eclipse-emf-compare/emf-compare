@@ -4,14 +4,6 @@
    <extension
          point="org.eclipse.emf.compare.rcp.ui.accessorFactory">
       <factory
-            class="org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor.factory.UMLManyStructuralFeatureAccessorFactory"
-            ranking="20">
-      </factory>
-      <factory
-            class="org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor.factory.UMLSingleStructuralFeatureAccessorFactory"
-            ranking="20">
-      </factory>
-      <factory
             class="org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor.factory.UMLStereotypeApplicationChangeFeatureAccessorFactory"
             ranking="25">
       </factory>

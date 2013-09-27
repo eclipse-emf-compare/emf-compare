@@ -16,6 +16,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
@@ -122,7 +123,8 @@ public abstract class TableOrTreeMergeViewer extends StructuredMergeViewer {
 				if (diff != null) {
 					TreeNode treeNode = MergeViewerUtil.getTreeNode(diff.getMatch().getComparison(),
 							getSelectedGroup(), diff);
-					if (filter.getPredicateWhenSelected().apply(treeNode)) {
+					if (filter.getPredicateWhenSelected().apply(treeNode)
+							&& !DiffUtil.isPrimeRefining(treeNode.getData())) {
 						doPaint = false;
 						break;
 					}

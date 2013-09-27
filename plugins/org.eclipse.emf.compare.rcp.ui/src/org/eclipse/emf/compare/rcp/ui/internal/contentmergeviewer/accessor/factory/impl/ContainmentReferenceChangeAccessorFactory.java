@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.ContainmentReferenceChangeAccessorImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement;
@@ -27,7 +28,17 @@ public class ContainmentReferenceChangeAccessorFactory extends AbstractAccessorF
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory#isFactoryFor(java.lang.Object)
 	 */
 	public boolean isFactoryFor(Object target) {
-		return (target instanceof ReferenceChange && ((ReferenceChange)target).getReference().isContainment());
+		final boolean isFactoryFor;
+		if (target instanceof ReferenceChange) {
+			isFactoryFor = ((ReferenceChange)target).getReference().isContainment();
+		} else if (target instanceof Diff) {
+			Diff primeRefining = ((Diff)target).getPrimeRefining();
+			isFactoryFor = primeRefining instanceof ReferenceChange
+					&& ((ReferenceChange)primeRefining).getReference().isContainment();
+		} else {
+			isFactoryFor = false;
+		}
+		return isFactoryFor;
 	}
 
 	/**
@@ -37,7 +48,8 @@ public class ContainmentReferenceChangeAccessorFactory extends AbstractAccessorF
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createLeft(AdapterFactory adapterFactory, Object target) {
-		return new ContainmentReferenceChangeAccessorImpl(adapterFactory, (ReferenceChange)target,
+		ReferenceChange referenceChange = getAppropriateReferenceChange(target);
+		return new ContainmentReferenceChangeAccessorImpl(adapterFactory, referenceChange,
 				MergeViewerSide.LEFT);
 	}
 
@@ -48,7 +60,8 @@ public class ContainmentReferenceChangeAccessorFactory extends AbstractAccessorF
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createRight(AdapterFactory adapterFactory, Object target) {
-		return new ContainmentReferenceChangeAccessorImpl(adapterFactory, (ReferenceChange)target,
+		ReferenceChange referenceChange = getAppropriateReferenceChange(target);
+		return new ContainmentReferenceChangeAccessorImpl(adapterFactory, referenceChange,
 				MergeViewerSide.RIGHT);
 	}
 
@@ -59,8 +72,29 @@ public class ContainmentReferenceChangeAccessorFactory extends AbstractAccessorF
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createAncestor(AdapterFactory adapterFactory, Object target) {
-		return new ContainmentReferenceChangeAccessorImpl(adapterFactory, (ReferenceChange)target,
+		ReferenceChange referenceChange = getAppropriateReferenceChange(target);
+		return new ContainmentReferenceChangeAccessorImpl(adapterFactory, referenceChange,
 				MergeViewerSide.ANCESTOR);
 	}
 
+	/**
+	 * Returns the appropriate reference change. If the given object has a prime refining that is a reference
+	 * change, returns this reference change. If the given object is a reference change, returns it.
+	 * Otherwise, returns null.
+	 * 
+	 * @param target
+	 *            the given object.
+	 * @return the appropriate reference change.
+	 */
+	private ReferenceChange getAppropriateReferenceChange(Object target) {
+		final ReferenceChange referenceChange;
+		if (target instanceof ReferenceChange) {
+			referenceChange = (ReferenceChange)target;
+		} else if (((Diff)target).getPrimeRefining() instanceof ReferenceChange) {
+			referenceChange = (ReferenceChange)((Diff)target).getPrimeRefining();
+		} else {
+			referenceChange = null;
+		}
+		return referenceChange;
+	}
 }

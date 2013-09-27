@@ -1060,6 +1060,25 @@ public final class DiffUtil {
 	}
 
 	/**
+	 * Check if the given object is a Diff that is a prime refining of one of its refine diffs.
+	 * 
+	 * @param data
+	 *            the given object.
+	 * @return true if the given object is a Diff that is a prime refining of one of its refine diffs, false
+	 *         otherwise.
+	 */
+	public static boolean isPrimeRefining(EObject data) {
+		if (data instanceof Diff) {
+			for (Diff refine : ((Diff)data).getRefines()) {
+				if (refine.getPrimeRefining() == data) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * This can be used to check whether a given Diff affects a value for which we can find another,
 	 * unresolved Diff on a given Feature.
 	 * 

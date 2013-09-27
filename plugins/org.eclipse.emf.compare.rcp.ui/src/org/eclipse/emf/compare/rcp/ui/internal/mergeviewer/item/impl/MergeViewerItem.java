@@ -499,7 +499,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			for (IDifferenceFilter filter : filters) {
 				for (Diff unfilteredDiff : unfilteredDiffs) {
 					TreeNode node = MergeViewerUtil.getTreeNode(fComparison, group, unfilteredDiff);
-					if (filter.getPredicateWhenSelected().apply(node)) {
+					if (filter.getPredicateWhenSelected().apply(node)
+							&& !DiffUtil.isPrimeRefining(node.getData())) {
 						filteredDiffs.remove(unfilteredDiff);
 					}
 				}
