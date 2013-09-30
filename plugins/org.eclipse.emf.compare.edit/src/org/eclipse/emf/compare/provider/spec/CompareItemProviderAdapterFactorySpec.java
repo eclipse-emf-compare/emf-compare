@@ -40,11 +40,7 @@ public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAd
 	 */
 	@Override
 	public Adapter createMatchAdapter() {
-		if (matchItemProvider == null) {
-			matchItemProvider = new MatchItemProviderSpec(this);
-		}
-
-		return matchItemProvider;
+		return new MatchItemProviderSpec(this);
 	}
 
 	/**
@@ -54,11 +50,7 @@ public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAd
 	 */
 	@Override
 	public Adapter createReferenceChangeAdapter() {
-		if (referenceChangeItemProvider == null) {
-			referenceChangeItemProvider = new ReferenceChangeItemProviderSpec(this);
-		}
-
-		return referenceChangeItemProvider;
+		return new ReferenceChangeItemProviderSpec(this);
 	}
 
 	/**
@@ -68,11 +60,7 @@ public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAd
 	 */
 	@Override
 	public Adapter createAttributeChangeAdapter() {
-		if (attributeChangeItemProvider == null) {
-			attributeChangeItemProvider = new AttributeChangeItemProviderSpec(this);
-		}
-
-		return attributeChangeItemProvider;
+		return new AttributeChangeItemProviderSpec(this);
 	}
 
 	/**
@@ -82,10 +70,7 @@ public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAd
 	 */
 	@Override
 	public Adapter createMatchResourceAdapter() {
-		if (matchResourceItemProvider == null) {
-			matchResourceItemProvider = new MatchResourceItemProviderSpec(this);
-		}
-		return matchResourceItemProvider;
+		return new MatchResourceItemProviderSpec(this);
 	}
 
 	/**
@@ -95,11 +80,7 @@ public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAd
 	 */
 	@Override
 	public Adapter createComparisonAdapter() {
-		if (comparisonItemProvider == null) {
-			comparisonItemProvider = new ComparisonItemProviderSpec(this);
-		}
-
-		return comparisonItemProvider;
+		return new ComparisonItemProviderSpec(this);
 	}
 
 	/**
@@ -109,11 +90,7 @@ public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAd
 	 */
 	@Override
 	public Adapter createConflictAdapter() {
-		if (conflictItemProvider == null) {
-			conflictItemProvider = new ConflictItemProviderSpec(this);
-		}
-
-		return conflictItemProvider;
+		return new ConflictItemProviderSpec(this);
 	}
 
 	/**
@@ -123,10 +100,6 @@ public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAd
 	 */
 	@Override
 	public Adapter createResourceAttachmentChangeAdapter() {
-		if (resourceAttachmentChangeItemProvider == null) {
-			resourceAttachmentChangeItemProvider = new ResourceAttachmentChangeItemProviderSpec(this);
-		}
-
-		return resourceAttachmentChangeItemProvider;
+		return new ResourceAttachmentChangeItemProviderSpec(this);
 	}
 }

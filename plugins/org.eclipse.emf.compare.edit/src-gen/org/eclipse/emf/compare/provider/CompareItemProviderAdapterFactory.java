@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.util.CompareAdapterFactory;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.provider.Disposable;
 import org.eclipse.emf.edit.provider.IChangeNotifier;
 import org.eclipse.emf.edit.provider.IDisposable;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -69,6 +70,14 @@ public class CompareItemProviderAdapterFactory extends CompareAdapterFactory imp
 	protected IChangeNotifier changeNotifier = new ChangeNotifier();
 
 	/**
+	 * This keeps track of all the item providers created, so that they can be {@link #dispose disposed}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected Disposable disposable = new Disposable();
+
+	/**
 	 * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -93,14 +102,6 @@ public class CompareItemProviderAdapterFactory extends CompareAdapterFactory imp
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.Comparison} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ComparisonItemProvider comparisonItemProvider;
-
-	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.Comparison}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -108,20 +109,8 @@ public class CompareItemProviderAdapterFactory extends CompareAdapterFactory imp
 	 */
 	@Override
 	public Adapter createComparisonAdapter() {
-		if (comparisonItemProvider == null) {
-			comparisonItemProvider = new ComparisonItemProvider(this);
-		}
-
-		return comparisonItemProvider;
+		return new ComparisonItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.MatchResource} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected MatchResourceItemProvider matchResourceItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.MatchResource}.
@@ -131,20 +120,8 @@ public class CompareItemProviderAdapterFactory extends CompareAdapterFactory imp
 	 */
 	@Override
 	public Adapter createMatchResourceAdapter() {
-		if (matchResourceItemProvider == null) {
-			matchResourceItemProvider = new MatchResourceItemProvider(this);
-		}
-
-		return matchResourceItemProvider;
+		return new MatchResourceItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.Match} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected MatchItemProvider matchItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.Match}.
@@ -154,20 +131,8 @@ public class CompareItemProviderAdapterFactory extends CompareAdapterFactory imp
 	 */
 	@Override
 	public Adapter createMatchAdapter() {
-		if (matchItemProvider == null) {
-			matchItemProvider = new MatchItemProvider(this);
-		}
-
-		return matchItemProvider;
+		return new MatchItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.Diff} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected DiffItemProvider diffItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.Diff}.
@@ -177,20 +142,8 @@ public class CompareItemProviderAdapterFactory extends CompareAdapterFactory imp
 	 */
 	@Override
 	public Adapter createDiffAdapter() {
-		if (diffItemProvider == null) {
-			diffItemProvider = new DiffItemProvider(this);
-		}
-
-		return diffItemProvider;
+		return new DiffItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.ResourceAttachmentChange} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ResourceAttachmentChangeItemProvider resourceAttachmentChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.ResourceAttachmentChange}.
@@ -200,20 +153,8 @@ public class CompareItemProviderAdapterFactory extends CompareAdapterFactory imp
 	 */
 	@Override
 	public Adapter createResourceAttachmentChangeAdapter() {
-		if (resourceAttachmentChangeItemProvider == null) {
-			resourceAttachmentChangeItemProvider = new ResourceAttachmentChangeItemProvider(this);
-		}
-
-		return resourceAttachmentChangeItemProvider;
+		return new ResourceAttachmentChangeItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.ReferenceChange} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ReferenceChangeItemProvider referenceChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.ReferenceChange}.
@@ -223,20 +164,8 @@ public class CompareItemProviderAdapterFactory extends CompareAdapterFactory imp
 	 */
 	@Override
 	public Adapter createReferenceChangeAdapter() {
-		if (referenceChangeItemProvider == null) {
-			referenceChangeItemProvider = new ReferenceChangeItemProvider(this);
-		}
-
-		return referenceChangeItemProvider;
+		return new ReferenceChangeItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.AttributeChange} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected AttributeChangeItemProvider attributeChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.AttributeChange}.
@@ -246,20 +175,8 @@ public class CompareItemProviderAdapterFactory extends CompareAdapterFactory imp
 	 */
 	@Override
 	public Adapter createAttributeChangeAdapter() {
-		if (attributeChangeItemProvider == null) {
-			attributeChangeItemProvider = new AttributeChangeItemProvider(this);
-		}
-
-		return attributeChangeItemProvider;
+		return new AttributeChangeItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.Conflict} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ConflictItemProvider conflictItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.Conflict}.
@@ -269,20 +186,8 @@ public class CompareItemProviderAdapterFactory extends CompareAdapterFactory imp
 	 */
 	@Override
 	public Adapter createConflictAdapter() {
-		if (conflictItemProvider == null) {
-			conflictItemProvider = new ConflictItemProvider(this);
-		}
-
-		return conflictItemProvider;
+		return new ConflictItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.Equivalence} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected EquivalenceItemProvider equivalenceItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.Equivalence}.
@@ -292,11 +197,7 @@ public class CompareItemProviderAdapterFactory extends CompareAdapterFactory imp
 	 */
 	@Override
 	public Adapter createEquivalenceAdapter() {
-		if (equivalenceItemProvider == null) {
-			equivalenceItemProvider = new EquivalenceItemProvider(this);
-		}
-
-		return equivalenceItemProvider;
+		return new EquivalenceItemProvider(this);
 	}
 
 	/**
@@ -358,6 +259,20 @@ public class CompareItemProviderAdapterFactory extends CompareAdapterFactory imp
 	}
 
 	/**
+	 * Associates an adapter with a notifier via the base implementation, then records it to ensure it will be disposed.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected void associate(Adapter adapter, Notifier target) {
+		super.associate(adapter, target);
+		if (adapter != null) {
+			disposable.add(adapter);
+		}
+	}
+
+	/**
 	 * This adds a listener.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -398,24 +313,7 @@ public class CompareItemProviderAdapterFactory extends CompareAdapterFactory imp
 	 * @generated
 	 */
 	public void dispose() {
-		if (comparisonItemProvider != null)
-			comparisonItemProvider.dispose();
-		if (matchResourceItemProvider != null)
-			matchResourceItemProvider.dispose();
-		if (matchItemProvider != null)
-			matchItemProvider.dispose();
-		if (diffItemProvider != null)
-			diffItemProvider.dispose();
-		if (resourceAttachmentChangeItemProvider != null)
-			resourceAttachmentChangeItemProvider.dispose();
-		if (referenceChangeItemProvider != null)
-			referenceChangeItemProvider.dispose();
-		if (attributeChangeItemProvider != null)
-			attributeChangeItemProvider.dispose();
-		if (conflictItemProvider != null)
-			conflictItemProvider.dispose();
-		if (equivalenceItemProvider != null)
-			equivalenceItemProvider.dispose();
+		disposable.dispose();
 	}
 
 }

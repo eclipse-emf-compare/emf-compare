@@ -102,11 +102,7 @@ public class EMFCompareAdapterFactoryTest {
 
 		@Override
 		public Adapter createComparisonAdapter() {
-			if (comparisonItemProvider == null) {
-				comparisonItemProvider = new ComparisonItemProviderSpec2(this);
-			}
-
-			return comparisonItemProvider;
+			return new ComparisonItemProviderSpec2(this);
 		}
 	}
 
@@ -132,11 +128,7 @@ public class EMFCompareAdapterFactoryTest {
 
 		@Override
 		public Adapter createComparisonAdapter() {
-			if (comparisonItemProvider == null) {
-				comparisonItemProvider = new ComparisonItemProviderSpec3(this);
-			}
-
-			return comparisonItemProvider;
+			return new ComparisonItemProviderSpec3(this);
 		}
 	}
 

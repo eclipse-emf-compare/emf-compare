@@ -37,7 +37,7 @@
     </genDataTypes>
     <genDataTypes ecoreDataType="compare.ecore#//IEqualityHelper"/>
     <genDataTypes ecoreDataType="compare.ecore#//Diagnostic"/>
-    <genClasses ecoreClass="compare.ecore#//Comparison">
+    <genClasses provider="Stateful" ecoreClass="compare.ecore#//Comparison">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/matchedResources"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/matches"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Comparison/conflicts"/>
@@ -53,7 +53,7 @@
       </genOperations>
       <genOperations ecoreOperation="compare.ecore#//Comparison/getEqualityHelper"/>
     </genClasses>
-    <genClasses ecoreClass="compare.ecore#//MatchResource">
+    <genClasses provider="Stateful" ecoreClass="compare.ecore#//MatchResource">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/leftURI"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/rightURI"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/originURI"/>
@@ -62,7 +62,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//MatchResource/origin"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference compare.ecore#//MatchResource/comparison"/>
     </genClasses>
-    <genClasses ecoreClass="compare.ecore#//Match">
+    <genClasses provider="Stateful" ecoreClass="compare.ecore#//Match">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Match/submatches"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//Match/differences"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Match/left"/>
@@ -72,7 +72,7 @@
       <genOperations ecoreOperation="compare.ecore#//Match/getAllSubmatches"/>
       <genOperations ecoreOperation="compare.ecore#//Match/getAllDifferences"/>
     </genClasses>
-    <genClasses ecoreClass="compare.ecore#//Diff">
+    <genClasses provider="Stateful" ecoreClass="compare.ecore#//Diff">
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference compare.ecore#//Diff/match"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Diff/requires"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Diff/requiredBy"/>
@@ -90,24 +90,24 @@
       <genOperations ecoreOperation="compare.ecore#//Diff/copyLeftToRight"/>
       <genOperations ecoreOperation="compare.ecore#//Diff/discard"/>
     </genClasses>
-    <genClasses ecoreClass="compare.ecore#//ResourceAttachmentChange">
+    <genClasses provider="Stateful" ecoreClass="compare.ecore#//ResourceAttachmentChange">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//ResourceAttachmentChange/resourceURI"/>
     </genClasses>
-    <genClasses ecoreClass="compare.ecore#//ReferenceChange">
+    <genClasses provider="Stateful" ecoreClass="compare.ecore#//ReferenceChange">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//ReferenceChange/reference"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//ReferenceChange/value"/>
     </genClasses>
-    <genClasses ecoreClass="compare.ecore#//AttributeChange">
+    <genClasses provider="Stateful" ecoreClass="compare.ecore#//AttributeChange">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//AttributeChange/attribute"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//AttributeChange/value"/>
     </genClasses>
-    <genClasses ecoreClass="compare.ecore#//Conflict">
+    <genClasses provider="Stateful" ecoreClass="compare.ecore#//Conflict">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//Conflict/kind"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Conflict/differences"/>
       <genOperations ecoreOperation="compare.ecore#//Conflict/getLeftDifferences"/>
       <genOperations ecoreOperation="compare.ecore#//Conflict/getRightDifferences"/>
     </genClasses>
-    <genClasses ecoreClass="compare.ecore#//Equivalence">
+    <genClasses provider="Stateful" ecoreClass="compare.ecore#//Equivalence">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Equivalence/differences"/>
     </genClasses>
   </genPackages>
