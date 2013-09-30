@@ -309,7 +309,6 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 
 			SWTUtil.safeAsyncExec(new Runnable() {
 				public void run() {
-					refresh(true);
 					treeRuler.computeConsequences();
 					treeRuler.redraw();
 				}
