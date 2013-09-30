@@ -14,12 +14,12 @@ import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterables.transform;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+
+import java.util.Arrays;
 
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 
 /**
@@ -47,9 +47,7 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 	@Override
 	public Object getParent(Object element) {
 		final Object ret;
-		if (element instanceof ItemProviderAdapter) {
-			ret = super.getParent(element);
-		} else if (element instanceof Adapter) {
+		if (element instanceof CompareInputAdapter) {
 			ret = super.getParent(((Adapter)element).getTarget());
 		} else {
 			ret = super.getParent(element);
@@ -65,12 +63,10 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 	@Override
 	public final boolean hasChildren(Object element) {
 		final boolean ret;
-		if (element instanceof ItemProviderAdapter) {
-			ret = super.hasChildren(element);
-		} else if (element instanceof Adapter) {
+		if (element instanceof CompareInputAdapter) {
 			ret = super.hasChildren(((Adapter)element).getTarget());
 		} else {
-			ret = false;
+			ret = super.hasChildren(element);
 		}
 		return ret;
 	}
@@ -83,9 +79,7 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 	@Override
 	public final Object[] getChildren(Object element) {
 		final Object[] children;
-		if (element instanceof ItemProviderAdapter) {
-			children = super.getChildren(element);
-		} else if (element instanceof Adapter) {
+		if (element instanceof CompareInputAdapter) {
 			children = super.getChildren(((Adapter)element).getTarget());
 		} else {
 			children = super.getChildren(element);
@@ -149,6 +143,6 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 	 */
 	private static Iterable<?> adapt(Object[] iterable, final AdapterFactory adapterFactory,
 			final Class<?> type) {
-		return adapt(Lists.newArrayList(iterable), adapterFactory, type);
+		return adapt(Arrays.asList(iterable), adapterFactory, type);
 	}
 }
