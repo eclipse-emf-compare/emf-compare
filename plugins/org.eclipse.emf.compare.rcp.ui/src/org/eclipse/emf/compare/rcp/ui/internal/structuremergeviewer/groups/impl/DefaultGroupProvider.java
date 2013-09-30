@@ -16,7 +16,6 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.Collection;
 
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
@@ -29,7 +28,7 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class DefaultGroupProvider extends AdapterImpl implements IDifferenceGroupProvider {
+public class DefaultGroupProvider extends AbstractDifferenceGroupProvider implements IDifferenceGroupProvider {
 
 	/** The unique group provided by this provider. */
 	private IDifferenceGroup group;
@@ -45,7 +44,7 @@ public class DefaultGroupProvider extends AdapterImpl implements IDifferenceGrou
 	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
 		if (group == null || !comparison.equals(comp)) {
 			this.comp = comparison;
-			group = new BasicDifferenceGroupImpl(comparison, alwaysTrue());
+			group = new BasicDifferenceGroupImpl(comparison, alwaysTrue(), getCrossReferenceAdapter());
 		}
 		return ImmutableList.of(group);
 	}

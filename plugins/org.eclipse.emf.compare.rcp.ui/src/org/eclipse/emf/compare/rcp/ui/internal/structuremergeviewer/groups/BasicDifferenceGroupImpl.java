@@ -52,6 +52,7 @@ import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender.IDifferenceGroupExtender;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.edit.tree.TreeFactory;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.swt.graphics.Image;
@@ -89,6 +90,9 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	private final IDifferenceGroupExtender.Registry registry = EMFCompareRCPUIPlugin.getDefault()
 			.getDifferenceGroupExtenderRegistry();
 
+	/** The cross reference adapter that will be added to this group's children. */
+	private final ECrossReferenceAdapter crossReferenceAdapter;
+
 	/**
 	 * Instantiates this group given the comparison and filter that should be used in order to determine its
 	 * list of differences.
@@ -102,9 +106,13 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 *            The whole unfiltered list of differences.
 	 * @param filter
 	 *            The filter we'll use in order to filter the differences that are part of this group.
+	 * @param crossReferenceAdapter
+	 *            The cross reference adapter that will be added to this group's children.
 	 */
-	public BasicDifferenceGroupImpl(Comparison comparison, Predicate<? super Diff> filter) {
-		this(comparison, filter, "Group", EMFCompareRCPUIPlugin.getImage("icons/full/toolb16/group.gif")); //$NON-NLS-1$//$NON-NLS-2$
+	public BasicDifferenceGroupImpl(Comparison comparison, Predicate<? super Diff> filter,
+			ECrossReferenceAdapter crossReferenceAdapter) {
+		this(comparison, filter, "Group", EMFCompareRCPUIPlugin.getImage("icons/full/toolb16/group.gif"), //$NON-NLS-2$
+				crossReferenceAdapter);
 	}
 
 	/**
@@ -119,9 +127,13 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 *            The filter we'll use in order to filter the differences that are part of this group.
 	 * @param name
 	 *            The name that the EMF Compare UI will display for this group.
+	 * @param crossReferenceAdapter
+	 *            The cross reference adapter that will be added to this group's children.
 	 */
-	public BasicDifferenceGroupImpl(Comparison comparison, Predicate<? super Diff> filter, String name) {
-		this(comparison, filter, name, EMFCompareRCPUIPlugin.getImage("icons/full/toolb16/group.gif")); //$NON-NLS-1$
+	public BasicDifferenceGroupImpl(Comparison comparison, Predicate<? super Diff> filter, String name,
+			ECrossReferenceAdapter crossReferenceAdapter) {
+		this(comparison, filter, name,
+				EMFCompareRCPUIPlugin.getImage("icons/full/toolb16/group.gif"), crossReferenceAdapter); //$NON-NLS-1$
 	}
 
 	/**
@@ -138,13 +150,16 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 *            The name that the EMF Compare UI will display for this group.
 	 * @param image
 	 *            The icon that the EMF Compare UI will display for this group.
+	 * @param crossReferenceAdapter
+	 *            The cross reference adapter that will be added to this group's children.
 	 */
 	public BasicDifferenceGroupImpl(Comparison comparison, Predicate<? super Diff> filter, String name,
-			Image image) {
+			Image image, ECrossReferenceAdapter crossReferenceAdapter) {
 		this.comparison = comparison;
 		this.filter = filter;
 		this.name = name;
 		this.image = image;
+		this.crossReferenceAdapter = crossReferenceAdapter;
 	}
 
 	/**
@@ -231,6 +246,10 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 				if (buildSubTree != null) {
 					children.add(buildSubTree);
 				}
+			}
+			for (TreeNode child : children) {
+				// this cross referencer has to live as long as the objects on which it is installed.
+				child.eAdapters().add(crossReferenceAdapter);
 			}
 		}
 		return children;

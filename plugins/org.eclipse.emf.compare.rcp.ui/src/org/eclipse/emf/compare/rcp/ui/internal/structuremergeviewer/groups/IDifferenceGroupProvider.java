@@ -15,6 +15,8 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
  * Instances of this class will be used by EMF Compare in order to provide difference grouping facilities to
@@ -121,5 +123,11 @@ public interface IDifferenceGroupProvider extends Adapter {
 		 */
 		void clear();
 	}
+
+	/**
+	 * @param first
+	 * @return
+	 */
+	Iterable<TreeNode> getTreeNodes(EObject eObject);
 
 }

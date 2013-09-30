@@ -31,7 +31,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
@@ -49,6 +48,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDiff
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
@@ -58,7 +58,7 @@ import org.eclipse.emf.edit.tree.TreeNode;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class ThreeWayComparisonGroupProvider extends AdapterImpl implements IDifferenceGroupProvider {
+public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProvider implements IDifferenceGroupProvider {
 
 	/** A human-readable label for this group provider. This will be displayed in the EMF Compare UI. */
 	private String label;
@@ -91,13 +91,13 @@ public class ThreeWayComparisonGroupProvider extends AdapterImpl implements IDif
 		if (differenceGroups == null || !comparison.equals(comp)) {
 			this.comp = comparison;
 			final IDifferenceGroup conflicts = new ConflictsGroupImpl(comparison, hasConflict(
-					ConflictKind.REAL, ConflictKind.PSEUDO), "Conflicts");
+					ConflictKind.REAL, ConflictKind.PSEUDO), "Conflicts", getCrossReferenceAdapter());
 			final IDifferenceGroup leftSide = new BasicDifferenceGroupImpl(comparison, Predicates.and(
 					fromSide(DifferenceSource.LEFT), Predicates.not(hasConflict(ConflictKind.REAL,
-							ConflictKind.PSEUDO))), "Left side");
+							ConflictKind.PSEUDO))), "Left side", getCrossReferenceAdapter());
 			final IDifferenceGroup rightSide = new BasicDifferenceGroupImpl(comparison, Predicates.and(
 					fromSide(DifferenceSource.RIGHT), Predicates.not(hasConflict(ConflictKind.REAL,
-							ConflictKind.PSEUDO))), "Right side");
+							ConflictKind.PSEUDO))), "Right side", getCrossReferenceAdapter());
 
 			differenceGroups = ImmutableList.of(conflicts, leftSide, rightSide);
 		}
@@ -166,8 +166,9 @@ public class ThreeWayComparisonGroupProvider extends AdapterImpl implements IDif
 		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#BasicDifferenceGroupImpl(org.eclipse.emf.compare.Comparison,
 		 *      java.lang.Iterable, com.google.common.base.Predicate, java.lang.String)
 		 */
-		public ConflictsGroupImpl(Comparison comparison, Predicate<? super Diff> filter, String name) {
-			super(comparison, filter, name);
+		public ConflictsGroupImpl(Comparison comparison, Predicate<? super Diff> filter, String name,
+				ECrossReferenceAdapter crossReferenceAdapter) {
+			super(comparison, filter, name, crossReferenceAdapter);
 		}
 
 		/**

@@ -36,6 +36,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.ui.dialogs.DiagnosticDialog;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Diagnostic;
@@ -66,6 +68,7 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IDisposable;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
@@ -318,14 +321,20 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 				// org.eclipse.compare.CompareEditorInput#getElement(ISelection))
 				Object first = getFirst(affectedObjects, null);
 				if (first instanceof EObject) {
-					TreeNode treeNode = TreeFactory.eINSTANCE.createTreeNode();
-					treeNode.setData((EObject)first);
-					final Object adaptedAffectedObject = fAdapterFactory.adapt(treeNode, ICompareInput.class);
-					SWTUtil.safeAsyncExec(new Runnable() {
-						public void run() {
-							setSelectionToWidget(new StructuredSelection(adaptedAffectedObject), true);
-						}
-					});
+					Notifier notifier = ((Adapter)diffTreeViewer.getRoot()).getTarget();
+					IDifferenceGroupProvider groupProvider = (IDifferenceGroupProvider)EcoreUtil
+							.getExistingAdapter(notifier, IDifferenceGroupProvider.class);
+					Iterable<TreeNode> treeNodes = groupProvider.getTreeNodes((EObject)first);
+					TreeNode treeNode = getFirst(treeNodes, null);
+					if (treeNode != null) {
+						final Object adaptedAffectedObject = fAdapterFactory.adapt(treeNode,
+								ICompareInput.class);
+						SWTUtil.safeAsyncExec(new Runnable() {
+							public void run() {
+								setSelection(new StructuredSelection(adaptedAffectedObject), true);
+							}
+						});
+					}
 				}
 			}
 		} else {

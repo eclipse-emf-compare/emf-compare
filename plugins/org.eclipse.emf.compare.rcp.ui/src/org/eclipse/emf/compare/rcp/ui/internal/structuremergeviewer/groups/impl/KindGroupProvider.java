@@ -17,7 +17,6 @@ import com.google.common.collect.Lists;
 
 import java.util.Collection;
 
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl;
@@ -32,7 +31,7 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  * @since 3.0
  */
-public class KindGroupProvider extends AdapterImpl implements IDifferenceGroupProvider {
+public class KindGroupProvider extends AbstractDifferenceGroupProvider implements IDifferenceGroupProvider {
 
 	/** A human-readable label for this group provider. This will be displayed in the EMF Compare UI. */
 	private String label;
@@ -65,13 +64,13 @@ public class KindGroupProvider extends AdapterImpl implements IDifferenceGroupPr
 		if (differenceGroups == null || !comparison.equals(comp)) {
 			this.comp = comparison;
 			final IDifferenceGroup additions = new BasicDifferenceGroupImpl(comparison,
-					ofKind(DifferenceKind.ADD), "Additions");
+					ofKind(DifferenceKind.ADD), "Additions", getCrossReferenceAdapter());
 			final IDifferenceGroup deletions = new BasicDifferenceGroupImpl(comparison,
-					ofKind(DifferenceKind.DELETE), "Deletions");
+					ofKind(DifferenceKind.DELETE), "Deletions", getCrossReferenceAdapter());
 			final IDifferenceGroup changes = new BasicDifferenceGroupImpl(comparison,
-					ofKind(DifferenceKind.CHANGE), "Changes");
+					ofKind(DifferenceKind.CHANGE), "Changes", getCrossReferenceAdapter());
 			final IDifferenceGroup moves = new BasicDifferenceGroupImpl(comparison,
-					ofKind(DifferenceKind.MOVE), "Moves");
+					ofKind(DifferenceKind.MOVE), "Moves", getCrossReferenceAdapter());
 			Collection<IDifferenceGroup> groups = Lists.newArrayList();
 			if (!additions.getGroupTree().isEmpty()) {
 				groups.add(additions);

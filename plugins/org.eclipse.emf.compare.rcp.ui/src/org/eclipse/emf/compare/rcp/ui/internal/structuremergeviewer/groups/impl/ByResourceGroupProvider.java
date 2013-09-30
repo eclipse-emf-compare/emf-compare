@@ -15,8 +15,8 @@ import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Lists.newArrayList;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentReferenceChange;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentMoveReferenceChange;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentReferenceChange;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
@@ -25,7 +25,6 @@ import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
@@ -35,6 +34,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.Basic
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
@@ -44,7 +44,7 @@ import org.eclipse.emf.edit.tree.TreeNode;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  * @since 3.0
  */
-public class ByResourceGroupProvider extends AdapterImpl implements IDifferenceGroupProvider {
+public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider implements IDifferenceGroupProvider {
 
 	/** A human-readable label for this group provider. This will be displayed in the EMF Compare UI. */
 	private String label;
@@ -76,7 +76,7 @@ public class ByResourceGroupProvider extends AdapterImpl implements IDifferenceG
 	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
 		if (group == null || !comparison.equals(comp)) {
 			this.comp = comparison;
-			group = new ResourceGroup(comparison);
+			group = new ResourceGroup(comparison, getCrossReferenceAdapter());
 		}
 		return ImmutableList.of(group);
 	}
@@ -139,8 +139,8 @@ public class ByResourceGroupProvider extends AdapterImpl implements IDifferenceG
 		 * 
 		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#BasicDifferenceGroupImpl(org.eclipse.emf.compare.Comparison)
 		 */
-		public ResourceGroup(Comparison comparison) {
-			super(comparison, Predicates.<Diff> alwaysTrue());
+		public ResourceGroup(Comparison comparison, ECrossReferenceAdapter crossReferenceAdapter) {
+			super(comparison, Predicates.<Diff> alwaysTrue(), crossReferenceAdapter);
 		}
 
 		/**
