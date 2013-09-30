@@ -11,10 +11,10 @@
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl;
 
 import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 import java.util.Map;
@@ -47,28 +47,22 @@ public class DifferenceGroupRegistryImpl implements Registry {
 	 *      Comparison)
 	 */
 	public List<IDifferenceGroupProvider> getGroupProviders(IComparisonScope scope, Comparison comparison) {
-		Iterable<IDifferenceGroupProvider> providers = filter(map.values(), isGroupProviderActivable(
-				scope, comparison));
-		List<IDifferenceGroupProvider> ret = newArrayList();
-		for (IDifferenceGroupProvider provider : providers) {
-			ret.add(provider);
-		}
-		return ret;
+		Iterable<IDifferenceGroupProvider> providers = filter(map.values(), isGroupProviderActivable(scope,
+				comparison));
+		return ImmutableList.copyOf(providers);
 	}
 
 	/**
-	 * Returns a predicate that represents the activation condition based on the scope and comparison
-	 * objects.
+	 * Returns a predicate that represents the activation condition based on the scope and comparison objects.
 	 * 
 	 * @param scope
 	 *            The scope on which the group provider will be applied.
 	 * @param comparison
 	 *            The comparison which is to be displayed in the structural view.
-	 * @return A predicate that represents the activation condition based on the scope and comparison
-	 *         objects.
+	 * @return A predicate that represents the activation condition based on the scope and comparison objects.
 	 */
-	static final Predicate<IDifferenceGroupProvider> isGroupProviderActivable(
-			final IComparisonScope scope, final Comparison comparison) {
+	static final Predicate<IDifferenceGroupProvider> isGroupProviderActivable(final IComparisonScope scope,
+			final Comparison comparison) {
 		return new Predicate<IDifferenceGroupProvider>() {
 			/**
 			 * {@inheritDoc}
