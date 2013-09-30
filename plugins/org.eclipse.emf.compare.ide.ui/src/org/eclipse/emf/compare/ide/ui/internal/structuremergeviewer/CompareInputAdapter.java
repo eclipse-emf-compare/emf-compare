@@ -24,10 +24,12 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.AccessorAdapter;
-import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
+import org.eclipse.emf.compare.provider.ExtendedAdapterFactoryItemDelegator;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.IAccessorFactory;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.emf.edit.provider.IDisposable;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.jface.util.SafeRunnable;
@@ -36,7 +38,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public abstract class CompareInputAdapter extends AdapterImpl implements ICompareInput {
+public abstract class CompareInputAdapter extends AdapterImpl implements ICompareInput, IDisposable {
 
 	/**
 	 * Store the listeners for notifications.
@@ -48,6 +50,9 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 	 */
 	private final AdapterFactory fAdapterFactory;
 
+	/** The item delegator to use to retrieve item */
+	private final ExtendedAdapterFactoryItemDelegator itemDelegator;
+
 	/**
 	 * Simple constructor storing the given {@link AdapterFactory}.
 	 * 
@@ -56,6 +61,7 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 	 */
 	public CompareInputAdapter(AdapterFactory adapterFactory) {
 		fAdapterFactory = adapterFactory;
+		itemDelegator = new ExtendedAdapterFactoryItemDelegator(getRootAdapterFactory());
 		fListener = new ListenerList();
 	}
 
@@ -75,6 +81,17 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 	 * @return the wrapped {@link AdapterFactory}.
 	 */
 	protected final AdapterFactory getAdapterFactory() {
+		return fAdapterFactory;
+	}
+
+	/**
+	 * Gets the root factory if this local adapter factory is composed, otherwise just the local one.
+	 */
+	protected final AdapterFactory getRootAdapterFactory() {
+		if (fAdapterFactory instanceof ComposeableAdapterFactory) {
+			return ((ComposeableAdapterFactory)fAdapterFactory).getRootAdapterFactory();
+		}
+
 		return fAdapterFactory;
 	}
 
@@ -147,7 +164,7 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 	 * @see org.eclipse.compare.ITypedElement#getImage()
 	 */
 	public Image getImage() {
-		Object imageObject = AdapterFactoryUtil.getImage(getAdapterFactory(), getComparisonObject());
+		Object imageObject = itemDelegator.getImage(getComparisonObject());
 		return ExtendedImageRegistry.getInstance().getImage(imageObject);
 	}
 
@@ -180,7 +197,7 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getName()
 	 */
 	public String getName() {
-		return AdapterFactoryUtil.getText(getAdapterFactory(), getComparisonObject());
+		return itemDelegator.getText(getComparisonObject());
 	}
 
 	/**
@@ -262,5 +279,18 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 			ret = null;
 		}
 		return ret;
+	}
+
+	/**
+	 * This will remove this adapter from all its the targets and dispose any remaining children wrappers in
+	 * the children store.
+	 */
+	public void dispose() {
+		Notifier oldTarget = target;
+		target = null;
+
+		if (oldTarget != null) {
+			oldTarget.eAdapters().remove(this);
+		}
 	}
 }

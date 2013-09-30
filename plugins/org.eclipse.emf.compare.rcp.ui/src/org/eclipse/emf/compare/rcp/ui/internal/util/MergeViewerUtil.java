@@ -71,6 +71,22 @@ public final class MergeViewerUtil {
 		return eObject;
 	}
 
+	public static EObject getBestSideEObject(Match match, MergeViewerSide side) {
+		final MergeViewerSide[] sideLookupOrder;
+		if (side == MergeViewerSide.ANCESTOR) {
+			sideLookupOrder = new MergeViewerSide[] {MergeViewerSide.ANCESTOR, MergeViewerSide.LEFT,
+					MergeViewerSide.RIGHT, };
+		} else {
+			sideLookupOrder = new MergeViewerSide[] {side, side.opposite(), MergeViewerSide.ANCESTOR, };
+		}
+
+		EObject objectOnSide = null;
+		for (int i = 0; i < sideLookupOrder.length && objectOnSide == null; i++) {
+			objectOnSide = MergeViewerUtil.getEObject(match, sideLookupOrder[i]);
+		}
+		return objectOnSide;
+	}
+
 	public static EStructuralFeature getAffectedFeature(Diff diff) {
 		final EStructuralFeature feature;
 		if (diff instanceof ReferenceChange) {

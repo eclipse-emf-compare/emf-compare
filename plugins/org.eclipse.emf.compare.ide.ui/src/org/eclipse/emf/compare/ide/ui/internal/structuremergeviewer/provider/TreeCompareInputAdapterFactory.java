@@ -16,17 +16,21 @@ import java.util.Collection;
 
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.provider.Disposable;
 import org.eclipse.emf.edit.provider.IChangeNotifier;
+import org.eclipse.emf.edit.provider.IDisposable;
+import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.emf.edit.tree.util.TreeAdapterFactory;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class TreeCompareInputAdapterFactory extends TreeAdapterFactory implements ComposeableAdapterFactory {
+public class TreeCompareInputAdapterFactory extends TreeAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
 
 	/**
 	 * This keeps track of the root adapter factory that delegates to this adapter factory.
@@ -37,6 +41,11 @@ public class TreeCompareInputAdapterFactory extends TreeAdapterFactory implement
 	 * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}.
 	 */
 	protected final IChangeNotifier changeNotifier = new ChangeNotifier();
+
+	/**
+	 * This is used to implement {@link org.eclipse.emf.edit.provider.IDisposable}.
+	 */
+	protected Disposable disposable = new Disposable();
 
 	/**
 	 * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
@@ -128,6 +137,48 @@ public class TreeCompareInputAdapterFactory extends TreeAdapterFactory implement
 	 */
 	@Override
 	public Adapter createTreeNodeAdapter() {
-		return new TreeNodeCompareInput(getRootAdapterFactory());
+		return new TreeNodeCompareInput(this);
+	}
+
+	/**
+	 * This records adapters for subsequent disposable.
+	 */
+	@Override
+	public Adapter adaptNew(Notifier object, Object type) {
+		Adapter result = super.adaptNew(object, type);
+		disposable.add(result);
+		return result;
+	}
+
+	/**
+	 * This adds a listener.
+	 */
+	public void addListener(INotifyChangedListener notifyChangedListener) {
+		changeNotifier.addListener(notifyChangedListener);
+	}
+
+	/**
+	 * This removes a listener.
+	 */
+	public void removeListener(INotifyChangedListener notifyChangedListener) {
+		changeNotifier.removeListener(notifyChangedListener);
+	}
+
+	/**
+	 * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}.
+	 */
+	public void fireNotifyChanged(Notification notification) {
+		changeNotifier.fireNotifyChanged(notification);
+
+		if (parentAdapterFactory != null) {
+			parentAdapterFactory.fireNotifyChanged(notification);
+		}
+	}
+
+	/**
+	 * This disposes all the disposables.
+	 */
+	public void dispose() {
+		disposable.dispose();
 	}
 }

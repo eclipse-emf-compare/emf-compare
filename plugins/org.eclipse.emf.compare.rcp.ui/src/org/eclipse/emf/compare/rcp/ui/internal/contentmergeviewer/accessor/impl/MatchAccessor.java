@@ -73,7 +73,7 @@ public class MatchAccessor implements ICompareAccessor {
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.wrapper.accessor.compare.ITypedElement#getName()
 	 */
 	public String getName() {
-		return MergeViewerUtil.getEObject(fMatch, fSide).eClass().getName();
+		return MergeViewerUtil.getBestSideEObject(fMatch, fSide).eClass().getName();
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class MatchAccessor implements ICompareAccessor {
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.wrapper.accessor.compare.ITypedElement#getImage()
 	 */
 	public Image getImage() {
-		EObject eObject = MergeViewerUtil.getEObject(fMatch, fSide);
+		EObject eObject = MergeViewerUtil.getBestSideEObject(fMatch, fSide);
 		Object image = AdapterFactoryUtil.getImage(fAdapterFactory, eObject);
 		return ExtendedImageRegistry.getInstance().getImage(image);
 	}
