@@ -14,6 +14,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.edit.provider.IItemColorProvider;
+import org.eclipse.emf.edit.provider.IItemFontProvider;
 import org.eclipse.emf.edit.tree.provider.TreeItemProviderAdapterFactory;
 
 /**
@@ -26,6 +27,7 @@ public class TreeItemProviderAdapterFactorySpec extends TreeItemProviderAdapterF
 	 */
 	public TreeItemProviderAdapterFactorySpec() {
 		super();
+		supportedTypes.add(IItemFontProvider.class);
 		supportedTypes.add(IItemColorProvider.class);
 		supportedTypes.add(IItemStyledLabelProvider.class);
 		supportedTypes.add(IItemDescriptionProvider.class);

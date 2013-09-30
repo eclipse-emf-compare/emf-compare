@@ -22,7 +22,7 @@ import java.util.Map;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
+import org.eclipse.emf.compare.provider.ExtendedAdapterFactoryItemDelegator;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
@@ -31,13 +31,14 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemColorProvider;
+import org.eclipse.emf.edit.provider.IItemFontProvider;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.emf.edit.tree.provider.TreeNodeItemProvider;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements IItemStyledLabelProvider, IItemColorProvider {
+public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements IItemStyledLabelProvider, IItemColorProvider, IItemFontProvider {
 
 	/***/
 	private final Map<IDifferenceGroup, GroupItemProviderAdapter> fGroupAdapters = Maps.newHashMap();
@@ -50,6 +51,7 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 	 */
 	public TreeNodeItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+		itemDelegator = new ExtendedAdapterFactoryItemDelegator(getRootAdapterFactory());
 	}
 
 	/**
@@ -69,10 +71,10 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 			Collection<?> children = comparisonGroupItemProvider.getChildren(parentData);
 			if (children.size() > 1) {
 				for (Notifier child : filter(children, Notifier.class)) {
-					IDifferenceGroup parentGroup = (IDifferenceGroup)EcoreUtil.getAdapter(child.eAdapters(),
+					IDifferenceGroup parentGroup = (IDifferenceGroup)EcoreUtil.getExistingAdapter(child,
 							IDifferenceGroup.class);
-					IDifferenceGroup group = (IDifferenceGroup)EcoreUtil.getAdapter(treeNode.getData()
-							.eAdapters(), IDifferenceGroup.class);
+					IDifferenceGroup group = (IDifferenceGroup)EcoreUtil.getExistingAdapter(treeNode
+							.getData(), IDifferenceGroup.class);
 					if (parentGroup == group) {
 						parent = child;
 					}
@@ -94,8 +96,8 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 		TreeNode treeNode = (TreeNode)object;
 		EObject data = treeNode.getData();
 		if (data instanceof Comparison) {
-			IDifferenceGroupProvider groupProvider = (IDifferenceGroupProvider)EcoreUtil.getAdapter(treeNode
-					.eAdapters(), IDifferenceGroupProvider.class);
+			IDifferenceGroupProvider groupProvider = (IDifferenceGroupProvider)EcoreUtil.getExistingAdapter(
+					treeNode, IDifferenceGroupProvider.class);
 			Comparison comparison = (Comparison)data;
 			Collection<? extends IDifferenceGroup> groups = groupProvider.getGroups(comparison);
 			if (groups.size() > 1) {
@@ -123,8 +125,7 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 	 */
 	public IComposedStyledString getStyledText(Object object) {
 		TreeNode treeNode = (TreeNode)object;
-		EObject data = treeNode.getData();
-		return (IComposedStyledString)AdapterFactoryUtil.getStyledText(getRootAdapterFactory(), data);
+		return ((ExtendedAdapterFactoryItemDelegator)itemDelegator).getStyledText(treeNode.getData());
 	}
 
 	/**
@@ -169,5 +170,16 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 	public Object getForeground(Object object, int columnIndex) {
 		TreeNode treeNode = ((TreeNode)object);
 		return itemDelegator.getForeground(treeNode.getData(), columnIndex);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getFont(java.lang.Object)
+	 */
+	@Override
+	public Object getFont(Object object) {
+		TreeNode treeNode = ((TreeNode)object);
+		return itemDelegator.getFont(treeNode.getData());
 	}
 }
