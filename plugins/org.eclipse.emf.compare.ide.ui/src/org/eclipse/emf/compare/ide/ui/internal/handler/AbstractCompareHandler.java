@@ -115,7 +115,7 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 			EditingDomain rightEditingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(right);
 			// do not use a delegating editing domain if those two are different.
 			if (leftEditingDomain == rightEditingDomain) {
-				delegatingEditingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(left);
+				delegatingEditingDomain = leftEditingDomain;
 			}
 		}
 		return delegatingEditingDomain;
