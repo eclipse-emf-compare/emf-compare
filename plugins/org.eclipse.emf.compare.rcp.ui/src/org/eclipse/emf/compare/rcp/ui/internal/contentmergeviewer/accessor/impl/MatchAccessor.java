@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,8 +20,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.impl.AbstractTypedElementAdapter;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.impl.TypeConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
@@ -35,12 +35,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class MatchAccessor implements ICompareAccessor {
-
-	/**
-	 * The adapter factory that will be used to get the name and the image.
-	 */
-	private final AdapterFactory fAdapterFactory;
+public class MatchAccessor extends AbstractTypedElementAdapter implements ICompareAccessor {
 
 	private final Match fMatch;
 
@@ -55,7 +50,7 @@ public class MatchAccessor implements ICompareAccessor {
 	 *            the {@link EObject} to wrap.
 	 */
 	public MatchAccessor(AdapterFactory adapterFactory, Match match, MergeViewerSide side) {
-		fAdapterFactory = adapterFactory;
+		super(adapterFactory);
 		fMatch = match;
 		fSide = side;
 	}
@@ -73,7 +68,12 @@ public class MatchAccessor implements ICompareAccessor {
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.wrapper.accessor.compare.ITypedElement#getName()
 	 */
 	public String getName() {
-		return MergeViewerUtil.getBestSideEObject(fMatch, fSide).eClass().getName();
+		final EObject eObject = MergeViewerUtil.getBestSideEObject(fMatch, fSide);
+		if (eObject != null) {
+			return getItemDelegator().getText(eObject);
+		} else {
+			return getItemDelegator().getText(fMatch);
+		}
 	}
 
 	/**
@@ -82,8 +82,13 @@ public class MatchAccessor implements ICompareAccessor {
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.wrapper.accessor.compare.ITypedElement#getImage()
 	 */
 	public Image getImage() {
-		EObject eObject = MergeViewerUtil.getBestSideEObject(fMatch, fSide);
-		Object image = AdapterFactoryUtil.getImage(fAdapterFactory, eObject);
+		final EObject eObject = MergeViewerUtil.getBestSideEObject(fMatch, fSide);
+		final Object image;
+		if (eObject != null) {
+			image = getItemDelegator().getImage(eObject);
+		} else {
+			image = getItemDelegator().getImage(fMatch);
+		}
 		return ExtendedImageRegistry.getInstance().getImage(image);
 	}
 
@@ -111,7 +116,8 @@ public class MatchAccessor implements ICompareAccessor {
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor#getInitialItem()
 	 */
 	public IMergeViewerItem getInitialItem() {
-		return new MergeViewerItem.Container(fMatch.getComparison(), null, fMatch, fSide, fAdapterFactory);
+		return new MergeViewerItem.Container(fMatch.getComparison(), null, fMatch, fSide,
+				getRootAdapterFactory());
 	}
 
 	/**
@@ -130,7 +136,7 @@ public class MatchAccessor implements ICompareAccessor {
 			if (getSide() != MergeViewerSide.ANCESTOR
 					|| (getSide() == MergeViewerSide.ANCESTOR && match.getOrigin() != null)) {
 				container = new MergeViewerItem.Container(getComparison(), diff, match.getLeft(), match
-						.getRight(), match.getOrigin(), getSide(), fAdapterFactory);
+						.getRight(), match.getOrigin(), getSide(), getRootAdapterFactory());
 				ret.add(container);
 			}
 		}

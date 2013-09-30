@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,10 +17,9 @@ import java.io.InputStream;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.IStreamContentAccessor;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.impl.AbstractTypedElementAdapter;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -28,14 +27,12 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class ResourceStreamAccessorImpl implements ITypedElement, IStreamContentAccessor {
-
-	private final AdapterFactory fAdapterFactory;
+public class ResourceStreamAccessorImpl extends AbstractTypedElementAdapter implements IStreamContentAccessor {
 
 	private final Resource fResource;
 
 	public ResourceStreamAccessorImpl(AdapterFactory adapterFactory, Resource resource) {
-		this.fAdapterFactory = adapterFactory;
+		super(adapterFactory);
 		this.fResource = resource;
 	}
 
@@ -54,7 +51,7 @@ public class ResourceStreamAccessorImpl implements ITypedElement, IStreamContent
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getImage()
 	 */
 	public Image getImage() {
-		Object image = AdapterFactoryUtil.getImage(fAdapterFactory, fResource);
+		Object image = getItemDelegator().getImage(fResource);
 		return ExtendedImageRegistry.getInstance().getImage(image);
 	}
 

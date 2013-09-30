@@ -21,6 +21,7 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IResourceContentsAccessor;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.impl.AbstractTypedElementAdapter;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.impl.TypeConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
@@ -36,7 +37,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
-public class ResourceContentsAccessorImpl implements IResourceContentsAccessor {
+public class ResourceContentsAccessorImpl extends AbstractTypedElementAdapter implements IResourceContentsAccessor {
 
 	/** The difference performed. */
 	private final Diff fDiff;
@@ -47,8 +48,6 @@ public class ResourceContentsAccessorImpl implements IResourceContentsAccessor {
 	/** The match associated to the performed difference. */
 	private final Match fOwnerMatch;
 
-	private final AdapterFactory fAdapterFactory;
-
 	/**
 	 * @param diff
 	 *            The difference performed.
@@ -56,7 +55,7 @@ public class ResourceContentsAccessorImpl implements IResourceContentsAccessor {
 	 *            The side on which the difference is located.
 	 */
 	public ResourceContentsAccessorImpl(AdapterFactory adapterFactory, Diff diff, MergeViewerSide side) {
-		fAdapterFactory = adapterFactory;
+		super(adapterFactory);
 		fDiff = diff;
 		fSide = side;
 		fOwnerMatch = diff.getMatch();
@@ -101,7 +100,7 @@ public class ResourceContentsAccessorImpl implements IResourceContentsAccessor {
 				Object ancestor = MergeViewerUtil.getValueFromResourceAttachmentChange(
 						(ResourceAttachmentChange)initialDiff, getComparison(), MergeViewerSide.ANCESTOR);
 				return new MergeViewerItem.Container(getComparison(), initialDiff, left, right, ancestor,
-						getSide(), fAdapterFactory);
+						getSide(), getRootAdapterFactory());
 			}
 
 		}
@@ -140,7 +139,7 @@ public class ResourceContentsAccessorImpl implements IResourceContentsAccessor {
 			}
 
 			return new MergeViewerItem.Container(getComparison(), initialDiff, left, right, ancestor,
-					getSide(), fAdapterFactory);
+					getSide(), getRootAdapterFactory());
 		}
 		return null;
 	}
@@ -154,7 +153,7 @@ public class ResourceContentsAccessorImpl implements IResourceContentsAccessor {
 		final ImmutableList<? extends IMergeViewerItem> ret = ImmutableList
 				.of(new ResourceAttachmentChangeMergeViewerItem(getComparison(), null,
 						getResource(MergeViewerSide.LEFT), getResource(MergeViewerSide.RIGHT),
-						getResource(MergeViewerSide.ANCESTOR), getSide(), fAdapterFactory));
+						getResource(MergeViewerSide.ANCESTOR), getSide(), getRootAdapterFactory()));
 		return ret;
 	}
 

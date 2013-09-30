@@ -1,6 +1,5 @@
 /*******************************************************************************
-
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,21 +22,20 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IStructuralFeatureAccessor;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.impl.AbstractTypedElementAdapter;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.impl.TypeConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public abstract class AbstractStructuralFeatureAccessor implements IStructuralFeatureAccessor {
+public abstract class AbstractStructuralFeatureAccessor extends AbstractTypedElementAdapter implements IStructuralFeatureAccessor {
 
 	private final Diff fDiff;
 
@@ -49,10 +47,8 @@ public abstract class AbstractStructuralFeatureAccessor implements IStructuralFe
 
 	private final ImmutableList<Diff> fDifferences;
 
-	private final AdapterFactory fAdapterFactory;
-
 	public AbstractStructuralFeatureAccessor(AdapterFactory adapterFactory, Diff diff, MergeViewerSide side) {
-		fAdapterFactory = adapterFactory;
+		super(adapterFactory);
 		fDiff = diff;
 		fSide = side;
 		fOwnerMatch = diff.getMatch();
@@ -118,13 +114,6 @@ public abstract class AbstractStructuralFeatureAccessor implements IStructuralFe
 		return fDifferences;
 	}
 
-	/**
-	 * @return the fAdapterFactory
-	 */
-	protected final AdapterFactory getAdapterFactory() {
-		return fAdapterFactory;
-	}
-
 	protected ImmutableList<Diff> computeDifferences() {
 		List<Diff> siblingDifferences = fOwnerMatch.getDifferences();
 		// We'll display all diffs on the same reference, excluding the pseudo conflicts.
@@ -164,13 +153,7 @@ public abstract class AbstractStructuralFeatureAccessor implements IStructuralFe
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getImage()
 	 */
 	public Image getImage() {
-		if (getStructuralFeature() instanceof EAttribute) {
-			return ExtendedImageRegistry.getInstance().getImage(
-					EcoreEditPlugin.getPlugin().getImage("full/obj16/EAttribute")); //$NON-NLS-1$
-		} else {
-			return ExtendedImageRegistry.getInstance().getImage(
-					EcoreEditPlugin.getPlugin().getImage("full/obj16/EReference")); //$NON-NLS-1$
-		}
+		return ExtendedImageRegistry.INSTANCE.getImage(getItemDelegator().getImage(fStructuralFeature));
 	}
 
 	/**

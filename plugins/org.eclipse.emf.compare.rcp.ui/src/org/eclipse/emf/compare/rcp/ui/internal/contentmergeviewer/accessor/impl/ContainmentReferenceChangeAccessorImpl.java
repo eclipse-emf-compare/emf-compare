@@ -71,7 +71,7 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 		}
 		if (match != null) {
 			return new MergeViewerItem.Container(getComparison(), getInitialDiff(), match, getSide(),
-					getAdapterFactory());
+					getRootAdapterFactory());
 		}
 		return null;
 	}
@@ -109,7 +109,7 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 			if (getSide() != MergeViewerSide.ANCESTOR
 					|| (getSide() == MergeViewerSide.ANCESTOR && match.getOrigin() != null)) {
 				container = new MergeViewerItem.Container(getComparison(), diff, match.getLeft(), match
-						.getRight(), match.getOrigin(), getSide(), getAdapterFactory());
+						.getRight(), match.getOrigin(), getSide(), getRootAdapterFactory());
 				ret.add(container);
 			}
 		}

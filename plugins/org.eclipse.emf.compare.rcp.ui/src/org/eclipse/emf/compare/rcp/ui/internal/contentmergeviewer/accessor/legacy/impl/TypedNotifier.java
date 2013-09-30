@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,6 @@ package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.lega
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -24,7 +23,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class TypedNotifier implements ITypedElement {
+public class TypedNotifier extends AbstractTypedElementAdapter {
 
 	public static final String NODE_TYPE__EMF_RESOURCESET = "NODE_TYPE__EMF_RESOURCESET"; //$NON-NLS-1$
 
@@ -36,10 +35,8 @@ public class TypedNotifier implements ITypedElement {
 
 	private final Notifier fNotifier;
 
-	private final AdapterFactory fAdapterFactory;
-
 	public TypedNotifier(AdapterFactory adapterFactory, Notifier notifier) {
-		fAdapterFactory = adapterFactory;
+		super(adapterFactory);
 		fNotifier = notifier;
 	}
 
@@ -49,7 +46,7 @@ public class TypedNotifier implements ITypedElement {
 	 * @see org.eclipse.compare.ITypedElement#getName()
 	 */
 	public String getName() {
-		return AdapterFactoryUtil.getText(fAdapterFactory, fNotifier);
+		return getItemDelegator().getText(fNotifier);
 	}
 
 	/**
@@ -58,7 +55,7 @@ public class TypedNotifier implements ITypedElement {
 	 * @see org.eclipse.compare.ITypedElement#getImage()
 	 */
 	public Image getImage() {
-		Object imageObject = AdapterFactoryUtil.getImage(fAdapterFactory, fNotifier);
+		Object imageObject = getItemDelegator().getImage(fNotifier);
 		return ExtendedImageRegistry.getInstance().getImage(imageObject);
 	}
 

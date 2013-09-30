@@ -88,7 +88,7 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 			}
 		}
 		return new MergeViewerItem(getComparison(), diff, left, right, ancestor, getSide(),
-				getAdapterFactory());
+				getRootAdapterFactory());
 	}
 
 	private List<? extends IMergeViewerItem> createInsertionPoints(
@@ -115,7 +115,7 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 						right = null;
 					}
 					IMergeViewerItem insertionPoint = new MergeViewerItem(getComparison(), diff, left, right,
-							ancestor, getSide(), getAdapterFactory());
+							ancestor, getSide(), getRootAdapterFactory());
 
 					final int insertionIndex = Math.min(findInsertionIndex(diff, rightToLeft), ret.size());
 					List<IMergeViewerItem> subList = ret.subList(0, insertionIndex);
