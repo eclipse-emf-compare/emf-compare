@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
@@ -208,16 +209,7 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 	public ITypedElement getAncestor() {
 		final ITypedElement ret;
 		Notifier notifier = getComparisonObject();
-		boolean isThreeWay = false;
-		if (notifier instanceof Diff) {
-			isThreeWay = ((Diff)notifier).getMatch().getComparison().isThreeWay();
-		} else if (notifier instanceof Match) {
-			isThreeWay = ((Match)notifier).getComparison().isThreeWay();
-		} else if (notifier instanceof Conflict) {
-			isThreeWay = true;
-		} else if (notifier instanceof MatchResource) {
-			isThreeWay = ((MatchResource)notifier).getComparison().isThreeWay();
-		}
+		boolean isThreeWay = isThreeWay(notifier);
 		if (isThreeWay) {
 			IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
 			if (accessorFactory != null) {
@@ -235,6 +227,24 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 			ret = null;
 		}
 		return ret;
+	}
+
+	protected boolean isThreeWay(Notifier notifier) {
+		final boolean isThreeWay;
+		if (notifier instanceof Diff) {
+			isThreeWay = ((Diff)notifier).getMatch().getComparison().isThreeWay();
+		} else if (notifier instanceof Match) {
+			isThreeWay = ((Match)notifier).getComparison().isThreeWay();
+		} else if (notifier instanceof Conflict) {
+			isThreeWay = true;
+		} else if (notifier instanceof MatchResource) {
+			isThreeWay = ((MatchResource)notifier).getComparison().isThreeWay();
+		} else if (notifier instanceof Comparison) {
+			isThreeWay = ((Comparison)notifier).isThreeWay();
+		} else {
+			isThreeWay = false;
+		}
+		return isThreeWay;
 	}
 
 	/**
