@@ -136,7 +136,12 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 	 * {@inheritDoc}
 	 */
 	public EObject getComparisonObject() {
-		return ((TreeNode)getTarget()).getData();
+		// target can be null when getLeft/Right/Ancestor is requested after StructureMergeViewer is disposed.
+		if (getTarget() != null) {
+			return ((TreeNode)getTarget()).getData();
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -209,23 +214,23 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 	public ITypedElement getAncestor() {
 		final ITypedElement ret;
 		Notifier notifier = getComparisonObject();
-		boolean isThreeWay = isThreeWay(notifier);
-		if (isThreeWay) {
-			IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
-			if (accessorFactory != null) {
-				org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
-						.createAncestor(getAdapterFactory(), getComparisonObject());
-				if (typedElement != null) {
-					ret = AccessorAdapter.adapt(typedElement);
+			boolean isThreeWay = isThreeWay(notifier);
+			if (isThreeWay) {
+				IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
+				if (accessorFactory != null) {
+					org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
+							.createAncestor(getAdapterFactory(), getComparisonObject());
+					if (typedElement != null) {
+						ret = AccessorAdapter.adapt(typedElement);
+					} else {
+						ret = null;
+					}
 				} else {
 					ret = null;
 				}
 			} else {
 				ret = null;
 			}
-		} else {
-			ret = null;
-		}
 		return ret;
 	}
 
