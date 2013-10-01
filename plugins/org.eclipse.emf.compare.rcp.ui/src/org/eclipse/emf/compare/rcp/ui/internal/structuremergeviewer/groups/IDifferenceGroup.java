@@ -15,7 +15,6 @@ import com.google.common.base.Function;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
@@ -30,13 +29,6 @@ import org.eclipse.swt.graphics.Image;
  * @since 3.0
  */
 public interface IDifferenceGroup extends Adapter {
-
-	/**
-	 * Returns the {@link Comparison} in which this group is defined.
-	 * 
-	 * @return The {@link Comparison} in which this group is defined.
-	 */
-	Comparison getComparison();
 
 	/**
 	 * A human-readable label for this group.
@@ -65,7 +57,7 @@ public interface IDifferenceGroup extends Adapter {
 	 * 
 	 * @return the list of TreeNode containded in this group.
 	 */
-	List<? extends TreeNode> getGroupTree();
+	List<? extends TreeNode> getChildren();
 
 	/**
 	 * Function that retrieve the data of the given TreeNode.

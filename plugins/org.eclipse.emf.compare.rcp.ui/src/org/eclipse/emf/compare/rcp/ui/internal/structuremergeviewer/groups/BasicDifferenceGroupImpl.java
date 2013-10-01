@@ -78,7 +78,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	protected final Image image;
 
 	/** The comparison that is the parent of this group. */
-	protected final Comparison comparison;
+	private final Comparison comparison;
 
 	/** The list of children of this group. */
 	protected List<TreeNode> children;
@@ -92,6 +92,8 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 
 	/** The cross reference adapter that will be added to this group's children. */
 	private final ECrossReferenceAdapter crossReferenceAdapter;
+
+	private final IDifferenceGroupProvider groupProvider;
 
 	/**
 	 * Instantiates this group given the comparison and filter that should be used in order to determine its
@@ -109,10 +111,18 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 * @param crossReferenceAdapter
 	 *            The cross reference adapter that will be added to this group's children.
 	 */
-	public BasicDifferenceGroupImpl(Comparison comparison, Predicate<? super Diff> filter,
-			ECrossReferenceAdapter crossReferenceAdapter) {
-		this(comparison, filter, "Group", EMFCompareRCPUIPlugin.getImage("icons/full/toolb16/group.gif"), //$NON-NLS-2$
+	public BasicDifferenceGroupImpl(Comparison comparison, IDifferenceGroupProvider groupProvider,
+			Predicate<? super Diff> filter, ECrossReferenceAdapter crossReferenceAdapter) {
+		this(comparison, groupProvider, filter,
+				"Group", EMFCompareRCPUIPlugin.getImage("icons/full/toolb16/group.gif"), //$NON-NLS-2$
 				crossReferenceAdapter);
+	}
+
+	/**
+	 * @return the comparison
+	 */
+	protected final Comparison getComparison() {
+		return comparison;
 	}
 
 	/**
@@ -130,10 +140,10 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 * @param crossReferenceAdapter
 	 *            The cross reference adapter that will be added to this group's children.
 	 */
-	public BasicDifferenceGroupImpl(Comparison comparison, Predicate<? super Diff> filter, String name,
-			ECrossReferenceAdapter crossReferenceAdapter) {
-		this(comparison, filter, name,
-				EMFCompareRCPUIPlugin.getImage("icons/full/toolb16/group.gif"), crossReferenceAdapter); //$NON-NLS-1$
+	public BasicDifferenceGroupImpl(Comparison comparison, IDifferenceGroupProvider groupProvider,
+			Predicate<? super Diff> filter, String name, ECrossReferenceAdapter crossReferenceAdapter) {
+		this(comparison, groupProvider, filter, name, EMFCompareRCPUIPlugin
+				.getImage("icons/full/toolb16/group.gif"), crossReferenceAdapter); //$NON-NLS-1$
 	}
 
 	/**
@@ -151,11 +161,13 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 * @param image
 	 *            The icon that the EMF Compare UI will display for this group.
 	 * @param crossReferenceAdapter
-	 *            The cross reference adapter that will be added to this group's children.
+	 *            Updated upstream The cross reference adapter that will be added to this group's children.
 	 */
-	public BasicDifferenceGroupImpl(Comparison comparison, Predicate<? super Diff> filter, String name,
-			Image image, ECrossReferenceAdapter crossReferenceAdapter) {
+	public BasicDifferenceGroupImpl(Comparison comparison, IDifferenceGroupProvider groupProvider,
+			Predicate<? super Diff> filter, String name, Image image,
+			ECrossReferenceAdapter crossReferenceAdapter) {
 		this.comparison = comparison;
+		this.groupProvider = groupProvider;
 		this.filter = filter;
 		this.name = name;
 		this.image = image;
@@ -175,15 +187,6 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup#getComparison()
-	 */
-	public Comparison getComparison() {
-		return comparison;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup#getName()
 	 */
 	public String getName() {
@@ -197,7 +200,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 */
 	public IStyledString.IComposedStyledString getStyledName() {
 		final IStyledString.IComposedStyledString ret = new ComposedStyledString();
-		Iterator<EObject> eAllContents = concat(transform(getGroupTree().iterator(), E_ALL_CONTENTS));
+		Iterator<EObject> eAllContents = concat(transform(getChildren().iterator(), E_ALL_CONTENTS));
 		Iterator<EObject> eAllData = transform(eAllContents, TREE_NODE_DATA);
 		boolean unresolvedDiffs = any(Iterators.filter(eAllData, Diff.class),
 				hasState(DifferenceState.UNRESOLVED));
@@ -229,9 +232,9 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup#getGroupTree()
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup#getChildren()
 	 */
-	public List<? extends TreeNode> getGroupTree() {
+	public List<? extends TreeNode> getChildren() {
 		if (children == null) {
 			children = newArrayList();
 			extensionDiffProcessed = newArrayList();
@@ -371,8 +374,8 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 					if (buildSubTree != null) {
 						hasDiff = true;
 						treeNode.getChildren().add(buildSubTree);
-						List<TreeNode> matchSubTree = buildSubTree((Match)null, getComparison().getMatch(
-								((ReferenceChange)diff).getValue()));
+						List<TreeNode> matchSubTree = buildSubTree((Match)null, comparison
+								.getMatch(((ReferenceChange)diff).getValue()));
 						for (TreeNode matchSubTreeNode : matchSubTree) {
 							buildSubTree.getChildren().addAll(matchSubTreeNode.getChildren());
 						}
@@ -450,8 +453,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 		EObject left = match.getLeft();
 		EObject right = match.getRight();
 		if (left != null && right != null) {
-			return getComparison().getMatch(left.eContainer()) != getComparison()
-					.getMatch(right.eContainer());
+			return comparison.getMatch(left.eContainer()) != comparison.getMatch(right.eContainer());
 		}
 		return false;
 	}

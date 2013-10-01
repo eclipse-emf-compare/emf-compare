@@ -76,7 +76,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider imp
 	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
 		if (group == null || !comparison.equals(comp)) {
 			this.comp = comparison;
-			group = new ResourceGroup(comparison, getCrossReferenceAdapter());
+			group = new ResourceGroup(comparison, this, getCrossReferenceAdapter());
 		}
 		return ImmutableList.of(group);
 	}
@@ -139,20 +139,21 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider imp
 		 * 
 		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#BasicDifferenceGroupImpl(org.eclipse.emf.compare.Comparison)
 		 */
-		public ResourceGroup(Comparison comparison, ECrossReferenceAdapter crossReferenceAdapter) {
-			super(comparison, Predicates.<Diff> alwaysTrue(), crossReferenceAdapter);
+		public ResourceGroup(Comparison comparison, IDifferenceGroupProvider groupProvider,
+				ECrossReferenceAdapter crossReferenceAdapter) {
+			super(comparison, groupProvider, Predicates.<Diff> alwaysTrue(), crossReferenceAdapter);
 		}
 
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#getGroupTree()
+		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#getChildren()
 		 */
 		@Override
-		public List<? extends TreeNode> getGroupTree() {
+		public List<? extends TreeNode> getChildren() {
 			if (children == null) {
 				children = newArrayList();
-				for (MatchResource matchResource : comparison.getMatchedResources()) {
+				for (MatchResource matchResource : getComparison().getMatchedResources()) {
 					children.add(buildSubTree(matchResource));
 				}
 			}
@@ -168,7 +169,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider imp
 		protected TreeNode buildSubTree(MatchResource matchResource) {
 			TreeNode ret = wrap(matchResource);
 
-			for (Match match : comparison.getMatches()) {
+			for (Match match : getComparison().getMatches()) {
 				ret.getChildren().addAll(buildSubTree(matchResource, match));
 			}
 

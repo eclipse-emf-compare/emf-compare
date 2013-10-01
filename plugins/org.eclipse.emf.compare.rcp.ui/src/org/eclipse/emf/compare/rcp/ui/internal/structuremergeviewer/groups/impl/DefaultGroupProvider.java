@@ -44,7 +44,7 @@ public class DefaultGroupProvider extends AbstractDifferenceGroupProvider implem
 	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
 		if (group == null || !comparison.equals(comp)) {
 			this.comp = comparison;
-			group = new BasicDifferenceGroupImpl(comparison, alwaysTrue(), getCrossReferenceAdapter());
+			group = new BasicDifferenceGroupImpl(comparison, this, alwaysTrue(), getCrossReferenceAdapter());
 		}
 		return ImmutableList.of(group);
 	}

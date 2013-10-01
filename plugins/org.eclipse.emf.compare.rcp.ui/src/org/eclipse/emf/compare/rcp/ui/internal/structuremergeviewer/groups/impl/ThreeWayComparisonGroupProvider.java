@@ -90,12 +90,12 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
 		if (differenceGroups == null || !comparison.equals(comp)) {
 			this.comp = comparison;
-			final IDifferenceGroup conflicts = new ConflictsGroupImpl(comparison, hasConflict(
+			final IDifferenceGroup conflicts = new ConflictsGroupImpl(comparison, this, hasConflict(
 					ConflictKind.REAL, ConflictKind.PSEUDO), "Conflicts", getCrossReferenceAdapter());
-			final IDifferenceGroup leftSide = new BasicDifferenceGroupImpl(comparison, Predicates.and(
+			final IDifferenceGroup leftSide = new BasicDifferenceGroupImpl(comparison, this, Predicates.and(
 					fromSide(DifferenceSource.LEFT), Predicates.not(hasConflict(ConflictKind.REAL,
 							ConflictKind.PSEUDO))), "Left side", getCrossReferenceAdapter());
-			final IDifferenceGroup rightSide = new BasicDifferenceGroupImpl(comparison, Predicates.and(
+			final IDifferenceGroup rightSide = new BasicDifferenceGroupImpl(comparison, this, Predicates.and(
 					fromSide(DifferenceSource.RIGHT), Predicates.not(hasConflict(ConflictKind.REAL,
 							ConflictKind.PSEUDO))), "Right side", getCrossReferenceAdapter());
 
@@ -166,9 +166,9 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#BasicDifferenceGroupImpl(org.eclipse.emf.compare.Comparison,
 		 *      java.lang.Iterable, com.google.common.base.Predicate, java.lang.String)
 		 */
-		public ConflictsGroupImpl(Comparison comparison, Predicate<? super Diff> filter, String name,
-				ECrossReferenceAdapter crossReferenceAdapter) {
-			super(comparison, filter, name, crossReferenceAdapter);
+		public ConflictsGroupImpl(Comparison comparison, IDifferenceGroupProvider groupProvider,
+				Predicate<? super Diff> filter, String name, ECrossReferenceAdapter crossReferenceAdapter) {
+			super(comparison, groupProvider, filter, name, crossReferenceAdapter);
 		}
 
 		/**
@@ -179,7 +179,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		@Override
 		public IComposedStyledString getStyledName() {
 			final IStyledString.IComposedStyledString ret = new ComposedStyledString();
-			Iterator<EObject> eAllContents = concat(transform(getGroupTree().iterator(), E_ALL_CONTENTS));
+			Iterator<EObject> eAllContents = concat(transform(getChildren().iterator(), E_ALL_CONTENTS));
 			Iterator<EObject> eAllData = transform(eAllContents, TREE_NODE_DATA);
 			UnmodifiableIterator<Diff> eAllDiffData = filter(eAllData, Diff.class);
 			Collection<Diff> diffs = Sets.newHashSet(eAllDiffData);
@@ -195,13 +195,13 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#getGroupTree()
+		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#getChildren()
 		 */
 		@Override
-		public List<? extends TreeNode> getGroupTree() {
+		public List<? extends TreeNode> getChildren() {
 			if (children == null) {
 				children = newArrayList();
-				for (Conflict conflict : comparison.getConflicts()) {
+				for (Conflict conflict : getComparison().getConflicts()) {
 					TreeNode buildSubTree = buildSubTree(conflict);
 					if (buildSubTree != null) {
 						children.add(buildSubTree);
@@ -221,7 +221,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		protected TreeNode buildSubTree(Conflict conflict) {
 			TreeNode ret = wrap(conflict);
 
-			for (Match match : comparison.getMatches()) {
+			for (Match match : getComparison().getMatches()) {
 				buildSubTree(ret, conflict, match);
 			}
 

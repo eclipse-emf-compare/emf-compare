@@ -305,7 +305,7 @@ public final class MergeViewerUtil {
 		if (data != null) {
 			Collection<? extends IDifferenceGroup> groups = groupProvider.getGroups(comparison);
 			for (IDifferenceGroup group : groups) {
-				List<? extends TreeNode> groupTree = group.getGroupTree();
+				List<? extends TreeNode> groupTree = group.getChildren();
 				for (TreeNode treeNode : groupTree) {
 					EObject treeNodeData = IDifferenceGroup.TREE_NODE_DATA.apply(treeNode);
 					if (data.equals(treeNodeData)) {

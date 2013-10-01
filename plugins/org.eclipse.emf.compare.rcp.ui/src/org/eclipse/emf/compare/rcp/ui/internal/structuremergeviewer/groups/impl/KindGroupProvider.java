@@ -63,25 +63,25 @@ public class KindGroupProvider extends AbstractDifferenceGroupProvider implement
 	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
 		if (differenceGroups == null || !comparison.equals(comp)) {
 			this.comp = comparison;
-			final IDifferenceGroup additions = new BasicDifferenceGroupImpl(comparison,
+			final IDifferenceGroup additions = new BasicDifferenceGroupImpl(comparison, this,
 					ofKind(DifferenceKind.ADD), "Additions", getCrossReferenceAdapter());
-			final IDifferenceGroup deletions = new BasicDifferenceGroupImpl(comparison,
+			final IDifferenceGroup deletions = new BasicDifferenceGroupImpl(comparison, this,
 					ofKind(DifferenceKind.DELETE), "Deletions", getCrossReferenceAdapter());
-			final IDifferenceGroup changes = new BasicDifferenceGroupImpl(comparison,
+			final IDifferenceGroup changes = new BasicDifferenceGroupImpl(comparison, this,
 					ofKind(DifferenceKind.CHANGE), "Changes", getCrossReferenceAdapter());
-			final IDifferenceGroup moves = new BasicDifferenceGroupImpl(comparison,
+			final IDifferenceGroup moves = new BasicDifferenceGroupImpl(comparison, this,
 					ofKind(DifferenceKind.MOVE), "Moves", getCrossReferenceAdapter());
 			Collection<IDifferenceGroup> groups = Lists.newArrayList();
-			if (!additions.getGroupTree().isEmpty()) {
+			if (!additions.getChildren().isEmpty()) {
 				groups.add(additions);
 			}
-			if (!deletions.getGroupTree().isEmpty()) {
+			if (!deletions.getChildren().isEmpty()) {
 				groups.add(deletions);
 			}
-			if (!changes.getGroupTree().isEmpty()) {
+			if (!changes.getChildren().isEmpty()) {
 				groups.add(changes);
 			}
-			if (!moves.getGroupTree().isEmpty()) {
+			if (!moves.getChildren().isEmpty()) {
 				groups.add(moves);
 			}
 			differenceGroups = ImmutableList.copyOf(groups);

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider;
 
-import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.collect.Maps;
@@ -20,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.provider.ExtendedAdapterFactoryItemDelegator;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
@@ -29,7 +27,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDiff
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemColorProvider;
 import org.eclipse.emf.edit.provider.IItemFontProvider;
 import org.eclipse.emf.edit.tree.TreeNode;
@@ -64,24 +61,14 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 		Object parent = null;
 		TreeNode treeNode = (TreeNode)object;
 		TreeNode superParent = (TreeNode)super.getParent(object);
-		if (superParent != null && superParent.getData() instanceof Comparison) {
-			EObject parentData = superParent.getData();
-			GroupItemProviderAdapter comparisonGroupItemProvider = (GroupItemProviderAdapter)adapterFactory
-					.adapt(parentData, IEditingDomainItemProvider.class);
-			Collection<?> children = comparisonGroupItemProvider.getChildren(parentData);
-			if (children.size() > 1) {
-				for (Notifier child : filter(children, Notifier.class)) {
-					IDifferenceGroup parentGroup = (IDifferenceGroup)EcoreUtil.getExistingAdapter(child,
-							IDifferenceGroup.class);
-					IDifferenceGroup group = (IDifferenceGroup)EcoreUtil.getExistingAdapter(treeNode
-							.getData(), IDifferenceGroup.class);
-					if (parentGroup == group) {
-						parent = child;
-					}
-				}
-			} else {
-				parent = superParent;
-			}
+		if (superParent == null) {
+			GroupItemProviderAdapter groupItemProvider = (GroupItemProviderAdapter)EcoreUtil
+					.getExistingAdapter(treeNode, GroupItemProviderAdapter.class);
+			return groupItemProvider;
+		} else if (object instanceof GroupItemProviderAdapter) {
+			parent = ((GroupItemProviderAdapter)object).getParent(null);
+		} else {
+			parent = superParent;
 		}
 		return parent;
 	}
@@ -103,15 +90,14 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 			if (groups.size() > 1) {
 				List<GroupItemProviderAdapter> children = newArrayList();
 				for (IDifferenceGroup differenceGroup : groups) {
-					if (!fGroupAdapters.containsKey(differenceGroup)) {
-						fGroupAdapters.put(differenceGroup, new GroupItemProviderAdapter(adapterFactory,
-								comparison, differenceGroup));
-					}
-					children.add(fGroupAdapters.get(differenceGroup));
+					GroupItemProviderAdapter adapter = new GroupItemProviderAdapter(adapterFactory, treeNode,
+							differenceGroup);
+					children.add(adapter);
 				}
 				return children;
 			} else {
-				return groups.iterator().next().getGroupTree();
+				// do not display group if there is only one.
+				return groups.iterator().next().getChildren();
 			}
 		} else {
 			return super.getChildren(object);

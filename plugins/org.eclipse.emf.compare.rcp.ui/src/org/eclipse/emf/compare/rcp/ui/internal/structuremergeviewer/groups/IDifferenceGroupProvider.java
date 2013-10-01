@@ -17,6 +17,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
+import org.eclipse.emf.edit.tree.TreePackage;
 
 /**
  * Instances of this class will be used by EMF Compare in order to provide difference grouping facilities to
@@ -125,8 +126,13 @@ public interface IDifferenceGroupProvider extends Adapter {
 	}
 
 	/**
-	 * @param first
-	 * @return
+	 * Returns all {@link TreeNode}s that are wrapping the given {@code eObject}. It internally use a cross
+	 * reference adapter.
+	 * 
+	 * @param eObject
+	 *            the object from which we want inverse reference.
+	 * @return all {@link TreeNode}s targeting the given {@code eObject} through
+	 *         {@link TreePackage.Literals#TREE_NODE__DATA}.
 	 */
 	Iterable<TreeNode> getTreeNodes(EObject eObject);
 

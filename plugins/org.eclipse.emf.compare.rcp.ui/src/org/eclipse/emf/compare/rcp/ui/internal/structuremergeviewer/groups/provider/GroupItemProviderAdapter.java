@@ -11,16 +11,16 @@
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider;
 
 import java.util.Collection;
+import java.util.List;
 
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.ComparePackage;
-import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemColorProvider;
 import org.eclipse.emf.edit.provider.IItemFontProvider;
@@ -28,14 +28,15 @@ import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
+import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class GroupItemProviderAdapter extends ItemProviderAdapter implements IEditingDomainItemProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource, IItemColorProvider, IItemFontProvider, IItemStyledLabelProvider, IItemDescriptionProvider {
 
-	/** The comparsion object used by this group. */
-	private Comparison comparison;
+	/** The parent object. */
+	private EObject parent;
 
 	/** The group for which we want the item provider. */
 	private IDifferenceGroup group;
@@ -43,10 +44,9 @@ public class GroupItemProviderAdapter extends ItemProviderAdapter implements IEd
 	/**
 	 * Constructor.
 	 */
-	public GroupItemProviderAdapter(AdapterFactory adapterFactory, Comparison comparison,
-			IDifferenceGroup group) {
+	public GroupItemProviderAdapter(AdapterFactory adapterFactory, EObject parent, IDifferenceGroup group) {
 		super(adapterFactory);
-		this.comparison = comparison;
+		this.parent = parent;
 		this.group = group;
 	}
 
@@ -91,37 +91,11 @@ public class GroupItemProviderAdapter extends ItemProviderAdapter implements IEd
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getChildrenFeatures(java.lang.Object)
-	 */
-	@Override
-	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
-		if (childrenFeatures == null) {
-			super.getChildrenFeatures(object);
-			childrenFeatures.add(ComparePackage.Literals.COMPARISON__MATCHED_RESOURCES);
-			childrenFeatures.add(ComparePackage.Literals.COMPARISON__MATCHES);
-		}
-		return childrenFeatures;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getValue(org.eclipse.emf.ecore.EObject,
-	 *      org.eclipse.emf.ecore.EStructuralFeature)
-	 */
-	@Override
-	protected Object getValue(EObject eObject, EStructuralFeature eStructuralFeature) {
-		return super.getValue(eObject, eStructuralFeature);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#getParent(java.lang.Object)
 	 */
 	@Override
 	public Object getParent(Object object) {
-		return comparison;
+		return parent;
 	}
 
 	/**
@@ -131,7 +105,7 @@ public class GroupItemProviderAdapter extends ItemProviderAdapter implements IEd
 	 */
 	@Override
 	public boolean hasChildren(Object object) {
-		return !group.getGroupTree().isEmpty();
+		return !group.getChildren().isEmpty();
 	}
 
 	/**
@@ -141,7 +115,25 @@ public class GroupItemProviderAdapter extends ItemProviderAdapter implements IEd
 	 */
 	@Override
 	public Collection<?> getChildren(Object object) {
-		return group.getGroupTree();
+		List<? extends TreeNode> children = group.getChildren();
+		for (TreeNode child : children) {
+			Adapter groupItemProvider = EcoreUtil.getExistingAdapter(child, GroupItemProviderAdapter.class);
+			if (groupItemProvider == null) {
+				// store the parent for later retrieval
+				child.eAdapters().add(this);
+			}
+		}
+		return children;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#isAdapterForType(java.lang.Object)
+	 */
+	@Override
+	public boolean isAdapterForType(Object type) {
+		return type == GroupItemProviderAdapter.class;
 	}
 
 }
