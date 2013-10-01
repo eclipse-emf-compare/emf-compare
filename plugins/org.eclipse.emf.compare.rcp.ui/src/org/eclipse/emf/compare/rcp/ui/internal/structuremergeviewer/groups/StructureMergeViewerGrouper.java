@@ -16,7 +16,6 @@ import com.google.common.eventbus.EventBus;
 import java.util.List;
 
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -84,9 +83,7 @@ public final class StructureMergeViewerGrouper {
 	 */
 	private void refreshViewers() {
 		for (TreeViewer viewer : viewers) {
-			final TreePath[] paths = viewer.getExpandedTreePaths();
 			viewer.refresh();
-			viewer.setExpandedTreePaths(paths);
 		}
 	}
 
