@@ -36,7 +36,6 @@ import org.eclipse.compare.CompareViewerSwitchingPane;
 import org.eclipse.compare.INavigatable;
 import org.eclipse.compare.structuremergeviewer.DiffTreeViewer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
@@ -45,9 +44,21 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.ui.internal.actions.collapse.CollapseAllModelAction;
-import org.eclipse.emf.compare.ide.ui.internal.actions.expand.ExpandAllModelAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.AcceptAllChangesAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.AcceptChangeAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.CollapseAllModelAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.DropDownAcceptRejectMenuAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.DropDownMergeMenuAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.ExpandAllModelAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAllToLeftAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAllToRightAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeToLeftAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeToRightAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.RejectAllChangesAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.RejectChangeAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SaveComparisonModelAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SelectNextDiffAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SelectPreviousDiffAction;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.FilterActionMenu;
@@ -61,7 +72,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.tree.TreeNode;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -91,12 +101,8 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.actions.CommandAction;
 import org.eclipse.ui.menus.IMenuService;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.services.IServiceLocator;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.Version;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -677,98 +683,37 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 					"toolbar:org.eclipse.emf.compare.structuremergeviewer.toolbar");
 		}
 
-		Bundle uiWorkbenchBundle = Platform.getBundle("org.eclipse.ui.workbench"); //$NON-NLS-1$
-		Version junoStart = Version.parseVersion("3.103"); //$NON-NLS-1$
-
-		// XXX MBA change to 3.105 once bug #366528 is fixed
-		Version keplerStart = Version.parseVersion("3.105"); //$NON-NLS-1$
-
-		if (uiWorkbenchBundle != null && uiWorkbenchBundle.getVersion().compareTo(junoStart) >= 0
-				&& uiWorkbenchBundle.getVersion().compareTo(keplerStart) < 0) {
-			addActionsForJuno(toolbarManager);
-		}
-
 		groupActionMenu = new GroupActionMenu(getStructureMergeViewerGrouper(), getGroupsMenuManager(),
 				getDefaultGroupProvider());
 		filterActionMenu = new FilterActionMenu(getStructureMergeViewerFilter(), getFiltersMenuManager());
 
+		boolean leftEditable = getCompareConfiguration().isLeftEditable();
+		boolean rightEditable = getCompareConfiguration().isRightEditable();
+
+		if (rightEditable && leftEditable) {
+			toolbarManager.add(new DropDownMergeMenuAction(getCompareConfiguration()));
+			toolbarManager.add(new MergeToRightAction(getCompareConfiguration()));
+			toolbarManager.add(new MergeToLeftAction(getCompareConfiguration()));
+			toolbarManager.add(new MergeAllToRightAction(getCompareConfiguration()));
+			toolbarManager.add(new MergeAllToLeftAction(getCompareConfiguration()));
+		} else {
+			toolbarManager.add(new DropDownAcceptRejectMenuAction(getCompareConfiguration()));
+			toolbarManager.add(new AcceptChangeAction(getCompareConfiguration()));
+			toolbarManager.add(new RejectChangeAction(getCompareConfiguration()));
+			toolbarManager.add(new AcceptAllChangesAction(getCompareConfiguration()));
+			toolbarManager.add(new RejectAllChangesAction(getCompareConfiguration()));
+		}
+		toolbarManager.add(new Separator());
+		toolbarManager.add(new SelectNextDiffAction(getCompareConfiguration()));
+		toolbarManager.add(new SelectPreviousDiffAction(getCompareConfiguration()));
 		toolbarManager.add(new Separator());
 		toolbarManager.add(new ExpandAllModelAction(this));
 		toolbarManager.add(new CollapseAllModelAction(this));
 		toolbarManager.add(new Separator());
 		toolbarManager.add(groupActionMenu);
 		toolbarManager.add(filterActionMenu);
-	}
-
-	/**
-	 * Add the compare merge/navigation actions to the structure merge viewer toolbar.
-	 * 
-	 * @param toolbarManager
-	 *            the given toolbar.
-	 */
-	public void addActionsForJuno(ToolBarManager toolbarManager) {
-		boolean bothSidesEditable = getCompareConfiguration().isLeftEditable()
-				&& getCompareConfiguration().isRightEditable();
-		addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.dropdown", //$NON-NLS-1$
-				"Select the way of merge", "icons/full/toolb16/left_to_right.gif", true); //$NON-NLS-2$
 		toolbarManager.add(new Separator());
-		if (bothSidesEditable) {
-			addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.mergedToRight", //$NON-NLS-1$
-					"Copy Current Change From Left To Right", "icons/full/toolb16/merge_to_right.gif", true); //$NON-NLS-2$
-			addSMVAction(
-					toolbarManager,
-					"org.eclipse.emf.compare.ide.ui.mergedAllToRight", //$NON-NLS-1$
-					"Copy All Non-Conflicting Changes From Left To Right", "icons/full/toolb16/merge_all_to_right.gif", true); //$NON-NLS-2$
-			toolbarManager.add(new Separator());
-			addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.mergedToLeft", //$NON-NLS-1$
-					"Copy Current Change From Right To Left", "icons/full/toolb16/merge_to_left.gif", true); //$NON-NLS-2$
-			addSMVAction(
-					toolbarManager,
-					"org.eclipse.emf.compare.ide.ui.mergedAllToLeft", //$NON-NLS-1$
-					"Copy All Non-Conflicting Changes From Right To Left", "icons/full/toolb16/merge_all_to_left.gif", true); //$NON-NLS-2$
-		} else {
-			addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.acceptChange", //$NON-NLS-1$
-					"Accept Change", "icons/full/toolb16/accept_change.gif", true); //$NON-NLS-2$
-			addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.acceptAllChanges", //$NON-NLS-1$
-					"Accept All Non-Conflicting Changes", "icons/full/toolb16/accept_all_changes.gif", true); //$NON-NLS-2$
-			toolbarManager.add(new Separator());
-			addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.rejectChange", //$NON-NLS-1$
-					"Reject Change", "icons/full/toolb16/reject_change.gif", true); //$NON-NLS-2$
-			addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.rejectAllChanges", //$NON-NLS-1$
-					"Reject All Non-Conflicting Changes", "icons/full/toolb16/reject_all_changes.gif", true); //$NON-NLS-2$
-		}
-		toolbarManager.add(new Separator());
-		addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.nextDiff", //$NON-NLS-1$
-				"Next Difference", "icons/full/toolb16/next_diff.gif", true); //$NON-NLS-2$
-		addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.previousDiff", //$NON-NLS-1$
-				"Previous Difference", "icons/full/toolb16/prev_diff.gif", true); //$NON-NLS-2$
-		toolbarManager.add(new Separator());
-		addSMVAction(toolbarManager, "org.eclipse.emf.compare.ide.ui.saveComparisonModel", //$NON-NLS-1$
-				"Save Comparison Model", "icons/full/toolb16/saveas_edit.gif", true); //$NON-NLS-2$
-	}
-
-	/**
-	 * Add the given action to the structure merge viewer toolbar.
-	 * 
-	 * @param tb
-	 *            the given toolbar.
-	 * @param actionId
-	 *            the id of the action to add.
-	 * @param tooltip
-	 *            the tooltip of the action to add.
-	 * @param imagePath
-	 *            the image path of the action to add.
-	 * @param activated
-	 *            the initial state of the action to add.
-	 */
-	private void addSMVAction(ToolBarManager tb, String actionId, String tooltip, String imagePath,
-			boolean activated) {
-		IAction action = new CommandAction(PlatformUI.getWorkbench(), actionId);
-		action.setToolTipText(tooltip);
-		action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
-				imagePath));
-		action.setEnabled(activated);
-		tb.add(action);
+		toolbarManager.add(new SaveComparisonModelAction(getCompareConfiguration()));
 	}
 
 	/**

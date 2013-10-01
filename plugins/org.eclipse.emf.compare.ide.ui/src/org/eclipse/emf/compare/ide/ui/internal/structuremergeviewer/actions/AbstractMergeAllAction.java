@@ -8,46 +8,42 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler;
+package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.compare.CompareEditorInput;
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.ui.ISources;
-import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.jface.action.Action;
 
 /**
- * Abstract Handler that manages a merge of a all non-conflicting difference in case of both sides of the
+ * Abstract Action that manages a merge of a all non-conflicting difference in case of both sides of the
  * comparison are editable.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public abstract class AbstractMergeAllHandler extends AbstractHandler {
+public abstract class AbstractMergeAllAction extends Action {
 
 	/** The compare configuration object used to get the compare model. */
 	private CompareConfiguration configuration;
 
 	/**
-	 * {@inheritDoc}
+	 * Constructor.
 	 * 
-	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+	 * @param configuration
+	 *            The compare configuration object.
 	 */
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		Object editorInput = HandlerUtil.getVariable(event, ISources.ACTIVE_EDITOR_INPUT_NAME);
-		if (editorInput instanceof CompareEditorInput) {
-			setConfiguration(((CompareEditorInput)editorInput).getCompareConfiguration());
-			copyAllDiffs();
-		}
-		return null;
+	public AbstractMergeAllAction(CompareConfiguration configuration) {
+		this.configuration = configuration;
 	}
 
 	/**
-	 * Copy all non-conflicting differences.
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.action.Action#run()
 	 */
-	protected abstract void copyAllDiffs();
+	@Override
+	public void run() {
+		copyAllDiffs();
+	}
 
 	/**
 	 * Get the compare configuration object.
@@ -67,4 +63,9 @@ public abstract class AbstractMergeAllHandler extends AbstractHandler {
 	public void setConfiguration(CompareConfiguration configuration) {
 		this.configuration = configuration;
 	}
+
+	/**
+	 * Copy all non-conflicting differences.
+	 */
+	protected abstract void copyAllDiffs();
 }

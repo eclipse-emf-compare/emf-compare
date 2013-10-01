@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.util;
+package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.util;
 
 import static com.google.common.collect.Iterables.addAll;
 import static com.google.common.collect.Iterables.filter;
@@ -43,17 +43,17 @@ import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * Util class that provides utilities methods for RCP UI handlers.
+ * Util class that provides utilities methods for IDE UI actions.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public final class EMFCompareUIHandlerUtil {
+public final class EMFCompareUIActionUtil {
 
 	/**
 	 * Utility classes don't need a default constructor.
 	 */
-	private EMFCompareUIHandlerUtil() {
+	private EMFCompareUIActionUtil() {
 		// Hides default constructor.
 	}
 
@@ -94,17 +94,17 @@ public final class EMFCompareUIHandlerUtil {
 			diffsToCopy.add(diffToCopy);
 			// Add merge data for required diffs
 			for (Diff require : DiffUtil.getRequires(diffToCopy, leftToRight)) {
-				EMFCompareUIHandlerUtil.setMergeDataForDiff(require, leftToRight, configuration
+				EMFCompareUIActionUtil.setMergeDataForDiff(require, leftToRight, configuration
 						.isLeftEditable(), configuration.isRightEditable());
 			}
-			if (EMFCompareUIHandlerUtil.isCascadingDifferencesFilterActive(configuration)) {
+			if (EMFCompareUIActionUtil.isCascadingDifferencesFilterActive(configuration)) {
 				addAll(diffsToCopy, org.eclipse.emf.compare.utils.DiffUtil.getSubDiffs(leftToRight).apply(
 						diffToCopy));
 			}
 			// Add merge data for subs diffs
 			for (Diff diff : diffsToCopy) {
-				EMFCompareUIHandlerUtil.setMergeDataForDiff(diff, leftToRight,
-						configuration.isLeftEditable(), configuration.isRightEditable());
+				EMFCompareUIActionUtil.setMergeDataForDiff(diff, leftToRight, configuration.isLeftEditable(),
+						configuration.isRightEditable());
 			}
 			// Add merge data for diffs in conflicts
 			addMergeDataForConflictedDiffs(diffToCopy, leftToRight, configuration);
@@ -138,8 +138,8 @@ public final class EMFCompareUIHandlerUtil {
 							&& ((diffToCopy.getSource() == DifferenceSource.LEFT && conflictedDiff
 									.getSource() == DifferenceSource.RIGHT) || (diffToCopy.getSource() == DifferenceSource.RIGHT && conflictedDiff
 									.getSource() == DifferenceSource.LEFT))) {
-						EMFCompareUIHandlerUtil.setMergeDataForDiff(conflictedDiff, leftToRight,
-								configuration.isLeftEditable(), configuration.isRightEditable());
+						EMFCompareUIActionUtil.setMergeDataForDiff(conflictedDiff, leftToRight, configuration
+								.isLeftEditable(), configuration.isRightEditable());
 					}
 				}
 			}
@@ -175,8 +175,8 @@ public final class EMFCompareUIHandlerUtil {
 
 		if (differences.size() > 0) {
 			for (Diff diff : differences) {
-				EMFCompareUIHandlerUtil.setMergeDataForDiff(diff, leftToRight,
-						configuration.isLeftEditable(), configuration.isRightEditable());
+				EMFCompareUIActionUtil.setMergeDataForDiff(diff, leftToRight, configuration.isLeftEditable(),
+						configuration.isRightEditable());
 			}
 			ICompareEditingDomain editingDomain = (ICompareEditingDomain)configuration
 					.getProperty(EMFCompareConstants.EDITING_DOMAIN);

@@ -8,15 +8,11 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler;
+package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
 import com.google.common.collect.ImmutableSet;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.compare.CompareEditorInput;
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -24,36 +20,47 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.util.EMFCompareUIHandlerUtil;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.util.EMFCompareUIActionUtil;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.edit.command.ChangeCommand;
 import org.eclipse.emf.edit.tree.TreeNode;
-import org.eclipse.ui.ISources;
-import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
- * Abstract handler that manages the accept and reject actions (when one side of a diff is not editable).
+ * Abstract action that manages the accept and reject actions (when one side of a diff is not editable).
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
-public abstract class AbstractAcceptRejectChange extends AbstractHandler {
+public abstract class AbstractAcceptRejectAction extends Action {
 
 	/** The compare configuration object used to get the compare model. */
 	private CompareConfiguration configuration;
 
 	/**
+	 * Constructor.
+	 * 
+	 * @param configuration
+	 *            The compare configuration object.
+	 */
+	public AbstractAcceptRejectAction(CompareConfiguration configuration) {
+		this.configuration = configuration;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+	 * @see org.eclipse.jface.action.Action#run()
 	 */
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		Object editorInput = HandlerUtil.getVariable(event, ISources.ACTIVE_EDITOR_INPUT_NAME);
-		if (editorInput instanceof CompareEditorInput) {
-			configuration = ((CompareEditorInput)editorInput).getCompareConfiguration();
-			Object diffNode = ((CompareEditorInput)editorInput).getSelectedEdition();
+	@Override
+	public void run() {
+		ISelection selection = (ISelection)configuration.getProperty(EMFCompareConstants.SMV_SELECTION);
+		if (selection instanceof IStructuredSelection) {
+			Object diffNode = ((IStructuredSelection)selection).getFirstElement();
 			if (diffNode instanceof Adapter) {
 				Notifier target = ((Adapter)diffNode).getTarget();
 				if (target instanceof TreeNode) {
@@ -65,24 +72,46 @@ public abstract class AbstractAcceptRejectChange extends AbstractHandler {
 								&& !configuration.isRightEditable();
 						if (leftEditableOnly) {
 							if (isCopyDiffCase((Diff)data, false)) {
-								EMFCompareUIHandlerUtil.copyDiff((Diff)data, false, configuration);
+								EMFCompareUIActionUtil.copyDiff((Diff)data, false, configuration);
 							} else {
 								changeStateFromUnresolvedToMerged((Diff)data, true);
 							}
 						} else if (rightEditableOnly) {
 							if (isCopyDiffCase((Diff)data, true)) {
-								EMFCompareUIHandlerUtil.copyDiff((Diff)data, true, configuration);
+								EMFCompareUIActionUtil.copyDiff((Diff)data, true, configuration);
 							} else {
 								changeStateFromUnresolvedToMerged((Diff)data, false);
 							}
 						}
 						// Select next diff
-						EMFCompareUIHandlerUtil.navigate(true, configuration);
+						EMFCompareUIActionUtil.navigate(true, configuration);
 					}
 				}
 			}
 		}
-		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.action.Action#isEnabled()
+	 */
+	@Override
+	public boolean isEnabled() {
+		ISelection selection = (ISelection)configuration.getProperty(EMFCompareConstants.SMV_SELECTION);
+		if (selection instanceof IStructuredSelection) {
+			Object diffNode = ((IStructuredSelection)selection).getFirstElement();
+			if (diffNode instanceof Adapter) {
+				Notifier target = ((Adapter)diffNode).getTarget();
+				if (target instanceof TreeNode) {
+					EObject data = ((TreeNode)target).getData();
+					if (data instanceof Diff) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -163,11 +192,11 @@ public abstract class AbstractAcceptRejectChange extends AbstractHandler {
 		@Override
 		public void doExecute() {
 			for (Diff require : DiffUtil.getRequires(difference, leftToRight)) {
-				EMFCompareUIHandlerUtil.setMergeDataForDiff(require, leftToRight, configuration
+				EMFCompareUIActionUtil.setMergeDataForDiff(require, leftToRight, configuration
 						.isLeftEditable(), configuration.isRightEditable());
 				require.setState(DifferenceState.MERGED);
 			}
-			EMFCompareUIHandlerUtil.setMergeDataForDiff(difference, leftToRight, configuration
+			EMFCompareUIActionUtil.setMergeDataForDiff(difference, leftToRight, configuration
 					.isLeftEditable(), configuration.isRightEditable());
 			difference.setState(DifferenceState.MERGED);
 

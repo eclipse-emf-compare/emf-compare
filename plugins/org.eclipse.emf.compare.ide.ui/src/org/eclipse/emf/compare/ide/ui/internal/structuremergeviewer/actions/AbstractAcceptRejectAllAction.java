@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler;
+package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
 import static com.google.common.collect.Iterables.filter;
 
@@ -19,10 +19,6 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.compare.CompareEditorInput;
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.compare.Comparison;
@@ -31,44 +27,49 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.handler.util.EMFCompareUIHandlerUtil;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.util.EMFCompareUIActionUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.edit.command.ChangeCommand;
-import org.eclipse.ui.ISources;
-import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.jface.action.Action;
 
 /**
- * Abstract handler that manages the accept all and reject all actions (when one side of a diff is not
+ * Abstract action that manages the accept all and reject all actions (when one side of a diff is not
  * editable).
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
-public abstract class AbstractAcceptRejectAllChanges extends AbstractHandler {
+public abstract class AbstractAcceptRejectAllAction extends Action {
 
 	/** The compare configuration object used to get the compare model. */
 	protected CompareConfiguration configuration;
 
 	/**
+	 * Constructor.
+	 * 
+	 * @param configuration
+	 *            The compare configuration object.
+	 */
+	public AbstractAcceptRejectAllAction(CompareConfiguration configuration) {
+		this.configuration = configuration;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+	 * @see org.eclipse.jface.action.Action#run()
 	 */
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		Object editorInput = HandlerUtil.getVariable(event, ISources.ACTIVE_EDITOR_INPUT_NAME);
-		if (editorInput instanceof CompareEditorInput) {
-			configuration = ((CompareEditorInput)editorInput).getCompareConfiguration();
-			boolean rightEditableOnly = !configuration.isLeftEditable() && configuration.isRightEditable();
-			boolean leftEditableOnly = configuration.isLeftEditable() && !configuration.isRightEditable();
-			if (leftEditableOnly) {
-				manageChanges(false);
-			} else if (rightEditableOnly) {
-				manageChanges(true);
-			}
+	@Override
+	public void run() {
+		boolean rightEditableOnly = !configuration.isLeftEditable() && configuration.isRightEditable();
+		boolean leftEditableOnly = configuration.isLeftEditable() && !configuration.isRightEditable();
+		if (leftEditableOnly) {
+			manageChanges(false);
+		} else if (rightEditableOnly) {
+			manageChanges(true);
 		}
-		return null;
 	}
 
 	/**
@@ -120,7 +121,7 @@ public abstract class AbstractAcceptRejectAllChanges extends AbstractHandler {
 			for (Diff diff : differences) {
 				if (DifferenceState.UNRESOLVED == diff.getState()) {
 					if (isCopyDiffCase(diff, leftToRight)) {
-						EMFCompareUIHandlerUtil.setMergeDataForDiff(diff, leftToRight, configuration
+						EMFCompareUIActionUtil.setMergeDataForDiff(diff, leftToRight, configuration
 								.isLeftEditable(), configuration.isRightEditable());
 						compoundCommand.append(editingDomain.createCopyCommand(Lists.newArrayList(diff),
 								leftToRight, EMFCompareRCPPlugin.getDefault().getMergerRegistry()));
@@ -202,7 +203,7 @@ public abstract class AbstractAcceptRejectAllChanges extends AbstractHandler {
 		 */
 		@Override
 		public void doExecute() {
-			EMFCompareUIHandlerUtil.setMergeDataForDiff(difference, leftToRight, configuration
+			EMFCompareUIActionUtil.setMergeDataForDiff(difference, leftToRight, configuration
 					.isLeftEditable(), configuration.isRightEditable());
 			difference.setState(DifferenceState.MERGED);
 
