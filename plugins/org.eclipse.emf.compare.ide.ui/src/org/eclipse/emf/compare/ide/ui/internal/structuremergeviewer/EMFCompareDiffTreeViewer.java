@@ -476,7 +476,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 			default:
 				throw new IllegalStateException();
 		}
-		refreshAfterDiff(getRoot());
 		getCompareConfiguration().setProperty(EMFCompareConstants.SELECTED_FILTERS, selectedFilters);
 	}
 
@@ -489,7 +488,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 			eAdapters.remove(oldDifferenceGroupProvider);
 		}
 		eAdapters.add(differenceGroupProvider);
-		refreshAfterDiff(getRoot());
 		getCompareConfiguration().setProperty(EMFCompareConstants.SELECTED_GROUP, differenceGroupProvider);
 	}
 
