@@ -10,9 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters;
 
+import static com.google.common.base.Predicates.alwaysFalse;
+import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
+import static com.google.common.collect.Iterables.any;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
@@ -27,6 +31,7 @@ import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilterSelectionChangeEvent.Action;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterSelectionChangeEventImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.GroupItemProviderAdapter;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
@@ -61,6 +66,25 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	/** The {@link EventBus} associated with this filter. */
 	private final EventBus eventBus;
 
+	private final Predicate<? super EObject> viewerPredicate = new Predicate<EObject>() {
+		public boolean apply(EObject eObject) {
+			if (aggregatedPredicate.apply(eObject)) {
+				Collection<EObject> eContents = eObject.eContents();
+				if (!eContents.isEmpty() && eObject instanceof TreeNode) {
+					EObject data = ((TreeNode)eObject).getData();
+					if (data instanceof Match || data instanceof Conflict || data instanceof MatchResource) {
+						return any(eContents, viewerPredicate);
+					}
+				}
+				return true;
+			} else {
+				return false;
+			}
+		}
+	};
+
+	private Predicate<? super EObject> aggregatedPredicate;
+
 	/**
 	 * Constructs the difference filter.
 	 * 
@@ -71,6 +95,7 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 		this.eventBus = eventBus;
 		this.predicates = Sets.newLinkedHashSet();
 		this.viewers = Lists.newArrayList();
+		this.aggregatedPredicate = alwaysFalse();
 	}
 
 	/**
@@ -81,52 +106,26 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 */
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (getPredicates().isEmpty()) {
+		if (predicates.isEmpty()) {
 			return true;
 		}
 
-		boolean result = true;
-		final Predicate<? super EObject> predicate = or(getPredicates());
-
+		final boolean result;
 		if (element instanceof GroupItemProviderAdapter) {
-			result = ((GroupItemProviderAdapter)element).hasChildren(element);
+			Collection<?> children = ((GroupItemProviderAdapter)element).getChildren(element);
+			result = any(Iterables.filter(children, EObject.class), viewerPredicate);
 		} else if (element instanceof Adapter) {
 			Notifier notifier = ((Adapter)element).getTarget();
 			if (notifier instanceof EObject) {
 				EObject eObject = (EObject)notifier;
-
-				// Keep node only if it is not filtered or if it is a Match with only filtered children.
-				result = keepNode(eObject, predicate);
+				result = viewerPredicate.apply(eObject);
+			} else {
+				result = true;
 			}
+		} else {
+			result = true;
 		}
 
-		return result;
-	}
-
-	/**
-	 * Keep node only if it is not filtered or if it is a Match with only filtered children.
-	 * 
-	 * @param eObject
-	 *            the node we want to keep.
-	 * @param predicate
-	 *            the predicate used to keep the node or not.
-	 * @return true if the node has to be keeped, false otherwise.
-	 */
-	private boolean keepNode(EObject eObject, final Predicate<? super EObject> predicate) {
-		boolean result = !predicate.apply(eObject);
-		Collection<EObject> eContents = eObject.eContents();
-		if (result && !eContents.isEmpty() && eObject instanceof TreeNode) {
-			EObject data = ((TreeNode)eObject).getData();
-			if (data instanceof Match || data instanceof Conflict || data instanceof MatchResource) {
-				result = false;
-				for (EObject child : eContents) {
-					if (keepNode(child, predicate)) {
-						result = true;
-						break;
-					}
-				}
-			}
-		}
 		return result;
 	}
 
@@ -137,14 +136,19 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 *            The given {@link IDifferenceFilter}s.
 	 */
 	public void addFilters(Collection<IDifferenceFilter> filters) {
+		boolean changed = false;
 		for (IDifferenceFilter filter : filters) {
-			getPredicates().remove(filter.getPredicateWhenUnselected());
-			getPredicates().add(filter.getPredicateWhenSelected());
+			changed |= predicates.remove(filter.getPredicateWhenUnselected());
+			changed |= predicates.add(filter.getPredicateWhenSelected());
 		}
-		refreshViewers();
-		for (IDifferenceFilter filter : filters) {
-			eventBus.post(new IDifferenceFilterSelectionChangeEvent.DefaultFilterSelectionChangeEvent(filter,
-					Action.ACTIVATE));
+
+		if (changed) {
+			computeAggregatedPredicate();
+			for (IDifferenceFilter filter : filters) {
+				eventBus.post(new DifferenceFilterSelectionChangeEventImpl(filter, aggregatedPredicate,
+						Action.SELECTED));
+			}
+			refreshViewers();
 		}
 	}
 
@@ -155,10 +159,21 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 *            The given {@link IDifferenceFilter}.
 	 */
 	public void addFilter(IDifferenceFilter filter) {
-		getPredicates().remove(filter.getPredicateWhenUnselected());
-		addPredicate(filter.getPredicateWhenSelected());
-		eventBus.post(new IDifferenceFilterSelectionChangeEvent.DefaultFilterSelectionChangeEvent(filter,
-				Action.ACTIVATE));
+		boolean changed = predicates.remove(filter.getPredicateWhenUnselected());
+		changed |= predicates.add(filter.getPredicateWhenSelected());
+		if (changed) {
+			computeAggregatedPredicate();
+			eventBus.post(new DifferenceFilterSelectionChangeEventImpl(filter, aggregatedPredicate,
+					Action.SELECTED));
+			refreshViewers();
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	private void computeAggregatedPredicate() {
+		aggregatedPredicate = not(or(predicates));
 	}
 
 	/**
@@ -168,36 +183,12 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 *            The given {@link IDifferenceFilter}.
 	 */
 	public void removeFilter(IDifferenceFilter filter) {
-		getPredicates().add(filter.getPredicateWhenUnselected());
-		removePredicate(filter.getPredicateWhenSelected());
-		eventBus.post(new IDifferenceFilterSelectionChangeEvent.DefaultFilterSelectionChangeEvent(filter,
-				Action.DEACTIVATE));
-	}
-
-	/**
-	 * Add a predicate to the set known by this filter.
-	 * 
-	 * @param predicate
-	 *            The new predicate for differences to be accepted by this viewer. No effect if already
-	 *            accepted.
-	 */
-	public void addPredicate(Predicate<? super EObject> predicate) {
-		final boolean changed = getPredicates().add(predicate);
+		boolean changed = predicates.add(filter.getPredicateWhenUnselected());
+		changed |= predicates.remove(filter.getPredicateWhenSelected());
 		if (changed) {
-			refreshViewers();
-		}
-	}
-
-	/**
-	 * Removes a predicate from those accepted by this filter.
-	 * 
-	 * @param predicate
-	 *            The predicate that should no longer by accepted by this filter. No effect if it was not one
-	 *            of the accepted ones.
-	 */
-	public void removePredicate(Predicate<? super EObject> predicate) {
-		final boolean changed = getPredicates().remove(predicate);
-		if (changed) {
+			computeAggregatedPredicate();
+			eventBus.post(new DifferenceFilterSelectionChangeEventImpl(filter, aggregatedPredicate,
+					Action.DESELECTED));
 			refreshViewers();
 		}
 	}
@@ -226,12 +217,12 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 */
 	public void install(final TreeViewer viewer) {
 		viewer.addFilter(this);
+		viewers.add(viewer);
 		viewer.getTree().addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				uninstall(viewer);
 			}
 		});
-		viewers.add(viewer);
 	}
 
 	/**
@@ -241,17 +232,8 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 *            The viewer from which the filter should be removed.
 	 */
 	public void uninstall(TreeViewer viewer) {
-		viewer.removeFilter(this);
 		viewers.remove(viewer);
-	}
-
-	/**
-	 * Get the predicates associated with this viewer.
-	 * 
-	 * @return the predicates
-	 */
-	public Set<Predicate<? super EObject>> getPredicates() {
-		return predicates;
+		viewer.removeFilter(this);
 	}
 
 }

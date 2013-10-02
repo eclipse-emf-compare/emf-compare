@@ -51,7 +51,7 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 	/**
 	 * @return the crossReferenceAdapter
 	 */
-	public ECrossReferenceAdapter getCrossReferenceAdapter() {
+	protected final ECrossReferenceAdapter getCrossReferenceAdapter() {
 		return crossReferenceAdapter;
 	}
 

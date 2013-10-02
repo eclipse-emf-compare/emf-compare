@@ -156,6 +156,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider imp
 				for (MatchResource matchResource : getComparison().getMatchedResources()) {
 					children.add(buildSubTree(matchResource));
 				}
+				registerCrossReferenceAdapter(children);
 			}
 			return children;
 		}

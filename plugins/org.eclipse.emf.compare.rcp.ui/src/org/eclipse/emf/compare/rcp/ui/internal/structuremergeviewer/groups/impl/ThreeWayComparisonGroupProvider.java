@@ -207,6 +207,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 						children.add(buildSubTree);
 					}
 				}
+				registerCrossReferenceAdapter(children);
 			}
 			return children;
 		}

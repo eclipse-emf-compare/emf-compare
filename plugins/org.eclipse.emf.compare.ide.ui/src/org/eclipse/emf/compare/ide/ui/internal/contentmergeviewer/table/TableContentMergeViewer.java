@@ -20,14 +20,12 @@ import java.util.ResourceBundle;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
-import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.TableMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -35,7 +33,6 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemFontProvider;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
-import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
@@ -280,23 +277,13 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			final Diff leftDiff = ((IMergeViewerItem)leftItem.getData()).getDiff();
 			boolean doPaint = true;
 			if (leftDiff != null) {
-				for (IDifferenceFilter filter : getEMFCompareConfiguration().getSelectedFilters()) {
-					TreeNode treeNode = MergeViewerUtil.getTreeNode(getEMFCompareConfiguration()
-							.getComparison(), getEMFCompareConfiguration().getSelectedGroup(), leftDiff);
-					if (filter.getPredicateWhenSelected().apply(treeNode)
-							&& !DiffUtil.isPrimeRefining(treeNode.getData())) {
-						doPaint = false;
-						break;
-					}
-				}
-			}
-			if (doPaint) {
-				if (leftDiff != null) {
+				if (MergeViewerUtil.isVisibleInMergeViewer(leftDiff, getEMFCompareConfiguration()
+						.getSelectedGroup(), getEMFCompareConfiguration().getAggregatedPredicate())) {
 					TableItem rightItem = findRightTableItemFromLeftDiff(rightItems, leftDiff, leftData);
 
 					if (rightItem != null) {
-						Color strokeColor = getCompareColor().getStrokeColor(leftDiff, isThreeWay(), false,
-								selected);
+						final Color strokeColor = getCompareColor().getStrokeColor(leftDiff, isThreeWay(),
+								false, selected);
 						g.setForeground(strokeColor);
 						drawCenterLine(g, leftClientArea, rightClientArea, leftItem, rightItem);
 					}

@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
+import static com.google.common.collect.Iterables.filter;
+
+import com.google.common.base.Predicate;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -334,10 +338,10 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	 */
 	private void handlePaintEvent(PaintEvent e) {
 		annotationsData.clear();
-		Collection<IDifferenceFilter> filters = (Collection<IDifferenceFilter>)fConfiguration
-				.getProperty(EMFCompareConstants.SELECTED_FILTERS);
-		Collection<? extends Diff> filteredRequires = filteredDiffs(requires, filters);
-		Collection<? extends Diff> filteredUnmergeables = filteredDiffs(unmergeables, filters);
+		Predicate<? super EObject> predicate = (Predicate<? super EObject>)fConfiguration
+				.getProperty(EMFCompareConstants.AGGREGATED_VIEWER_PREDICATE);
+		Collection<? extends Diff> filteredRequires = filteredDiffs(requires, predicate);
+		Collection<? extends Diff> filteredUnmergeables = filteredDiffs(unmergeables, predicate);
 		for (Diff diff : filteredRequires) {
 			for (TreeItem item : diffItems.get(diff)) {
 				createAnnotation(e, diff, item, requiredDiffFillColor, requiredDiffBorderColor);
@@ -638,19 +642,10 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	 * @return A filtered list of diffs.
 	 */
 	protected Collection<? extends Diff> filteredDiffs(Collection<? extends Diff> unfilteredDiffs,
-			Collection<IDifferenceFilter> filters) {
+			Predicate<? super EObject> filters) {
 		if (filters != null) {
-			List<Diff> filteredDiffs = Lists.newArrayList(unfilteredDiffs);
-			for (IDifferenceFilter filter : filters) {
-				for (Diff unfilteredDiff : unfilteredDiffs) {
-					if (filter.getPredicateWhenSelected().apply(unfilteredDiff)) {
-						filteredDiffs.remove(unfilteredDiff);
-					}
-				}
-			}
-			return filteredDiffs;
+			return ImmutableList.copyOf(filter(unfilteredDiffs, filters));
 		}
-		return unfilteredDiffs;
-
+		return ImmutableList.of();
 	}
 }

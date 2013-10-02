@@ -537,6 +537,7 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 			if (getCompareConfiguration() != null) {
 				getCompareConfiguration().setProperty(EMFCompareConstants.COMPARE_RESULT, null);
 				getCompareConfiguration().setProperty(EMFCompareConstants.SELECTED_FILTERS, null);
+				getCompareConfiguration().setProperty(EMFCompareConstants.AGGREGATED_VIEWER_PREDICATE, null);
 				getCompareConfiguration().setProperty(EMFCompareConstants.SELECTED_GROUP, null);
 				getCompareConfiguration().setProperty(EMFCompareConstants.MERGE_WAY, null);
 				getCompareConfiguration().setProperty(EMFCompareConstants.SMV_SELECTION, null);

@@ -57,7 +57,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
-import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -498,16 +497,13 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		if (predicate != null) {
 			List<Diff> filteredDiffs = Lists.newArrayList(unfilteredDiffs);
 				for (Diff unfilteredDiff : unfilteredDiffs) {
-					TreeNode node = MergeViewerUtil.getTreeNode(fComparison, group, unfilteredDiff);
-					if (predicate.apply(node)
-							&& !DiffUtil.isPrimeRefining(node.getData())) {
+					if (!MergeViewerUtil.isVisibleInMergeViewer(unfilteredDiff, group, predicate)) {
 						filteredDiffs.remove(unfilteredDiff);
 					}
 				}
 			return filteredDiffs;
 		}
 		return unfilteredDiffs;
-
 	}
 
 	public static class Container extends MergeViewerItem implements IMergeViewerItem.Container {

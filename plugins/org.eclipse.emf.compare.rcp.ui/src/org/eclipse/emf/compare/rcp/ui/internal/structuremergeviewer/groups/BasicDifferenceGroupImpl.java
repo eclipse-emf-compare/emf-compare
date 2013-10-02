@@ -37,6 +37,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
@@ -250,12 +251,16 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 					children.add(buildSubTree);
 				}
 			}
-			for (TreeNode child : children) {
-				// this cross referencer has to live as long as the objects on which it is installed.
-				child.eAdapters().add(crossReferenceAdapter);
-			}
+			registerCrossReferenceAdapter(children);
 		}
 		return children;
+	}
+
+	protected final void registerCrossReferenceAdapter(List<? extends Notifier> notifiers) {
+		for (Notifier notifier : notifiers) {
+			// this cross referencer has to live as long as the objects on which it is installed.
+			notifier.eAdapters().add(crossReferenceAdapter);
+		}
 	}
 
 	/**

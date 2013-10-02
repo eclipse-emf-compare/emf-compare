@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,13 @@
  *     Obeo - initial API and implementation
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.util;
+
+import static com.google.common.collect.Iterables.any;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.isEmpty;
+import static com.google.common.collect.Iterables.transform;
+
+import com.google.common.base.Predicate;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -23,6 +30,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
@@ -298,45 +306,30 @@ public final class MergeViewerUtil {
 	}
 
 	/**
-	 * Function that retrieve the TreeNode of the given data.
+	 * Returns true if the given diff is displayed in an group as provided by the {@code groupProvider} and
+	 * not filtered by the given {@code filters}.
+	 * 
+	 * @param diff
+	 * @param groupProvider
+	 * @param selectedFilters
+	 * @return
 	 */
-	public static TreeNode getTreeNode(final Comparison comparison,
-			final IDifferenceGroupProvider groupProvider, final EObject data) {
-		if (data != null) {
-			Collection<? extends IDifferenceGroup> groups = groupProvider.getGroups(comparison);
-			for (IDifferenceGroup group : groups) {
-				List<? extends TreeNode> groupTree = group.getChildren();
-				for (TreeNode treeNode : groupTree) {
-					EObject treeNodeData = IDifferenceGroup.TREE_NODE_DATA.apply(treeNode);
-					if (data.equals(treeNodeData)) {
-						return treeNode;
-					} else {
-						for (TreeNode child : treeNode.getChildren()) {
-							TreeNode tn = getTreeNode(child, data);
-							if (tn != null) {
-								return tn;
-							}
-						}
-					}
-				}
-			}
-		}
+	public static boolean isVisibleInMergeViewer(Diff diff, IDifferenceGroupProvider groupProvider,
+			Predicate<? super EObject> predicate) {
+		Iterable<TreeNode> nodes = groupProvider.getTreeNodes(diff);
 
-		return null;
+		boolean isDisplayedInSMV = any(nodes, predicate);
+		boolean isPrimeRefining = !isEmpty(filter(transform(nodes, IDifferenceGroup.TREE_NODE_DATA),
+				IS_PRIME_REFINING));
+		return (isDisplayedInSMV || isPrimeRefining);
 	}
 
-	private static TreeNode getTreeNode(final TreeNode treeNode, final EObject data) {
-		EObject treeNodeData = IDifferenceGroup.TREE_NODE_DATA.apply(treeNode);
-		if (data.equals(treeNodeData)) {
-			return treeNode;
-		} else {
-			for (TreeNode child : treeNode.getChildren()) {
-				TreeNode tn = getTreeNode(child, data);
-				if (tn != null) {
-					return tn;
-				}
-			}
+	/**
+	 * Predicates that apply {@link DiffUtil#isPrimeRefining(EObject)}.
+	 */
+	private static final Predicate<EObject> IS_PRIME_REFINING = new Predicate<EObject>() {
+		public boolean apply(EObject eObject) {
+			return DiffUtil.isPrimeRefining(eObject);
 		}
-		return null;
-	}
+	};
 }

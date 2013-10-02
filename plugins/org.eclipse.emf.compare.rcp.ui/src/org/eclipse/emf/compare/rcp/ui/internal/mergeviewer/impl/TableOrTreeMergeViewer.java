@@ -16,13 +16,10 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
-import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.SWT;
@@ -119,24 +116,14 @@ public abstract class TableOrTreeMergeViewer extends StructuredMergeViewer {
 
 		if (data instanceof IMergeViewerItem) {
 			IMergeViewerItem mergeViewerItem = ((IMergeViewerItem)data);
-			boolean doPaint = true;
 			Diff diff = mergeViewerItem.getDiff();
-			for (IDifferenceFilter filter : getCompareConfiguration().getSelectedFilters()) {
-				if (diff != null) {
-					TreeNode treeNode = MergeViewerUtil.getTreeNode(diff.getMatch().getComparison(),
-							getCompareConfiguration().getSelectedGroup(), diff);
-					if (filter.getPredicateWhenSelected().apply(treeNode)
-							&& !DiffUtil.isPrimeRefining(treeNode.getData())) {
-						doPaint = false;
-						break;
-					}
-				}
-			}
-			if (doPaint) {
-				if (mergeViewerItem.isInsertionPoint()) {
-					paintItemDiffBox(event, itemWrapper, diff, getBoundsForInsertionPoint(event, itemWrapper));
-				} else {
-					if (diff != null) {
+			if (diff != null) {
+				if (MergeViewerUtil.isVisibleInMergeViewer(diff, getCompareConfiguration().getSelectedGroup(),
+						getCompareConfiguration().getAggregatedPredicate())) {
+					if (mergeViewerItem.isInsertionPoint()) {
+						paintItemDiffBox(event, itemWrapper, diff, getBoundsForInsertionPoint(event,
+								itemWrapper));
+					} else {
 						paintItemDiffBox(event, itemWrapper, diff, getBounds(event, itemWrapper));
 					}
 				}

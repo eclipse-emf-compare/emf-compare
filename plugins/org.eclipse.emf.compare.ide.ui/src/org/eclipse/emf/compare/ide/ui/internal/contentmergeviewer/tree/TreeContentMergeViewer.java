@@ -27,7 +27,6 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
-import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
@@ -35,7 +34,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeVie
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.TreeMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EObject;
@@ -44,7 +42,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
-import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -112,6 +109,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	public TreeContentMergeViewer(Composite parent, CompareConfiguration config) {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
+
 		fAdapterFactory = new ComposedAdapterFactory(EMFCompareRCPPlugin.getDefault()
 				.getAdapterFactoryRegistry());
 		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
@@ -352,20 +350,9 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			final boolean selected = Iterables.any(selection, equalTo(leftItem));
 			IMergeViewerItem leftData = (IMergeViewerItem)leftItem.getData();
 			final Diff leftDiff = leftData.getDiff();
-			boolean doPaint = true;
 			if (leftDiff != null) {
-				for (IDifferenceFilter filter : getEMFCompareConfiguration().getSelectedFilters()) {
-					TreeNode treeNode = MergeViewerUtil.getTreeNode(getEMFCompareConfiguration().getComparison(), getEMFCompareConfiguration().getSelectedGroup(),
-							leftDiff);
-					if (filter.getPredicateWhenSelected().apply(treeNode)
-							&& !DiffUtil.isPrimeRefining(treeNode.getData())) {
-						doPaint = false;
-						break;
-					}
-				}
-			}
-			if (doPaint) {
-				if (leftDiff != null) {
+				if (MergeViewerUtil.isVisibleInMergeViewer(leftDiff, getEMFCompareConfiguration()
+						.getSelectedGroup(), getEMFCompareConfiguration().getAggregatedPredicate())) {
 					TreeItem rightItem = findRightTreeItemFromLeftDiff(rightItems, leftDiff, leftData);
 
 					if (rightItem != null) {

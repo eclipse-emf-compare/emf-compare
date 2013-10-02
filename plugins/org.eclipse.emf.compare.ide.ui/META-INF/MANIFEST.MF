@@ -35,7 +35,7 @@ Export-Package: org.eclipse.emf.compare.ide.ui.internal;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.util;x-internal:=true,
- org.eclipse.emf.compare.ide.ui.logical
+ org.eclipse.emf.compare.ide.ui.logical;x-internal:=true
 Import-Package: com.google.common.annotations;version="[11.0.0,15.0.0)",
  com.google.common.base;version="[11.0.0,15.0.0)",
  com.google.common.cache;version="[11.0.0,15.0.0)",

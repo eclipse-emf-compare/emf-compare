@@ -67,7 +67,7 @@ public final class EMFCompareUIActionUtil {
 	public static boolean isCascadingDifferencesFilterActive(CompareConfiguration configuration) {
 		Object property = configuration.getProperty(EMFCompareConstants.SELECTED_FILTERS);
 		final Collection<IDifferenceFilter> selectedFilters;
-		if (property != null) {
+		if (property instanceof Collection<?>) {
 			selectedFilters = (Collection<IDifferenceFilter>)property;
 			for (IDifferenceFilter iDifferenceFilter : selectedFilters) {
 				if (iDifferenceFilter instanceof CascadingDifferencesFilter) {
