@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IStructuralFeatureAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.ResourceContentsAccessorImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
@@ -38,8 +39,9 @@ public class TableMergeViewer extends TableOrTreeMergeViewer {
 
 	private InfoViewer fInfoViewer;
 
-	public TableMergeViewer(Composite parent, MergeViewerSide side, ICompareColor.Provider colorProvider) {
-		super(parent, side, colorProvider);
+	public TableMergeViewer(Composite parent, MergeViewerSide side, ICompareColor.Provider colorProvider,
+			IEMFCompareConfiguration compareConfiguration) {
+		super(parent, side, colorProvider, compareConfiguration);
 	}
 
 	/**

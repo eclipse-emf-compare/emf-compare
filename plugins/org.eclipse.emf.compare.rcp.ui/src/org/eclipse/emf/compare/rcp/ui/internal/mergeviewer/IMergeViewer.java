@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer;
 
-import java.util.Collection;
-
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.jface.viewers.IInputSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Control;
@@ -61,36 +57,6 @@ public interface IMergeViewer extends IInputSelectionProvider {
 	 *            <code>true</code> if the selection is to be made visible, and <code>false</code> otherwise
 	 */
 	void setSelection(ISelection selection, boolean reveal);
-
-	/**
-	 * Returns the active group provider.
-	 * 
-	 * @return the selected group provider.
-	 */
-	IDifferenceGroupProvider getSelectedGroup();
-
-	/**
-	 * Set the active group provider.
-	 * 
-	 * @param group
-	 *            the group provider to set.
-	 */
-	void setSelectedGroup(IDifferenceGroupProvider group);
-
-	/**
-	 * Returns the active filters.
-	 * 
-	 * @return the selectedFilters.
-	 */
-	Collection<IDifferenceFilter> getSelectedFilters();
-
-	/**
-	 * Set the list of selected filters.
-	 * 
-	 * @param filters
-	 *            the selectedFilters to set
-	 */
-	void setSelectedFilters(Collection<IDifferenceFilter> filters);
 
 	enum MergeViewerSide {
 		LEFT, RIGHT, ANCESTOR;

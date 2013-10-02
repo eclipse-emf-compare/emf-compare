@@ -17,6 +17,7 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
@@ -51,8 +52,9 @@ public abstract class TableOrTreeMergeViewer extends StructuredMergeViewer {
 
 	private Listener fPaintItemListener;
 
-	public TableOrTreeMergeViewer(Composite parent, MergeViewerSide side, ICompareColor.Provider colorProvider) {
-		super(parent, side);
+	public TableOrTreeMergeViewer(Composite parent, MergeViewerSide side,
+			ICompareColor.Provider colorProvider, IEMFCompareConfiguration compareConfiguration) {
+		super(parent, side, compareConfiguration);
 
 		getStructuredViewer().setUseHashlookup(true);
 		getStructuredViewer().setComparer(new ElementComparer());
@@ -119,10 +121,10 @@ public abstract class TableOrTreeMergeViewer extends StructuredMergeViewer {
 			IMergeViewerItem mergeViewerItem = ((IMergeViewerItem)data);
 			boolean doPaint = true;
 			Diff diff = mergeViewerItem.getDiff();
-			for (IDifferenceFilter filter : getSelectedFilters()) {
+			for (IDifferenceFilter filter : getCompareConfiguration().getSelectedFilters()) {
 				if (diff != null) {
 					TreeNode treeNode = MergeViewerUtil.getTreeNode(diff.getMatch().getComparison(),
-							getSelectedGroup(), diff);
+							getCompareConfiguration().getSelectedGroup(), diff);
 					if (filter.getPredicateWhenSelected().apply(treeNode)
 							&& !DiffUtil.isPrimeRefining(treeNode.getData())) {
 						doPaint = false;

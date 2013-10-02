@@ -22,6 +22,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentRefe
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -493,18 +494,16 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	 * @return A filtered list of diffs.
 	 */
 	protected List<? extends Diff> filteredDiffs(List<? extends Diff> unfilteredDiffs,
-			Collection<IDifferenceFilter> filters, IDifferenceGroupProvider group) {
-		if (filters != null) {
+			Predicate<? super EObject> predicate, IDifferenceGroupProvider group) {
+		if (predicate != null) {
 			List<Diff> filteredDiffs = Lists.newArrayList(unfilteredDiffs);
-			for (IDifferenceFilter filter : filters) {
 				for (Diff unfilteredDiff : unfilteredDiffs) {
 					TreeNode node = MergeViewerUtil.getTreeNode(fComparison, group, unfilteredDiff);
-					if (filter.getPredicateWhenSelected().apply(node)
+					if (predicate.apply(node)
 							&& !DiffUtil.isPrimeRefining(node.getData())) {
 						filteredDiffs.remove(unfilteredDiff);
 					}
 				}
-			}
 			return filteredDiffs;
 		}
 		return unfilteredDiffs;
@@ -579,8 +578,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		 * 
 		 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem.Container#hasChildren()
 		 */
-		public boolean hasChildren(IDifferenceGroupProvider group, Collection<IDifferenceFilter> filters) {
-			return getChildren(group, filters).length > 0;
+		public boolean hasChildren(IDifferenceGroupProvider group, Predicate<? super EObject> predicate) {
+			return getChildren(group, predicate).length > 0;
 		}
 
 		@Override
@@ -595,7 +594,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem.Container#getChildren()
 		 */
 		public IMergeViewerItem[] getChildren(IDifferenceGroupProvider group,
-				Collection<IDifferenceFilter> filters) {
+				Predicate<? super EObject> predicate) {
 			Object sideValue = getSideValue(getSide());
 			EObject bestSideValue = (EObject)getBestSideValue();
 
@@ -619,7 +618,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 					List<? extends Diff> differencesOnFeature = ImmutableList.copyOf(filter(differences,
 							onFeature(eStructuralFeature.getName())));
 					ret.addAll(createInsertionPoints(getComparison(), eStructuralFeature, mergeViewerItem,
-							filteredDiffs(differencesOnFeature, filters, group)));
+							filteredDiffs(differencesOnFeature, predicate, group)));
 
 				} else {
 					ret.addAll(mergeViewerItem);

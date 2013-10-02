@@ -10,10 +10,14 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.AbstractDifferenceGroupProvider;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
@@ -27,6 +31,33 @@ import org.eclipse.emf.edit.tree.TreePackage;
  * @since 3.0
  */
 public interface IDifferenceGroupProvider extends Adapter {
+
+	public static IDifferenceGroupProvider EMPTY = new AbstractDifferenceGroupProvider() {
+
+		public void setLabel(String label) {
+			// do nothing
+		}
+
+		public void setDefaultSelected(boolean defaultSelected) {
+			// do nothing;
+		}
+
+		public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
+			return true;
+		}
+
+		public String getLabel() {
+			return IDifferenceGroupProvider.class.getName() + ".EMPTY"; //$NON-NLS-1$
+		}
+
+		public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
+			return ImmutableList.of();
+		}
+
+		public boolean defaultSelected() {
+			return true;
+		}
+	};
 
 	/**
 	 * This will be called internally by the grouping actions in order to determine how the differences should
@@ -134,6 +165,6 @@ public interface IDifferenceGroupProvider extends Adapter {
 	 * @return all {@link TreeNode}s targeting the given {@code eObject} through
 	 *         {@link TreePackage.Literals#TREE_NODE__DATA}.
 	 */
-	Iterable<TreeNode> getTreeNodes(EObject eObject);
+	List<TreeNode> getTreeNodes(EObject eObject);
 
 }

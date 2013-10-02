@@ -183,7 +183,8 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected AbstractMergeViewer createMergeViewer(final Composite parent, final MergeViewerSide side) {
-		final TreeMergeViewer mergeTreeViewer = new TreeMergeViewer(parent, side, this);
+		final TreeMergeViewer mergeTreeViewer = new TreeMergeViewer(parent, side, this,
+				getEMFCompareConfiguration());
 		IContentProvider contentProvider = new AdapterFactoryContentProvider(fAdapterFactory) {
 			/**
 			 * {@inheritDoc}
@@ -207,7 +208,8 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			public Object[] getChildren(Object object) {
 				if (object instanceof IMergeViewerItem.Container) {
 					IMergeViewerItem[] children = ((IMergeViewerItem.Container)object).getChildren(
-							getSelectedGroup(), getSelectedFilters());
+							getEMFCompareConfiguration().getSelectedGroup(), getEMFCompareConfiguration()
+									.getAggregatedPredicate());
 
 					return children;
 				}
@@ -222,8 +224,8 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			@Override
 			public boolean hasChildren(Object object) {
 				if (object instanceof IMergeViewerItem.Container) {
-					return ((IMergeViewerItem.Container)object).hasChildren(getSelectedGroup(),
-							getSelectedFilters());
+					return ((IMergeViewerItem.Container)object).hasChildren(getEMFCompareConfiguration()
+							.getSelectedGroup(), getEMFCompareConfiguration().getAggregatedPredicate());
 				}
 				return super.hasChildren(object);
 			}
@@ -324,10 +326,6 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 		return mergeTreeViewer;
 	}
 
-	protected void redrawCenterControl() {
-		getCenterControl().redraw();
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -356,8 +354,8 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			final Diff leftDiff = leftData.getDiff();
 			boolean doPaint = true;
 			if (leftDiff != null) {
-				for (IDifferenceFilter filter : getSelectedFilters()) {
-					TreeNode treeNode = MergeViewerUtil.getTreeNode(getComparison(), getSelectedGroup(),
+				for (IDifferenceFilter filter : getEMFCompareConfiguration().getSelectedFilters()) {
+					TreeNode treeNode = MergeViewerUtil.getTreeNode(getEMFCompareConfiguration().getComparison(), getEMFCompareConfiguration().getSelectedGroup(),
 							leftDiff);
 					if (filter.getPredicateWhenSelected().apply(treeNode)
 							&& !DiffUtil.isPrimeRefining(treeNode.getData())) {
@@ -532,26 +530,30 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			}
 
 			if (parent instanceof EObject) {
-				Match match = getComparison().getMatch((EObject)parent);
+				Match match = getEMFCompareConfiguration().getComparison().getMatch((EObject)parent);
 				if (match != null) {
 					for (ReferenceChange referenceChange : filter(filter(match.getDifferences(),
 							ReferenceChange.class), EMFComparePredicates.ofKind(DifferenceKind.MOVE))) {
 						if (getLeftMergeViewer() == mergeTreeViewer) {
-							EObject eContainer = getComparison().getMatch(referenceChange.getValue())
-									.getRight().eContainer(); // XXX: use itemProvider.getParent().
-							Match match2 = getComparison().getMatch(eContainer);
+							EObject eContainer = getEMFCompareConfiguration().getComparison().getMatch(
+									referenceChange.getValue()).getRight().eContainer(); // XXX: use
+																							// itemProvider.getParent().
+							Match match2 = getEMFCompareConfiguration().getComparison().getMatch(eContainer);
 							if (match2.getLeft() != parent) {
 								IMergeViewerItem.Container container = new MergeViewerItem.Container(
-										getComparison(), null, match2, MergeViewerSide.RIGHT, fAdapterFactory);
+										getEMFCompareConfiguration().getComparison(), null, match2,
+										MergeViewerSide.RIGHT, fAdapterFactory);
 								toBeExpanded.add(container);
 							}
 						} else if (getRightMergeViewer() == mergeTreeViewer) {
-							EObject eContainer = getComparison().getMatch(referenceChange.getValue())
-									.getLeft().eContainer(); // XXX: use itemProvider.getParent().
-							Match match2 = getComparison().getMatch(eContainer);
+							EObject eContainer = getEMFCompareConfiguration().getComparison().getMatch(
+									referenceChange.getValue()).getLeft().eContainer(); // XXX: use
+																						// itemProvider.getParent().
+							Match match2 = getEMFCompareConfiguration().getComparison().getMatch(eContainer);
 							if (match2.getRight() != parent) {
 								IMergeViewerItem.Container container = new MergeViewerItem.Container(
-										getComparison(), null, match2, MergeViewerSide.LEFT, fAdapterFactory);
+										getEMFCompareConfiguration().getComparison(), null, match2,
+										MergeViewerSide.LEFT, fAdapterFactory);
 								toBeExpanded.add(container);
 							}
 						}

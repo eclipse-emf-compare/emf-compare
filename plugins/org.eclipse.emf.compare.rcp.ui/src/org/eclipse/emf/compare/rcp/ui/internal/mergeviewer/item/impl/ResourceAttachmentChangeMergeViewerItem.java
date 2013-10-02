@@ -14,9 +14,9 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Lists.newArrayList;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -33,7 +33,6 @@ import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -76,8 +75,7 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem.Container#getChildren()
 	 */
 	@Override
-	public IMergeViewerItem[] getChildren(IDifferenceGroupProvider group,
-			Collection<IDifferenceFilter> filters) {
+	public IMergeViewerItem[] getChildren(IDifferenceGroupProvider group, Predicate<? super EObject> filters) {
 		Object sideValue = getSideValue(getSide());
 		Object bestSideValue = getBestSideValue();
 

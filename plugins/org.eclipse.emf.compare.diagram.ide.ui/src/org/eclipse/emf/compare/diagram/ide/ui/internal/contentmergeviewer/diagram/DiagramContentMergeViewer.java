@@ -345,7 +345,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 */
 		public void hideDecorators(Diff difference) {
 			Collection<? extends AbstractDecorator> oldDecorators = getDecorators(difference);
-			if (oldDecorators != null && !oldDecorators.isEmpty() && getComparison() != null) {
+			if (oldDecorators != null && !oldDecorators.isEmpty()
+					&& getEMFCompareConfiguration().getComparison() != null) {
 				handleDecorators(oldDecorators, false, true);
 			}
 		}
@@ -372,8 +373,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 					IFigure referenceFigure = getFigure(referenceView);
 
 					if (referenceFigure != null) {
-						MergeViewerSide targetSide = getTargetSide(getComparison().getMatch(referenceView),
-								referenceView);
+						MergeViewerSide targetSide = getTargetSide(getEMFCompareConfiguration()
+								.getComparison().getMatch(referenceView), referenceView);
 
 						if (decorators == null) {
 							decorators = new ArrayList();
@@ -807,8 +808,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 */
 		private List<Phantom> getOrCreateRelatedPhantoms(EObject referenceView, MergeViewerSide side) {
 			List<Phantom> result = new ArrayList<Phantom>();
-			Collection<Diff> changes = Collections2.filter(getComparison().getDifferences(referenceView),
-					goodCandidate());
+			Collection<Diff> changes = Collections2.filter(getEMFCompareConfiguration().getComparison()
+					.getDifferences(referenceView), goodCandidate());
 			for (Diff change : changes) {
 				Phantom phantom = fPhantomRegistry.get(change);
 				if (phantom == null) {
@@ -834,7 +835,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		protected List<View> getReferenceViews(DiagramDiff difference) {
 			List<View> result = new ArrayList<View>();
 
-			Match match = getComparison().getMatch(difference.getView());
+			Match match = getEMFCompareConfiguration().getComparison().getMatch(difference.getView());
 
 			EObject originObj = match.getOrigin();
 			EObject leftObj = match.getLeft();
@@ -1124,14 +1125,15 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 						return input instanceof View && !((View)input).isVisible();
 					}
 				});
-				return DiffUtil.findInsertionIndex(getComparison(), ignoredElements, source, target,
-						newElement);
+				return DiffUtil.findInsertionIndex(getEMFCompareConfiguration().getComparison(),
+						ignoredElements, source, target, newElement);
 			}
 			// Case for deleted objects
 			Diff refiningDiff = Iterators.find(diff.getRefinedBy().iterator(), and(valueIs(referenceView),
 					onFeature(NotationPackage.Literals.VIEW__PERSISTED_CHILDREN.getName())));
 
-			return DiffUtil.findInsertionIndex(getComparison(), refiningDiff, side == MergeViewerSide.LEFT);
+			return DiffUtil.findInsertionIndex(getEMFCompareConfiguration().getComparison(), refiningDiff,
+					side == MergeViewerSide.LEFT);
 		}
 
 		/**
@@ -1163,8 +1165,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			if (diff instanceof DiagramDiff) {
 				EObject parent = ((DiagramDiff)diff).getView().eContainer();
 				while (parent instanceof View && !isCandidate) {
-					isCandidate = Iterables.any(getComparison().getDifferences(parent),
-							instanceOf(CoordinatesChange.class));
+					isCandidate = Iterables.any(getEMFCompareConfiguration().getComparison().getDifferences(
+							parent), instanceOf(CoordinatesChange.class));
 					parent = parent.eContainer();
 				}
 			}
@@ -1253,13 +1255,13 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			DifferenceKind lookup = DifferenceKind.CHANGE;
 			View extremity = (View)getMatchView(referenceView, targetSide);
 			// Look for a related change coordinates on the extremity of the edge reference.
-			Collection<Diff> diffs = Collections2.filter(getComparison().getDifferences(referenceView),
-					CoordinatesChangeFactory.isCoordinatesChangeExtension());
+			Collection<Diff> diffs = Collections2.filter(getEMFCompareConfiguration().getComparison()
+					.getDifferences(referenceView), CoordinatesChangeFactory.isCoordinatesChangeExtension());
 			if (diffs.isEmpty()) {
 				// Look for a related change coordinates on the matching extremity (other side) of the edge
 				// reference.
-				diffs = Collections2.filter(getComparison().getDifferences(extremity),
-						CoordinatesChangeFactory.isCoordinatesChangeExtension());
+				diffs = Collections2.filter(getEMFCompareConfiguration().getComparison().getDifferences(
+						extremity), CoordinatesChangeFactory.isCoordinatesChangeExtension());
 			}
 			return !diffs.isEmpty();
 		}
@@ -1499,7 +1501,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		@Override
 		protected List<View> getReferenceViews(DiagramDiff difference) {
 			List<View> result = new ArrayList<View>();
-			Match matchValue = getComparison().getMatch(difference.getView());
+			Match matchValue = getEMFCompareConfiguration().getComparison().getMatch(difference.getView());
 			if (matchValue != null) {
 				if (matchValue.getLeft() != null) {
 					result.add((View)matchValue.getLeft());
@@ -1507,7 +1509,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 				if (matchValue.getRight() != null) {
 					result.add((View)matchValue.getRight());
 				}
-				if (getComparison().isThreeWay()) {
+				if (getEMFCompareConfiguration().getComparison().isThreeWay()) {
 					switch (difference.getKind()) {
 						case DELETE:
 						case CHANGE:
@@ -1822,7 +1824,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected IMergeViewer createMergeViewer(Composite parent, MergeViewerSide side) {
-		final DiagramMergeViewer diagramMergeViewer = new DiagramMergeViewer(parent, side);
+		final DiagramMergeViewer diagramMergeViewer = new DiagramMergeViewer(parent, side,
+				getEMFCompareConfiguration());
 		return diagramMergeViewer;
 	}
 
@@ -1988,7 +1991,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	private MergeViewerSide getSide(View view) {
 		MergeViewerSide result = null;
-		Match match = getComparison().getMatch(view);
+		Match match = getEMFCompareConfiguration().getComparison().getMatch(view);
 		if (match.getLeft() == view) {
 			result = MergeViewerSide.LEFT;
 		} else if (match.getRight() == view) {
@@ -2009,7 +2012,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 	 * @return The matching object.
 	 */
 	private EObject getMatchView(EObject object, MergeViewerSide side) {
-		Match match = getComparison().getMatch(object);
+		Match match = getEMFCompareConfiguration().getComparison().getMatch(object);
 		return getMatchView(match, side);
 	}
 

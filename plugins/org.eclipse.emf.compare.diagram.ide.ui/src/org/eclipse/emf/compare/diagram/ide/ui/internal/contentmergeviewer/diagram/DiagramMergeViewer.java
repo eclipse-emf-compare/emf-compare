@@ -20,6 +20,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.AbstractGraphicalMergeViewer;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramDiffAccessor;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -128,9 +129,12 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 	 *            The parent composite.
 	 * @param side
 	 *            The side having to be managed by this viewer.
+	 * @param compareConfiguration
+	 *            the compare configuration.
 	 */
-	public DiagramMergeViewer(Composite parent, MergeViewerSide side) {
-		super(parent, side);
+	public DiagramMergeViewer(Composite parent, MergeViewerSide side,
+			IEMFCompareConfiguration compareConfiguration) {
+		super(parent, side, compareConfiguration);
 		((FigureCanvas)fGraphicalViewer.getControl()).getLightweightSystem().setEventDispatcher(
 				new NonEditingEventDispatcher(editDomain, fGraphicalViewer));
 	}

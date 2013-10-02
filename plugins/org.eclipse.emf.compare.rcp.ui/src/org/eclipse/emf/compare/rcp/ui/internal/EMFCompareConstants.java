@@ -41,6 +41,9 @@ public final class EMFCompareConstants {
 
 	public static final String SELECTED_FILTERS = EMFCompareRCPUIPlugin.PLUGIN_ID + ".SELECTED_FILTERS"; //$NON-NLS-1$
 
+	public static final String AGGREGATED_VIEWER_PREDICATE = EMFCompareRCPUIPlugin.PLUGIN_ID
+			+ ".AGGREGATED_VIEWER_PREDICATE"; //$NON-NLS-1$
+
 	public static final String SELECTED_GROUP = EMFCompareRCPUIPlugin.PLUGIN_ID + ".SELECTED_GROUP"; //$NON-NLS-1$
 
 	public static final String SMV_SELECTION = EMFCompareRCPUIPlugin.PLUGIN_ID + ".SMV_SELECTION"; //$NON-NLS-1$

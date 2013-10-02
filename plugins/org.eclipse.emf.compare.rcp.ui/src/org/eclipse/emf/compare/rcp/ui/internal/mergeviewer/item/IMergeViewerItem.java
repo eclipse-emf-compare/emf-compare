@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,13 +12,11 @@ package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item;
 
 import com.google.common.base.Predicate;
 
-import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -60,11 +58,11 @@ public interface IMergeViewerItem extends Adapter {
 		 * 
 		 * @param group
 		 *            the active group provider.
-		 * @param selectedFilters
-		 *            the active filters.
+		 * @param predicate
+		 *            the active predicate.
 		 * @return <code>true</code> if this container has at least one child
 		 */
-		boolean hasChildren(IDifferenceGroupProvider group, Collection<IDifferenceFilter> selectedFilters);
+		boolean hasChildren(IDifferenceGroupProvider group, Predicate<? super EObject> predicate);
 
 		/**
 		 * Returns the children of this container. If this container has no children an empty array is
@@ -72,11 +70,10 @@ public interface IMergeViewerItem extends Adapter {
 		 * 
 		 * @param group
 		 *            the active group provider.
-		 * @param selectedFilters
-		 *            the active filters.
+		 * @param predicate
+		 *            the active predicate.
 		 * @return the children of this container as an array
 		 */
-		IMergeViewerItem[] getChildren(IDifferenceGroupProvider group,
-				Collection<IDifferenceFilter> selectedFilters);
+		IMergeViewerItem[] getChildren(IDifferenceGroupProvider group, Predicate<? super EObject> predicate);
 	}
 }

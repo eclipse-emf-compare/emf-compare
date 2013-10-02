@@ -10,23 +10,32 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;
 
+import static com.google.common.base.Predicates.equalTo;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
+import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.TableMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemFontProvider;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
+import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
@@ -141,7 +150,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected AbstractMergeViewer createMergeViewer(Composite parent, final MergeViewerSide side) {
-		TableMergeViewer ret = new TableMergeViewer(parent, side, this);
+		TableMergeViewer ret = new TableMergeViewer(parent, side, this, getEMFCompareConfiguration());
 		ret.getStructuredViewer().getTable().getVerticalBar().setVisible(false);
 
 		ret.setContentProvider(new ArrayContentProvider() {
@@ -243,10 +252,6 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 		return ret;
 	}
 
-	protected void redrawCenterControl() {
-		getCenterControl().redraw();
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -267,25 +272,34 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 		TableItem[] leftItems = leftTable.getItems();
 		TableItem[] rightItems = rightTable.getItems();
 
-		TableItem[] selection = leftTable.getSelection();
+		final ImmutableSet<TableItem> selection = ImmutableSet.copyOf(leftTable.getSelection());
 
 		for (TableItem leftItem : leftItems) {
-			final boolean selected;
-			if (selection.length > 0) {
-				selected = leftItem == selection[0];
-			} else {
-				selected = false;
-			}
+			final boolean selected = Iterables.any(selection, equalTo(leftItem));
+			IMergeViewerItem leftData = (IMergeViewerItem)leftItem.getData();
 			final Diff leftDiff = ((IMergeViewerItem)leftItem.getData()).getDiff();
-
+			boolean doPaint = true;
 			if (leftDiff != null) {
-				TableItem rightItem = findRightTableItemFromLeftDiff(rightItems, leftDiff);
+				for (IDifferenceFilter filter : getEMFCompareConfiguration().getSelectedFilters()) {
+					TreeNode treeNode = MergeViewerUtil.getTreeNode(getEMFCompareConfiguration()
+							.getComparison(), getEMFCompareConfiguration().getSelectedGroup(), leftDiff);
+					if (filter.getPredicateWhenSelected().apply(treeNode)
+							&& !DiffUtil.isPrimeRefining(treeNode.getData())) {
+						doPaint = false;
+						break;
+					}
+				}
+			}
+			if (doPaint) {
+				if (leftDiff != null) {
+					TableItem rightItem = findRightTableItemFromLeftDiff(rightItems, leftDiff, leftData);
 
-				if (rightItem != null) {
-					Color strokeColor = getCompareColor().getStrokeColor(leftDiff, isThreeWay(), false,
-							selected);
-					g.setForeground(strokeColor);
-					drawCenterLine(g, leftClientArea, rightClientArea, leftItem, rightItem);
+					if (rightItem != null) {
+						Color strokeColor = getCompareColor().getStrokeColor(leftDiff, isThreeWay(), false,
+								selected);
+						g.setForeground(strokeColor);
+						drawCenterLine(g, leftClientArea, rightClientArea, leftItem, rightItem);
+					}
 				}
 			}
 		}
@@ -335,12 +349,17 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 		}
 	}
 
-	private TableItem findRightTableItemFromLeftDiff(TableItem[] rightItems, Diff leftDiff) {
+	private TableItem findRightTableItemFromLeftDiff(TableItem[] rightItems, Diff leftDiff,
+			IMergeViewerItem rightData) {
 		TableItem ret = null;
 		for (int i = 0; i < rightItems.length && ret == null; i++) {
 			TableItem rightItem = rightItems[i];
 			final Diff rightDiff = ((IMergeViewerItem)rightItem.getData()).getDiff();
 			if (leftDiff == rightDiff) {
+				ret = rightItem;
+			} else if (rightData.getAncestor() == rightData.getAncestor()
+					&& rightData.getRight() == rightData.getRight()
+					&& rightData.getLeft() == rightData.getLeft()) {
 				ret = rightItem;
 			}
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
@@ -31,8 +32,9 @@ public class TreeMergeViewer extends TableOrTreeMergeViewer {
 	/**
 	 * @param parent
 	 */
-	public TreeMergeViewer(Composite parent, MergeViewerSide side, ICompareColor.Provider colorProvider) {
-		super(parent, side, colorProvider);
+	public TreeMergeViewer(Composite parent, MergeViewerSide side, ICompareColor.Provider colorProvider,
+			IEMFCompareConfiguration compareConfiguration) {
+		super(parent, side, colorProvider, compareConfiguration);
 	}
 
 	/**

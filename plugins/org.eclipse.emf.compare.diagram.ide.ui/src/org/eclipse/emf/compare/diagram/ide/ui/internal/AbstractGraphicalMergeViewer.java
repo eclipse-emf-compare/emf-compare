@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.internal;
 
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeViewer;
 import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -37,9 +38,12 @@ public abstract class AbstractGraphicalMergeViewer extends AbstractMergeViewer {
 	 *            The parent composite.
 	 * @param side
 	 *            The side having to be handle.
+	 * @param compareConfiguration
+	 *            the compare configuration.
 	 */
-	public AbstractGraphicalMergeViewer(Composite parent, MergeViewerSide side) {
-		super(side);
+	public AbstractGraphicalMergeViewer(Composite parent, MergeViewerSide side,
+			IEMFCompareConfiguration compareConfiguration) {
+		super(side, compareConfiguration);
 		fControl = createControl(parent);
 		hookControl(fControl);
 	}

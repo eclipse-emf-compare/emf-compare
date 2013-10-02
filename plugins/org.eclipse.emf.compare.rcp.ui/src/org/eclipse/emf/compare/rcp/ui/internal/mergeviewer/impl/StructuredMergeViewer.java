@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -33,8 +34,9 @@ public abstract class StructuredMergeViewer extends AbstractMergeViewer {
 	 * @param parent
 	 * @param side
 	 */
-	public StructuredMergeViewer(Composite parent, MergeViewerSide side) {
-		super(side);
+	public StructuredMergeViewer(Composite parent, MergeViewerSide side,
+			IEMFCompareConfiguration compareConfiguration) {
+		super(side, compareConfiguration);
 
 		fControl = createControl(parent);
 		hookControl(fControl);
