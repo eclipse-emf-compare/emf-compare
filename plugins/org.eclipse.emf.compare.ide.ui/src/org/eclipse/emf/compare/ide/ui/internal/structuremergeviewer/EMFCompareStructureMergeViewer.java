@@ -56,6 +56,7 @@ import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.actions.collapse.CollapseAllModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.actions.expand.ExpandAllModelAction;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.OSGIVersionUtil;
 import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
 import org.eclipse.emf.compare.ide.ui.internal.logical.EMFSynchronizationModel;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.ComparisonNode;
@@ -599,8 +600,9 @@ public class EMFCompareStructureMergeViewer extends DiffTreeViewer implements Co
 		// XXX MBA change to 3.105 once bug #366528 is fixed
 		Version keplerStart = Version.parseVersion("3.105");
 
-		if (uiWorkbenchBundle != null && uiWorkbenchBundle.getVersion().compareTo(junoStart) >= 0
-				&& uiWorkbenchBundle.getVersion().compareTo(keplerStart) < 0) {
+		if (uiWorkbenchBundle != null
+				&& OSGIVersionUtil.compare(uiWorkbenchBundle.getVersion(), junoStart) >= 0
+				&& OSGIVersionUtil.compare(uiWorkbenchBundle.getVersion(), keplerStart) < 0) {
 			IAction action = new CommandAction(PlatformUI.getWorkbench(),
 					"org.eclipse.emf.compare.ide.ui.saveComparisonModel");
 			action.setToolTipText("Save Comparison model"); //$NON-NLS-1$
