@@ -6,8 +6,7 @@
 <location includeAllPlatforms="false" includeMode="planner" includeSource="false" type="InstallableUnit">
 <unit id="com.google.guava" version="11.0.2.v201303041551"/>
 <unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
-<unit id="org.junit" version="4.8.1.v4_8_1_v20100427-1100"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20130308121626/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="false" type="InstallableUnit">
 <unit id="org.eclipse.platform.sdk" version="3.6.2.M20110210-1200"/>
@@ -20,6 +19,7 @@
 <unit id="org.eclipse.gmf.runtime.sdk.feature.group" version="1.4.2.v20110201-1000-67G49E9QYBfkXgwmVt5ksk7w9Vqi"/>
 <unit id="org.eclipse.ocl.all.sdk.feature.group" version="3.0.2.R30x_v201101181635-7J-7A8j_CDZUhIyiEJYRHlnWupBh"/>
 <unit id="org.eclipse.uml2.sdk.feature.group" version="3.1.2.v201010261927"/>
+<unit id="org.junit4" version="4.8.1.v20100525"/>
 <repository location="http://download.eclipse.org/releases/helios"/>
 </location>
 </locations>
