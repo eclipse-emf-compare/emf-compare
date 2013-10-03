@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.emf.compare.uml2"
       label="%featureName"
-      version="2.1.1.qualifier"
+      version="2.1.2.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.emf.compare.uml2">
 
@@ -19,8 +19,8 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.emf.compare" version="2.1.1.qualifier"/>
-      <import feature="org.eclipse.emf.compare.ide.ui" version="2.1.1.qualifier"/>
+      <import feature="org.eclipse.emf.compare" version="2.1.2.qualifier"/>
+      <import feature="org.eclipse.emf.compare.ide.ui" version="2.1.2.qualifier"/>
       <import plugin="org.eclipse.uml2.uml" version="3.2.0" match="greaterOrEqual"/>
    </requires>
 
