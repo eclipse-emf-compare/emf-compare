@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.OSGIVersionUtil;
 import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
@@ -66,7 +67,7 @@ public final class AccessorAdapter implements ITypedElement, IStreamContentAcces
 		 */
 		Bundle compareBundle = Platform.getBundle("org.eclipse.compare"); //$NON-NLS-1$
 		Version compareBundleVersion = compareBundle.getVersion();
-		if (compareBundleVersion.compareTo(BUG_293926_VERSION) < 0) {
+		if (OSGIVersionUtil.compare(compareBundleVersion, BUG_293926_VERSION) < 0) {
 			// workaround for before before indigo SR1 - 3.7.1
 			return new ByteArrayInputStream(new byte[] {' ' });
 		} else {
