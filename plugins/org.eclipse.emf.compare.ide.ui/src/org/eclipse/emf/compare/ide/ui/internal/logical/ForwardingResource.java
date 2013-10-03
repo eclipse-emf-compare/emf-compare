@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Map;
 
@@ -48,7 +50,21 @@ public abstract class ForwardingResource extends ForwardingAdaptable implements 
 	}
 
 	public void accept(IResourceProxyVisitor visitor, int depth, int memberFlags) throws CoreException {
-		delegate().accept(visitor, depth, memberFlags);
+		try {
+			Method method = delegate().getClass().getDeclaredMethod("accept", IResourceProxyVisitor.class, //$NON-NLS-1$
+					int.class, int.class);
+			if (method != null) {
+				method.invoke(delegate(), visitor, Integer.valueOf(depth), Integer.valueOf(memberFlags));
+			}
+		} catch (NoSuchMethodException e) {
+			// swallow
+		} catch (IllegalAccessException e) {
+			// swallow
+		} catch (IllegalArgumentException e) {
+			// swallow
+		} catch (InvocationTargetException e) {
+			// swallow
+		}
 	}
 
 	public void accept(IResourceVisitor visitor) throws CoreException {
