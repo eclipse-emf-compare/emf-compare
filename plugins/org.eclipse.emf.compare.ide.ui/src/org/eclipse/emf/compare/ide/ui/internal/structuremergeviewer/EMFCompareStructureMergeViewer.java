@@ -427,8 +427,18 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 			undoAction = new UndoAction(editingDomain);
 			redoAction = new RedoAction(editingDomain);
 
-			fHandlerService.setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
-			fHandlerService.setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
+			SWTUtil.safeAsyncExec(new Runnable() {
+				public void run() {
+					fHandlerService.updatePaneActionHandlers(new Runnable() {
+						public void run() {
+							fHandlerService.setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
+							fHandlerService.setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
+
+						}
+					});
+				}
+			});
+
 		}
 	}
 

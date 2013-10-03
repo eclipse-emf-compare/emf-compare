@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.edit.ui.EMFEditUIPlugin;
 import org.eclipse.jface.action.Action;
 
@@ -66,8 +67,9 @@ public class UndoAction extends Action {
 
 		Command undoCommand = domain.getCommandStack().getUndoCommand();
 		if (undoCommand != null && undoCommand.getLabel() != null) {
-			setText(EMFEditUIPlugin.INSTANCE.getString("_UI_Undo_menu_item", new Object[] {undoCommand //$NON-NLS-1$
-					.getLabel() }));
+			setText(EMFEditUIPlugin.INSTANCE
+					.getString(
+							"_UI_Undo_menu_item", new Object[] {EMFCompareIDEUIMessages.getString("undo.menu.item.text") })); //$NON-NLS-1$//$NON-NLS-2$
 		} else {
 			setText(EMFEditUIPlugin.INSTANCE.getString("_UI_Undo_menu_item", new Object[] {"" })); //$NON-NLS-1$ //$NON-NLS-2$
 		}

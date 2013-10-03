@@ -76,7 +76,6 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.services.IServiceLocator;
@@ -324,12 +323,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			menuService.populateContributionManager(toolBarManager,
 					"toolbar:org.eclipse.emf.compare.contentmergeviewer.toolbar");
 		}
-
-		undoAction = new UndoAction(getEMFCompareConfiguration().getEditingDomain());
-		redoAction = new RedoAction(getEMFCompareConfiguration().getEditingDomain());
-
-		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
-		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
 
 	}
 

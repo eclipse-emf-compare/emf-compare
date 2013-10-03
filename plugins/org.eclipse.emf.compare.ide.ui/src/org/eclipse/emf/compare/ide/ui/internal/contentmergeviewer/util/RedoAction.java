@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.edit.ui.EMFEditUIPlugin;
 import org.eclipse.jface.action.Action;
 
@@ -66,8 +67,8 @@ public class RedoAction extends Action {
 
 		Command redoCommand = domain.getCommandStack().getRedoCommand();
 		if (redoCommand != null && redoCommand.getLabel() != null) {
-			setText(EMFEditUIPlugin.INSTANCE.getString("_UI_Redo_menu_item", new Object[] {redoCommand //$NON-NLS-1$
-					.getLabel() }));
+			setText(EMFEditUIPlugin.INSTANCE.getString("_UI_Redo_menu_item", //$NON-NLS-1$
+					new Object[] {EMFCompareIDEUIMessages.getString("redo.menu.item.text") })); //$NON-NLS-1$
 		} else {
 			setText(EMFEditUIPlugin.INSTANCE.getString("_UI_Redo_menu_item", new Object[] {"" })); //$NON-NLS-1$ //$NON-NLS-2$
 		}
