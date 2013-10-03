@@ -42,7 +42,6 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 	 */
 	public EMFCompareStructureMergeViewerLabelProvider(AdapterFactory adapterFactory, Viewer viewer) {
 		super(adapterFactory, viewer);
-		isFireLabelUpdateNotifications = true;
 	}
 
 	/**

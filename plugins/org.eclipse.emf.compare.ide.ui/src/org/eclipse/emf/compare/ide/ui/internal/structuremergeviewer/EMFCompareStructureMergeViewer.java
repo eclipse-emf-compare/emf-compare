@@ -331,6 +331,7 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 								ICompareInput.class);
 						SWTUtil.safeAsyncExec(new Runnable() {
 							public void run() {
+								refresh();
 								setSelection(new StructuredSelection(adaptedAffectedObject), true);
 							}
 						});
