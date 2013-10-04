@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.editor;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.compare.internal.CompareEditor;
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
@@ -42,9 +40,6 @@ public class PropertySheetAdapterFactory implements IAdapterFactory {
 					IEditorInput editorInput = ((CompareEditor)adaptableObject).getEditorInput();
 					if (editorInput instanceof CompareEditorInput) {
 						propertySheetPage = new ExtendedPropertySheetPage(null);
-						CompareConfiguration configuration = ((CompareEditorInput)editorInput)
-								.getCompareConfiguration();
-						configuration.setProperty(EMFCompareConstants.PROPERTY_SHEET, propertySheetPage);
 					}
 				}
 			}
