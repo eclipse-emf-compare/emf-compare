@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -2014,6 +2014,25 @@ public class ConflictDetectionTest {
 		final Resource left = input.getILeft();
 		final Resource origin = input.getIOrigin();
 		final Resource right = input.getIRight();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
+		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
+		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+
+		Conflict soleConflict = conflicts.get(0);
+		assertSame(ConflictKind.PSEUDO, soleConflict.getKind());
+	}
+
+	@Test
+	public void testJUseCase() throws IOException {
+		final Resource left = input.getJLeft();
+		final Resource origin = input.getJOrigin();
+		final Resource right = input.getJRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		final Comparison comparison = EMFCompare.builder().build().compare(scope);

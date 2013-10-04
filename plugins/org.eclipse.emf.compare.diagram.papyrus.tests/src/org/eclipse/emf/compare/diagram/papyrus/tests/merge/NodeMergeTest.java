@@ -1338,8 +1338,6 @@ public class NodeMergeTest extends AbstractTest {
 	}
 	
 	@Test
-	@Ignore
-	// FIXME See Bug 406402
 	// Successive merges right to left of NodeLists
 	public void testA4b() throws IOException {
 		final Resource left = input.getA4NodeChangeLeft();
@@ -1425,8 +1423,6 @@ public class NodeMergeTest extends AbstractTest {
 	}
 	
 	@Test
-	@Ignore
-	// FIXME See Bug 406402
 	// Successive merges left to right of NodeLists
 	public void testA4c() throws IOException {
 		final Resource left = input.getA4NodeChangeLeft();

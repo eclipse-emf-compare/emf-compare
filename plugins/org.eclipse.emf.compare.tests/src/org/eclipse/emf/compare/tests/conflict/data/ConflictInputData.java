@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -584,6 +584,18 @@ public class ConflictInputData extends AbstractInputData {
 
 	public Resource getIRight() throws IOException {
 		return loadFromClassLoader("i/conflict_i_right.nodes");
+	}
+
+	public Resource getJLeft() throws IOException {
+		return loadFromClassLoader("j/conflict_j_left.nodes");
+	}
+
+	public Resource getJOrigin() throws IOException {
+		return loadFromClassLoader("j/conflict_j_origin.nodes");
+	}
+
+	public Resource getJRight() throws IOException {
+		return loadFromClassLoader("j/conflict_j_right.nodes");
 	}
 
 	public Resource getComplexLeft() throws IOException {

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes:Node xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes" xmi:id="_SgoxYKy7EeKXdNRNQo8y5Q" name="model">
+  <containmentRef1 xmi:id="_bFBNQKy7EeKXdNRNQo8y5Q" name="H">
+    <containmentRef1 xmi:id="_cgz10Ky7EeKXdNRNQo8y5Q" name="feature2"/>
+  </containmentRef1>
+  <containmentRef1 xmi:id="_uohCEKy7EeKXdNRNQo8y5Q" name="ShapeH">
+    <containmentRef1 xsi:type="nodes:NodeSingleValueReference" xmi:id="_z3QX0Ky7EeKXdNRNQo8y5Q" name="ShapeFeature2" singleValuedReference="_cgz10Ky7EeKXdNRNQo8y5Q"/>
+  </containmentRef1>
+</nodes:Node>

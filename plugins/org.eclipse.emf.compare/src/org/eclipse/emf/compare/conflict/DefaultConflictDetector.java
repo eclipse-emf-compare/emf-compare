@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -196,12 +196,12 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 */
 	protected void checkContainmentConflict(Comparison comparison, ReferenceChange diff,
 			ReferenceChange candidate) {
+		final boolean candidateIsDelete = isDeleteOrUnsetDiff(candidate);
 		if (candidate.getReference().isContainment()) {
 			// The same value has been changed on both sides in containment references
 			// This is a conflict, but is it a pseudo-conflict?
 			ConflictKind kind = ConflictKind.REAL;
 			final boolean diffIsDelete = isDeleteOrUnsetDiff(diff);
-			final boolean candidateIsDelete = isDeleteOrUnsetDiff(candidate);
 			if (diffIsDelete && candidateIsDelete) {
 				kind = ConflictKind.PSEUDO;
 			} else if (diff.getMatch() == candidate.getMatch()
@@ -220,7 +220,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 			 * We removed an element from its containment difference, but it has been used in some way on the
 			 * other side.
 			 */
-			if (candidate.getKind() == DifferenceKind.DELETE) {
+			if (candidateIsDelete) {
 				// No conflict here
 			} else {
 				// Be it added, moved or changed, this is a REAL conflict
