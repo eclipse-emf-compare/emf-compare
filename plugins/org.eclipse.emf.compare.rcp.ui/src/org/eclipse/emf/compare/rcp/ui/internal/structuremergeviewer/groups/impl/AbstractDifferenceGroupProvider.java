@@ -69,4 +69,14 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 		}
 		return ret;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#isAdapterForType(java.lang.Object)
+	 */
+	@Override
+	public boolean isAdapterForType(Object type) {
+		return type == IDifferenceGroupProvider.class;
+	}
 }

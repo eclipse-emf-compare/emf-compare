@@ -52,16 +52,6 @@ public class DefaultGroupProvider extends AbstractDifferenceGroupProvider implem
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#isAdapterForType(java.lang.Object)
-	 */
-	@Override
-	public boolean isAdapterForType(Object type) {
-		return type == IDifferenceGroupProvider.class;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#getLabel()
 	 */
 	public String getLabel() {

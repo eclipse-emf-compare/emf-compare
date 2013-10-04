@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.prov
 
 import static com.google.common.collect.Lists.newArrayList;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
 import java.util.Collection;
@@ -87,7 +88,12 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 					treeNode, IDifferenceGroupProvider.class);
 			Comparison comparison = (Comparison)data;
 			Collection<? extends IDifferenceGroup> groups = groupProvider.getGroups(comparison);
-			if (groups.size() > 1) {
+			if (groups.isEmpty()) {
+				return ImmutableList.of();
+			} else if (groups.size() == 1) {
+				// do not display group if there is only one.
+				return groups.iterator().next().getChildren();
+			} else {
 				List<GroupItemProviderAdapter> children = newArrayList();
 				for (IDifferenceGroup differenceGroup : groups) {
 					GroupItemProviderAdapter adapter = new GroupItemProviderAdapter(adapterFactory, treeNode,
@@ -95,9 +101,6 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 					children.add(adapter);
 				}
 				return children;
-			} else {
-				// do not display group if there is only one.
-				return groups.iterator().next().getChildren();
 			}
 		} else {
 			return super.getChildren(object);
