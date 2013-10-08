@@ -11,18 +11,14 @@
 package org.eclipse.emf.compare.provider.spec;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.google.common.collect.Iterables.any;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
-import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
 
 /**
@@ -111,11 +107,7 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 	 */
 	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		Match match = (Match)object;
-		ComposedStyledString styledString = new ComposedStyledString();
-		if (any(match.getAllDifferences(), hasState(DifferenceState.UNRESOLVED))) {
-			styledString.append("> ", Style.DECORATIONS_STYLER); //$NON-NLS-1$
-		}
-		styledString.append(getText(object));
+		ComposedStyledString styledString = new ComposedStyledString(getText(object));
 		return styledString;
 	}
 

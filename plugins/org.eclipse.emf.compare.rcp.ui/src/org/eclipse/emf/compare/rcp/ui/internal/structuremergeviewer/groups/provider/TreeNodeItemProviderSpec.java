@@ -10,18 +10,28 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider;
 
+import static com.google.common.collect.Iterators.any;
+import static com.google.common.collect.Iterators.filter;
+import static com.google.common.collect.Iterators.transform;
 import static com.google.common.collect.Lists.newArrayList;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
 import com.google.common.collect.ImmutableList;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.provider.ExtendedAdapterFactoryItemDelegator;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
+import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
+import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.ecore.EObject;
@@ -93,7 +103,7 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 			} else {
 				if (groupItemProviderAdapters == null) {
 					groupItemProviderAdapters = newArrayList();
-				for (IDifferenceGroup differenceGroup : groups) {
+					for (IDifferenceGroup differenceGroup : groups) {
 						groupItemProviderAdapters.add(new GroupItemProviderAdapter(adapterFactory, treeNode,
 								differenceGroup));
 					}
@@ -114,7 +124,19 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 	 */
 	public IComposedStyledString getStyledText(Object object) {
 		TreeNode treeNode = (TreeNode)object;
-		return ((ExtendedAdapterFactoryItemDelegator)itemDelegator).getStyledText(treeNode.getData());
+		EObject data = treeNode.getData();
+		ComposedStyledString styledString = new ComposedStyledString();
+		if (data instanceof Match) {
+			Iterator<EObject> eAllContents = transform(treeNode.eAllContents(),
+					IDifferenceGroup.TREE_NODE_DATA);
+			Iterator<Diff> allDifferences = filter(eAllContents, Diff.class);
+			if (any(allDifferences, hasState(DifferenceState.UNRESOLVED))) {
+				styledString.append("> ", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+			}
+		}
+		IComposedStyledString treeNodeText = ((ExtendedAdapterFactoryItemDelegator)itemDelegator)
+				.getStyledText(treeNode.getData());
+		return styledString.append(treeNodeText);
 	}
 
 	/**
