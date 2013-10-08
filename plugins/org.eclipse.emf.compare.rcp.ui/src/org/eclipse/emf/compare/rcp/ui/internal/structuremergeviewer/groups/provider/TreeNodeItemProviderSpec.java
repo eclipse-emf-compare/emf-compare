@@ -13,11 +13,9 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.prov
 import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Maps;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
@@ -38,8 +36,7 @@ import org.eclipse.emf.edit.tree.provider.TreeNodeItemProvider;
  */
 public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements IItemStyledLabelProvider, IItemColorProvider, IItemFontProvider {
 
-	/***/
-	private final Map<IDifferenceGroup, GroupItemProviderAdapter> fGroupAdapters = Maps.newHashMap();
+	private List<GroupItemProviderAdapter> groupItemProviderAdapters;
 
 	/**
 	 * This constructs an instance from a factory.
@@ -94,13 +91,16 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 				// do not display group if there is only one.
 				return groups.iterator().next().getChildren();
 			} else {
-				List<GroupItemProviderAdapter> children = newArrayList();
+				if (groupItemProviderAdapters == null) {
+					groupItemProviderAdapters = newArrayList();
 				for (IDifferenceGroup differenceGroup : groups) {
-					GroupItemProviderAdapter adapter = new GroupItemProviderAdapter(adapterFactory, treeNode,
-							differenceGroup);
-					children.add(adapter);
+						groupItemProviderAdapters.add(new GroupItemProviderAdapter(adapterFactory, treeNode,
+								differenceGroup));
+					}
+					return groupItemProviderAdapters;
+				} else {
+					return groupItemProviderAdapters;
 				}
-				return children;
 			}
 		} else {
 			return super.getChildren(object);

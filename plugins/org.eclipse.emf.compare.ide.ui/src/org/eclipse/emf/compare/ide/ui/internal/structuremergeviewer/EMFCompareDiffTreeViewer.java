@@ -78,7 +78,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
-import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -198,9 +197,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		};
 		getControl().addListener(SWT.EraseItem, fEraseItemListener);
 
-		// Wrap the defined comparer in our own.
-		setComparer(new CompareInputComparer(super.getComparer()));
-
 		if (eventBus == null) {
 			eventBus = new EventBus();
 			eventBus.register(this);
@@ -315,6 +311,7 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 			}
 		};
 		configuration.addChangeListener(configurationChangeListener);
+		setUseHashlookup(true);
 	}
 
 	/**
@@ -689,17 +686,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 			Object[] children = cp.getChildren(element);
 			getMatchCount(cp, children, diffs);
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.StructuredViewer#setComparer(org.eclipse.jface.viewers.IElementComparer)
-	 */
-	@Override
-	public void setComparer(IElementComparer comparer) {
-		// Wrap this new comparer in our own
-		super.setComparer(new CompareInputComparer(comparer));
 	}
 
 	/**
