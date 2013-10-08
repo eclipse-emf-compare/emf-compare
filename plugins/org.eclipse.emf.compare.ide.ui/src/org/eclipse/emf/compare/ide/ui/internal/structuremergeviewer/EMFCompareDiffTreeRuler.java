@@ -15,7 +15,6 @@ import static com.google.common.collect.Iterables.filter;
 import com.google.common.base.Predicate;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -33,6 +32,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
+import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.ecore.EObject;
@@ -239,28 +239,11 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	public void computeConsequences() {
 		clearAllData();
 		if (selectedDiff != null) {
-			boolean ltr = fConfiguration.getPreviewMergeMode();
-			boolean leftEditable = fConfiguration.isLeftEditable();
-			boolean rightEditable = fConfiguration.isRightEditable();
-
-			if (rightEditable) {
-				if (leftEditable) { // RW both sides
-					requires = DiffUtil.getRequires(selectedDiff, ltr);
-					unmergeables = DiffUtil.getUnmergeables(selectedDiff, ltr);
-				} else { // !leftEditable
-					requires = DiffUtil.getRequires(selectedDiff, !ltr);
-					unmergeables = DiffUtil.getUnmergeables(selectedDiff, !ltr);
-				}
-			} else { // !rightEditable
-				if (leftEditable) {
-					requires = DiffUtil.getRequires(selectedDiff, ltr);
-					unmergeables = DiffUtil.getUnmergeables(selectedDiff, ltr);
-				} else { // R-Only both
-					// nothing
-					requires = ImmutableSet.of();
-					unmergeables = ImmutableSet.of();
-				}
-			}
+			MergeMode mergePreviewMode = fConfiguration.getMergePreviewMode();
+			boolean leftToRigh = mergePreviewMode.isLeftToRight(fConfiguration.isLeftEditable(),
+					fConfiguration.isRightEditable());
+			requires = DiffUtil.getRequires(selectedDiff, leftToRigh);
+			unmergeables = DiffUtil.getUnmergeables(selectedDiff, leftToRigh);
 			associateTreeItems(Lists.newLinkedList(Iterables.concat(requires, unmergeables)));
 		}
 	}

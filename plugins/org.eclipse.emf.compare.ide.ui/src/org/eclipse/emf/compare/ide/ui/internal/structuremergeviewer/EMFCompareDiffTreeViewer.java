@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.any;
+import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 
@@ -25,6 +28,7 @@ import com.google.common.eventbus.Subscribe;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -42,28 +46,27 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.AcceptAllChangesAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.AcceptChangeAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.CollapseAllModelAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.DropDownAcceptRejectMenuAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.DropDownMergeMenuAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.ExpandAllModelAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAllToLeftAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAllToRightAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeToLeftAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeToRightAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.RejectAllChangesAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.RejectChangeAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAllNonConflictingAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SaveComparisonModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SelectNextDiffAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SelectPreviousDiffAction;
+import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
+import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.FilterActionMenu;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.GroupActionMenu;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilterSelectionChangeEvent;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
@@ -149,6 +152,10 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	private Listener fEraseItemListener;
 
 	private AdapterFactory adapterFactory;
+
+	private List<MergeAction> mergeActions = newArrayListWithCapacity(4);
+
+	private List<MergeAllNonConflictingAction> mergeAllNonConflictingActions = newArrayListWithCapacity(2);
 
 	/**
 	 * @param parent
@@ -252,6 +259,62 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 			}
 		};
 		getTree().setData(INavigatable.NAVIGATOR_PROPERTY, nav);
+
+		configurationChangeListener = new EMFCompareConfigurationChangeListener() {
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener#editingDomainChange(org.eclipse.emf.compare.domain.ICompareEditingDomain,
+			 *      org.eclipse.emf.compare.domain.ICompareEditingDomain)
+			 */
+			@Override
+			public void editingDomainChange(ICompareEditingDomain oldValue, ICompareEditingDomain newValue) {
+				for (MergeAction mergeAction : mergeActions) {
+					mergeAction.setEditingDomain(newValue);
+				}
+			}
+
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener#selectedDifferenceFiltersChange(java.util.Set,
+			 *      java.util.Set)
+			 */
+			@Override
+			public void selectedDifferenceFiltersChange(Set<IDifferenceFilter> oldValue,
+					Set<IDifferenceFilter> newValue) {
+				final boolean enabled = any(newValue, instanceOf(CascadingDifferencesFilter.class));
+				for (MergeAction mergeAction : mergeActions) {
+					mergeAction.setCascadingDifferencesFilterEnabled(enabled);
+				}
+				getTree().redraw();
+			}
+
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener#mergePreviewModeChange(org.eclipse.emf.compare.internal.merge.MergeMode,
+			 *      org.eclipse.emf.compare.internal.merge.MergeMode)
+			 */
+			@Override
+			public void mergePreviewModeChange(MergeMode oldValue, MergeMode newValue) {
+				getTree().redraw();
+			}
+
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener#comparisonChange(org.eclipse.emf.compare.Comparison,
+			 *      org.eclipse.emf.compare.Comparison)
+			 */
+			@Override
+			public void comparisonChange(Comparison oldValue, Comparison newValue) {
+				for (MergeAllNonConflictingAction mergeAction : mergeAllNonConflictingActions) {
+					mergeAction.setComparison(newValue);
+				}
+			}
+		};
+		configuration.addChangeListener(configurationChangeListener);
 	}
 
 	/**
@@ -408,6 +471,8 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 			return t instanceof TreeNode && ((TreeNode)t).getData() instanceof Diff;
 		}
 	};
+
+	private final EMFCompareConfigurationChangeListener configurationChangeListener;
 
 	/**
 	 * Returns the sorted and filtered set of TreeNode children of the given element.
@@ -664,19 +729,21 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		boolean leftEditable = getCompareConfiguration().isLeftEditable();
 		boolean rightEditable = getCompareConfiguration().isRightEditable();
 
+		final EnumSet<MergeMode> modes;
 		if (rightEditable && leftEditable) {
-			toolbarManager.add(new DropDownMergeMenuAction(getCompareConfiguration()));
-			toolbarManager.add(new MergeToRightAction(getCompareConfiguration(), this));
-			toolbarManager.add(new MergeToLeftAction(getCompareConfiguration(), this));
-			toolbarManager.add(new MergeAllToRightAction(getCompareConfiguration()));
-			toolbarManager.add(new MergeAllToLeftAction(getCompareConfiguration()));
+			modes = EnumSet.of(MergeMode.RIGHT_TO_LEFT, MergeMode.LEFT_TO_RIGHT);
 		} else {
-			toolbarManager.add(new DropDownAcceptRejectMenuAction(getCompareConfiguration()));
-			toolbarManager.add(new AcceptChangeAction(getCompareConfiguration(), this));
-			toolbarManager.add(new RejectChangeAction(getCompareConfiguration(), this));
-			toolbarManager.add(new AcceptAllChangesAction(getCompareConfiguration()));
-			toolbarManager.add(new RejectAllChangesAction(getCompareConfiguration()));
+			modes = EnumSet.of(MergeMode.ACCEPT, MergeMode.REJECT);
 		}
+
+		toolbarManager.add(new DropDownMergeMenuAction(getCompareConfiguration(), modes));
+		for (MergeMode mode : modes) {
+			toolbarManager.add(createMergeAction(mode));
+		}
+		for (MergeMode mode : modes) {
+			toolbarManager.add(createMergeAllNonConflictingAction(mode));
+		}
+
 		toolbarManager.add(new Separator());
 		toolbarManager.add(new SelectNextDiffAction(getCompareConfiguration()));
 		toolbarManager.add(new SelectPreviousDiffAction(getCompareConfiguration()));
@@ -688,6 +755,27 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		toolbarManager.add(filterActionMenu);
 		toolbarManager.add(new Separator());
 		toolbarManager.add(new SaveComparisonModelAction(getCompareConfiguration()));
+	}
+
+	private MergeAction createMergeAction(MergeMode mergeMode) {
+		EMFCompareConfiguration cc = getCompareConfiguration();
+		IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
+		MergeAction mergeAction = new MergeAction(cc.getEditingDomain(), mergerRegistry, mergeMode, cc
+				.isLeftEditable(), cc.isRightEditable());
+		addSelectionChangedListener(mergeAction);
+		mergeActions.add(mergeAction);
+		return mergeAction;
+	}
+
+	private MergeAction createMergeAllNonConflictingAction(MergeMode mergeMode) {
+		EMFCompareConfiguration cc = getCompareConfiguration();
+		IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
+		MergeAllNonConflictingAction mergeAction = new MergeAllNonConflictingAction(cc.getEditingDomain(), cc
+				.getComparison(), mergerRegistry, mergeMode, cc.isLeftEditable(), cc.isRightEditable());
+		addSelectionChangedListener(mergeAction);
+		mergeActions.add(mergeAction);
+		mergeAllNonConflictingActions.add(mergeAction);
+		return mergeAction;
 	}
 
 	/**
@@ -805,6 +893,10 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	@Override
 	protected void handleDispose(DisposeEvent event) {
 		getControl().removeListener(SWT.EraseItem, fEraseItemListener);
+		for (MergeAction mergeAction : mergeActions) {
+			removeSelectionChangedListener(mergeAction);
+		}
+		getCompareConfiguration().removeChangeListener(configurationChangeListener);
 		super.handleDispose(event);
 	}
 
@@ -872,30 +964,14 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 						Notifier targetItem = ((Adapter)dataTreeItem).getTarget();
 						if (targetItem instanceof TreeNode) {
 							EObject dataItem = ((TreeNode)targetItem).getData();
-							final Set<Diff> unmergeables;
-							final Set<Diff> requires;
-							boolean ltr = getCompareConfiguration().getPreviewMergeMode();
+							MergeMode mergePreviewMode = getCompareConfiguration().getMergePreviewMode();
 							boolean leftEditable = getCompareConfiguration().isLeftEditable();
 							boolean rightEditable = getCompareConfiguration().isRightEditable();
 							Diff selectedDiff = (Diff)selectionData;
-							if (rightEditable) {
-								if (leftEditable) { // RW both sides
-									requires = DiffUtil.getRequires(selectedDiff, ltr);
-									unmergeables = DiffUtil.getUnmergeables(selectedDiff, ltr);
-								} else { // !leftEditable
-									requires = DiffUtil.getRequires(selectedDiff, !ltr);
-									unmergeables = DiffUtil.getUnmergeables(selectedDiff, !ltr);
-								}
-							} else { // !rightEditable
-								if (leftEditable) {
-									requires = DiffUtil.getRequires(selectedDiff, ltr);
-									unmergeables = DiffUtil.getUnmergeables(selectedDiff, ltr);
-								} else { // R-Only both
-									// nothing
-									requires = ImmutableSet.of();
-									unmergeables = ImmutableSet.of();
-								}
-							}
+							boolean leftToRight = mergePreviewMode.isLeftToRight(leftEditable, rightEditable);
+							final Set<Diff> requires = DiffUtil.getRequires(selectedDiff, leftToRight);
+							final Set<Diff> unmergeables = DiffUtil
+									.getUnmergeables(selectedDiff, leftToRight);
 							final GC g = event.gc;
 							if (requires.contains(dataItem)) {
 								paintItemBackground(g, item, requiredDiffColor);

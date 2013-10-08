@@ -19,29 +19,29 @@ import org.eclipse.emf.compare.DifferenceSource;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class DiffMergeDataAdapter extends AdapterImpl implements IDiffMergeData {
-
-	/** The merge way. */
-	boolean leftToRight;
+public class MergeDataImpl extends AdapterImpl implements IMergeData {
 
 	/** Left side is editable. */
-	boolean leftEditable;
+	private boolean leftEditable;
 
 	/** Right side is editable. */
-	boolean rightEditable;
+	private boolean rightEditable;
+
+	/** The merge mode used to merge the associated diff. */
+	private MergeMode mergeMode;
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param leftToRight
-	 *            The merge way.
+	 * @param mergeMode
+	 *            The merge mode.
 	 * @param leftEditable
 	 *            Left side editable.
 	 * @param rightEditable
 	 *            Right side editable.
 	 */
-	public DiffMergeDataAdapter(boolean leftToRight, boolean leftEditable, boolean rightEditable) {
-		this.leftToRight = leftToRight;
+	public MergeDataImpl(MergeMode mergeMode, boolean leftEditable, boolean rightEditable) {
+		this.mergeMode = mergeMode;
 		this.leftEditable = leftEditable;
 		this.rightEditable = rightEditable;
 	}
@@ -49,34 +49,25 @@ public class DiffMergeDataAdapter extends AdapterImpl implements IDiffMergeData 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.internal.merge.IDiffMergeData#hasBeenMergedToLeft()
+	 * @see org.eclipse.emf.compare.internal.merge.IMergeData#getMergeMode()
 	 */
-	public boolean hasBeenMergedToLeft() {
-		return !leftToRight;
+	public MergeMode getMergeMode() {
+		return mergeMode;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.internal.merge.IDiffMergeData#hasBeenMergedToRight()
+	 * @see org.eclipse.emf.compare.internal.merge.IMergeData#getMergeTarget()
 	 */
-	public boolean hasBeenMergedToRight() {
-		return leftToRight;
+	public DifferenceSource getMergeTarget() {
+		return mergeMode.getMergeTarget(leftEditable, rightEditable);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.internal.merge.IDiffMergeData#setMergedTo(boolean)
-	 */
-	public void setMergedTo(boolean lToR) {
-		this.leftToRight = lToR;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.internal.merge.IDiffMergeData#isLeftEditable()
+	 * @see org.eclipse.emf.compare.internal.merge.IMergeData#isLeftEditable()
 	 */
 	public boolean isLeftEditable() {
 		return leftEditable;
@@ -85,16 +76,21 @@ public class DiffMergeDataAdapter extends AdapterImpl implements IDiffMergeData 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.internal.merge.IDiffMergeData#isRightEditable()
+	 * @see org.eclipse.emf.compare.internal.merge.IMergeData#isRightEditable()
 	 */
 	public boolean isRightEditable() {
 		return rightEditable;
 	}
 
+	@Override
+	public boolean isAdapterForType(Object type) {
+		return type == IMergeData.class;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.internal.merge.IDiffMergeData#setLeftEditable(boolean)
+	 * @see org.eclipse.emf.compare.internal.merge.IMergeData#setLeftEditable(boolean)
 	 */
 	public void setLeftEditable(boolean leftEditable) {
 		this.leftEditable = leftEditable;
@@ -103,27 +99,18 @@ public class DiffMergeDataAdapter extends AdapterImpl implements IDiffMergeData 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.internal.merge.IDiffMergeData#setRightEditable(boolean)
+	 * @see org.eclipse.emf.compare.internal.merge.IMergeData#setRightEditable(boolean)
 	 */
 	public void setRightEditable(boolean rightEditable) {
 		this.rightEditable = rightEditable;
 	}
 
-	@Override
-	public boolean isAdapterForType(Object type) {
-		return type == IDiffMergeData.class;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.internal.merge.IDiffMergeData#mergedTo()
+	 * @see org.eclipse.emf.compare.internal.merge.IMergeData#setMergeMode(org.eclipse.emf.compare.internal.merge.MergeMode)
 	 */
-	public DifferenceSource mergedTo() {
-		if (leftToRight) {
-			return DifferenceSource.RIGHT;
-		} else {
-			return DifferenceSource.LEFT;
-		}
+	public void setMergeMode(MergeMode mergeMode) {
+		this.mergeMode = mergeMode;
 	}
 }

@@ -18,6 +18,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.ecore.EObject;
@@ -103,10 +104,10 @@ public class EMFCompareConfigurationChangeListener implements IEMFCompareConfigu
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfigurationChangeListener#previewMergeModeChange(org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration.PreviewMergeMode,
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfigurationChangeListener#mergePreviewModeChange(org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration.PreviewMergeMode,
 	 *      org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration.PreviewMergeMode)
 	 */
-	public void previewMergeModeChange(Boolean oldValue, Boolean newValue) {
+	public void mergePreviewModeChange(MergeMode oldValue, MergeMode newValue) {
 
 	}
 

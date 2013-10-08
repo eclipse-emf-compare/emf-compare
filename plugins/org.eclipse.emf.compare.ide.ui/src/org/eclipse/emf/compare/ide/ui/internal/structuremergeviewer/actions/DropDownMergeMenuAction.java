@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,35 +10,40 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
+import static com.google.common.collect.Lists.newArrayList;
+
+import java.util.EnumSet;
+import java.util.List;
+
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
+import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
- * Action that manages the click on the dropdown menu of the toolbar of the structure merge viewer.
+ * Action that manages the dropdown menu that allows to show the consequences of an accept or a reject.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
+ * @since 3.0
  */
 public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 
-	/** The compare configuration object. */
+	/** The compare configuration object used to get the compare model. */
 	private final EMFCompareConfiguration configuration;
 
 	/** The menu associated with this action. */
 	private Menu fMenu;
 
-	/** The left to right menu item. */
-	private final Action leftToRightItem;
-
-	/** The right to left menu item. */
-	private final Action rightToLeftItem;
+	/** The accept menu item. */
+	private final List<Action> actions;
 
 	private final EMFCompareConfigurationChangeListener changeListener;
 
@@ -48,23 +53,22 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public DropDownMergeMenuAction(EMFCompareConfiguration configuration) {
+	public DropDownMergeMenuAction(EMFCompareConfiguration configuration, EnumSet<MergeMode> previewModes) {
 		this.configuration = configuration;
-		setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.tooltip")); //$NON-NLS-1$
-		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
-				"icons/full/toolb16/left_to_right.gif")); //$NON-NLS-1$
+		actions = newArrayList();
 
 		changeListener = new EMFCompareConfigurationChangeListener() {
 			@Override
-			public void previewMergeModeChange(Boolean oldValue, Boolean newValue) {
-				updateMenu(newValue.booleanValue());
+			public void mergePreviewModeChange(MergeMode oldValue, MergeMode newValue) {
+				updateMenu(newValue);
 			}
 		};
 		configuration.addChangeListener(changeListener);
 
-		leftToRightItem = new DropDownAction(configuration, true);
-		rightToLeftItem = new DropDownAction(configuration, false);
-		updateMenu(configuration.getPreviewMergeMode());
+		for (MergeMode mergePreviewMode : previewModes) {
+			actions.add(new DropDownAction(configuration, mergePreviewMode));
+		}
+		updateMenu(configuration.getMergePreviewMode());
 
 		setMenuCreator(this);
 	}
@@ -76,8 +80,8 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 	 */
 	@Override
 	public void run() {
-		boolean mergeWay = configuration.getPreviewMergeMode();
-		configuration.setPreviewMergeMode(!mergeWay);
+		MergeMode mergeWay = configuration.getMergePreviewMode();
+		configuration.setMergePreviewMode(mergeWay.inverse());
 	}
 
 	/**
@@ -113,9 +117,9 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 		}
 
 		fMenu = new Menu(parent);
-		addActionToMenu(fMenu, leftToRightItem);
-		addActionToMenu(fMenu, rightToLeftItem);
-
+		for (IAction action : actions) {
+			addActionToMenu(fMenu, action);
+		}
 		return fMenu;
 	}
 
@@ -127,7 +131,7 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 	 * @param action
 	 *            the given action.
 	 */
-	protected void addActionToMenu(Menu parent, Action action) {
+	protected void addActionToMenu(Menu parent, IAction action) {
 		ActionContributionItem item = new ActionContributionItem(action);
 		item.fill(parent, -1);
 	}
@@ -135,15 +139,34 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 	/**
 	 * Update the icon and tooltip of the dropdown menu.
 	 */
-	protected void updateMenu(boolean mergeWay) {
-		if (mergeWay) {
-			setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
-					"icons/full/toolb16/left_to_right.gif")); //$NON-NLS-1$
-			setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.left.to.right.tooltip")); //$NON-NLS-1$
-		} else {
-			setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
-					"icons/full/toolb16/right_to_left.gif")); //$NON-NLS-1$
-			setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.right.to.left.tooltip")); //$NON-NLS-1$
+	protected void updateMenu(MergeMode mergeWay) {
+		setToolTipTextAndImage(this, mergeWay);
+	}
+
+	static void setToolTipTextAndImage(IAction action, MergeMode mergeMode) {
+		switch (mergeMode) {
+			case LEFT_TO_RIGHT:
+				action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
+						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/left_to_right.gif")); //$NON-NLS-1$
+				action.setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.left.to.right.tooltip")); //$NON-NLS-1$
+				break;
+			case RIGHT_TO_LEFT:
+				action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
+						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/right_to_left.gif")); //$NON-NLS-1$
+				action.setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.right.to.left.tooltip")); //$NON-NLS-1$
+				break;
+			case ACCEPT:
+				action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
+						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/accept.gif")); //$NON-NLS-1$
+				action.setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.accept.tooltip")); //$NON-NLS-1$
+				break;
+			case REJECT:
+				action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
+						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/reject.gif")); //$NON-NLS-1$
+				action.setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.reject.tooltip")); //$NON-NLS-1$
+				break;
+			default:
+				throw new IllegalStateException();
 		}
 	}
 
@@ -152,7 +175,7 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 		/** The compare configuration object used to get the compare model. */
 		private final EMFCompareConfiguration configuration;
 
-		private final boolean mode;
+		private final MergeMode mergeMode;
 
 		/**
 		 * Constructor.
@@ -160,18 +183,10 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 		 * @param configuration
 		 *            The compare configuration object.
 		 */
-		public DropDownAction(EMFCompareConfiguration configuration, boolean mode) {
+		public DropDownAction(EMFCompareConfiguration configuration, MergeMode mergeMode) {
 			this.configuration = configuration;
-			this.mode = mode;
-			if (mode) {
-				setText(EMFCompareIDEUIMessages.getString("dropdown.left.to.right.tooltip")); //$NON-NLS-1$
-				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/left_to_right.gif")); //$NON-NLS-1$
-			} else {
-				setText(EMFCompareIDEUIMessages.getString("dropdown.right.to.left.tooltip")); //$NON-NLS-1$
-				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/right_to_left.gif")); //$NON-NLS-1$
-			}
+			this.mergeMode = mergeMode;
+			setToolTipTextAndImage(this, mergeMode);
 		}
 
 		/**
@@ -181,7 +196,7 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 		 */
 		@Override
 		public void run() {
-			configuration.setPreviewMergeMode(mode);
+			configuration.setMergePreviewMode(mergeMode);
 		}
 	}
 }

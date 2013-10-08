@@ -22,11 +22,15 @@ import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
+import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.command.impl.CompareCommandStack;
 import org.eclipse.emf.compare.command.impl.CopyCommand;
 import org.eclipse.emf.compare.command.impl.DualCompareCommandStack;
+import org.eclipse.emf.compare.command.impl.MergeCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.domain.IMergeRunnable;
 import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -263,6 +267,25 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 		ImmutableSet<Notifier> notifiers = notifiersBuilder.addAll(fNotifiers).build();
 
 		return new CopyCommand(fChangeRecorder, notifiers, differences, leftToRight, mergerRegistry);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.domain.ICompareEditingDomain#createCopyCommand(java.util.List, boolean,
+	 *      org.eclipse.emf.compare.merge.IMerger.Registry,
+	 *      org.eclipse.emf.compare.command.ICompareCopyCommand.IMergeRunnable)
+	 */
+	public ICompareCopyCommand createCopyCommand(List<? extends Diff> differences, boolean leftToRight,
+			Registry mergerRegistry, IMergeRunnable runnable) {
+		ImmutableSet.Builder<Notifier> notifiersBuilder = ImmutableSet.builder();
+		for (Diff diff : differences) {
+			notifiersBuilder.add(diff.getMatch().getComparison());
+		}
+		ImmutableSet<Notifier> notifiers = notifiersBuilder.addAll(fNotifiers).build();
+
+		return new MergeCommand(fChangeRecorder, notifiers, differences, leftToRight, mergerRegistry,
+				runnable);
 	}
 
 	/**

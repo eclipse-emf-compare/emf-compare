@@ -26,6 +26,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfigurationChangeListener;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
@@ -65,8 +66,6 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 
 	private static final String PREVIEW_MERGE_MODE = EMFCompareIDEUIPlugin.PLUGIN_ID + ".PREVIEW_MERGE_MODE"; //$NON-NLS-1$
 
-	private static final Boolean PREVIEW_MERGE_MODE__DEFAULT_VALUE = Boolean.FALSE;
-
 	private final List<IEMFCompareConfigurationChangeListener> listeners;
 
 	private final PropertyChangeListener propertyChangeListener;
@@ -97,7 +96,11 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 					SELECTED_DIFFERENCE_GROUP_PROVIDER__DEFAULT_VALUE);
 		}
 
-		compareConfiguration.setProperty(PREVIEW_MERGE_MODE, PREVIEW_MERGE_MODE__DEFAULT_VALUE);
+		if (compareConfiguration.isLeftEditable() && compareConfiguration.isRightEditable()) {
+			compareConfiguration.setProperty(PREVIEW_MERGE_MODE, MergeMode.RIGHT_TO_LEFT);
+		} else {
+			compareConfiguration.setProperty(PREVIEW_MERGE_MODE, MergeMode.ACCEPT);
+		}
 	}
 
 	/**
@@ -192,12 +195,13 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		setProperty(SELECTED_DIFFERENCE_GROUP_PROVIDER, groupProvider);
 	}
 
-	public boolean getPreviewMergeMode() {
-		return ((Boolean)getProperty(PREVIEW_MERGE_MODE)).booleanValue();
+	public MergeMode getMergePreviewMode() {
+		return (MergeMode)getProperty(PREVIEW_MERGE_MODE);
 	}
 
-	public void setPreviewMergeMode(boolean previewMergeMode) {
-		setProperty(PREVIEW_MERGE_MODE, Boolean.valueOf(previewMergeMode));
+	public void setMergePreviewMode(MergeMode previewMergeMode) {
+		Preconditions.checkNotNull(previewMergeMode);
+		setProperty(PREVIEW_MERGE_MODE, previewMergeMode);
 	}
 
 	public AdapterFactory getAdapterFactory() {
@@ -306,10 +310,10 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		}
 
 		protected void handlePreviewMergeModeChange(PropertyChangeEvent event) {
-			Boolean oldValue = (Boolean)event.getOldValue();
-			Boolean newValue = (Boolean)event.getNewValue();
+			MergeMode oldValue = (MergeMode)event.getOldValue();
+			MergeMode newValue = (MergeMode)event.getNewValue();
 			for (IEMFCompareConfigurationChangeListener listener : listeners) {
-				listener.previewMergeModeChange(oldValue.booleanValue(), newValue.booleanValue());
+				listener.mergePreviewModeChange(oldValue, newValue);
 			}
 		}
 	}

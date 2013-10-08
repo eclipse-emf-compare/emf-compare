@@ -18,6 +18,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.ecore.EObject;
@@ -51,6 +52,6 @@ public interface IEMFCompareConfigurationChangeListener {
 	 * @param oldValue
 	 * @param newValue
 	 */
-	void previewMergeModeChange(Boolean oldValue, Boolean newValue);
+	void mergePreviewModeChange(MergeMode oldValue, MergeMode newValue);
 
 }

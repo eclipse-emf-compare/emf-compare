@@ -60,6 +60,7 @@ import org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil;
 import org.eclipse.emf.compare.ide.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
+import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener;
@@ -106,7 +107,7 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 	 */
 	private final class EMFCompareStructureMergeViewerConfigurationChangeListener extends EMFCompareConfigurationChangeListener {
 		@Override
-		public void previewMergeModeChange(Boolean oldValue, Boolean newValue) {
+		public void mergePreviewModeChange(MergeMode oldValue, MergeMode newValue) {
 			treeRuler.computeConsequences();
 			treeRuler.redraw();
 		}

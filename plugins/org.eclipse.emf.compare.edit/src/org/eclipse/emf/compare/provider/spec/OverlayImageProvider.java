@@ -25,7 +25,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.internal.merge.IDiffMergeData;
+import org.eclipse.emf.compare.internal.merge.IMergeData;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedImage;
 
@@ -35,6 +35,15 @@ import org.eclipse.emf.edit.provider.ComposedImage;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class OverlayImageProvider {
+
+	/** The base name of the change (and move) kind of diff overlay. */
+	private static final String CHG_OV = "chg_ov"; //$NON-NLS-1$
+
+	/** The base name of the deletion kind of diff overlay. */
+	private static final String DEL_OV = "del_ov"; //$NON-NLS-1$
+
+	/** The base name of the add kind of diff overlay. */
+	private static final String ADD_OV = "add_ov"; //$NON-NLS-1$
 
 	/** The base name of the merge to right diff overlay. */
 	private static final String MERGED_TO_RIGHT_OV = "merged_right_ov"; //$NON-NLS-1$
@@ -129,22 +138,7 @@ public class OverlayImageProvider {
 		} else if (comparison.isThreeWay()) {
 			path += getThreeWayOverlay(diff);
 		} else {
-			final DifferenceKind diffKind = diff.getKind();
-			switch (diffKind) {
-				case ADD:
-					path += "add_ov";
-					break;
-				case DELETE:
-					path += "del_ov";
-					break;
-				case CHANGE:
-					// fallthrough
-				case MOVE:
-					path += "chg_ov";
-					break;
-				default:
-					break;
-			}
+			path += getTwoWayDiffOverlay(diff);
 		}
 		return path;
 	}
@@ -187,15 +181,15 @@ public class OverlayImageProvider {
 
 		switch (diffKind) {
 			case ADD:
-				path += "add_ov";
+				path += ADD_OV;
 				break;
 			case DELETE:
-				path += "del_ov";
+				path += DEL_OV;
 				break;
 			case CHANGE:
 				// fallthrough
 			case MOVE:
-				path += "chg_ov";
+				path += CHG_OV;
 				break;
 			default:
 				// Cannot happen ... for now
@@ -213,26 +207,62 @@ public class OverlayImageProvider {
 	 */
 	private String getMergedOverlay(Diff diff) {
 		final String path;
-		Adapter adapter = EcoreUtil.getExistingAdapter(diff, IDiffMergeData.class);
+		Adapter adapter = EcoreUtil.getExistingAdapter(diff, IMergeData.class);
 		if (adapter != null) {
-			IDiffMergeData mergeData = (IDiffMergeData)adapter;
-			if (!mergeData.isLeftEditable() || !mergeData.isRightEditable()) {
-				if (mergeData.mergedTo() == diff.getSource()) {
-					path = REJECTED_OV;
-				} else {
-					path = ACCEPTED_OV;
-				}
-			} else if (mergeData.isLeftEditable() && mergeData.isRightEditable()) {
-				if (mergeData.hasBeenMergedToLeft()) {
-					path = MERGED_TO_LEFT_OV;
-				} else {
+			IMergeData mergeData = (IMergeData)adapter;
+			switch (mergeData.getMergeMode()) {
+				case LEFT_TO_RIGHT:
 					path = MERGED_TO_RIGHT_OV;
-				}
-			} else {
-				path = ACCEPTED_OV;
+					break;
+				case RIGHT_TO_LEFT:
+					path = MERGED_TO_LEFT_OV;
+					break;
+				case ACCEPT:
+					path = ACCEPTED_OV;
+					break;
+				case REJECT:
+					path = REJECTED_OV;
+					break;
+				default:
+					throw new IllegalStateException();
 			}
 		} else {
-			path = ACCEPTED_OV;
+			// fall-back to standard overlay.
+			final Match match = diff.getMatch();
+			final Comparison comparison = match.getComparison();
+			if (comparison.isThreeWay()) {
+				path = getThreeWayOverlay(diff);
+			} else {
+				path = getTwoWayDiffOverlay(diff);
+			}
+		}
+		return path;
+	}
+
+	/**
+	 * Returns the overlay path for the given unmerged diff.
+	 * 
+	 * @param diff
+	 *            the diff we have to find an image for.
+	 * @return the overlay path for the given unmerged diff.
+	 */
+	private String getTwoWayDiffOverlay(Diff diff) {
+		final String path;
+		final DifferenceKind diffKind = diff.getKind();
+		switch (diffKind) {
+			case ADD:
+				path = ADD_OV;
+				break;
+			case DELETE:
+				path = DEL_OV;
+				break;
+			case CHANGE:
+				// fallthrough
+			case MOVE:
+				path = CHG_OV;
+				break;
+			default:
+				throw new IllegalStateException();
 		}
 		return path;
 	}
