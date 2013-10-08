@@ -10,17 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.command.impl;
 
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
-
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
@@ -90,6 +86,6 @@ public abstract class AbstractCopyCommand extends ChangeCommand implements IComp
 	 */
 	@Override
 	public boolean canExecute() {
-		return super.canExecute() && Iterables.any(differences, hasState(DifferenceState.UNRESOLVED));
+		return super.canExecute() && !differences.isEmpty();
 	}
 }
