@@ -39,7 +39,9 @@ public interface ICompareEditingDomain {
 	 * 
 	 * @return the associated {@link ChangeRecorder}.
 	 * @since 3.0
+	 * @deprecated
 	 */
+	@Deprecated
 	ChangeRecorder getChangeRecorder();
 
 	/**
@@ -55,7 +57,9 @@ public interface ICompareEditingDomain {
 	 *            merged.
 	 * @return the created command.
 	 * @since 3.0
+	 * @deprecated
 	 */
+	@Deprecated
 	Command createCopyCommand(List<? extends Diff> differences, boolean leftToRight,
 			IMerger.Registry mergerRegistry);
 
