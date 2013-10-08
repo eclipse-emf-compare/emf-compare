@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,6 +39,22 @@ import org.eclipse.emf.ecore.EcorePackage;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class EMFComparePredicates {
+
+	/** This can be used to test whether a given Diff has no conflict object associated. */
+	public static final Predicate<? super Diff> WITHOUT_CONFLICT = new Predicate<Diff>() {
+		public boolean apply(Diff input) {
+			return input != null && input.getConflict() == null;
+		}
+	};
+
+	/** This can be used to check whether a given diff is a containment reference change. */
+	public static final Predicate<? super Diff> CONTAINMENT_REFERENCE_CHANGE = new Predicate<Diff>() {
+		public boolean apply(Diff input) {
+			return input instanceof ReferenceChange
+					&& ((ReferenceChange)input).getReference().isContainment();
+		}
+	};
+
 	/**
 	 * This class does not need to be instantiated.
 	 */
@@ -750,14 +766,11 @@ public final class EMFComparePredicates {
 	 * This can be used to check whether a given diff is a containment reference change.
 	 * 
 	 * @return The created predicate.
+	 * @deprecated use {@link #CONTAINMENT_REFERENCE_CHANGE};
 	 */
+	@Deprecated
 	public static Predicate<? super Diff> containmentReferenceChange() {
-		return new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				return input instanceof ReferenceChange
-						&& ((ReferenceChange)input).getReference().isContainment();
-			}
-		};
+		return CONTAINMENT_REFERENCE_CHANGE;
 	}
 
 	/**
@@ -765,14 +778,11 @@ public final class EMFComparePredicates {
 	 * 
 	 * @return The created predicate.
 	 * @since 3.0
+	 * @deprecated use and(CONTAINMENT_REFERENCE_CHANGE, ofKind(DifferenceKind.MOVE)) instead.
 	 */
+	@Deprecated
 	public static Predicate<? super Diff> containmentMoveReferenceChange() {
-		return new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				return input instanceof ReferenceChange && DifferenceKind.MOVE == input.getKind()
-						&& ((ReferenceChange)input).getReference().isContainment();
-			}
-		};
+		return and(CONTAINMENT_REFERENCE_CHANGE, ofKind(DifferenceKind.MOVE));
 	}
 
 	/**
