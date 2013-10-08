@@ -29,7 +29,9 @@ import org.eclipse.emf.ecore.change.util.ChangeRecorder;
  * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ * @deprecated Use {@link MergeCommand} instead.
  */
+@Deprecated
 public class CopyCommand extends AbstractCopyCommand {
 
 	/**
