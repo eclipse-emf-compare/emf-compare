@@ -59,7 +59,7 @@
    <extension
          point="org.eclipse.compare.contentMergeViewers">
       <viewer
-            class="org.eclipse.emf.compare.diagram.ide.ui.internal.DiagramContentMergeViewerCreator"
+            class="org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewerCreator"
             extensions="diagramcompare_match, diagramcompare_diff"
             id="org.eclipse.emf.compare.ui.diagram.contentviewer"
             label="Model Compare (Diagram)">
