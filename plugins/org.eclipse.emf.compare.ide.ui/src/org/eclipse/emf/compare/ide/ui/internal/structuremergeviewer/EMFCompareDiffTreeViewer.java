@@ -41,7 +41,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -80,8 +79,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 
 	private final CompareViewerSwitchingPane fParent;
 
-	private Object fRoot;
-
 	private Listener fEraseItemListener;
 
 	private AdapterFactory adapterFactory;
@@ -99,10 +96,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		this.adapterFactory = adapterFactory;
 
 		getCompareConfiguration().getEventBus().register(this);
-
-		setLabelProvider(new DelegatingStyledCellLabelProvider(
-				new EMFCompareStructureMergeViewerLabelProvider(adapterFactory, this)));
-		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(adapterFactory));
 
 		if (parent.getParent() instanceof CompareViewerSwitchingPane) {
 			fParent = (CompareViewerSwitchingPane)parent.getParent();
@@ -183,20 +176,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	@Override
 	public ViewerComparator getComparator() {
 		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.StructuredViewer#getRoot()
-	 */
-	@Override
-	public Object getRoot() {
-		return fRoot;
-	}
-
-	public void setRoot(Object root) {
-		fRoot = root;
 	}
 
 	public void createChildrenSilently(Object o) {
