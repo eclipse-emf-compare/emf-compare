@@ -28,11 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
@@ -122,7 +122,7 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	private Cursor lastCursor;
 
 	/** The configuration for this control. */
-	private CompareConfiguration fConfiguration;
+	private EMFCompareConfiguration fConfiguration;
 
 	/** The selected diff in the Treeviewer associated with this Treeruler. */
 	private Diff selectedDiff;
@@ -142,7 +142,7 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	 *            the configuration for this control.
 	 */
 	EMFCompareDiffTreeRuler(Composite parent, int style, int width, TreeViewer treeViewer,
-			CompareConfiguration config) {
+			EMFCompareConfiguration config) {
 		super(parent, style);
 		fWidth = width;
 		fTreeViewer = treeViewer;
@@ -240,11 +240,7 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	public void computeConsequences() {
 		clearAllData();
 		if (selectedDiff != null) {
-			Boolean leftToRight = (Boolean)fConfiguration.getProperty(EMFCompareConstants.MERGE_WAY);
-			boolean ltr = false;
-			if (leftToRight == null || leftToRight.booleanValue()) {
-				ltr = true;
-			}
+			boolean ltr = fConfiguration.getPreviewMergeMode();
 			boolean leftEditable = fConfiguration.isLeftEditable();
 			boolean rightEditable = fConfiguration.isRightEditable();
 
@@ -338,8 +334,7 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	 */
 	private void handlePaintEvent(PaintEvent e) {
 		annotationsData.clear();
-		Predicate<? super EObject> predicate = (Predicate<? super EObject>)fConfiguration
-				.getProperty(EMFCompareConstants.AGGREGATED_VIEWER_PREDICATE);
+		Predicate<? super EObject> predicate = fConfiguration.getAggregatedViewerPredicate();
 		Collection<? extends Diff> filteredRequires = filteredDiffs(requires, predicate);
 		Collection<? extends Diff> filteredUnmergeables = filteredDiffs(unmergeables, predicate);
 		for (Diff diff : filteredRequires) {

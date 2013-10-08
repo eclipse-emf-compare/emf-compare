@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,15 +14,13 @@ import static org.eclipse.emf.compare.ide.utils.ResourceUtil.saveAllResources;
 
 import com.google.common.collect.ImmutableMap;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.AccessorAdapter;
-import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -34,7 +32,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class TableContentMergeViewerContentProvider implements IMergeViewerContentProvider {
 
-	private CompareConfiguration fCompareConfiguration;
+	private EMFCompareConfiguration fCompareConfiguration;
 
 	private String fAncestorError;
 
@@ -42,7 +40,7 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 
 	private String fRightError;
 
-	public TableContentMergeViewerContentProvider(CompareConfiguration cc) {
+	public TableContentMergeViewerContentProvider(EMFCompareConfiguration cc) {
 		fCompareConfiguration = cc;
 	}
 
@@ -130,7 +128,7 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 	}
 
 	public void saveLeftContent(Object element, byte[] bytes) {
-		EList<Match> matches = getComparison().getMatches();
+		EList<Match> matches = fCompareConfiguration.getComparison().getMatches();
 		EObject leftEObject = null;
 		for (Match match : matches) {
 			leftEObject = match.getLeft();
@@ -184,7 +182,7 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 	}
 
 	public void saveRightContent(Object element, byte[] bytes) {
-		EList<Match> matches = getComparison().getMatches();
+		EList<Match> matches = fCompareConfiguration.getComparison().getMatches();
 		EObject rightEObject = null;
 		for (Match match : matches) {
 			rightEObject = match.getRight();
@@ -200,14 +198,5 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 						Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
 			}
 		}
-	}
-
-	/**
-	 * Returns the comparison object.
-	 * 
-	 * @return the comparison.
-	 */
-	public Comparison getComparison() {
-		return (Comparison)fCompareConfiguration.getProperty(EMFCompareConstants.COMPARE_RESULT);
 	}
 }

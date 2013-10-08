@@ -27,9 +27,9 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.util.EMFCompareUIActionUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
-import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.edit.command.ChangeCommand;
@@ -44,7 +44,7 @@ import org.eclipse.jface.action.Action;
 public abstract class AbstractAcceptRejectAllAction extends Action {
 
 	/** The compare configuration object used to get the compare model. */
-	protected CompareConfiguration configuration;
+	protected EMFCompareConfiguration configuration;
 
 	/**
 	 * Constructor.
@@ -52,7 +52,7 @@ public abstract class AbstractAcceptRejectAllAction extends Action {
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public AbstractAcceptRejectAllAction(CompareConfiguration configuration) {
+	public AbstractAcceptRejectAllAction(EMFCompareConfiguration configuration) {
 		this.configuration = configuration;
 	}
 
@@ -93,7 +93,7 @@ public abstract class AbstractAcceptRejectAllAction extends Action {
 	 */
 	private void manageChanges(final boolean leftToRight) {
 		final List<Diff> differences;
-		Comparison comparison = (Comparison)configuration.getProperty(EMFCompareConstants.COMPARE_RESULT);
+		Comparison comparison = configuration.getComparison();
 		if (comparison.isThreeWay()) {
 			differences = ImmutableList.copyOf(filter(comparison.getDifferences(), new Predicate<Diff>() {
 				public boolean apply(Diff diff) {
@@ -112,8 +112,7 @@ public abstract class AbstractAcceptRejectAllAction extends Action {
 
 		if (differences.size() > 0) {
 
-			ICompareEditingDomain editingDomain = (ICompareEditingDomain)configuration
-					.getProperty(EMFCompareConstants.EDITING_DOMAIN);
+			ICompareEditingDomain editingDomain = configuration.getEditingDomain();
 
 			AcceptRejectAllChangesCompoundCommand compoundCommand = new AcceptRejectAllChangesCompoundCommand(
 					leftToRight);
@@ -150,8 +149,7 @@ public abstract class AbstractAcceptRejectAllAction extends Action {
 	protected Command createChangeStateFromUnresolvedToMergedCommand(Diff diffToChangeState,
 			boolean leftToRight) {
 		if (diffToChangeState != null) {
-			ICompareEditingDomain compareEditingDomain = (ICompareEditingDomain)configuration
-					.getProperty(EMFCompareConstants.EDITING_DOMAIN);
+			ICompareEditingDomain compareEditingDomain = configuration.getEditingDomain();
 			Command changeStateCommand = new AcceptRejectAllChangesCommand(compareEditingDomain
 					.getChangeRecorder(), diffToChangeState, leftToRight, configuration);
 			return changeStateCommand;

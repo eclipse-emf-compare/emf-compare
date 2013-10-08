@@ -118,8 +118,9 @@ public abstract class TableOrTreeMergeViewer extends StructuredMergeViewer {
 			IMergeViewerItem mergeViewerItem = ((IMergeViewerItem)data);
 			Diff diff = mergeViewerItem.getDiff();
 			if (diff != null) {
-				if (MergeViewerUtil.isVisibleInMergeViewer(diff, getCompareConfiguration().getSelectedGroup(),
-						getCompareConfiguration().getAggregatedPredicate())) {
+				if (MergeViewerUtil.isVisibleInMergeViewer(diff, getCompareConfiguration()
+						.getSelectedDifferenceGroupProvider(), getCompareConfiguration()
+						.getAggregatedViewerPredicate())) {
 					if (mergeViewerItem.isInsertionPoint()) {
 						paintItemDiffBox(event, itemWrapper, diff, getBoundsForInsertionPoint(event,
 								itemWrapper));

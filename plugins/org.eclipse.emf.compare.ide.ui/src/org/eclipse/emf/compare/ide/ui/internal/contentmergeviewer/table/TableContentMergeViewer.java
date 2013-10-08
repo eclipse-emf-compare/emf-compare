@@ -17,8 +17,8 @@ import com.google.common.collect.Iterables;
 
 import java.util.ResourceBundle;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
@@ -77,7 +77,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 * 
 	 * @see TableContentMergeViewer
 	 */
-	protected TableContentMergeViewer(Composite parent, CompareConfiguration config) {
+	protected TableContentMergeViewer(Composite parent, EMFCompareConfiguration config) {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
 		fAdapterFactory = new ComposedAdapterFactory(EMFCompareRCPPlugin.getDefault()
 				.getAdapterFactoryRegistry());
@@ -147,7 +147,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected AbstractMergeViewer createMergeViewer(Composite parent, final MergeViewerSide side) {
-		TableMergeViewer ret = new TableMergeViewer(parent, side, this, getEMFCompareConfiguration());
+		TableMergeViewer ret = new TableMergeViewer(parent, side, this, getCompareConfiguration());
 		ret.getStructuredViewer().getTable().getVerticalBar().setVisible(false);
 
 		ret.setContentProvider(new ArrayContentProvider() {
@@ -277,8 +277,9 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			final Diff leftDiff = ((IMergeViewerItem)leftItem.getData()).getDiff();
 			boolean doPaint = true;
 			if (leftDiff != null) {
-				if (MergeViewerUtil.isVisibleInMergeViewer(leftDiff, getEMFCompareConfiguration()
-						.getSelectedGroup(), getEMFCompareConfiguration().getAggregatedPredicate())) {
+				if (MergeViewerUtil.isVisibleInMergeViewer(leftDiff, getCompareConfiguration()
+						.getSelectedDifferenceGroupProvider(), getCompareConfiguration()
+						.getAggregatedViewerPredicate())) {
 					TableItem rightItem = findRightTableItemFromLeftDiff(rightItems, leftDiff, leftData);
 
 					if (rightItem != null) {

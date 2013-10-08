@@ -23,7 +23,6 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.core.runtime.IAdaptable;
@@ -42,7 +41,7 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoActio
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
-import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
@@ -89,14 +88,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	/**
 	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
 	 */
-	private final class EMFCompareContentMergerViewerConfiguration extends EMFCompareConfiguration {
-
-		/**
-		 * @param cc
-		 */
-		private EMFCompareContentMergerViewerConfiguration(CompareConfiguration cc) {
-			super(cc);
-		}
+	private final class EMFCompareContentMergerViewerConfigurationListener extends EMFCompareConfigurationChangeListener {
 
 		/**
 		 * {@inheritDoc}
@@ -106,7 +98,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		 */
 		@Override
 		public void editingDomainChange(ICompareEditingDomain oldValue, ICompareEditingDomain newValue) {
-			super.editingDomainChange(oldValue, newValue);
 			if (newValue != oldValue) {
 				if (oldValue != null) {
 					oldValue.getCommandStack().removeCommandStackListener(EMFCompareContentMergeViewer.this);
@@ -135,7 +126,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		@Override
 		public void aggregatedViewerPredicateChange(Predicate<? super EObject> oldValue,
 				Predicate<? super EObject> newValue) {
-			super.aggregatedViewerPredicateChange(oldValue, newValue);
 			if (oldValue != newValue) {
 				redrawCenterControl();
 			}
@@ -150,7 +140,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		@Override
 		public void selectedDifferenceFiltersChange(Set<IDifferenceFilter> oldValue,
 				Set<IDifferenceFilter> newValue) {
-			super.selectedDifferenceFiltersChange(oldValue, newValue);
 			if (oldValue != newValue) {
 				redrawCenterControl();
 			}
@@ -165,7 +154,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		@Override
 		public void selectedDifferenceGroupProviderChange(IDifferenceGroupProvider oldValue,
 				IDifferenceGroupProvider newValue) {
-			super.selectedDifferenceGroupProviderChange(oldValue, newValue);
 			if (oldValue != newValue) {
 				redrawCenterControl();
 			}
@@ -179,7 +167,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		 */
 		@Override
 		public void adapterFactoryChange(AdapterFactory oldValue, AdapterFactory newValue) {
-			super.adapterFactoryChange(oldValue, newValue);
 			if (oldValue != null) {
 				fAdapterFactoryContentProvider.dispose();
 			}
@@ -212,20 +199,27 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	private RedoAction redoAction;
 
-	private final IEMFCompareConfiguration emfCompareConfiguration;
-
 	private AdapterFactoryContentProvider fAdapterFactoryContentProvider;
+
+	private final EMFCompareContentMergerViewerConfigurationListener configurationListener;
 
 	/**
 	 * @param style
 	 * @param bundle
 	 * @param cc
 	 */
-	protected EMFCompareContentMergeViewer(int style, ResourceBundle bundle, CompareConfiguration cc) {
+	protected EMFCompareContentMergeViewer(int style, ResourceBundle bundle, EMFCompareConfiguration cc) {
 		super(style, bundle, cc);
 
 		fDynamicObject = new DynamicObject(this);
-		emfCompareConfiguration = new EMFCompareContentMergerViewerConfiguration(cc);
+
+		if (getCompareConfiguration().getAdapterFactory() != null) {
+			fAdapterFactoryContentProvider = new AdapterFactoryContentProvider(getCompareConfiguration()
+					.getAdapterFactory());
+		}
+
+		configurationListener = new EMFCompareContentMergerViewerConfigurationListener();
+		getCompareConfiguration().addChangeListener(configurationListener);
 	}
 
 	/**
@@ -333,10 +327,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		if (redoAction != null) {
 			redoAction.update();
 		}
-		if (getEMFCompareConfiguration().getEditingDomain() != null) {
-			setLeftDirty(getEMFCompareConfiguration().getEditingDomain().getCommandStack().isLeftSaveNeeded());
-			setRightDirty(getEMFCompareConfiguration().getEditingDomain().getCommandStack()
-					.isRightSaveNeeded());
+		if (getCompareConfiguration().getEditingDomain() != null) {
+			setLeftDirty(getCompareConfiguration().getEditingDomain().getCommandStack().isLeftSaveNeeded());
+			setRightDirty(getCompareConfiguration().getEditingDomain().getCommandStack().isRightSaveNeeded());
 		}
 
 		SWTUtil.safeAsyncExec(new Runnable() {
@@ -344,13 +337,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 				refresh();
 			}
 		});
-	}
-
-	/**
-	 * @return the emfCompareConfiguration
-	 */
-	protected final IEMFCompareConfiguration getEMFCompareConfiguration() {
-		return emfCompareConfiguration;
 	}
 
 	/**
@@ -362,8 +348,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	protected void copy(final boolean leftToRight) {
 		final List<Diff> differences;
 
-		if (getEMFCompareConfiguration().getComparison().isThreeWay()) {
-			differences = ImmutableList.copyOf(filter(getEMFCompareConfiguration().getComparison()
+		if (getCompareConfiguration().getComparison().isThreeWay()) {
+			differences = ImmutableList.copyOf(filter(getCompareConfiguration().getComparison()
 					.getDifferences(), new Predicate<Diff>() {
 				public boolean apply(Diff diff) {
 					final boolean unresolved = diff.getState() == DifferenceState.UNRESOLVED;
@@ -375,15 +361,15 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 				}
 			}));
 		} else {
-			differences = ImmutableList.copyOf(filter(getEMFCompareConfiguration().getComparison()
+			differences = ImmutableList.copyOf(filter(getCompareConfiguration().getComparison()
 					.getDifferences(), EMFComparePredicates.hasState(DifferenceState.UNRESOLVED)));
 		}
 
 		if (differences.size() > 0) {
-			final Command copyCommand = getEMFCompareConfiguration().getEditingDomain().createCopyCommand(
+			final Command copyCommand = getCompareConfiguration().getEditingDomain().createCopyCommand(
 					differences, leftToRight, EMFCompareRCPPlugin.getDefault().getMergerRegistry());
 
-			getEMFCompareConfiguration().getEditingDomain().getCommandStack().execute(copyCommand);
+			getCompareConfiguration().getEditingDomain().getCommandStack().execute(copyCommand);
 			refresh();
 		}
 	}
@@ -655,7 +641,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
-		getEMFCompareConfiguration().dispose();
+		getCompareConfiguration().removeChangeListener(configurationListener);
 		super.handleDispose(event);
 	}
 
@@ -665,4 +651,13 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#getCompareConfiguration()
+	 */
+	@Override
+	protected EMFCompareConfiguration getCompareConfiguration() {
+		return (EMFCompareConfiguration)super.getCompareConfiguration();
+	}
 }

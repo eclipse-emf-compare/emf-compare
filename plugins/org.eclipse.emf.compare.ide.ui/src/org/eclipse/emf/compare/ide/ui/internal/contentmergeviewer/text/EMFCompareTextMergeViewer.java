@@ -25,7 +25,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareNavigator;
 import org.eclipse.compare.ICompareNavigator;
 import org.eclipse.compare.IStreamContentAccessor;
@@ -39,7 +38,6 @@ import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.AttributeChange;
-import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
@@ -48,12 +46,13 @@ import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.CompareInputAdapter;
 import org.eclipse.emf.compare.ide.ui.internal.util.SWTUtil;
-import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
@@ -66,8 +65,6 @@ import org.eclipse.emf.edit.command.ChangeCommand;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.FocusEvent;
@@ -80,7 +77,7 @@ import org.eclipse.ui.actions.ActionFactory;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPropertyChangeListener, CommandStackListener {
+public class EMFCompareTextMergeViewer extends TextMergeViewer implements CommandStackListener {
 
 	private static final String BUNDLE_NAME = EMFCompareTextMergeViewer.class.getName();
 
@@ -94,26 +91,30 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 
 	private final ScheduledExecutorService fExecutorService;
 
+	private final ConfigurationChangeListener configurationChangeListener;
+
+	private class ConfigurationChangeListener extends EMFCompareConfigurationChangeListener {
+		@Override
+		public void editingDomainChange(ICompareEditingDomain oldValue, ICompareEditingDomain newValue) {
+			EMFCompareTextMergeViewer.this.editingDomainChange(oldValue, newValue);
+		}
+	}
+
 	/**
 	 * @param parent
 	 * @param configuration
 	 */
-	public EMFCompareTextMergeViewer(Composite parent, CompareConfiguration configuration) {
+	public EMFCompareTextMergeViewer(Composite parent, EMFCompareConfiguration configuration) {
 		super(parent, configuration);
 		setContentProvider(new EMFCompareTextMergeViewerContentProvider(configuration));
 
 		fExecutorService = Executors.newSingleThreadScheduledExecutor();
 		fDelayedExecutor = new DelayedExecutor(fExecutorService);
 
-		editingDomainChange(null, getEditingDomain());
-		configuration.addPropertyChangeListener(this);
-	}
+		editingDomainChange(null, configuration.getEditingDomain());
 
-	public void propertyChange(PropertyChangeEvent event) {
-		if (EMFCompareConstants.EDITING_DOMAIN.equals(event.getProperty())) {
-			editingDomainChange((ICompareEditingDomain)event.getOldValue(), (ICompareEditingDomain)event
-					.getNewValue());
-		}
+		configurationChangeListener = new ConfigurationChangeListener();
+		configuration.addChangeListener(configurationChangeListener);
 	}
 
 	/**
@@ -163,8 +164,9 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 		if (fRedoAction != null) {
 			fRedoAction.update();
 		}
-		if (getEditingDomain() != null) {
-			ICompareCommandStack commandStack = getEditingDomain().getCommandStack();
+		if (getCompareConfiguration().getEditingDomain() != null) {
+			ICompareCommandStack commandStack = getCompareConfiguration().getEditingDomain()
+					.getCommandStack();
 			setLeftDirty(commandStack.isLeftSaveNeeded());
 			setRightDirty(commandStack.isRightSaveNeeded());
 		}
@@ -180,7 +182,8 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 			public void run() {
 				String leftValueFromWidget = getContents(true, Charsets.UTF_8.name());
 				String rightValueFromWidget = getContents(false, Charsets.UTF_8.name());
-				IEqualityHelper equalityHelper = getComparison().getEqualityHelper();
+				IEqualityHelper equalityHelper = getCompareConfiguration().getComparison()
+						.getEqualityHelper();
 				if (!equalityHelper.matchingAttributeValues(leftValueFromModel, leftValueFromWidget)
 						|| !equalityHelper.matchingAttributeValues(rightValueFromModel, rightValueFromWidget)) {
 					// only refresh if values are different to avoid select-all of the text.
@@ -209,18 +212,13 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 	}
 
 	/**
-	 * @return the fEditingDomain
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#getCompareConfiguration()
 	 */
-	protected final ICompareEditingDomain getEditingDomain() {
-		return (ICompareEditingDomain)getCompareConfiguration().getProperty(
-				EMFCompareConstants.EDITING_DOMAIN);
-	}
-
-	/**
-	 * @return the fComparison
-	 */
-	protected final Comparison getComparison() {
-		return (Comparison)getCompareConfiguration().getProperty(EMFCompareConstants.COMPARE_RESULT);
+	@Override
+	protected EMFCompareConfiguration getCompareConfiguration() {
+		return (EMFCompareConfiguration)super.getCompareConfiguration();
 	}
 
 	/**
@@ -254,9 +252,9 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 		final boolean oldAndNewEquals = equalityHelper.matchingAttributeValues(newValue, oldValue);
 		if (eObject != null && !oldAndNewEquals && getCompareConfiguration().isLeftEditable()) {
 			// Save the change on left side
-			getEditingDomain().getCommandStack().execute(
-					new UpdateModelAndRejectDiffCommand(getEditingDomain().getChangeRecorder(), eObject,
-							eAttribute, newValue, diff, isLeft));
+			getCompareConfiguration().getEditingDomain().getCommandStack().execute(
+					new UpdateModelAndRejectDiffCommand(getCompareConfiguration().getEditingDomain()
+							.getChangeRecorder(), eObject, eAttribute, newValue, diff, isLeft));
 		}
 	}
 
@@ -395,9 +393,9 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 	@Override
 	protected void createToolItems(ToolBarManager toolBarManager) {
 		super.createToolItems(toolBarManager);
-				
-		fRedoAction = new RedoAction(getEditingDomain());
-		fUndoAction = new UndoAction(getEditingDomain());
+
+		fRedoAction = new RedoAction(getCompareConfiguration().getEditingDomain());
+		fUndoAction = new UndoAction(getCompareConfiguration().getEditingDomain());
 
 		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), fUndoAction);
 		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), fRedoAction);
@@ -458,9 +456,9 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements IPrope
 		}
 		fExecutorService.shutdown();
 
-		getCompareConfiguration().removePropertyChangeListener(this);
+		getCompareConfiguration().removeChangeListener(configurationChangeListener);
 
-		editingDomainChange(getEditingDomain(), null);
+		editingDomainChange(getCompareConfiguration().getEditingDomain(), null);
 
 		super.handleDispose(event);
 	}

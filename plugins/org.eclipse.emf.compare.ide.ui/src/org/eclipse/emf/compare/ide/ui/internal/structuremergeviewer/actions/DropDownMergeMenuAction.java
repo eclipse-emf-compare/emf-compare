@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
@@ -29,7 +28,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 
 	/** The compare configuration object. */
-	private CompareConfiguration configuration;
+	private EMFCompareConfiguration configuration;
 
 	/** The menu associated with this action. */
 	private Menu fMenu;
@@ -46,7 +45,7 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public DropDownMergeMenuAction(CompareConfiguration configuration) {
+	public DropDownMergeMenuAction(EMFCompareConfiguration configuration) {
 		this.configuration = configuration;
 		setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.tooltip")); //$NON-NLS-1$
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
@@ -78,13 +77,13 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 	 */
 	@Override
 	public void run() {
-		Boolean mergeWay = (Boolean)configuration.getProperty(EMFCompareConstants.MERGE_WAY);
-		if (mergeWay == null || mergeWay.booleanValue()) {
-			configuration.setProperty(EMFCompareConstants.MERGE_WAY, new Boolean(false));
+		boolean mergeWay = configuration.getPreviewMergeMode();
+		if (mergeWay) {
+			configuration.setPreviewMergeMode(false);
 			setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
 					"icons/full/toolb16/right_to_left.gif")); //$NON-NLS-1$
 		} else {
-			configuration.setProperty(EMFCompareConstants.MERGE_WAY, new Boolean(true));
+			configuration.setPreviewMergeMode(true);
 			setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
 					"icons/full/toolb16/left_to_right.gif")); //$NON-NLS-1$
 		}
@@ -145,8 +144,8 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 	 * Update the icon and tooltip of the dropdown menu.
 	 */
 	protected void updateMenu() {
-		Boolean mergeWay = (Boolean)configuration.getProperty(EMFCompareConstants.MERGE_WAY);
-		if (mergeWay == null || mergeWay.booleanValue()) {
+		boolean mergeWay = configuration.getPreviewMergeMode();
+		if (mergeWay) {
 			setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
 					"icons/full/toolb16/left_to_right.gif")); //$NON-NLS-1$
 		} else {

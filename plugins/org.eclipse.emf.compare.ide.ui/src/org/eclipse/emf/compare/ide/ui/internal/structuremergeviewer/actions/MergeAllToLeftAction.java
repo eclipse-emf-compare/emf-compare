@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.util.EMFCompareUIActionUtil;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
@@ -31,7 +31,7 @@ public class MergeAllToLeftAction extends AbstractMergeAllAction {
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public MergeAllToLeftAction(CompareConfiguration configuration) {
+	public MergeAllToLeftAction(EMFCompareConfiguration configuration) {
 		super(configuration);
 		setToolTipText(EMFCompareIDEUIMessages.getString("merged.all.to.left.tooltip")); //$NON-NLS-1$
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,

@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IViewerCreator;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 
@@ -27,7 +28,7 @@ public class EMFCompareStructureMergeViewerCreator implements IViewerCreator {
 	 *      org.eclipse.compare.CompareConfiguration)
 	 */
 	public Viewer createViewer(Composite parent, CompareConfiguration config) {
-		return new EMFCompareStructureMergeViewer(parent, config);
+		return new EMFCompareStructureMergeViewer(parent, new EMFCompareConfiguration(config));
 	}
 
 }

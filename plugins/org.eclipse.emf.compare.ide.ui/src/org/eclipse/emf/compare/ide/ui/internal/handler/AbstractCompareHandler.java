@@ -27,6 +27,7 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeEditorInput;
 import org.eclipse.emf.compare.match.DefaultComparisonFactory;
 import org.eclipse.emf.compare.match.DefaultEqualityHelperFactory;
@@ -57,7 +58,7 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 
 		ICompareEditingDomain editingDomain = createEMFCompareEditingDomain(part, left, right, origin);
 
-		final CompareConfiguration configuration = new CompareConfiguration();
+		final EMFCompareConfiguration configuration = new EMFCompareConfiguration(new CompareConfiguration());
 		IMatchEngine.Factory eObjectMatchEngineFactory = new MatchEObjectEngineFactory();
 		eObjectMatchEngineFactory.setRanking(Integer.MAX_VALUE);
 		final IMatchEngine.Factory.Registry matchEngineFactoryRegistry = EMFCompareRCPPlugin.getDefault()

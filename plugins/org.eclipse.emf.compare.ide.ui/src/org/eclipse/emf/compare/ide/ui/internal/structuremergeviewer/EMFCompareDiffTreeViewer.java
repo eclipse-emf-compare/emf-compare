@@ -44,6 +44,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.AcceptAllChangesAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.AcceptChangeAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.CollapseAllModelAction;
@@ -163,7 +164,7 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	 * @param configuration
 	 */
 	public EMFCompareDiffTreeViewer(Composite parent, final AdapterFactory adapterFactory,
-			CompareConfiguration configuration) {
+			EMFCompareConfiguration configuration) {
 		super(parent, configuration);
 		this.adapterFactory = adapterFactory;
 
@@ -465,13 +466,9 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	@SuppressWarnings("unchecked")
 	@Subscribe
 	public void recordFilterSelectionChange(IDifferenceFilterSelectionChangeEvent event) {
-		final Object property = getCompareConfiguration().getProperty(EMFCompareConstants.SELECTED_FILTERS);
-		final Collection<IDifferenceFilter> selectedFilters;
-		if (property == null) {
-			selectedFilters = newLinkedHashSet();
-		} else {
-			selectedFilters = newLinkedHashSet((Collection<IDifferenceFilter>)property);
-		}
+		final Set<IDifferenceFilter> property = getCompareConfiguration().getSelectedDifferenceFilters();
+
+		final Set<IDifferenceFilter> selectedFilters = newLinkedHashSet(property);
 		switch (event.getAction()) {
 			case SELECTED:
 				selectedFilters.add(event.getFilter());
@@ -483,9 +480,8 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 				throw new IllegalStateException();
 		}
 
-		getCompareConfiguration().setProperty(EMFCompareConstants.SELECTED_FILTERS, selectedFilters);
-		getCompareConfiguration().setProperty(EMFCompareConstants.AGGREGATED_VIEWER_PREDICATE,
-				event.getAggregatedPredicate());
+		getCompareConfiguration().setSelectedDifferenceFilters(ImmutableSet.copyOf(selectedFilters));
+		getCompareConfiguration().setAggregatedViewerPredicate(event.getAggregatedPredicate());
 
 		refreshTitle();
 	}
@@ -499,18 +495,9 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 			eAdapters.remove(oldDifferenceGroupProvider);
 		}
 		eAdapters.add(differenceGroupProvider);
-		getCompareConfiguration().setProperty(EMFCompareConstants.SELECTED_GROUP, differenceGroupProvider);
+		getCompareConfiguration().setSelectedDifferenceGroupProvider(differenceGroupProvider);
 
 		refreshTitle();
-	}
-
-	public void configurationPropertyChanged() {
-		getControl().redraw();
-		if (toolbarManager != null) {
-			for (IContributionItem item : toolbarManager.getItems()) {
-				item.update();
-			}
-		}
 	}
 
 	/**
@@ -622,8 +609,7 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		if (fParent != null) {
 			ITreeContentProvider contentProvider = (ITreeContentProvider)getContentProvider();
 			int displayedDiff = getMatchCount(contentProvider, contentProvider.getElements(getRoot()));
-			Comparison comparison = (Comparison)getCompareConfiguration().getProperty(
-					EMFCompareConstants.COMPARE_RESULT);
+			Comparison comparison = getCompareConfiguration().getComparison();
 			int computedDiff = comparison.getDifferences().size();
 			int filteredDiff = computedDiff - displayedDiff;
 			fParent.setTitleArgument(computedDiff + " differences – " + filteredDiff
@@ -911,12 +897,7 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 							EObject dataItem = ((TreeNode)targetItem).getData();
 							final Set<Diff> unmergeables;
 							final Set<Diff> requires;
-							Boolean leftToRight = (Boolean)getCompareConfiguration().getProperty(
-									EMFCompareConstants.MERGE_WAY);
-							boolean ltr = false;
-							if (leftToRight == null || leftToRight.booleanValue()) {
-								ltr = true;
-							}
+							boolean ltr = getCompareConfiguration().getPreviewMergeMode();
 							boolean leftEditable = getCompareConfiguration().isLeftEditable();
 							boolean rightEditable = getCompareConfiguration().isRightEditable();
 							Diff selectedDiff = (Diff)selectionData;
@@ -968,5 +949,15 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		g.setClipping(areaBounds.x, itemBounds.y, areaBounds.width, itemBounds.height);
 		g.setBackground(color);
 		g.fillRectangle(areaBounds.x, itemBounds.y, areaBounds.width, itemBounds.height);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.structuremergeviewer.DiffTreeViewer#getCompareConfiguration()
+	 */
+	@Override
+	public EMFCompareConfiguration getCompareConfiguration() {
+		return (EMFCompareConfiguration)super.getCompareConfiguration();
 	}
 }

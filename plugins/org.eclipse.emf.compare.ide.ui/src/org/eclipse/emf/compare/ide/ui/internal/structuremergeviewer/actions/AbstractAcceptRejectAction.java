@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.util.EMFCompareUIActionUtil;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
@@ -39,7 +40,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 public abstract class AbstractAcceptRejectAction extends Action {
 
 	/** The compare configuration object used to get the compare model. */
-	private CompareConfiguration configuration;
+	private final EMFCompareConfiguration configuration;
 
 	/**
 	 * Constructor.
@@ -47,7 +48,7 @@ public abstract class AbstractAcceptRejectAction extends Action {
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public AbstractAcceptRejectAction(CompareConfiguration configuration) {
+	public AbstractAcceptRejectAction(EMFCompareConfiguration configuration) {
 		this.configuration = configuration;
 	}
 
@@ -138,8 +139,7 @@ public abstract class AbstractAcceptRejectAction extends Action {
 	 */
 	private void changeStateFromUnresolvedToMerged(Diff diffToChangeState, boolean leftToRight) {
 		if (diffToChangeState != null) {
-			ICompareEditingDomain compareEditingDomain = (ICompareEditingDomain)configuration
-					.getProperty(EMFCompareConstants.EDITING_DOMAIN);
+			ICompareEditingDomain compareEditingDomain = configuration.getEditingDomain();
 			Command changeStateCommand = new AcceptRejectChangeCommand(compareEditingDomain
 					.getChangeRecorder(), diffToChangeState, leftToRight, configuration);
 			compareEditingDomain.getCommandStack().execute(changeStateCommand);

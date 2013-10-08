@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
-import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 
 /**
  * Abstract subclass of {@link CompareEditorInput} to be use to open CompareEditor with results of EMF
@@ -48,7 +48,7 @@ public abstract class AbstractEMFCompareEditorInput extends CompareEditorInput {
 	 * @throws NullPointerException
 	 *             if {@code editingDomain} or {@code adapterFactory} is null.
 	 */
-	public AbstractEMFCompareEditorInput(CompareConfiguration configuration,
+	public AbstractEMFCompareEditorInput(EMFCompareConfiguration configuration,
 			ICompareEditingDomain editingDomain, AdapterFactory adapterFactory) {
 		super(configuration);
 		this.editingDomain = checkNotNull(editingDomain);
@@ -97,8 +97,18 @@ public abstract class AbstractEMFCompareEditorInput extends CompareEditorInput {
 	@Override
 	protected final Object prepareInput(IProgressMonitor monitor) throws InvocationTargetException,
 			InterruptedException {
-		getCompareConfiguration().setProperty(EMFCompareConstants.EDITING_DOMAIN, editingDomain);
+		getCompareConfiguration().setEditingDomain(editingDomain);
 		return doPrepareInput(monitor);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.CompareEditorInput#getCompareConfiguration()
+	 */
+	@Override
+	public EMFCompareConfiguration getCompareConfiguration() {
+		return (EMFCompareConfiguration)super.getCompareConfiguration();
 	}
 
 	/**

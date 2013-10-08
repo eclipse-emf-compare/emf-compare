@@ -32,27 +32,9 @@ public final class EMFCompareConstants {
 	public static final String RESOLVED_COLOR = "RESOLVED_COLOR"; //$NON-NLS-1$
 
 	// CompareConfiguration
-
-	public static final String COMPARE_RESULT = EMFCompareRCPUIPlugin.PLUGIN_ID + ".COMPARE.RESULT"; //$NON-NLS-1$
-
-	public static final String COMPARATOR = EMFCompareRCPUIPlugin.PLUGIN_ID + ".COMPARATOR"; //$NON-NLS-1$
-
-	public static final String EDITING_DOMAIN = EMFCompareRCPUIPlugin.PLUGIN_ID + ".EDITING_DOMAIN"; //$NON-NLS-1$
-
-	public static final String SELECTED_FILTERS = EMFCompareRCPUIPlugin.PLUGIN_ID + ".SELECTED_FILTERS"; //$NON-NLS-1$
-
-	public static final String AGGREGATED_VIEWER_PREDICATE = EMFCompareRCPUIPlugin.PLUGIN_ID
-			+ ".AGGREGATED_VIEWER_PREDICATE"; //$NON-NLS-1$
-
-	public static final String SELECTED_GROUP = EMFCompareRCPUIPlugin.PLUGIN_ID + ".SELECTED_GROUP"; //$NON-NLS-1$
-
+	
 	public static final String SMV_SELECTION = EMFCompareRCPUIPlugin.PLUGIN_ID + ".SMV_SELECTION"; //$NON-NLS-1$
-
-	public static final String MERGE_WAY = EMFCompareRCPUIPlugin.PLUGIN_ID + ".MERGE_WAY"; //$NON-NLS-1$
-
-	public static final String COMPOSED_ADAPTER_FACTORY = EMFCompareRCPUIPlugin.PLUGIN_ID
-			+ ".COMPOSED_ADAPTER_FACTORY"; //$NON-NLS-1$
-
+	
 	// ITypedElement#getType()
 
 	public static final String NODE_TYPE__EMF_RESOURCESET = "NODE_TYPE__EMF_RESOURCESET"; //$NON-NLS-1$

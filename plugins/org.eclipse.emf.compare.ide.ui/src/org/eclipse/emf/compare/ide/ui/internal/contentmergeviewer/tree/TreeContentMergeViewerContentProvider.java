@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,10 +19,9 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.AccessorAdapter;
-import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -43,7 +42,7 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 	/**
 	 * The stored {@link CompareConfiguration} to delegates most methods of this object.
 	 */
-	private final CompareConfiguration fCompareConfiguration;
+	private final EMFCompareConfiguration fCompareConfiguration;
 
 	/**
 	 * Creates a new {@link TreeContentMergeViewerContentProvider} and stored the given
@@ -55,7 +54,7 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 	 * @param comparison
 	 *            the comparison that is to be displayed by this viewer.
 	 */
-	public TreeContentMergeViewerContentProvider(CompareConfiguration cc) {
+	public TreeContentMergeViewerContentProvider(EMFCompareConfiguration cc) {
 		this.fCompareConfiguration = cc;
 	}
 
@@ -166,7 +165,7 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 	 *      byte[])
 	 */
 	public void saveLeftContent(Object element, byte[] bytes) {
-		EList<Match> matches = getComparison().getMatches();
+		EList<Match> matches = fCompareConfiguration.getComparison().getMatches();
 		EObject leftEObject = null;
 		for (Match match : matches) {
 			leftEObject = match.getLeft();
@@ -229,7 +228,7 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 	 *      byte[])
 	 */
 	public void saveRightContent(Object element, byte[] bytes) {
-		EList<Match> matches = getComparison().getMatches();
+		EList<Match> matches = fCompareConfiguration.getComparison().getMatches();
 		EObject rightEObject = null;
 		for (Match match : matches) {
 			rightEObject = match.getRight();
@@ -245,14 +244,5 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 						Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
 			}
 		}
-	}
-
-	/**
-	 * Returns the comparison object.
-	 * 
-	 * @return the comparison.
-	 */
-	public Comparison getComparison() {
-		return (Comparison)fCompareConfiguration.getProperty(EMFCompareConstants.COMPARE_RESULT);
 	}
 }

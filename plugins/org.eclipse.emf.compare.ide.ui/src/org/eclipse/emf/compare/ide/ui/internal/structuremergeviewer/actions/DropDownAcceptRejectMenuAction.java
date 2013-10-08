@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
@@ -30,7 +29,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 public class DropDownAcceptRejectMenuAction extends Action implements IMenuCreator {
 
 	/** The compare configuration object used to get the compare model. */
-	private CompareConfiguration configuration;
+	private EMFCompareConfiguration configuration;
 
 	/** The menu associated with this action. */
 	private Menu fMenu;
@@ -47,7 +46,7 @@ public class DropDownAcceptRejectMenuAction extends Action implements IMenuCreat
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public DropDownAcceptRejectMenuAction(final CompareConfiguration configuration) {
+	public DropDownAcceptRejectMenuAction(final EMFCompareConfiguration configuration) {
 		this.configuration = configuration;
 		setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.accept.tooltip")); //$NON-NLS-1$
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
@@ -79,11 +78,11 @@ public class DropDownAcceptRejectMenuAction extends Action implements IMenuCreat
 	 */
 	@Override
 	public void run() {
-		Boolean mergeWay = (Boolean)configuration.getProperty(EMFCompareConstants.MERGE_WAY);
+		boolean mergeWay = configuration.getPreviewMergeMode();
 		boolean rightEditableOnly = !configuration.isLeftEditable() && configuration.isRightEditable();
 		boolean leftEditableOnly = configuration.isLeftEditable() && !configuration.isRightEditable();
-		if (mergeWay == null || mergeWay.booleanValue()) {
-			configuration.setProperty(EMFCompareConstants.MERGE_WAY, new Boolean(false));
+		if (mergeWay) {
+			configuration.setPreviewMergeMode(false);
 			if (leftEditableOnly) {
 				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
 						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/reject.gif")); //$NON-NLS-1$
@@ -94,7 +93,7 @@ public class DropDownAcceptRejectMenuAction extends Action implements IMenuCreat
 				setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.accept.tooltip")); //$NON-NLS-1$
 			}
 		} else {
-			configuration.setProperty(EMFCompareConstants.MERGE_WAY, new Boolean(true));
+			configuration.setPreviewMergeMode(true);
 			if (leftEditableOnly) {
 				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
 						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/accept.gif")); //$NON-NLS-1$
@@ -162,10 +161,10 @@ public class DropDownAcceptRejectMenuAction extends Action implements IMenuCreat
 	 * Update the icon and tooltip of the dropdown menu.
 	 */
 	protected void updateMenu() {
-		Boolean mergeWay = (Boolean)configuration.getProperty(EMFCompareConstants.MERGE_WAY);
+		boolean mergeWay = configuration.getPreviewMergeMode();
 		boolean rightEditableOnly = !configuration.isLeftEditable() && configuration.isRightEditable();
 		boolean leftEditableOnly = configuration.isLeftEditable() && !configuration.isRightEditable();
-		if (mergeWay == null || mergeWay.booleanValue()) {
+		if (mergeWay) {
 			if (leftEditableOnly) {
 				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
 						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/accept.gif")); //$NON-NLS-1$

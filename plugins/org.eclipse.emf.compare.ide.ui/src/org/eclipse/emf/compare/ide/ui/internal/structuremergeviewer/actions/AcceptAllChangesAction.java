@@ -12,11 +12,11 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
@@ -34,7 +34,7 @@ public class AcceptAllChangesAction extends AbstractAcceptRejectAllAction {
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public AcceptAllChangesAction(CompareConfiguration configuration) {
+	public AcceptAllChangesAction(EMFCompareConfiguration configuration) {
 		super(configuration);
 		setToolTipText(EMFCompareIDEUIMessages.getString("accept.all.changes.tooltip")); //$NON-NLS-1$
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,

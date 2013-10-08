@@ -17,8 +17,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareNavigator;
@@ -32,11 +32,11 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.internal.merge.DiffMergeDataAdapter;
 import org.eclipse.emf.compare.internal.merge.IDiffMergeData;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
-import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
@@ -64,15 +64,11 @@ public final class EMFCompareUIActionUtil {
 	 *            the compare configuration object.
 	 * @return true, if the cascading differences filter is active, false otherwise.
 	 */
-	public static boolean isCascadingDifferencesFilterActive(CompareConfiguration configuration) {
-		Object property = configuration.getProperty(EMFCompareConstants.SELECTED_FILTERS);
-		final Collection<IDifferenceFilter> selectedFilters;
-		if (property instanceof Collection<?>) {
-			selectedFilters = (Collection<IDifferenceFilter>)property;
-			for (IDifferenceFilter iDifferenceFilter : selectedFilters) {
-				if (iDifferenceFilter instanceof CascadingDifferencesFilter) {
-					return true;
-				}
+	public static boolean isCascadingDifferencesFilterActive(EMFCompareConfiguration configuration) {
+		Set<IDifferenceFilter> selectedFilters = configuration.getSelectedDifferenceFilters();
+		for (IDifferenceFilter iDifferenceFilter : selectedFilters) {
+			if (iDifferenceFilter instanceof CascadingDifferencesFilter) {
+				return true;
 			}
 		}
 		return false;
@@ -88,7 +84,7 @@ public final class EMFCompareUIActionUtil {
 	 * @param configuration
 	 *            the compare configuration object.
 	 */
-	public static void copyDiff(Diff diffToCopy, boolean leftToRight, CompareConfiguration configuration) {
+	public static void copyDiff(Diff diffToCopy, boolean leftToRight, EMFCompareConfiguration configuration) {
 		if (diffToCopy != null) {
 			List<Diff> diffsToCopy = new ArrayList<Diff>();
 			diffsToCopy.add(diffToCopy);
@@ -110,8 +106,7 @@ public final class EMFCompareUIActionUtil {
 			addMergeDataForConflictedDiffs(diffToCopy, leftToRight, configuration);
 
 			// Execute merge
-			ICompareEditingDomain editingDomain = (ICompareEditingDomain)configuration
-					.getProperty(EMFCompareConstants.EDITING_DOMAIN);
+			ICompareEditingDomain editingDomain = configuration.getEditingDomain();
 			Command copyCommand = editingDomain.createCopyCommand(diffsToCopy, leftToRight,
 					EMFCompareRCPPlugin.getDefault().getMergerRegistry());
 			editingDomain.getCommandStack().execute(copyCommand);
@@ -154,9 +149,9 @@ public final class EMFCompareUIActionUtil {
 	 * @param configuration
 	 *            the compare configuration object.
 	 */
-	public static void copyAllDiffs(final boolean leftToRight, CompareConfiguration configuration) {
+	public static void copyAllDiffs(final boolean leftToRight, EMFCompareConfiguration configuration) {
 		final List<Diff> differences;
-		Comparison comparison = (Comparison)configuration.getProperty(EMFCompareConstants.COMPARE_RESULT);
+		Comparison comparison = configuration.getComparison();
 		if (comparison.isThreeWay()) {
 			differences = ImmutableList.copyOf(filter(comparison.getDifferences(), new Predicate<Diff>() {
 				public boolean apply(Diff diff) {
@@ -178,8 +173,7 @@ public final class EMFCompareUIActionUtil {
 				EMFCompareUIActionUtil.setMergeDataForDiff(diff, leftToRight, configuration.isLeftEditable(),
 						configuration.isRightEditable());
 			}
-			ICompareEditingDomain editingDomain = (ICompareEditingDomain)configuration
-					.getProperty(EMFCompareConstants.EDITING_DOMAIN);
+			ICompareEditingDomain editingDomain = configuration.getEditingDomain();
 			final Command copyCommand = editingDomain.createCopyCommand(differences, leftToRight,
 					EMFCompareRCPPlugin.getDefault().getMergerRegistry());
 

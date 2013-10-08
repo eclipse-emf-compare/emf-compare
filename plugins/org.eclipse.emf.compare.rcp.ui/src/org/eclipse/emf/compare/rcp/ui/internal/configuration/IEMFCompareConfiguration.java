@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
@@ -32,46 +33,72 @@ public interface IEMFCompareConfiguration {
 	 */
 	ICompareEditingDomain getEditingDomain();
 
+	void setEditingDomain(ICompareEditingDomain editingDomain);
+
 	/**
 	 * Returns the active group.
 	 * 
 	 * @return the selected group provider.
 	 */
-	IDifferenceGroupProvider getSelectedGroup();
+	IDifferenceGroupProvider getSelectedDifferenceGroupProvider();
+
+	/**
+	 * @param differenceGroupProvider
+	 */
+	void setSelectedDifferenceGroupProvider(IDifferenceGroupProvider differenceGroupProvider);
 
 	/**
 	 * Returns the active filters.
 	 * 
 	 * @return the selectedFilters.
 	 */
-	Collection<IDifferenceFilter> getSelectedFilters();
+	Collection<IDifferenceFilter> getSelectedDifferenceFilters();
+
+	void setSelectedDifferenceFilters(Set<IDifferenceFilter> filters);
 
 	/**
 	 * @return the smvPredicate
 	 */
-	Predicate<? super EObject> getAggregatedPredicate();
+	Predicate<? super EObject> getAggregatedViewerPredicate();
+
+	void setAggregatedViewerPredicate(Predicate<? super EObject> predicate);
 
 	AdapterFactory getAdapterFactory();
+
+	void setAdapterFactory(AdapterFactory adapterFactory);
 
 	/**
 	 * @return the fComparison
 	 */
 	Comparison getComparison();
 
-	void comparisonChange(Comparison oldValue, Comparison newValue);
+	void setComparison(Comparison comparison);
 
-	void editingDomainChange(ICompareEditingDomain oldValue, ICompareEditingDomain newValue);
+	EMFCompare getComparator();
 
-	void selectedDifferenceGroupProviderChange(IDifferenceGroupProvider oldValue,
-			IDifferenceGroupProvider newValue);
+	void setComparator(EMFCompare comparator);
 
-	void selectedDifferenceFiltersChange(Set<IDifferenceFilter> oldValue, Set<IDifferenceFilter> newValue);
+	boolean getPreviewMergeMode();
 
-	void aggregatedViewerPredicateChange(Predicate<? super EObject> oldValue,
-			Predicate<? super EObject> newValue);
+	void setPreviewMergeMode(boolean mergeWay);
 
-	void adapterFactoryChange(AdapterFactory oldValue, AdapterFactory newValue);
+	/**
+	 * Adds a listener for property changes to this notifier. Has no effect if an identical listener is
+	 * already registered.
+	 * 
+	 * @param listener
+	 *            a property change listener
+	 */
+	void addChangeListener(IEMFCompareConfigurationChangeListener listener);
 
-	void dispose();
+	/**
+	 * Removes the given content change listener from this notifier. Has no effect if the identical listener
+	 * is not registered.
+	 * 
+	 * @param listener
+	 *            a property change listener
+	 */
+	void removeChangeListener(IEMFCompareConfigurationChangeListener listener);
 
+	boolean getBooleanProperty(String key, boolean dflt);
 }

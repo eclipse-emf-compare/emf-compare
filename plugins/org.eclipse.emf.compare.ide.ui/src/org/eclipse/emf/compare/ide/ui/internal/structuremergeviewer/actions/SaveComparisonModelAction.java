@@ -18,14 +18,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.NotSerializableException;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
@@ -52,7 +51,7 @@ public class SaveComparisonModelAction extends Action {
 	private static final ImmutableList<String> DIALOG_BUTTON_LABELS = ImmutableList.of("Replace", "Cancel");
 
 	/** The compare configuration object used to get the compare model. */
-	private CompareConfiguration configuration;
+	private EMFCompareConfiguration configuration;
 
 	/**
 	 * Constructor.
@@ -60,7 +59,7 @@ public class SaveComparisonModelAction extends Action {
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public SaveComparisonModelAction(CompareConfiguration configuration) {
+	public SaveComparisonModelAction(EMFCompareConfiguration configuration) {
 		this.configuration = configuration;
 		setToolTipText(EMFCompareIDEUIMessages.getString("save.model.tooltip")); //$NON-NLS-1$
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
@@ -114,7 +113,7 @@ public class SaveComparisonModelAction extends Action {
 	 *            the result {@link File}.
 	 */
 	private void saveComparison(File file) {
-		Comparison comparison = (Comparison)configuration.getProperty(EMFCompareConstants.COMPARE_RESULT);
+		Comparison comparison = configuration.getComparison();
 		Resource resource = new XMIResourceImpl(URI.createFileURI(file.getAbsolutePath()));
 		Copier copier = new Copier(false);
 		EObject comparisonCopy = copier.copy(comparison);

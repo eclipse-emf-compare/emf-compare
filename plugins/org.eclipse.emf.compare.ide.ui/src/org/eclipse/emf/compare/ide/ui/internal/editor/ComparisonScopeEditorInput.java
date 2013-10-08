@@ -12,12 +12,11 @@ package org.eclipse.emf.compare.ide.ui.internal.editor;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
-import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 
 /**
@@ -35,7 +34,7 @@ public class ComparisonScopeEditorInput extends AbstractEMFCompareEditorInput {
 	/**
 	 * @param configuration
 	 */
-	public ComparisonScopeEditorInput(CompareConfiguration configuration,
+	public ComparisonScopeEditorInput(EMFCompareConfiguration configuration,
 			ICompareEditingDomain editingDomain, AdapterFactory adapterFactory, EMFCompare comparator,
 			IComparisonScope scope) {
 		super(configuration, editingDomain, adapterFactory);
@@ -51,7 +50,7 @@ public class ComparisonScopeEditorInput extends AbstractEMFCompareEditorInput {
 	@Override
 	protected Object doPrepareInput(IProgressMonitor monitor) throws InvocationTargetException,
 			InterruptedException {
-		getCompareConfiguration().setProperty(EMFCompareConstants.COMPARATOR, comparator);
+		getCompareConfiguration().setComparator(comparator);
 		return new ComparisonScopeInput(scope, getAdapterFactory());
 	}
 

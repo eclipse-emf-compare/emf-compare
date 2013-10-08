@@ -23,6 +23,7 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Export-Package: org.eclipse.emf.compare.ide.ui.internal;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.configuration;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;x-internal:=true,
@@ -33,6 +34,8 @@ Export-Package: org.eclipse.emf.compare.ide.ui.internal;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.handler;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.logical;x-friends:="org.eclipse.emf.compare.ide.ui.tests",
  org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.util;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.util;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.logical;x-internal:=true

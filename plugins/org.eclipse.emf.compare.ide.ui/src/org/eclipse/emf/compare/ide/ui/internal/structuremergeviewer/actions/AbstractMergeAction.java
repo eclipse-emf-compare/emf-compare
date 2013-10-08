@@ -14,6 +14,7 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.util.EMFCompareUIActionUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.ecore.EObject;
@@ -31,7 +32,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 public abstract class AbstractMergeAction extends Action {
 
 	/** The compare configuration object used to get the compare model. */
-	private CompareConfiguration configuration;
+	private EMFCompareConfiguration configuration;
 
 	/**
 	 * Constructor.
@@ -39,7 +40,7 @@ public abstract class AbstractMergeAction extends Action {
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public AbstractMergeAction(CompareConfiguration configuration) {
+	public AbstractMergeAction(EMFCompareConfiguration configuration) {
 		this.configuration = configuration;
 	}
 
@@ -95,7 +96,7 @@ public abstract class AbstractMergeAction extends Action {
 	 * 
 	 * @return the configuration
 	 */
-	public CompareConfiguration getConfiguration() {
+	public EMFCompareConfiguration getConfiguration() {
 		return configuration;
 	}
 
@@ -105,7 +106,7 @@ public abstract class AbstractMergeAction extends Action {
 	 * @param configuration
 	 *            the configuration to set
 	 */
-	public void setConfiguration(CompareConfiguration configuration) {
+	public void setConfiguration(EMFCompareConfiguration configuration) {
 		this.configuration = configuration;
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util;
 
-import static org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.CompareConfigurationExtension.getBoolean;
-
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.CompareColorImpl;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -29,8 +28,8 @@ public class EMFCompareColor extends CompareColorImpl {
 	private final CompareConfiguration fCompareConfiguration;
 
 	public EMFCompareColor(ContentMergeViewer contentMergeViewer, IPreferenceStore preferenceStore,
-			CompareConfiguration compareConfiguration) {
-		super(contentMergeViewer.getControl().getDisplay(), getBoolean(compareConfiguration,
+			EMFCompareConfiguration compareConfiguration) {
+		super(contentMergeViewer.getControl().getDisplay(), compareConfiguration.getBooleanProperty(
 				"LEFT_IS_LOCAL", false), preferenceStore); //$NON-NLS-1$
 
 		this.fCompareConfigurationChangeListener = new IPropertyChangeListener() {
