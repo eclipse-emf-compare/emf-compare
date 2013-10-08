@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
@@ -29,16 +30,18 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 public class DropDownAcceptRejectMenuAction extends Action implements IMenuCreator {
 
 	/** The compare configuration object used to get the compare model. */
-	private EMFCompareConfiguration configuration;
+	private final EMFCompareConfiguration configuration;
 
 	/** The menu associated with this action. */
 	private Menu fMenu;
 
 	/** The accept menu item. */
-	private Action acceptItem;
+	private final Action acceptItem;
 
 	/** The reject menu item. */
-	private Action rejectItem;
+	private final Action rejectItem;
+
+	private final EMFCompareConfigurationChangeListener changeListener;
 
 	/**
 	 * Constructor.
@@ -46,27 +49,23 @@ public class DropDownAcceptRejectMenuAction extends Action implements IMenuCreat
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public DropDownAcceptRejectMenuAction(final EMFCompareConfiguration configuration) {
+	public DropDownAcceptRejectMenuAction(EMFCompareConfiguration configuration) {
 		this.configuration = configuration;
 		setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.accept.tooltip")); //$NON-NLS-1$
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
 				"icons/full/toolb16/accept.gif")); //$NON-NLS-1$
 
-		acceptItem = new DropDownAcceptAction(configuration) {
+		changeListener = new EMFCompareConfigurationChangeListener() {
 			@Override
-			public void run() {
-				super.run();
-				updateMenu();
+			public void previewMergeModeChange(Boolean oldValue, Boolean newValue) {
+				updateMenu(newValue.booleanValue());
 			}
 		};
+		configuration.addChangeListener(changeListener);
 
-		rejectItem = new DropDownRejectAction(configuration) {
-			@Override
-			public void run() {
-				super.run();
-				updateMenu();
-			}
-		};
+		acceptItem = new DropDownAction(configuration, true);
+		rejectItem = new DropDownAction(configuration, false);
+		updateMenu(configuration.getPreviewMergeMode());
 
 		setMenuCreator(this);
 	}
@@ -79,31 +78,7 @@ public class DropDownAcceptRejectMenuAction extends Action implements IMenuCreat
 	@Override
 	public void run() {
 		boolean mergeWay = configuration.getPreviewMergeMode();
-		boolean rightEditableOnly = !configuration.isLeftEditable() && configuration.isRightEditable();
-		boolean leftEditableOnly = configuration.isLeftEditable() && !configuration.isRightEditable();
-		if (mergeWay) {
-			configuration.setPreviewMergeMode(false);
-			if (leftEditableOnly) {
-				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/reject.gif")); //$NON-NLS-1$
-				setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.reject.tooltip")); //$NON-NLS-1$
-			} else if (rightEditableOnly) {
-				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/accept.gif")); //$NON-NLS-1$
-				setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.accept.tooltip")); //$NON-NLS-1$
-			}
-		} else {
-			configuration.setPreviewMergeMode(true);
-			if (leftEditableOnly) {
-				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/accept.gif")); //$NON-NLS-1$
-				setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.accept.tooltip")); //$NON-NLS-1$
-			} else if (rightEditableOnly) {
-				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/reject.gif")); //$NON-NLS-1$
-				setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.reject.tooltip")); //$NON-NLS-1$
-			}
-		}
+		configuration.setPreviewMergeMode(!mergeWay);
 	}
 
 	/**
@@ -116,6 +91,7 @@ public class DropDownAcceptRejectMenuAction extends Action implements IMenuCreat
 			fMenu.dispose();
 			fMenu = null;
 		}
+		configuration.removeChangeListener(changeListener);
 	}
 
 	/**
@@ -160,8 +136,7 @@ public class DropDownAcceptRejectMenuAction extends Action implements IMenuCreat
 	/**
 	 * Update the icon and tooltip of the dropdown menu.
 	 */
-	protected void updateMenu() {
-		boolean mergeWay = configuration.getPreviewMergeMode();
+	protected void updateMenu(boolean mergeWay) {
 		boolean rightEditableOnly = !configuration.isLeftEditable() && configuration.isRightEditable();
 		boolean leftEditableOnly = configuration.isLeftEditable() && !configuration.isRightEditable();
 		if (mergeWay) {
@@ -184,6 +159,58 @@ public class DropDownAcceptRejectMenuAction extends Action implements IMenuCreat
 						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/accept.gif")); //$NON-NLS-1$
 				setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.accept.tooltip")); //$NON-NLS-1$
 			}
+		}
+	}
+	
+	private static class DropDownAction extends Action {
+
+		/** The compare configuration object used to get the compare model. */
+		private final EMFCompareConfiguration configuration;
+
+		private final boolean mode;
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param configuration
+		 *            The compare configuration object.
+		 */
+		public DropDownAction(EMFCompareConfiguration configuration, boolean mode) {
+			this.configuration = configuration;
+			this.mode = mode;
+			boolean rightEditableOnly = !configuration.isLeftEditable() && configuration.isRightEditable();
+			boolean leftEditableOnly = configuration.isLeftEditable() && !configuration.isRightEditable();
+			if (mode) {
+				if (leftEditableOnly) {
+					setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
+							EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/accept.gif")); //$NON-NLS-1$
+					setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.accept.tooltip")); //$NON-NLS-1$
+				} else if (rightEditableOnly) {
+					setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
+							EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/reject.gif")); //$NON-NLS-1$
+					setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.reject.tooltip")); //$NON-NLS-1$
+				}
+			} else {
+				if (leftEditableOnly) {
+					setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
+							EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/reject.gif")); //$NON-NLS-1$
+					setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.reject.tooltip")); //$NON-NLS-1$
+				} else if (rightEditableOnly) {
+					setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
+							EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/accept.gif")); //$NON-NLS-1$
+					setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.accept.tooltip")); //$NON-NLS-1$
+				}
+			}
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.action.Action#run()
+		 */
+		@Override
+		public void run() {
+			configuration.setPreviewMergeMode(mode);
 		}
 	}
 }

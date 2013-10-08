@@ -17,6 +17,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
@@ -33,8 +34,8 @@ public class RejectChangeAction extends AbstractAcceptRejectAction {
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public RejectChangeAction(EMFCompareConfiguration configuration) {
-		super(configuration);
+	public RejectChangeAction(EMFCompareConfiguration configuration, ISelectionProvider selectionProvider) {
+		super(configuration, selectionProvider);
 		setToolTipText(EMFCompareIDEUIMessages.getString("reject.change.tooltip")); //$NON-NLS-1$
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
 				"icons/full/toolb16/reject_change.gif")); //$NON-NLS-1$

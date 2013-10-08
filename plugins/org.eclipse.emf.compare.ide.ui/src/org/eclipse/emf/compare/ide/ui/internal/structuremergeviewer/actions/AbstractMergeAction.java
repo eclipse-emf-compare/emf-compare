@@ -10,18 +10,19 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.util.EMFCompareUIActionUtil;
-import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 /**
  * Abstract Action that manages a merge of a difference in case of both sides of the comparison are editable.
@@ -29,10 +30,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public abstract class AbstractMergeAction extends Action {
+public abstract class AbstractMergeAction extends Action implements ISelectionChangedListener {
 
 	/** The compare configuration object used to get the compare model. */
-	private EMFCompareConfiguration configuration;
+	private final EMFCompareConfiguration configuration;
+
+	private final ISelectionProvider selectionProvider;
 
 	/**
 	 * Constructor.
@@ -40,8 +43,10 @@ public abstract class AbstractMergeAction extends Action {
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public AbstractMergeAction(EMFCompareConfiguration configuration) {
+	public AbstractMergeAction(EMFCompareConfiguration configuration, ISelectionProvider selectionProvider) {
 		this.configuration = configuration;
+		this.selectionProvider = selectionProvider;
+		selectionProvider.addSelectionChangedListener(this);
 	}
 
 	/**
@@ -51,7 +56,7 @@ public abstract class AbstractMergeAction extends Action {
 	 */
 	@Override
 	public void run() {
-		ISelection selection = (ISelection)configuration.getProperty(EMFCompareConstants.SMV_SELECTION);
+		ISelection selection = selectionProvider.getSelection();
 		if (selection instanceof IStructuredSelection) {
 			Object diffNode = ((IStructuredSelection)selection).getFirstElement();
 			if (diffNode instanceof Adapter) {
@@ -69,29 +74,6 @@ public abstract class AbstractMergeAction extends Action {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.action.Action#isEnabled()
-	 */
-	@Override
-	public boolean isEnabled() {
-		ISelection selection = (ISelection)configuration.getProperty(EMFCompareConstants.SMV_SELECTION);
-		if (selection instanceof IStructuredSelection) {
-			Object diffNode = ((IStructuredSelection)selection).getFirstElement();
-			if (diffNode instanceof Adapter) {
-				Notifier target = ((Adapter)diffNode).getTarget();
-				if (target instanceof TreeNode) {
-					EObject data = ((TreeNode)target).getData();
-					if (data instanceof Diff) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * Get the compare configuration object.
 	 * 
 	 * @return the configuration
@@ -101,21 +83,32 @@ public abstract class AbstractMergeAction extends Action {
 	}
 
 	/**
-	 * Set the compare configuration object.
-	 * 
-	 * @param configuration
-	 *            the configuration to set
-	 */
-	public void setConfiguration(EMFCompareConfiguration configuration) {
-		this.configuration = configuration;
-	}
-
-	/**
 	 * Copy the diff.
 	 * 
 	 * @param diff
 	 *            the given diff.
 	 */
 	protected abstract void copyDiff(Diff diff);
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent event) {
+		boolean ret = false;
+		ISelection selection = event.getSelection();
+		if (selection instanceof IStructuredSelection) {
+			Object diffNode = ((IStructuredSelection)selection).getFirstElement();
+			if (diffNode instanceof Adapter) {
+				Notifier target = ((Adapter)diffNode).getTarget();
+				if (target instanceof TreeNode) {
+					EObject data = ((TreeNode)target).getData();
+					ret = data instanceof Diff;
+				}
+			}
+		}
+		setEnabled(ret);
+	}
 
 }

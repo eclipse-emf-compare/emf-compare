@@ -23,14 +23,12 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareViewerPane;
 import org.eclipse.compare.CompareViewerSwitchingPane;
 import org.eclipse.compare.INavigatable;
@@ -61,7 +59,6 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.Save
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SelectNextDiffAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SelectPreviousDiffAction;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
-import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.FilterActionMenu;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.GroupActionMenu;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
@@ -73,7 +70,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.tree.TreeNode;
-import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
@@ -81,11 +77,9 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -121,8 +115,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	private final Color requiredDiffColor;
 
 	private final Color unmergeableDiffColor;
-
-	private final ISelectionChangedListener fSelectionChangedListener;
 
 	private final CompareViewerSwitchingPane fParent;
 
@@ -191,20 +183,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		} else {
 			fParent = null;
 		}
-
-		fSelectionChangedListener = new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				getControl().redraw();
-				getCompareConfiguration()
-						.setProperty(EMFCompareConstants.SMV_SELECTION, event.getSelection());
-				if (toolbarManager != null) {
-					for (IContributionItem item : toolbarManager.getItems()) {
-						item.update();
-					}
-				}
-			}
-		};
-		addSelectionChangedListener(fSelectionChangedListener);
 
 		fEraseItemListener = new Listener() {
 			public void handleEvent(Event event) {
@@ -688,14 +666,14 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 
 		if (rightEditable && leftEditable) {
 			toolbarManager.add(new DropDownMergeMenuAction(getCompareConfiguration()));
-			toolbarManager.add(new MergeToRightAction(getCompareConfiguration()));
-			toolbarManager.add(new MergeToLeftAction(getCompareConfiguration()));
+			toolbarManager.add(new MergeToRightAction(getCompareConfiguration(), this));
+			toolbarManager.add(new MergeToLeftAction(getCompareConfiguration(), this));
 			toolbarManager.add(new MergeAllToRightAction(getCompareConfiguration()));
 			toolbarManager.add(new MergeAllToLeftAction(getCompareConfiguration()));
 		} else {
 			toolbarManager.add(new DropDownAcceptRejectMenuAction(getCompareConfiguration()));
-			toolbarManager.add(new AcceptChangeAction(getCompareConfiguration()));
-			toolbarManager.add(new RejectChangeAction(getCompareConfiguration()));
+			toolbarManager.add(new AcceptChangeAction(getCompareConfiguration(), this));
+			toolbarManager.add(new RejectChangeAction(getCompareConfiguration(), this));
 			toolbarManager.add(new AcceptAllChangesAction(getCompareConfiguration()));
 			toolbarManager.add(new RejectAllChangesAction(getCompareConfiguration()));
 		}
@@ -827,7 +805,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	@Override
 	protected void handleDispose(DisposeEvent event) {
 		getControl().removeListener(SWT.EraseItem, fEraseItemListener);
-		removeSelectionChangedListener(fSelectionChangedListener);
 		super.handleDispose(event);
 	}
 

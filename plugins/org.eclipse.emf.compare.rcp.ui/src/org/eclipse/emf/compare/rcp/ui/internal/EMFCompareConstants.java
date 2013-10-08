@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal;
 
-import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -31,10 +30,6 @@ public final class EMFCompareConstants {
 
 	public static final String RESOLVED_COLOR = "RESOLVED_COLOR"; //$NON-NLS-1$
 
-	// CompareConfiguration
-	
-	public static final String SMV_SELECTION = EMFCompareRCPUIPlugin.PLUGIN_ID + ".SMV_SELECTION"; //$NON-NLS-1$
-	
 	// ITypedElement#getType()
 
 	public static final String NODE_TYPE__EMF_RESOURCESET = "NODE_TYPE__EMF_RESOURCESET"; //$NON-NLS-1$

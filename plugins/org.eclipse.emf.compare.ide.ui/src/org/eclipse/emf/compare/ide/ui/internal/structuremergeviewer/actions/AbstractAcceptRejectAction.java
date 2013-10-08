@@ -23,24 +23,28 @@ import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.util.EMFCompareUIActionUtil;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
-import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.edit.command.ChangeCommand;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 /**
  * Abstract action that manages the accept and reject actions (when one side of a diff is not editable).
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
-public abstract class AbstractAcceptRejectAction extends Action {
+public abstract class AbstractAcceptRejectAction extends Action implements ISelectionChangedListener {
 
 	/** The compare configuration object used to get the compare model. */
 	private final EMFCompareConfiguration configuration;
+
+	private final ISelectionProvider selectionProvider;
 
 	/**
 	 * Constructor.
@@ -48,8 +52,11 @@ public abstract class AbstractAcceptRejectAction extends Action {
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public AbstractAcceptRejectAction(EMFCompareConfiguration configuration) {
+	public AbstractAcceptRejectAction(EMFCompareConfiguration configuration,
+			ISelectionProvider selectionProvider) {
 		this.configuration = configuration;
+		this.selectionProvider = selectionProvider;
+		selectionProvider.addSelectionChangedListener(this);
 	}
 
 	/**
@@ -59,7 +66,7 @@ public abstract class AbstractAcceptRejectAction extends Action {
 	 */
 	@Override
 	public void run() {
-		ISelection selection = (ISelection)configuration.getProperty(EMFCompareConstants.SMV_SELECTION);
+		ISelection selection = selectionProvider.getSelection();
 		if (selection instanceof IStructuredSelection) {
 			Object diffNode = ((IStructuredSelection)selection).getFirstElement();
 			if (diffNode instanceof Adapter) {
@@ -93,29 +100,6 @@ public abstract class AbstractAcceptRejectAction extends Action {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.action.Action#isEnabled()
-	 */
-	@Override
-	public boolean isEnabled() {
-		ISelection selection = (ISelection)configuration.getProperty(EMFCompareConstants.SMV_SELECTION);
-		if (selection instanceof IStructuredSelection) {
-			Object diffNode = ((IStructuredSelection)selection).getFirstElement();
-			if (diffNode instanceof Adapter) {
-				Notifier target = ((Adapter)diffNode).getTarget();
-				if (target instanceof TreeNode) {
-					EObject data = ((TreeNode)target).getData();
-					if (data instanceof Diff) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * Check if the way of merge of the given diff correspond to a copy or a simple change state (unresolved
 	 * to merged).
 	 * 
@@ -144,6 +128,27 @@ public abstract class AbstractAcceptRejectAction extends Action {
 					.getChangeRecorder(), diffToChangeState, leftToRight, configuration);
 			compareEditingDomain.getCommandStack().execute(changeStateCommand);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent event) {
+		boolean ret = false;
+		ISelection selection = event.getSelection();
+		if (selection instanceof IStructuredSelection) {
+			Object diffNode = ((IStructuredSelection)selection).getFirstElement();
+			if (diffNode instanceof Adapter) {
+				Notifier target = ((Adapter)diffNode).getTarget();
+				if (target instanceof TreeNode) {
+					EObject data = ((TreeNode)target).getData();
+					ret = data instanceof Diff;
+				}
+			}
+		}
+		setEnabled(ret);
 	}
 
 	/**
