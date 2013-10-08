@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,6 +59,15 @@ public interface IStyledString {
 		 * @return this instance to let you chain the calls.
 		 */
 		IComposedStyledString append(String str, Style style);
+
+		/**
+		 * Appends the given composed styled string to this.
+		 * 
+		 * @param composedStyledString
+		 *            the styled string to append.
+		 * @return this instance.
+		 */
+		IComposedStyledString append(IComposedStyledString composedStyledString);
 
 		/**
 		 * Returns the Java string for this composed styled string.

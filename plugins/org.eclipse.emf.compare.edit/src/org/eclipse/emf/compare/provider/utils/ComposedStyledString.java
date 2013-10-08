@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -87,6 +87,18 @@ public class ComposedStyledString implements IComposedStyledString {
 	 */
 	public IComposedStyledString append(String str, Style style) {
 		content.add(new StyledString(str, style));
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString#append(org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString)
+	 */
+	public IComposedStyledString append(IComposedStyledString composedStyledString) {
+		for (IStyledString styledString : composedStyledString) {
+			content.add(styledString);
+		}
 		return this;
 	}
 
