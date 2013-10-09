@@ -17,6 +17,7 @@ import static org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil.a
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.createURIFor;
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.hasContentType;
 
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
@@ -286,7 +287,7 @@ public class ProjectModelResolver extends LogicalModelResolver {
 			try {
 				project.accept(modelVisitor);
 			} catch (CoreException e) {
-				EMFCompareIDEUIPlugin.getDefault().log(e);
+				Throwables.propagate(e);
 			}
 		}
 	}

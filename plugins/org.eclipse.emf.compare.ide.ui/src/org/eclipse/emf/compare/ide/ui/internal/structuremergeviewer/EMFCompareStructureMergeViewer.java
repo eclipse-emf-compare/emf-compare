@@ -55,6 +55,7 @@ import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
 import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
 import org.eclipse.emf.compare.ide.ui.internal.logical.StreamAccessorStorage;
 import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor;
+import org.eclipse.emf.compare.ide.ui.internal.util.ExceptionUtil;
 import org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil;
 import org.eclipse.emf.compare.ide.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
@@ -459,8 +460,13 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 				final ITypedElement right = input.getRight();
 				final ITypedElement origin = input.getAncestor();
 
-				final IComparisonScope scope = buildComparisonScope(left, right, origin, subMonitor
-						.newChild(85));
+				IComparisonScope scope = null;
+				try {
+					scope = buildComparisonScope(left, right, origin, subMonitor.newChild(85));
+				} catch (Exception e) {
+					ExceptionUtil.handleException(e, getCompareConfiguration(), true);
+					return;
+				}
 				final Comparison compareResult = EMFCompare
 						.builder()
 						.setMatchEngineFactoryRegistry(
