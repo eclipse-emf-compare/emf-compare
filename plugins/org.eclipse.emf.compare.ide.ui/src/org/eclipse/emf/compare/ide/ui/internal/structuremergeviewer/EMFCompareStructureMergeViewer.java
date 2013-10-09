@@ -208,8 +208,8 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 		control.setLayoutData(data);
 		diffTreeViewer = new EMFCompareDiffTreeViewer(control, fAdapterFactory, getCompareConfiguration());
 		setViewer(diffTreeViewer);
-		control.setData(INavigatable.NAVIGATOR_PROPERTY, diffTreeViewer.getControl().getData(
-				INavigatable.NAVIGATOR_PROPERTY));
+		INavigatable nav = new Navigatable(fAdapterFactory, diffTreeViewer);
+		control.setData(INavigatable.NAVIGATOR_PROPERTY, nav);
 		control.setData(CompareUI.COMPARE_VIEWER_TITLE, "Model differences");
 		diffTreeViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, false, true);
