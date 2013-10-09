@@ -56,6 +56,7 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.Merg
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SaveComparisonModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SelectNextDiffAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SelectPreviousDiffAction;
+import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.merge.IMerger;
@@ -428,8 +429,8 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 				IS_DIFF_TREE_NODE);
 		while (diffChildren.hasNext()) {
 			TreeNode next = (TreeNode)diffChildren.next();
-			if (!isFiltered(adapterFactory.adapt(next, ICompareInput.class), adapterFactory.adapt(next
-					.getParent(), ICompareInput.class), getFilters())) {
+			if (!JFaceUtil.isFiltered(this, adapterFactory.adapt(next, ICompareInput.class), adapterFactory
+					.adapt(next.getParent(), ICompareInput.class))) {
 				return next;
 			}
 		}
@@ -450,8 +451,8 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		ListIterator<EObject> li = l.listIterator(l.size());
 		while (li.hasPrevious()) {
 			TreeNode prev = (TreeNode)li.previous();
-			if (!isFiltered(adapterFactory.adapt(prev, ICompareInput.class), adapterFactory.adapt(prev
-					.getParent(), ICompareInput.class), getFilters())) {
+			if (!JFaceUtil.isFiltered(this, adapterFactory.adapt(prev, ICompareInput.class), adapterFactory
+					.adapt(prev.getParent(), ICompareInput.class))) {
 				return prev;
 			}
 		}
@@ -608,28 +609,7 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		ViewerFilter[] filters = getFilters();
 		for (int i = 0; i < elements.length; i++) {
 			Object object = elements[i];
-			if (!isFiltered(object, parent, filters)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * All element filter tests must go through this method. Can be overridden by subclasses.
-	 * 
-	 * @param object
-	 *            the object to filter
-	 * @param parent
-	 *            the parent
-	 * @param filters
-	 *            the filters to apply
-	 * @return true if the element is filtered
-	 */
-	protected boolean isFiltered(Object object, Object parent, ViewerFilter[] filters) {
-		for (int i = 0; i < filters.length; i++) {
-			ViewerFilter filter = filters[i];
-			if (!filter.select(this, parent, object)) {
+			if (!JFaceUtil.isFiltered(this, object, parent)) {
 				return true;
 			}
 		}
@@ -670,10 +650,9 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	 * @return
 	 */
 	private void getMatchCount(ITreeContentProvider cp, Object[] elements, Set<Diff> diffs) {
-		ViewerFilter[] filters = getFilters();
 		for (int j = 0; j < elements.length; j++) {
 			Object element = elements[j];
-			if (!isFiltered(element, null, filters) && element instanceof Adapter) {
+			if (!JFaceUtil.isFiltered(this, element, null) && element instanceof Adapter) {
 				Notifier target = ((Adapter)element).getTarget();
 				if (target instanceof TreeNode) {
 					TreeNode treeNode = (TreeNode)target;
