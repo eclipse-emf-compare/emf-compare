@@ -11,8 +11,12 @@
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
 import static com.google.common.collect.Iterables.getFirst;
+import static com.google.common.collect.Sets.newLinkedHashSet;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.lang.reflect.Field;
 import java.security.AccessController;
@@ -20,9 +24,12 @@ import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.EventObject;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
+import org.eclipse.compare.CompareViewerPane;
 import org.eclipse.compare.INavigatable;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.internal.CompareHandlerService;
@@ -38,6 +45,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.ui.dialogs.DiagnosticDialog;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
@@ -65,12 +73,18 @@ import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfigurationChangeListener;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilterSelectionChangeEvent;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IDisposable;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
@@ -240,7 +254,52 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 		fHandlerService = CompareHandlerService.createFor(getCompareConfiguration().getContainer(),
 				diffTreeViewer.getControl().getShell());
 
+		EventBus eventBus = new EventBus();
+		eventBus.register(this);
+
+		StructureMergeViewerFilter structureMergeViewerFilter = new StructureMergeViewerFilter(eventBus);
+		structureMergeViewerFilter.install(diffTreeViewer);
+
+		StructureMergeViewerGrouper structureMergeViewerGrouper = new StructureMergeViewerGrouper(eventBus);
+		structureMergeViewerGrouper.install(diffTreeViewer);
+
+		toolBar = new CompareToolBar(diffTreeViewer, CompareViewerPane.getToolBarManager(parent),
+				structureMergeViewerGrouper, structureMergeViewerFilter, getCompareConfiguration());
+
 		return control;
+	}
+
+	@Subscribe
+	public void recordFilterSelectionChange(IDifferenceFilterSelectionChangeEvent event) {
+		final Set<IDifferenceFilter> property = getCompareConfiguration().getSelectedDifferenceFilters();
+
+		final Set<IDifferenceFilter> selectedFilters = newLinkedHashSet(property);
+		switch (event.getAction()) {
+			case SELECTED:
+				selectedFilters.add(event.getFilter());
+				break;
+			case DESELECTED:
+				selectedFilters.remove(event.getFilter());
+				break;
+			default:
+				throw new IllegalStateException();
+		}
+
+		getCompareConfiguration().setSelectedDifferenceFilters(ImmutableSet.copyOf(selectedFilters));
+		getCompareConfiguration().setAggregatedViewerPredicate(event.getAggregatedPredicate());
+	}
+
+	@Subscribe
+	public void recordGroupProviderSelectionChange(IDifferenceGroupProvider differenceGroupProvider) {
+		List<Adapter> eAdapters = ((Adapter)diffTreeViewer.getRoot()).getTarget().eAdapters();
+		IDifferenceGroupProvider oldDifferenceGroupProvider = (IDifferenceGroupProvider)EcoreUtil.getAdapter(
+				eAdapters, IDifferenceGroupProvider.class);
+		if (oldDifferenceGroupProvider != null) {
+			eAdapters.remove(oldDifferenceGroupProvider);
+		}
+		eAdapters.add(differenceGroupProvider);
+
+		getCompareConfiguration().setSelectedDifferenceGroupProvider(differenceGroupProvider);
 	}
 
 	/**
@@ -300,6 +359,7 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 		compareInputChanged((ICompareInput)null);
 		treeRuler.handleDispose();
 		fAdapterFactory.dispose();
+		toolBar.dispose();
 		super.handleDispose(event);
 	}
 
@@ -362,6 +422,8 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 		}
 	};
 
+	private CompareToolBar toolBar;
+
 	/**
 	 * Triggered by fCompareInputChangeListener and {@link #inputChanged(Object, Object)}.
 	 */
@@ -404,8 +466,8 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 					.getSelectedDifferenceGroupProvider();
 			final TreeNode treeNode = TreeFactory.eINSTANCE.createTreeNode();
 			treeNode.setData(comparison);
-			if (selectedGroup == null) {
-				selectedGroup = diffTreeViewer.getDefaultGroupProvider();
+			if (selectedGroup == IDifferenceGroupProvider.EMPTY) {
+				selectedGroup = new DefaultGroupProvider();
 			}
 			treeNode.eAdapters().add(selectedGroup);
 
@@ -415,12 +477,6 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 
 			SWTUtil.safeAsyncExec(new Runnable() {
 				public void run() {
-					if (diffTreeViewer.getGroupActionMenu() != null) {
-						diffTreeViewer.getGroupActionMenu().createActions(scope, comparison);
-					}
-					if (diffTreeViewer.getFilterActionMenu() != null) {
-						diffTreeViewer.getFilterActionMenu().createActions(scope, comparison);
-					}
 					// Mandatory for the EMFCompareDiffTreeRuler, all TreeItems must have been created
 					diffTreeViewer.createChildrenSilently(diffTreeViewer.getTree());
 					diffTreeViewer.refreshAfterDiff(diffTreeViewer.getRoot());

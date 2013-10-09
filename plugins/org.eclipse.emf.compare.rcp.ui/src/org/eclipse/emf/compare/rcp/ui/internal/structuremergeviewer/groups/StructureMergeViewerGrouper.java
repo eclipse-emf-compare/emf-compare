@@ -15,7 +15,6 @@ import com.google.common.eventbus.EventBus;
 
 import java.util.List;
 
-import org.eclipse.emf.compare.Comparison;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -48,19 +47,6 @@ public final class StructureMergeViewerGrouper {
 	 */
 	public StructureMergeViewerGrouper(EventBus eventBus) {
 		this.eventBus = eventBus;
-	}
-
-	/**
-	 * This will be called internally by the ComparisonNode in order to know how it should group its
-	 * differences.
-	 * 
-	 * @param comparison
-	 *            The comparison which differences need to be grouped.
-	 * @return The collection of groups we could retrieve from the currently selected group provider. Empty
-	 *         {@link Iterable} if we have no group provider set.
-	 */
-	public Iterable<? extends IDifferenceGroup> getGroups(final Comparison comparison) {
-		return provider.getGroups(comparison);
 	}
 
 	/**

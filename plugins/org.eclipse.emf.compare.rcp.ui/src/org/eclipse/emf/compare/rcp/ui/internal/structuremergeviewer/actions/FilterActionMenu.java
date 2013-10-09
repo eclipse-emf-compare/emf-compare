@@ -48,9 +48,9 @@ public class FilterActionMenu extends Action implements IMenuCreator {
 	 * @param menuManager
 	 *            The Menu Manager that will contain our menu.
 	 */
-	public FilterActionMenu(StructureMergeViewerFilter structureMergeViewerFilter, MenuManager menuManager) {
+	public FilterActionMenu(StructureMergeViewerFilter structureMergeViewerFilter) {
 		super("", IAction.AS_DROP_DOWN_MENU); //$NON-NLS-1$
-		this.menuManager = menuManager;
+		this.menuManager = new MenuManager();
 		this.structureMergeViewerFilter = structureMergeViewerFilter;
 		setMenuCreator(this);
 		setToolTipText("Filters");

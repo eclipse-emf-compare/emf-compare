@@ -50,10 +50,10 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 	 * @param defaultGroupProvider
 	 *            The default group provider.
 	 */
-	public GroupActionMenu(StructureMergeViewerGrouper structureMergeViewerGrouper, MenuManager menuManager,
+	public GroupActionMenu(StructureMergeViewerGrouper structureMergeViewerGrouper,
 			DefaultGroupProvider defaultGroupProvider) {
 		super("", IAction.AS_DROP_DOWN_MENU); //$NON-NLS-1$
-		this.menuManager = menuManager;
+		this.menuManager = new MenuManager();
 		this.structureMergeViewerGrouper = structureMergeViewerGrouper;
 		this.defaultGroupProvider = defaultGroupProvider;
 		setToolTipText("Groups");
@@ -88,7 +88,6 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 					alreadyChecked = true;
 					action.run();
 				}
-
 			}
 		}
 	}

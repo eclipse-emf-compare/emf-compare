@@ -10,66 +10,33 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.collect.Iterables.any;
-import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static com.google.common.collect.Sets.newHashSet;
-import static com.google.common.collect.Sets.newLinkedHashSet;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumSet;
-import java.util.List;
 import java.util.Set;
 
-import org.eclipse.compare.CompareViewerPane;
 import org.eclipse.compare.CompareViewerSwitchingPane;
 import org.eclipse.compare.structuremergeviewer.DiffTreeViewer;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.CollapseAllModelAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.DropDownMergeMenuAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.ExpandAllModelAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAllNonConflictingAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SaveComparisonModelAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SelectNextDiffAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SelectPreviousDiffAction;
 import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
-import org.eclipse.emf.compare.merge.IMerger;
-import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.FilterActionMenu;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.GroupActionMenu;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilterSelectionChangeEvent;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.tree.TreeNode;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -88,9 +55,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.menus.IMenuService;
-import org.eclipse.ui.services.IServiceLocator;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -111,41 +75,11 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 
 	private final CompareViewerSwitchingPane fParent;
 
-	private ToolBarManager toolbarManager;
-
 	private Object fRoot;
-
-	/**
-	 * The difference filter that will be applied to the structure viewer. Note that this will be initialized
-	 * from {@link #createToolItems(ToolBarManager)} since that method is called from the super-constructor
-	 * and we cannot init ourselves beforehand.
-	 */
-	private StructureMergeViewerFilter structureMergeViewerFilter;
-
-	/**
-	 * This will be used by our adapter factory in order to group together the differences located under the
-	 * Comparison. Note that this will be initialized from {@link #createToolItems(ToolBarManager)} since that
-	 * method is called from the super-constructor and we cannot init ourselves beforehand.
-	 */
-	private StructureMergeViewerGrouper structureMergeViewerGrouper;
-
-	private MenuManager groupsMenuManager;
-
-	private MenuManager filtersMenuManager;
-
-	private GroupActionMenu groupActionMenu;
-
-	private FilterActionMenu filterActionMenu;
-
-	private EventBus eventBus;
 
 	private Listener fEraseItemListener;
 
 	private AdapterFactory adapterFactory;
-
-	private List<MergeAction> mergeActions = newArrayListWithCapacity(4);
-
-	private List<MergeAllNonConflictingAction> mergeAllNonConflictingActions = newArrayListWithCapacity(2);
 
 	/**
 	 * @param parent
@@ -156,20 +90,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 			EMFCompareConfiguration configuration) {
 		super(parent, configuration);
 		this.adapterFactory = adapterFactory;
-
-		ToolBarManager tbm = CompareViewerPane.getToolBarManager(parent.getParent());
-		if (tbm != null) {
-			tbm.removeAll();
-
-			tbm.add(new Separator("merge")); //$NON-NLS-1$
-			tbm.add(new Separator("modes")); //$NON-NLS-1$
-			tbm.add(new Separator("navigation")); //$NON-NLS-1$
-
-			createToolItems(tbm);
-			// updateActions();
-
-			tbm.update(true);
-		}
 
 		setLabelProvider(new DelegatingStyledCellLabelProvider(
 				new EMFCompareStructureMergeViewerLabelProvider(adapterFactory, this)));
@@ -188,11 +108,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		};
 		getControl().addListener(SWT.EraseItem, fEraseItemListener);
 
-		if (eventBus == null) {
-			eventBus = new EventBus();
-			eventBus.register(this);
-		}
-
 		JFaceResources.getColorRegistry().put(REQUIRED_DIFF_COLOR, new RGB(215, 255, 200));
 		JFaceResources.getColorRegistry().put(REQUIRED_DIFF_BORDER_COLOR, new RGB(195, 235, 180));
 		JFaceResources.getColorRegistry().put(UNMERGEABLE_DIFF_COLOR, new RGB(255, 205, 180));
@@ -202,18 +117,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		unmergeableDiffColor = JFaceResources.getColorRegistry().get(UNMERGEABLE_DIFF_COLOR);
 
 		configurationChangeListener = new EMFCompareConfigurationChangeListener() {
-			/**
-			 * {@inheritDoc}
-			 * 
-			 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener#editingDomainChange(org.eclipse.emf.compare.domain.ICompareEditingDomain,
-			 *      org.eclipse.emf.compare.domain.ICompareEditingDomain)
-			 */
-			@Override
-			public void editingDomainChange(ICompareEditingDomain oldValue, ICompareEditingDomain newValue) {
-				for (MergeAction mergeAction : mergeActions) {
-					mergeAction.setEditingDomain(newValue);
-				}
-			}
 
 			/**
 			 * {@inheritDoc}
@@ -224,11 +127,20 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 			@Override
 			public void selectedDifferenceFiltersChange(Set<IDifferenceFilter> oldValue,
 					Set<IDifferenceFilter> newValue) {
-				final boolean enabled = any(newValue, instanceOf(CascadingDifferencesFilter.class));
-				for (MergeAction mergeAction : mergeActions) {
-					mergeAction.setCascadingDifferencesFilterEnabled(enabled);
-				}
 				getTree().redraw();
+				refreshTitle();
+			}
+
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener#selectedDifferenceGroupProviderChange(org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider,
+			 *      org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider)
+			 */
+			@Override
+			public void selectedDifferenceGroupProviderChange(IDifferenceGroupProvider oldValue,
+					IDifferenceGroupProvider newValue) {
+				refreshTitle();
 			}
 
 			/**
@@ -242,18 +154,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 				getTree().redraw();
 			}
 
-			/**
-			 * {@inheritDoc}
-			 * 
-			 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener#comparisonChange(org.eclipse.emf.compare.Comparison,
-			 *      org.eclipse.emf.compare.Comparison)
-			 */
-			@Override
-			public void comparisonChange(Comparison oldValue, Comparison newValue) {
-				for (MergeAllNonConflictingAction mergeAction : mergeAllNonConflictingActions) {
-					mergeAction.setComparison(newValue);
-				}
-			}
 		};
 		configuration.addChangeListener(configurationChangeListener);
 		setUseHashlookup(true);
@@ -280,43 +180,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	@Override
 	public ViewerComparator getComparator() {
 		return null;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Subscribe
-	public void recordFilterSelectionChange(IDifferenceFilterSelectionChangeEvent event) {
-		final Set<IDifferenceFilter> property = getCompareConfiguration().getSelectedDifferenceFilters();
-
-		final Set<IDifferenceFilter> selectedFilters = newLinkedHashSet(property);
-		switch (event.getAction()) {
-			case SELECTED:
-				selectedFilters.add(event.getFilter());
-				break;
-			case DESELECTED:
-				selectedFilters.remove(event.getFilter());
-				break;
-			default:
-				throw new IllegalStateException();
-		}
-
-		getCompareConfiguration().setSelectedDifferenceFilters(ImmutableSet.copyOf(selectedFilters));
-		getCompareConfiguration().setAggregatedViewerPredicate(event.getAggregatedPredicate());
-
-		refreshTitle();
-	}
-
-	@Subscribe
-	public void recordGroupProviderSelectionChange(IDifferenceGroupProvider differenceGroupProvider) {
-		EList<Adapter> eAdapters = ((Adapter)fRoot).getTarget().eAdapters();
-		IDifferenceGroupProvider oldDifferenceGroupProvider = (IDifferenceGroupProvider)EcoreUtil.getAdapter(
-				eAdapters, IDifferenceGroupProvider.class);
-		if (oldDifferenceGroupProvider != null) {
-			eAdapters.remove(oldDifferenceGroupProvider);
-		}
-		eAdapters.add(differenceGroupProvider);
-		getCompareConfiguration().setSelectedDifferenceGroupProvider(differenceGroupProvider);
-
-		refreshTitle();
 	}
 
 	/**
@@ -419,197 +282,11 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.compare.structuremergeviewer.DiffTreeViewer#createToolItems(org.eclipse.jface.action.ToolBarManager)
-	 */
-	@Override
-	protected void createToolItems(ToolBarManager toolbarManager) {
-
-		this.toolbarManager = toolbarManager;
-
-		super.createToolItems(toolbarManager);
-
-		// Add extension point contributions to the structure merge viewer toolbar
-		IServiceLocator workbench = PlatformUI.getWorkbench();
-		IMenuService menuService = (IMenuService)workbench.getService(IMenuService.class);
-		if (menuService != null) {
-			menuService.populateContributionManager(toolbarManager,
-					"toolbar:org.eclipse.emf.compare.structuremergeviewer.toolbar");
-		}
-
-		groupActionMenu = new GroupActionMenu(getStructureMergeViewerGrouper(), getGroupsMenuManager(),
-				getDefaultGroupProvider());
-		filterActionMenu = new FilterActionMenu(getStructureMergeViewerFilter(), getFiltersMenuManager());
-
-		boolean leftEditable = getCompareConfiguration().isLeftEditable();
-		boolean rightEditable = getCompareConfiguration().isRightEditable();
-
-		final EnumSet<MergeMode> modes;
-		if (rightEditable && leftEditable) {
-			modes = EnumSet.of(MergeMode.RIGHT_TO_LEFT, MergeMode.LEFT_TO_RIGHT);
-		} else {
-			modes = EnumSet.of(MergeMode.ACCEPT, MergeMode.REJECT);
-		}
-
-		toolbarManager.add(new DropDownMergeMenuAction(getCompareConfiguration(), modes));
-		for (MergeMode mode : modes) {
-			toolbarManager.add(createMergeAction(mode));
-		}
-		for (MergeMode mode : modes) {
-			toolbarManager.add(createMergeAllNonConflictingAction(mode));
-		}
-
-		toolbarManager.add(new Separator());
-		toolbarManager.add(new SelectNextDiffAction(getCompareConfiguration()));
-		toolbarManager.add(new SelectPreviousDiffAction(getCompareConfiguration()));
-		toolbarManager.add(new Separator());
-		toolbarManager.add(new ExpandAllModelAction(this));
-		toolbarManager.add(new CollapseAllModelAction(this));
-		toolbarManager.add(new Separator());
-		toolbarManager.add(groupActionMenu);
-		toolbarManager.add(filterActionMenu);
-		toolbarManager.add(new Separator());
-		toolbarManager.add(new SaveComparisonModelAction(getCompareConfiguration()));
-	}
-
-	private MergeAction createMergeAction(MergeMode mergeMode) {
-		EMFCompareConfiguration cc = getCompareConfiguration();
-		IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
-		MergeAction mergeAction = new MergeAction(cc.getEditingDomain(), mergerRegistry, mergeMode, cc
-				.isLeftEditable(), cc.isRightEditable());
-		addSelectionChangedListener(mergeAction);
-		mergeActions.add(mergeAction);
-		return mergeAction;
-	}
-
-	private MergeAction createMergeAllNonConflictingAction(MergeMode mergeMode) {
-		EMFCompareConfiguration cc = getCompareConfiguration();
-		IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
-		MergeAllNonConflictingAction mergeAction = new MergeAllNonConflictingAction(cc.getEditingDomain(), cc
-				.getComparison(), mergerRegistry, mergeMode, cc.isLeftEditable(), cc.isRightEditable());
-		addSelectionChangedListener(mergeAction);
-		mergeActions.add(mergeAction);
-		mergeAllNonConflictingActions.add(mergeAction);
-		return mergeAction;
-	}
-
-	/**
-	 * Returns the viewer filter that is to be applied on the structure viewer.
-	 * <p>
-	 * Note that this will be called from {@link #createToolItems(ToolBarManager)}, which is called from the
-	 * super-constructor, when we have had no time to initialize the {@link #structureMergeViewerFilter}
-	 * field.
-	 * </p>
-	 * 
-	 * @return The difference filter that is to be applied on the structure viewer.
-	 */
-	protected StructureMergeViewerFilter getStructureMergeViewerFilter() {
-		if (structureMergeViewerFilter == null) {
-			if (eventBus == null) {
-				eventBus = new EventBus();
-				eventBus.register(this);
-			}
-			structureMergeViewerFilter = new StructureMergeViewerFilter(eventBus);
-			structureMergeViewerFilter.install(this);
-		}
-		return structureMergeViewerFilter;
-	}
-
-	/**
-	 * Returns the viewer grouper that is to be applied on the structure viewer.
-	 * <p>
-	 * Note that this will be called from {@link #createToolItems(ToolBarManager)}, which is called from the
-	 * super-constructor, when we have had no time to initialize the {@link #structureMergeViewerGrouper}
-	 * field.
-	 * </p>
-	 * 
-	 * @return The viewer grouper grouper that is to be applied on the structure viewer.
-	 */
-	protected StructureMergeViewerGrouper getStructureMergeViewerGrouper() {
-		if (structureMergeViewerGrouper == null) {
-			if (eventBus == null) {
-				eventBus = new EventBus();
-				eventBus.register(this);
-			}
-			structureMergeViewerGrouper = new StructureMergeViewerGrouper(eventBus);
-			structureMergeViewerGrouper.install(this);
-		}
-		return structureMergeViewerGrouper;
-	}
-
-	/**
-	 * Returns the menu manager that is to be applied to groups on the structure viewer.
-	 * 
-	 * @return The menu manager that is to be applied to groups on the structure viewer.
-	 */
-	public MenuManager getGroupsMenuManager() {
-		if (groupsMenuManager == null) {
-			groupsMenuManager = new MenuManager();
-		}
-		return groupsMenuManager;
-	}
-
-	/**
-	 * @return the groupActionMenu
-	 */
-	public GroupActionMenu getGroupActionMenu() {
-		return groupActionMenu;
-	}
-
-	/**
-	 * @param groupActionMenu
-	 *            the groupActionMenu to set
-	 */
-	public void setGroupActionMenu(GroupActionMenu groupActionMenu) {
-		this.groupActionMenu = groupActionMenu;
-	}
-
-	/**
-	 * Returns the menu manager that is to be applied to filters on the structure viewer.
-	 * 
-	 * @return The menu manager that is to be applied to filters on the structure viewer.
-	 */
-	public MenuManager getFiltersMenuManager() {
-		if (filtersMenuManager == null) {
-			filtersMenuManager = new MenuManager();
-		}
-		return filtersMenuManager;
-	}
-
-	/**
-	 * @return the filterActionMenu
-	 */
-	public FilterActionMenu getFilterActionMenu() {
-		return filterActionMenu;
-	}
-
-	/**
-	 * @param filterActionMenu
-	 *            the filterActionMenu to set
-	 */
-	public void setFilterActionMenu(FilterActionMenu filterActionMenu) {
-		this.filterActionMenu = filterActionMenu;
-	}
-
-	/**
-	 * Returns the default group provider that is to be applied on the structure viewer.
-	 * 
-	 * @return The default group provider that is to be applied on the structure viewer.
-	 */
-	public DefaultGroupProvider getDefaultGroupProvider() {
-		return new DefaultGroupProvider();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.compare.structuremergeviewer.DiffTreeViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
 	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
 		getControl().removeListener(SWT.EraseItem, fEraseItemListener);
-		for (MergeAction mergeAction : mergeActions) {
-			removeSelectionChangedListener(mergeAction);
-		}
 		getCompareConfiguration().removeChangeListener(configurationChangeListener);
 		super.handleDispose(event);
 	}
