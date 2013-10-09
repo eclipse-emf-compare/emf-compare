@@ -47,12 +47,7 @@ public class DifferenceFilterRegistryImpl implements Registry {
 	 *      org.eclipse.emf.compare.Comparison)
 	 */
 	public List<IDifferenceFilter> getFilters(IComparisonScope scope, Comparison comparison) {
-		Iterable<IDifferenceFilter> filters = filter(map.values(), isFilterActivable(scope, comparison));
-		List<IDifferenceFilter> ret = newArrayList();
-		for (IDifferenceFilter filter : filters) {
-			ret.add(filter);
-		}
-		return ret;
+		return newArrayList(filter(map.values(), isFilterActivable(scope, comparison)));
 	}
 
 	/**
