@@ -411,6 +411,7 @@ public class EMFCompareStructureMergeViewer extends AbstractViewerWrapper implem
 
 			diffTreeViewer.setRoot(fAdapterFactory.adapt(treeNode, ICompareInput.class));
 			getCompareConfiguration().setComparison(comparison);
+			getCompareConfiguration().setComparisonScope(scope);
 
 			SWTUtil.safeAsyncExec(new Runnable() {
 				public void run() {

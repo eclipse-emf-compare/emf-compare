@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -74,6 +75,10 @@ public interface IEMFCompareConfiguration {
 	Comparison getComparison();
 
 	void setComparison(Comparison comparison);
+
+	IComparisonScope getComparisonScope();
+
+	void setComparisonScope(IComparisonScope comparisonScope);
 
 	EMFCompare getComparator();
 

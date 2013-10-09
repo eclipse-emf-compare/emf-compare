@@ -31,6 +31,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfigur
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfigurationChangeListener;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -65,6 +66,8 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	private static final IDifferenceGroupProvider SELECTED_DIFFERENCE_GROUP_PROVIDER__DEFAULT_VALUE = IDifferenceGroupProvider.EMPTY;
 
 	private static final String PREVIEW_MERGE_MODE = EMFCompareIDEUIPlugin.PLUGIN_ID + ".PREVIEW_MERGE_MODE"; //$NON-NLS-1$
+
+	private static final String COMPARISON_SCOPE = EMFCompareIDEUIPlugin.PLUGIN_ID + ".COMPARISON_SCOPE"; //$NON-NLS-1$;
 
 	private final List<IEMFCompareConfigurationChangeListener> listeners;
 
@@ -223,6 +226,24 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		return ret;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration#getComparisonScope()
+	 */
+	public IComparisonScope getComparisonScope() {
+		return (IComparisonScope)getProperty(COMPARISON_SCOPE);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration#setComparisonScope(org.eclipse.emf.compare.scope.IComparisonScope)
+	 */
+	public void setComparisonScope(IComparisonScope comparisonScope) {
+		setProperty(COMPARISON_SCOPE, comparisonScope);
+	}
+
 	private class PropertyChangeListener implements IPropertyChangeListener {
 
 		/**
@@ -248,6 +269,8 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 				handleComparatorChange(event);
 			} else if (PREVIEW_MERGE_MODE.equals(property)) {
 				handlePreviewMergeModeChange(event);
+			} else if (COMPARISON_SCOPE.equals(property)) {
+				handleComparisonScopeChange(event);
 			}
 		}
 
@@ -314,6 +337,14 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 			MergeMode newValue = (MergeMode)event.getNewValue();
 			for (IEMFCompareConfigurationChangeListener listener : listeners) {
 				listener.mergePreviewModeChange(oldValue, newValue);
+			}
+		}
+
+		protected void handleComparisonScopeChange(PropertyChangeEvent event) {
+			IComparisonScope oldValue = (IComparisonScope)event.getOldValue();
+			IComparisonScope newValue = (IComparisonScope)event.getNewValue();
+			for (IEMFCompareConfigurationChangeListener listener : listeners) {
+				listener.comparisonScopeChange(oldValue, newValue);
 			}
 		}
 	}
