@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.AbstractDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
@@ -31,6 +32,8 @@ import org.eclipse.emf.edit.tree.TreePackage;
  * @since 3.0
  */
 public interface IDifferenceGroupProvider extends Adapter {
+
+	public static IDifferenceGroupProvider DEFAULT = new DefaultGroupProvider();
 
 	public static IDifferenceGroupProvider EMPTY = new AbstractDifferenceGroupProvider() {
 
