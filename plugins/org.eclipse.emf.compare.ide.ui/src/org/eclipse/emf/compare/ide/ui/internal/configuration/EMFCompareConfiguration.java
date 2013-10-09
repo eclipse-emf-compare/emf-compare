@@ -271,6 +271,8 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 				handlePreviewMergeModeChange(event);
 			} else if (COMPARISON_SCOPE.equals(property)) {
 				handleComparisonScopeChange(event);
+			} else {
+				fireChange(property, event.getOldValue(), event.getNewValue());
 			}
 		}
 
