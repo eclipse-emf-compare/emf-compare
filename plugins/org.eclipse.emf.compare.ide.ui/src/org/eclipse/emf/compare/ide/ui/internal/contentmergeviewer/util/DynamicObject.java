@@ -19,7 +19,9 @@ import com.google.common.cache.LoadingCache;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 
 /**
  * Utility class to access (R/W) field in super class hierarchy.
@@ -31,6 +33,8 @@ import java.lang.reflect.Modifier;
 public class DynamicObject {
 
 	private final LoadingCache<String, Field> fFieldCache;
+
+	private final LoadingCache<MethodKey, Method> fMethodCache;
 
 	private final Object fTarget;
 
@@ -46,6 +50,12 @@ public class DynamicObject {
 			@Override
 			public Field load(String key) throws Exception {
 				return getField(fTargetClass, key);
+			}
+		});
+		fMethodCache = CacheBuilder.newBuilder().maximumSize(16).build(new CacheLoader<MethodKey, Method>() {
+			@Override
+			public Method load(MethodKey key) throws Exception {
+				return getMethod(fTargetClass, key.methodName, key.parameterTypes);
 			}
 		});
 	}
@@ -110,6 +120,17 @@ public class DynamicObject {
 		}
 	}
 
+	public Object invoke(String methodName, Class<?>[] parameterTypes, Object... args) {
+		Object ret = null;
+		try {
+			Method method = fMethodCache.get(MethodKey.create(methodName, parameterTypes));
+			ret = method.invoke(fTarget, args);
+		} catch (Exception e) {
+			handleException(e);
+		}
+		return ret;
+	}
+
 	/**
 	 * @param cause
 	 */
@@ -133,12 +154,97 @@ public class DynamicObject {
 		return null;
 	}
 
+	private static Method getMethod(Class<?> clazz, String name, Class<?>[] parameterTypes) {
+		Method method = null;
+		try {
+			method = clazz.getDeclaredMethod(name, parameterTypes);
+		} catch (NoSuchMethodException nsme) {
+			if (!clazz.isInterface()) {
+				Class<?> superClass = clazz.getSuperclass();
+				if (superClass != null) {
+					method = getMethod(superClass, name, parameterTypes);
+				}
+			}
+
+			if (method == null) {
+				for (Class<?> superInterface : clazz.getInterfaces()) {
+					method = getMethod(superInterface, name, parameterTypes);
+					if (method != null) {
+						break;
+					}
+				}
+			}
+		} catch (Exception e) {
+			propagate(e);
+		}
+
+		if (method != null && !method.isAccessible()) {
+			makeAccessible(method);
+		}
+
+		return method;
+	}
+
 	private static void makeAccessible(Member member) {
-		if (!Modifier.isPublic(member.getModifiers())
+		final boolean instanceOfAccesibleAndNotAccessible = member instanceof AccessibleObject
+				&& !((AccessibleObject)member).isAccessible();
+		if (instanceOfAccesibleAndNotAccessible || !Modifier.isPublic(member.getModifiers())
 				|| !Modifier.isPublic(member.getDeclaringClass().getModifiers())) {
 			if (member instanceof AccessibleObject) {
 				((AccessibleObject)member).setAccessible(true);
+			} else {
+				throw new RuntimeException("Can not set accessible " + member);
 			}
 		}
+	}
+
+	private static class MethodKey {
+		final String methodName;
+
+		final Class<?>[] parameterTypes;
+
+		private MethodKey(String methodName, Class<?>[] parameterTypes) {
+			this.methodName = methodName;
+			this.parameterTypes = parameterTypes;
+		}
+
+		static MethodKey create(String methodName, Class<?>[] parameterTypes) {
+			return new MethodKey(methodName, parameterTypes);
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((methodName == null) ? 0 : methodName.hashCode());
+			result = prime * result + Arrays.hashCode(parameterTypes);
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (getClass() != obj.getClass()) {
+				return false;
+			}
+			MethodKey other = (MethodKey)obj;
+			if (methodName == null) {
+				if (other.methodName != null) {
+					return false;
+				}
+			} else if (!methodName.equals(other.methodName)) {
+				return false;
+			}
+			if (!Arrays.equals(parameterTypes, other.parameterTypes)) {
+				return false;
+			}
+			return true;
+		}
+
 	}
 }
