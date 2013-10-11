@@ -450,7 +450,7 @@ public class ProjectModelResolver extends LogicalModelResolver {
 			segments = segments.subList(1, segments.size());
 		}
 		for (String segment : segments) {
-			path.append(segment).append('/');
+			path.append(URI.decode(segment)).append('/');
 		}
 		return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(path.toString()));
 	}

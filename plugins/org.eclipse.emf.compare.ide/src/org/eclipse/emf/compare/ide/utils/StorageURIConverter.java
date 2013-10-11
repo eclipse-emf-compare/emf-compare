@@ -176,7 +176,7 @@ public class StorageURIConverter extends DelegatingURIConverter {
 		 * @see org.eclipse.core.resources.IStorage#getName()
 		 */
 		public String getName() {
-			return uri.lastSegment();
+			return URI.decode(uri.lastSegment());
 		}
 
 		/**

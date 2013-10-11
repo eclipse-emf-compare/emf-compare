@@ -120,7 +120,7 @@ public class StreamAccessorStorage implements IStorage {
 			if (revision != null) {
 				final URI uri = revision.getURI();
 				if (uri != null) {
-					tmp = uri.toString();
+					tmp = org.eclipse.emf.common.util.URI.decode(uri.toString());
 				} else if (revision instanceof IAdaptable) {
 					final IResourceVariant variant = (IResourceVariant)((IAdaptable)revision)
 							.getAdapter(IResourceVariant.class);
