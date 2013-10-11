@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
 import static com.google.common.collect.Iterables.getFirst;
 
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import java.lang.reflect.Field;
@@ -234,9 +233,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		fHandlerService = CompareHandlerService.createFor(getCompareConfiguration().getContainer(),
 				treeViewer.getControl().getShell());
 
-		EventBus eventBus = new EventBus();
-		eventBus.register(this);
-
 		StructureMergeViewerFilter structureMergeViewerFilter = getCompareConfiguration()
 				.getStructureMergeViewerFilter();
 		structureMergeViewerFilter.install(treeViewer);
@@ -294,7 +290,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		eAdapters.add(differenceGroupProvider);
 
 		treeRuler.computeConsequences();
-		treeRuler.redraw();
+		SWTUtil.safeRedraw(treeRuler, true);
 	}
 
 	@Subscribe
@@ -466,14 +462,22 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		if (!getControl().isDisposed()) { // guard against disposal
 			final TreeNode treeNode = TreeFactory.eINSTANCE.createTreeNode();
 			treeNode.setData(comparison);
+			final Object input = fAdapterFactory.adapt(treeNode, ICompareInput.class);
+
+			// this will set to the EMPTY difference group provider, but necessary to avoid NPE while setting
+			// input.
+			treeNode.eAdapters().add(getSelectedDifferenceGroupProvider());
+
+			SWTUtil.safeSyncExec(new Runnable() {
+				public void run() {
+					getViewer().setInput(input);
+				}
+			});
 
 			getCompareConfiguration().setComparisonAndScope(comparison, scope);
-			registerDifferenceGroupProvider(treeNode, getSelectedDifferenceGroupProvider());
 
 			SWTUtil.safeAsyncExec(new Runnable() {
 				public void run() {
-					// Mandatory for the EMFCompareDiffTreeRuler, all TreeItems must have been created
-					((EMFCompareDiffTreeViewer)getViewer()).refreshAfterDiff(getViewer().getInput());
 					((EMFCompareDiffTreeViewer)getViewer()).createChildrenSilently(getViewer().getTree());
 					((EMFCompareDiffTreeViewer)getViewer()).initialSelection();
 				}

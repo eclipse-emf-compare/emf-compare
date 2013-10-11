@@ -10,13 +10,19 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups;
 
+import static com.google.common.collect.Sets.newLinkedHashSet;
+
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 
 import java.util.List;
+import java.util.Set;
 
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DifferenceGroupProviderChange;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -36,10 +42,13 @@ public final class StructureMergeViewerGrouper {
 	private IDifferenceGroupProvider provider;
 
 	/** List of all TreeViewers on which this grouper is applied. */
-	private List<TreeViewer> viewers = Lists.newArrayList();
+	private final List<TreeViewer> viewers;
 
 	/** The {@link EventBus} associated with this grouper. */
-	private EventBus eventBus;
+	private final EventBus eventBus;
+
+	/** The set of registered group provider that has been set on this grouper. */
+	private final Set<IDifferenceGroupProvider> registeredGroupProviders;
 
 	/**
 	 * Constructs the difference grouper.
@@ -49,6 +58,9 @@ public final class StructureMergeViewerGrouper {
 	 */
 	public StructureMergeViewerGrouper(EventBus eventBus) {
 		this.eventBus = eventBus;
+		this.provider = IDifferenceGroupProvider.EMPTY;
+		this.viewers = Lists.newArrayList();
+		this.registeredGroupProviders = newLinkedHashSet();
 	}
 
 	/**
@@ -78,8 +90,23 @@ public final class StructureMergeViewerGrouper {
 	 */
 	private void refreshViewers() {
 		for (TreeViewer viewer : viewers) {
+			Adapter root = (Adapter)viewer.getInput();
+			if (root != null) {
+				Notifier target = (Notifier)root.getTarget();
+				registerDifferenceGroupProvider(target, provider);
+			}
 			SWTUtil.safeRefresh(viewer, false);
 		}
+	}
+
+	protected void registerDifferenceGroupProvider(Notifier notifier, IDifferenceGroupProvider groupProvider) {
+		List<Adapter> eAdapters = notifier.eAdapters();
+		Adapter oldGroupProvider = EcoreUtil.getAdapter(eAdapters, IDifferenceGroupProvider.class);
+		if (oldGroupProvider != null) {
+			eAdapters.remove(oldGroupProvider);
+		}
+		eAdapters.add(groupProvider);
+		registeredGroupProviders.add(groupProvider);
 	}
 
 	/**
@@ -108,6 +135,23 @@ public final class StructureMergeViewerGrouper {
 	 *            The viewer from which the grouper should be removed.
 	 */
 	public void uninstall(TreeViewer viewer) {
+		Object input = viewer.getInput();
+		if (input != null) {
+			List<Adapter> eAdapters = ((Notifier)input).eAdapters();
+			Adapter groupProvider = EcoreUtil.getAdapter(eAdapters, IDifferenceGroupProvider.class);
+			if (provider != groupProvider) {
+				throw new IllegalStateException();
+			}
+			if (registeredGroupProviders.contains(groupProvider)) {
+				throw new IllegalStateException();
+			}
+
+			eAdapters.remove(provider);
+
+			for (IDifferenceGroupProvider registeredGroupProvider : registeredGroupProviders) {
+				registeredGroupProvider.dispose();
+			}
+		}
 		viewers.remove(viewer);
 	}
 }

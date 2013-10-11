@@ -13,14 +13,14 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.prov
 import static com.google.common.collect.Iterators.any;
 import static com.google.common.collect.Iterators.filter;
 import static com.google.common.collect.Iterators.transform;
-import static com.google.common.collect.Lists.newArrayList;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multimap;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
@@ -46,7 +46,7 @@ import org.eclipse.emf.edit.tree.provider.TreeNodeItemProvider;
  */
 public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements IItemStyledLabelProvider, IItemColorProvider, IItemFontProvider {
 
-	private List<GroupItemProviderAdapter> groupItemProviderAdapters;
+	private Multimap<IDifferenceGroupProvider, GroupItemProviderAdapter> groupItemProviderAdapters;
 
 	/**
 	 * This constructs an instance from a factory.
@@ -102,18 +102,28 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 				return groups.iterator().next().getChildren();
 			} else {
 				if (groupItemProviderAdapters == null) {
-					groupItemProviderAdapters = newArrayList();
-					for (IDifferenceGroup differenceGroup : groups) {
-						groupItemProviderAdapters.add(new GroupItemProviderAdapter(adapterFactory, treeNode,
-								differenceGroup));
-					}
-					return groupItemProviderAdapters;
+					groupItemProviderAdapters = ArrayListMultimap.create();
+					initMapping(groups, groupProvider, treeNode);
+					return groupItemProviderAdapters.get(groupProvider);
 				} else {
-					return groupItemProviderAdapters;
+					Collection<GroupItemProviderAdapter> adapters = groupItemProviderAdapters
+							.get(groupProvider);
+					if (adapters.isEmpty()) {
+						initMapping(groups, groupProvider, treeNode);
+					}
+					return adapters;
 				}
 			}
 		} else {
 			return super.getChildren(object);
+		}
+	}
+
+	protected void initMapping(Collection<? extends IDifferenceGroup> groups,
+			IDifferenceGroupProvider groupProvider, TreeNode treeNode) {
+		for (IDifferenceGroup differenceGroup : groups) {
+			groupItemProviderAdapters.put(groupProvider, new GroupItemProviderAdapter(adapterFactory,
+					treeNode, differenceGroup));
 		}
 	}
 
@@ -192,5 +202,13 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 	public Object getFont(Object object) {
 		TreeNode treeNode = ((TreeNode)object);
 		return itemDelegator.getFont(treeNode.getData());
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		if (groupItemProviderAdapters != null) {
+			groupItemProviderAdapters.clear();
+		}
 	}
 }

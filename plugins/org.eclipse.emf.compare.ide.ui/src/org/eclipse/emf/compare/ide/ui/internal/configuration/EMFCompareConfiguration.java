@@ -187,8 +187,8 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		setProperty(COMPARE_RESULT, newComparison);
 		setProperty(COMPARISON_SCOPE, newComparisonScope);
 
-		initStructureMergeViewerFilter(newComparison, newComparisonScope);
 		initStructureMergeViewerGroupProvider(newComparison, newComparisonScope);
+		initStructureMergeViewerFilter(newComparison, newComparisonScope);
 
 		getEventBus().post(
 				new ComparisonAndScopeChange(oldComparison, newComparison, oldComparisonScope,
