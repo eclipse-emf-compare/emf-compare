@@ -99,6 +99,20 @@ public class OverlayImageProvider {
 	}
 
 	/**
+	 * Returns a composed image with the image of the given object and the appropriate overlay.
+	 * 
+	 * @param object
+	 *            the object for which we have to find an overlay.
+	 * @param imageToCompose
+	 *            the image of the match to use as base.
+	 * @return a composed image with the image of the given object and the appropriate overlay.
+	 */
+	public Object getComposedImage(Object object, Object imageToCompose) {
+		String overlay = "full/ovr16/match_ov";
+		return getComposedImage(imageToCompose, overlay);
+	}
+
+	/**
 	 * Returns a composed image with the image of the given match the overlay at the given path.
 	 * 
 	 * @param imageToCompose
@@ -285,7 +299,7 @@ public class OverlayImageProvider {
 	 * 
 	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
 	 */
-	private final class ComposedImageExtension extends ComposedImage {
+	private static final class ComposedImageExtension extends ComposedImage {
 
 		/** The offset of the overlays. */
 		private static final int X_OFFSET = 10;
