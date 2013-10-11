@@ -10,13 +10,12 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions;
 
-import com.google.common.collect.Lists;
-
 import java.util.Collection;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter.Registry;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.jface.action.Action;
@@ -38,7 +37,10 @@ public class FilterActionMenu extends Action implements IMenuCreator {
 	private final StructureMergeViewerFilter structureMergeViewerFilter;
 
 	/** Menu Manager that will contain our menu. */
-	private MenuManager menuManager;
+	private final MenuManager menuManager;
+
+    /** The registry that will be used to retrieve available filters. */
+	private final Registry registry;
 
 	/**
 	 * Constructs our filtering menu.
@@ -48,10 +50,12 @@ public class FilterActionMenu extends Action implements IMenuCreator {
 	 * @param menuManager
 	 *            The Menu Manager that will contain our menu.
 	 */
-	public FilterActionMenu(StructureMergeViewerFilter structureMergeViewerFilter) {
+	public FilterActionMenu(StructureMergeViewerFilter structureMergeViewerFilter,
+			IDifferenceFilter.Registry registry) {
 		super("", IAction.AS_DROP_DOWN_MENU); //$NON-NLS-1$
-		this.menuManager = new MenuManager();
 		this.structureMergeViewerFilter = structureMergeViewerFilter;
+		this.registry = registry;
+		this.menuManager = new MenuManager();
 		setMenuCreator(this);
 		setToolTipText("Filters");
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareRCPUIPlugin.PLUGIN_ID,
@@ -66,21 +70,14 @@ public class FilterActionMenu extends Action implements IMenuCreator {
 	 * @param comparison
 	 *            The comparison on which the filters will be applied.
 	 */
-	public void createActions(IComparisonScope scope, Comparison comparison) {
-		if (menuManager.isEmpty()) {
-			IDifferenceFilter.Registry registry = EMFCompareRCPUIPlugin.getDefault()
-					.getFilterActionRegistry();
-			Collection<IDifferenceFilter> filters = registry.getFilters(scope, comparison);
-			Collection<IDifferenceFilter> filtersSelected = Lists.newArrayList();
-			for (IDifferenceFilter filter : filters) {
-				FilterAction action = new FilterAction(filter.getLabel(), structureMergeViewerFilter, filter);
-				if (filter.defaultSelected()) {
-					action.setChecked(true);
-					filtersSelected.add(filter);
-				}
-				menuManager.add(action);
-			}
-			structureMergeViewerFilter.addFilters(filtersSelected);
+	public void updateMenu(IComparisonScope newScope, Comparison newComparison) {
+		menuManager.removeAll();
+		Collection<IDifferenceFilter> filters = registry.getFilters(newScope, newComparison);
+		for (IDifferenceFilter filter : filters) {
+			FilterAction action = new FilterAction(filter.getLabel(), structureMergeViewerFilter, filter);
+			boolean selected = structureMergeViewerFilter.getSelectedDifferenceFilters().contains(filter);
+			action.setChecked(selected);
+			menuManager.add(action);
 		}
 	}
 
@@ -108,6 +105,6 @@ public class FilterActionMenu extends Action implements IMenuCreator {
 	 * @see IMenuCreator#getMenu(Menu)
 	 */
 	public Menu getMenu(Menu parent) {
-		return menuManager.getMenu();
+		return null;
 	}
 }

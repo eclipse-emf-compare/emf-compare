@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.eventbus.Subscribe;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
 
@@ -51,8 +52,8 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicOb
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.CompareInputAdapter;
-import org.eclipse.emf.compare.ide.ui.internal.util.SWTUtil;
-import org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
+import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
@@ -91,15 +92,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 	private final ScheduledExecutorService fExecutorService;
 
-	private final ConfigurationChangeListener configurationChangeListener;
-
-	private class ConfigurationChangeListener extends EMFCompareConfigurationChangeListener {
-		@Override
-		public void editingDomainChange(ICompareEditingDomain oldValue, ICompareEditingDomain newValue) {
-			EMFCompareTextMergeViewer.this.editingDomainChange(oldValue, newValue);
-		}
-	}
-
 	/**
 	 * @param parent
 	 * @param configuration
@@ -113,8 +105,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 		editingDomainChange(null, configuration.getEditingDomain());
 
-		configurationChangeListener = new ConfigurationChangeListener();
-		configuration.addChangeListener(configurationChangeListener);
+		configuration.getEventBus().register(this);
 	}
 
 	/**
@@ -137,7 +128,14 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	 * @param oldValue
 	 * @param newValue
 	 */
-	protected void editingDomainChange(ICompareEditingDomain oldValue, ICompareEditingDomain newValue) {
+	@Subscribe
+	public void editingDomainChange(ICompareEditingDomainChange event) {
+		ICompareEditingDomain oldValue = event.getOldValue();
+		ICompareEditingDomain newValue = event.getNewValue();
+		editingDomainChange(oldValue, newValue);
+	}
+
+	public void editingDomainChange(ICompareEditingDomain oldValue, ICompareEditingDomain newValue) {
 		if (oldValue != null) {
 			oldValue.getCommandStack().removeCommandStackListener(this);
 		}
@@ -456,7 +454,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		}
 		fExecutorService.shutdown();
 
-		getCompareConfiguration().removeChangeListener(configurationChangeListener);
+		getCompareConfiguration().getEventBus().unregister(this);
 
 		editingDomainChange(getCompareConfiguration().getEditingDomain(), null);
 

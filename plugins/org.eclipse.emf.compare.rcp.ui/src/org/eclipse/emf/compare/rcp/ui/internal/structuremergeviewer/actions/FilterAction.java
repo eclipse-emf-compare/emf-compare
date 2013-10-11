@@ -30,10 +30,10 @@ import org.eclipse.jface.action.IAction;
 public class FilterAction extends Action {
 
 	/** The filter associated with this action. */
-	private IDifferenceFilter filter;
+	private final IDifferenceFilter filter;
 
 	/** The Filter that will be modified by the action. */
-	private StructureMergeViewerFilter structureMergeViewerFilter;
+	private final StructureMergeViewerFilter structureMergeViewerFilter;
 
 	/**
 	 * The "default" constructor for this action.

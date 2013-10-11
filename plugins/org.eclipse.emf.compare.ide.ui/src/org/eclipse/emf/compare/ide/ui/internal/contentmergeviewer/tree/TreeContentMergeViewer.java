@@ -207,8 +207,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			public Object[] getChildren(Object object) {
 				if (object instanceof IMergeViewerItem.Container) {
 					IMergeViewerItem[] children = ((IMergeViewerItem.Container)object).getChildren(
-							getCompareConfiguration().getSelectedDifferenceGroupProvider(),
-							getCompareConfiguration().getAggregatedViewerPredicate());
+							getDifferenceGroupProvider(), getDifferenceFilterPredicate());
 
 					return children;
 				}
@@ -223,9 +222,8 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			@Override
 			public boolean hasChildren(Object object) {
 				if (object instanceof IMergeViewerItem.Container) {
-					return ((IMergeViewerItem.Container)object).hasChildren(getCompareConfiguration()
-							.getSelectedDifferenceGroupProvider(), getCompareConfiguration()
-							.getAggregatedViewerPredicate());
+					return ((IMergeViewerItem.Container)object).hasChildren(getDifferenceGroupProvider(),
+							getDifferenceFilterPredicate());
 				}
 				return super.hasChildren(object);
 			}
@@ -353,9 +351,8 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			IMergeViewerItem leftData = (IMergeViewerItem)leftItem.getData();
 			final Diff leftDiff = leftData.getDiff();
 			if (leftDiff != null) {
-				if (MergeViewerUtil.isVisibleInMergeViewer(leftDiff, getCompareConfiguration()
-						.getSelectedDifferenceGroupProvider(), getCompareConfiguration()
-						.getAggregatedViewerPredicate())) {
+				if (MergeViewerUtil.isVisibleInMergeViewer(leftDiff, getDifferenceGroupProvider(),
+						getDifferenceFilterPredicate())) {
 					TreeItem rightItem = findRightTreeItemFromLeftDiff(rightItems, leftDiff, leftData);
 
 					if (rightItem != null) {

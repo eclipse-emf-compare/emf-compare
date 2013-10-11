@@ -14,11 +14,11 @@ import static com.google.common.base.Predicates.alwaysFalse;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.any;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newLinkedHashSet;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
 import java.util.Collection;
@@ -30,9 +30,9 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilterSelectionChangeEvent.Action;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterSelectionChangeEventImpl;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterChange;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.GroupItemProviderAdapter;
+import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.TreePath;
@@ -57,8 +57,15 @@ import org.eclipse.swt.events.DisposeListener;
  * @since 3.0
  */
 public class StructureMergeViewerFilter extends ViewerFilter {
+
+	public static final Predicate<? super EObject> DEFAULT_PREDICATE = alwaysFalse();
+
 	/** The set of predicates known by this filter. */
 	private final Set<Predicate<? super EObject>> predicates;
+
+	private final Set<IDifferenceFilter> selectedDifferenceFilters;
+
+	private final Set<IDifferenceFilter> unselectedDifferenceFilters;
 
 	/** List of all TreeViewers on which this filter is applied. */
 	private final List<TreeViewer> viewers;
@@ -93,9 +100,11 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 */
 	public StructureMergeViewerFilter(EventBus eventBus) {
 		this.eventBus = eventBus;
-		this.predicates = Sets.newLinkedHashSet();
-		this.viewers = Lists.newArrayList();
-		this.aggregatedPredicate = alwaysFalse();
+		this.predicates = newLinkedHashSet();
+		this.selectedDifferenceFilters = newLinkedHashSet();
+		this.unselectedDifferenceFilters = newLinkedHashSet();
+		this.viewers = newArrayList();
+		this.aggregatedPredicate = DEFAULT_PREDICATE;
 	}
 
 	/**
@@ -130,29 +139,6 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	}
 
 	/**
-	 * Add the predicates of the given {@link IDifferenceFilter}s.
-	 * 
-	 * @param filters
-	 *            The given {@link IDifferenceFilter}s.
-	 */
-	public void addFilters(Collection<IDifferenceFilter> filters) {
-		boolean changed = false;
-		for (IDifferenceFilter filter : filters) {
-			changed |= predicates.remove(filter.getPredicateWhenUnselected());
-			changed |= predicates.add(filter.getPredicateWhenSelected());
-		}
-
-		if (changed) {
-			computeAggregatedPredicate();
-			for (IDifferenceFilter filter : filters) {
-				eventBus.post(new DifferenceFilterSelectionChangeEventImpl(filter, aggregatedPredicate,
-						Action.SELECTED));
-			}
-			refreshViewers();
-		}
-	}
-
-	/**
 	 * Add the predicate of the given {@link IDifferenceFilter}.
 	 * 
 	 * @param filter
@@ -161,19 +147,23 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	public void addFilter(IDifferenceFilter filter) {
 		boolean changed = predicates.remove(filter.getPredicateWhenUnselected());
 		changed |= predicates.add(filter.getPredicateWhenSelected());
+
+		changed |= selectedDifferenceFilters.add(filter);
+		changed |= unselectedDifferenceFilters.remove(filter);
+
 		if (changed) {
-			computeAggregatedPredicate();
-			eventBus.post(new DifferenceFilterSelectionChangeEventImpl(filter, aggregatedPredicate,
-					Action.SELECTED));
+			aggregatedPredicate = computeAggregatedPredicate();
 			refreshViewers();
+			eventBus.post(new DifferenceFilterChange(aggregatedPredicate, selectedDifferenceFilters,
+					unselectedDifferenceFilters));
 		}
 	}
 
 	/**
 	 * @return
 	 */
-	private void computeAggregatedPredicate() {
-		aggregatedPredicate = not(or(predicates));
+	private Predicate<? super EObject> computeAggregatedPredicate() {
+		return not(or(predicates));
 	}
 
 	/**
@@ -185,12 +175,56 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	public void removeFilter(IDifferenceFilter filter) {
 		boolean changed = predicates.add(filter.getPredicateWhenUnselected());
 		changed |= predicates.remove(filter.getPredicateWhenSelected());
+
+		changed |= unselectedDifferenceFilters.add(filter);
+		changed |= selectedDifferenceFilters.remove(filter);
+
 		if (changed) {
-			computeAggregatedPredicate();
-			eventBus.post(new DifferenceFilterSelectionChangeEventImpl(filter, aggregatedPredicate,
-					Action.DESELECTED));
+			aggregatedPredicate = computeAggregatedPredicate();
 			refreshViewers();
+			eventBus.post(new DifferenceFilterChange(aggregatedPredicate, selectedDifferenceFilters,
+					unselectedDifferenceFilters));
 		}
+	}
+
+	public void init(Collection<IDifferenceFilter> selectedFilters,
+			Collection<IDifferenceFilter> unselectedFilters) {
+		boolean changed = false;
+
+		if (!predicates.isEmpty()) {
+			predicates.clear();
+			changed = true;
+		}
+
+		for (IDifferenceFilter filter : selectedFilters) {
+			changed |= predicates.add(filter.getPredicateWhenSelected());
+			changed |= selectedDifferenceFilters.add(filter);
+		}
+		for (IDifferenceFilter filter : unselectedFilters) {
+			changed |= predicates.add(filter.getPredicateWhenUnselected());
+			changed |= unselectedDifferenceFilters.add(filter);
+		}
+
+		if (changed) {
+			aggregatedPredicate = computeAggregatedPredicate();
+			refreshViewers();
+			eventBus.post(new DifferenceFilterChange(aggregatedPredicate, selectedDifferenceFilters,
+					unselectedDifferenceFilters));
+		}
+	}
+
+	/**
+	 * @return the selectedDifferenceFilters
+	 */
+	public Set<IDifferenceFilter> getSelectedDifferenceFilters() {
+		return selectedDifferenceFilters;
+	}
+
+	/**
+	 * @return the aggregatedPredicate
+	 */
+	public Predicate<? super EObject> getAggregatedPredicate() {
+		return aggregatedPredicate;
 	}
 
 	/**
@@ -198,10 +232,14 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 * possible.
 	 */
 	private void refreshViewers() {
-		for (TreeViewer viewer : viewers) {
-			final TreePath[] paths = viewer.getExpandedTreePaths();
-			viewer.refresh();
-			viewer.setExpandedTreePaths(paths);
+		for (final TreeViewer viewer : viewers) {
+			SWTUtil.safeSyncExec(new Runnable() {
+				public void run() {
+					final TreePath[] paths = viewer.getExpandedTreePaths();
+					viewer.refresh();
+					viewer.setExpandedTreePaths(paths);
+				}
+			});
 		}
 	}
 

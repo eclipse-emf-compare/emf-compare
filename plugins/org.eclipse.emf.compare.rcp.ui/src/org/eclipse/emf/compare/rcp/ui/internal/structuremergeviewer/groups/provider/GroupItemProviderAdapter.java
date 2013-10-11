@@ -15,8 +15,10 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.provider.EMFCompareEditPlugin;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
+import org.eclipse.emf.compare.provider.spec.OverlayImageProvider;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.ecore.EObject;
@@ -41,6 +43,9 @@ public class GroupItemProviderAdapter extends ItemProviderAdapter implements IEd
 	/** The group for which we want the item provider. */
 	private IDifferenceGroup group;
 
+	/** The overlay provider for the group */
+	private OverlayImageProvider overlayProvider;
+
 	/**
 	 * Constructor.
 	 */
@@ -48,6 +53,7 @@ public class GroupItemProviderAdapter extends ItemProviderAdapter implements IEd
 		super(adapterFactory);
 		this.parent = parent;
 		this.group = group;
+		this.overlayProvider = new OverlayImageProvider(EMFCompareEditPlugin.INSTANCE);
 	}
 
 	/**
@@ -66,7 +72,7 @@ public class GroupItemProviderAdapter extends ItemProviderAdapter implements IEd
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return group.getImage();
+		return overlayProvider.getComposedImage(object, group.getImage());
 	}
 
 	/**

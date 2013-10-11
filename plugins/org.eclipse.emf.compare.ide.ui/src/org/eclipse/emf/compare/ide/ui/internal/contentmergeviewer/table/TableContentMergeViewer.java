@@ -277,9 +277,8 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			final Diff leftDiff = ((IMergeViewerItem)leftItem.getData()).getDiff();
 			boolean doPaint = true;
 			if (leftDiff != null) {
-				if (MergeViewerUtil.isVisibleInMergeViewer(leftDiff, getCompareConfiguration()
-						.getSelectedDifferenceGroupProvider(), getCompareConfiguration()
-						.getAggregatedViewerPredicate())) {
+				if (MergeViewerUtil.isVisibleInMergeViewer(leftDiff, getDifferenceGroupProvider(),
+						getDifferenceFilterPredicate())) {
 					TableItem rightItem = findRightTableItemFromLeftDiff(rightItems, leftDiff, leftData);
 
 					if (rightItem != null) {

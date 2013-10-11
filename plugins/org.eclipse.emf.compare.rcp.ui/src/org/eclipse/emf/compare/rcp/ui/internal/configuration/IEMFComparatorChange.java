@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,28 +8,16 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.util;
+package org.eclipse.emf.compare.rcp.ui.internal.configuration;
 
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.emf.compare.EMFCompare;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class SWTUtil {
+public interface IEMFComparatorChange extends ICompareEvent {
 
-	public static void safeAsyncExec(final Runnable runnable) {
-		if (Display.getCurrent() != null) {
-			runnable.run();
-		} else {
-			Display.getDefault().asyncExec(runnable);
-		}
-	}
+	EMFCompare getOldValue();
 
-	public static void safeSyncExec(final Runnable runnable) {
-		if (Display.getCurrent() != null) {
-			runnable.run();
-		} else {
-			Display.getDefault().syncExec(runnable);
-		}
-	}
+	EMFCompare getNewValue();
 }

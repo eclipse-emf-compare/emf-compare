@@ -11,11 +11,14 @@
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
 import com.google.common.base.Predicate;
+import com.google.common.eventbus.Subscribe;
 
-import org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilterChange;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProviderChange;
+import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.swt.events.DisposeEvent;
@@ -29,7 +32,9 @@ public abstract class AbstractMergeViewer extends ContentViewer implements IMerg
 
 	private final IEMFCompareConfiguration compareConfiguration;
 
-	private EMFCompareMergeViewerConfigurationListener configurationListener;
+	private Predicate<? super EObject> differenceFilter;
+
+	private IDifferenceGroupProvider differenceGroupProvider;
 
 	/**
 	 * 
@@ -37,8 +42,7 @@ public abstract class AbstractMergeViewer extends ContentViewer implements IMerg
 	public AbstractMergeViewer(MergeViewerSide side, final IEMFCompareConfiguration compareConfiguration) {
 		fSide = side;
 		this.compareConfiguration = compareConfiguration;
-		configurationListener = new EMFCompareMergeViewerConfigurationListener();
-		compareConfiguration.addChangeListener(configurationListener);
+		getCompareConfiguration().getEventBus().register(this);
 	}
 
 	/**
@@ -64,32 +68,35 @@ public abstract class AbstractMergeViewer extends ContentViewer implements IMerg
 	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
-		compareConfiguration.removeChangeListener(configurationListener);
+		getCompareConfiguration().getEventBus().unregister(this);
 		super.handleDispose(event);
 	}
 
-	protected void handleSelectedDifferenceGroupProviderChange() {
-		refresh();
+	@Subscribe
+	public void handleDifferenceGroupProviderChange(IDifferenceGroupProviderChange event) {
+		differenceGroupProvider = event.getDifferenceGroupProvider();
+		SWTUtil.safeRefresh(this, true);
 	}
 
-	protected void handleAggregatedViewerPredicateChange() {
-		refresh();
-	}
-
-	/**
-	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
-	 */
-	private final class EMFCompareMergeViewerConfigurationListener extends EMFCompareConfigurationChangeListener {
-		@Override
-		public void selectedDifferenceGroupProviderChange(IDifferenceGroupProvider oldValue,
-				IDifferenceGroupProvider newValue) {
-			handleSelectedDifferenceGroupProviderChange();
+	public IDifferenceGroupProvider getDifferenceGroupProvider() {
+		if (differenceGroupProvider == null) {
+			return getCompareConfiguration().getStructureMergeViewerGrouper().getProvider();
+		} else {
+			return differenceGroupProvider;
 		}
-	
-		@Override
-		public void aggregatedViewerPredicateChange(Predicate<? super EObject> oldValue,
-				Predicate<? super EObject> newValue) {
-			handleAggregatedViewerPredicateChange();
+	}
+
+	@Subscribe
+	public void handleDifferenceFilterChange(IDifferenceFilterChange event) {
+		differenceFilter = event.getPredicate();
+		SWTUtil.safeRefresh(this, true);
+	}
+
+	protected final Predicate<? super EObject> getDifferenceFilter() {
+		if (differenceFilter == null) {
+			return getCompareConfiguration().getStructureMergeViewerFilter().getAggregatedPredicate();
+		} else {
+			return differenceFilter;
 		}
 	}
 }

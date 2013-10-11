@@ -194,7 +194,7 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 		return groupProviderRegistry;
 	}
 
-	public IDifferenceFilter.Registry getFilterActionRegistry() {
+	public IDifferenceFilter.Registry getDifferenceFilterRegistry() {
 		return filterRegistry;
 	}
 

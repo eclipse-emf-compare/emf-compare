@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl;
 
+import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.indexOf;
+import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
@@ -47,9 +50,32 @@ public class DifferenceGroupRegistryImpl implements Registry {
 	 *      Comparison)
 	 */
 	public List<IDifferenceGroupProvider> getGroupProviders(IComparisonScope scope, Comparison comparison) {
-		Iterable<IDifferenceGroupProvider> providers = filter(map.values(), isGroupProviderActivable(scope,
-				comparison));
+		List<IDifferenceGroupProvider> providers = newArrayList(filter(map.values(),
+				isGroupProviderActivable(scope, comparison)));
+		int indexOfDefault = indexOf(providers, instanceOf(DefaultGroupProvider.class));
+		if (indexOfDefault >= 0) {
+			IDifferenceGroupProvider defaultGroupProvider = providers.remove(indexOfDefault);
+			providers.add(0, defaultGroupProvider);
+		}
 		return ImmutableList.copyOf(providers);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Registry#getDefaultGroupProviders(org.eclipse.emf.compare.scope.IComparisonScope,
+	 *      org.eclipse.emf.compare.Comparison)
+	 */
+	public IDifferenceGroupProvider getDefaultGroupProviders(IComparisonScope scope, Comparison comparison) {
+		IDifferenceGroupProvider selectedGroupProvider = null;
+		for (IDifferenceGroupProvider dgp : getGroupProviders(scope, comparison)) {
+			if (dgp.defaultSelected()) {
+				if (selectedGroupProvider == null || !(dgp instanceof DefaultGroupProvider)) {
+					selectedGroupProvider = dgp;
+				}
+			}
+		}
+		return selectedGroupProvider;
 	}
 
 	/**

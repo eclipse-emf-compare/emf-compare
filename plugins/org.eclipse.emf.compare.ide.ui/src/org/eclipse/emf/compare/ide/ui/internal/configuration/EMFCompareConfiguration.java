@@ -10,15 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.configuration;
 
-import static com.google.common.base.Predicates.alwaysFalse;
-
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+import com.google.common.eventbus.EventBus;
 
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Collection;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -27,12 +23,17 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
-import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfigurationChangeListener;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.CompareEditingDomainChange;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.ComparisonAndScopeChange;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.EMFComparatorChange;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.MergePreviewModeChange;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 
@@ -49,27 +50,16 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 
 	private static final String ADAPTER_FACTORY = EMFCompareIDEUIPlugin.PLUGIN_ID + ".ADAPTER_FACTORY"; //$NON-NLS-1$
 
-	private static final String SELECTED_DIFFERENCE_FILTERS = EMFCompareIDEUIPlugin.PLUGIN_ID
-			+ ".SELECTED_DIFFERENCE_FILTERS"; //$NON-NLS-1$
-
-	private static final Set<IDifferenceFilter> SELECTED_DIFFERENCE_FILTERS__DEFAULT_VALUE = ImmutableSet
-			.of();
-
-	private static final String AGGREGATED_VIEWER_PREDICATE = EMFCompareIDEUIPlugin.PLUGIN_ID
-			+ ".AGGREGATED_VIEWER_PREDICATE"; //$NON-NLS-1$
-
-	private static final Predicate<? super EObject> AGGREGATED_VIEWER_PREDICATE__DEFAULT_VALUE = alwaysFalse();
-
-	private static final String SELECTED_DIFFERENCE_GROUP_PROVIDER = EMFCompareIDEUIPlugin.PLUGIN_ID
-			+ ".SELECTED_DIFFERENCE_GROUP_PROVIDER"; //$NON-NLS-1$
-
-	private static final IDifferenceGroupProvider SELECTED_DIFFERENCE_GROUP_PROVIDER__DEFAULT_VALUE = IDifferenceGroupProvider.EMPTY;
-
 	private static final String PREVIEW_MERGE_MODE = EMFCompareIDEUIPlugin.PLUGIN_ID + ".PREVIEW_MERGE_MODE"; //$NON-NLS-1$
 
 	private static final String COMPARISON_SCOPE = EMFCompareIDEUIPlugin.PLUGIN_ID + ".COMPARISON_SCOPE"; //$NON-NLS-1$;
 
-	private final List<IEMFCompareConfigurationChangeListener> listeners;
+	private static final String SMV_FILTERS = EMFCompareIDEUIPlugin.PLUGIN_ID + ".SMV_FILTERS"; //$NON-NLS-1$;
+
+	private static final String EVENT_BUS = EMFCompareIDEUIPlugin.PLUGIN_ID + ".EVENT_BUS"; //$NON-NLS-1$;
+
+	private static final String SMV_GROUP_PROVIDERS = EMFCompareIDEUIPlugin.PLUGIN_ID
+			+ ".SMV_GROUP_PROVIDERS"; //$NON-NLS-1$;
 
 	private final PropertyChangeListener propertyChangeListener;
 
@@ -78,32 +68,38 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	public EMFCompareConfiguration(CompareConfiguration compareConfiguration) {
 		this.compareConfiguration = compareConfiguration;
 		setDefaultValues();
-		listeners = new CopyOnWriteArrayList<IEMFCompareConfigurationChangeListener>();
 		propertyChangeListener = new PropertyChangeListener();
 		compareConfiguration.addPropertyChangeListener(propertyChangeListener);
 	}
 
-	public void setDefaultValues() {
-		if (compareConfiguration.getProperty(AGGREGATED_VIEWER_PREDICATE) == null) {
-			compareConfiguration.setProperty(AGGREGATED_VIEWER_PREDICATE,
-					AGGREGATED_VIEWER_PREDICATE__DEFAULT_VALUE);
-		}
-
-		if (compareConfiguration.getProperty(SELECTED_DIFFERENCE_FILTERS) == null) {
-			compareConfiguration.setProperty(SELECTED_DIFFERENCE_FILTERS,
-					SELECTED_DIFFERENCE_FILTERS__DEFAULT_VALUE);
-		}
-
-		if (compareConfiguration.getProperty(SELECTED_DIFFERENCE_GROUP_PROVIDER) == null) {
-			compareConfiguration.setProperty(SELECTED_DIFFERENCE_GROUP_PROVIDER,
-					SELECTED_DIFFERENCE_GROUP_PROVIDER__DEFAULT_VALUE);
-		}
-
-		if (compareConfiguration.isLeftEditable() && compareConfiguration.isRightEditable()) {
-			compareConfiguration.setProperty(PREVIEW_MERGE_MODE, MergeMode.RIGHT_TO_LEFT);
+	private void setDefaultValues() {
+		if (isLeftEditable() && isRightEditable()) {
+			setProperty(PREVIEW_MERGE_MODE, MergeMode.RIGHT_TO_LEFT);
 		} else {
-			compareConfiguration.setProperty(PREVIEW_MERGE_MODE, MergeMode.ACCEPT);
+			setProperty(PREVIEW_MERGE_MODE, MergeMode.ACCEPT);
 		}
+
+		EventBus eventBus = new EventBus();
+		if (getProperty(SMV_FILTERS) == null) {
+			setProperty(SMV_FILTERS, new StructureMergeViewerFilter(eventBus));
+		}
+
+		if (getProperty(SMV_GROUP_PROVIDERS) == null) {
+			setProperty(SMV_GROUP_PROVIDERS, new StructureMergeViewerGrouper(eventBus));
+		}
+
+		if (getProperty(EVENT_BUS) == null) {
+			setProperty(EVENT_BUS, eventBus);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration#getEventBus()
+	 */
+	public EventBus getEventBus() {
+		return (EventBus)getProperty(EVENT_BUS);
 	}
 
 	/**
@@ -127,94 +123,6 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		compareConfiguration.removePropertyChangeListener(propertyChangeListener);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration#addChangeListener(org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfigurationChangeListener)
-	 */
-	public void addChangeListener(IEMFCompareConfigurationChangeListener listener) {
-		listeners.add(listener);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration#removeChangeListener(org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfigurationChangeListener)
-	 */
-	public void removeChangeListener(IEMFCompareConfigurationChangeListener listener) {
-		listeners.remove(listener);
-	}
-
-	public Comparison getComparison() {
-		return (Comparison)getProperty(COMPARE_RESULT);
-	}
-
-	public void setComparison(Comparison comparison) {
-		setProperty(COMPARE_RESULT, comparison);
-	}
-
-	public EMFCompare getComparator() {
-		return (EMFCompare)getProperty(COMPARATOR);
-	}
-
-	public void setComparator(EMFCompare comparator) {
-		setProperty(COMPARATOR, comparator);
-	}
-
-	public ICompareEditingDomain getEditingDomain() {
-		return (ICompareEditingDomain)getProperty(EDITING_DOMAIN);
-	}
-
-	public void setEditingDomain(ICompareEditingDomain editingDomain) {
-		setProperty(EDITING_DOMAIN, editingDomain);
-	}
-
-	@SuppressWarnings("unchecked")
-	public Set<IDifferenceFilter> getSelectedDifferenceFilters() {
-		return (Set<IDifferenceFilter>)getProperty(SELECTED_DIFFERENCE_FILTERS);
-	}
-
-	public void setSelectedDifferenceFilters(Set<IDifferenceFilter> differenceFilters) {
-		Preconditions.checkNotNull(differenceFilters);
-		setProperty(SELECTED_DIFFERENCE_FILTERS, differenceFilters);
-	}
-
-	@SuppressWarnings("unchecked")
-	public Predicate<? super EObject> getAggregatedViewerPredicate() {
-		return (Predicate<? super EObject>)getProperty(AGGREGATED_VIEWER_PREDICATE);
-	}
-
-	public void setAggregatedViewerPredicate(Predicate<? super EObject> predicate) {
-		Preconditions.checkNotNull(predicate);
-		setProperty(AGGREGATED_VIEWER_PREDICATE, predicate);
-	}
-
-	public IDifferenceGroupProvider getSelectedDifferenceGroupProvider() {
-		return (IDifferenceGroupProvider)getProperty(SELECTED_DIFFERENCE_GROUP_PROVIDER);
-	}
-
-	public void setSelectedDifferenceGroupProvider(IDifferenceGroupProvider groupProvider) {
-		Preconditions.checkNotNull(groupProvider);
-		setProperty(SELECTED_DIFFERENCE_GROUP_PROVIDER, groupProvider);
-	}
-
-	public MergeMode getMergePreviewMode() {
-		return (MergeMode)getProperty(PREVIEW_MERGE_MODE);
-	}
-
-	public void setMergePreviewMode(MergeMode previewMergeMode) {
-		Preconditions.checkNotNull(previewMergeMode);
-		setProperty(PREVIEW_MERGE_MODE, previewMergeMode);
-	}
-
-	public AdapterFactory getAdapterFactory() {
-		return (AdapterFactory)getProperty(ADAPTER_FACTORY);
-	}
-
-	public void setAdapterFactory(AdapterFactory adapterFactory) {
-		setProperty(ADAPTER_FACTORY, adapterFactory);
-	}
-
 	public boolean getBooleanProperty(String key, boolean dflt) {
 		final boolean ret;
 		Object value = getProperty(key);
@@ -226,6 +134,26 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		return ret;
 	}
 
+	public Comparison getComparison() {
+		return (Comparison)getProperty(COMPARE_RESULT);
+	}
+
+	public EMFCompare getEMFComparator() {
+		return (EMFCompare)getProperty(COMPARATOR);
+	}
+
+	public ICompareEditingDomain getEditingDomain() {
+		return (ICompareEditingDomain)getProperty(EDITING_DOMAIN);
+	}
+
+	public MergeMode getMergePreviewMode() {
+		return (MergeMode)getProperty(PREVIEW_MERGE_MODE);
+	}
+
+	public AdapterFactory getAdapterFactory() {
+		return (AdapterFactory)getProperty(ADAPTER_FACTORY);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -235,120 +163,95 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		return (IComparisonScope)getProperty(COMPARISON_SCOPE);
 	}
 
+	public void setEMFComparator(EMFCompare newComparator) {
+		EMFCompare oldComparator = getEMFComparator();
+		setProperty(COMPARATOR, oldComparator);
+		getEventBus().post(new EMFComparatorChange(oldComparator, newComparator));
+	}
+
+	public void setEditingDomain(ICompareEditingDomain newValue) {
+		ICompareEditingDomain oldValue = getEditingDomain();
+		setProperty(EDITING_DOMAIN, newValue);
+		getEventBus().post(new CompareEditingDomainChange(oldValue, newValue));
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration#setComparisonScope(org.eclipse.emf.compare.scope.IComparisonScope)
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration#setComparisonAndScope(org.eclipse.emf.compare.scope.IComparisonScope,
+	 *      org.eclipse.emf.compare.Comparison)
 	 */
-	public void setComparisonScope(IComparisonScope comparisonScope) {
-		setProperty(COMPARISON_SCOPE, comparisonScope);
+	public void setComparisonAndScope(Comparison newComparison, IComparisonScope newComparisonScope) {
+		Comparison oldComparison = getComparison();
+		IComparisonScope oldComparisonScope = getComparisonScope();
+		setProperty(COMPARE_RESULT, newComparison);
+		setProperty(COMPARISON_SCOPE, newComparisonScope);
+
+		initStructureMergeViewerFilter(newComparison, newComparisonScope);
+		initStructureMergeViewerGroupProvider(newComparison, newComparisonScope);
+
+		getEventBus().post(
+				new ComparisonAndScopeChange(oldComparison, newComparison, oldComparisonScope,
+						newComparisonScope));
+	}
+
+	protected void initStructureMergeViewerGroupProvider(Comparison comparison,
+			IComparisonScope comparisonScope) {
+		EMFCompareRCPUIPlugin plugin = EMFCompareRCPUIPlugin.getDefault();
+		IDifferenceGroupProvider.Registry groupProviderRegistry = plugin.getDifferenceGroupProviderRegistry();
+		getStructureMergeViewerGrouper().setProvider(
+				groupProviderRegistry.getDefaultGroupProviders(comparisonScope, comparison));
+	}
+
+	protected void initStructureMergeViewerFilter(Comparison comparison, IComparisonScope comparisonScope) {
+		EMFCompareRCPUIPlugin plugin = EMFCompareRCPUIPlugin.getDefault();
+		IDifferenceFilter.Registry filterRegistry = plugin.getDifferenceFilterRegistry();
+		Collection<IDifferenceFilter> filters = filterRegistry.getFilters(comparisonScope, comparison);
+		Collection<IDifferenceFilter> selectedFilters = Lists.newArrayList();
+		Collection<IDifferenceFilter> unselectedFilters = Lists.newArrayList();
+		for (IDifferenceFilter filter : filters) {
+			if (filter.defaultSelected()) {
+				selectedFilters.add(filter);
+			} else {
+				unselectedFilters.add(filter);
+			}
+		}
+		getStructureMergeViewerFilter().init(selectedFilters, unselectedFilters);
+	}
+
+	public void setMergePreviewMode(MergeMode previewMergeMode) {
+		Preconditions.checkNotNull(previewMergeMode);
+		MergeMode oldValue = getMergePreviewMode();
+		setProperty(PREVIEW_MERGE_MODE, previewMergeMode);
+		getEventBus().post(new MergePreviewModeChange(oldValue, previewMergeMode));
+	}
+
+	public void setAdapterFactory(AdapterFactory adapterFactory) {
+		setProperty(ADAPTER_FACTORY, adapterFactory);
 	}
 
 	private class PropertyChangeListener implements IPropertyChangeListener {
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
-		 */
 		public void propertyChange(PropertyChangeEvent event) {
-			String property = event.getProperty();
-			if (EDITING_DOMAIN.equals(property)) {
-				handleEditingDomainChange(event);
-			} else if (SELECTED_DIFFERENCE_GROUP_PROVIDER.equals(property)) {
-				handleSelectedDifferenceGroupProviderChanger(event);
-			} else if (SELECTED_DIFFERENCE_FILTERS.equals(property)) {
-				handleSelectedDifferenceFiltersChange(event);
-			} else if (AGGREGATED_VIEWER_PREDICATE.equals(property)) {
-				handleAggregatedViewerPredicateChange(event);
-			} else if (COMPARE_RESULT.equals(property)) {
-				handleComparisonChange(event);
-			} else if (ADAPTER_FACTORY.equals(property)) {
-				handleAdapterFactoryChange(event);
-			} else if (COMPARATOR.equals(property)) {
-				handleComparatorChange(event);
-			} else if (PREVIEW_MERGE_MODE.equals(property)) {
-				handlePreviewMergeModeChange(event);
-			} else if (COMPARISON_SCOPE.equals(property)) {
-				handleComparisonScopeChange(event);
-			} else {
-				fireChange(property, event.getOldValue(), event.getNewValue());
-			}
+			fireChange(event.getProperty(), event.getOldValue(), event.getNewValue());
 		}
+	}
 
-		protected void handleAdapterFactoryChange(PropertyChangeEvent event) {
-			AdapterFactory oldValue = (AdapterFactory)event.getOldValue();
-			AdapterFactory newValue = (AdapterFactory)event.getNewValue();
-			for (IEMFCompareConfigurationChangeListener listener : listeners) {
-				listener.adapterFactoryChange(oldValue, newValue);
-			}
-		}
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration#getStructureMergeViewerGrouper()
+	 */
+	public StructureMergeViewerGrouper getStructureMergeViewerGrouper() {
+		return (StructureMergeViewerGrouper)getProperty(SMV_GROUP_PROVIDERS);
+	}
 
-		protected void handleComparisonChange(PropertyChangeEvent event) {
-			Comparison oldValue = (Comparison)event.getOldValue();
-			Comparison newValue = (Comparison)event.getNewValue();
-			for (IEMFCompareConfigurationChangeListener listener : listeners) {
-				listener.comparisonChange(oldValue, newValue);
-			}
-		}
-
-		@SuppressWarnings("unchecked")
-		protected void handleAggregatedViewerPredicateChange(PropertyChangeEvent event) {
-			Predicate<? super EObject> oldValue = (Predicate<? super EObject>)event.getOldValue();
-			Predicate<? super EObject> newValue = (Predicate<? super EObject>)event.getNewValue();
-			for (IEMFCompareConfigurationChangeListener listener : listeners) {
-				listener.aggregatedViewerPredicateChange(oldValue, newValue);
-			}
-		}
-
-		@SuppressWarnings("unchecked")
-		protected void handleSelectedDifferenceFiltersChange(PropertyChangeEvent event) {
-			Set<IDifferenceFilter> oldValue = (Set<IDifferenceFilter>)event.getOldValue();
-			Set<IDifferenceFilter> newValue = (Set<IDifferenceFilter>)event.getNewValue();
-			for (IEMFCompareConfigurationChangeListener listener : listeners) {
-				listener.selectedDifferenceFiltersChange(oldValue, newValue);
-			}
-		}
-
-		protected void handleSelectedDifferenceGroupProviderChanger(PropertyChangeEvent event) {
-			IDifferenceGroupProvider oldValue = (IDifferenceGroupProvider)event.getOldValue();
-			IDifferenceGroupProvider newValue = (IDifferenceGroupProvider)event.getNewValue();
-			for (IEMFCompareConfigurationChangeListener listener : listeners) {
-				listener.selectedDifferenceGroupProviderChange(oldValue, newValue);
-			}
-		}
-
-		protected void handleEditingDomainChange(PropertyChangeEvent event) {
-			ICompareEditingDomain oldValue = (ICompareEditingDomain)event.getOldValue();
-			ICompareEditingDomain newValue = (ICompareEditingDomain)event.getNewValue();
-			for (IEMFCompareConfigurationChangeListener listener : listeners) {
-				listener.editingDomainChange(oldValue, newValue);
-			}
-		}
-
-		protected void handleComparatorChange(PropertyChangeEvent event) {
-			EMFCompare oldValue = (EMFCompare)event.getOldValue();
-			EMFCompare newValue = (EMFCompare)event.getNewValue();
-			for (IEMFCompareConfigurationChangeListener listener : listeners) {
-				listener.comparatorChange(oldValue, newValue);
-			}
-		}
-
-		protected void handlePreviewMergeModeChange(PropertyChangeEvent event) {
-			MergeMode oldValue = (MergeMode)event.getOldValue();
-			MergeMode newValue = (MergeMode)event.getNewValue();
-			for (IEMFCompareConfigurationChangeListener listener : listeners) {
-				listener.mergePreviewModeChange(oldValue, newValue);
-			}
-		}
-
-		protected void handleComparisonScopeChange(PropertyChangeEvent event) {
-			IComparisonScope oldValue = (IComparisonScope)event.getOldValue();
-			IComparisonScope newValue = (IComparisonScope)event.getNewValue();
-			for (IEMFCompareConfigurationChangeListener listener : listeners) {
-				listener.comparisonScopeChange(oldValue, newValue);
-			}
-		}
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration#getStructureMergeViewerFilter()
+	 */
+	public StructureMergeViewerFilter getStructureMergeViewerFilter() {
+		return (StructureMergeViewerFilter)getProperty(SMV_FILTERS);
 	}
 
 }

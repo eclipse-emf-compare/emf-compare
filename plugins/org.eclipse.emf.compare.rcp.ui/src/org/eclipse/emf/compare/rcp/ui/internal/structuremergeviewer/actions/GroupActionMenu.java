@@ -13,8 +13,8 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Registry;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -35,10 +35,10 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 	private final StructureMergeViewerGrouper structureMergeViewerGrouper;
 
 	/** Menu Manager that will contain our menu. */
-	private MenuManager menuManager;
+	private final MenuManager menuManager;
 
-	/** The default group provider. */
-	private DefaultGroupProvider defaultGroupProvider;
+	/** The registry that will be used to retrieve the displayed group providers. */
+	private final Registry registry;
 
 	/**
 	 * Constructs our grouping menu.
@@ -51,11 +51,11 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 	 *            The default group provider.
 	 */
 	public GroupActionMenu(StructureMergeViewerGrouper structureMergeViewerGrouper,
-			DefaultGroupProvider defaultGroupProvider) {
+			IDifferenceGroupProvider.Registry registry) {
 		super("", IAction.AS_DROP_DOWN_MENU); //$NON-NLS-1$
+		this.registry = registry;
 		this.menuManager = new MenuManager();
 		this.structureMergeViewerGrouper = structureMergeViewerGrouper;
-		this.defaultGroupProvider = defaultGroupProvider;
 		setToolTipText("Groups");
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareRCPUIPlugin.PLUGIN_ID,
 				"icons/full/toolb16/group.gif")); //$NON-NLS-1$
@@ -70,24 +70,14 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 	 * @param comparison
 	 *            The comparison which differences are to be split into groups.
 	 */
-	public void createActions(IComparisonScope scope, Comparison comparison) {
-		if (menuManager.isEmpty()) {
-			final IAction defaultAction = new GroupAction(structureMergeViewerGrouper, defaultGroupProvider);
-			defaultAction.setChecked(true);
-			defaultAction.run(); // must run to activate the adapter factory
-			menuManager.add(defaultAction);
-			IDifferenceGroupProvider.Registry registry = EMFCompareRCPUIPlugin.getDefault()
-					.getDifferenceGroupProviderRegistry();
-			boolean alreadyChecked = false;
-			for (IDifferenceGroupProvider dgp : registry.getGroupProviders(scope, comparison)) {
-				GroupAction action = new GroupAction(structureMergeViewerGrouper, dgp);
-				menuManager.add(action);
-				if (dgp.defaultSelected() && !alreadyChecked) {
-					defaultAction.setChecked(false);
-					action.setChecked(true);
-					alreadyChecked = true;
-					action.run();
-				}
+	public void updateMenu(IComparisonScope scope, Comparison comparison) {
+		menuManager.removeAll();
+
+		for (IDifferenceGroupProvider dgp : registry.getGroupProviders(scope, comparison)) {
+			IAction action = new GroupAction(structureMergeViewerGrouper, dgp);
+			menuManager.add(action);
+			if (dgp == structureMergeViewerGrouper.getProvider()) {
+				action.setChecked(true);
 			}
 		}
 	}
@@ -116,6 +106,6 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 	 * @see IMenuCreator#getMenu(Menu)
 	 */
 	public Menu getMenu(Menu parent) {
-		return menuManager.getMenu();
+		return null;
 	}
 }

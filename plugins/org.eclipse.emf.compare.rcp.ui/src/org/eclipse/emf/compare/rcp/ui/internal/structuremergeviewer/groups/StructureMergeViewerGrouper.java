@@ -15,6 +15,8 @@ import com.google.common.eventbus.EventBus;
 
 import java.util.List;
 
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DifferenceGroupProviderChange;
+import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -58,9 +60,16 @@ public final class StructureMergeViewerGrouper {
 	public void setProvider(IDifferenceGroupProvider provider) {
 		if (this.provider != provider) {
 			this.provider = provider;
-			eventBus.post(provider);
 			refreshViewers();
+			eventBus.post(new DifferenceGroupProviderChange(provider));
 		}
+	}
+
+	/**
+	 * @return the provider
+	 */
+	public IDifferenceGroupProvider getProvider() {
+		return provider;
 	}
 
 	/**
@@ -69,7 +78,7 @@ public final class StructureMergeViewerGrouper {
 	 */
 	private void refreshViewers() {
 		for (TreeViewer viewer : viewers) {
-			viewer.refresh();
+			SWTUtil.safeRefresh(viewer, false);
 		}
 	}
 

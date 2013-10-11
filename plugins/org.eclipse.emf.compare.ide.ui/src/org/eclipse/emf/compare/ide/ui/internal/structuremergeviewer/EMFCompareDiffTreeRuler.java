@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
+import com.google.common.eventbus.Subscribe;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -34,7 +35,10 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IMergePreviewModeChange;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilterChange;
+import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.resource.JFaceResources;
@@ -120,11 +124,14 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	/** The last cursor used. */
 	private Cursor lastCursor;
 
-	/** The configuration for this control. */
-	private EMFCompareConfiguration fConfiguration;
-
 	/** The selected diff in the Treeviewer associated with this Treeruler. */
 	private Diff selectedDiff;
+
+	private Predicate<? super EObject> differencePredicate;
+
+	private MergeMode mergePreviewMode;
+
+	private final EMFCompareConfiguration compareConfiguration;
 
 	/**
 	 * Constructor.
@@ -145,7 +152,8 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 		super(parent, style);
 		fWidth = width;
 		fTreeViewer = treeViewer;
-		fConfiguration = config;
+		this.compareConfiguration = config;
+		compareConfiguration.getEventBus().register(this);
 
 		requiredDiffFillColor = JFaceResources.getColorRegistry().get(
 				EMFCompareDiffTreeViewer.REQUIRED_DIFF_COLOR);
@@ -239,13 +247,52 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	public void computeConsequences() {
 		clearAllData();
 		if (selectedDiff != null) {
-			MergeMode mergePreviewMode = fConfiguration.getMergePreviewMode();
-			boolean leftToRigh = mergePreviewMode.isLeftToRight(fConfiguration.isLeftEditable(),
-					fConfiguration.isRightEditable());
+			boolean leftToRigh = getMergePreviewMode().isLeftToRight(compareConfiguration.isLeftEditable(),
+					compareConfiguration.isRightEditable());
 			requires = DiffUtil.getRequires(selectedDiff, leftToRigh);
 			unmergeables = DiffUtil.getUnmergeables(selectedDiff, leftToRigh);
 			associateTreeItems(Lists.newLinkedList(Iterables.concat(requires, unmergeables)));
 		}
+	}
+
+	@Subscribe
+	public void handleDifferenceFilterChange(IDifferenceFilterChange event) {
+		differencePredicate = event.getPredicate();
+		SWTUtil.safeAsyncExec(new Runnable() {
+			public void run() {
+				((EMFCompareDiffTreeViewer)fTreeViewer).createChildrenSilently(fTreeViewer.getTree());
+				computeConsequences();
+				redraw();
+			}
+		});
+	}
+
+	/**
+	 * @return the differencePredicate
+	 */
+	public Predicate<? super EObject> getDifferencePredicate() {
+		if (differencePredicate == null) {
+			differencePredicate = compareConfiguration.getStructureMergeViewerFilter()
+					.getAggregatedPredicate();
+		}
+		return differencePredicate;
+	}
+
+	@Subscribe
+	public void handleMergePreviewModeChange(IMergePreviewModeChange event) {
+		mergePreviewMode = event.getNewValue();
+		computeConsequences();
+		redraw();
+	}
+
+	/**
+	 * @return the mergePreviewMode
+	 */
+	public MergeMode getMergePreviewMode() {
+		if (mergePreviewMode == null) {
+			mergePreviewMode = compareConfiguration.getMergePreviewMode();
+		}
+		return mergePreviewMode;
 	}
 
 	/**
@@ -257,7 +304,7 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	private void associateTreeItems(List<Diff> diffs) {
 		Tree tree = fTreeViewer.getTree();
 		if (fTreeViewer instanceof EMFCompareDiffTreeViewer) {
-			((EMFCompareDiffTreeViewer)fTreeViewer).createChildrenSilently(tree);
+			// ((EMFCompareDiffTreeViewer)fTreeViewer).createChildrenSilently(tree);
 		}
 		for (TreeItem item : tree.getItems()) {
 			associateTreeItem(item, diffs);
@@ -302,6 +349,7 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	 * Handles the dispose event on this control.
 	 */
 	public void handleDispose() {
+		compareConfiguration.getEventBus().unregister(this);
 		removeMouseTrackListener(mouseTrackListener);
 		removeMouseMoveListener(mouseMoveListener);
 		removeMouseListener(mouseClickListener);
@@ -316,7 +364,7 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	 */
 	private void handlePaintEvent(PaintEvent e) {
 		annotationsData.clear();
-		Predicate<? super EObject> predicate = fConfiguration.getAggregatedViewerPredicate();
+		Predicate<? super EObject> predicate = differencePredicate;
 		Collection<? extends Diff> filteredRequires = filteredDiffs(requires, predicate);
 		Collection<? extends Diff> filteredUnmergeables = filteredDiffs(unmergeables, predicate);
 		for (Diff diff : filteredRequires) {

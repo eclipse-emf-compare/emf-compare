@@ -14,13 +14,13 @@ import static com.google.common.collect.Iterables.filter;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.eventbus.Subscribe;
 
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
@@ -39,17 +39,19 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicOb
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
-import org.eclipse.emf.compare.ide.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
-import org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IAdapterFactoryChange;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilterChange;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProviderChange;
+import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -85,97 +87,6 @@ import org.eclipse.ui.views.properties.PropertySheet;
  */
 public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer implements ISelectionChangedListener, ICompareColor.Provider, IAdaptable, CommandStackListener {
 
-	/**
-	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
-	 */
-	private final class EMFCompareContentMergerViewerConfigurationListener extends EMFCompareConfigurationChangeListener {
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration#editingDomainChange(org.eclipse.emf.compare.domain.ICompareEditingDomain,
-		 *      org.eclipse.emf.compare.domain.ICompareEditingDomain)
-		 */
-		@Override
-		public void editingDomainChange(ICompareEditingDomain oldValue, ICompareEditingDomain newValue) {
-			if (newValue != oldValue) {
-				if (oldValue != null) {
-					oldValue.getCommandStack().removeCommandStackListener(EMFCompareContentMergeViewer.this);
-				}
-
-				if (newValue != null) {
-					newValue.getCommandStack().addCommandStackListener(EMFCompareContentMergeViewer.this);
-					setLeftDirty(newValue.getCommandStack().isLeftSaveNeeded());
-					setRightDirty(newValue.getCommandStack().isRightSaveNeeded());
-				}
-				if (undoAction != null) {
-					undoAction.setEditingDomain(newValue);
-				}
-				if (redoAction != null) {
-					redoAction.setEditingDomain(newValue);
-				}
-			}
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration#aggregatedViewerPredicateChange(com.google.common.base.Predicate,
-		 *      com.google.common.base.Predicate)
-		 */
-		@Override
-		public void aggregatedViewerPredicateChange(Predicate<? super EObject> oldValue,
-				Predicate<? super EObject> newValue) {
-			if (oldValue != newValue) {
-				redrawCenterControl();
-			}
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration#selectedDifferenceFiltersChange(java.util.Set,
-		 *      java.util.Set)
-		 */
-		@Override
-		public void selectedDifferenceFiltersChange(Set<IDifferenceFilter> oldValue,
-				Set<IDifferenceFilter> newValue) {
-			if (oldValue != newValue) {
-				redrawCenterControl();
-			}
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration#selectedDifferenceGroupProviderChange(org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider,
-		 *      org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider)
-		 */
-		@Override
-		public void selectedDifferenceGroupProviderChange(IDifferenceGroupProvider oldValue,
-				IDifferenceGroupProvider newValue) {
-			if (oldValue != newValue) {
-				redrawCenterControl();
-			}
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration#adapterFactoryChange(org.eclipse.emf.common.notify.AdapterFactory,
-		 *      org.eclipse.emf.common.notify.AdapterFactory)
-		 */
-		@Override
-		public void adapterFactoryChange(AdapterFactory oldValue, AdapterFactory newValue) {
-			if (oldValue != null) {
-				fAdapterFactoryContentProvider.dispose();
-			}
-			if (newValue != oldValue) {
-				fAdapterFactoryContentProvider = new AdapterFactoryContentProvider(newValue);
-			}
-		}
-	}
-
 	private static final String HANDLER_SERVICE = "fHandlerService";
 
 	/**
@@ -201,7 +112,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	private AdapterFactoryContentProvider fAdapterFactoryContentProvider;
 
-	private final EMFCompareContentMergerViewerConfigurationListener configurationListener;
+	private Predicate<? super EObject> differenceFilterPredicate;
+
+	private IDifferenceGroupProvider differenceGroupProvider;
 
 	/**
 	 * @param style
@@ -218,8 +131,87 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 					.getAdapterFactory());
 		}
 
-		configurationListener = new EMFCompareContentMergerViewerConfigurationListener();
-		getCompareConfiguration().addChangeListener(configurationListener);
+		editingDomainChange(null, getCompareConfiguration().getEditingDomain());
+		getCompareConfiguration().getEventBus().register(this);
+	}
+
+	@Subscribe
+	public void handleAdapterFactoryChange(IAdapterFactoryChange event) {
+		AdapterFactory oldValue = event.getOldValue();
+		AdapterFactory newValue = event.getNewValue();
+		if (oldValue != null) {
+			fAdapterFactoryContentProvider.dispose();
+		}
+		if (newValue != oldValue) {
+			fAdapterFactoryContentProvider = new AdapterFactoryContentProvider(newValue);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration#editingDomainChange(org.eclipse.emf.compare.domain.ICompareEditingDomain,
+	 *      org.eclipse.emf.compare.domain.ICompareEditingDomain)
+	 */
+	@Subscribe
+	public void handleEditingDomainChange(ICompareEditingDomainChange event) {
+		ICompareEditingDomain oldValue = event.getOldValue();
+		ICompareEditingDomain newValue = event.getNewValue();
+		editingDomainChange(oldValue, newValue);
+	}
+
+	protected void editingDomainChange(ICompareEditingDomain oldValue, ICompareEditingDomain newValue) {
+		if (newValue != oldValue) {
+			if (oldValue != null) {
+				oldValue.getCommandStack().removeCommandStackListener(this);
+			}
+
+			if (newValue != null) {
+				newValue.getCommandStack().addCommandStackListener(this);
+				setLeftDirty(newValue.getCommandStack().isLeftSaveNeeded());
+				setRightDirty(newValue.getCommandStack().isRightSaveNeeded());
+			}
+			if (undoAction != null) {
+				undoAction.setEditingDomain(newValue);
+			}
+			if (redoAction != null) {
+				redoAction.setEditingDomain(newValue);
+			}
+		}
+	}
+
+	@Subscribe
+	public void handleDifferenceFiltersChange(IDifferenceFilterChange event) {
+		differenceFilterPredicate = event.getPredicate();
+		redrawCenterControl();
+	}
+
+	/**
+	 * @return the differenceFilterPredicate
+	 */
+	protected final Predicate<? super EObject> getDifferenceFilterPredicate() {
+		if (differenceFilterPredicate == null) {
+			differenceFilterPredicate = getCompareConfiguration().getStructureMergeViewerFilter()
+					.getAggregatedPredicate();
+		}
+		return differenceFilterPredicate;
+	}
+
+	@Subscribe
+	public void handleDifferenceGroupProviderChange(IDifferenceGroupProviderChange event) {
+		differenceGroupProvider = event.getDifferenceGroupProvider();
+		redrawCenterControl();
+	}
+
+	/**
+	 * @return the differenceGroupProvider
+	 */
+	protected final IDifferenceGroupProvider getDifferenceGroupProvider() {
+		if (differenceGroupProvider == null) {
+			differenceGroupProvider = getCompareConfiguration().getStructureMergeViewerGrouper()
+					.getProvider();
+		}
+		return differenceGroupProvider;
 	}
 
 	/**
@@ -332,11 +324,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			setRightDirty(getCompareConfiguration().getEditingDomain().getCommandStack().isRightSaveNeeded());
 		}
 
-		SWTUtil.safeAsyncExec(new Runnable() {
-			public void run() {
-				refresh();
-			}
-		});
+		SWTUtil.safeRefresh(this, true);
 	}
 
 	/**
@@ -641,13 +629,14 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
-		getCompareConfiguration().removeChangeListener(configurationListener);
+		editingDomainChange(getCompareConfiguration().getEditingDomain(), null);
+		getCompareConfiguration().getEventBus().unregister(this);
 		super.handleDispose(event);
 	}
 
 	protected final void redrawCenterControl() {
 		if (getCenterControl() != null) {
-			getCenterControl().redraw();
+			SWTUtil.safeRedraw(getCenterControl(), true);
 		}
 	}
 

@@ -12,6 +12,8 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
 import static com.google.common.collect.Lists.newArrayList;
 
+import com.google.common.eventbus.Subscribe;
+
 import java.util.EnumSet;
 import java.util.List;
 
@@ -19,7 +21,7 @@ import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
-import org.eclipse.emf.compare.rcp.ui.internal.configuration.EMFCompareConfigurationChangeListener;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IMergePreviewModeChange;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
@@ -45,8 +47,6 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 	/** The accept menu item. */
 	private final List<Action> actions;
 
-	private final EMFCompareConfigurationChangeListener changeListener;
-
 	/**
 	 * Constructor.
 	 * 
@@ -57,20 +57,18 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 		this.configuration = configuration;
 		actions = newArrayList();
 
-		changeListener = new EMFCompareConfigurationChangeListener() {
-			@Override
-			public void mergePreviewModeChange(MergeMode oldValue, MergeMode newValue) {
-				updateMenu(newValue);
-			}
-		};
-		configuration.addChangeListener(changeListener);
-
 		for (MergeMode mergePreviewMode : previewModes) {
 			actions.add(new DropDownAction(configuration, mergePreviewMode));
 		}
-		updateMenu(configuration.getMergePreviewMode());
+		setToolTipTextAndImage(this, configuration.getMergePreviewMode());
 
 		setMenuCreator(this);
+		configuration.getEventBus().register(this);
+	}
+
+	@Subscribe
+	public void mergePreviewModeChange(IMergePreviewModeChange event) {
+		setToolTipTextAndImage(this, event.getNewValue());
 	}
 
 	/**
@@ -94,7 +92,7 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 			fMenu.dispose();
 			fMenu = null;
 		}
-		configuration.removeChangeListener(changeListener);
+		configuration.getEventBus().unregister(this);
 	}
 
 	/**
@@ -134,13 +132,6 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 	protected void addActionToMenu(Menu parent, IAction action) {
 		ActionContributionItem item = new ActionContributionItem(action);
 		item.fill(parent, -1);
-	}
-
-	/**
-	 * Update the icon and tooltip of the dropdown menu.
-	 */
-	protected void updateMenu(MergeMode mergeWay) {
-		setToolTipTextAndImage(this, mergeWay);
 	}
 
 	static void setToolTipTextAndImage(IAction action, MergeMode mergeMode) {

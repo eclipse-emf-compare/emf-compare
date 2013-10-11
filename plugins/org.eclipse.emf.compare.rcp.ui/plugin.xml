@@ -20,6 +20,11 @@
    <extension
          point="org.eclipse.emf.compare.rcp.ui.groups">
       <group
+            activeByDefault="true"
+            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider"
+            label="No Group">
+      </group>
+      <group
             activeByDefault="false"
             class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.KindGroupProvider"
             label="By Kind">

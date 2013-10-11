@@ -37,7 +37,5 @@ public class ExpandAllModelAction extends Action {
 	@Override
 	public void run() {
 		treeViewer.expandToLevel(256);
-		// Workaround to force the redraw of the EMFCompareDiffTreeruler
-		treeViewer.setSelection(treeViewer.getSelection());
 	}
 }
