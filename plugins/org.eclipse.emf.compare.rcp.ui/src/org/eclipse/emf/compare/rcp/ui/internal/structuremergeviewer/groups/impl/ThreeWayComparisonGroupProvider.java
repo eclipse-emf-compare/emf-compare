@@ -79,6 +79,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 	 */
 	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
 		if (differenceGroups == null || !comparison.equals(comp)) {
+			dispose();
 			this.comp = comparison;
 			final IDifferenceGroup conflicts = new ConflictsGroupImpl(comparison, this, hasConflict(
 					ConflictKind.REAL, ConflictKind.PSEUDO), "Conflicts", getCrossReferenceAdapter());
@@ -316,4 +317,18 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#dispose()
+	 */
+	public void dispose() {
+		this.comp = null;
+		if (differenceGroups != null) {
+			for (IDifferenceGroup group : differenceGroups) {
+				group.dispose();
+			}
+			differenceGroups = null;
+		}
+	}
 }

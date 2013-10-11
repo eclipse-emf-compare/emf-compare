@@ -263,6 +263,13 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 		}
 	}
 
+	protected final void unregisterCrossReferenceAdapter(List<? extends Notifier> notifiers) {
+		for (Notifier notifier : notifiers) {
+			// this cross referencer has to live as long as the objects on which it is installed.
+			notifier.eAdapters().remove(crossReferenceAdapter);
+		}
+	}
+
 	/**
 	 * Build the sub tree of the given {@link MatchResource}.
 	 * 
@@ -525,5 +532,17 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			}
 		}
 		return ret;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup#dispose()
+	 */
+	public void dispose() {
+		if (children != null) {
+			unregisterCrossReferenceAdapter(children);
+			children = null;
+		}
 	}
 }

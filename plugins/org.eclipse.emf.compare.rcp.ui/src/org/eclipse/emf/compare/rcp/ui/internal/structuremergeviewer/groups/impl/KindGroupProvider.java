@@ -52,6 +52,7 @@ public class KindGroupProvider extends AbstractDifferenceGroupProvider implement
 	 */
 	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
 		if (differenceGroups == null || !comparison.equals(comp)) {
+			dispose();
 			this.comp = comparison;
 			final IDifferenceGroup additions = new BasicDifferenceGroupImpl(comparison, this,
 					ofKind(DifferenceKind.ADD), "Additions", getCrossReferenceAdapter());
@@ -123,5 +124,20 @@ public class KindGroupProvider extends AbstractDifferenceGroupProvider implement
 	 */
 	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
 		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#dispose()
+	 */
+	public void dispose() {
+		this.comp = null;
+		if (differenceGroups != null) {
+			for (IDifferenceGroup group : differenceGroups) {
+				group.dispose();
+			}
+			differenceGroups = null;
+		}
 	}
 }

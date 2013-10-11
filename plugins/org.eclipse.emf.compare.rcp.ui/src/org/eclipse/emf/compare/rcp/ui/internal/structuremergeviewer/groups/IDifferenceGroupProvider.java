@@ -57,6 +57,9 @@ public interface IDifferenceGroupProvider extends Adapter {
 		public boolean defaultSelected() {
 			return true;
 		}
+
+		public void dispose() {
+		}
 	};
 
 	/**
@@ -112,6 +115,11 @@ public interface IDifferenceGroupProvider extends Adapter {
 	 * @return The activation condition based on the scope and comparison objects.
 	 */
 	boolean isEnabled(IComparisonScope scope, Comparison comparison);
+
+	/**
+	 * Dispose this difference group provider.
+	 */
+	void dispose();
 
 	/**
 	 * A registry of {@link IDifferenceGroupProvider}.

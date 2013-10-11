@@ -65,6 +65,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider imp
 	 */
 	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
 		if (group == null || !comparison.equals(comp)) {
+			dispose();
 			this.comp = comparison;
 			group = new ResourceGroup(comparison, this, getCrossReferenceAdapter());
 		}
@@ -115,6 +116,14 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider imp
 	 */
 	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
 		return true;
+	}
+
+	public void dispose() {
+		this.comp = null;
+		if (this.group != null) {
+			this.group.dispose();
+			this.group = null;
+		}
 	}
 
 	/**

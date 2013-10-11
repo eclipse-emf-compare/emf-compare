@@ -34,7 +34,7 @@ public class DefaultGroupProvider extends AbstractDifferenceGroupProvider implem
 	private IDifferenceGroup group;
 
 	/** The comparison object. */
-	private Comparison comp;
+	private Comparison comparison;
 
 	/**
 	 * {@inheritDoc}
@@ -42,8 +42,9 @@ public class DefaultGroupProvider extends AbstractDifferenceGroupProvider implem
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
 	 */
 	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
-		if (group == null || !comparison.equals(comp)) {
-			this.comp = comparison;
+		if (group == null || !comparison.equals(this.comparison)) {
+			dispose();
+			this.comparison = comparison;
 			group = new BasicDifferenceGroupImpl(comparison, this, alwaysTrue(), getCrossReferenceAdapter());
 		}
 		return ImmutableList.of(group);
@@ -93,5 +94,18 @@ public class DefaultGroupProvider extends AbstractDifferenceGroupProvider implem
 	 */
 	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
 		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#dispose()
+	 */
+	public void dispose() {
+		this.comparison = null;
+		if (this.group != null) {
+			this.group.dispose();
+			this.group = null;
+		}
 	}
 }

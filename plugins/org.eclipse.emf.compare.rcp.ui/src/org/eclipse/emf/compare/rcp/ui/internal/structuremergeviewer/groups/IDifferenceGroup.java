@@ -60,6 +60,11 @@ public interface IDifferenceGroup extends Adapter {
 	List<? extends TreeNode> getChildren();
 
 	/**
+	 * Dispose this group provider.
+	 */
+	void dispose();
+
+	/**
 	 * Function that retrieve the data of the given TreeNode.
 	 */
 	public static final Function<EObject, EObject> TREE_NODE_DATA = new Function<EObject, EObject>() {
