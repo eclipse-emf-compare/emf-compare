@@ -10,15 +10,21 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
+import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.getFirst;
+import static com.google.common.collect.Iterables.size;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.Collection;
 import java.util.EventObject;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.CompareViewerPane;
@@ -42,7 +48,9 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.ui.dialogs.DiagnosticDialog;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
@@ -95,6 +103,12 @@ import org.eclipse.ui.actions.ActionFactory;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
 public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrapper<Composite, WrappableTreeViewer> implements CommandStackListener {
+
+	/**
+	 * 
+	 */
+	private static final Predicate<Diff> UNRESOLVED_OR_WITHOUT_PSEUDO_CONFLICT = or(
+			hasState(DifferenceState.UNRESOLVED), hasConflict(ConflictKind.PSEUDO));
 
 	/** The width of the tree ruler. */
 	private static final int TREE_RULER_WIDTH = 17;
@@ -182,8 +196,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				new EMFCompareStructureMergeViewerLabelProvider(
 						getCompareConfiguration().getAdapterFactory(), this)));
 
-		undoAction = new UndoAction(null);
-		redoAction = new RedoAction(null);
+		undoAction = new UndoAction(getCompareConfiguration().getEditingDomain());
+		redoAction = new RedoAction(getCompareConfiguration().getEditingDomain());
 
 		inputChangedTask.setPriority(Job.LONG);
 		config.getEventBus().register(this);
@@ -291,10 +305,14 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			int displayedDiff = JFaceUtil.filterVisibleElement(getViewer(), IS_DIFF).size();
 			Comparison comparison = getCompareConfiguration().getComparison();
 			if (comparison != null) {
-				int computedDiff = comparison.getDifferences().size();
+				List<Diff> differences = comparison.getDifferences();
+				int computedDiff = differences.size();
 				int filteredDiff = computedDiff - displayedDiff;
-				((CompareViewerSwitchingPane)parent).setTitleArgument(computedDiff + " differences – "
-						+ filteredDiff + " differences filtered from view");
+				int differencesToMerge = size(Iterables.filter(differences,
+						UNRESOLVED_OR_WITHOUT_PSEUDO_CONFLICT));
+				((CompareViewerSwitchingPane)parent).setTitleArgument(differencesToMerge + " over "
+						+ computedDiff + " differences still to be merged — " + filteredDiff
+						+ " differences filtered from view");
 			}
 		}
 	}
@@ -393,12 +411,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 * @see org.eclipse.emf.common.command.CommandStackListener#commandStackChanged(java.util.EventObject)
 	 */
 	public void commandStackChanged(EventObject event) {
-		if (undoAction != null) {
-			undoAction.update();
-		}
-		if (redoAction != null) {
-			redoAction.update();
-		}
+		undoAction.update();
+		redoAction.update();
 
 		Command mostRecentCommand = ((CommandStack)event.getSource()).getMostRecentCommand();
 		if (mostRecentCommand instanceof ICompareCopyCommand) {
@@ -651,9 +665,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		dependencyData.updateTreeItemMappings();
 		dependencyData.updateDependencies(getSelection());
-		
+
 		getControl().redraw();
-		
+
 		refreshTitle();
 	}
 
