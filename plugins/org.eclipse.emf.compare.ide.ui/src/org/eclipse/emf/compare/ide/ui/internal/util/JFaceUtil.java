@@ -10,13 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.util;
 
-import static com.google.common.collect.Iterables.addAll;
 import static com.google.common.collect.Sets.newHashSet;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 
-import java.util.Arrays;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -60,7 +57,7 @@ public class JFaceUtil {
 		Set<Object> acc = newHashSet();
 		ITreeContentProvider contentProvider = (ITreeContentProvider)treeViewer.getContentProvider();
 		Object[] elements = contentProvider.getElements(treeViewer.getInput());
-		getMatchCount(treeViewer, elements, null, predicate, acc);
+		appendNonFilteredChildren(treeViewer, elements, null, predicate, acc);
 		return acc;
 	}
 
@@ -70,16 +67,15 @@ public class JFaceUtil {
 	 * @param diffs
 	 * @return
 	 */
-	private static void getMatchCount(TreeViewer treeViewer, Object[] elements, Object parent,
+	private static void appendNonFilteredChildren(TreeViewer treeViewer, Object[] elements, Object parent,
 			Predicate<? super Object> predicate, Set<Object> acc) {
 		final ITreeContentProvider cp = (ITreeContentProvider)treeViewer.getContentProvider();
-		addAll(acc, Iterables.filter(Arrays.asList(elements), predicate));
 		for (Object element : elements) {
 			if (!isFiltered(treeViewer, element, parent) && predicate.apply(element)) {
 				acc.add(element);
 			}
 			Object[] children = cp.getChildren(element);
-			getMatchCount(treeViewer, children, element, predicate, acc);
+			appendNonFilteredChildren(treeViewer, children, element, predicate, acc);
 		}
 	}
 }
