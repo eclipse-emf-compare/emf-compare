@@ -10,21 +10,15 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
-import static com.google.common.base.Predicates.notNull;
-import static com.google.common.collect.Iterables.addAll;
 import static com.google.common.collect.Iterables.getFirst;
-import static com.google.common.collect.Iterables.transform;
-import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.Collection;
 import java.util.EventObject;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.CompareViewerPane;
@@ -82,14 +76,11 @@ import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory
 import org.eclipse.emf.edit.tree.TreeFactory;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.layout.GridData;
@@ -103,7 +94,7 @@ import org.eclipse.ui.actions.ActionFactory;
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
-public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrapper<Composite, TreeViewer> implements CommandStackListener {
+public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrapper<Composite, WrappableTreeViewer> implements CommandStackListener {
 
 	/** The width of the tree ruler. */
 	private static final int TREE_RULER_WIDTH = 17;
@@ -135,6 +126,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 * Compare.
 	 */
 	private boolean resourcesShouldBeUnload;
+
+	private DependencyData dependencyData;
 
 	private ISelectionChangedListener selectionChangeListener;
 
@@ -183,11 +176,11 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		fHandlerService = CompareHandlerService.createFor(getCompareConfiguration().getContainer(),
 				getControl().getShell());
 
+		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(getCompareConfiguration()
+				.getAdapterFactory()));
 		setLabelProvider(new DelegatingStyledCellLabelProvider(
 				new EMFCompareStructureMergeViewerLabelProvider(
 						getCompareConfiguration().getAdapterFactory(), this)));
-		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(getCompareConfiguration()
-				.getAdapterFactory()));
 
 		undoAction = new UndoAction(null);
 		redoAction = new RedoAction(null);
@@ -203,7 +196,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 */
 	@Override
 	protected void preHookCreateControlAndViewer() {
-		super.preHookCreateControlAndViewer();
 		fAdapterFactory = new ComposedAdapterFactory(EMFCompareRCPPlugin.getDefault()
 				.getAdapterFactoryRegistry());
 
@@ -212,6 +204,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 
 		getCompareConfiguration().setAdapterFactory(fAdapterFactory);
+
+		dependencyData = new DependencyData(getCompareConfiguration());
 	}
 
 	/**
@@ -222,7 +216,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 *      CompareConfiguration)
 	 */
 	@Override
-	protected ControlAndViewer<Composite, TreeViewer> createControlAndViewer(Composite parent) {
+	protected ControlAndViewer<Composite, WrappableTreeViewer> createControlAndViewer(Composite parent) {
 		Composite control = new Composite(parent, SWT.NONE);
 
 		GridLayout layout = new GridLayout(2, false);
@@ -233,7 +227,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
 		control.setLayout(layout);
 		control.setLayoutData(data);
-		final TreeViewer treeViewer = new EMFCompareDiffTreeViewer(control, getCompareConfiguration());
+		final WrappableTreeViewer treeViewer = new EMFCompareDiffTreeViewer(control, dependencyData);
+		dependencyData.setTreeViewer(treeViewer);
 		INavigatable nav = new Navigatable(fAdapterFactory, treeViewer);
 		control.setData(INavigatable.NAVIGATOR_PROPERTY, nav);
 		control.setData(CompareUI.COMPARE_VIEWER_TITLE, "Model differences");
@@ -242,7 +237,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		layoutData.widthHint = TREE_RULER_WIDTH;
 		layoutData.minimumWidth = TREE_RULER_WIDTH;
 		treeRuler = new EMFCompareDiffTreeRuler(control, SWT.NONE, layoutData.widthHint, treeViewer,
-				getCompareConfiguration());
+				dependencyData);
 		treeRuler.setLayoutData(layoutData);
 
 		fCompareInputChangeListener = new ICompareInputChangeListener() {
@@ -310,7 +305,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		}
 	};
 
-	private static EObject getDataOfTreeNodeOfAdapter(Object object) {
+	static EObject getDataOfTreeNodeOfAdapter(Object object) {
 		EObject data = null;
 		if (object instanceof Adapter) {
 			Notifier target = ((Adapter)object).getTarget();
@@ -321,7 +316,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		return data;
 	}
 
-	private static final Function<Object, EObject> ADAPTER__TARGET__DATA = new Function<Object, EObject>() {
+	static final Function<Object, EObject> ADAPTER__TARGET__DATA = new Function<Object, EObject>() {
 		public EObject apply(Object object) {
 			return getDataOfTreeNodeOfAdapter(object);
 		}
@@ -329,7 +324,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	@Subscribe
 	public void mergePreviewModeChange(IMergePreviewModeChange event) {
-		redrawFromSelection(getSelection());
+		dependencyData.updateDependencies(getSelection());
+		getControl().redraw();
 	}
 
 	@Subscribe
@@ -492,10 +488,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				public void run() {
 					// the tree has now a proper group provider and its input, so we can create the child
 					// silently.
-					((EMFCompareDiffTreeViewer)getViewer()).createChildrenSilently();
+					// ((EMFCompareDiffTreeViewer)getViewer()).createChildrenSilently();
 
-					// title is not initialized as the comparison was set after the refresh caused by the
-					// initialization of the viewer filters and the groupe providers.
+					// title is not initialized as the comparison was set in the configuration after the
+					// refresh caused by the initialization of the viewer filters and the groupe providers.
 					refreshTitle();
 
 					// XXX: fixme!!
@@ -651,37 +647,19 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 */
 	@Override
 	protected void internalRefresh(Object element) {
-		SWTUtil.safeSyncExec(new Runnable() {
-			public void run() {
-				getViewer().refresh();
-				refreshTitle();
+		getViewer().refresh();
 
-				((EMFCompareDiffTreeViewer)getViewer()).createChildrenSilently();
-				redrawFromSelection(getSelection());
-			}
-		});
+		dependencyData.updateTreeItemMappings();
+		dependencyData.updateDependencies(getSelection());
+		
+		getControl().redraw();
+		
+		refreshTitle();
 	}
 
 	private void handleSelectionChangedEvent(SelectionChangedEvent event) {
-		redrawFromSelection(event.getSelection());
+		dependencyData.updateDependencies(event.getSelection());
+		getControl().redraw();
 	}
 
-	protected void redrawFromSelection(ISelection selection) {
-		EObject eObject = getFirst(getSelectedComparisonObject(selection), null);
-		if (eObject != null) {
-			treeRuler.computeConsequences(eObject);
-			getControl().redraw();
-		}
-	}
-
-	private static List<EObject> getSelectedComparisonObject(ISelection selection) {
-		List<EObject> ret = newArrayList();
-		if (selection instanceof IStructuredSelection) {
-			List<?> selectedObjects = ((IStructuredSelection)selection).toList();
-			Iterable<EObject> data = transform(selectedObjects, ADAPTER__TARGET__DATA);
-			Iterable<EObject> notNullData = Iterables.filter(data, notNull());
-			addAll(ret, notNullData);
-		}
-		return ret;
-	}
 }

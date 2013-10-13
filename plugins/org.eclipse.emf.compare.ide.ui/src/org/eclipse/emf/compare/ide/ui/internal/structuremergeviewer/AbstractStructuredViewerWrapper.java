@@ -24,7 +24,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -32,7 +31,6 @@ import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.HelpEvent;
 import org.eclipse.swt.events.HelpListener;
 import org.eclipse.swt.widgets.Composite;
@@ -43,7 +41,7 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public abstract class AbstractStructuredViewerWrapper<C extends Control, V extends StructuredViewer> extends StructuredViewer {
+public abstract class AbstractStructuredViewerWrapper<C extends Control, V extends IWrappableStructuredViewer> extends StructuredViewer {
 
 	/** The wrapped Viewer. */
 	private final V fViewer;
@@ -112,8 +110,8 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 
 		fWrappedViewerPostSelectionChangedListener = new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				fireSelectionChanged(new SelectionChangedEvent(AbstractStructuredViewerWrapper.this, event
-						.getSelection()));
+				firePostSelectionChanged(new SelectionChangedEvent(AbstractStructuredViewerWrapper.this,
+						event.getSelection()));
 			}
 		};
 		fViewer.addPostSelectionChangedListener(fWrappedViewerPostSelectionChangedListener);
@@ -134,15 +132,6 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 	 */
 	protected final EMFCompareConfiguration getCompareConfiguration() {
 		return fConfiguration;
-	}
-
-	@Override
-	protected final void hookControl(Control control) {
-		control.addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent event) {
-				handleDispose(event);
-			}
-		});
 	}
 
 	/**
@@ -169,36 +158,6 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 	@Override
 	public final Control getControl() {
 		return fControl;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.ContentViewer#getInput()
-	 */
-	@Override
-	public final Object getInput() {
-		return super.getInput();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.StructuredViewer#getSelection()
-	 */
-	@Override
-	public final ISelection getSelection() {
-		return fViewer.getSelection();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.StructuredViewer#setSelection(ISelection, boolean)
-	 */
-	@Override
-	public final void setSelection(ISelection selection, boolean reveal) {
-		fViewer.setSelection(selection, reveal);
 	}
 
 	/**
@@ -267,22 +226,11 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.jface.viewers.StructuredViewer#addFilter(org.eclipse.jface.viewers.ViewerFilter)
-	 */
-	@Override
-	public final void addFilter(ViewerFilter filter) {
-		fViewer.addFilter(filter);
-		super.addFilter(filter);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.jface.viewers.StructuredViewer#doFindInputItem(java.lang.Object)
 	 */
 	@Override
 	protected final Widget doFindInputItem(Object element) {
-		throw new UnsupportedOperationException();
+		return fViewer.doFindInputItem(element);
 	}
 
 	/**
@@ -292,7 +240,7 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 	 */
 	@Override
 	protected final Widget doFindItem(Object element) {
-		throw new UnsupportedOperationException();
+		return fViewer.doFindInputItem(element);
 	}
 
 	/**
@@ -302,8 +250,8 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 	 *      java.lang.Object, boolean)
 	 */
 	@Override
-	protected void doUpdateItem(Widget item, Object element, boolean fullMap) {
-		throw new UnsupportedOperationException();
+	protected final void doUpdateItem(Widget item, Object element, boolean fullMap) {
+		fViewer.doUpdateItem(item, element, fullMap);
 	}
 
 	/**
@@ -314,6 +262,17 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 	@Override
 	public final IElementComparer getComparer() {
 		return fViewer.getComparer();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.StructuredViewer#addFilter(org.eclipse.jface.viewers.ViewerFilter)
+	 */
+	@Override
+	public final void addFilter(ViewerFilter filter) {
+		fViewer.addFilter(filter);
+		super.addFilter(filter);
 	}
 
 	/**
@@ -365,7 +324,7 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 	 * @see org.eclipse.jface.viewers.StructuredViewer#reveal(java.lang.Object)
 	 */
 	@Override
-	public void reveal(Object element) {
+	public final void reveal(Object element) {
 		fViewer.reveal(element);
 	}
 
@@ -376,8 +335,8 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	protected List getSelectionFromWidget() {
-		throw new UnsupportedOperationException();
+	protected final List getSelectionFromWidget() {
+		return fViewer.getSelectionFromWidget();
 	}
 
 	/**
@@ -407,16 +366,7 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 	 */
 	@Override
 	protected final void setSelectionToWidget(List l, boolean reveal) {
-
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.StructuredViewer#updateSelection(org.eclipse.jface.viewers.ISelection)
-	 */
-	@Override
-	protected void updateSelection(ISelection selection) {
+		fViewer.setSelectionToWidget(l, reveal);
 	}
 
 	/**
@@ -426,8 +376,8 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 	 *      org.eclipse.jface.viewers.ISelection)
 	 */
 	@Override
-	protected void handleInvalidSelection(ISelection invalidSelection, ISelection newSelection) {
-		throw new UnsupportedOperationException();
+	protected final void handleInvalidSelection(ISelection invalidSelection, ISelection newSelection) {
+		fViewer.handleInvalidSelection(invalidSelection, newSelection);
 	}
 
 	/**
@@ -468,33 +418,11 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 	 * @see org.eclipse.jface.viewers.StructuredViewer#setComparer(org.eclipse.jface.viewers.IElementComparer)
 	 */
 	@Override
-	public void setComparer(IElementComparer comparer) {
+	public final void setComparer(IElementComparer comparer) {
 		fViewer.setComparer(comparer);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.StructuredViewer#update(java.lang.Object[], java.lang.String[])
-	 */
-	@Override
-	public void update(Object[] elements, String[] properties) {
-		fViewer.update(elements, properties);
-		super.update(elements, properties);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.StructuredViewer#update(java.lang.Object, java.lang.String[])
-	 */
-	@Override
-	public final void update(Object element, String[] properties) {
-		fViewer.update(element, properties);
-		super.update(element, properties);
-	}
-
-	public static final class ControlAndViewer<C extends Control, V extends Viewer> {
+	public static final class ControlAndViewer<C extends Control, V extends IWrappableStructuredViewer> {
 		private final C control;
 
 		private final V viewer;
@@ -518,7 +446,8 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 			return viewer;
 		}
 
-		public static <C extends Control, V extends Viewer> ControlAndViewer<C, V> create(C control, V viewer) {
+		public static <C extends Control, V extends IWrappableStructuredViewer> ControlAndViewer<C, V> create(
+				C control, V viewer) {
 			return new ControlAndViewer<C, V>(control, viewer);
 		}
 	}

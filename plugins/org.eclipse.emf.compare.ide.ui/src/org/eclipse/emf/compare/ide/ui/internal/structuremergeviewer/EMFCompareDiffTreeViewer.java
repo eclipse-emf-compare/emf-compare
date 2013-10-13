@@ -10,28 +10,19 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
-import com.google.common.base.Predicate;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Set;
 
-import org.eclipse.compare.structuremergeviewer.DiffTreeViewer;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
-import org.eclipse.emf.compare.internal.merge.MergeMode;
-import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.graphics.Color;
@@ -43,12 +34,11 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.swt.widgets.Widget;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
+public class EMFCompareDiffTreeViewer extends WrappableTreeViewer {
 
 	public static final String REQUIRED_DIFF_COLOR = "RequiredDiffColor"; //$NON-NLS-1$
 
@@ -62,15 +52,18 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 
 	private final Color unmergeableDiffColor;
 
-	private Listener fEraseItemListener;
+	private final Listener fEraseItemListener;
+
+	private final DependencyData dependencyData;
 
 	/**
 	 * @param parent
 	 * @param adapterFactory
 	 * @param configuration
 	 */
-	public EMFCompareDiffTreeViewer(Composite parent, EMFCompareConfiguration configuration) {
-		super(parent, configuration);
+	public EMFCompareDiffTreeViewer(Composite parent, DependencyData dependencyData) {
+		super(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		this.dependencyData = dependencyData;
 
 		fEraseItemListener = new Listener() {
 			public void handleEvent(Event event) {
@@ -91,47 +84,9 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	}
 
 	/**
-	 * A predicate that checks if the given input is a TreeNode that contains a diff.
-	 * 
-	 * @return true, if the given input is a TreeNode that contains a diff, false otherwise.
-	 */
-	static Predicate<EObject> IS_DIFF_TREE_NODE = new Predicate<EObject>() {
-		public boolean apply(EObject t) {
-			return t instanceof TreeNode && ((TreeNode)t).getData() instanceof Diff;
-		}
-	};
-
-	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.jface.viewers.StructuredViewer#getComparator()
-	 */
-	@Override
-	public ViewerComparator getComparator() {
-		return null;
-	}
-
-	public void createChildrenSilently() {
-		createChildrenSilently(getTree());
-	}
-
-	private void createChildrenSilently(Object o) {
-		if (o instanceof Tree) {
-			createChildren((Widget)o);
-			for (TreeItem item : ((Tree)o).getItems()) {
-				createChildrenSilently(item);
-			}
-		} else if (o instanceof TreeItem) {
-			createChildren((Widget)o);
-			for (TreeItem item : ((TreeItem)o).getItems()) {
-				createChildrenSilently(item);
-			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.AbstractTreeViewer#isExpandable(java.lang.Object)
+	 * @see org.eclipse.jface.viewers.TreeViewer#isExpandable(java.lang.Object)
 	 */
 	@Override
 	public boolean isExpandable(Object parent) {
@@ -148,7 +103,7 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	 * @see org.eclipse.compare.structuremergeviewer.DiffTreeViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
 	 */
 	@Override
-	protected void handleDispose(DisposeEvent event) {
+	public void handleDispose(DisposeEvent event) {
 		getControl().removeListener(SWT.EraseItem, fEraseItemListener);
 		super.handleDispose(event);
 	}
@@ -159,7 +114,7 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	 * @see org.eclipse.jface.viewers.AbstractTreeViewer#getSortedChildren(java.lang.Object)
 	 */
 	@Override
-	protected Object[] getSortedChildren(Object parentElementOrTreePath) {
+	public Object[] getSortedChildren(Object parentElementOrTreePath) {
 		Object[] result = super.getSortedChildren(parentElementOrTreePath);
 		if (parentElementOrTreePath instanceof Adapter) {
 			Notifier target = ((Adapter)parentElementOrTreePath).getTarget();
@@ -204,36 +159,16 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	 *            the erase item event.
 	 */
 	protected void handleEraseItemEvent(Event event) {
-		ISelection selection = getSelection();
-		Object firstElement = ((IStructuredSelection)selection).getFirstElement();
-		if (firstElement instanceof Adapter) {
-			Notifier target = ((Adapter)firstElement).getTarget();
-			if (target instanceof TreeNode) {
-				EObject selectionData = ((TreeNode)target).getData();
-				if (selectionData instanceof Diff) {
-					TreeItem item = (TreeItem)event.item;
-					Object dataTreeItem = item.getData();
-					if (dataTreeItem instanceof Adapter) {
-						Notifier targetItem = ((Adapter)dataTreeItem).getTarget();
-						if (targetItem instanceof TreeNode) {
-							EObject dataItem = ((TreeNode)targetItem).getData();
-							MergeMode mergePreviewMode = getCompareConfiguration().getMergePreviewMode();
-							boolean leftEditable = getCompareConfiguration().isLeftEditable();
-							boolean rightEditable = getCompareConfiguration().isRightEditable();
-							Diff selectedDiff = (Diff)selectionData;
-							boolean leftToRight = mergePreviewMode.isLeftToRight(leftEditable, rightEditable);
-							final Set<Diff> requires = DiffUtil.getRequires(selectedDiff, leftToRight);
-							final Set<Diff> unmergeables = DiffUtil
-									.getUnmergeables(selectedDiff, leftToRight);
-							final GC g = event.gc;
-							if (requires.contains(dataItem)) {
-								paintItemBackground(g, item, requiredDiffColor);
-							} else if (unmergeables.contains(dataItem)) {
-								paintItemBackground(g, item, unmergeableDiffColor);
-							}
-						}
-					}
-				}
+		TreeItem item = (TreeItem)event.item;
+		EObject dataItem = EMFCompareStructureMergeViewer.getDataOfTreeNodeOfAdapter(item.getData());
+		if (dataItem != null) {
+			final Set<Diff> requires = dependencyData.getRequires();
+			final Set<Diff> unmergeables = dependencyData.getUnmergeables();
+			final GC g = event.gc;
+			if (requires.contains(dataItem)) {
+				paintItemBackground(g, item, requiredDiffColor);
+			} else if (unmergeables.contains(dataItem)) {
+				paintItemBackground(g, item, unmergeableDiffColor);
 			}
 		}
 	}
@@ -257,13 +192,4 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		g.fillRectangle(areaBounds.x, itemBounds.y, areaBounds.width, itemBounds.height);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.structuremergeviewer.DiffTreeViewer#getCompareConfiguration()
-	 */
-	@Override
-	public EMFCompareConfiguration getCompareConfiguration() {
-		return (EMFCompareConfiguration)super.getCompareConfiguration();
-	}
 }

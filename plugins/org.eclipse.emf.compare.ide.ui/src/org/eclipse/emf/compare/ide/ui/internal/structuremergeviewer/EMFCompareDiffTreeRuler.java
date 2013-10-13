@@ -10,36 +10,16 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
-import static com.google.common.collect.Iterables.filter;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 
-import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
-import org.eclipse.emf.compare.internal.merge.MergeMode;
-import org.eclipse.emf.compare.internal.utils.DiffUtil;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.TreePath;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -73,7 +53,7 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	private static final int ANNOTATION_HEIGHT = 5;
 
 	/** The TreeViewer associated with this Treeruler. */
-	private final TreeViewer fTreeViewer;
+	private final WrappableTreeViewer fTreeViewer;
 
 	/** The color a required diff. */
 	private final Color requiredDiffFillColor;
@@ -89,15 +69,6 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 
 	/** The width of this tree ruler. */
 	private final int fWidth;
-
-	/** The list of required Diff that need to be shown in the TreeRuler. */
-	private Set<Diff> requires;
-
-	/** The list of unmergeables Diff that need to be shown in the TreeRuler. */
-	private Set<Diff> unmergeables;
-
-	/** A map that links a diff with tree items. */
-	private Multimap<Diff, TreeItem> diffItems;
 
 	/** A map that links a rectangle with a tree item. */
 	private Map<Rectangle, TreeItem> annotationsData;
@@ -117,7 +88,7 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	/** The last cursor used. */
 	private Cursor lastCursor;
 
-	private final EMFCompareConfiguration compareConfiguration;
+	private final DependencyData dependencyData;
 
 	/**
 	 * Constructor.
@@ -133,12 +104,12 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	 * @param config
 	 *            the configuration for this control.
 	 */
-	EMFCompareDiffTreeRuler(Composite parent, int style, int width, TreeViewer treeViewer,
-			EMFCompareConfiguration config) {
+	EMFCompareDiffTreeRuler(Composite parent, int style, int width, WrappableTreeViewer treeViewer,
+			DependencyData dependencyData) {
 		super(parent, style);
 		fWidth = width;
 		fTreeViewer = treeViewer;
-		this.compareConfiguration = config;
+		this.dependencyData = dependencyData;
 
 		requiredDiffFillColor = JFaceResources.getColorRegistry().get(
 				EMFCompareDiffTreeViewer.REQUIRED_DIFF_COLOR);
@@ -149,9 +120,6 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 		unmergeableDiffBorderColor = JFaceResources.getColorRegistry().get(
 				EMFCompareDiffTreeViewer.UNMERGEABLE_DIFF_BORDER_COLOR);
 
-		requires = Sets.newHashSet();
-		unmergeables = Sets.newHashSet();
-		diffItems = HashMultimap.create();
 		annotationsData = Maps.newHashMap();
 
 		paintListener = new PaintListener() {
@@ -203,72 +171,6 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	}
 
 	/**
-	 * Compute consequences (required and unmergeable differences).
-	 */
-	public void computeConsequences(Object object) {
-		clearAllData();
-		if (object instanceof Diff) {
-			Diff diff = (Diff)object;
-			MergeMode mergePreviewMode = compareConfiguration.getMergePreviewMode();
-			boolean leftToRigh = mergePreviewMode.isLeftToRight(compareConfiguration.isLeftEditable(),
-					compareConfiguration.isRightEditable());
-			requires = DiffUtil.getRequires(diff, leftToRigh);
-			unmergeables = DiffUtil.getUnmergeables(diff, leftToRigh);
-			associateTreeItems(Lists.newLinkedList(Iterables.concat(requires, unmergeables)));
-		}
-	}
-
-	/**
-	 * Maps tree items with the given list of diffs.
-	 * 
-	 * @param diffs
-	 *            the given list of diffs.
-	 */
-	private void associateTreeItems(List<Diff> diffs) {
-		Tree tree = fTreeViewer.getTree();
-		if (fTreeViewer instanceof EMFCompareDiffTreeViewer) {
-			// ((EMFCompareDiffTreeViewer)fTreeViewer).createChildrenSilently(tree);
-		}
-		for (TreeItem item : tree.getItems()) {
-			associateTreeItem(item, diffs);
-		}
-	}
-
-	/**
-	 * Maps, if necessary, the given tree item and all his children with the given list of diffs.
-	 * 
-	 * @param item
-	 *            the given tree item.
-	 * @param diffs
-	 *            the given list of diffs.
-	 */
-	private void associateTreeItem(TreeItem item, List<Diff> diffs) {
-		Object data = item.getData();
-		if (data instanceof Adapter) {
-			Notifier target = ((Adapter)data).getTarget();
-			if (target instanceof TreeNode) {
-				EObject treeNodeData = ((TreeNode)target).getData();
-				if (diffs.contains(treeNodeData)) {
-					diffItems.put((Diff)treeNodeData, item);
-				}
-			}
-		}
-		for (TreeItem child : item.getItems()) {
-			associateTreeItem(child, diffs);
-		}
-	}
-
-	/**
-	 * Clear all data.
-	 */
-	private void clearAllData() {
-		requires.clear();
-		unmergeables.clear();
-		diffItems.clear();
-		annotationsData.clear();
-	}
-
-	/**
 	 * Handles the dispose event on this control.
 	 */
 	public void handleDispose() {
@@ -286,17 +188,13 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	 */
 	private void handlePaintEvent(PaintEvent e) {
 		annotationsData.clear();
-		Predicate<? super EObject> predicate = compareConfiguration.getStructureMergeViewerFilter()
-				.getAggregatedPredicate();
-		Collection<? extends Diff> filteredRequires = filteredDiffs(requires, predicate);
-		Collection<? extends Diff> filteredUnmergeables = filteredDiffs(unmergeables, predicate);
-		for (Diff diff : filteredRequires) {
-			for (TreeItem item : diffItems.get(diff)) {
+		for (Diff diff : dependencyData.getRequires()) {
+			for (TreeItem item : dependencyData.getTreeItems(diff)) {
 				createAnnotation(e, diff, item, requiredDiffFillColor, requiredDiffBorderColor);
 			}
 		}
-		for (Diff diff : filteredUnmergeables) {
-			for (TreeItem item : diffItems.get(diff)) {
+		for (Diff diff : dependencyData.getUnmergeables()) {
+			for (TreeItem item : dependencyData.getTreeItems(diff)) {
 				createAnnotation(e, diff, item, unmergeableDiffFillColor, unmergeableDiffBorderColor);
 			}
 		}
@@ -386,7 +284,11 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 				int yMin = Math.abs(item.getParent().getItems()[0].getBounds().y);
 				int yMax = getLastVisibleItem().getBounds().y;
 				int realYMax = yMax + yMin;
-				y = (y + yMin) * yRuler / realYMax;
+				if (realYMax > 0) {
+					y = (y + yMin) * yRuler / realYMax;
+				} else {
+					y = (y + yMin) * yRuler;
+				}
 				if (y + Y_OFFSET + ANNOTATION_HEIGHT > yRuler) {
 					y = yRuler - Y_OFFSET - ANNOTATION_HEIGHT;
 				}
@@ -577,23 +479,5 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 			}
 		}
 		return lastVisibleItem;
-	}
-
-	/**
-	 * From a list of {@link Diff}s, returns the diffs which are not filtered by a filter of the given list of
-	 * {@link IDifferenceFilter}.
-	 * 
-	 * @param unfilteredDiffs
-	 *            the given list of unfiltered diffs.
-	 * @param filters
-	 *            the given list of IDifferenceFilter.
-	 * @return A filtered list of diffs.
-	 */
-	protected Collection<? extends Diff> filteredDiffs(Collection<? extends Diff> unfilteredDiffs,
-			Predicate<? super EObject> filters) {
-		if (filters != null) {
-			return ImmutableList.copyOf(filter(unfilteredDiffs, filters));
-		}
-		return ImmutableList.of();
 	}
 }

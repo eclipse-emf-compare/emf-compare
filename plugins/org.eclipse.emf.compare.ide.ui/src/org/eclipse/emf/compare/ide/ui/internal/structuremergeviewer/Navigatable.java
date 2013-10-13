@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
@@ -23,6 +24,7 @@ import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -36,9 +38,18 @@ import org.eclipse.jface.viewers.StructuredViewer;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class Navigatable implements INavigatable {
+
 	/**
+	 * A predicate that checks if the given input is a TreeNode that contains a diff.
 	 * 
+	 * @return true, if the given input is a TreeNode that contains a diff, false otherwise.
 	 */
+	private static final Predicate<EObject> IS_DIFF_TREE_NODE = new Predicate<EObject>() {
+		public boolean apply(EObject t) {
+			return isDiffTreeNode(t);
+		}
+	};
+
 	private final AdapterFactory adapterFactory;
 
 	private final StructuredViewer viewer;
@@ -110,7 +121,7 @@ public class Navigatable implements INavigatable {
 					adapterFactory.adapt(parentNode, ICompareInput.class)).reverse();
 			int indexOfTreeNode = children.indexOf(treeNode);
 			if (indexOfTreeNode == children.size() - 1) {
-				if (EMFCompareDiffTreeViewer.IS_DIFF_TREE_NODE.apply(parentNode)) {
+				if (isDiffTreeNode(parentNode)) {
 					previousNode = parentNode;
 				} else {
 					previousNode = getPrevDiffNode(parentNode);
@@ -123,7 +134,7 @@ public class Navigatable implements INavigatable {
 						previousNode = getLastChildDiffNode(prevSibling);
 						if (previousNode != null) {
 							stop = true;
-						} else if (EMFCompareDiffTreeViewer.IS_DIFF_TREE_NODE.apply(prevSibling)) {
+						} else if (isDiffTreeNode(prevSibling)) {
 							previousNode = prevSibling;
 							stop = true;
 						}
@@ -180,7 +191,7 @@ public class Navigatable implements INavigatable {
 			while (!stop) {
 				if (children.size() > indexOfTreeNode + 1) {
 					TreeNode nextSibling = children.get(indexOfTreeNode + 1);
-					if (EMFCompareDiffTreeViewer.IS_DIFF_TREE_NODE.apply(nextSibling)) {
+					if (isDiffTreeNode(nextSibling)) {
 						next = nextSibling;
 					} else {
 						next = getFirstChildDiffNode(nextSibling);
@@ -206,7 +217,7 @@ public class Navigatable implements INavigatable {
 	 */
 	private TreeNode getFirstChildDiffNode(TreeNode treeNode) {
 		UnmodifiableIterator<EObject> diffChildren = Iterators.filter(treeNode.eAllContents(),
-				EMFCompareDiffTreeViewer.IS_DIFF_TREE_NODE);
+				IS_DIFF_TREE_NODE);
 		while (diffChildren.hasNext()) {
 			TreeNode next = (TreeNode)diffChildren.next();
 			if (!JFaceUtil.isFiltered(viewer, adapterFactory.adapt(next, ICompareInput.class), adapterFactory
@@ -226,7 +237,7 @@ public class Navigatable implements INavigatable {
 	 */
 	private TreeNode getLastChildDiffNode(TreeNode treeNode) {
 		UnmodifiableIterator<EObject> diffChildren = Iterators.filter(treeNode.eAllContents(),
-				EMFCompareDiffTreeViewer.IS_DIFF_TREE_NODE);
+				IS_DIFF_TREE_NODE);
 		List<EObject> l = Lists.newArrayList(diffChildren);
 		ListIterator<EObject> li = l.listIterator(l.size());
 		while (li.hasPrevious()) {
@@ -260,6 +271,9 @@ public class Navigatable implements INavigatable {
 			}
 		}
 		return ImmutableList.copyOf(treeNodeChildren);
+	}
 
+	private static boolean isDiffTreeNode(EObject t) {
+		return t instanceof TreeNode && ((TreeNode)t).getData() instanceof Diff;
 	}
 }
