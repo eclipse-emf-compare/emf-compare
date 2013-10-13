@@ -34,6 +34,7 @@ import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IComparisonAndScopeChange;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.FilterActionMenu;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.GroupActionMenu;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilterChange;
@@ -130,7 +131,7 @@ public class CompareToolBar implements ISelectionChangedListener {
 		toolbarManager.update(true);
 	}
 
-	private MergeAction createMergeAction(MergeMode mergeMode, EMFCompareConfiguration cc) {
+	private MergeAction createMergeAction(MergeMode mergeMode, IEMFCompareConfiguration cc) {
 		IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 		MergeAction mergeAction = new MergeAction(cc.getEditingDomain(), mergerRegistry, mergeMode, cc
 				.isLeftEditable(), cc.isRightEditable());
@@ -138,7 +139,7 @@ public class CompareToolBar implements ISelectionChangedListener {
 		return mergeAction;
 	}
 
-	private MergeAction createMergeAllNonConflictingAction(MergeMode mergeMode, EMFCompareConfiguration cc) {
+	private MergeAction createMergeAllNonConflictingAction(MergeMode mergeMode, IEMFCompareConfiguration cc) {
 		IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 		MergeAllNonConflictingAction mergeAction = new MergeAllNonConflictingAction(cc.getEditingDomain(), cc
 				.getComparison(), mergerRegistry, mergeMode, cc.isLeftEditable(), cc.isRightEditable());
@@ -169,6 +170,9 @@ public class CompareToolBar implements ISelectionChangedListener {
 	@Subscribe
 	public void editingDomainChange(ICompareEditingDomainChange event) {
 		for (MergeAction mergeAction : mergeActions) {
+			mergeAction.setEditingDomain(event.getNewValue());
+		}
+		for (MergeAction mergeAction : mergeAllNonConflictingActions) {
 			mergeAction.setEditingDomain(event.getNewValue());
 		}
 	}
