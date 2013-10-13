@@ -10,42 +10,27 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
-import static com.google.common.collect.Sets.newHashSet;
-
 import com.google.common.base.Predicate;
-import com.google.common.eventbus.Subscribe;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Set;
 
-import org.eclipse.compare.CompareViewerSwitchingPane;
 import org.eclipse.compare.structuremergeviewer.DiffTreeViewer;
 import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
-import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
-import org.eclipse.emf.compare.rcp.ui.internal.configuration.IComparisonAndScopeChange;
-import org.eclipse.emf.compare.rcp.ui.internal.configuration.IMergePreviewModeChange;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilterChange;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProviderChange;
-import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -77,31 +62,15 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 
 	private final Color unmergeableDiffColor;
 
-	private final CompareViewerSwitchingPane fParent;
-
 	private Listener fEraseItemListener;
-
-	private AdapterFactory adapterFactory;
-
-	private ISelectionChangedListener selectionChangeListener;
 
 	/**
 	 * @param parent
 	 * @param adapterFactory
 	 * @param configuration
 	 */
-	public EMFCompareDiffTreeViewer(Composite parent, final AdapterFactory adapterFactory,
-			EMFCompareConfiguration configuration) {
+	public EMFCompareDiffTreeViewer(Composite parent, EMFCompareConfiguration configuration) {
 		super(parent, configuration);
-		this.adapterFactory = adapterFactory;
-
-		getCompareConfiguration().getEventBus().register(this);
-
-		if (parent.getParent() instanceof CompareViewerSwitchingPane) {
-			fParent = (CompareViewerSwitchingPane)parent.getParent();
-		} else {
-			fParent = null;
-		}
 
 		fEraseItemListener = new Listener() {
 			public void handleEvent(Event event) {
@@ -109,13 +78,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 			}
 		};
 		getControl().addListener(SWT.EraseItem, fEraseItemListener);
-
-		selectionChangeListener = new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				getControl().redraw();
-			}
-		};
-		addSelectionChangedListener(selectionChangeListener);
 
 		JFaceResources.getColorRegistry().put(REQUIRED_DIFF_COLOR, new RGB(215, 255, 200));
 		JFaceResources.getColorRegistry().put(REQUIRED_DIFF_BORDER_COLOR, new RGB(195, 235, 180));
@@ -139,35 +101,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		}
 	};
 
-	@Subscribe
-	public void selectedDifferenceFiltersChange(IDifferenceFilterChange event) {
-		SWTUtil.safeAsyncExec(new Runnable() {
-			public void run() {
-				getTree().redraw();
-				refreshTitle();
-			}
-		});
-	}
-
-	@Subscribe
-	public void handleDifferenceGroupProviderChange(IDifferenceGroupProviderChange event) {
-		SWTUtil.safeAsyncExec(new Runnable() {
-			public void run() {
-				refreshTitle();
-			}
-		});
-	}
-
-	@Subscribe
-	public void mergePreviewModeChange(IMergePreviewModeChange event) {
-		SWTUtil.safeRedraw(getTree(), true);
-	}
-
-	@Subscribe
-	public void comparisonChange(IComparisonAndScopeChange event) {
-		SWTUtil.safeRefresh(this, true);
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -178,7 +111,11 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		return null;
 	}
 
-	public void createChildrenSilently(Object o) {
+	public void createChildrenSilently() {
+		createChildrenSilently(getTree());
+	}
+
+	private void createChildrenSilently(Object o) {
 		if (o instanceof Tree) {
 			createChildren((Widget)o);
 			for (TreeItem item : ((Tree)o).getItems()) {
@@ -190,11 +127,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 				createChildrenSilently(item);
 			}
 		}
-	}
-
-	@Override
-	public void initialSelection() {
-		super.initialSelection();
 	}
 
 	/*
@@ -210,56 +142,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 		return super.isExpandable(parent);
 	}
 
-	public void refreshAfterDiff(Object root) {
-		if (getControl().isDisposed()) {
-			return;
-		}
-
-		refresh(root);
-	}
-
-	protected void refreshTitle() {
-		if (fParent != null) {
-			ITreeContentProvider contentProvider = (ITreeContentProvider)getContentProvider();
-			int displayedDiff = getMatchCount(contentProvider, contentProvider.getElements(getRoot()));
-			Comparison comparison = getCompareConfiguration().getComparison();
-			int computedDiff = comparison.getDifferences().size();
-			int filteredDiff = computedDiff - displayedDiff;
-			fParent.setTitleArgument(computedDiff + " differences – " + filteredDiff
-					+ " differences filtered from view");
-		}
-	}
-
-	private int getMatchCount(ITreeContentProvider cp, Object[] elements) {
-		Set<Diff> diffs = newHashSet();
-		getMatchCount(cp, elements, diffs);
-		return diffs.size();
-	}
-
-	/**
-	 * @param cp
-	 * @param children
-	 * @param diffs
-	 * @return
-	 */
-	private void getMatchCount(ITreeContentProvider cp, Object[] elements, Set<Diff> diffs) {
-		for (int j = 0; j < elements.length; j++) {
-			Object element = elements[j];
-			if (!JFaceUtil.isFiltered(this, element, null) && element instanceof Adapter) {
-				Notifier target = ((Adapter)element).getTarget();
-				if (target instanceof TreeNode) {
-					TreeNode treeNode = (TreeNode)target;
-					EObject data = treeNode.getData();
-					if (data instanceof Diff) {
-						diffs.add((Diff)data);
-					}
-				}
-			}
-			Object[] children = cp.getChildren(element);
-			getMatchCount(cp, children, diffs);
-		}
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -268,8 +150,6 @@ public class EMFCompareDiffTreeViewer extends DiffTreeViewer {
 	@Override
 	protected void handleDispose(DisposeEvent event) {
 		getControl().removeListener(SWT.EraseItem, fEraseItemListener);
-		removeSelectionChangedListener(selectionChangeListener);
-		getCompareConfiguration().getEventBus().unregister(this);
 		super.handleDispose(event);
 	}
 

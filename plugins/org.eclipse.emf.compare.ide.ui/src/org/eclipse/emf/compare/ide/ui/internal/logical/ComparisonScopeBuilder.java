@@ -17,10 +17,14 @@ import static org.eclipse.emf.compare.ide.utils.ResourceUtil.createURIFor;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 
+import java.lang.reflect.Field;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.eclipse.compare.ICompareContainer;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
@@ -29,6 +33,8 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.internal.utils.NotLoadingResourceSet;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil;
 import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
@@ -39,6 +45,11 @@ import org.eclipse.emf.compare.scope.FilterComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.team.core.subscribers.Subscriber;
+import org.eclipse.team.core.subscribers.SubscriberMergeContext;
+import org.eclipse.team.internal.ui.mapping.ModelCompareEditorInput;
+import org.eclipse.team.ui.synchronize.ISynchronizeParticipant;
+import org.eclipse.team.ui.synchronize.ModelSynchronizeParticipant;
 
 /**
  * This will be used by EMF Compare in order to construct its comparison scope given a "starting point".
@@ -129,6 +140,86 @@ public final class ComparisonScopeBuilder {
 			syncModel = createSynchronizationModel(left, right, origin, monitor);
 		}
 		return createMinimizedScope(syncModel, monitor);
+	}
+
+	/**
+	 * Constructs the comparison scope corresponding to the given typed elements.
+	 * 
+	 * @param left
+	 *            Left of the compared elements.
+	 * @param right
+	 *            Right of the compared elements.
+	 * @param origin
+	 *            Common ancestor of the <code>left</code> and <code>right</code> compared elements.
+	 * @param monitor
+	 *            Monitor to report progress on.
+	 * @return The created comparison scope.
+	 */
+	public static IComparisonScope create(ICompareContainer container, ITypedElement left,
+			ITypedElement right, ITypedElement origin, IProgressMonitor monitor) {
+		IStorageProviderAccessor storageAccessor = null;
+		Subscriber subscriber = getSubscriber(container);
+		if (subscriber != null) {
+			storageAccessor = new SubscriberStorageAccessor(subscriber);
+		}
+		IStorage leftStorage = PlatformElementUtil.findFile(left);
+		if (leftStorage == null) {
+			leftStorage = StreamAccessorStorage.fromTypedElement(left);
+		}
+		IModelResolver resolver = EMFCompareIDEUIPlugin.getDefault().getModelResolverRegistry()
+				.getBestResolverFor(leftStorage);
+		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
+				new IdenticalResourceMinimizer(), storageAccessor);
+		return scopeBuilder.build(left, right, origin, monitor);
+	}
+
+	/**
+	 * Team left us with absolutely no way to determine whether our supplied input is the result of a
+	 * synchronization or not.
+	 * <p>
+	 * In order to properly resolve the logical model of the resource currently being compared we need to know
+	 * what "other" resources were part of its logical model, and we need to know the revisions of these
+	 * resources we are to load. All of this has already been computed by Team, but it would not let us know.
+	 * This method uses discouraged means to get around this "black box" locking from Team.
+	 * </p>
+	 * <p>
+	 * The basic need here is to retrieve the Subscriber from this point. We have a lot of accessible
+	 * variables, the two most important being the CompareConfiguration and ICompareInput... I could find no
+	 * way around the privileged access to the private ModelCompareEditorInput.participant field. There does
+	 * not seem to be any adapter (or Platform.getAdapterManager().getAdapter(...)) that would allow for this,
+	 * so I'm taking the long way 'round.
+	 * </p>
+	 * 
+	 * @return The subscriber used for this comparison if any could be found, <code>null</code> otherwise.
+	 */
+	@SuppressWarnings("restriction")
+	private static Subscriber getSubscriber(ICompareContainer container) {
+		if (container instanceof ModelCompareEditorInput) {
+			final ModelCompareEditorInput modelInput = (ModelCompareEditorInput)container;
+			ISynchronizeParticipant participant = null;
+			try {
+				final Field field = ModelCompareEditorInput.class.getDeclaredField("participant"); //$NON-NLS-1$
+				AccessController.doPrivileged(new PrivilegedAction<Object>() {
+					public Object run() {
+						field.setAccessible(true);
+						return null;
+					}
+				});
+				participant = (ISynchronizeParticipant)field.get(modelInput);
+			} catch (NoSuchFieldException e) {
+				// Swallow this, this private field was there at least from 3.5 to 4.3
+			} catch (IllegalArgumentException e) {
+				// Cannot happen
+			} catch (IllegalAccessException e) {
+				// "Should" not happen, but ignore it anyway
+			}
+			if (participant instanceof ModelSynchronizeParticipant
+					&& ((ModelSynchronizeParticipant)participant).getContext() instanceof SubscriberMergeContext) {
+				return ((SubscriberMergeContext)((ModelSynchronizeParticipant)participant).getContext())
+						.getSubscriber();
+			}
+		}
+		return null;
 	}
 
 	/**

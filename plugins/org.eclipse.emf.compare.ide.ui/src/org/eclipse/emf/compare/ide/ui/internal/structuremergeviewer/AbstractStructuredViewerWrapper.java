@@ -427,6 +427,7 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 	 */
 	@Override
 	protected void handleInvalidSelection(ISelection invalidSelection, ISelection newSelection) {
+		throw new UnsupportedOperationException();
 	}
 
 	/**

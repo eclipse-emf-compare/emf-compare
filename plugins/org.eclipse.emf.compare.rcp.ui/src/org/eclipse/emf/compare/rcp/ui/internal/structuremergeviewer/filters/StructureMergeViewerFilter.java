@@ -32,15 +32,11 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterChange;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.GroupItemProviderAdapter;
-import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
-import org.eclipse.jface.viewers.TreePath;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 
 /**
  * This will be used by the structure viewer to filter out its list of differences according to a number of
@@ -68,7 +64,7 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	private final Set<IDifferenceFilter> unselectedDifferenceFilters;
 
 	/** List of all TreeViewers on which this filter is applied. */
-	private final List<TreeViewer> viewers;
+	private final List<StructuredViewer> viewers;
 
 	/** The {@link EventBus} associated with this filter. */
 	private final EventBus eventBus;
@@ -153,7 +149,6 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 
 		if (changed) {
 			aggregatedPredicate = computeAggregatedPredicate();
-			refreshViewers();
 			eventBus.post(new DifferenceFilterChange(aggregatedPredicate, selectedDifferenceFilters,
 					unselectedDifferenceFilters));
 		}
@@ -181,7 +176,6 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 
 		if (changed) {
 			aggregatedPredicate = computeAggregatedPredicate();
-			refreshViewers();
 			eventBus.post(new DifferenceFilterChange(aggregatedPredicate, selectedDifferenceFilters,
 					unselectedDifferenceFilters));
 		}
@@ -207,7 +201,6 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 
 		if (changed) {
 			aggregatedPredicate = computeAggregatedPredicate();
-			refreshViewers();
 			eventBus.post(new DifferenceFilterChange(aggregatedPredicate, selectedDifferenceFilters,
 					unselectedDifferenceFilters));
 		}
@@ -226,52 +219,4 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	public Predicate<? super EObject> getAggregatedPredicate() {
 		return aggregatedPredicate;
 	}
-
-	/**
-	 * Refreshes the viewers registered with this filter. Will try and conserve the expanded tree paths when
-	 * possible.
-	 */
-	private void refreshViewers() {
-		for (final TreeViewer viewer : viewers) {
-			SWTUtil.safeSyncExec(new Runnable() {
-				public void run() {
-					final TreePath[] paths = viewer.getExpandedTreePaths();
-					viewer.refresh();
-					viewer.setExpandedTreePaths(paths);
-				}
-			});
-		}
-	}
-
-	/**
-	 * Install this filter on the given viewer.
-	 * <p>
-	 * Note that this will also install a dispose listener on that viewer in order to remove the filter
-	 * whenever the viewer is disposed.
-	 * </p>
-	 * 
-	 * @param viewer
-	 *            the viewer on which the filter will be installed
-	 */
-	public void install(final TreeViewer viewer) {
-		viewer.addFilter(this);
-		viewers.add(viewer);
-		viewer.getTree().addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				uninstall(viewer);
-			}
-		});
-	}
-
-	/**
-	 * Uninstall this filter from the given viewer.
-	 * 
-	 * @param viewer
-	 *            The viewer from which the filter should be removed.
-	 */
-	public void uninstall(TreeViewer viewer) {
-		viewers.remove(viewer);
-		viewer.removeFilter(this);
-	}
-
 }

@@ -21,9 +21,8 @@ import java.util.Set;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DifferenceGroupProviderChange;
-import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 
@@ -42,7 +41,7 @@ public final class StructureMergeViewerGrouper {
 	private IDifferenceGroupProvider provider;
 
 	/** List of all TreeViewers on which this grouper is applied. */
-	private final List<TreeViewer> viewers;
+	private final List<StructuredViewer> viewers;
 
 	/** The {@link EventBus} associated with this grouper. */
 	private final EventBus eventBus;
@@ -85,17 +84,15 @@ public final class StructureMergeViewerGrouper {
 	}
 
 	/**
-	 * Refreshes the viewers registered with this grouper. Will try and conserve the expanded tree paths when
-	 * possible.
+	 * Refreshes the viewers registered with this grouper.
 	 */
 	private void refreshViewers() {
-		for (TreeViewer viewer : viewers) {
+		for (StructuredViewer viewer : viewers) {
 			Adapter root = (Adapter)viewer.getInput();
 			if (root != null) {
-				Notifier target = (Notifier)root.getTarget();
+				Notifier target = root.getTarget();
 				registerDifferenceGroupProvider(target, provider);
 			}
-			SWTUtil.safeRefresh(viewer, false);
 		}
 	}
 
@@ -119,8 +116,8 @@ public final class StructureMergeViewerGrouper {
 	 * @param viewer
 	 *            The viewer on which the grouper will be installed.
 	 */
-	public void install(final TreeViewer viewer) {
-		viewer.getTree().addDisposeListener(new DisposeListener() {
+	public void install(final StructuredViewer viewer) {
+		viewer.getControl().addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				uninstall(viewer);
 			}
@@ -134,7 +131,7 @@ public final class StructureMergeViewerGrouper {
 	 * @param viewer
 	 *            The viewer from which the grouper should be removed.
 	 */
-	public void uninstall(TreeViewer viewer) {
+	public void uninstall(StructuredViewer viewer) {
 		Object input = viewer.getInput();
 		if (input != null) {
 			List<Adapter> eAdapters = ((Notifier)input).eAdapters();
