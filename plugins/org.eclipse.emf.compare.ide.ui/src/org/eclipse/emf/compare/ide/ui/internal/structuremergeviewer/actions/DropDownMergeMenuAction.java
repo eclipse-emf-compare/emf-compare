@@ -19,8 +19,8 @@ import java.util.List;
 
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IMergePreviewModeChange;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -39,7 +39,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 
 	/** The compare configuration object used to get the compare model. */
-	private final EMFCompareConfiguration configuration;
+	private final IEMFCompareConfiguration configuration;
 
 	/** The menu associated with this action. */
 	private Menu fMenu;
@@ -53,7 +53,7 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public DropDownMergeMenuAction(EMFCompareConfiguration configuration, EnumSet<MergeMode> previewModes) {
+	public DropDownMergeMenuAction(IEMFCompareConfiguration configuration, EnumSet<MergeMode> previewModes) {
 		this.configuration = configuration;
 		actions = newArrayList();
 
@@ -164,7 +164,7 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 	private static class DropDownAction extends Action {
 
 		/** The compare configuration object used to get the compare model. */
-		private final EMFCompareConfiguration configuration;
+		private final IEMFCompareConfiguration configuration;
 
 		private final MergeMode mergeMode;
 
@@ -174,7 +174,7 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 		 * @param configuration
 		 *            The compare configuration object.
 		 */
-		public DropDownAction(EMFCompareConfiguration configuration, MergeMode mergeMode) {
+		public DropDownAction(IEMFCompareConfiguration configuration, MergeMode mergeMode) {
 			this.configuration = configuration;
 			this.mergeMode = mergeMode;
 			setToolTipTextAndImage(this, mergeMode);

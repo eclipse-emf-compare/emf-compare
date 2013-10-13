@@ -24,7 +24,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
@@ -51,7 +51,7 @@ public class SaveComparisonModelAction extends Action {
 	private static final ImmutableList<String> DIALOG_BUTTON_LABELS = ImmutableList.of("Replace", "Cancel");
 
 	/** The compare configuration object used to get the compare model. */
-	private EMFCompareConfiguration configuration;
+	private IEMFCompareConfiguration configuration;
 
 	/**
 	 * Constructor.
@@ -59,7 +59,7 @@ public class SaveComparisonModelAction extends Action {
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public SaveComparisonModelAction(EMFCompareConfiguration configuration) {
+	public SaveComparisonModelAction(IEMFCompareConfiguration configuration) {
 		this.configuration = configuration;
 		setToolTipText(EMFCompareIDEUIMessages.getString("save.model.tooltip")); //$NON-NLS-1$
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,

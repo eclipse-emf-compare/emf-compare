@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.util.EMFCompareUIActionUtil;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -26,7 +26,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 public class SelectPreviousDiffAction extends Action {
 
 	/** The compare configuration object used to get the compare model. */
-	private CompareConfiguration configuration;
+	private EMFCompareConfiguration configuration;
 
 	/**
 	 * Constructor.
@@ -34,7 +34,7 @@ public class SelectPreviousDiffAction extends Action {
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public SelectPreviousDiffAction(CompareConfiguration configuration) {
+	public SelectPreviousDiffAction(EMFCompareConfiguration configuration) {
 		this.configuration = configuration;
 		setToolTipText(EMFCompareIDEUIMessages.getString("previous.diff.tooltip")); //$NON-NLS-1$
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
