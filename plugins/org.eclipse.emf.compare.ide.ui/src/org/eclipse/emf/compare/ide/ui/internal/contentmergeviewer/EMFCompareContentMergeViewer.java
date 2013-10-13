@@ -636,7 +636,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	protected final void redrawCenterControl() {
 		if (getCenterControl() != null) {
-			SWTUtil.safeRedraw(getCenterControl(), true);
+			SWTUtil.safeRedraw(getCenterControl(), false);
 		}
 	}
 
