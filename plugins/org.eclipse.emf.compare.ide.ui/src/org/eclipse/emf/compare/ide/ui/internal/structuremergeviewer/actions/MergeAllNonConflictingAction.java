@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
-import static com.google.common.base.Predicates.or;
+import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.WITHOUT_CONFLICT;
@@ -94,7 +94,7 @@ public class MergeAllNonConflictingAction extends MergeAction {
 	 */
 	@Override
 	protected List<Diff> getDifferencesToMerge() {
-		Iterable<Diff> differences = filter(comparison.getDifferences(), or(WITHOUT_CONFLICT,
+		Iterable<Diff> differences = filter(comparison.getDifferences(), and(WITHOUT_CONFLICT,
 				hasState(DifferenceState.UNRESOLVED)));
 		return newArrayList(differences);
 	}
