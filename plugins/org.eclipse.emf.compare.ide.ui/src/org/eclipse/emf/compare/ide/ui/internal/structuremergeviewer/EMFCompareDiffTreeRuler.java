@@ -67,9 +67,6 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	/** The border color an unmergeable diff. */
 	private final Color unmergeableDiffBorderColor;
 
-	/** The width of this tree ruler. */
-	private final int fWidth;
-
 	/** A map that links a rectangle with a tree item. */
 	private Map<Rectangle, TreeItem> annotationsData;
 
@@ -104,21 +101,20 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	 * @param config
 	 *            the configuration for this control.
 	 */
-	EMFCompareDiffTreeRuler(Composite parent, int style, int width, WrappableTreeViewer treeViewer,
+	EMFCompareDiffTreeRuler(Composite parent, int style, WrappableTreeViewer treeViewer,
 			DependencyData dependencyData) {
 		super(parent, style);
-		fWidth = width;
 		fTreeViewer = treeViewer;
 		this.dependencyData = dependencyData;
 
 		requiredDiffFillColor = JFaceResources.getColorRegistry().get(
-				EMFCompareDiffTreeViewer.REQUIRED_DIFF_COLOR);
+				EMFCompareStructureMergeViewer.REQUIRED_DIFF_COLOR);
 		requiredDiffBorderColor = JFaceResources.getColorRegistry().get(
-				EMFCompareDiffTreeViewer.REQUIRED_DIFF_BORDER_COLOR);
+				EMFCompareStructureMergeViewer.REQUIRED_DIFF_BORDER_COLOR);
 		unmergeableDiffFillColor = JFaceResources.getColorRegistry().get(
-				EMFCompareDiffTreeViewer.UNMERGEABLE_DIFF_COLOR);
+				EMFCompareStructureMergeViewer.UNMERGEABLE_DIFF_COLOR);
 		unmergeableDiffBorderColor = JFaceResources.getColorRegistry().get(
-				EMFCompareDiffTreeViewer.UNMERGEABLE_DIFF_BORDER_COLOR);
+				EMFCompareStructureMergeViewer.UNMERGEABLE_DIFF_BORDER_COLOR);
 
 		annotationsData = Maps.newHashMap();
 
@@ -293,8 +289,8 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 					y = yRuler - Y_OFFSET - ANNOTATION_HEIGHT;
 				}
 			}
-			Rectangle rect = drawAnnotation(e.gc, 2, y + Y_OFFSET, fWidth - 5, ANNOTATION_HEIGHT, fill,
-					border);
+			Rectangle rect = drawAnnotation(e.gc, 2, y + Y_OFFSET, getBounds().width - 5, ANNOTATION_HEIGHT,
+					fill, border);
 			annotationsData.put(rect, treeItem);
 		}
 	}

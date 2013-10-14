@@ -17,6 +17,7 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
 
+import com.google.common.base.Function;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
@@ -46,24 +47,17 @@ public class DependencyData {
 
 	private Set<Diff> unmergeables;
 
-	private WrappableTreeViewer treeViewer;
+	private final WrappableTreeViewer treeViewer;
 
 	/** A map that links a diff with tree items. */
 	private Multimap<Diff, TreeItem> diffToItemsMappings;
 
-	public DependencyData(IEMFCompareConfiguration compareConfiguration) {
+	public DependencyData(IEMFCompareConfiguration compareConfiguration, WrappableTreeViewer treeViewer) {
 		this.compareConfiguration = compareConfiguration;
+		this.treeViewer = treeViewer;
 		requires = newHashSet();
 		unmergeables = newHashSet();
 		diffToItemsMappings = HashMultimap.create();
-	}
-
-	/**
-	 * @param treeViewer
-	 *            the treeViewer to set
-	 */
-	void setTreeViewer(WrappableTreeViewer treeViewer) {
-		this.treeViewer = treeViewer;
 	}
 
 	/**
@@ -92,7 +86,7 @@ public class DependencyData {
 
 		TreeItem[] children = tree.getItems();
 		// item with non created children has a fake child item with null data.
-		if (children.length > 0 && children[0].getData() == null) {
+		if (children.length == 1 && children[0].getData() == null) {
 			treeViewer.createChildren(tree);
 		}
 
@@ -132,13 +126,18 @@ public class DependencyData {
 		List<EObject> ret = newArrayList();
 		if (selection instanceof IStructuredSelection) {
 			List<?> selectedObjects = ((IStructuredSelection)selection).toList();
-			Iterable<EObject> data = transform(selectedObjects,
-					EMFCompareStructureMergeViewer.ADAPTER__TARGET__DATA);
+			Iterable<EObject> data = transform(selectedObjects, ADAPTER__TARGET__DATA);
 			Iterable<EObject> notNullData = Iterables.filter(data, notNull());
 			addAll(ret, notNullData);
 		}
 		return ret;
 	}
+
+	private static final Function<Object, EObject> ADAPTER__TARGET__DATA = new Function<Object, EObject>() {
+		public EObject apply(Object object) {
+			return EMFCompareStructureMergeViewer.getDataOfTreeNodeOfAdapter(object);
+		}
+	};
 
 	/**
 	 * @return the requires

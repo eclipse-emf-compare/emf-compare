@@ -16,7 +16,6 @@ import static com.google.common.collect.Iterables.size;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.eventbus.Subscribe;
@@ -25,13 +24,14 @@ import java.util.Collection;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.CompareViewerPane;
 import org.eclipse.compare.CompareViewerSwitchingPane;
+import org.eclipse.compare.ICompareNavigator;
 import org.eclipse.compare.INavigatable;
 import org.eclipse.compare.ITypedElement;
-import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -61,6 +61,7 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoActio
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
+import org.eclipse.emf.compare.ide.ui.internal.util.CompareHandlerService;
 import org.eclipse.emf.compare.ide.ui.internal.util.ExceptionUtil;
 import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
@@ -83,6 +84,7 @@ import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.tree.TreeFactory;
 import org.eclipse.emf.edit.tree.TreeNode;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeViewerListener;
@@ -91,9 +93,16 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.actions.ActionFactory;
 
@@ -110,8 +119,26 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	private static final Predicate<Diff> UNRESOLVED_OR_WITHOUT_PSEUDO_CONFLICT = or(
 			hasState(DifferenceState.UNRESOLVED), hasConflict(ConflictKind.PSEUDO));
 
+	static final String REQUIRED_DIFF_COLOR = "RequiredDiffColor"; //$NON-NLS-1$
+
+	static final String REQUIRED_DIFF_BORDER_COLOR = "RequiredDiffBorderColor"; //$NON-NLS-1$
+
+	static final String UNMERGEABLE_DIFF_COLOR = "UnmergeableDiffColor"; //$NON-NLS-1$
+
+	static final String UNMERGEABLE_DIFF_BORDER_COLOR = "UnmergeableDiffBorderColor"; //$NON-NLS-1$
+
+	private Color requiredDiffColor;
+
+	private Color unmergeableDiffColor;
+
 	/** The width of the tree ruler. */
 	private static final int TREE_RULER_WIDTH = 17;
+
+	private static final Predicate<? super Object> IS_DIFF = new Predicate<Object>() {
+		public boolean apply(Object object) {
+			return getDataOfTreeNodeOfAdapter(object) instanceof Diff;
+		}
+	};
 
 	/** The adapter factory. */
 	private ComposedAdapterFactory fAdapterFactory;
@@ -119,7 +146,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	/** The tree ruler associated with this viewer. */
 	private EMFCompareDiffTreeRuler treeRuler;
 
-	private ICompareInputChangeListener fCompareInputChangeListener;
+	private final ICompareInputChangeListener fCompareInputChangeListener;
 
 	/** The expand/collapse item listener. */
 	private ITreeViewerListener fWrappedTreeListener;
@@ -144,6 +171,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	private DependencyData dependencyData;
 
 	private ISelectionChangedListener selectionChangeListener;
+
+	private final Listener fEraseItemListener;
 
 	private final Job inputChangedTask = new Job("Compute Model Differences") {
 		@Override
@@ -175,6 +204,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				.getStructureMergeViewerGrouper();
 		structureMergeViewerGrouper.install(getViewer());
 
+		fCompareInputChangeListener = new ICompareInputChangeListener() {
+			public void compareInputChanged(ICompareInput input) {
+				EMFCompareStructureMergeViewer.this.compareInputChanged(input);
+			}
+		};
+
 		toolBar = new CompareToolBar(structureMergeViewerGrouper, structureMergeViewerFilter,
 				getCompareConfiguration());
 		getViewer().addSelectionChangedListener(toolBar);
@@ -186,6 +221,24 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			}
 		};
 		addSelectionChangedListener(selectionChangeListener);
+
+		fWrappedTreeListener = new ITreeViewerListener() {
+			public void treeExpanded(TreeExpansionEvent event) {
+				treeRuler.redraw();
+			}
+
+			public void treeCollapsed(TreeExpansionEvent event) {
+				treeRuler.redraw();
+			}
+		};
+		getViewer().addTreeListener(fWrappedTreeListener);
+
+		fEraseItemListener = new Listener() {
+			public void handleEvent(Event event) {
+				handleEraseItemEvent(event);
+			}
+		};
+		getViewer().getControl().addListener(SWT.EraseItem, fEraseItemListener);
 
 		fHandlerService = CompareHandlerService.createFor(getCompareConfiguration().getContainer(),
 				getControl().getShell());
@@ -200,6 +253,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		redoAction = new RedoAction(getCompareConfiguration().getEditingDomain());
 
 		inputChangedTask.setPriority(Job.LONG);
+
 		config.getEventBus().register(this);
 	}
 
@@ -219,7 +273,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		getCompareConfiguration().setAdapterFactory(fAdapterFactory);
 
-		dependencyData = new DependencyData(getCompareConfiguration());
+		JFaceResources.getColorRegistry().put(REQUIRED_DIFF_COLOR, new RGB(215, 255, 200));
+		JFaceResources.getColorRegistry().put(REQUIRED_DIFF_BORDER_COLOR, new RGB(195, 235, 180));
+		JFaceResources.getColorRegistry().put(UNMERGEABLE_DIFF_COLOR, new RGB(255, 205, 180));
+		JFaceResources.getColorRegistry().put(UNMERGEABLE_DIFF_BORDER_COLOR, new RGB(235, 185, 160));
+
+		requiredDiffColor = JFaceResources.getColorRegistry().get(REQUIRED_DIFF_COLOR);
+		unmergeableDiffColor = JFaceResources.getColorRegistry().get(UNMERGEABLE_DIFF_COLOR);
 	}
 
 	/**
@@ -241,38 +301,37 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
 		control.setLayout(layout);
 		control.setLayoutData(data);
-		final WrappableTreeViewer treeViewer = new EMFCompareDiffTreeViewer(control, dependencyData);
-		dependencyData.setTreeViewer(treeViewer);
+
+		final WrappableTreeViewer treeViewer = new WrappableTreeViewer(control, SWT.MULTI | SWT.H_SCROLL
+				| SWT.V_SCROLL) {
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see org.eclipse.jface.viewers.TreeViewer#isExpandable(java.lang.Object)
+			 */
+			@Override
+			public boolean isExpandable(Object parent) {
+				if (hasFilters()) {
+					// workaround for 65762
+					return getFilteredChildren(parent).length > 0;
+				}
+				return super.isExpandable(parent);
+			}
+		};
+		treeViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		treeViewer.setUseHashlookup(true);
+
+		dependencyData = new DependencyData(getCompareConfiguration(), treeViewer);
+
 		INavigatable nav = new Navigatable(fAdapterFactory, treeViewer);
 		control.setData(INavigatable.NAVIGATOR_PROPERTY, nav);
 		control.setData(CompareUI.COMPARE_VIEWER_TITLE, "Model differences");
-		treeViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		treeRuler = new EMFCompareDiffTreeRuler(control, SWT.NONE, treeViewer, dependencyData);
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, false, true);
 		layoutData.widthHint = TREE_RULER_WIDTH;
 		layoutData.minimumWidth = TREE_RULER_WIDTH;
-		treeRuler = new EMFCompareDiffTreeRuler(control, SWT.NONE, layoutData.widthHint, treeViewer,
-				dependencyData);
 		treeRuler.setLayoutData(layoutData);
-
-		fCompareInputChangeListener = new ICompareInputChangeListener() {
-			public void compareInputChanged(ICompareInput input) {
-				EMFCompareStructureMergeViewer.this.compareInputChanged(input);
-			}
-		};
-
-		fWrappedTreeListener = new ITreeViewerListener() {
-			public void treeExpanded(TreeExpansionEvent event) {
-				treeRuler.redraw();
-			}
-
-			public void treeCollapsed(TreeExpansionEvent event) {
-				treeRuler.redraw();
-			}
-		};
-		treeViewer.addTreeListener(fWrappedTreeListener);
-
-		fHandlerService = CompareHandlerService.createFor(getCompareConfiguration().getContainer(),
-				treeViewer.getControl().getShell());
 
 		return ControlAndViewer.create(control, treeViewer);
 	}
@@ -282,7 +341,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		editingDomainChange(event.getOldValue(), event.getNewValue());
 	}
 
-	protected void editingDomainChange(ICompareEditingDomain oldValue, ICompareEditingDomain newValue) {
+	private void editingDomainChange(ICompareEditingDomain oldValue, ICompareEditingDomain newValue) {
 		if (newValue != oldValue) {
 			if (oldValue != null) {
 				oldValue.getCommandStack().removeCommandStackListener(this);
@@ -290,8 +349,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 			if (newValue != null) {
 				newValue.getCommandStack().addCommandStackListener(this);
-				// setLeftDirty(newValue.getCommandStack().isLeftSaveNeeded());
-				// setRightDirty(newValue.getCommandStack().isRightSaveNeeded());
 			}
 
 			undoAction.setEditingDomain(newValue);
@@ -317,12 +374,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		}
 	}
 
-	private static final Predicate<? super Object> IS_DIFF = new Predicate<Object>() {
-		public boolean apply(Object object) {
-			return getDataOfTreeNodeOfAdapter(object) instanceof Diff;
-		}
-	};
-
 	static EObject getDataOfTreeNodeOfAdapter(Object object) {
 		EObject data = null;
 		if (object instanceof Adapter) {
@@ -334,12 +385,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		return data;
 	}
 
-	static final Function<Object, EObject> ADAPTER__TARGET__DATA = new Function<Object, EObject>() {
-		public EObject apply(Object object) {
-			return getDataOfTreeNodeOfAdapter(object);
-		}
-	};
-
 	@Subscribe
 	public void mergePreviewModeChange(IMergePreviewModeChange event) {
 		dependencyData.updateDependencies(getSelection());
@@ -348,12 +393,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	@Subscribe
 	public void handleDifferenceFilterChange(IDifferenceFilterChange event) {
-		SWTUtil.safeRefresh(this, true);
+		SWTUtil.safeRefresh(this, false);
 	}
 
 	@Subscribe
 	public void handleDifferenceGroupProviderChange(IDifferenceGroupProviderChange event) {
-		SWTUtil.safeRefresh(this, true);
+		SWTUtil.safeRefresh(this, false);
 	}
 
 	/**
@@ -398,6 +443,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		}
 		removeSelectionChangedListener(selectionChangeListener);
 		getViewer().removeSelectionChangedListener(toolBar);
+		getViewer().getTree().removeListener(SWT.EraseItem, fEraseItemListener);
 		compareInputChanged((ICompareInput)null);
 		treeRuler.handleDispose();
 		fAdapterFactory.dispose();
@@ -430,7 +476,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					if (treeNode != null) {
 						final Object adaptedAffectedObject = fAdapterFactory.adapt(treeNode,
 								ICompareInput.class);
-						SWTUtil.safeAsyncExec(new Runnable() {
+						SWTUtil.safeSyncExec(new Runnable() {
 							public void run() {
 								refresh();
 								setSelection(new StructuredSelection(adaptedAffectedObject), true);
@@ -500,16 +546,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 			SWTUtil.safeAsyncExec(new Runnable() {
 				public void run() {
-					// the tree has now a proper group provider and its input, so we can create the child
-					// silently.
-					// ((EMFCompareDiffTreeViewer)getViewer()).createChildrenSilently();
-
 					// title is not initialized as the comparison was set in the configuration after the
 					// refresh caused by the initialization of the viewer filters and the groupe providers.
 					refreshTitle();
 
-					// XXX: fixme!!
-					// ((EMFCompareDiffTreeViewer)getViewer()).initialSelection();
+					ICompareNavigator navigator = getCompareConfiguration().getContainer().getNavigator();
+					navigator.selectChange(true);
 				}
 			});
 
@@ -622,6 +664,47 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			getCompareConfiguration().dispose();
 		}
 		getViewer().setInput(null);
+	}
+
+	/**
+	 * Handle the erase item event. When select a difference in the structure merge viewer, highlight required
+	 * differences with a specific color, and highlight unmergeable differences with another color.
+	 * 
+	 * @param event
+	 *            the erase item event.
+	 */
+	private void handleEraseItemEvent(Event event) {
+		TreeItem item = (TreeItem)event.item;
+		EObject dataItem = EMFCompareStructureMergeViewer.getDataOfTreeNodeOfAdapter(item.getData());
+		if (dataItem != null) {
+			final Set<Diff> requires = dependencyData.getRequires();
+			final Set<Diff> unmergeables = dependencyData.getUnmergeables();
+			final GC g = event.gc;
+			if (requires.contains(dataItem)) {
+				paintItemBackground(g, item, requiredDiffColor);
+			} else if (unmergeables.contains(dataItem)) {
+				paintItemBackground(g, item, unmergeableDiffColor);
+			}
+		}
+	}
+
+	/**
+	 * Paint the background of the given item with the given color.
+	 * 
+	 * @param g
+	 *            the GC associated to the item.
+	 * @param item
+	 *            the given item.
+	 * @param color
+	 *            the given color.
+	 */
+	private void paintItemBackground(GC g, TreeItem item, Color color) {
+		Rectangle itemBounds = item.getBounds();
+		Tree tree = item.getParent();
+		Rectangle areaBounds = tree.getClientArea();
+		g.setClipping(areaBounds.x, itemBounds.y, areaBounds.width, itemBounds.height);
+		g.setBackground(color);
+		g.fillRectangle(areaBounds.x, itemBounds.y, areaBounds.width, itemBounds.height);
 	}
 
 	private void reportErrors(final Comparison comparison) {
