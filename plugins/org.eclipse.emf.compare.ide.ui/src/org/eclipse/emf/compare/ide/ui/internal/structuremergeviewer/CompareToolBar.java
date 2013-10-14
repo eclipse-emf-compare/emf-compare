@@ -131,10 +131,10 @@ public class CompareToolBar implements ISelectionChangedListener {
 		toolbarManager.update(true);
 	}
 
-	private MergeAction createMergeAction(MergeMode mergeMode, IEMFCompareConfiguration cc) {
+	private MergeAction createMergeAction(MergeMode mergeMode, EMFCompareConfiguration cc) {
 		IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 		MergeAction mergeAction = new MergeAction(cc.getEditingDomain(), mergerRegistry, mergeMode, cc
-				.isLeftEditable(), cc.isRightEditable());
+				.isLeftEditable(), cc.isRightEditable(), cc.getContainer().getNavigator());
 		mergeActions.add(mergeAction);
 		return mergeAction;
 	}

@@ -476,6 +476,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					if (treeNode != null) {
 						final Object adaptedAffectedObject = fAdapterFactory.adapt(treeNode,
 								ICompareInput.class);
+						// execute synchronously the set selection to be sure the MergeAction#run() will
+						// select next diff after.
 						SWTUtil.safeSyncExec(new Runnable() {
 							public void run() {
 								refresh();

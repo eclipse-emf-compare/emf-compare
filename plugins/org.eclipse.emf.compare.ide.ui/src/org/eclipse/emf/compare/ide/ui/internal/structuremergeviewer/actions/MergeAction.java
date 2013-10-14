@@ -21,6 +21,7 @@ import com.google.common.base.Preconditions;
 
 import java.util.List;
 
+import org.eclipse.compare.ICompareNavigator;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
@@ -65,6 +66,8 @@ public class MergeAction extends BaseSelectionListenerAction {
 
 	private final List<Diff> selectedDifferences;
 
+	private final ICompareNavigator navigator;
+
 	/**
 	 * Constructor.
 	 * 
@@ -72,8 +75,9 @@ public class MergeAction extends BaseSelectionListenerAction {
 	 *            The compare configuration object.
 	 */
 	public MergeAction(ICompareEditingDomain editingDomain, IMerger.Registry mergerRegistry, MergeMode mode,
-			boolean isLeftEditable, boolean isRightEditable) {
+			boolean isLeftEditable, boolean isRightEditable, ICompareNavigator navigator) {
 		super(""); //$NON-NLS-1$
+		this.navigator = navigator;
 
 		Preconditions.checkNotNull(mode);
 		// at least should be editable
@@ -141,8 +145,10 @@ public class MergeAction extends BaseSelectionListenerAction {
 				mergerRegistry, mergeRunnable);
 		editingDomain.getCommandStack().execute(mergeCommand);
 
-		// Select next diff
-		// EMFCompareUIActionUtil.navigate(true, configuration);
+		if (navigator != null) {
+			// navigator is null in MergeAllNonConflictingAction
+			navigator.selectChange(true);
+		}
 	}
 
 	protected List<Diff> getDifferencesToMerge() {

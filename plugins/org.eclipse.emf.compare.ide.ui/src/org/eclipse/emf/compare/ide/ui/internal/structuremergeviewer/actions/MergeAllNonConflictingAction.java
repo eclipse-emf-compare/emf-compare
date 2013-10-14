@@ -48,7 +48,7 @@ public class MergeAllNonConflictingAction extends MergeAction {
 	 */
 	public MergeAllNonConflictingAction(ICompareEditingDomain editingDomain, Comparison comparison,
 			IMerger.Registry mergerRegistry, MergeMode mode, boolean isLeftEditable, boolean isRightEditable) {
-		super(editingDomain, mergerRegistry, mode, isLeftEditable, isRightEditable);
+		super(editingDomain, mergerRegistry, mode, isLeftEditable, isRightEditable, null);
 		this.comparison = comparison;
 	}
 
