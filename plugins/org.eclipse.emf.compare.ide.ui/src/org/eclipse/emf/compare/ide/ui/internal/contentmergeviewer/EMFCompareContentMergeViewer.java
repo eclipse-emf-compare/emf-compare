@@ -69,9 +69,12 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Sash;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -416,8 +419,21 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#createCenterControl(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
-	protected Control createCenterControl(Composite parent) {
-		final Control ret = super.createCenterControl(parent);
+	protected Control createCenterControl(final Composite parent) {
+		final Sash ret = (Sash)super.createCenterControl(parent);
+
+		final SelectionAdapter selectionListener = new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				SWTUtil.safeAsyncExec(new Runnable() {
+					public void run() {
+						parent.layout();
+					}
+				});
+			}
+		};
+
+		ret.addSelectionListener(selectionListener);
 
 		final PaintListener paintListener = new PaintListener() {
 			public void paintControl(PaintEvent e) {
@@ -429,6 +445,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		ret.addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				ret.removePaintListener(paintListener);
+				ret.removeSelectionListener(selectionListener);
 			}
 		});
 
