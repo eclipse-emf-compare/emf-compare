@@ -80,6 +80,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.services.IServiceLocator;
@@ -134,6 +135,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 					.getAdapterFactory());
 		}
 
+		redoAction = new RedoAction(getCompareConfiguration().getEditingDomain());
+		undoAction = new UndoAction(getCompareConfiguration().getEditingDomain());
+
 		editingDomainChange(null, getCompareConfiguration().getEditingDomain());
 		getCompareConfiguration().getEventBus().register(this);
 	}
@@ -174,12 +178,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 				setLeftDirty(newValue.getCommandStack().isLeftSaveNeeded());
 				setRightDirty(newValue.getCommandStack().isRightSaveNeeded());
 			}
-			if (undoAction != null) {
-				undoAction.setEditingDomain(newValue);
-			}
-			if (redoAction != null) {
-				redoAction.setEditingDomain(newValue);
-			}
+
+			undoAction.setEditingDomain(newValue);
+			redoAction.setEditingDomain(newValue);
 		}
 	}
 
@@ -304,6 +305,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 */
 	@Override
 	protected void createToolItems(ToolBarManager toolBarManager) {
+		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
+		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
 
 		// Add extension point contributions to the content merge viewer toolbar
 		IServiceLocator workbench = PlatformUI.getWorkbench();
@@ -316,12 +319,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	}
 
 	public void commandStackChanged(EventObject event) {
-		if (undoAction != null) {
-			undoAction.update();
-		}
-		if (redoAction != null) {
-			redoAction.update();
-		}
+		undoAction.update();
+		redoAction.update();
+
 		if (getCompareConfiguration().getEditingDomain() != null) {
 			setLeftDirty(getCompareConfiguration().getEditingDomain().getCommandStack().isLeftSaveNeeded());
 			setRightDirty(getCompareConfiguration().getEditingDomain().getCommandStack().isRightSaveNeeded());

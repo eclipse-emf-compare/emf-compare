@@ -252,6 +252,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		undoAction = new UndoAction(getCompareConfiguration().getEditingDomain());
 		redoAction = new RedoAction(getCompareConfiguration().getEditingDomain());
 
+		editingDomainChange(null, getCompareConfiguration().getEditingDomain());
+
 		inputChangedTask.setPriority(Job.LONG);
 
 		config.getEventBus().register(this);

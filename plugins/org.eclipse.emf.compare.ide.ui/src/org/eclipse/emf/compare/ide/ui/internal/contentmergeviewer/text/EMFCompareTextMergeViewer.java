@@ -317,13 +317,14 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	protected void attachListeners(final MergeSourceViewer viewer) {
 		final StyledText textWidget = viewer.getSourceViewer().getTextWidget();
 		textWidget.addFocusListener(new FocusListener() {
-
 			public void focusLost(FocusEvent e) {
-				setActiveViewer(viewer, false);
+				getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), null);
+				getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), null);
 			}
 
 			public void focusGained(FocusEvent e) {
-				setActiveViewer(viewer, true);
+				getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), fUndoAction);
+				getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), fRedoAction);
 			}
 		});
 
@@ -350,36 +351,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 				}
 			}
 		});
-
-	}
-
-	private void setActiveViewer(MergeSourceViewer viewer, boolean activate) {
-		// connectContributedActions(viewer, activate);
-		if (activate) {
-			// fFocusPart = viewer;
-			connectGlobalActions(viewer);
-		} else {
-			connectGlobalActions(null);
-		}
-	}
-
-	private void connectGlobalActions(final MergeSourceViewer part) {
-		if (getHandlerService() != null) {
-			if (part != null) {
-				part.updateActions();
-			}
-			getHandlerService().updatePaneActionHandlers(new Runnable() {
-				public void run() {
-					if (part == null) {
-						getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), null);
-						getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), null);
-					} else {
-						getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), fUndoAction);
-						getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), fRedoAction);
-					}
-				}
-			});
-		}
 	}
 
 	/**
