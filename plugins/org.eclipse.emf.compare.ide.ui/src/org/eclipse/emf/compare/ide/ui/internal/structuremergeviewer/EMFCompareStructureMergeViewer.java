@@ -64,6 +64,8 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoActio
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
+import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressInfoComposite;
+import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressMonitorWrapper;
 import org.eclipse.emf.compare.ide.ui.internal.util.CompareHandlerService;
 import org.eclipse.emf.compare.ide.ui.internal.util.ExceptionUtil;
 import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
@@ -104,6 +106,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Tree;
@@ -116,6 +119,20 @@ import org.eclipse.ui.actions.ActionFactory;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
 public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrapper<Composite, WrappableTreeViewer> implements CommandStackListener {
+
+	private final class CompareInputChangedJob extends Job {
+		private CompareInputChangedJob(String name) {
+			super(name);
+		}
+
+		@Override
+		public IStatus run(IProgressMonitor monitor) {
+			IProgressMonitor wrapper = new JobProgressMonitorWrapper(monitor, progressInfoItem);
+			SubMonitor subMonitor = SubMonitor.convert(wrapper, "Computing Model Differences", 100);
+			compareInputChanged((ICompareInput)getInput(), subMonitor.newChild(100));
+			return Status.OK_STATUS;
+		}
+	}
 
 	private static final Predicate<Diff> UNRESOLVED_AND_WITHOUT_PSEUDO_CONFLICT = and(
 			hasState(DifferenceState.UNRESOLVED), not(hasConflict(ConflictKind.PSEUDO)));
@@ -175,14 +192,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	private final Listener fEraseItemListener;
 
-	private final Job inputChangedTask = new Job("Compute Model Differences") {
-		@Override
-		public IStatus run(IProgressMonitor monitor) {
-			SubMonitor subMonitor = SubMonitor.convert(monitor, "Computing Model Differences", 100);
-			compareInputChanged((ICompareInput)getInput(), subMonitor.newChild(100));
-			return Status.OK_STATUS;
-		}
-	};
+	private JobProgressInfoComposite progressInfoItem;
+
+	private Job inputChangedTask;
 
 	private CompareToolBar toolBar;
 
@@ -198,6 +210,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 */
 	public EMFCompareStructureMergeViewer(Composite parent, EMFCompareConfiguration config) {
 		super(parent, config);
+
+		updateLayout(true, false);
 
 		StructureMergeViewerFilter structureMergeViewerFilter = getCompareConfiguration()
 				.getStructureMergeViewerFilter();
@@ -285,6 +299,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		requiredDiffColor = JFaceResources.getColorRegistry().get(REQUIRED_DIFF_COLOR);
 		unmergeableDiffColor = JFaceResources.getColorRegistry().get(UNMERGEABLE_DIFF_COLOR);
+
+		inputChangedTask = new CompareInputChangedJob("Computing Model Differences");
 	}
 
 	/**
@@ -298,14 +314,20 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	protected ControlAndViewer<Composite, WrappableTreeViewer> createControlAndViewer(Composite parent) {
 		Composite control = new Composite(parent, SWT.NONE);
 
+		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+		control.setLayoutData(data);
+
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		layout.horizontalSpacing = 0;
 		layout.verticalSpacing = 0;
-		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
 		control.setLayout(layout);
-		control.setLayoutData(data);
+
+		progressInfoItem = new JobProgressInfoComposite(inputChangedTask, control, SWT.SMOOTH
+				| SWT.HORIZONTAL, SWT.NONE);
+		progressInfoItem.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		progressInfoItem.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 
 		final WrappableTreeViewer treeViewer = new WrappableTreeViewer(control, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL) {
@@ -330,13 +352,15 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		INavigatable nav = new Navigatable(fAdapterFactory, treeViewer);
 		control.setData(INavigatable.NAVIGATOR_PROPERTY, nav);
+
 		control.setData(CompareUI.COMPARE_VIEWER_TITLE, "Model differences");
 
 		treeRuler = new EMFCompareDiffTreeRuler(control, SWT.NONE, treeViewer, dependencyData);
-		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, false, true);
-		layoutData.widthHint = TREE_RULER_WIDTH;
-		layoutData.minimumWidth = TREE_RULER_WIDTH;
-		treeRuler.setLayoutData(layoutData);
+		GridData rulerLayoutData = new GridData(SWT.FILL, SWT.FILL, false, true);
+		rulerLayoutData.exclude = true;
+		rulerLayoutData.widthHint = TREE_RULER_WIDTH;
+		rulerLayoutData.minimumWidth = TREE_RULER_WIDTH;
+		treeRuler.setLayoutData(rulerLayoutData);
 
 		return ControlAndViewer.create(control, treeViewer);
 	}
@@ -528,6 +552,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		}
 		// The compare configuration is nulled when the viewer is disposed
 		if (getCompareConfiguration() != null) {
+			updateLayout(true, true);
 			inputChangedTask.schedule();
 		}
 	}
@@ -572,6 +597,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 			SWTUtil.safeAsyncExec(new Runnable() {
 				public void run() {
+					updateLayout(false, true);
+
 					// title is not initialized as the comparison was set in the configuration after the
 					// refresh caused by the initialization of the viewer filters and the groupe providers.
 					refreshTitle();
@@ -640,6 +667,21 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			}
 		} else {
 			compareInputChangedToNull();
+		}
+	}
+
+	private void updateLayout(boolean displayProgress, boolean doLayout) {
+		((GridData)progressInfoItem.getLayoutData()).exclude = !displayProgress;
+		progressInfoItem.setVisible(displayProgress);
+
+		((GridData)getViewer().getControl().getLayoutData()).exclude = displayProgress;
+		getViewer().getControl().setVisible(!displayProgress);
+
+		((GridData)treeRuler.getLayoutData()).exclude = displayProgress;
+		treeRuler.setVisible(!displayProgress);
+
+		if (doLayout) {
+			getControl().layout(true, true);
 		}
 	}
 
