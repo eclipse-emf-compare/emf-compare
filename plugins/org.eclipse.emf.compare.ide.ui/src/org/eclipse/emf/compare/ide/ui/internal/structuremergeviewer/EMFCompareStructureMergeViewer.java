@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
-import static com.google.common.base.Predicates.or;
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.size;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
@@ -70,6 +73,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDoma
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IMergePreviewModeChange;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilterChange;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.PseudoConflictsFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProviderChange;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
@@ -113,11 +117,8 @@ import org.eclipse.ui.actions.ActionFactory;
  */
 public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrapper<Composite, WrappableTreeViewer> implements CommandStackListener {
 
-	/**
-	 * 
-	 */
-	private static final Predicate<Diff> UNRESOLVED_OR_WITHOUT_PSEUDO_CONFLICT = or(
-			hasState(DifferenceState.UNRESOLVED), hasConflict(ConflictKind.PSEUDO));
+	private static final Predicate<Diff> UNRESOLVED_AND_WITHOUT_PSEUDO_CONFLICT = and(
+			hasState(DifferenceState.UNRESOLVED), not(hasConflict(ConflictKind.PSEUDO)));
 
 	static final String REQUIRED_DIFF_COLOR = "RequiredDiffColor"; //$NON-NLS-1$
 
@@ -184,6 +185,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	};
 
 	private CompareToolBar toolBar;
+
+	private boolean pseudoConflictsFilterEnabled;
 
 	/**
 	 * Constructor.
@@ -365,10 +368,27 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			Comparison comparison = getCompareConfiguration().getComparison();
 			if (comparison != null) {
 				List<Diff> differences = comparison.getDifferences();
-				int computedDiff = differences.size();
-				int filteredDiff = computedDiff - displayedDiff;
-				int differencesToMerge = size(Iterables.filter(differences,
-						UNRESOLVED_OR_WITHOUT_PSEUDO_CONFLICT));
+				final int computedDiff;
+				if (pseudoConflictsFilterEnabled) {
+					computedDiff = size(Iterables.filter(differences, not(hasConflict(ConflictKind.PSEUDO))));
+				} else {
+					computedDiff = differences.size();
+				}
+				int filteredDiff = differences.size() - displayedDiff;
+				if (filteredDiff < 0) {
+					// some differences (conflicts in default view) are displayed twice,
+					// use this workaround to avoid displayed negative numbers, but we have
+					// to know that we display wrong number.
+					filteredDiff = 0;
+				}
+				final int differencesToMerge;
+				if (pseudoConflictsFilterEnabled) {
+					differencesToMerge = size(Iterables.filter(differences,
+							UNRESOLVED_AND_WITHOUT_PSEUDO_CONFLICT));
+				} else {
+					differencesToMerge = size(Iterables.filter(differences,
+							hasState(DifferenceState.UNRESOLVED)));
+				}
 				((CompareViewerSwitchingPane)parent).setTitleArgument(differencesToMerge + " over "
 						+ computedDiff + " differences still to be merged — " + filteredDiff
 						+ " differences filtered from view");
@@ -395,6 +415,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	@Subscribe
 	public void handleDifferenceFilterChange(IDifferenceFilterChange event) {
+		pseudoConflictsFilterEnabled = any(event.getSelectedDifferenceFilters(),
+				instanceOf(PseudoConflictsFilter.class));
 		SWTUtil.safeRefresh(this, false);
 	}
 
