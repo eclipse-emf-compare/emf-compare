@@ -410,7 +410,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	@Subscribe
 	public void mergePreviewModeChange(IMergePreviewModeChange event) {
 		dependencyData.updateDependencies(getSelection());
-		getControl().redraw();
+		internalRedraw();
 	}
 
 	@Subscribe
@@ -775,14 +775,23 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		dependencyData.updateTreeItemMappings();
 		dependencyData.updateDependencies(getSelection());
 
-		getControl().redraw();
+		internalRedraw();
 
 		refreshTitle();
 	}
 
 	private void handleSelectionChangedEvent(SelectionChangedEvent event) {
 		dependencyData.updateDependencies(event.getSelection());
-		getControl().redraw();
+		internalRedraw();
+	}
+
+	/**
+	 * We need to call redraw() on the tree and the tree ruler because getControl().redraw() doesn't propagate
+	 * the redraw on its sub components under windows platform.
+	 */
+	private void internalRedraw() {
+		getViewer().getTree().redraw();
+		treeRuler.redraw();
 	}
 
 }
