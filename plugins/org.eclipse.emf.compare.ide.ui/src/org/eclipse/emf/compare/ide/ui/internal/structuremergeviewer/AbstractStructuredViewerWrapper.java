@@ -156,7 +156,7 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 	 * @see org.eclipse.jface.viewers.Viewer#getControl()
 	 */
 	@Override
-	public final Control getControl() {
+	public final C getControl() {
 		return fControl;
 	}
 
