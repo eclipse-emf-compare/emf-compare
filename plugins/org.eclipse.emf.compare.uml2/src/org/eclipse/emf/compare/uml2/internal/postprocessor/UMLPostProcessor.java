@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
-import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
@@ -173,10 +172,9 @@ public class UMLPostProcessor implements IPostProcessor {
 	private void addDiagnostic(Comparison comparison, Diagnostic diagnostic) {
 		Diagnostic currentDiag = comparison.getDiagnostic();
 		if (currentDiag == null) {
-			comparison.setDiagnostic(diagnostic);
-		} else if (currentDiag instanceof DiagnosticChain) {
-			((DiagnosticChain)currentDiag).add(diagnostic);
+			comparison.setDiagnostic(new BasicDiagnostic());
 		}
+		((BasicDiagnostic)comparison.getDiagnostic()).add(diagnostic);
 	}
 
 	/**
