@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
+import org.eclipse.compare.INavigatable;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.util.EMFCompareUIActionUtil;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
@@ -25,8 +24,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class SelectNextDiffAction extends Action {
 
-	/** The compare configuration object used to get the compare model. */
-	private EMFCompareConfiguration configuration;
+	private final INavigatable navigatable;
 
 	/**
 	 * Constructor.
@@ -34,8 +32,8 @@ public class SelectNextDiffAction extends Action {
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public SelectNextDiffAction(EMFCompareConfiguration configuration) {
-		this.configuration = configuration;
+	public SelectNextDiffAction(INavigatable navigatable) {
+		this.navigatable = navigatable;
 		setToolTipText(EMFCompareIDEUIMessages.getString("next.diff.tooltip")); //$NON-NLS-1$
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
 				"icons/full/toolb16/next_diff.gif")); //$NON-NLS-1$
@@ -49,6 +47,6 @@ public class SelectNextDiffAction extends Action {
 	@Override
 	public void run() {
 		// Select next diff
-		EMFCompareUIActionUtil.navigate(true, configuration);
+		navigatable.selectChange(INavigatable.NEXT_CHANGE);
 	}
 }

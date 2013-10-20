@@ -19,6 +19,7 @@ import com.google.common.eventbus.Subscribe;
 import java.util.EnumSet;
 import java.util.List;
 
+import org.eclipse.compare.INavigatable;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.CollapseAllModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.DropDownMergeMenuAction;
@@ -82,7 +83,7 @@ public class CompareToolBar implements ISelectionChangedListener {
 				.getDifferenceFilterRegistry());
 	}
 
-	public final void initToolbar(ToolBarManager toolbarManager, AbstractTreeViewer viewer) {
+	public final void initToolbar(ToolBarManager toolbarManager, AbstractTreeViewer viewer, INavigatable nav) {
 		compareConfiguration.getEventBus().register(this);
 
 		// Add extension point contributions to the structure merge viewer toolbar
@@ -106,15 +107,15 @@ public class CompareToolBar implements ISelectionChangedListener {
 
 		toolbarManager.add(new DropDownMergeMenuAction(compareConfiguration, modes));
 		for (MergeMode mode : modes) {
-			toolbarManager.add(createMergeAction(mode, compareConfiguration));
+			toolbarManager.add(createMergeAction(mode, compareConfiguration, nav));
 		}
 		for (MergeMode mode : modes) {
 			toolbarManager.add(createMergeAllNonConflictingAction(mode, compareConfiguration));
 		}
 
 		toolbarManager.add(new Separator());
-		toolbarManager.add(new SelectNextDiffAction(compareConfiguration));
-		toolbarManager.add(new SelectPreviousDiffAction(compareConfiguration));
+		toolbarManager.add(new SelectNextDiffAction(nav));
+		toolbarManager.add(new SelectPreviousDiffAction(nav));
 		toolbarManager.add(new Separator());
 		toolbarManager.add(new ExpandAllModelAction(viewer));
 		toolbarManager.add(new CollapseAllModelAction(viewer));
@@ -131,10 +132,10 @@ public class CompareToolBar implements ISelectionChangedListener {
 		toolbarManager.update(true);
 	}
 
-	private MergeAction createMergeAction(MergeMode mergeMode, EMFCompareConfiguration cc) {
+	private MergeAction createMergeAction(MergeMode mergeMode, EMFCompareConfiguration cc, INavigatable nav) {
 		IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 		MergeAction mergeAction = new MergeAction(cc.getEditingDomain(), mergerRegistry, mergeMode, cc
-				.isLeftEditable(), cc.isRightEditable(), cc.getContainer().getNavigator());
+				.isLeftEditable(), cc.isRightEditable(), nav);
 		mergeActions.add(mergeAction);
 		return mergeAction;
 	}

@@ -32,7 +32,6 @@ import java.util.Set;
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.CompareViewerPane;
 import org.eclipse.compare.CompareViewerSwitchingPane;
-import org.eclipse.compare.ICompareNavigator;
 import org.eclipse.compare.INavigatable;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
@@ -200,6 +199,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	private boolean pseudoConflictsFilterEnabled;
 
+	private INavigatable navigatable;
+
 	/**
 	 * Constructor.
 	 * 
@@ -227,10 +228,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			}
 		};
 
+		navigatable = new Navigatable(fAdapterFactory, getViewer());
+
 		toolBar = new CompareToolBar(structureMergeViewerGrouper, structureMergeViewerFilter,
 				getCompareConfiguration());
 		getViewer().addSelectionChangedListener(toolBar);
-		toolBar.initToolbar(CompareViewerPane.getToolBarManager(parent), getViewer());
+		toolBar.initToolbar(CompareViewerPane.getToolBarManager(parent), getViewer(), navigatable);
 
 		selectionChangeListener = new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -349,9 +352,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		treeViewer.setUseHashlookup(true);
 
 		dependencyData = new DependencyData(getCompareConfiguration(), treeViewer);
-
-		INavigatable nav = new Navigatable(fAdapterFactory, treeViewer);
-		control.setData(INavigatable.NAVIGATOR_PROPERTY, nav);
 
 		control.setData(CompareUI.COMPARE_VIEWER_TITLE, "Model differences");
 
@@ -603,8 +603,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					// refresh caused by the initialization of the viewer filters and the groupe providers.
 					refreshTitle();
 
-					ICompareNavigator navigator = getCompareConfiguration().getContainer().getNavigator();
-					navigator.selectChange(true);
+					navigatable.selectChange(INavigatable.FIRST_CHANGE);
 				}
 			});
 
