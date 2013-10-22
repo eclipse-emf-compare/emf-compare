@@ -12,6 +12,8 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;
 
 import static com.google.common.base.Predicates.equalTo;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
@@ -202,7 +204,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 						// selectable on Windows platform. The labels of placeholders in (Tree/Table)Viewer
 						// are one whitespace. Placeholder are then selectable at the very left of itself.
 						// Add a 42 whitespaces label to workaround.
-						text = "                                          ";
+						text = Strings.repeat(" ", 42);
 					} else {
 						text = super.getColumnText(value, columnIndex);
 					}
@@ -224,7 +226,13 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 					if (((IMergeViewerItem)object).isInsertionPoint()) {
 						return null;
 					} else {
-						return super.getColumnImage(mergeViewerItem.getSideValue(side), columnIndex);
+						Object sideValue = mergeViewerItem.getSideValue(side);
+						Image superImage = super.getColumnImage(sideValue, columnIndex);
+						if (superImage == null) {
+							return getDefaultImage(sideValue);
+						} else {
+							return superImage;
+						}
 					}
 				}
 				return super.getColumnImage(object, columnIndex);
@@ -275,7 +283,6 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			final boolean selected = Iterables.any(selection, equalTo(leftItem));
 			IMergeViewerItem leftData = (IMergeViewerItem)leftItem.getData();
 			final Diff leftDiff = ((IMergeViewerItem)leftItem.getData()).getDiff();
-			boolean doPaint = true;
 			if (leftDiff != null) {
 				if (MergeViewerUtil.isVisibleInMergeViewer(leftDiff, getDifferenceGroupProvider(),
 						getDifferenceFilterPredicate())) {
@@ -337,16 +344,17 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	}
 
 	private TableItem findRightTableItemFromLeftDiff(TableItem[] rightItems, Diff leftDiff,
-			IMergeViewerItem rightData) {
+			IMergeViewerItem leftData) {
 		TableItem ret = null;
 		for (int i = 0; i < rightItems.length && ret == null; i++) {
 			TableItem rightItem = rightItems[i];
+			IMergeViewerItem rightData = (IMergeViewerItem)rightItem.getData();
 			final Diff rightDiff = ((IMergeViewerItem)rightItem.getData()).getDiff();
 			if (leftDiff == rightDiff) {
 				ret = rightItem;
-			} else if (rightData.getAncestor() == rightData.getAncestor()
-					&& rightData.getRight() == rightData.getRight()
-					&& rightData.getLeft() == rightData.getLeft()) {
+			} else if (Objects.equal(rightData.getAncestor(), leftData.getAncestor())
+					&& Objects.equal(rightData.getRight(), leftData.getRight())
+					&& Objects.equal(rightData.getLeft(), leftData.getLeft())) {
 				ret = rightItem;
 			}
 		}
