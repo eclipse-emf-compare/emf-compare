@@ -18,7 +18,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.NotSerializableException;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
@@ -87,9 +93,11 @@ public class SaveComparisonModelAction extends Action {
 				int open = messageDialog.open();
 				if (open == DIALOG_BUTTON_LABELS.indexOf("Replace")) {
 					saveComparison(file);
+					refreshLocation(filePath);
 				} // else do nothing
 			} else {
 				saveComparison(file);
+				refreshLocation(filePath);
 			}
 		}
 
@@ -131,6 +139,24 @@ public class SaveComparisonModelAction extends Action {
 				EMFCompareIDEUIPlugin.getDefault().log(e);
 			}
 		} catch (IOException e) {
+			EMFCompareIDEUIPlugin.getDefault().log(e);
+		}
+	}
+
+	/**
+	 * Refresh the folder containing the given path.
+	 * 
+	 * @param path
+	 *            the given path.
+	 */
+	private void refreshLocation(String path) {
+		try {
+			IFile fileForLocation = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(
+					new Path(path));
+			if (fileForLocation != null) {
+				fileForLocation.getParent().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+			}
+		} catch (CoreException e) {
 			EMFCompareIDEUIPlugin.getDefault().log(e);
 		}
 	}
