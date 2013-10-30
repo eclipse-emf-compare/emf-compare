@@ -139,6 +139,9 @@ public class Navigatable implements INavigatable {
 	}
 
 	private Object getNextSiblingDiff(Item item) {
+		if (item == null) {
+			return null;
+		}
 		Object ret = null;
 		Item parentItem = viewer.getParentItem(item);
 		final Item[] siblings = getChildren(parentItem);
@@ -155,6 +158,9 @@ public class Navigatable implements INavigatable {
 	}
 
 	private Object getPreviousSiblingDeepestDiff(Item item) {
+		if (item == null) {
+			return null;
+		}
 		Object ret = null;
 		Item parentItem = viewer.getParentItem(item);
 		final Item[] siblings = getChildren(parentItem);
