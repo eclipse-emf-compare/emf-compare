@@ -277,7 +277,12 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 
 			if (!isEmpty(diffs)) {
 				Diff diff = diffs.iterator().next();
-				ret = createInsertionPoint(diff, fSide, fAdapterFactory);
+				if (diff instanceof ResourceAttachmentChange) {
+					ret = new MergeViewerItem.Container(fComparison, diff, parentMatch, fSide,
+							fAdapterFactory);
+				} else {
+					ret = createInsertionPoint(diff, fSide, fAdapterFactory);
+				}
 			}
 		}
 		return ret;
@@ -496,11 +501,11 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			Predicate<? super EObject> predicate, IDifferenceGroupProvider group) {
 		if (predicate != null) {
 			List<Diff> filteredDiffs = Lists.newArrayList(unfilteredDiffs);
-				for (Diff unfilteredDiff : unfilteredDiffs) {
-					if (!MergeViewerUtil.isVisibleInMergeViewer(unfilteredDiff, group, predicate)) {
-						filteredDiffs.remove(unfilteredDiff);
-					}
+			for (Diff unfilteredDiff : unfilteredDiffs) {
+				if (!MergeViewerUtil.isVisibleInMergeViewer(unfilteredDiff, group, predicate)) {
+					filteredDiffs.remove(unfilteredDiff);
 				}
+			}
 			return filteredDiffs;
 		}
 		return unfilteredDiffs;
