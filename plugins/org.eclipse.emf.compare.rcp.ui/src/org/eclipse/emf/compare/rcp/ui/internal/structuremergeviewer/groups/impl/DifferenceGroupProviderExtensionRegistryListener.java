@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
@@ -27,7 +26,7 @@ public class DifferenceGroupProviderExtensionRegistryListener extends AbstractRe
 
 	static final String ATT_ACTIVE = "activeByDefault"; //$NON-NLS-1$
 
-	private final IDifferenceGroupProvider.Registry groupProviderRegistry;
+	private final IDifferenceGroupProvider.Descriptor.Registry groupProviderRegistry;
 
 	/**
 	 * @param pluginID
@@ -35,7 +34,7 @@ public class DifferenceGroupProviderExtensionRegistryListener extends AbstractRe
 	 * @param registry
 	 */
 	public DifferenceGroupProviderExtensionRegistryListener(String pluginID, String extensionPointID,
-			ILog log, IDifferenceGroupProvider.Registry groupProviderRegistry) {
+			ILog log, IDifferenceGroupProvider.Descriptor.Registry groupProviderRegistry) {
 		super(pluginID, extensionPointID, log);
 		this.groupProviderRegistry = groupProviderRegistry;
 	}
@@ -75,23 +74,14 @@ public class DifferenceGroupProviderExtensionRegistryListener extends AbstractRe
 	 */
 	@Override
 	protected boolean addedValid(IConfigurationElement element) {
-		try {
-			IDifferenceGroupProvider provider = (IDifferenceGroupProvider)element
-					.createExecutableExtension(ATT_CLASS);
-			provider.setLabel(element.getAttribute(ATT_LABEL));
-			if (Boolean.valueOf(element.getAttribute(ATT_ACTIVE)).booleanValue()) {
-				provider.setDefaultSelected(true);
-			} else {
-				provider.setDefaultSelected(false);
-			}
-			IDifferenceGroupProvider previous = groupProviderRegistry.add(provider);
-			if (previous != null) {
-				log(IStatus.WARNING, element, "The group provider '" + provider.getClass().getName()
-						+ "' is registered twice.");
-			}
-		} catch (CoreException e) {
-			log(element, e);
-			return false;
+		IDifferenceGroupProvider.Descriptor providerDescriptor = new DifferenceGroupProviderDescriptorImpl(
+				element, element.getAttribute(ATT_LABEL), Boolean.valueOf(element.getAttribute(ATT_ACTIVE))
+						.booleanValue());
+		IDifferenceGroupProvider.Descriptor previous = groupProviderRegistry.add(providerDescriptor, element
+				.getAttribute(ATT_CLASS));
+		if (previous != null) {
+			log(IStatus.WARNING, element, "The group provider descriptor'" + element.getAttribute(ATT_CLASS)
+					+ "' is registered twice.");
 		}
 		return true;
 	}

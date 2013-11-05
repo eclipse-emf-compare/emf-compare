@@ -66,7 +66,7 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 
 	private AbstractRegistryEventListener groupProviderRegistryListener;
 
-	private IDifferenceGroupProvider.Registry groupProviderRegistry;
+	private IDifferenceGroupProvider.Descriptor.Registry groupProviderRegistry;
 
 	private AbstractRegistryEventListener filterRegistryListener;
 
@@ -190,7 +190,7 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	/**
 	 * @return the groupProviderRegistry
 	 */
-	public IDifferenceGroupProvider.Registry getDifferenceGroupProviderRegistry() {
+	public IDifferenceGroupProvider.Descriptor.Registry getDifferenceGroupProviderRegistry() {
 		return groupProviderRegistry;
 	}
 

@@ -13,7 +13,6 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Registry;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.jface.action.Action;
@@ -38,7 +37,7 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 	private final MenuManager menuManager;
 
 	/** The registry that will be used to retrieve the displayed group providers. */
-	private final Registry registry;
+	private final IDifferenceGroupProvider.Descriptor.Registry registry;
 
 	/**
 	 * Constructs our grouping menu.
@@ -51,7 +50,7 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 	 *            The default group provider.
 	 */
 	public GroupActionMenu(StructureMergeViewerGrouper structureMergeViewerGrouper,
-			IDifferenceGroupProvider.Registry registry) {
+			IDifferenceGroupProvider.Descriptor.Registry registry) {
 		super("", IAction.AS_DROP_DOWN_MENU); //$NON-NLS-1$
 		this.registry = registry;
 		this.menuManager = new MenuManager();

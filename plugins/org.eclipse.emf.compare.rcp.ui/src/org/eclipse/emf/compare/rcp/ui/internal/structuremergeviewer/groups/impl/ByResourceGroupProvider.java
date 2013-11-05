@@ -44,7 +44,7 @@ import org.eclipse.emf.edit.tree.TreeNode;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  * @since 3.0
  */
-public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider implements IDifferenceGroupProvider {
+public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 
 	/** A human-readable label for this group provider. This will be displayed in the EMF Compare UI. */
 	private String label;

@@ -122,48 +122,67 @@ public interface IDifferenceGroupProvider extends Adapter {
 	void dispose();
 
 	/**
-	 * A registry of {@link IDifferenceGroupProvider}.
+	 * A descriptor that can create adifference group provider. They are used as the values in a
+	 * {@link IDifferenceGroupProvider.Descriptor.Registry registry}.
+	 * 
+	 * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
 	 */
-	interface Registry {
+	interface Descriptor {
 
 		/**
-		 * Returns the list of {@link IDifferenceGroupProvider} contained in the registry.
+		 * Creates a group provider.
 		 * 
-		 * @param scope
-		 *            The scope on which the group providers will be applied.
-		 * @param comparison
-		 *            The comparison which is to be displayed in the structural view.
-		 * @return The list of {@link IDifferenceGroupProvider} contained in the registry.
+		 * @return the newly created group provider.
 		 */
-		Collection<IDifferenceGroupProvider> getGroupProviders(IComparisonScope scope, Comparison comparison);
-
-		IDifferenceGroupProvider getDefaultGroupProviders(IComparisonScope scope, Comparison comparison);
+		IDifferenceGroupProvider createGroupProvider();
 
 		/**
-		 * Add to the registry the given {@link IDifferenceGroupProvider}.
-		 * 
-		 * @param provider
-		 *            The given {@link IDifferenceGroupProvider}.
-		 * @return The previous value associated with the class name of the given
-		 *         {@link IDifferenceGroupProvider}, or null if there was no entry in the registry for the
-		 *         class name.
+		 * A registry of {@link IDifferenceGroupProvider}.
 		 */
-		IDifferenceGroupProvider add(IDifferenceGroupProvider provider);
+		interface Registry {
 
-		/**
-		 * Remove from the registry the {@link IDifferenceGroupProvider} designated by the given
-		 * {@link String} .
-		 * 
-		 * @param className
-		 *            The given {@link String} representing a {@link IDifferenceGroupProvider}.
-		 * @return The {@link IDifferenceGroupProvider} designated by the given {@link String}.
-		 */
-		IDifferenceGroupProvider remove(String className);
+			/**
+			 * Returns the list of {@link IDifferenceGroupProvider} contained in the registry.
+			 * 
+			 * @param scope
+			 *            The scope on which the group providers will be applied.
+			 * @param comparison
+			 *            The comparison which is to be displayed in the structural view.
+			 * @return The list of {@link IDifferenceGroupProvider} contained in the registry.
+			 */
+			Collection<IDifferenceGroupProvider> getGroupProviders(IComparisonScope scope,
+					Comparison comparison);
 
-		/**
-		 * Clear the registry.
-		 */
-		void clear();
+			IDifferenceGroupProvider getDefaultGroupProviders(IComparisonScope scope, Comparison comparison);
+
+			/**
+			 * Add to the registry the given {@link IDifferenceGroupProvider}.
+			 * 
+			 * @param provider
+			 *            The given {@link IDifferenceGroupProvider}.
+			 * @return The previous value associated with the class name of the given
+			 *         {@link IDifferenceGroupProvider}, or null if there was no entry in the registry for the
+			 *         class name.
+			 */
+			IDifferenceGroupProvider.Descriptor add(IDifferenceGroupProvider.Descriptor provider,
+					String className);
+
+			/**
+			 * Remove from the registry the {@link IDifferenceGroupProvider} designated by the given
+			 * {@link String} .
+			 * 
+			 * @param className
+			 *            The given {@link String} representing a {@link IDifferenceGroupProvider}.
+			 * @return The {@link IDifferenceGroupProvider} designated by the given {@link String}.
+			 */
+			IDifferenceGroupProvider.Descriptor remove(String className);
+
+			/**
+			 * Clear the registry.
+			 */
+			void clear();
+		}
+
 	}
 
 	/**

@@ -58,7 +58,7 @@ import org.eclipse.emf.edit.tree.TreeNode;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProvider implements IDifferenceGroupProvider {
+public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProvider {
 
 	/** A human-readable label for this group provider. This will be displayed in the EMF Compare UI. */
 	private String label;

@@ -28,7 +28,7 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class DefaultGroupProvider extends AbstractDifferenceGroupProvider implements IDifferenceGroupProvider {
+public class DefaultGroupProvider extends AbstractDifferenceGroupProvider {
 
 	/** The unique group provided by this provider. */
 	private IDifferenceGroup group;

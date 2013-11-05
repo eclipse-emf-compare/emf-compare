@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,12 +11,10 @@
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl;
 
 import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.indexOf;
 import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 
 import java.util.List;
@@ -25,33 +23,37 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Registry;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 
 /**
- * The default implementation of the {@link Registry}.
+ * The default implementation of the {@link IDifferenceGroupProvider.Descriptor.Registry}.
  */
-public class DifferenceGroupRegistryImpl implements Registry {
+public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Descriptor.Registry {
 
-	/** A map that associates the class name to theirs {@link IDifferenceGroupProvider}s. */
-	private final Map<String, IDifferenceGroupProvider> map;
+	/** A map that associates the class name to theirs {@link IDifferenceGroupProvider.Descriptor}s. */
+	private final Map<String, IDifferenceGroupProvider.Descriptor> map;
 
 	/**
 	 * Constructs the registry.
 	 */
 	public DifferenceGroupRegistryImpl() {
-		map = new ConcurrentHashMap<String, IDifferenceGroupProvider>();
+		map = new ConcurrentHashMap<String, IDifferenceGroupProvider.Descriptor>();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Registry#getGroupProviders(IComparisonScope,
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#getGroupProviders(IComparisonScope,
 	 *      Comparison)
 	 */
 	public List<IDifferenceGroupProvider> getGroupProviders(IComparisonScope scope, Comparison comparison) {
-		List<IDifferenceGroupProvider> providers = newArrayList(filter(map.values(),
-				isGroupProviderActivable(scope, comparison)));
+		List<IDifferenceGroupProvider> providers = newArrayList();
+		for (IDifferenceGroupProvider.Descriptor desc : map.values()) {
+			IDifferenceGroupProvider groupProvider = desc.createGroupProvider();
+			if (isGroupProviderActivable(groupProvider, scope, comparison)) {
+				providers.add(groupProvider);
+			}
+		}
 		int indexOfDefault = indexOf(providers, instanceOf(DefaultGroupProvider.class));
 		if (indexOfDefault >= 0) {
 			IDifferenceGroupProvider defaultGroupProvider = providers.remove(indexOfDefault);
@@ -63,7 +65,7 @@ public class DifferenceGroupRegistryImpl implements Registry {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Registry#getDefaultGroupProviders(org.eclipse.emf.compare.scope.IComparisonScope,
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#getDefaultGroupProviders(org.eclipse.emf.compare.scope.IComparisonScope,
 	 *      org.eclipse.emf.compare.Comparison)
 	 */
 	public IDifferenceGroupProvider getDefaultGroupProviders(IComparisonScope scope, Comparison comparison) {
@@ -79,53 +81,44 @@ public class DifferenceGroupRegistryImpl implements Registry {
 	}
 
 	/**
-	 * Returns a predicate that represents the activation condition based on the scope and comparison objects.
+	 * Checks if the given IDifferenceGroupProvider is activable based on the scope and comparison objects.
 	 * 
 	 * @param scope
 	 *            The scope on which the group provider will be applied.
 	 * @param comparison
 	 *            The comparison which is to be displayed in the structural view.
-	 * @return A predicate that represents the activation condition based on the scope and comparison objects.
+	 * @return true, if it is activable, false otherwise.
 	 */
-	static final Predicate<IDifferenceGroupProvider> isGroupProviderActivable(final IComparisonScope scope,
-			final Comparison comparison) {
-		return new Predicate<IDifferenceGroupProvider>() {
-			/**
-			 * {@inheritDoc}
-			 * 
-			 * @see com.google.common.base.Predicate#apply(java.lang.Object)
-			 */
-			public boolean apply(IDifferenceGroupProvider d) {
-				return d.isEnabled(scope, comparison);
-			}
-		};
+	static final boolean isGroupProviderActivable(final IDifferenceGroupProvider dgp,
+			final IComparisonScope scope, final Comparison comparison) {
+		return dgp.isEnabled(scope, comparison);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Registry#add
-	 *      (org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider)
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#add
+	 *      (org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor)
 	 */
-	public IDifferenceGroupProvider add(IDifferenceGroupProvider provider) {
-		Preconditions.checkNotNull(provider);
-		return map.put(provider.getClass().getName(), provider);
+	public IDifferenceGroupProvider.Descriptor add(IDifferenceGroupProvider.Descriptor providerDescriptor,
+			String className) {
+		Preconditions.checkNotNull(providerDescriptor);
+		return map.put(className, providerDescriptor);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Registry#remove(java.lang.String)
-	 *      )
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#remove(java.lang.String)
 	 */
-	public IDifferenceGroupProvider remove(String className) {
+	public IDifferenceGroupProvider.Descriptor remove(String className) {
 		return map.remove(className);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Registry#clear()
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#clear()
 	 */
 	public void clear() {
 		map.clear();

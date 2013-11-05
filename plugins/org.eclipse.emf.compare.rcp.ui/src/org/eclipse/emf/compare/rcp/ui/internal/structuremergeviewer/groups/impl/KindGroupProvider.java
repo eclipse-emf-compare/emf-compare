@@ -31,7 +31,7 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  * @since 3.0
  */
-public class KindGroupProvider extends AbstractDifferenceGroupProvider implements IDifferenceGroupProvider {
+public class KindGroupProvider extends AbstractDifferenceGroupProvider {
 
 	/** A human-readable label for this group provider. This will be displayed in the EMF Compare UI. */
 	private String label;

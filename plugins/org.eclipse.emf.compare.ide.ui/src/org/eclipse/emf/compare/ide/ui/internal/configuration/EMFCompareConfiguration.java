@@ -198,7 +198,8 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	protected void initStructureMergeViewerGroupProvider(Comparison comparison,
 			IComparisonScope comparisonScope) {
 		EMFCompareRCPUIPlugin plugin = EMFCompareRCPUIPlugin.getDefault();
-		IDifferenceGroupProvider.Registry groupProviderRegistry = plugin.getDifferenceGroupProviderRegistry();
+		IDifferenceGroupProvider.Descriptor.Registry groupProviderRegistry = plugin
+				.getDifferenceGroupProviderRegistry();
 		getStructureMergeViewerGrouper().setProvider(
 				groupProviderRegistry.getDefaultGroupProviders(comparisonScope, comparison));
 	}
