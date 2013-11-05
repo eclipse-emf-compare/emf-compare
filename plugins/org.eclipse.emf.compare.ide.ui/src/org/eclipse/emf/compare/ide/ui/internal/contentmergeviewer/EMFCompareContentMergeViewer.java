@@ -65,6 +65,8 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
@@ -140,6 +142,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 		editingDomainChange(null, getCompareConfiguration().getEditingDomain());
 		getCompareConfiguration().getEventBus().register(this);
+
 	}
 
 	@Subscribe
@@ -296,6 +299,16 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		fRight.addSelectionChangedListener(this);
 
 		fColors = new EMFCompareColor(this, null, getCompareConfiguration());
+
+		composite.addControlListener(new ControlListener() {
+			public void controlResized(ControlEvent e) {
+				redrawCenterControl();
+			}
+
+			public void controlMoved(ControlEvent e) {
+				// Do nothing.
+			}
+		});
 	}
 
 	/**

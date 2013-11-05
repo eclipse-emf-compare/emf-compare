@@ -238,12 +238,12 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 				return super.getColumnImage(object, columnIndex);
 			}
 		});
+
 		ret.getStructuredViewer().getTable().getVerticalBar().addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				redrawCenterControl();
 			}
 		});
-
 		ret.getStructuredViewer().getTable().addMouseWheelListener(new MouseWheelListener() {
 			public void mouseScrolled(MouseEvent e) {
 				redrawCenterControl();
@@ -254,6 +254,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 				redrawCenterControl();
 			}
 		});
+
 		return ret;
 	}
 
