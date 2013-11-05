@@ -177,8 +177,10 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 			Resource eResource = leftEObject.eResource();
 			if (eResource != null) {
 				ResourceSet resourceSet = eResource.getResourceSet();
-				saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
-						Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
+				if (resourceSet != null) {
+					saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
+				}
 			}
 		}
 	}
@@ -240,8 +242,10 @@ public class TreeContentMergeViewerContentProvider implements IMergeViewerConten
 			Resource eResource = rightEObject.eResource();
 			if (eResource != null) {
 				ResourceSet resourceSet = eResource.getResourceSet();
-				saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
-						Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
+				if (resourceSet != null) {
+					saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
+				}
 			}
 		}
 	}
