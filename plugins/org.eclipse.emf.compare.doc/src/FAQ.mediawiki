@@ -1,0 +1,151 @@
+= FAQs =
+
+These FAQs will be aimed at EMF Compare 2 and subsequent versions. Since this version largely differs from the previous 1.* stream, answers related to version 1 cannot apply in most case.
+
+=== Users FAQ ===
+
+==== Which files should be compared via EMF Compare ? ====
+
+'''Q''' : My model is compared as a text-file, how can EMF compare know the files it should handle ?
+
+'''A''' : EMF Compare will be triggered for any files that is recognized as an EMF model. There is no specific content-type for EMF Compare; any content-type that has the ecore XMI type as its base will be recognized as a file which comparison should be done with EMF Compare.
+
+You may add your own extension using the <tt>Preferences view / General / Content-types</tt> and adding your file extension in the "XMI" content-type. 
+
+[[Image:images/EMF_Compare_XMI_Content_Type.png]]
+
+==== How to force text comparison? ====
+
+'''Q''' : uml, ecore and emfdiff models are "locked" as model files in the aforementioned "EMF Compare" content-type. I want to compare two uml files as text, is there a way to do so?
+
+'''A''' : There is no way to '''force''' textual comparison of EMF files. You can, however, switch back to a plain text comparison through the drop-down menu that is diplayed between the two halves of the compare editor :
+
+[[Image:images/EMF_Compare_Text_Comparison.png]]
+
+==== EMF Compare compatibility ? ====
+
+'''Q''' : Which Java/Eclipse versions can EMF Compare run on?
+
+'''A''' : EMF Compare is built against JDK 1.5 and makes use of the features it introduced such as foreach and generics. It is therefore incompatible with a JDK < 1.5. EMF Compare can also be used with both JDK 1.6 and JDK 1.7.
+
+We strive to keep the [[./../overview/Overview.html#Compatibility|compatibility chart]] updated so that you can determine which version of EMF Compare can be used in conjunction with your Eclipse of choice.
+
+==== Where can I find EMF Compare ? ====
+
+'''Q''' : Where can I download the latest version of EMF Compare?
+
+'''A''' : The [[./../user/Getting%20Started.html#Installing EMF Compare|Installation instruction]] present a set of update sites useable to install.
+The [http://www.eclipse.org/emf/compare/downloads/ Download page] lists more specific update sites if you wish to try one of the latest integration builds.
+
+== Developers FAQ ==
+
+=== How can I programmatically add my model file extension in EMF Compare so that it is called automatically ? ===
+
+'''Q''' : How can I programatically add my model file extension to EMF Compare so that it is called automatically ? 
+
+'''A''' : You can do so using the exore XMI content-type, here is a sample from a plugin.xml:
+
+<source lang="xml">
+<extension
+    point="org.eclipse.core.contenttype.contentTypes">
+  <file-association
+      content-type="org.eclipse.emf.ecore.xmi"
+      file-extensions="uml"
+      file-names="*"/>
+</extension>
+</source>
+
+=== How can I use EMF Compare programmatically ? ===
+
+'''Q''' : How can I use EMF Compare programmatically, to compare either files or "in-memory" objects?
+
+'''A''' : Many samples of how to compare objects can be found within [http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare.tests the unit tests of EMF Compare] (see also [[EMF_Compare/Contributor_Guide#Checking_out_the_code|how to checkout the source code]]). Here is a sample that should cover the basic use case (the class with this method should have a dependency towards the ''org.eclipse.emf.compare'' plugin) :
+
+<source lang="java">
+public void compare(File model1, File model2) {
+	URI uri1 = URI.createFileURI("path/to/first/model.xmi");
+	URI uri2 = URI.createFileURI("path/to/second/model.xmi");
+
+	Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
+
+	ResourceSet resourceSet1 = new ResourceSetImpl();
+	ResourceSet resourceSet2 = new ResourceSetImpl();
+
+	resourceSet1.getResource(uri1, true);
+	resourceSet2.getResource(uri2, true);
+
+	IComparisonScope scope = new DefaultComparisonScope(resourceSet1, resourceSet2);
+	Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+	List<Diff> differences = comparison.getDifferences();
+	// Let's merge every single diff
+	IMerger.Registry mergerRegistry = new IMerger.RegistryImpl();
+	IBatchMerger merger = new BatchMerger(mergerRegistry);
+	merger.copyAllLeftToRight(differences, new BasicMonitor());
+}
+</source>
+
+=== Can EMF Compare be used standalone ? ===
+
+'''Q''' : Is EMF Compare able to compare "in-memory" objects, and can it be run without Eclipse ?
+
+'''A''': Yes, the core of EMF Compare is developed primarily for standalone, the integration with Eclipse being built on top of that. All of the classes and utilities located in the ''org.eclipse.emf.compare'' plugin are pure Java with no dependency towards Eclipse, and can thus safely be used within a Java application running outside of Eclipse.
+
+The following is the minimal set of dependencies you will need for EMF Compare.
+
+ * org.eclipse.emf.common 2.5 or higher
+ * org.eclipse.emf.ecore 2.5 or higher
+ * org.eclipse.emf.ecore.xmi 2.5 or higher
+ * org.eclipse.emf.compare 2.0 or higher
+ * com.google.guava 11.0 (EMF Compare should also be compatible with Guava 12, 13 and 14 as far as we tested our integration)
+
+=== Custom data types are always marked as modified by EMF Compare ===
+
+'''Q''' : A model based on a custom meta-model always shows elements of a custom data type as being changed. How can I have EMF Compare behave correctly?
+
+'''A''' : The differencing process of EMF Compare is based on equality helpers. For data types, this depends upon the return value of these data types' ''equals(Object)'' method. It will thus fail to determine whether two objects match if their ''equals(Object)'' methods has not been overriden in the custom data type's instance class. Remember to also override ''hashCode()'' when overriding ''equals(Object)''. A Typical example of this is [https://bugs.eclipse.org/bugs/show_bug.cgi?id=226152 bug 226152].
+
+Another way around this problem would be to contribute your own equality helper to EMF Compare so that it knows how to compare these kind of data types. That could be done through the EMFCompare builder :
+
+<source lang="java">
+IEqualityHelperFactory helperFactory = new DefaultEqualityHelperFactory() {
+	@Override
+	public org.eclipse.emf.compare.utils.IEqualityHelper createEqualityHelper() {
+		final Cache<EObject, URI> cache = EqualityHelper.createDefaultCache(getCacheBuilder());
+		return new EqualityHelper(cache) {
+			@Override
+			public boolean matchingValues(Object object1, Object object2) {
+				if (object1 instanceof MyDataType && object2 instanceof MyDataType) {
+					// custom code
+				}
+				return super.matchingValues(object1, object2);
+			}
+		};
+	}
+};
+IComparisonFactory comparisonFactory = new DefaultComparisonFactory(helperFactory);
+Comparison comparison = EMFCompare.builder().setMatchEngine(new DefaultMatchEngine(DefaultMatchEngine
+		.createDefaultEObjectMatcher(UseIdentifiers.WHEN_AVAILABLE), comparisonFactory)).build().compare(scope);
+</source>
+
+=== Can I programmatically open a comparison editor or dialog ? ===
+
+'''Q''' : I need to call EMF Compare programmatically from within my own plugin, but I'd like to be able to show my users a comparison editor. Is there a way?
+
+'''A''' : Since EMF Compare 2.1.0M4, there is. As the answer to this question is a little complex, it deserves [[./../developer/How%20To%20Open%20Compare%20Dialog%20With%20Comparison.html|its own page]].
+
+=== Can I use custom identifiers for my objects ? ===
+
+'''Q''' : I have my own custom elements, and I'd like to tell EMF Compare what to use to uniquely identify them. For example, their name.
+
+'''A''' : EMF Compare internally uses a function in order to compute the identifier of an EObject. You can override this function with your own, or compose your own with it so that EMF Compare will use your function for your elements, and fall back to the default behavior for any other element it needs to match.
+
+How to do this is outlined on the [[./../developer/Default%20Behavior%20and%20Extensibility.html#Defining custom identifiers|Developer Guide]].
+
+=== Can I ignore differences on a specific reference, or ignore ordering differences ? ===
+
+'''Q''' : I want to ignore all differences on a given structural feature, can I tell EMF Compare not to look at these features?<br/>
+'''Q''' : EMF Compare detects many ''ordering'' differences on my models, but I do not care about them. Is there a way to ignore all ordering changes?
+
+'''A''' : You can override the ''FeatureFilter'' to tell EMF Compare that some references should be ignored, there is an example doing just that in the [[./../developer/Default%20Behavior%20and%20Extensibility.html##Changing the FeatureFilter|Developer Guide]].
+

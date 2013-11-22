@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.jgit-3.2.0.201312181205-r.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.mylyn.wikitext.core_1.9.0.20131007-2055.jar" sourcepath="lib/org.eclipse.mylyn.wikitext.core.source_1.9.0.20131007-2055.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.mylyn.wikitext.mediawiki.core_1.9.0.20131007-2055.jar" sourcepath="lib/org.eclipse.mylyn.wikitext.mediawiki.core.source_1.9.0.20131007-2055.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

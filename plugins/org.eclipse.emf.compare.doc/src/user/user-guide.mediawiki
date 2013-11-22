@@ -1,0 +1,348 @@
+= User Guide =
+
+== Getting Started ==
+
+=== Installing EMF Compare ===
+
+'''Marketplace Client''' 
+
+Using the bundled Eclipse marketplace client you can install EMF Compare in one click. Just type "emf compare", click on search, and then on install. 
+
+[[Image:images/Marketplace.png]] 
+
+'''Update Site'''
+
+EMF has been part of the Eclipse release train since Galileo, you can install it using the following update sites, depending on your platform. '''Note''' that the following are not meant to be visited in your internet browser; they must be pasted in the ''Help > Install New Software'' dialog of your Eclipse, as p2 repositories.
+
+  http://download.eclipse.org/releases/juno
+  http://download.eclipse.org/releases/indigo
+  http://download.eclipse.org/releases/helios
+  http://download.eclipse.org/releases/galileo
+
+The [http://www.eclipse.org/emf/compare/downloads/ Download page] lists more specific update sites if you wish to try one of the latest integration builds.
+
+'''Compatibility'''
+
+Please note that the EMF Compare development team does its best to maintain downward compatibility towards Galileo (Eclipse 3.5). Following is the compatibility chart : 
+
+{| border="1"
+|-
+! EMF Compare 
+! bgcolor="#cccccc" align="center" | Eclipse 4.3 - EMF 2.9
+! align="center" | Eclipse 4.2 - EMF 2.8
+! align="center" | Eclipse 3.8 - EMF 2.8 
+! align="center" | Eclipse 3.7 - EMF 2.7 
+! align="center" | Eclipse 3.6 - EMF 2.6 
+! align="center" | Eclipse 3.5 - EMF 2.5 
+! align="center" | Eclipse 3.4 - EMF 2.4
+! align="center" | Eclipse 3.3 - EMF 2.3
+! align="center" | Eclipse 3.2 - EMF 2.2 
+|-
+| bgcolor="#cccccc" align="center" | 2.1
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+|-
+| align="center" | 2.0
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+|-
+| align="center" | 1.3
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+|-
+| align="center" | 1.2 
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+|-
+| align="center" | 1.1 
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+|-
+| align="center" | 1.0 
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#ffffff" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+|}
+
+An empty cell indicates that the compatibility hasn't been tested for a particular combination.
+
+=== User Interface Breakdown ===
+
+The main points of interest are highlighted in the following picture :
+
+[[Image:images/CompareUI.png|center|EMF Compare's basic user interface]]
+
+# Overview of the differences detected between the given two (or three) models.
+# First version of the compared models.
+# Second version of the compared models.
+# This button will only be visible in the case of three-way comparisons (for example, comparing with a remote repository). It will make a third version of the compared model (the common ancestor of the two others) visible in the interface.
+# This button will allow you to group differences together in the structural view. For example, grouping all "Additions" or "Deletions" together.
+# This button will allow you to filter some differences out of the view according to a set predicate. For example, filtering out all "Additions" or "Moves".
+# Allows you to merge all non conflicting differences (left to right, or right to left) at once.
+# Allows you to merge the single, currently selected difference in a given direction (left to right, or right to left).
+# Allows you to navigate through the detected differences.
+
+=== Usage ===
+
+Once installed, you can compare your files (locally or from any Version Control System) as usual using the '''compare with''' menu.
+
+[[Image:images/EMFC_Compare_With.png|center]]
+
+The following displays the important part of a model life cycle with regards to the comparison. The full life cycle can be followed on [[./Sample%20Use%20Case.html| Sample Use Case]]
+
+==== Compare with latest ====
+
+For this test, we'll suppose that you are trying to use EMF Compare on UML models shared under git. This will not go in details about UML and Git. We'll assume that you know how to manipulate an UML model, create or clone a git repository, share a project under it and use standard Git operations.
+
+The name of our sample project will be "library". It contains a single folder "model" containing two models :
+* library_Types.uml will contain our primitive types,
+* library.uml will contain our actual model.
+
+The model itself is a very simple library. Graphically speaking :
+
+[[Image:images/EMF_Compare_Use_Model.png]]
+
+We commit this initial file as the original model. We then slightly modify it so that it now looks like :
+
+[[Image:images/EMF_Compare_Use_Model_Changed.png]]
+
+But how do we know exactly what changed? Let's compare this with the file from the Git Index :
+
+[[Image:images/EMF_Compare_Use_Compare_1.png]]
+
+This will open a comparison editor that initially displays empty panels on its bottom half. Let's select one of the differences displayed on its top half :
+
+[[Image:images/EMF_Compare_Use_Compare_3.png]]
+
+# We've selected the difference corresponding to the addition of attribute '''alias''' in the class '''Writer'''. A double-click on this difference updated our two panes below.
+# '''alias''' has been added to the properties of Class '''Writer'''. In the model, this corresponds to a change to the reference ''ownedAttributes'' of the ''Writer'' Class. This sub-panel indicates the actual reference that was changed in oder to remind us of the context.
+# This displays all values of the reference outlined in (2) as they are in the ''left'' model. This is where we see the new value, '''alias''' outlined.
+# As for (2), this will display the context of the selected difference. The same reference will usually be displayed in both (2) and (4).
+# This panel displays all values of the reference outlined in (4) as they are in the ''right'' model. In here, we see the location of '''alias''' outlined as an empty space. This rectangle is where the new value will be added if we merge it... Though in this case, it is not possible to merge towards the ''right'' : it is a version located on a repository and is thus non-editable.
+
+This is useful in order to determine exactly what changed in our version, but serves no other purpose : merging changes here would only mean reverting back our modifications to the "clean" state from the repository. Let's commit our changes on the ''master'' branch.
+
+==== Compare two differing branches ====
+
+After that, our model can evolve, and evolve separately in multiple branches. Let's consider the case where we would have a ''master'' branch differing from a ''borrowables'' branch such as the two look like this (the branching point was the model we've already displayed above) :
+
+{| border="1" cellpadding="5" cellspacing="0" align="center"
+|-
+! align="center" | Master
+! align="center" | Borrowables
+|-
+| [[Image:images/EMF_Compare_Use_Compare_Master.png|center]]
+| [[Image:images/EMF_Compare_Use_Compare_5.png|center]]
+|}
+
+Before we continue working on our Borrowables branch, we'd like to retrieve all modifications that have been pushed to master. With the "Borrowables" branch checked out, we'll use the ''Compare With > Branch, Tag or Reference'' action :
+
+[[Image:images/EMF_Compare_Use_Compare_With_Master_1.png|center]]
+
+and compare with master :
+
+[[Image:images/EMF_Compare_Use_Compare_With_Master_2.png|center]]
+
+This shows us all differences between our local copy and the master branch that were made since the 'branching' point.
+
+[[Image:images/EMF_Compare_Merge.png|center]]
+
+Same as previously, you can navigate through the differences via the top panel, the structural view. There are three main kind of elements displayed here. '''Regular''' elements, that mimic the containment tree of your input models, are there to separate the various differences and let you know where they were actually detected. Then there are '''incoming''' differences, decorated with a blue arrow ([[Image:images/EMF_Compare_Incoming_Change.gif]]) or a derived icon, and '''outgoing''' differences decorated with a green arrow ([[Image:images/EMF_Compare_Outgoing_Change.gif]]) or a derived icon.
+
+'''Incoming''' differences are changes that were made in the remote branch (here, ''master'') since the branching point (common ancestor).
+'''Outgoing''' differences are changes taht were made in the local copy (here, the ''borrowables'' branch) since the branching point.
+
+There are no conflicts here, since UML uses computed identifiers (XMI ID) for the model elements. Thus, what looks like a conflict (the "Date" type that's been added on both branch in the types packages) is actually two distinct differences.
+
+The interface also lets you display the common ancestor of both models through the [[Image:images/EMF_Compare_Ancestor.gif]] icon. For example, if we select the '''Book''' class, we can see how it looks like on all three versions :
+
+[[Image:images/EMF_Compare_Merge_Book_Ancestor.png|center]]
+
+You can navigate through the differences using the appropriate actions, either the previous ([[Image:images/EMF_Compare_Prev_Diff.gif]]) or the next ([[Image:images/EMF_Compare_Next_Diff.gif]]) difference.
+
+The remaining two actions are those that actually interest us here we can either merge all non-conflicting differences to the local copy through [[Image:images/EMF_Compare_Copy_All.gif]] or merge them one after the other through [[Image:images/EMF_Compare_Copy.gif]].
+
+Merging '''all''' differences is not what we seek : we want to keep the changes we made locally, not revert them to the state they had before the branching point (which is their current state on ''master'', the right side). We will then select all ''incoming'' differences one after the other and merge them one by one. This gives us our merged model :
+
+[[Image:images/EMF_Compare_Merged.png|center]]
+
+Notice that ''merged'' differences are displayed in ''italics'' and have a distinct icon. All that's left is to save, our model now contains both our local changes and the changes that were made on master.
+
+== Features ==
+
+=== Handling Conflicts  ===
+
+PENDING
+
+=== Grouping Differences  ===
+
+This feature allows you to group differences together in the structural view according to a set predicate. By default, EMF Compare provides three distinct grouping strategies :
+
+[[Image:images/EMF_Compare_Groups_Choice.png]]
+
+; Default : Do not try and group differences together, display them as they were detected.
+
+[[Image:images/EMF_Compare_Groups_Default.png]]
+
+; By Kind : Group differences by their kind (''additions'', ''deletions'', ''moves'', ''changes'').
+
+[[Image:images/EMF_Compare_Groups_Kind.png]]
+
+; By Side : Group differences according to their side: left or right and a special group regrouping differences in conflicts with other differences together.
+
+[[Image:images/EMF_Compare_Groups_Side.png]]
+
+PENDING UPDATE, this is a demo displaying EMF Compare 1.3
+[http://www.eclipse.org/emf/compare/doc/features/videos/Groups/groups.htm Demo]
+
+PENDING : New grouping strategies can be provided to EMF Compare through extension points.
+
+=== Filtering Differences  ===
+
+This features allows you to filter differences out of the structural view according to a set predicate. By default, EMF Compare provides five distinct filters :
+
+[[Image:images/EMF_Compare_Filters_Choice.png]]
+
+; Pseudo conflicts differences : Filter out all pseudo conflicts differences(only in 3-way comparison). Enabled by default.
+; Identical elements : Filter out all identical elements (elements with no differences). Enabled by default.
+; Empty Resource Mappings : Filter out all resource mappings with no differences from the view. Enabled by default.
+; Cascading differences : Filter out all differences that are contained under differences (except when in conflict). Enabled by default.
+
+PENDING UPDATE, this is a demo displaying EMF Compare 1.3
+[http://www.eclipse.org/emf/compare/doc/features/videos/Filters/filters.htm Demo]
+
+PENDING : New filters can be provided to EMF Compare through extension points.
+
+=== Text Attribute Comparison  ===
+
+Differences made into ''String''-typed attributes can be compared and merged directly as text from the compare interface through a simple right-click on the difference.
+
+[[Image:images/EMF_Compare_Text_Compare.png]]
+
+PENDING UPDATE, this demo displays EMF Compare 1.3
+[http://www.eclipse.org/emf/compare/doc/features/videos/Text%20compare/textCompare.htm Demo]
+
+=== Graphical Comparison  ===
+
+PENDING UPDATE
+
+Since the 1.2 release EMF compare provides the ability to compare models with graphical modelers. 
+
+Have a look on the following demos :
+
+[[http://www.eclipse.org/emf/compare/doc/features/videos/EcoreTools-v2/EMFCompareEcoreTools.html | Demo : Comparing Ecore files with diagrams]] 
+
+[[http://www.eclipse.org/emf/compare/doc/features/videos/Papyrus/EMFComparePapyrus.html | Demo : Comparing UML files with diagrams]] 
+
+[[Image:images/Diag_comp_diff.png]]
+
+=== Logical Model  ===
+
+EMF Compare does not act simply on the selected files, but on their whole logical model (a given model can be split through multiple files through EMF ''control'' action). Thanks to that, if you try and compare a model file that reference other model files, the comparison will still be able to take these "other" files into account. For example, if you try and compare a ''genmodel'' file (that depends on its underlying ''ecore'' file) :
+
+[[Image:images/EMF_Compare_Logical_Compare_Action.png]]
+
+EMF Compare will actually consider both files when comparing :
+
+[[Image:images/EMF_Compare_Logical_Compare_Result.png]]
+
+PENDING UPDATE
+[http://www.eclipse.org/emf/compare/doc/features/videos/LogicalModels/LogicalModels.html Demo]
+
+=== UML Specialization  ===
+
+PENDING
+
+[[http://www.eclipse.org/emf/compare/doc/features/videos/UML%20comparison/compareUml.htm | Demo : Specific support to encapsulate profiles and stereotypes diffs]]
+
+== Known Bugs and Limitations ==
+
+=== Project names and location ===
+
+'''Project names should match their location'''
+
+==== Cause ====
+
+If you need to compare models that:
+* reference another model in the same project (or another project which also meets the following point), and
+* are located in a project which name (as seen in their '.project' file) does not match their containing folder's name (case sensitive).
+
+Due to [https://bugs.eclipse.org/bugs/show_bug.cgi?id=354801 Bug 354801], we cannot properly support models that are located in Eclipse projects which identifier is distinct from their containing folder, case included. For example, if you have a project named ''EcoreModels'', it '''must''' be contained in a folder named ''EcoreModels''. Any other name, even if changing only the case, such as ''ecoreModels'', will cause issues when comparing fragmented models (or any model which references another).
+
+Note that this only applies to comparisons launched from within Eclipse, which would trigger the opening of the EMF Compare user interface.
+
+==== Observed Symptoms ====
+
+Symptoms vary, but they often include a NullPointerException somewhere in EMFSynchronizationModel such as :
+
+ Caused by: java.lang.NullPointerException
+ at org.eclipse.emf.compare.ide.ui.logical.RevisionedURIConverter.<init>(RevisionedURIConverter.java:108)
+ at org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel.resolveTraversal(EMFSynchronizationModel.java:464)
+ at org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel.createSynchronizationModel(EMFSynchronizationModel.java:165)
+ at org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewer.compareInputChanged(EMFCompareStructureMergeViewer.java:258)
+
+=== Models out of the workspace ===
+
+'''The models should be imported within the workspace'''
+
+==== Cause ====
+
+Trying to compare models that are not present in the current Eclipse workspace from either the ''Git repositories'' perspective, or from the ''Git Staging'' view.
+
+Note that this only applies to comparisons launched from within Eclipse, which would trigger the opening of the EMF Compare user interface.
+
+==== Observed Symptoms ====
+
+Symptoms are mostly the same here as they would be with the limitation mentionned above regarding project names, and they usually include the same NullPointerException:
+
+ Caused by: java.lang.NullPointerException
+ at org.eclipse.emf.compare.ide.ui.logical.RevisionedURIConverter.<init>(RevisionedURIConverter.java:108)
+ at org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel.resolveTraversal(EMFSynchronizationModel.java:464)
+ at org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel.createSynchronizationModel(EMFSynchronizationModel.java:165)
+ at org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewer.compareInputChanged(EMFCompareStructureMergeViewer.java:258)
+
+== Other Materials ==
+
+*[http://www.eclipse.org/emf/compare/doc/features/videos/index.html Videos of 2011 new features]
+ 

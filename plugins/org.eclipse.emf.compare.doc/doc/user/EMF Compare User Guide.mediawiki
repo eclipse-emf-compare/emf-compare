@@ -1,7 +1,0 @@
-= EMF Compare User Guide =
-
-You will find the following sections:
-* [[Getting%20Started.html | Getting Started]] explains how to install EMF Compare and use the simple UI to your models.
-* [[Features.html | Features]] shows all the common features of EMF Compare.
-* [[Known%20bugs%20and%20limitations.html | Known bugs and limitations]] 
-* [[Other%20materials.html | Other materials]]
