@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<setup:Project setup:toolVersion="1" xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:setup="http://www.eclipse.org/CDO/releng/setup/1.0" name="EMF.Compare" label="EMF Compare">
+  <setupTasks xsi:type="setup:ContextVariableTask" name="git.user.id"/>
+  <branches name="master">
+    <setupTasks xsi:type="setup:P2Task">
+      <installableUnits id="org.eclipse.buckminster.core.headless.feature.feature.group"/>
+      <installableUnits id="org.eclipse.buckminster.pde.headless.feature.feature.group"/>
+      <installableUnits id="org.eclipse.buckminster.git.headless.feature.feature.group"/>
+      <installableUnits id="org.eclipse.buckminster.mspec"/>
+      <installableUnits id="org.eclipse.buckminster.rmap"/>
+      <p2Repositories url="http://download.eclipse.org/tools/buckminster/headless-4.3"/>
+      <p2Repositories url="http://download.eclipse.org/tools/buckminster/updates-4.3"/>
+    </setupTasks>
+    <setupTasks xsi:type="setup:P2Task">
+      <installableUnits id="org.eclipse.egit.feature.group"/>
+      <p2Repositories url="${train.url}"/>
+    </setupTasks>
+    <setupTasks xsi:type="setup:GitCloneTask" requirements="//@branches[name='master']/@setupTasks.1" location="${setup.branch.dir/git/org.eclipse.emf.compare.git}" remoteURI="ssh://git.eclipse.org:29418/emfcompare/org.eclipse.emf.compare.git" checkoutBranch="master"/>
+    <setupTasks xsi:type="setup:MaterializationTask" documentation="Generated from /Users/mbarbero/git/emf.compare/packaging/org.eclipse.emf.compare-feature/targetPlatforms/luna-sdk.target">
+      <rootComponents name="com.google.guava" type="osgi.bundle" versionRange="11.0.2.v201303041551"/>
+      <rootComponents name="javaewah" type="osgi.bundle" versionRange="0.5.6.v201307211000"/>
+      <rootComponents name="org.apache.commons.compress" type="osgi.bundle" versionRange="1.4.1.v201301140946"/>
+      <rootComponents name="org.apache.commons.logging" type="osgi.bundle" versionRange="1.1.1.v201101211721"/>
+      <rootComponents name="org.eclipse.egit.feature.group" versionRange="3.1.0.201310021548-r"/>
+      <rootComponents name="org.eclipse.emf.compare"/>
+      <rootComponents name="org.eclipse.emf.compare.diagram.ecoretools"/>
+      <rootComponents name="org.eclipse.emf.compare.diagram.ecoretools.tests" type="osgi.bundle"/>
+      <rootComponents name="org.eclipse.emf.compare.diagram.gmf"/>
+      <rootComponents name="org.eclipse.emf.compare.diagram.ide.ecoretools.tests" type="osgi.bundle"/>
+      <rootComponents name="org.eclipse.emf.compare.diagram.papyrus"/>
+      <rootComponents name="org.eclipse.emf.compare.diagram.papyrus.tests" type="osgi.bundle"/>
+      <rootComponents name="org.eclipse.emf.compare.ide.tests" type="osgi.bundle"/>
+      <rootComponents name="org.eclipse.emf.compare.ide.ui"/>
+      <rootComponents name="org.eclipse.emf.compare.ide.ui.tests" type="osgi.bundle"/>
+      <rootComponents name="org.eclipse.emf.compare.rcp.ui"/>
+      <rootComponents name="org.eclipse.emf.compare.rcp.ui.tests" type="osgi.bundle"/>
+      <rootComponents name="org.eclipse.emf.compare.tests" type="osgi.bundle"/>
+      <rootComponents name="org.eclipse.emf.compare.uml2"/>
+      <rootComponents name="org.eclipse.emf.compare.uml2.tests" type="osgi.bundle"/>
+      <rootComponents name="org.eclipse.emf.compare.update" type="unknown"/>
+      <rootComponents name="org.eclipse.emf.ecoretools.sdk.feature.group" versionRange="1.2.0.201306071421"/>
+      <rootComponents name="org.eclipse.emf.emfstore.fuzzy.feature.feature.group" versionRange="0.9.3.M5"/>
+      <rootComponents name="org.eclipse.emf.emfstore.modelmutator.feature.feature.group" versionRange="0.9.3.M5"/>
+      <rootComponents name="org.eclipse.emf.sdk.feature.group" versionRange="2.10.0.v20130930-0510"/>
+      <rootComponents name="org.eclipse.gmf.runtime.sdk.feature.group" versionRange="1.7.0.201306111432"/>
+      <rootComponents name="org.eclipse.papyrus.sdk.feature.feature.group" versionRange="0.10.1.v201310020936"/>
+      <rootComponents name="org.eclipse.sdk.ide" type="osgi.bundle" versionRange="4.4.0.I20130918-2000"/>
+      <rootComponents name="org.eclipse.uml2.sdk.feature.group" versionRange="4.2.0.v20130930-1000"/>
+      <rootComponents name="org.junit4" type="osgi.bundle" versionRange="4.8.1.v20100525"/>
+      <rootComponents name="org.kohsuke.args4j" type="osgi.bundle" versionRange="2.0.21.v201301150030"/>
+      <sourceLocators xsi:type="setup:AutomaticSourceLocator" rootFolder="${setup.branch.dir/git/org.eclipse.emf.compare.git}"/>
+      <p2Repositories url="http://download.eclipse.org/emf-store/milestones/archive/0.9.3.M5"/>
+      <p2Repositories url="http://download.eclipse.org/releases/helios"/>
+      <p2Repositories url="http://download.eclipse.org/tools/orbit/downloads/drops/S20131024145017/repository/"/>
+      <p2Repositories url="http://download.eclipse.org/releases/luna/201310040900"/>
+    </setupTasks>
+  </branches>
+</setup:Project>
