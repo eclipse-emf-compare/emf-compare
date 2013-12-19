@@ -369,7 +369,7 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 	public interface DistanceFunction {
 		/**
 		 * Return the distance between two EObjects. When the two objects should considered as completely
-		 * different the implementation is expected to return Integer.MAX_VALUE.
+		 * different the implementation is expected to return Double.MAX_VALUE.
 		 * 
 		 * @param inProgress
 		 *            the comparison being processed right now. This might be used for the distance to
@@ -378,7 +378,7 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 		 *            first object.
 		 * @param b
 		 *            second object.
-		 * @return the distance between the two EObjects or Integer.MAX_VALUE when the objects are considered
+		 * @return the distance between the two EObjects or Double.MAX_VALUE when the objects are considered
 		 *         too different to be the same.
 		 */
 		double distance(Comparison inProgress, EObject a, EObject b);
