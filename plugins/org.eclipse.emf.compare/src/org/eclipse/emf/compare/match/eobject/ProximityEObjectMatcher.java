@@ -91,7 +91,7 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 		 * We are iterating through the three sides of the scope at the same time so that index might apply
 		 * pre-matching strategies elements if they wish.
 		 */
-		while (leftEObjects.hasNext() || rightEObjects.hasNext() || leftEObjects.hasNext()) {
+		while (leftEObjects.hasNext() || rightEObjects.hasNext() || originEObjects.hasNext()) {
 
 			if (leftEObjects.hasNext()) {
 				EObject next = leftEObjects.next();
