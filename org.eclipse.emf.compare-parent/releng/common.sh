@@ -44,7 +44,15 @@ fi
 
 chmod u+x $P2_ADMIN_PATH
 alias p2-admin="$P2_ADMIN_PATH"
-alias composite-repository="p2-admin -application org.eclipselabs.equinox.p2.composite.repository" -compressed
+alias composite-repository="p2-admin -application org.eclipselabs.equinox.p2.composite.repository -compressed"
+
+createP2Index() {
+	    cat > "$1/p2.index" <<EOF
+version = 1
+metadata.repository.factory.order = compositeContent.xml,\!
+artifact.repository.factory.order = compositeArtifacts.xml,\!
+EOF
+}
 
 # Remove any previous file from the $1 path and create a composite repository with a single
 # child ($2). The composite will be name $3.
@@ -54,8 +62,9 @@ createRedirect() {
 	local name=$3
 	
 	mkdir -p "$from"
-	rm -f "$from/"*
+	[ -d "$from" ] && rm -f "$from/"*
 	composite-repository -location "$from" -add "$to" -repositoryName "$name"
+	createP2Index $from
 }
 
 # Echo a negative integer, zero, or a positive integer if $1 version is less than, equal to,

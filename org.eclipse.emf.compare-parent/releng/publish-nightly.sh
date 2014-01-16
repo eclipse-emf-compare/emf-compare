@@ -143,21 +143,25 @@ echo "Adding $UPDATE_SITE_URL to composites repositories:"
 echo "    $EMF_COMPARE_UPDATES_BASE_URL/$BUILD_TYPE"
 composite-repository -location "$NIGHTLY_PATH" -add "$UPDATE_SITE_URL" \
 	-repositoryName "EMF Compare $BUILD_TYPE builds"
+createP2Index "$NIGHTLY_PATH"
 
 # add a link for the $VERSION (e.g. "1.2.0" => "1.2.0-NYYYYMMDD-HHMM")
 echo "    $EMF_COMPARE_UPDATES_BASE_URL/$BUILD_TYPE/$VERSION"
 composite-repository -location "$NIGHTLY_PATH/$VERSION" -add "$UPDATE_SITE_URL" \
 	-repositoryName "EMF Compare $VERSION $BUILD_TYPE builds"
+createP2Index "$NIGHTLY_PATH/$VERSION"
 
 # add a link for the $MINOR_STREAM (e.g. "1.2.x" => "1.2.0-NYYYYMMDD-HHMM")
 echo "    $EMF_COMPARE_UPDATES_BASE_URL/$BUILD_TYPE/$MINOR_STREAM"
 composite-repository -location "$NIGHTLY_PATH/$MINOR_STREAM" -add "$UPDATE_SITE_URL" \
 	-repositoryName "EMF Compare $MINOR_STREAM $BUILD_TYPE builds"
+createP2Index "$NIGHTLY_PATH/$MINOR_STREAM"
 
 # add a link for the $MAJOR_STREAM (e.g. "1.x" => "1.2.0-NYYYYMMDD-HHMM")
 echo "    $EMF_COMPARE_UPDATES_BASE_URL/$BUILD_TYPE/$MAJOR_STREAM"
 composite-repository -location "$NIGHTLY_PATH/$MAJOR_STREAM" -add "$UPDATE_SITE_URL" \
 	-repositoryName "EMF Compare $MAJOR_STREAM $BUILD_TYPE builds"
+createP2Index "$NIGHTLY_PATH/$MAJOR_STREAM"
 
 echo "Redirecting 'latest' repositories to $UPDATE_SITE_URL:"
 visitVersions $NIGHTLY_PATH "updateLatestRedirections" $VERSION
