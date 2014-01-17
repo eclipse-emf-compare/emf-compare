@@ -62,7 +62,8 @@ createRedirect() {
 	local name=$3
 	
 	mkdir -p "$from"
-	[ -d "$from" ] && rm -f "$from/"*
+	rm -f "$from/compositeArtifacts."*
+	rm -f "$from/compositeContent."*
 	composite-repository -location "$from" -add "$to" -repositoryName "$name"
 	createP2Index $from
 }
