@@ -4,13 +4,13 @@
 
 === Comparison Process ===
 
-[[Image:images/EMF_Compare_Process_Full.png|thumb|center|800px]]
+[[Image:./../images/EMF_Compare_Process_Full.png|thumb|center|800px]]
 
 This is the overview of the comparison process as a whole. Each of the six phases of the comparison process of EMF Compare are briefly defined on the [[./../overview/Overview.html|Overview]], and a much more in-depth explanation will be given below, in our explanations of the [[./Default%20Behavior%20and%20Extensibility.html|default behavior]] of EMF Compare.
 
 === Project Architecture ===
 
-[[Image:images/EMF_Compare_2_Architecture.png|center]]
+[[Image:./../images/EMF_Compare_2_Architecture.png|center]]
 
 EMF Compare is built on top of the Eclipse platform. We depend on the Eclipse Modeling Framework (EMF), the Eclipse Compare framework and, finally, Eclipse Team, the framework upon which the repository providers (EGit, CVS, Subversive...) are built.
 
@@ -32,8 +32,8 @@ A ''Match'' element is how we represent that the ''n'' compared versions have el
 ! align="center" | Master
 ! align="center" | Borrowables
 |-
-| [[Image:images/v1.png|center]]
-| [[Image:images/v2.png|center]]
+| [[Image:./../images/v1.png|center]]
+| [[Image:./../images/v2.png|center]]
 |}
 
 Comparing these two models, we'll have a Comparison model containing three matches:
@@ -458,7 +458,189 @@ PENDING how to provide custom mergers, override existing ones?
 
 === User Interface ===
 
-PENDING customize display of custom differences, add custom menu entries, add groups, add filters, add export options, provide custom content viewer
+==== Add your own filter ====
+
+You can provide your own filters by adding an extension of type ''org.eclipse.emf.compare.rcp.ui.filters'' to your plugin.
+
+[[Image:./../images/EMF_Compare_Developer_New_Extension_Filter.png|center]]
+
+This extension has three fields:
+* class: a class that implements ''org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter''
+* label: the label that will be displayed in the UI.
+* activeByDefault: true if you want your filter be active by default, false otherwise.
+
+The ''org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter'''s contract is:
+
+<source lang="java">
+/**
+ * Instances of this class will be used by EMF Compare in order to provide difference filter facilities to the
+ * structural differences view.
+ * @since 3.0
+ */
+public interface IDifferenceFilter {
+
+	/**
+	 * Returns the predicate that will filter out objects in the structural differences view when this filter
+	 * will be selected.
+	 * 
+	 * @return the predicate that will filter out objects in the structural differences view when this filter
+	 *         will be selected.
+	 */
+	Predicate<? super EObject> getPredicateWhenSelected();
+
+	/**
+	 * Returns the predicate that will filter out objects in the structural differences view when this filter
+	 * will be unselected.
+	 * 
+	 * @return the predicate that will filter out objects in the structural differences view when this filter
+	 *         will be unselected.
+	 */
+	Predicate<? super EObject> getPredicateWhenUnselected();
+
+	/**
+	 * A human-readable label for this filter. This will be displayed in the EMF Compare UI.
+	 * 
+	 * @return The label for this filter.
+	 */
+	String getLabel();
+
+	/**
+	 * Set the label for this filter. This will be displayed in the EMF Compare UI.
+	 * 
+	 * @param label
+	 *            A human-readable label for this filter.
+	 */
+	void setLabel(String label);
+
+	/**
+	 * Returns the initial activation state that the filter should have.
+	 * 
+	 * @return The initial activation state that the filter should have.
+	 */
+	boolean defaultSelected();
+
+	/**
+	 * Set the initial activation state that the filter should have.
+	 * 
+	 * @param defaultSelected
+	 *            The initial activation state that the filter should have (true if the filter should be
+	 *            active by default).
+	 */
+	void setDefaultSelected(boolean defaultSelected);
+
+	/**
+	 * Returns the activation condition based on the scope and comparison objects.
+	 * 
+	 * @param scope
+	 *            The scope on which the filter will be applied.
+	 * @param comparison
+	 *            The comparison which is to be displayed in the structural view.
+	 * @return The activation condition based on the scope and comparison objects.
+	 */
+	boolean isEnabled(IComparisonScope scope, Comparison comparison);
+}
+</source>
+
+A default abstract implementation named ''org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.AbstractDifferenceFilter'' is available in the ''org.eclipse.emf.compare.rcp.ui'' plugin. With this abstract implementation, all you have to do is to subclass it and implements the ''getPredicateWhenSelected()'' method.
+
+==== Add your own group ====
+
+[[Image:./../images/EMF_Compare_Developer_New_Extension_Group.png|center]]
+
+This extension has three fields:
+* class: a class that implements ''org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider''
+* label: the label that will be displayed in the UI.
+* activeByDefault: true if you want your filter be active by default, false otherwise.
+
+The ''org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider'''s contract is:
+
+<source lang="java">
+/**
+ * Instances of this class will be used by EMF Compare in order to provide difference grouping facilities to
+ * the structural differences view.
+ * @since 3.0
+ */
+public interface IDifferenceGroupProvider extends Adapter {
+
+	/**
+	 * This will be called internally by the grouping actions in order to determine how the differences should
+	 * be grouped in the structural view.
+	 * 
+	 * @param comparison
+	 *            The comparison which is to be displayed in the structural view. By default, its containment
+	 *            tree will be displayed.
+	 * @return The collection of difference groups that are to be displayed in the structural viewer. An empty
+	 *         group will not be displayed at all. If {@code null}, we'll fall back to the default behavior.
+	 */
+	Collection<? extends IDifferenceGroup> getGroups(Comparison comparison);
+
+	/**
+	 * A human-readable label for this group. This will be displayed in the EMF Compare UI.
+	 * 
+	 * @return The label for this group.
+	 */
+	String getLabel();
+
+	/**
+	 * Set the label for this group. This will be displayed in the EMF Compare UI.
+	 * 
+	 * @param label
+	 *            A human-readable label for this group.
+	 */
+	void setLabel(String label);
+
+	/**
+	 * Returns the initial activation state that the group should have.
+	 * 
+	 * @return The initial activation state that the group should have.
+	 */
+	boolean defaultSelected();
+
+	/**
+	 * Set the initial activation state that the group should have.
+	 * 
+	 * @param defaultSelected
+	 *            The initial activation state that the group should have (true if the group should be active
+	 *            by default).
+	 */
+	void setDefaultSelected(boolean defaultSelected);
+
+	/**
+	 * Returns the activation condition based on the scope and comparison objects.
+	 * 
+	 * @param scope
+	 *            The scope on which the group provider will be applied.
+	 * @param comparison
+	 *            The comparison which is to be displayed in the structural view.
+	 * @return The activation condition based on the scope and comparison objects.
+	 */
+	boolean isEnabled(IComparisonScope scope, Comparison comparison);
+
+	/**
+	 * Dispose this difference group provider.
+	 */
+	void dispose();
+	
+	/**
+	 * Returns all {@link TreeNode}s that are wrapping the given {@code eObject}. It internally use a cross
+	 * reference adapter.
+	 * 
+	 * @param eObject
+	 *            the object from which we want inverse reference.
+	 * @return all {@link TreeNode}s targeting the given {@code eObject} through
+	 *         {@link TreePackage.Literals#TREE_NODE__DATA}.
+	 */
+	List<TreeNode> getTreeNodes(EObject eObject);
+}
+</source>
+
+A default abstract implementation named ''org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.AbstractDifferenceGroupProvider'' is available in the ''org.eclipse.emf.compare.rcp.ui'' plugin. With this abstract implementation, all you have to do is to subclass it and implements the ''getGroups()'' method.
+
+For example, the ''By Kind'' group provider has 4 groups: Additions, Deletions, Changes and Moves.
+
+A defaul implementation named ''org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl'' is available in the ''org.eclipse.emf.compare.rcp.ui'' plugin. With this default implementation, all you have to do is to subclass it and overrides the ''getChildren()'' method.
+
+PENDING customize display of custom differences, add custom menu entries, add export options, provide custom content viewer
 
 == Using The Compare APIs ==
 
@@ -600,13 +782,13 @@ Let's use a complex example as reference. Consider the three following models:
 |-
 ! colspan="2" align="center" | Origin
 |-
-| colspan="2" align="center" | [[Image:images/EMF_Compare_Origin_Model.png|center]]
+| colspan="2" align="center" | [[Image:./../images/EMF_Compare_Origin_Model.png|center]]
 |-
 ! align="center" | Left
 ! align="center" | Right
 |-
-| [[Image:images/EMF_Compare_Use_Compare_Master.png|center]]
-| [[Image:images/EMF_Compare_Use_Compare_5.png|center]]
+| [[Image:./../images/EMF_Compare_Use_Compare_Master.png|center]]
+| [[Image:./../images/EMF_Compare_Use_Compare_5.png|center]]
 |}
 
 ==== All differences ====

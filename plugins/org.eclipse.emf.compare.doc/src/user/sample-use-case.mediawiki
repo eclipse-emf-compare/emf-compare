@@ -37,10 +37,10 @@ This will open a comparison editor that initially looks like the following :
 
 There are three main areas of interest in this editor.
 # Displays a structured list of the differences detected between the current version of the model and the version that lies in the Git Index.
-# This will react to the selections in (1) and display the ''left'' side of this comparison. As a rule of thumb, the ''left'' is the ''local'' version of the model. In this example, ''left'' will then be the version we have modified in our workspace. This is originally empty, more on this section in the example just below.
+# This will react to the selections in (1) and display the ''left'' side of this comparison. As a rule of thumb, the ''left'' is the ''local'' version of the model. In this example, ''left'' will then be the version we have modified in our workspace. This is originally filled with the first difference that is selected in the top panel (1), more on this section in the example just below.
 # As above, this will react to selections in (1), but this time it will display the ''right'' side of the comparison. This is generally the ''remote'' version of the model; the version to which we've compared ours. In this case, this will represent the version of the model as it is in the Git Index. This is originally empty, more on this section in the example just below.
 
-As stated above, (2) and (3) are initially empty. These two panels are there to display more information about the differences detected between our models. Let's select one of the differences displayed in (1) :
+As stated above, (2) and (3) are initially filled with the values of the difference selected in the top panel (1). These two panels are there to display more information about the differences detected between our models. Let's select another difference displayed in (1) :
 
 [[Image:../images/EMF_Compare_Use_Compare_3.png]]
 

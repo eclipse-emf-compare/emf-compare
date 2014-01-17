@@ -8,7 +8,7 @@
 
 Using the bundled Eclipse marketplace client you can install EMF Compare in one click. Just type "emf compare", click on search, and then on install. 
 
-[[Image:images/Marketplace.png]] 
+[[Image:./../images/Marketplace.png]] 
 
 '''Update Site'''
 
@@ -111,25 +111,110 @@ An empty cell indicates that the compatibility hasn't been tested for a particul
 
 The main points of interest are highlighted in the following picture :
 
-[[Image:images/CompareUI.png|center|EMF Compare's basic user interface]]
+[[Image:./../images/EMF_Compare_User_Interface.png|center|EMF Compare's basic user interface]]
 
 # Overview of the differences detected between the given two (or three) models.
 # First version of the compared models.
 # Second version of the compared models.
 # This button will only be visible in the case of three-way comparisons (for example, comparing with a remote repository). It will make a third version of the compared model (the common ancestor of the two others) visible in the interface.
+# When you select a difference in the top panel, the consequences of the merge of this difference are highlighted in green and red. 
+#* The consequences highlighted in <span style="color:green">green</span>  are the differences that will be merge with the selected difference.
+#* The consequences highlighted in <span style="color:red">red</span>  are the differences that will be not "mergeable" after the merge of the selected difference.
+#* A click on a <span style="color:green">green</span> or <span style="color:red">red</span> rectangle in the right gutter will lead you to the concerned consequence.
+
+==== Toolbar ====
+
+The toolbar displays the current status of the comparison and allows you to act on differences.
+
+[[Image:./../images/EMF_Compare_User_Interface_Toolbar.png|center|EMF Compare's user interface toolbar]]
+
+# Gives the number of differences still to be merged, and the number of differences filtered from the view.
+# Allows to change the direction of consequences that are highlighted in green and red in the top panel. You can either display the consequences of a merge from left to right or right to left.
+# Allows you to merge the single, currently selected difference in a given direction (left to right, or right to left).
+# Allows you to merge all non conflicting differences (left to right, or right to left) at once.
+# Allows you to navigate through the detected differences.
+# Allows to expand/collapse all differences in the top panel.
 # This button will allow you to group differences together in the structural view. For example, grouping all "Additions" or "Deletions" together.
 # This button will allow you to filter some differences out of the view according to a set predicate. For example, filtering out all "Additions" or "Moves".
-# Allows you to merge all non conflicting differences (left to right, or right to left) at once.
-# Allows you to merge the single, currently selected difference in a given direction (left to right, or right to left).
-# Allows you to navigate through the detected differences.
+# Allows to save the comparison model.
 
-=== Usage ===
+When you compare models with one in a read-only mode, some of actions proposed by the toolbar are slightly different. Indeed, if you compare a model with the local history, or you compare a model with a remote model stored in a repository, the latter is in a read-only mode. You will not able to merge differences to this read-only model. You will only accept or reject changes for your local model.
 
-Once installed, you can compare your files (locally or from any Version Control System) as usual using the '''compare with''' menu.
+[[Image:./../images/EMF_Compare_User_Interface_Toolbar_With_Read_Only_Side.png|center|EMF Compare's user interface toolbar]]
 
-[[Image:images/EMFC_Compare_With.png|center]]
+# Allows to change the kind of consequences that are highlighted in green and red in the top panel. You can either display the consequences of accepting/rejecting the selected change.
+# Allows you to accept the single, currently selected change.
+# Allows you to reject the single, currently selected change.
+# Allows you to accept all non conflicting changes at once.
+# Allows you to reject all non conflicting changes at once.
 
-The following displays the important part of a model life cycle with regards to the comparison. The full life cycle can be followed on [[./Sample%20Use%20Case.html| Sample Use Case]]
+==== Signification of icons associated with differences ====
+
+When you run a comparison involving two models (a 2-way comparison), the icons associated with differences are:
+
+* [[Image:./../images/add_ov.gif|Addition]] represent an addition in the left side model of the comparison.
+* [[Image:./../images/del_ov.gif|Deletion]] represent a deletion in the left side model of the comparison.
+* [[Image:./../images/chg_ov.gif|Change]] represent a change (set/unset/move) in the left side model of the comparison.
+
+When you run a comparison involving three models (a 3-way comparison), the icons associated with differences are:
+
+*[[Image:./../images/r_inchg_ov.gif|Incoming change]] incoming differences are changes that were made in the right-side/remote model since common ancestor.
+*[[Image:./../images/r_outchg_ov.gif|Outgoing change]] outgoing differences are changes that were made in the left-side/local model since common ancestor.
+*[[Image:./../images/r_inadd_ov.gif|Incoming addition]] represent an incoming addition difference.
+*[[Image:./../images/r_indel_ov.gif|Incoming deletion]] represent an incoming deletion difference.
+*[[Image:./../images/r_outadd_ov.gif|Outgoing addition]] represent an outgoing addition difference.
+*[[Image:./../images/r_outdel_ov.gif|Outgoing deletion]] represent an outgoing deletion difference.
+*[[Image:./../images/confr_chg_ov.gif|Incoming conflict]] incoming conflict differences are changes that were made in the right-side/remote model since common ancestor, and are in conflict with the left-side/local model.
+*[[Image:./../images/confchg_ov.gif|Outgoing conflict]] outgoing conflict differences are changes that were made in the right-side/remote model since common ancestor, and are in conflict with the right-side/remote model.
+*[[Image:./../images/confr_add_ov.gif|Incoming conflict addition]] represent an incoming addition conflict.
+*[[Image:./../images/confr_del_ov.gif|Incoming conflict deletion]] represent an incoming deletion conflict.
+*[[Image:./../images/confadd_ov.gif|Outgoing conflict addition]] represent an outgoing addition conflict.
+*[[Image:./../images/confdel_ov.gif|Outgoing conflict deletion]] represent an outgoing deletion conflict.
+*[[Image:./../images/pconfr_chg_ov.gif|Incoming pseudo conflict]] incoming pseudo conflict differences are changes that were made in the right-side/remote model since common ancestor, and are in pseudo conflict with the left-side/local model.
+*[[Image:./../images/pconfchg_ov.gif|Outgoing pseudo conflict]] outgoing pseudo conflict differences are changes that were made in the right-side/remote model since common ancestor, and are in pseudo conflict with the right-side/remote model.
+*[[Image:./../images/pconfr_add_ov.gif|Incoming pseudo conflict addition]] represent an incoming pseudo conflict addition.
+*[[Image:./../images/pconfr_del_ov.gif|Incoming pseudo conflict deletion]] represent an incoming pseudo conflict deletion.
+*[[Image:./../images/pconfadd_ov.gif|Outgoing pseudo conflict addition]] represent an outgoing pseudo conflict addition.
+*[[Image:./../images/pconfdel_ov.gif|Outgoing pseudo conflict deletion]] represent an outgoing pseudo conflict deletion.
+
+==== After merge ====
+
+The ''merged'' differences are displayed in <span style="color:gray">gray</span> and have a distinct icon.
+
+*[[Image:./../images/merged_left_ov.gif|Merged difference from right to left]] represent a difference that has been merged from right to left.
+*[[Image:./../images/merged_right_ov.gif|Merged difference from left to right]] represent a difference that has been merged from left to right.
+
+When you compare models with one in a read-only mode, the icons are:
+
+*[[Image:./../images/merged_ov.gif|Accepted change]] represent a change that has been accepted.
+*[[Image:./../images/removed_ov.gif|Rejected change]] represent a change that has been rejected.
+
+
+== Launch Comparison ==
+
+Once installed, you can compare your files (locally or from any Version Control System) as usual using the '''Compare With''' menu.
+
+=== Compare with local models ===
+
+==== Compare with each other ====
+
+You can compare two or three models by selecting them and then using the '''Compare With > Each Other''' menu:
+
+[[Image:./../images/EMF_Compare_With_Each_Other.png|center]]
+
+If you run a 3-way comparison (with 3 models), you have to select the ancestor of the comparison:
+
+[[Image:./../images/EMF_Compare_Select_Common_Ancestor.png|center]]
+
+==== Compare with local history ====
+
+You can also compare your local model with one of its previous version available in the local history. For that, use the '''Compare With > Local History''' menu:
+
+[[Image:./../images/EMFC_Compare_With.png|center]]
+
+=== Compare with remote models ===
+
+The following displays the important part of a model life cycle with regards to the comparison. The full life cycle can be followed on [[./sample-use-case.html| Sample Use Case]]
 
 ==== Compare with latest ====
 
@@ -141,27 +226,28 @@ The name of our sample project will be "library". It contains a single folder "m
 
 The model itself is a very simple library. Graphically speaking :
 
-[[Image:images/EMF_Compare_Use_Model.png]]
+[[Image:./../images/EMF_Compare_Use_Model.png]]
 
 We commit this initial file as the original model. We then slightly modify it so that it now looks like :
 
-[[Image:images/EMF_Compare_Use_Model_Changed.png]]
+[[Image:./../images/EMF_Compare_Use_Model_Changed.png]]
 
 But how do we know exactly what changed? Let's compare this with the file from the Git Index :
 
-[[Image:images/EMF_Compare_Use_Compare_1.png]]
+[[Image:./../images/EMF_Compare_Use_Compare_1.png]]
 
-This will open a comparison editor that initially displays empty panels on its bottom half. Let's select one of the differences displayed on its top half :
+This will open a comparison editor. Let's select one of the differences displayed on its top half :
 
-[[Image:images/EMF_Compare_Use_Compare_3.png]]
+[[Image:./../images/EMF_Compare_Use_Compare_3.png]]
 
 # We've selected the difference corresponding to the addition of attribute '''alias''' in the class '''Writer'''. A double-click on this difference updated our two panes below.
 # '''alias''' has been added to the properties of Class '''Writer'''. In the model, this corresponds to a change to the reference ''ownedAttributes'' of the ''Writer'' Class. This sub-panel indicates the actual reference that was changed in oder to remind us of the context.
 # This displays all values of the reference outlined in (2) as they are in the ''left'' model. This is where we see the new value, '''alias''' outlined.
 # As for (2), this will display the context of the selected difference. The same reference will usually be displayed in both (2) and (4).
-# This panel displays all values of the reference outlined in (4) as they are in the ''right'' model. In here, we see the location of '''alias''' outlined as an empty space. This rectangle is where the new value will be added if we merge it... Though in this case, it is not possible to merge towards the ''right'' : it is a version located on a repository and is thus non-editable.
+# This panel displays all values of the reference outlined in (4) as they are in the ''right'' model. In here, we see the location of '''alias''' outlined as an empty space. This rectangle is where the new value will be added if we merge it. 
+In this case, it is possible to merge towards the ''right'' : the ''index'' version of the model is editable, like any other file in the index. If we merge this difference towards the ''right'', then it will exist an ''unstaged'' version of the model, and a ''staged'' version of the model, that will include the merged difference.
 
-This is useful in order to determine exactly what changed in our version, but serves no other purpose : merging changes here would only mean reverting back our modifications to the "clean" state from the repository. Let's commit our changes on the ''master'' branch.
+But this comparison with index is mainly useful in order to determine exactly what changed in our version. Let's commit our changes on the ''master'' branch.
 
 ==== Compare two differing branches ====
 
@@ -172,66 +258,65 @@ After that, our model can evolve, and evolve separately in multiple branches. Le
 ! align="center" | Master
 ! align="center" | Borrowables
 |-
-| [[Image:images/EMF_Compare_Use_Compare_Master.png|center]]
-| [[Image:images/EMF_Compare_Use_Compare_5.png|center]]
+| [[Image:./../images/EMF_Compare_Use_Compare_Master.png|center]]
+| [[Image:./../images/EMF_Compare_Use_Compare_5.png|center]]
 |}
 
 Before we continue working on our Borrowables branch, we'd like to retrieve all modifications that have been pushed to master. With the "Borrowables" branch checked out, we'll use the ''Compare With > Branch, Tag or Reference'' action :
 
-[[Image:images/EMF_Compare_Use_Compare_With_Master_1.png|center]]
+[[Image:./../images/EMF_Compare_Use_Compare_With_Master_1.png|center]]
 
 and compare with master :
 
-[[Image:images/EMF_Compare_Use_Compare_With_Master_2.png|center]]
+[[Image:./../images/EMF_Compare_Use_Compare_With_Master_2.png|center]]
 
 This shows us all differences between our local copy and the master branch that were made since the 'branching' point.
 
-[[Image:images/EMF_Compare_Merge.png|center]]
+[[Image:./../images/EMF_Compare_Merge.png|center]]
 
-Same as previously, you can navigate through the differences via the top panel, the structural view. There are three main kind of elements displayed here. '''Regular''' elements, that mimic the containment tree of your input models, are there to separate the various differences and let you know where they were actually detected. Then there are '''incoming''' differences, decorated with a blue arrow ([[Image:images/EMF_Compare_Incoming_Change.gif]]) or a derived icon, and '''outgoing''' differences decorated with a green arrow ([[Image:images/EMF_Compare_Outgoing_Change.gif]]) or a derived icon.
+Same as previously, you can navigate through the differences via the top panel, the structural view. There are three main kind of elements displayed here. '''Regular''' elements, that mimic the containment tree of your input models, are there to separate the various differences and let you know where they were actually detected. Then there are '''incoming''' differences, decorated with a blue arrow ([[Image:./../images/EMF_Compare_Incoming_Change.gif]]) or a derived icon, and '''outgoing''' differences decorated with a gray arrow ([[Image:./../images/EMF_Compare_Outgoing_Change.gif]]) or a derived icon.
 
 '''Incoming''' differences are changes that were made in the remote branch (here, ''master'') since the branching point (common ancestor).
 '''Outgoing''' differences are changes taht were made in the local copy (here, the ''borrowables'' branch) since the branching point.
 
 There are no conflicts here, since UML uses computed identifiers (XMI ID) for the model elements. Thus, what looks like a conflict (the "Date" type that's been added on both branch in the types packages) is actually two distinct differences.
 
-The interface also lets you display the common ancestor of both models through the [[Image:images/EMF_Compare_Ancestor.gif]] icon. For example, if we select the '''Book''' class, we can see how it looks like on all three versions :
+The interface also lets you display the common ancestor of both models through the [[Image:./../images/EMF_Compare_Ancestor.gif]] icon. For example, if we select the '''Book''' class, we can see how it looks like on all three versions :
 
-[[Image:images/EMF_Compare_Merge_Book_Ancestor.png|center]]
+[[Image:./../images/EMF_Compare_Merge_Book_Ancestor.png|center]]
 
-You can navigate through the differences using the appropriate actions, either the previous ([[Image:images/EMF_Compare_Prev_Diff.gif]]) or the next ([[Image:images/EMF_Compare_Next_Diff.gif]]) difference.
+You can navigate through the differences using the appropriate actions, either the previous ([[Image:./../images/EMF_Compare_Prev_Diff.gif]]) or the next ([[Image:./../images/EMF_Compare_Next_Diff.gif]]) difference.
 
-The remaining two actions are those that actually interest us here we can either merge all non-conflicting differences to the local copy through [[Image:images/EMF_Compare_Copy_All.gif]] or merge them one after the other through [[Image:images/EMF_Compare_Copy.gif]].
+The remaining two actions are those that actually interest us here we can either accept all non-conflicting differences to the local copy through [[Image:./../images/accept_all_changes.gif]] or accept them one after the other through [[Image:./../images/accept_change.gif]].
 
-Merging '''all''' differences is not what we seek : we want to keep the changes we made locally, not revert them to the state they had before the branching point (which is their current state on ''master'', the right side). We will then select all ''incoming'' differences one after the other and merge them one by one. This gives us our merged model :
+Accept '''all''' differences is not what we seek : we want to keep the changes we made locally, not revert them to the state they had before the branching point (which is their current state on ''master'', the right side). We will then select all ''incoming'' differences (under the ''Right side'' node) one after the other and merge them one by one. This gives us our merged model :
 
-[[Image:images/EMF_Compare_Merged.png|center]]
-
-Notice that ''merged'' differences are displayed in ''italics'' and have a distinct icon. All that's left is to save, our model now contains both our local changes and the changes that were made on master.
+[[Image:./../images/EMF_Compare_Merged.png|center]]
 
 == Features ==
-
-=== Handling Conflicts  ===
-
-PENDING
 
 === Grouping Differences  ===
 
 This feature allows you to group differences together in the structural view according to a set predicate. By default, EMF Compare provides three distinct grouping strategies :
 
-[[Image:images/EMF_Compare_Groups_Choice.png]]
+[[Image:./../images/EMF_Compare_Groups_Choice.png]]
 
 ; Default : Do not try and group differences together, display them as they were detected.
 
-[[Image:images/EMF_Compare_Groups_Default.png]]
+[[Image:./../images/EMF_Compare_Groups_Default.png]]
 
 ; By Kind : Group differences by their kind (''additions'', ''deletions'', ''moves'', ''changes'').
 
-[[Image:images/EMF_Compare_Groups_Kind.png]]
+[[Image:./../images/EMF_Compare_Groups_Kind.png]]
 
-; By Side : Group differences according to their side: left or right and a special group regrouping differences in conflicts with other differences together.
+; By Side : Group differences according to their side: left or right and a special group regrouping differences in conflicts with other differences together. This grouping strategy is display by default in case of a 3-way comparison.
 
-[[Image:images/EMF_Compare_Groups_Side.png]]
+[[Image:./../images/EMF_Compare_Groups_Side.png]]
+
+; By Resource : Group differences according to their resource: useful when more than two resources involved in comparison and/or resources are split into fragments. 
+
+[[Image:./../images/EMF_Compare_Groups_Resource.png]]
+
 
 PENDING UPDATE, this is a demo displaying EMF Compare 1.3
 [http://www.eclipse.org/emf/compare/doc/features/videos/Groups/groups.htm Demo]
@@ -242,9 +327,9 @@ PENDING : New grouping strategies can be provided to EMF Compare through extensi
 
 This features allows you to filter differences out of the structural view according to a set predicate. By default, EMF Compare provides five distinct filters :
 
-[[Image:images/EMF_Compare_Filters_Choice.png]]
+[[Image:./../images/EMF_Compare_Filters_Choice.png]]
 
-; Pseudo conflicts differences : Filter out all pseudo conflicts differences(only in 3-way comparison). Enabled by default.
+; Pseudo conflicts differences : Filter out all pseudo conflicts differences (only in case of a 3-way comparison). Enabled by default.
 ; Identical elements : Filter out all identical elements (elements with no differences). Enabled by default.
 ; Empty Resource Mappings : Filter out all resource mappings with no differences from the view. Enabled by default.
 ; Cascading differences : Filter out all differences that are contained under differences (except when in conflict). Enabled by default.
@@ -254,43 +339,114 @@ PENDING UPDATE, this is a demo displaying EMF Compare 1.3
 
 PENDING : New filters can be provided to EMF Compare through extension points.
 
+=== Handling Conflicts  ===
+
+When a 3-way comparison has conflicts, all differences involved in the same conflict are grouped under a Confict node.
+
+In the following case, the Employee Green has his manager reference in conflict. The left side of the comparison shows that the manager of the Employee Green is the employee Smith while the right side side shows that the manager is the Employee Johnson.
+The consequences of a merge from right to left of the selected difference are displayed.
+
+When the left side difference ''Employee Smith [ manager changed ]'' is selected in the top panel, the right side difference ''Employee Johnson [ manager changed ]'' is highlighted in red, that means if the the left side difference ''Employee Smith [ manager changed ]'' is merged from right to left, then it will be impossible to merge the right side difference ''Employee Johnson [ manager changed ]'' from left to right.
+
+[[Image:./../images/EMF_Compare_Handling_Conflict_1.png]]
+
+After the merge of the left side difference from right to left ''Employee Smith [ manager changed ]'', the right side difference ''Employee Johnson [ manager changed ]'' is not "mergeable" from left to right anymore, it has been merged from right to left automatically.
+
+[[Image:./../images/EMF_Compare_Handling_Conflict_2.png]]
+
 === Text Attribute Comparison  ===
 
-Differences made into ''String''-typed attributes can be compared and merged directly as text from the compare interface through a simple right-click on the difference.
+In case of differences made on ''String''-typed attributes, specifics actions are available in the top-right of the content viewer panel.
 
-[[Image:images/EMF_Compare_Text_Compare.png]]
+[[Image:./../images/EMF_Compare_Text_Compare.png]]
+
+# Allows to merge all changes of the current difference.
+# Allows to merge the current change.
+# Allows to move to the next/previous textual difference (in case of multi-valuated ''String''-typed attributes).
+# Allows to move to next/previous change in the current textual difference.
 
 PENDING UPDATE, this demo displays EMF Compare 1.3
 [http://www.eclipse.org/emf/compare/doc/features/videos/Text%20compare/textCompare.htm Demo]
 
 === Graphical Comparison  ===
 
-PENDING UPDATE
+EMF compare provides the ability to compare models with Papyrus graphical modeler (GMF Diagrams). To get the graphical comparison, the ''EMF Compare Papyrus integration'' feature and Papyrus have to be installed.
+The graphical comparison will be launched if you compare diagrams files (.di), or if you compare models that have diagrams associated in the same folder.
+In the same way as the semantic model comparison, the graphical model comparison uses the same color coding, to distinguish <span style="color:blue">incoming</span> and <span style="color:gray">outgoing</span> changes, and <span style="color:red">conflicts</span>. To put in relief the graphical differences, some decorators are used:
+*On one hand, to focus on the impacted objects, identifying them with markers. These markers are simple transparent rectangles which are set down above the concerned objects and are lightly larger.
+*On the other hand, through phantoms (place-holders), to locate either the place where objects were deleted or the target location where objects should be added after merging.
+The color of the concerned decorators are highlighted on selection of the difference.
 
-Since the 1.2 release EMF compare provides the ability to compare models with graphical modelers. 
+In the following example, a 3-way comparison is run with UML class diagrams. We can see that a Shape associated to a semantic uml class named A has been added on the left side of the comparison. After selected the difference in top panel, we can see the concerned elements in down panels. In the left part, the Shape A is highlighted in gray because it is an incoming change. In the right part, a phantom is drawn at the place the Shape should be after merging from right to left.
+
+[[Image:./../images/EMF_Compare_Graphical_AddClassA.png]]
+
+About phantoms (place-holders):
+
+To ease their readability, in some cases, their context have to be displayed:
+*If they are nested in an other phantom (e.g. due to a delete of the parent object), this last contextual one is displayed at the same time as the main phantom concerned by the current selected change.
+*If they are edges connected to deleted nodes or edges, these last contextual ones are displayed at the same time as the main edge phantom.
+*The color of the contextual phantoms (dependencies) is not highlighted.
+They are drawn as:
+*A simple rectangle for nodes, at the same origin location (and size).
+*A simple line (with the same bend points) for edges, at the same location.
+*A simple line for nodes as element of containment list. For this case, the same LCS computation will be used to locate in the list, at the good index.
+*Particular cases: If the location of the contextual phantoms was changed, the new location of the main phantom is computed.
+**A node place-holder, related to a delete of a node, embedded in a node where the location changed.
+**An edge place-holder between nodes where the location changed. In this case, the display of the line is drawn again.
+
+
+Here is an example of nested phantom:
+* the first capture represent an addition of a lifeline in sequence diagram.
+
+[[Image:./../images/EMF_Compare_Graphical_Phantom.gif]]
+
+* the second capture represent an addition of an execution inside the lifeline. We can see the phantom of the execution element, which is highlighted and the phantom of the lifeline parent, which is not highlighted. 
+
+[[Image:./../images/EMF_Compare_Graphical_Nested_Phantom.gif]]
 
 Have a look on the following demos :
+
+PENDING update videos
 
 [[http://www.eclipse.org/emf/compare/doc/features/videos/EcoreTools-v2/EMFCompareEcoreTools.html | Demo : Comparing Ecore files with diagrams]] 
 
 [[http://www.eclipse.org/emf/compare/doc/features/videos/Papyrus/EMFComparePapyrus.html | Demo : Comparing UML files with diagrams]] 
 
-[[Image:images/Diag_comp_diff.png]]
-
 === Logical Model  ===
 
 EMF Compare does not act simply on the selected files, but on their whole logical model (a given model can be split through multiple files through EMF ''control'' action). Thanks to that, if you try and compare a model file that reference other model files, the comparison will still be able to take these "other" files into account. For example, if you try and compare a ''genmodel'' file (that depends on its underlying ''ecore'' file) :
 
-[[Image:images/EMF_Compare_Logical_Compare_Action.png]]
+[[Image:./../images/EMF_Compare_Logical_Compare_Action.png]]
 
 EMF Compare will actually consider both files when comparing :
 
-[[Image:images/EMF_Compare_Logical_Compare_Result.png]]
+[[Image:./../images/EMF_Compare_Logical_Compare_Result.png]]
 
 PENDING UPDATE
 [http://www.eclipse.org/emf/compare/doc/features/videos/LogicalModels/LogicalModels.html Demo]
 
 === UML Specialization  ===
+
+A specific work has been done with EMF Compare for UML. It consists in an additionnal filter named '''UML refined elements'''. This filter is active by default when a comparison involves UML resources.
+
+[[Image:./../images/EMF_Compare_UML_Filter.png]]
+
+The filter groups UML consistant differences together in one difference. For example, a UML association is modeled by an association element and several sub-elements:
+
+[[Image:./../images/EMF_Compare_UML_Association.png]]
+
+If EMF Compare detects a change on an element of type association, it will group all changes on the sub-elements of the assocation to the association difference.
+The goal of this filter is to ease the merge of differences. Indeed, all you have to do is to merge the association difference and it will merge all the sub-differences with it.
+
+Here is the comparison of two UML model, one with an association (the left side), another whithout (the right side). The '''UML refined elements''' filter has been deactivated:
+
+[[Image:./../images/EMF_Compare_UML_Association_2.png]]
+
+We can see a lot of differences. 
+The same comparison with the '''UML refined elements''' filter activated:
+
+[[Image:./../images/EMF_Compare_UML_Association_3.png]]
 
 PENDING
 

@@ -36,6 +36,11 @@ img {
 	margin-bottom: 2em;
 	display: block;
 }
+li img {
+	box-shadow: none;
+	display: inline;
+	margin: 0 auto;
+}
 pre {
 	left:50px;
 	width:90%;
