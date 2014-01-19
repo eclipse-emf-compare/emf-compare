@@ -24,12 +24,36 @@
   <version>2.2.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
   
-  
   <build>
    <plugins>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-source-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.2.1</version>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <id>buid-info-generator</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>${JAVA_HOME}/bin/java</executable>
+              <arguments>
+                <argument>-jar</argument>
+                <argument>${project.basedir}/../../packaging/org.eclipse.emf.compare.gendoc/target/org.eclipse.emf.compare.gendoc-1.0-uberjar.jar</argument>
+                <argument>-location</argument>
+                <argument>${project.basedir}</argument>
+                <argument>-eclipsehelp</argument>
+                <argument>-website</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

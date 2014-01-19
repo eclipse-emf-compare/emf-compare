@@ -42,6 +42,9 @@
   </properties>
 
   <modules>
+    <!-- Releng bits -->
+    <module>../packaging/org.eclipse.emf.compare.gendoc</module>
+  
     <!-- Update Site -->
     <module>../packaging/org.eclipse.emf.compare.update</module>
 

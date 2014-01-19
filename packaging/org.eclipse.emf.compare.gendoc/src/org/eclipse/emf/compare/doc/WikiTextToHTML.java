@@ -306,7 +306,8 @@ public class WikiTextToHTML {
 
 		if (genWebsite) {
 			mkdirs(targetRootFolder.resolve(targetHTML));
-		} else if (genEclipseHelp) {
+		} 
+		if (genEclipseHelp) {
 			mkdirs(targetRootFolder.resolve(targetTOC));
 			mkdirs(targetRootFolder.resolve(targetHelp));
 		}
