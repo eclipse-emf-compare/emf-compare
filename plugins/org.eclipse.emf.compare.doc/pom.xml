@@ -25,12 +25,39 @@
   <packaging>eclipse-plugin</packaging>
   
   <build>
-   <plugins>
+    <plugins>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-source-plugin</artifactId>
+        <artifactId>tycho-packaging-plugin</artifactId>
+        <configuration>
+          <!-- 
+          As the the help folder and the plugin.xml will be generated @ build time 
+          by the o.e.e.c.gendoc WikitexToHTML tool, we can not use the build.properties 
+          file to specify its  inclusion, it would lead to warnings during the PDE build 
+          in the Eclipse workspace. We better include it with the following directive.
+           -->
+          <additionalFileSets>
+            <fileSet>
+              <directory>${project.basedir}/help</directory>
+              <prefix>help/</prefix>
+              <includes>
+                <include>**/*</include>
+              </includes>
+            </fileSet>
+            <fileSet>
+              <directory>${project.basedir}</directory>
+              <includes>
+                <include>plugin.xml</include>
+              </includes>
+            </fileSet>
+          </additionalFileSets>
+        </configuration>
       </plugin>
       <plugin>
+        <!--
+        Run the org.e.e.c.gendoc WikitTextToHTML tool to generate Eclipse help and
+        website HTML documentation.
+        -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.2.1</version>

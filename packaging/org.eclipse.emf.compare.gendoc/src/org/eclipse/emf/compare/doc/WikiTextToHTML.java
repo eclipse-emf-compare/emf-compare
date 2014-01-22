@@ -165,8 +165,13 @@ public class WikiTextToHTML {
 		
 		targetWebsiteFolder = DEFAULT_FS.getPath("target", "website").resolve(gitDescribe());
 		targetHelpFolder = DEFAULT_FS.getPath("help");
+		final Path resolvedTargetHelpFolder = targetRootFolder.resolve(targetHelpFolder);
 
 		if (genEclipseHelp) {
+			if (Files.exists(resolvedTargetHelpFolder)) {
+				System.out.println("Deleting "+ resolvedTargetHelpFolder + " before regenerating Eclipse help");
+				removeRecursiveContent(resolvedTargetHelpFolder);
+			}
 			primaryTOCWriter.startPrimaryTOC(targetHelpFolder.resolve("index.html"), "EMF Compare Documentation");
 		}
 		
@@ -219,7 +224,7 @@ public class WikiTextToHTML {
 		
 		if (genEclipseHelp) {
 			primaryTOCWriter.endPrimaryTOC();
-			writeStringToFile(primaryTOCWriter.getPrimaryTOCContent(), targetRootFolder.resolve(targetHelpFolder).resolve("toc.xml"));
+			writeStringToFile(primaryTOCWriter.getPrimaryTOCContent(), resolvedTargetHelpFolder.resolve("toc.xml"));
 			writeStringToFile(primaryTOCWriter.getPluginContent(), targetRootFolder.resolve("plugin.xml"));
 		}
 		
@@ -227,7 +232,7 @@ public class WikiTextToHTML {
 			if (genWebsite)
 				copy(folder, targetRootFolder.resolve(targetWebsiteFolder).resolve(folder.getFileName()), "glob:**/*");
 			if (genEclipseHelp)
-				copy(folder, targetRootFolder.resolve(targetHelpFolder).resolve(folder.getFileName()), "glob:**/*");
+				copy(folder, resolvedTargetHelpFolder.resolve(folder.getFileName()), "glob:**/*");
 		}
 	}
 
@@ -350,6 +355,40 @@ public class WikiTextToHTML {
 		if (!parentFile.exists()) {
 			file.getParent().toFile().mkdirs();
 		}
+	}
+	
+	private static void removeRecursiveContent(final Path path) throws IOException {
+		Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				Files.delete(file);
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult visitFileFailed(Path file, IOException exc)
+					throws IOException {
+				// try to delete the file anyway, even if its attributes
+				// could not be read, since delete-only access is
+				// theoretically possible
+				Files.delete(file);
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult postVisitDirectory(Path dir, IOException exc)
+					throws IOException {
+				if (exc == null) {
+					if (!dir.equals(path)) {
+						Files.delete(dir);
+					}
+					return FileVisitResult.CONTINUE;
+				} else {
+					// directory iteration failed; propagate exception
+					throw exc;
+				}
+			}
+		});
 	}
 
 	private Path changeFilename(Path source, String newFileExtension) {
