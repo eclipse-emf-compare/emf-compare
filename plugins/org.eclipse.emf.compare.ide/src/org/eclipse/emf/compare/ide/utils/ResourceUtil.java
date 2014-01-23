@@ -283,20 +283,18 @@ public final class ResourceUtil {
 	 * configured (as returned by {@link IContentTypeManager#findContentTypesFor(InputStream, String)
 	 * Platform.getContentTypeManager().findContentTypesFor(InputStream, String)}.
 	 * 
-	 * @param resource
-	 *            The resource from which to test the content types.
 	 * @param contentTypeId
 	 *            Fully qualified identifier of the content type this <em>resource</em> has to feature.
+	 * @param contentTypes
+	 *            The whole list of content types of the given resource.
 	 * @return <code>true</code> if the given {@link IFile} has the given content type.
 	 */
-	public static boolean hasContentType(IFile resource, String contentTypeId) {
+	public static boolean hasContentType(String contentTypeId, IContentType[] contentTypes) {
 		IContentTypeManager ctManager = Platform.getContentTypeManager();
 		IContentType expected = ctManager.getContentType(contentTypeId);
 		if (expected == null) {
 			return false;
 		}
-
-		final IContentType[] contentTypes = getContentTypes(resource);
 
 		boolean hasContentType = false;
 		for (int i = 0; i < contentTypes.length && !hasContentType; i++) {
@@ -315,7 +313,7 @@ public final class ResourceUtil {
 	 * @return All content types associated with the given file, an empty array if none.
 	 */
 	@SuppressWarnings("resource")
-	private static IContentType[] getContentTypes(IFile file) {
+	public static IContentType[] getContentTypes(IFile file) {
 		IContentTypeManager ctManager = Platform.getContentTypeManager();
 
 		InputStream resourceContent = null;

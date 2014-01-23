@@ -42,6 +42,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
@@ -50,6 +51,7 @@ import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor.DiffSide;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
+import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
 
@@ -349,8 +351,9 @@ public class ProjectModelResolver extends LogicalModelResolver {
 	 */
 	protected static final boolean hasModelType(IFile file) {
 		boolean isModel = false;
+		final IContentType[] contentTypes = ResourceUtil.getContentTypes(file);
 		for (int i = 0; i < MODEL_CONTENT_TYPES.length && !isModel; i++) {
-			isModel = hasContentType(file, MODEL_CONTENT_TYPES[i]);
+			isModel = hasContentType(MODEL_CONTENT_TYPES[i], contentTypes);
 		}
 		return isModel;
 	}
