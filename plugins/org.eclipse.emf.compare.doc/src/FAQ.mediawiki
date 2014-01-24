@@ -8,17 +8,17 @@ These FAQs will be aimed at EMF Compare 2 and subsequent versions. Since this ve
 
 '''Q''' : My model is compared as a text-file, how can EMF compare know the files it should handle ?
 
-'''A''' : EMF Compare will be triggered for any files that is recognized as an EMF model. There is no specific content-type for EMF Compare; any content-type that has the ecore XMI type as its base will be recognized as a file which comparison should be done with EMF Compare.
+'''A''' : EMF Compare will be triggered for any files being recognized as an EMF model. Technically, it will be files recognized with the content types XMI (org.eclipse.emf.ecore.xmi) or "EMF Compare" (org.eclipse.emf.compare.content.type).
 
-You may add your own extension using the <tt>Preferences view / General / Content-types</tt> and adding your file extension in the "XMI" content-type. 
+If your models are compared with the text compare editor and you want EMF Compare to be used instead, you should add your own extension using the Preferences view / General / Content-types and add your file extension in the "EMF Compare" content-type.
 
-[[Image:images/EMF_Compare_XMI_Content_Type.png]]
+[[Image:images/EMF_Compare_Preferences_Content_Type.png]]
 
 ==== How to force text comparison? ====
 
-'''Q''' : uml, ecore and emfdiff models are "locked" as model files in the aforementioned "EMF Compare" content-type. I want to compare two uml files as text, is there a way to do so?
+'''Q''': I want my models to be compared as text but I can't remove its association to XMI Content Type or EMF Compare content type because they are locked (e.g. Ecore, UML, etc…)
 
-'''A''' : There is no way to '''force''' textual comparison of EMF files. You can, however, switch back to a plain text comparison through the drop-down menu that is diplayed between the two halves of the compare editor :
+'''A''': Every files locked with XMI content type (i.e. their content type is "org.eclipse.emf.ecore.xmi" or one of its subtype) or EMF Compare content type can not be forced to use the text compare editor. This is a Eclipse Compare platform limitation. You can, however, see the text comparison from the EMF Compare editor. Deactivate the "Empty Resource Mappings" filter and then select the appropriate resource mapping. The bottom panes will display the comparison of the textual content of the mapped resources.
 
 [[Image:images/EMF_Compare_Text_Comparison.png]]
 
@@ -28,13 +28,13 @@ You may add your own extension using the <tt>Preferences view / General / Conten
 
 '''A''' : EMF Compare is built against JDK 1.5 and makes use of the features it introduced such as foreach and generics. It is therefore incompatible with a JDK < 1.5. EMF Compare can also be used with both JDK 1.6 and JDK 1.7.
 
-We strive to keep the [[./../overview/Overview.html#Compatibility|compatibility chart]] updated so that you can determine which version of EMF Compare can be used in conjunction with your Eclipse of choice.
+We strive to keep the [[./user/user-guide.html#Compatibility|compatibility chart]] updated so that you can determine which version of EMF Compare can be used in conjunction with your Eclipse of choice.
 
 ==== Where can I find EMF Compare ? ====
 
 '''Q''' : Where can I download the latest version of EMF Compare?
 
-'''A''' : The [[./../user/Getting%20Started.html#Installing EMF Compare|Installation instruction]] present a set of update sites useable to install.
+'''A''' : The [[./user/user-guide.html#Installing_EMF_Compare|Installation instruction]] present a set of update sites useable to install.
 The [http://www.eclipse.org/emf/compare/downloads/ Download page] lists more specific update sites if you wish to try one of the latest integration builds.
 
 == Developers FAQ ==

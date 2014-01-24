@@ -4,13 +4,13 @@
 
 === Installing EMF Compare ===
 
-'''Marketplace Client''' 
+==== Marketplace Client ====
 
 Using the bundled Eclipse marketplace client you can install EMF Compare in one click. Just type "emf compare", click on search, and then on install. 
 
 [[Image:./../images/Marketplace.png]] 
 
-'''Update Site'''
+==== Update Site ====
 
 EMF has been part of the Eclipse release train since Galileo, you can install it using the following update sites, depending on your platform. '''Note''' that the following are not meant to be visited in your internet browser; they must be pasted in the ''Help > Install New Software'' dialog of your Eclipse, as p2 repositories.
 
@@ -21,7 +21,7 @@ EMF has been part of the Eclipse release train since Galileo, you can install it
 
 The [http://www.eclipse.org/emf/compare/downloads/ Download page] lists more specific update sites if you wish to try one of the latest integration builds.
 
-'''Compatibility'''
+==== Compatibility ====
 
 Please note that the EMF Compare development team does its best to maintain downward compatibility towards Galileo (Eclipse 3.5). Following is the compatibility chart : 
 
