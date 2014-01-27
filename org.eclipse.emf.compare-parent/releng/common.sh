@@ -23,7 +23,7 @@ export EMF_COMPARE_UPDATES_BASE_URL="http://download.eclipse.org/modeling/emf/co
 # It takes apart the argument list to find and concatenates the arguments back into another 
 # argument list but inserts -regextype posix-awk in front of any -iregex or -regex arguments it finds.
 # see http://superuser.com/a/666634
-find-regex-gnu () {
+findGnuRegex () {
     args=
     for arg in $*
     do
@@ -46,10 +46,10 @@ find-regex-gnu () {
 # find and sed.
 if [[ "$OSTYPE" == "linux"* ]]; then
 	alias sed-regex="sed -r"
-	alias find-regex="find-regex-gnu"
+	alias find-regex="findGnuRegex"
 elif [[ "$OSTYPE" == "cygwin" ]]; then
     alias sed-regex="sed -r"
-    alias find-regex="find-regex-gnu"
+    alias find-regex="findGnuRegex"
 elif [[ "$OSTYPE" == "freebsd"* ]]; then
 	alias sed-regex="sed -E"
 	alias find-regex="find -E"
