@@ -11,7 +11,7 @@
 # ====================================================================
 
 # The path to the p2-admin executable
-export P2_ADMIN_PATH="/jobs/genie.modeling.emfcompare/p2-admin/lastStable/archive/org.eclipselabs.equinox.p2.admin.product/target/products/org.eclipse.equinox.p2.admin.rcp.product/linux/gtk/x86_64/p2admin"
+export P2_ADMIN_PATH="/jobs/genie.modeling.emfcompare/p2-admin/lastStable/archive/org.eclipselabs.equinox.p2.admin.product/target/products/org.eclipse.equinox.p2.admin.rcp.product/linux/gtk/x86_64/p2-admin/p2-admin"
 
 # The root folder for all EMF Compare udpate sites
 export EMF_COMPARE_UPDATES_ROOT="/home/data/httpd/download.eclipse.org/modeling/emf/compare/updates2"
