@@ -14,10 +14,10 @@
 export P2_ADMIN_PATH="/jobs/genie.modeling.emfcompare/p2-admin/lastStable/archive/org.eclipselabs.equinox.p2.admin.product/target/products/org.eclipse.equinox.p2.admin.rcp.product/linux/gtk/x86_64/p2-admin"
 
 # The root folder for all EMF Compare udpate sites
-export EMF_COMPARE_UPDATES_ROOT="/home/data/httpd/download.eclipse.org/modeling/emf/compare/updates2"
+export EMF_COMPARE_UPDATES_ROOT="/home/data/httpd/download.eclipse.org/modeling/emf/compare/updates"
 
 # The base URL for all EMF Compare update sites
-export EMF_COMPARE_UPDATES_BASE_URL="http://download.eclipse.org/modeling/emf/compare/updates2"
+export EMF_COMPARE_UPDATES_BASE_URL="http://download.eclipse.org/modeling/emf/compare/updates"
 
 # To avoid error find: paths must precede expression
 # It takes apart the argument list to find and concatenates the arguments back into another 
