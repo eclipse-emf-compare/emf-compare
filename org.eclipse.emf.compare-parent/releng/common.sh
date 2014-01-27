@@ -40,7 +40,7 @@ else
 fi
 
 chmod u+x $P2_ADMIN_PATH
-alias p2-admin="java -jar $P2_ADMIN_PATH/plugins/org.eclipse.equinox.launcher_*.jar"
+alias p2-admin="${JAVA_HOME}/bin/java -jar $P2_ADMIN_PATH/plugins/org.eclipse.equinox.launcher_*.jar"
 alias composite-repository="p2-admin -application org.eclipselabs.equinox.p2.composite.repository -compressed"
 
 # Create a p2 index file for composite repositories
