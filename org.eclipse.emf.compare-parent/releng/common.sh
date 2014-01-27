@@ -19,15 +19,37 @@ export EMF_COMPARE_UPDATES_ROOT="/home/data/httpd/download.eclipse.org/modeling/
 # The base URL for all EMF Compare update sites
 export EMF_COMPARE_UPDATES_BASE_URL="http://download.eclipse.org/modeling/emf/compare/updates2"
 
+# To avoid error find: paths must precede expression
+# It takes apart the argument list to find and concatenates the arguments back into another 
+# argument list but inserts -regextype posix-awk in front of any -iregex or -regex arguments it finds.
+# see http://superuser.com/a/666634
+find-regex-gnu () {
+    args=
+    for arg in $*
+    do
+        case $arg in
+            -ireges|-regex)
+                args="$args -regextype posix-extended $arg"
+                ;;
+            *)
+                args="$args $arg"
+                ;;
+        esac
+    done
+    set -f
+    command find $args
+    set +f
+}
+
 # define alias depending on the underlying OS 
 # e.g., regex on BSD-like and GNU-like OS are not handled through the same options for
 # find and sed.
-if [[ "$OSTYPE" == "linux" ]]; then
+if [[ "$OSTYPE" == "linux"* ]]; then
 	alias sed-regex="sed -r"
-	alias find-regex="find -regextype posix-extended"
+	alias find-regex="find-regex-gnu"
 elif [[ "$OSTYPE" == "cygwin" ]]; then
     alias sed-regex="sed -r"
-    alias find-regex="find -regextype posix-extended"
+    alias find-regex="find-regex-gnu"
 elif [[ "$OSTYPE" == "freebsd"* ]]; then
 	alias sed-regex="sed -E"
 	alias find-regex="find -E"
