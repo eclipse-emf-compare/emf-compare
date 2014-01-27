@@ -445,7 +445,7 @@
       <id>sign</id>
       <activation>
         <property>
-          <name>BUILD_SIGN</name>
+          <name>SIGN_BUILD</name>
           <value>true</value>
         </property>
       </activation>
