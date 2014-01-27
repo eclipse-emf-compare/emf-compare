@@ -22,7 +22,7 @@ export EMF_COMPARE_UPDATES_BASE_URL="http://download.eclipse.org/modeling/emf/co
 # define alias depending on the underlying OS 
 # e.g., regex on BSD-like and GNU-like OS are not handled through the same options for
 # find and sed.
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
+if [[ "$OSTYPE" == "linux" ]]; then
 	alias sed-regex="sed -r"
 	alias find-regex="find -regextype posix-extended"
 elif [[ "$OSTYPE" == "cygwin" ]]; then
