@@ -62,8 +62,6 @@ public final class ResourceUtil {
 	 *            The options to pass to {@link Resource#load(java.util.Map)}.
 	 * @return The loaded EMF Resource if {@code file} was a model, {@code null} otherwise.
 	 */
-	// Suppressing the warning until bug 376938 is fixed
-	@SuppressWarnings("resource")
 	public static Resource loadResource(IStorage storage, ResourceSet resourceSet, Map<?, ?> options) {
 		final String resourceName = storage.getName();
 		String path = storage.getFullPath().toString();
@@ -283,11 +281,42 @@ public final class ResourceUtil {
 	 * configured (as returned by {@link IContentTypeManager#findContentTypesFor(InputStream, String)
 	 * Platform.getContentTypeManager().findContentTypesFor(InputStream, String)}.
 	 * 
+	 * @param resource
+	 *            The resource from which to test the content types.
 	 * @param contentTypeId
 	 *            Fully qualified identifier of the content type this <em>resource</em> has to feature.
-	 * @param contentTypes
-	 *            The whole list of content types of the given resource.
 	 * @return <code>true</code> if the given {@link IFile} has the given content type.
+	 * @deprecated use {@link #hasContentType(String, IContentType[])} instead.
+	 */
+	@Deprecated
+	public static boolean hasContentType(IFile resource, String contentTypeId) {
+		IContentTypeManager ctManager = Platform.getContentTypeManager();
+		IContentType expected = ctManager.getContentType(contentTypeId);
+		if (expected == null) {
+			return false;
+		}
+
+		final IContentType[] contentTypes = getContentTypes(resource);
+
+		boolean hasContentType = false;
+		for (int i = 0; i < contentTypes.length && !hasContentType; i++) {
+			if (contentTypes[i].isKindOf(expected)) {
+				hasContentType = true;
+			}
+		}
+		return hasContentType;
+	}
+
+	/**
+	 * This will return <code>true</code> if the given <em>contentTypeId</em> represents a content-type
+	 * contained in the given array.
+	 * 
+	 * @param contentTypeId
+	 *            Fully qualified identifier of the content type we seek.
+	 * @param contentTypes
+	 *            The array of content-types to compare against.
+	 * @return <code>true</code> if the given array contains a content-type with this id.
+	 * @since 3.1
 	 */
 	public static boolean hasContentType(String contentTypeId, IContentType[] contentTypes) {
 		IContentTypeManager ctManager = Platform.getContentTypeManager();
@@ -311,8 +340,8 @@ public final class ResourceUtil {
 	 * @param file
 	 *            The file we need the content types of.
 	 * @return All content types associated with the given file, an empty array if none.
+	 * @since 3.1
 	 */
-	@SuppressWarnings("resource")
 	public static IContentType[] getContentTypes(IFile file) {
 		IContentTypeManager ctManager = Platform.getContentTypeManager();
 
