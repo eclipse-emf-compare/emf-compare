@@ -75,7 +75,7 @@ public class ExtendedAdapterFactoryItemDelegator extends AdapterFactoryItemDeleg
 			} else if (object == null) {
 				result = new ComposedStyledString();
 			} else {
-				result = new ComposedStyledString(object.toString());
+				result = new ComposedStyledString(getText(object));
 			}
 		}
 		return result;
