@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,13 +15,10 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.ResourceLocator;
-
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemColorProvider;
@@ -36,25 +33,25 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.Diff} object.
- * <!-- begin-user-doc -->
- * <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.Diff} object. <!-- begin-user-doc
+ * --> <!-- end-user-doc -->
+ * 
  * @generated
  */
 @SuppressWarnings("all")
 // generated code : suppressing warnings
 public class DiffItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource, IItemColorProvider, IItemFontProvider {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static final String copyright = "Copyright (c) 2012 Obeo.\r\nAll rights reserved. This program and the accompanying materials\r\nare made available under the terms of the Eclipse Public License v1.0\r\nwhich accompanies this distribution, and is available at\r\nhttp://www.eclipse.org/legal/epl-v10.html\r\n\r\nContributors:\r\n    Obeo - initial API and implementation"; //$NON-NLS-1$
 
 	/**
-	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	public DiffItemProvider(AdapterFactory adapterFactory) {
@@ -62,9 +59,9 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -89,9 +86,8 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This adds a property descriptor for the Requires feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Requires feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected void addRequiresPropertyDescriptor(Object object) {
@@ -106,9 +102,9 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This adds a property descriptor for the Required By feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Required By feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	protected void addRequiredByPropertyDescriptor(Object object) {
@@ -123,10 +119,10 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This adds a property descriptor for the Implies feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Implies feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
+	 * @since 4.0
 	 */
 	protected void addImpliesPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
@@ -136,10 +132,11 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This adds a property descriptor for the Implied By feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Implied By feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
+	 * @since 4.0
 	 */
 	protected void addImpliedByPropertyDescriptor(Object object) {
 		itemPropertyDescriptors
@@ -153,9 +150,8 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This adds a property descriptor for the Refines feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Refines feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected void addRefinesPropertyDescriptor(Object object) {
@@ -166,9 +162,9 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This adds a property descriptor for the Refined By feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Refined By feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	protected void addRefinedByPropertyDescriptor(Object object) {
@@ -183,10 +179,11 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This adds a property descriptor for the Prime Refining feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Prime Refining feature. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
+	 * @since 4.0
 	 */
 	protected void addPrimeRefiningPropertyDescriptor(Object object) {
 		itemPropertyDescriptors
@@ -200,9 +197,8 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This adds a property descriptor for the Kind feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Kind feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected void addKindPropertyDescriptor(Object object) {
@@ -215,9 +211,8 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This adds a property descriptor for the Source feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Source feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected void addSourcePropertyDescriptor(Object object) {
@@ -230,9 +225,8 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This adds a property descriptor for the State feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the State feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected void addStatePropertyDescriptor(Object object) {
@@ -245,9 +239,9 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This adds a property descriptor for the Equivalence feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Equivalence feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	protected void addEquivalencePropertyDescriptor(Object object) {
@@ -262,9 +256,8 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This adds a property descriptor for the Conflict feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Conflict feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected void addConflictPropertyDescriptor(Object object) {
@@ -279,9 +272,8 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This returns Diff.gif.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns Diff.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -290,9 +282,8 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -304,10 +295,10 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -326,10 +317,9 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -338,9 +328,9 @@ public class DiffItemProvider extends ItemProviderAdapter implements IEditingDom
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

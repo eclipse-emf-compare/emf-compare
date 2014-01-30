@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,9 +20,9 @@ import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Iterators.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentMoveReferenceChange;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentReferenceChange;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
 
 import com.google.common.base.Function;
@@ -42,6 +42,7 @@ import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
@@ -51,6 +52,7 @@ import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
+import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender.IDifferenceGroupExtender;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
@@ -94,8 +96,6 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	/** The cross reference adapter that will be added to this group's children. */
 	private final ECrossReferenceAdapter crossReferenceAdapter;
 
-	private final IDifferenceGroupProvider groupProvider;
-
 	/**
 	 * Instantiates this group given the comparison and filter that should be used in order to determine its
 	 * list of differences.
@@ -112,11 +112,11 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 * @param crossReferenceAdapter
 	 *            The cross reference adapter that will be added to this group's children.
 	 */
-	public BasicDifferenceGroupImpl(Comparison comparison, IDifferenceGroupProvider groupProvider,
-			Predicate<? super Diff> filter, ECrossReferenceAdapter crossReferenceAdapter) {
-		this(comparison, groupProvider, filter,
-				"Group", EMFCompareRCPUIPlugin.getImage("icons/full/toolb16/group.gif"), //$NON-NLS-2$
-				crossReferenceAdapter);
+	public BasicDifferenceGroupImpl(Comparison comparison, Predicate<? super Diff> filter,
+			ECrossReferenceAdapter crossReferenceAdapter) {
+		this(comparison, filter,
+				EMFCompareRCPUIMessages.getString("BasicDifferenceGroup.name"), EMFCompareRCPUIPlugin //$NON-NLS-1$
+						.getImage("icons/full/toolb16/group.gif"), crossReferenceAdapter); //$NON-NLS-1$
 	}
 
 	/**
@@ -141,10 +141,10 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 * @param crossReferenceAdapter
 	 *            The cross reference adapter that will be added to this group's children.
 	 */
-	public BasicDifferenceGroupImpl(Comparison comparison, IDifferenceGroupProvider groupProvider,
-			Predicate<? super Diff> filter, String name, ECrossReferenceAdapter crossReferenceAdapter) {
-		this(comparison, groupProvider, filter, name, EMFCompareRCPUIPlugin
-				.getImage("icons/full/toolb16/group.gif"), crossReferenceAdapter); //$NON-NLS-1$
+	public BasicDifferenceGroupImpl(Comparison comparison, Predicate<? super Diff> filter, String name,
+			ECrossReferenceAdapter crossReferenceAdapter) {
+		this(comparison, filter, name, EMFCompareRCPUIPlugin.getImage("icons/full/toolb16/group.gif"), //$NON-NLS-1$
+				crossReferenceAdapter);
 	}
 
 	/**
@@ -164,11 +164,9 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 * @param crossReferenceAdapter
 	 *            Updated upstream The cross reference adapter that will be added to this group's children.
 	 */
-	public BasicDifferenceGroupImpl(Comparison comparison, IDifferenceGroupProvider groupProvider,
-			Predicate<? super Diff> filter, String name, Image image,
-			ECrossReferenceAdapter crossReferenceAdapter) {
+	public BasicDifferenceGroupImpl(Comparison comparison, Predicate<? super Diff> filter, String name,
+			Image image, ECrossReferenceAdapter crossReferenceAdapter) {
 		this.comparison = comparison;
-		this.groupProvider = groupProvider;
 		this.filter = filter;
 		this.name = name;
 		this.image = image;
@@ -206,7 +204,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 		boolean unresolvedDiffs = any(Iterators.filter(eAllData, Diff.class),
 				hasState(DifferenceState.UNRESOLVED));
 		if (unresolvedDiffs) {
-			ret.append("> ", Style.DECORATIONS_STYLER);
+			ret.append("> ", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 		}
 		ret.append(getName());
 		return ret;
@@ -358,7 +356,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			boolean hasNonEmptySubMatch = false;
 			Set<Match> alreadyProcessedSubMatch = newHashSet();
 			// Manage non-containment changes
-			for (Diff diff : filter(match.getDifferences(), and(filter, not(or(containmentReferenceChange(),
+			for (Diff diff : filter(match.getDifferences(), and(filter, not(or(CONTAINMENT_REFERENCE_CHANGE,
 					resourceAttachmentChange()))))) {
 				if (diff.getPrimeRefining() != null && !extensionDiffProcessed.contains(diff)) {
 					continue;
@@ -380,7 +378,8 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 				}
 			}
 			// Manage move changes
-			for (Diff diff : filter(match.getDifferences(), and(filter, containmentMoveReferenceChange()))) {
+			for (Diff diff : filter(match.getDifferences(), and(filter, and(CONTAINMENT_REFERENCE_CHANGE,
+					ofKind(DifferenceKind.MOVE))))) {
 				if (!containsChildrenWithDataEqualsToDiff(treeNode, diff)) {
 					TreeNode buildSubTree = buildSubTree(diff);
 					if (buildSubTree != null) {
@@ -499,7 +498,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 */
 	@SuppressWarnings("unchecked")
 	protected Predicate<Diff> containmentReferenceForMatch(Match subMatch) {
-		return and(filter, containmentReferenceChange(), or(valueIs(subMatch.getLeft()), valueIs(subMatch
+		return and(filter, CONTAINMENT_REFERENCE_CHANGE, or(valueIs(subMatch.getLeft()), valueIs(subMatch
 				.getRight()), valueIs(subMatch.getOrigin())));
 	}
 

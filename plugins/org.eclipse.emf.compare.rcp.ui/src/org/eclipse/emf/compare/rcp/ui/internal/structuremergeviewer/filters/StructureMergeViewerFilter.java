@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,6 @@ import static com.google.common.base.Predicates.alwaysFalse;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.any;
-import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 
 import com.google.common.base.Predicate;
@@ -22,7 +21,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.eventbus.EventBus;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -34,7 +32,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.GroupItemProviderAdapter;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
@@ -62,9 +59,6 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	private final Set<IDifferenceFilter> selectedDifferenceFilters;
 
 	private final Set<IDifferenceFilter> unselectedDifferenceFilters;
-
-	/** List of all TreeViewers on which this filter is applied. */
-	private final List<StructuredViewer> viewers;
 
 	/** The {@link EventBus} associated with this filter. */
 	private final EventBus eventBus;
@@ -99,7 +93,6 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 		this.predicates = newLinkedHashSet();
 		this.selectedDifferenceFilters = newLinkedHashSet();
 		this.unselectedDifferenceFilters = newLinkedHashSet();
-		this.viewers = newArrayList();
 		this.aggregatedPredicate = DEFAULT_PREDICATE;
 	}
 

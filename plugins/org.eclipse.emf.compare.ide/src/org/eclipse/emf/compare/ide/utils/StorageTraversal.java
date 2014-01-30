@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2011, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,6 +62,7 @@ public class StorageTraversal implements IAdaptable {
 	 * 
 	 * @param storage
 	 *            The storage to be removed.
+	 * @since 4.0
 	 */
 	public void removeStorage(IStorage storage) {
 		storages.remove(storage);

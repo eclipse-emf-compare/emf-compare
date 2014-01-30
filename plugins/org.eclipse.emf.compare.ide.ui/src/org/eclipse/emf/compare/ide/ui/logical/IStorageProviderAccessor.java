@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.CoreException;
  * proper remote content.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ * @since 4.0
  */
 @Beta
 public interface IStorageProviderAccessor {

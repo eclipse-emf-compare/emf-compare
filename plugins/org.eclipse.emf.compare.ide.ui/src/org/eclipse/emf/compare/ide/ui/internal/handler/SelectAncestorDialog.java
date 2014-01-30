@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2013 IBM Corporation and others.
+ * Copyright (c) 2000, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,9 +61,10 @@ public class SelectAncestorDialog extends MessageDialog {
 		for (int i = 0; i < 3; i++) {
 			buttons[i] = new Button(composite, SWT.RADIO);
 			buttons[i].addSelectionListener(selectionListener);
-			String text = "'" + AdapterFactoryUtil.getText(adapterFactory, notifiers[i]) + "'";
+			@SuppressWarnings("deprecation")
+			String text = "'" + AdapterFactoryUtil.getText(adapterFactory, notifiers[i]) + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 			if (notifiers[i] instanceof EObject) {
-				text = text + " (" + EcoreUtil.getURI(((EObject)notifiers[i])) + ")";
+				text = text + " (" + EcoreUtil.getURI(((EObject)notifiers[i])) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			buttons[i].setText(text);
 			buttons[i].setFont(parent.getFont());

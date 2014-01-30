@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -110,7 +110,7 @@ public class PostProcessorFactoryRegistryListener extends AbstractRegistryEventL
 					valid = true;
 				}
 			} else {
-				log(IStatus.ERROR, element, "Post processor must have an nsURI or a resource URI");
+				log(IStatus.ERROR, element, "Post processor must have an nsURI or a resource URI"); //$NON-NLS-1$
 				valid = false;
 			}
 		} else {
@@ -144,7 +144,7 @@ public class PostProcessorFactoryRegistryListener extends AbstractRegistryEventL
 		IPostProcessor.Descriptor previous = registry.put(className, descriptor);
 		if (previous != null) {
 			EMFCompareRCPPlugin.getDefault().log(IStatus.WARNING,
-					"The post processor factory '" + className + "' is registered twice.");
+					"The post processor factory '" + className + "' is registered twice."); //$NON-NLS-1$//$NON-NLS-2$
 		}
 		return true;
 	}

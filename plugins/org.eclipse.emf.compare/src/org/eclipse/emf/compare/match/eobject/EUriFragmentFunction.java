@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,23 +56,26 @@ public class EUriFragmentFunction implements Function<EObject, String> {
 	// TODO Comment the checkstyle suppression. Was that copy/pasted from somewhere?
 	public String eURIFragmentSegment(EObject container, EStructuralFeature eStructuralFeature,
 			EObject eObject) {
-		if (eStructuralFeature == null) {
+		EStructuralFeature actualFeature = eStructuralFeature;
+		if (actualFeature == null) {
 			for (@SuppressWarnings("unchecked")
 			EContentsEList.FeatureIterator<EObject> crossReferences = (EContentsEList.FeatureIterator<EObject>)((InternalEList<?>)container
 					.eCrossReferences()).basicIterator(); crossReferences.hasNext();) {
 				EObject crossReference = crossReferences.next();
 				if (crossReference == eObject) {
-					eStructuralFeature = crossReferences.feature();
+					actualFeature = crossReferences.feature();
 				}
 			}
 		}
 
+		assert actualFeature != null;
+
 		StringBuilder result = new StringBuilder();
 		result.append('@');
-		result.append(eStructuralFeature.getName());
+		result.append(actualFeature.getName());
 
-		if (eStructuralFeature instanceof EAttribute) {
-			FeatureMap featureMap = (FeatureMap)container.eGet(eStructuralFeature, false);
+		if (actualFeature instanceof EAttribute) {
+			FeatureMap featureMap = (FeatureMap)container.eGet(actualFeature, false);
 			for (int i = 0, size = featureMap.size(); i < size; ++i) {
 				if (featureMap.getValue(i) == eObject) {
 					EStructuralFeature entryFeature = featureMap.getEStructuralFeature(i);
@@ -83,11 +86,11 @@ public class EUriFragmentFunction implements Function<EObject, String> {
 					}
 				}
 			}
-			result.append(".-1");
-		} else if (eStructuralFeature.isMany()) {
-			EList<EAttribute> eKeys = ((EReference)eStructuralFeature).getEKeys();
+			result.append(".-1"); //$NON-NLS-1$
+		} else if (actualFeature.isMany()) {
+			EList<EAttribute> eKeys = ((EReference)actualFeature).getEKeys();
 			if (eKeys.isEmpty()) {
-				EList<?> eList = (EList<?>)container.eGet(eStructuralFeature, false);
+				EList<?> eList = (EList<?>)container.eGet(actualFeature, false);
 				int index = eList.indexOf(eObject);
 				result.append('.');
 				result.append(index);
@@ -133,7 +136,7 @@ public class EUriFragmentFunction implements Function<EObject, String> {
 	private void eEncodeValue(StringBuilder result, EFactory eFactory, EDataType eDataType, Object value) {
 		String stringValue = eFactory.convertToString(eDataType, value);
 		if (stringValue == null) {
-			result.append("null");
+			result.append("null"); //$NON-NLS-1$
 		} else {
 			int length = stringValue.length();
 			result.ensureCapacity(result.length() + length + 2);
@@ -153,36 +156,7 @@ public class EUriFragmentFunction implements Function<EObject, String> {
 		}
 	}
 
-	/**
-	 * Returns the encoded value or the original, if no encoding was needed.
-	 * 
-	 * @param value
-	 *            the value to be encoded.
-	 * @return the encoded value or the original, if no encoding was needed.
-	 */
-	private String eEncodeValue(String value) {
-		int length = value.length();
-		StringBuilder result = null;
-		for (int i = 0; i < length; ++i) {
-			char character = value.charAt(i);
-			if (character < ESCAPE.length) {
-				String escape = ESCAPE[character];
-				if (escape != null) {
-					if (result == null) {
-						result = new StringBuilder(length + 2);
-						result.append(value, 0, i);
-					}
-					result.append(escape);
-					continue;
-				}
-			}
-			if (result != null) {
-				result.append(character);
-			}
-		}
-		return result == null ? value : result.toString();
-	}
-
+	@SuppressWarnings("nls")
 	private final String[] ESCAPE = {"%00", "%01", "%02", "%03", "%04", "%05", "%06", "%07", "%08", "%09",
 			"%0A", "%0B", "%0C", "%0D", "%0E", "%0F", "%10", "%11", "%12", "%13", "%14", "%15", "%16", "%17",
 			"%18", "%19", "%1A", "%1B", "%1C", "%1D", "%1E", "%1F", "%20", null, "%22", "%23", null, "%25",

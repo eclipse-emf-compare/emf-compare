@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -199,7 +199,7 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 			if (targetURI == null) {
 				// We treat null as "no valid target". We'll cancel the merge operation.
 				// FIXME we need to rollback the current merge operation.
-				throw new RuntimeException("Couldn't create a valid target resource for "
+				throw new RuntimeException("Couldn't create a valid target resource for " //$NON-NLS-1$
 						+ sourceRes.getURI());
 			}
 
@@ -224,8 +224,8 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 			// This resource might already exists... in which case we cannot use it
 			if (targetSet.getURIConverter().exists(targetURI, Collections.emptyMap())) {
 				// FIXME we need to rollback the current merge operation.
-				throw new RuntimeException("The resource '" + sourceRes.getURI()
-						+ "' already exists at that location.");
+				throw new RuntimeException("The resource '" + sourceRes.getURI() //$NON-NLS-1$
+						+ "' already exists at that location."); //$NON-NLS-1$
 			} else {
 				target = targetSet.createResource(targetURI);
 

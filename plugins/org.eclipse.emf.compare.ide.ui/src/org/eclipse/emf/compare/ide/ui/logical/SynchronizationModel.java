@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2013 Obeo.
+ * Copyright (c) 2011, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.emf.compare.ide.utils.StorageTraversal;
  * sides of a comparison while we build its scope.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ * @since 4.0
  */
 @Beta
 public final class SynchronizationModel {

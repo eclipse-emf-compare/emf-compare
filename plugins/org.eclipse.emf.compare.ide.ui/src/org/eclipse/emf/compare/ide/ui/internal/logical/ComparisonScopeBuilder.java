@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,7 +47,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.eclipse.team.core.subscribers.SubscriberMergeContext;
-import org.eclipse.team.internal.ui.mapping.ModelCompareEditorInput;
 import org.eclipse.team.ui.synchronize.ISynchronizeParticipant;
 import org.eclipse.team.ui.synchronize.ModelSynchronizeParticipant;
 
@@ -194,11 +193,12 @@ public final class ComparisonScopeBuilder {
 	 */
 	@SuppressWarnings("restriction")
 	private static Subscriber getSubscriber(ICompareContainer container) {
-		if (container instanceof ModelCompareEditorInput) {
-			final ModelCompareEditorInput modelInput = (ModelCompareEditorInput)container;
+		if (container instanceof org.eclipse.team.internal.ui.mapping.ModelCompareEditorInput) {
+			final org.eclipse.team.internal.ui.mapping.ModelCompareEditorInput modelInput = (org.eclipse.team.internal.ui.mapping.ModelCompareEditorInput)container;
 			ISynchronizeParticipant participant = null;
 			try {
-				final Field field = ModelCompareEditorInput.class.getDeclaredField("participant"); //$NON-NLS-1$
+				final Field field = org.eclipse.team.internal.ui.mapping.ModelCompareEditorInput.class
+						.getDeclaredField("participant"); //$NON-NLS-1$
 				AccessController.doPrivileged(new PrivilegedAction<Object>() {
 					public Object run() {
 						field.setAccessible(true);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.equi;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;

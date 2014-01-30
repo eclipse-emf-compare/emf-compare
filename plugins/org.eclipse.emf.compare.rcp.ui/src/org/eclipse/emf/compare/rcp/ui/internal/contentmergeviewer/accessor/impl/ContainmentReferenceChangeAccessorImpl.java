@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,7 @@ package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl
 
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentReferenceChange;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
 
 import com.google.common.collect.ImmutableList;
 
@@ -51,7 +51,7 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 	@Override
 	protected ImmutableList<Diff> computeDifferences() {
 		List<Diff> allDifferences = getComparison().getDifferences();
-		return ImmutableList.<Diff> copyOf(filter(allDifferences, containmentReferenceChange()));
+		return ImmutableList.<Diff> copyOf(filter(allDifferences, CONTAINMENT_REFERENCE_CHANGE));
 	}
 
 	/**

@@ -25,6 +25,7 @@ import org.eclipse.emf.compare.ide.utils.StorageTraversal;
  * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ * @since 4.0
  */
 @Beta
 public interface IModelResolver {

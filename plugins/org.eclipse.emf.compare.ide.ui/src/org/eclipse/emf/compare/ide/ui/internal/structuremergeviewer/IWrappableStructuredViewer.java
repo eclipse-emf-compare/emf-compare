@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -220,6 +220,8 @@ interface IWrappableStructuredViewer {
 	 * 
 	 * @see org.eclipse.jface.viewers.StructuredViewer#getSelectionFromWidget()
 	 */
+	// Suppressing warning since super is raw
+	@SuppressWarnings("rawtypes")
 	List getSelectionFromWidget();
 
 	/**
@@ -440,6 +442,8 @@ interface IWrappableStructuredViewer {
 	 * 
 	 * @see org.eclipse.jface.viewers.StructuredViewer#setSelectionToWidget(java.util.List, boolean)
 	 */
+	@SuppressWarnings("rawtypes")
+	// Suppressing warning since super is raw
 	void setSelectionToWidget(List l, boolean reveal);
 
 	/**

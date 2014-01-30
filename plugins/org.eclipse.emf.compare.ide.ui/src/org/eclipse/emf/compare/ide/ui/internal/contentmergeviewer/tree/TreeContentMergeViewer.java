@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -255,20 +255,20 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 					IMergeViewerItem mergeViewerItem = (IMergeViewerItem)object;
 					final Object value = mergeViewerItem.getSideValue(side);
 					if (value instanceof EObject && ((EObject)value).eIsProxy()) {
-						text = "proxy : " + ((InternalEObject)value).eProxyURI().toString();
+						text = "proxy : " + ((InternalEObject)value).eProxyURI().toString(); //$NON-NLS-1$
 					} else if (mergeViewerItem.isInsertionPoint()) {
 						// workaround for 406513: Windows specific issue. Only labels of (Tree/Table)Item are
 						// selectable on Windows platform. The labels of placeholders in (Tree/Table)Viewer
 						// are one whitespace. Placeholder are then selectable at the very left of itself.
 						// Add a 42 whitespaces label to workaround.
-						text = "                                          ";
+						text = "                                          "; //$NON-NLS-1$
 					} else if (value == null
 							&& mergeViewerItem.getSideValue(side.opposite()) instanceof Resource) {
-						text = "Unknown resource";
+						text = getResourceBundle().getString("UnkownResource"); //$NON-NLS-1$
 					} else if (value == null && mergeViewerItem.getLeft() == null
 							&& mergeViewerItem.getRight() == null
 							&& mergeViewerItem.getAncestor() instanceof Resource) {
-						text = "Unknown resource";
+						text = getResourceBundle().getString("UnkownResource"); //$NON-NLS-1$
 					} else {
 						text = super.getText(value);
 					}
@@ -379,9 +379,9 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			if (iContributionItem instanceof ActionContributionItem) {
 				IAction action = ((ActionContributionItem)iContributionItem).getAction();
 				String id = action.getActionDefinitionId();
-				if ("org.eclipse.compare.copyAllLeftToRight".equals(id)) {
+				if ("org.eclipse.compare.copyAllLeftToRight".equals(id)) { //$NON-NLS-1$
 					toolBarManager.remove(iContributionItem);
-				} else if ("org.eclipse.compare.copyAllRightToLeft".equals(id)) {
+				} else if ("org.eclipse.compare.copyAllRightToLeft".equals(id)) { //$NON-NLS-1$
 					toolBarManager.remove(iContributionItem);
 				}
 			}
@@ -418,17 +418,17 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 		Rectangle rightBounds = rightItem.getBounds();
 
 		from.y = leftBounds.y + (leftBounds.height / 2) - leftClientArea.y;
-		if ("gtk".equals(SWT.getPlatform())) {
+		if ("gtk".equals(SWT.getPlatform())) { //$NON-NLS-1$
 			from.y -= 1;
-		} else if ("win32".equals(SWT.getPlatform())) {
+		} else if ("win32".equals(SWT.getPlatform())) { //$NON-NLS-1$
 			from.y += 1;
 		}
 
 		to.x = control.getBounds().width;
 		to.y = rightBounds.y + (rightBounds.height / 2) - rightClientArea.y;
-		if ("gtk".equals(SWT.getPlatform())) {
+		if ("gtk".equals(SWT.getPlatform())) { //$NON-NLS-1$
 			to.y -= 1;
-		} else if ("win32".equals(SWT.getPlatform())) {
+		} else if ("win32".equals(SWT.getPlatform())) { //$NON-NLS-1$
 			to.y += 1;
 		}
 

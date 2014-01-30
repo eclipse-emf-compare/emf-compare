@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
+import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -55,7 +56,7 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 		this.registry = registry;
 		this.menuManager = new MenuManager();
 		this.structureMergeViewerGrouper = structureMergeViewerGrouper;
-		setToolTipText("Groups");
+		setToolTipText(EMFCompareRCPUIMessages.getString("GroupActionMenu.tooltip")); //$NON-NLS-1$
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareRCPUIPlugin.PLUGIN_ID,
 				"icons/full/toolb16/group.gif")); //$NON-NLS-1$
 		setMenuCreator(this);

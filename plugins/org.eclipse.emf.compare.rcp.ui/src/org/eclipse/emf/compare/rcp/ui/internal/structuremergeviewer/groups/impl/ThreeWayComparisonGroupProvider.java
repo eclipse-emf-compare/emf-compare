@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,6 +43,7 @@ import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
+import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
@@ -81,14 +82,17 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		if (differenceGroups == null || !comparison.equals(comp)) {
 			dispose();
 			this.comp = comparison;
-			final IDifferenceGroup conflicts = new ConflictsGroupImpl(comparison, this, hasConflict(
-					ConflictKind.REAL, ConflictKind.PSEUDO), "Conflicts", getCrossReferenceAdapter());
-			final IDifferenceGroup leftSide = new BasicDifferenceGroupImpl(comparison, this, Predicates.and(
+			final IDifferenceGroup conflicts = new ConflictsGroupImpl(comparison, hasConflict(
+					ConflictKind.REAL, ConflictKind.PSEUDO), EMFCompareRCPUIMessages
+					.getString("ThreeWayComparisonGroupProvider.conflicts.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
+			final IDifferenceGroup leftSide = new BasicDifferenceGroupImpl(comparison, Predicates.and(
 					fromSide(DifferenceSource.LEFT), Predicates.not(hasConflict(ConflictKind.REAL,
-							ConflictKind.PSEUDO))), "Left side", getCrossReferenceAdapter());
-			final IDifferenceGroup rightSide = new BasicDifferenceGroupImpl(comparison, this, Predicates.and(
+							ConflictKind.PSEUDO))), EMFCompareRCPUIMessages
+					.getString("ThreeWayComparisonGroupProvider.left.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
+			final IDifferenceGroup rightSide = new BasicDifferenceGroupImpl(comparison, Predicates.and(
 					fromSide(DifferenceSource.RIGHT), Predicates.not(hasConflict(ConflictKind.REAL,
-							ConflictKind.PSEUDO))), "Right side", getCrossReferenceAdapter());
+							ConflictKind.PSEUDO))), EMFCompareRCPUIMessages
+					.getString("ThreeWayComparisonGroupProvider.right.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
 
 			differenceGroups = ImmutableList.of(conflicts, leftSide, rightSide);
 		}
@@ -157,9 +161,9 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#BasicDifferenceGroupImpl(org.eclipse.emf.compare.Comparison,
 		 *      java.lang.Iterable, com.google.common.base.Predicate, java.lang.String)
 		 */
-		public ConflictsGroupImpl(Comparison comparison, IDifferenceGroupProvider groupProvider,
-				Predicate<? super Diff> filter, String name, ECrossReferenceAdapter crossReferenceAdapter) {
-			super(comparison, groupProvider, filter, name, crossReferenceAdapter);
+		public ConflictsGroupImpl(Comparison comparison, Predicate<? super Diff> filter, String name,
+				ECrossReferenceAdapter crossReferenceAdapter) {
+			super(comparison, filter, name, crossReferenceAdapter);
 		}
 
 		/**
@@ -177,7 +181,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 			boolean unresolvedDiffs = any(diffs, and(hasState(DifferenceState.UNRESOLVED), hasConflict(
 					ConflictKind.REAL, ConflictKind.PSEUDO)));
 			if (unresolvedDiffs) {
-				ret.append("> ", Style.DECORATIONS_STYLER);
+				ret.append("> ", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 			}
 			ret.append(getName());
 			return ret;

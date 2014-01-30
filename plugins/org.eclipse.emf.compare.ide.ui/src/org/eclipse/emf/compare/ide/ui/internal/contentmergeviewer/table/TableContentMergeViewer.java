@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -198,13 +198,13 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 					IMergeViewerItem mergeViewerItem = (IMergeViewerItem)object;
 					final Object value = mergeViewerItem.getSideValue(side);
 					if (value instanceof EObject && ((EObject)value).eIsProxy()) {
-						text = "proxy : " + ((InternalEObject)value).eProxyURI().toString();
+						text = "proxy : " + ((InternalEObject)value).eProxyURI().toString(); //$NON-NLS-1$
 					} else if (mergeViewerItem.isInsertionPoint()) {
 						// workaround for 406513: Windows specific issue. Only labels of (Tree/Table)Item are
 						// selectable on Windows platform. The labels of placeholders in (Tree/Table)Viewer
 						// are one whitespace. Placeholder are then selectable at the very left of itself.
 						// Add a 42 whitespaces label to workaround.
-						text = Strings.repeat(" ", 42);
+						text = Strings.repeat(" ", 42); //$NON-NLS-1$
 					} else {
 						text = super.getColumnText(value, columnIndex);
 					}
@@ -313,9 +313,9 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			if (iContributionItem instanceof ActionContributionItem) {
 				IAction action = ((ActionContributionItem)iContributionItem).getAction();
 				String id = action.getActionDefinitionId();
-				if ("org.eclipse.compare.copyAllLeftToRight".equals(id)) {
+				if ("org.eclipse.compare.copyAllLeftToRight".equals(id)) { //$NON-NLS-1$
 					toolBarManager.remove(iContributionItem);
-				} else if ("org.eclipse.compare.copyAllRightToLeft".equals(id)) {
+				} else if ("org.eclipse.compare.copyAllRightToLeft".equals(id)) { //$NON-NLS-1$
 					toolBarManager.remove(iContributionItem);
 				}
 			}

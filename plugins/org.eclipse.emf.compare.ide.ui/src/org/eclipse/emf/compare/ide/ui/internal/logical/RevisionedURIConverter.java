@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2013 Obeo.
+ * Copyright (c) 2011, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -67,7 +67,6 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 	 * @see org.eclipse.emf.compare.ide.utils.StorageURIConverter#createInputStream(org.eclipse.emf.common.util.URI,
 	 *      java.util.Map)
 	 */
-	@SuppressWarnings("resource")
 	@Override
 	public InputStream createInputStream(URI uri, Map<?, ?> options) throws IOException {
 		InputStream stream = null;

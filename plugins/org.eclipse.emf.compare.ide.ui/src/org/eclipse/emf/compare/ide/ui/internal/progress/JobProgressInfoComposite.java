@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,7 +64,7 @@ public class JobProgressInfoComposite extends Composite {
 		gridLayout.horizontalSpacing = 2;
 		setLayout(gridLayout);
 
-		Image jobImage = EMFCompareIDEUIPlugin.getImage("icons/full/eobj16/task.gif");
+		Image jobImage = EMFCompareIDEUIPlugin.getImage("icons/full/eobj16/task.gif"); //$NON-NLS-1$
 		jobNameLabel = new Label(this, SWT.NONE);
 		int horizontalIndent = jobImage.getBounds().width + 2;
 		GridData gridData = new GridData();
@@ -101,8 +101,8 @@ public class JobProgressInfoComposite extends Composite {
 				JobProgressInfoComposite.this.job.cancel();
 			}
 		});
-		actionButton.setImage(EMFCompareIDEUIPlugin.getImage("icons/full/dobj16/stop.gif"));
-		actionButton.setDisabledImage(EMFCompareIDEUIPlugin.getImage("icons/full/eobj16/stop.gif"));
+		actionButton.setImage(EMFCompareIDEUIPlugin.getImage("icons/full/dobj16/stop.gif")); //$NON-NLS-1$
+		actionButton.setDisabledImage(EMFCompareIDEUIPlugin.getImage("icons/full/eobj16/stop.gif")); //$NON-NLS-1$
 
 		taskNameLabel = new Label(this, SWT.NONE);
 		gridData = new GridData();

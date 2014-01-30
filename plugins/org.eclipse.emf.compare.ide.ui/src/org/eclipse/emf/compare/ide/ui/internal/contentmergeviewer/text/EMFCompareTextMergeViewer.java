@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -191,7 +191,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		});
 	}
 
-	@SuppressWarnings("resource")
 	// closed by Closeables
 	private String getString(IStreamContentAccessor contentAccessor) {
 		String ret = null;
@@ -232,7 +231,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 	protected String getContents(boolean isLeft, String charsetName) {
 		try {
-			return new String(getContents(isLeft), Charsets.UTF_8.name());
+			return new String(getContents(isLeft), charsetName);
 		} catch (UnsupportedEncodingException e) {
 			// UTF_8 is a standard charset guaranteed to be supported by all Java platform
 			// implementations

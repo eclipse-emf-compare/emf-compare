@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,16 +10,14 @@
  */
 package org.eclipse.emf.compare.tests.fullcomparison;
 
-import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.List;
 
@@ -141,11 +139,6 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
 				.build().compare(scope);
 		EMFComparePrettyPrinter.printComparison(result, System.out);
-		final List<Diff> differences = result.getDifferences();
-		// EMFCompareAssert.assertAddedToReference(differences, "p1.p2", "eSubpackages", "p1.p2.subPackage",
-		// DifferenceSource.LEFT);
-		// EMFCompareAssert.assertRemovedFromReference(differences, "p1", "eSubpackages", "p1.another",
-		// DifferenceSource.LEFT);
 		assertEquals("We are supposed to have zero diffs", 2, result.getDifferences().size());
 	}
 
@@ -189,7 +182,6 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		Iterator<ResourceAttachmentChange> attrChanges = Iterators.filter(result.getDifferences().iterator(),
 				ResourceAttachmentChange.class);
 		assertTrue("We are supposed to detect a new attachment to a resource", attrChanges.hasNext());
-
 	}
 
 	@Test
@@ -212,13 +204,6 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 			}
 		}
 
-	}
-
-	private String print(Comparison result) {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		PrintStream ps = new PrintStream(baos);
-		EMFComparePrettyPrinter.printDifferences(result, ps);
-		return baos.toString();
 	}
 
 	private void assertAllMatched(Iterable<? extends EObject> eObjects, Comparison comparison) {

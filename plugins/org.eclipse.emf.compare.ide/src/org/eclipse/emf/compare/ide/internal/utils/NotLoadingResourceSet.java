@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
+import org.eclipse.emf.compare.ide.internal.EMFCompareIDEMessages;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
@@ -59,7 +60,8 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 	 * @return resource set to containing the resources described by the given traversals.
 	 */
 	public static NotLoadingResourceSet create(final StorageTraversal traversals, IProgressMonitor monitor) {
-		SubMonitor progress = SubMonitor.convert(monitor, "Create and resolve resource set", 100);
+		SubMonitor progress = SubMonitor.convert(monitor, EMFCompareIDEMessages
+				.getString("NotLoadingResourceSet.monitor.resolve"), 100); //$NON-NLS-1$
 		final NotLoadingResourceSet resourceSet = new NotLoadingResourceSet();
 
 		resourceSet.setURIResourceMap(new HashMap<URI, Resource>(traversals.getStorages().size() << 1));
@@ -112,8 +114,6 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 	 *            The options to pass to {@link Resource#load(java.util.Map)}.
 	 * @return The loaded EMF Resource if {@code file} was a model, {@code null} otherwise.
 	 */
-	// Suppressing the warning until bug 376938 is fixed
-	@SuppressWarnings("resource")
 	public Resource loadResource(IStorage storage, Map<?, ?> options) {
 		InputStream stream = null;
 		Resource resource = null;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -84,8 +84,8 @@ public class DifferenceFilterExtensionRegistryListener extends AbstractRegistryE
 			}
 			IDifferenceFilter previous = filterRegistry.add(filter);
 			if (previous != null) {
-				log(IStatus.WARNING, element, "The filter '" + filter.getClass().getName()
-						+ "' is registered twice.");
+				log(IStatus.WARNING, element, "The filter '" + filter.getClass().getName() //$NON-NLS-1$
+						+ "' is registered twice."); //$NON-NLS-1$
 			}
 		} catch (CoreException e) {
 			log(element, e);

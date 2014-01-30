@@ -1,5 +1,5 @@
 /** ****************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,6 +54,9 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 
 	public static final String ACCESSOR_FACTORY_PPID = "accessorFactory"; //$NON-NLS-1$
 
+	/**
+	 * @since 4.0
+	 */
 	public static final String DIFFERENCE_GROUP_EXTENDER_PPID = "differenceGroupExtender"; //$NON-NLS-1$
 
 	/**
@@ -189,11 +192,15 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 
 	/**
 	 * @return the groupProviderRegistry
+	 * @since 4.0
 	 */
 	public IDifferenceGroupProvider.Descriptor.Registry getDifferenceGroupProviderRegistry() {
 		return groupProviderRegistry;
 	}
 
+	/**
+	 * @since 4.0
+	 */
 	public IDifferenceFilter.Registry getDifferenceFilterRegistry() {
 		return filterRegistry;
 	}
@@ -207,6 +214,7 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 
 	/**
 	 * @return the sub tree registry
+	 * @since 4.0
 	 */
 	public IDifferenceGroupExtender.Registry getDifferenceGroupExtenderRegistry() {
 		return differenceGroupExtenderRegistry;

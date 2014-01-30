@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
@@ -41,11 +42,11 @@ public class DefaultGroupProvider extends AbstractDifferenceGroupProvider {
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
 	 */
-	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
-		if (group == null || !comparison.equals(this.comparison)) {
+	public Collection<? extends IDifferenceGroup> getGroups(Comparison aComparison) {
+		if (group == null || !aComparison.equals(this.comparison)) {
 			dispose();
-			this.comparison = comparison;
-			group = new BasicDifferenceGroupImpl(comparison, this, alwaysTrue(), getCrossReferenceAdapter());
+			this.comparison = aComparison;
+			group = new BasicDifferenceGroupImpl(aComparison, alwaysTrue(), getCrossReferenceAdapter());
 		}
 		return ImmutableList.of(group);
 	}
@@ -56,7 +57,7 @@ public class DefaultGroupProvider extends AbstractDifferenceGroupProvider {
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#getLabel()
 	 */
 	public String getLabel() {
-		return "Default";
+		return EMFCompareRCPUIMessages.getString("DefaultGroupProvider.label"); //$NON-NLS-1$
 	}
 
 	/**
@@ -92,7 +93,7 @@ public class DefaultGroupProvider extends AbstractDifferenceGroupProvider {
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#isEnabled(org
 	 *      .eclipse.emf.compare.scope.IComparisonScope, org.eclipse.emf.compare.Comparison)
 	 */
-	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
+	public boolean isEnabled(IComparisonScope scope, Comparison aComparison) {
 		return true;
 	}
 

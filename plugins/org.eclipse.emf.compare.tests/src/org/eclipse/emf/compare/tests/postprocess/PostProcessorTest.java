@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.postprocess;
 
-import static junit.framework.Assert.assertSame;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -203,7 +203,7 @@ public class PostProcessorTest {
 		final Resource right = input.getRight();
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 
-		PostProcessorDescriptorRegistryImpl registry = new PostProcessorDescriptorRegistryImpl();
+		PostProcessorDescriptorRegistryImpl<String> registry = new PostProcessorDescriptorRegistryImpl<String>();
 		registry.put(TestPostProcessor1.class.getName(), new TestPostProcessorDescriptor(Pattern.compile(""),
 				null, new TestPostProcessor1(), 1));
 		registry.put(TestPostProcessor2.class.getName(), new TestPostProcessorDescriptor(Pattern
@@ -230,7 +230,7 @@ public class PostProcessorTest {
 
 	private Comparison compareWithPostProcessing(Resource left, Resource right, Pattern nsURI,
 			Pattern resourceURI) {
-		PostProcessorDescriptorRegistryImpl registry = new PostProcessorDescriptorRegistryImpl();
+		PostProcessorDescriptorRegistryImpl<String> registry = new PostProcessorDescriptorRegistryImpl<String>();
 		registry.put(TestPostProcessor.class.getName(), new TestPostProcessorDescriptor(nsURI, resourceURI,
 				new TestPostProcessor(), 10));
 

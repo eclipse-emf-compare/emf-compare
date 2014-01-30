@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,7 @@ import org.eclipse.emf.edit.tree.TreeNode;
  * in the structure merge viewer.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- * @since 3.0
+ * @since 4.0
  */
 public interface IDifferenceGroupExtender {
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,7 @@ import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentReferenceChange;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 
 import com.google.common.base.Objects;
@@ -229,11 +229,14 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	public String toString() {
 		String className = this.getClass().getName();
 		int start = className.lastIndexOf('.');
-		return Objects.toStringHelper(className.substring(start + 1)).add("ancestor",
-				EObjectUtil.getLabel((EObject)getAncestor())).add("left",
-				EObjectUtil.getLabel((EObject)getLeft())).add("right",
-				EObjectUtil.getLabel((EObject)getRight())).add("side", getSide()).add("diff", getDiff())
-				.toString();
+		// @formatter:off
+		return Objects.toStringHelper(className.substring(start + 1))
+				.add("ancestor", EObjectUtil.getLabel((EObject)getAncestor())) //$NON-NLS-1$
+				.add("left", EObjectUtil.getLabel((EObject)getLeft())) //$NON-NLS-1$
+				.add("right", EObjectUtil.getLabel((EObject)getRight())) //$NON-NLS-1$
+				.add("side", getSide()) //$NON-NLS-1$
+				.add("diff", getDiff()).toString(); //$NON-NLS-1$
+		// @formatter:on
 	}
 
 	/**
@@ -297,7 +300,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	 */
 	private Iterable<? extends Diff> getDiffsWithValue(EObject expectedValue, Match parentMatch) {
 		Iterable<? extends Diff> diffs = filter(fComparison.getDifferences(expectedValue),
-				containmentReferenceChange());
+				CONTAINMENT_REFERENCE_CHANGE);
 		if (size(diffs) > 1) {
 			throw new IllegalStateException("Should not have more than one ReferenceChange on each Match"); //$NON-NLS-1$
 		} else {
@@ -466,7 +469,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		Match match = getComparison().getMatch(eObject);
 
 		ReferenceChange referenceChange = (ReferenceChange)getFirst(filter(getComparison().getDifferences(
-				eObject), containmentReferenceChange()), null);
+				eObject), CONTAINMENT_REFERENCE_CHANGE), null);
 		if (match != null) {
 			return new MergeViewerItem.Container(getComparison(), referenceChange, match, getSide(),
 					getAdapterFactory());
@@ -605,7 +608,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			final ImmutableList<Diff> differences;
 			if (match != null) {
 				differences = ImmutableList.copyOf(filter(match.getDifferences(),
-						containmentReferenceChange()));
+						CONTAINMENT_REFERENCE_CHANGE));
 			} else {
 				differences = ImmutableList.of();
 			}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -77,8 +78,8 @@ public class CompareInDialog extends AbstractCompareHandler {
 					&& right instanceof EObject
 					&& (EcoreUtil.isAncestor((EObject)left, (EObject)right) || EcoreUtil.isAncestor(
 							(EObject)right, (EObject)left))) {
-				MessageDialog.openInformation(activePart.getSite().getShell(), "EMF Compare",
-						"Can't run a comparison between an object and one of its ancestor.");
+				MessageDialog.openInformation(activePart.getSite().getShell(), "EMF Compare", //$NON-NLS-1$
+						EMFCompareIDEUIMessages.getString("CompareSelfWithAncestor")); //$NON-NLS-1$
 			} else {
 				final CompareEditorInput input = createCompareEditorInput(activePart, adapterFactory, left,
 						right, origin);

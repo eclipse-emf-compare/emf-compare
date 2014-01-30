@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.io.IOException;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 
+@SuppressWarnings("nls")
 public class DistanceMatchInputData extends AbstractInputData {
 
 	public Resource getCompareLeft() throws IOException {

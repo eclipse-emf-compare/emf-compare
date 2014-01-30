@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -106,7 +106,6 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 	 * @since 3.0
 	 */
 	public IStyledString.IComposedStyledString getStyledText(Object object) {
-		Match match = (Match)object;
 		ComposedStyledString styledString = new ComposedStyledString(getText(object));
 		return styledString;
 	}

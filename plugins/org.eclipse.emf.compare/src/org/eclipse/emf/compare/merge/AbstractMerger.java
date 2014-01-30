@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -84,6 +84,7 @@ public abstract class AbstractMerger implements IMerger {
 	 * 
 	 * @see org.eclipse.emf.compare.merge.IMerger#copyLeftToRight(org.eclipse.emf.compare.Diff,
 	 *      org.eclipse.emf.common.util.Monitor)
+	 * @since 4.0
 	 */
 	public void copyLeftToRight(Diff target, Monitor monitor) {
 		// Don't merge an already merged (or discarded) diff
@@ -127,6 +128,7 @@ public abstract class AbstractMerger implements IMerger {
 	 * 
 	 * @see org.eclipse.emf.compare.merge.IMerger#copyRightToLeft(org.eclipse.emf.compare.Diff,
 	 *      org.eclipse.emf.common.util.Monitor)
+	 * @since 4.0
 	 */
 	public void copyRightToLeft(Diff target, Monitor monitor) {
 		// Don't merge an already merged (or discarded) diff
@@ -172,9 +174,10 @@ public abstract class AbstractMerger implements IMerger {
 	 *            the difference to merge
 	 * @param rightToLeft
 	 *            the direction of the merge
+	 * @since 4.0
 	 */
 	protected void accept(final Diff diff, boolean rightToLeft) {
-
+		// Empty default implementation
 	}
 
 	/**
@@ -184,9 +187,10 @@ public abstract class AbstractMerger implements IMerger {
 	 *            the difference to merge
 	 * @param rightToLeft
 	 *            the direction of the merge
+	 * @since 4.0
 	 */
 	protected void reject(final Diff diff, boolean rightToLeft) {
-
+		// Empty default implementation
 	}
 
 	/**
@@ -219,6 +223,7 @@ public abstract class AbstractMerger implements IMerger {
 	 *            The direction of the merge.
 	 * @param monitor
 	 *            Monitor.
+	 * @since 4.0
 	 */
 	protected void handleImplies(Diff diff, boolean rightToLeft, Monitor monitor) {
 		for (Diff implied : diff.getImplies()) {
@@ -237,6 +242,7 @@ public abstract class AbstractMerger implements IMerger {
 	 *            The direction of the merge.
 	 * @param monitor
 	 *            Monitor.
+	 * @since 4.0
 	 */
 	protected void handleImpliedBy(Diff diff, boolean rightToLeft, Monitor monitor) {
 		for (Diff impliedBy : diff.getImpliedBy()) {
@@ -306,6 +312,7 @@ public abstract class AbstractMerger implements IMerger {
 	 *            The monitor to use in order to report progress information.
 	 * @return <code>true</code> if the current difference should still be merged after handling its
 	 *         equivalences, <code>false</code> if it should be considered "already merged".
+	 * @since 4.0
 	 */
 	protected boolean handleEquivalences(Diff diff, boolean rightToLeft, Monitor monitor) {
 		boolean continueMerge = true;

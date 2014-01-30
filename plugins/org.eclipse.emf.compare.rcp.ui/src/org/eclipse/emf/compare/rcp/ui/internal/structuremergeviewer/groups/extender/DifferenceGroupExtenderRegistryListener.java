@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,7 @@ import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- * @since 3.0
+ * @since 4.0
  */
 public class DifferenceGroupExtenderRegistryListener extends AbstractRegistryEventListener {
 
@@ -83,8 +83,8 @@ public class DifferenceGroupExtenderRegistryListener extends AbstractRegistryEve
 					.createExecutableExtension(ATT_CLASS);
 			IDifferenceGroupExtender previous = extendersRegistry.add(extender);
 			if (previous != null) {
-				log(IStatus.WARNING, element, "The difference group extender '"
-						+ extender.getClass().getName() + "' is registered twice.");
+				log(IStatus.WARNING, element, "The difference group extender '" //$NON-NLS-1$
+						+ extender.getClass().getName() + "' is registered twice."); //$NON-NLS-1$
 			}
 		} catch (CoreException e) {
 			log(element, e);

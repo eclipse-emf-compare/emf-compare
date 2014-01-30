@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -125,16 +125,13 @@ public class ResourceContentsAccessorImpl extends AbstractTypedElementAdapter im
 			Object ancestor = match.getOrigin();
 			// Manage case where the resource attachment change is between an existing resource and an unknown
 			// resource
-			if (MergeViewerUtil.getResource(getComparison(), MergeViewerSide.LEFT,
-					(ResourceAttachmentChange)initialDiff) == null) {
+			if (MergeViewerUtil.getResource(getComparison(), MergeViewerSide.LEFT, initialDiff) == null) {
 				left = null;
 			}
-			if (MergeViewerUtil.getResource(getComparison(), MergeViewerSide.RIGHT,
-					(ResourceAttachmentChange)initialDiff) == null) {
+			if (MergeViewerUtil.getResource(getComparison(), MergeViewerSide.RIGHT, initialDiff) == null) {
 				right = null;
 			}
-			if (MergeViewerUtil.getResource(getComparison(), MergeViewerSide.ANCESTOR,
-					(ResourceAttachmentChange)initialDiff) == null) {
+			if (MergeViewerUtil.getResource(getComparison(), MergeViewerSide.ANCESTOR, initialDiff) == null) {
 				ancestor = null;
 			}
 

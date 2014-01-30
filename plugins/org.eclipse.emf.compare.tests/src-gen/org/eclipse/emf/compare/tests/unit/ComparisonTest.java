@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.unit;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -212,6 +212,8 @@ public class ComparisonTest extends AbstractCompareTest {
 	 * 
 	 * @generated
 	 */
+	// generated test. Suppress the warning
+	@SuppressWarnings("boxing")
 	@Test
 	public void testThreeWay() {
 		EStructuralFeature feature = org.eclipse.emf.compare.ComparePackage.eINSTANCE

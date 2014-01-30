@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002-2013 IBM Corporation and others.
+ * Copyright (c) 2002, 2014 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,6 @@ package org.eclipse.emf.compare.rcp.extension;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
 
 /**
  * Simple utility class to create proxy of extension that are
@@ -21,11 +20,14 @@ import org.eclipse.core.runtime.IExtensionRegistry;
  * <p>
  * No test of the {@link IConfigurationElement#isValid() validity} of the wrapped
  * {@link IConfigurationElement} is performed. As such you should always extend this class while listening to
- * the {@link IExtensionRegistry} and react properly the removal of the wrapped {@link IConfigurationElement}.
+ * the {@link org.eclipse.core.runtime.IExtensionRegistry} and react properly the removal of the wrapped
+ * {@link IConfigurationElement}.
  * <p>
  * Note: this is based on {@code org.eclipse.emf.ecore.plugin.RegistryReader.PluginClassDescriptor}
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @param <T>
+ *            Type of the instances created from this descriptor.
  */
 public class PluginClassDescriptor<T> {
 	/**

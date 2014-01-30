@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,6 @@ import org.eclipse.emf.compare.tests.suite.AllTests;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.UMLPackage;
-import org.eclipse.uml2.uml.internal.resource.UMLResourceFactoryImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,13 +48,14 @@ public class MatchPerformanceComparisonTest {
 
 	Resource origin;
 
+	@SuppressWarnings("restriction")
 	@Before
 	public void setUp() throws Exception {
 		AllTests.fillEMFRegistries();
 		EPackage.Registry.INSTANCE.put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);
 
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("uml", //$NON-NLS-1$
-				new UMLResourceFactoryImpl());
+				new org.eclipse.uml2.uml.internal.resource.UMLResourceFactoryImpl());
 		left = data.getNominalUMLLeft();
 		right = data.getNominalUMLRight();
 		origin = data.getNominalUMLOrigin();

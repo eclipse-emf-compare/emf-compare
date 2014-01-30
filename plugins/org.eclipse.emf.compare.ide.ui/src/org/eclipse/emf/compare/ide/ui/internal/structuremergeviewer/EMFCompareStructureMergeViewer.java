@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -228,7 +228,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			}
 		};
 
-		navigatable = new Navigatable(fAdapterFactory, getViewer());
+		navigatable = new Navigatable(getViewer());
 
 		toolBar = new CompareToolBar(structureMergeViewerGrouper, structureMergeViewerFilter,
 				getCompareConfiguration());
@@ -340,12 +340,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			 * @see org.eclipse.jface.viewers.TreeViewer#isExpandable(java.lang.Object)
 			 */
 			@Override
-			public boolean isExpandable(Object parent) {
+			public boolean isExpandable(Object element) {
 				if (hasFilters()) {
 					// workaround for 65762
-					return getFilteredChildren(parent).length > 0;
+					return getFilteredChildren(element).length > 0;
 				}
-				return super.isExpandable(parent);
+				return super.isExpandable(element);
 			}
 		};
 		treeViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -432,7 +432,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	@Subscribe
-	public void mergePreviewModeChange(IMergePreviewModeChange event) {
+	public void mergePreviewModeChange(@SuppressWarnings("unused") IMergePreviewModeChange event) {
 		dependencyData.updateDependencies(getSelection());
 		internalRedraw();
 	}
@@ -445,7 +445,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	@Subscribe
-	public void handleDifferenceGroupProviderChange(IDifferenceGroupProviderChange event) {
+	public void handleDifferenceGroupProviderChange(
+			@SuppressWarnings("unused") IDifferenceGroupProviderChange event) {
 		SWTUtil.safeRefresh(this, false);
 	}
 

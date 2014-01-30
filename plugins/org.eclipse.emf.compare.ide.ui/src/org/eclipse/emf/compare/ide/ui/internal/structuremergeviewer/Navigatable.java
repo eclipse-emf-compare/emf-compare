@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,6 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 import java.util.Arrays;
 
 import org.eclipse.compare.INavigatable;
-import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
@@ -26,15 +25,12 @@ import org.eclipse.swt.widgets.Item;
  */
 public class Navigatable implements INavigatable {
 
-	private final AdapterFactory adapterFactory;
-
 	private final WrappableTreeViewer viewer;
 
 	/**
 	 * @param adapterFactory
 	 */
-	public Navigatable(AdapterFactory adapterFactory, WrappableTreeViewer viewer) {
-		this.adapterFactory = adapterFactory;
+	public Navigatable(WrappableTreeViewer viewer) {
 		this.viewer = viewer;
 	}
 

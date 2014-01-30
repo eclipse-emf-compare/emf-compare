@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,15 +20,17 @@ import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.command.impl.CompareCommandStack;
-import org.eclipse.emf.compare.command.impl.CopyCommand;
 import org.eclipse.emf.compare.command.impl.DualCompareCommandStack;
 import org.eclipse.emf.compare.command.impl.MergeCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.IMergeRunnable;
+import org.eclipse.emf.compare.merge.BatchMerger;
+import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.ecore.EObject;
@@ -266,7 +268,18 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 		}
 		ImmutableSet<Notifier> notifiers = notifiersBuilder.addAll(fNotifiers).build();
 
-		return new CopyCommand(fChangeRecorder, notifiers, differences, leftToRight, mergerRegistry);
+		IMergeRunnable runnable = new IMergeRunnable() {
+			public void merge(List<? extends Diff> diffs, boolean lTR, Registry registry) {
+				final IBatchMerger merger = new BatchMerger(registry);
+				if (lTR) {
+					merger.copyAllLeftToRight(diffs, new BasicMonitor());
+				} else {
+					merger.copyAllRightToLeft(diffs, new BasicMonitor());
+				}
+			}
+		};
+		return new MergeCommand(fChangeRecorder, notifiers, differences, leftToRight, mergerRegistry,
+				runnable);
 	}
 
 	/**

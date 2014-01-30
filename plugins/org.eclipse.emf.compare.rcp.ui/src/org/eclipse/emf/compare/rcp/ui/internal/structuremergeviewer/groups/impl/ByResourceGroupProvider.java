@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,8 +15,8 @@ import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Lists.newArrayList;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentMoveReferenceChange;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.containmentReferenceChange;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
@@ -67,7 +68,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 		if (group == null || !comparison.equals(comp)) {
 			dispose();
 			this.comp = comparison;
-			group = new ResourceGroup(comparison, this, getCrossReferenceAdapter());
+			group = new ResourceGroup(comparison, getCrossReferenceAdapter());
 		}
 		return ImmutableList.of(group);
 	}
@@ -138,9 +139,8 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 		 * 
 		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#BasicDifferenceGroupImpl(org.eclipse.emf.compare.Comparison)
 		 */
-		public ResourceGroup(Comparison comparison, IDifferenceGroupProvider groupProvider,
-				ECrossReferenceAdapter crossReferenceAdapter) {
-			super(comparison, groupProvider, Predicates.<Diff> alwaysTrue(), crossReferenceAdapter);
+		public ResourceGroup(Comparison comparison, ECrossReferenceAdapter crossReferenceAdapter) {
+			super(comparison, Predicates.<Diff> alwaysTrue(), crossReferenceAdapter);
 		}
 
 		/**
@@ -235,7 +235,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 				boolean hasDiff = false;
 				boolean hasNonEmptySubMatch = false;
 				for (Diff diff : filter(match.getDifferences(), and(filter, not(or(
-						containmentReferenceChange(), resourceAttachmentChange()))))) {
+						CONTAINMENT_REFERENCE_CHANGE, resourceAttachmentChange()))))) {
 					hasDiff = true;
 					treeNode.getChildren().add(wrap(diff));
 				}
@@ -246,7 +246,8 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 						treeNode.getChildren().addAll(buildSubTree);
 					}
 				}
-				for (Diff diff : filter(match.getDifferences(), and(filter, containmentMoveReferenceChange()))) {
+				for (Diff diff : filter(match.getDifferences(), and(filter, and(CONTAINMENT_REFERENCE_CHANGE,
+						ofKind(DifferenceKind.MOVE))))) {
 					if (!containsChildrenWithDataEqualsToDiff(treeNode, diff)) {
 						TreeNode buildSubTree = buildSubTree(diff);
 						if (buildSubTree != null) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import java.util.Collection;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
@@ -54,14 +55,18 @@ public class KindGroupProvider extends AbstractDifferenceGroupProvider {
 		if (differenceGroups == null || !comparison.equals(comp)) {
 			dispose();
 			this.comp = comparison;
-			final IDifferenceGroup additions = new BasicDifferenceGroupImpl(comparison, this,
-					ofKind(DifferenceKind.ADD), "Additions", getCrossReferenceAdapter());
-			final IDifferenceGroup deletions = new BasicDifferenceGroupImpl(comparison, this,
-					ofKind(DifferenceKind.DELETE), "Deletions", getCrossReferenceAdapter());
-			final IDifferenceGroup changes = new BasicDifferenceGroupImpl(comparison, this,
-					ofKind(DifferenceKind.CHANGE), "Changes", getCrossReferenceAdapter());
-			final IDifferenceGroup moves = new BasicDifferenceGroupImpl(comparison, this,
-					ofKind(DifferenceKind.MOVE), "Moves", getCrossReferenceAdapter());
+			final IDifferenceGroup additions = new BasicDifferenceGroupImpl(comparison,
+					ofKind(DifferenceKind.ADD), EMFCompareRCPUIMessages
+							.getString("KindGroupProvider.addition.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
+			final IDifferenceGroup deletions = new BasicDifferenceGroupImpl(comparison,
+					ofKind(DifferenceKind.DELETE), EMFCompareRCPUIMessages
+							.getString("KindGroupProvider.deletion.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
+			final IDifferenceGroup changes = new BasicDifferenceGroupImpl(comparison,
+					ofKind(DifferenceKind.CHANGE), EMFCompareRCPUIMessages
+							.getString("KindGroupProvider.change.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
+			final IDifferenceGroup moves = new BasicDifferenceGroupImpl(comparison,
+					ofKind(DifferenceKind.MOVE), EMFCompareRCPUIMessages
+							.getString("KindGroupProvider.move.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
 			Collection<IDifferenceGroup> groups = Lists.newArrayList();
 			if (!additions.getChildren().isEmpty()) {
 				groups.add(additions);

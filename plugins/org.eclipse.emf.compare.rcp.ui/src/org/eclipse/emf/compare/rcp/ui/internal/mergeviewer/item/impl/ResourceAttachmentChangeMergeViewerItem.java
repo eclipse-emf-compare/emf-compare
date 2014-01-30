@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -74,6 +74,7 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem.Container#getChildren()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public IMergeViewerItem[] getChildren(IDifferenceGroupProvider group, Predicate<? super EObject> filters) {
 		Object sideValue = getSideValue(getSide());

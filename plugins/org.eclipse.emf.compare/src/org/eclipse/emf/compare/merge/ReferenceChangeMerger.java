@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.utils.DiffUtil;
+import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -529,6 +529,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 	 *            The diff we are currently merging.
 	 * @param rightToLeft
 	 *            Direction of the merge.
+	 * @since 4.0
 	 */
 	protected void checkImpliedDiffsOrdering(ReferenceChange diff, boolean rightToLeft) {
 		final EReference reference = diff.getReference();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
  * {@link IItemStyledLabelProvider} and {@link IItemDescriptionProvider}.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @since 4.0
  */
 public class ExtendedAdapterFactoryItemDelegator extends AdapterFactoryItemDelegator implements IItemStyledLabelProvider, IItemDescriptionProvider {
 
@@ -59,7 +60,7 @@ public class ExtendedAdapterFactoryItemDelegator extends AdapterFactoryItemDeleg
 			result = new ComposedStyledString();
 			for (Object child : (List<?>)object) {
 				if (!isEmpty(result)) {
-					result.append(", ");
+					result.append(", "); //$NON-NLS-1$
 				}
 				IComposedStyledString styledText = getStyledText(child);
 				for (IStyledString styledString : styledText) {

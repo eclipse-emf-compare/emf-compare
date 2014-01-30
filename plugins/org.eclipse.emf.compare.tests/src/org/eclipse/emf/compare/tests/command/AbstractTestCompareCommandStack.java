@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,15 +31,11 @@ public abstract class AbstractTestCompareCommandStack {
 
 	private MockCompareCommand leftToRight3;
 
-	private MockCompareCommand leftToRight4;
-
 	private MockCompareCommand rightToLeft1;
 
 	private MockCompareCommand rightToLeft2;
 
 	private MockCompareCommand rightToLeft3;
-
-	private MockCompareCommand rightToLeft4;
 
 	@Before
 	public void before() {
@@ -48,12 +44,10 @@ public abstract class AbstractTestCompareCommandStack {
 		leftToRight1 = new MockCompareCommand(true);
 		leftToRight2 = new MockCompareCommand(true);
 		leftToRight3 = new MockCompareCommand(true);
-		leftToRight4 = new MockCompareCommand(true);
 
 		rightToLeft1 = new MockCompareCommand(false);
 		rightToLeft2 = new MockCompareCommand(false);
 		rightToLeft3 = new MockCompareCommand(false);
-		rightToLeft4 = new MockCompareCommand(false);
 	}
 
 	/**

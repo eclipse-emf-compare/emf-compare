@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -93,7 +93,7 @@ import org.eclipse.ui.views.properties.PropertySheet;
  */
 public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer implements ISelectionChangedListener, ICompareColor.Provider, IAdaptable, CommandStackListener {
 
-	private static final String HANDLER_SERVICE = "fHandlerService";
+	private static final String HANDLER_SERVICE = "fHandlerService"; //$NON-NLS-1$
 
 	/**
 	 * Width of center bar
@@ -326,7 +326,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		IMenuService menuService = (IMenuService)workbench.getService(IMenuService.class);
 		if (menuService != null) {
 			menuService.populateContributionManager(toolBarManager,
-					"toolbar:org.eclipse.emf.compare.contentmergeviewer.toolbar");
+					"toolbar:org.eclipse.emf.compare.contentmergeviewer.toolbar"); //$NON-NLS-1$
 		}
 
 	}
@@ -350,6 +350,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 */
 	@Override
 	protected void copy(final boolean leftToRight) {
+		// TODO this is used from an action we delete from the view, so can probably be removed altogether
 		final List<Diff> differences;
 
 		if (getCompareConfiguration().getComparison().isThreeWay()) {

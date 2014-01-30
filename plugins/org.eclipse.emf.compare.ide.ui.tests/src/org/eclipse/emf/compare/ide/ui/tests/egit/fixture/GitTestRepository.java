@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2013 Obeo and others
+ * Copyright (C) 2013, 2014 Obeo and others
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -49,7 +49,7 @@ import org.eclipse.team.core.subscribers.SubscriberScopeManager;
  * This class is largely inspired from org.eclipse.egit.core.test.TestRepository. It has been copied here in
  * order to be usable from our build without dependencies towards egit.core.tests.
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({"nls", "restriction" })
 public class GitTestRepository {
 	Repository repository;
 

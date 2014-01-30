@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,12 +39,11 @@ import org.junit.runner.RunWith;
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
+@SuppressWarnings("nls")
 @RunWith(Theories.class)
 public class DistanceAxiomsTests {
 
 	private DistanceFunction meter;
-
-	private int MAX_DISTANCE = Integer.MAX_VALUE;
 
 	private Comparison comparison;
 
@@ -63,7 +62,7 @@ public class DistanceAxiomsTests {
 		Assume.assumeTrue(a.eClass() == b.eClass());
 		double aTob = meter.distance(comparison, a, b);
 		double bToa = meter.distance(comparison, b, a);
-		assertEquals(aTob, bToa);
+		assertEquals(aTob, bToa, 0.01);
 	}
 
 	private static EObject[] createFingerPrintsFromModel(EObject einstance) {
@@ -72,7 +71,7 @@ public class DistanceAxiomsTests {
 
 	@Theory
 	public void separation(EObject a) {
-		assertEquals(0, meter.distance(comparison, a, a));
+		assertEquals(0, meter.distance(comparison, a, a), 0.01);
 	}
 
 	@Theory

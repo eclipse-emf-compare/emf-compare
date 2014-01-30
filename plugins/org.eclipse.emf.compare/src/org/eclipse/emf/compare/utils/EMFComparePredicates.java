@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,15 +39,22 @@ import org.eclipse.emf.ecore.EcorePackage;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class EMFComparePredicates {
-
-	/** This can be used to test whether a given Diff has no conflict object associated. */
+	/**
+	 * This can be used to test whether a given Diff has no conflict object associated.
+	 * 
+	 * @since 4.0
+	 */
 	public static final Predicate<? super Diff> WITHOUT_CONFLICT = new Predicate<Diff>() {
 		public boolean apply(Diff input) {
 			return input != null && input.getConflict() == null;
 		}
 	};
 
-	/** This can be used to check whether a given diff is a containment reference change. */
+	/**
+	 * This can be used to check whether a given diff is a containment reference change.
+	 * 
+	 * @since 4.0
+	 */
 	public static final Predicate<? super Diff> CONTAINMENT_REFERENCE_CHANGE = new Predicate<Diff>() {
 		public boolean apply(Diff input) {
 			return input instanceof ReferenceChange
@@ -771,18 +778,6 @@ public final class EMFComparePredicates {
 	@Deprecated
 	public static Predicate<? super Diff> containmentReferenceChange() {
 		return CONTAINMENT_REFERENCE_CHANGE;
-	}
-
-	/**
-	 * This can be used to check whether a given diff is a containment move reference change.
-	 * 
-	 * @return The created predicate.
-	 * @since 3.0
-	 * @deprecated use and(CONTAINMENT_REFERENCE_CHANGE, ofKind(DifferenceKind.MOVE)) instead.
-	 */
-	@Deprecated
-	public static Predicate<? super Diff> containmentMoveReferenceChange() {
-		return and(CONTAINMENT_REFERENCE_CHANGE, ofKind(DifferenceKind.MOVE));
 	}
 
 	/**

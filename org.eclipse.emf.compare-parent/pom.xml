@@ -19,7 +19,7 @@
 
   <groupId>org.eclipse.emf.compare</groupId>
   <artifactId>emf.compare-parent</artifactId>
-  <version>2.2.0-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <licenses>
@@ -301,7 +301,7 @@
               <artifact>
                 <groupId>org.eclipse.emf.compare</groupId>
                 <artifactId>emf.compare-parent</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>3.0.0-SNAPSHOT</version>
                 <classifier>targetPlatforms/luna-sdk</classifier>
               </artifact>
             </target>
@@ -327,7 +327,7 @@
               <artifact>
                 <groupId>org.eclipse.emf.compare</groupId>
                 <artifactId>emf.compare-parent</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>3.0.0-SNAPSHOT</version>
                 <classifier>targetPlatforms/kepler-sdk</classifier>
               </artifact>
             </target>
@@ -353,7 +353,7 @@
               <artifact>
                 <groupId>org.eclipse.emf.compare</groupId>
                 <artifactId>emf.compare-parent</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>3.0.0-SNAPSHOT</version>
                 <classifier>targetPlatforms/juno-4.2-sdk</classifier>
               </artifact>
             </target>
@@ -379,7 +379,7 @@
               <artifact>
                 <groupId>org.eclipse.emf.compare</groupId>
                 <artifactId>emf.compare-parent</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>3.0.0-SNAPSHOT</version>
                 <classifier>targetPlatforms/juno-4.2-sdk</classifier>
               </artifact>
             </target>
@@ -407,7 +407,7 @@
                             <artifact>
                                 <groupId>org.eclipse.emf.compare</groupId>
                                 <artifactId>org.eclipse.emf.compare</artifactId>
-                                <version>2.2.0-SNAPSHOT</version>
+                                <version>3.0.0-SNAPSHOT</version>
                                 <classifier>target_platforms/helios-sdk</classifier>
                             </artifact>
                         </target>
@@ -433,7 +433,7 @@
                             <artifact>
                                 <groupId>org.eclipse.emf.compare</groupId>
                                 <artifactId>org.eclipse.emf.compare</artifactId>
-                                <version>2.2.0-SNAPSHOT</version>
+                                <version>3.0.0-SNAPSHOT</version>
                                 <classifier>target_platforms/galileo-sdk</classifier>
                             </artifact>
                         </target>

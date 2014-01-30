@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class URIDistanceTest {
 
 	private URIDistance meter = new URIDistance();
@@ -141,14 +142,16 @@ public class URIDistanceTest {
 		} else {
 			CharMatcher slash = CharMatcher.is('/');
 			Splitter splitter = Splitter.on('/');
-			if (slash.indexIn(aPath) == 0) {
-				aPath = aPath.substring(1);
+			String actualAPath = aPath;
+			String actualBPath = bPath;
+			if (slash.indexIn(actualAPath) == 0) {
+				actualAPath = aPath.substring(1);
 			}
-			if (slash.indexIn(bPath) == 0) {
-				bPath = bPath.substring(1);
+			if (slash.indexIn(actualBPath) == 0) {
+				actualBPath = bPath.substring(1);
 			}
-			Iterable<String> aString = splitter.split(slash.trimTrailingFrom(aPath));
-			Iterable<String> bString = splitter.split(slash.trimTrailingFrom(bPath));
+			Iterable<String> aString = splitter.split(slash.trimTrailingFrom(actualAPath));
+			Iterable<String> bString = splitter.split(slash.trimTrailingFrom(actualBPath));
 			return meter.proximity(ImmutableList.copyOf(aString), ImmutableList.copyOf(bString));
 		}
 	}

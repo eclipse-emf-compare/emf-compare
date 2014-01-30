@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -67,8 +67,6 @@ public abstract class AbstractInputData {
 	 *             Thrown if we could not access either this class' resource, or the file towards which
 	 *             <code>path</code> points.
 	 */
-	// Suppressing the warning until bug 376938 is fixed
-	@SuppressWarnings("resource")
 	protected Resource loadFromClassLoader(String path, ResourceSet resourceSet) throws IOException {
 		final URL fileURL = getClass().getResource(path);
 		final URI uri = URI.createURI(fileURL.toString());

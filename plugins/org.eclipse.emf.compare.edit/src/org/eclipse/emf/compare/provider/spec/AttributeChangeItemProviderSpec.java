@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.internal.EMFCompareEditMessages;
 import org.eclipse.emf.compare.provider.AttributeChangeItemProvider;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
@@ -127,7 +128,7 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 
 		if (isNullOrEmpty(value)) {
 			if (attValue instanceof EObject && ((EObject)attValue).eIsProxy()) {
-				value = "proxy : " + ((InternalEObject)attValue).eProxyURI().toString();
+				value = "proxy : " + ((InternalEObject)attValue).eProxyURI().toString(); //$NON-NLS-1$
 			} else {
 				value = "<null>"; //$NON-NLS-1$
 			}
@@ -211,32 +212,35 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 		final String valueText = getValueText(attChange);
 		final String attributeText = getAttributeText(attChange);
 
-		String remotely = "";
+		String hasBeenAndSide = EMFCompareEditMessages.getString("change.local"); //$NON-NLS-1$
 		if (attChange.getSource() == DifferenceSource.RIGHT) {
-			remotely = "remotely ";
+			hasBeenAndSide = EMFCompareEditMessages.getString("change.remote"); //$NON-NLS-1$
 		}
 
-		String ret = "";
-		final String hasBeen = " has been ";
+		String ret = ""; //$NON-NLS-1$
 
 		switch (attChange.getKind()) {
 			case ADD:
-				ret = valueText + hasBeen + remotely + "added to " + attributeText;
+				ret = EMFCompareEditMessages.getString("AttributeChangeItemProviderSpec.valueAdded", //$NON-NLS-1$
+						valueText, hasBeenAndSide, attributeText);
 				break;
 			case DELETE:
-				ret = valueText + hasBeen + remotely + "deleted from " + attributeText;
+				ret = EMFCompareEditMessages.getString("AttributeChangeItemProviderSpec.valueRemoved", //$NON-NLS-1$
+						valueText, hasBeenAndSide, attributeText);
 				break;
 			case CHANGE:
 				String changeText = ReferenceChangeItemProviderSpec.changeText(attChange, attChange
 						.getAttribute());
-				ret = attributeText + " " + valueText + hasBeen + remotely + changeText;
+				ret = EMFCompareEditMessages.getString("AttributeChangeItemProviderSpec.valueChanged", //$NON-NLS-1$
+						attributeText, valueText, hasBeenAndSide, changeText);
 				break;
 			case MOVE:
-				ret = valueText + hasBeen + remotely + "moved in '" + attributeText;
+				ret = EMFCompareEditMessages.getString("AttributeChangeItemProviderSpec.valueMoved", //$NON-NLS-1$
+						valueText, hasBeenAndSide, attributeText);
 				break;
 			default:
-				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName()
-						+ " value: " + attChange.getKind());
+				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
+						+ " value: " + attChange.getKind()); //$NON-NLS-1$
 		}
 
 		return ret;

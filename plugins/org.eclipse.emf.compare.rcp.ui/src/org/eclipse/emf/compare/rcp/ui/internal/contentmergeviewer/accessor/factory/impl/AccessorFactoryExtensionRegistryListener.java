@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,8 +55,8 @@ public class AccessorFactoryExtensionRegistryListener extends AbstractRegistryEv
 				try {
 					Integer.parseInt(rankingStr);
 				} catch (NumberFormatException nfe) {
-					log(IStatus.ERROR, element, "Attribute '" + ATT_RANKING
-							+ "' is malformed, should be an integer.");
+					log(IStatus.ERROR, element, "Attribute '" + ATT_RANKING //$NON-NLS-1$
+							+ "' is malformed, should be an integer."); //$NON-NLS-1$
 				}
 				logMissingAttribute(element, ATT_RANKING);
 				valid = false;
@@ -81,8 +81,8 @@ public class AccessorFactoryExtensionRegistryListener extends AbstractRegistryEv
 			factory.setRanking(Integer.parseInt(element.getAttribute(ATT_RANKING)));
 			IAccessorFactory previous = registry.add(factory);
 			if (previous != null) {
-				log(IStatus.WARNING, element, "The accessor factory '" + factory.getClass().getName()
-						+ "' is registered twice.");
+				log(IStatus.WARNING, element, "The accessor factory '" + factory.getClass().getName() //$NON-NLS-1$
+						+ "' is registered twice."); //$NON-NLS-1$
 			}
 		} catch (CoreException e) {
 			log(element, e);

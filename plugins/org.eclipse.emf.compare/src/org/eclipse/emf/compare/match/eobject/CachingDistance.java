@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo and others.
+ * Copyright (c) 2012, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * same value will be returned to distance(b,a).
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
+ * @since 4.0
  */
 public class CachingDistance implements DistanceFunction {
 
@@ -54,7 +55,7 @@ public class CachingDistance implements DistanceFunction {
 		Double previousResult = distanceCache.get(key);
 		if (previousResult == null) {
 			double dist = wrapped.distance(inProgress, a, b);
-			distanceCache.put(key, dist);
+			distanceCache.put(key, Double.valueOf(dist));
 			// cache it
 			return dist;
 		}

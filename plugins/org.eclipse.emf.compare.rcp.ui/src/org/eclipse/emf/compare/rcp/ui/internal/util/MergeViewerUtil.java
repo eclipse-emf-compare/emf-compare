@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,7 +30,6 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
@@ -325,11 +324,18 @@ public final class MergeViewerUtil {
 	}
 
 	/**
-	 * Predicates that apply {@link DiffUtil#isPrimeRefining(EObject)}.
+	 * Check if the given object is a Diff that is a prime refining of one of its refine diffs.
 	 */
 	private static final Predicate<EObject> IS_PRIME_REFINING = new Predicate<EObject>() {
 		public boolean apply(EObject eObject) {
-			return DiffUtil.isPrimeRefining(eObject);
+			if (eObject instanceof Diff) {
+				for (Diff refine : ((Diff)eObject).getRefines()) {
+					if (refine.getPrimeRefining() == eObject) {
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	};
 }

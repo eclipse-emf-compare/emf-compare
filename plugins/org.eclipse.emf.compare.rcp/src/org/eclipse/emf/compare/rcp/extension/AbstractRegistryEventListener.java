@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -60,6 +60,7 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 	 */
 	private final String extensionPointID;
 
+	/** The log in which to report failures from this listener. */
 	private final ILog log;
 
 	/**
@@ -184,12 +185,15 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 	 *            the name of the missing attribute.
 	 */
 	protected void logMissingAttribute(IConfigurationElement element, String attributeName) {
-		log(IStatus.ERROR, element, "The required attribute '" + attributeName + "' not defined");
+		log(IStatus.ERROR, element, "The required attribute '" + attributeName + "' not defined"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
 	 * Log the error to the current plugin logger.
 	 * 
+	 * @param severity
+	 *            Severity of this message. One of <code>IStatus.OK</code>, <code>IStatus.ERROR</code>,
+	 *            <code>IStatus.INFO</code>, <code>IStatus.WARNING</code>, or <code>IStatus.CANCEL</code>
 	 * @param element
 	 *            the element from which comes to the error.
 	 * @param message
@@ -204,8 +208,8 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 	 * 
 	 * @param element
 	 *            the element from which comes to the error.
-	 * @param message
-	 *            the message to be logged.
+	 * @param t
+	 *            the exception to be logged.
 	 */
 	protected void log(IConfigurationElement element, Throwable t) {
 		log.log(new Status(IStatus.ERROR, element.getDeclaringExtension().getContributor().getName(), t
@@ -221,6 +225,7 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 	 *            Human-readable cause of this exception.
 	 * @param cause
 	 *            Actual exception that is to be logged.
+	 * @since 3.0
 	 */
 	protected void log(IConfigurationElement element, String errorMessage, Throwable cause) {
 		log.log(new Status(IStatus.ERROR, element.getDeclaringExtension().getContributor().getName(),

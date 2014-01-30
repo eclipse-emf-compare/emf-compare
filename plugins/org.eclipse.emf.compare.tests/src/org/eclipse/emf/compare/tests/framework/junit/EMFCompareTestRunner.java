@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2011, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,10 +13,9 @@ package org.eclipse.emf.compare.tests.framework.junit;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.eclipse.emf.compare.tests.framework.junit.annotation.UseCase;
 import org.eclipse.emf.compare.tests.framework.junit.internal.UseCaseRunner;
+import org.junit.Assert;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;

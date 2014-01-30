@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -221,6 +221,8 @@ class WrappableTreeViewer extends TreeViewer implements IWrappableStructuredView
 	 * 
 	 * @see org.eclipse.jface.viewers.TreeViewer#setSelection(java.util.List)
 	 */
+	// Suppressing warning since super is raw
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void setSelection(List items) {
 		super.setSelection(items);
@@ -481,6 +483,8 @@ class WrappableTreeViewer extends TreeViewer implements IWrappableStructuredView
 	 * @see org.eclipse.jface.viewers.AbstractTreeViewer#isSameSelection(java.util.List,
 	 *      org.eclipse.swt.widgets.Item[])
 	 */
+	// Suppressing warning since super is raw
+	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean isSameSelection(List items, Item[] current) {
 		return super.isSameSelection(items, current);
@@ -542,6 +546,8 @@ class WrappableTreeViewer extends TreeViewer implements IWrappableStructuredView
 	 * 
 	 * @see org.eclipse.jface.viewers.AbstractTreeViewer#getSelectionFromWidget()
 	 */
+	// Suppressing warning since super is raw
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List getSelectionFromWidget() {
 		return super.getSelectionFromWidget();
@@ -675,6 +681,8 @@ class WrappableTreeViewer extends TreeViewer implements IWrappableStructuredView
 	 * 
 	 * @see org.eclipse.jface.viewers.AbstractTreeViewer#setSelectionToWidget(java.util.List, boolean)
 	 */
+	// Suppressing warning since super is raw
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void setSelectionToWidget(List v, boolean reveal) {
 		super.setSelectionToWidget(v, reveal);

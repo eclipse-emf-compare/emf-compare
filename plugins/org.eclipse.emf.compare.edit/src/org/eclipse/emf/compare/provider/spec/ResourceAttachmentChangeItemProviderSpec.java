@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.internal.EMFCompareEditMessages;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.ResourceAttachmentChangeItemProvider;
@@ -110,10 +111,14 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 		ret.append(" [", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 		switch (resourceAttachmentChange.getKind()) {
 			case ADD:
-				ret.append("controlled in ", Style.DECORATIONS_STYLER);
+				ret.append(EMFCompareEditMessages
+						.getString("ResourceAttachmentChangeItemProviderSpec.decoration.control") + ' ', //$NON-NLS-1$
+						Style.DECORATIONS_STYLER);
 				break;
 			case DELETE:
-				ret.append("uncontrolled from ", Style.DECORATIONS_STYLER);
+				ret.append(EMFCompareEditMessages
+						.getString("ResourceAttachmentChangeItemProviderSpec.decoration.uncontrol") + ' ', //$NON-NLS-1$
+						Style.DECORATIONS_STYLER);
 				break;
 			default:
 				break;
@@ -131,38 +136,41 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 	public String getDescription(Object object) {
 		final ResourceAttachmentChange rac = (ResourceAttachmentChange)object;
 		final Match match = rac.getMatch();
-		String ret = itemDelegator.getText(match.getLeft());
-		if (isNullOrEmpty(ret)) {
-			ret = itemDelegator.getText(match.getRight());
+		String valueText = itemDelegator.getText(match.getLeft());
+		if (isNullOrEmpty(valueText)) {
+			valueText = itemDelegator.getText(match.getRight());
 		}
-		if (isNullOrEmpty(ret)) {
-			ret = itemDelegator.getText(match.getOrigin());
+		if (isNullOrEmpty(valueText)) {
+			valueText = itemDelegator.getText(match.getOrigin());
 		}
-		if (isNullOrEmpty(ret)) {
-			ret = super.getText(object);
+		if (isNullOrEmpty(valueText)) {
+			valueText = super.getText(object);
 		}
 
-		String remotely = "";
+		String hasBeenAndSide = EMFCompareEditMessages.getString("change.local"); //$NON-NLS-1$
 		if (rac.getSource() == DifferenceSource.RIGHT) {
-			remotely = "remotely ";
+			hasBeenAndSide = EMFCompareEditMessages.getString("change.remote"); //$NON-NLS-1$
 		}
 
 		DifferenceKind labelValue = rac.getKind();
-		final String hasBeen = " has been ";
 
+		final String ret;
 		switch (labelValue) {
 			case ADD:
-				ret += hasBeen + remotely + "added to resource contents";
+				ret = EMFCompareEditMessages.getString("ResourceAttachmentChangeItemProviderSpec.added", //$NON-NLS-1$
+						valueText, hasBeenAndSide);
 				break;
 			case DELETE:
-				ret += hasBeen + remotely + "deleted from resource contents";
+				ret = EMFCompareEditMessages.getString("ResourceAttachmentChangeItemProviderSpec.deleted", //$NON-NLS-1$
+						valueText, hasBeenAndSide);
 				break;
 			case MOVE:
-				ret += hasBeen + remotely + "moved in resource contents";
+				ret = EMFCompareEditMessages.getString("ResourceAttachmentChangeItemProviderSpec.moved", //$NON-NLS-1$
+						valueText, hasBeenAndSide);
 				break;
 			default:
-				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName()
-						+ " value: " + rac.getKind());
+				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
+						+ " value: " + rac.getKind()); //$NON-NLS-1$
 		}
 		return ret;
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,10 +10,9 @@
  */
 package org.eclipse.emf.compare.tests.framework.junit.internal;
 
-import junit.framework.Assert;
-
 import org.eclipse.emf.compare.tests.framework.NotifierTuple;
 import org.eclipse.emf.compare.tests.framework.junit.annotation.UseCase;
+import org.junit.Assert;
 import org.junit.runners.model.FrameworkMethod;
 
 /**

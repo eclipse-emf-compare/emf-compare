@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -78,31 +78,31 @@ final class MergeRunnableImpl implements IMergeRunnable {
 	 * @param isLeftEditable
 	 * @param isRightEditable
 	 */
-	private void markAllAsMerged(Collection<Diff> diffToMarkAsMerged, MergeMode mergeMode) {
+	private void markAllAsMerged(Collection<Diff> diffToMarkAsMerged, MergeMode mode) {
 		for (Diff diff : diffToMarkAsMerged) {
-			markAsMerged(diff, mergeMode);
+			markAsMerged(diff, mode);
 		}
 	}
 
-	private void markAsMerged(Diff diff, MergeMode mergeMode) {
+	private void markAsMerged(Diff diff, MergeMode mode) {
 		diff.setState(DifferenceState.MERGED);
-		addOrUpdateMergeData(diff, mergeMode);
+		addOrUpdateMergeData(diff, mode);
 	}
 
-	private void addOrUpdateMergeData(Collection<Diff> differences, MergeMode mergeMode) {
+	private void addOrUpdateMergeData(Collection<Diff> differences, MergeMode mode) {
 		for (Diff difference : differences) {
-			addOrUpdateMergeData(difference, mergeMode);
+			addOrUpdateMergeData(difference, mode);
 		}
 	}
 
-	private void addOrUpdateMergeData(Diff diff, MergeMode mergeMode) {
+	private void addOrUpdateMergeData(Diff diff, MergeMode mode) {
 		IMergeData mergeData = (IMergeData)EcoreUtil.getExistingAdapter(diff, IMergeData.class);
 		if (mergeData != null) {
-			mergeData.setMergeMode(mergeMode);
+			mergeData.setMergeMode(mode);
 			mergeData.setLeftEditable(isLeftEditable);
 			mergeData.setRightEditable(isRightEditable);
 		} else {
-			mergeData = new MergeDataImpl(mergeMode, isLeftEditable, isRightEditable);
+			mergeData = new MergeDataImpl(mode, isLeftEditable, isRightEditable);
 			diff.eAdapters().add(mergeData);
 		}
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -200,6 +200,7 @@ public final class ResourceUtil {
 	 * @param file
 	 *            The file for which we need an EMF URI.
 	 * @return The created URI.
+	 * @since 4.0
 	 */
 	public static URI createURIFor(IFile file) {
 		// whether it exists or not (no longer), use platform:/resource
@@ -277,37 +278,6 @@ public final class ResourceUtil {
 	}
 
 	/**
-	 * This will return <code>true</code> if and only if the given IFile has the given <em>contentTypeId</em>
-	 * configured (as returned by {@link IContentTypeManager#findContentTypesFor(InputStream, String)
-	 * Platform.getContentTypeManager().findContentTypesFor(InputStream, String)}.
-	 * 
-	 * @param resource
-	 *            The resource from which to test the content types.
-	 * @param contentTypeId
-	 *            Fully qualified identifier of the content type this <em>resource</em> has to feature.
-	 * @return <code>true</code> if the given {@link IFile} has the given content type.
-	 * @deprecated use {@link #hasContentType(String, IContentType[])} instead.
-	 */
-	@Deprecated
-	public static boolean hasContentType(IFile resource, String contentTypeId) {
-		IContentTypeManager ctManager = Platform.getContentTypeManager();
-		IContentType expected = ctManager.getContentType(contentTypeId);
-		if (expected == null) {
-			return false;
-		}
-
-		final IContentType[] contentTypes = getContentTypes(resource);
-
-		boolean hasContentType = false;
-		for (int i = 0; i < contentTypes.length && !hasContentType; i++) {
-			if (contentTypes[i].isKindOf(expected)) {
-				hasContentType = true;
-			}
-		}
-		return hasContentType;
-	}
-
-	/**
 	 * This will return <code>true</code> if the given <em>contentTypeId</em> represents a content-type
 	 * contained in the given array.
 	 * 
@@ -316,7 +286,7 @@ public final class ResourceUtil {
 	 * @param contentTypes
 	 *            The array of content-types to compare against.
 	 * @return <code>true</code> if the given array contains a content-type with this id.
-	 * @since 3.1
+	 * @since 4.0
 	 */
 	public static boolean hasContentType(String contentTypeId, IContentType[] contentTypes) {
 		IContentTypeManager ctManager = Platform.getContentTypeManager();
@@ -340,7 +310,7 @@ public final class ResourceUtil {
 	 * @param file
 	 *            The file we need the content types of.
 	 * @return All content types associated with the given file, an empty array if none.
-	 * @since 3.1
+	 * @since 4.0
 	 */
 	public static IContentType[] getContentTypes(IFile file) {
 		IContentTypeManager ctManager = Platform.getContentTypeManager();

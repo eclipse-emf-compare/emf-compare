@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,8 +80,8 @@ public class DifferenceGroupProviderExtensionRegistryListener extends AbstractRe
 		IDifferenceGroupProvider.Descriptor previous = groupProviderRegistry.add(providerDescriptor, element
 				.getAttribute(ATT_CLASS));
 		if (previous != null) {
-			log(IStatus.WARNING, element, "The group provider descriptor'" + element.getAttribute(ATT_CLASS)
-					+ "' is registered twice.");
+			log(IStatus.WARNING, element, "The group provider descriptor'" + element.getAttribute(ATT_CLASS) //$NON-NLS-1$
+					+ "' is registered twice."); //$NON-NLS-1$
 		}
 		return true;
 	}

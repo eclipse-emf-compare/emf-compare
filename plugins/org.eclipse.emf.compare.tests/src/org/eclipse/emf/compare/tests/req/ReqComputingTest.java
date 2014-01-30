@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,14 +12,14 @@ package org.eclipse.emf.compare.tests.req;
 
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.movedInReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
@@ -624,7 +624,7 @@ public class ReqComputingTest {
 
 		EList<Diff> differences = comparison.getDifferences();
 
-		assertSame(3, differences.size());
+		assertSame(Integer.valueOf(3), Integer.valueOf(differences.size()));
 		Diff added1 = getOnlyElement(filter(differences, added(node1)), null);
 		assertNotNull(added1);
 		Diff added2 = getOnlyElement(filter(differences, added(node2)), null);
@@ -641,10 +641,10 @@ public class ReqComputingTest {
 		// Happy compiler
 		assert singleChange != null;
 		assertTrue(singleChange.getValue().eIsProxy());
-		assertSame(0, added1.getRequires().size());
-		assertSame(1, added2.getRequires().size());
+		assertSame(Integer.valueOf(0), Integer.valueOf(added1.getRequires().size()));
+		assertSame(Integer.valueOf(1), Integer.valueOf(added2.getRequires().size()));
 		assertTrue(added2.getRequires().contains(added1));
-		assertSame(1, singleChange.getRequires().size());
+		assertSame(Integer.valueOf(1), Integer.valueOf(singleChange.getRequires().size()));
 		assertTrue(singleChange.getRequires().contains(added2));
 	}
 

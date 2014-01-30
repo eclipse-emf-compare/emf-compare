@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,15 +31,12 @@ public class TestCompareSideCommandStack {
 
 	private MockCompareCommand leftToRight3;
 
-	private MockCompareCommand leftToRight4;
-
 	@Before
 	public void before() {
 		commandStack = new CompareSideCommandStack();
 		leftToRight1 = new MockCompareCommand(true);
 		leftToRight2 = new MockCompareCommand(true);
 		leftToRight3 = new MockCompareCommand(true);
-		leftToRight4 = new MockCompareCommand(true);
 	}
 
 	@Test

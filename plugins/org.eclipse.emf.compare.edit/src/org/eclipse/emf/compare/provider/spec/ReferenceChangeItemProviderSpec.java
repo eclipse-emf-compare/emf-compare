@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.internal.EMFCompareEditMessages;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.ReferenceChangeItemProvider;
@@ -118,19 +119,19 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		if (sourceSide != null) {
 			Object leftValue = ReferenceUtil.safeEGet(sourceSide, eStructuralFeature);
 			if (leftValue == null || isStringAndNullOrEmpty(leftValue)) {
-				changeText = "unset";
+				changeText = EMFCompareEditMessages.getString("ReferenceChangeItemProviderSpec.unset"); //$NON-NLS-1$
 			} else if (otherSide != null) {
 				Object otherValue = ReferenceUtil.safeEGet(otherSide, eStructuralFeature);
 				if (otherValue == null || isStringAndNullOrEmpty(otherValue)) {
-					changeText = "set";
+					changeText = EMFCompareEditMessages.getString("ReferenceChangeItemProviderSpec.set"); //$NON-NLS-1$
 				} else {
-					changeText = "changed";
+					changeText = EMFCompareEditMessages.getString("ReferenceChangeItemProviderSpec.changed"); //$NON-NLS-1$
 				}
 			} else {
-				changeText = "set";
+				changeText = EMFCompareEditMessages.getString("ReferenceChangeItemProviderSpec.set"); //$NON-NLS-1$
 			}
 		} else {
-			changeText = "unset";
+			changeText = EMFCompareEditMessages.getString("ReferenceChangeItemProviderSpec.unset"); //$NON-NLS-1$
 		}
 		return changeText;
 	}
@@ -173,7 +174,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		String value = itemDelegator.getText(refChangeValue);
 		if (isNullOrEmpty(value)) {
 			if (refChangeValue.eIsProxy()) {
-				value = "proxy : " + ((InternalEObject)refChangeValue).eProxyURI().toString();
+				value = "proxy : " + ((InternalEObject)refChangeValue).eProxyURI().toString(); //$NON-NLS-1$
 			} else {
 				value = "<null>"; //$NON-NLS-1$
 			}
@@ -253,20 +254,26 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 
 		switch (refChange.getKind()) {
 			case ADD:
-				ret.append(" add", Style.DECORATIONS_STYLER);
+				ret.append(' ' + EMFCompareEditMessages
+						.getString("ReferenceChangeItemProviderSpec.decoration.add"), //$NON-NLS-1$
+						Style.DECORATIONS_STYLER);
 				break;
 			case DELETE:
-				ret.append(" delete", Style.DECORATIONS_STYLER);
+				ret.append(' ' + EMFCompareEditMessages
+						.getString("ReferenceChangeItemProviderSpec.decoration.delete"), //$NON-NLS-1$
+						Style.DECORATIONS_STYLER);
 				break;
 			case CHANGE:
-				ret.append(" " + changeText(refChange, refChange.getReference()), Style.DECORATIONS_STYLER);
+				ret.append(' ' + changeText(refChange, refChange.getReference()), Style.DECORATIONS_STYLER);
 				break;
 			case MOVE:
-				ret.append(" move", Style.DECORATIONS_STYLER);
+				ret.append(' ' + EMFCompareEditMessages
+						.getString("ReferenceChangeItemProviderSpec.decoration.move"), //$NON-NLS-1$
+						Style.DECORATIONS_STYLER);
 				break;
 			default:
-				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName()
-						+ " value: " + refChange.getKind());
+				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
+						+ " value: " + refChange.getKind()); //$NON-NLS-1$
 		}
 		ret.append("]", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -60,11 +60,8 @@ import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem.Severity;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
- * 
  */
 public class WikiTextToHTML {
-
-	private static final String TOC = "__TOC__\n\n";
 
 	private static final FileSystem DEFAULT_FS = FileSystems.getDefault();
 

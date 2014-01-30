@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
+import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IStructuralFeatureAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.ResourceContentsAccessorImpl;
@@ -272,7 +273,8 @@ public class TableMergeViewer extends TableOrTreeMergeViewer {
 
 				if (getLabelProvider() instanceof ILabelProvider) {
 					ILabelProvider labelProvider = (ILabelProvider)getLabelProvider();
-					fFeatureLabel.setText("resource contents");
+					fFeatureLabel.setText(EMFCompareRCPUIMessages
+							.getString("TableMergeViewer.directResourceContentsLabel")); //$NON-NLS-1$
 
 					fEObjectIcon.setImage(labelProvider.getImage(resource));
 					fEObjectLabel.setText(labelProvider.getText(resource));

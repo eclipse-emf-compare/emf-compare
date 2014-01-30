@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,12 +38,12 @@ public final class JobProgressMonitorWrapper extends ProgressMonitorWrapper {
 	 * @see org.eclipse.core.runtime.ProgressMonitorWrapper#beginTask(java.lang.String, int)
 	 */
 	@Override
-	public void beginTask(String name, int totalWork) {
-		this.totalWork = totalWork;
+	public void beginTask(String name, int tota) {
+		this.totalWork = tota;
 		this.worked = 0;
 		this.progressInfoItem.init();
 		this.progressInfoItem.setTaskName(name);
-		super.beginTask(name, totalWork);
+		super.beginTask(name, tota);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1057,25 +1057,6 @@ public final class DiffUtil {
 			}
 		}
 		return ignored;
-	}
-
-	/**
-	 * Check if the given object is a Diff that is a prime refining of one of its refine diffs.
-	 * 
-	 * @param data
-	 *            the given object.
-	 * @return true if the given object is a Diff that is a prime refining of one of its refine diffs, false
-	 *         otherwise.
-	 */
-	public static boolean isPrimeRefining(EObject data) {
-		if (data instanceof Diff) {
-			for (Diff refine : ((Diff)data).getRefines()) {
-				if (refine.getPrimeRefining() == data) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	/**

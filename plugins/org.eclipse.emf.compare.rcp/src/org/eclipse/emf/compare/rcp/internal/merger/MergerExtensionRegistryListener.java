@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,8 @@ import org.eclipse.emf.compare.rcp.internal.EMFCompareRCPMessages;
 
 /**
  * Listener for contributions to the merger extension.
+ * 
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class MergerExtensionRegistryListener extends AbstractRegistryEventListener {
 
@@ -32,6 +34,7 @@ public class MergerExtensionRegistryListener extends AbstractRegistryEventListen
 	/** ATT_RANKING. */
 	private static final String ATT_RANKING = "ranking"; //$NON-NLS-1$
 
+	/** The actual registry we'll populate. */
 	private final IMerger.Registry mergerRegistry;
 
 	/**
@@ -41,7 +44,10 @@ public class MergerExtensionRegistryListener extends AbstractRegistryEventListen
 	 *            The plugin id.
 	 * @param extensionPointID
 	 *            The extension point id.
+	 * @param log
+	 *            The log in which to report failures.
 	 * @param mergerRegistry
+	 *            The actual registry that will be populated by this listener.
 	 */
 	public MergerExtensionRegistryListener(String pluginID, String extensionPointID, ILog log,
 			IMerger.Registry mergerRegistry) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2013 Obeo and others
+ * Copyright (C) 2013, 2014 Obeo and others
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -28,6 +28,7 @@ import org.junit.BeforeClass;
 /**
  * The set up and tear down of this class were mostly copied from org.eclipse.egit.core.test.GitTestCase.
  */
+@SuppressWarnings("restriction")
 public class CompareGitTestCase extends CompareTestCase {
 	protected GitTestRepository repository;
 

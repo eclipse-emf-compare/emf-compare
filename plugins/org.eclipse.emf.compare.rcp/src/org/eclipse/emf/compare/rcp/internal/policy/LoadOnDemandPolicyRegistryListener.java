@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,6 +43,8 @@ public class LoadOnDemandPolicyRegistryListener extends AbstractRegistryEventLis
 	 *            the plugin id of the registering extension point.
 	 * @param extensionPointID
 	 *            the id of the extension point to listen to.
+	 * @param log
+	 *            the log in which to report errors.
 	 */
 	public LoadOnDemandPolicyRegistryListener(ILoadOnDemandPolicy.Registry registry, String pluginID,
 			String extensionPointID, ILog log) {
@@ -60,13 +62,11 @@ public class LoadOnDemandPolicyRegistryListener extends AbstractRegistryEventLis
 		if (TAG_POLICY.equals(element.getName())) {
 			if (element.getAttribute(ATT_CLASS) == null) {
 				logMissingAttribute(element, ATT_CLASS);
-				return false;
 			} else {
 				return true;
 			}
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
@@ -80,8 +80,8 @@ public class LoadOnDemandPolicyRegistryListener extends AbstractRegistryEventLis
 			ILoadOnDemandPolicy policy = (ILoadOnDemandPolicy)element.createExecutableExtension(ATT_CLASS);
 			ILoadOnDemandPolicy previous = registry.addPolicy(policy);
 			if (previous != null) {
-				log(IStatus.WARNING, element, "The factory '" + policy.getClass().getName()
-						+ "' is registered twice.");
+				log(IStatus.WARNING, element, "The factory '" + policy.getClass().getName() //$NON-NLS-1$
+						+ "' is registered twice."); //$NON-NLS-1$
 			}
 		} catch (CoreException e) {
 			log(IStatus.ERROR, element, e.getMessage());

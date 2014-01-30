@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.match.eobject.EObjectIndex.Side;
 import org.eclipse.emf.compare.match.eobject.internal.ByTypeIndex;
@@ -84,7 +85,7 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 
 		// FIXME: how to create an EMF submonitor
 		Monitor subMonitor = new BasicMonitor();
-		subMonitor.beginTask("indexing objects", 1);
+		subMonitor.beginTask(EMFCompareMessages.getString("ProximityEObjectMatcher.monitor.indexing"), 1); //$NON-NLS-1$
 		int nbElements = 0;
 		int lastSegment = 0;
 		/*
@@ -123,7 +124,8 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 
 		// FIXME: how to create an EMF submonitor
 		subMonitor = new BasicMonitor();
-		subMonitor.beginTask("matching objects", nbElements);
+		subMonitor.beginTask(EMFCompareMessages.getString("ProximityEObjectMatcher.monitor.matching"), //$NON-NLS-1$
+				nbElements);
 
 		matchIndexedObjects(comparison, subMonitor);
 
