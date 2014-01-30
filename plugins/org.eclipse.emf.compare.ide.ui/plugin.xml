@@ -21,7 +21,7 @@
             class="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerCreator"
             extensions="NODE_TYPE__EMF_EOBJECT,NODE_TYPE__EMF_RESOURCE,NODE_TYPE__EMF_RESOURCESET,NODE_TYPE__EMF_COMPARISON"
             id="org.eclipse.emf.compare.ide.ui.internal.structureMergeViewer"
-            label="EMFCompare Structure Merge Viewer">
+            label="%emf.compare.structure.merge.viewer">
       </viewer>
       <contentTypeBinding
             contentTypeId="org.eclipse.emf.ecore.xmi"
@@ -38,19 +38,19 @@
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerCreator"
             extensions="org.eclipse.emf.compare.rcp.ui.eTreeDiff,org.eclipse.emf.compare.rcp.ui.eMatch,org.eclipse.emf.compare.rcp.ui.eResourceDiff,NODE_TYPE__EMF_EOBJECT,NODE_TYPE__EMF_RESOURCE,NODE_TYPE__EMF_RESOURCESET,NODE_TYPE__EMF_COMPARISON"
             id="org.eclipse.emf.compare.ide.ui.internal.EObjectContentMergeViewer"
-            label="Model Compare (Containment Features)">
+            label="%model.compare.containment.feature">
       </viewer>
       <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table.TableContentMergeViewerCreator"
             extensions="org.eclipse.emf.compare.rcp.ui.eListDiff"
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EObjectListContentMergeViewer"
-            label="Model Compare (Non Containment Feature)">
+            label="%model.compare.non.contaiment.feature">
       </viewer>
       <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text.EMFCompareTextMergeViewerCreator"
             extensions="org.eclipse.emf.compare.rcp.ui.eTextDiff"
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text.EMFCompareTextContentMergeViewer"
-            label="Model Compare (Text Feature)">
+            label="%model.compare.text.feature">
       </viewer>
       <contentTypeBinding
             contentTypeId="org.eclipse.emf.ecore.xmi"
@@ -76,7 +76,7 @@
             locationURI="popup:compareWithMenu?after=compareWithGroup">
          <command
                commandId="org.eclipse.emf.compare.ide.ui.compareInDialog"
-               label="Each Other &lt;EObject&gt; (in Dialog)"
+               label="%command.each.other.in.dialog"
                style="push">
             <visibleWhen
                   checkEnabled="true">
@@ -84,7 +84,7 @@
          </command>
          <command
                commandId="org.eclipse.emf.compare.ide.ui.compareInEditor"
-               label="Each Other &lt;EObject&gt; (in Editor)"
+               label="%command.each.other.in.editor"
                style="push">
             <visibleWhen
                   checkEnabled="true">
@@ -96,7 +96,7 @@
             locationURI="popup:org.eclipse.ui.popup.any">
          <menu
                id="compareWithMenu"
-               label="Compare With">
+               label="%compare.with.label">
             <separator
                   name="compareWithGroup">
             </separator>
