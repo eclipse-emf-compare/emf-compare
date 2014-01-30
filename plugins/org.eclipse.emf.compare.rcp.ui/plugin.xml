@@ -21,12 +21,12 @@
       <group
             activeByDefault="false"
             class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.KindGroupProvider"
-            label="By Kind">
+            label="%emf.compare.kind.groups">
       </group>
       <group
             activeByDefault="true"
             class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.ThreeWayComparisonGroupProvider"
-            label="By Side">
+            label="%emf.compare.side.groups">
       </group>
    </extension>
    <extension
@@ -34,22 +34,22 @@
       <filter
             activeByDefault="true"
             class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.EmptyMatchedResourcesFilter"
-            label="Empty resource mappings">
+            label="%emf.compare.empty.resource.mappings.filter">
       </filter>
       <filter
             activeByDefault="true"
             class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.PseudoConflictsFilter"
-            label="Pseudo conflicts differences">
+            label="%emf.compare.pseudo.conflicts.differences.filter">
       </filter>
       <filter
             activeByDefault="true"
             class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.IdenticalElementsFilter"
-            label="Identical elements">
+            label="%emf.compare.identical.elements.filter">
       </filter>
       <filter
             activeByDefault="true"
             class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter"
-            label="Cascading differences">
+            label="%emf.compare.cascading.differences.filter">
       </filter>
    </extension>
    <extension
