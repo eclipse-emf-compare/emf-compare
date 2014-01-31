@@ -286,7 +286,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 4.0
+	 * @since 3.1
 	 * @generated
 	 */
 	public EAttribute getComparison_Diagnostic() {
@@ -458,7 +458,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 4.0
+	 * @since 3.1
 	 * @generated
 	 */
 	public EReference getDiff_Implies() {
@@ -468,7 +468,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 4.0
+	 * @since 3.1
 	 * @generated
 	 */
 	public EReference getDiff_ImpliedBy() {
@@ -496,7 +496,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 4.0
+	 * @since 3.1
 	 * @generated
 	 */
 	public EReference getDiff_PrimeRefining() {
@@ -722,7 +722,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 4.0
+	 * @since 3.1
 	 * @generated
 	 */
 	public EDataType getDiagnostic() {

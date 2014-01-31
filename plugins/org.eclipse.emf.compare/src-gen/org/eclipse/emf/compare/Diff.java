@@ -119,7 +119,7 @@ public interface Diff extends EObject {
 	 * @see org.eclipse.emf.compare.ComparePackage#getDiff_Implies()
 	 * @see org.eclipse.emf.compare.Diff#getImpliedBy
 	 * @model opposite="impliedBy"
-	 * @since 4.0
+	 * @since 3.1
 	 * @generated
 	 */
 	EList<Diff> getImplies();
@@ -138,7 +138,7 @@ public interface Diff extends EObject {
 	 * @see org.eclipse.emf.compare.ComparePackage#getDiff_ImpliedBy()
 	 * @see org.eclipse.emf.compare.Diff#getImplies
 	 * @model opposite="implies"
-	 * @since 4.0
+	 * @since 3.1
 	 * @generated
 	 */
 	EList<Diff> getImpliedBy();
@@ -187,7 +187,7 @@ public interface Diff extends EObject {
 	 * @return the value of the '<em>Prime Refining</em>' reference.
 	 * @see org.eclipse.emf.compare.ComparePackage#getDiff_PrimeRefining()
 	 * @model transient="true" changeable="false" derived="true"
-	 * @since 4.0
+	 * @since 3.1
 	 * @generated
 	 */
 	Diff getPrimeRefining();

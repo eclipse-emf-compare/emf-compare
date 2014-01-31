@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.diagram.papyrus.tests
-Bundle-Version: 3.0.0.qualifier
+Bundle-Version: 2.2.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  org.eclipse.emf.compare.diagram,
@@ -14,7 +14,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.uml2.uml,
  org.eclipse.uml2.uml.resources,
  org.eclipse.papyrus.infra.core
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %providerName
 Import-Package: com.google.common.base;version="[11.0.0,15.0.0)",
  com.google.common.collect;version="[11.0.0,15.0.0)"

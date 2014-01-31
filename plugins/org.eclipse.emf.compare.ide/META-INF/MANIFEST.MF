@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.ide;singleton:=true
-Bundle-Version: 4.0.0.qualifier
+Bundle-Version: 3.1.0.qualifier
 Bundle-Activator: org.eclipse.emf.compare.ide.EMFCompareIDEPlugin
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.core.runtime,
@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.xmi;bundle-version="2.5.0",
  org.eclipse.emf.compare.rcp;bundle-version="2.1.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Localization: plugin
 Import-Package: com.google.common.annotations;version="[11.0.0,15.0.0)", 
  com.google.common.base;version="[11.0.0,15.0.0)",

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.tests;singleton:=true
-Bundle-Version: 4.0.0.qualifier
+Bundle-Version: 3.1.0.qualifier
 Bundle-Activator: org.eclipse.emf.compare.tests.EMFCompareTestsPlugin
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
@@ -18,7 +18,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.uml2.uml.resources;bundle-version="3.1.100",
  org.eclipse.emf.compare.edit
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.emf.compare.tests,
  org.eclipse.emf.compare.tests.command,
  org.eclipse.emf.compare.tests.conflict,

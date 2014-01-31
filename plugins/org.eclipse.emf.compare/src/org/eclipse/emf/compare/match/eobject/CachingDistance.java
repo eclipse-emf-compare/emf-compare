@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * same value will be returned to distance(b,a).
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
- * @since 4.0
+ * @since 3.1
  */
 public class CachingDistance implements DistanceFunction {
 

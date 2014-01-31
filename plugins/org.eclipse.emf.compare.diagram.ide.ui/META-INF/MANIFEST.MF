@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.diagram.ide.ui;singleton:=true
-Bundle-Version: 4.0.0.qualifier
+Bundle-Version: 3.1.0.qualifier
 Bundle-Activator: org.eclipse.emf.compare.diagram.ide.ui.internal.CompareDiagramIDEUIPlugin
 Require-Bundle: org.eclipse.emf.compare,
  org.eclipse.gmf.runtime.diagram.ui,
@@ -17,7 +17,7 @@ Require-Bundle: org.eclipse.emf.compare,
  org.eclipse.compare
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.emf.compare.diagram.ide.ui.internal;x-internal:=true,
  org.eclipse.emf.compare.diagram.ide.ui.internal.accessor;x-internal:=true,
  org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.factory;x-internal:=true,

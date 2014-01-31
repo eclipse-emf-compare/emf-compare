@@ -200,7 +200,7 @@ public final class ResourceUtil {
 	 * @param file
 	 *            The file for which we need an EMF URI.
 	 * @return The created URI.
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	public static URI createURIFor(IFile file) {
 		// whether it exists or not (no longer), use platform:/resource
@@ -286,7 +286,7 @@ public final class ResourceUtil {
 	 * @param contentTypes
 	 *            The array of content-types to compare against.
 	 * @return <code>true</code> if the given array contains a content-type with this id.
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	public static boolean hasContentType(String contentTypeId, IContentType[] contentTypes) {
 		IContentTypeManager ctManager = Platform.getContentTypeManager();
@@ -310,7 +310,7 @@ public final class ResourceUtil {
 	 * @param file
 	 *            The file we need the content types of.
 	 * @return All content types associated with the given file, an empty array if none.
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	public static IContentType[] getContentTypes(IFile file) {
 		IContentTypeManager ctManager = Platform.getContentTypeManager();

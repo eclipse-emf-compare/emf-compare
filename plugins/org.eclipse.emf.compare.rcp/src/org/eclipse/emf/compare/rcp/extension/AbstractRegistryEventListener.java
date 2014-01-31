@@ -225,7 +225,7 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 	 *            Human-readable cause of this exception.
 	 * @param cause
 	 *            Actual exception that is to be logged.
-	 * @since 3.0
+	 * @since 2.2
 	 */
 	protected void log(IConfigurationElement element, String errorMessage, Throwable cause) {
 		log.log(new Status(IStatus.ERROR, element.getDeclaringExtension().getContributor().getName(),

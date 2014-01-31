@@ -62,7 +62,7 @@ public class StorageTraversal implements IAdaptable {
 	 * 
 	 * @param storage
 	 *            The storage to be removed.
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	public void removeStorage(IStorage storage) {
 		storages.remove(storage);

@@ -529,7 +529,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 	 *            The diff we are currently merging.
 	 * @param rightToLeft
 	 *            Direction of the merge.
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	protected void checkImpliedDiffsOrdering(ReferenceChange diff, boolean rightToLeft) {
 		final EReference reference = diff.getReference();

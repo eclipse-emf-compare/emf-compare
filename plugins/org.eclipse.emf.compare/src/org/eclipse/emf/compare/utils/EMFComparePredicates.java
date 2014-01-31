@@ -42,7 +42,7 @@ public final class EMFComparePredicates {
 	/**
 	 * This can be used to test whether a given Diff has no conflict object associated.
 	 * 
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	public static final Predicate<? super Diff> WITHOUT_CONFLICT = new Predicate<Diff>() {
 		public boolean apply(Diff input) {
@@ -53,7 +53,7 @@ public final class EMFComparePredicates {
 	/**
 	 * This can be used to check whether a given diff is a containment reference change.
 	 * 
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	public static final Predicate<? super Diff> CONTAINMENT_REFERENCE_CHANGE = new Predicate<Diff>() {
 		public boolean apply(Diff input) {

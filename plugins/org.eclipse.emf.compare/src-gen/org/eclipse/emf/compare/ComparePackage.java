@@ -129,7 +129,7 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	int COMPARISON__DIAGNOSTIC = 5;
 
@@ -327,7 +327,7 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	int DIFF__IMPLIES = 3;
 
@@ -337,7 +337,7 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	int DIFF__IMPLIED_BY = 4;
 
@@ -365,7 +365,7 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	int DIFF__PRIME_REFINING = 7;
 
@@ -464,7 +464,7 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	int RESOURCE_ATTACHMENT_CHANGE__IMPLIES = DIFF__IMPLIES;
 
@@ -474,7 +474,7 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	int RESOURCE_ATTACHMENT_CHANGE__IMPLIED_BY = DIFF__IMPLIED_BY;
 
@@ -502,7 +502,7 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	int RESOURCE_ATTACHMENT_CHANGE__PRIME_REFINING = DIFF__PRIME_REFINING;
 
@@ -610,7 +610,7 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	int REFERENCE_CHANGE__IMPLIES = DIFF__IMPLIES;
 
@@ -620,7 +620,7 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	int REFERENCE_CHANGE__IMPLIED_BY = DIFF__IMPLIED_BY;
 
@@ -648,7 +648,7 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	int REFERENCE_CHANGE__PRIME_REFINING = DIFF__PRIME_REFINING;
 
@@ -764,7 +764,7 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	int ATTRIBUTE_CHANGE__IMPLIES = DIFF__IMPLIES;
 
@@ -774,7 +774,7 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	int ATTRIBUTE_CHANGE__IMPLIED_BY = DIFF__IMPLIED_BY;
 
@@ -802,7 +802,7 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	int ATTRIBUTE_CHANGE__PRIME_REFINING = DIFF__PRIME_REFINING;
 
@@ -1006,7 +1006,7 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.common.util.Diagnostic
 	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getDiagnostic()
 	 * @generated
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	int DIAGNOSTIC = 15;
 
@@ -1087,7 +1087,7 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.Comparison#getDiagnostic()
 	 * @see #getComparison()
 	 * @generated
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	EAttribute getComparison_Diagnostic();
 
@@ -1297,7 +1297,7 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.Diff#getImplies()
 	 * @see #getDiff()
 	 * @generated
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	EReference getDiff_Implies();
 
@@ -1309,7 +1309,7 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.Diff#getImpliedBy()
 	 * @see #getDiff()
 	 * @generated
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	EReference getDiff_ImpliedBy();
 
@@ -1343,7 +1343,7 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.Diff#getPrimeRefining()
 	 * @see #getDiff()
 	 * @generated
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	EReference getDiff_PrimeRefining();
 
@@ -1612,7 +1612,7 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.common.util.Diagnostic
 	 * @model instanceClass="org.eclipse.emf.common.util.Diagnostic" serializeable="false"
 	 * @generated
-	 * @since 4.0
+	 * @since 3.1
 	 */
 	EDataType getDiagnostic();
 
@@ -1695,7 +1695,7 @@ public interface ComparePackage extends EPackage {
 		 * --> <!-- end-user-doc -->
 		 * 
 		 * @generated
-		 * @since 4.0
+		 * @since 3.1
 		 */
 		EAttribute COMPARISON__DIAGNOSTIC = eINSTANCE.getComparison_Diagnostic();
 
@@ -1854,7 +1854,7 @@ public interface ComparePackage extends EPackage {
 		 * begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
-		 * @since 4.0
+		 * @since 3.1
 		 */
 		EReference DIFF__IMPLIES = eINSTANCE.getDiff_Implies();
 
@@ -1863,7 +1863,7 @@ public interface ComparePackage extends EPackage {
 		 * begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
-		 * @since 4.0
+		 * @since 3.1
 		 */
 		EReference DIFF__IMPLIED_BY = eINSTANCE.getDiff_ImpliedBy();
 
@@ -1888,7 +1888,7 @@ public interface ComparePackage extends EPackage {
 		 * begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
-		 * @since 4.0
+		 * @since 3.1
 		 */
 		EReference DIFF__PRIME_REFINING = eINSTANCE.getDiff_PrimeRefining();
 
@@ -2114,7 +2114,7 @@ public interface ComparePackage extends EPackage {
 		 * @see org.eclipse.emf.common.util.Diagnostic
 		 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getDiagnostic()
 		 * @generated
-		 * @since 4.0
+		 * @since 3.1
 		 */
 		EDataType DIAGNOSTIC = eINSTANCE.getDiagnostic();
 

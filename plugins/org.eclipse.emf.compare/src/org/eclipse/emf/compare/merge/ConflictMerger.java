@@ -25,7 +25,7 @@ import org.eclipse.emf.compare.EMFCompareMessages;
  * This specific implementation of {@link AbstractMerger} will be used to merge real conflicts.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- * @since 4.0
+ * @since 3.1
  */
 public class ConflictMerger extends AbstractMerger {
 

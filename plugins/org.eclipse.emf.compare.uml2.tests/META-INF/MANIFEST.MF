@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.uml2.tests;singleton:=true
-Bundle-Version: 3.0.0.qualifier
+Bundle-Version: 2.2.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile,
  org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl,
  org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.util,

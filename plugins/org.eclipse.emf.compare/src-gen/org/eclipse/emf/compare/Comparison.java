@@ -180,7 +180,7 @@ public interface Comparison extends EObject {
 	 * @see #setDiagnostic(Diagnostic)
 	 * @see org.eclipse.emf.compare.ComparePackage#getComparison_Diagnostic()
 	 * @model dataType="org.eclipse.emf.compare.Diagnostic" transient="true"
-	 * @since 4.0
+	 * @since 3.1
 	 * @generated
 	 */
 	Diagnostic getDiagnostic();
@@ -192,7 +192,7 @@ public interface Comparison extends EObject {
 	 * @param value
 	 *            the new value of the '<em>Diagnostic</em>' attribute.
 	 * @see #getDiagnostic()
-	 * @since 4.0
+	 * @since 3.1
 	 * @generated
 	 */
 	void setDiagnostic(Diagnostic value);

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.diagram.ecoretools.tests
-Bundle-Version: 3.0.0.qualifier
+Bundle-Version: 2.2.0.qualifier
 Export-Package: org.eclipse.emf.compare.diagram.ecoretools.tests,
  org.eclipse.emf.compare.diagram.ecoretools.tests.hide
 Require-Bundle: org.eclipse.emf.ecore;bundle-version="2.5.0",
@@ -16,6 +16,6 @@ Require-Bundle: org.eclipse.emf.ecore;bundle-version="2.5.0",
  org.eclipse.emf.compare.uml2;bundle-version="2.1.0"
 Import-Package: com.google.common.base;version="[11.0.0,15.0.0)",
  com.google.common.collect;version="[11.0.0,15.0.0)"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin

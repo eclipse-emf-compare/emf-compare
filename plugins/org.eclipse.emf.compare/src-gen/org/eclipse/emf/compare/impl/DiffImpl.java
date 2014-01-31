@@ -89,7 +89,7 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	 * --> <!-- end-user-doc -->
 	 * 
 	 * @see #getImplies()
-	 * @since 4.0
+	 * @since 3.1
 	 * @generated
 	 * @ordered
 	 */
@@ -100,7 +100,7 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getImpliedBy()
-	 * @since 4.0
+	 * @since 3.1
 	 * @generated
 	 * @ordered
 	 */
@@ -131,7 +131,7 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getPrimeRefining()
-	 * @since 4.0
+	 * @since 3.1
 	 * @generated
 	 * @ordered
 	 */
@@ -316,7 +316,7 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 4.0
+	 * @since 3.1
 	 * @generated
 	 */
 	public EList<Diff> getImplies() {
@@ -330,7 +330,7 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 4.0
+	 * @since 3.1
 	 * @generated
 	 */
 	public EList<Diff> getImpliedBy() {
@@ -370,7 +370,7 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 4.0
+	 * @since 3.1
 	 * @generated
 	 */
 	public Diff getPrimeRefining() {
@@ -390,7 +390,7 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 4.0
+	 * @since 3.1
 	 * @generated
 	 */
 	public Diff basicGetPrimeRefining() {
