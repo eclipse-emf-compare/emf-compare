@@ -44,20 +44,20 @@ import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.AbstractDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
- * This implementation of a {@link IDifferenceGroupProvider} will be used to group the differences by their
- * {@link DifferenceSource side} : left, right and conflicts.
+ * This implementation of a
+ * {@link org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider} will be used to
+ * group the differences by their {@link DifferenceSource side} : left, right and conflicts.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- * @since 3.0
+ * @since 4.0
  */
 public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProvider {
 
@@ -76,7 +76,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
 	 */
 	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
 		if (differenceGroups == null || !comparison.equals(comp)) {
@@ -102,7 +102,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#getLabel()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getLabel()
 	 */
 	public String getLabel() {
 		return label;
@@ -111,7 +111,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#setLabel(java.lang.String)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setLabel(java.lang.String)
 	 */
 	public void setLabel(String label) {
 		this.label = label;
@@ -120,7 +120,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#defaultSelected()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#defaultSelected()
 	 */
 	public boolean defaultSelected() {
 		return activeByDefault;
@@ -129,7 +129,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#setDefaultSelected(boolean)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setDefaultSelected(boolean)
 	 */
 	public void setDefaultSelected(boolean active) {
 		this.activeByDefault = active;
@@ -138,7 +138,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#isEnabled(org
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#isEnabled(org
 	 *      .eclipse.emf.compare.scope.IComparisonScope, org.eclipse.emf.compare.Comparison)
 	 */
 	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
@@ -158,7 +158,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		/**
 		 * {@inheritDoc}.
 		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#BasicDifferenceGroupImpl(org.eclipse.emf.compare.Comparison,
+		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#BasicDifferenceGroupImpl(org.eclipse.emf.compare.Comparison,
 		 *      java.lang.Iterable, com.google.common.base.Predicate, java.lang.String)
 		 */
 		public ConflictsGroupImpl(Comparison comparison, Predicate<? super Diff> filter, String name,
@@ -169,7 +169,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#getStyledName()
+		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#getStyledName()
 		 */
 		@Override
 		public IComposedStyledString getStyledName() {
@@ -190,7 +190,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#getChildren()
+		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#getChildren()
 		 */
 		@Override
 		public List<? extends TreeNode> getChildren() {
@@ -324,7 +324,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#dispose()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#dispose()
 	 */
 	public void dispose() {
 		this.comp = null;

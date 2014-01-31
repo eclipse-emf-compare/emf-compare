@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,13 +8,12 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl;
+package org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 
@@ -22,7 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  * An abstract filter implementation.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- * @since 3.0
+ * @since 4.0
  */
 public abstract class AbstractDifferenceFilter implements IDifferenceFilter {
 
@@ -42,14 +41,14 @@ public abstract class AbstractDifferenceFilter implements IDifferenceFilter {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter#getPredicateWhenSelected()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#getPredicateWhenSelected()
 	 */
 	public abstract Predicate<? super EObject> getPredicateWhenSelected();
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter#getPredicateWhenUnselected()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#getPredicateWhenUnselected()
 	 */
 	public Predicate<? super EObject> getPredicateWhenUnselected() {
 		return Predicates.alwaysFalse();
@@ -58,7 +57,7 @@ public abstract class AbstractDifferenceFilter implements IDifferenceFilter {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter#getLabel()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#getLabel()
 	 */
 	public String getLabel() {
 		return label;
@@ -67,7 +66,7 @@ public abstract class AbstractDifferenceFilter implements IDifferenceFilter {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter#setLabel(java.lang.String)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#setLabel(java.lang.String)
 	 */
 	public void setLabel(String label) {
 		this.label = label;
@@ -76,7 +75,7 @@ public abstract class AbstractDifferenceFilter implements IDifferenceFilter {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter#defaultSelected()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#defaultSelected()
 	 */
 	public boolean defaultSelected() {
 		return activeByDefault;
@@ -85,16 +84,16 @@ public abstract class AbstractDifferenceFilter implements IDifferenceFilter {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter#setDefaultSelected(boolean)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#setDefaultSelected(boolean)
 	 */
-	public void setDefaultSelected(boolean activeByDefault) {
-		this.activeByDefault = activeByDefault;
+	public void setDefaultSelected(boolean active) {
+		this.activeByDefault = active;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter#isEnabled(org.eclipse.emf.compare.scope.IComparisonScope,
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#isEnabled(org.eclipse.emf.compare.scope.IComparisonScope,
 	 *      org.eclipse.emf.compare.Comparison)
 	 */
 	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {

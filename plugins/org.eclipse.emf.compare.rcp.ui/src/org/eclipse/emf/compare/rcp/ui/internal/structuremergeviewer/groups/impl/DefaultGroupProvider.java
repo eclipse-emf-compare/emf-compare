@@ -18,16 +18,17 @@ import java.util.Collection;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.AbstractDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 
 /**
- * This implementation of a {@link IDifferenceGroupProvider} will be used as the default group provider.
+ * This implementation of a
+ * {@link org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider} will be used as
+ * the default group provider.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- * @since 3.0
+ * @since 4.0
  */
 public class DefaultGroupProvider extends AbstractDifferenceGroupProvider {
 
@@ -40,7 +41,7 @@ public class DefaultGroupProvider extends AbstractDifferenceGroupProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
 	 */
 	public Collection<? extends IDifferenceGroup> getGroups(Comparison aComparison) {
 		if (group == null || !aComparison.equals(this.comparison)) {
@@ -54,7 +55,7 @@ public class DefaultGroupProvider extends AbstractDifferenceGroupProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#getLabel()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getLabel()
 	 */
 	public String getLabel() {
 		return EMFCompareRCPUIMessages.getString("DefaultGroupProvider.label"); //$NON-NLS-1$
@@ -63,7 +64,7 @@ public class DefaultGroupProvider extends AbstractDifferenceGroupProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#setLabel(java.lang.String)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setLabel(java.lang.String)
 	 */
 	public void setLabel(String label) {
 
@@ -72,7 +73,7 @@ public class DefaultGroupProvider extends AbstractDifferenceGroupProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#defaultSelected()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#defaultSelected()
 	 */
 	public boolean defaultSelected() {
 		return true;
@@ -81,7 +82,7 @@ public class DefaultGroupProvider extends AbstractDifferenceGroupProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#setDefaultSelected(boolean)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setDefaultSelected(boolean)
 	 */
 	public void setDefaultSelected(boolean defaultSelected) {
 
@@ -90,7 +91,7 @@ public class DefaultGroupProvider extends AbstractDifferenceGroupProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#isEnabled(org
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#isEnabled(org
 	 *      .eclipse.emf.compare.scope.IComparisonScope, org.eclipse.emf.compare.Comparison)
 	 */
 	public boolean isEnabled(IComparisonScope scope, Comparison aComparison) {
@@ -100,7 +101,7 @@ public class DefaultGroupProvider extends AbstractDifferenceGroupProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#dispose()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#dispose()
 	 */
 	public void dispose() {
 		this.comparison = null;

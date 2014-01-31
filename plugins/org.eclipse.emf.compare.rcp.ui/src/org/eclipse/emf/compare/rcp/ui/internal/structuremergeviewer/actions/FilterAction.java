@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions;
 
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 
@@ -25,7 +25,7 @@ import org.eclipse.jface.action.IAction;
  * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @since 3.0
+ * @since 4.0
  */
 public class FilterAction extends Action {
 

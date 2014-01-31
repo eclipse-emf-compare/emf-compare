@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,11 +22,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 
 /**
  * The default implementation of the {@link IDifferenceGroupProvider.Descriptor.Registry}.
+ * 
+ * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
+ * @since 4.0
  */
 public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Descriptor.Registry {
 
@@ -43,7 +46,7 @@ public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Des
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#getGroupProviders(IComparisonScope,
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#getGroupProviders(IComparisonScope,
 	 *      Comparison)
 	 */
 	public List<IDifferenceGroupProvider> getGroupProviders(IComparisonScope scope, Comparison comparison) {
@@ -65,10 +68,10 @@ public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Des
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#getDefaultGroupProviders(org.eclipse.emf.compare.scope.IComparisonScope,
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#getDefaultGroupProvider(org.eclipse.emf.compare.scope.IComparisonScope,
 	 *      org.eclipse.emf.compare.Comparison)
 	 */
-	public IDifferenceGroupProvider getDefaultGroupProviders(IComparisonScope scope, Comparison comparison) {
+	public IDifferenceGroupProvider getDefaultGroupProvider(IComparisonScope scope, Comparison comparison) {
 		IDifferenceGroupProvider selectedGroupProvider = null;
 		for (IDifferenceGroupProvider dgp : getGroupProviders(scope, comparison)) {
 			if (dgp.defaultSelected()) {
@@ -83,6 +86,8 @@ public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Des
 	/**
 	 * Checks if the given IDifferenceGroupProvider is activable based on the scope and comparison objects.
 	 * 
+	 * @param dgp
+	 *            the given IDifferenceGroupProvider.
 	 * @param scope
 	 *            The scope on which the group provider will be applied.
 	 * @param comparison
@@ -97,8 +102,8 @@ public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Des
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#add
-	 *      (org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#add
+	 *      (org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor)
 	 */
 	public IDifferenceGroupProvider.Descriptor add(IDifferenceGroupProvider.Descriptor providerDescriptor,
 			String className) {
@@ -109,7 +114,7 @@ public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Des
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#remove(java.lang.String)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#remove(java.lang.String)
 	 */
 	public IDifferenceGroupProvider.Descriptor remove(String className) {
 		return map.remove(className);
@@ -118,7 +123,7 @@ public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Des
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#clear()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#clear()
 	 */
 	public void clear() {
 		map.clear();

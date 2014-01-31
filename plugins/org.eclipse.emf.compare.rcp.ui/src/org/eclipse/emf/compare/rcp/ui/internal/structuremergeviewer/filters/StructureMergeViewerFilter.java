@@ -30,6 +30,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterChange;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.GroupItemProviderAdapter;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.Viewer;
@@ -47,39 +48,54 @@ import org.eclipse.jface.viewers.ViewerFilter;
  * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @since 3.0
+ * @since 4.0
  */
 public class StructureMergeViewerFilter extends ViewerFilter {
 
+	/** A predicate use by default that always returns false. */
 	public static final Predicate<? super EObject> DEFAULT_PREDICATE = alwaysFalse();
 
 	/** The set of predicates known by this filter. */
 	private final Set<Predicate<? super EObject>> predicates;
 
+	/** The set of selected filters known by this filter. */
 	private final Set<IDifferenceFilter> selectedDifferenceFilters;
 
+	/** The set of unselected filters known by this filter. */
 	private final Set<IDifferenceFilter> unselectedDifferenceFilters;
 
 	/** The {@link EventBus} associated with this filter. */
 	private final EventBus eventBus;
 
+	/**
+	 * The predicate used by this StructureMergeViewerFilter.
+	 */
 	private final Predicate<? super EObject> viewerPredicate = new Predicate<EObject>() {
 		public boolean apply(EObject eObject) {
+			final boolean ret;
 			if (aggregatedPredicate.apply(eObject)) {
 				Collection<EObject> eContents = eObject.eContents();
 				if (!eContents.isEmpty() && eObject instanceof TreeNode) {
 					EObject data = ((TreeNode)eObject).getData();
 					if (data instanceof Match || data instanceof Conflict || data instanceof MatchResource) {
-						return any(eContents, viewerPredicate);
+						ret = any(eContents, viewerPredicate);
+					} else {
+						ret = true;
 					}
+				} else {
+					ret = true;
 				}
-				return true;
 			} else {
-				return false;
+				ret = false;
 			}
+			return ret;
 		}
 	};
 
+	/**
+	 * A predicate that aggregates the selected state predicates of selected filters and the unselected state
+	 * predicates of unselected filters.
+	 */
 	private Predicate<? super EObject> aggregatedPredicate;
 
 	/**
@@ -148,7 +164,11 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	}
 
 	/**
-	 * @return
+	 * Computes the aggregated predicates composed of selected state predicates of selected filters and
+	 * unselected state predicates of unselected filters.
+	 * 
+	 * @return an aggregated predicates composed of selected state predicates of selected filters and
+	 *         unselected state predicates of unselected filters.
 	 */
 	private Predicate<? super EObject> computeAggregatedPredicate() {
 		return not(or(predicates));
@@ -174,6 +194,14 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 		}
 	}
 
+	/**
+	 * Init this StructureMergeViewerFilter.
+	 * 
+	 * @param selectedFilters
+	 *            the set of selected filters known by this filter.
+	 * @param unselectedFilters
+	 *            the set of unselected filters known by this filter.
+	 */
 	public void init(Collection<IDifferenceFilter> selectedFilters,
 			Collection<IDifferenceFilter> unselectedFilters) {
 		boolean changed = false;
@@ -200,14 +228,20 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	}
 
 	/**
-	 * @return the selectedDifferenceFilters
+	 * Returns the set of selected filters known by this filter.
+	 * 
+	 * @return the selectedDifferenceFilters the set of selected filters known by this filter.
 	 */
 	public Set<IDifferenceFilter> getSelectedDifferenceFilters() {
 		return selectedDifferenceFilters;
 	}
 
 	/**
-	 * @return the aggregatedPredicate
+	 * Returns the predicate that aggregates the selected state predicates of selected filters and the
+	 * unselected state predicates of unselected filters.
+	 * 
+	 * @return the predicate that aggregates the selected state predicates of selected filters and the
+	 *         unselected state predicates of unselected filters.
 	 */
 	public Predicate<? super EObject> getAggregatedPredicate() {
 		return aggregatedPredicate;

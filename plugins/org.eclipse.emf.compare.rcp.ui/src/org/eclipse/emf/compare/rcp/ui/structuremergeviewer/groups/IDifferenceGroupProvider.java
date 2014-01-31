@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,59 +8,25 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups;
-
-import com.google.common.collect.ImmutableList;
+package org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups;
 
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.AbstractDifferenceGroupProvider;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
-import org.eclipse.emf.edit.tree.TreePackage;
 
 /**
  * Instances of this class will be used by EMF Compare in order to provide difference grouping facilities to
  * the structural differences view.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @since 3.0
+ * @since 4.0
  */
 public interface IDifferenceGroupProvider extends Adapter {
-
-	public static IDifferenceGroupProvider EMPTY = new AbstractDifferenceGroupProvider() {
-
-		public void setLabel(String label) {
-			// do nothing
-		}
-
-		public void setDefaultSelected(boolean defaultSelected) {
-			// do nothing;
-		}
-
-		public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
-			return true;
-		}
-
-		public String getLabel() {
-			return IDifferenceGroupProvider.class.getName() + ".EMPTY"; //$NON-NLS-1$
-		}
-
-		public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
-			return ImmutableList.of();
-		}
-
-		public boolean defaultSelected() {
-			return true;
-		}
-
-		public void dispose() {
-		}
-	};
 
 	/**
 	 * This will be called internally by the grouping actions in order to determine how the differences should
@@ -122,6 +88,17 @@ public interface IDifferenceGroupProvider extends Adapter {
 	void dispose();
 
 	/**
+	 * Returns all {@link TreeNode}s that are wrapping the given {@code eObject}. It internally use a cross
+	 * reference adapter.
+	 * 
+	 * @param eObject
+	 *            the object from which we want inverse reference.
+	 * @return all {@link TreeNode}s targeting the given {@code eObject} through
+	 *         {@link org.eclipse.emf.edit.tree.TreePackage.Literals#TREE_NODE__DATA}.
+	 */
+	List<TreeNode> getTreeNodes(EObject eObject);
+
+	/**
 	 * A descriptor that can create adifference group provider. They are used as the values in a
 	 * {@link IDifferenceGroupProvider.Descriptor.Registry registry}.
 	 * 
@@ -153,13 +130,24 @@ public interface IDifferenceGroupProvider extends Adapter {
 			Collection<IDifferenceGroupProvider> getGroupProviders(IComparisonScope scope,
 					Comparison comparison);
 
-			IDifferenceGroupProvider getDefaultGroupProviders(IComparisonScope scope, Comparison comparison);
+			/**
+			 * Returns the default group provider.
+			 * 
+			 * @param scope
+			 *            The scope on which the group providers will be applied.
+			 * @param comparison
+			 *            The comparison which is to be displayed in the structural view.
+			 * @return the default group provider.
+			 */
+			IDifferenceGroupProvider getDefaultGroupProvider(IComparisonScope scope, Comparison comparison);
 
 			/**
 			 * Add to the registry the given {@link IDifferenceGroupProvider}.
 			 * 
 			 * @param provider
 			 *            The given {@link IDifferenceGroupProvider}.
+			 * @param className
+			 *            The class name of the given provider.
 			 * @return The previous value associated with the class name of the given
 			 *         {@link IDifferenceGroupProvider}, or null if there was no entry in the registry for the
 			 *         class name.
@@ -182,18 +170,5 @@ public interface IDifferenceGroupProvider extends Adapter {
 			 */
 			void clear();
 		}
-
 	}
-
-	/**
-	 * Returns all {@link TreeNode}s that are wrapping the given {@code eObject}. It internally use a cross
-	 * reference adapter.
-	 * 
-	 * @param eObject
-	 *            the object from which we want inverse reference.
-	 * @return all {@link TreeNode}s targeting the given {@code eObject} through
-	 *         {@link TreePackage.Literals#TREE_NODE__DATA}.
-	 */
-	List<TreeNode> getTreeNodes(EObject eObject);
-
 }

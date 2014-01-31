@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,8 @@ import java.util.Set;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DifferenceGroupProviderChange;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.EmptyDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.events.DisposeEvent;
@@ -31,9 +33,13 @@ import org.eclipse.swt.events.DisposeListener;
  * tree viewer.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @since 3.0
+ * @since 4.0
  */
 public final class StructureMergeViewerGrouper {
+
+	/** An empty difference group provider. */
+	private static IDifferenceGroupProvider empty = new EmptyDifferenceGroupProvider();
+
 	/**
 	 * The currently selected group provider. This is what will compute and give us the groups we need to
 	 * display.
@@ -57,7 +63,7 @@ public final class StructureMergeViewerGrouper {
 	 */
 	public StructureMergeViewerGrouper(EventBus eventBus) {
 		this.eventBus = eventBus;
-		this.provider = IDifferenceGroupProvider.EMPTY;
+		this.provider = StructureMergeViewerGrouper.empty;
 		this.viewers = Lists.newArrayList();
 		this.registeredGroupProviders = newLinkedHashSet();
 	}
@@ -77,7 +83,9 @@ public final class StructureMergeViewerGrouper {
 	}
 
 	/**
-	 * @return the provider
+	 * Get the {@link IDifferenceGroupProvider} associated to this StructureMergeViewerGrouper.
+	 * 
+	 * @return the provider associated to this StructureMergeViewerGrouper
 	 */
 	public IDifferenceGroupProvider getProvider() {
 		return provider;
@@ -96,6 +104,14 @@ public final class StructureMergeViewerGrouper {
 		}
 	}
 
+	/**
+	 * Registers the selected IDifferenceGroupProvider to the given Notifier.
+	 * 
+	 * @param notifier
+	 *            the given Notifier.
+	 * @param groupProvider
+	 *            the selected IDifferenceGroupProvider.
+	 */
 	protected void registerDifferenceGroupProvider(Notifier notifier, IDifferenceGroupProvider groupProvider) {
 		List<Adapter> eAdapters = notifier.eAdapters();
 		Adapter oldGroupProvider = EcoreUtil.getAdapter(eAdapters, IDifferenceGroupProvider.class);

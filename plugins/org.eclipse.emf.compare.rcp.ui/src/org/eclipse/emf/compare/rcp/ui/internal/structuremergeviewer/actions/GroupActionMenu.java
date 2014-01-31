@@ -13,8 +13,8 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -28,7 +28,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * This menu will display actions that will allow the user to group differences together.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @since 3.0
+ * @since 4.0
  */
 public class GroupActionMenu extends Action implements IMenuCreator {
 	/** The viewer grouper that will be affected by this menu's actions. */
@@ -45,10 +45,8 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 	 * 
 	 * @param structureMergeViewerGrouper
 	 *            The viewer grouper that will be affected by this menu's actions.
-	 * @param menuManager
-	 *            The Menu Manager that will contain our menu.
-	 * @param defaultGroupProvider
-	 *            The default group provider.
+	 * @param registry
+	 *            The registry that contains the group provider..
 	 */
 	public GroupActionMenu(StructureMergeViewerGrouper structureMergeViewerGrouper,
 			IDifferenceGroupProvider.Descriptor.Registry registry) {

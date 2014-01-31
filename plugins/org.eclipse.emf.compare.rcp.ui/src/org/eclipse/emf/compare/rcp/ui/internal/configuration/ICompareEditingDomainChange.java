@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.rcp.ui.internal.configuration;
 
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.rcp.ui.configuration.ICompareEvent;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>

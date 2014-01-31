@@ -11,7 +11,7 @@
 package org.eclipse.emf.compare.rcp.ui.internal.configuration.impl;
 
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEvent;
+import org.eclipse.emf.compare.rcp.ui.configuration.ICompareEvent;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IComparisonAndScopeChange;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 

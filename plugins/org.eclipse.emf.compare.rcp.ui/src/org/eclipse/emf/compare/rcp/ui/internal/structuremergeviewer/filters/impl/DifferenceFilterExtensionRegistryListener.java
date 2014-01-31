@@ -15,29 +15,47 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
 
+/**
+ * Utility class to listen to the {@link IDifferenceFilter.Registry}.
+ * 
+ * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
+ * @since 4.0
+ */
 public class DifferenceFilterExtensionRegistryListener extends AbstractRegistryEventListener {
 
+	/** TAG_FILTER_ACTION. */
 	static final String TAG_FILTER_ACTION = "filter"; //$NON-NLS-1$
 
+	/** ATT_CLASS. */
 	static final String ATT_CLASS = "class"; //$NON-NLS-1$
 
+	/** ATT_LABEL. */
 	static final String ATT_LABEL = "label"; //$NON-NLS-1$
 
+	/** ATT_ACTIVE. */
 	static final String ATT_ACTIVE = "activeByDefault"; //$NON-NLS-1$
 
+	/** The IDifferenceFilter.Registry to listen. */
 	private final IDifferenceFilter.Registry filterRegistry;
 
 	/**
+	 * Default constructor.
+	 * 
 	 * @param pluginID
+	 *            The namespace of the extension point to be monitored.
 	 * @param extensionPointID
+	 *            The extension point ID to be monitored.
+	 * @param log
+	 *            The log object to be used to log error and/or warning.
 	 * @param registry
+	 *            The {@link IDifferenceFilter.Registry} to listen.
 	 */
 	public DifferenceFilterExtensionRegistryListener(String pluginID, String extensionPointID, ILog log,
-			IDifferenceFilter.Registry filterRegistry) {
+			IDifferenceFilter.Registry registry) {
 		super(pluginID, extensionPointID, log);
-		this.filterRegistry = filterRegistry;
+		this.filterRegistry = registry;
 	}
 
 	/**

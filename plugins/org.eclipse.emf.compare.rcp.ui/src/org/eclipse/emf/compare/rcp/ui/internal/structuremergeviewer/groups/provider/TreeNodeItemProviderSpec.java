@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,8 +32,8 @@ import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.IItemColorProvider;
@@ -42,10 +42,14 @@ import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.emf.edit.tree.provider.TreeNodeItemProvider;
 
 /**
+ * A specific implementation of {@link TreeNodeItemProvider}.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @since 4.0
  */
 public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements IItemStyledLabelProvider, IItemColorProvider, IItemFontProvider {
 
+	/** A map of IDifferenceGroupProvider, GroupItemProviderAdapter. */
 	private Multimap<IDifferenceGroupProvider, GroupItemProviderAdapter> groupItemProviderAdapters;
 
 	/**
@@ -119,6 +123,16 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 		}
 	}
 
+	/**
+	 * Init the mapping.
+	 * 
+	 * @param groups
+	 *            the list of IDifferenceGroup to map with {@link GroupItemProviderAdapter}s.
+	 * @param groupProvider
+	 *            the IDifferenceGroupProvider used to create a {@link GroupItemProviderAdapter}.
+	 * @param treeNode
+	 *            the TreeNode used to create a {@link GroupItemProviderAdapter}.
+	 */
 	protected void initMapping(Collection<? extends IDifferenceGroup> groups,
 			IDifferenceGroupProvider groupProvider, TreeNode treeNode) {
 		for (IDifferenceGroup differenceGroup : groups) {
@@ -156,7 +170,7 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 	 */
 	@Override
 	public Object getBackground(Object object) {
-		TreeNode treeNode = ((TreeNode)object);
+		TreeNode treeNode = (TreeNode)object;
 		return itemDelegator.getBackground(treeNode.getData());
 	}
 
@@ -167,7 +181,7 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 	 */
 	@Override
 	public Object getForeground(Object object) {
-		TreeNode treeNode = ((TreeNode)object);
+		TreeNode treeNode = (TreeNode)object;
 		return itemDelegator.getForeground(treeNode.getData());
 	}
 
@@ -178,7 +192,7 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 	 */
 	@Override
 	public Object getBackground(Object object, int columnIndex) {
-		TreeNode treeNode = ((TreeNode)object);
+		TreeNode treeNode = (TreeNode)object;
 		return itemDelegator.getBackground(treeNode.getData(), columnIndex);
 	}
 
@@ -189,7 +203,7 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 	 */
 	@Override
 	public Object getForeground(Object object, int columnIndex) {
-		TreeNode treeNode = ((TreeNode)object);
+		TreeNode treeNode = (TreeNode)object;
 		return itemDelegator.getForeground(treeNode.getData(), columnIndex);
 	}
 
@@ -200,7 +214,7 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 	 */
 	@Override
 	public Object getFont(Object object) {
-		TreeNode treeNode = ((TreeNode)object);
+		TreeNode treeNode = (TreeNode)object;
 		return itemDelegator.getFont(treeNode.getData());
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,12 +21,16 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter.Registry;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter.Registry;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 
 /**
- * The default implementation of the {@link Registry}.
+ * The default implementation of the
+ * {@link org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter.Registry}.
+ * 
+ * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
+ * @since 4.0
  */
 public class DifferenceFilterRegistryImpl implements Registry {
 
@@ -43,7 +47,7 @@ public class DifferenceFilterRegistryImpl implements Registry {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter.Registry#getFilters(org.eclipse.emf.compare.scope.IComparisonScope,
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter.Registry#getFilters(org.eclipse.emf.compare.scope.IComparisonScope,
 	 *      org.eclipse.emf.compare.Comparison)
 	 */
 	public List<IDifferenceFilter> getFilters(IComparisonScope scope, Comparison comparison) {
@@ -51,15 +55,13 @@ public class DifferenceFilterRegistryImpl implements Registry {
 	}
 
 	/**
-	 * Returns a predicate that represents the activation condition based on the scope and comparison
-	 * objects.
+	 * Returns a predicate that represents the activation condition based on the scope and comparison objects.
 	 * 
 	 * @param scope
 	 *            The scope on which the group provider will be applied.
 	 * @param comparison
 	 *            The comparison which is to be displayed in the structural view.
-	 * @return A predicate that represents the activation condition based on the scope and comparison
-	 *         objects.
+	 * @return A predicate that represents the activation condition based on the scope and comparison objects.
 	 */
 	static final Predicate<IDifferenceFilter> isFilterActivable(final IComparisonScope scope,
 			final Comparison comparison) {
@@ -78,7 +80,7 @@ public class DifferenceFilterRegistryImpl implements Registry {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter.Registry#add(org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter.Registry#add(org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter)
 	 */
 	public IDifferenceFilter add(IDifferenceFilter filter) {
 		Preconditions.checkNotNull(filter);
@@ -88,7 +90,7 @@ public class DifferenceFilterRegistryImpl implements Registry {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter.Registry#remove(java.lang.String)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter.Registry#remove(java.lang.String)
 	 */
 	public IDifferenceFilter remove(String className) {
 		return map.remove(className);
@@ -97,7 +99,7 @@ public class DifferenceFilterRegistryImpl implements Registry {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter.Registry#clear()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter.Registry#clear()
 	 */
 	public void clear() {
 		map.clear();

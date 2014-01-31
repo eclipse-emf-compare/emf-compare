@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups;
+package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
@@ -53,7 +53,8 @@ import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender.IDifferenceGroupExtender;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.edit.tree.TreeFactory;
@@ -67,9 +68,18 @@ import org.eclipse.swt.graphics.Image;
  * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @since 3.0
+ * @since 4.0
  */
 public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifferenceGroup {
+
+	/**
+	 * Function that returns all contents of the given EObject.
+	 */
+	protected static final Function<EObject, Iterator<EObject>> E_ALL_CONTENTS = new Function<EObject, Iterator<EObject>>() {
+		public Iterator<EObject> apply(EObject eObject) {
+			return eObject.eAllContents();
+		}
+	};
 
 	/** The filter we'll use in order to filter the differences that are part of this group. */
 	protected final Predicate<? super Diff> filter;
@@ -80,14 +90,14 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	/** The icon that the EMF Compare UI will display for this group. */
 	protected final Image image;
 
-	/** The comparison that is the parent of this group. */
-	private final Comparison comparison;
-
 	/** The list of children of this group. */
 	protected List<TreeNode> children;
 
 	/** The list of already processed refined diffs. */
 	protected List<Diff> extensionDiffProcessed;
+
+	/** The comparison that is the parent of this group. */
+	private final Comparison comparison;
 
 	/** The registry of difference group extenders. */
 	private final IDifferenceGroupExtender.Registry registry = EMFCompareRCPUIPlugin.getDefault()
@@ -105,8 +115,6 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 * 
 	 * @param comparison
 	 *            The comparison that is the parent of this group.
-	 * @param unfiltered
-	 *            The whole unfiltered list of differences.
 	 * @param filter
 	 *            The filter we'll use in order to filter the differences that are part of this group.
 	 * @param crossReferenceAdapter
@@ -120,20 +128,11 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	}
 
 	/**
-	 * @return the comparison
-	 */
-	protected final Comparison getComparison() {
-		return comparison;
-	}
-
-	/**
 	 * Instantiates this group given the comparison and filter that should be used in order to determine its
 	 * list of differences. It will be displayed in the UI with the default icon and the given name.
 	 * 
 	 * @param comparison
 	 *            The comparison that is the parent of this group.
-	 * @param unfiltered
-	 *            The whole unfiltered list of differences.
 	 * @param filter
 	 *            The filter we'll use in order to filter the differences that are part of this group.
 	 * @param name
@@ -153,8 +152,6 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 * 
 	 * @param comparison
 	 *            The comparison that is the parent of this group.
-	 * @param unfiltered
-	 *            The whole unfiltered list of differences.
 	 * @param filter
 	 *            The filter we'll use in order to filter the differences that are part of this group.
 	 * @param name
@@ -174,6 +171,15 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	}
 
 	/**
+	 * Returns the comparison object.
+	 * 
+	 * @return the comparison object.
+	 */
+	protected final Comparison getComparison() {
+		return comparison;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#isAdapterForType(java.lang.Object)
@@ -186,7 +192,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup#getName()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup#getName()
 	 */
 	public String getName() {
 		return name;
@@ -195,7 +201,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup#getStyledName()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup#getStyledName()
 	 */
 	public IStyledString.IComposedStyledString getStyledName() {
 		final IStyledString.IComposedStyledString ret = new ComposedStyledString();
@@ -211,18 +217,9 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	}
 
 	/**
-	 * Function that returns all contents of the given EObject.
-	 */
-	protected static final Function<EObject, Iterator<EObject>> E_ALL_CONTENTS = new Function<EObject, Iterator<EObject>>() {
-		public Iterator<EObject> apply(EObject eObject) {
-			return eObject.eAllContents();
-		}
-	};
-
-	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup#getImage()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup#getImage()
 	 */
 	public Image getImage() {
 		return image;
@@ -231,7 +228,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup#getChildren()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup#getChildren()
 	 */
 	public List<? extends TreeNode> getChildren() {
 		if (children == null) {
@@ -254,6 +251,12 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 		return children;
 	}
 
+	/**
+	 * Registers the CrossReferenceAdapter to all given notifiers.
+	 * 
+	 * @param notifiers
+	 *            the list of notifiers.
+	 */
 	protected final void registerCrossReferenceAdapter(List<? extends Notifier> notifiers) {
 		for (Notifier notifier : notifiers) {
 			// this cross referencer has to live as long as the objects on which it is installed.
@@ -261,6 +264,12 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 		}
 	}
 
+	/**
+	 * Unregisters the CrossReferenceAdapter from all given notifiers.
+	 * 
+	 * @param notifiers
+	 *            the list of notifiers.
+	 */
 	protected final void unregisterCrossReferenceAdapter(List<? extends Notifier> notifiers) {
 		for (Notifier notifier : notifiers) {
 			// this cross referencer has to live as long as the objects on which it is installed.
@@ -517,8 +526,11 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	}
 
 	/**
+	 * Checks if the given {@link Match} contains only differences of type {@link ResourceAttachmentChange}.
+	 * 
 	 * @param match
-	 * @return
+	 *            the given Match.
+	 * @return true, if the given Match contains only differences of type ResourceAttachmentChange.
 	 */
 	private boolean isMatchWithOnlyResourceAttachmentChanges(Match match) {
 		boolean ret = false;
@@ -536,7 +548,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup#dispose()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup#dispose()
 	 */
 	public void dispose() {
 		if (children != null) {

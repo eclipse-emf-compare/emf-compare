@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import com.google.common.base.Predicate;
 
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.AbstractDifferenceFilter;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
 
@@ -23,14 +24,14 @@ import org.eclipse.emf.edit.tree.TreeNode;
  * A filter used by default that filtered out identical elements.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- * @since 3.0
+ * @since 4.0
  */
 public class IdenticalElementsFilter extends AbstractDifferenceFilter {
 
 	/**
 	 * The predicate use by this filter when it is selected.
 	 */
-	private static final Predicate<? super EObject> predicateWhenSelected = new Predicate<EObject>() {
+	private static final Predicate<? super EObject> PREDICATE_WHEN_SELECTED = new Predicate<EObject>() {
 		public boolean apply(EObject input) {
 			if (input instanceof TreeNode) {
 				TreeNode treeNode = (TreeNode)input;
@@ -55,11 +56,11 @@ public class IdenticalElementsFilter extends AbstractDifferenceFilter {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter#getPredicateWhenSelected()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#getPredicateWhenSelected()
 	 */
 	@Override
 	public Predicate<? super EObject> getPredicateWhenSelected() {
-		return predicateWhenSelected;
+		return PREDICATE_WHEN_SELECTED;
 	}
 
 }

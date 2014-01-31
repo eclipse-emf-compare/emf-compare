@@ -15,7 +15,7 @@ import com.google.common.base.Predicate;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.ecore.EObject;
 
 /**

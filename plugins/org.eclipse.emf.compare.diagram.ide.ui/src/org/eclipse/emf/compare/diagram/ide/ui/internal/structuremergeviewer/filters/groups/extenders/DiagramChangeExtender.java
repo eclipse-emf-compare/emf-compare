@@ -25,7 +25,7 @@ public class DiagramChangeExtender extends DiagramDiffExtender {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender.IDifferenceGroupExtender#addChildren(TreeNode)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender#addChildren(TreeNode)
 	 */
 	@Override
 	public void addChildren(TreeNode treeNode) {
@@ -49,7 +49,7 @@ public class DiagramChangeExtender extends DiagramDiffExtender {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender.IDifferenceGroupExtender#handle(TreeNode)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender#handle(TreeNode)
 	 */
 	@Override
 	public boolean handle(TreeNode treeNode) {

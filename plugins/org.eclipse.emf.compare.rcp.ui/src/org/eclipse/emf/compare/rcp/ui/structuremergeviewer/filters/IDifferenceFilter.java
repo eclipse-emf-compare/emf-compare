@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,8 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters;
-
+package org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters;
 
 import com.google.common.base.Predicate;
 
@@ -24,7 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  * structural differences view.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- * @since 3.0
+ * @since 4.0
  */
 public interface IDifferenceFilter {
 
@@ -90,6 +89,8 @@ public interface IDifferenceFilter {
 
 	/**
 	 * A registry of {@link IDifferenceFilter}.
+	 * 
+	 * @since 4.0
 	 */
 	interface Registry {
 

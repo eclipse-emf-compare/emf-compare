@@ -15,9 +15,9 @@ import java.util.Collection;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter.Registry;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter.Registry;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -31,7 +31,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * This will be displayed atop the structure viewer as the "filters" menu.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @since 3.0
+ * @since 4.0
  */
 public class FilterActionMenu extends Action implements IMenuCreator {
 	/** The viewer filter that will be modified by this menu's actions. */
@@ -48,8 +48,8 @@ public class FilterActionMenu extends Action implements IMenuCreator {
 	 * 
 	 * @param structureMergeViewerFilter
 	 *            The viewer filter for which we'll create actions.
-	 * @param menuManager
-	 *            The Menu Manager that will contain our menu.
+	 * @param registry
+	 *            The registry that contains the filters.
 	 */
 	public FilterActionMenu(StructureMergeViewerFilter structureMergeViewerFilter,
 			IDifferenceFilter.Registry registry) {
@@ -66,9 +66,9 @@ public class FilterActionMenu extends Action implements IMenuCreator {
 	/**
 	 * Create all of our filtering actions into the given menu.
 	 * 
-	 * @param scope
+	 * @param newScope
 	 *            The scope on which the filters will be applied.
-	 * @param comparison
+	 * @param newComparison
 	 *            The comparison on which the filters will be applied.
 	 */
 	public void updateMenu(IComparisonScope newScope, Comparison newComparison) {

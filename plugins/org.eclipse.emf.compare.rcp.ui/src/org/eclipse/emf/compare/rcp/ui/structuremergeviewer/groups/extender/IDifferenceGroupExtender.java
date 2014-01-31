@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender;
+package org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender;
 
 import java.util.Collection;
 

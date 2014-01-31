@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups;
+package org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups;
 
 import com.google.common.base.Function;
 
@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.swt.graphics.Image;
@@ -26,9 +27,24 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  * @see BasicDifferenceGroupImpl
- * @since 3.0
+ * @since 4.0
  */
 public interface IDifferenceGroup extends Adapter {
+
+	/**
+	 * Function that retrieve the data of the given TreeNode.
+	 */
+	Function<EObject, EObject> TREE_NODE_DATA = new Function<EObject, EObject>() {
+		public EObject apply(EObject node) {
+			final EObject data;
+			if (node instanceof TreeNode) {
+				data = ((TreeNode)node).getData();
+			} else {
+				data = node;
+			}
+			return data;
+		}
+	};
 
 	/**
 	 * A human-readable label for this group.
@@ -63,13 +79,4 @@ public interface IDifferenceGroup extends Adapter {
 	 * Dispose this group provider.
 	 */
 	void dispose();
-
-	/**
-	 * Function that retrieve the data of the given TreeNode.
-	 */
-	public static final Function<EObject, EObject> TREE_NODE_DATA = new Function<EObject, EObject>() {
-		public EObject apply(EObject node) {
-			return node instanceof TreeNode ? ((TreeNode)node).getData() : node;
-		}
-	};
 }

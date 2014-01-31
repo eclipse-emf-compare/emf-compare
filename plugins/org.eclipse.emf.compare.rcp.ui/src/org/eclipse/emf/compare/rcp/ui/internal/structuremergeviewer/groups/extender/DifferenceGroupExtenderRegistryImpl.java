@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender.IDifferenceGroupExtender.Registry;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender.Registry;
 
 /**
  * The default implementation of the {@link Registry}.
@@ -41,7 +42,7 @@ public class DifferenceGroupExtenderRegistryImpl implements Registry {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender.IDifferenceGroupExtender.Registry#getExtenders()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender.Registry#getExtenders()
 	 */
 	public List<IDifferenceGroupExtender> getExtenders() {
 		Iterable<IDifferenceGroupExtender> extenders = map.values();
@@ -55,8 +56,8 @@ public class DifferenceGroupExtenderRegistryImpl implements Registry {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender.IDifferenceGroupExtender.Registry#add
-	 *      (org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender.IDifferenceGroupExtender)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender.Registry#add
+	 *      (org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender)
 	 */
 	public IDifferenceGroupExtender add(IDifferenceGroupExtender provider) {
 		Preconditions.checkNotNull(provider);
@@ -66,7 +67,7 @@ public class DifferenceGroupExtenderRegistryImpl implements Registry {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender.IDifferenceGroupExtender.Registry#remove(java.lang.String)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender.Registry#remove(java.lang.String)
 	 *      )
 	 */
 	public IDifferenceGroupExtender remove(String className) {
@@ -76,7 +77,7 @@ public class DifferenceGroupExtenderRegistryImpl implements Registry {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender.IDifferenceGroupExtender
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender
 	 *      .Registry#clear()
 	 */
 	public void clear() {

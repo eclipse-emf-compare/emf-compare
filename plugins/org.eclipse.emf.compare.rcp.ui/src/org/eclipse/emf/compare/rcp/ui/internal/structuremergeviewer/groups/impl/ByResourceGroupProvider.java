@@ -31,19 +31,19 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.AbstractDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
- * This implementation of a {@link IDifferenceGroupProvider} will be used to group the differences by their
- * Resource.
+ * This implementation of a
+ * {@link org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider} will be used to
+ * group the differences by their Resource.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
- * @since 3.0
+ * @since 4.0
  */
 public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 
@@ -62,7 +62,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
 	 */
 	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
 		if (group == null || !comparison.equals(comp)) {
@@ -76,7 +76,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#getLabel()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getLabel()
 	 */
 	public String getLabel() {
 		return label;
@@ -85,7 +85,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#setLabel(java.lang.String)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setLabel(java.lang.String)
 	 */
 	public void setLabel(String label) {
 		this.label = label;
@@ -94,7 +94,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#defaultSelected()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#defaultSelected()
 	 */
 	public boolean defaultSelected() {
 		return activeByDefault;
@@ -103,22 +103,27 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#setDefaultSelected(boolean)
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setDefaultSelected(boolean)
 	 */
-	public void setDefaultSelected(boolean activeByDefault) {
-		this.activeByDefault = activeByDefault;
+	public void setDefaultSelected(boolean active) {
+		this.activeByDefault = active;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider#isEnabled(org
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#isEnabled(org
 	 *      .eclipse.emf.compare.scope.IComparisonScope, org.eclipse.emf.compare.Comparison)
 	 */
 	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#dispose()
+	 */
 	public void dispose() {
 		this.comp = null;
 		if (this.group != null) {
@@ -137,7 +142,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 		/**
 		 * {@inheritDoc}.
 		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#BasicDifferenceGroupImpl(org.eclipse.emf.compare.Comparison)
+		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#BasicDifferenceGroupImpl(org.eclipse.emf.compare.Comparison)
 		 */
 		public ResourceGroup(Comparison comparison, ECrossReferenceAdapter crossReferenceAdapter) {
 			super(comparison, Predicates.<Diff> alwaysTrue(), crossReferenceAdapter);
@@ -146,7 +151,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#getChildren()
+		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#getChildren()
 		 */
 		@Override
 		public List<? extends TreeNode> getChildren() {
@@ -163,7 +168,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#buildSubTree(org.eclipse.emf.compare.MatchResource)
+		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#buildSubTree(org.eclipse.emf.compare.MatchResource)
 		 */
 		@Override
 		protected TreeNode buildSubTree(MatchResource matchResource) {
@@ -179,7 +184,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#buildSubTree(org.eclipse.emf.compare.MatchResource,
+		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#buildSubTree(org.eclipse.emf.compare.MatchResource,
 		 *      org.eclipse.emf.compare.Match)
 		 */
 		@Override
@@ -200,7 +205,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl#buildSubTree(org.eclipse.emf.compare.Match,
+		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#buildSubTree(org.eclipse.emf.compare.Match,
 		 *      org.eclipse.emf.compare.Match)
 		 */
 		@Override

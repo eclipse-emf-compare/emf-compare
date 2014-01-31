@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,8 @@ import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroup;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.AbstractDifferenceFilter;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
 
@@ -33,21 +34,26 @@ import org.eclipse.emf.edit.tree.TreeNode;
  * also known as sub differences).
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- * @since 3.0
+ * @since 4.0
  */
 public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 
 	/**
 	 * The predicate use by this filter when it is selected.
 	 */
-	private static final Predicate<? super EObject> predicateWhenSelected = new Predicate<EObject>() {
+	private static final Predicate<? super EObject> PREDICATE_WHEN_SELECTED = new Predicate<EObject>() {
 		public boolean apply(EObject input) {
 			boolean ret = false;
 			if (input instanceof TreeNode) {
 				TreeNode treeNode = (TreeNode)input;
 				EObject data = treeNode.getData();
 				TreeNode parent = treeNode.getParent();
-				EObject parentData = (parent != null ? parent.getData() : null);
+				final EObject parentData;
+				if (parent != null) {
+					parentData = parent.getData();
+				} else {
+					parentData = null;
+				}
 				if (parentData instanceof Diff && !(parentData instanceof ResourceAttachmentChange)
 						&& data instanceof Diff) {
 					Iterator<EObject> eAllDataContents = transform(treeNode.eAllContents(),
@@ -81,10 +87,10 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter#getPredicateWhenSelected()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#getPredicateWhenSelected()
 	 */
 	@Override
 	public Predicate<? super EObject> getPredicateWhenSelected() {
-		return predicateWhenSelected;
+		return PREDICATE_WHEN_SELECTED;
 	}
 }

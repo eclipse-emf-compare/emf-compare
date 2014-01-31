@@ -15,17 +15,23 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender.Registry;
 
 /**
+ * Utility class to listen to the
+ * {@link org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry}
+ * .
+ * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 4.0
  */
 public class DifferenceGroupExtenderRegistryListener extends AbstractRegistryEventListener {
 
-	/** TAG_GROUP_PROVIDER */
+	/** TAG_GROUP_PROVIDER. */
 	static final String TAG_GROUP_PROVIDER = "differenceGroupExtender"; //$NON-NLS-1$
 
-	/** ATT_CLASS */
+	/** ATT_CLASS. */
 	static final String ATT_CLASS = "class"; //$NON-NLS-1$
 
 	/** The registry. */
@@ -44,9 +50,9 @@ public class DifferenceGroupExtenderRegistryListener extends AbstractRegistryEve
 	 *            The registry to listen.
 	 */
 	public DifferenceGroupExtenderRegistryListener(String pluginID, String extensionPointID, ILog log,
-			IDifferenceGroupExtender.Registry extendersRegistry) {
+			IDifferenceGroupExtender.Registry registry) {
 		super(pluginID, extensionPointID, log);
-		this.extendersRegistry = extendersRegistry;
+		this.extendersRegistry = registry;
 	}
 
 	/**

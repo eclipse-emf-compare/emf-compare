@@ -17,7 +17,7 @@ import com.google.common.collect.Iterables;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.AbstractDifferenceFilter;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.AbstractDifferenceFilter;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.ecore.EObject;
@@ -69,7 +69,7 @@ public class UMLRefinedElementsFilter extends AbstractDifferenceFilter {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter#isEnabled(org.eclipse.emf.compare.scope.IComparisonScope,
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#isEnabled(org.eclipse.emf.compare.scope.IComparisonScope,
 	 *      org.eclipse.emf.compare.Comparison)
 	 */
 	@Override
@@ -87,7 +87,7 @@ public class UMLRefinedElementsFilter extends AbstractDifferenceFilter {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter#getPredicateWhenSelected()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#getPredicateWhenSelected()
 	 */
 	@Override
 	public Predicate<? super EObject> getPredicateWhenSelected() {
@@ -97,7 +97,7 @@ public class UMLRefinedElementsFilter extends AbstractDifferenceFilter {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter#getPredicateWhenUnselected()
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#getPredicateWhenUnselected()
 	 */
 	@Override
 	public Predicate<? super EObject> getPredicateWhenUnselected() {
