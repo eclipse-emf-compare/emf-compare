@@ -26,8 +26,11 @@
 <unit id="org.eclipse.uml2.sdk.feature.group" version="4.0.0.v20120604-0919"/>
 <unit id="org.eclipse.jdt.feature.group" version="3.8.0.v20120525-1249-8-8nFqlFNOfwKDRGz-pXLdGxEM83"/>
 <unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="0.9.1.v201209190809"/>
-<unit id="org.eclipse.egit.feature.group" version="2.2.0.201212191850-r"/>
 <repository location="http://download.eclipse.org/releases/juno"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<unit id="org.eclipse.egit.feature.group" version="3.0.0.201306101825-r"/>
+<repository location="http://download.eclipse.org/egit/updates-3.0"/>
 </location>
 </locations>
 </target>
