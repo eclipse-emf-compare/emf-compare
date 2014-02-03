@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?>
-
-<target name="EMF Compare based on Juno with 4.2 Platform" sequenceNumber="57">
+<?pde version="3.8"?><target name="EMF Compare based on Juno with 4.2 Platform" sequenceNumber="58">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.guava" version="11.0.2.v201303041551"/>
@@ -13,26 +11,17 @@
 <repository location="http://download.eclipse.org/emf-store/milestones/archive/0.9.3.M5"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.sdk.feature.group" version="2.8.0.v20120608-0554"/>
-<unit id="org.eclipse.emf.ecoretools.sdk.feature.group" version="1.1.0.201205150811"/>
-<unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="1.6.0.v20120327-2213-47F08xGD6FxMBN7CJFV3CIKK9t84"/>
-<unit id="org.eclipse.gmf.feature.group" version="1.6.0.v20120517-1809-7d9X7FFYnmMJUVOKcqPSgIiK281V"/>
-<unit id="org.eclipse.gmf.runtime.sdk.feature.group" version="1.6.0.v20120517-1809-67R09E9QuFflXswwIO_z0E3d4k_X"/>
-<unit id="org.eclipse.uml2.sdk.feature.group" version="4.0.0.v20120604-0919"/>
-<unit id="org.eclipse.jdt.feature.group" version="3.8.0.v20120525-1249-8-8nFqlFNOfwKDRGz-pXLdGxEM83"/>
-<unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="0.9.1.v201209190809"/>
-<repository location="http://download.eclipse.org/releases/juno"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/egit/updates"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
 <unit id="org.eclipse.swtbot.ide.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
 <unit id="org.eclipse.swtbot.eclipse.test.junit4.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
 <unit id="org.eclipse.swtbot.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
 <repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="1.6.0.v20120327-2213-47F08xGD6FxMBN7CJFV3CIKK9t84"/>
+<unit id="org.eclipse.egit.feature.group" version="2.2.0.201212191850-r"/>
+<unit id="org.eclipse.emf.ecoretools.sdk.feature.group" version="1.1.0.201205150811"/>
+<repository location="http://download.eclipse.org/releases/juno"/>
 </location>
 </locations>
 </target>

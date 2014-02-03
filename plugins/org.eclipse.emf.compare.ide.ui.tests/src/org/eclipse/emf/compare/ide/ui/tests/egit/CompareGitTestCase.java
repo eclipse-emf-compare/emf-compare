@@ -28,7 +28,7 @@ import org.junit.BeforeClass;
 /**
  * The set up and tear down of this class were mostly copied from org.eclipse.egit.core.test.GitTestCase.
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings("nls")
 public class CompareGitTestCase extends CompareTestCase {
 	protected GitTestRepository repository;
 
@@ -39,8 +39,10 @@ public class CompareGitTestCase extends CompareTestCase {
 	public static void setUpClass() {
 		// suppress auto-ignoring and auto-sharing to avoid interference
 		IEclipsePreferences eGitPreferences = InstanceScope.INSTANCE.getNode(Activator.getPluginId());
-		eGitPreferences.putBoolean(GitCorePreferences.core_autoIgnoreDerivedResources, false);
 		eGitPreferences.putBoolean(GitCorePreferences.core_autoShareProjects, false);
+		// This is actually the value of "GitCorePreferences.core_autoIgnoreDerivedResources"... but it was
+		// not in Egit 2.1
+		eGitPreferences.putBoolean("core_autoIgnoreDerivedResources", false);
 	}
 
 	@Override
