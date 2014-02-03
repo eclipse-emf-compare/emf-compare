@@ -1,30 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.6"?>
-
-<target name="EMF Compare based on Indigo SDK" sequenceNumber="28">
+<?pde version="3.8"?><target name="EMF Compare based on Indigo SDK" sequenceNumber="29">
 <locations>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
 <unit id="org.eclipse.platform.sdk" version="3.7.0.I20110613-1736"/>
 <repository location="http://download.eclipse.org/eclipse/updates/3.7"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
 <unit id="org.eclipse.emf.emfstore.fuzzy.feature.feature.group" version="0.9.3.M5"/>
 <unit id="org.eclipse.emf.emfstore.modelmutator.feature.feature.group" version="0.9.3.M5"/>
 <repository location="http://download.eclipse.org/emf-store/milestones/archive/0.9.3.M5"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
 <unit id="com.google.guava" version="11.0.2.v201303041551"/>
 <unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
-<unit id="org.junit" version="4.8.1.v4_8_1_v20100427-1100"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20130308121626/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20131024145017/repository/"/>
 </location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="false" type="InstallableUnit">
-<unit id="org.eclipse.emf.sdk.feature.group" version="2.7.1.v20110913-1526"/>
-<unit id="org.eclipse.team.svn.feature.group" version="0.7.9.I20110602-1700"/>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<unit id="org.junit4" version="4.8.1.v20100525"/>
+<repository location="http://download.eclipse.org/releases/helios"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
 <unit id="org.eclipse.emf.ecoretools.sdk.feature.group" version="1.0.0.v20110608-1633"/>
-<unit id="org.eclipse.ocl.all.sdk.feature.group" version="3.1.0.v20110606-1427"/>
-<unit id="org.eclipse.emf.query.sdk.feature.group" version="1.5.0.v20110502-1600-67O-95GFz03DQEiNLXRMK_NPj507"/>
 <unit id="org.eclipse.gmf.runtime.sdk.feature.group" version="1.5.0.v20110607-1200-67N09E9QnChoWswz-3wf_rz0kQ8Y"/>
+<unit id="org.eclipse.emf.query.sdk.feature.group" version="1.5.0.v20110502-1600-67O-95GFz03DQEiNLXRMK_NPj507"/>
 <repository location="http://download.eclipse.org/releases/indigo"/>
 </location>
 </locations>

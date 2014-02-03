@@ -19,8 +19,8 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.emf.compare" version="2.2.0.qualifier"/>
-      <import feature="org.eclipse.emf.compare.ide.ui" version="2.2.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare" version="3.0.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare.ide.ui" version="3.0.0.qualifier"/>
       <import feature="org.eclipse.gmf.runtime.notation" version="1.5.0"/>
    </requires>
 

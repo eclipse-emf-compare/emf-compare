@@ -4,7 +4,7 @@
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.sdk.ide" version="4.4.0.I20140123-1600"/>
 <unit id="org.eclipse.emf.sdk.feature.group" version="2.10.0.v20140127-0448"/>
-<unit id="org.eclipse.emf.ecoretools.sdk.feature.group" version="2.0.0.201401281049"/>
+<unit id="org.eclipse.emf.ecoretools.feature.group" version="2.0.0.201401281049"/>
 <unit id="org.eclipse.gmf.runtime.sdk.feature.group" version="1.8.0.201401272007"/>
 <unit id="org.eclipse.uml2.sdk.feature.group" version="5.0.0.v20140127-0906"/>
 <unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="1.0.0.v201401290914"/>
