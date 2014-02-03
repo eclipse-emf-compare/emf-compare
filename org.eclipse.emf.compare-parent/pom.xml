@@ -41,6 +41,10 @@
     <tycho-extras-version>0.19.0</tycho-extras-version>
   </properties>
 
+  <!--
+    Platform-specific modules will be activated from the related profiles.
+    Here, we only define those modules that should build against every target platform.
+  -->
   <modules>
     <!-- This one must remain the first module in the list -->
     <module>../packaging/org.eclipse.emf.compare.gendoc</module>
@@ -48,9 +52,26 @@
     <module>../packaging/org.eclipse.emf.compare-feature</module>
     <module>../plugins/org.eclipse.emf.compare</module>
     <module>../plugins/org.eclipse.emf.compare.tests</module>
-    
-    <module>../plugins/org.eclipse.emf.compare.edit</module>
     <module>../plugins/org.eclipse.emf.compare.doc</module>
+
+    <module>../packaging/org.eclipse.emf.compare.ide.ui-feature</module>
+    <module>../plugins/org.eclipse.emf.compare.edit</module>
+    <module>../plugins/org.eclipse.emf.compare.ide</module>
+    <module>../plugins/org.eclipse.emf.compare.ide.ui</module>
+    <module>../plugins/org.eclipse.emf.compare.ide.ui.tests</module>
+    <!-- There are no longer any "ide" tests
+    <module>../plugins/org.eclipse.emf.compare.ide.tests</module>
+    -->
+
+    <module>../packaging/org.eclipse.emf.compare.rcp.ui-feature</module>
+    <module>../plugins/org.eclipse.emf.compare.rcp</module>
+    <module>../plugins/org.eclipse.emf.compare.rcp.ui</module>
+    <module>../plugins/org.eclipse.emf.compare.rcp.ui.tests</module>
+
+    <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
+    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui</module>
   </modules>
 
   <build>
@@ -266,6 +287,25 @@
           </plugin>
         </plugins>
       </build>
+      <modules>
+        <module>../packaging/org.eclipse.emf.compare.update</module>
+
+        <module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.rcp</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.rcp.ui</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.tests</module>
+
+        <module>../packaging/org.eclipse.emf.compare.diagram.ecoretools-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.ecoretools</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools.tests</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools.tests</module>
+
+        <module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests</module>
+      </modules>
     </profile>
 
     <profile>
@@ -292,6 +332,23 @@
           </plugin>
         </plugins>
       </build>
+      <modules>
+        <module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.rcp</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.rcp.ui</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.tests</module>
+
+        <module>../packaging/org.eclipse.emf.compare.diagram.ecoretools-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.ecoretools</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools.tests</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools.tests</module>
+
+        <module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests</module>
+      </modules>
     </profile>
 
     <profile>
@@ -318,6 +375,23 @@
           </plugin>
         </plugins>
       </build>
+      <modules>
+        <module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.rcp</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.rcp.ui</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.tests</module>
+
+        <module>../packaging/org.eclipse.emf.compare.diagram.ecoretools-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.ecoretools</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools.tests</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools.tests</module>
+
+        <module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests</module>
+      </modules>
     </profile>
 
     <profile>
@@ -396,109 +470,6 @@
           </plugin>
         </plugins>
       </build>
-    </profile>
-
-    <!--
-      These define coherent sets of modules (core, uml comparison support, diagram comparison support, ...
-      By default, all sets are active. When building against older platforms, make sure to disable the profiles that won't build.
-      
-      luna => core, ui, uml, diagram, ecoretools, papyrus, update
-      kepler => core, ui, uml, diagram, ecoretools, papyrus, update
-      juno => core, ui, uml, diagram, ecoretools, papyrus, update
-      indigo => core, ui, diagram
-      helios => core, ui, diagram
-      galileo => core, ui, diagram
-    -->
-
-    <profile>
-      <id>update</id>
-      <activation>
-        <!--
-          The update site requires that all other sets of modules are built
-        -->
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <modules>
-        <module>../packaging/org.eclipse.emf.compare.update</module>
-      </modules>
-    </profile>
-
-    <profile>
-      <id>ui</id>
-      <activation>
-        <!-- The UI should always be built... -->
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <modules>
-        <module>../packaging/org.eclipse.emf.compare.ide.ui-feature</module>
-        <module>../plugins/org.eclipse.emf.compare.ide</module>
-        <module>../plugins/org.eclipse.emf.compare.ide.ui</module>
-        <module>../plugins/org.eclipse.emf.compare.ide.ui.tests</module>
-        <!-- There are no longer any "ide" tests
-        <module>../plugins/org.eclipse.emf.compare.ide.tests</module>
-        -->
-        
-        <module>../packaging/org.eclipse.emf.compare.rcp.ui-feature</module>
-        <module>../plugins/org.eclipse.emf.compare.rcp</module>
-        <module>../plugins/org.eclipse.emf.compare.rcp.ui</module>
-        <module>../plugins/org.eclipse.emf.compare.rcp.ui.tests</module>
-      </modules>
-    </profile>
-    
-    <profile>
-      <id>uml</id>
-      <activation>
-        <!-- This requires UML 4 and can only be built with juno or higher -->
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <modules>
-        <module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
-        <module>../plugins/org.eclipse.emf.compare.uml2</module>
-        <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>
-        <module>../plugins/org.eclipse.emf.compare.uml2.rcp</module>
-        <module>../plugins/org.eclipse.emf.compare.uml2.rcp.ui</module>
-        <module>../plugins/org.eclipse.emf.compare.uml2.tests</module>
-      </modules>
-    </profile>
-
-    <profile>
-      <id>diagram</id>
-      <activation>
-        <!-- This should compile on all platforms. -->
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <modules>
-        <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui</module>
-      </modules>
-    </profile>
-
-    <profile>
-      <id>ecoretools</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <modules>
-        <module>../packaging/org.eclipse.emf.compare.diagram.ecoretools-feature</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.ecoretools</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools.tests</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools.tests</module>
-      </modules>
-    </profile>
-
-    <profile>
-      <id>papyrus</id>
-      <activation>
-        <!-- This only builds against juno or higher -->
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <modules>
-        <module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests</module>
-      </modules>
     </profile>
 
     <profile>
