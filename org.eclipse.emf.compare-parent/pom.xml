@@ -42,66 +42,15 @@
   </properties>
 
   <modules>
-    <!-- Releng bits -->
+    <!-- This one must remain the first module in the list -->
     <module>../packaging/org.eclipse.emf.compare.gendoc</module>
-  
-    <!-- Update Site -->
-    <module>../packaging/org.eclipse.emf.compare.update</module>
 
-    <!-- Core -->
     <module>../packaging/org.eclipse.emf.compare-feature</module>
     <module>../plugins/org.eclipse.emf.compare</module>
     <module>../plugins/org.eclipse.emf.compare.tests</module>
-
-    <!-- IDE UI -->
-    <module>../packaging/org.eclipse.emf.compare.ide.ui-feature</module>
+    
     <module>../plugins/org.eclipse.emf.compare.edit</module>
-    <module>../plugins/org.eclipse.emf.compare.ide</module>
-    <module>../plugins/org.eclipse.emf.compare.ide.ui</module>
     <module>../plugins/org.eclipse.emf.compare.doc</module>
-    <module>../plugins/org.eclipse.emf.compare.ide.ui.tests</module>
-    <!-- There are no longer any "ide" tests
-    <module>../plugins/org.eclipse.emf.compare.ide.tests</module>
-    -->
-
-    <!-- RCP -->
-    <module>../packaging/org.eclipse.emf.compare.rcp.ui-feature</module>
-    <module>../plugins/org.eclipse.emf.compare.rcp</module>
-    <module>../plugins/org.eclipse.emf.compare.rcp.ui</module>
-    <module>../plugins/org.eclipse.emf.compare.rcp.ui.tests</module>
-
-    <!-- UML -->
-    <module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
-    <module>../plugins/org.eclipse.emf.compare.uml2</module>
-    <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>
-    <module>../plugins/org.eclipse.emf.compare.uml2.rcp</module>
-    <module>../plugins/org.eclipse.emf.compare.uml2.rcp.ui</module>
-    <module>../plugins/org.eclipse.emf.compare.uml2.tests</module>
-
-    <!-- SYSML -->
-    <!-- Not compiling yet
-    <module>../packaging/org.eclipse.emf.compare.sysml-feature</module>
-    <module>../plugins/org.eclipse.emf.compare.sysml</module>
-    <module>../plugins/org.eclipse.emf.compare.sysml.edit</module>
-    <module>../plugins/org.eclipse.emf.compare.sysml.tests</module>
-    -->
-
-    <!-- GMF -->
-    <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui</module>
-
-    <!-- Ecore Tools -->
-    <module>../packaging/org.eclipse.emf.compare.diagram.ecoretools-feature</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.ecoretools</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools.tests</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools.tests</module>
-
-    <!-- Papyrus -->
-    <module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests</module>
   </modules>
 
   <build>
@@ -282,172 +231,280 @@
               </plugin>
           </plugins>
     </pluginManagement>
-</build>
+  </build>
 
-<profiles>
-  <profile>
-    <id>luna</id>
-    <activation>
-      <activeByDefault>true</activeByDefault>
-    </activation>
-    <build>
-      <plugins>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>target-platform-configuration</artifactId>
-          <version>${tycho-version}</version>
-          <configuration>
-            <target>
-              <artifact>
-                <groupId>org.eclipse.emf.compare</groupId>
-                <artifactId>emf.compare-parent</artifactId>
-                <version>3.0.0-SNAPSHOT</version>
-                <classifier>targetPlatforms/luna-sdk</classifier>
-              </artifact>
-            </target>
-          </configuration>
-        </plugin>
-      </plugins>
-    </build>
-  </profile>
-
-  <profile>
-    <id>kepler</id>
-    <activation>
-      <activeByDefault>false</activeByDefault>
-    </activation>
-    <build>
-      <plugins>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>target-platform-configuration</artifactId>
-          <version>${tycho-version}</version>
-          <configuration>
-            <target>
-              <artifact>
-                <groupId>org.eclipse.emf.compare</groupId>
-                <artifactId>emf.compare-parent</artifactId>
-                <version>3.0.0-SNAPSHOT</version>
-                <classifier>targetPlatforms/kepler-sdk</classifier>
-              </artifact>
-            </target>
-          </configuration>
-        </plugin>
-      </plugins>
-    </build>
-  </profile>
-
-  <profile>
-    <id>juno</id>
-    <activation>
-      <activeByDefault>false</activeByDefault>
-    </activation>
-    <build>
-      <plugins>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>target-platform-configuration</artifactId>
-          <version>${tycho-version}</version>
-          <configuration>
-            <target>
-              <artifact>
-                <groupId>org.eclipse.emf.compare</groupId>
-                <artifactId>emf.compare-parent</artifactId>
-                <version>3.0.0-SNAPSHOT</version>
-                <classifier>targetPlatforms/juno-4.2-sdk</classifier>
-              </artifact>
-            </target>
-          </configuration>
-        </plugin>
-      </plugins>
-    </build>
-  </profile>
-
-  <profile>
-      <id>indigo</id>
+  <profiles>
+    <!--
+      EMF Compare can be built against Luna, Kepler, Juno, Indigo, Helios and Galileo.
+      However, some parts of EMF Compare are dependent on recent platforms.
+      Namely, the UML and diagram comparison supports are only available for platforms Juno and higher.
+      Please set the "platform" variable to either one of the supported platform to activate the proper set of profiles.
+    -->
+    
+    <!-- Target platforms are located in org.eclipse.emf.compare-parent/targetPlatforms. -->
+    <profile>
+      <id>luna</id>
       <activation>
-          <activeByDefault>false</activeByDefault>
+        <activeByDefault>true</activeByDefault>
       </activation>
       <build>
-      <plugins>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>target-platform-configuration</artifactId>
-          <version>${tycho-version}</version>
-          <configuration>
-            <target>
-              <artifact>
-                <groupId>org.eclipse.emf.compare</groupId>
-                <artifactId>emf.compare-parent</artifactId>
-                <version>3.0.0-SNAPSHOT</version>
-                <classifier>targetPlatforms/indigo-sdk</classifier>
-              </artifact>
-            </target>
-          </configuration>
-        </plugin>
-      </plugins>
-    </build>
-  </profile>
-
-
-    <profile>
-        <id>helios</id>
-        <activation>
-            <activeByDefault>false</activeByDefault>
-        </activation>
-        <build> <plugins>
-                <plugin>
-                    <groupId>org.eclipse.tycho</groupId>
-                    <artifactId>target-platform-configuration</artifactId>
-                    <version>${tycho-version}</version>
-                    <configuration>
-                        <resolver>p2</resolver>
-                        <ignoreTychoRepositories>true</ignoreTychoRepositories>
-                        <target>
-                            <artifact>
-                                <groupId>org.eclipse.emf.compare</groupId>
-                                <artifactId>org.eclipse.emf.compare</artifactId>
-                                <version>3.0.0-SNAPSHOT</version>
-                                <classifier>target_platforms/helios-sdk</classifier>
-                            </artifact>
-                        </target>
-                    </configuration>
-        </plugin></plugins></build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>target-platform-configuration</artifactId>
+            <version>${tycho-version}</version>
+            <configuration>
+              <target>
+                <artifact>
+                  <groupId>org.eclipse.emf.compare</groupId>
+                  <artifactId>emf.compare-parent</artifactId>
+                  <version>3.0.0-SNAPSHOT</version>
+                  <classifier>targetPlatforms/luna-sdk</classifier>
+                </artifact>
+              </target>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
 
     <profile>
-        <id>galileo</id>
-        <activation>
-            <activeByDefault>false</activeByDefault>
-        </activation>
-        <build> 
-            <plugins>
-                <plugin>
-                    <groupId>org.eclipse.tycho</groupId>
-                    <artifactId>target-platform-configuration</artifactId>
-                    <version>${tycho-version}</version>
-                    <configuration>
-                        <resolver>p2</resolver>
-                        <ignoreTychoRepositories>true</ignoreTychoRepositories>
-                        <target>
-                            <artifact>
-                                <groupId>org.eclipse.emf.compare</groupId>
-                                <artifactId>org.eclipse.emf.compare</artifactId>
-                                <version>3.0.0-SNAPSHOT</version>
-                                <classifier>target_platforms/galileo-sdk</classifier>
-                            </artifact>
-                        </target>
-                    </configuration>
-        </plugin></plugins></build>
+      <id>kepler</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>target-platform-configuration</artifactId>
+            <version>${tycho-version}</version>
+            <configuration>
+              <target>
+                <artifact>
+                  <groupId>org.eclipse.emf.compare</groupId>
+                  <artifactId>emf.compare-parent</artifactId>
+                  <version>3.0.0-SNAPSHOT</version>
+                  <classifier>targetPlatforms/kepler-sdk</classifier>
+                </artifact>
+              </target>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>juno</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>target-platform-configuration</artifactId>
+            <version>${tycho-version}</version>
+            <configuration>
+              <target>
+                <artifact>
+                  <groupId>org.eclipse.emf.compare</groupId>
+                  <artifactId>emf.compare-parent</artifactId>
+                  <version>3.0.0-SNAPSHOT</version>
+                  <classifier>targetPlatforms/juno-4.2-sdk</classifier>
+                </artifact>
+              </target>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>indigo</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>target-platform-configuration</artifactId>
+            <version>${tycho-version}</version>
+            <configuration>
+              <target>
+                <artifact>
+                  <groupId>org.eclipse.emf.compare</groupId>
+                  <artifactId>emf.compare-parent</artifactId>
+                  <version>3.0.0-SNAPSHOT</version>
+                  <classifier>targetPlatforms/indigo-sdk</classifier>
+                </artifact>
+              </target>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>helios</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>target-platform-configuration</artifactId>
+            <version>${tycho-version}</version>
+            <configuration>
+              <target>
+                <artifact>
+                  <groupId>org.eclipse.emf.compare</groupId>
+                  <artifactId>emf.compare-parent</artifactId>
+                  <version>3.0.0-SNAPSHOT</version>
+                  <classifier>targetPlatforms/helios-sdk</classifier>
+                </artifact>
+              </target>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>galileo</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build> 
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>target-platform-configuration</artifactId>
+            <version>${tycho-version}</version>
+            <configuration>
+              <target>
+                <artifact>
+                  <groupId>org.eclipse.emf.compare</groupId>
+                  <artifactId>emf.compare-parent</artifactId>
+                  <version>3.0.0-SNAPSHOT</version>
+                  <classifier>targetPlatforms/galileo-sdk</classifier>
+                </artifact>
+              </target>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!--
+      These define coherent sets of modules (core, uml comparison support, diagram comparison support, ...
+      By default, all sets are active. When building against older platforms, make sure to disable the profiles that won't build.
+      
+      luna => core, ui, uml, diagram, ecoretools, papyrus, update
+      kepler => core, ui, uml, diagram, ecoretools, papyrus, update
+      juno => core, ui, uml, diagram, ecoretools, papyrus, update
+      indigo => core, ui, diagram
+      helios => core, ui, diagram
+      galileo => core, ui, diagram
+    -->
+
+    <profile>
+      <id>update</id>
+      <activation>
+        <!--
+          The update site requires that all other sets of modules are built
+        -->
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>../packaging/org.eclipse.emf.compare.update</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>ui</id>
+      <activation>
+        <!-- The UI should always be built... -->
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>../packaging/org.eclipse.emf.compare.ide.ui-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.ide</module>
+        <module>../plugins/org.eclipse.emf.compare.ide.ui</module>
+        <module>../plugins/org.eclipse.emf.compare.ide.ui.tests</module>
+        <!-- There are no longer any "ide" tests
+        <module>../plugins/org.eclipse.emf.compare.ide.tests</module>
+        -->
+        
+        <module>../packaging/org.eclipse.emf.compare.rcp.ui-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.rcp</module>
+        <module>../plugins/org.eclipse.emf.compare.rcp.ui</module>
+        <module>../plugins/org.eclipse.emf.compare.rcp.ui.tests</module>
+      </modules>
+    </profile>
+    
+    <profile>
+      <id>uml</id>
+      <activation>
+        <!-- This requires UML 4 and can only be built with juno or higher -->
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.rcp</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.rcp.ui</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.tests</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>diagram</id>
+      <activation>
+        <!-- This should compile on all platforms. -->
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>ecoretools</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>../packaging/org.eclipse.emf.compare.diagram.ecoretools-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.ecoretools</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools.tests</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools.tests</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>papyrus</id>
+      <activation>
+        <!-- This only builds against juno or higher -->
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests</module>
+      </modules>
     </profile>
 
     <profile>
       <id>sign</id>
       <activation>
-        <property>
-          <name>SIGN_BUILD</name>
-          <value>true</value>
-        </property>
+        <activeByDefault>false</activeByDefault>
       </activation>
       <build>
         <plugins>
@@ -486,7 +543,7 @@
             <executions>
               <execution>
                 <id>pack200-pack</id>
-                <goals>
+                  <goals>
                   <goal>pack</goal>
                 </goals>
                 <phase>verify</phase>
@@ -509,67 +566,68 @@
       </pluginRepositories>
     </profile>
 
+    <!-- use this profile if you need to launch sonar or other quality-related plugins on the built artifacts. -->
     <profile>
-        <id>quality</id>
-        <activation>
-            <activeByDefault>false</activeByDefault>
-        </activation>
-        <properties>
-            <!-- Sonar properties -->
-            <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-            <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-            <!-- Points to the target folder of the global parent project -->
-            <sonar.jacoco.reportPath>../../org.eclipse.emf.compare-parent/target/jacoco.exec</sonar.jacoco.reportPath>
-        </properties>
-        <build>
-            <plugins>
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.6.4.201312101107</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>prepare-agent</goal>
-                            </goals>
-                            <configuration>
-                                <append>true</append>
-                                <destFile>${sonar.jacoco.reportPath}</destFile>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>2.11</version>
-                    <executions>
-                        <execution>
-                            <id>check my sources</id>
-                            <goals>
-                                <goal>checkstyle</goal>
-                            </goals>
-                            <phase>verify</phase>
-                            <configuration>
-                                <failOnErrors>false</failOnErrors>
-                                <consoleOutput>true</consoleOutput>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>findbugs-maven-plugin</artifactId>
-                    <version>2.5.3</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-pmd-plugin</artifactId>
-                    <version>3.0.1</version>
-                </plugin>
-            </plugins>
-        </build>
+      <id>quality</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <!-- Sonar properties -->
+        <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <!-- Points to the target folder of the global parent project -->
+        <sonar.jacoco.reportPath>../../org.eclipse.emf.compare-parent/target/jacoco.exec</sonar.jacoco.reportPath>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.6.4.201312101107</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+                <configuration>
+                  <append>true</append>
+                  <destFile>${sonar.jacoco.reportPath}</destFile>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>2.11</version>
+            <executions>
+              <execution>
+                <id>check my sources</id>
+                <goals>
+                  <goal>checkstyle</goal>
+                </goals>
+                <phase>verify</phase>
+                <configuration>
+                  <failOnErrors>false</failOnErrors>
+                  <consoleOutput>true</consoleOutput>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>findbugs-maven-plugin</artifactId>
+            <version>2.5.3</version>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <version>3.0.1</version>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
-</profiles>
+  </profiles>
 
 </project>

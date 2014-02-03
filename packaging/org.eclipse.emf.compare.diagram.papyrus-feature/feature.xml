@@ -19,10 +19,10 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.emf.compare" version="2.2.0.qualifier"/>
-      <import feature="org.eclipse.emf.compare.diagram.gmf" version="2.2.0.qualifier"/>
-      <import feature="org.eclipse.emf.compare.ide.ui" version="2.2.0.qualifier"/>
-      <import feature="org.eclipse.emf.compare.uml2" version="2.2.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare" version="3.0.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare.diagram.gmf" version="3.0.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare.ide.ui" version="3.0.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare.uml2" version="3.0.0.qualifier"/>
       <import feature="org.eclipse.papyrus.infra.core.feature" version="0.9.1.v201209190809"/>
       <import feature="org.eclipse.papyrus.infra.emf.feature" version="0.9.1.v201209190809"/>
       <import feature="org.eclipse.papyrus.infra.gmfdiag.feature" version="0.9.1.v201209190809"/>

@@ -19,10 +19,10 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.emf.compare" version="2.2.0.qualifier"/>
-      <import feature="org.eclipse.emf.compare.ide.ui" version="2.2.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare" version="3.0.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare.ide.ui" version="3.0.0.qualifier"/>
       <import feature="org.eclipse.emf.ecoretools" version="1.0.0"/>
-      <import feature="org.eclipse.emf.compare.diagram.gmf" version="2.2.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare.diagram.gmf" version="3.0.0.qualifier"/>
    </requires>
 
    <plugin
