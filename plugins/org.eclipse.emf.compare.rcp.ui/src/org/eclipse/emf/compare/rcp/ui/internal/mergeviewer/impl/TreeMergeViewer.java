@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
+import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;

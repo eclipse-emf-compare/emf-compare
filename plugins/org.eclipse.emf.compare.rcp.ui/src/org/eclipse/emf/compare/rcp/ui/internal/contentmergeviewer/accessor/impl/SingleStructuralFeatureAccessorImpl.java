@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,13 +21,22 @@ import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 
 /**
+ * A specific {@link AbstractStructuralFeatureAccessor} for mono-valued structural feature objects.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @since 4.0
  */
 public class SingleStructuralFeatureAccessorImpl extends AbstractStructuralFeatureAccessor {
 
 	/**
+	 * Default constructor.
+	 * 
+	 * @param adapterFactory
+	 *            the adapater factory used to create the accessor.
 	 * @param diff
+	 *            the diff associated with this accessor.
 	 * @param side
+	 *            the side of the accessor.
 	 */
 	public SingleStructuralFeatureAccessorImpl(AdapterFactory adapterFactory, Diff diff, MergeViewerSide side) {
 		super(adapterFactory, diff, side);
@@ -36,7 +45,7 @@ public class SingleStructuralFeatureAccessorImpl extends AbstractStructuralFeatu
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.AbstractStructuralFeatureAccessor.ui.internal.contentmergeviewer.provider.BasicStructuralFeatureAccessorImpl#getItems()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.ICompareAccessor.#getItems()
 	 */
 	public ImmutableList<? extends IMergeViewerItem> getItems() {
 		Object thisSideValue = getValue(getSide());
@@ -66,6 +75,13 @@ public class SingleStructuralFeatureAccessorImpl extends AbstractStructuralFeatu
 		return ret;
 	}
 
+	/**
+	 * Get the value associated to the given side.
+	 * 
+	 * @param side
+	 *            the given side.
+	 * @return the value associated to the given side.
+	 */
 	private Object getValue(MergeViewerSide side) {
 		Object value = null;
 		EObject eObject = getEObject(side);

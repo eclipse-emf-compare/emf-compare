@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,19 +18,35 @@ import java.io.InputStream;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.IStreamContentAccessor;
+import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.IStreamContentAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.impl.AbstractTypedElementAdapter;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.swt.graphics.Image;
 
 /**
+ * A specific {@link org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.IStreamContentAccessor}
+ * for resources.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @since 4.0
  */
 public class ResourceStreamAccessorImpl extends AbstractTypedElementAdapter implements IStreamContentAccessor {
 
+	/** The default size of the input stream resource contents. */
+	private static final int INPUT_STREAM_DEFAULT_SIZE = 10240;
+
+	/** The resource associated to this accessor. */
 	private final Resource fResource;
 
+	/**
+	 * Default constructor.
+	 * 
+	 * @param adapterFactory
+	 *            the adapater factory used to create the accessor.
+	 * @param resource
+	 *            the Resource to associate with the accessor.
+	 */
 	public ResourceStreamAccessorImpl(AdapterFactory adapterFactory, Resource resource) {
 		super(adapterFactory);
 		this.fResource = resource;
@@ -39,7 +55,7 @@ public class ResourceStreamAccessorImpl extends AbstractTypedElementAdapter impl
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getName()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement#getName()
 	 */
 	public String getName() {
 		return this.getClass().getName();
@@ -48,7 +64,7 @@ public class ResourceStreamAccessorImpl extends AbstractTypedElementAdapter impl
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getImage()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement#getImage()
 	 */
 	public Image getImage() {
 		Object image = getItemDelegator().getImage(fResource);
@@ -58,7 +74,7 @@ public class ResourceStreamAccessorImpl extends AbstractTypedElementAdapter impl
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getType()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement#getType()
 	 */
 	public String getType() {
 		return TEXT_TYPE;
@@ -67,10 +83,10 @@ public class ResourceStreamAccessorImpl extends AbstractTypedElementAdapter impl
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.IStreamContentAccessor#getContents()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.IStreamContentAccessor#getContents()
 	 */
 	public InputStream getContents() throws CoreException {
-		ByteArrayOutputStream os = new ByteArrayOutputStream(10240);
+		ByteArrayOutputStream os = new ByteArrayOutputStream(INPUT_STREAM_DEFAULT_SIZE);
 		try {
 			fResource.save(os, null);
 		} catch (IOException e) {

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy;
+package org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy;
 
 import org.eclipse.swt.graphics.Image;
 
@@ -19,6 +19,9 @@ import org.eclipse.swt.graphics.Image;
  * <code>getImage</code>) and for finding a viewer for a given input type (<code>getType</code>).
  * <p>
  * Clients may implement this interface.
+ * 
+ * @author <a href="mailto:xyz@xyz.com">Ibm Corporation</a>
+ * @since 4.0
  */
 public interface ITypedElement {
 
@@ -26,17 +29,17 @@ public interface ITypedElement {
 	 * Type for a folder input (value <code>"FOLDER"</code>). Folders are comparison elements that have no
 	 * contents, only a name and children.
 	 */
-	public static final String FOLDER_TYPE = "FOLDER"; //$NON-NLS-1$
+	String FOLDER_TYPE = "FOLDER"; //$NON-NLS-1$
 
 	/**
 	 * Type for an element whose actual type is text (value <code>"txt"</code>).
 	 */
-	public static final String TEXT_TYPE = "txt"; //$NON-NLS-1$
+	String TEXT_TYPE = "txt"; //$NON-NLS-1$
 
 	/**
 	 * Type for an element whose actual type could not be determined. (value <code>"???"</code>).
 	 */
-	public static final String UNKNOWN_TYPE = "???"; //$NON-NLS-1$
+	String UNKNOWN_TYPE = "???"; //$NON-NLS-1$
 
 	/**
 	 * Returns the name of this object. The name is used when displaying this object in the UI.

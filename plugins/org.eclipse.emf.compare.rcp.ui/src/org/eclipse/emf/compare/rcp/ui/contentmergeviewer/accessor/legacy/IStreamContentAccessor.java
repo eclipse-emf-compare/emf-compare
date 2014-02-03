@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Mikael Barbero (mikael.barbero@obeo.fr) - Adapted for EMF Compare
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy;
+package org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy;
 
 import java.io.InputStream;
 
@@ -26,6 +26,8 @@ import org.eclipse.core.runtime.CoreException;
  * </p>
  * 
  * @see BufferedContent
+ * @author <a href="mailto:xyz@xyz.com">Ibm Corporation</a>
+ * @since 4.0
  */
 public interface IStreamContentAccessor {
 	/**

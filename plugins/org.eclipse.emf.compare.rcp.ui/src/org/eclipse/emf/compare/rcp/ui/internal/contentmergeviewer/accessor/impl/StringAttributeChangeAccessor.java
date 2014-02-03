@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,9 +16,9 @@ import java.io.InputStream;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.IStreamContentAccessor;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.impl.TypeConstants;
+import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.IStreamContentAccessor;
+import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.TypeConstants;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
@@ -32,6 +32,7 @@ import org.eclipse.swt.graphics.Image;
  * the given {@link EAttribute} on the given {@link EObject}.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @since 4.0
  */
 public class StringAttributeChangeAccessor implements ITypedElement, IStreamContentAccessor {
 
@@ -45,13 +46,18 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	 */
 	private final EAttribute fAttribute;
 
+	/**
+	 * The comparison object.
+	 */
 	private final Comparison fComparison;
 
 	/**
-	 * Creates a new object for the given <code>eObject</code> and <code>eAttribute</code>.
+	 * Creates a new accessor for the given <code>eObject</code> and <code>eAttribute</code>.
 	 * 
 	 * @param eObject
-	 *            The EObject to get the value of the EAttribute from
+	 *            The EObject to get the value of the EAttribute from.
+	 * @param attributeChange
+	 *            The attribute change to get the attribute Eattribute from.
 	 */
 	public StringAttributeChangeAccessor(EObject eObject, AttributeChange attributeChange) {
 		this.fEObject = eObject;
@@ -60,7 +66,9 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	}
 
 	/**
-	 * @return the fComparison
+	 * Returns the comparison object.
+	 * 
+	 * @return the comparison object.
 	 */
 	public Comparison getComparison() {
 		return fComparison;
@@ -69,7 +77,7 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.compare.IStreamContentAccessor#getContents()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.IStreamContentAccessor#getContents()
 	 */
 	public InputStream getContents() throws CoreException {
 		Object value = ReferenceUtil.safeEGet(getEObject(), getEAtribute());
@@ -83,14 +91,18 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	}
 
 	/**
-	 * @return the fEObject
+	 * Returns the EObject to get the value of the EAttribute from.
+	 * 
+	 * @return the EObject to get the value of the EAttribute from.
 	 */
 	protected final EObject getEObject() {
 		return fEObject;
 	}
 
 	/**
-	 * @return the fEAttribute
+	 * Returns the EAttribute to retrieve from the wrapped EObject.
+	 * 
+	 * @return the EAttribute to retrieve from the wrapped EObject.
 	 */
 	protected final EAttribute getEAtribute() {
 		return fAttribute;
@@ -99,7 +111,7 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.wrapper.compare.ITypedElement#getName()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement#getName()
 	 */
 	public String getName() {
 		return this.getClass().getName();
@@ -108,7 +120,7 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.wrapper.compare.ITypedElement#getImage()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement#getImage()
 	 */
 	public Image getImage() {
 		return ExtendedImageRegistry.getInstance().getImage(
@@ -118,10 +130,10 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.wrapper.compare.ITypedElement#getType()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement#getType()
 	 */
 	public String getType() {
-		return TypeConstants.TYPE__ETEXT_DIFF;
+		return TypeConstants.TYPE_ETEXT_DIFF;
 	}
 
 }

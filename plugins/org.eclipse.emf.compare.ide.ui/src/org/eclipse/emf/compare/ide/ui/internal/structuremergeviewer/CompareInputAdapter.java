@@ -27,7 +27,7 @@ import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.AccessorAdapter;
 import org.eclipse.emf.compare.provider.ExtendedAdapterFactoryItemDelegator;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.IAccessorFactory;
+import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IDisposable;
@@ -218,7 +218,7 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 			if (isThreeWay) {
 				IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
 				if (accessorFactory != null) {
-					org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
+					org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
 							.createAncestor(getAdapterFactory(), getComparisonObject());
 					if (typedElement != null) {
 						ret = AccessorAdapter.adapt(typedElement);
@@ -261,7 +261,7 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 		final ITypedElement ret;
 		IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
 		if (accessorFactory != null) {
-			org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
+			org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
 					.createLeft(getAdapterFactory(), getComparisonObject());
 			if (typedElement != null) {
 				ret = AccessorAdapter.adapt(typedElement);
@@ -283,7 +283,7 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 		final ITypedElement ret;
 		IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
 		if (accessorFactory != null) {
-			org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
+			org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
 					.createRight(getAdapterFactory(), getComparisonObject());
 			if (typedElement != null) {
 				ret = AccessorAdapter.adapt(typedElement);

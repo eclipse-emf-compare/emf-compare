@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,16 +10,23 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl;
 
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.IAccessorFactory;
+import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory;
 
+/**
+ * An abstract implementation of {@link IAccessorFactory}.
+ * 
+ * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
+ * @since 4.0
+ */
 public abstract class AbstractAccessorFactory implements IAccessorFactory {
 
+	/** The ranking of this factory. */
 	private int ranking;
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.accessor.factory.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory#getRanking()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory#getRanking()
 	 */
 	public int getRanking() {
 		return ranking;
@@ -28,7 +35,7 @@ public abstract class AbstractAccessorFactory implements IAccessorFactory {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.accessor.factory.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory#setRanking(int)
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory#setRanking(int)
 	 */
 	public void setRanking(int r) {
 		ranking = r;

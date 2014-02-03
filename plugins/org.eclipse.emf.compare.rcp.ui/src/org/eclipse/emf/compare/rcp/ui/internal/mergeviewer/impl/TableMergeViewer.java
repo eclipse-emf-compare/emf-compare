@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
+import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.IStructuralFeatureAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IStructuralFeatureAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.ResourceContentsAccessorImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
 import org.eclipse.emf.ecore.EObject;

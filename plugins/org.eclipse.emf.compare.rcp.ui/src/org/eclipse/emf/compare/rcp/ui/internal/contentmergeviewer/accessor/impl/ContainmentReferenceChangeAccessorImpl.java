@@ -25,7 +25,7 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.impl.TypeConstants;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.TypeConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
@@ -34,11 +34,19 @@ import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.ecore.EObject;
 
 /**
+ * A specific {@link AbstractStructuralFeatureAccessor} for containment {@link ReferenceChange} objects.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @since 4.0
  */
 public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFeatureAccessor {
+
 	/**
+	 * {@inheritDoc}.
 	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.AbstractStructuralFeatureAccessor#AbstractStructuralFeatureAccessor(org.eclipse.emf.common.notify.AdapterFactory,
+	 *      org.eclipse.emf.compare.Diff,
+	 *      org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide)
 	 */
 	public ContainmentReferenceChangeAccessorImpl(AdapterFactory adapterFactory,
 			ReferenceChange referenceChange, MergeViewerSide side) {
@@ -46,7 +54,10 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 	}
 
 	/**
-	 * @return
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.AbstractStructuralFeatureAccessor#
+	 *      computeDifferences()
 	 */
 	@Override
 	protected ImmutableList<Diff> computeDifferences() {
@@ -57,7 +68,7 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.ICompareAccessor#getInitialItem()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.ICompareAccessor#getInitialItem()
 	 */
 	@Override
 	public IMergeViewerItem getInitialItem() {
@@ -82,6 +93,7 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 	 * find this match.
 	 * 
 	 * @param match
+	 *            the match of the merged diff.
 	 * @return the match associated with the given merged diff.
 	 */
 	private Match getMatchWithNullValues(Match match) {
@@ -96,7 +108,7 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.accessor.ICompareAccessor#getItems()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.ICompareAccessor#getItems()
 	 */
 	public ImmutableList<? extends IMergeViewerItem> getItems() {
 		final ImmutableList.Builder<IMergeViewerItem> ret = ImmutableList.builder();
@@ -120,10 +132,10 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getType()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement#getType()
 	 */
 	@Override
 	public String getType() {
-		return TypeConstants.TYPE__ETREE_DIFF;
+		return TypeConstants.TYPE_ETREE_DIFF;
 	}
 }

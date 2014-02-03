@@ -11,8 +11,8 @@
 package org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor.factory;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.AbstractAccessorFactory;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor.UMLStereotypeApplicationChangeFeatureAccessor;
@@ -26,7 +26,7 @@ public class UMLStereotypeApplicationChangeFeatureAccessorFactory extends Abstra
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory#isFactoryFor(java.lang.Object)
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory#isFactoryFor(java.lang.Object)
 	 */
 	public boolean isFactoryFor(Object target) {
 		return target instanceof StereotypeApplicationChange;
@@ -35,7 +35,7 @@ public class UMLStereotypeApplicationChangeFeatureAccessorFactory extends Abstra
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory#createLeft(org.eclipse.emf.common.notify.AdapterFactory,
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory#createLeft(org.eclipse.emf.common.notify.AdapterFactory,
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createLeft(AdapterFactory adapterFactory, Object target) {
@@ -46,7 +46,7 @@ public class UMLStereotypeApplicationChangeFeatureAccessorFactory extends Abstra
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory#createRight(org.eclipse.emf.common.notify.AdapterFactory,
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory#createRight(org.eclipse.emf.common.notify.AdapterFactory,
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createRight(AdapterFactory adapterFactory, Object target) {
@@ -57,7 +57,7 @@ public class UMLStereotypeApplicationChangeFeatureAccessorFactory extends Abstra
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory#createAncestor(org.eclipse.emf.common.notify.AdapterFactory,
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory#createAncestor(org.eclipse.emf.common.notify.AdapterFactory,
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createAncestor(AdapterFactory adapterFactory, Object target) {

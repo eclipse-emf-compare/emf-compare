@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,15 +21,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.IAccessorFactory;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.IAccessorFactory.Registry;
+import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory;
 
-public class AccessorFactoryRegistryImpl implements Registry {
+/**
+ * The default implementation of {@link IAccessorFactory.Registry}.
+ * 
+ * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
+ * @since 4.0
+ */
+public class AccessorFactoryRegistryImpl implements IAccessorFactory.Registry {
 
+	/** A map between IAccessorFactory and their class names. */
 	private final Map<String, IAccessorFactory> map;
 
 	/**
-	 * 
+	 * Default constructor.
 	 */
 	public AccessorFactoryRegistryImpl() {
 		map = new ConcurrentHashMap<String, IAccessorFactory>();
@@ -38,7 +44,7 @@ public class AccessorFactoryRegistryImpl implements Registry {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.accessor.factory.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory.Registry#getHighestRankingFactory(java.lang.Object)
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory.Registry#getHighestRankingFactory(java.lang.Object)
 	 */
 	public IAccessorFactory getHighestRankingFactory(Object target) {
 		Iterator<IAccessorFactory> factories = getFactories(target).iterator();
@@ -62,7 +68,7 @@ public class AccessorFactoryRegistryImpl implements Registry {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.accessor.factory.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory.Registry#getFactories(java.lang.Object)
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory.Registry#getFactories(java.lang.Object)
 	 */
 	// safe thanks to the isFactoryFor filter
 	public List<IAccessorFactory> getFactories(Object target) {
@@ -74,6 +80,13 @@ public class AccessorFactoryRegistryImpl implements Registry {
 		return ret;
 	}
 
+	/**
+	 * A predicate to know if the factory is applicable to the given object.
+	 * 
+	 * @param target
+	 *            the given object.
+	 * @return true, if the factory is applicable to the given object, false otherwise.
+	 */
 	static final Predicate<IAccessorFactory> isFactoryFor(final Object target) {
 		return new Predicate<IAccessorFactory>() {
 			/**
@@ -90,7 +103,7 @@ public class AccessorFactoryRegistryImpl implements Registry {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.accessor.factory.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory.Registry#add(java.lang.Object)
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory.Registry#add(java.lang.Object)
 	 */
 	public IAccessorFactory add(IAccessorFactory factory) {
 		Preconditions.checkNotNull(factory);
@@ -100,7 +113,7 @@ public class AccessorFactoryRegistryImpl implements Registry {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.accessor.factory.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory.Registry#remove(java.lang.Object)
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory.Registry#remove(java.lang.Object)
 	 */
 	public IAccessorFactory remove(String className) {
 		return map.remove(className);
@@ -109,7 +122,7 @@ public class AccessorFactoryRegistryImpl implements Registry {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.accessor.factory.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory.Registry#clear()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory.Registry#clear()
 	 */
 	public void clear() {
 		map.clear();

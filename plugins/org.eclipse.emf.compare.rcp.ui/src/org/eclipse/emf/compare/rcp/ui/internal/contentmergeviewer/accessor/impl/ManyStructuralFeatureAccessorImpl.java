@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,13 +34,22 @@ import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 
 /**
+ * A specific {@link AbstractStructuralFeatureAccessor} for multi-valued structural feature objects.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @since 4.0
  */
 public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeatureAccessor {
 
 	/**
+	 * Default constructor.
+	 * 
+	 * @param adapterFactory
+	 *            the adapater factory used to create the accessor.
 	 * @param diff
+	 *            the diff associated with this accessor.
 	 * @param side
+	 *            the side of the accessor.
 	 */
 	public ManyStructuralFeatureAccessorImpl(AdapterFactory adapterFactory, Diff diff, MergeViewerSide side) {
 		super(adapterFactory, diff, side);
@@ -49,7 +58,7 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.AbstractStructuralFeatureAccessor.ui.internal.contentmergeviewer.provider.BasicStructuralFeatureAccessorImpl#getItems()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.ICompareAccessor#getItems()
 	 */
 	public ImmutableList<? extends IMergeViewerItem> getItems() {
 		List<? extends IMergeViewerItem> ret;
@@ -63,6 +72,13 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 		return ImmutableList.copyOf(ret);
 	}
 
+	/**
+	 * Create IMergeViewerItems for the given values.
+	 * 
+	 * @param values
+	 *            the given values.
+	 * @return the list of newly created IMergeViewerItems.
+	 */
 	private List<? extends IMergeViewerItem> createMergeViewerItemFrom(List<?> values) {
 		List<IMergeViewerItem> ret = newArrayListWithCapacity(values.size());
 		for (Object value : values) {
@@ -72,6 +88,13 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 		return ret;
 	}
 
+	/**
+	 * Create a IMergeViewerItem for the given object.
+	 * 
+	 * @param object
+	 *            the given object.
+	 * @return an IMergeViewerItem.
+	 */
 	private IMergeViewerItem createMergeViewerItemFrom(Object object) {
 		Diff diff = getDiffWithValue(object);
 		Object left = matchingValue(object, MergeViewerSide.LEFT);
@@ -91,11 +114,18 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 				getRootAdapterFactory());
 	}
 
+	/**
+	 * Create insertion points for the given values.
+	 * 
+	 * @param values
+	 *            the given values.
+	 * @return a list of newly created insertion points (IMegreViewerItems).
+	 */
 	private List<? extends IMergeViewerItem> createInsertionPoints(
 			final List<? extends IMergeViewerItem> values) {
 		List<IMergeViewerItem> ret = newArrayList(values);
 		for (Diff diff : getDifferences().reverse()) {
-			boolean rightToLeft = (getSide() == MergeViewerSide.LEFT);
+			boolean rightToLeft = getSide() == MergeViewerSide.LEFT;
 			Object left = getValueFromDiff(diff, MergeViewerSide.LEFT);
 			Object right = getValueFromDiff(diff, MergeViewerSide.RIGHT);
 
@@ -130,12 +160,25 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 		return ret;
 	}
 
+	/**
+	 * Find the insertion index for the given diff.
+	 * 
+	 * @param diff
+	 *            the given diff.
+	 * @param rightToLeft
+	 *            the way of merge.
+	 * @return the insertion index.
+	 */
 	protected int findInsertionIndex(Diff diff, boolean rightToLeft) {
 		return DiffUtil.findInsertionIndex(getComparison(), diff, rightToLeft);
 	}
 
 	/**
+	 * Get the Diff corresponding to the given object.
 	 * 
+	 * @param value
+	 *            the given object.
+	 * @return the Diff corresponding to the given object.
 	 */
 	private Diff getDiffWithValue(Object value) {
 		Diff ret = null;
@@ -150,9 +193,13 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 	}
 
 	/**
+	 * Get the value of the given side associated to the given Diff.
+	 * 
 	 * @param diff
+	 *            the given Diff.
 	 * @param side
-	 * @return
+	 *            the side of the Diff.
+	 * @return the value associated to the given Diff.
 	 */
 	protected Object getValueFromDiff(final Diff diff, MergeViewerSide side) {
 		Object diffValue = getDiffValue(diff);
@@ -160,6 +207,15 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 		return ret;
 	}
 
+	/**
+	 * Get the value of the given side of the Match corresponding to the given object.
+	 * 
+	 * @param object
+	 *            the given object.
+	 * @param side
+	 *            the given side.
+	 * @return the value of the given side of the Match corresponding to the given object.
+	 */
 	private Object matchingValue(Object object, MergeViewerSide side) {
 		final Object ret;
 		if (object instanceof EObject) {
@@ -187,6 +243,15 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 		return ret;
 	}
 
+	/**
+	 * Get the value in the given list that match to the given value.
+	 * 
+	 * @param value
+	 *            the given value.
+	 * @param in
+	 *            the list of values.
+	 * @return the value in the given list that match to the given value.
+	 */
 	private Object matchingValue(Object value, List<?> in) {
 		Object ret = null;
 		IEqualityHelper equalityHelper = getComparison().getEqualityHelper();
@@ -204,7 +269,8 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 	 * Returns the values of the current feature on the given side.
 	 * 
 	 * @param side
-	 * @return
+	 *            the given side.
+	 * @return the values of the current feature on the given side.
 	 */
 	protected List<?> getFeatureValues(MergeViewerSide side) {
 		final EObject eObject = getEObject(side);
@@ -213,10 +279,11 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 
 	/**
 	 * Returns either {@link ReferenceChange#getValue()} or {@link AttributeChange#getValue()} depending on
-	 * the runtime type of the give {@code diff} or null otherwise.
+	 * the runtime type of the give, {@code diff} or null otherwise.
 	 * 
 	 * @param diff
-	 * @return
+	 *            the given Diff.
+	 * @return the value of the given Diff.
 	 */
 	protected Object getDiffValue(Diff diff) {
 		final Object ret;
