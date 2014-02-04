@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="EMF Compare based on Luna SDK" sequenceNumber="0">
+<?pde version="3.8"?><target name="EMF Compare based on Luna M5" sequenceNumber="0">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.sdk.ide" version="4.4.0.I20140123-1600"/>
-<unit id="org.eclipse.emf.sdk.feature.group" version="2.10.0.v20140127-0448"/>
-<unit id="org.eclipse.emf.ecoretools.feature.group" version="2.0.0.201401281049"/>
-<unit id="org.eclipse.gmf.runtime.sdk.feature.group" version="1.8.0.201401272007"/>
-<unit id="org.eclipse.uml2.sdk.feature.group" version="5.0.0.v20140127-0906"/>
-<unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="1.0.0.v201401290914"/>
-<unit id="org.eclipse.egit.feature.group" version="3.2.0.201312181205-r"/>
-<repository location="http://download.eclipse.org/releases/luna"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.junit4" version="4.8.1.v20100525"/>
-<repository location="http://download.eclipse.org/releases/helios"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.guava" version="11.0.2.v201303041551"/>
-<unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
-<unit id="javaewah" version="0.5.6.v201307211000"/>
-<unit id="org.apache.commons.compress" version="1.4.1.v201301140946"/>
-<unit id="org.kohsuke.args4j" version="2.0.21.v201301150030"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20131024145017/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.emfstore.modelmutator.feature.feature.group" version="0.9.3.M5"/>
-<unit id="org.eclipse.emf.emfstore.fuzzy.feature.feature.group" version="0.9.3.M5"/>
-<repository location="http://download.eclipse.org/emf-store/milestones/archive/0.9.3.M5"/>
+<unit id="org.eclipse.emf.emfstore.modelmutator.feature.feature.group" version="0.9.3.M6"/>
+<unit id="org.eclipse.emf.emfstore.fuzzy.feature.feature.group" version="0.9.3.M6"/>
+<repository location="http://download.eclipse.org/emf-store/milestones/archive/0.9.3.M6"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<unit id="org.junit4" version="4.8.1.v20120523-1257"/>
+<repository location="http://download.eclipse.org/releases/juno"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.feature.group" version="2.10.0.v20140127-0448"/>
+<unit id="org.eclipse.emf.transaction.feature.group" version="1.8.0.201401271944"/>
+<unit id="org.eclipse.uml2.feature.group" version="5.0.0.v20140127-0906"/>
+<unit id="org.eclipse.platform.sdk" version="4.4.0.I20140123-1600"/>
+<unit id="org.junit" version="4.11.0.v201303080030"/>
+<unit id="org.eclipse.egit.feature.group" version="3.2.0.201312181205-r"/>
+<unit id="org.eclipse.gmf.feature.group" version="1.8.0.201401272007"/>
+<unit id="org.eclipse.gmf.runtime.notation.feature.group" version="1.8.0.201401271537"/>
+<unit id="org.eclipse.emf.ecoretools.feature.group" version="2.0.0.201401281049"/>
+<unit id="org.eclipse.papyrus.infra.core.feature.feature.group" version="1.0.0.v201401290914"/>
+<unit id="org.eclipse.papyrus.infra.emf.feature.feature.group" version="1.0.0.v201401290914"/>
+<unit id="org.eclipse.papyrus.infra.gmfdiag.feature.feature.group" version="1.0.0.v201401290914"/>
+<unit id="org.eclipse.papyrus.uml.diagram.feature.feature.group" version="1.0.0.v201401290914"/>
+<unit id="org.eclipse.papyrus.uml.tools.feature.feature.group" version="1.0.0.v201401290914"/>
+<repository location="http://download.eclipse.org/releases/luna"/>
 </location>
 </locations>
 </target>

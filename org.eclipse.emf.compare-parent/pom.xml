@@ -67,11 +67,6 @@
     <module>../plugins/org.eclipse.emf.compare.rcp</module>
     <module>../plugins/org.eclipse.emf.compare.rcp.ui</module>
     <module>../plugins/org.eclipse.emf.compare.rcp.ui.tests</module>
-
-    <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
-    <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui</module>
   </modules>
 
   <build>
@@ -299,6 +294,11 @@
         <module>../plugins/org.eclipse.emf.compare.uml2.rcp.ui</module>
         <module>../plugins/org.eclipse.emf.compare.uml2.tests</module>
 
+        <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui</module>
+
         <module>../packaging/org.eclipse.emf.compare.diagram.ecoretools-feature</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.ecoretools</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools.tests</module>
@@ -344,6 +344,11 @@
         <module>../plugins/org.eclipse.emf.compare.uml2.rcp.ui</module>
         <module>../plugins/org.eclipse.emf.compare.uml2.tests</module>
 
+        <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui</module>
+
         <module>../packaging/org.eclipse.emf.compare.diagram.ecoretools-feature</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.ecoretools</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools.tests</module>
@@ -388,6 +393,11 @@
         <module>../plugins/org.eclipse.emf.compare.uml2.rcp</module>
         <module>../plugins/org.eclipse.emf.compare.uml2.rcp.ui</module>
         <module>../plugins/org.eclipse.emf.compare.uml2.tests</module>
+
+        <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui</module>
 
         <module>../packaging/org.eclipse.emf.compare.diagram.ecoretools-feature</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.ecoretools</module>
