@@ -59,6 +59,13 @@ public class DefaultDiffEngine implements IDiffEngine {
 
 	/**
 	 * Create the diff engine.
+	 */
+	public DefaultDiffEngine() {
+		this(new DiffBuilder());
+	}
+
+	/**
+	 * Create the diff engine.
 	 * 
 	 * @param processor
 	 *            this instance will be called for each detected difference.
