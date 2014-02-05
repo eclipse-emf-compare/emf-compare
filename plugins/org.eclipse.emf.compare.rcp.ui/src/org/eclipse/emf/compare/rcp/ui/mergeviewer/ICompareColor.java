@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer;
+package org.eclipse.emf.compare.rcp.ui.mergeviewer;
 
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.swt.graphics.Color;
@@ -17,6 +17,7 @@ import org.eclipse.swt.graphics.Color;
  * Implementation of this interface will return color of decorator of {@link Diff difference}.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @since 4.0
  */
 public interface ICompareColor {
 
@@ -56,10 +57,18 @@ public interface ICompareColor {
 	void dispose();
 
 	/**
+	 * A provider of ICompareColor.
+	 * 
 	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+	 * @since 4.0
 	 */
 	public interface Provider {
 
+		/**
+		 * Returns the ICompareColor.
+		 * 
+		 * @return the ICompareColor.
+		 */
 		ICompareColor getCompareColor();
 	}
 }

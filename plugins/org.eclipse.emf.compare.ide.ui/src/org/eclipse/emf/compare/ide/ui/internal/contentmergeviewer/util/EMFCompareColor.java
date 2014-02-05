@@ -45,7 +45,7 @@ public class EMFCompareColor extends CompareColorImpl {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.ICompareColor#dispose()
+	 * @see org.org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor#dispose()
 	 */
 	@Override
 	public void dispose() {

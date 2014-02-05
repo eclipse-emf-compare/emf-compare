@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableList;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
 
 /**
  * An ICompareAccessor is an {@link ITypedElement} used to present an input object in the EMF Compare UI.

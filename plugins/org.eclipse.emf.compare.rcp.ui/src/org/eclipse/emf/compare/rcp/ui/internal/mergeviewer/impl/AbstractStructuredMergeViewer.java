@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,19 +22,30 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 /**
+ * A specific {@link AbstractMergeViewer} for the EMF Compare Editor.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @since 4.0
  */
-public abstract class StructuredMergeViewer extends AbstractMergeViewer {
+public abstract class AbstractStructuredMergeViewer extends AbstractMergeViewer {
 
+	/** The primary control associated with this viewer. */
 	private final Control fControl;
 
+	/** A listener which is notified when a viewer's selection changes. */
 	private final ISelectionChangedListener fForwardingSelectionListener;
 
 	/**
+	 * Default constructor.
+	 * 
 	 * @param parent
+	 *            the parent widget.
 	 * @param side
+	 *            the side of the viewer.
+	 * @param compareConfiguration
+	 *            the compare configuration object used by this viewer.
 	 */
-	public StructuredMergeViewer(Composite parent, MergeViewerSide side,
+	public AbstractStructuredMergeViewer(Composite parent, MergeViewerSide side,
 			IEMFCompareConfiguration compareConfiguration) {
 		super(side, compareConfiguration);
 
@@ -44,6 +55,22 @@ public abstract class StructuredMergeViewer extends AbstractMergeViewer {
 		fForwardingSelectionListener = new ForwardingViewerSelectionListener();
 		getStructuredViewer().addSelectionChangedListener(fForwardingSelectionListener);
 	}
+
+	/**
+	 * Creates the primary control associated with this viewer.
+	 * 
+	 * @param parent
+	 *            the parent widget of this viewer.
+	 * @return the created primary control associated with this viewer.
+	 */
+	protected abstract Control createControl(Composite parent);
+
+	/**
+	 * Returns the wrapped {@link StructuredViewer}.
+	 * 
+	 * @return the wrapped {@link StructuredViewer}.
+	 */
+	protected abstract StructuredViewer getStructuredViewer();
 
 	/**
 	 * {@inheritDoc}
@@ -60,15 +87,6 @@ public abstract class StructuredMergeViewer extends AbstractMergeViewer {
 		getStructuredViewer().removeSelectionChangedListener(fForwardingSelectionListener);
 		super.handleDispose(event);
 	}
-
-	protected abstract Control createControl(Composite parent);
-
-	/**
-	 * Returns the wrapped {@link StructuredViewer}.
-	 * 
-	 * @return
-	 */
-	protected abstract StructuredViewer getStructuredViewer();
 
 	/**
 	 * {@inheritDoc}
@@ -108,6 +126,12 @@ public abstract class StructuredMergeViewer extends AbstractMergeViewer {
 		getStructuredViewer().setLabelProvider(labelProvider);
 	}
 
+	/**
+	 * A specific implementation of {@link ISelectionChangedListener} for the AbstractStructuredMergeViewer.
+	 * 
+	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+	 * @since 4.0
+	 */
 	private class ForwardingViewerSelectionListener implements ISelectionChangedListener {
 		/**
 		 * {@inheritDoc}
@@ -115,7 +139,8 @@ public abstract class StructuredMergeViewer extends AbstractMergeViewer {
 		 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
 		 */
 		public void selectionChanged(SelectionChangedEvent event) {
-			fireSelectionChanged(new SelectionChangedEvent(StructuredMergeViewer.this, event.getSelection()));
+			fireSelectionChanged(new SelectionChangedEvent(AbstractStructuredMergeViewer.this, event
+					.getSelection()));
 		}
 
 	}

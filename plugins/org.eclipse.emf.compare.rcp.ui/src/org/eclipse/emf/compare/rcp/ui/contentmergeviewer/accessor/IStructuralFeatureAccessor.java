@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor;
 
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 

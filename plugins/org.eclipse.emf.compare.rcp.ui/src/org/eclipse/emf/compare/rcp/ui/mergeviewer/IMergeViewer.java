@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer;
+package org.eclipse.emf.compare.rcp.ui.mergeviewer;
 
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.jface.viewers.IInputSelectionProvider;
@@ -16,7 +16,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Control;
 
 /**
+ * A specific {@link IInputSelectionProvider} for EMF Compare.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @since 4.0
  */
 public interface IMergeViewer extends IInputSelectionProvider {
 
@@ -58,22 +61,47 @@ public interface IMergeViewer extends IInputSelectionProvider {
 	 */
 	void setSelection(ISelection selection, boolean reveal);
 
+	/**
+	 * An enum that represents the side of the viewer and provides utilty methods to manage sides.
+	 * 
+	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+	 * @since 4.0
+	 */
 	enum MergeViewerSide {
+
+		/** Values: left side, right side, ancestor side. */
 		LEFT, RIGHT, ANCESTOR;
 
+		/**
+		 * Get the opposite side of this side.
+		 * 
+		 * @return the opposite side of this side.
+		 */
 		public MergeViewerSide opposite() {
+			final MergeViewerSide opposite;
 			switch (this) {
 				case LEFT:
-					return RIGHT;
+					opposite = RIGHT;
+					break;
 				case RIGHT:
-					return LEFT;
+					opposite = LEFT;
+					break;
 				case ANCESTOR:
-					return ANCESTOR;
+					opposite = ANCESTOR;
+					break;
 				default:
 					throw new IllegalStateException(); // happy compiler :)
 			}
+			return opposite;
 		}
 
+		/**
+		 * Get the side value from the given {@link DifferenceSource}.
+		 * 
+		 * @param source
+		 *            the given DifferenceSource.
+		 * @return the side value from the given DifferenceSource.
+		 */
 		public static MergeViewerSide getValueFrom(DifferenceSource source) {
 			switch (source) {
 				case LEFT:
@@ -85,6 +113,11 @@ public interface IMergeViewer extends IInputSelectionProvider {
 			}
 		}
 
+		/**
+		 * Converts this side to DifferenceSource.
+		 * 
+		 * @return the DifferenceSource equivalent to this side.
+		 */
 		public DifferenceSource convertToDifferenceSource() {
 			switch (this) {
 				case LEFT:

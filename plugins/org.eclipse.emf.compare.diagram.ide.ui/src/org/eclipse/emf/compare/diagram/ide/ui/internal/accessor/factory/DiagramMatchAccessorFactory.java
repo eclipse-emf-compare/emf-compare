@@ -15,7 +15,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.DiagramMatchAccessorImpl;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.AbstractAccessorFactory;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 
 /**
  * Factory for graphical matches accessors.

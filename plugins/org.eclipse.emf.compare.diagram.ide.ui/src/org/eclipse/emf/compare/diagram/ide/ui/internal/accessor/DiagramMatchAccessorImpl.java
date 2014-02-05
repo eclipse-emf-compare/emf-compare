@@ -18,7 +18,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
@@ -91,7 +91,7 @@ public class DiagramMatchAccessorImpl implements IDiagramNodeAccessor, ITypedEle
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor#getEObject(org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide)
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor#getEObject(org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide)
 	 */
 	public EObject getEObject(MergeViewerSide side) {
 		return getEObject(fMatch, side);
@@ -126,7 +126,7 @@ public class DiagramMatchAccessorImpl implements IDiagramNodeAccessor, ITypedEle
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor#getDiagram(org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide)
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor#getDiagram(org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide)
 	 */
 	public Diagram getDiagram(MergeViewerSide side) {
 		Diagram diagram = null;

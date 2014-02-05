@@ -62,8 +62,8 @@ import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfigura
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
@@ -876,7 +876,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 * 
 		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#createAndRegisterDecorator(org.eclipse.emf.compare.Diff,
 		 *      org.eclipse.gmf.runtime.notation.View, org.eclipse.draw2d.IFigure,
-		 *      org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide)
+		 *      org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide)
 		 */
 		@Override
 		protected Phantom createAndRegisterDecorator(Diff diff, View referenceView, IFigure referenceFigure,
@@ -1540,7 +1540,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 * 
 		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#createAndRegisterDecorator(org.eclipse.emf.compare.Diff,
 		 *      org.eclipse.gmf.runtime.notation.View, org.eclipse.draw2d.IFigure,
-		 *      org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide)
+		 *      org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide)
 		 */
 		@Override
 		protected Marker createAndRegisterDecorator(Diff diff, View referenceView, IFigure referenceFigure,
@@ -1820,7 +1820,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.DiagramCompareContentMergeViewer#createMergeViewer(org.eclipse.swt.widgets.Composite,
-	 *      org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide)
+	 *      org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide)
 	 */
 	@Override
 	protected IMergeViewer createMergeViewer(Composite parent, MergeViewerSide side) {
@@ -1938,7 +1938,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#getDiffFrom(org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer)
+	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#getDiffFrom(org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer)
 	 */
 	@Override
 	protected Diff getDiffFrom(IMergeViewer viewer) {
