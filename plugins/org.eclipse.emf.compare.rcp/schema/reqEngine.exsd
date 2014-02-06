@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.emf.compare.rcp" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.eclipse.emf.compare.rcp" id="reqEngine" name="Requirements engine"/>
+      </appinfo>
+      <documentation>
+         This extension point can be used for customizing the requirement engine used for comparison.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="descriptor" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="descriptor">
+      <complexType>
+         <attribute name="label" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Label of the engine
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="description" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Description of the engine
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="ranking" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Rank of the engine. The engine with the highest rank is used by default. (Integer value)
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="impl" type="string">
+            <annotation>
+               <documentation>
+                  Implementation of the engine.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.req.IReqEngine"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Unique identifier of the engine.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         2.2.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         &lt;extension
+         point=&quot;org.eclipse.emf.compare.rcp.reqEngine&quot;&gt;
+      &lt;descriptor
+            description=&quot;Default implementation of the requierements engine provided by EMF Compare.&quot;
+            id=&quot;org.eclipse.emf.compare.rcp.default.reqEngine&quot;
+            impl=&quot;org.eclipse.emf.compare.req.DefaultReqEngine&quot;
+            label=&quot;Default Requirements Engine&quot;
+            ranking=&quot;100&quot;&gt;
+      &lt;/descriptor&gt;
+   &lt;/extension&gt;
+      </documentation>
+   </annotation>
+
+
+
+
+</schema>

@@ -54,6 +54,7 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
@@ -71,6 +72,8 @@ import org.eclipse.emf.compare.ide.ui.internal.util.ExceptionUtil;
 import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
+import org.eclipse.emf.compare.rcp.internal.engine.IEMFCompareBuilderConfigurator;
+import org.eclipse.emf.compare.rcp.internal.engine.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IMergePreviewModeChange;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IColorChangeEvent;
@@ -649,12 +652,17 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					ExceptionUtil.handleException(e, getCompareConfiguration(), true);
 					return;
 				}
-				final Comparison compareResult = EMFCompare
+
+				final Builder comparisonBuilder = EMFCompare
 						.builder()
 						.setMatchEngineFactoryRegistry(
 								EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry())
-						.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry())
-						.build().compare(scope, BasicMonitor.toMonitor(subMonitor.newChild(15)));
+						.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
+
+				 EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
+
+				final Comparison compareResult = comparisonBuilder.build().compare(scope,
+						BasicMonitor.toMonitor(subMonitor.newChild(15)));
 
 				reportErrors(compareResult);
 
