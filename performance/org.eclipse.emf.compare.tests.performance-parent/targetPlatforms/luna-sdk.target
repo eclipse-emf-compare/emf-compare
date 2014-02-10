@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target name="EMF Compare based on Luna SDK" sequenceNumber="0">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<unit id="org.eclipse.sdk.ide" version="4.4.0.I20140123-1600"/>
+<unit id="org.eclipse.emf.feature.group" version="2.10.0.v20140127-0448"/>
+<unit id="org.eclipse.uml2.feature.group" version="5.0.0.v20140127-0906"/>
+<repository location="http://download.eclipse.org/releases/luna"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<unit id="org.junit4" version="4.8.1.v20100525"/>
+<repository location="http://download.eclipse.org/releases/helios"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<unit id="com.google.guava" version="11.0.2.v201303041551"/>
+<unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20131024145017/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<unit id="org.eclipse.emf.compare.feature.group" version="3.0.0.201402070502"/>
+<unit id="org.eclipse.emf.compare.ide.ui.feature.group" version="3.0.0.201402070502"/>
+<repository location="http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<unit id="fr.obeo.performance" version="1.0.0.201402071743"/>
+<repository location="http://axelrichard.github.io/fr.obeo.performance/"/>
+</location>
+</locations>
+</target>

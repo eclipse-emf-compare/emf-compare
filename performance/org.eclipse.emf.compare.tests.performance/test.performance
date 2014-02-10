@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="ASCII"?>
+<performance:PerformanceTest xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:performance="http://www.obeo.fr/performance/1.0.0">
+  <sut name="TestMatchUML"/>
+  <environment>
+    <properties key="jvm.java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <properties key="jvm.sun.boot.library.path" value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Libraries"/>
+    <properties key="jvm.java.vm.version" value="20.8-b03-424"/>
+    <properties key="jvm.awt.nativeDoubleBuffering" value="true"/>
+    <properties key="jvm.gopherProxySet" value="false"/>
+    <properties key="jvm.mrj.build" value="11M3720"/>
+    <properties key="jvm.java.vm.vendor" value="Apple Inc."/>
+    <properties key="jvm.java.vendor.url" value="http://www.apple.com/"/>
+    <properties key="jvm.path.separator" value=":"/>
+    <properties key="jvm.java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <properties key="jvm.file.encoding.pkg" value="sun.io"/>
+    <properties key="jvm.sun.java.launcher" value="SUN_STANDARD"/>
+    <properties key="jvm.user.country" value="FR"/>
+    <properties key="jvm.sun.os.patch.level" value="unknown"/>
+    <properties key="jvm.java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <properties key="jvm.user.dir" value="/Users/mbarbero/Desktop/workspaces/compare2/org.eclipse.emf.compare.tests.performance"/>
+    <properties key="jvm.java.runtime.version" value="1.6.0_33-b03-424-11M3720"/>
+    <properties key="jvm.java.awt.graphicsenv" value="apple.awt.CGraphicsEnvironment"/>
+    <properties key="jvm.java.endorsed.dirs" value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/endorsed"/>
+    <properties key="jvm.os.arch" value="x86_64"/>
+    <properties key="jvm.java.io.tmpdir" value="/var/folders/d2/jvztp09d6cl6zds9ykcxv1cm0000gp/T/"/>
+    <properties key="jvm.line.separator" value="&#xA;"/>
+    <properties key="jvm.java.vm.specification.vendor" value="Sun Microsystems Inc."/>
+    <properties key="jvm.os.name" value="Mac OS X"/>
+    <properties key="jvm.sun.jnu.encoding" value="MacRoman"/>
+    <properties key="jvm.java.library.path" value=".:/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java"/>
+    <properties key="jvm.java.specification.name" value="Java Platform API Specification"/>
+    <properties key="jvm.java.class.version" value="50.0"/>
+    <properties key="jvm.sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <properties key="jvm.os.version" value="10.7.4"/>
+    <properties key="jvm.http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <properties key="jvm.user.home" value="/Users/mbarbero"/>
+    <properties key="jvm.user.timezone" value="Europe/Paris"/>
+    <properties key="jvm.java.awt.printerjob" value="apple.awt.CPrinterJob"/>
+    <properties key="jvm.file.encoding" value="US-ASCII"/>
+    <properties key="jvm.java.specification.version" value="1.6"/>
+    <properties key="jvm.java.class.path" value="/Users/mbarbero/git/emf.compare/plugins/org.eclipse.emf.compare/bin:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.emf.ecore_2.8.0.v20120606-0717.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.emf.common_2.8.0.v20120606-0717.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.emf.ecore.xmi_2.8.0.v20120606-0717.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/com.google.guava_10.0.1.v201203051515.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.core.runtime_3.8.0.v20120521-2346.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.osgi_3.8.0.v20120529-1548.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.equinox.common_3.6.100.v20120522-1841.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.core.jobs_3.5.200.v20120521-2346.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.core.runtime.compatibility.registry_3.5.100.v20120521-2346/runtime_registry_compatibility.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.equinox.registry_3.5.200.v20120522-1841.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.equinox.preferences_3.5.0.v20120522-1841.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.core.contenttype_3.4.200.v20120523-2004.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.equinox.app_1.3.100.v20120522-1841.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.junit_4.10.0.v4_10_0_v20120426-0900/junit.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.compare_3.5.300.v20120522-1148.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.compare.core_3.5.200.v20120522-1148.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.uml2.uml_4.0.0.v20120604-0919.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.uml2.common_1.7.0.v20120604-0919.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.uml2.types_1.0.0.v20120604-0919.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.emf.mapping.ecore2xml_2.7.0.v20120608-0554.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.uml2.uml.resources_4.0.0.v20120604-0919.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.uml2.uml.profile.l2_1.0.0.v20120604-0919.jar:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.uml2.uml.profile.l3_1.0.0.v20120604-0919.jar:/Users/mbarbero/git/emf.compare/plugins/org.eclipse.emf.compare.tests/bin:/Users/mbarbero/Desktop/workspaces/compare2/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.mat.hprof_1.2.0.201205300858.jar:/Users/mbarbero/git/fr.obeo.performance/fr.obeo.performance/bin:/Users/mbarbero/Desktop/workspaces/compare2/org.eclipse.emf.compare.tests.performance/bin:/Users/mbarbero/Desktop/eclipse 4.2/configuration/org.eclipse.osgi/bundles/153/2/.cp/:/Users/mbarbero/Desktop/eclipse 4.2/configuration/org.eclipse.osgi/bundles/152/2/.cp/"/>
+    <properties key="jvm.user.name" value="mbarbero"/>
+    <properties key="jvm.java.vm.specification.version" value="1.0"/>
+    <properties key="jvm.sun.java.command" value="org.eclipse.jdt.internal.junit.runner.RemoteTestRunner -version 3 -port 58569 -testLoaderClass org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader -loaderpluginname org.eclipse.jdt.junit4.runtime -classNames org.eclipse.emf.compare.tests.performance.PerformanceSuite"/>
+    <properties key="jvm.java.home" value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home"/>
+    <properties key="jvm.sun.arch.data.model" value="64"/>
+    <properties key="jvm.user.language" value="fr"/>
+    <properties key="jvm.java.specification.vendor" value="Sun Microsystems Inc."/>
+    <properties key="jvm.awt.toolkit" value="apple.awt.CToolkit"/>
+    <properties key="jvm.java.vm.info" value="mixed mode"/>
+    <properties key="jvm.java.version" value="1.6.0_33"/>
+    <properties key="jvm.java.ext.dirs" value="/Library/Java/Extensions:/System/Library/Java/Extensions:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/ext"/>
+    <properties key="jvm.sun.boot.class.path" value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jsfd.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar:/System/Library/Frameworks/JavaVM.framework/Frameworks/JavaRuntimeSupport.framework/Resources/Java/JavaRuntimeSupport.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/ui.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/laf.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/sunrsasign.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jsse.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jce.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/charsets.jar"/>
+    <properties key="jvm.java.vendor" value="Apple Inc."/>
+    <properties key="jvm.file.separator" value="/"/>
+    <properties key="jvm.java.vendor.url.bug" value="http://bugreport.apple.com/"/>
+    <properties key="jvm.sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <properties key="jvm.sun.cpu.endian" value="little"/>
+    <properties key="jvm.mrj.version" value="1070.1.6.0_33-424"/>
+    <properties key="jvm.socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <properties key="jvm.ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <properties key="jvm.sun.cpu.isalist" value=""/>
+    <properties key="env.SHELL" value="/opt/local/bin/bash"/>
+    <properties key="env.TMPDIR" value="/var/folders/d2/jvztp09d6cl6zds9ykcxv1cm0000gp/T/"/>
+    <properties key="env.com.apple.java.jvmMode" value="client"/>
+    <properties key="env.JAVA_MAIN_CLASS_43177" value="org.eclipse.jdt.internal.junit.runner.RemoteTestRunner"/>
+    <properties key="env.__CF_USER_TEXT_ENCODING" value="0x1F6:0:91&#xA;"/>
+    <properties key="env.PATH" value="/usr/bin:/bin:/usr/sbin:/sbin"/>
+    <properties key="env.COMMAND_MODE" value="unix2003"/>
+    <properties key="env.DISPLAY" value="/tmp/launch-ysyf7F/org.x:0"/>
+    <properties key="env.JAVA_STARTED_ON_FIRST_THREAD_42425" value="1"/>
+    <properties key="env.USER" value="mbarbero"/>
+    <properties key="env.com.apple.java.jvmTask" value="CommandLine_Manual.java"/>
+    <properties key="env.HOME" value="/Users/mbarbero"/>
+    <properties key="env.LOGNAME" value="mbarbero"/>
+    <properties key="env.Apple_Ubiquity_Message" value="/tmp/launch-iVU6c9/Apple_Ubiquity_Message"/>
+    <properties key="env.Apple_PubSub_Socket_Render" value="/tmp/launch-vERAvc/Render"/>
+    <properties key="env.SSH_AUTH_SOCK" value="/tmp/launch-XmXslp/Listeners"/>
+    <properties key="env.APP_ICON_42425" value="../Resources/Eclipse.icns"/>
+  </environment>
+  <results>
+    <scenario name="match_uml_small"/>
+    <dataPoints>
+      <measures name="system_time" value="732.0"/>
+      <measures name="heap_peek" dimension="MEMORY" value="2.7893272E7"/>
+      <measures name="heap_delta" dimension="MEMORY" value="943952.0"/>
+    </dataPoints>
+    <dataPoints>
+      <measures name="system_time" value="712.0"/>
+      <measures name="heap_peek" dimension="MEMORY" value="2.8481768E7"/>
+      <measures name="heap_delta" dimension="MEMORY" value="1694712.0"/>
+    </dataPoints>
+    <dataPoints>
+      <measures name="system_time" value="730.0"/>
+      <measures name="heap_peek" dimension="MEMORY" value="2.7600384E7"/>
+      <measures name="heap_delta" dimension="MEMORY" value="801376.0"/>
+    </dataPoints>
+  </results>
+  <results>
+    <scenario name="match_uml_nominal"/>
+    <dataPoints>
+      <measures name="system_time" value="79.0"/>
+      <measures name="heap_peek" dimension="MEMORY" value="2.9124056E7"/>
+      <measures name="heap_delta" dimension="MEMORY" value="1650192.0"/>
+    </dataPoints>
+    <dataPoints>
+      <measures name="system_time" value="84.0"/>
+      <measures name="heap_peek" dimension="MEMORY" value="2.9139032E7"/>
+      <measures name="heap_delta" dimension="MEMORY" value="1617016.0"/>
+    </dataPoints>
+    <dataPoints>
+      <measures name="system_time" value="85.0"/>
+      <measures name="heap_peek" dimension="MEMORY" value="2.9237648E7"/>
+      <measures name="heap_delta" dimension="MEMORY" value="1719064.0"/>
+    </dataPoints>
+  </results>
+  <results>
+    <scenario name="match_uml_large"/>
+    <dataPoints>
+      <measures name="system_time" value="188.0"/>
+      <measures name="heap_peek" dimension="MEMORY" value="3.14626E7"/>
+      <measures name="heap_delta" dimension="MEMORY" value="3613872.0"/>
+    </dataPoints>
+    <dataPoints>
+      <measures name="system_time" value="175.0"/>
+      <measures name="heap_peek" dimension="MEMORY" value="3.1247624E7"/>
+      <measures name="heap_delta" dimension="MEMORY" value="3377416.0"/>
+    </dataPoints>
+    <dataPoints>
+      <measures name="system_time" value="153.0"/>
+      <measures name="heap_peek" dimension="MEMORY" value="3.1316776E7"/>
+      <measures name="heap_delta" dimension="MEMORY" value="3284576.0"/>
+    </dataPoints>
+  </results>
+</performance:PerformanceTest>

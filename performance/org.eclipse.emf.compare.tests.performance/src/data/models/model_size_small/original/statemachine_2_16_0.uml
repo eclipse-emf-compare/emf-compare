@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:StateMachine xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_NqNCo_SyEeC7b93Q5ZPZDw" name="StateMachine_15">
+  <ownedOperation xmi:id="_NqNCqfSyEeC7b93Q5ZPZDw" name="Operation_0">
+    <ownedParameter xmi:id="_NqNCqvSyEeC7b93Q5ZPZDw" name="Parameter_0">
+      <type xmi:type="uml:Class" href="package_1_21.uml#_Nk9WQPSyEeC7b93Q5ZPZDw"/>
+    </ownedParameter>
+    <ownedParameter xmi:id="_NqNCq_SyEeC7b93Q5ZPZDw" name="Parameter_1">
+      <type xmi:type="uml:PrimitiveType" href="package_0_14.uml#_NZ581PSyEeC7b93Q5ZPZDw"/>
+    </ownedParameter>
+    <ownedParameter xmi:id="_NqNCrPSyEeC7b93Q5ZPZDw" direction="return">
+      <type xmi:type="uml:PrimitiveType" href="package_1_8.uml#_Ng-1N_SyEeC7b93Q5ZPZDw"/>
+    </ownedParameter>
+  </ownedOperation>
+  <region xmi:id="_NqNCpPSyEeC7b93Q5ZPZDw" name="Region_0">
+    <subvertex xmi:type="uml:Pseudostate" xmi:id="_NqNCpfSyEeC7b93Q5ZPZDw" name="InitialState"/>
+    <subvertex xmi:type="uml:FinalState" xmi:id="_NqNCpvSyEeC7b93Q5ZPZDw" name="FinalState"/>
+    <subvertex xmi:type="uml:State" xmi:id="_NqNCp_SyEeC7b93Q5ZPZDw" name="State_2"/>
+    <transition xmi:id="_NqNCqPSyEeC7b93Q5ZPZDw" name="Transition_0" source="_NqNCpfSyEeC7b93Q5ZPZDw" target="_NqNCp_SyEeC7b93Q5ZPZDw"/>
+  </region>
+</uml:StateMachine>
