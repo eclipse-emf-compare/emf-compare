@@ -17,6 +17,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.emf.compare.rcp.internal.EMFCompareRCPMessages;
+import org.eclipse.emf.compare.rcp.internal.engine.IItemDescriptor;
+import org.eclipse.emf.compare.rcp.internal.engine.IItemRegistry;
+import org.eclipse.emf.compare.rcp.internal.engine.impl.FactoryDescriptor;
 
 /**
  * Listener for contributions to the match engine extension.
@@ -34,8 +37,14 @@ public class MatchEngineFactoryRegistryListener extends AbstractRegistryEventLis
 	/** ATT_RANKING. */
 	private static final String ATT_RANKING = "ranking"; //$NON-NLS-1$
 
+	/** ATT_LABEL. */
+	private static final String ATT_LABEL = "label"; //$NON-NLS-1$
+
+	/** ATT_DESC. */
+	private static final String ATT_DESCRIPTION = "description"; //$NON-NLS-1$
+
 	/** The match engine factory registry to which extension will be registered. */
-	private final IMatchEngine.Factory.Registry matchEngineFactoryRegistry;
+	private final IItemRegistry<IMatchEngine.Factory> matchEngineFactoryRegistry;
 
 	/**
 	 * Creates a new registry listener with the given match engine factory registry to which extension will be
@@ -51,7 +60,7 @@ public class MatchEngineFactoryRegistryListener extends AbstractRegistryEventLis
 	 *            The log object to be used to log error and/or warning.
 	 */
 	public MatchEngineFactoryRegistryListener(String pluginID, String extensionPointID, ILog log,
-			IMatchEngine.Factory.Registry registry) {
+			IItemRegistry<IMatchEngine.Factory> registry) {
 		super(pluginID, extensionPointID, log);
 		this.matchEngineFactoryRegistry = registry;
 	}
@@ -98,11 +107,18 @@ public class MatchEngineFactoryRegistryListener extends AbstractRegistryEventLis
 	 */
 	@Override
 	protected boolean addedValid(IConfigurationElement element) {
+
 		try {
 			IMatchEngine.Factory matchEngineFactory = (IMatchEngine.Factory)element
 					.createExecutableExtension(ATT_CLASS);
-			matchEngineFactory.setRanking(Integer.parseInt(element.getAttribute(ATT_RANKING)));
-			IMatchEngine.Factory previous = matchEngineFactoryRegistry.add(matchEngineFactory);
+			String label = element.getAttribute(ATT_LABEL);
+			String description = element.getAttribute(ATT_DESCRIPTION);
+			int rank = Integer.parseInt(element.getAttribute(ATT_RANKING));
+			matchEngineFactory.setRanking(rank);
+			FactoryDescriptor<IMatchEngine.Factory> descriptor = new FactoryDescriptor<IMatchEngine.Factory>(
+					label, description, rank, element.getAttribute(ATT_CLASS), matchEngineFactory);
+
+			IItemDescriptor<IMatchEngine.Factory> previous = matchEngineFactoryRegistry.add(descriptor);
 			if (previous != null) {
 				log(IStatus.WARNING, element, EMFCompareRCPMessages.getString(
 						"duplicate.extension", matchEngineFactoryRegistry.getClass().getName())); //$NON-NLS-1$
@@ -110,6 +126,7 @@ public class MatchEngineFactoryRegistryListener extends AbstractRegistryEventLis
 		} catch (CoreException e) {
 			log(IStatus.ERROR, element, e.getMessage());
 		}
+
 		return true;
 	}
 

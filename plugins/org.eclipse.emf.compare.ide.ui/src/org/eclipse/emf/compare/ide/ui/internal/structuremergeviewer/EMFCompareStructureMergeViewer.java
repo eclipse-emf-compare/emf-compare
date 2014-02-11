@@ -653,11 +653,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					return;
 				}
 
-				final Builder comparisonBuilder = EMFCompare
-						.builder()
-						.setMatchEngineFactoryRegistry(
-								EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry())
-						.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
+				final Builder comparisonBuilder = EMFCompare.builder().setPostProcessorRegistry(
+						EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
 
 				 EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
 

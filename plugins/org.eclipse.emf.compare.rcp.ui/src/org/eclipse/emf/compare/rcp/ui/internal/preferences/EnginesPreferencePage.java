@@ -10,19 +10,30 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.preferences;
 
+import com.google.common.collect.Sets;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
 import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.equi.IEquiEngine;
+import org.eclipse.emf.compare.match.IMatchEngine;
+import org.eclipse.emf.compare.match.IMatchEngine.Factory;
+import org.eclipse.emf.compare.match.impl.MatchEngineFactoryImpl;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.engine.IItemDescriptor;
 import org.eclipse.emf.compare.rcp.internal.engine.IItemRegistry;
@@ -31,11 +42,13 @@ import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
 import org.eclipse.emf.compare.rcp.internal.tracer.TracingConstant;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.req.IReqEngine;
+import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -97,6 +110,10 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	private static final String CONFLICT_DETECTOR_TAB_LABEL = EMFCompareRCPUIMessages
 			.getString("EnginesPreferencePage.CONFLICT_DETECTOR_TAB_LABEL"); //$NON-NLS-1$
 
+	/** Label of the Conflict detector tab */
+	private static final String MATCH_ENGINE_TAB_LABEL = EMFCompareRCPUIMessages
+			.getString("EnginesPreferencePage.MATCH_ENGINE_TAB_LABEL"); //$NON-NLS-1$
+
 	private static final String DATA_FIELD_NAME = "currentSelection"; //$NON-NLS-1$
 
 	/** Data regarding the Difference selected engine */
@@ -111,6 +128,9 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	/** Data regarding the Conflicts detector selected engine */
 	private SingleValueHolder<IConflictDetector> conflictsDetectorData = new SingleValueHolder<IConflictDetector>();
 
+	/** Data regarding the selected match engine factories. */
+	private Multipledata<IMatchEngine.Factory> matchEnginesData = new Multipledata<IMatchEngine.Factory>();
+
 	public EnginesPreferencePage() {
 		super();
 	}
@@ -124,7 +144,8 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	}
 
 	public void init(IWorkbench workbench) {
-		// The preferences shall be stored under EMF Compare RCP Plugin
+		// The preferences shall be stored under EMF Compare RCP Plugin.
+		// Do not use InstanceScope.Instance to be compatible with Helios.
 		ScopedPreferenceStore store = new ScopedPreferenceStore(new InstanceScope(),
 				EMFCompareRCPPlugin.PLUGIN_ID);
 		setPreferenceStore(store);
@@ -136,6 +157,13 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new FillLayout(SWT.HORIZONTAL));
 		TabFolder tabFolder = new TabFolder(container, SWT.NONE);
+		// Create match engine tab
+		IItemRegistry<Factory> matchEngineFactoryDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
+				.getMatchEngineFactoryDescriptorRegistry();
+		createMatchEnginefactoryTab(tabFolder, MATCH_ENGINE_TAB_LABEL, matchEngineFactoryDescriptorRegistry,
+				DATA_FIELD_NAME, EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, matchEnginesData,
+				matchEngineFactoryDescriptorRegistry.getItemDescriptor(MatchEngineFactoryImpl.class
+						.getCanonicalName()));
 		// Create diff engine tab
 		createEngineTab(tabFolder, DIFFERENCES_ENGINE_TAB_LABEL, EMFCompareRCPPlugin.getDefault()
 				.getDiffEngineDescriptorRegistry(), DATA_FIELD_NAME, EMFComparePreferences.DIFF_ENGINES,
@@ -192,6 +220,28 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 
 	}
 
+	private <T> void createMatchEnginefactoryTab(TabFolder tabFolder, String label,
+			IItemRegistry<T> registry, String engineBindingProperty, String preferenceKey,
+			Multipledata<T> dataObject, IItemDescriptor<T> defaultEngine) {
+		TabItem tbtmMain = new TabItem(tabFolder, SWT.NONE);
+		tbtmMain.setText(label);
+		// Parent container
+		Composite composite = new Composite(tabFolder, SWT.NONE);
+		composite.setLayout(new GridLayout(2, false));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tbtmMain.setControl(composite);
+		// Engine chooser composite
+		Composite comboBoxCompsite = new Composite(composite, SWT.NONE);
+		comboBoxCompsite.setLayout(new GridLayout(1, false));
+		comboBoxCompsite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 1, 1));
+		// Descriptor engine Text
+		Text engineDescriptionText = createDescriptionComposite(composite);
+
+		fillMatchEngineFactoryComposite(registry, engineBindingProperty, comboBoxCompsite,
+				engineDescriptionText, preferenceKey, dataObject, defaultEngine);
+
+	}
+
 	/**
 	 * Composite for description. This composite hold the text field that will update with the current
 	 * selection
@@ -239,11 +289,61 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		// Save for reset default
 		viewerFromTabs.put(preferenceKey, descriptorViewer);
 		List<IItemDescriptor<T>> itemDescriptors = registry.getItemDescriptors();
-		Collections.sort(itemDescriptors);
+		Collections.sort(itemDescriptors, Collections.reverseOrder());
 		descriptorViewer.setInput(itemDescriptors);
 		bindEngineData(engineBindingProperty, descriptorViewer, dataObject);
 
 		initdefaultDescriptor(registry, descriptionText, preferenceKey, descriptorViewer);
+	}
+
+	private <T> void fillMatchEngineFactoryComposite(IItemRegistry<T> registry, String engineBindingProperty,
+			Composite comboBoxComposite, final Text descriptionText, String preferenceKey,
+			Multipledata<T> dataObject, IItemDescriptor<T> defaultDescriptor) {
+		CheckboxTableViewer descriptorViewer = CheckboxTableViewer.newCheckList(comboBoxComposite, SWT.BORDER
+				| SWT.V_SCROLL | SWT.FULL_SELECTION);
+		descriptorViewer.addSelectionChangedListener(new DescriptionListener(descriptionText));
+		descriptorViewer.setData(DESCRIPTION_TEXT_DATA_KEY, descriptionText);
+		descriptorViewer.setContentProvider(ArrayContentProvider.getInstance());
+		descriptorViewer.setLabelProvider(descriptorLabelProvider);
+		// Save for reset default
+		viewerFromTabs.put(preferenceKey, descriptorViewer);
+		// Filter input with input with higher rank than default item descriptor
+		List<IItemDescriptor<T>> itemDescriptors = registry.getItemDescriptors();
+		Collections.sort(itemDescriptors, Collections.reverseOrder());
+		descriptorViewer.setInput(itemDescriptors);
+
+		descriptorViewer.setSelection(new StructuredSelection(defaultDescriptor));
+		dataObject.setCurrentSelection(getActiveFactory(registry, preferenceKey));
+
+		bindMultipleData(engineBindingProperty, descriptorViewer, dataObject);
+
+	}
+
+	private <T> Set<IItemDescriptor<T>> getActiveFactory(IItemRegistry<T> registry, String preferenceKey) {
+		List<IItemDescriptor<T>> itemsDescriptor = ItemUtil.getItemsDescriptor(registry, preferenceKey,
+				InstanceScope.INSTANCE.getNode(EMFCompareRCPPlugin.PLUGIN_ID));
+		if (itemsDescriptor == null) {
+			itemsDescriptor = Collections.emptyList();
+		}
+		Set<IItemDescriptor<T>> disableFactories = Sets.newHashSet(itemsDescriptor);
+		Set<IItemDescriptor<T>> allFactories = Sets.newHashSet(registry.getItemDescriptors());
+		Set<IItemDescriptor<T>> activeFactory = Sets.difference(allFactories, disableFactories);
+
+		return activeFactory;
+	}
+
+	private <T> void bindMultipleData(String engineBindingProperty, CheckboxTableViewer descriptorViewer,
+			final Multipledata<T> dataObject) {
+		DataBindingContext ctx = new DataBindingContext();
+		// Bind the button with the corresponding field in data
+		IViewerObservableSet target = ViewersObservables.observeCheckedElements(descriptorViewer,
+				IItemDescriptor.class);
+		// IObservableValue target = WidgetProperties.selection().observe(viewer);
+		IObservableSet model = PojoProperties.set(Multipledata.class, engineBindingProperty).observe(
+				dataObject);
+
+		ctx.bindSet(target, model);
+
 	}
 
 	/**
@@ -301,6 +401,14 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 				.getCurrentSelection(), EMFCompareRCPPlugin.getDefault()
 				.getConflictDetectorDescriptorRegistry().getHighestRankingDescriptor());
 
+		// Set match engine to disable
+		Set<IItemDescriptor<Factory>> matchEngineRegsitry = Sets.newHashSet(EMFCompareRCPPlugin.getDefault()
+				.getMatchEngineFactoryDescriptorRegistry().getItemDescriptors());
+		Set<IItemDescriptor<Factory>> matchingEngineToDisable = Sets.difference(matchEngineRegsitry,
+				matchEnginesData.getCurrentSelection());
+		setEnginePreferences(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, matchingEngineToDisable,
+				new ArrayList<IItemDescriptor<IMatchEngine.Factory>>());
+
 		if (TracingConstant.CONFIGURATION_TRACING_ACTIVATED) {
 			StringBuilder traceMessage = new StringBuilder("Preference serialization:\n"); //$NON-NLS-1$
 			String prefDelimiter = " :\n"; //$NON-NLS-1$
@@ -312,8 +420,12 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 			traceMessage.append(EMFComparePreferences.REQ_ENGINES).append(prefDelimiter).append(
 					getPreferenceStore().getString(EMFComparePreferences.REQ_ENGINES)).append(new_line);
 			traceMessage.append(EMFComparePreferences.CONFLICTS_DETECTOR).append(prefDelimiter).append(
-					getPreferenceStore().getString(EMFComparePreferences.CONFLICTS_DETECTOR)).append(
-					new_line);
+					getPreferenceStore().getString(EMFComparePreferences.CONFLICTS_DETECTOR))
+					.append(new_line);
+			traceMessage.append(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES).append(prefDelimiter)
+					.append(getPreferenceStore()
+							.getString(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES)).append(new_line);
+
 			EMFCompareRCPPlugin.getDefault().log(IStatus.INFO, traceMessage.toString());
 		}
 		return super.performOk();
@@ -330,6 +442,9 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		resetDefaultPreferencesToHighestRank(EMFCompareRCPPlugin.getDefault()
 				.getConflictDetectorDescriptorRegistry(), EMFComparePreferences.CONFLICTS_DETECTOR,
 				conflictsDetectorData);
+		resetDefaultPreferencesToAll(EMFCompareRCPPlugin.getDefault()
+				.getMatchEngineFactoryDescriptorRegistry(),
+				EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, matchEnginesData);
 		super.performDefaults();
 	}
 
@@ -354,10 +469,47 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		}
 	}
 
+	private <T> void resetDefaultPreferencesToAll(IItemRegistry<T> registry, String preferenceKey,
+			Multipledata<T> dataObject) {
+		StructuredViewer descriptorViewer = viewerFromTabs.get(preferenceKey);
+		if (descriptorViewer instanceof CheckboxTableViewer) {
+			CheckboxTableViewer checkBoxViewer = (CheckboxTableViewer)descriptorViewer;
+			Object _descriptionText = descriptorViewer.getData(DESCRIPTION_TEXT_DATA_KEY);
+			if (_descriptionText instanceof Text) {
+				Text descriptionText = (Text)_descriptionText;
+				IItemDescriptor<T> defaultEngine = registry.getHighestRankingDescriptor();
+				descriptorViewer.setSelection(new StructuredSelection(defaultEngine), true);
+				descriptionText.setText(defaultEngine.getDescription());
+				// dataObject.getCurrentSelection().addAll(registry.getEngineDescriptors());
+				List<IItemDescriptor<T>> itemDescriptors = registry.getItemDescriptors();
+				dataObject.setCurrentSelection(Sets.newHashSet(itemDescriptors));
+				checkBoxViewer.setCheckedElements(itemDescriptors.toArray(new IItemDescriptor[itemDescriptors
+						.size()]));
+			}
+		}
+	}
+
 	private <T> void setEnginePreferences(String preferenceKey, IItemDescriptor<T> currentSelectedEngine,
 			IItemDescriptor<T> defaultConf) {
 		if (currentSelectedEngine != null && !currentSelectedEngine.equals(defaultConf)) {
 			getPreferenceStore().setValue(preferenceKey, currentSelectedEngine.getID());
+		} else {
+			getPreferenceStore().setValue(preferenceKey, DEFAULT_ENGINE_ID);
+		}
+	}
+
+	private <T> void setEnginePreferences(String preferenceKey,
+			Set<IItemDescriptor<T>> currentSelectedEngine, Collection<IItemDescriptor<T>> defaultConf) {
+		if (currentSelectedEngine != null && !currentSelectedEngine.contains(defaultConf)) {
+			StringBuilder descriptorsKey = new StringBuilder();
+			for (Iterator<IItemDescriptor<T>> iterator = currentSelectedEngine.iterator(); iterator.hasNext();) {
+				IItemDescriptor<T> iItemDescriptor = iterator.next();
+				descriptorsKey.append(iItemDescriptor.getID());
+				if (iterator.hasNext()) {
+					descriptorsKey.append(ItemUtil.PREFFERENCE_DELIMITER);
+				}
+			}
+			getPreferenceStore().setValue(preferenceKey, descriptorsKey.toString());
 		} else {
 			getPreferenceStore().setValue(preferenceKey, DEFAULT_ENGINE_ID);
 		}
@@ -422,6 +574,26 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		}
 
 		public void setCurrentSelection(IItemDescriptor<T> currentSelection) {
+			this.currentSelection = currentSelection;
+		}
+
+	}
+
+	/**
+	 * Data object use to store multiplue values data
+	 * 
+	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
+	 * @param <T>
+	 */
+	private class Multipledata<T> {
+
+		public Set<IItemDescriptor<T>> currentSelection = new HashSet<IItemDescriptor<T>>();
+
+		public Set<IItemDescriptor<T>> getCurrentSelection() {
+			return currentSelection;
+		}
+
+		public void setCurrentSelection(Set<IItemDescriptor<T>> currentSelection) {
 			this.currentSelection = currentSelection;
 		}
 

@@ -64,7 +64,9 @@
          point="org.eclipse.emf.compare.rcp.matchEngine">
       <engineFactory
             class="org.eclipse.emf.compare.match.impl.MatchEngineFactoryImpl"
-            ranking="10">
+            description="Default implementation of the Matching engine provided by EMF Compare"
+            label="Default Match engine"
+            ranking="0">
       </engineFactory>
    </extension>
    <extension

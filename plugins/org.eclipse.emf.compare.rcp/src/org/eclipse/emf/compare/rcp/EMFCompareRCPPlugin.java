@@ -22,7 +22,6 @@ import org.eclipse.emf.compare.equi.IEquiEngine;
 import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor;
 import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptorRegistryImpl;
 import org.eclipse.emf.compare.match.IMatchEngine;
-import org.eclipse.emf.compare.match.impl.MatchEngineFactoryRegistryImpl;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
@@ -33,6 +32,7 @@ import org.eclipse.emf.compare.rcp.internal.engine.IItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.engine.impl.DescriptorRegistryEventListener;
 import org.eclipse.emf.compare.rcp.internal.engine.impl.EngineRegistry;
 import org.eclipse.emf.compare.rcp.internal.match.MatchEngineFactoryRegistryListener;
+import org.eclipse.emf.compare.rcp.internal.match.MatchEnginefactoryRegistryWrapper;
 import org.eclipse.emf.compare.rcp.internal.merger.MergerExtensionRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryImpl;
 import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryListener;
@@ -113,7 +113,10 @@ public class EMFCompareRCPPlugin extends Plugin {
 	private AbstractRegistryEventListener postProcessorFactoryRegistryListener;
 
 	/** The registry that will hold references to all match engine factories. */
-	private IMatchEngine.Factory.Registry matchEngineFactoryRegistry;
+	private IItemRegistry<IMatchEngine.Factory> matchEngineFactoryRegistry;
+
+	/** The registry that will hold references to all match engine factories. */
+	private MatchEnginefactoryRegistryWrapper matchEngineFactoryRegistryWrapped;
 
 	/** The registry listener that will be used to react to match engine changes. */
 	private MatchEngineFactoryRegistryListener matchEngineFactoryRegistryListener;
@@ -193,10 +196,11 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 *            {@link IExtensionRegistry} to listen in order to fill the registry
 	 */
 	private void setUpMatchEngineFactoryRegistry(final IExtensionRegistry registry) {
-		matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
+		matchEngineFactoryRegistry = new EngineRegistry<IMatchEngine.Factory>();
 		matchEngineFactoryRegistryListener = new MatchEngineFactoryRegistryListener(PLUGIN_ID,
 				MATCH_ENGINE_PPID, getLog(), matchEngineFactoryRegistry);
 		matchEngineFactoryRegistryListener.readRegistry(registry);
+		matchEngineFactoryRegistryWrapped = new MatchEnginefactoryRegistryWrapper(matchEngineFactoryRegistry);
 	}
 
 	/**
@@ -397,6 +401,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 		registry.removeListener(matchEngineFactoryRegistryListener);
 		matchEngineFactoryRegistryListener = null;
 		matchEngineFactoryRegistry = null;
+		matchEngineFactoryRegistryWrapped = null;
 	}
 
 	/**
@@ -516,6 +521,16 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 * @since 3.0
 	 */
 	public IMatchEngine.Factory.Registry getMatchEngineFactoryRegistry() {
+		return matchEngineFactoryRegistryWrapped;
+	}
+
+	/**
+	 * Returns the match engine factory registry to which extension will be registered.
+	 * 
+	 * @return the match engine factory registry to which extension will be registered
+	 * @since 3.0
+	 */
+	public IItemRegistry<IMatchEngine.Factory> getMatchEngineFactoryDescriptorRegistry() {
 		return matchEngineFactoryRegistry;
 	}
 

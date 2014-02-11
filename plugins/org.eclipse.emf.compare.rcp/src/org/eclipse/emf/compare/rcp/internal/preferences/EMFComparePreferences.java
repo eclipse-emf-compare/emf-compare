@@ -29,6 +29,9 @@ public final class EMFComparePreferences {
 	/** Conflicts detector preference. (Key to use in the registry to retrieve the engine descriptor). */
 	public static final String CONFLICTS_DETECTOR = "org.eclipse.emf.compare.preference.conflict.detector"; //$NON-NLS-1$
 
+	/** Match engine preference. (Key to use in the registry to retrieve the engine descriptor). */
+	public static final String MATCH_ENGINE_DISABLE_ENGINES = "org.eclipse.emf.compare.preference.match.engine"; //$NON-NLS-1$
+
 	/**
 	 * Private constructor. Not to be called.
 	 */

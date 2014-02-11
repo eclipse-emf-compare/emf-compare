@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.internal.engine.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.compare.rcp.internal.engine.IItemDescriptor;
 import org.eclipse.emf.compare.rcp.internal.engine.IItemRegistry;
@@ -102,6 +105,40 @@ public final class ItemUtil {
 				result = descritpor;
 			}
 		}
+		return result;
+	}
+
+	/**
+	 * Get a list of {@link IItemDescriptor} from preferences.
+	 * 
+	 * @param registry
+	 *            Registry for the {@link IItemDescriptor}
+	 * @param preferenceKey
+	 *            Key for this {@link IItemDescriptor} in preferences
+	 * @param enginePreferences
+	 *            {@link IEclipsePreferences} where are stored {@link IItemDescriptor} values
+	 * @param <T>
+	 *            Type of {@link IItemDescriptor}
+	 * @return List of {@link IItemDescriptor} or null if nothing in preferences
+	 */
+	public static <T> List<IItemDescriptor<T>> getItemsDescriptor(IItemRegistry<T> registry,
+			String preferenceKey, IEclipsePreferences enginePreferences) {
+		String diffEngineKey = enginePreferences.get(preferenceKey, null);
+		List<IItemDescriptor<T>> result = null;
+		if (diffEngineKey != null) {
+			String[] diffEngineKeys = diffEngineKey.split(PREFFERENCE_DELIMITER);
+			for (String nonTrimedKey : diffEngineKeys) {
+				String key = nonTrimedKey.trim();
+				IItemDescriptor<T> descritpor = registry.getItemDescriptor(key);
+				if (descritpor != null) {
+					if (result == null) {
+						result = new ArrayList<IItemDescriptor<T>>();
+					}
+					result.add(descritpor);
+				}
+			}
+		}
+
 		return result;
 	}
 }
