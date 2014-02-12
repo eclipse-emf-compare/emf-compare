@@ -293,6 +293,23 @@ Accept '''all''' differences is not what we seek : we want to keep the changes w
 
 [[Image:./../images/EMF_Compare_Merged.png|center]]
 
+
+== Customization ==
+
+=== User Interface customization ===
+
+==== Colors Customization ====
+
+You can customize the colors used by EMF Compare to highlight differences in the user interface.
+ 
+# Open preferences: Window -> Preferences
+# Go to Colors and Fonts prefernces: Select -> General -> Colors and Fonts
+# Open the EMF Compare Category.
+# Select the color you want to customize and click and edit to pick a new color. Your editor will now use your new colors.
+[[Image:./../images/EMFCompare_ColorPreferences.png]]
+
+
+
 == Features ==
 
 === Grouping Differences  ===

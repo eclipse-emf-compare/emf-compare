@@ -18,7 +18,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -55,18 +55,6 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	/** The TreeViewer associated with this Treeruler. */
 	private final WrappableTreeViewer fTreeViewer;
 
-	/** The color a required diff. */
-	private final Color requiredDiffFillColor;
-
-	/** The color of an unmergeable diff. **/
-	private final Color unmergeableDiffFillColor;
-
-	/** The border color a required diff. */
-	private final Color requiredDiffBorderColor;
-
-	/** The border color an unmergeable diff. */
-	private final Color unmergeableDiffBorderColor;
-
 	/** A map that links a rectangle with a tree item. */
 	private Map<Rectangle, TreeItem> annotationsData;
 
@@ -87,6 +75,8 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 
 	private final DependencyData dependencyData;
 
+	private ICompareColor compareColor;
+
 	/**
 	 * Constructor.
 	 * 
@@ -102,19 +92,11 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	 *            the configuration for this control.
 	 */
 	EMFCompareDiffTreeRuler(Composite parent, int style, WrappableTreeViewer treeViewer,
-			DependencyData dependencyData) {
+			DependencyData dependencyData, ICompareColor compareColor) {
 		super(parent, style);
 		fTreeViewer = treeViewer;
 		this.dependencyData = dependencyData;
-
-		requiredDiffFillColor = JFaceResources.getColorRegistry().get(
-				EMFCompareStructureMergeViewer.REQUIRED_DIFF_COLOR);
-		requiredDiffBorderColor = JFaceResources.getColorRegistry().get(
-				EMFCompareStructureMergeViewer.REQUIRED_DIFF_BORDER_COLOR);
-		unmergeableDiffFillColor = JFaceResources.getColorRegistry().get(
-				EMFCompareStructureMergeViewer.UNMERGEABLE_DIFF_COLOR);
-		unmergeableDiffBorderColor = JFaceResources.getColorRegistry().get(
-				EMFCompareStructureMergeViewer.UNMERGEABLE_DIFF_BORDER_COLOR);
+		this.compareColor = compareColor;
 
 		annotationsData = Maps.newHashMap();
 
@@ -164,6 +146,7 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 			}
 		};
 		addMouseTrackListener(mouseTrackListener);
+
 	}
 
 	/**
@@ -186,12 +169,14 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 		annotationsData.clear();
 		for (Diff diff : dependencyData.getRequires()) {
 			for (TreeItem item : dependencyData.getTreeItems(diff)) {
-				createAnnotation(e, diff, item, requiredDiffFillColor, requiredDiffBorderColor);
+				createAnnotation(e, diff, item, compareColor.getRequiredFillColor(), compareColor
+						.getRequiredStrokeColor());
 			}
 		}
 		for (Diff diff : dependencyData.getUnmergeables()) {
 			for (TreeItem item : dependencyData.getTreeItems(diff)) {
-				createAnnotation(e, diff, item, unmergeableDiffFillColor, unmergeableDiffBorderColor);
+				createAnnotation(e, diff, item, compareColor.getUnmergeableFillColor(), compareColor
+						.getUnmergeableStrokeColor());
 			}
 		}
 	}

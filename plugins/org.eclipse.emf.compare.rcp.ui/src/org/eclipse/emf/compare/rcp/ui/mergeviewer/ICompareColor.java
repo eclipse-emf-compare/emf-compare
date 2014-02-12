@@ -52,6 +52,36 @@ public interface ICompareColor {
 	Color getStrokeColor(Diff diff, boolean isThreeWay, boolean isIgnoreAncestor, boolean selected);
 
 	/**
+	 * Get the color for Required change.
+	 * 
+	 * @return
+	 */
+	Color getRequiredFillColor();
+
+	/**
+	 * Get the color for Required change border items. This color is computed from
+	 * {@link ICompareColor#getRequiredFillColor()}
+	 * 
+	 * @return
+	 */
+	Color getRequiredStrokeColor();
+
+	/**
+	 * Get the color for Unmergeable difference.
+	 * 
+	 * @return
+	 */
+	Color getUnmergeableFillColor();
+
+	/**
+	 * Get the color for Unmergeable difference border items. This color is computed from
+	 * {@link ICompareColor#getUnmergeableFillColor()}
+	 * 
+	 * @return
+	 */
+	Color getUnmergeableStrokeColor();
+
+	/**
 	 * Dispose all {@link Color} resources.
 	 */
 	void dispose();

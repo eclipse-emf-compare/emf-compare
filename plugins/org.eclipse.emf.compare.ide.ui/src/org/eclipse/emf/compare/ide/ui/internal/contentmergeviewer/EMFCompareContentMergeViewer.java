@@ -14,6 +14,7 @@ import static com.google.common.collect.Iterables.filter;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.EventObject;
@@ -21,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
@@ -43,6 +45,8 @@ import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IAdapterFactoryChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.CompareColorImpl;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IColorChangeEvent;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
@@ -86,6 +90,8 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.services.IServiceLocator;
+import org.eclipse.ui.themes.ITheme;
+import org.eclipse.ui.themes.IThemeManager;
 import org.eclipse.ui.views.properties.PropertySheet;
 
 /**
@@ -94,6 +100,12 @@ import org.eclipse.ui.views.properties.PropertySheet;
 public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer implements ISelectionChangedListener, ICompareColor.Provider, IAdaptable, CommandStackListener {
 
 	private static final String HANDLER_SERVICE = "fHandlerService"; //$NON-NLS-1$
+
+	/** List of all color ID that this viewer shall listen. */
+	private static final Set<String> LISTENING_COLOR_IDS = ImmutableSet.of(
+			CompareColorImpl.INCOMING_CHANGE_COLOR_THEME_KEY,
+			CompareColorImpl.OUTGOING_CHANGE_COLOR_THEME_KEY,
+			CompareColorImpl.CONFLICTING_CHANGE_COLOR_THEME_KEY);
 
 	/**
 	 * Width of center bar
@@ -154,6 +166,13 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		}
 		if (newValue != oldValue) {
 			fAdapterFactoryContentProvider = new AdapterFactoryContentProvider(newValue);
+		}
+	}
+
+	@Subscribe
+	public void refreshNeeded(IColorChangeEvent event) {
+		if (LISTENING_COLOR_IDS.contains(event.getColorID())) {
+			refresh();
 		}
 	}
 
@@ -297,8 +316,16 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 		fRight = createMergeViewer(composite, MergeViewerSide.RIGHT);
 		fRight.addSelectionChangedListener(this);
-
-		fColors = new EMFCompareColor(this, null, getCompareConfiguration());
+		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+		final ITheme currentTheme;
+		if (themeManager != null) {
+			currentTheme = themeManager.getCurrentTheme();
+		} else {
+			currentTheme = null;
+		}
+		boolean leftIsLocal = getCompareConfiguration().getBooleanProperty("LEFT_IS_LOCAL", false);
+		fColors = new EMFCompareColor(composite.getDisplay(), leftIsLocal, currentTheme,
+				getCompareConfiguration().getEventBus());
 
 		composite.addControlListener(new ControlListener() {
 			public void controlResized(ControlEvent e) {
