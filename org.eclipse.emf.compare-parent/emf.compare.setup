@@ -101,13 +101,20 @@
         <predicates xsi:type="predicates:NaturePredicate" nature="org.eclipse.pde.FeatureNature"/>
       </workingSets>
     </setupTasks>
-    <setupTasks xsi:type="setup:MylynBuildsTask" serverURL="https://hudson.eclipse.org/emfcompare/">
-      <buildPlans name="master-nigthly"/>
+    <setupTasks xsi:type="setup:MylynQueriesTask" repositoryURL="https://bugs.eclipse.org/bugs">
+      <queries summary="Open bugs" url="https://bugs.eclipse.org/bugs/buglist.cgi?short_desc_type=allwordssubstr&amp;short_desc=&amp;product=EMFCompare&amp;long_desc_type=allwordssubstr&amp;long_desc=&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;status_whiteboard_type=allwordssubstr&amp;status_whiteboard=&amp;order=Importance"/>
     </setupTasks>
-    <setupTasks xsi:type="setup:MylynQueriesTask" repositoryURL="https://bugs.eclipse.org/bugs/">
-      <queries summary="Open bugs" url="https://bugs.eclipse.org/bugs/buglist.cgi?bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;classification=Modeling&amp;list_id=8234070&amp;product=EMFCompare&amp;query_format=advanced">
-        <attributes key="bug_status" value="NEW"/>
+    <setupTasks xsi:type="setup:MylynQueriesTask" connectorKind="org.eclipse.mylyn.gerrit" repositoryURL="https://git.eclipse.org/r">
+      <queries summary="Open reviews">
+        <attributes key="gerrit query type" value="open changes by project"/>
+        <attributes key="gerrit query project" value="emfcompare/org.eclipse.emf.compare"/>
+        <attributes key="gerrit query string" value=""/>
       </queries>
+    </setupTasks>
+    <setupTasks xsi:type="setup:MylynBuildsTask" serverURL="https://hudson.eclipse.org/emfcompare/">
+      <buildPlans name="gerrit-allbranches"/>
+      <buildPlans name="performance-tests"/>
+      <buildPlans name="master-nightly"/>
     </setupTasks>
   </branches>
 </setup:Project>
