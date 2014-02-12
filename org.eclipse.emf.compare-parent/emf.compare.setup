@@ -2,7 +2,25 @@
 <setup:Project setup:toolVersion="8" xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:predicates="http://www.eclipse.org/CDO/releng/predicates/1.0" xmlns:setup="http://www.eclipse.org/CDO/releng/setup/1.0" xmlns:workingsets="http://www.eclipse.org/CDO/releng/workingsets/1.0" name="EMF.Compare" label="EMF Compare">
   <setupTasks xsi:type="setup:P2Task">
     <installableUnits id="org.eclipse.pde.api.tools.ee.feature.feature.group"/>
+    <installableUnits id="net.sf.eclipsecs.feature.group"/>
+    <installableUnits id="edu.umd.cs.findbugs.plugin.eclipse.feature.group"/>
+    <installableUnits id="com.mountainminds.eclemma.feature.feature.group&#x9;"/>
+    <installableUnits id="org.eclipse.mylyn.bugzilla_feature.feature.group"/>
+    <installableUnits id="org.eclipse.mylyn.gerrit.feature.feature.group"/>
+    <installableUnits id="org.eclipse.mylyn.hudson.feature.group"/>
+    <installableUnits id="org.eclipse.mylyn.builds.feature.group"/>
+    <installableUnits id="org.eclipse.mylyn.wikitext_feature.feature.group"/>
+    <installableUnits id="net.jeeeyul.pdetools.feature.feature.group"/>
+    <installableUnits id="fr.obeo.releng.targetplatform-feature_3.8.feature.group"/>
+    <installableUnits id="org.eclipselabs.emf.loophole.feature.group"/>
     <p2Repositories url="${train.url}"/>
+    <p2Repositories url="http://eclipse-cs.sf.net/update/"/>
+    <p2Repositories url="http://findbugs.cs.umd.edu/eclipse/"/>
+    <p2Repositories url="http://update.eclemma.org/"/>
+    <p2Repositories url="http://download.eclipse.org/mylyn/releases/latest/"/>
+    <p2Repositories url="https://raw.github.com/jeeeyul/pde-tools/master/net.jeeeyul.pdetools.updatesite/"/>
+    <p2Repositories url="http://mbarbero.github.com/fr.obeo.releng.targetplatform/p2/3.8"/>
+    <p2Repositories url="http://mbarbero.github.io/emf-loophole/2.9"/>
   </setupTasks>
   <setupTasks xsi:type="setup:EclipseIniTask" option="-Xmx" value="1g" vm="true"/>
   <setupTasks xsi:type="setup:ResourceCreationTask" excludedTriggers="STARTUP MANUAL" content="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;section name=&quot;Workbench&quot;>&#xD;&#xA;&#x9;&lt;section name=&quot;org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart&quot;>&#xD;&#xA;&#x9;&#x9;&lt;item value=&quot;true&quot; key=&quot;group_libraries&quot;/>&#xD;&#xA;&#x9;&#x9;&lt;item value=&quot;false&quot; key=&quot;linkWithEditor&quot;/>&#xD;&#xA;&#x9;&#x9;&lt;item value=&quot;2&quot; key=&quot;layout&quot;/>&#xD;&#xA;&#x9;&#x9;&lt;item value=&quot;2&quot; key=&quot;rootMode&quot;/>&#xD;&#xA;&#x9;&#x9;&lt;item value=&quot;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;&amp;#x0D;&amp;#x0A;&amp;lt;packageExplorer configured=&amp;quot;true&amp;quot; group_libraries=&amp;quot;1&amp;quot; layout=&amp;quot;2&amp;quot; linkWithEditor=&amp;quot;0&amp;quot; rootMode=&amp;quot;2&amp;quot; sortWorkingSets=&amp;quot;false&amp;quot; workingSetName=&amp;quot;&amp;quot;&amp;gt;&amp;#x0D;&amp;#x0A;&amp;lt;localWorkingSetManager&amp;gt;&amp;#x0D;&amp;#x0A;&amp;lt;workingSet editPageId=&amp;quot;org.eclipse.jdt.internal.ui.OthersWorkingSet&amp;quot; factoryID=&amp;quot;org.eclipse.ui.internal.WorkingSetFactory&amp;quot; id=&amp;quot;1382792884467_1&amp;quot; label=&amp;quot;Other Projects&amp;quot; name=&amp;quot;Other Projects&amp;quot;/&amp;gt;&amp;#x0D;&amp;#x0A;&amp;lt;/localWorkingSetManager&amp;gt;&amp;#x0D;&amp;#x0A;&amp;lt;activeWorkingSet workingSetName=&amp;quot;Other Projects&amp;quot;/&amp;gt;&amp;#x0D;&amp;#x0A;&amp;lt;allWorkingSets workingSetName=&amp;quot;Other Projects&amp;quot;/&amp;gt;&amp;#x0D;&amp;#x0A;&amp;lt;/packageExplorer&amp;gt;&quot; key=&quot;memento&quot;/>&#xD;&#xA;&#x9;&lt;/section>&#xD;&#xA;&lt;/section>&#xD;&#xA;" targetURL="${setup.ws.dir|uri}/.metadata/.plugins/org.eclipse.jdt.ui/dialog_settings.xml" encoding="UTF-8"/>
@@ -43,15 +61,53 @@
       </repositoryLists>
     </setupTasks>
     <setupTasks xsi:type="setup:WorkingSetTask">
-      <workingSets name="Plugins">
-        <predicates xsi:type="workingsets:ExclusionPredicate" excludedWorkingSets="//@branches[name='master']/@setupTasks.3/@workingSets.1 //@branches[name='master']/@setupTasks.3/@workingSets.2"/>
+      <workingSets name="Core">
+        <predicates xsi:type="workingsets:ExclusionPredicate" excludedWorkingSets="//@branches[name='master']/@setupTasks.3/@workingSets.6 //@branches[name='master']/@setupTasks.3/@workingSets.1 //@branches[name='master']/@setupTasks.3/@workingSets.2 //@branches[name='master']/@setupTasks.3/@workingSets.3 //@branches[name='master']/@setupTasks.3/@workingSets.4 //@branches[name='master']/@setupTasks.3/@workingSets.7"/>
+      </workingSets>
+      <workingSets name="RCP">
+        <predicates xsi:type="predicates:AndPredicate">
+          <operands xsi:type="predicates:NamePredicate" pattern=".*compare.rcp.*"/>
+          <operands xsi:type="workingsets:ExclusionPredicate" excludedWorkingSets="//@branches[name='master']/@setupTasks.3/@workingSets.7"/>
+        </predicates>
+      </workingSets>
+      <workingSets name="IDE">
+        <predicates xsi:type="predicates:AndPredicate">
+          <operands xsi:type="predicates:NamePredicate" pattern=".*compare.ide.*"/>
+          <operands xsi:type="workingsets:ExclusionPredicate" excludedWorkingSets="//@branches[name='master']/@setupTasks.3/@workingSets.7"/>
+        </predicates>
+      </workingSets>
+      <workingSets name="UML">
+        <predicates xsi:type="predicates:AndPredicate">
+          <operands xsi:type="predicates:NamePredicate" pattern=".*uml.*"/>
+          <operands xsi:type="workingsets:ExclusionPredicate" excludedWorkingSets="//@branches[name='master']/@setupTasks.3/@workingSets.7"/>
+        </predicates>
+      </workingSets>
+      <workingSets name="Diagram">
+        <predicates xsi:type="predicates:AndPredicate">
+          <operands xsi:type="predicates:NamePredicate" pattern=".*diagram.*"/>
+          <operands xsi:type="workingsets:ExclusionPredicate" excludedWorkingSets="//@branches[name='master']/@setupTasks.3/@workingSets.7"/>
+        </predicates>
       </workingSets>
       <workingSets name="Tests">
         <predicates xsi:type="predicates:FilePredicate" filePattern="META-INF/MANIFEST.MF" contentPattern="org\.junit"/>
+        <predicates xsi:type="predicates:NamePredicate" pattern=".*tests.*"/>
+      </workingSets>
+      <workingSets name="Packaging">
+        <predicates xsi:type="predicates:NaturePredicate" nature="org.eclipse.pde.UpdateSiteNature"/>
+        <predicates xsi:type="predicates:NamePredicate" pattern=".*-parent"/>
+        <predicates xsi:type="predicates:NamePredicate" pattern=".*doc"/>
       </workingSets>
       <workingSets name="Features">
         <predicates xsi:type="predicates:NaturePredicate" nature="org.eclipse.pde.FeatureNature"/>
       </workingSets>
+    </setupTasks>
+    <setupTasks xsi:type="setup:MylynBuildsTask" serverURL="https://hudson.eclipse.org/emfcompare/">
+      <buildPlans name="master-nigthly"/>
+    </setupTasks>
+    <setupTasks xsi:type="setup:MylynQueriesTask" repositoryURL="https://bugs.eclipse.org/bugs/">
+      <queries summary="Open bugs" url="https://bugs.eclipse.org/bugs/buglist.cgi?bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;classification=Modeling&amp;list_id=8234070&amp;product=EMFCompare&amp;query_format=advanced">
+        <attributes key="bug_status" value="NEW"/>
+      </queries>
     </setupTasks>
   </branches>
 </setup:Project>
