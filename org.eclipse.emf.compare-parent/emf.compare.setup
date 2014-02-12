@@ -4,7 +4,7 @@
     <installableUnits id="org.eclipse.pde.api.tools.ee.feature.feature.group"/>
     <installableUnits id="net.sf.eclipsecs.feature.group"/>
     <installableUnits id="edu.umd.cs.findbugs.plugin.eclipse.feature.group"/>
-    <installableUnits id="com.mountainminds.eclemma.feature.feature.group&#x9;"/>
+    <installableUnits id="com.mountainminds.eclemma.feature.feature.group"/>
     <installableUnits id="org.eclipse.mylyn.bugzilla_feature.feature.group"/>
     <installableUnits id="org.eclipse.mylyn.gerrit.feature.feature.group"/>
     <installableUnits id="org.eclipse.mylyn.hudson.feature.group"/>
