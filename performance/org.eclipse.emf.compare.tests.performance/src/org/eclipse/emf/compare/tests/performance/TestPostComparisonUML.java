@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,8 +12,9 @@ package org.eclipse.emf.compare.tests.performance;
 
 import java.io.IOException;
 
-import org.eclipse.emf.compare.match.eobject.IdentifierEObjectMatcher;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import data.models.Data;
 import data.models.LargeInputData;
@@ -22,10 +23,11 @@ import data.models.SmallInputData;
 import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
- * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  *
  */
-public class TestMatch extends AbstractEMFComparePerformanceTest {
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class TestPostComparisonUML extends AbstractEMFComparePerformanceTest {
 
 	/** 
 	 * {@inheritDoc}
@@ -33,40 +35,58 @@ public class TestMatch extends AbstractEMFComparePerformanceTest {
 	 */
 	@Override
 	protected void setSUTName() {
-		getPerformance().getSystemUnderTest().setName(TestMatch.class.getSimpleName());
+		getPerformance().getSystemUnderTest().setName(TestPostComparisonUML.class.getSimpleName());
 	}
 
 	@Test
-	public void matchUMLSmall() {
-		PerformanceMonitor monitor = getPerformance().createMonitor("matchUMLSmall");
+	public void a_pcUMLUMLSmall() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLSmall");
 		final Data data = new SmallInputData();
+		data.match();
+		data.postMatchUML();
+		data.diff();
+		data.req();
+		data.equi();
+		data.conflict();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
-				data.match(new IdentifierEObjectMatcher());
+				data.postComparisonGMF();
 			}
 		});
 		data.dispose();
 	}
 	
 	@Test
-	public void matchUMLNominal() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("matchUMLNominal");
+	public void b_pcUMLUMLNominal() throws IOException {
+		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLNominal");
 		final Data data = new NominalInputData();
+		data.match();
+		data.postMatchUML();
+		data.diff();
+		data.req();
+		data.equi();
+		data.conflict();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
-				data.match(new IdentifierEObjectMatcher());
+				data.postComparisonGMF();
 			}
 		});
 		data.dispose();
 	}
 	
 	@Test
-	public void matchUMLLarge() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("matchUMLLarge");
+	public void c_pcUMLUMLLarge() throws IOException {
+		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLLarge");
 		final Data data = new LargeInputData();
+		data.match();
+		data.postMatchUML();
+		data.diff();
+		data.req();
+		data.equi();
+		data.conflict();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
-				data.match(new IdentifierEObjectMatcher());
+				data.postComparisonGMF();
 			}
 		});
 		data.dispose();

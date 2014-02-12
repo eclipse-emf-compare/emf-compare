@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.tests.performance;
 
 import java.io.IOException;
 
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -23,56 +24,52 @@ import data.models.SmallInputData;
 import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
- * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestDiff extends AbstractEMFComparePerformanceTest {
+public class TestMatchContent extends AbstractEMFComparePerformanceTest {
 
-	
 	/** 
 	 * {@inheritDoc}
 	 * @see org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest#setSUTName()
 	 */
 	@Override
 	protected void setSUTName() {
-		getPerformance().getSystemUnderTest().setName(TestDiff.class.getSimpleName());
+		getPerformance().getSystemUnderTest().setName(TestMatchContent.class.getSimpleName());
 	}
 
 	@Test
-	public void a_diffUMLSmall() {
-		PerformanceMonitor monitor = getPerformance().createMonitor("diffUMLSmall");
+	public void a_matchContentUMLSmall() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("matchContentUMLSmall");
 		final Data data = new SmallInputData();
-		data.match();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
-				data.diff();
+				data.match(UseIdentifiers.NEVER);
 			}
 		});
 		data.dispose();
 	}
 	
 	@Test
-	public void b_diffUMLNominal() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("diffUMLNominal");
+	public void b_matchContentUMLNominal() throws IOException {
+		PerformanceMonitor monitor = getPerformance().createMonitor("matchContentUMLNominal");
 		final Data data = new NominalInputData();
-		data.match();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
-				data.diff();
+				data.match(UseIdentifiers.NEVER);
 			}
 		});
 		data.dispose();
 	}
 	
 	@Test
-	public void c_diffUMLLarge() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("diffUMLLarge");
+	public void c_matchContentUMLLarge() throws IOException {
+		PerformanceMonitor monitor = getPerformance().createMonitor("matchContentUMLLarge");
 		final Data data = new LargeInputData();
-		data.match();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
-				data.diff();
+				data.match(UseIdentifiers.NEVER);
 			}
 		});
 		data.dispose();

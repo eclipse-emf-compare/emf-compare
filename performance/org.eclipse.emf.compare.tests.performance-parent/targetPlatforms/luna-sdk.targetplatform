@@ -5,10 +5,8 @@ location "http://download.eclipse.org/releases/luna" {
 	org.eclipse.sdk.ide
 	org.eclipse.emf.feature.group
 	org.eclipse.uml2.feature.group
-}
-
-location "http://download.eclipse.org/releases/helios" {
-	org.junit4
+	org.eclipse.egit.feature.group
+	org.junit4;version="[4.11.0,5.0.0)"
 }
 
 location "http://download.eclipse.org/tools/orbit/downloads/drops/S20131024145017/repository/" {
@@ -21,6 +19,9 @@ location "http://download.eclipse.org/modeling/emf/compare/updates/nightly/lates
 	with requirements
 	org.eclipse.emf.compare.feature.group
 	org.eclipse.emf.compare.ide.ui.feature.group
+	org.eclipse.emf.compare.diagram.gmf.feature.group
+	org.eclipse.emf.compare.diagram.papyrus.feature.group
+	org.eclipse.emf.compare.uml2.feature.group
 }
 
 location "http://axelrichard.github.io/fr.obeo.performance/" {

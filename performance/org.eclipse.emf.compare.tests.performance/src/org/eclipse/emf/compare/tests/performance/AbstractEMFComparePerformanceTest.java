@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.performance;
 
+import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Iterables.getFirst;
+import static com.google.common.collect.Iterables.transform;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -50,10 +54,6 @@ import fr.obeo.performance.PerformancePackage;
 import fr.obeo.performance.Scenario;
 import fr.obeo.performance.TestResult;
 import fr.obeo.performance.api.Performance;
-
-import static com.google.common.collect.Iterables.concat;
-import static com.google.common.collect.Iterables.getFirst;
-import static com.google.common.collect.Iterables.transform;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>

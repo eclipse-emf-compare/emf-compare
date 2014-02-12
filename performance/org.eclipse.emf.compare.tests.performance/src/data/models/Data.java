@@ -18,24 +18,34 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.common.EMFPlugin;
+import org.eclipse.compare.ITypedElement;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.conflict.DefaultConflictDetector;
+import org.eclipse.emf.compare.conflict.IConflictDetector;
+import org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor;
 import org.eclipse.emf.compare.diff.DefaultDiffEngine;
 import org.eclipse.emf.compare.diff.DiffBuilder;
 import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.diff.IDiffProcessor;
-import org.eclipse.emf.compare.match.DefaultComparisonFactory;
-import org.eclipse.emf.compare.match.DefaultEqualityHelperFactory;
+import org.eclipse.emf.compare.equi.DefaultEquiEngine;
+import org.eclipse.emf.compare.equi.IEquiEngine;
+import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
-import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
+import org.eclipse.emf.compare.match.IMatchEngine;
+import org.eclipse.emf.compare.postprocessor.IPostProcessor;
+import org.eclipse.emf.compare.req.DefaultReqEngine;
+import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.tests.performance.EMFComparePerformanceActivator;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.UMLPostProcessor;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -93,19 +103,63 @@ public abstract class Data {
 		return resourceSet;
 	}
 	
-	public Comparison match(IEObjectMatcher matcher) {
-		final IComparisonScope scope = new DefaultComparisonScope(getLeft(), loadRight(), loadAncestor());
-		final DefaultMatchEngine matchEngine = new DefaultMatchEngine(matcher, new DefaultComparisonFactory(new DefaultEqualityHelperFactory()));
+	public void logicalModel(ITypedElement leftTypedElement, ITypedElement rightTypedElement) {
+		ComparisonScopeBuilder.create(null, leftTypedElement, rightTypedElement, null, new NullProgressMonitor());
+	}
+	
+	public Comparison match() {
+		return match(UseIdentifiers.ONLY);
+	}
+	
+	public Comparison match(UseIdentifiers useIDs) {
+		final IComparisonScope scope = new DefaultComparisonScope(getLeft(), getRight(), getAncestor());
+		final IMatchEngine matchEngine = DefaultMatchEngine.create(useIDs);
 		comparison = matchEngine.match(scope, new BasicMonitor());
 		return comparison;
 	}
-
+	
 	public Comparison diff() {
 		final IDiffProcessor diffBuilder = new DiffBuilder();
 		final IDiffEngine diffEngine = new DefaultDiffEngine(diffBuilder);
 		diffEngine.diff(comparison,  new BasicMonitor());
 		return comparison;
 	}
+	
+	public void req() {
+		final IReqEngine reqEngine = new DefaultReqEngine();
+		reqEngine.computeRequirements(comparison, new BasicMonitor());
+	}
+	
+	public void equi() {
+		final IEquiEngine equiEngine = new DefaultEquiEngine();
+		equiEngine.computeEquivalences(comparison, new BasicMonitor());
+	}
+	
+	public void conflict() {
+		final IConflictDetector conflictDetector = new DefaultConflictDetector();
+		conflictDetector.detect(comparison, new BasicMonitor());
+	}
+	
+	public void compare() {
+		final IComparisonScope scope = new DefaultComparisonScope(getLeft(), getRight(), getAncestor());
+		EMFCompare.builder().build().compare(scope);
+	}
+
+	public void postComparisonGMF() {
+		final IPostProcessor postProcessor = new CompareDiagramPostProcessor();
+		postProcessor.postComparison(comparison, new BasicMonitor());
+	}
+	
+	public void postMatchUML() {
+		final IPostProcessor postProcessor = new UMLPostProcessor();
+		postProcessor.postMatch(comparison, new BasicMonitor());
+	}
+	
+	public void postComparisonUML() {
+		final IPostProcessor postProcessor = new UMLPostProcessor();
+		postProcessor.postComparison(comparison, new BasicMonitor());
+	}
+	
 	
 	public void dispose() {
 		comparison = null;
@@ -156,5 +210,4 @@ public abstract class Data {
 
 		return resource;
 	}
-	
 }

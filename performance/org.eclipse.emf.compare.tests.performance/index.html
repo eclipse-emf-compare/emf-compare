@@ -10,10 +10,16 @@
   </head>
   <body>
 <p>
-<h1>Match</h1>
-      <div id="TestMatch-system_time" style="width:800px; height:320px;"></div>
-      <div id="TestMatch-heap_peek" style="width:800px; height:320px;"></div>
-      <div id="TestMatch-heap_delta" style="width:800px; height:320px;"></div>
+<h1>Match Id</h1>
+      <div id="TestMatchId-system_time" style="width:800px; height:320px;"></div>
+      <div id="TestMatchId-heap_peek" style="width:800px; height:320px;"></div>
+      <div id="TestMatchId-heap_delta" style="width:800px; height:320px;"></div>
+</p>
+<p>
+<h1>Match Content</h1>
+      <div id="TestMatchContent-system_time" style="width:800px; height:320px;"></div>
+      <div id="TestMatchContent-heap_peek" style="width:800px; height:320px;"></div>
+      <div id="TestMatchContent-heap_delta" style="width:800px; height:320px;"></div>
 </p>
 <p>
 <h1>Diff</h1>
@@ -21,43 +27,120 @@
       <div id="TestDiff-heap_peek" style="width:800px; height:320px;"></div>
       <div id="TestDiff-heap_delta" style="width:800px; height:320px;"></div>      
 </p>
+<p>
+<h1>Req</h1>
+      <div id="TestReq-system_time" style="width:800px; height:320px;"></div>
+      <div id="TestReq-heap_peek" style="width:800px; height:320px;"></div>
+      <div id="TestReq-heap_delta" style="width:800px; height:320px;"></div>      
+</p>
+<p>
+<h1>Equi</h1>
+      <div id="TestEqui-system_time" style="width:800px; height:320px;"></div>
+      <div id="TestEqui-heap_peek" style="width:800px; height:320px;"></div>
+      <div id="TestEqui-heap_delta" style="width:800px; height:320px;"></div>      
+</p>
+<p>
+<h1>Conflict</h1>
+      <div id="TestConflict-system_time" style="width:800px; height:320px;"></div>
+      <div id="TestConflict-heap_peek" style="width:800px; height:320px;"></div>
+      <div id="TestConflict-heap_delta" style="width:800px; height:320px;"></div>      
+</p>
+<p>
+<h1>Compare</h1>
+      <div id="TestCompare-system_time" style="width:800px; height:320px;"></div>
+      <div id="TestCompare-heap_peek" style="width:800px; height:320px;"></div>
+      <div id="TestCompare-heap_delta" style="width:800px; height:320px;"></div>      
+</p>
+<p>
+<h1>Post Match UML</h1>
+      <div id="TestPostMatchUML-system_time" style="width:800px; height:320px;"></div>
+      <div id="TestPostMatchUML-heap_peek" style="width:800px; height:320px;"></div>
+      <div id="TestPostMatchUML-heap_delta" style="width:800px; height:320px;"></div>      
+</p>
+<p>
+<h1>Post Comparison UML</h1>
+      <div id="TestPostComparisonUML-system_time" style="width:800px; height:320px;"></div>
+      <div id="TestPostComparisonUML-heap_peek" style="width:800px; height:320px;"></div>
+      <div id="TestPostComparisonUML-heap_delta" style="width:800px; height:320px;"></div>      
+</p>
 
       <script type="text/javascript">
         g = [
         new Dygraph(
-          document.getElementById("TestMatch-system_time"),
-          "TestMatch-system_time.csv",
+          document.getElementById("TestMatchId-system_time"),
+          "TestMatchId-system_time.csv",
           {
             rollPeriod: 1,
             showRoller: true,
             customBars: true,
-            title: 'Test Match - system time',
+            title: 'Test MatchId - system time',
             ylabel: 'System time (ms)',
             legend: 'always',
             labelsDivStyles: { 'textAlign': 'right' }
           }
         ),
         new Dygraph(
-          document.getElementById("TestMatch-heap_peek"),
-          "TestMatch-heap_peek.csv",
+          document.getElementById("TestMatchId-heap_peek"),
+          "TestMatchId-heap_peek.csv",
           {
             rollPeriod: 1,
             showRoller: true,
             customBars: true,
-            title: 'Test Match - heap peek',
+            title: 'Test MatchId - heap peek',
             ylabel: 'Heap peek (MiB)',
             legend: 'always',
             labelsDivStyles: { 'textAlign': 'right' }
           }
         ),
         new Dygraph(
-          document.getElementById("TestMatch-heap_delta"),
-          "TestMatch-heap_delta.csv",
+          document.getElementById("TestMatchId-heap_delta"),
+          "TestMatchId-heap_delta.csv",
           {
             rollPeriod: 1,
             showRoller: true,
             customBars: true,
-            title: 'Test Match - heap delta',
+            title: 'Test MatchId - heap delta',
+            ylabel: 'Heap delta (MiB)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        
+        
+        new Dygraph(
+          document.getElementById("TestMatchContent-system_time"),
+          "TestMatchContent-system_time.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test MatchContent - system time',
+            ylabel: 'System time (ms)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        new Dygraph(
+          document.getElementById("TestMatchContent-heap_peek"),
+          "TestMatchContent-heap_peek.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test MatchContent - heap peek',
+            ylabel: 'Heap peek (MiB)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        new Dygraph(
+          document.getElementById("TestMatchContent-heap_delta"),
+          "TestMatchContent-heap_delta.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test MatchContent - heap delta',
             ylabel: 'Heap delta (MiB)',
             legend: 'always',
             labelsDivStyles: { 'textAlign': 'right' }
@@ -99,6 +182,252 @@
             showRoller: true,
             customBars: true,
             title: 'Test Diff - heap delta',
+            ylabel: 'Heap delta (MiB)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        
+        
+        new Dygraph(
+          document.getElementById("TestReq-system_time"),
+          "TestReq-system_time.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Req - system time',
+            ylabel: 'System time (ms)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        new Dygraph(
+          document.getElementById("TestReq-heap_peek"),
+          "TestReq-heap_peek.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Req - heap peek',
+            ylabel: 'Heap peek (MiB)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        new Dygraph(
+          document.getElementById("TestReq-heap_delta"),
+          "TestReq-heap_delta.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Req - heap delta',
+            ylabel: 'Heap delta (MiB)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        
+        
+        new Dygraph(
+          document.getElementById("TestEqui-system_time"),
+          "TestEqui-system_time.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Equi - system time',
+            ylabel: 'System time (ms)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        new Dygraph(
+          document.getElementById("TestEqui-heap_peek"),
+          "TestEqui-heap_peek.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Equi - heap peek',
+            ylabel: 'Heap peek (MiB)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        new Dygraph(
+          document.getElementById("TestEqui-heap_delta"),
+          "TestEqui-heap_delta.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Equi - heap delta',
+            ylabel: 'Heap delta (MiB)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        
+        
+         new Dygraph(
+          document.getElementById("TestConflict-system_time"),
+          "TestConflict-system_time.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Conflict - system time',
+            ylabel: 'System time (ms)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        new Dygraph(
+          document.getElementById("TestConflict-heap_peek"),
+          "TestConflict-heap_peek.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Conflict - heap peek',
+            ylabel: 'Heap peek (MiB)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        new Dygraph(
+          document.getElementById("TestConflict-heap_delta"),
+          "TestConflict-heap_delta.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Conflict - heap delta',
+            ylabel: 'Heap delta (MiB)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        
+        
+        new Dygraph(
+          document.getElementById("TestCompare-system_time"),
+          "TestCompare-system_time.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Compare - system time',
+            ylabel: 'System time (ms)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        new Dygraph(
+          document.getElementById("TestCompare-heap_peek"),
+          "TestCompare-heap_peek.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Compare - heap peek',
+            ylabel: 'Heap peek (MiB)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        new Dygraph(
+          document.getElementById("TestCompare-heap_delta"),
+          "TestCompare-heap_delta.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Compare - heap delta',
+            ylabel: 'Heap delta (MiB)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        
+        
+        new Dygraph(
+          document.getElementById("TestPostMatchUML-system_time"),
+          "TestPostMatchUML-system_time.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Post Match UML - system time',
+            ylabel: 'System time (ms)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        new Dygraph(
+          document.getElementById("TestPostMatchUML-heap_peek"),
+          "TestPostMatchUML-heap_peek.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Post Match UML - heap peek',
+            ylabel: 'Heap peek (MiB)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        new Dygraph(
+          document.getElementById("TestPostMatchUML-heap_delta"),
+          "TestPostMatchUML-heap_delta.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Post Match UML - heap delta',
+            ylabel: 'Heap delta (MiB)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        
+        
+        new Dygraph(
+          document.getElementById("TestPostComparisonUML-system_time"),
+          "TestPostComparisonUML-system_time.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Post Comparison UML - system time',
+            ylabel: 'System time (ms)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        new Dygraph(
+          document.getElementById("TestPostComparisonUML-heap_peek"),
+          "TestPostComparisonUML-heap_peek.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Post Comparison UML - heap peek',
+            ylabel: 'Heap peek (MiB)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        new Dygraph(
+          document.getElementById("TestPostComparisonUML-heap_delta"),
+          "TestPostComparisonUML-heap_delta.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Post Comparison UML - heap delta',
             ylabel: 'Heap delta (MiB)',
             legend: 'always',
             labelsDivStyles: { 'textAlign': 'right' }
