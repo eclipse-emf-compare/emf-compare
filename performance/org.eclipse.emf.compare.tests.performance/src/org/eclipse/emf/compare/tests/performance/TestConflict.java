@@ -70,7 +70,7 @@ public class TestConflict extends AbstractEMFComparePerformanceTest {
 		data.dispose();
 	}
 	
-	@Test
+//	@Test
 	public void c_conflictUMLLarge() throws IOException {
 		PerformanceMonitor monitor = getPerformance().createMonitor("conflictUMLLarge");
 		final Data data = new LargeInputData();

@@ -65,7 +65,7 @@ public class TestDiff extends AbstractEMFComparePerformanceTest {
 		data.dispose();
 	}
 	
-	@Test
+//	@Test
 	public void c_diffUMLLarge() throws IOException {
 		PerformanceMonitor monitor = getPerformance().createMonitor("diffUMLLarge");
 		final Data data = new LargeInputData();

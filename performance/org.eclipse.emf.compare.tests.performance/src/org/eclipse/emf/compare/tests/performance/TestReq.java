@@ -66,7 +66,7 @@ public class TestReq extends AbstractEMFComparePerformanceTest {
 		data.dispose();
 	}
 	
-	@Test
+//	@Test
 	public void c_reqUMLLarge() throws IOException {
 		PerformanceMonitor monitor = getPerformance().createMonitor("reqUMLLarge");
 		final Data data = new LargeInputData();

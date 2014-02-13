@@ -61,7 +61,7 @@ public class TestMatchId extends AbstractEMFComparePerformanceTest {
 		data.dispose();
 	}
 	
-	@Test
+//	@Test
 	public void c_matchIdUMLLarge() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("matchIdUMLLarge");
 		final Data data = new LargeInputData();

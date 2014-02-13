@@ -22,7 +22,8 @@ import org.junit.runners.Suite.SuiteClasses;
 	TestConflict.class,
 	TestCompare.class,
 	TestPostMatchUML.class,
-	TestPostComparisonUML.class
+	TestPostComparisonUML.class,
+	TestLogicalModel.class
 })
 public class PerformanceSuite {
    

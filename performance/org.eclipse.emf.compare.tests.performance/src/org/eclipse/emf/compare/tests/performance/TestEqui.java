@@ -66,7 +66,7 @@ public class TestEqui extends AbstractEMFComparePerformanceTest {
 		data.dispose();
 	}
 	
-	@Test
+//	@Test
 	public void c_equiUMLLarge() throws IOException {
 		PerformanceMonitor monitor = getPerformance().createMonitor("equiUMLLarge");
 		final Data data = new LargeInputData();

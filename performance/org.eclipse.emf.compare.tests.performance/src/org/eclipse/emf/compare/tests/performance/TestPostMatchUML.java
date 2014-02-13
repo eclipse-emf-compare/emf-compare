@@ -64,7 +64,7 @@ public class TestPostMatchUML extends AbstractEMFComparePerformanceTest {
 		data.dispose();
 	}
 	
-	@Test
+//	@Test
 	public void c_pmUMLUMLLarge() throws IOException {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pmUMLUMLLarge");
 		final Data data = new LargeInputData();

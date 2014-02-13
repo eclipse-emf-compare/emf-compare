@@ -6,7 +6,7 @@
     <!--[if IE]>
       <script type="text/javascript" src="excanvas.js"></script>
     <![endif]-->
-    <script type="text/javascript" src="http://dygraphs.com/dygraph-combined.js"></script>
+    <script type="text/javascript" src="dygraph-combined.js"></script>
   </head>
   <body>
 <p>
@@ -63,6 +63,12 @@
       <div id="TestPostComparisonUML-heap_peek" style="width:800px; height:320px;"></div>
       <div id="TestPostComparisonUML-heap_delta" style="width:800px; height:320px;"></div>      
 </p>
+<p>
+<h1>Logical Model</h1>
+      <div id="TestLogicalModel-system_time" style="width:800px; height:320px;"></div>
+      <div id="TestLogicalModel-heap_peek" style="width:800px; height:320px;"></div>
+      <div id="TestLogicalModel-heap_delta" style="width:800px; height:320px;"></div>      
+</p>
 
       <script type="text/javascript">
         g = [
@@ -70,7 +76,7 @@
           document.getElementById("TestMatchId-system_time"),
           "TestMatchId-system_time.csv",
           {
-            rollPeriod: 1,
+            rollPeriod: 10,
             showRoller: true,
             customBars: true,
             title: 'Test MatchId - system time',
@@ -428,6 +434,47 @@
             showRoller: true,
             customBars: true,
             title: 'Test Post Comparison UML - heap delta',
+            ylabel: 'Heap delta (MiB)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        
+        
+        new Dygraph(
+          document.getElementById("TestLogicalModel-system_time"),
+          "TestLogicalModel-system_time.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Logical Model - system time',
+            ylabel: 'System time (ms)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        new Dygraph(
+          document.getElementById("TestLogicalModel-heap_peek"),
+          "TestLogicalModel-heap_peek.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Logical Model - heap peek',
+            ylabel: 'Heap peek (MiB)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' }
+          }
+        ),
+        new Dygraph(
+          document.getElementById("TestLogicalModel-heap_delta"),
+          "TestLogicalModel-heap_delta.csv",
+          {
+            rollPeriod: 1,
+            showRoller: true,
+            customBars: true,
+            title: 'Test Logical Model - heap delta',
             ylabel: 'Heap delta (MiB)',
             legend: 'always',
             labelsDivStyles: { 'textAlign': 'right' }

@@ -72,7 +72,7 @@ public class TestPostComparisonGMF extends AbstractEMFComparePerformanceTest {
 		data.dispose();
 	}
 	
-	@Test
+//	@Test
 	public void c_pcGMFUMLLarge() throws IOException {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcGMFUMLLarge");
 		final Data data = new LargeInputData();
