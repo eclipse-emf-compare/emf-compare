@@ -43,6 +43,8 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.Ordering;
 import com.google.common.io.Closeables;
@@ -88,9 +90,23 @@ public abstract class AbstractEMFComparePerformanceTest {
 			return point.getMeasures();
 		}
 	};
+	
 	private static final Function<TestResult, List<DataPoint>> TEST_RESULT__DATA_POINTS = new Function<TestResult, List<DataPoint>>() {
 		public List<DataPoint> apply(TestResult testResult) {
 			return testResult.getDataPoints();
+		}
+	};
+	
+	private static final Function<Iterable<Double>, Double> AVERAGE = new Function<Iterable<Double>, Double>() {
+		public Double apply(Iterable<Double> it) {
+			Double sum = 0.0;
+			  if(!Iterables.isEmpty(it)) {
+			    for (Double d : it) {
+			        sum += d;
+			    }
+			    return sum.doubleValue() / Iterables.size(it);
+			  }
+			  return sum;
 		}
 	};
 
@@ -162,8 +178,13 @@ public abstract class AbstractEMFComparePerformanceTest {
 								public String apply(Entry<Scenario, Collection<Measure>> entry) {
 									final Dimension dimension = getFirst(entry.getValue(), null).getDimension();
 									Iterable<Double> transform = transform(entry.getValue(), MEASURE__VALUE);
-									List<Double> sortedCopy = Ordering.natural().sortedCopy(transform);
-									Iterable<String> transform2 = transform(sortedCopy,
+									
+									List<Double> minAvMax = Lists.newArrayList();
+									minAvMax.add(Ordering.natural().min(transform));
+									minAvMax.add(AVERAGE.apply(transform));
+									minAvMax.add(Ordering.natural().max(transform));
+									
+									Iterable<String> transform2 = transform(minAvMax,
 										new Function<Double, String>() {
 											public String apply(Double d) {
 												switch (dimension) {

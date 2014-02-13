@@ -10,16 +10,22 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.performance;
 
+import java.net.URL;
+
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.osgi.framework.Bundle;
 
 import data.models.Data;
 import data.models.SmallInputData;
@@ -47,8 +53,12 @@ public class TestLogicalModel extends AbstractEMFComparePerformanceTest {
 		try {
 			PerformanceMonitor monitor = getPerformance().createMonitor("logicalModelUMLSmall");
 			final Data data = new SmallInputData();
-			String baseDir = "D:/git/compare2/org.eclipse.emf.compare/performance/org.eclipse.emf.compare.tests.performance/src/data/models/model_size_small";// location of files to import
-			IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(baseDir + "/.project"));
+			
+			Bundle bundle = Platform.getBundle("org.eclipse.emf.compare.tests.performance");
+			URL entry = bundle.getEntry("src/data/models/model_size_small/.project");
+			URL fileURL = FileLocator.toFileURL(entry);
+			IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(fileURL.getPath()));
+			
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
 			project.create(description, new NullProgressMonitor());
 			project.open(new NullProgressMonitor());
@@ -66,6 +76,7 @@ public class TestLogicalModel extends AbstractEMFComparePerformanceTest {
 			data.dispose();
 		} catch (Exception e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 	}
 	
@@ -74,8 +85,12 @@ public class TestLogicalModel extends AbstractEMFComparePerformanceTest {
 		try {
 			PerformanceMonitor monitor = getPerformance().createMonitor("logicalModelUMLNominal");
 			final Data data = new SmallInputData();
-			String baseDir = "D:/git/compare2/org.eclipse.emf.compare/performance/org.eclipse.emf.compare.tests.performance/src/data/models/model_size_nominal";// location of files to import
-			IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(baseDir + "/.project"));
+			
+			Bundle bundle = Platform.getBundle("org.eclipse.emf.compare.tests.performance");
+			URL entry = bundle.getEntry("src/data/models/model_size_nominal/.project");
+			URL fileURL = FileLocator.toFileURL(entry);
+			IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(fileURL.getPath()));
+			
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
 			project.create(description, new NullProgressMonitor());
 			project.open(new NullProgressMonitor());
@@ -93,6 +108,7 @@ public class TestLogicalModel extends AbstractEMFComparePerformanceTest {
 			data.dispose();
 		} catch (Exception e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 	}
 }
