@@ -110,7 +110,7 @@ public abstract class AbstractEMFComparePerformanceTest {
 		}
 	};
 
-	private static final int DEFAULT_STEPS_NUMBER = 5;
+	private static final int DEFAULT_STEPS_NUMBER = 3;
 
 	private static final boolean DEFAULT_WARMUP = true;
 	
