@@ -14,11 +14,11 @@
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20131024145017/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
-<unit id="org.eclipse.emf.compare.feature.group" version="3.0.0.201402130502"/>
-<unit id="org.eclipse.emf.compare.ide.ui.feature.group" version="3.0.0.201402130502"/>
-<unit id="org.eclipse.emf.compare.diagram.gmf.feature.group" version="3.0.0.201402130502"/>
-<unit id="org.eclipse.emf.compare.diagram.papyrus.feature.group" version="3.0.0.201402130502"/>
-<unit id="org.eclipse.emf.compare.uml2.feature.group" version="3.0.0.201402130502"/>
+<unit id="org.eclipse.emf.compare.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.compare.ide.ui.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.compare.diagram.gmf.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.compare.diagram.papyrus.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.compare.uml2.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
