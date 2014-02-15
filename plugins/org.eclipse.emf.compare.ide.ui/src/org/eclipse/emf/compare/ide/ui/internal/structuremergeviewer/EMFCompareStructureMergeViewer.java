@@ -20,7 +20,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.eventbus.Subscribe;
 
@@ -74,7 +73,6 @@ import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IMergePreviewModeChange;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.CompareColorImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IColorChangeEvent;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.PseudoConflictsFilter;
@@ -137,11 +135,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			return Status.OK_STATUS;
 		}
 	}
-
-	/** List of all color ID that this viewer shall listen. */
-	private static final Set<String> LISTENING_COLOR_IDS = ImmutableSet
-			.of(CompareColorImpl.UNMERGEABLE_DIFF_COLOR_THEME_KEY,
-					CompareColorImpl.REQUIRED_DIFF_COLOR_THEME_KEY);
 
 	private static final Predicate<Diff> UNRESOLVED_AND_WITHOUT_PSEUDO_CONFLICT = and(
 			hasState(DifferenceState.UNRESOLVED), not(hasConflict(ConflictKind.PSEUDO)));
@@ -299,11 +292,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	@Subscribe
-	public void refreshNeeded(IColorChangeEvent changeColorEvent) {
-		if (LISTENING_COLOR_IDS.contains(changeColorEvent.getColorID())) {
-			refresh();
-		}
-
+	public void colorChanged(
+			@SuppressWarnings("unused")/* necessary for @Subscribe */IColorChangeEvent changeColorEvent) {
+		internalRedraw();
 	}
 
 	/**

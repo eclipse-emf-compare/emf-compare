@@ -78,9 +78,9 @@ public class EMFCompareColor extends CompareColorImpl {
 
 		if (COLOR_IDS.contains(propertyKey)) {
 			updateColors();
-			ColorChangeEvent colorEvent = new ColorChangeEvent(propertyKey);
 			// This event bus may not have been set
 			if (eventBus != null) {
+				ColorChangeEvent colorEvent = new ColorChangeEvent(propertyKey);
 				eventBus.post(colorEvent);
 			}
 		}

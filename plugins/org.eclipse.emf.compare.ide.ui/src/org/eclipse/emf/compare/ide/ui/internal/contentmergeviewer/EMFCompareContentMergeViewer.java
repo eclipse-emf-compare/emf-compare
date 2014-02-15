@@ -14,7 +14,6 @@ import static com.google.common.collect.Iterables.filter;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.EventObject;
@@ -22,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
@@ -45,7 +43,6 @@ import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IAdapterFactoryChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.CompareColorImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IColorChangeEvent;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
@@ -100,12 +97,6 @@ import org.eclipse.ui.views.properties.PropertySheet;
 public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer implements ISelectionChangedListener, ICompareColor.Provider, IAdaptable, CommandStackListener {
 
 	private static final String HANDLER_SERVICE = "fHandlerService"; //$NON-NLS-1$
-
-	/** List of all color ID that this viewer shall listen. */
-	private static final Set<String> LISTENING_COLOR_IDS = ImmutableSet.of(
-			CompareColorImpl.INCOMING_CHANGE_COLOR_THEME_KEY,
-			CompareColorImpl.OUTGOING_CHANGE_COLOR_THEME_KEY,
-			CompareColorImpl.CONFLICTING_CHANGE_COLOR_THEME_KEY);
 
 	/**
 	 * Width of center bar
@@ -170,10 +161,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	}
 
 	@Subscribe
-	public void refreshNeeded(IColorChangeEvent event) {
-		if (LISTENING_COLOR_IDS.contains(event.getColorID())) {
-			refresh();
-		}
+	public void colorChanged(
+			@SuppressWarnings("unused")/* necessary for @Subscribe */IColorChangeEvent changeColorEvent) {
+		getControl().redraw();
 	}
 
 	/**
