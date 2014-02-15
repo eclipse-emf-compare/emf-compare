@@ -51,30 +51,22 @@ public class CompareColorImpl implements RemovalListener<RGB, Color>, ICompareCo
 	private static final double INTERPOLATION_SCALE_2 = 0.97;
 
 	/** Scale factor to compute the color of border. */
-	private static final double DARKER_BORDER_SCALE_FACTOR = -0.4;
+	private static final double DARKER_BORDER_SCALE_FACTOR = -0.5;
 
 	/** Incoming color key in theme */
 	public static final String INCOMING_CHANGE_COLOR_THEME_KEY = "org.eclipse.emf.compare.incomingChangeColor";//$NON-NLS-1$
 
 	/** Conflicting color key in theme */
-	public static final String CONFLICTING_CHANGE_COLOR_THEME_KEY = "org.eclipse.emf.compare.ConflictingChangeColor";//$NON-NLS-1$
+	public static final String CONFLICTING_CHANGE_COLOR_THEME_KEY = "org.eclipse.emf.compare.conflictingChangeColor";//$NON-NLS-1$
 
 	/** Outgoing color key in theme */
 	public static final String OUTGOING_CHANGE_COLOR_THEME_KEY = "org.eclipse.emf.compare.outgoingChangeColor";//$NON-NLS-1$
 
 	/** Required difference color key in theme */
-	public static final String REQUIRED_DIFF_COLOR_THEME_KEY = "org.eclipse.emf.compare.requiredDifferenceColor";//$NON-NLS-1$
+	public static final String REQUIRED_DIFF_COLOR_THEME_KEY = "org.eclipse.emf.compare.requiredChangeColor";//$NON-NLS-1$
 
 	/** Unmergeable difference color key in theme */
-	public static final String UNMERGEABLE_DIFF_COLOR_THEME_KEY = "org.eclipse.emf.compare.unmergeableDifferenceColor";//$NON-NLS-1$
-
-	private static final String BORDER_SUFFIX_KEYWORD = "Border";//$NON-NLS-1$
-
-	public static final String REQUIRED_DIFF_BORDER_COLOR = CompareColorImpl.REQUIRED_DIFF_COLOR_THEME_KEY
-			+ BORDER_SUFFIX_KEYWORD;
-
-	public static final String UNMERGEABLE_DIFF_BORDER_COLOR = CompareColorImpl.UNMERGEABLE_DIFF_COLOR_THEME_KEY
-			+ BORDER_SUFFIX_KEYWORD;
+	public static final String UNMERGEABLE_DIFF_COLOR_THEME_KEY = "org.eclipse.emf.compare.unmergeableChangeColor";//$NON-NLS-1$
 
 	private final LoadingCache<RGB, Color> fColors;
 

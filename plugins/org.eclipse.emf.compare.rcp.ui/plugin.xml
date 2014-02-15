@@ -112,14 +112,14 @@
             id="org.eclipse.emf.compare.incomingChangeColor"
             isEditable="true"
             label="Incoming change color"
-            value="COLOR_DARK_BLUE">
+            value="COLOR_BLUE">
          <description>
             The color used to indicate an incoming change in EMF Compare and merge tools.
          </description>
       </colorDefinition>
       <colorDefinition
             categoryId="org.eclipse.emf.compare.themeCategory"
-            id="org.eclipse.emf.compare.ConflictingChangeColor"
+            id="org.eclipse.emf.compare.conflictingChangeColor"
             isEditable="true"
             label="Conflicting change color"
             value="COLOR_RED">
@@ -139,22 +139,22 @@
       </colorDefinition>
       <colorDefinition
             categoryId="org.eclipse.emf.compare.themeCategory"
-            id="org.eclipse.emf.compare.requiredDifferenceColor"
+            id="org.eclipse.emf.compare.requiredChangeColor"
             isEditable="true"
-            label="Required difference Color"
+            label="Required change color"
             value="215, 255, 200">
          <description>
-            The color used to indicate a required difference in Difference Overview window part.
+         	The color used to indicate a change to be merged in the same direction as the selected "highlight consequences" mode along with the selected one.
          </description>
       </colorDefinition>
       <colorDefinition
             categoryId="org.eclipse.emf.compare.themeCategory"
-            id="org.eclipse.emf.compare.unmergeableDifferenceColor"
+            id="org.eclipse.emf.compare.unmergeableChangeColor"
             isEditable="true"
-            label="Unmergeable difference Color"
+            label="Merge conflict color"
             value="255, 205, 180">
          <description>
-            The color used to indicate a unmergeable difference in Difference Overview window part.
+            The color used to indicate a conflictual change to be merged in the opposite direction as the selected "highlight consequences" mode along with the selected one.
          </description>
       </colorDefinition>
 	</extension>

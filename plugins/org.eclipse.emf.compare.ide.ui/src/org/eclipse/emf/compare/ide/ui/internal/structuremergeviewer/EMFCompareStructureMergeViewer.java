@@ -139,8 +139,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	/** List of all color ID that this viewer shall listen. */
-	private static final Set<String> LISTENING_COLOR_IDS = ImmutableSet.of(
-			CompareColorImpl.UNMERGEABLE_DIFF_COLOR_THEME_KEY, CompareColorImpl.REQUIRED_DIFF_BORDER_COLOR);
+	private static final Set<String> LISTENING_COLOR_IDS = ImmutableSet
+			.of(CompareColorImpl.UNMERGEABLE_DIFF_COLOR_THEME_KEY,
+					CompareColorImpl.REQUIRED_DIFF_COLOR_THEME_KEY);
 
 	private static final Predicate<Diff> UNRESOLVED_AND_WITHOUT_PSEUDO_CONFLICT = and(
 			hasState(DifferenceState.UNRESOLVED), not(hasConflict(ConflictKind.PSEUDO)));
