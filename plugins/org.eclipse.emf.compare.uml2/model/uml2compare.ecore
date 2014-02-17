@@ -7,9 +7,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="ExecutionSpecificationChange" eSuperTypes="#//UMLDiff"/>
   <eClassifiers xsi:type="ecore:EClass" name="IntervalConstraintChange" eSuperTypes="#//UMLDiff"/>
   <eClassifiers xsi:type="ecore:EClass" name="MessageChange" eSuperTypes="#//UMLDiff"/>
-  <eClassifiers xsi:type="ecore:EClass" name="StereotypePropertyChange" eSuperTypes="#//UMLDiff">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="stereotype" eType="ecore:EClass platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//Stereotype"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StereotypeAttributeChange" eSuperTypes="#//UMLDiff"/>
   <eClassifiers xsi:type="ecore:EClass" name="StereotypeApplicationChange" eSuperTypes="#//UMLDiff">
     <eStructuralFeatures xsi:type="ecore:EReference" name="stereotype" eType="ecore:EClass platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//Stereotype"/>
   </eClassifiers>

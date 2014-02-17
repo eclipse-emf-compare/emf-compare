@@ -32,8 +32,10 @@ Export-Package: org.eclipse.emf.compare.uml2.internal;
  org.eclipse.emf.compare.uml2.internal.postprocessor.extension.clazz;x-internal:=true,
  org.eclipse.emf.compare.uml2.internal.postprocessor.extension.profile;x-internal:=true,
  org.eclipse.emf.compare.uml2.internal.postprocessor.extension.sequence;x-internal:=true,
+ org.eclipse.emf.compare.uml2.internal.postprocessor.extension.stereotype;x-internal:=true,
  org.eclipse.emf.compare.uml2.internal.postprocessor.extension.usecase;x-internal:=true,
  org.eclipse.emf.compare.uml2.internal.postprocessor.util;x-internal:=true,
+ org.eclipse.emf.compare.uml2.internal.spec;x-internal:=true,
  org.eclipse.emf.compare.uml2.internal.util;
   x-friends:="org.eclipse.emf.compare.uml2.edit,
    org.eclipse.emf.compare.uml2.rcp,

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.uml2.internal.postprocessor.extension.profile;
+package org.eclipse.emf.compare.uml2.internal.postprocessor.extension.stereotype;
 
 import static com.google.common.base.Predicates.instanceOf;
 

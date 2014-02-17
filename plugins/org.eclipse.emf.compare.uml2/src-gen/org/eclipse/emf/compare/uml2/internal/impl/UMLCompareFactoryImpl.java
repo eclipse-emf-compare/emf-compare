@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.uml2.internal.IntervalConstraintChange;
 import org.eclipse.emf.compare.uml2.internal.MessageChange;
 import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
-import org.eclipse.emf.compare.uml2.internal.StereotypePropertyChange;
+import org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeReferenceChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
@@ -74,7 +74,7 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 			case UMLComparePackage.EXECUTION_SPECIFICATION_CHANGE: return createExecutionSpecificationChange();
 			case UMLComparePackage.INTERVAL_CONSTRAINT_CHANGE: return createIntervalConstraintChange();
 			case UMLComparePackage.MESSAGE_CHANGE: return createMessageChange();
-			case UMLComparePackage.STEREOTYPE_PROPERTY_CHANGE: return createStereotypePropertyChange();
+			case UMLComparePackage.STEREOTYPE_ATTRIBUTE_CHANGE: return createStereotypeAttributeChange();
 			case UMLComparePackage.STEREOTYPE_APPLICATION_CHANGE: return createStereotypeApplicationChange();
 			case UMLComparePackage.STEREOTYPE_REFERENCE_CHANGE: return createStereotypeReferenceChange();
 			case UMLComparePackage.PROFILE_APPLICATION_CHANGE: return createProfileApplicationChange();
@@ -139,12 +139,13 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public StereotypePropertyChange createStereotypePropertyChange() {
-		StereotypePropertyChangeImpl stereotypePropertyChange = new StereotypePropertyChangeImpl();
-		return stereotypePropertyChange;
+	public StereotypeAttributeChange createStereotypeAttributeChange() {
+		StereotypeAttributeChangeImpl stereotypeAttributeChange = new StereotypeAttributeChangeImpl();
+		return stereotypeAttributeChange;
 	}
 
 	/**

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.uml2.tests.stereotypes;
 
 import static com.google.common.base.Predicates.and;
@@ -14,6 +24,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueNameMatche
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.UnmodifiableIterator;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,6 +37,8 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
+import org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange;
+import org.eclipse.emf.compare.uml2.internal.StereotypeReferenceChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractStaticProfileTest;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.data.static_.StaticStereotypeInputData;
@@ -1021,8 +1034,8 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 	private void testAB5(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
-		// We should have no less and no more than 3 differences
-		assertSame(Integer.valueOf(3), Integer.valueOf(differences.size()));
+		// We should have no less and no more than 4 differences
+		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
 
 		Predicate<? super Diff> changeAttributeDescription1 = null;
 		Predicate<? super Diff> changeAttributeDescription2 = null;
@@ -1034,15 +1047,23 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 
 		final Diff changeAttribute1 = Iterators.find(differences.iterator(), changeAttributeDescription1);
 		final Diff changeAttribute2 = Iterators.find(differences.iterator(), changeAttributeDescription2);
-		final Diff changeUMLStereotypeApplication = Iterators.find(differences.iterator(), and(
-				instanceOf(StereotypeApplicationChange.class), ofKind(DifferenceKind.CHANGE)));
+		final UnmodifiableIterator<Diff> changeUMLStereotypeProperties = Iterators.filter(differences
+				.iterator(), and(instanceOf(StereotypeAttributeChange.class), ofKind(DifferenceKind.CHANGE)));
+
+		assertTrue(changeUMLStereotypeProperties.hasNext());
+		final Diff changeUMLStereotypeProperty1 = changeUMLStereotypeProperties.next();
+		assertTrue(changeUMLStereotypeProperties.hasNext());
+		final Diff changeUMLStereotypeProperty2 = changeUMLStereotypeProperties.next();
+
 		assertNotNull(changeAttribute1);
 		assertNotNull(changeAttribute2);
-		assertNotNull(changeUMLStereotypeApplication);
+		assertNotNull(changeUMLStereotypeProperty1);
+		assertNotNull(changeUMLStereotypeProperty2);
 
-		assertSame(Integer.valueOf(2), Integer.valueOf(changeUMLStereotypeApplication.getRefinedBy().size()));
-		assertTrue(changeUMLStereotypeApplication.getRefinedBy().contains(changeAttribute1));
-		assertTrue(changeUMLStereotypeApplication.getRefinedBy().contains(changeAttribute2));
+		assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLStereotypeProperty1.getRefinedBy().size()));
+		assertTrue(changeUMLStereotypeProperty1.getRefinedBy().contains(changeAttribute1));
+		assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLStereotypeProperty2.getRefinedBy().size()));
+		assertTrue(changeUMLStereotypeProperty2.getRefinedBy().contains(changeAttribute2));
 
 		testIntersections(comparison);
 
@@ -1064,7 +1085,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 			addStereotypeRefDescription = and(instanceOf(ReferenceChange.class),
 					ofKind(DifferenceKind.DELETE), onFeature("manyValuedReference"));
 		}
-		changeUMLStereotypeDescription = and(instanceOf(StereotypeApplicationChange.class),
+		changeUMLStereotypeDescription = and(instanceOf(StereotypeReferenceChange.class),
 				ofKind(DifferenceKind.CHANGE));
 
 		final Diff addStereotypeRef = Iterators.find(differences.iterator(), addStereotypeRefDescription);
@@ -1091,7 +1112,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 
 		moveStereotypeRefDescription = and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE),
 				onFeature("manyValuedReference"));
-		changeUMLStereotypeDescription = and(instanceOf(StereotypeApplicationChange.class),
+		changeUMLStereotypeDescription = and(instanceOf(StereotypeReferenceChange.class),
 				ofKind(DifferenceKind.CHANGE));
 
 		final Diff moveStereotypeRef = Iterators.find(differences.iterator(), moveStereotypeRefDescription);
@@ -1125,7 +1146,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 					ofKind(DifferenceKind.CHANGE), onFeature("singleValuedReference"),
 					valueNameMatches("class1"));
 		}
-		changeUMLStereotypeDescription = and(instanceOf(StereotypeApplicationChange.class),
+		changeUMLStereotypeDescription = and(instanceOf(StereotypeReferenceChange.class),
 				ofKind(DifferenceKind.CHANGE));
 
 		final Diff changeStereotypeRef = Iterators.find(differences.iterator(),
@@ -1154,7 +1175,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 		changeStereotypeRefDescription = and(instanceOf(ReferenceChange.class),
 				ofKind(DifferenceKind.CHANGE), onFeature("singleValuedReference"), valueNameMatches("class0"));
 
-		changeUMLStereotypeDescription = and(instanceOf(StereotypeApplicationChange.class),
+		changeUMLStereotypeDescription = and(instanceOf(StereotypeReferenceChange.class),
 				ofKind(DifferenceKind.CHANGE));
 
 		final Diff changeStereotypeRef = Iterators.find(differences.iterator(),
@@ -1188,7 +1209,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 					ofKind(DifferenceKind.CHANGE), onFeature("singleValuedAttribute"), valueIs("oldValue"));
 		}
 
-		changeUMLStereotypeDescription = and(instanceOf(StereotypeApplicationChange.class),
+		changeUMLStereotypeDescription = and(instanceOf(StereotypeAttributeChange.class),
 				ofKind(DifferenceKind.CHANGE));
 
 		final Diff changeStereotypeRef = Iterators.find(differences.iterator(),

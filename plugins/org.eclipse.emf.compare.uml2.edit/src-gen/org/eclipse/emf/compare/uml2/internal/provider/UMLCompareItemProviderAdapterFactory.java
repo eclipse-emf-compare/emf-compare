@@ -217,25 +217,26 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.internal.StereotypePropertyChange} instances.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected StereotypePropertyChangeItemProvider stereotypePropertyChangeItemProvider;
+	protected StereotypeAttributeChangeItemProvider stereotypeAttributeChangeItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.internal.StereotypePropertyChange}.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createStereotypePropertyChangeAdapter() {
-		if (stereotypePropertyChangeItemProvider == null) {
-			stereotypePropertyChangeItemProvider = new StereotypePropertyChangeItemProvider(this);
+	public Adapter createStereotypeAttributeChangeAdapter() {
+		if (stereotypeAttributeChangeItemProvider == null) {
+			stereotypeAttributeChangeItemProvider = new StereotypeAttributeChangeItemProvider(this);
 		}
 
-		return stereotypePropertyChangeItemProvider;
+		return stereotypeAttributeChangeItemProvider;
 	}
 
 	/**
@@ -428,7 +429,7 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 		if (executionSpecificationChangeItemProvider != null) executionSpecificationChangeItemProvider.dispose();
 		if (intervalConstraintChangeItemProvider != null) intervalConstraintChangeItemProvider.dispose();
 		if (messageChangeItemProvider != null) messageChangeItemProvider.dispose();
-		if (stereotypePropertyChangeItemProvider != null) stereotypePropertyChangeItemProvider.dispose();
+		if (stereotypeAttributeChangeItemProvider != null) stereotypeAttributeChangeItemProvider.dispose();
 		if (stereotypeApplicationChangeItemProvider != null) stereotypeApplicationChangeItemProvider.dispose();
 		if (stereotypeReferenceChangeItemProvider != null) stereotypeReferenceChangeItemProvider.dispose();
 		if (profileApplicationChangeItemProvider != null) profileApplicationChangeItemProvider.dispose();

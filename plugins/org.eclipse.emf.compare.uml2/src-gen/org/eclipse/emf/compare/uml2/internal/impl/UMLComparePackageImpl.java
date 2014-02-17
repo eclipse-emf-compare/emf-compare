@@ -20,7 +20,7 @@ import org.eclipse.emf.compare.uml2.internal.IntervalConstraintChange;
 import org.eclipse.emf.compare.uml2.internal.MessageChange;
 import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
-import org.eclipse.emf.compare.uml2.internal.StereotypePropertyChange;
+import org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeReferenceChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
@@ -74,10 +74,11 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	private EClass messageChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass stereotypePropertyChangeEClass = null;
+	private EClass stereotypeAttributeChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -220,19 +221,12 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getStereotypePropertyChange() {
-		return stereotypePropertyChangeEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getStereotypePropertyChange_Stereotype() {
-		return (EReference)stereotypePropertyChangeEClass.getEStructuralFeatures().get(0);
+	public EClass getStereotypeAttributeChange() {
+		return stereotypeAttributeChangeEClass;
 	}
 
 	/**
@@ -344,8 +338,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 		messageChangeEClass = createEClass(MESSAGE_CHANGE);
 
-		stereotypePropertyChangeEClass = createEClass(STEREOTYPE_PROPERTY_CHANGE);
-		createEReference(stereotypePropertyChangeEClass, STEREOTYPE_PROPERTY_CHANGE__STEREOTYPE);
+		stereotypeAttributeChangeEClass = createEClass(STEREOTYPE_ATTRIBUTE_CHANGE);
 
 		stereotypeApplicationChangeEClass = createEClass(STEREOTYPE_APPLICATION_CHANGE);
 		createEReference(stereotypeApplicationChangeEClass, STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE);
@@ -399,7 +392,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 		executionSpecificationChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		intervalConstraintChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		messageChangeEClass.getESuperTypes().add(this.getUMLDiff());
-		stereotypePropertyChangeEClass.getESuperTypes().add(this.getUMLDiff());
+		stereotypeAttributeChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		stereotypeApplicationChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		stereotypeReferenceChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		profileApplicationChangeEClass.getESuperTypes().add(this.getUMLDiff());
@@ -419,8 +412,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 		initEClass(messageChangeEClass, MessageChange.class, "MessageChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(stereotypePropertyChangeEClass, StereotypePropertyChange.class, "StereotypePropertyChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getStereotypePropertyChange_Stereotype(), theUMLPackage.getStereotype(), null, "stereotype", null, 0, 1, StereotypePropertyChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(stereotypeAttributeChangeEClass, StereotypeAttributeChange.class, "StereotypeAttributeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(stereotypeApplicationChangeEClass, StereotypeApplicationChange.class, "StereotypeApplicationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(getStereotypeApplicationChange_Stereotype(), theUMLPackage.getStereotype(), null, "stereotype", null, 0, 1, StereotypeApplicationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$

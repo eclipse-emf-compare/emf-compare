@@ -22,7 +22,7 @@ import org.eclipse.emf.compare.uml2.internal.IntervalConstraintChange;
 import org.eclipse.emf.compare.uml2.internal.MessageChange;
 import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
-import org.eclipse.emf.compare.uml2.internal.StereotypePropertyChange;
+import org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeReferenceChange;
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
@@ -141,11 +141,11 @@ public class UMLCompareSwitch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case UMLComparePackage.STEREOTYPE_PROPERTY_CHANGE: {
-				StereotypePropertyChange stereotypePropertyChange = (StereotypePropertyChange)theEObject;
-				T result = caseStereotypePropertyChange(stereotypePropertyChange);
-				if (result == null) result = caseUMLDiff(stereotypePropertyChange);
-				if (result == null) result = caseDiff(stereotypePropertyChange);
+			case UMLComparePackage.STEREOTYPE_ATTRIBUTE_CHANGE: {
+				StereotypeAttributeChange stereotypeAttributeChange = (StereotypeAttributeChange)theEObject;
+				T result = caseStereotypeAttributeChange(stereotypeAttributeChange);
+				if (result == null) result = caseUMLDiff(stereotypeAttributeChange);
+				if (result == null) result = caseDiff(stereotypeAttributeChange);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -277,15 +277,17 @@ public class UMLCompareSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Stereotype Property Change</em>'.
-	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
-	 * the switch. <!-- end-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Stereotype Attribute Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Stereotype Property Change</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Stereotype Attribute Change</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseStereotypePropertyChange(StereotypePropertyChange object) {
+	public T caseStereotypeAttributeChange(StereotypeAttributeChange object) {
 		return null;
 	}
 

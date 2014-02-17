@@ -19,10 +19,8 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.compare.DifferenceKind;
 
-import org.eclipse.emf.compare.uml2.internal.StereotypePropertyChange;
-import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
+import org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange;
 
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemColorProvider;
 import org.eclipse.emf.edit.provider.IItemFontProvider;
@@ -33,12 +31,12 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.uml2.internal.StereotypePropertyChange} object.
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class StereotypePropertyChangeItemProvider
+public class StereotypeAttributeChangeItemProvider
 	extends UMLDiffItemProvider
 	implements
 		IEditingDomainItemProvider,
@@ -54,7 +52,7 @@ public class StereotypePropertyChangeItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public StereotypePropertyChangeItemProvider(AdapterFactory adapterFactory) {
+	public StereotypeAttributeChangeItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -69,42 +67,19 @@ public class StereotypePropertyChangeItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addStereotypePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Stereotype feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addStereotypePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_StereotypePropertyChange_stereotype_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_StereotypePropertyChange_stereotype_feature", "_UI_StereotypePropertyChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 UMLComparePackage.Literals.STEREOTYPE_PROPERTY_CHANGE__STEREOTYPE,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This returns StereotypePropertyChange.gif.
+	 * This returns StereotypeAttributeChange.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/StereotypePropertyChange")); //$NON-NLS-1$
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/StereotypeAttributeChange")); //$NON-NLS-1$
 	}
 
 	/**
@@ -115,11 +90,11 @@ public class StereotypePropertyChangeItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		DifferenceKind labelValue = ((StereotypePropertyChange)object).getKind();
+		DifferenceKind labelValue = ((StereotypeAttributeChange)object).getKind();
 		String label = labelValue == null ? null : labelValue.toString();
 		return label == null || label.length() == 0 ?
-			getString("_UI_StereotypePropertyChange_type") : //$NON-NLS-1$
-			getString("_UI_StereotypePropertyChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+			getString("_UI_StereotypeAttributeChange_type") : //$NON-NLS-1$
+			getString("_UI_StereotypeAttributeChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

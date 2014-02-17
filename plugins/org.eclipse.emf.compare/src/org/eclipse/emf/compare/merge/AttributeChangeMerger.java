@@ -23,8 +23,12 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
+import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EEnumLiteral;
+import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.impl.DynamicEObjectImpl;
 
 /**
  * This specific implementation of {@link AbstractMerger} will be used to merge attribute changes.
@@ -356,7 +360,17 @@ public class AttributeChangeMerger extends AbstractMerger {
 			originContainer = match.getLeft();
 		}
 
-		final Object targetValue = safeEGet(originContainer, attribute);
+		final Object targetValue;
+		final Object value = safeEGet(originContainer, attribute);
+
+		// Case of change of EnumLiteral of an attribute of a DynamicEObject : we need to retrieve the
+		// EnumLiteral instance of the target which is not the same than the source.
+		if (expectedContainer instanceof DynamicEObjectImpl && value instanceof EEnumLiteral) {
+			targetValue = ((EEnum)((EEnumLiteral)safeEGet(expectedContainer, attribute)).eContainer())
+					.getEEnumLiteral(((ENamedElement)value).getName());
+		} else {
+			targetValue = value;
+		}
 
 		// Though not the "default value", we consider that an empty string is an unset attribute.
 		final Object defaultValue = attribute.getDefaultValue();

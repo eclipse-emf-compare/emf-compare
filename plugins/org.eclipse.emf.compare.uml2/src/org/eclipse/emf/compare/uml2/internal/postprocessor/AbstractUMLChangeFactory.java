@@ -556,7 +556,7 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 	 *            The difference.
 	 * @return True if it is related to a CHANGE in an ADD/DELETE.
 	 */
-	private boolean isChangeOnAddOrDelete(Diff input) {
+	protected boolean isChangeOnAddOrDelete(Diff input) {
 		if (getRelatedExtensionKind(input) == DifferenceKind.CHANGE) {
 			final Comparison comparison = input.getMatch().getComparison();
 			final EObject discriminant = getDiscriminant(input);
@@ -581,8 +581,9 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 	 */
 	private boolean isChangeOnAddOrDelete(Diff input, final Comparison comparison, final EObject discriminant) {
 		boolean result = false;
-		if (Iterables.any(comparison.getMatch(discriminant).getDifferences(),
-				instanceOf(ResourceAttachmentChange.class))) {
+		Match match = comparison.getMatch(discriminant);
+		if (match != null
+				&& Iterables.any(match.getDifferences(), instanceOf(ResourceAttachmentChange.class))) {
 			result = true;
 		}
 		if (!result) {
