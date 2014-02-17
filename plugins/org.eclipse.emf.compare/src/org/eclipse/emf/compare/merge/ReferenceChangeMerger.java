@@ -11,7 +11,9 @@
 package org.eclipse.emf.compare.merge;
 
 import static com.google.common.collect.Iterators.filter;
+import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEGet;
 import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEIsSet;
+import static org.eclipse.emf.compare.utils.ReferenceUtil.safeESet;
 
 import com.google.common.collect.Iterators;
 
@@ -85,7 +87,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 				}
 				// Is it an unset?
 				if (container != null) {
-					final EObject leftValue = (EObject)container.eGet(referenceChange.getReference(), false);
+					final EObject leftValue = (EObject)safeEGet(container, referenceChange.getReference());
 					if (leftValue == null) {
 						// Value has been unset in the right, and we are merging towards right.
 						// We need to re-add this element
@@ -137,8 +139,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 				}
 				// Is it an unset?
 				if (container != null) {
-					final EObject leftValue = (EObject)ReferenceUtil.safeEGet(container, referenceChange
-							.getReference());
+					final EObject leftValue = (EObject)safeEGet(container, referenceChange.getReference());
 					if (leftValue == null) {
 						removeFromTarget(referenceChange, rightToLeft);
 					} else {
@@ -211,10 +212,10 @@ public class ReferenceChangeMerger extends AbstractMerger {
 			// We need to look it up
 			if (reference.isMany()) {
 				@SuppressWarnings("unchecked")
-				final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(reference);
+				final List<EObject> targetList = (List<EObject>)safeEGet(expectedContainer, reference);
 				expectedValue = findMatchIn(comparison, targetList, diff.getValue());
 			} else {
-				expectedValue = (EObject)expectedContainer.eGet(reference);
+				expectedValue = (EObject)safeEGet(expectedContainer, reference);
 			}
 		} else {
 			if (rightToLeft) {
@@ -254,7 +255,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 			 * However, it could still have been located "before" its new index, in which case we need to take
 			 * it into account.
 			 */
-			final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(reference);
+			final List<EObject> targetList = (List<EObject>)safeEGet(expectedContainer, reference);
 			final int currentIndex = targetList.indexOf(expectedValue);
 			if (insertionIndex > currentIndex && currentIndex >= 0) {
 				insertionIndex--;
@@ -285,7 +286,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 				}
 			}
 		} else {
-			expectedContainer.eSet(reference, expectedValue);
+			safeESet(expectedContainer, reference, expectedValue);
 		}
 	}
 
@@ -364,10 +365,10 @@ public class ReferenceChangeMerger extends AbstractMerger {
 		if (reference.isMany()) {
 			final int insertionIndex = findInsertionIndex(comparison, diff, rightToLeft);
 
-			final List<EObject> targetList = (List<EObject>)expectedContainer.eGet(reference);
+			final List<EObject> targetList = (List<EObject>)safeEGet(expectedContainer, reference);
 			addAt(targetList, expectedValue, insertionIndex);
 		} else {
-			expectedContainer.eSet(reference, expectedValue);
+			safeESet(expectedContainer, reference, expectedValue);
 		}
 
 		if (reference.isContainment()) {
@@ -432,7 +433,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 		if (valueMatch == null) {
 			// value is out of the scope... we need to look it up
 			if (reference.isMany()) {
-				final List<EObject> targetList = (List<EObject>)currentContainer.eGet(reference);
+				final List<EObject> targetList = (List<EObject>)safeEGet(currentContainer, reference);
 				expectedValue = findMatchIn(comparison, targetList, diff.getValue());
 			} else {
 				// the value will not be needed anyway
@@ -459,7 +460,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 			 * TODO if the same value appears twice, should we try and find the one that has actually been
 			 * deleted? Can it happen? For now, remove the first occurence we find.
 			 */
-			final List<EObject> targetList = (List<EObject>)currentContainer.eGet(reference);
+			final List<EObject> targetList = (List<EObject>)safeEGet(currentContainer, reference);
 			targetList.remove(expectedValue);
 		} else {
 			currentContainer.eUnset(reference);
@@ -501,7 +502,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 				|| !safeEIsSet(originContainer, reference)) {
 			targetContainer.eUnset(reference);
 		} else {
-			final EObject originalValue = (EObject)ReferenceUtil.safeEGet(originContainer, reference);
+			final EObject originalValue = (EObject)safeEGet(originContainer, reference);
 			final Match valueMatch = match.getComparison().getMatch(originalValue);
 			final EObject expectedValue;
 			if (valueMatch == null) {
@@ -512,7 +513,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 			} else {
 				expectedValue = valueMatch.getRight();
 			}
-			targetContainer.eSet(reference, expectedValue);
+			safeESet(targetContainer, reference, expectedValue);
 		}
 	}
 
@@ -612,7 +613,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 			 * actually any work to do. Use the real list now.
 			 */
 			@SuppressWarnings("unchecked")
-			final List<EObject> changedList = (List<EObject>)targetContainer.eGet(feature);
+			final List<EObject> changedList = (List<EObject>)safeEGet(targetContainer, feature);
 			if (changedList instanceof EList<?>) {
 				if (insertionIndex > changedList.size()) {
 					((EList<EObject>)changedList).move(changedList.size() - 1, newValue);
