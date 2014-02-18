@@ -14,8 +14,10 @@ import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.transform;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -169,6 +171,11 @@ public abstract class AbstractEMFComparePerformanceTest {
 			PrintWriter writer = null;
 			try {
 				writer = new PrintWriter(new BufferedWriter(new FileWriter(output, true), 16384));
+				BufferedReader br = new BufferedReader(new FileReader(output));
+				if (br.readLine() == null) {
+					br.close();
+					writer.println("Date, Small UML, Nominal UML, Large UML");
+				}
 				writer.print(timestamp + ",");
 				Collection<Measure> measures = entry.getValue();
 				ImmutableListMultimap<Scenario, Measure> measuresByScenario = Multimaps.index(measures, MEASURE__SCENARIO);
@@ -203,6 +210,7 @@ public abstract class AbstractEMFComparePerformanceTest {
 							})
 						);
 				writer.println(joinedMeasure);
+				
 			} catch (IOException e) {
 				Throwables.propagate(e);
 			} finally {
