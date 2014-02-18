@@ -25,7 +25,6 @@ import java.util.Set;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
@@ -43,17 +42,18 @@ import org.eclipse.emf.compare.rcp.internal.tracer.TracingConstant;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
-import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -65,6 +65,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
@@ -92,7 +93,7 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	private static final String DEFAULT_ENGINE_ID = ""; //$NON-NLS-1$
 
 	/** Pointer to list viewers for each tab */
-	private Map<String, StructuredViewer> viewerFromTabs = new HashMap<String, StructuredViewer>();
+	private Map<String, CheckboxTableViewer> viewerFromTabs = new HashMap<String, CheckboxTableViewer>();
 
 	/** Label of the Diff engine tab */
 	private static final String DIFFERENCES_ENGINE_TAB_LABEL = EMFCompareRCPUIMessages
@@ -114,6 +115,32 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	private static final String MATCH_ENGINE_TAB_LABEL = EMFCompareRCPUIMessages
 			.getString("EnginesPreferencePage.MATCH_ENGINE_TAB_LABEL"); //$NON-NLS-1$
 
+	/** Match Engine tab descriptor. */
+	private static final String MATCH_ENGINE_INTRO_TEXT = EMFCompareRCPUIMessages
+			.getString("EnginesPreferencePagestatic.MATCH_ENGINE_INTRO_TEXT"); //$NON-NLS-1$
+
+	/** Diff Engine tab descritpor. */
+	private static final String DIFF_ENGINE_INTRO_TEXT = EMFCompareRCPUIMessages
+			.getString("EnginesPreferencePagestatic.DIFF_ENGINE_INTRO_TEXT"); //$NON-NLS-1$
+
+	/** Equi Engine tab descriptor. */
+	private static final String EQUI_ENGINE_INTRO_TEXT = EMFCompareRCPUIMessages
+			.getString("EnginesPreferencePagestatic.EQUI_ENGINE_INTRO_TEXT"); //$NON-NLS-1$
+
+	/** Req Engine tab descriptor. */
+	private static final String REQ_ENGINE_INTRO_TEXT = EMFCompareRCPUIMessages
+			.getString("EnginesPreferencePagestatic.REQ_ENGINE_INTRO_TEXT"); //$NON-NLS-1$
+
+	private static final String INCORRECT_SELECTION_TITLE = EMFCompareRCPUIMessages
+			.getString("EnginesPreferencePagestatic.INCORRECT_SELECTION_TITLE");//$NON-NLS-1$
+
+	/** Conflict Detector tab Descriptor. */
+	private static final String CONFLICT_DETECTOR_INTRO_TEXT = EMFCompareRCPUIMessages
+			.getString("EnginesPreferencePagestatic.CONFLICT_DETECTOR_INTRO_TEXT"); //$NON-NLS-1$
+
+	private static final String INCORRECT_SELECTION_MESSAGE = EMFCompareRCPUIMessages
+			.getString("EnginesPreferencePagestatic.INCORRECT_SELECTION_MESSAGE"); //$NON-NLS-1$
+
 	private static final String DATA_FIELD_NAME = "currentSelection"; //$NON-NLS-1$
 
 	/** Data regarding the Difference selected engine */
@@ -129,7 +156,7 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	private SingleValueHolder<IConflictDetector> conflictsDetectorData = new SingleValueHolder<IConflictDetector>();
 
 	/** Data regarding the selected match engine factories. */
-	private Multipledata<IMatchEngine.Factory> matchEnginesData = new Multipledata<IMatchEngine.Factory>();
+	private MultipleValueHolder<IMatchEngine.Factory> matchEnginesData = new MultipleValueHolder<IMatchEngine.Factory>();
 
 	public EnginesPreferencePage() {
 		super();
@@ -160,85 +187,124 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		// Create match engine tab
 		IItemRegistry<Factory> matchEngineFactoryDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
 				.getMatchEngineFactoryDescriptorRegistry();
-		createMatchEnginefactoryTab(tabFolder, MATCH_ENGINE_TAB_LABEL, matchEngineFactoryDescriptorRegistry,
-				DATA_FIELD_NAME, EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, matchEnginesData,
-				matchEngineFactoryDescriptorRegistry.getItemDescriptor(MatchEngineFactoryImpl.class
-						.getCanonicalName()));
+		IItemDescriptor<Factory> defaultMatchEngineDescriptor = matchEngineFactoryDescriptorRegistry
+				.getItemDescriptor(MatchEngineFactoryImpl.class.getCanonicalName());
+		createMultipleValueSelectorTab(tabFolder, MATCH_ENGINE_TAB_LABEL, MATCH_ENGINE_INTRO_TEXT,
+				matchEngineFactoryDescriptorRegistry, DATA_FIELD_NAME,
+				EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, matchEnginesData,
+				defaultMatchEngineDescriptor);
 		// Create diff engine tab
-		createEngineTab(tabFolder, DIFFERENCES_ENGINE_TAB_LABEL, EMFCompareRCPPlugin.getDefault()
-				.getDiffEngineDescriptorRegistry(), DATA_FIELD_NAME, EMFComparePreferences.DIFF_ENGINES,
-				diffEngineData);
+		IItemRegistry<IDiffEngine> diffEngineDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
+				.getDiffEngineDescriptorRegistry();
+		createSingleValueSelectorTab(tabFolder, DIFFERENCES_ENGINE_TAB_LABEL, DIFF_ENGINE_INTRO_TEXT,
+				diffEngineDescriptorRegistry, EMFComparePreferences.DIFF_ENGINES, diffEngineData);
 		// Create equi engine tab
-		createEngineTab(tabFolder, EQUIVALENCES_ENGINE_TAB_LABEL, EMFCompareRCPPlugin.getDefault()
-				.getEquiEngineDescriptorRegistry(), DATA_FIELD_NAME, EMFComparePreferences.EQUI_ENGINES,
-				equiEngineData);
+		IItemRegistry<IEquiEngine> equiEngineDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
+				.getEquiEngineDescriptorRegistry();
+		createSingleValueSelectorTab(tabFolder, EQUIVALENCES_ENGINE_TAB_LABEL, EQUI_ENGINE_INTRO_TEXT,
+				equiEngineDescriptorRegistry, EMFComparePreferences.EQUI_ENGINES, equiEngineData);
 		// Create req engine tab
-		createEngineTab(tabFolder, REQUIREMENT_ENGINE_TAB_LABEL, EMFCompareRCPPlugin.getDefault()
-				.getReqEngineDescriptorRegistry(), DATA_FIELD_NAME, EMFComparePreferences.REQ_ENGINES,
-				reqEngineData);
+		IItemRegistry<IReqEngine> reqEngineDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
+				.getReqEngineDescriptorRegistry();
+		createSingleValueSelectorTab(tabFolder, REQUIREMENT_ENGINE_TAB_LABEL, REQ_ENGINE_INTRO_TEXT,
+				reqEngineDescriptorRegistry, EMFComparePreferences.REQ_ENGINES, reqEngineData);
 		// Create conflicts detectors tab
-		createEngineTab(tabFolder, CONFLICT_DETECTOR_TAB_LABEL, EMFCompareRCPPlugin.getDefault()
-				.getConflictDetectorDescriptorRegistry(), DATA_FIELD_NAME,
-				EMFComparePreferences.CONFLICTS_DETECTOR, conflictsDetectorData);
+		IItemRegistry<IConflictDetector> conflictDetectorDescriptorRegistry = EMFCompareRCPPlugin
+				.getDefault().getConflictDetectorDescriptorRegistry();
+		createSingleValueSelectorTab(tabFolder, CONFLICT_DETECTOR_TAB_LABEL, CONFLICT_DETECTOR_INTRO_TEXT,
+				conflictDetectorDescriptorRegistry, EMFComparePreferences.CONFLICTS_DETECTOR,
+				conflictsDetectorData);
 
 		return container;
 	}
 
 	/**
-	 * Create a tab using an {@link IItemRegistry}
+	 * Create a tab using an {@link IItemRegistry} for a single value selection
 	 * 
 	 * @param tabFolder
 	 *            Holder tab folder
 	 * @param label
 	 *            Label of the new tab
+	 * @param tabDescriptor
+	 *            Tab descriptor label
 	 * @param registry
 	 *            {@link IItemRegistry} used to fill the tab
-	 * @param engineBindingProperty
-	 *            Name of the property in {@link SingleValueHolder} that represent the type of engine
 	 * @param preferenceKey
 	 *            The preference key of the engine type
 	 * @param dataObject
+	 *            Object that hold the UI data
+	 * @param <T>
+	 *            Type of descriptor
 	 */
-	private <T> void createEngineTab(TabFolder tabFolder, String label, IItemRegistry<T> registry,
-			String engineBindingProperty, String preferenceKey, SingleValueHolder<T> dataObject) {
+	private <T> void createSingleValueSelectorTab(TabFolder tabFolder, String label, String tabDescriptor,
+			IItemRegistry<T> registry, String preferenceKey, SingleValueHolder<T> dataObject) {
 		TabItem tbtmMain = new TabItem(tabFolder, SWT.NONE);
 		tbtmMain.setText(label);
 		// Parent container
-		Composite composite = new Composite(tabFolder, SWT.NONE);
-		composite.setLayout(new GridLayout(2, false));
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tbtmMain.setControl(composite);
-		// Engine chooser composite
-		Composite comboBoxCompsite = new Composite(composite, SWT.NONE);
+		Composite tabComposite = new Composite(tabFolder, SWT.NONE);
+		tabComposite.setLayout(new GridLayout(1, true));
+		tbtmMain.setControl(tabComposite);
+		// Introduction text
+		Label introductionText = new Label(tabComposite, SWT.WRAP);
+		introductionText.setText(tabDescriptor);
+		// Selector composite
+		Composite selectorComposite = new Composite(tabComposite, SWT.NONE);
+		selectorComposite.setLayout(new GridLayout(2, true));
+		selectorComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		// Item chooser composite
+		Composite comboBoxCompsite = new Composite(selectorComposite, SWT.NONE);
 		comboBoxCompsite.setLayout(new GridLayout(1, false));
-		comboBoxCompsite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 1, 1));
-		// Descriptor engine Text
-		Text engineDescriptionText = createDescriptionComposite(composite);
+		comboBoxCompsite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		// Descriptor item Text
+		Text engineDescriptionText = createDescriptionComposite(selectorComposite);
 
-		fillEngineComposite(registry, engineBindingProperty, comboBoxCompsite, engineDescriptionText,
-				preferenceKey, dataObject);
+		fillEngineComposite(registry, comboBoxCompsite, engineDescriptionText, preferenceKey, dataObject);
 
 	}
 
-	private <T> void createMatchEnginefactoryTab(TabFolder tabFolder, String label,
-			IItemRegistry<T> registry, String engineBindingProperty, String preferenceKey,
-			Multipledata<T> dataObject, IItemDescriptor<T> defaultEngine) {
+	/**
+	 * Create a tab using an {@link IItemRegistry} for multiple value selection
+	 * 
+	 * @param tabFolder
+	 *            Holding tab
+	 * @param tabLabel
+	 *            Tab label
+	 * @param introText
+	 *            Description of the tab content
+	 * @param registry
+	 *            Registry of item use as input
+	 * @param bindingProperty
+	 *            Property name use to bind data to dataObject
+	 * @param preferenceKey
+	 *            Preference key for this tab
+	 * @param dataObject
+	 *            Data object use to hold information
+	 * @param defaultSelection
+	 *            Default selection.
+	 */
+	private <T> void createMultipleValueSelectorTab(TabFolder tabFolder, String tabLabel, String introText,
+			IItemRegistry<T> registry, String bindingProperty, String preferenceKey,
+			MultipleValueHolder<T> dataObject, IItemDescriptor<T> defaultSelection) {
 		TabItem tbtmMain = new TabItem(tabFolder, SWT.NONE);
-		tbtmMain.setText(label);
+		tbtmMain.setText(tabLabel);
+		Composite tabComposite = new Composite(tabFolder, SWT.NONE);
+		tbtmMain.setControl(tabComposite);
+		Label introductionText = new Label(tabComposite, SWT.WRAP);
+		introductionText.setText(introText);
+		tabComposite.setLayout(new GridLayout(1, true));
 		// Parent container
-		Composite composite = new Composite(tabFolder, SWT.NONE);
-		composite.setLayout(new GridLayout(2, false));
+		Composite composite = new Composite(tabComposite, SWT.NONE);
+		composite.setLayout(new GridLayout(2, true));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tbtmMain.setControl(composite);
 		// Engine chooser composite
-		Composite comboBoxCompsite = new Composite(composite, SWT.NONE);
-		comboBoxCompsite.setLayout(new GridLayout(1, false));
-		comboBoxCompsite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 1, 1));
+		Composite viewerComposite = new Composite(composite, SWT.NONE);
+		viewerComposite.setLayout(new GridLayout(1, false));
+		viewerComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		// Descriptor engine Text
 		Text engineDescriptionText = createDescriptionComposite(composite);
 
-		fillMatchEngineFactoryComposite(registry, engineBindingProperty, comboBoxCompsite,
-				engineDescriptionText, preferenceKey, dataObject, defaultEngine);
+		fillMatchEngineFactoryComposite(registry, bindingProperty, viewerComposite, engineDescriptionText,
+				preferenceKey, dataObject, defaultSelection);
 
 	}
 
@@ -253,10 +319,12 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		Group descriptionComposite = new Group(composite, SWT.BORDER);
 		descriptionComposite.setText(DESCRIPTION_Label);
 		descriptionComposite.setLayout(new GridLayout(1, false));
-		descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1));
-		Text engineDescriptionText = new Text(descriptionComposite, SWT.WRAP);
+		descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		Text engineDescriptionText = new Text(descriptionComposite, SWT.WRAP | SWT.MULTI);
 		engineDescriptionText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-		engineDescriptionText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1));
+		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		layoutData.widthHint = 300;
+		engineDescriptionText.setLayoutData(layoutData);
 		engineDescriptionText.setEditable(false);
 		return engineDescriptionText;
 	}
@@ -278,33 +346,65 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 * @param preferenceKey
 	 *            Preference key link to this tab
 	 */
-	private <T> void fillEngineComposite(IItemRegistry<T> registry, String engineBindingProperty,
-			Composite comboBoxComposite, final Text descriptionText, String preferenceKey,
-			SingleValueHolder<T> dataObject) {
-		ListViewer descriptorViewer = new ListViewer(comboBoxComposite);
+	private <T> void fillEngineComposite(IItemRegistry<T> registry, Composite comboBoxComposite,
+			final Text descriptionText, String preferenceKey, final SingleValueHolder<T> dataObject) {
+
+		final CheckboxTableViewer descriptorViewer = CheckboxTableViewer.newCheckList(comboBoxComposite,
+				SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE);
 		descriptorViewer.addSelectionChangedListener(new DescriptionListener(descriptionText));
 		descriptorViewer.setData(DESCRIPTION_TEXT_DATA_KEY, descriptionText);
 		descriptorViewer.setContentProvider(ArrayContentProvider.getInstance());
 		descriptorViewer.setLabelProvider(descriptorLabelProvider);
+		GridData gd = new GridData(GridData.FILL_BOTH);
+		descriptorViewer.getControl().setLayoutData(gd);
+		// Only one check at a time
+		descriptorViewer.addCheckStateListener(new ICheckStateListener() {
+			public void checkStateChanged(CheckStateChangedEvent event) {
+				Object element = event.getElement();
+				if (event.getChecked()) {
+					if (element instanceof IItemDescriptor<?>) {
+						@SuppressWarnings("unchecked")
+						IItemDescriptor<T> descriptor = (IItemDescriptor<T>)element;
+						dataObject.setCurrentSelection(descriptor);
+					}
+					descriptorViewer.setCheckedElements(new Object[] {element });
+				} else {
+					// Prevent from nothing checked
+					if (descriptorViewer.getCheckedElements().length == 0) {
+						descriptorViewer.setCheckedElements(new Object[] {element });
+						MessageDialog.openWarning(getShell(), INCORRECT_SELECTION_TITLE,
+								INCORRECT_SELECTION_MESSAGE);
+					}
+				}
+
+			}
+		});
 		// Save for reset default
 		viewerFromTabs.put(preferenceKey, descriptorViewer);
 		List<IItemDescriptor<T>> itemDescriptors = registry.getItemDescriptors();
 		Collections.sort(itemDescriptors, Collections.reverseOrder());
 		descriptorViewer.setInput(itemDescriptors);
-		bindEngineData(engineBindingProperty, descriptorViewer, dataObject);
+		// Init default value
+		IItemDescriptor<T> defaultEngine = ItemUtil.getDefaultItemDescriptor(registry, preferenceKey,
+				EMFCompareRCPPlugin.getDefault().getEMFComparePreferences());
+		descriptorViewer.setSelection(new StructuredSelection(defaultEngine), true);
+		descriptorViewer.setCheckedElements(new Object[] {defaultEngine });
+		dataObject.setCurrentSelection(defaultEngine);
+		descriptionText.setText(defaultEngine.getDescription());
 
-		initdefaultDescriptor(registry, descriptionText, preferenceKey, descriptorViewer);
 	}
 
 	private <T> void fillMatchEngineFactoryComposite(IItemRegistry<T> registry, String engineBindingProperty,
 			Composite comboBoxComposite, final Text descriptionText, String preferenceKey,
-			Multipledata<T> dataObject, IItemDescriptor<T> defaultDescriptor) {
+			MultipleValueHolder<T> dataObject, IItemDescriptor<T> defaultDescriptor) {
 		CheckboxTableViewer descriptorViewer = CheckboxTableViewer.newCheckList(comboBoxComposite, SWT.BORDER
 				| SWT.V_SCROLL | SWT.FULL_SELECTION);
 		descriptorViewer.addSelectionChangedListener(new DescriptionListener(descriptionText));
 		descriptorViewer.setData(DESCRIPTION_TEXT_DATA_KEY, descriptionText);
 		descriptorViewer.setContentProvider(ArrayContentProvider.getInstance());
 		descriptorViewer.setLabelProvider(descriptorLabelProvider);
+		GridData gd = new GridData(GridData.FILL_BOTH);
+		descriptorViewer.getControl().setLayoutData(gd);
 		// Save for reset default
 		viewerFromTabs.put(preferenceKey, descriptorViewer);
 		// Filter input with input with higher rank than default item descriptor
@@ -334,54 +434,16 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	}
 
 	private <T> void bindMultipleData(String engineBindingProperty, CheckboxTableViewer descriptorViewer,
-			final Multipledata<T> dataObject) {
+			final MultipleValueHolder<T> dataObject) {
 		DataBindingContext ctx = new DataBindingContext();
 		// Bind the button with the corresponding field in data
 		IViewerObservableSet target = ViewersObservables.observeCheckedElements(descriptorViewer,
 				IItemDescriptor.class);
 		// IObservableValue target = WidgetProperties.selection().observe(viewer);
-		IObservableSet model = PojoProperties.set(Multipledata.class, engineBindingProperty).observe(
+		IObservableSet model = PojoProperties.set(MultipleValueHolder.class, engineBindingProperty).observe(
 				dataObject);
 
 		ctx.bindSet(target, model);
-
-	}
-
-	/**
-	 * Initialize UI to reflect actual preferences
-	 * 
-	 * @param registry
-	 * @param descriptionText
-	 * @param preferenceKey
-	 * @param descriptorViewer
-	 */
-	private void initdefaultDescriptor(IItemRegistry<?> registry, final Text descriptionText,
-			String preferenceKey, ListViewer descriptorViewer) {
-		IItemDescriptor<?> defaultEngine = ItemUtil.getDefaultItemDescriptor(registry, preferenceKey,
-				EMFCompareRCPPlugin.getDefault().getEMFComparePreferences());
-		descriptorViewer.setSelection(new StructuredSelection(defaultEngine), true);
-		descriptionText.setText(defaultEngine.getDescription());
-	}
-
-	/**
-	 * Bind selection to one {@link SingleValueHolder} field.
-	 * 
-	 * @param engineBindingProperty
-	 *            Name of the field of {@link SingleValueHolder} that represent this engine descriptor
-	 * @param engineDescriptor
-	 *            {@link IItemDescriptor} linked to this button
-	 * @param engineButton
-	 *            button to bind
-	 */
-	private <T> void bindEngineData(String engineBindingProperty, ListViewer viewer,
-			SingleValueHolder<T> dataObject) {
-		DataBindingContext ctx = new DataBindingContext();
-		// Bind the button with the corresponding field in data
-		IViewerObservableValue target = ViewersObservables.observeSinglePostSelection(viewer);
-		// IObservableValue target = WidgetProperties.selection().observe(viewer);
-		IObservableValue model = PojoProperties.value(SingleValueHolder.class, engineBindingProperty)
-				.observe(dataObject);
-		ctx.bindValue(target, model);
 
 	}
 
@@ -457,13 +519,14 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 */
 	private <T> void resetDefaultPreferencesToHighestRank(IItemRegistry<T> registry, String preferenceKey,
 			SingleValueHolder<T> dataObject) {
-		StructuredViewer descriptorViewer = viewerFromTabs.get(preferenceKey);
+		CheckboxTableViewer descriptorViewer = viewerFromTabs.get(preferenceKey);
 		if (descriptorViewer != null) {
 			Object _descriptionText = descriptorViewer.getData(DESCRIPTION_TEXT_DATA_KEY);
 			if (_descriptionText instanceof Text) {
 				Text descriptionText = (Text)_descriptionText;
 				IItemDescriptor<T> defaultEngine = registry.getHighestRankingDescriptor();
 				descriptorViewer.setSelection(new StructuredSelection(defaultEngine), true);
+				descriptorViewer.setCheckedElements(new Object[] {defaultEngine });
 				descriptionText.setText(defaultEngine.getDescription());
 				dataObject.setCurrentSelection(defaultEngine);
 			}
@@ -471,7 +534,7 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	}
 
 	private <T> void resetDefaultPreferencesToAll(IItemRegistry<T> registry, String preferenceKey,
-			Multipledata<T> dataObject) {
+			MultipleValueHolder<T> dataObject) {
 		StructuredViewer descriptorViewer = viewerFromTabs.get(preferenceKey);
 		if (descriptorViewer instanceof CheckboxTableViewer) {
 			CheckboxTableViewer checkBoxViewer = (CheckboxTableViewer)descriptorViewer;
@@ -565,9 +628,8 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
 	 */
 	private static class SingleValueHolder<T> {
-		/** Name of the diff engine field */
 
-		/** Current selected diff engine */
+		/** Current value */
 		public IItemDescriptor<T> currentSelection;
 
 		public IItemDescriptor<T> getCurrentSelection() {
@@ -581,12 +643,12 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	}
 
 	/**
-	 * Data object use to store multiplue values data
+	 * Data object use to store multiple values data
 	 * 
 	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
 	 * @param <T>
 	 */
-	private class Multipledata<T> {
+	private class MultipleValueHolder<T> {
 
 		public Set<IItemDescriptor<T>> currentSelection = new HashSet<IItemDescriptor<T>>();
 
@@ -597,7 +659,6 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		public void setCurrentSelection(Set<IItemDescriptor<T>> currentSelection) {
 			this.currentSelection = currentSelection;
 		}
-
 	}
 
 }
