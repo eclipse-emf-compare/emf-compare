@@ -321,7 +321,8 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private <T> Set<IItemDescriptor<T>> getActiveFactory(IItemRegistry<T> registry, String preferenceKey) {
 		List<IItemDescriptor<T>> itemsDescriptor = ItemUtil.getItemsDescriptor(registry, preferenceKey,
-				InstanceScope.INSTANCE.getNode(EMFCompareRCPPlugin.PLUGIN_ID));
+				EMFCompareRCPPlugin.getDefault().getEMFComparePreferences());
+
 		if (itemsDescriptor == null) {
 			itemsDescriptor = Collections.emptyList();
 		}
