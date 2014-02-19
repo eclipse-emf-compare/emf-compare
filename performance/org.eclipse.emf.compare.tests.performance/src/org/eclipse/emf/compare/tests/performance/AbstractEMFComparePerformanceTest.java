@@ -198,7 +198,7 @@ public abstract class AbstractEMFComparePerformanceTest {
 												case MEMORY:
 													return nf.format(SizeUnit.MEBI.convert(d)).replaceAll(",", "");
 												case TIME:
-													return Long.toString(TimeUnit.SECONDS.convert(d.longValue(), TimeUnit.MILLISECONDS));
+													return nf.format(d).replaceAll(",", "");
 												}
 												return "";
 											}
