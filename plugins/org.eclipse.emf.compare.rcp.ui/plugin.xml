@@ -17,6 +17,7 @@
    <extension-point id="filters" name="EMF Compare Filters" schema="schema/filters.exsd"/>
    <extension-point id="accessorFactory" name="Accessor Factory" schema="schema/accessorFactory.exsd"/>
    <extension-point id="differenceGroupExtender" name="EMF Compare Difference Group Extender" schema="schema/differenceGroupExtender.exsd"/>
+   <extension-point id="matchEngineFactoryConfigurationUI" name="matchEngineFactoryConfigurationUI" schema="schema/matchEngineFactoryConfigurationUI.exsd"/>
    <extension
          point="org.eclipse.emf.compare.rcp.ui.groups">
       <group
@@ -178,4 +179,11 @@
             name="Engines">
       </page>
    </extension>
+   <extension
+       point="org.eclipse.emf.compare.rcp.ui.matchEngineFactoryConfigurationUI">
+    <configurator
+          itemToConfigure="org.eclipse.emf.compare.rcp.internal.match.DefaultRCPMatchEngineFactory"
+          uiProvider="org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.match.DefaultMatchEngineConfiguatorUIFactory">
+    </configurator>
+ </extension>
 </plugin>

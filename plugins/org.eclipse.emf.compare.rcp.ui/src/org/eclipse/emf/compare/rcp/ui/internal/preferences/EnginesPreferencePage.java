@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.preferences;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.core.databinding.DataBindingContext;
@@ -32,14 +34,17 @@ import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.equi.IEquiEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine.Factory;
-import org.eclipse.emf.compare.match.impl.MatchEngineFactoryImpl;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.engine.IItemDescriptor;
 import org.eclipse.emf.compare.rcp.internal.engine.IItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.engine.impl.ItemUtil;
+import org.eclipse.emf.compare.rcp.internal.match.DefaultRCPMatchEngineFactory;
 import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
 import org.eclipse.emf.compare.rcp.internal.tracer.TracingConstant;
+import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.AbstractConfigurationUI;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.IConfigurationUIFactory;
 import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -58,6 +63,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -72,6 +78,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.osgi.service.prefs.BackingStoreException;
+import org.osgi.service.prefs.Preferences;
 
 /**
  * Preference page for engines preferences
@@ -80,83 +88,26 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
  */
 public class EnginesPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
-	/** Label of the group holding the text description */
-	private static final String DESCRIPTION_Label = "Description"; //$NON-NLS-1$
-
-	/** Key used to map button to the {@link Text} widget that display the description */
-	private static final String DESCRIPTION_TEXT_DATA_KEY = "descriptionText"; //$NON-NLS-1$
-
 	/** Label provider for {@link IItemDescriptor} */
 	private final EngineDescriptorLabelProvider descriptorLabelProvider = new EngineDescriptorLabelProvider();
 
-	/** ID in the preference store when no engine has been set */
-	private static final String DEFAULT_ENGINE_ID = ""; //$NON-NLS-1$
-
-	/** Pointer to list viewers for each tab */
-	private Map<String, CheckboxTableViewer> viewerFromTabs = new HashMap<String, CheckboxTableViewer>();
-
-	/** Label of the Diff engine tab */
-	private static final String DIFFERENCES_ENGINE_TAB_LABEL = EMFCompareRCPUIMessages
-			.getString("EnginesPreferencePage.DIFFERENCES_ENGINE_TAB_LABEL"); //$NON-NLS-1$
-
-	/** Label of the Equi engine tab */
-	private static final String EQUIVALENCES_ENGINE_TAB_LABEL = EMFCompareRCPUIMessages
-			.getString("EnginesPreferencePage.EQUIVALENCES_ENGINE_TAB_LABEL"); //$NON-NLS-1$
-
-	/** Label of the Req engine tab */
-	private static final String REQUIREMENT_ENGINE_TAB_LABEL = EMFCompareRCPUIMessages
-			.getString("EnginesPreferencePage.REQUIREMENT_ENGINE_TAB_LABEL"); //$NON-NLS-1$
-
-	/** Label of the Conflict detector tab */
-	private static final String CONFLICT_DETECTOR_TAB_LABEL = EMFCompareRCPUIMessages
-			.getString("EnginesPreferencePage.CONFLICT_DETECTOR_TAB_LABEL"); //$NON-NLS-1$
-
-	/** Label of the Conflict detector tab */
-	private static final String MATCH_ENGINE_TAB_LABEL = EMFCompareRCPUIMessages
-			.getString("EnginesPreferencePage.MATCH_ENGINE_TAB_LABEL"); //$NON-NLS-1$
-
-	/** Match Engine tab descriptor. */
-	private static final String MATCH_ENGINE_INTRO_TEXT = EMFCompareRCPUIMessages
-			.getString("EnginesPreferencePagestatic.MATCH_ENGINE_INTRO_TEXT"); //$NON-NLS-1$
-
-	/** Diff Engine tab descritpor. */
-	private static final String DIFF_ENGINE_INTRO_TEXT = EMFCompareRCPUIMessages
-			.getString("EnginesPreferencePagestatic.DIFF_ENGINE_INTRO_TEXT"); //$NON-NLS-1$
-
-	/** Equi Engine tab descriptor. */
-	private static final String EQUI_ENGINE_INTRO_TEXT = EMFCompareRCPUIMessages
-			.getString("EnginesPreferencePagestatic.EQUI_ENGINE_INTRO_TEXT"); //$NON-NLS-1$
-
-	/** Req Engine tab descriptor. */
-	private static final String REQ_ENGINE_INTRO_TEXT = EMFCompareRCPUIMessages
-			.getString("EnginesPreferencePagestatic.REQ_ENGINE_INTRO_TEXT"); //$NON-NLS-1$
-
-	private static final String INCORRECT_SELECTION_TITLE = EMFCompareRCPUIMessages
-			.getString("EnginesPreferencePagestatic.INCORRECT_SELECTION_TITLE");//$NON-NLS-1$
-
-	/** Conflict Detector tab Descriptor. */
-	private static final String CONFLICT_DETECTOR_INTRO_TEXT = EMFCompareRCPUIMessages
-			.getString("EnginesPreferencePagestatic.CONFLICT_DETECTOR_INTRO_TEXT"); //$NON-NLS-1$
-
-	private static final String INCORRECT_SELECTION_MESSAGE = EMFCompareRCPUIMessages
-			.getString("EnginesPreferencePagestatic.INCORRECT_SELECTION_MESSAGE"); //$NON-NLS-1$
-
-	private static final String DATA_FIELD_NAME = "currentSelection"; //$NON-NLS-1$
+	/** Pointer to all {@link InteractiveUIContent} of each tab */
+	private final Map<String, InteractiveUIContent> interactiveUis = new HashMap<String, InteractiveUIContent>();
 
 	/** Data regarding the Difference selected engine */
-	private SingleValueHolder<IDiffEngine> diffEngineData = new SingleValueHolder<IDiffEngine>();
+	private final SingleValueHolder<IDiffEngine> diffEngineData = new SingleValueHolder<IDiffEngine>();
 
 	/** Data regarding the Equivalence selected engine */
-	private SingleValueHolder<IEquiEngine> equiEngineData = new SingleValueHolder<IEquiEngine>();
+	private final SingleValueHolder<IEquiEngine> equiEngineData = new SingleValueHolder<IEquiEngine>();
 
 	/** Data regarding the Requirement selected engine */
-	private SingleValueHolder<IReqEngine> reqEngineData = new SingleValueHolder<IReqEngine>();
+	private final SingleValueHolder<IReqEngine> reqEngineData = new SingleValueHolder<IReqEngine>();
 
 	/** Data regarding the Conflicts detector selected engine */
-	private SingleValueHolder<IConflictDetector> conflictsDetectorData = new SingleValueHolder<IConflictDetector>();
+	private final SingleValueHolder<IConflictDetector> conflictsDetectorData = new SingleValueHolder<IConflictDetector>();
 
 	/** Data regarding the selected match engine factories. */
-	private MultipleValueHolder<IMatchEngine.Factory> matchEnginesData = new MultipleValueHolder<IMatchEngine.Factory>();
+	private final MultipleValueHolder<IMatchEngine.Factory> matchEnginesData = new MultipleValueHolder<IMatchEngine.Factory>();
 
 	public EnginesPreferencePage() {
 		super();
@@ -171,7 +122,6 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	}
 
 	public void init(IWorkbench workbench) {
-		// The preferences shall be stored under EMF Compare RCP Plugin.
 		// Do not use InstanceScope.Instance to be compatible with Helios.
 		ScopedPreferenceStore store = new ScopedPreferenceStore(new InstanceScope(),
 				EMFCompareRCPPlugin.PLUGIN_ID);
@@ -184,132 +134,187 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new FillLayout(SWT.HORIZONTAL));
 		TabFolder tabFolder = new TabFolder(container, SWT.NONE);
+
 		// Create match engine tab
-		IItemRegistry<Factory> matchEngineFactoryDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
-				.getMatchEngineFactoryDescriptorRegistry();
-		IItemDescriptor<Factory> defaultMatchEngineDescriptor = matchEngineFactoryDescriptorRegistry
-				.getItemDescriptor(MatchEngineFactoryImpl.class.getCanonicalName());
-		createMultipleValueSelectorTab(tabFolder, MATCH_ENGINE_TAB_LABEL, MATCH_ENGINE_INTRO_TEXT,
-				matchEngineFactoryDescriptorRegistry, DATA_FIELD_NAME,
-				EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, matchEnginesData,
-				defaultMatchEngineDescriptor);
+		createMatchEngineTab(tabFolder);
 		// Create diff engine tab
-		IItemRegistry<IDiffEngine> diffEngineDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
-				.getDiffEngineDescriptorRegistry();
-		createSingleValueSelectorTab(tabFolder, DIFFERENCES_ENGINE_TAB_LABEL, DIFF_ENGINE_INTRO_TEXT,
-				diffEngineDescriptorRegistry, EMFComparePreferences.DIFF_ENGINES, diffEngineData);
+		createDiffEngineTab(tabFolder);
 		// Create equi engine tab
-		IItemRegistry<IEquiEngine> equiEngineDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
-				.getEquiEngineDescriptorRegistry();
-		createSingleValueSelectorTab(tabFolder, EQUIVALENCES_ENGINE_TAB_LABEL, EQUI_ENGINE_INTRO_TEXT,
-				equiEngineDescriptorRegistry, EMFComparePreferences.EQUI_ENGINES, equiEngineData);
+		createEquiEngineTab(tabFolder);
 		// Create req engine tab
-		IItemRegistry<IReqEngine> reqEngineDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
-				.getReqEngineDescriptorRegistry();
-		createSingleValueSelectorTab(tabFolder, REQUIREMENT_ENGINE_TAB_LABEL, REQ_ENGINE_INTRO_TEXT,
-				reqEngineDescriptorRegistry, EMFComparePreferences.REQ_ENGINES, reqEngineData);
+		createReqEngineTab(tabFolder);
 		// Create conflicts detectors tab
-		IItemRegistry<IConflictDetector> conflictDetectorDescriptorRegistry = EMFCompareRCPPlugin
-				.getDefault().getConflictDetectorDescriptorRegistry();
-		createSingleValueSelectorTab(tabFolder, CONFLICT_DETECTOR_TAB_LABEL, CONFLICT_DETECTOR_INTRO_TEXT,
-				conflictDetectorDescriptorRegistry, EMFComparePreferences.CONFLICTS_DETECTOR,
-				conflictsDetectorData);
+		createConflictDetectorTab(tabFolder);
 
 		return container;
 	}
 
 	/**
-	 * Create a tab using an {@link IItemRegistry} for a single value selection
+	 * Create a tab to select one Conflict Detector.
 	 * 
 	 * @param tabFolder
-	 *            Holder tab folder
-	 * @param label
-	 *            Label of the new tab
-	 * @param tabDescriptor
-	 *            Tab descriptor label
-	 * @param registry
-	 *            {@link IItemRegistry} used to fill the tab
-	 * @param preferenceKey
-	 *            The preference key of the engine type
-	 * @param dataObject
-	 *            Object that hold the UI data
-	 * @param <T>
-	 *            Type of descriptor
 	 */
-	private <T> void createSingleValueSelectorTab(TabFolder tabFolder, String label, String tabDescriptor,
-			IItemRegistry<T> registry, String preferenceKey, SingleValueHolder<T> dataObject) {
-		TabItem tbtmMain = new TabItem(tabFolder, SWT.NONE);
-		tbtmMain.setText(label);
-		// Parent container
-		Composite tabComposite = new Composite(tabFolder, SWT.NONE);
-		tabComposite.setLayout(new GridLayout(1, true));
-		tbtmMain.setControl(tabComposite);
-		// Introduction text
-		Label introductionText = new Label(tabComposite, SWT.WRAP);
-		introductionText.setText(tabDescriptor);
-		// Selector composite
-		Composite selectorComposite = new Composite(tabComposite, SWT.NONE);
-		selectorComposite.setLayout(new GridLayout(2, true));
-		selectorComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		// Item chooser composite
-		Composite comboBoxCompsite = new Composite(selectorComposite, SWT.NONE);
-		comboBoxCompsite.setLayout(new GridLayout(1, false));
-		comboBoxCompsite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		// Descriptor item Text
-		Text engineDescriptionText = createDescriptionComposite(selectorComposite);
+	private void createConflictDetectorTab(TabFolder tabFolder) {
+		IItemRegistry<IConflictDetector> conflictDetectorDescriptorRegistry = EMFCompareRCPPlugin
+				.getDefault().getConflictDetectorDescriptorRegistry();
+		// Create tab structure
+		Composite tabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
+				.getString("EnginesPreferencePage.CONFLICT_DETECTOR_TAB_LABEL"),//$NON-NLS-1$
+				EMFCompareRCPUIMessages.getString("EnginesPreferencePagestatic.CONFLICT_DETECTOR_INTRO_TEXT"));//$NON-NLS-1$
+		// Create main content structure
+		InteractiveUIContent contentStructure = createContentSkeleton(tabComposite);
 
-		fillEngineComposite(registry, comboBoxCompsite, engineDescriptionText, preferenceKey, dataObject);
+		setUpUniqueCheckViewer(conflictDetectorDescriptorRegistry, contentStructure,
+				EMFComparePreferences.CONFLICTS_DETECTOR, conflictsDetectorData);
+
+		// Save for reset default
+		interactiveUis.put(EMFComparePreferences.CONFLICTS_DETECTOR, contentStructure);
+	}
+
+	/**
+	 * Create a tab to select one Requirement Engine.
+	 * 
+	 * @param tabFolder
+	 */
+	private void createReqEngineTab(TabFolder tabFolder) {
+		IItemRegistry<IReqEngine> reqEngineDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
+				.getReqEngineDescriptorRegistry();
+		// Create tab structure
+		Composite tabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
+				.getString("EnginesPreferencePage.REQUIREMENT_ENGINE_TAB_LABEL"), //$NON-NLS-1$
+				EMFCompareRCPUIMessages.getString("EnginesPreferencePagestatic.REQ_ENGINE_INTRO_TEXT")); //$NON-NLS-1$
+		// Create main content structure
+		InteractiveUIContent contentStructure = createContentSkeleton(tabComposite);
+
+		setUpUniqueCheckViewer(reqEngineDescriptorRegistry, contentStructure,
+				EMFComparePreferences.REQ_ENGINES, reqEngineData);
+
+		// Save for reset default
+		interactiveUis.put(EMFComparePreferences.REQ_ENGINES, contentStructure);
+	}
+
+	/**
+	 * Create a tab to select one Equivalence Engine.
+	 * 
+	 * @param tabFolder
+	 */
+	private void createEquiEngineTab(TabFolder tabFolder) {
+		IItemRegistry<IEquiEngine> equiEngineDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
+				.getEquiEngineDescriptorRegistry();
+		// Create tab structure
+		Composite tabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
+				.getString("EnginesPreferencePage.EQUIVALENCES_ENGINE_TAB_LABEL"), //$NON-NLS-1$
+				EMFCompareRCPUIMessages.getString("EnginesPreferencePagestatic.EQUI_ENGINE_INTRO_TEXT")); //$NON-NLS-1$
+		// Create main content structure
+		InteractiveUIContent contentStructure = createContentSkeleton(tabComposite);
+
+		setUpUniqueCheckViewer(equiEngineDescriptorRegistry, contentStructure,
+				EMFComparePreferences.EQUI_ENGINES, equiEngineData);
+
+		// Save for reset default
+		interactiveUis.put(EMFComparePreferences.EQUI_ENGINES, contentStructure);
+	}
+
+	/**
+	 * Create a tab to select one Difference Engine.
+	 * 
+	 * @param tabFolder
+	 */
+	private void createDiffEngineTab(TabFolder tabFolder) {
+		IItemRegistry<IDiffEngine> diffEngineDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
+				.getDiffEngineDescriptorRegistry();
+		// Create tab structure
+		Composite tabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
+				.getString("EnginesPreferencePage.DIFFERENCES_ENGINE_TAB_LABEL"), EMFCompareRCPUIMessages //$NON-NLS-1$
+				.getString("EnginesPreferencePagestatic.DIFF_ENGINE_INTRO_TEXT")); //$NON-NLS-1$
+		// Create main content structure
+		InteractiveUIContent contentStructure = createContentSkeleton(tabComposite);
+
+		setUpUniqueCheckViewer(diffEngineDescriptorRegistry, contentStructure,
+				EMFComparePreferences.DIFF_ENGINES, diffEngineData);
+
+		// Save for reset default
+		interactiveUis.put(EMFComparePreferences.DIFF_ENGINES, contentStructure);
 
 	}
 
 	/**
-	 * Create a tab using an {@link IItemRegistry} for multiple value selection
+	 * Create a tab to disable/enable Match Engines.
 	 * 
 	 * @param tabFolder
-	 *            Holding tab
-	 * @param tabLabel
-	 *            Tab label
-	 * @param introText
-	 *            Description of the tab content
-	 * @param registry
-	 *            Registry of item use as input
-	 * @param bindingProperty
-	 *            Property name use to bind data to dataObject
-	 * @param preferenceKey
-	 *            Preference key for this tab
-	 * @param dataObject
-	 *            Data object use to hold information
-	 * @param defaultSelection
-	 *            Default selection.
 	 */
-	private <T> void createMultipleValueSelectorTab(TabFolder tabFolder, String tabLabel, String introText,
-			IItemRegistry<T> registry, String bindingProperty, String preferenceKey,
-			MultipleValueHolder<T> dataObject, IItemDescriptor<T> defaultSelection) {
+	private void createMatchEngineTab(TabFolder tabFolder) {
+		IItemRegistry<Factory> matchEngineFactoryDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
+				.getMatchEngineFactoryDescriptorRegistry();
+		IItemDescriptor<Factory> defaultMatchEngineDescriptor = matchEngineFactoryDescriptorRegistry
+				.getItemDescriptor(DefaultRCPMatchEngineFactory.class.getCanonicalName());
+		Composite tabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
+				.getString("EnginesPreferencePage.MATCH_ENGINE_TAB_LABEL"), EMFCompareRCPUIMessages //$NON-NLS-1$
+				.getString("EnginesPreferencePagestatic.MATCH_ENGINE_INTRO_TEXT")); //$NON-NLS-1$
+		// Create main content structure
+		InteractiveUIContent interactiveUI = createContentSkeleton(tabComposite);
+		// Create viewer
+		Map<String, IConfigurationUIFactory> configuratorUIRegistry = EMFCompareRCPUIPlugin.getDefault()
+				.getMatchEngineConfiguratorRegistry();
+		String matchEnginePreferenceKey = EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES;
+		setUpMultipleCheckViewer(matchEngineFactoryDescriptorRegistry, interactiveUI,
+				matchEnginePreferenceKey, configuratorUIRegistry);
+
+		// Save for reset default
+		interactiveUis.put(matchEnginePreferenceKey, interactiveUI);
+		// Init default
+		interactiveUI.select(defaultMatchEngineDescriptor);
+		matchEnginesData.setCurrentSelection(getActiveItems(matchEngineFactoryDescriptorRegistry,
+				matchEnginePreferenceKey));
+		bindMultipleData(MultipleValueHolder.DATA_FIELD_NAME, interactiveUI.getViewer(), matchEnginesData);
+	}
+
+	/**
+	 * Create the skeleton of a tab. All needed composites and layout.
+	 * 
+	 * @param tabComposite
+	 * @return
+	 */
+	private InteractiveUIContent createContentSkeleton(Composite tabComposite) {
+		Composite contentComposite = new Composite(tabComposite, SWT.NONE);
+		contentComposite.setLayout(new GridLayout(2, true));
+		contentComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		// Engine chooser composite
+		Composite viewerComposite = new Composite(contentComposite, SWT.NONE);
+		viewerComposite.setLayout(new GridLayout(1, true));
+		viewerComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		// Config composite
+		Group configComposite = createConfigComposite(contentComposite);
+		// Descriptor engine Text
+		Text descriptionText = createDescriptionComposite(tabComposite);
+		return new InteractiveUIContent(descriptionText, viewerComposite, configComposite);
+	}
+
+	/**
+	 * Create skeleton of a tab.
+	 * 
+	 * @param tabFolder
+	 * @param tabLabel
+	 * @param introText
+	 *            Text use as description a tab
+	 * @return Main composite of the tab
+	 */
+	private Composite createTabSkeleton(TabFolder tabFolder, String tabLabel, String introText) {
 		TabItem tbtmMain = new TabItem(tabFolder, SWT.NONE);
 		tbtmMain.setText(tabLabel);
 		Composite tabComposite = new Composite(tabFolder, SWT.NONE);
 		tbtmMain.setControl(tabComposite);
+		tabComposite.setLayout(new GridLayout(1, true));
+		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
+		tabComposite.setLayoutData(layoutData);
+		// Description text
 		Label introductionText = new Label(tabComposite, SWT.WRAP);
 		introductionText.setText(introText);
-		tabComposite.setLayout(new GridLayout(1, true));
-		// Parent container
-		Composite composite = new Composite(tabComposite, SWT.NONE);
-		composite.setLayout(new GridLayout(2, true));
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		// Engine chooser composite
-		Composite viewerComposite = new Composite(composite, SWT.NONE);
-		viewerComposite.setLayout(new GridLayout(1, false));
-		viewerComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		// Descriptor engine Text
-		Text engineDescriptionText = createDescriptionComposite(composite);
-
-		fillMatchEngineFactoryComposite(registry, bindingProperty, viewerComposite, engineDescriptionText,
-				preferenceKey, dataObject, defaultSelection);
-
+		return tabComposite;
 	}
 
 	/**
-	 * Composite for description. This composite hold the text field that will update with the current
+	 * Composite for description. This composite hold the text widget that will update with the current
 	 * selection
 	 * 
 	 * @param composite
@@ -317,46 +322,58 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 */
 	private Text createDescriptionComposite(Composite composite) {
 		Group descriptionComposite = new Group(composite, SWT.BORDER);
-		descriptionComposite.setText(DESCRIPTION_Label);
+		descriptionComposite.setText(EMFCompareRCPUIMessages
+				.getString("EnginesPreferencePagestatic.DESCRIPTION_COMPOSITE_LABEL")); //$NON-NLS-1$
 		descriptionComposite.setLayout(new GridLayout(1, false));
-		descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		Text engineDescriptionText = new Text(descriptionComposite, SWT.WRAP | SWT.MULTI);
 		engineDescriptionText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		layoutData.widthHint = 300;
+		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		layoutData.heightHint = 50;
 		engineDescriptionText.setLayoutData(layoutData);
 		engineDescriptionText.setEditable(false);
 		return engineDescriptionText;
 	}
 
 	/**
-	 * Fill the composite with list of engine from a registry.
+	 * Create the composite that will hold all configurations for a tab.
+	 * 
+	 * @param composite
+	 * @return
+	 */
+	private Group createConfigComposite(Composite composite) {
+		Group configurationComposite = new Group(composite, SWT.BORDER);
+		configurationComposite.setText(EMFCompareRCPUIMessages
+				.getString("EnginesPreferencePagestatic.CONFIGURATION_COMPOSITE_LABEL")); //$NON-NLS-1$
+		StackLayout layout = new StackLayout();
+		layout.marginHeight = 10;
+		layout.marginWidth = 10;
+		configurationComposite.setLayout(layout);
+		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		configurationComposite.setLayoutData(layoutData);
+		return configurationComposite;
+	}
+
+	/**
+	 * Set up a {@link CheckboxTableViewer} which accept only one element checked at a time
 	 * 
 	 * @param registry
-	 *            Registry containing data
-	 * @param engineBindingProperty
-	 *            Name of the field of {@link SingleValueHolder} that reflect the selection of an engine (use
-	 *            for binding)
-	 * @param comboBoxComposite
-	 *            Parent composite
-	 * @param descriptionText
-	 *            Text that need to be update on selection representing the description of an engine
-	 * @param dataObject
-	 *            Model object holding the information selected by the user
+	 * @param interactiveUI
 	 * @param preferenceKey
-	 *            Preference key link to this tab
+	 * @param dataObject
+	 * @param configuratorRegistry
 	 */
-	private <T> void fillEngineComposite(IItemRegistry<T> registry, Composite comboBoxComposite,
-			final Text descriptionText, String preferenceKey, final SingleValueHolder<T> dataObject) {
+	private <T> void setUpUniqueCheckViewer(IItemRegistry<T> registry,
+			final InteractiveUIContent interactiveUI, String preferenceKey,
+			final SingleValueHolder<T> dataObject) {
 
-		final CheckboxTableViewer descriptorViewer = CheckboxTableViewer.newCheckList(comboBoxComposite,
-				SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE);
-		descriptorViewer.addSelectionChangedListener(new DescriptionListener(descriptionText));
-		descriptorViewer.setData(DESCRIPTION_TEXT_DATA_KEY, descriptionText);
+		final CheckboxTableViewer descriptorViewer = CheckboxTableViewer.newCheckList(interactiveUI
+				.getViewerComposite(), SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE);
 		descriptorViewer.setContentProvider(ArrayContentProvider.getInstance());
 		descriptorViewer.setLabelProvider(descriptorLabelProvider);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		descriptorViewer.getControl().setLayoutData(gd);
+
 		// Only one check at a time
 		descriptorViewer.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
@@ -372,54 +389,78 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 					// Prevent from nothing checked
 					if (descriptorViewer.getCheckedElements().length == 0) {
 						descriptorViewer.setCheckedElements(new Object[] {element });
-						MessageDialog.openWarning(getShell(), INCORRECT_SELECTION_TITLE,
-								INCORRECT_SELECTION_MESSAGE);
+						MessageDialog
+								.openWarning(
+										getShell(),
+										EMFCompareRCPUIMessages
+												.getString("EnginesPreferencePagestatic.INCORRECT_SELECTION_TITLE"), //$NON-NLS-1$
+										EMFCompareRCPUIMessages
+												.getString("EnginesPreferencePagestatic.INCORRECT_SELECTION_MESSAGE")); //$NON-NLS-1$
 					}
 				}
 
 			}
 		});
-		// Save for reset default
-		viewerFromTabs.put(preferenceKey, descriptorViewer);
+
 		List<IItemDescriptor<T>> itemDescriptors = registry.getItemDescriptors();
 		Collections.sort(itemDescriptors, Collections.reverseOrder());
 		descriptorViewer.setInput(itemDescriptors);
+
+		interactiveUI.setViewer(descriptorViewer);
+
 		// Init default value
 		IItemDescriptor<T> defaultEngine = ItemUtil.getDefaultItemDescriptor(registry, preferenceKey,
 				EMFCompareRCPPlugin.getDefault().getEMFComparePreferences());
-		descriptorViewer.setSelection(new StructuredSelection(defaultEngine), true);
-		descriptorViewer.setCheckedElements(new Object[] {defaultEngine });
+		interactiveUI.select(defaultEngine);
+		interactiveUI.checkElement(defaultEngine);
 		dataObject.setCurrentSelection(defaultEngine);
-		descriptionText.setText(defaultEngine.getDescription());
 
 	}
 
-	private <T> void fillMatchEngineFactoryComposite(IItemRegistry<T> registry, String engineBindingProperty,
-			Composite comboBoxComposite, final Text descriptionText, String preferenceKey,
-			MultipleValueHolder<T> dataObject, IItemDescriptor<T> defaultDescriptor) {
-		CheckboxTableViewer descriptorViewer = CheckboxTableViewer.newCheckList(comboBoxComposite, SWT.BORDER
-				| SWT.V_SCROLL | SWT.FULL_SELECTION);
-		descriptorViewer.addSelectionChangedListener(new DescriptionListener(descriptionText));
-		descriptorViewer.setData(DESCRIPTION_TEXT_DATA_KEY, descriptionText);
+	/**
+	 * Set up a {@link CheckboxTableViewer} which accept multiple checked element.
+	 * 
+	 * @param registry
+	 * @param interactiveUI
+	 * @param preferenceKey
+	 * @param configuratorRegistry
+	 */
+	private <T> void setUpMultipleCheckViewer(IItemRegistry<T> registry,
+			final InteractiveUIContent interactiveUI, String preferenceKey,
+			Map<String, IConfigurationUIFactory> configuratorUIRegistry) {
+		CheckboxTableViewer descriptorViewer = CheckboxTableViewer.newCheckList(interactiveUI
+				.getViewerComposite(), SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		interactiveUI.setViewer(descriptorViewer);
 		descriptorViewer.setContentProvider(ArrayContentProvider.getInstance());
 		descriptorViewer.setLabelProvider(descriptorLabelProvider);
-		GridData gd = new GridData(GridData.FILL_BOTH);
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		descriptorViewer.getControl().setLayoutData(gd);
-		// Save for reset default
-		viewerFromTabs.put(preferenceKey, descriptorViewer);
+
+		// Init configuration elements
+		for (IItemDescriptor<T> item : registry.getItemDescriptors()) {
+			String itemId = item.getID();
+			IConfigurationUIFactory configuratorFactory = configuratorUIRegistry.get(itemId);
+			if (configuratorFactory != null) {
+				Preferences pref = ItemUtil.getConfigurationPreferenceNode(preferenceKey, itemId);
+				interactiveUI.addConfigurator(itemId, configuratorFactory, pref);
+			}
+		}
 		// Filter input with input with higher rank than default item descriptor
 		List<IItemDescriptor<T>> itemDescriptors = registry.getItemDescriptors();
 		Collections.sort(itemDescriptors, Collections.reverseOrder());
 		descriptorViewer.setInput(itemDescriptors);
 
-		descriptorViewer.setSelection(new StructuredSelection(defaultDescriptor));
-		dataObject.setCurrentSelection(getActiveFactory(registry, preferenceKey));
-
-		bindMultipleData(engineBindingProperty, descriptorViewer, dataObject);
-
 	}
 
-	private <T> Set<IItemDescriptor<T>> getActiveFactory(IItemRegistry<T> registry, String preferenceKey) {
+	/**
+	 * Get all active item from a registry. (Filter out all disable element stored in preferences)
+	 * 
+	 * @param registry
+	 * @param preferenceKey
+	 *            Preference key where are stored disabled items.
+	 * @return
+	 */
+	private <T> Set<IItemDescriptor<T>> getActiveItems(IItemRegistry<T> registry, String preferenceKey) {
 		List<IItemDescriptor<T>> itemsDescriptor = ItemUtil.getItemsDescriptor(registry, preferenceKey,
 				EMFCompareRCPPlugin.getDefault().getEMFComparePreferences());
 
@@ -433,6 +474,13 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		return activeFactory;
 	}
 
+	/**
+	 * Bind UI to data object.
+	 * 
+	 * @param engineBindingProperty
+	 * @param descriptorViewer
+	 * @param dataObject
+	 */
 	private <T> void bindMultipleData(String engineBindingProperty, CheckboxTableViewer descriptorViewer,
 			final MultipleValueHolder<T> dataObject) {
 		DataBindingContext ctx = new DataBindingContext();
@@ -444,33 +492,14 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 				dataObject);
 
 		ctx.bindSet(target, model);
-
 	}
 
 	@Override
 	public boolean performOk() {
 
-		// Update preferences preferences
-		setEnginePreferences(EMFComparePreferences.DIFF_ENGINES, diffEngineData.getCurrentSelection(),
-				EMFCompareRCPPlugin.getDefault().getDiffEngineDescriptorRegistry()
-						.getHighestRankingDescriptor());
-		setEnginePreferences(EMFComparePreferences.EQUI_ENGINES, equiEngineData.getCurrentSelection(),
-				EMFCompareRCPPlugin.getDefault().getEquiEngineDescriptorRegistry()
-						.getHighestRankingDescriptor());
-		setEnginePreferences(EMFComparePreferences.REQ_ENGINES, reqEngineData.getCurrentSelection(),
-				EMFCompareRCPPlugin.getDefault().getReqEngineDescriptorRegistry()
-						.getHighestRankingDescriptor());
-		setEnginePreferences(EMFComparePreferences.CONFLICTS_DETECTOR, conflictsDetectorData
-				.getCurrentSelection(), EMFCompareRCPPlugin.getDefault()
-				.getConflictDetectorDescriptorRegistry().getHighestRankingDescriptor());
+		setEnginesPreferences();
 
-		// Set match engine to disable
-		Set<IItemDescriptor<Factory>> matchEngineRegsitry = Sets.newHashSet(EMFCompareRCPPlugin.getDefault()
-				.getMatchEngineFactoryDescriptorRegistry().getItemDescriptors());
-		Set<IItemDescriptor<Factory>> matchingEngineToDisable = Sets.difference(matchEngineRegsitry,
-				matchEnginesData.getCurrentSelection());
-		setEnginePreferences(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, matchingEngineToDisable,
-				new ArrayList<IItemDescriptor<IMatchEngine.Factory>>());
+		storeConfigurations();
 
 		if (TracingConstant.CONFIGURATION_TRACING_ACTIVATED) {
 			StringBuilder traceMessage = new StringBuilder("Preference serialization:\n"); //$NON-NLS-1$
@@ -494,6 +523,76 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		return super.performOk();
 	}
 
+	/**
+	 * Set all engines preferences.
+	 */
+	private void setEnginesPreferences() {
+		// Update preferences preferences
+		setEnginePreferences(EMFComparePreferences.DIFF_ENGINES, diffEngineData.getCurrentSelection(),
+				EMFCompareRCPPlugin.getDefault().getDiffEngineDescriptorRegistry()
+						.getHighestRankingDescriptor());
+		setEnginePreferences(EMFComparePreferences.EQUI_ENGINES, equiEngineData.getCurrentSelection(),
+				EMFCompareRCPPlugin.getDefault().getEquiEngineDescriptorRegistry()
+						.getHighestRankingDescriptor());
+		setEnginePreferences(EMFComparePreferences.REQ_ENGINES, reqEngineData.getCurrentSelection(),
+				EMFCompareRCPPlugin.getDefault().getReqEngineDescriptorRegistry()
+						.getHighestRankingDescriptor());
+		setEnginePreferences(EMFComparePreferences.CONFLICTS_DETECTOR, conflictsDetectorData
+				.getCurrentSelection(), EMFCompareRCPPlugin.getDefault()
+				.getConflictDetectorDescriptorRegistry().getHighestRankingDescriptor());
+		// Set match engine to disable
+		Set<IItemDescriptor<Factory>> matchEngineRegsitry = Sets.newHashSet(EMFCompareRCPPlugin.getDefault()
+				.getMatchEngineFactoryDescriptorRegistry().getItemDescriptors());
+		Set<IItemDescriptor<Factory>> matchingEngineToDisable = Sets.difference(matchEngineRegsitry,
+				matchEnginesData.getCurrentSelection());
+		setEnginePreferences(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, matchingEngineToDisable,
+				new ArrayList<IItemDescriptor<IMatchEngine.Factory>>());
+	}
+
+	/**
+	 * Store the value of the configuration of each engine into preferences.
+	 */
+	private void storeConfigurations() {
+		for (Entry<String, InteractiveUIContent> interactiveContentEntry : interactiveUis.entrySet()) {
+			for (Entry<String, AbstractConfigurationUI> configuratorEntry : interactiveContentEntry
+					.getValue().getConfigurators().entrySet()) {
+				AbstractConfigurationUI configurator = configuratorEntry.getValue();
+				configurator.storeConfiguration();
+			}
+		}
+
+		if (TracingConstant.CONFIGURATION_TRACING_ACTIVATED) {
+			StringBuilder traceMessage = new StringBuilder("Configuration serialization:\n"); //$NON-NLS-1$
+			String prefDelimiter = " :\n"; //$NON-NLS-1$
+			String new_line = "\n"; //$NON-NLS-1$
+			String node_Label = "Node "; //$NON-NLS-1$
+			String double_dot_label = " : "; //$NON-NLS-1$
+			String empty_label = "EMPTY"; //$NON-NLS-1$
+			for (Entry<String, InteractiveUIContent> interactiveContentEntry : interactiveUis.entrySet()) {
+				String itemTypeId = interactiveContentEntry.getKey();
+				for (Entry<String, AbstractConfigurationUI> configuratorEntry : interactiveContentEntry
+						.getValue().getConfigurators().entrySet()) {
+					String itemToConfigureId = configuratorEntry.getKey();
+					Preferences storeNode = ItemUtil.getConfigurationPreferenceNode(itemTypeId,
+							itemToConfigureId);
+					traceMessage.append(node_Label).append(storeNode.absolutePath()).append(prefDelimiter);
+					try {
+						for (String propertyKey : storeNode.keys()) {
+							traceMessage.append(propertyKey).append(double_dot_label).append(
+									storeNode.get(propertyKey, empty_label)).append(new_line);
+						}
+					} catch (BackingStoreException e) {
+						e.printStackTrace();
+						traceMessage.append("Error in tracing ").append(storeNode.absolutePath()); //$NON-NLS-1$
+					}
+				}
+			}
+
+			EMFCompareRCPPlugin.getDefault().log(IStatus.INFO, traceMessage.toString());
+		}
+
+	}
+
 	@Override
 	protected void performDefaults() {
 		resetDefaultPreferencesToHighestRank(EMFCompareRCPPlugin.getDefault()
@@ -508,60 +607,84 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		resetDefaultPreferencesToAll(EMFCompareRCPPlugin.getDefault()
 				.getMatchEngineFactoryDescriptorRegistry(),
 				EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, matchEnginesData);
+
+		resetConfigurations();
+
 		super.performDefaults();
 	}
 
 	/**
-	 * Reset preference to default
+	 * Reset all configuration of each engine to its default value.
+	 */
+	private void resetConfigurations() {
+		for (Entry<String, InteractiveUIContent> interactiveContentEntry : interactiveUis.entrySet()) {
+			for (AbstractConfigurationUI configurator : interactiveContentEntry.getValue().getConfigurators()
+					.values()) {
+				configurator.resetDefault();
+			}
+		}
+	}
+
+	/**
+	 * Reset engine preference to default using highest rank strategy.
 	 * 
 	 * @param registry
 	 * @param preferenceKey
 	 */
 	private <T> void resetDefaultPreferencesToHighestRank(IItemRegistry<T> registry, String preferenceKey,
 			SingleValueHolder<T> dataObject) {
-		CheckboxTableViewer descriptorViewer = viewerFromTabs.get(preferenceKey);
-		if (descriptorViewer != null) {
-			Object _descriptionText = descriptorViewer.getData(DESCRIPTION_TEXT_DATA_KEY);
-			if (_descriptionText instanceof Text) {
-				Text descriptionText = (Text)_descriptionText;
-				IItemDescriptor<T> defaultEngine = registry.getHighestRankingDescriptor();
-				descriptorViewer.setSelection(new StructuredSelection(defaultEngine), true);
-				descriptorViewer.setCheckedElements(new Object[] {defaultEngine });
-				descriptionText.setText(defaultEngine.getDescription());
-				dataObject.setCurrentSelection(defaultEngine);
-			}
+		InteractiveUIContent interactiveContent = interactiveUis.get(preferenceKey);
+		if (interactiveContent != null) {
+			IItemDescriptor<T> defaultEngine = registry.getHighestRankingDescriptor();
+			interactiveContent.select(defaultEngine);
+			interactiveContent.checkElement(defaultEngine);
+			dataObject.setCurrentSelection(defaultEngine);
 		}
 	}
 
+	/**
+	 * Reset to default for a collection (using all is default).
+	 * 
+	 * @param registry
+	 * @param preferenceKey
+	 * @param dataObject
+	 */
 	private <T> void resetDefaultPreferencesToAll(IItemRegistry<T> registry, String preferenceKey,
 			MultipleValueHolder<T> dataObject) {
-		StructuredViewer descriptorViewer = viewerFromTabs.get(preferenceKey);
-		if (descriptorViewer instanceof CheckboxTableViewer) {
-			CheckboxTableViewer checkBoxViewer = (CheckboxTableViewer)descriptorViewer;
-			Object _descriptionText = descriptorViewer.getData(DESCRIPTION_TEXT_DATA_KEY);
-			if (_descriptionText instanceof Text) {
-				Text descriptionText = (Text)_descriptionText;
-				IItemDescriptor<T> defaultEngine = registry.getHighestRankingDescriptor();
-				descriptorViewer.setSelection(new StructuredSelection(defaultEngine), true);
-				descriptionText.setText(defaultEngine.getDescription());
-				// dataObject.getCurrentSelection().addAll(registry.getEngineDescriptors());
-				List<IItemDescriptor<T>> itemDescriptors = registry.getItemDescriptors();
-				dataObject.setCurrentSelection(Sets.newHashSet(itemDescriptors));
-				checkBoxViewer.setCheckedElements(itemDescriptors.toArray(new IItemDescriptor[itemDescriptors
-						.size()]));
-			}
+		InteractiveUIContent interactiveContent = interactiveUis.get(preferenceKey);
+		if (interactiveContent != null) {
+			IItemDescriptor<T> defaultEngine = registry.getHighestRankingDescriptor();
+			interactiveContent.select(defaultEngine);
+			List<IItemDescriptor<T>> itemDescriptors = registry.getItemDescriptors();
+			interactiveContent.checkElements(itemDescriptors.toArray(new IItemDescriptor[itemDescriptors
+					.size()]));
+			dataObject.setCurrentSelection(Sets.newHashSet(itemDescriptors));
 		}
 	}
 
+	/**
+	 * Set an engine preferences into the preferences.
+	 * 
+	 * @param preferenceKey
+	 * @param currentSelectedEngine
+	 * @param defaultConf
+	 */
 	private <T> void setEnginePreferences(String preferenceKey, IItemDescriptor<T> currentSelectedEngine,
 			IItemDescriptor<T> defaultConf) {
 		if (currentSelectedEngine != null && !currentSelectedEngine.equals(defaultConf)) {
 			getPreferenceStore().setValue(preferenceKey, currentSelectedEngine.getID());
 		} else {
-			getPreferenceStore().setValue(preferenceKey, DEFAULT_ENGINE_ID);
+			getPreferenceStore().setToDefault(preferenceKey);
 		}
 	}
 
+	/**
+	 * Set an engine preferences into the preferences (for a collection).
+	 * 
+	 * @param preferenceKey
+	 * @param currentSelectedEngine
+	 * @param defaultConf
+	 */
 	private <T> void setEnginePreferences(String preferenceKey,
 			Set<IItemDescriptor<T>> currentSelectedEngine, Collection<IItemDescriptor<T>> defaultConf) {
 		if (currentSelectedEngine != null && !currentSelectedEngine.contains(defaultConf)) {
@@ -575,16 +698,19 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 			}
 			getPreferenceStore().setValue(preferenceKey, descriptorsKey.toString());
 		} else {
-			getPreferenceStore().setValue(preferenceKey, DEFAULT_ENGINE_ID);
+			getPreferenceStore().setToDefault(preferenceKey);
 		}
 	}
 
 	/**
-	 * Label provider for {@link IItemDescriptor}
+	 * Label provider for {@link ILabeledItemDescriptor}
 	 * 
 	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
 	 */
 	private static final class EngineDescriptorLabelProvider extends LabelProvider {
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public String getText(Object element) {
 			if (element instanceof IItemDescriptor<?>) {
@@ -592,33 +718,6 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 				return desc.getLabel();
 			}
 			return super.getText(element);
-		}
-	}
-
-	/**
-	 * Listener to update description text
-	 * 
-	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
-	 */
-	private static final class DescriptionListener implements ISelectionChangedListener {
-		private final Text descriptionText;
-
-		private DescriptionListener(Text descriptionText) {
-			this.descriptionText = descriptionText;
-		}
-
-		public void selectionChanged(SelectionChangedEvent event) {
-			ISelection selection = event.getSelection();
-			if (selection instanceof IStructuredSelection) {
-				IStructuredSelection structSelection = (IStructuredSelection)selection;
-				Object selected = structSelection.getFirstElement();
-				if (selected instanceof IItemDescriptor<?>) {
-					IItemDescriptor<?> desc = (IItemDescriptor<?>)selected;
-					String description = desc.getDescription();
-					descriptionText.setText(description);
-				}
-			}
-
 		}
 	}
 
@@ -650,6 +749,8 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 */
 	private class MultipleValueHolder<T> {
 
+		private static final String DATA_FIELD_NAME = "currentSelection"; //$NON-NLS-1$
+
 		public Set<IItemDescriptor<T>> currentSelection = new HashSet<IItemDescriptor<T>>();
 
 		public Set<IItemDescriptor<T>> getCurrentSelection() {
@@ -659,6 +760,191 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		public void setCurrentSelection(Set<IItemDescriptor<T>> currentSelection) {
 			this.currentSelection = currentSelection;
 		}
+	}
+
+	/**
+	 * Structure that handle UI interactive content (Description, configuration and viewer).
+	 * 
+	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
+	 */
+	private static class InteractiveUIContent {
+		/** Text that shall be update with the description of the viewer. */
+		private final Text descriptionText;
+
+		/** Composite holding the viewer. */
+		private final Composite viewerCompsite;
+
+		/**
+		 * Composite holding the configuration. This shall react to a selection in the viewer.
+		 */
+		private final Composite configurationComposite;
+
+		/** Composite that is used when the selection has no registered configuration. */
+		private final Composite defaultComposite;
+
+		/** Viewer of {@link IItemDescriptor}. */
+		private CheckboxTableViewer viewer;
+
+		/** List of all {@link AbstractConfigurationUI} that is linked to this viewer. */
+		private final Map<String, AbstractConfigurationUI> configurators = new HashMap<String, AbstractConfigurationUI>();
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param descriptionText
+		 *            {@link InteractiveUIContent#descriptionText}
+		 * @param viewerCompsite
+		 *            {@link InteractiveUIContent#viewerCompsite}
+		 * @param configurationComposite
+		 *            {@link InteractiveUIContent#configurationComposite}
+		 */
+		public InteractiveUIContent(Text descriptionText, Composite viewerCompsite,
+				Composite configurationComposite) {
+			super();
+			this.descriptionText = descriptionText;
+			this.viewerCompsite = viewerCompsite;
+			this.configurationComposite = configurationComposite;
+			// Init default composite.
+			defaultComposite = new Composite(configurationComposite, SWT.NONE);
+			defaultComposite.setLayout(new GridLayout(1, true));
+			Label text = new Label(defaultComposite, SWT.WRAP);
+			text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
+			text.setText(EMFCompareRCPUIMessages
+					.getString("InteractiveUIContent.DEFAULT_CONFIGURATION_LABEL")); //$NON-NLS-1$
+		}
+
+		/**
+		 * Add a configuration to this Interactive content.
+		 * 
+		 * @param id
+		 *            Id of the item to configure
+		 * @param configuratorfactory
+		 *            Factory for the configuration
+		 */
+		public void addConfigurator(String id, IConfigurationUIFactory configuratorfactory, Preferences pref) {
+			AbstractConfigurationUI configurator = configuratorfactory.createUI(configurationComposite,
+					SWT.NONE, pref);
+			configurators.put(id, configurator);
+		}
+
+		/**
+		 * Check one element in the viewer
+		 * 
+		 * @param descriptor
+		 */
+		public void checkElement(IItemDescriptor<?> descriptor) {
+			viewer.setCheckedElements(new Object[] {descriptor });
+		}
+
+		/**
+		 * Check multiple element in the viewer. (Only use if multiple selection is allowed)
+		 * 
+		 * @param descriptors
+		 */
+		public void checkElements(IItemDescriptor<?>[] descriptors) {
+			viewer.setCheckedElements(descriptors);
+		}
+
+		/**
+		 * @param viewer
+		 *            A {@link StructuredViewer} of {@link IItemDescriptor}
+		 */
+		public void setViewer(CheckboxTableViewer inputViewer) {
+			this.viewer = inputViewer;
+			viewer.addSelectionChangedListener(new ConfigurationListener());
+			viewer.addSelectionChangedListener(new DescriptionListener());
+		}
+
+		/**
+		 * @return A map of all configuration.
+		 */
+		public Map<String, AbstractConfigurationUI> getConfigurators() {
+			return ImmutableMap.copyOf(configurators);
+		}
+
+		/**
+		 * Handle a selection in the viewer. Update related components.
+		 * 
+		 * @param descriptor
+		 */
+		public void select(IItemDescriptor<?> descriptor) {
+			// Update viewer
+			viewer.setSelection(new StructuredSelection(descriptor), true);
+			updateLinkedElements(descriptor);
+		}
+
+		/**
+		 * Update linked element in
+		 * 
+		 * @param descriptor
+		 */
+		private void updateLinkedElements(IItemDescriptor<?> descriptor) {
+			// Update description
+			descriptionText.setText(descriptor.getDescription());
+
+			StackLayout stackLayout = (StackLayout)configurationComposite.getLayout();
+			if (configurators.containsKey(descriptor.getID())) {
+				stackLayout.topControl = configurators.get(descriptor.getID());
+			} else {
+				stackLayout.topControl = defaultComposite;
+			}
+			configurationComposite.layout();
+		}
+
+		/**
+		 * @return The composite holding the viewer.
+		 */
+		public Composite getViewerComposite() {
+			return viewerCompsite;
+		}
+
+		/**
+		 * @return The viewer.
+		 */
+		public CheckboxTableViewer getViewer() {
+			return viewer;
+		}
+
+		/**
+		 * Listener in charge of updating the the configuration composite.
+		 * 
+		 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
+		 */
+		private final class ConfigurationListener implements ISelectionChangedListener {
+			public void selectionChanged(SelectionChangedEvent event) {
+				ISelection selection = event.getSelection();
+				if (selection instanceof IStructuredSelection) {
+					IStructuredSelection structSelection = (IStructuredSelection)selection;
+					Object selected = structSelection.getFirstElement();
+					if (selected instanceof IItemDescriptor<?>) {
+						updateLinkedElements(((IItemDescriptor<?>)selected));
+					}
+				}
+			}
+		}
+
+		/**
+		 * Listener to update description text
+		 * 
+		 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
+		 */
+		private final class DescriptionListener implements ISelectionChangedListener {
+
+			public void selectionChanged(SelectionChangedEvent event) {
+				ISelection selection = event.getSelection();
+				if (selection instanceof IStructuredSelection) {
+					IStructuredSelection structSelection = (IStructuredSelection)selection;
+					Object selected = structSelection.getFirstElement();
+					if (selected instanceof IItemDescriptor<?>) {
+						IItemDescriptor<?> desc = (IItemDescriptor<?>)selected;
+						String description = desc.getDescription();
+						descriptionText.setText(description);
+					}
+				}
+
+			}
+		}
+
 	}
 
 }

@@ -17,7 +17,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
 import java.util.Collection;
@@ -61,14 +60,17 @@ public class MatchEnginefactoryRegistryWrapper implements IMatchEngine.Factory.R
 	}
 
 	/**
-	 * Transform the IItemRegistry<IMatchEngine.Factory> to collection to be more use full.
+	 * Return a Collection of enabled {@link IMatchEngine.Factory}.
 	 * 
 	 * @return Collection<IMatchEngine.Factory>
 	 */
-	private Collection<IMatchEngine.Factory> getFactories() {
+	private Collection<IMatchEngine.Factory> getEnabledFactories() {
 		Function<IItemDescriptor<Factory>, Factory> toFactoryFunction = AbstractItemDescriptor
 				.getItemFunction();
-		return Collections2.transform(registry.getItemDescriptors(), toFactoryFunction);
+
+		Collection<IItemDescriptor<Factory>> enableFactories = Collections2.filter(registry
+				.getItemDescriptors(), Predicates.not(Predicates.in(getDisabledEngines())));
+		return Collections2.transform(enableFactories, toFactoryFunction);
 	}
 
 	/**
@@ -79,8 +81,7 @@ public class MatchEnginefactoryRegistryWrapper implements IMatchEngine.Factory.R
 	public IMatchEngine.Factory getHighestRankingMatchEngineFactory(IComparisonScope scope) {
 		IMatchEngine.Factory result = null;
 
-		Iterator<IMatchEngine.Factory> matchEngineFactories = Iterators.filter(getMatchEngineFactories(scope)
-				.iterator(), new DisableEngineFilter(getDisabledEngines()));
+		Iterator<IMatchEngine.Factory> matchEngineFactories = getMatchEngineFactories(scope).iterator();
 		while (matchEngineFactories.hasNext()) {
 			IMatchEngine.Factory engineFactory = matchEngineFactories.next();
 			if (result == null || engineFactory.getRanking() > result.getRanking()) {
@@ -96,8 +97,8 @@ public class MatchEnginefactoryRegistryWrapper implements IMatchEngine.Factory.R
 	 * @see org.eclipse.emf.compare.match.IMatchEngine.Factory.Registry#getMatchEngines(org.eclipse.emf.compare.scope.IComparisonScope)
 	 */
 	public List<IMatchEngine.Factory> getMatchEngineFactories(IComparisonScope scope) {
-		Iterable<IMatchEngine.Factory> matchEngineFactories = filter(getFactories(), Predicates.and(
-				isMatchEngineFactoryActivable(scope), new DisableEngineFilter(getDisabledEngines())));
+		Iterable<IMatchEngine.Factory> matchEngineFactories = filter(getEnabledFactories(),
+				isMatchEngineFactoryActivable(scope));
 		return Lists.newArrayList(matchEngineFactories);
 	}
 
@@ -160,48 +161,17 @@ public class MatchEnginefactoryRegistryWrapper implements IMatchEngine.Factory.R
 	}
 
 	/**
-	 * Get the {@link IMatchEngine.Factory} that have been disabled.
+	 * Return a collection of disabled {@link IItemDescriptor<IMatchEngine.Factory>}.
 	 * 
-	 * @return Collection of {@link IMatchEngine.Factory} that have been disabled
+	 * @return Collection<IItemDescriptor<IMatchEngine.Factory>>
 	 */
-	private Collection<IMatchEngine.Factory> getDisabledEngines() {
+	private Collection<IItemDescriptor<IMatchEngine.Factory>> getDisabledEngines() {
 		Collection<IItemDescriptor<Factory>> result = ItemUtil.getItemsDescriptor(registry,
 				EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, EMFCompareRCPPlugin.getDefault()
 						.getEMFComparePreferences());
 		if (result == null) {
 			result = Collections.emptyList();
 		}
-		Function<IItemDescriptor<Factory>, Factory> toFactoryFunction = AbstractItemDescriptor
-				.getItemFunction();
-		return Collections2.transform(result, toFactoryFunction);
-	}
-
-	/**
-	 * Predicate that filter out disabled predicates.
-	 * 
-	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
-	 */
-	private class DisableEngineFilter implements Predicate<IMatchEngine.Factory> {
-
-		/** All disable factories. */
-		private Collection<IMatchEngine.Factory> disabled;
-
-		/**
-		 * Constructor.
-		 * 
-		 * @param disabled
-		 *            {@link DisableEngineFilter#disabled}
-		 */
-		public DisableEngineFilter(Collection<Factory> disabled) {
-			super();
-			this.disabled = disabled;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public boolean apply(Factory input) {
-			return !disabled.contains(input);
-		}
+		return result;
 	}
 }

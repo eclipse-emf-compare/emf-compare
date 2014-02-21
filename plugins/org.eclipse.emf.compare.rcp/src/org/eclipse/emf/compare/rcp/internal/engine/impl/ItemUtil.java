@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.engine.IItemDescriptor;
 import org.eclipse.emf.compare.rcp.internal.engine.IItemRegistry;
+import org.osgi.service.prefs.Preferences;
 
 /**
  * Util class for item.
@@ -140,5 +142,18 @@ public final class ItemUtil {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Return the node holding the configuration for an item.
+	 * 
+	 * @param type
+	 *            Type of item.
+	 * @param itemId
+	 *            Id of the item we want to retrieve the configuration for.
+	 * @return The {@link Preferences} holding the configuration.
+	 */
+	public static Preferences getConfigurationPreferenceNode(String type, String itemId) {
+		return EMFCompareRCPPlugin.getDefault().getEMFComparePreferences().node(type).node(itemId);
 	}
 }

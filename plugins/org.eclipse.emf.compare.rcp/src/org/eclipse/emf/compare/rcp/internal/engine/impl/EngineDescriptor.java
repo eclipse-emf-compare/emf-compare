@@ -61,6 +61,7 @@ public class EngineDescriptor<T> extends AbstractItemDescriptor<T> {
 	 * 
 	 * @return a engine instance
 	 */
+	@SuppressWarnings("unchecked")
 	public T getItem() {
 		T result = null;
 		try {
