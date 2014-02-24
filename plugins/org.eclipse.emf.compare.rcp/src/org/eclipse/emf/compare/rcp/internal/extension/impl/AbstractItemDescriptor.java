@@ -8,12 +8,12 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.internal.engine.impl;
+package org.eclipse.emf.compare.rcp.internal.extension.impl;
 
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 
-import org.eclipse.emf.compare.rcp.internal.engine.IItemDescriptor;
+import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
 
 /**
  * Abstract class for an {@link IItemDescriptor}.
@@ -27,16 +27,16 @@ public abstract class AbstractItemDescriptor<T> implements IItemDescriptor<T> {
 	/** EMPTY_STRING. */
 	protected static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
-	/** Label of the engine. */
+	/** Label of the item. */
 	private final String label;
 
-	/** Description of the engine. */
+	/** Description of the item. */
 	private final String description;
 
-	/** Rank of the engine. */
+	/** Rank of the item. */
 	private final int rank;
 
-	/** ID of the engine (Use as key for the registry). */
+	/** ID of the item (Use as key for the registry). */
 	private final String id;
 
 	/**

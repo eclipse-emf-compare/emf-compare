@@ -8,15 +8,15 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.internal.engine.impl;
+package org.eclipse.emf.compare.rcp.internal.extension.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
-import org.eclipse.emf.compare.rcp.internal.engine.IItemDescriptor;
-import org.eclipse.emf.compare.rcp.internal.engine.IItemRegistry;
+import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
+import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
 import org.osgi.service.prefs.Preferences;
 
 /**
@@ -36,22 +36,22 @@ public final class ItemUtil {
 	}
 
 	/**
-	 * Get an engine using the preferences. If nothing has been set in the preferences then the highest
-	 * ranking engine is returned
+	 * Get an item using the preferences. If nothing has been set in the preferences then the highest ranking
+	 * item is returned
 	 * 
 	 * @param registry
-	 *            The engine registry
+	 *            The item registry
 	 * @param preferenceKey
 	 *            The preference to retrieve the key.
-	 * @param enginePreferences
-	 *            Eclipse preference where are stored the engines to use
+	 * @param itemPreferences
+	 *            Eclipse preference where are stored the items to use
 	 * @param <T>
-	 *            Type of engine
-	 * @return an engine or null if nothing has been found.
+	 *            Type of item
+	 * @return an item or null if nothing has been found.
 	 */
 	public static <T> T getItem(IItemRegistry<T> registry, String preferenceKey,
-			IEclipsePreferences enginePreferences) {
-		IItemDescriptor<T> desc = getDefaultItemDescriptor(registry, preferenceKey, enginePreferences);
+			IEclipsePreferences itemPreferences) {
+		IItemDescriptor<T> desc = getDefaultItemDescriptor(registry, preferenceKey, itemPreferences);
 		if (desc != null) {
 			return desc.getItem();
 		}
@@ -60,21 +60,21 @@ public final class ItemUtil {
 
 	/**
 	 * Get an item descriptor using the preferences. If nothing has been set in the preferences then the
-	 * highest ranking engine is returned
+	 * highest ranking item is returned
 	 * 
 	 * @param registry
-	 *            {@link IItemRegistry} of the engine type
+	 *            {@link IItemRegistry} of the item type
 	 * @param preferenceKey
-	 *            Preference key use to retrieve the engine
-	 * @param enginePreferences
-	 *            {@link IEclipsePreferences} where are stored the engine preferences.
+	 *            Preference key use to retrieve the item
+	 * @param itemPreferences
+	 *            {@link IEclipsePreferences} where are stored the item preferences.
 	 * @param <T>
-	 *            Type of engine
+	 *            Type of item
 	 * @return {@link IItemDescriptor}
 	 */
 	public static <T> IItemDescriptor<T> getDefaultItemDescriptor(IItemRegistry<T> registry,
-			String preferenceKey, IEclipsePreferences enginePreferences) {
-		IItemDescriptor<T> result = getItemDescriptorFromPref(registry, enginePreferences, preferenceKey);
+			String preferenceKey, IEclipsePreferences itemPreferences) {
+		IItemDescriptor<T> result = getItemDescriptorFromPref(registry, itemPreferences, preferenceKey);
 		if (result == null) {
 			IItemDescriptor<T> descriptor = registry.getHighestRankingDescriptor();
 			if (descriptor != null) {
@@ -91,18 +91,18 @@ public final class ItemUtil {
 	 *            Registry for the {@link IItemDescriptor}
 	 * @param preferenceKey
 	 *            Key for this {@link IItemDescriptor} in preferences
-	 * @param enginePreferences
+	 * @param itemPreferences
 	 *            {@link IEclipsePreferences} where are stored {@link IItemDescriptor} values
 	 * @param <T>
 	 *            Type of {@link IItemDescriptor}
 	 * @return {@link IItemDescriptor} or null if nothing in preferences
 	 */
 	private static <T> IItemDescriptor<T> getItemDescriptorFromPref(IItemRegistry<T> registry,
-			IEclipsePreferences enginePreferences, String preferenceKey) {
-		String engineKey = enginePreferences.get(preferenceKey, null);
+			IEclipsePreferences itemPreferences, String preferenceKey) {
+		String itemKey = itemPreferences.get(preferenceKey, null);
 		IItemDescriptor<T> result = null;
-		if (engineKey != null) {
-			IItemDescriptor<T> descritpor = registry.getItemDescriptor(engineKey);
+		if (itemKey != null) {
+			IItemDescriptor<T> descritpor = registry.getItemDescriptor(itemKey);
 			if (descritpor != null) {
 				result = descritpor;
 			}
@@ -117,15 +117,15 @@ public final class ItemUtil {
 	 *            Registry for the {@link IItemDescriptor}
 	 * @param preferenceKey
 	 *            Key for this {@link IItemDescriptor} in preferences
-	 * @param enginePreferences
+	 * @param itemPreferences
 	 *            {@link IEclipsePreferences} where are stored {@link IItemDescriptor} values
 	 * @param <T>
 	 *            Type of {@link IItemDescriptor}
 	 * @return List of {@link IItemDescriptor} or null if nothing in preferences
 	 */
 	public static <T> List<IItemDescriptor<T>> getItemsDescriptor(IItemRegistry<T> registry,
-			String preferenceKey, IEclipsePreferences enginePreferences) {
-		String diffEngineKey = enginePreferences.get(preferenceKey, null);
+			String preferenceKey, IEclipsePreferences itemPreferences) {
+		String diffEngineKey = itemPreferences.get(preferenceKey, null);
 		List<IItemDescriptor<T>> result = null;
 		if (diffEngineKey != null) {
 			String[] diffEngineKeys = diffEngineKey.split(PREFFERENCE_DELIMITER);

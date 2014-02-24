@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.internal.engine.impl;
+package org.eclipse.emf.compare.rcp.internal.extension.impl;
 
 import com.google.common.base.Throwables;
 
@@ -16,39 +16,38 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 /**
- * Descriptor for an engine.
+ * Descriptor for an item.
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  * @param <T>
- *            one of the engine
+ *            an item type
  */
-public class EngineDescriptor<T> extends AbstractItemDescriptor<T> {
+public class ItemDescriptor<T> extends AbstractItemDescriptor<T> {
 
-	/** IConfig element of the engine. */
+	/** IConfig element of the item. */
 	private final IConfigurationElement config;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param label
-	 *            {@link EngineDescriptor#label}
+	 *            {@link ItemDescriptor#label}
 	 * @param description
-	 *            {@link EngineDescriptor#description}
+	 *            {@link ItemDescriptor#description}
 	 * @param rank
-	 *            {@link EngineDescriptor#rank}
+	 *            {@link ItemDescriptor#rank}
 	 * @param config
-	 *            {@link EngineDescriptor#config}
+	 *            {@link ItemDescriptor#config}
 	 * @param id
-	 *            {@link EngineDescriptor#id}
+	 *            {@link ItemDescriptor#id}
 	 */
-	public EngineDescriptor(String label, String description, int rank, IConfigurationElement config,
-			String id) {
+	public ItemDescriptor(String label, String description, int rank, IConfigurationElement config, String id) {
 		super(label, description, rank, id);
 		this.config = config;
 	}
 
 	/**
-	 * {@link EngineDescriptor#config}.
+	 * {@link ItemDescriptor#config}.
 	 * 
 	 * @return IConfigurationElement.
 	 */
@@ -57,9 +56,9 @@ public class EngineDescriptor<T> extends AbstractItemDescriptor<T> {
 	}
 
 	/**
-	 * Create an engine.
+	 * Create an item.
 	 * 
-	 * @return a engine instance
+	 * @return a item instance
 	 */
 	@SuppressWarnings("unchecked")
 	public T getItem() {

@@ -27,11 +27,11 @@ import java.util.List;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine.Factory;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
-import org.eclipse.emf.compare.rcp.internal.engine.IItemDescriptor;
-import org.eclipse.emf.compare.rcp.internal.engine.IItemRegistry;
-import org.eclipse.emf.compare.rcp.internal.engine.impl.AbstractItemDescriptor;
-import org.eclipse.emf.compare.rcp.internal.engine.impl.FactoryDescriptor;
-import org.eclipse.emf.compare.rcp.internal.engine.impl.ItemUtil;
+import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
+import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.AbstractItemDescriptor;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.FactoryDescriptor;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemUtil;
 import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 

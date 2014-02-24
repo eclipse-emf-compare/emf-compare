@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.internal.engine.impl;
+package org.eclipse.emf.compare.rcp.internal.extension.impl;
 
 import com.google.common.collect.Lists;
 
@@ -17,19 +17,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.eclipse.emf.compare.rcp.internal.engine.IItemDescriptor;
-import org.eclipse.emf.compare.rcp.internal.engine.IItemRegistry;
+import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
+import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
 
 /**
  * Registry holding {@link IItemDescriptor}.
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  * @param <T>
- *            one of the engine class
+ *            one of the item class
  */
-public class EngineRegistry<T> implements IItemRegistry<T> {
+public class ItemRegistry<T> implements IItemRegistry<T> {
 
-	/** Registry of all engine. */
+	/** Item registry. */
 	private final Map<String, IItemDescriptor<T>> registry = new ConcurrentHashMap<String, IItemDescriptor<T>>();
 
 	/**
@@ -53,8 +53,8 @@ public class EngineRegistry<T> implements IItemRegistry<T> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public IItemDescriptor<T> add(IItemDescriptor<T> engineDescriptor) {
-		return registry.put(engineDescriptor.getID(), engineDescriptor);
+	public IItemDescriptor<T> add(IItemDescriptor<T> itemDescriptor) {
+		return registry.put(itemDescriptor.getID(), itemDescriptor);
 
 	}
 

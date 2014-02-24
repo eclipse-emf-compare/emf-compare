@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.internal.engine;
+package org.eclipse.emf.compare.rcp.internal.extension;
 
 import org.osgi.service.prefs.Preferences;
 

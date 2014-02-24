@@ -8,15 +8,15 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.internal.engine.impl;
+package org.eclipse.emf.compare.rcp.internal.extension.impl;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.emf.compare.rcp.internal.EMFCompareRCPMessages;
-import org.eclipse.emf.compare.rcp.internal.engine.IItemDescriptor;
-import org.eclipse.emf.compare.rcp.internal.engine.IItemRegistry;
+import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
+import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
 
 /**
  * Base class for Descriptor Registry.
@@ -48,7 +48,7 @@ public class DescriptorRegistryEventListener<T> extends AbstractRegistryEventLis
 	/** EMPTY_STRING. */
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
-	/** Registry of the engines. */
+	/** Registry of items. */
 	private final IItemRegistry<T> registry;
 
 	/**
@@ -62,7 +62,7 @@ public class DescriptorRegistryEventListener<T> extends AbstractRegistryEventLis
 	 *            Logger
 	 * @param registry
 	 *            {@link IItemRegistry} where
-	 *            {@link org.eclipse.emf.compare.rcp.internal.engine.IItemDescriptor} will be stored
+	 *            {@link org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor} will be stored
 	 */
 	public DescriptorRegistryEventListener(String namespace, String extensionPointID, ILog log,
 			IItemRegistry<T> registry) {
@@ -128,7 +128,7 @@ public class DescriptorRegistryEventListener<T> extends AbstractRegistryEventLis
 		String label = element.getAttribute(DescriptorRegistryEventListener.LABEL_DESCRIPTOR_ATTR);
 		String description = element.getAttribute(DESCRITPION_DESCRIPTOR_ATTR);
 		String id = element.getAttribute(ID_DESCRIPTOR_ATTR);
-		EngineDescriptor<T> descriptor = new EngineDescriptor<T>(label, description, rank, element, id);
+		ItemDescriptor<T> descriptor = new ItemDescriptor<T>(label, description, rank, element, id);
 		IItemDescriptor<T> previous = registry.add(descriptor);
 		if (previous != null) {
 			log(IStatus.WARNING, element, EMFCompareRCPMessages.getString(

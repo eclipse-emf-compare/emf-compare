@@ -16,9 +16,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine.Factory;
-import org.eclipse.emf.compare.rcp.internal.engine.IConfigurableItem;
-import org.eclipse.emf.compare.rcp.internal.engine.impl.EngineDescriptor;
-import org.eclipse.emf.compare.rcp.internal.engine.impl.ItemUtil;
+import org.eclipse.emf.compare.rcp.internal.extension.IConfigurableItem;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemDescriptor;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemUtil;
 import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
 import org.osgi.service.prefs.Preferences;
 
@@ -27,21 +27,21 @@ import org.osgi.service.prefs.Preferences;
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
-public class MatchEngineFactoryDescriptor extends EngineDescriptor<IMatchEngine.Factory> {
+public class MatchEngineFactoryDescriptor extends ItemDescriptor<IMatchEngine.Factory> {
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param label
-	 *            {@link EngineDescriptor#getLabel()}
+	 *            {@link ItemDescriptor#getLabel()}
 	 * @param description
-	 *            {@link EngineDescriptor#getDescription()}
+	 *            {@link ItemDescriptor#getDescription()}
 	 * @param rank
-	 *            {@link EngineDescriptor#getRank()}
+	 *            {@link ItemDescriptor#getRank()}
 	 * @param config
 	 *            {@link IConfigurableItem} element used to create this item.
 	 * @param id
-	 *            {@link EngineDescriptor#getID()}
+	 *            {@link ItemDescriptor#getID()}
 	 */
 	public MatchEngineFactoryDescriptor(String label, String description, int rank,
 			IConfigurationElement config, String id) {

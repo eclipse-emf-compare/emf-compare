@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.internal.engine.impl;
+package org.eclipse.emf.compare.rcp.internal.extension.impl;
 
 import com.google.common.base.Preconditions;
 
@@ -20,7 +20,7 @@ import org.eclipse.emf.compare.equi.IEquiEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine.Factory.Registry;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
-import org.eclipse.emf.compare.rcp.internal.engine.IEMFCompareBuilderConfigurator;
+import org.eclipse.emf.compare.rcp.internal.extension.IEMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
 import org.eclipse.emf.compare.req.IReqEngine;
 

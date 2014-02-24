@@ -28,9 +28,9 @@ import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl
 import org.eclipse.emf.compare.provider.EMFCompareEditPlugin;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.emf.compare.rcp.internal.adapterfactory.AdapterFactoryDescriptorRegistryListener;
-import org.eclipse.emf.compare.rcp.internal.engine.IItemRegistry;
-import org.eclipse.emf.compare.rcp.internal.engine.impl.DescriptorRegistryEventListener;
-import org.eclipse.emf.compare.rcp.internal.engine.impl.EngineRegistry;
+import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.DescriptorRegistryEventListener;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.match.MatchEngineFactoryRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.match.MatchEnginefactoryRegistryWrapper;
 import org.eclipse.emf.compare.rcp.internal.merger.MergerExtensionRegistryListener;
@@ -86,16 +86,16 @@ public class EMFCompareRCPPlugin extends Plugin {
 	private IMerger.Registry mergerRegistry;
 
 	/** The registry that will hold references to all differences engines. */
-	private EngineRegistry<IDiffEngine> diffEngineRegistry;
+	private ItemRegistry<IDiffEngine> diffEngineRegistry;
 
 	/** The registry that will hold references to all equivalences engines. */
-	private EngineRegistry<IEquiEngine> equiEngineRegistry;
+	private ItemRegistry<IEquiEngine> equiEngineRegistry;
 
 	/** The registry that will hold references to all requirements engines. */
-	private EngineRegistry<IReqEngine> reqEngineRegistry;
+	private ItemRegistry<IReqEngine> reqEngineRegistry;
 
 	/** The registry that will hold references to all conflicts detector. */
-	private EngineRegistry<IConflictDetector> conflictDetectorRegistry;
+	private ItemRegistry<IConflictDetector> conflictDetectorRegistry;
 
 	/** The registry listener that will be used to react to merger changes. */
 	private AbstractRegistryEventListener mergerRegistryListener;
@@ -196,7 +196,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 *            {@link IExtensionRegistry} to listen in order to fill the registry
 	 */
 	private void setUpMatchEngineFactoryRegistry(final IExtensionRegistry registry) {
-		matchEngineFactoryRegistry = new EngineRegistry<IMatchEngine.Factory>();
+		matchEngineFactoryRegistry = new ItemRegistry<IMatchEngine.Factory>();
 		matchEngineFactoryRegistryListener = new MatchEngineFactoryRegistryListener(PLUGIN_ID,
 				MATCH_ENGINE_PPID, getLog(), matchEngineFactoryRegistry);
 		matchEngineFactoryRegistryListener.readRegistry(registry);
@@ -252,7 +252,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 *            {@link IExtensionRegistry} to listen in order to fill the registry
 	 */
 	private void setUpDiffEngineRegistry(final IExtensionRegistry registry) {
-		diffEngineRegistry = new EngineRegistry<IDiffEngine>();
+		diffEngineRegistry = new ItemRegistry<IDiffEngine>();
 		diffEngineListener = new DescriptorRegistryEventListener<IDiffEngine>(PLUGIN_ID, DIFF_ENGINE_PPID,
 				getLog(), diffEngineRegistry);
 		registry.addListener(diffEngineListener);
@@ -266,7 +266,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 *            {@link IExtensionRegistry} to listen in order to fill the registry
 	 */
 	private void setUpEquiEngineRegistry(final IExtensionRegistry registry) {
-		equiEngineRegistry = new EngineRegistry<IEquiEngine>();
+		equiEngineRegistry = new ItemRegistry<IEquiEngine>();
 		equiEngineListener = new DescriptorRegistryEventListener<IEquiEngine>(PLUGIN_ID, EQUI_ENGINE_PPID,
 				getLog(), equiEngineRegistry);
 		registry.addListener(equiEngineListener);
@@ -280,7 +280,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 *            {@link IExtensionRegistry} to listen in order to fill the registry
 	 */
 	private void setUpReqEngineRegistry(final IExtensionRegistry registry) {
-		reqEngineRegistry = new EngineRegistry<IReqEngine>();
+		reqEngineRegistry = new ItemRegistry<IReqEngine>();
 		reqEngineListener = new DescriptorRegistryEventListener<IReqEngine>(PLUGIN_ID, REQ_ENGINE_PPID,
 				getLog(), reqEngineRegistry);
 		registry.addListener(reqEngineListener);
@@ -294,7 +294,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 *            {@link IExtensionRegistry} to listen in order to fill the registry
 	 */
 	private void setUpConflictDetectorRegistry(final IExtensionRegistry registry) {
-		conflictDetectorRegistry = new EngineRegistry<IConflictDetector>();
+		conflictDetectorRegistry = new ItemRegistry<IConflictDetector>();
 		conflictDetectorListener = new DescriptorRegistryEventListener<IConflictDetector>(PLUGIN_ID,
 				CONFLICT_DETECTOR_PPID, getLog(), conflictDetectorRegistry);
 		registry.addListener(conflictDetectorListener);

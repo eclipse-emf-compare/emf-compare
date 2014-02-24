@@ -8,8 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.internal.engine.impl;
-
+package org.eclipse.emf.compare.rcp.internal.extension.impl;
 
 /**
  * IItemDescriptor used for factories. The will be only one instance of each item.
@@ -27,13 +26,13 @@ public class FactoryDescriptor<T> extends AbstractItemDescriptor<T> {
 	 * Constructor.
 	 * 
 	 * @param label
-	 *            {@link EngineDescriptor#label}
+	 *            {@link ItemDescriptor#label}
 	 * @param description
-	 *            {@link EngineDescriptor#description}
+	 *            {@link ItemDescriptor#description}
 	 * @param rank
-	 *            {@link EngineDescriptor#rank}
+	 *            {@link ItemDescriptor#rank}
 	 * @param id
-	 *            {@link EngineDescriptor#id}
+	 *            {@link ItemDescriptor#id}
 	 * @param instance
 	 *            Instance of the factory
 	 */
@@ -43,9 +42,9 @@ public class FactoryDescriptor<T> extends AbstractItemDescriptor<T> {
 	}
 
 	/**
-	 * Create an engine.
+	 * Create an item.
 	 * 
-	 * @return a engine instance
+	 * @return a item instance
 	 */
 	public T getItem() {
 		return instance;

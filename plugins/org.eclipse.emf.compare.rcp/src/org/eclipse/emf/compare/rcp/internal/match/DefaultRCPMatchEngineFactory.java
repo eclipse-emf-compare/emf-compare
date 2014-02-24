@@ -15,7 +15,7 @@ import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
-import org.eclipse.emf.compare.rcp.internal.engine.IConfigurableItem;
+import org.eclipse.emf.compare.rcp.internal.extension.IConfigurableItem;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.osgi.service.prefs.Preferences;

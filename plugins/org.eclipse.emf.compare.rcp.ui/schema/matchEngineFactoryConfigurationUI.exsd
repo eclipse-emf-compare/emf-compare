@@ -52,10 +52,10 @@
          <attribute name="itemToConfigure" type="string" use="required">
             <annotation>
                <documentation>
-                  Id of the item to configure. It is the qualified named of the factory class. This factory shall implement org.eclipse.emf.compare.rcp.internal.engine.IConfigurableItem.
+                  Id of the item to configure. It is the qualified named of the factory class. This factory shall implement org.eclipse.emf.compare.rcp.internal.extension.IConfigurableItem.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.rcp.internal.engine.IConfigurableItem"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.rcp.internal.extension.IConfigurableItem"/>
                </appinfo>
             </annotation>
          </attribute>
