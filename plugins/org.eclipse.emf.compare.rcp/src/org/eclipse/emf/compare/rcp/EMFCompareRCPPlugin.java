@@ -139,7 +139,10 @@ public class EMFCompareRCPPlugin extends Plugin {
 	/** The registry listener that will be used to react to conflict detector changes. */
 	private DescriptorRegistryEventListener<IConflictDetector> conflictDetectorListener;
 
-	/** Instance scope for preferences. Do not use singleton to respect Helios compatibility. See {@link InstanceScope} */
+	/**
+	 * Instance scope for preferences. Do not use singleton to respect Helios compatibility. See
+	 * {@link InstanceScope}
+	 */
 	@SuppressWarnings("deprecation")
 	private InstanceScope instanceScope = new InstanceScope();
 
@@ -444,7 +447,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 * Returns the adapter factory descriptor registry to which extension will be registered.
 	 * 
 	 * @return the the adapter factory descriptor registry to which extension will be registered
-	 * @since 3.0
+	 * @since 2.2
 	 */
 	public RankedAdapterFactoryDescriptor.Registry getAdapterFactoryRegistry() {
 		return adapterFactoryRegistry;
@@ -454,7 +457,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 * Returns the merger registry to which extension will be registered.
 	 * 
 	 * @return the merger registry to which extension will be registered
-	 * @since 3.0
+	 * @since 2.2
 	 */
 	public IMerger.Registry getMergerRegistry() {
 		return mergerRegistry;
@@ -518,7 +521,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 * Returns the match engine factory registry to which extension will be registered.
 	 * 
 	 * @return the match engine factory registry to which extension will be registered
-	 * @since 3.0
+	 * @since 2.2
 	 */
 	public IMatchEngine.Factory.Registry getMatchEngineFactoryRegistry() {
 		return matchEngineFactoryRegistryWrapped;
@@ -528,7 +531,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 * Returns the match engine factory registry to which extension will be registered.
 	 * 
 	 * @return the match engine factory registry to which extension will be registered
-	 * @since 3.0
+	 * @since 2.2
 	 */
 	public IItemRegistry<IMatchEngine.Factory> getMatchEngineFactoryDescriptorRegistry() {
 		return matchEngineFactoryRegistry;
