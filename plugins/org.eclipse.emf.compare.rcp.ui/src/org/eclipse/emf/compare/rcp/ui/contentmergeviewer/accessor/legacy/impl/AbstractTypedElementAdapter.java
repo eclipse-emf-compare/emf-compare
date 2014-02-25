@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.impl;
+package org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.impl;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.provider.ExtendedAdapterFactoryItemDelegator;
