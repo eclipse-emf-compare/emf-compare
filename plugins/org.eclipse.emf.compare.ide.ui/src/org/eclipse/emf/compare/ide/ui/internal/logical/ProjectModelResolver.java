@@ -330,15 +330,14 @@ public class ProjectModelResolver extends LogicalModelResolver {
 		final Set<URI> removedURIs = resourceListener.popRemovedURIs();
 		final Set<URI> changedURIs = Sets.difference(resourceListener.popChangedURIs(), removedURIs);
 
-		for (URI removed : removedURIs) {
-			dependencyGraph.remove(removed);
-		}
+		dependencyGraph.removeAll(removedURIs);
+		dependencyGraph.removeAll(changedURIs);
 
 		for (URI changed : changedURIs) {
-			dependencyGraph.remove(changed);
-
-			final IFile file = getFileAt(changed);
-			updateDependencies(file, monitor);
+			if (!dependencyGraph.contains(changed)) {
+				final IFile file = getFileAt(changed);
+				updateDependencies(file, monitor);
+			}
 		}
 	}
 
