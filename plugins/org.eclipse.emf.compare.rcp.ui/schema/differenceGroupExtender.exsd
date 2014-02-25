@@ -6,7 +6,9 @@
          <meta.schema plugin="org.eclipse.emf.compare.rcp.ui" id="differenceGroupExtender" name="EMF Compare Difference Group Extender"/>
       </appinfo>
       <documentation>
-         [Enter description of this extension point.]
+         A difference group extender allows you to modify the display of an existing group&apos;s differences tree node of the EMF Commpare structural view.
+
+You can provide your own extender by adding an extension of type &lt;samp&gt;org.eclipse.emf.compare.rcp.ui.differenceGroupExtender&lt;/samp&gt; to your plugin.
       </documentation>
    </annotation>
 
@@ -52,10 +54,10 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  A class that implements &lt;samp&gt;org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender&lt;/samp&gt;.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender.IDifferenceGroupExtender"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender"/>
                </appinfo>
             </annotation>
          </attribute>
@@ -67,7 +69,7 @@
          <meta.section type="since"/>
       </appinfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         4.0
       </documentation>
    </annotation>
 
@@ -76,7 +78,16 @@
          <meta.section type="examples"/>
       </appinfo>
       <documentation>
-         [Enter extension point usage example here.]
+         The example below shows the extension point syntax:
+&lt;p&gt;
+&lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.emf.compare.rcp.ui.differenceGroupExtender&quot;&gt;
+ &lt;differenceGroupExtender
+     class=&quot;com.example.xyz.SampleExtender&quot;&gt;
+ &lt;/differenceGroupExtender&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -85,7 +96,7 @@
          <meta.section type="apiinfo"/>
       </appinfo>
       <documentation>
-         [Enter API information here.]
+         Plugins using this extension point have to implement &lt;samp&gt;org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender&lt;/samp&gt;.
       </documentation>
    </annotation>
 
@@ -94,9 +105,17 @@
          <meta.section type="implementation"/>
       </appinfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         There is no default implementation.
       </documentation>
    </annotation>
 
+   <annotation>
+      <appinfo>
+         <meta.section type="copyright"/>
+      </appinfo>
+      <documentation>
+         Copyright (c) 2014 Obeo. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
+      </documentation>
+   </annotation>
 
 </schema>
