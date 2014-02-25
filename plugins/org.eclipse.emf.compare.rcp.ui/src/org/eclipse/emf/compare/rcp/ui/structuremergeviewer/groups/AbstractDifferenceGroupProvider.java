@@ -16,6 +16,8 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
@@ -34,6 +36,12 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 	/** The cross reference adapter used by the difference group provider. */
 	private final ECrossReferenceAdapter crossReferenceAdapter;
 
+	/** A human-readable label for this group provider. This will be displayed in the EMF Compare UI. */
+	protected String label;
+
+	/** The initial activation state of the group provider. */
+	protected boolean activeByDefault;
+
 	/**
 	 * Default constructor.
 	 */
@@ -49,6 +57,52 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 				return eReference == TreePackage.Literals.TREE_NODE__DATA;
 			}
 		};
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getLabel()
+	 */
+	public String getLabel() {
+		return label;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setLabel(java.lang.String)
+	 */
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#defaultSelected()
+	 */
+	public boolean defaultSelected() {
+		return activeByDefault;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setDefaultSelected(boolean)
+	 */
+	public void setDefaultSelected(boolean active) {
+		this.activeByDefault = active;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#isEnabled(org
+	 *      .eclipse.emf.compare.scope.IComparisonScope, org.eclipse.emf.compare.Comparison)
+	 */
+	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
+		return true;
 	}
 
 	/**
