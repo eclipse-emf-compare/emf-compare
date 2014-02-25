@@ -27,7 +27,6 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.AbstractDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
-import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.edit.tree.TreeNode;
 
@@ -40,9 +39,6 @@ import org.eclipse.emf.edit.tree.TreeNode;
  * @since 4.0
  */
 public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
-
-	/** The initial activation state of the group provider. */
-	private boolean activeByDefault;
 
 	/** The unique group provided by this provider. */
 	private IDifferenceGroup group;
@@ -62,16 +58,6 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 			group = new ResourceGroup(comparison, getCrossReferenceAdapter());
 		}
 		return ImmutableList.of(group);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#isEnabled(org
-	 *      .eclipse.emf.compare.scope.IComparisonScope, org.eclipse.emf.compare.Comparison)
-	 */
-	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
-		return true;
 	}
 
 	/**

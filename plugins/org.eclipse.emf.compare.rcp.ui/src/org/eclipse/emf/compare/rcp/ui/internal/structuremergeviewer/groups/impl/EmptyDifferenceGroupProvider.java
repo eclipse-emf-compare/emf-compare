@@ -17,7 +17,6 @@ import java.util.Collection;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.AbstractDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
-import org.eclipse.emf.compare.scope.IComparisonScope;
 
 /**
  * An empty difference group provider.
@@ -39,21 +38,10 @@ public class EmptyDifferenceGroupProvider extends AbstractDifferenceGroupProvide
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#isEnabled(Open
-	 *      Declaration org.eclipse.emf.compare.scope.IComparisonScope, org.eclipse.emf.compare.Comparison)
-	 */
-	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
-		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#dispose()
 	 */
 	public void dispose() {
 		// do nothing;
-
 	}
 
 }

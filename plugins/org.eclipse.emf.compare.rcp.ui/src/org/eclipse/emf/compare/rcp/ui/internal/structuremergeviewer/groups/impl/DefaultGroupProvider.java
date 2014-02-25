@@ -19,7 +19,6 @@ import java.util.Collection;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.AbstractDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
-import org.eclipse.emf.compare.scope.IComparisonScope;
 
 /**
  * This implementation of a
@@ -49,16 +48,6 @@ public class DefaultGroupProvider extends AbstractDifferenceGroupProvider {
 			group = new BasicDifferenceGroupImpl(aComparison, alwaysTrue(), getCrossReferenceAdapter());
 		}
 		return ImmutableList.of(group);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#isEnabled(org
-	 *      .eclipse.emf.compare.scope.IComparisonScope, org.eclipse.emf.compare.Comparison)
-	 */
-	public boolean isEnabled(IComparisonScope scope, Comparison aComparison) {
-		return true;
 	}
 
 	/**

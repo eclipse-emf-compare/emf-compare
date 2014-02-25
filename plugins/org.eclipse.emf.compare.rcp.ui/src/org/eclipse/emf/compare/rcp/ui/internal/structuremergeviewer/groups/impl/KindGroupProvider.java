@@ -22,7 +22,6 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.AbstractDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
-import org.eclipse.emf.compare.scope.IComparisonScope;
 
 /**
  * This implementation of a
@@ -77,16 +76,6 @@ public class KindGroupProvider extends AbstractDifferenceGroupProvider {
 			differenceGroups = ImmutableList.copyOf(groups);
 		}
 		return differenceGroups;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#isEnabled(org
-	 *      .eclipse.emf.compare.scope.IComparisonScope, org.eclipse.emf.compare.Comparison)
-	 */
-	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
-		return true;
 	}
 
 	/**

@@ -114,6 +114,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#isEnabled(org
 	 *      .eclipse.emf.compare.scope.IComparisonScope, org.eclipse.emf.compare.Comparison)
 	 */
+	@Override
 	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
 		if (comparison != null && comparison.isThreeWay()) {
 			return true;
