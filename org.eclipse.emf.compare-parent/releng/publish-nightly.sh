@@ -18,8 +18,6 @@ source common.sh
 ######################################################################
 
 # The type of build being published
-BUILD_TYPE="nightly"
-BUILD_TYPE_PREFIX="N"
 PROG=`basename $0`
 REPOSITORY_PATH="packaging/org.eclipse.emf.compare.update/target/repository"
 
@@ -69,33 +67,39 @@ fi
 
 if [ -z "$WORKSPACE" ]; then
   echo "$0: workspace argument is mandatory" >&2
+  usage >&2 
   exit 1
 fi
 
 if [ ! -d "$WORKSPACE" ]; then
   echo "$0: workspace does not exist or is not a directory -- $WORKSPACE" >&2
+  usage >&2 
   exit 1
 fi
 
 if [ -z "$BUILD_ID" ]; then
   echo "$0: build-id argument is mandatory" >&2
+  usage >&2 
   exit 1
 fi 
 
 echo $BUILD_ID | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}-[0-9]{2}$' > /dev/null
-if [ ! $? -eq 0 ]; then
+if [ $? -ne 0 ]; then
   echo "$0: bad build-id format -- $BUILD_ID" >&2 
+  usage >&2 
   exit 1
 fi
 
 if [ -z "$VERSION" ]; then
   echo "$0: version argument is mandatory" >&2
+  usage >&2 
   exit 1
 fi 
 
 echo $VERSION | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' > /dev/null
-if [ ! $? -eq 0 ]; then
+if [ $? -ne 0 ]; then
   echo "$0: bad version format -- $VERSION" >&2 
+  usage >&2 
   exit 1
 fi
 
@@ -105,14 +109,16 @@ set -e
 # update the "latest" repositories to the new build. Should be used as a callback in 
 # function visitVersions
 #  1/ the path
-#  2/ the version of interrest 
-#  3/ the currently visited major version (format x, where x is an integer)
-#  4/ the currently visited minor version (format x.y, where x and y are integer)
-#  5/ the currently visited micro version (format x.y.z, where x, y and z are integer)
-#  6/ the most recent major version in the given $1 path (format x, where x is an integer)
-#  7/ the most recent minor version in the currently visited major version (format x.y, where x and y are integer)
-#  8/ the most recent micro version in the currently visited minor version (format x.y.z, where x, y and z are integer)
-#  9/ the most recent build version in the currently visited micro version (format x.y.z-TYYYYMMDD-HHMM, where x, y and z 
+#  2/ the version of interrest
+#  3/ the currently visited major version (an integer)
+#  4/ the currently visited minor version (an integer)
+#  5/ the currently visited micro version (an integer)
+#  6/ the currently visited build (format x.y.z-TYYYYMMDD-HHMM, where x, y and z 
+#     are integer, T is N for nightly, I for integration or R for release and YYYYMMDD-HHMM is a timestamp)
+#  7/ the most recent major version in the given $1 path (an integer)
+#  8/ the most recent minor version in the currently visited major version (an integer)
+#  9/ the most recent micro version in the currently visited minor version (an integer)
+#  10/ the most recent build version in the currently visited micro version (format x.y.z-TYYYYMMDD-HHMM, where x, y and z 
 #     are integer, T is N for nightly, I for integration or R for release and YYYYMMDD-HHMM is a timestamp)
 updateLatestRedirections() {
 	local path=$1
@@ -120,12 +126,13 @@ updateLatestRedirections() {
 	local visitedMajor=$3
 	local visitedMinor=$4
 	local visitedMicro=$5
-	local latestMajor=$6
-	local latestMinor=$7
-	local latestMicro=$8
-	local latestBuild=$9
+	local visitedBuild=$6
+	local latestMajor=$7
+	local latestMinor=$8
+	local latestMicro=$9
+	local latestBuild=${10}
 	
-	local updateSiteURL="$EMF_COMPARE_UPDATES_BASE_URL/$BUILD_TYPE/$latestBuild"
+	local updateSiteURL="$EMF_COMPARE_UPDATES_BASE_URL/$NIGHTLY/$latestBuild"
 
 	local nextMajor="$(($visitedMajor+1)).0.0"
 	local nextMinor="$visitedMajor.$(($visitedMinor+1)).0"
@@ -134,27 +141,27 @@ updateLatestRedirections() {
 	if [ $(compareOSGIVersions $versionToPublish "$visitedMajor.$visitedMinor.$visitedMicro") -ge 0 ]; then
 		if [  $(compareOSGIVersions $versionToPublish $nextMicro) -lt 0 ]; then
 				local stream="$visitedMajor.$visitedMinor.$visitedMicro"
-				echo "    $EMF_COMPARE_UPDATES_BASE_URL/$BUILD_TYPE/$stream/latest"
-				createRedirect "$path/$stream/latest" "$updateSiteURL" "EMF Compare latest $stream $BUILD_TYPE build"
+				echo "    $EMF_COMPARE_UPDATES_BASE_URL/$NIGHTLY/$stream/latest"
+				createRedirect "$path/$stream/latest" "$updateSiteURL" "EMF Compare latest $stream $NIGHTLY build"
 		fi 
 
-		if [ $visitedMicro = $latestMicro ]; then
+		if [ "$visitedMicro" -eq "$latestMicro" ]; then
 			if [ $(compareOSGIVersions $versionToPublish $nextMinor) -lt 0 ]; then
 				local stream="$visitedMajor.$visitedMinor.x"
-				echo "    $EMF_COMPARE_UPDATES_BASE_URL/$BUILD_TYPE/$stream/latest"
-				createRedirect "$path/$stream/latest" "$updateSiteURL" "EMF Compare latest $stream $BUILD_TYPE build"
+				echo "    $EMF_COMPARE_UPDATES_BASE_URL/$NIGHTLY/$stream/latest"
+				createRedirect "$path/$stream/latest" "$updateSiteURL" "EMF Compare latest $stream $NIGHTLY build"
 			fi
 
-			if [ $visitedMinor = $latestMinor ]; then
+			if [ "$visitedMinor" -eq "$latestMinor" ]; then
 				if [ $(compareOSGIVersions $versionToPublish $nextMajor) -lt 0 ]; then
 					local stream="$visitedMajor.x"
-					echo "    $EMF_COMPARE_UPDATES_BASE_URL/$BUILD_TYPE/$stream/latest"
-					createRedirect "$path/$stream/latest" "$updateSiteURL" "EMF Compare latest $stream $BUILD_TYPE build"
+					echo "    $EMF_COMPARE_UPDATES_BASE_URL/$NIGHTLY/$stream/latest"
+					createRedirect "$path/$stream/latest" "$updateSiteURL" "EMF Compare latest $stream $NIGHTLY build"
 				fi
 
-				if [ $visitedMajor = $latestMajor ]; then
-					echo "    $EMF_COMPARE_UPDATES_BASE_URL/$BUILD_TYPE/latest"
-					createRedirect "$path/latest" "$updateSiteURL" "EMF Compare latest $BUILD_TYPE build"
+				if [ "$visitedMajor" -eq "$latestMajor" ]; then
+					echo "    $EMF_COMPARE_UPDATES_BASE_URL/$NIGHTLY/latest"
+					createRedirect "$path/latest" "$updateSiteURL" "EMF Compare latest $NIGHTLY build"
 				fi
 			fi
 		fi
@@ -178,17 +185,17 @@ export MAJOR_STREAM=$(majorStream "$VERSION")
 export BUILD_TIMESTAMP=$(buildTimestamp "$BUILD_ID")
 
 # The full version for this build, e.g. 0.9.0-N20131015-070707
-export FULL_VERSION="${VERSION}-${BUILD_TYPE_PREFIX}${BUILD_TIMESTAMP}"
+export FULL_VERSION="${VERSION}-${NIGHTLY_PREFIX}${BUILD_TIMESTAMP}"
 
 # The root folder where all the builds of the same type as this one
 # are published
-export NIGHTLY_PATH="$EMF_COMPARE_UPDATES_ROOT/$BUILD_TYPE"
+export NIGHTLY_PATH="$EMF_COMPARE_UPDATES_ROOT/$NIGHTLY"
 
 # The folder for this particular build
 export UPDATE_SITE_PATH=
 
 # The URL on which this particular build will be made available
-export UPDATE_SITE_URL="$EMF_COMPARE_UPDATES_BASE_URL/$BUILD_TYPE/$FULL_VERSION"
+export UPDATE_SITE_URL="$EMF_COMPARE_UPDATES_BASE_URL/$NIGHTLY/$FULL_VERSION"
 
 ######################################################################
 # Publish the build
@@ -206,35 +213,35 @@ env | sort > "$NIGHTLY_PATH/$FULL_VERSION/build_env.txt"
 echo "Adding $UPDATE_SITE_URL to composites repositories:"
 
 # add a link for the $VERSION (e.g. "1.2.0" => "1.2.0-NYYYYMMDD-HHMM")
-echo "    $EMF_COMPARE_UPDATES_BASE_URL/$BUILD_TYPE/$VERSION"
+echo "    $EMF_COMPARE_UPDATES_BASE_URL/$NIGHTLY/$VERSION"
 composite-repository \
 	-location "$NIGHTLY_PATH/$VERSION" \
 	-add "$UPDATE_SITE_URL" \
-	-repositoryName "EMF Compare $VERSION $BUILD_TYPE builds"
+	-repositoryName "EMF Compare $VERSION $NIGHTLY builds"
 createP2Index "$NIGHTLY_PATH/$VERSION"
 
 # add a link for the $MINOR_STREAM (e.g. "1.2.x" => "1.2.0-NYYYYMMDD-HHMM")
-echo "    $EMF_COMPARE_UPDATES_BASE_URL/$BUILD_TYPE/$MINOR_STREAM"
+echo "    $EMF_COMPARE_UPDATES_BASE_URL/$NIGHTLY/$MINOR_STREAM"
 composite-repository \
 	-location "$NIGHTLY_PATH/$MINOR_STREAM" \
 	-add "$UPDATE_SITE_URL" \
-	-repositoryName "EMF Compare $MINOR_STREAM $BUILD_TYPE builds"
+	-repositoryName "EMF Compare $MINOR_STREAM $NIGHTLY builds"
 createP2Index "$NIGHTLY_PATH/$MINOR_STREAM"
 
 # add a link for the $MAJOR_STREAM (e.g. "1.x" => "1.2.0-NYYYYMMDD-HHMM")
-echo "    $EMF_COMPARE_UPDATES_BASE_URL/$BUILD_TYPE/$MAJOR_STREAM"
+echo "    $EMF_COMPARE_UPDATES_BASE_URL/$NIGHTLY/$MAJOR_STREAM"
 composite-repository \
 	-location "$NIGHTLY_PATH/$MAJOR_STREAM" \
 	-add "$UPDATE_SITE_URL" \
-	-repositoryName "EMF Compare $MAJOR_STREAM $BUILD_TYPE builds"
+	-repositoryName "EMF Compare $MAJOR_STREAM $NIGHTLY builds"
 createP2Index "$NIGHTLY_PATH/$MAJOR_STREAM"
 
 # add a link for all nightly list
-echo "    $EMF_COMPARE_UPDATES_BASE_URL/$BUILD_TYPE"
+echo "    $EMF_COMPARE_UPDATES_BASE_URL/$NIGHTLY"
 composite-repository \
 	-location "$NIGHTLY_PATH" \
 	-add "$UPDATE_SITE_URL" \
-	-repositoryName "EMF Compare $BUILD_TYPE builds"
+	-repositoryName "EMF Compare $NIGHTLY builds"
 createP2Index "$NIGHTLY_PATH"
 
 # Setup or update the redirects (implemented as composite repos)

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -112,5 +112,29 @@ public final class ReferenceUtil {
 		}
 		// Assumes that the containing package is the same, let it fail otherwise
 		return object.eIsSet(clazz.getEStructuralFeature(feature.getName()));
+	}
+
+	/**
+	 * In case of dynamic EObjects, the EClasses of both sides might be different, making "isset" fail in
+	 * "unknown feature". We assume that even if the EClasses are distinct instances, they are the same
+	 * nonetheless, and thus we can use the feature name in order to retrieve the feature's value.
+	 * 
+	 * @param object
+	 *            The object for which feature we'll set the value.
+	 * @param feature
+	 *            The actual feature of which we'll set the value.
+	 * @param newValue
+	 *            The value to set.
+	 */
+	public static void safeESet(EObject object, EStructuralFeature feature, Object newValue) {
+		final EClass clazz = object.eClass();
+		// TODO profile. This "if" might be counter productive : accessing both packages is probably as long
+		// as a direct lookup to the clazz.eGetEStructuralFeature...
+		if (clazz.getEPackage() == feature.getEContainingClass().getEPackage()) {
+			object.eSet(feature, newValue);
+		} else {
+			// Assumes that the containing package is the same, let it fail otherwise
+			object.eSet(clazz.getEStructuralFeature(feature.getName()), newValue);
+		}
 	}
 }

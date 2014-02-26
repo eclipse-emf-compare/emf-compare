@@ -84,13 +84,13 @@ public interface UMLCompareFactory extends EFactory {
 	MessageChange createMessageChange();
 
 	/**
-	 * Returns a new object of class '<em>Stereotype Property Change</em>'.
+	 * Returns a new object of class '<em>Stereotype Attribute Change</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Stereotype Property Change</em>'.
+	 * @return a new object of class '<em>Stereotype Attribute Change</em>'.
 	 * @generated
 	 */
-	StereotypePropertyChange createStereotypePropertyChange();
+	StereotypeAttributeChange createStereotypeAttributeChange();
 
 	/**
 	 * Returns a new object of class '<em>Stereotype Application Change</em>'.

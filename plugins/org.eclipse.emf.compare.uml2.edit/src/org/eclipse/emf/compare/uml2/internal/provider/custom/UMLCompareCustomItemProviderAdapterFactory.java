@@ -57,6 +57,18 @@ public class UMLCompareCustomItemProviderAdapterFactory extends UMLCompareAdapte
 	private StereotypeApplicationChangeCustomItemProvider stereotypeApplicationChangeExtendedItemProvider;
 
 	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange} instances.
+	 */
+	private StereotypeAttributeChangeCustomItemProvider stereotypeAttributeChangeExtendedItemProvider;
+
+	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link org.eclipse.emf.compare.uml2.internal.StereotypeReferenceChange} instances.
+	 */
+	private StereotypeReferenceChangeCustomItemProvider stereotypeReferenceChangeExtendedItemProvider;
+
+	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.internal.UMLDiff}
 	 * instances.
 	 */
@@ -83,6 +95,36 @@ public class UMLCompareCustomItemProviderAdapterFactory extends UMLCompareAdapte
 		}
 
 		return stereotypeApplicationChangeExtendedItemProvider;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.util.UMLCompareAdapterFactory#createStereotypeAttributeChangeAdapter()
+	 */
+	@Override
+	public Adapter createStereotypeAttributeChangeAdapter() {
+		if (stereotypeAttributeChangeExtendedItemProvider == null) {
+			stereotypeAttributeChangeExtendedItemProvider = new StereotypeAttributeChangeCustomItemProvider(
+					this);
+		}
+
+		return stereotypeAttributeChangeExtendedItemProvider;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.util.UMLCompareAdapterFactory#createStereotypeReferenceChangeAdapter()
+	 */
+	@Override
+	public Adapter createStereotypeReferenceChangeAdapter() {
+		if (stereotypeReferenceChangeExtendedItemProvider == null) {
+			stereotypeReferenceChangeExtendedItemProvider = new StereotypeReferenceChangeCustomItemProvider(
+					this);
+		}
+
+		return stereotypeReferenceChangeExtendedItemProvider;
 	}
 
 	/**

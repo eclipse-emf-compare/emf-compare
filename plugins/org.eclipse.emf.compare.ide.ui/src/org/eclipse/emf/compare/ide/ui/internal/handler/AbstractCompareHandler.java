@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012 - 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.Iterator;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
@@ -24,6 +25,7 @@ import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
@@ -38,6 +40,7 @@ import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryImpl;
 import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
@@ -54,6 +57,12 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 
 	protected static CompareEditorInput createCompareEditorInput(IWorkbenchPart part,
 			AdapterFactory adapterFactory, Notifier left, Notifier right, Notifier origin) {
+		return createCompareEditorInput(part, adapterFactory, left, right, origin, null);
+	}
+
+	protected static CompareEditorInput createCompareEditorInput(IWorkbenchPart part,
+			AdapterFactory adapterFactory, Notifier left, Notifier right, Notifier origin,
+			IEclipsePreferences enginePreferences) {
 		CompareEditorInput input = null;
 
 		ICompareEditingDomain editingDomain = createEMFCompareEditingDomain(part, left, right, origin);
@@ -65,9 +74,15 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 				.getMatchEngineFactoryRegistry();
 		matchEngineFactoryRegistry.add(eObjectMatchEngineFactory);
 
-		EMFCompare comparator = EMFCompare.builder()
-				.setMatchEngineFactoryRegistry(matchEngineFactoryRegistry).setPostProcessorRegistry(
-						EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build();
+		Builder builder = EMFCompare.builder().setPostProcessorRegistry(
+				EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
+		if (enginePreferences != null) {
+			EMFCompareBuilderConfigurator engineProvider = new EMFCompareBuilderConfigurator(
+					enginePreferences, matchEngineFactoryRegistry);
+			engineProvider.configure(builder);
+		}
+		EMFCompare comparator = builder.build();
+
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		input = new ComparisonScopeEditorInput(configuration, editingDomain, adapterFactory, comparator,
 				scope) {

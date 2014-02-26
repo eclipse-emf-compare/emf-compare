@@ -1142,14 +1142,14 @@ public interface UMLComparePackage extends EPackage {
 	int MESSAGE_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.internal.impl.StereotypePropertyChangeImpl <em>Stereotype Property Change</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.internal.impl.StereotypeAttributeChangeImpl <em>Stereotype Attribute Change</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.uml2.internal.impl.StereotypePropertyChangeImpl
-	 * @see org.eclipse.emf.compare.uml2.internal.impl.UMLComparePackageImpl#getStereotypePropertyChange()
+	 * @see org.eclipse.emf.compare.uml2.internal.impl.StereotypeAttributeChangeImpl
+	 * @see org.eclipse.emf.compare.uml2.internal.impl.UMLComparePackageImpl#getStereotypeAttributeChange()
 	 * @generated
 	 */
-	int STEREOTYPE_PROPERTY_CHANGE = 6;
+	int STEREOTYPE_ATTRIBUTE_CHANGE = 6;
 
 	/**
 	 * The feature id for the '<em><b>Match</b></em>' container reference.
@@ -1158,7 +1158,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_PROPERTY_CHANGE__MATCH = UML_DIFF__MATCH;
+	int STEREOTYPE_ATTRIBUTE_CHANGE__MATCH = UML_DIFF__MATCH;
 
 	/**
 	 * The feature id for the '<em><b>Requires</b></em>' reference list.
@@ -1167,7 +1167,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_PROPERTY_CHANGE__REQUIRES = UML_DIFF__REQUIRES;
+	int STEREOTYPE_ATTRIBUTE_CHANGE__REQUIRES = UML_DIFF__REQUIRES;
 
 	/**
 	 * The feature id for the '<em><b>Required By</b></em>' reference list.
@@ -1176,7 +1176,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_PROPERTY_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
+	int STEREOTYPE_ATTRIBUTE_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Implies</b></em>' reference list.
@@ -1185,7 +1185,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_PROPERTY_CHANGE__IMPLIES = UML_DIFF__IMPLIES;
+	int STEREOTYPE_ATTRIBUTE_CHANGE__IMPLIES = UML_DIFF__IMPLIES;
 
 	/**
 	 * The feature id for the '<em><b>Implied By</b></em>' reference list.
@@ -1194,7 +1194,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_PROPERTY_CHANGE__IMPLIED_BY = UML_DIFF__IMPLIED_BY;
+	int STEREOTYPE_ATTRIBUTE_CHANGE__IMPLIED_BY = UML_DIFF__IMPLIED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Refines</b></em>' reference list.
@@ -1203,7 +1203,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_PROPERTY_CHANGE__REFINES = UML_DIFF__REFINES;
+	int STEREOTYPE_ATTRIBUTE_CHANGE__REFINES = UML_DIFF__REFINES;
 
 	/**
 	 * The feature id for the '<em><b>Refined By</b></em>' reference list.
@@ -1212,7 +1212,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_PROPERTY_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
+	int STEREOTYPE_ATTRIBUTE_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Prime Refining</b></em>' reference.
@@ -1221,7 +1221,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_PROPERTY_CHANGE__PRIME_REFINING = UML_DIFF__PRIME_REFINING;
+	int STEREOTYPE_ATTRIBUTE_CHANGE__PRIME_REFINING = UML_DIFF__PRIME_REFINING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute.
@@ -1230,7 +1230,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_PROPERTY_CHANGE__KIND = UML_DIFF__KIND;
+	int STEREOTYPE_ATTRIBUTE_CHANGE__KIND = UML_DIFF__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' attribute.
@@ -1239,7 +1239,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_PROPERTY_CHANGE__SOURCE = UML_DIFF__SOURCE;
+	int STEREOTYPE_ATTRIBUTE_CHANGE__SOURCE = UML_DIFF__SOURCE;
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
@@ -1248,7 +1248,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_PROPERTY_CHANGE__STATE = UML_DIFF__STATE;
+	int STEREOTYPE_ATTRIBUTE_CHANGE__STATE = UML_DIFF__STATE;
 
 	/**
 	 * The feature id for the '<em><b>Equivalence</b></em>' reference.
@@ -1257,7 +1257,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_PROPERTY_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
+	int STEREOTYPE_ATTRIBUTE_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
 
 	/**
 	 * The feature id for the '<em><b>Conflict</b></em>' reference.
@@ -1266,7 +1266,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_PROPERTY_CHANGE__CONFLICT = UML_DIFF__CONFLICT;
+	int STEREOTYPE_ATTRIBUTE_CHANGE__CONFLICT = UML_DIFF__CONFLICT;
 
 	/**
 	 * The feature id for the '<em><b>Discriminant</b></em>' reference.
@@ -1275,7 +1275,7 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_PROPERTY_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
+	int STEREOTYPE_ATTRIBUTE_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
 
 	/**
 	 * The feature id for the '<em><b>EReference</b></em>' reference.
@@ -1284,25 +1284,16 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_PROPERTY_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
+	int STEREOTYPE_ATTRIBUTE_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
 
 	/**
-	 * The feature id for the '<em><b>Stereotype</b></em>' reference.
+	 * The number of structural features of the '<em>Stereotype Attribute Change</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STEREOTYPE_PROPERTY_CHANGE__STEREOTYPE = UML_DIFF_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Stereotype Property Change</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STEREOTYPE_PROPERTY_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 1;
+	int STEREOTYPE_ATTRIBUTE_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2.internal.impl.StereotypeApplicationChangeImpl <em>Stereotype Application Change</em>}' class.
@@ -2001,25 +1992,14 @@ public interface UMLComparePackage extends EPackage {
 	EClass getMessageChange();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.internal.StereotypePropertyChange <em>Stereotype Property Change</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange <em>Stereotype Attribute Change</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Stereotype Property Change</em>'.
-	 * @see org.eclipse.emf.compare.uml2.internal.StereotypePropertyChange
+	 * @return the meta object for class '<em>Stereotype Attribute Change</em>'.
+	 * @see org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange
 	 * @generated
 	 */
-	EClass getStereotypePropertyChange();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.uml2.internal.StereotypePropertyChange#getStereotype <em>Stereotype</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Stereotype</em>'.
-	 * @see org.eclipse.emf.compare.uml2.internal.StereotypePropertyChange#getStereotype()
-	 * @see #getStereotypePropertyChange()
-	 * @generated
-	 */
-	EReference getStereotypePropertyChange_Stereotype();
+	EClass getStereotypeAttributeChange();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange <em>Stereotype Application Change</em>}'.
@@ -2200,22 +2180,14 @@ public interface UMLComparePackage extends EPackage {
 		EClass MESSAGE_CHANGE = eINSTANCE.getMessageChange();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.internal.impl.StereotypePropertyChangeImpl <em>Stereotype Property Change</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.internal.impl.StereotypeAttributeChangeImpl <em>Stereotype Attribute Change</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.emf.compare.uml2.internal.impl.StereotypePropertyChangeImpl
-		 * @see org.eclipse.emf.compare.uml2.internal.impl.UMLComparePackageImpl#getStereotypePropertyChange()
+		 * @see org.eclipse.emf.compare.uml2.internal.impl.StereotypeAttributeChangeImpl
+		 * @see org.eclipse.emf.compare.uml2.internal.impl.UMLComparePackageImpl#getStereotypeAttributeChange()
 		 * @generated
 		 */
-		EClass STEREOTYPE_PROPERTY_CHANGE = eINSTANCE.getStereotypePropertyChange();
-
-		/**
-		 * The meta object literal for the '<em><b>Stereotype</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference STEREOTYPE_PROPERTY_CHANGE__STEREOTYPE = eINSTANCE.getStereotypePropertyChange_Stereotype();
+		EClass STEREOTYPE_ATTRIBUTE_CHANGE = eINSTANCE.getStereotypeAttributeChange();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2.internal.impl.StereotypeApplicationChangeImpl <em>Stereotype Application Change</em>}' class.

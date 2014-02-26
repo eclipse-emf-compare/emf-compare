@@ -19,6 +19,15 @@ export EMF_COMPARE_UPDATES_ROOT="/home/data/httpd/download.eclipse.org/modeling/
 # The base URL for all EMF Compare update sites
 export EMF_COMPARE_UPDATES_BASE_URL="http://download.eclipse.org/modeling/emf/compare/updates"
 
+NIGHTLY="nightly"
+NIGHTLY_PREFIX="N"
+INTEGRATION="integration"
+INTEGRATION_PREFIX="I"
+RELEASE="release"
+RELEASE_PREFIX="R"
+PREFIXES="$NIGHTLY_PREFIX$INTEGRATION_PREFIX$RELEASE_PREFIX"
+VERSION_PATTERN="([0-9]+)\.([0-9]+)\.([0-9]+)-?([$PREFIXES])?([0-9]{8}-[0-9]{6})?"
+
 # To avoid error find: paths must precede expression
 # It takes apart the argument list to find and concatenates the arguments back into another 
 # argument list but inserts -regextype posix-awk in front of any -iregex or -regex arguments it finds.
@@ -88,36 +97,54 @@ createRedirect() {
 	createP2Index $from
 }
 
+strcmp() {
+  local diff
+  for ((i=0; i<=${#1}; ++i)); do
+    if ((diff=$(printf %d \""${1:i:1}") - $(printf %d \""${2:i:1}") ));
+      then echo $diff; return
+    fi
+  done
+  echo 0
+}
+
 # Echo a negative integer, zero, or a positive integer if $1 version is less than, equal to,
 # or greater than the specified $2 version.
 compareOSGIVersions() {
     local this="$1"
 	local that="$2"
-	thisMajor=`echo $this | cut -d . -f1`
-	thisMinor=`echo $this | cut -d . -f2`
-	thisMicro=`echo $this | cut -d . -f3`
+
+	thisMajor=$(echo "$this" | sed-regex -e 's/'"$VERSION_PATTERN"'/\1/')
+	thisMinor=$(echo "$this" | sed-regex -e 's/'"$VERSION_PATTERN"'/\2/')
+	thisMicro=$(echo "$this" | sed-regex -e 's/'"$VERSION_PATTERN"'/\3/')
+	thisQualifier=$(echo "$this" | sed-regex -e 's/'"$VERSION_PATTERN"'/\4\5/')
 	
-	thatMajor=`echo $that | cut -d . -f1`
-	thatMinor=`echo $that | cut -d . -f2`
-	thatMicro=`echo $that | cut -d . -f3`
+	thatMajor=$(echo "$that" | sed-regex -e 's/'"$VERSION_PATTERN"'/\1/')
+	thatMinor=$(echo "$that" | sed-regex -e 's/'"$VERSION_PATTERN"'/\2/')
+	thatMicro=$(echo "$that" | sed-regex -e 's/'"$VERSION_PATTERN"'/\3/')
+	thatQualifier=$(echo "$that" | sed-regex -e 's/'"$VERSION_PATTERN"'/\4\5/')
 	
-	if [ $thisMajor -ne $thatMajor ]; then
-		echo $(($thisMajor-$thatMajor))
-	elif [ $thisMinor -ne $thatMinor ]; then
-		echo $(($thisMinor-$thatMinor))	
-	elif [ $thisMicro -ne $thatMicro ]; then
-		echo $(($thisMicro-$thatMicro))
+	echo "'"$thisMajor"' => '"$thatMajor"'" 1>&2
+	echo "'"$that"'" 1>&2
+	if [ "$thisMajor" -ne "$thatMajor" ]; then
+		echo $(($thisMajor-$thatMajor))  1>&2
+	elif [ "$thisMinor" -ne "$thatMinor" ]; then
+		echo $(($thisMinor-$thatMinor))	 1>&2
+	elif [ "$thisMicro" -ne "$thatMicro" ]; then
+		echo $(($thisMicro-$thatMicro))  1>&2
+	elif [[ "$thisQualifier" != "$thatQualifier" ]]; then
+		echo strcmp $thisQualifier $thatQualifier 1>&2
 	else
-		echo 0
+		echo 0  1>&2
 	fi
+	echo 0
 }
 
 # print all major versions (sorted) in the $1 path on the standard output
 # the output will be a list of integer
 allMajors() {
 	local path="$1"
-	find-regex "$path" -regex '^'"$path"'/?[0-9]+\.[0-9]+\.[0-9]+-[NIR][0-9]{8}-[0-9]{6}$' -type d \
-		| sed-regex -e 's#^'"$path"'/?([0-9]+)\.([0-9]+)\.([0-9]+)-([NIR])([0-9]{8})-([0-9]{6})$#\1#' \
+	find-regex "$path" -regex '^'"$path"'/?'"$VERSION_PATTERN"'$' -type d \
+		| sed-regex -e 's#^'"$path"'/?([0-9]+)\.([0-9]+)\.([0-9]+)-(['"$PREFIXES"'])([0-9]{8})-([0-9]{6})$#\1#' \
 		| sort -un
 }
 
@@ -127,8 +154,8 @@ allMajors() {
 allMinors() {
 	local path="$1"
 	local major="$2"
-	find-regex "$path" -regex '^'"$path"'/?'"$major"'\.[0-9]+\.[0-9]+-[NIR][0-9]{8}-[0-9]{6}$' -type d \
-		| sed-regex -e 's#^'"$path"'/?([0-9]+)\.([0-9]+)\.([0-9]+)-([NIR])([0-9]{8})-([0-9]{6})$#\2#' \
+	find-regex "$path" -regex '^'"$path"'/?'"$major"'\.[0-9]+\.[0-9]+-['"$PREFIXES"'][0-9]{8}-[0-9]{6}$' -type d \
+		| sed-regex -e 's#^'"$path"'/?([0-9]+)\.([0-9]+)\.([0-9]+)-(['"$PREFIXES"'])([0-9]{8})-([0-9]{6})$#\2#' \
 		| sort -un
 }
 
@@ -139,8 +166,8 @@ allMicros() {
 	local path="$1"
 	local major="$2"
 	local minor="$3"
-	find-regex "$path" -regex '^'"$path"'/?'"$major"'\.'"$minor"'\.[0-9]+-[NIR][0-9]{8}-[0-9]{6}$' -type d \
-		| sed-regex -e 's#^'"$path"'/?([0-9]+)\.([0-9]+)\.([0-9]+)-([NIR])([0-9]{8})-([0-9]{6})$#\3#' \
+	find-regex "$path" -regex '^'"$path"'/?'"$major"'\.'"$minor"'\.[0-9]+-['"$PREFIXES"'][0-9]{8}-[0-9]{6}$' -type d \
+		| sed-regex -e 's#^'"$path"'/?([0-9]+)\.([0-9]+)\.([0-9]+)-(['"$PREFIXES"'])([0-9]{8})-([0-9]{6})$#\3#' \
 		| sort -un
 }
 
@@ -152,7 +179,7 @@ allBuilds() {
 	local major="$2"
 	local minor="$3"
 	local micro="$4"
-	find-regex "$path" -regex '^'"$path"'/?'"$major"'\.'"$minor"'\.'"$micro"'-[NIR][0-9]{8}-[0-9]{6}$' -type d \
+	find-regex "$path" -regex '^'"$path"'/?'"$major"'\.'"$minor"'\.'"$micro"'-['"$PREFIXES"'][0-9]{8}-[0-9]{6}$' -type d \
 		| sed-regex -e 's#'"$path"'/?##' \
 		| sort -u
 }
@@ -161,16 +188,18 @@ allBuilds() {
 # $3 should the version of interest for this call. It is not used by this function but
 # is given to the $2 callback.
 #
-# The callback must accept 9 parameters:
+# The callback must accept 10 parameters:
 #  1/ the path (equals to $1)
 #  2/ the version of interrest (equals to $3)
-#  3/ the currently visited major version (format x, where x is an integer)
-#  4/ the currently visited minor version (format x.y, where x and y are integer)
-#  5/ the currently visited micro version (format x.y.z, where x, y and z are integer)
-#  6/ the most recent major version in the given $1 path (format x, where x is an integer)
-#  7/ the most recent minor version in the currently visited major version (format x.y, where x and y are integer)
-#  8/ the most recent micro version in the currently visited minor version (format x.y.z, where x, y and z are integer)
-#  9/ the most recent build version in the currently visited micro version (format x.y.z-TYYYYMMDD-HHMM, where x, y and z 
+#  3/ the currently visited major version (an integer)
+#  4/ the currently visited minor version (an integer)
+#  5/ the currently visited micro version (an integer)
+#  6/ the currently visited build (format x.y.z-TYYYYMMDD-HHMM, where x, y and z 
+#     are integer, T is N for nightly, I for integration or R for release and YYYYMMDD-HHMM is a timestamp)
+#  7/ the most recent major version in the given $1 path (an integer)
+#  8/ the most recent minor version in the currently visited major version (an integer)
+#  9/ the most recent micro version in the currently visited minor version (an integer)
+#  10/ the most recent build version in the currently visited micro version (format x.y.z-TYYYYMMDD-HHMM, where x, y and z 
 #     are integer, T is N for nightly, I for integration or R for release and YYYYMMDD-HHMM is a timestamp)
 visitVersions() {
 	local path="$1"
@@ -192,7 +221,10 @@ visitVersions() {
 				allBuilds=$(allBuilds "$path" "$major" "$minor" "$micro")
 				latestBuild=$(echo "$allBuilds" | tail -1)
 
-				$callback "$path" "$version" "$major" "$minor" "$micro" "$latestMajor" "$latestMinor" "$latestMicro" "$latestBuild" 
+				for build in $allBuilds
+				do
+					$callback "$path" "$version" "$major" "$minor" "$micro" "$build" "$latestMajor" "$latestMinor" "$latestMicro" "$latestBuild" 
+				done
 			done
 		done
 	done

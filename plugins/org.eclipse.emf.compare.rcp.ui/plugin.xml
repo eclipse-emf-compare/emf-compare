@@ -17,6 +17,7 @@
    <extension-point id="filters" name="EMF Compare Filters" schema="schema/filters.exsd"/>
    <extension-point id="accessorFactory" name="Accessor Factory" schema="schema/accessorFactory.exsd"/>
    <extension-point id="differenceGroupExtender" name="EMF Compare Difference Group Extender" schema="schema/differenceGroupExtender.exsd"/>
+   <extension-point id="matchEngineFactoryConfigurationUI" name="matchEngineFactoryConfigurationUI" schema="schema/matchEngineFactoryConfigurationUI.exsd"/>
    <extension
          point="org.eclipse.emf.compare.rcp.ui.groups">
       <group
@@ -98,4 +99,91 @@
             ranking="15">
       </factory>
    </extension>
+   <extension
+         point="org.eclipse.ui.themes">
+      <themeElementCategory
+            id="org.eclipse.emf.compare.themeCategory"
+            label="EMF Compare">
+         <description>
+            Set of colors for EMF Compare viewers
+         </description>
+      </themeElementCategory>
+      <colorDefinition
+            categoryId="org.eclipse.emf.compare.themeCategory"
+            id="org.eclipse.emf.compare.incomingChangeColor"
+            isEditable="true"
+            label="Incoming change color"
+            value="COLOR_BLUE">
+         <description>
+            The color used to indicate an incoming change in EMF Compare and merge tools.
+         </description>
+      </colorDefinition>
+      <colorDefinition
+            categoryId="org.eclipse.emf.compare.themeCategory"
+            id="org.eclipse.emf.compare.conflictingChangeColor"
+            isEditable="true"
+            label="Conflicting change color"
+            value="COLOR_RED">
+         <description>
+            The color used to indicate a conflicting change in EMF Compare and merge tools
+         </description>
+      </colorDefinition>
+      <colorDefinition
+            categoryId="org.eclipse.emf.compare.themeCategory"
+            id="org.eclipse.emf.compare.outgoingChangeColor"
+            isEditable="true"
+            label="Outgoing change color"
+            value="COLOR_BLACK">
+         <description>
+            The color used to indicate an outgoing change in EMF Compare and merge tools.
+         </description>
+      </colorDefinition>
+      <colorDefinition
+            categoryId="org.eclipse.emf.compare.themeCategory"
+            id="org.eclipse.emf.compare.requiredChangeColor"
+            isEditable="true"
+            label="Required change color"
+            value="215, 255, 200">
+         <description>
+         	The color used to indicate a change to be merged in the same direction as the selected "highlight consequences" mode along with the selected one.
+         </description>
+      </colorDefinition>
+      <colorDefinition
+            categoryId="org.eclipse.emf.compare.themeCategory"
+            id="org.eclipse.emf.compare.unmergeableChangeColor"
+            isEditable="true"
+            label="Merge conflict color"
+            value="255, 205, 180">
+         <description>
+            The color used to indicate a conflictual change to be merged in the opposite direction as the selected "highlight consequences" mode along with the selected one.
+         </description>
+      </colorDefinition>
+	</extension>
+	<extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.eclipse.emf.compare.rcp.ui.internal.preferences.EMFComparePreferencePage"
+            id="org.eclipse.emf.compare.rcp.ui.preferencePage.global"
+            name="EMF Compare">
+      </page>
+      <page
+            category="org.eclipse.emf.compare.rcp.ui.preferencePage.global"
+            class="org.eclipse.emf.compare.rcp.ui.internal.preferences.EditorPreferencePage"
+            id="org.eclipse.emf.compare.rcp.ui.preferencePage.editor"
+            name="Editor">
+      </page>
+      <page
+            category="org.eclipse.emf.compare.rcp.ui.preferencePage.global"
+            class="org.eclipse.emf.compare.rcp.ui.internal.preferences.EnginesPreferencePage"
+            id="org.eclipse.emf.compare.rcp.ui.preferencePage.engines"
+            name="Engines">
+      </page>
+   </extension>
+   <extension
+       point="org.eclipse.emf.compare.rcp.ui.matchEngineFactoryConfigurationUI">
+    <configurator
+          itemToConfigure="org.eclipse.emf.compare.rcp.internal.match.DefaultRCPMatchEngineFactory"
+          uiProvider="org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.match.DefaultMatchEngineConfiguatorUIFactory">
+    </configurator>
+ </extension>
 </plugin>

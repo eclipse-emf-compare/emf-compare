@@ -87,4 +87,16 @@ public class DynamicStereotypeInputData extends AbstractUMLInputData {
 		return loadFromClassLoader("a10/right.uml"); //$NON-NLS-1$
 	}
 
+	public Resource getA11Left() throws IOException {
+		return loadFromClassLoader("a11/left.uml"); //$NON-NLS-1$
+	}
+
+	public Resource getA11Right() throws IOException {
+		return loadFromClassLoader("a11/right.uml"); //$NON-NLS-1$
+	}
+
+	public Resource getA11Ancestor() throws IOException {
+		return loadFromClassLoader("a11/ancestor.uml"); //$NON-NLS-1$
+	}
+
 }

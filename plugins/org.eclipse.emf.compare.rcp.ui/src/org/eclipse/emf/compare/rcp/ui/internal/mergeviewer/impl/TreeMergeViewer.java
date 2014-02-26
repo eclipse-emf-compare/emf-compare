@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
+import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -20,14 +20,35 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-public class TreeMergeViewer extends TableOrTreeMergeViewer {
+/**
+ * A concrete implementation of {@link AbstractTableOrTreeMergeViewer} for TreeViewer.
+ * 
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @since 4.0
+ */
+public class TreeMergeViewer extends AbstractTableOrTreeMergeViewer {
 
+	/**
+	 * The Input of the viewer.
+	 */
 	private Object fInput;
 
+	/**
+	 * The TreeViewer.
+	 */
 	private TreeViewer fTreeViewer;
 
 	/**
+	 * Default constructor.
+	 * 
 	 * @param parent
+	 *            the parent widget of this viewer.
+	 * @param side
+	 *            the side of this viewer.
+	 * @param colorProvider
+	 *            the color provider to use with this viewer.
+	 * @param compareConfiguration
+	 *            the compare configuration object to use with this viewer.
 	 */
 	public TreeMergeViewer(Composite parent, MergeViewerSide side, ICompareColor.Provider colorProvider,
 			IEMFCompareConfiguration compareConfiguration) {
@@ -37,7 +58,7 @@ public class TreeMergeViewer extends TableOrTreeMergeViewer {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.impl.AbstractMergeViewer#createControl(org.eclipse.swt.widgets.Composite)
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeViewer#createControl(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
 	protected Control createControl(Composite parent) {
@@ -61,13 +82,21 @@ public class TreeMergeViewer extends TableOrTreeMergeViewer {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.AbstractMergeViewer#getStructuredViewer()
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.ide.ui.internal.contentmergeviewer.AbstractMergeViewer#getStructuredViewer()
 	 */
 	@Override
 	public TreeViewer getStructuredViewer() {
 		return fTreeViewer;
 	}
 
+	/**
+	 * Set the expanded state of the given element or tree path.
+	 * 
+	 * @param elementOrTreePath
+	 *            the given element or tree path.
+	 * @param expanded
+	 *            the expanded state .
+	 */
 	public void setExpandedState(Object elementOrTreePath, boolean expanded) {
 		getStructuredViewer().setExpandedState(elementOrTreePath, expanded);
 	}

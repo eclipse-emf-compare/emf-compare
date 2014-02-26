@@ -13,13 +13,17 @@ package org.eclipse.emf.compare.rcp.ui;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.IAccessorFactory;
+import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.ConfigurationUIRegistryEventListener;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.IConfigurationUIFactory;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.AccessorFactoryExtensionRegistryListener;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.AccessorFactoryRegistryImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterExtensionRegistryListener;
@@ -60,6 +64,11 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	public static final String DIFFERENCE_GROUP_EXTENDER_PPID = "differenceGroupExtender"; //$NON-NLS-1$
 
 	/**
+	 * @since 4.0
+	 */
+	private static final String MATCH_ENGINE_FACTORY_CONFIGURATION_UI_PPID = "matchEngineFactoryConfigurationUI";//$NON-NLS-1$
+
+	/**
 	 * the shared instance.
 	 */
 	private static EMFCompareRCPUIPlugin plugin;
@@ -82,6 +91,10 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	private AbstractRegistryEventListener differenceGroupExtenderRegistryListener;
 
 	private IDifferenceGroupExtender.Registry differenceGroupExtenderRegistry;
+
+	private Map<String, IConfigurationUIFactory> matchEngineConfiguratorRegistry;
+
+	private ConfigurationUIRegistryEventListener matchEngineConfiguratorRegistryListener;
 
 	/**
 	 * The constructor.
@@ -127,6 +140,14 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 				+ "." + DIFFERENCE_GROUP_EXTENDER_PPID); //$NON-NLS-1$
 		differenceGroupExtenderRegistryListener.readRegistry(extensionRegistry);
 
+		matchEngineConfiguratorRegistry = new ConcurrentHashMap<String, IConfigurationUIFactory>();
+		matchEngineConfiguratorRegistryListener = new ConfigurationUIRegistryEventListener(PLUGIN_ID,
+				MATCH_ENGINE_FACTORY_CONFIGURATION_UI_PPID, getLog(), matchEngineConfiguratorRegistry,
+				EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryDescriptorRegistry());
+		extensionRegistry.addListener(matchEngineConfiguratorRegistryListener, PLUGIN_ID + "."
+				+ MATCH_ENGINE_FACTORY_CONFIGURATION_UI_PPID);
+		matchEngineConfiguratorRegistryListener.readRegistry(extensionRegistry);
+
 	}
 
 	/*
@@ -136,6 +157,10 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
+
+		extensionRegistry.removeListener(matchEngineConfiguratorRegistryListener);
+		matchEngineConfiguratorRegistry = null;
+		matchEngineConfiguratorRegistryListener = null;
 
 		extensionRegistry.removeListener(differenceGroupExtenderRegistryListener);
 		differenceGroupExtenderRegistryListener = null;
@@ -275,4 +300,15 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 		}
 		resourcesMapper.clear();
 	}
+
+	/**
+	 * Get the Match Engine Configurator Registry
+	 * 
+	 * @return Map<String, IConfigurationUIFactory>
+	 * @since 4.0
+	 */
+	public Map<String, IConfigurationUIFactory> getMatchEngineConfiguratorRegistry() {
+		return matchEngineConfiguratorRegistry;
+	}
+
 }

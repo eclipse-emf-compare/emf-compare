@@ -101,6 +101,8 @@ public interface IMatchEngine {
 		 * A registry of {@link IMatchEngine.Factory}.
 		 * 
 		 * @since 3.0
+		 * @noimplement
+		 * @noextend This interface is not intended to be extended by clients.
 		 */
 		interface Registry {
 

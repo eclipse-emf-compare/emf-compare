@@ -45,9 +45,9 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.spec.EObjectUtil;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
@@ -144,7 +144,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.item.ide.ui.internal.contentmergeviewer.IMergeViewerItem#getSideValue(org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide)
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.item.ide.ui.internal.contentmergeviewer.IMergeViewerItem#getSideValue(org.eclipse.emf.compare.rcp.ui.mergeviewer.ide.ui.internal.contentmergeviewer.IMergeViewer.MergeViewerSide)
 	 */
 	public final Object getSideValue(MergeViewerSide side) {
 		switch (side) {
@@ -214,7 +214,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem#isInsertionPoint()
+	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem#isInsertionPoint()
 	 */
 	public boolean isInsertionPoint() {
 		return getSideValue(getSide()) == null && getDiff() != null;

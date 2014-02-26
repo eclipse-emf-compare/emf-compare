@@ -18,8 +18,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -245,7 +245,7 @@ public class UMLPostProcessor implements IPostProcessor {
 
 		final Map<Class<? extends Diff>, IChangeFactory> mapUml2ExtensionFactories = UMLExtensionFactoryRegistry
 				.createExtensionFactories();
-		uml2ExtensionFactories = new HashSet<IChangeFactory>(mapUml2ExtensionFactories.values());
+		uml2ExtensionFactories = new LinkedHashSet<IChangeFactory>(mapUml2ExtensionFactories.values());
 
 		// Creation of the UML difference extensions
 		for (Diff diff : comparison.getDifferences()) {

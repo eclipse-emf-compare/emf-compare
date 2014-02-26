@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.merge;
 
 import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEGet;
 import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEIsSet;
+import static org.eclipse.emf.compare.utils.ReferenceUtil.safeESet;
 
 import java.util.List;
 
@@ -22,8 +23,12 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
+import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EEnumLiteral;
+import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.impl.DynamicEObjectImpl;
 
 /**
  * This specific implementation of {@link AbstractMerger} will be used to merge attribute changes.
@@ -143,10 +148,10 @@ public class AttributeChangeMerger extends AbstractMerger {
 			if (attribute.isMany()) {
 				final int insertionIndex = findInsertionIndex(comparison, diff, rightToLeft);
 
-				final List<Object> targetList = (List<Object>)expectedContainer.eGet(attribute);
+				final List<Object> targetList = (List<Object>)safeEGet(expectedContainer, attribute);
 				addAt(targetList, expectedValue, insertionIndex);
 			} else {
-				expectedContainer.eSet(attribute, expectedValue);
+				safeESet(expectedContainer, attribute, expectedValue);
 			}
 		}
 	}
@@ -197,7 +202,7 @@ public class AttributeChangeMerger extends AbstractMerger {
 				 * TODO if the same value appears twice, should we try and find the one that has actually been
 				 * deleted? Will it happen that often? For now, remove the first occurence we find.
 				 */
-				final List<Object> targetList = (List<Object>)currentContainer.eGet(attribute);
+				final List<Object> targetList = (List<Object>)safeEGet(currentContainer, attribute);
 				targetList.remove(expectedValue);
 			} else {
 				currentContainer.eUnset(attribute);
@@ -258,7 +263,7 @@ public class AttributeChangeMerger extends AbstractMerger {
 			 * However, it could still have been located "before" its new index, in which case we need to take
 			 * it into account.
 			 */
-			final List<Object> targetList = (List<Object>)expectedContainer.eGet(attribute);
+			final List<Object> targetList = (List<Object>)safeEGet(expectedContainer, attribute);
 			final int currentIndex = targetList.indexOf(expectedValue);
 			if (insertionIndex > currentIndex) {
 				insertionIndex--;
@@ -280,7 +285,7 @@ public class AttributeChangeMerger extends AbstractMerger {
 			}
 		} else {
 			// This will never happen with the default diff engine, but may still be done from extenders
-			expectedContainer.eSet(attribute, expectedValue);
+			safeESet(expectedContainer, attribute, expectedValue);
 		}
 	}
 
@@ -321,8 +326,8 @@ public class AttributeChangeMerger extends AbstractMerger {
 				|| !safeEIsSet(originContainer, attribute)) {
 			targetContainer.eUnset(attribute);
 		} else {
-			final Object expectedValue = originContainer.eGet(attribute);
-			targetContainer.eSet(attribute, expectedValue);
+			final Object expectedValue = safeEGet(originContainer, attribute);
+			safeESet(targetContainer, attribute, expectedValue);
 		}
 	}
 
@@ -355,7 +360,17 @@ public class AttributeChangeMerger extends AbstractMerger {
 			originContainer = match.getLeft();
 		}
 
-		final Object targetValue = safeEGet(originContainer, attribute);
+		final Object targetValue;
+		final Object value = safeEGet(originContainer, attribute);
+
+		// Case of change of EnumLiteral of an attribute of a DynamicEObject : we need to retrieve the
+		// EnumLiteral instance of the target which is not the same than the source.
+		if (expectedContainer instanceof DynamicEObjectImpl && value instanceof EEnumLiteral) {
+			targetValue = ((EEnum)((EEnumLiteral)safeEGet(expectedContainer, attribute)).eContainer())
+					.getEEnumLiteral(((ENamedElement)value).getName());
+		} else {
+			targetValue = value;
+		}
 
 		// Though not the "default value", we consider that an empty string is an unset attribute.
 		final Object defaultValue = attribute.getDefaultValue();
@@ -365,7 +380,7 @@ public class AttributeChangeMerger extends AbstractMerger {
 		if (isUnset) {
 			expectedContainer.eUnset(attribute);
 		} else {
-			expectedContainer.eSet(attribute, targetValue);
+			safeESet(expectedContainer, attribute, targetValue);
 		}
 	}
 

@@ -40,15 +40,16 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompar
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
+import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IAdapterFactoryChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.ICompareAccessor;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IColorChangeEvent;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilterChange;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProviderChange;
@@ -86,6 +87,8 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.services.IServiceLocator;
+import org.eclipse.ui.themes.ITheme;
+import org.eclipse.ui.themes.IThemeManager;
 import org.eclipse.ui.views.properties.PropertySheet;
 
 /**
@@ -155,6 +158,12 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		if (newValue != oldValue) {
 			fAdapterFactoryContentProvider = new AdapterFactoryContentProvider(newValue);
 		}
+	}
+
+	@Subscribe
+	public void colorChanged(
+			@SuppressWarnings("unused")/* necessary for @Subscribe */IColorChangeEvent changeColorEvent) {
+		getControl().redraw();
 	}
 
 	/**
@@ -297,8 +306,16 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 		fRight = createMergeViewer(composite, MergeViewerSide.RIGHT);
 		fRight.addSelectionChangedListener(this);
-
-		fColors = new EMFCompareColor(this, null, getCompareConfiguration());
+		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+		final ITheme currentTheme;
+		if (themeManager != null) {
+			currentTheme = themeManager.getCurrentTheme();
+		} else {
+			currentTheme = null;
+		}
+		boolean leftIsLocal = getCompareConfiguration().getBooleanProperty("LEFT_IS_LOCAL", false);
+		fColors = new EMFCompareColor(composite.getDisplay(), leftIsLocal, currentTheme,
+				getCompareConfiguration().getEventBus());
 
 		composite.addControlListener(new ControlListener() {
 			public void controlResized(ControlEvent e) {

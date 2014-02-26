@@ -10,6 +10,8 @@
  */
 package org.eclipse.emf.compare.uml2.tests;
 
+import static com.google.common.collect.Iterators.all;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -28,6 +30,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompare.Builder;
@@ -201,25 +204,45 @@ public abstract class AbstractUMLTest {
 	protected abstract AbstractUMLInputData getInput();
 
 	protected void testMergeLeftToRight(Notifier left, Notifier right, Notifier origin) {
-		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparisonBefore = getCompare().compare(scope);
-		EList<Diff> differences = comparisonBefore.getDifferences();
-		final IBatchMerger merger = new BatchMerger(mergerRegistry);
-		merger.copyAllLeftToRight(differences, new BasicMonitor());
-		final Comparison comparisonAfter = getCompare().compare(scope);
-		assertTrue("Comparison#getDifferences() must be empty after copyAllLeftToRight", comparisonAfter
-				.getDifferences().isEmpty());
+		testMergeLeftToRight(left, right, origin, false);
 	}
 
 	protected void testMergeRightToLeft(Notifier left, Notifier right, Notifier origin) {
+		testMergeRightToLeft(left, right, origin, false);
+	}
+
+	protected void testMergeLeftToRight(Notifier left, Notifier right, Notifier origin, boolean pseudoAllowed) {
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		final Comparison comparisonBefore = getCompare().compare(scope);
-		EList<Diff> differences = comparisonBefore.getDifferences();
+		EList<Diff> differencesBefore = comparisonBefore.getDifferences();
 		final IBatchMerger merger = new BatchMerger(mergerRegistry);
-		merger.copyAllRightToLeft(differences, new BasicMonitor());
+		merger.copyAllLeftToRight(differencesBefore, new BasicMonitor());
 		final Comparison comparisonAfter = getCompare().compare(scope);
-		assertTrue("Comparison#getDifferences() must be empty after copyAllRightToLeft", comparisonAfter
-				.getDifferences().isEmpty());
+		EList<Diff> differencesAfter = comparisonAfter.getDifferences();
+		final boolean diffs;
+		if (pseudoAllowed) {
+			diffs = all(differencesAfter.iterator(), hasConflict(ConflictKind.PSEUDO));
+		} else {
+			diffs = differencesAfter.isEmpty();
+		}
+		assertTrue("Comparison#getDifferences() must be empty after copyAllLeftToRight", diffs);
+	}
+
+	protected void testMergeRightToLeft(Notifier left, Notifier right, Notifier origin, boolean pseudoAllowed) {
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
+		final Comparison comparisonBefore = getCompare().compare(scope);
+		EList<Diff> differencesBefore = comparisonBefore.getDifferences();
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		merger.copyAllRightToLeft(differencesBefore, new BasicMonitor());
+		final Comparison comparisonAfter = getCompare().compare(scope);
+		EList<Diff> differencesAfter = comparisonAfter.getDifferences();
+		final boolean diffs;
+		if (pseudoAllowed) {
+			diffs = all(differencesAfter.iterator(), hasConflict(ConflictKind.PSEUDO));
+		} else {
+			diffs = differencesAfter.isEmpty();
+		}
+		assertTrue("Comparison#getDifferences() must be empty after copyAllRightToLeft", diffs);
 	}
 
 	protected void testIntersections(Comparison comparison) {

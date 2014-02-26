@@ -12,7 +12,7 @@ package org.eclipse.emf.compare.uml2.internal.postprocessor.extension;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,10 +21,12 @@ import org.eclipse.emf.compare.internal.postprocessor.factories.IChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.clazz.UMLAssociationChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.clazz.UMLGeneralizationSetChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.profile.UMLProfileApplicationChangeFactory;
-import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.profile.UMLStereotypeApplicationChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.sequence.UMLExecutionSpecificationChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.sequence.UMLIntervalConstraintChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.sequence.UMLMessageChangeFactory;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.stereotype.UMLStereotypeApplicationChangeFactory;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.stereotype.UMLStereotypeAttributeChangeFactory;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.stereotype.UMLStereotypeReferenceChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.usecase.UMLExtendChangeFactory;
 
 /**
@@ -48,7 +50,7 @@ public final class UMLExtensionFactoryRegistry {
 	 * @return an unmodifiable set of all {@link IDiffExtensionFactory}.
 	 */
 	public static Map<Class<? extends Diff>, IChangeFactory> createExtensionFactories() {
-		final Map<Class<? extends Diff>, IChangeFactory> dataset = new HashMap<Class<? extends Diff>, IChangeFactory>();
+		final Map<Class<? extends Diff>, IChangeFactory> dataset = new LinkedHashMap<Class<? extends Diff>, IChangeFactory>();
 
 		List<IChangeFactory> factories = new ArrayList<IChangeFactory>();
 		factories.add(new UMLAssociationChangeFactory());
@@ -59,6 +61,8 @@ public final class UMLExtensionFactoryRegistry {
 		factories.add(new UMLExecutionSpecificationChangeFactory());
 		factories.add(new UMLIntervalConstraintChangeFactory());
 		factories.add(new UMLProfileApplicationChangeFactory());
+		factories.add(new UMLStereotypeAttributeChangeFactory());
+		factories.add(new UMLStereotypeReferenceChangeFactory());
 		factories.add(new UMLStereotypeApplicationChangeFactory());
 
 		for (IChangeFactory iDiffExtensionFactory : factories) {

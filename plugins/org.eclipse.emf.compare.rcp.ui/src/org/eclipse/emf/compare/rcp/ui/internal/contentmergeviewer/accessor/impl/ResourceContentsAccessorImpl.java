@@ -20,14 +20,14 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IResourceContentsAccessor;
+import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.IResourceContentsAccessor;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.TypeConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.impl.AbstractTypedElementAdapter;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.impl.TypeConstants;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.ResourceAttachmentChangeMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -35,7 +35,10 @@ import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.swt.graphics.Image;
 
 /**
+ * A specific {@link IResourceContentsAccessor} for {@link ResourceAttachmentChange} objects.
+ * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
+ * @since 4.0
  */
 public class ResourceContentsAccessorImpl extends AbstractTypedElementAdapter implements IResourceContentsAccessor {
 
@@ -49,6 +52,10 @@ public class ResourceContentsAccessorImpl extends AbstractTypedElementAdapter im
 	private final Match fOwnerMatch;
 
 	/**
+	 * Default constructor.
+	 * 
+	 * @param adapterFactory
+	 *            the adapter factory used to create the accessor.
 	 * @param diff
 	 *            The difference performed.
 	 * @param side
@@ -64,7 +71,7 @@ public class ResourceContentsAccessorImpl extends AbstractTypedElementAdapter im
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IResourceContentsAccessor#getComparison()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.IResourceContentsAccessor#getComparison()
 	 */
 	public Comparison getComparison() {
 		return fOwnerMatch.getComparison();
@@ -73,7 +80,7 @@ public class ResourceContentsAccessorImpl extends AbstractTypedElementAdapter im
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IResourceContentsAccessor#getInitialItem()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.IResourceContentsAccessor#getInitialItem()
 	 */
 	public IMergeViewerItem getInitialItem() {
 		Diff initialDiff = fDiff;
@@ -144,7 +151,7 @@ public class ResourceContentsAccessorImpl extends AbstractTypedElementAdapter im
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IResourceContentsAccessor#getItems()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.IResourceContentsAccessor#getItems()
 	 */
 	public ImmutableList<? extends IMergeViewerItem> getItems() {
 		final ImmutableList<? extends IMergeViewerItem> ret = ImmutableList
@@ -157,7 +164,7 @@ public class ResourceContentsAccessorImpl extends AbstractTypedElementAdapter im
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IResourceContentsAccessor#getResource(org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide)
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.IResourceContentsAccessor#getResource(org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide)
 	 */
 	public Resource getResource(MergeViewerSide side) {
 		return MergeViewerUtil.getResource(fOwnerMatch.getComparison(), side, fDiff);
@@ -175,7 +182,7 @@ public class ResourceContentsAccessorImpl extends AbstractTypedElementAdapter im
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getName()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement#getName()
 	 */
 	public String getName() {
 		return ResourceContentsAccessorImpl.class.getName();
@@ -184,7 +191,7 @@ public class ResourceContentsAccessorImpl extends AbstractTypedElementAdapter im
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getImage()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement#getImage()
 	 */
 	public Image getImage() {
 		return ExtendedImageRegistry.getInstance().getImage(
@@ -194,9 +201,9 @@ public class ResourceContentsAccessorImpl extends AbstractTypedElementAdapter im
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement#getType()
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement#getType()
 	 */
 	public String getType() {
-		return TypeConstants.TYPE__ERESOURCE_DIFF;
+		return TypeConstants.TYPE_ERESOURCE_DIFF;
 	}
 }

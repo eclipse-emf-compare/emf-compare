@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
+import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.IStructuralFeatureAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.IStructuralFeatureAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.ResourceContentsAccessorImpl;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.ICompareColor;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -32,14 +32,31 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
 /**
+ * A concrete implementation of {@link AbstractTableOrTreeMergeViewer} for TableViewer.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @since 4.0
  */
-public class TableMergeViewer extends TableOrTreeMergeViewer {
+public class TableMergeViewer extends AbstractTableOrTreeMergeViewer {
 
+	/** The TableViewer. */
 	private TableViewer fTableViewer;
 
+	/** The InfoViewer. */
 	private InfoViewer fInfoViewer;
 
+	/**
+	 * Default constructor.
+	 * 
+	 * @param parent
+	 *            the parent widget of this viewer.
+	 * @param side
+	 *            the side of this viewer.
+	 * @param colorProvider
+	 *            the color provider to use with this viewer.
+	 * @param compareConfiguration
+	 *            the compare configuration object to use with this viewer.
+	 */
 	public TableMergeViewer(Composite parent, MergeViewerSide side, ICompareColor.Provider colorProvider,
 			IEMFCompareConfiguration compareConfiguration) {
 		super(parent, side, colorProvider, compareConfiguration);
@@ -48,7 +65,7 @@ public class TableMergeViewer extends TableOrTreeMergeViewer {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.impl.AbstractMergeViewer#createControl(org.eclipse.swt.widgets.Composite)
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeViewer#createControl(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
 	protected Control createControl(Composite parent) {
@@ -91,7 +108,7 @@ public class TableMergeViewer extends TableOrTreeMergeViewer {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.impl.AbstractMergeViewer#setContentProvider(org.eclipse.jface.viewers.IContentProvider)
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeViewer#setContentProvider(org.eclipse.jface.viewers.IContentProvider)
 	 */
 	@Override
 	public void setContentProvider(IContentProvider contentProvider) {
@@ -102,7 +119,7 @@ public class TableMergeViewer extends TableOrTreeMergeViewer {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.impl.AbstractMergeViewer#setLabelProvider(org.eclipse.jface.viewers.IBaseLabelProvider)
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeViewer#setLabelProvider(org.eclipse.jface.viewers.IBaseLabelProvider)
 	 */
 	@Override
 	public void setLabelProvider(IBaseLabelProvider labelProvider) {
@@ -133,26 +150,47 @@ public class TableMergeViewer extends TableOrTreeMergeViewer {
 		fTableViewer.refresh();
 	}
 
+	/**
+	 * A content viewer is a model-based adapter on a widget which accesses its model by means of a content
+	 * provider and a label provider. This InfoViewer is the top part of the TableMergeViewer. It contains the
+	 * object an the feature concerned by the Diff.
+	 * 
+	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+	 * @since 4.0
+	 */
 	private static class InfoViewer extends ContentViewer {
 
+		/** The side of this viewer. */
 		private final MergeViewerSide fSide;
 
+		/** The control associated with this viewer. */
 		private final Composite fControl;
 
+		/** The Icon of the EObject concerned by the Diff. */
 		private final Label fEObjectIcon;
 
+		/** The Label of the EObject concerned by the Diff. */
 		private final Label fEObjectLabel;
 
+		/** The Icon of the feature concerned by the Diff. */
 		private final Label fFeatureIcon;
 
+		/** The Label of the feature concerned by the Diff. */
 		private final Label fFeatureLabel;
 
+		/** Stores the selection for this viewer. */
 		private ISelection fSelection;
 
+		/** Stores the input of this viewer. */
 		private Object fInput;
 
 		/**
+		 * Default constructor.
 		 * 
+		 * @param parent
+		 *            the parent widget of this viewer.
+		 * @param side
+		 *            the side of this viewer.
 		 */
 		public InfoViewer(Composite parent, MergeViewerSide side) {
 			this.fControl = new Composite(parent, SWT.BORDER);

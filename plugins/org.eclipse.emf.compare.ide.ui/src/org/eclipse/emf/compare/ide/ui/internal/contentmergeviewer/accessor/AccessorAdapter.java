@@ -55,8 +55,8 @@ public final class AccessorAdapter implements ITypedElement, IStreamContentAcces
 	 * @see org.eclipse.compare.IStreamContentAccessor#getContents()
 	 */
 	public InputStream getContents() throws CoreException {
-		if (target instanceof org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.IStreamContentAccessor) {
-			return ((org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.IStreamContentAccessor)target)
+		if (target instanceof org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.IStreamContentAccessor) {
+			return ((org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.IStreamContentAccessor)target)
 					.getContents();
 		}
 		/*
@@ -81,8 +81,8 @@ public final class AccessorAdapter implements ITypedElement, IStreamContentAcces
 	 * @see org.eclipse.compare.ITypedElement#getName()
 	 */
 	public String getName() {
-		if (target instanceof org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement) {
-			return ((org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement)target)
+		if (target instanceof org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement) {
+			return ((org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement)target)
 					.getName();
 		}
 		return null;
@@ -94,8 +94,8 @@ public final class AccessorAdapter implements ITypedElement, IStreamContentAcces
 	 * @see org.eclipse.compare.ITypedElement#getImage()
 	 */
 	public Image getImage() {
-		if (target instanceof org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement) {
-			return ((org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement)target)
+		if (target instanceof org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement) {
+			return ((org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement)target)
 					.getImage();
 		}
 		return null;
@@ -107,8 +107,8 @@ public final class AccessorAdapter implements ITypedElement, IStreamContentAcces
 	 * @see org.eclipse.compare.ITypedElement#getType()
 	 */
 	public String getType() {
-		if (target instanceof org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement) {
-			return ((org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement)target)
+		if (target instanceof org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement) {
+			return ((org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement)target)
 					.getType();
 		}
 		return null;

@@ -165,7 +165,7 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 
 	public void setEMFComparator(EMFCompare newComparator) {
 		EMFCompare oldComparator = getEMFComparator();
-		setProperty(COMPARATOR, oldComparator);
+		setProperty(COMPARATOR, newComparator);
 		getEventBus().post(new EMFComparatorChange(oldComparator, newComparator));
 	}
 

@@ -18,6 +18,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -99,6 +100,19 @@ public final class Graph<E> {
 			if (node != null) {
 				node.breakConnections();
 			}
+		}
+	}
+
+	/**
+	 * Removes the given elements' nodes from this graph. This will effectively break all connections to these
+	 * nodes.
+	 * 
+	 * @param elements
+	 *            The elements which are to be removed from this graph.
+	 */
+	public void removeAll(Collection<E> elements) {
+		for (E e : elements) {
+			remove(e);
 		}
 	}
 

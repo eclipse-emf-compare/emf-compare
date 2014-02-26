@@ -18,9 +18,7 @@
     <genClasses ecoreClass="uml2compare.ecore#//ExecutionSpecificationChange"/>
     <genClasses ecoreClass="uml2compare.ecore#//IntervalConstraintChange"/>
     <genClasses ecoreClass="uml2compare.ecore#//MessageChange"/>
-    <genClasses ecoreClass="uml2compare.ecore#//StereotypePropertyChange">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference uml2compare.ecore#//StereotypePropertyChange/stereotype"/>
-    </genClasses>
+    <genClasses ecoreClass="uml2compare.ecore#//StereotypeAttributeChange"/>
     <genClasses ecoreClass="uml2compare.ecore#//StereotypeApplicationChange">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference uml2compare.ecore#//StereotypeApplicationChange/stereotype"/>
     </genClasses>

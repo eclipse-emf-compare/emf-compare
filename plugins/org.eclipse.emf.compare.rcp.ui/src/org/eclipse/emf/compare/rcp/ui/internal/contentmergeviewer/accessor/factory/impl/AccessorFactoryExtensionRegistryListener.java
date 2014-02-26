@@ -15,22 +15,39 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.IAccessorFactory;
+import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory;
 
+/**
+ * The default concrete implementation of {@link AbstractRegistryEventListener}.
+ * 
+ * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
+ * @since 4.0
+ */
 public class AccessorFactoryExtensionRegistryListener extends AbstractRegistryEventListener {
 
+	/** TAG_FACTORY. */
 	static final String TAG_FACTORY = "factory"; //$NON-NLS-1$
 
+	/** ATT_CLASS. */
 	static final String ATT_CLASS = "class"; //$NON-NLS-1$
 
+	/** ATT_RANKING. */
 	static final String ATT_RANKING = "ranking"; //$NON-NLS-1$
 
+	/** The IAccessorFactory.Registry to listen. */
 	private final IAccessorFactory.Registry registry;
 
 	/**
+	 * Default constructor.
+	 * 
 	 * @param pluginID
+	 *            The namespace of the extension point to be monitored.
 	 * @param extensionPointID
+	 *            The extension point ID to be monitored.
+	 * @param log
+	 *            The log object to be used to log error and/or warning.
 	 * @param registry
+	 *            The {@link IAccessorFactory.Registry} to listen.
 	 */
 	public AccessorFactoryExtensionRegistryListener(String pluginID, String extensionPointID, ILog log,
 			IAccessorFactory.Registry registry) {

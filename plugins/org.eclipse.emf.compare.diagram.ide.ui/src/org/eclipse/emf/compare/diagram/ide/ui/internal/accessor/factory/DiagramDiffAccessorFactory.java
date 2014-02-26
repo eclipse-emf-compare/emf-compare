@@ -13,9 +13,10 @@ package org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.factory;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.DiagramDiffAccessorImpl;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
+import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.AbstractAccessorFactory;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.legacy.ITypedElement;
-import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
+
 
 /**
  * Factory for graphical differences accessors.
@@ -40,7 +41,7 @@ public class DiagramDiffAccessorFactory extends AbstractAccessorFactory {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory#isFactoryFor(java.lang.Object)
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory#isFactoryFor(java.lang.Object)
 	 */
 	public boolean isFactoryFor(Object target) {
 		return target instanceof DiagramDiff;
@@ -49,7 +50,7 @@ public class DiagramDiffAccessorFactory extends AbstractAccessorFactory {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory#createLeft(org.eclipse.emf.common.notify.AdapterFactory,
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory#createLeft(org.eclipse.emf.common.notify.AdapterFactory,
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createLeft(AdapterFactory adapterFactory, Object target) {
@@ -59,7 +60,7 @@ public class DiagramDiffAccessorFactory extends AbstractAccessorFactory {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory#createRight(org.eclipse.emf.common.notify.AdapterFactory,
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory#createRight(org.eclipse.emf.common.notify.AdapterFactory,
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createRight(AdapterFactory adapterFactory, Object target) {
@@ -69,7 +70,7 @@ public class DiagramDiffAccessorFactory extends AbstractAccessorFactory {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.IAccessorFactory#createAncestor(org.eclipse.emf.common.notify.AdapterFactory,
+	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory#createAncestor(org.eclipse.emf.common.notify.AdapterFactory,
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createAncestor(AdapterFactory adapterFactory, Object target) {
