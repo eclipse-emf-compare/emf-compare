@@ -16,9 +16,13 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
+import org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.emf.compare.rcp.internal.EMFCompareRCPMessages;
+import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
+import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.WrapperItemDescriptor;
 
 /**
  * This listener will allow us to be aware of contribution changes against the model resolver extension point.
@@ -45,8 +49,14 @@ public class PostProcessorFactoryRegistryListener extends AbstractRegistryEventL
 	/** ATT_ORDINAL. */
 	static final String ATT_ORDINAL = "ordinal"; //$NON-NLS-1$
 
+	/** ATT_LABEL. */
+	static final String ATT_LABEL = "label"; //$NON-NLS-1$
+
+	/** ATT_DESCRIPTION. */
+	static final String ATT_DESCRIPTION = "description"; //$NON-NLS-1$
+
 	/** The post processor registry to which extension will be registered. */
-	private final IPostProcessor.Descriptor.Registry<String> registry;
+	private final IItemRegistry<IPostProcessor.Descriptor> registry;
 
 	/**
 	 * Creates a new registry listener with the given post processor registry to which extension will be
@@ -62,7 +72,7 @@ public class PostProcessorFactoryRegistryListener extends AbstractRegistryEventL
 	 *            the post processor registry to which extension will be registered.
 	 */
 	public PostProcessorFactoryRegistryListener(String pluginID, String extensionPointID, ILog log,
-			IPostProcessor.Descriptor.Registry<String> registry) {
+			IItemRegistry<IPostProcessor.Descriptor> registry) {
 		super(pluginID, extensionPointID, log);
 		this.registry = registry;
 	}
@@ -139,9 +149,14 @@ public class PostProcessorFactoryRegistryListener extends AbstractRegistryEventL
 		}
 		String className = element.getAttribute(ATT_CLASS);
 
-		IPostProcessor.Descriptor descriptor = new PostProcessorDescriptor(element, nsURI, resourceURI);
-		descriptor.setOrdinal(Integer.parseInt(element.getAttribute(ATT_ORDINAL)));
-		IPostProcessor.Descriptor previous = registry.put(className, descriptor);
+		IPostProcessor.Descriptor postProcessorDescriptor = new PostProcessorDescriptor(element, nsURI,
+				resourceURI);
+		postProcessorDescriptor.setOrdinal(Integer.parseInt(element.getAttribute(ATT_ORDINAL)));
+
+		WrapperItemDescriptor<IPostProcessor.Descriptor> postProcessorItemDescriptor = new WrapperItemDescriptor<IPostProcessor.Descriptor>(
+				element.getAttribute(ATT_LABEL), element.getAttribute(ATT_DESCRIPTION),
+				postProcessorDescriptor.getOrdinal(), className, postProcessorDescriptor);
+		IItemDescriptor<Descriptor> previous = registry.add(postProcessorItemDescriptor);
 		if (previous != null) {
 			EMFCompareRCPPlugin.getDefault().log(IStatus.WARNING,
 					"The post processor factory '" + className + "' is registered twice."); //$NON-NLS-1$//$NON-NLS-2$

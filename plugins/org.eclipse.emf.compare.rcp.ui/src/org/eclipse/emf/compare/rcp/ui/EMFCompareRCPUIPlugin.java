@@ -144,7 +144,7 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 		matchEngineConfiguratorRegistryListener = new ConfigurationUIRegistryEventListener(PLUGIN_ID,
 				MATCH_ENGINE_FACTORY_CONFIGURATION_UI_PPID, getLog(), matchEngineConfiguratorRegistry,
 				EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryDescriptorRegistry());
-		extensionRegistry.addListener(matchEngineConfiguratorRegistryListener, PLUGIN_ID + "."
+		extensionRegistry.addListener(matchEngineConfiguratorRegistryListener, PLUGIN_ID + '.'
 				+ MATCH_ENGINE_FACTORY_CONFIGURATION_UI_PPID);
 		matchEngineConfiguratorRegistryListener.readRegistry(extensionRegistry);
 

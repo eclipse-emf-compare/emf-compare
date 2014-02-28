@@ -17,8 +17,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine.Factory;
 import org.eclipse.emf.compare.rcp.internal.extension.IConfigurableItem;
-import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemDescriptor;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemUtil;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.LazyItemDescriptor;
 import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
 import org.osgi.service.prefs.Preferences;
 
@@ -27,21 +27,21 @@ import org.osgi.service.prefs.Preferences;
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
-public class MatchEngineFactoryDescriptor extends ItemDescriptor<IMatchEngine.Factory> {
+public class MatchEngineFactoryDescriptor extends LazyItemDescriptor<IMatchEngine.Factory> {
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param label
-	 *            {@link ItemDescriptor#getLabel()}
+	 *            {@link LazyItemDescriptor#getLabel()}
 	 * @param description
-	 *            {@link ItemDescriptor#getDescription()}
+	 *            {@link LazyItemDescriptor#getDescription()}
 	 * @param rank
-	 *            {@link ItemDescriptor#getRank()}
+	 *            {@link LazyItemDescriptor#getRank()}
 	 * @param config
 	 *            {@link IConfigurableItem} element used to create this item.
 	 * @param id
-	 *            {@link ItemDescriptor#getID()}
+	 *            {@link LazyItemDescriptor#getID()}
 	 */
 	public MatchEngineFactoryDescriptor(String label, String description, int rank,
 			IConfigurationElement config, String id) {

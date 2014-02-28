@@ -30,8 +30,8 @@ import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.AbstractItemDescriptor;
-import org.eclipse.emf.compare.rcp.internal.extension.impl.FactoryDescriptor;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemUtil;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.WrapperItemDescriptor;
 import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 
@@ -129,7 +129,7 @@ public class MatchEngineFactoryRegistryWrapper implements IMatchEngine.Factory.R
 	 */
 	public IMatchEngine.Factory add(IMatchEngine.Factory filter) {
 		Preconditions.checkNotNull(filter);
-		IItemDescriptor<Factory> factory = registry.add(new FactoryDescriptor<IMatchEngine.Factory>(
+		IItemDescriptor<Factory> factory = registry.add(new WrapperItemDescriptor<IMatchEngine.Factory>(
 				EMPTY_STRING, EMPTY_STRING, filter.getRanking(), filter.getMatchEngine().getClass()
 						.getCanonicalName(), filter));
 		if (factory != null) {

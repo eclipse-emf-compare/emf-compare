@@ -128,7 +128,7 @@ public class DescriptorRegistryEventListener<T> extends AbstractRegistryEventLis
 		String label = element.getAttribute(DescriptorRegistryEventListener.LABEL_DESCRIPTOR_ATTR);
 		String description = element.getAttribute(DESCRITPION_DESCRIPTOR_ATTR);
 		String id = element.getAttribute(ID_DESCRIPTOR_ATTR);
-		ItemDescriptor<T> descriptor = new ItemDescriptor<T>(label, description, rank, element, id);
+		LazyItemDescriptor<T> descriptor = new LazyItemDescriptor<T>(label, description, rank, element, id);
 		IItemDescriptor<T> previous = registry.add(descriptor);
 		if (previous != null) {
 			log(IStatus.WARNING, element, EMFCompareRCPMessages.getString(
