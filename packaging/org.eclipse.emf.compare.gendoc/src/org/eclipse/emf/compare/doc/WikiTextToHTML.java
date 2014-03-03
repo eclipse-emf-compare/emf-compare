@@ -315,12 +315,19 @@ public class WikiTextToHTML {
 		}
 		
 		String markupContent = new String(Files.readAllBytes(markupPath), UTF_8);
-				
-		String markupContentWithTOC = markupContent.replaceFirst("=(.*)=", "=EMF Compare — $1=\n\nVersion " + gitDescribe() +"\n\n__TOC__\n\n") + 
-				"\n\nPart of [index.html EMF Compare Documentation]" +
-				"\n\nVersion " + gitDescribe() +
-				"\n\nLast updated " + NOW;
-				
+		
+		final String markupContentWithTOC;
+		if ("index.mediawiki".equals(markupPath.getFileName().toString())) {
+			markupContentWithTOC = markupContent.replaceFirst("=(.*)=", "=EMF Compare — $1=\n\nVersion " + gitDescribe() +"\n\n") + 
+					"\n\nVersion " + gitDescribe() +
+					"\n\nLast updated " + NOW;
+		} else {
+			Path relativeToRoot = targetHTML.getParent().relativize(targetWebsiteFolder.resolve("index.html"));
+			markupContentWithTOC = markupContent.replaceFirst("=(.*)=", "=EMF Compare — $1=\n\nVersion " + gitDescribe() +"\n\n__TOC__\n\n") + 
+					"\n\nPart of ["+relativeToRoot+" EMF Compare Documentation]" +
+					"\n\nVersion " + gitDescribe() +
+					"\n\nLast updated " + NOW;
+		}
 
 		if (performValidation(markupPath, markupContent)) {
 			// for website
