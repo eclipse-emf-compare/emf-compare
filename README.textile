@@ -9,8 +9,8 @@ h3. Prerequesites
 
 EMF Compare can be installed on the following Eclipse platforms :
 
-- Eclipse version 3.5 (Galileo) to Eclipse version 4.4 (Luna)
-- Java 1.5 to Java 1.7
+* Eclipse version 3.5 (Galileo) to Eclipse version 4.4 (Luna)
+* Java 1.5 to Java 1.7
 
 h3. Compatibility
 
