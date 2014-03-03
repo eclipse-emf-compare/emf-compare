@@ -1,0 +1,77 @@
+h1. EMF Compare
+
+h2. Installation
+
+* The latest version of EMF Compare can be installed from http://download.eclipse.org/modeling/emf/compare/updates/releases/2.1
+* More detailed installation instructions on http://www.eclipse.org/emf/compare/documentation/latest/user/user-guide.html#Installing_EMF_Compare
+
+h3. Prerequesites
+
+EMF Compare can be installed on the following Eclipse platforms :
+
+- Eclipse version 3.5 (Galileo) to Eclipse version 4.4 (Luna)
+- Java 1.5 to Java 1.7
+
+h3. Compatibility
+
+Take note that parts of the EMF Compare optional supports can only be installed on later Eclipse versions. Namely :
+
+{| border="1" cellpadding="7" cellspacing="0"
+|-
+! Feature                            !! Eclipse 4.4 (Luna) !! Eclipse 4.3 (Kepler) !! Eclipse 4.2 (Juno) !! Eclipse 3.7 (Indigo) !! Eclipse 3.6 (Helios) !! Eclipse 3.5 (Galileo)
+|-
+| EMF Compare Core                   || X                  || X                    || X                  || X                    || X                    || X
+|-
+| EMF Compare RCP UI                 || X                  || X                    || X                  || X                    || X                    || X
+|-
+| EMF Compare IDE UI                 || X                  || X                    || X                  || X                    || X                    || X
+|-
+| EMF Compare UML integration        || X                  || X                    || X                  ||                      ||                      ||
+|-
+| EMF Compare GMF integration        || X                  || X                    || X                  ||                      ||                      ||
+|-
+| EMF Compare EcoreTools integration || X                  || X                    || X                  ||                      ||                      ||
+|-
+| EMF Compare Papyrus integration    || X                  || X                    || X                  ||                      ||                      ||
+|}
+
+h2. Reporting Bugs
+
+There may be errors in the <workspace>/.metadata/.log or even on stdout that can help you track down and problem.
+When reporting errors, please include stack traces when applicable and the commit id or the version your plugin is built from, or the version of the plugin if it does not contain a date.
+
+* Bugs or enhancement requests should be reported on the Eclipse bugzilla at https://bugs.eclipse.org/bugs/enter_bug.cgi?product=EMFCompare&component= 
+* Check http://www.eclipse.org/emf/compare/support/ for more details on support issues
+
+h2. Build
+
+EMF Compare can be built using maven from within the org.eclipse.emf.compare-parent sub-folder of this repository :
+
+@mvn clean package -Pluna@
+
+The above example will build the EMF Compare binaries against a Luna platform. Select the appropriate profile according to the platform you wish to install EMF Compare on, one in [luna, kepler, juno, indigo, helios, galileo].
+
+You can also check the tests using
+
+@mvn verify -Pluna --fail-at-end -Dmaven.test.failure.ignore=true@
+
+h2. Contributing
+
+* You need an Eclipse user account. You already have one if you are an Eclipse commiter or have a "Bugzilla":http://bugs.eclipse.org/bugs account. Otherwise, use "this form":https://dev.eclipse.org/site_login/createaccount.php.
+* Sign the Eclipse Contributing License Agreement (CLA) : Please go to "your user page":https://projects.eclipse.org/user/login/sso , then to the CLA tab once you're logged in and follow the instructions.
+* Make sure you use the proper user information on your git clone's configuration :
+** @$ cd <path/to/repository>@
+** @$ git config --local user.name "<Full Name>"@
+** @$ git config --local user.email "<your.mail@yourmail.com>"@
+
+* Make small logical changes.
+* Provide a meaningful commit message.
+
+EMF Compare uses gerrit for peer reviews.
+To configure it on your repository, please look up how to setup your SSH keys and remote on the "wiki":https://wiki.eclipse.org/EMF_Compare/Gerrit#SSH .
+A detailed guide on the commit message's format can be found further down this same page.
+
+Once properly configured, you will be able to request a review by simply pushing your commit on this new remote.
+
+A comprehensive contributor guide can also be found on "the project's wiki":https://wiki.eclipse.org/EMF_Compare/Contributor_Guide
+
