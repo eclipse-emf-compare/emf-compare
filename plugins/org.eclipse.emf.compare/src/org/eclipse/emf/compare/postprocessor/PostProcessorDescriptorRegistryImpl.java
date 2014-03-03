@@ -14,6 +14,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Ordering;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
@@ -73,7 +74,7 @@ public class PostProcessorDescriptorRegistryImpl<K> implements IPostProcessor.De
 	 * 
 	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor.Registry#getDescriptors()
 	 */
-	public ImmutableList<Descriptor> getDescriptors() {
+	public List<Descriptor> getDescriptors() {
 		return Ordering.natural().onResultOf(ordinal).immutableSortedCopy(postProcessorFactories.values());
 	}
 
@@ -91,7 +92,7 @@ public class PostProcessorDescriptorRegistryImpl<K> implements IPostProcessor.De
 	 * 
 	 * @see org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor.Registry#getPostProcessors(org.eclipse.emf.compare.scope.IComparisonScope)
 	 */
-	public ImmutableList<IPostProcessor> getPostProcessors(IComparisonScope scope) {
+	public List<IPostProcessor> getPostProcessors(IComparisonScope scope) {
 		final ImmutableList.Builder<IPostProcessor> processors = ImmutableList.builder();
 		for (IPostProcessor.Descriptor factory : getDescriptors()) {
 			Pattern nsURIPattern = factory.getNsURI();

@@ -10,8 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.postprocessor;
 
-import com.google.common.collect.ImmutableList;
-
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.Monitor;
@@ -180,7 +179,7 @@ public interface IPostProcessor {
 			 * 
 			 * @return A copy of the registered post processors list.
 			 */
-			ImmutableList<IPostProcessor.Descriptor> getDescriptors();
+			List<IPostProcessor.Descriptor> getDescriptors();
 
 			/**
 			 * Removes a post processor from this registry.
@@ -201,7 +200,7 @@ public interface IPostProcessor {
 			 *            The given scope.
 			 * @return The associated post processors if any.
 			 */
-			ImmutableList<IPostProcessor> getPostProcessors(IComparisonScope scope);
+			List<IPostProcessor> getPostProcessors(IComparisonScope scope);
 		}
 	}
 }
