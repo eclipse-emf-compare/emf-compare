@@ -16,24 +16,14 @@ h3. Compatibility
 
 Take note that parts of the EMF Compare optional supports can only be installed on later Eclipse versions. Namely :
 
-{| border="1" cellpadding="7" cellspacing="0"
-|-
-! Feature                            !! Eclipse 4.4 (Luna) !! Eclipse 4.3 (Kepler) !! Eclipse 4.2 (Juno) !! Eclipse 3.7 (Indigo) !! Eclipse 3.6 (Helios) !! Eclipse 3.5 (Galileo)
-|-
-| EMF Compare Core                   || X                  || X                    || X                  || X                    || X                    || X
-|-
-| EMF Compare RCP UI                 || X                  || X                    || X                  || X                    || X                    || X
-|-
-| EMF Compare IDE UI                 || X                  || X                    || X                  || X                    || X                    || X
-|-
-| EMF Compare UML integration        || X                  || X                    || X                  ||                      ||                      ||
-|-
-| EMF Compare GMF integration        || X                  || X                    || X                  ||                      ||                      ||
-|-
-| EMF Compare EcoreTools integration || X                  || X                    || X                  ||                      ||                      ||
-|-
-| EMF Compare Papyrus integration    || X                  || X                    || X                  ||                      ||                      ||
-|}
+|_. Feature                          |_. Eclipse 4.4 (Luna) |_. Eclipse 4.3 (Kepler) |_. Eclipse 4.2 (Juno) |_. Eclipse 3.7 (Indigo) |_. Eclipse 3.6 (Helios) |_. Eclipse 3.5 (Galileo) |
+| EMF Compare Core                   | X                    | X                      | X                    | X                      | X                      | X                       |
+| EMF Compare RCP UI                 | X                    | X                      | X                    | X                      | X                      | X                       |
+| EMF Compare IDE UI                 | X                    | X                      | X                    | X                      | X                      | X                       |
+| EMF Compare UML integration        | X                    | X                      | X                    |                        |                        |                         |
+| EMF Compare GMF integration        | X                    | X                      | X                    |                        |                        |                         |
+| EMF Compare EcoreTools integration | X                    | X                      | X                    |                        |                        |                         |
+| EMF Compare Papyrus integration    | X                    | X                      | X                    |                        |                        |                         |
 
 h2. Reporting Bugs
 
