@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
@@ -31,6 +32,10 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.match.IMatchEngine;
+import org.eclipse.emf.compare.match.eobject.EcoreWeightProvider;
+import org.eclipse.emf.compare.match.eobject.WeightProvider;
+import org.eclipse.emf.compare.match.eobject.WeightProviderDescriptorRegistryImpl;
+import org.eclipse.emf.compare.match.eobject.internal.WeightProviderDescriptorImpl;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryImpl;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryRegistryImpl;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
@@ -161,7 +166,12 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		final IComparisonScope scope = new DefaultComparisonScope(inputData.get391657Left(), inputData
 				.get391657Right(), null);
 		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
-		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
+		WeightProvider.Descriptor.Registry weightProviderRegistry = new WeightProviderDescriptorRegistryImpl();
+		WeightProviderDescriptorImpl descriptor = new WeightProviderDescriptorImpl(new EcoreWeightProvider(),
+				100, Pattern.compile(".*"));
+		weightProviderRegistry.put(descriptor.getNsURI().toString(), descriptor);
+		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER,
+				weightProviderRegistry));
 		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
 				.build().compare(scope);
 		Iterator<AttributeChange> attrChanges = Iterators.filter(result.getDifferences().iterator(),

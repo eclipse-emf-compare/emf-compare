@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.emf.compare.match.IMatchEngine;
+import org.eclipse.emf.compare.match.eobject.WeightProviderDescriptorRegistryImpl;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
 
@@ -52,10 +53,11 @@ public class MatchEngineFactoryRegistryImpl implements IMatchEngine.Factory.Regi
 	public static IMatchEngine.Factory.Registry createStandaloneInstance() {
 		final IMatchEngine.Factory.Registry registry = new MatchEngineFactoryRegistryImpl();
 
-		final IMatchEngine.Factory matchEngineFactory = new MatchEngineFactoryImpl(
+		final MatchEngineFactoryImpl matchEngineFactory = new MatchEngineFactoryImpl(
 				UseIdentifiers.WHEN_AVAILABLE);
 		matchEngineFactory.setRanking(10);
-
+		matchEngineFactory.setWeightProviderRegistry(WeightProviderDescriptorRegistryImpl
+				.createStandaloneInstance());
 		registry.add(matchEngineFactory);
 
 		return registry;

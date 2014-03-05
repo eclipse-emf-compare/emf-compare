@@ -47,7 +47,8 @@ public class DefaultRCPMatchEngineFactory implements IMatchEngine.Factory, IConf
 	}
 
 	/**
-	 * Parse the input preference to retrieve the value of {@link DefaultRCPMatchEngineFactory#USE_IDENTIFIER_ATTR}.
+	 * Parse the input preference to retrieve the value of
+	 * {@link DefaultRCPMatchEngineFactory#USE_IDENTIFIER_ATTR}.
 	 * 
 	 * @param pref
 	 *            {@link Preferences} holding configuration for this {@link IMatchEngine.Factory}.
@@ -77,7 +78,8 @@ public class DefaultRCPMatchEngineFactory implements IMatchEngine.Factory, IConf
 	 */
 	public IMatchEngine getMatchEngine() {
 		final UseIdentifiers useUdentifier = getUseIdentifierValue(config);
-		return DefaultMatchEngine.create(useUdentifier);
+		return DefaultMatchEngine.create(useUdentifier, EMFCompareRCPPlugin.getDefault()
+				.getWeightProviderRegistry());
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo and others.
+ * Copyright (c) 2012, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import com.google.common.collect.Sets;
 
 import java.util.Iterator;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.EList;
@@ -35,7 +36,7 @@ import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.match.DefaultEqualityHelperFactory;
 import org.eclipse.emf.compare.match.IEqualityHelperFactory;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher.DistanceFunction;
-import org.eclipse.emf.compare.match.eobject.internal.ReflectiveWeightProvider;
+import org.eclipse.emf.compare.match.eobject.internal.WeightProviderDescriptorImpl;
 import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
@@ -84,15 +85,26 @@ public class EditionDistance implements DistanceFunction {
 	 */
 	private Comparison fakeComparison;
 
+	/** The registry of Weight Providers to use in this Edition Distance. */
+	private WeightProvider.Descriptor.Registry weightProviderRegistry;
+
 	/**
-	 * instance providing the weight for each feature.
+	 * Instantiate a new Edition Distance that will use
+	 * {@link WeightProviderDescriptorRegistryImpl#createStandaloneInstance()}.
 	 */
-	private WeightProvider weights = new ReflectiveWeightProvider();
+	public EditionDistance() {
+		this(WeightProviderDescriptorRegistryImpl.createStandaloneInstance());
+	}
 
 	/**
 	 * Instantiate a new Edition Distance.
+	 * 
+	 * @param registry
+	 *            The registry of weight providers to use in this Edition Distance.
 	 */
-	public EditionDistance() {
+	public EditionDistance(WeightProvider.Descriptor.Registry registry) {
+		weightProviderRegistry = registry;
+
 		IEqualityHelperFactory fakeEqualityHelperFactory = new DefaultEqualityHelperFactory() {
 			@Override
 			public IEqualityHelper createEqualityHelper() {
@@ -143,7 +155,6 @@ public class EditionDistance implements DistanceFunction {
 
 		fakeComparison.eAdapters().add(equalityHelper);
 		equalityHelper.setTarget(fakeComparison);
-
 	}
 
 	/**
@@ -225,7 +236,9 @@ public class EditionDistance implements DistanceFunction {
 		 * @return the current builder instance.
 		 */
 		public Builder weightProvider(WeightProvider provider) {
-			this.toBeBuilt.weights = provider;
+			final WeightProvider.Descriptor descriptor = new WeightProviderDescriptorImpl(provider, 101,
+					Pattern.compile(".*")); //$NON-NLS-1$
+			this.toBeBuilt.weightProviderRegistry.put(descriptor.getNsURI().toString(), descriptor);
 			return this;
 		}
 
@@ -263,12 +276,15 @@ public class EditionDistance implements DistanceFunction {
 			if (!alreadyChanged.contains(reference)) {
 				switch (kind) {
 					case MOVE:
-						distance += weights.getWeight(reference) * orderChangeCoef;
+						distance += weightProviderRegistry.getHighestRankingWeightProvider(
+								reference.eClass().getEPackage()).getWeight(reference)
+								* orderChangeCoef;
 						break;
 					case ADD:
 					case DELETE:
 					case CHANGE:
-						distance += weights.getWeight(reference);
+						distance += weightProviderRegistry.getHighestRankingWeightProvider(
+								reference.eClass().getEPackage()).getWeight(reference);
 						break;
 					default:
 						break;
@@ -289,16 +305,20 @@ public class EditionDistance implements DistanceFunction {
 				Object bValue = ReferenceUtil.safeEGet(match.getRight(), attribute);
 				switch (kind) {
 					case MOVE:
-						distance += weights.getWeight(attribute) * orderChangeCoef;
+						distance += weightProviderRegistry.getHighestRankingWeightProvider(
+								attribute.eClass().getEPackage()).getWeight(attribute)
+								* orderChangeCoef;
 						break;
 					case ADD:
 					case DELETE:
 					case CHANGE:
 						if (aValue instanceof String && bValue instanceof String) {
-							distance += weights.getWeight(attribute)
+							distance += weightProviderRegistry.getHighestRankingWeightProvider(
+									attribute.eClass().getEPackage()).getWeight(attribute)
 									* (1 - DiffUtil.diceCoefficient((String)aValue, (String)bValue));
 						} else {
-							distance += weights.getWeight(attribute);
+							distance += weightProviderRegistry.getHighestRankingWeightProvider(
+									attribute.eClass().getEPackage()).getWeight(attribute);
 						}
 						break;
 					default:
@@ -406,7 +426,9 @@ public class EditionDistance implements DistanceFunction {
 			getCounter().reset();
 			double changes = 0;
 			if (!haveSameContainer(comparisonInProgress, a, b)) {
-				changes += locationChangeCoef * weights.getParentWeight(a);
+				changes += locationChangeCoef
+						* weightProviderRegistry.getHighestRankingWeightProvider(a.eClass().getEPackage())
+								.getParentWeight(a);
 			} else {
 				int aIndex = getContainmentIndex(a);
 				int bIndex = getContainmentIndex(b);
@@ -420,7 +442,9 @@ public class EditionDistance implements DistanceFunction {
 
 			}
 			if (a.eContainingFeature() != b.eContainingFeature()) {
-				changes += Math.max(weights.getContainingFeatureWeight(a), weights
+				changes += Math.max(weightProviderRegistry.getHighestRankingWeightProvider(
+						a.eClass().getEPackage()).getContainingFeatureWeight(a), weightProviderRegistry
+						.getHighestRankingWeightProvider(b.eClass().getEPackage())
 						.getContainingFeatureWeight(b));
 			}
 			if (changes <= maxDistance) {
@@ -562,9 +586,9 @@ public class EditionDistance implements DistanceFunction {
 				@Override
 				public Iterator<EReference> getReferencesToCheck(Match match) {
 					return Iterators.filter(super.getReferencesToCheck(match), new Predicate<EReference>() {
-
 						public boolean apply(EReference input) {
-							return weights.getWeight(input) != 0;
+							return weightProviderRegistry.getHighestRankingWeightProvider(
+									input.eClass().getEPackage()).getWeight(input) != 0;
 
 						}
 					});
@@ -573,9 +597,9 @@ public class EditionDistance implements DistanceFunction {
 				@Override
 				public Iterator<EAttribute> getAttributesToCheck(Match match) {
 					return Iterators.filter(super.getAttributesToCheck(match), new Predicate<EAttribute>() {
-
 						public boolean apply(EAttribute input) {
-							return weights.getWeight(input) != 0;
+							return weightProviderRegistry.getHighestRankingWeightProvider(
+									input.eClass().getEPackage()).getWeight(input) != 0;
 						}
 					});
 				}
@@ -599,15 +623,19 @@ public class EditionDistance implements DistanceFunction {
 		int nbFeatures = 0;
 
 		for (EStructuralFeature feat : eObj.eClass().getEAllStructuralFeatures()) {
-			int featureWeight = weights.getWeight(feat);
+			int featureWeight = weightProviderRegistry.getHighestRankingWeightProvider(
+					feat.eClass().getEPackage()).getWeight(feat);
 			if (featureWeight != 0 && eObj.eIsSet(feat)) {
 				max += featureWeight;
 				nbFeatures++;
 			}
 		}
 
-		// max = max + (locationChangeCoef * weights.getParentWeight(eObj));
-		max = max + weights.getContainingFeatureWeight(eObj);
+		// max = max + (locationChangeCoef *
+		// weightProviderRegistry.getHighestRankingWeightProvider(eObj.eClass().getEPackage()).getParentWeight(eObj));
+		max = max
+				+ weightProviderRegistry.getHighestRankingWeightProvider(eObj.eClass().getEPackage())
+						.getContainingFeatureWeight(eObj);
 
 		return max * getThresholdRatio(nbFeatures);
 	}

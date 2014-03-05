@@ -22,6 +22,8 @@ import org.eclipse.emf.compare.equi.IEquiEngine;
 import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor;
 import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptorRegistryImpl;
 import org.eclipse.emf.compare.match.IMatchEngine;
+import org.eclipse.emf.compare.match.eobject.WeightProvider;
+import org.eclipse.emf.compare.match.eobject.WeightProviderDescriptorRegistryImpl;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
@@ -33,6 +35,7 @@ import org.eclipse.emf.compare.rcp.internal.extension.impl.DescriptorRegistryEve
 import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.match.MatchEngineFactoryRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.match.MatchEngineFactoryRegistryWrapper;
+import org.eclipse.emf.compare.rcp.internal.match.WeightProviderDescriptorRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.merger.MergerExtensionRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryImpl;
 import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryListener;
@@ -67,6 +70,9 @@ public class EMFCompareRCPPlugin extends Plugin {
 	/** The id of the conflict engine extension point. */
 	public static final String CONFLICT_DETECTOR_PPID = "conflictsDetector"; //$NON-NLS-1$
 
+	/** The id of the weight provider extension point. */
+	public static final String WEIGHT_PROVIDER_PPID = "weightProvider"; //$NON-NLS-1$
+
 	/** The id of the load on demand policy extension point. */
 	public static final String LOAD_ON_DEMAND_POLICY_PPID = "loadOnDemandPolicy"; //$NON-NLS-1$
 
@@ -96,6 +102,9 @@ public class EMFCompareRCPPlugin extends Plugin {
 
 	/** The registry that will hold references to all conflicts detector. */
 	private ItemRegistry<IConflictDetector> conflictDetectorRegistry;
+
+	/** The registry that will hold references to all weight providers. */
+	private WeightProvider.Descriptor.Registry weightProviderRegistry;
 
 	/** The registry listener that will be used to react to merger changes. */
 	private AbstractRegistryEventListener mergerRegistryListener;
@@ -139,6 +148,9 @@ public class EMFCompareRCPPlugin extends Plugin {
 	/** The registry listener that will be used to react to conflict detector changes. */
 	private DescriptorRegistryEventListener<IConflictDetector> conflictDetectorListener;
 
+	/** The registry listener that will be used to react to weight provider changes. */
+	private WeightProviderDescriptorRegistryListener weightProviderListener;
+
 	/**
 	 * Instance scope for preferences. Do not use singleton to respect Helios compatibility. See
 	 * {@link InstanceScope}
@@ -158,6 +170,8 @@ public class EMFCompareRCPPlugin extends Plugin {
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
 		setUpAdapterFactoryRegistry(registry);
+
+		setUpWeightProviderRegistry(registry);
 
 		setUpMatchEngineFactoryRegistry(registry);
 
@@ -304,6 +318,20 @@ public class EMFCompareRCPPlugin extends Plugin {
 		conflictDetectorListener.readRegistry(registry);
 	}
 
+	/**
+	 * Set the Weight Provider Registry.
+	 * 
+	 * @param registry
+	 *            {@link IExtensionRegistry} to listen in order to fill the registry
+	 */
+	private void setUpWeightProviderRegistry(final IExtensionRegistry registry) {
+		weightProviderRegistry = new WeightProviderDescriptorRegistryImpl();
+		weightProviderListener = new WeightProviderDescriptorRegistryListener(PLUGIN_ID,
+				WEIGHT_PROVIDER_PPID, getLog(), weightProviderRegistry);
+		registry.addListener(weightProviderListener);
+		weightProviderListener.readRegistry(registry);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
@@ -313,6 +341,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 		EMFCompareRCPPlugin.plugin = null;
 
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
 		discardConflictDetectorRegistry(registry);
 
 		discardReqEngineRegistry(registry);
@@ -328,6 +357,8 @@ public class EMFCompareRCPPlugin extends Plugin {
 		discardMergerRegistry(registry);
 
 		discardMatchEngineRegistry(registry);
+
+		discardWeightProviderRegistry(registry);
 
 		discardAdapterFactoryRegistry(registry);
 
@@ -356,6 +387,18 @@ public class EMFCompareRCPPlugin extends Plugin {
 		registry.removeListener(conflictDetectorListener);
 		conflictDetectorListener = null;
 		conflictDetectorRegistry = null;
+	}
+
+	/**
+	 * Discard Weight Provider Registry.
+	 * 
+	 * @param registry
+	 *            IExtensionRegistry to remove listener
+	 */
+	private void discardWeightProviderRegistry(final IExtensionRegistry registry) {
+		registry.removeListener(weightProviderListener);
+		weightProviderListener = null;
+		weightProviderRegistry = null;
 	}
 
 	/**
@@ -447,7 +490,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 * Returns the adapter factory descriptor registry to which extension will be registered.
 	 * 
 	 * @return the the adapter factory descriptor registry to which extension will be registered
-	 * @since 2.2
+	 * @since 3.0
 	 */
 	public RankedAdapterFactoryDescriptor.Registry getAdapterFactoryRegistry() {
 		return adapterFactoryRegistry;
@@ -457,7 +500,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 * Returns the merger registry to which extension will be registered.
 	 * 
 	 * @return the merger registry to which extension will be registered
-	 * @since 2.2
+	 * @since 3.0
 	 */
 	public IMerger.Registry getMergerRegistry() {
 		return mergerRegistry;
@@ -518,10 +561,19 @@ public class EMFCompareRCPPlugin extends Plugin {
 	}
 
 	/**
+	 * Returns the registry of weight providers.
+	 * 
+	 * @return the registry of weight providers
+	 */
+	public WeightProvider.Descriptor.Registry getWeightProviderRegistry() {
+		return weightProviderRegistry;
+	}
+
+	/**
 	 * Returns the match engine factory registry to which extension will be registered.
 	 * 
 	 * @return the match engine factory registry to which extension will be registered
-	 * @since 2.2
+	 * @since 3.0
 	 */
 	public IMatchEngine.Factory.Registry getMatchEngineFactoryRegistry() {
 		return matchEngineFactoryRegistryWrapped;
@@ -531,7 +583,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 * Returns the match engine factory registry to which extension will be registered.
 	 * 
 	 * @return the match engine factory registry to which extension will be registered
-	 * @since 2.2
+	 * @since 3.0
 	 */
 	public IItemRegistry<IMatchEngine.Factory> getMatchEngineFactoryDescriptorRegistry() {
 		return matchEngineFactoryRegistry;

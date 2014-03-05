@@ -21,6 +21,7 @@
    <extension-point id="equiEngine" name="Equivalences Engine" schema="schema/equiEngine.exsd"/>
    <extension-point id="conflictsDetector" name="Conflicts Detector" schema="schema/conflictsDetector.exsd"/>
    <extension-point id="reqEngine" name="Requirements Engine" schema="schema/reqEngine.exsd"/>
+   <extension-point id="weightProvider" name="Weight Provider" schema="schema/weightProvider.exsd"/>
    
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
@@ -108,6 +109,25 @@
             label="Default Requirement Engine"
             ranking="100">
       </descriptor>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.rcp.weightProvider">
+      <provider
+            class="org.eclipse.emf.compare.match.eobject.DefaultWeightProvider"
+            description="Default implementation of the weight provider provided by EMF Compare."
+            id="org.eclipse.emf.compare.rcp.default.weightProvider"
+            label="Default Weight Provider"
+            nsURI=".*"
+            ranking="100">
+      </provider>
+      <provider
+            class="org.eclipse.emf.compare.match.eobject.EcoreWeightProvider"
+            description="Ecore implementation of the weight provider provided by EMF Compare."
+            id="org.eclipse.emf.compare.rcp.ecore.weightProvider"
+            label="Ecore Weight Provider"
+            nsURI="http://www.eclipse.org/emf/2002/Ecore"
+            ranking="101">
+      </provider>
    </extension>
    
 </plugin>

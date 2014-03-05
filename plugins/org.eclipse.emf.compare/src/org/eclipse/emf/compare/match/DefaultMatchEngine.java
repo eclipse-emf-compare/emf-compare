@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo and others.
+ * Copyright (c) 2012, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,8 @@ import org.eclipse.emf.compare.match.eobject.EditionDistance;
 import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
 import org.eclipse.emf.compare.match.eobject.IdentifierEObjectMatcher;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher;
+import org.eclipse.emf.compare.match.eobject.WeightProvider;
+import org.eclipse.emf.compare.match.eobject.WeightProviderDescriptorRegistryImpl;
 import org.eclipse.emf.compare.match.resource.IResourceMatcher;
 import org.eclipse.emf.compare.match.resource.StrategyResourceMatcher;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -358,9 +360,24 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * @return a new {@link DefaultMatchEngine} instance.
 	 */
 	public static IMatchEngine create(UseIdentifiers useIDs) {
+		return create(useIDs, WeightProviderDescriptorRegistryImpl.createStandaloneInstance());
+	}
+
+	/**
+	 * Helper creator method that instantiate a {@link DefaultMatchEngine} that will use identifiers as
+	 * specified by the given {@code useIDs} enumeration.
+	 * 
+	 * @param useIDs
+	 *            the kinds of matcher to use.
+	 * @param weightProviderRegistry
+	 *            the match engine needs a WeightProvider in case of this match engine do not use identifiers.
+	 * @return a new {@link DefaultMatchEngine} instance.
+	 */
+	public static IMatchEngine create(UseIdentifiers useIDs,
+			WeightProvider.Descriptor.Registry weightProviderRegistry) {
 		final IComparisonFactory comparisonFactory = new DefaultComparisonFactory(
 				new DefaultEqualityHelperFactory());
-		final IEObjectMatcher matcher = createDefaultEObjectMatcher(useIDs);
+		final IEObjectMatcher matcher = createDefaultEObjectMatcher(useIDs, weightProviderRegistry);
 
 		final IMatchEngine matchEngine = new DefaultMatchEngine(matcher, comparisonFactory);
 		return matchEngine;
@@ -375,8 +392,24 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * @return a new IEObjectMatcher.
 	 */
 	public static IEObjectMatcher createDefaultEObjectMatcher(UseIdentifiers useIDs) {
+		return createDefaultEObjectMatcher(useIDs, WeightProviderDescriptorRegistryImpl
+				.createStandaloneInstance());
+	}
+
+	/**
+	 * Creates and configures an {@link IEObjectMatcher} with the strategy given by {@code useIDs}. The
+	 * {@code cache} will be used to cache some expensive computation (should better a LoadingCache).
+	 * 
+	 * @param useIDs
+	 *            which strategy the return IEObjectMatcher must follow.
+	 * @param weightProviderRegistry
+	 *            the match engine needs a WeightProvider in case of this match engine do not use identifiers.
+	 * @return a new IEObjectMatcher.
+	 */
+	public static IEObjectMatcher createDefaultEObjectMatcher(UseIdentifiers useIDs,
+			WeightProvider.Descriptor.Registry weightProviderRegistry) {
 		final IEObjectMatcher matcher;
-		final EditionDistance editionDistance = new EditionDistance();
+		final EditionDistance editionDistance = new EditionDistance(weightProviderRegistry);
 		final CachingDistance cachedDistance = new CachingDistance(editionDistance);
 		switch (useIDs) {
 			case NEVER:
@@ -397,5 +430,4 @@ public class DefaultMatchEngine implements IMatchEngine {
 
 		return matcher;
 	}
-
 }

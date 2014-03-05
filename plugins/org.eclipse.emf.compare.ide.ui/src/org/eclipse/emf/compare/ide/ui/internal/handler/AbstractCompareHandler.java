@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 - 2014 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -183,8 +183,9 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 		 */
 		public MatchEObjectEngine() {
 			// never use id in EObjects comparison
-			super(DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER),
-					new DefaultComparisonFactory(new DefaultEqualityHelperFactory()));
+			super(DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER, EMFCompareRCPPlugin
+					.getDefault().getWeightProviderRegistry()), new DefaultComparisonFactory(
+					new DefaultEqualityHelperFactory()));
 		}
 
 		/**
