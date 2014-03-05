@@ -32,7 +32,7 @@ import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.DescriptorRegistryEventListener;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.match.MatchEngineFactoryRegistryListener;
-import org.eclipse.emf.compare.rcp.internal.match.MatchEnginefactoryRegistryWrapper;
+import org.eclipse.emf.compare.rcp.internal.match.MatchEngineFactoryRegistryWrapper;
 import org.eclipse.emf.compare.rcp.internal.merger.MergerExtensionRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryImpl;
 import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryListener;
@@ -116,7 +116,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	private IItemRegistry<IMatchEngine.Factory> matchEngineFactoryRegistry;
 
 	/** The registry that will hold references to all match engine factories. */
-	private MatchEnginefactoryRegistryWrapper matchEngineFactoryRegistryWrapped;
+	private MatchEngineFactoryRegistryWrapper matchEngineFactoryRegistryWrapped;
 
 	/** The registry listener that will be used to react to match engine changes. */
 	private MatchEngineFactoryRegistryListener matchEngineFactoryRegistryListener;
@@ -200,7 +200,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 		matchEngineFactoryRegistryListener = new MatchEngineFactoryRegistryListener(PLUGIN_ID,
 				MATCH_ENGINE_PPID, getLog(), matchEngineFactoryRegistry);
 		matchEngineFactoryRegistryListener.readRegistry(registry);
-		matchEngineFactoryRegistryWrapped = new MatchEnginefactoryRegistryWrapper(matchEngineFactoryRegistry);
+		matchEngineFactoryRegistryWrapped = new MatchEngineFactoryRegistryWrapper(matchEngineFactoryRegistry);
 	}
 
 	/**

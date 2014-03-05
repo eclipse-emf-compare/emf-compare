@@ -40,7 +40,7 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
-public class MatchEnginefactoryRegistryWrapper implements IMatchEngine.Factory.Registry {
+public class MatchEngineFactoryRegistryWrapper implements IMatchEngine.Factory.Registry {
 
 	/** EMPTY_STRING. */
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
@@ -52,9 +52,9 @@ public class MatchEnginefactoryRegistryWrapper implements IMatchEngine.Factory.R
 	 * Constructor.
 	 * 
 	 * @param registy
-	 *            {@link MatchEnginefactoryRegistryWrapper#registry}
+	 *            {@link MatchEngineFactoryRegistryWrapper#registry}
 	 */
-	public MatchEnginefactoryRegistryWrapper(IItemRegistry<Factory> registy) {
+	public MatchEngineFactoryRegistryWrapper(IItemRegistry<Factory> registy) {
 		super();
 		this.registry = registy;
 	}
