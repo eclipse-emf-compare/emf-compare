@@ -132,7 +132,7 @@ Comparison comparison = EMFCompare.builder().setMatchEngine(new DefaultMatchEngi
 
 '''Q''' : I need to call EMF Compare programmatically from within my own plugin, but I'd like to be able to show my users a comparison editor. Is there a way?
 
-'''A''' : Since EMF Compare 2.1.0M4, there is. As the answer to this question is a little complex, it deserves [[./../developer/How%20To%20Open%20Compare%20Dialog%20With%20Comparison.html|its own page]].
+'''A''' : Since EMF Compare 2.1.0M4, there is. As the answer to this question is a little complex, it deserves [[./developer/how-to-open-compare-dialog.html|its own page]].
 
 === Can I use custom identifiers for my objects ? ===
 
@@ -140,12 +140,12 @@ Comparison comparison = EMFCompare.builder().setMatchEngine(new DefaultMatchEngi
 
 '''A''' : EMF Compare internally uses a function in order to compute the identifier of an EObject. You can override this function with your own, or compose your own with it so that EMF Compare will use your function for your elements, and fall back to the default behavior for any other element it needs to match.
 
-How to do this is outlined on the [[./../developer/Default%20Behavior%20and%20Extensibility.html#Defining custom identifiers|Developer Guide]].
+How to do this is outlined on the [[./developer/developer-guide.html#Defining custom identifiers|Developer Guide]].
 
 === Can I ignore differences on a specific reference, or ignore ordering differences ? ===
 
 '''Q''' : I want to ignore all differences on a given structural feature, can I tell EMF Compare not to look at these features?<br/>
 '''Q''' : EMF Compare detects many ''ordering'' differences on my models, but I do not care about them. Is there a way to ignore all ordering changes?
 
-'''A''' : You can override the ''FeatureFilter'' to tell EMF Compare that some references should be ignored, there is an example doing just that in the [[./../developer/Default%20Behavior%20and%20Extensibility.html##Changing the FeatureFilter|Developer Guide]].
+'''A''' : You can override the ''FeatureFilter'' to tell EMF Compare that some references should be ignored, there is an example doing just that in the [[./developer/developer-guide.html#Changing the FeatureFilter|Developer Guide]].
 
