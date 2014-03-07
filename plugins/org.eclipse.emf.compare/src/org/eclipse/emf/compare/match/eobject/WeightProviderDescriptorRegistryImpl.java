@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.eclipse.emf.compare.match.eobject.WeightProvider.Descriptor;
 import org.eclipse.emf.compare.match.eobject.internal.WeightProviderDescriptorImpl;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -28,14 +29,23 @@ import org.eclipse.emf.ecore.EPackage;
  */
 public class WeightProviderDescriptorRegistryImpl implements WeightProvider.Descriptor.Registry {
 
-	/** List of all the weight providers contributed through extension point. */
-	private final Map<String, WeightProvider.Descriptor> weightProviders;
+	/**
+	 * Map of all known {@link WeightProvider.Descriptor}s.
+	 */
+	private final Map<String, WeightProvider.Descriptor> weightProviderDescriptors;
+
+	/**
+	 * Cache (NsURI <-> highest ranking weight provider) associating each NsURI to his highest ranking weight
+	 * provider.
+	 */
+	private final Map<String, WeightProvider> cache;
 
 	/**
 	 * Creates a new extension registry.
 	 */
 	public WeightProviderDescriptorRegistryImpl() {
-		weightProviders = Maps.newHashMap();
+		weightProviderDescriptors = Maps.newHashMap();
+		cache = Maps.newHashMap();
 	}
 
 	/**
@@ -64,50 +74,47 @@ public class WeightProviderDescriptorRegistryImpl implements WeightProvider.Desc
 	 * {@inheritDoc}
 	 */
 	public WeightProvider.Descriptor put(String key, WeightProvider.Descriptor weightProvider) {
-		return weightProviders.put(key, weightProvider);
+		cache.clear();
+		return weightProviderDescriptors.put(key, weightProvider);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public void clear() {
-		weightProviders.clear();
+		weightProviderDescriptors.clear();
+		cache.clear();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public ImmutableList<WeightProvider.Descriptor> getDescriptors() {
-		return ImmutableList.copyOf(weightProviders.values());
+		return ImmutableList.copyOf(weightProviderDescriptors.values());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public WeightProvider.Descriptor remove(String key) {
-		return weightProviders.remove(key);
+		cache.clear();
+		return weightProviderDescriptors.remove(key);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public WeightProvider getHighestRankingWeightProvider(EPackage ePackage) {
-		Iterator<WeightProvider.Descriptor> descriptors = getWeightProviderDescriptors(ePackage).iterator();
-
-		WeightProvider ret = null;
-
-		if (descriptors.hasNext()) {
-			WeightProvider.Descriptor highestRanking = descriptors.next();
-			while (descriptors.hasNext()) {
-				WeightProvider.Descriptor desc = descriptors.next();
-				if (desc.getRanking() > highestRanking.getRanking()) {
-					highestRanking = desc;
-				}
+		WeightProvider weightProvider = cache.get(ePackage.getNsURI());
+		if (weightProvider == null) {
+			WeightProvider.Descriptor highestRankingWeightProviderDescriptor = getHighestRankingWeightProviderDescriptor(ePackage
+					.getNsURI());
+			if (highestRankingWeightProviderDescriptor != null) {
+				weightProvider = highestRankingWeightProviderDescriptor.getWeightProvider();
+				cache.put(ePackage.getNsURI(), weightProvider);
 			}
-			ret = highestRanking.getWeightProvider();
 		}
-
-		return ret;
+		return weightProvider;
 	}
 
 	/**
@@ -129,12 +136,22 @@ public class WeightProviderDescriptorRegistryImpl implements WeightProvider.Desc
 	 * @return the weight providers descriptors from a given ePackage.
 	 */
 	private ImmutableList<WeightProvider.Descriptor> getWeightProviderDescriptors(EPackage ePackage) {
+		return getWeightProviderDescriptors(ePackage.getNsURI());
+	}
+
+	/**
+	 * Retrieve the weight providers descriptors from a given nsURI.
+	 * 
+	 * @param nsURI
+	 *            the given nsURI.
+	 * @return the weight providers descriptors from a given nsURI.
+	 */
+	private ImmutableList<Descriptor> getWeightProviderDescriptors(String nsURI) {
 		final ImmutableList.Builder<WeightProvider.Descriptor> weightProvidersBuilder = ImmutableList
 				.builder();
 		for (WeightProvider.Descriptor descriptor : getDescriptors()) {
 			Pattern nsURIPattern = descriptor.getNsURI();
 			if (nsURIPattern != null) {
-				String nsURI = ePackage.getNsURI();
 				if (nsURIPattern.matcher(nsURI).matches()) {
 					weightProvidersBuilder.add(descriptor);
 				}
@@ -143,4 +160,26 @@ public class WeightProviderDescriptorRegistryImpl implements WeightProvider.Desc
 		return weightProvidersBuilder.build();
 	}
 
+	/**
+	 * Returns the highest ranking weight provider descriptor associated to the given nsURI.
+	 * 
+	 * @param nsURI
+	 *            the nsURI for which we want to get the highest ranking weight provider descriptor.
+	 * @return the highest ranking weight provider descriptor associated to the given nsURI.
+	 */
+	private WeightProvider.Descriptor getHighestRankingWeightProviderDescriptor(String nsURI) {
+		WeightProvider.Descriptor ret = null;
+		Iterator<WeightProvider.Descriptor> descriptors = getWeightProviderDescriptors(nsURI).iterator();
+		if (descriptors.hasNext()) {
+			WeightProvider.Descriptor highestRanking = descriptors.next();
+			while (descriptors.hasNext()) {
+				WeightProvider.Descriptor desc = descriptors.next();
+				if (desc.getRanking() > highestRanking.getRanking()) {
+					highestRanking = desc;
+				}
+			}
+			ret = highestRanking;
+		}
+		return ret;
+	}
 }
