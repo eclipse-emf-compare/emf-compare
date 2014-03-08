@@ -58,11 +58,11 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 	/** The help listener of the wrapped viewer. */
 	private final HelpListener fWrappedViewerHelpListener;
 
-	public final IDoubleClickListener fWrappedViewerDoubleClickListener;
+	private final IDoubleClickListener fWrappedViewerDoubleClickListener;
 
-	public final ISelectionChangedListener fWrappedViewerPostSelectionChangedListener;
+	private final ISelectionChangedListener fWrappedViewerPostSelectionChangedListener;
 
-	public final IOpenListener fWrappedViewerOpenListener;
+	private final IOpenListener fWrappedViewerOpenListener;
 
 	/**
 	 * Constructor.
