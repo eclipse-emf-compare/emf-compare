@@ -465,17 +465,17 @@ You can provide your own filters by adding an extension of type ''org.eclipse.em
 [[Image:./../images/EMF_Compare_Developer_New_Extension_Filter.png|center]]
 
 This extension has three fields:
-* class: a class that implements ''org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter''
+* class: a class that implements ''org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter''
 * label: the label that will be displayed in the UI.
 * activeByDefault: true if you want your filter be active by default, false otherwise.
 
-The ''org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.IDifferenceFilter'''s contract is:
+The ''org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter'''s contract is:
 
 <source lang="java">
 /**
  * Instances of this class will be used by EMF Compare in order to provide difference filter facilities to the
  * structural differences view.
- * @since 3.0
+ * @since 4.0
  */
 public interface IDifferenceFilter {
 
@@ -541,24 +541,26 @@ public interface IDifferenceFilter {
 }
 </source>
 
-A default abstract implementation named ''org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.AbstractDifferenceFilter'' is available in the ''org.eclipse.emf.compare.rcp.ui'' plugin. With this abstract implementation, all you have to do is to subclass it and implements the ''getPredicateWhenSelected()'' method.
+A default abstract implementation named ''org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.impl.AbstractDifferenceFilter'' is available in the ''org.eclipse.emf.compare.rcp.ui'' plugin. With this abstract implementation, all you have to do is to subclass it and implements the ''getPredicateWhenSelected()'' method.
 
 ==== Add your own group ====
+
+You can provide your own groups by adding an extension of type ''org.eclipse.emf.compare.rcp.ui.groups'' to your plugin.
 
 [[Image:./../images/EMF_Compare_Developer_New_Extension_Group.png|center]]
 
 This extension has three fields:
-* class: a class that implements ''org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider''
+* class: a class that implements ''org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider''
 * label: the label that will be displayed in the UI.
 * activeByDefault: true if you want your filter be active by default, false otherwise.
 
-The ''org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider'''s contract is:
+The ''org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider'''s contract is:
 
 <source lang="java">
 /**
  * Instances of this class will be used by EMF Compare in order to provide difference grouping facilities to
  * the structural differences view.
- * @since 3.0
+ * @since 4.0
  */
 public interface IDifferenceGroupProvider extends Adapter {
 
@@ -634,11 +636,140 @@ public interface IDifferenceGroupProvider extends Adapter {
 }
 </source>
 
-A default abstract implementation named ''org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.AbstractDifferenceGroupProvider'' is available in the ''org.eclipse.emf.compare.rcp.ui'' plugin. With this abstract implementation, all you have to do is to subclass it and implements the ''getGroups()'' method.
+An ''IDifferenceGroupProvider'' provides a set of ''IDifferenceGroup''.
+A group provider's default abstract implementation named ''org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.impl.AbstractDifferenceGroupProvider'' is available in the ''org.eclipse.emf.compare.rcp.ui'' plugin. With this abstract implementation, all you have to do is to subclass it and implements the ''getGroups()'' method.
 
 For example, the ''By Kind'' group provider has 4 groups: Additions, Deletions, Changes and Moves.
 
-A defaul implementation named ''org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl'' is available in the ''org.eclipse.emf.compare.rcp.ui'' plugin. With this default implementation, all you have to do is to subclass it and overrides the ''getChildren()'' method.
+A group's default implementation named ''org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.BasicDifferenceGroupImpl'' is available in the ''org.eclipse.emf.compare.rcp.ui'' plugin. With this default implementation, all you have to do is to subclass it and overrides the ''getChildren()'' method.
+Note that default implementation is ''internal'' and subject to modifications.
+
+==== Customize display of differences inside an existing group ====
+
+You can customize display of differences inside an existing group by adding an extension of type ''org.eclipse.emf.compare.rcp.ui.differenceGroupExtender'' to your plugin.
+
+[[Image:./../images/EMF_Compare_Developer_New_Extension_Extender.png|center]]
+
+This extension has one field:
+* class: a class that implements ''org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender''
+
+The ''org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender'''s contract is:
+
+<source lang="java">
+/**
+ * Instances of this class will be used by EMF Compare in order to extend the children of TreeNodes containing
+ * in the structure merge viewer.
+ * 
+ * @since 4.0
+ */
+public interface IDifferenceGroupExtender {
+
+	/**
+	 * Checks if the given TreeNode have to be handled by the extender.
+	 * 
+	 * @param treeNode
+	 *            the given TreeNode.
+	 * @return true if the TreeNode have to be handled, false otherwise.
+	 */
+	boolean handle(TreeNode treeNode);
+
+	/**
+	 * Add children to the given TreeNode.
+	 * 
+	 * @param treeNode
+	 *            the given TreeNode.
+	 */
+	void addChildren(TreeNode treeNode);
+}
+</source>
+
+There is no default implementation of extender. Examples of extender implementations are available in the ''org.eclipse.emf.compare.diagram.ide.ui'' plugin.
+
+==== Add your own accessor factory ====
+
+You can add your own accessor factory by adding an extension of type ''org.eclipse.emf.compare.rcp.ui.accessorFactory'' to your plugin.
+
+[[Image:./../images/EMF_Compare_Developer_New_Extension_AccessorFactory.png|center]]
+
+This extension has one field:
+* class: a class that implements ''org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory''
+* ranking : the ranking of this accessor factory.
+
+The ''org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory'''s contract is:
+
+<source lang="java">
+/**
+ * A factory of {@link ITypedElement}s.
+ * 
+ * @since 4.0
+ */
+public interface IAccessorFactory {
+
+	/**
+	 * Checks if the target object is applicable to the factory.
+	 * 
+	 * @param target
+	 *            the object for which we want to know if it is applicable to the factory.
+	 * @return true if the object is applicable to the factory, false otherwise.
+	 */
+	boolean isFactoryFor(Object target);
+
+	/**
+	 * The ranking of the factory.
+	 * 
+	 * @return the ranking of the factory.
+	 */
+	int getRanking();
+
+	/**
+	 * Set the ranking of the factory.
+	 * 
+	 * @param value
+	 *            the ranking value.
+	 */
+	void setRanking(int value);
+
+	/**
+	 * Creates an {@link ITypedElement} from an {@link AdapterFactory} and a given object. This accessor is
+	 * specific for the left side of the comparison.
+	 * 
+	 * @param adapterFactory
+	 *            the given adapter factory.
+	 * @param target
+	 *            the given object.
+	 * @return an ITypedElement.
+	 */
+	ITypedElement createLeft(AdapterFactory adapterFactory, Object target);
+
+	/**
+	 * Creates an {@link ITypedElement} from an {@link AdapterFactory} and a given object. This accessor is
+	 * specific for the right side of the comparison.
+	 * 
+	 * @param adapterFactory
+	 *            the given adapter factory.
+	 * @param target
+	 *            the given object.
+	 * @return an ITypedElement.
+	 */
+	ITypedElement createRight(AdapterFactory adapterFactory, Object target);
+
+	/**
+	 * Creates an {@link ITypedElement} from an {@link AdapterFactory} and a given object. This accessor is
+	 * specific for the ancestor side of the comparison.
+	 * 
+	 * @param adapterFactory
+	 *            the given adapter factory.
+	 * @param target
+	 *            the given object.
+	 * @return an ITypedElement.
+	 */
+	ITypedElement createAncestor(AdapterFactory adapterFactory, Object target);
+}
+</source>
+
+An ITypedElement is an interface for getting the name, image, and type for an object. An ITypedElement is used to present an input object in the compare UI (getName and getImage) and for finding a viewer for a given input type (getType).
+
+There is no default implementation of accessor factory. Examples of accessor factories implementations are available in the ''org.eclipse.emf.compare.rcp.ui'' plugin. There is several existing accessor factories in EMF Compare: for Matches, ReferenceChanges, AttibuteChanges, ResourceAttachmentChanges...
 
 PENDING customize display of custom differences, add custom menu entries, add export options, provide custom content viewer
 
