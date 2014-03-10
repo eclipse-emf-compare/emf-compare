@@ -167,9 +167,10 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 				.get391657Right(), null);
 		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
 		WeightProvider.Descriptor.Registry weightProviderRegistry = new WeightProviderDescriptorRegistryImpl();
-		WeightProviderDescriptorImpl descriptor = new WeightProviderDescriptorImpl(new EcoreWeightProvider(),
-				100, Pattern.compile(".*"));
-		weightProviderRegistry.put(descriptor.getNsURI().toString(), descriptor);
+		EcoreWeightProvider weightProvider = new EcoreWeightProvider();
+		WeightProviderDescriptorImpl descriptor = new WeightProviderDescriptorImpl(weightProvider, 100,
+				Pattern.compile(".*"));
+		weightProviderRegistry.put(weightProvider.getClass().getName(), descriptor);
 		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER,
 				weightProviderRegistry));
 		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)

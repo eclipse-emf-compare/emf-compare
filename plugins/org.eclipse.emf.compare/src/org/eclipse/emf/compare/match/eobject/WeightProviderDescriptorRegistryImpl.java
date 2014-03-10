@@ -64,8 +64,8 @@ public class WeightProviderDescriptorRegistryImpl implements WeightProvider.Desc
 		final WeightProviderDescriptorImpl ewpDescriptor = new WeightProviderDescriptorImpl(
 				ecoreWeightProvider, 101, Pattern.compile("http://www.eclipse.org/emf/2002/Ecore")); //$NON-NLS-1$
 
-		registry.put(dwpDescriptor.getNsURI().toString(), dwpDescriptor);
-		registry.put(ewpDescriptor.getNsURI().toString(), ewpDescriptor);
+		registry.put(defaultWeightProvider.getClass().getName(), dwpDescriptor);
+		registry.put(ecoreWeightProvider.getClass().getName(), ewpDescriptor);
 
 		return registry;
 	}

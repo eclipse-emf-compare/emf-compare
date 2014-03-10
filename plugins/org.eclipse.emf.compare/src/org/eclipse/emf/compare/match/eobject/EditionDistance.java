@@ -238,7 +238,7 @@ public class EditionDistance implements DistanceFunction {
 		public Builder weightProvider(WeightProvider provider) {
 			final WeightProvider.Descriptor descriptor = new WeightProviderDescriptorImpl(provider, 101,
 					Pattern.compile(".*")); //$NON-NLS-1$
-			this.toBeBuilt.weightProviderRegistry.put(descriptor.getNsURI().toString(), descriptor);
+			this.toBeBuilt.weightProviderRegistry.put(provider.getClass().getName(), descriptor);
 			return this;
 		}
 
