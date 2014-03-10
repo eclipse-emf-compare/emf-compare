@@ -57,7 +57,7 @@ You can provide your own groups by adding an extension of type &lt;samp&gt;org.e
                   A class that implements &lt;samp&gt;org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider&lt;/samp&gt;.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.IDifferenceGroupProvider"/>
                </appinfo>
             </annotation>
          </attribute>
@@ -68,12 +68,53 @@ You can provide your own groups by adding an extension of type &lt;samp&gt;org.e
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="activeByDefault" type="boolean" use="required">
+         <attribute name="activeByDefault" type="boolean">
             <annotation>
                <documentation>
-                  The initial activation state of the filter.
+                  The initial activation state of the group. (Deprecated use rank instead)
+               </documentation>
+               <appinfo>
+                  <meta.attribute deprecated="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="description" type="string">
+            <annotation>
+               <documentation>
+                  A description of the group. (Used in interface)
                </documentation>
             </annotation>
+         </attribute>
+         <attribute name="rank" type="string">
+            <annotation>
+               <documentation>
+                  The rank of the group. The highest rank enabled for a comparison is used.
+ 
+ Default value : 0
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="type">
+            <annotation>
+               <documentation>
+                  Type of comparison this group can handle.
+ THREE_WAY: This group can only handle three way comparison.
+ TWO_WAY: This group can handle two way comparison
+ BOTH: This group can handle two and three way comparison.
+ 
+ Default value: BOTH
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="THREE_WAY">
+                  </enumeration>
+                  <enumeration value="TWO_WAY">
+                  </enumeration>
+                  <enumeration value="BOTH">
+                  </enumeration>
+               </restriction>
+            </simpleType>
          </attribute>
       </complexType>
    </element>
@@ -83,7 +124,7 @@ You can provide your own groups by adding an extension of type &lt;samp&gt;org.e
          <meta.section type="since"/>
       </appinfo>
       <documentation>
-         4.0
+         3.0.0
       </documentation>
    </annotation>
 

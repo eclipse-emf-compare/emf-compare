@@ -35,11 +35,32 @@ public final class EMFComparePreferences {
 	/** Disabled post processors preference. */
 	public static final String DISABLED_POST_PROCESSOR = "org.eclipse.emf.compare.preference.postprocessor.disabled"; //$NON-NLS-1$
 
+	/** Ordered list of groups for two way comparison. */
+	public static final String TWO_WAY_GROUP_RANKING = "org.eclipse.emf.compare.preference.groups.2way"; //$NON-NLS-1$
+
+	/** Ordered list of groups for three way comparison. */
+	public static final String THREE_WAY_GROUP_RANKING = "org.eclipse.emf.compare.preference.groups.3way"; //$NON-NLS-1$
+
 	/**
 	 * Private constructor. Not to be called.
 	 */
 	private EMFComparePreferences() {
 		// Hide default constructor.
+	}
+
+	/**
+	 * Value of {@link EMFComparePreferences#THREE_WAY_COMPARISON_AUTOMATIC_BEHAVIOR} and
+	 * {@link EMFComparePreferences#TWO_WAY_COMPARISON_AUTOMATIC_BEHAVIOR}.
+	 * 
+	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
+	 */
+	public static enum GroupAutomaticBehavior {
+		/** Never synchronize current selected group with preferences. */
+		NEVER,
+		/** Always synchronize current selected group with preferences. */
+		ALWAYS,
+		/** Ask each time the user if he want to synchronize. */
+		ASK_EACH_TIME
 	}
 
 }

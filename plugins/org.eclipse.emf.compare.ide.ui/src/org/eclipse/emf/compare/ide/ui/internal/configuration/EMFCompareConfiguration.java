@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,8 +31,10 @@ import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.EMFComparatorC
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.MergePreviewModeChange;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -200,8 +202,16 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		EMFCompareRCPUIPlugin plugin = EMFCompareRCPUIPlugin.getDefault();
 		IDifferenceGroupProvider.Descriptor.Registry groupProviderRegistry = plugin
 				.getDifferenceGroupProviderRegistry();
-		getStructureMergeViewerGrouper().setProvider(
-				groupProviderRegistry.getDefaultGroupProvider(comparisonScope, comparison));
+		Descriptor defaultGroupProvider = groupProviderRegistry.getDefaultGroupProvider(comparisonScope,
+				comparison);
+		IDifferenceGroupProvider defaultGroup = null;
+		if (defaultGroupProvider != null) {
+			defaultGroup = defaultGroupProvider.createGroupProvider();
+		}
+		if (defaultGroup == null) {
+			defaultGroup = new DefaultGroupProvider();
+		}
+		getStructureMergeViewerGrouper().setProvider(defaultGroup);
 	}
 
 	protected void initStructureMergeViewerFilter(Comparison comparison, IComparisonScope comparisonScope) {

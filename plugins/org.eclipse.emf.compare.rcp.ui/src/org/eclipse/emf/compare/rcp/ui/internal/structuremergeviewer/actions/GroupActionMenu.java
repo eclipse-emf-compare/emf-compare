@@ -71,11 +71,14 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 	public void updateMenu(IComparisonScope scope, Comparison comparison) {
 		menuManager.removeAll();
 
-		for (IDifferenceGroupProvider dgp : registry.getGroupProviders(scope, comparison)) {
-			IAction action = new GroupAction(structureMergeViewerGrouper, dgp);
-			menuManager.add(action);
-			if (dgp == structureMergeViewerGrouper.getProvider()) {
-				action.setChecked(true);
+		for (IDifferenceGroupProvider.Descriptor dgp : registry.getGroupProviders(scope, comparison)) {
+			IDifferenceGroupProvider gp = dgp.createGroupProvider();
+			if (gp != null) {
+				IAction action = new GroupAction(structureMergeViewerGrouper, gp, dgp.getLabel());
+				menuManager.add(action);
+				if (dgp == structureMergeViewerGrouper.getProvider()) {
+					action.setChecked(true);
+				}
 			}
 		}
 	}

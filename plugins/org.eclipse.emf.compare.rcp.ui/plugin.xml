@@ -21,24 +21,25 @@
    <extension
          point="org.eclipse.emf.compare.rcp.ui.groups">
       <group
-            activeByDefault="true"
             class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider"
-            label="%emf.compare.no.group">
+            label="%emf.compare.default"
+            rank="100">
       </group>
       <group
-            activeByDefault="false"
             class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.KindGroupProvider"
-            label="%emf.compare.kind.groups">
+            label="%emf.compare.kind.groups"
+            rank="80">
       </group>
       <group
-            activeByDefault="true"
             class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.ThreeWayComparisonGroupProvider"
-            label="%emf.compare.side.groups">
+            label="%emf.compare.side.groups"
+            rank="120"
+            type="THREE_WAY">
       </group>
       <group
-            activeByDefault="false"
             class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.ByResourceGroupProvider"
-            label="%emf.compare.resource.group">
+            label="%emf.compare.resource.group"
+            rank="60">
       </group>
    </extension>
    <extension

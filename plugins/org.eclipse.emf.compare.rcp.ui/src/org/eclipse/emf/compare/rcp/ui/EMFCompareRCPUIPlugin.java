@@ -19,8 +19,12 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
+import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemRegistry;
+import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.ConfigurationUIRegistryEventListener;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.IConfigurationUIFactory;
@@ -78,6 +82,8 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 
 	private AbstractRegistryEventListener groupProviderRegistryListener;
 
+	private IItemRegistry<IDifferenceGroupProvider.Descriptor> groupItemRegistry;
+
 	private IDifferenceGroupProvider.Descriptor.Registry groupProviderRegistry;
 
 	private AbstractRegistryEventListener filterRegistryListener;
@@ -97,6 +103,17 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	private ConfigurationUIRegistryEventListener matchEngineConfiguratorRegistryListener;
 
 	/**
+	 * Instance scope for preferences.
+	 * <p>
+	 * Do not use singleton to respect Helios compatibility
+	 * </p>
+	 * 
+	 * @see org.eclipse.core.runtime.preferences.InstanceScope#INSTANCE
+	 */
+	@SuppressWarnings("deprecation")
+	private InstanceScope instanceScope = new InstanceScope();
+
+	/**
 	 * The constructor.
 	 */
 	public EMFCompareRCPUIPlugin() {
@@ -114,9 +131,13 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 
 		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 
-		groupProviderRegistry = new DifferenceGroupRegistryImpl();
+		groupItemRegistry = new ItemRegistry<IDifferenceGroupProvider.Descriptor>();
+		groupProviderRegistry = new DifferenceGroupRegistryImpl(groupItemRegistry, instanceScope
+				.getNode(PLUGIN_ID), EMFComparePreferences.TWO_WAY_GROUP_RANKING,
+				EMFComparePreferences.THREE_WAY_GROUP_RANKING);
 		groupProviderRegistryListener = new DifferenceGroupProviderExtensionRegistryListener(PLUGIN_ID,
-				GROUP_PROVIDER_PPID, getLog(), groupProviderRegistry);
+				GROUP_PROVIDER_PPID, getLog(), groupItemRegistry);
+
 		extensionRegistry.addListener(groupProviderRegistryListener, PLUGIN_ID + "." + GROUP_PROVIDER_PPID); //$NON-NLS-1$
 		groupProviderRegistryListener.readRegistry(extensionRegistry);
 
@@ -176,6 +197,7 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 
 		extensionRegistry.removeListener(groupProviderRegistryListener);
 		groupProviderRegistryListener = null;
+		groupItemRegistry = null;
 		groupProviderRegistry = null;
 
 		plugin = null;

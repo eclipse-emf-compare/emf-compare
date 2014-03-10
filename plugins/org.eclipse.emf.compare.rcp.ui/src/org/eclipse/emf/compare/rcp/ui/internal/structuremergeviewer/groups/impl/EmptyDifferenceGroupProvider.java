@@ -17,7 +17,6 @@ import java.util.Collection;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.AbstractDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 
 /**
@@ -35,44 +34,6 @@ public class EmptyDifferenceGroupProvider extends AbstractDifferenceGroupProvide
 	 */
 	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
 		return ImmutableList.of();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getLabel()
-	 */
-	public String getLabel() {
-		return IDifferenceGroupProvider.class.getName() + ".EMPTY"; //$NON-NLS-1$
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setLabel(java.lang.String)
-	 */
-	public void setLabel(String label) {
-		// do nothing
-
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#defaultSelected()
-	 */
-	public boolean defaultSelected() {
-		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setDefaultSelected(boolean)
-	 */
-	public void setDefaultSelected(boolean defaultSelected) {
-		// do nothing;
-
 	}
 
 	/**

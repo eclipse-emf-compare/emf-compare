@@ -34,12 +34,6 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
  */
 public class KindGroupProvider extends AbstractDifferenceGroupProvider {
 
-	/** A human-readable label for this group provider. This will be displayed in the EMF Compare UI. */
-	private String label;
-
-	/** The initial activation state of the group provider. */
-	private boolean activeByDefault;
-
 	/** The groups provided by this provider. */
 	private ImmutableList<IDifferenceGroup> differenceGroups;
 
@@ -83,42 +77,6 @@ public class KindGroupProvider extends AbstractDifferenceGroupProvider {
 			differenceGroups = ImmutableList.copyOf(groups);
 		}
 		return differenceGroups;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getLabel()
-	 */
-	public String getLabel() {
-		return label;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setLabel(java.lang.String)
-	 */
-	public void setLabel(String label) {
-		this.label = label;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#defaultSelected()
-	 */
-	public boolean defaultSelected() {
-		return activeByDefault;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setDefaultSelected(boolean)
-	 */
-	public void setDefaultSelected(boolean active) {
-		this.activeByDefault = active;
 	}
 
 	/**

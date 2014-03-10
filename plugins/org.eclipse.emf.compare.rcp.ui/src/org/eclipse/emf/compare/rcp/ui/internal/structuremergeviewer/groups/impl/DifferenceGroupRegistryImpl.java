@@ -10,23 +10,32 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl;
 
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.collect.Iterables.indexOf;
 import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ListIterator;
 
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
+import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemUtil;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.WrapperItemDescriptor;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.ComparisonType;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.osgi.service.prefs.Preferences;
 
 /**
- * The default implementation of the {@link IDifferenceGroupProvider.Descriptor.Registry}.
+ * Implementation of the {@link IDifferenceGroupProvider.Descriptor.Registry}. This implementation allow user
+ * to override ranking of each group using preferences.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 4.0
@@ -34,13 +43,46 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
 public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Descriptor.Registry {
 
 	/** A map that associates the class name to theirs {@link IDifferenceGroupProvider.Descriptor}s. */
-	private final Map<String, IDifferenceGroupProvider.Descriptor> map;
+	private final IItemRegistry<IDifferenceGroupProvider.Descriptor> registry;
+
+	/** Preference key for two way comparison group ranking. */
+	private final String twoWayPreferenceKey;
+
+	/** Preference key for three way comparison group ranking. */
+	private final String threeWayPrefenceKey;
+
+	/** Preferences holding ranked descriptors. */
+	private Preferences preferences;
 
 	/**
 	 * Constructs the registry.
+	 * 
+	 * @param twoWaygroupProviderDescriptors
 	 */
-	public DifferenceGroupRegistryImpl() {
-		map = new ConcurrentHashMap<String, IDifferenceGroupProvider.Descriptor>();
+	public DifferenceGroupRegistryImpl(IItemRegistry<IDifferenceGroupProvider.Descriptor> registry,
+			Preferences preferences, String twoWayPreferenceKey, String threeWayPrefenceKey) {
+		this.registry = registry;
+		this.twoWayPreferenceKey = twoWayPreferenceKey;
+		this.threeWayPrefenceKey = threeWayPrefenceKey;
+		this.preferences = preferences;
+	}
+
+	/**
+	 * Return an ordered list of IItemDescriptor<IDifferenceGroupProvider.Descriptor>.
+	 * 
+	 * @return Ordered list of IItemDescriptor<IDifferenceGroupProvider.Descriptor>.
+	 */
+	private List<IItemDescriptor<IDifferenceGroupProvider.Descriptor>> getOrderedGroupProviderDescriptors(
+			final Comparison comparison) {
+		final List<IItemDescriptor<Descriptor>> items;
+		if (comparison.isThreeWay()) {
+			items = ItemUtil.getOrderedItems(getDefaultThreeWayDescriptors(), registry, threeWayPrefenceKey,
+					preferences);
+		} else {
+			items = ItemUtil.getOrderedItems(getDefaultTwoWayDescriptors(), registry, twoWayPreferenceKey,
+					preferences);
+		}
+		return items;
 	}
 
 	/**
@@ -49,20 +91,23 @@ public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Des
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#getGroupProviders(IComparisonScope,
 	 *      Comparison)
 	 */
-	public List<IDifferenceGroupProvider> getGroupProviders(IComparisonScope scope, Comparison comparison) {
-		List<IDifferenceGroupProvider> providers = newArrayList();
-		for (IDifferenceGroupProvider.Descriptor desc : map.values()) {
-			IDifferenceGroupProvider groupProvider = desc.createGroupProvider();
-			if (isGroupProviderActivable(groupProvider, scope, comparison)) {
-				providers.add(groupProvider);
+	public List<IDifferenceGroupProvider.Descriptor> getGroupProviders(IComparisonScope scope,
+			Comparison comparison) {
+		if (comparison != null) {
+			List<IDifferenceGroupProvider.Descriptor> providers = newArrayList();
+			List<IItemDescriptor<Descriptor>> groupProviderDescriptors = getOrderedGroupProviderDescriptors(comparison);
+			ListIterator<IItemDescriptor<Descriptor>> groupIterator = groupProviderDescriptors.listIterator();
+			while (groupIterator.hasNext()) {
+				IItemDescriptor<Descriptor> desc = groupIterator.next();
+				IDifferenceGroupProvider.Descriptor groupProviderDescriptor = desc.getItem();
+				IDifferenceGroupProvider gp = groupProviderDescriptor.createGroupProvider();
+				if (gp != null && isGroupProviderActivable(gp, scope, comparison)) {
+					providers.add(groupProviderDescriptor);
+				}
 			}
+			return ImmutableList.copyOf(providers);
 		}
-		int indexOfDefault = indexOf(providers, instanceOf(DefaultGroupProvider.class));
-		if (indexOfDefault >= 0) {
-			IDifferenceGroupProvider defaultGroupProvider = providers.remove(indexOfDefault);
-			providers.add(0, defaultGroupProvider);
-		}
-		return ImmutableList.copyOf(providers);
+		return Collections.emptyList();
 	}
 
 	/**
@@ -71,16 +116,13 @@ public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Des
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#getDefaultGroupProvider(org.eclipse.emf.compare.scope.IComparisonScope,
 	 *      org.eclipse.emf.compare.Comparison)
 	 */
-	public IDifferenceGroupProvider getDefaultGroupProvider(IComparisonScope scope, Comparison comparison) {
-		IDifferenceGroupProvider selectedGroupProvider = null;
-		for (IDifferenceGroupProvider dgp : getGroupProviders(scope, comparison)) {
-			if (dgp.defaultSelected()) {
-				if (selectedGroupProvider == null || !(dgp instanceof DefaultGroupProvider)) {
-					selectedGroupProvider = dgp;
-				}
-			}
+	public IDifferenceGroupProvider.Descriptor getDefaultGroupProvider(IComparisonScope scope,
+			Comparison comparison) {
+		List<IDifferenceGroupProvider.Descriptor> descriptors = getGroupProviders(scope, comparison);
+		if (!descriptors.isEmpty()) {
+			return descriptors.get(0);
 		}
-		return selectedGroupProvider;
+		return null;
 	}
 
 	/**
@@ -108,7 +150,16 @@ public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Des
 	public IDifferenceGroupProvider.Descriptor add(IDifferenceGroupProvider.Descriptor providerDescriptor,
 			String className) {
 		Preconditions.checkNotNull(providerDescriptor);
-		return map.put(className, providerDescriptor);
+		IDifferenceGroupProvider groupProvider = providerDescriptor.createGroupProvider();
+		WrapperItemDescriptor<IDifferenceGroupProvider.Descriptor> descriptor = new WrapperItemDescriptor<IDifferenceGroupProvider.Descriptor>(
+				providerDescriptor.getLabel(), providerDescriptor.getDescription(), providerDescriptor
+						.getRank(), groupProvider.getClass().getName(), providerDescriptor);
+
+		IItemDescriptor<Descriptor> oldValue = registry.add(descriptor);
+		if (oldValue != null) {
+			return oldValue.getItem();
+		}
+		return null;
 	}
 
 	/**
@@ -117,7 +168,11 @@ public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Des
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#remove(java.lang.String)
 	 */
 	public IDifferenceGroupProvider.Descriptor remove(String className) {
-		return map.remove(className);
+		IItemDescriptor<IDifferenceGroupProvider.Descriptor> oldValue = registry.remove(className);
+		if (oldValue != null) {
+			return oldValue.getItem();
+		}
+		return null;
 	}
 
 	/**
@@ -126,6 +181,51 @@ public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Des
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor.Registry#clear()
 	 */
 	public void clear() {
-		map.clear();
+		registry.clear();
 	}
+
+	/**
+	 * Get an ordered list of default descriptors for a three way comparison.
+	 * 
+	 * @return
+	 */
+	private List<IItemDescriptor<Descriptor>> getDefaultTwoWayDescriptors() {
+		Iterable<IItemDescriptor<Descriptor>> threeWayGroups = Iterables.filter(
+				registry.getItemDescriptors(), new Predicate<IItemDescriptor<Descriptor>>() {
+
+					public boolean apply(IItemDescriptor<Descriptor> descriptor) {
+						if (descriptor == null) {
+							return false;
+						}
+						ComparisonType type = descriptor.getItem().getType();
+						return type == ComparisonType.BOTH || type == ComparisonType.TWO_WAY;
+					}
+				});
+		List<IItemDescriptor<Descriptor>> result = Lists.newArrayList(threeWayGroups);
+		Collections.sort(result, Collections.reverseOrder());
+		return result;
+	}
+
+	/**
+	 * Get an ordered list of default descriptors for a three way comparison.
+	 * 
+	 * @return
+	 */
+	private List<IItemDescriptor<Descriptor>> getDefaultThreeWayDescriptors() {
+		Iterable<IItemDescriptor<Descriptor>> twoWayComparison = Iterables.filter(registry
+				.getItemDescriptors(), new Predicate<IItemDescriptor<Descriptor>>() {
+
+			public boolean apply(IItemDescriptor<Descriptor> descriptor) {
+				if (descriptor == null) {
+					return false;
+				}
+				ComparisonType type = descriptor.getItem().getType();
+				return type == ComparisonType.BOTH || type == ComparisonType.THREE_WAY;
+			}
+		});
+		List<IItemDescriptor<Descriptor>> result = Lists.newArrayList(twoWayComparison);
+		Collections.sort(result, Collections.reverseOrder());
+		return result;
+	}
+
 }

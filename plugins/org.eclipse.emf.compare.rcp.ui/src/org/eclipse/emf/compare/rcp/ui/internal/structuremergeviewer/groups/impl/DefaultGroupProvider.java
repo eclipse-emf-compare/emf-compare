@@ -17,7 +17,6 @@ import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.AbstractDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -50,42 +49,6 @@ public class DefaultGroupProvider extends AbstractDifferenceGroupProvider {
 			group = new BasicDifferenceGroupImpl(aComparison, alwaysTrue(), getCrossReferenceAdapter());
 		}
 		return ImmutableList.of(group);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getLabel()
-	 */
-	public String getLabel() {
-		return EMFCompareRCPUIMessages.getString("DefaultGroupProvider.label"); //$NON-NLS-1$
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setLabel(java.lang.String)
-	 */
-	public void setLabel(String label) {
-
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#defaultSelected()
-	 */
-	public boolean defaultSelected() {
-		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setDefaultSelected(boolean)
-	 */
-	public void setDefaultSelected(boolean defaultSelected) {
-
 	}
 
 	/**

@@ -41,37 +41,6 @@ public interface IDifferenceGroupProvider extends Adapter {
 	Collection<? extends IDifferenceGroup> getGroups(Comparison comparison);
 
 	/**
-	 * A human-readable label for this group. This will be displayed in the EMF Compare UI.
-	 * 
-	 * @return The label for this group.
-	 */
-	String getLabel();
-
-	/**
-	 * Set the label for this group. This will be displayed in the EMF Compare UI.
-	 * 
-	 * @param label
-	 *            A human-readable label for this group.
-	 */
-	void setLabel(String label);
-
-	/**
-	 * Returns the initial activation state that the group should have.
-	 * 
-	 * @return The initial activation state that the group should have.
-	 */
-	boolean defaultSelected();
-
-	/**
-	 * Set the initial activation state that the group should have.
-	 * 
-	 * @param defaultSelected
-	 *            The initial activation state that the group should have (true if the group should be active
-	 *            by default).
-	 */
-	void setDefaultSelected(boolean defaultSelected);
-
-	/**
 	 * Returns the activation condition based on the scope and comparison objects.
 	 * 
 	 * @param scope
@@ -109,15 +78,43 @@ public interface IDifferenceGroupProvider extends Adapter {
 		/**
 		 * Creates a group provider.
 		 * 
-		 * @return the newly created group provider.
+		 * @return the newly created group provider or null if error.
 		 */
 		IDifferenceGroupProvider createGroupProvider();
+
+		/**
+		 * A human-readable label for this group. This will be displayed in the EMF Compare UI.
+		 * 
+		 * @return The label for this group.
+		 */
+		public String getLabel();
+
+		/**
+		 * A human-readable description for this group. This will be displayed in EMF Compare UI.
+		 * 
+		 * @return
+		 */
+		public String getDescription();
+
+		/**
+		 * Rank of this group. The highest rank enabled {@link IDifferenceGroupProvider} will be used as
+		 * default group provider.
+		 * 
+		 * @return the rank.
+		 */
+		public int getRank();
+
+		/**
+		 * Return the type of Comparison this group provider can handle.
+		 * 
+		 * @return {@link ComparisonType}
+		 */
+		public ComparisonType getType();
 
 		/**
 		 * A registry of {@link IDifferenceGroupProvider}.
 		 */
 		interface Registry {
-
 			/**
 			 * Returns the list of {@link IDifferenceGroupProvider} contained in the registry.
 			 * 
@@ -127,7 +124,7 @@ public interface IDifferenceGroupProvider extends Adapter {
 			 *            The comparison which is to be displayed in the structural view.
 			 * @return The list of {@link IDifferenceGroupProvider} contained in the registry.
 			 */
-			Collection<IDifferenceGroupProvider> getGroupProviders(IComparisonScope scope,
+			Collection<IDifferenceGroupProvider.Descriptor> getGroupProviders(IComparisonScope scope,
 					Comparison comparison);
 
 			/**
@@ -137,9 +134,10 @@ public interface IDifferenceGroupProvider extends Adapter {
 			 *            The scope on which the group providers will be applied.
 			 * @param comparison
 			 *            The comparison which is to be displayed in the structural view.
-			 * @return the default group provider.
+			 * @return the default group provider or null if none.
 			 */
-			IDifferenceGroupProvider getDefaultGroupProvider(IComparisonScope scope, Comparison comparison);
+			IDifferenceGroupProvider.Descriptor getDefaultGroupProvider(IComparisonScope scope,
+					Comparison comparison);
 
 			/**
 			 * Add to the registry the given {@link IDifferenceGroupProvider}.
@@ -170,5 +168,19 @@ public interface IDifferenceGroupProvider extends Adapter {
 			 */
 			void clear();
 		}
+	}
+
+	/**
+	 * Type of comparison a {@link IDifferenceGroupProvider} can handle.
+	 * 
+	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
+	 */
+	public static enum ComparisonType {
+		/** Only three way comparison. */
+		THREE_WAY, //
+		/** Only two way comparison. */
+		TWO_WAY, // Two way comparison
+		/** Can handle both comparison type. */
+		BOTH
 	}
 }

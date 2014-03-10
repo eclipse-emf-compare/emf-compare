@@ -40,8 +40,8 @@ public class GroupAction extends Action {
 	 *            The group provider associated with this action.
 	 */
 	public GroupAction(StructureMergeViewerGrouper structureMergeViewerGrouper,
-			IDifferenceGroupProvider provider) {
-		super(provider.getLabel(), IAction.AS_RADIO_BUTTON);
+			IDifferenceGroupProvider provider, String label) {
+		super(label, IAction.AS_RADIO_BUTTON);
 		this.structureMergeViewerGrouper = structureMergeViewerGrouper;
 		this.provider = provider;
 	}
