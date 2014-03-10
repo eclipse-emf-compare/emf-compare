@@ -1,4 +1,4 @@
-/** ****************************************************************************
+/******************************************************************************
  * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -24,7 +24,6 @@ import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemRegistry;
-import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.ConfigurationUIRegistryEventListener;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.IConfigurationUIFactory;
@@ -35,6 +34,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterRegistryImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender.DifferenceGroupExtenderRegistryImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender.DifferenceGroupExtenderRegistryListener;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DifferenceGroupManager;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DifferenceGroupProviderExtensionRegistryListener;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DifferenceGroupRegistryImpl;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
@@ -136,9 +136,9 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 
 		groupItemRegistry = new ItemRegistry<IDifferenceGroupProvider.Descriptor>();
-		groupProviderRegistry = new DifferenceGroupRegistryImpl(groupItemRegistry, instanceScope
-				.getNode(PLUGIN_ID), EMFComparePreferences.TWO_WAY_GROUP_RANKING,
-				EMFComparePreferences.THREE_WAY_GROUP_RANKING);
+		DifferenceGroupManager groupManager = new DifferenceGroupManager(
+				getEMFCompareUIPreferences(), groupItemRegistry);
+		groupProviderRegistry = new DifferenceGroupRegistryImpl(groupManager, groupItemRegistry);
 		groupProviderRegistryListener = new DifferenceGroupProviderExtensionRegistryListener(PLUGIN_ID,
 				GROUP_PROVIDER_PPID, getLog(), groupItemRegistry);
 
@@ -249,6 +249,14 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	 */
 	public IDifferenceGroupProvider.Descriptor.Registry getDifferenceGroupProviderRegistry() {
 		return groupProviderRegistry;
+	}
+
+	/**
+	 * @return the item registry for group providers.
+	 * @since 4.0
+	 */
+	public IItemRegistry<IDifferenceGroupProvider.Descriptor> getItemDifferenceGroupProviderRegistry() {
+		return groupItemRegistry;
 	}
 
 	/**

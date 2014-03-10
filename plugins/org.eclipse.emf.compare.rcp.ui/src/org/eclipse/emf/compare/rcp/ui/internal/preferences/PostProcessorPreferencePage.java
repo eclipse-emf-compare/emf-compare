@@ -29,7 +29,8 @@ import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemUtil;
 import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
 import org.eclipse.emf.compare.rcp.internal.tracer.TracingConstant;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
-import org.eclipse.emf.compare.rcp.ui.internal.preferences.InteractiveUIContent.InteractiveUIBuilder;
+import org.eclipse.emf.compare.rcp.ui.internal.preferences.impl.InteractiveUIContent;
+import org.eclipse.emf.compare.rcp.ui.internal.preferences.impl.InteractiveUIContent.InteractiveUIBuilder;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -51,21 +52,41 @@ public class PostProcessorPreferencePage extends PreferencePage implements IWork
 	/** Data holder. */
 	private DataHolder<IPostProcessor.Descriptor> dataHolder = new DataHolder<IPostProcessor.Descriptor>();
 
-	/** {@link InteractiveUIContent} */
-	private InteractiveUIContent interactiveUI = null;
+	/** {@link InteractiveUIContent}. */
+	private InteractiveUIContent interactiveUI;
 
+	/**
+	 * Constructor.
+	 */
 	public PostProcessorPreferencePage() {
 		super();
 	}
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param title
+	 *            .
+	 * @param image
+	 *            .
+	 */
 	public PostProcessorPreferencePage(String title, ImageDescriptor image) {
 		super(title, image);
 	}
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param title
+	 *            .
+	 */
 	public PostProcessorPreferencePage(String title) {
 		super(title);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void init(IWorkbench workbench) {
 		// Do not use InstanceScope.Instance to be compatible with Helios.
 		@SuppressWarnings("deprecation")
@@ -110,10 +131,10 @@ public class PostProcessorPreferencePage extends PreferencePage implements IWork
 		if (TracingConstant.CONFIGURATION_TRACING_ACTIVATED) {
 			StringBuilder traceMessage = new StringBuilder("Post processor preference serialization:\n"); //$NON-NLS-1$
 			String prefDelimiter = " :\n"; //$NON-NLS-1$
-			String new_line = "\n"; //$NON-NLS-1$
+			String newLine = "\n"; //$NON-NLS-1$
 			traceMessage.append(EMFComparePreferences.DISABLED_POST_PROCESSOR).append(prefDelimiter).append(
 					getPreferenceStore().getString(EMFComparePreferences.DISABLED_POST_PROCESSOR)).append(
-					new_line);
+					newLine);
 			EMFCompareRCPPlugin.getDefault().log(IStatus.INFO, traceMessage.toString());
 		}
 
@@ -136,10 +157,9 @@ public class PostProcessorPreferencePage extends PreferencePage implements IWork
 	 *            Key used in the preference store.
 	 * @param currentSelectedEngines
 	 *            Engines to store.
-	 * @param defaultConf
-	 *            Default configuration for this type of engines.
 	 */
-	private <T> void setEnginePreferences(String preferenceKey, Set<IItemDescriptor<T>> currentSelectedEngines) {
+	private void setEnginePreferences(String preferenceKey,
+			Set<IItemDescriptor<IPostProcessor.Descriptor>> currentSelectedEngines) {
 		if (currentSelectedEngines != null && currentSelectedEngines.size() > 0) {
 			Iterable<String> identifiers = Iterables.transform(currentSelectedEngines,
 					new Function<IItemDescriptor<?>, String>() {

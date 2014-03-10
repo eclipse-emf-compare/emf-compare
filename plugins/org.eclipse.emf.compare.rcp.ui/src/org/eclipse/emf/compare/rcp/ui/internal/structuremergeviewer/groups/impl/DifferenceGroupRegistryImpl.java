@@ -13,10 +13,7 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl
 import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,13 +22,10 @@ import java.util.ListIterator;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
-import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemUtil;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.WrapperItemDescriptor;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.ComparisonType;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.osgi.service.prefs.Preferences;
 
 /**
  * Implementation of the {@link IDifferenceGroupProvider.Descriptor.Registry}. This implementation allow user
@@ -45,44 +39,21 @@ public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Des
 	/** A map that associates the class name to theirs {@link IDifferenceGroupProvider.Descriptor}s. */
 	private final IItemRegistry<IDifferenceGroupProvider.Descriptor> registry;
 
-	/** Preference key for two way comparison group ranking. */
-	private final String twoWayPreferenceKey;
-
-	/** Preference key for three way comparison group ranking. */
-	private final String threeWayPrefenceKey;
-
-	/** Preferences holding ranked descriptors. */
-	private Preferences preferences;
+	/** Group manager. */
+	private DifferenceGroupManager groupManager;
 
 	/**
 	 * Constructs the registry.
 	 * 
-	 * @param twoWaygroupProviderDescriptors
+	 * @param groupManager
+	 *            {@link DifferenceGroupManager} use to handle groups.
+	 * @param registry
+	 *            Item registry where are stored all registered group.
 	 */
-	public DifferenceGroupRegistryImpl(IItemRegistry<IDifferenceGroupProvider.Descriptor> registry,
-			Preferences preferences, String twoWayPreferenceKey, String threeWayPrefenceKey) {
+	public DifferenceGroupRegistryImpl(DifferenceGroupManager groupManager,
+			IItemRegistry<IDifferenceGroupProvider.Descriptor> registry) {
+		this.groupManager = groupManager;
 		this.registry = registry;
-		this.twoWayPreferenceKey = twoWayPreferenceKey;
-		this.threeWayPrefenceKey = threeWayPrefenceKey;
-		this.preferences = preferences;
-	}
-
-	/**
-	 * Return an ordered list of IItemDescriptor<IDifferenceGroupProvider.Descriptor>.
-	 * 
-	 * @return Ordered list of IItemDescriptor<IDifferenceGroupProvider.Descriptor>.
-	 */
-	private List<IItemDescriptor<IDifferenceGroupProvider.Descriptor>> getOrderedGroupProviderDescriptors(
-			final Comparison comparison) {
-		final List<IItemDescriptor<Descriptor>> items;
-		if (comparison.isThreeWay()) {
-			items = ItemUtil.getOrderedItems(getDefaultThreeWayDescriptors(), registry, threeWayPrefenceKey,
-					preferences);
-		} else {
-			items = ItemUtil.getOrderedItems(getDefaultTwoWayDescriptors(), registry, twoWayPreferenceKey,
-					preferences);
-		}
-		return items;
 	}
 
 	/**
@@ -95,7 +66,8 @@ public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Des
 			Comparison comparison) {
 		if (comparison != null) {
 			List<IDifferenceGroupProvider.Descriptor> providers = newArrayList();
-			List<IItemDescriptor<Descriptor>> groupProviderDescriptors = getOrderedGroupProviderDescriptors(comparison);
+			List<IItemDescriptor<Descriptor>> groupProviderDescriptors = groupManager
+					.getCurrentGroupRanking(comparison.isThreeWay());
 			ListIterator<IItemDescriptor<Descriptor>> groupIterator = groupProviderDescriptors.listIterator();
 			while (groupIterator.hasNext()) {
 				IItemDescriptor<Descriptor> desc = groupIterator.next();
@@ -183,49 +155,4 @@ public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Des
 	public void clear() {
 		registry.clear();
 	}
-
-	/**
-	 * Get an ordered list of default descriptors for a three way comparison.
-	 * 
-	 * @return
-	 */
-	private List<IItemDescriptor<Descriptor>> getDefaultTwoWayDescriptors() {
-		Iterable<IItemDescriptor<Descriptor>> threeWayGroups = Iterables.filter(
-				registry.getItemDescriptors(), new Predicate<IItemDescriptor<Descriptor>>() {
-
-					public boolean apply(IItemDescriptor<Descriptor> descriptor) {
-						if (descriptor == null) {
-							return false;
-						}
-						ComparisonType type = descriptor.getItem().getType();
-						return type == ComparisonType.BOTH || type == ComparisonType.TWO_WAY;
-					}
-				});
-		List<IItemDescriptor<Descriptor>> result = Lists.newArrayList(threeWayGroups);
-		Collections.sort(result, Collections.reverseOrder());
-		return result;
-	}
-
-	/**
-	 * Get an ordered list of default descriptors for a three way comparison.
-	 * 
-	 * @return
-	 */
-	private List<IItemDescriptor<Descriptor>> getDefaultThreeWayDescriptors() {
-		Iterable<IItemDescriptor<Descriptor>> twoWayComparison = Iterables.filter(registry
-				.getItemDescriptors(), new Predicate<IItemDescriptor<Descriptor>>() {
-
-			public boolean apply(IItemDescriptor<Descriptor> descriptor) {
-				if (descriptor == null) {
-					return false;
-				}
-				ComparisonType type = descriptor.getItem().getType();
-				return type == ComparisonType.BOTH || type == ComparisonType.THREE_WAY;
-			}
-		});
-		List<IItemDescriptor<Descriptor>> result = Lists.newArrayList(twoWayComparison);
-		Collections.sort(result, Collections.reverseOrder());
-		return result;
-	}
-
 }

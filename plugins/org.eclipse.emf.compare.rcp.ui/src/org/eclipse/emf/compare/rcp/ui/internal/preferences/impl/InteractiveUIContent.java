@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.ui.internal.preferences;
+package org.eclipse.emf.compare.rcp.ui.internal.preferences.impl;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
@@ -28,6 +28,7 @@ import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.AbstractConfigurationUI;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.IConfigurationUIFactory;
+import org.eclipse.emf.compare.rcp.ui.internal.preferences.DataHolder;
 import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -38,7 +39,6 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -73,7 +73,10 @@ import org.osgi.service.prefs.Preferences;
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
-public class InteractiveUIContent {
+public final class InteractiveUIContent {
+
+	/** Height hint for description composite. */
+	private static final int DESCRIPTION_COMPOSITE_HEIGHT_HINT = 50;
 
 	/** Text that will be updated with the description of the viewer. */
 	private final Text descriptionText;
@@ -93,6 +96,16 @@ public class InteractiveUIContent {
 	/** List of all {@link AbstractConfigurationUI} that are linked to this viewer. */
 	private final Map<String, AbstractConfigurationUI> configurators = new HashMap<String, AbstractConfigurationUI>();
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param parent
+	 *            Composite parent holding this interactive content.
+	 * @param hasDescription
+	 *            Set to true if this has a description label that react to viewer selection.
+	 * @param hasConfiguration
+	 *            set to true if this has a configuration composite that react to viewer selection.
+	 */
 	private InteractiveUIContent(Composite parent, boolean hasDescription, boolean hasConfiguration) {
 		super();
 		Composite contentComposite = new Composite(parent, SWT.NONE);
@@ -131,12 +144,14 @@ public class InteractiveUIContent {
 	}
 
 	/**
-	 * Add a configuration to this Interactive content.
+	 * Adds a configuration to this Interactive content.
 	 * 
 	 * @param id
 	 *            Id of the item to configure
 	 * @param configuratorfactory
 	 *            Factory for the configuration
+	 * @param pref
+	 *            Preference store that will hold this {@link IConfigurationUIFactory} value.
 	 */
 	public void addConfigurator(String id, IConfigurationUIFactory configuratorfactory, Preferences pref) {
 		AbstractConfigurationUI configurator = configuratorfactory.createUI(configurationComposite, SWT.NONE,
@@ -145,31 +160,34 @@ public class InteractiveUIContent {
 	}
 
 	/**
-	 * Check one element in the viewer
+	 * Checks one element in the viewer.
 	 * 
 	 * @param descriptor
+	 *            element to check.
 	 */
 	public void checkElement(IItemDescriptor<?> descriptor) {
 		viewer.setCheckedElements(new Object[] {descriptor });
 	}
 
 	/**
-	 * Check multiple element in the viewer. (Only use if multiple selection is allowed)
+	 * Checks multiple element in the viewer. (Only use if multiple selection is allowed)
 	 * 
 	 * @param descriptors
+	 *            elements to check.
 	 */
 	public void checkElements(IItemDescriptor<?>[] descriptors) {
 		viewer.setCheckedElements(descriptors);
 	}
 
 	/**
-	 * Create the composite that will hold all configurations for a tab.
+	 * Creates the composite that will hold all configurations for a tab.
 	 * 
 	 * @param composite
-	 * @return
+	 *            Main composite
+	 * @return Group that will hold configurations in a stack layout.
 	 */
 	private Group createConfigComposite(Composite composite) {
-		Group confComposite = new Group(composite, SWT.NONE);
+		Group confComposite = new Group(composite, SWT.BORDER);
 		confComposite.setText(EMFCompareRCPUIMessages
 				.getString("InteractiveUIContent.CONFIGURATION_COMPOSITE_LABEL")); //$NON-NLS-1$
 		StackLayout layout = new StackLayout();
@@ -182,14 +200,15 @@ public class InteractiveUIContent {
 	}
 
 	/**
-	 * Composite for description. This composite hold the text widget that will update with the current
-	 * selection
+	 * Composite for description. This composite holds the text widget that will be updated with the current
+	 * selection.
 	 * 
 	 * @param composite
-	 * @return
+	 *            Main composite.
+	 * @return Text that will hold viewer selection description.
 	 */
 	private Text createDescriptionComposite(Composite composite) {
-		Group descriptionComposite = new Group(composite, SWT.NONE);
+		Group descriptionComposite = new Group(composite, SWT.BORDER);
 		descriptionComposite.setText(EMFCompareRCPUIMessages
 				.getString("InteractiveUIContent.DESCRIPTION_COMPOSITE_LABEL")); //$NON-NLS-1$
 		descriptionComposite.setLayout(new GridLayout(1, false));
@@ -197,7 +216,7 @@ public class InteractiveUIContent {
 		Text engineDescriptionText = new Text(descriptionComposite, SWT.WRAP | SWT.MULTI);
 		engineDescriptionText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
-		layoutData.heightHint = 50;
+		layoutData.heightHint = DESCRIPTION_COMPOSITE_HEIGHT_HINT;
 		engineDescriptionText.setLayoutData(layoutData);
 		engineDescriptionText.setEditable(false);
 		return engineDescriptionText;
@@ -211,6 +230,8 @@ public class InteractiveUIContent {
 	}
 
 	/**
+	 * Gets the viewer.
+	 * 
 	 * @return The viewer.
 	 */
 	private CheckboxTableViewer getViewer() {
@@ -218,6 +239,8 @@ public class InteractiveUIContent {
 	}
 
 	/**
+	 * Returns the composite that will hold the viewer.
+	 * 
 	 * @return The composite holding the viewer.
 	 */
 	private Composite getViewerComposite() {
@@ -225,9 +248,10 @@ public class InteractiveUIContent {
 	}
 
 	/**
-	 * Handle a selection in the viewer. Update related components.
+	 * Handles a selection in the viewer. Update related components.
 	 * 
 	 * @param descriptor
+	 *            Item to select.
 	 */
 	public void select(IItemDescriptor<?> descriptor) {
 		// Update viewer
@@ -236,7 +260,9 @@ public class InteractiveUIContent {
 	}
 
 	/**
-	 * @param viewer
+	 * Sets the viewer in the interactive content.
+	 * 
+	 * @param inputViewer
 	 *            A {@link StructuredViewer} of {@link IItemDescriptor}
 	 */
 	public void setViewer(CheckboxTableViewer inputViewer) {
@@ -248,9 +274,10 @@ public class InteractiveUIContent {
 	}
 
 	/**
-	 * Update linked element in
+	 * Updates the linked element in this interactive content.
 	 * 
 	 * @param descriptor
+	 *            Item used as input to get information for satellite elements.
 	 */
 	private void updateLinkedElements(IItemDescriptor<?> descriptor) {
 		// Update description
@@ -260,6 +287,12 @@ public class InteractiveUIContent {
 		}
 	}
 
+	/**
+	 * Updates the configuration composite.
+	 * 
+	 * @param descriptor
+	 *            New descriptor.
+	 */
 	private void updateConfigurationComposite(IItemDescriptor<?> descriptor) {
 		StackLayout stackLayout = (StackLayout)configurationComposite.getLayout();
 		if (configurators.containsKey(descriptor.getID())) {
@@ -271,18 +304,35 @@ public class InteractiveUIContent {
 	}
 
 	/**
-	 * This listener updates the Data Holder and for that only one element can be checked at a time.
+	 * This listener updates the Data Holder.
+	 * <p>
+	 * With this listener, only one element can be checked at a time
+	 * </p>
 	 * 
 	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
 	 * @param <T>
+	 *            Type of item.
 	 */
 	private static final class SingleCheckListener<T> implements ICheckStateListener {
+		/** Data holder. */
 		private final DataHolder<T> dataObject;
 
+		/** Viewer. */
 		private final CheckboxTableViewer descriptorViewer;
 
+		/** Shell. */
 		private final Shell shell;
 
+		/**
+		 * Constructor.
+		 * 
+		 * @param dataObject
+		 *            Data holder.
+		 * @param descriptorViewer
+		 *            Viewer
+		 * @param shell
+		 *            Shell.
+		 */
 		private SingleCheckListener(DataHolder<T> dataObject, CheckboxTableViewer descriptorViewer,
 				Shell shell) {
 			this.dataObject = dataObject;
@@ -290,6 +340,9 @@ public class InteractiveUIContent {
 			this.shell = shell;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public void checkStateChanged(CheckStateChangedEvent event) {
 			Object element = event.getElement();
 			if (event.getChecked()) {
@@ -319,25 +372,31 @@ public class InteractiveUIContent {
 	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
 	 */
 	private final class ConfigurationListener implements ISelectionChangedListener {
+		/**
+		 * {@inheritDoc}
+		 */
 		public void selectionChanged(SelectionChangedEvent event) {
 			ISelection selection = event.getSelection();
 			if (selection instanceof IStructuredSelection) {
 				IStructuredSelection structSelection = (IStructuredSelection)selection;
 				Object selected = structSelection.getFirstElement();
 				if (selected instanceof IItemDescriptor<?>) {
-					updateLinkedElements(((IItemDescriptor<?>)selected));
+					updateLinkedElements((IItemDescriptor<?>)selected);
 				}
 			}
 		}
 	}
 
 	/**
-	 * Listener to update description text
+	 * Listener used to update description text.
 	 * 
 	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
 	 */
 	private final class DescriptionListener implements ISelectionChangedListener {
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public void selectionChanged(SelectionChangedEvent event) {
 			ISelection selection = event.getSelection();
 			if (selection instanceof IStructuredSelection) {
@@ -350,25 +409,6 @@ public class InteractiveUIContent {
 				}
 			}
 
-		}
-	}
-
-	/**
-	 * Label provider for {@link ILabeledItemDescriptor}
-	 * 
-	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
-	 */
-	private static final class EngineDescriptorLabelProvider extends LabelProvider {
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public String getText(Object element) {
-			if (element instanceof IItemDescriptor<?>) {
-				IItemDescriptor<?> desc = (IItemDescriptor<?>)element;
-				return desc.getLabel();
-			}
-			return super.getText(element);
 		}
 	}
 
@@ -394,10 +434,10 @@ public class InteractiveUIContent {
 		private Map<String, IConfigurationUIFactory> configurationUIRegistry;
 
 		/** Set of elements to check by default. */
-		private Set<IItemDescriptor<T>> defaultCheck = null;
+		private Set<IItemDescriptor<T>> defaultCheck;
 
 		/** Element to select by default. */
-		private IItemDescriptor<T> defaultSelection = null;
+		private IItemDescriptor<T> defaultSelection;
 
 		/** Object holding data representing the current status of the interactive content. */
 		private DataHolder<T> dataHolder;
@@ -415,8 +455,6 @@ public class InteractiveUIContent {
 		 *            Holding composite of all the structure.
 		 * @param registry
 		 *            Item registry holding input of the viewer.
-		 * @param dataHolder
-		 *            Object holding data representing the current status of the interactive content.
 		 */
 		public InteractiveUIBuilder(Composite parent, IItemRegistry<T> registry) {
 			super();
@@ -425,24 +463,25 @@ public class InteractiveUIContent {
 		}
 
 		/**
-		 * Set a dataHolder that will be synchronized with the checked element. If this isSimple then
-		 * {@link DataHolder#simpleData} is filled. else {@link DataHolder#data} is filled
+		 * Sets a dataHolder that will be synchronized with the checked element.
 		 * 
-		 * @param dataHolder
-		 * @return
+		 * @param newDataHolder
+		 *            DataHolder.
+		 * @return {@link InteractiveUIBuilder}
 		 */
-		public InteractiveUIBuilder<T> setHoldingData(DataHolder<T> dataHolder) {
-			this.dataHolder = dataHolder;
+		public InteractiveUIBuilder<T> setHoldingData(DataHolder<T> newDataHolder) {
+			this.dataHolder = newDataHolder;
 			return this;
 		}
 
 		/**
-		 * Key of the node to get the {@link Preferences} to retrieve {@link IConfigurationUIFactory}. See
-		 * {@link ItemUtil#getConfigurationPreferenceNode(String, String)} (needed is ConfigurationUIRegistry
-		 * is provided)
+		 * Node key used to get the {@link Preferences} to retrieve {@link IConfigurationUIFactory}. See
+		 * {@link ItemUtil#getConfigurationPreferenceNode(String, String)} (needed if a
+		 * ConfigurationUIRegistry has been provided)
 		 * 
 		 * @param key
-		 * @return
+		 *            .
+		 * @return {@link InteractiveUIBuilder}
 		 */
 		public InteractiveUIBuilder<T> setConfigurationNodeKey(String key) {
 			this.configurationNodeKey = key;
@@ -450,10 +489,11 @@ public class InteractiveUIContent {
 		}
 
 		/**
-		 * Registry of of {@link IConfigurationUIFactory} to filled the configuraiton composite.
+		 * Registry of {@link IConfigurationUIFactory} used to fill the configuration composite.
 		 * 
 		 * @param configuratorUIRegistry
-		 * @return
+		 *            .
+		 * @return {@link InteractiveUIBuilder}
 		 */
 		public InteractiveUIBuilder<T> setConfiguratorUIRegistry(
 				Map<String, IConfigurationUIFactory> configuratorUIRegistry) {
@@ -462,54 +502,58 @@ public class InteractiveUIContent {
 		}
 
 		/**
-		 * Set the default element to check. (A singleton is this is set to simple
+		 * Sets the default element to check. (A singleton if "this" is set to simple
 		 * {@link InteractiveUIBuilder#setSimple(boolean)}
 		 * 
-		 * @param defaultCheck
-		 * @return
+		 * @param newDefaultCheck
+		 *            .
+		 * @return InteractiveUIBuilder
 		 */
-		public InteractiveUIBuilder<T> setDefaultCheck(Set<IItemDescriptor<T>> defaultCheck) {
-			this.defaultCheck = defaultCheck;
+		public InteractiveUIBuilder<T> setDefaultCheck(Set<IItemDescriptor<T>> newDefaultCheck) {
+			this.defaultCheck = newDefaultCheck;
 			return this;
 		}
 
 		/**
 		 * Set the default element to select.
 		 * 
-		 * @param defaultSelection
-		 * @return
+		 * @param newDefaultSelection
+		 *            .
+		 * @return InteractiveUIBuilder
 		 */
-		public InteractiveUIBuilder<T> setDefaultSelection(IItemDescriptor<T> defaultSelection) {
-			this.defaultSelection = defaultSelection;
+		public InteractiveUIBuilder<T> setDefaultSelection(IItemDescriptor<T> newDefaultSelection) {
+			this.defaultSelection = newDefaultSelection;
 			return this;
 		}
 
 		/**
-		 * Set to true if this need to create a description field.
+		 * Set to true if "this" needs to create a description field.
 		 * 
-		 * @param hasDescription
-		 * @return
+		 * @param newHasDescription
+		 *            .
+		 * @return {@link InteractiveUIBuilder}
 		 */
-		public InteractiveUIBuilder<T> setHasDescription(boolean hasDescription) {
-			this.hasDescription = hasDescription;
+		public InteractiveUIBuilder<T> setHasDescription(boolean newHasDescription) {
+			this.hasDescription = newHasDescription;
 			return this;
 		}
 
 		/**
-		 * Set to true if the viewer can only have only one element check at a time.
+		 * Set to true if the viewer can only have only one element checked at a time.
 		 * 
-		 * @param isSimple
-		 * @return
+		 * @param newIsSimple
+		 *            .
+		 * @return {@link InteractiveUIBuilder}
 		 */
-		public InteractiveUIBuilder<T> setSimple(boolean isSimple) {
-			this.isSimple = isSimple;
+		public InteractiveUIBuilder<T> setSimple(boolean newIsSimple) {
+			this.isSimple = newIsSimple;
 			return this;
 		}
 
 		/**
-		 * Build a new {@link InteractiveUI}
+		 * Build a new {@link InteractiveUI}.
 		 * 
-		 * @return
+		 * @return InteractiveUIContent
 		 */
 		public InteractiveUIContent build() {
 			// If simple only one element check at a time
@@ -533,6 +577,13 @@ public class InteractiveUIContent {
 			return interactiveUI;
 		}
 
+		/**
+		 * Initializes the viewer.
+		 * 
+		 * @param interactiveUI
+		 *            .
+		 * @return CheckboxTableViewer
+		 */
 		private CheckboxTableViewer createViewer(final InteractiveUIContent interactiveUI) {
 			int style = SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION;
 			if (isSimple) {
@@ -542,12 +593,18 @@ public class InteractiveUIContent {
 					.getViewerComposite(), style);
 			interactiveUI.setViewer(descriptorViewer);
 			descriptorViewer.setContentProvider(ArrayContentProvider.getInstance());
-			descriptorViewer.setLabelProvider(new EngineDescriptorLabelProvider());
+			descriptorViewer.setLabelProvider(new ItemDescriptorLabelProvider());
 			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 			descriptorViewer.getControl().setLayoutData(gd);
 			return descriptorViewer;
 		}
 
+		/**
+		 * Creates the configuration composite.
+		 * 
+		 * @param interactiveUI
+		 *            .
+		 */
 		private void createConfigurationComposite(final InteractiveUIContent interactiveUI) {
 			// Init configuration elements
 			for (IItemDescriptor<T> item : registry.getItemDescriptors()) {
@@ -560,6 +617,14 @@ public class InteractiveUIContent {
 			}
 		}
 
+		/**
+		 * Initializes and binds interactive content with the data holder value.
+		 * 
+		 * @param interactiveUI
+		 *            .
+		 * @param descriptorViewer
+		 *            .
+		 */
 		private void bindAndInit(final InteractiveUIContent interactiveUI,
 				CheckboxTableViewer descriptorViewer) {
 			if (defaultSelection != null) {
@@ -581,11 +646,17 @@ public class InteractiveUIContent {
 						dataHolder.setData(defaultCheck);
 					}
 					// Bind data
-					bindMultipleData(DataHolder.DATA_FIELD_NAME, interactiveUI.getViewer(), dataHolder);
+					bindMultipleData(interactiveUI.getViewer(), dataHolder);
 				}
 			}
 		}
 
+		/**
+		 * Sets the viewer input.
+		 * 
+		 * @param descriptorViewer
+		 *            .
+		 */
 		private void setViewerInput(CheckboxTableViewer descriptorViewer) {
 			List<IItemDescriptor<T>> itemDescriptors = registry.getItemDescriptors();
 			Collections.sort(itemDescriptors);
@@ -593,19 +664,19 @@ public class InteractiveUIContent {
 		}
 
 		/**
-		 * Bind UI to data object.
+		 * Binds UI to data object.
 		 * 
-		 * @param engineBindingProperty
 		 * @param descriptorViewer
+		 *            .
 		 * @param dataObject
+		 *            The data holder.
 		 */
-		private void bindMultipleData(String engineBindingProperty, CheckboxTableViewer descriptorViewer,
-				final DataHolder<T> dataObject) {
+		private void bindMultipleData(CheckboxTableViewer descriptorViewer, final DataHolder<T> dataObject) {
 			DataBindingContext ctx = new DataBindingContext();
 			// Bind the button with the corresponding field in data
 			IViewerObservableSet target = ViewersObservables.observeCheckedElements(descriptorViewer,
 					IItemDescriptor.class);
-			IObservableSet model = PojoProperties.set(DataHolder.class, engineBindingProperty).observe(
+			IObservableSet model = PojoProperties.set(DataHolder.class, DataHolder.DATA_FIELD_NAME).observe(
 					dataObject);
 
 			ctx.bindSet(target, model);

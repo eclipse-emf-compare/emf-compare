@@ -10,12 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.internal.extension.impl;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import com.google.common.collect.Sets.SetView;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -190,50 +187,6 @@ public final class ItemUtil {
 		Set<IItemDescriptor<T>> activeFactory = Sets.difference(allFactories, disableFactories);
 
 		return activeFactory;
-	}
-
-	/**
-	 * Return an ordered list of {@link IItemDescriptor}. The order in the list is either define by the rank
-	 * in the registry or from preference is the rank has been overloaded. If any descriptor has been added or
-	 * removed from last modification in the preference. This method will merge the modification.
-	 * 
-	 * @param orderedDefaultDescriptor
-	 *            List of ordered default {@link IItemDescriptor}.
-	 * @param descriptorRegistry
-	 *            Registry of descriptor.
-	 * @param orderedItemPreferenceKey
-	 *            Key in preferences where are stored the new order of descriptor
-	 * @param preferences
-	 *            holding user preferences.
-	 * @return Ordered list of descriptor.
-	 * @param <T>
-	 *            Descriptor type.
-	 */
-	public static <T> List<IItemDescriptor<T>> getOrderedItems(
-			List<IItemDescriptor<T>> orderedDefaultDescriptor, IItemRegistry<T> descriptorRegistry,
-			String orderedItemPreferenceKey, Preferences preferences) {
-		List<IItemDescriptor<T>> itemsDescriptor = ItemUtil.getItemsDescriptor(descriptorRegistry,
-				orderedItemPreferenceKey, preferences);
-
-		if (itemsDescriptor == null) {
-			itemsDescriptor = orderedDefaultDescriptor;
-		} else {
-			HashSet<IItemDescriptor<T>> descriptorFromPrefSet = Sets.newLinkedHashSet(itemsDescriptor);
-			HashSet<IItemDescriptor<T>> defaultDescriptorSet = Sets
-					.newLinkedHashSet(orderedDefaultDescriptor);
-
-			// Remove descriptor
-			SetView<IItemDescriptor<T>> descriptorToRemove = Sets.difference(descriptorFromPrefSet,
-					defaultDescriptorSet);
-			Iterables.removeAll(itemsDescriptor, descriptorToRemove);
-
-			// Add new descriptor
-			SetView<IItemDescriptor<T>> descriptorToAdd = Sets.difference(defaultDescriptorSet,
-					descriptorFromPrefSet);
-			Iterables.addAll(itemsDescriptor, descriptorToAdd);
-
-		}
-		return itemsDescriptor;
 	}
 
 }

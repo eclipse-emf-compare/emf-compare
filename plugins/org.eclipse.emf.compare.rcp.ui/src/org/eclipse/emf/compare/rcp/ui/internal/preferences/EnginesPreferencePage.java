@@ -40,7 +40,8 @@ import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.AbstractConfigurationUI;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.IConfigurationUIFactory;
-import org.eclipse.emf.compare.rcp.ui.internal.preferences.InteractiveUIContent.InteractiveUIBuilder;
+import org.eclipse.emf.compare.rcp.ui.internal.preferences.impl.InteractiveUIContent;
+import org.eclipse.emf.compare.rcp.ui.internal.preferences.impl.InteractiveUIContent.InteractiveUIBuilder;
 import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -137,7 +138,7 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 * @param tabComposite
 	 *            Holding composite.
 	 * @param dataHolder
-	 *            Data that will be synchronoze with the UI.
+	 *            Data that will be synchronized with the UI.
 	 * @param <T>
 	 *            type of engine.
 	 * @return {@link InteractiveUIContent} for a specific type of engine.
