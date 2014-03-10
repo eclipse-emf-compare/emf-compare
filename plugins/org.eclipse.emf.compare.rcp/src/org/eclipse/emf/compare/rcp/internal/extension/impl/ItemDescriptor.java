@@ -65,7 +65,7 @@ public class ItemDescriptor<T> extends AbstractItemDescriptor<T> {
 		T result = null;
 		try {
 			result = (T)config
-					.createExecutableExtension(DescriptorRegistryEventListener.IMPL_CLASS_DESCRIPTPOR_ATTR);
+					.createExecutableExtension(DescriptorRegistryEventListener.IMPL_CLASS_DESCRIPTOR_ATTR);
 		} catch (CoreException e) {
 			Throwables.propagate(e);
 		}

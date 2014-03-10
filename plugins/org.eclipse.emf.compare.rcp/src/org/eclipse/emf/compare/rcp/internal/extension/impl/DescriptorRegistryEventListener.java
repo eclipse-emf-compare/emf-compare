@@ -34,7 +34,7 @@ public class DescriptorRegistryEventListener<T> extends AbstractRegistryEventLis
 	public static final String DESCRITPION_DESCRIPTOR_ATTR = "description"; //$NON-NLS-1$
 
 	/** Engine implementation class attribute of extension point. */
-	public static final String IMPL_CLASS_DESCRIPTPOR_ATTR = "impl"; //$NON-NLS-1$
+	public static final String IMPL_CLASS_DESCRIPTOR_ATTR = "impl"; //$NON-NLS-1$
 
 	/** Rank attribute of extension point. */
 	public static final String RANK_DESCRIPTOR_ATTR = "ranking"; //$NON-NLS-1$
@@ -79,8 +79,8 @@ public class DescriptorRegistryEventListener<T> extends AbstractRegistryEventLis
 	protected boolean validateExtensionElement(IConfigurationElement element) {
 		final boolean ret;
 		if (TAG_DESCRIPTOR.equals(element.getName())) {
-			if (element.getAttribute(IMPL_CLASS_DESCRIPTPOR_ATTR) == null) {
-				logMissingAttribute(element, IMPL_CLASS_DESCRIPTPOR_ATTR);
+			if (element.getAttribute(IMPL_CLASS_DESCRIPTOR_ATTR) == null) {
+				logMissingAttribute(element, IMPL_CLASS_DESCRIPTOR_ATTR);
 				ret = false;
 			} else if (element.getAttribute(DescriptorRegistryEventListener.LABEL_DESCRIPTOR_ATTR) == null) {
 				logMissingAttribute(element, DescriptorRegistryEventListener.LABEL_DESCRIPTOR_ATTR);
