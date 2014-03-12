@@ -14,6 +14,9 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.Struc
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  * This action will allow us to group differences by their kind.
@@ -51,5 +54,21 @@ public class GroupAction extends Action {
 	@Override
 	public void run() {
 		structureMergeViewerGrouper.setProvider(provider);
+	}
+
+	@Override
+	public void runWithEvent(Event event) {
+		Widget widget = event.widget;
+		if (widget instanceof MenuItem) {
+			MenuItem menuItem = (MenuItem)widget;
+			if (menuItem.getSelection()) {
+				/*
+				 * Only run action if the widget has been selected. In case of the group menu, it is composed
+				 * with a combo.A combo send two events for each selection. One for the old selection and one
+				 * for the new one. We only want to run this action for the new selection.
+				 */
+				super.runWithEvent(event);
+			}
+		}
 	}
 }
