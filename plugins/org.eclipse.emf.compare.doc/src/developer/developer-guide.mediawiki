@@ -4,9 +4,26 @@
 
 === Comparison Process ===
 
-[[Image:./../images/EMF_Compare_Process_Full.png|thumb|center|800px]]
+[[Image:./../images/EMF_Compare_Process_Full.png|center]]
 
-This is the overview of the comparison process as a whole. Each of the six phases of the comparison process of EMF Compare are briefly defined on the [[./../overview/Overview.html|Overview]], and a much more in-depth explanation will be given below, in our explanations of the [[./Default%20Behavior%20and%20Extensibility.html|default behavior]] of EMF Compare.
+The above figure represents the comparison process of EMF Compare. It can be roughly divided in 6 main phases.
+
+==== Model Resolving ====
+From a given "starting point" (the file a user decided to compare), finding all other fragments required for the comparison of the whole logical model.
+==== Matching ====
+Iterating over the two (or three) loaded logical models in order to map elements together two-by-two (or three-by-three). For example, determine that class Class1 from the first model corresponds to class Class1' from the second model.
+==== Differencing ====
+The matching phase told us which elements were matching together. The differencing phase will browse through these mappings and determine whether the two (or three) elements are equal or if they present differences (for example, the name of the class changed from Class1 to Class1').
+==== Equivalences ====
+The differencing phases detected a number of differences between the compared models. However, two distinct differences might actually represent the same change. This phase will browse through all differences and link them together when they can be seen as equivalent (for example, differences on opposite references).
+==== Requirements ====
+For the purpose of merging differences, there might be dependencies between them. For example, the addition of a class C1 in package P1 depends on the addition of package P1 itself. During this phase, we'll browse through all detected differences and link them together when we determine that one cannot be merged without the other.
+==== Conflicts ====
+When we're comparing our file with one from a Version Control System (CVS, SVN, Git, Clearcase...), there might actually be conflicts between the changes we've made locally, and the changes that were made to the file on the remote repository. This phase will browse through all detected differences and detect these conflicts.
+
+The Model resolving phase itself can be further decomposed in its own two distinct phases. More on the logical model and its resolution can be found on the [[./logical-model.html|dedicated page]].
+
+[[Image:./../images/EMF_Compare_Model_Resolving.png|center]]
 
 === Project Architecture ===
 
@@ -100,7 +117,7 @@ When cross-referencing objects from another resource, EMF may use proxies instea
 
 Proxy resolution is generally transparent, but a lot of tools based on EMF do not consider these proxies as first-class citizens: they simply resolve it without considering that it might not be needed. On the other hand, EMF Compare will never resolve proxies except for those strictly necessary. Whatever the phase of comparison, we strive to never hold the whole model in memory.
 
-The [[./Default%20Behavior%20and%20Extensibility.html#Model Resolving|initial resolution phase]] is the most intensive in terms of proxy resolution and I/O operations. Though we will never hold the whole logical model in memory at any given time, we do resolve all cross-references of the compared resources, on all sides of the comparison. Since the logical model may be located in a lot of different files on disk, it might also be very heavy in memory if loaded at once. However, even if EMF Compare does resolve all fragments composing that logical model, it also unloads them as soon as the cross-references are registered. In other words, what we create is a dependency graph between the resources, not a loaded model. Afterwards, we only reload in memory those resources that have actually changed, and can thus contain differences. There will be proxies between these "changed" resources and the unchanged ones we have decided not to reload, but EMF Compare will never resolve these proxies again (and, in fact, will prevent their resolving from other tools).
+The [[#Model Resolving|initial resolution phase]] is the most intensive in terms of proxy resolution and I/O operations. Though we will never hold the whole logical model in memory at any given time, we do resolve all cross-references of the compared resources, on all sides of the comparison. Since the logical model may be located in a lot of different files on disk, it might also be very heavy in memory if loaded at once. However, even if EMF Compare does resolve all fragments composing that logical model, it also unloads them as soon as the cross-references are registered. In other words, what we create is a dependency graph between the resources, not a loaded model. Afterwards, we only reload in memory those resources that have actually changed, and can thus contain differences. There will be proxies between these "changed" resources and the unchanged ones we have decided not to reload, but EMF Compare will never resolve these proxies again (and, in fact, will prevent their resolving from other tools).
 
 At the time of writing, the user interface will never resolve any proxies either. This might change in the future for a better user experience since proxies usually end up displayed in strange manners.
 
@@ -108,9 +125,9 @@ At the time of writing, the user interface will never resolve any proxies either
 
 The equality helper is a very central concept of EMF Compare. Of course, EMF Compare's aim is to be able to compare objects together, objects which comparison is not trivial and cannot be done through a mere "equal or not" concept. However, we still need to be able to compare these objects at all time and, whenever possible, without a full-fledged comparison.
 
-The equality helper will be used in all phases of the comparison, from matching to merging (please see the [[./../overview/Overview.html|overview]] for a bird's eye view of the different comparison phases, or their detailled descriptions down below). The matching phase is precisely the time when EMF Compare is trying to match two-by-two the elements from one side to the elements from the other side. As such, we do not have -yet- the knowledge of whichi element matches with which other. However, for all subsequent phases, the equality helper will rely on information from the comparison itself (the ''Match'' elements) to make a fail-fast test for element 'equality'.
+The equality helper will be used in all phases of the comparison, from matching to merging (please see the [[#Comparison Process|comparison process]] for a bird's eye view of the different comparison phases, or their detailled descriptions down below). The matching phase is precisely the time when EMF Compare is trying to match two-by-two the elements from one side to the elements from the other side. As such, we do not have -yet- the knowledge of whichi element matches with which other. However, for all subsequent phases, the equality helper will rely on information from the comparison itself (the ''Match'' elements) to make a fail-fast test for element 'equality'.
 
-When we do not have this information, the equality helper will resort to less optimal algorithms. For any object that is not an EMF EObject, we will use strict equality through ''=='' and ''Object#equals()'' calls. One of the cause for EMF Compare failing to match attribute values together is in fact the lack of implementation of the ''equals'' method on custom datatypes (see the [[FAQ.html#Custom data types are always marked as modified by EMF Compare|FAQ]] for more on that particular issue).
+When we do not have this information, the equality helper will resort to less optimal algorithms. For any object that is not an EMF EObject, we will use strict equality through ''=='' and ''Object#equals()'' calls. One of the cause for EMF Compare failing to match attribute values together is in fact the lack of implementation of the ''equals'' method on custom datatypes (see the [[./../FAQ.html#Custom data types are always marked as modified by EMF Compare|FAQ]] for more on that particular issue).
 
 Note that the equality helper will be used extensively, and that any performance hit or improvement here will make a huge difference for the whole comparison process. Likewise, any mistake you make when implementing a custom equality helper will introduce a lot of bugs.
 
@@ -122,7 +139,7 @@ For example, an element that is outside of the comparison scope, but referenced 
 
 This is a special case that is handled by the IEqualityHelper. Specifically, when such cases are encountered, EMF Compare falls back to using the URI of the two objects to check for equality. This behavior can be changed by customizing the IEqualityHelper (see [[#Equality Helper|above]]).
 
-By default, the only thing that EMF Compare considers "out of scope" are Ecore's "EGenericType" elements. These are usually meaningless as far as comparison is concerned (as they are located in derived references and will be merged along with their "true" difference anyway). Please take note that, when used from the user interface, EMF Compare will narrow down the scope even further through the resolution of the [[developer/logical-model.html|logical model]] and determining which resources are actually candidates for differences.
+By default, the only thing that EMF Compare considers "out of scope" are Ecore's "EGenericType" elements. These are usually meaningless as far as comparison is concerned (as they are located in derived references and will be merged along with their "true" difference anyway). Please take note that, when used from the user interface, EMF Compare will narrow down the scope even further through the resolution of the [[./../developer/logical-model.html|logical model]] and determining which resources are actually candidates for differences.
 
 The comparison scope provides EMF Compare with information on the content of ResourceSets, Resources or EObjects, according to the entry point of the comparison. Take note that '''the scope is only used during the matching phase'''. The differencing phase only uses the result of the matching phase to proceed.
 
@@ -382,7 +399,7 @@ A few examples of customizations that could be made from here :
 * Detect your own equivalences
 : If you have specific rules on your metamodel or implementation that make some differences redundant or otherwise fully equivalent to one another, you can add your own equivalences from here.
 
-The post-processor for the equivalence detection engine is implemented exactly in the same way as for the match engine post-processors (the interface and extension point are the same). Please refer to [[Refine the default Match result|Refining the Match result]].
+The post-processor for the equivalence detection engine is implemented exactly in the same way as for the match engine post-processors (the interface and extension point are the same). Please refer to [[#Refine the default Match result|Refining the Match result]].
 
 === Requirements ===
 
@@ -798,9 +815,9 @@ public void load(String absolutePath, ResourceSet resourceSet) {
 
 ==== Creating the comparison scope ====
 
-EMF Compare uses a scoping mechanism to determine which elements should be compared, and which others should be ignored. Any element that is outside of the comparison scope will be ignored by the comparison engine and left alone (if it is a proxy, it won't even be loaded). As such, extra care should be taken to determine the proper scope of the comparison or customize the IEqualityHelper to handle the specific elements you remove from the scope. Refer to the [[./Core%20Concepts.html#Comparison Scope|appropriate section]] above for more on the scoping mechanism.
+EMF Compare uses a scoping mechanism to determine which elements should be compared, and which others should be ignored. Any element that is outside of the comparison scope will be ignored by the comparison engine and left alone (if it is a proxy, it won't even be loaded). As such, extra care should be taken to determine the proper scope of the comparison or customize the IEqualityHelper to handle the specific elements you remove from the scope. Refer to the [[#Comparison Scope|appropriate section]] above for more on the scoping mechanism.
 
-By default, the only thing that EMF Compare considers "out of scope" are Ecore's "EGenericType" elements. These are usually meaningless as far as comparison is concerned (as they are located in derived references and will be merged along with their "true" difference anyway). Other than that, Please note that EMF Compare will leave unresolved proxies alone: more on this can be found in the [[./Core%20Concepts.html#Proxy Resolution|related section]].
+By default, the only thing that EMF Compare considers "out of scope" are Ecore's "EGenericType" elements. These are usually meaningless as far as comparison is concerned (as they are located in derived references and will be merged along with their "true" difference anyway). Other than that, Please note that EMF Compare will leave unresolved proxies alone: more on this can be found in the [[#Proxy Resolution|related section]].
 
 The default scope can be easily created through:
 
@@ -810,7 +827,7 @@ IComparisonScope scope === EMFCompare.createDefaultScope(resourceSet1, resourceS
 
 ==== Configuring the comparison ====
 
-EMF Compare can be customized in a number of ways, the most important of which were described [[./Default%20Behavior%20and%20Extensibility.html|above]]. Most of them re-use the same entry point, the ''org.eclipse.emf.compare.EMFCompare'' class. We won't customize much here, please see the afore-mentionned section for extensibility means.
+EMF Compare can be customized in a number of ways, the most important of which were described [[#Default Behavior and Extensibility|above]]. Most of them re-use the same entry point, the ''org.eclipse.emf.compare.EMFCompare'' class. We won't customize much here, please see the afore-mentionned section for extensibility means.
 
 All we will tell EMF Compare is not to use identifiers, and rely on its proximity algorithms instead (after all, we're comparing plain XMI files):
 
@@ -979,4 +996,4 @@ entry points: org.eclipse.emf.compare.merge.IMerger and org.eclipse.emf.compare.
 
 === Open a compare editor ===
 
-PENDING description of the need (dialog and editor), link to [[developer/how-to-open-compare-dialog.html|appropriate page]]
+PENDING description of the need (dialog and editor), link to [[./how-to-open-compare-dialog.html|appropriate page]]
