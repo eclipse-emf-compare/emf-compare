@@ -95,7 +95,7 @@ public abstract class AbstractMergeViewer extends ContentViewer implements IMerg
 	@Subscribe
 	public void handleDifferenceGroupProviderChange(IDifferenceGroupProviderChange event) {
 		differenceGroupProvider = event.getDifferenceGroupProvider();
-		SWTUtil.safeRefresh(this, true);
+		SWTUtil.safeRefresh(this, true, true);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public abstract class AbstractMergeViewer extends ContentViewer implements IMerg
 	@Subscribe
 	public void handleDifferenceFilterChange(IDifferenceFilterChange event) {
 		differenceFilter = event.getPredicate();
-		SWTUtil.safeRefresh(this, true);
+		SWTUtil.safeRefresh(this, true, true);
 	}
 
 	/**

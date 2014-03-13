@@ -72,7 +72,6 @@ import org.eclipse.emf.compare.ide.ui.internal.util.ExceptionUtil;
 import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
-import org.eclipse.emf.compare.rcp.internal.extension.IEMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IMergePreviewModeChange;
@@ -446,13 +445,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	public void handleDifferenceFilterChange(IDifferenceFilterChange event) {
 		pseudoConflictsFilterEnabled = any(event.getSelectedDifferenceFilters(),
 				instanceOf(PseudoConflictsFilter.class));
-		SWTUtil.safeRefresh(this, false);
+		SWTUtil.safeRefresh(this, false, true);
 	}
 
 	@Subscribe
 	public void handleDifferenceGroupProviderChange(
 			@SuppressWarnings("unused") IDifferenceGroupProviderChange event) {
-		SWTUtil.safeRefresh(this, false);
+		SWTUtil.safeRefresh(this, false, true);
 	}
 
 	/**
@@ -656,7 +655,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				final Builder comparisonBuilder = EMFCompare.builder().setPostProcessorRegistry(
 						EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
 
-				 EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
+				EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
 
 				final Comparison compareResult = comparisonBuilder.build().compare(scope,
 						BasicMonitor.toMonitor(subMonitor.newChild(15)));

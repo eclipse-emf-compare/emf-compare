@@ -357,7 +357,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			setRightDirty(getCompareConfiguration().getEditingDomain().getCommandStack().isRightSaveNeeded());
 		}
 
-		SWTUtil.safeRefresh(this, true);
+		SWTUtil.safeRefresh(this, true, false);
 	}
 
 	/**

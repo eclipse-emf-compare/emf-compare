@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,11 +63,20 @@ public final class SWTUtil {
 	 *            the viewer to refresh.
 	 * @param async
 	 *            whether the thread which calls this method is not suspended until the runnable completes.
+	 * @param checkDisposed
+	 *            whether the viewer's control dispose state has to be checked before refresh.
 	 */
-	public static void safeRefresh(final Viewer viewer, boolean async) {
+	public static void safeRefresh(final Viewer viewer, boolean async, final boolean checkDisposed) {
 		Runnable runnable = new Runnable() {
 			public void run() {
-				viewer.refresh();
+				if (checkDisposed) {
+					Control control = viewer.getControl();
+					if (control != null && !control.isDisposed()) {
+						viewer.refresh();
+					}
+				} else {
+					viewer.refresh();
+				}
 			}
 		};
 		if (async) {
