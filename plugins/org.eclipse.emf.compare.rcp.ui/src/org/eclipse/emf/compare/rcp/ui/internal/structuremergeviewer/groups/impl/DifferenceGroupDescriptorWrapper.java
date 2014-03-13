@@ -25,7 +25,7 @@ import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGro
  */
 public class DifferenceGroupDescriptorWrapper extends AbstractItemDescriptor<IDifferenceGroupProvider.Descriptor> implements IDifferenceGroupProvider.Descriptor {
 
-	/** {@link IConfigurationElement} used to instantiate the {@link IDifferenceGroupProvider} */
+	/** {@link IConfigurationElement} used to instantiate the {@link IDifferenceGroupProvider}. */
 	private final IConfigurationElement element;
 
 	/** Type of comparison the {@link IDifferenceGroupProvider} can handle. */

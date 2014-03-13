@@ -28,12 +28,12 @@ public class DataHolder<T> {
 	public static final String DATA_FIELD_NAME = "data"; //$NON-NLS-1$
 
 	/** Filed holding multiple data. */
-	public Set<IItemDescriptor<T>> data = new LinkedHashSet<IItemDescriptor<T>>();
+	private Set<IItemDescriptor<T>> data = new LinkedHashSet<IItemDescriptor<T>>();
 
 	/**
-	 * Get data
+	 * Get data.
 	 * 
-	 * @return
+	 * @return Set<IItemDescriptor<T>>
 	 */
 	public Set<IItemDescriptor<T>> getData() {
 		return data;
@@ -43,6 +43,7 @@ public class DataHolder<T> {
 	 * Set data.
 	 * 
 	 * @param currentSelection
+	 *            .
 	 */
 	public void setData(Set<IItemDescriptor<T>> currentSelection) {
 		this.data = currentSelection;

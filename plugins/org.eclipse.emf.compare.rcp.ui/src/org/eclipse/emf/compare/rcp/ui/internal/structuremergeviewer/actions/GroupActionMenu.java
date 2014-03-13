@@ -14,6 +14,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DifferenceGroupManager;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.jface.action.Action;
@@ -70,11 +71,14 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 	 */
 	public void updateMenu(IComparisonScope scope, Comparison comparison) {
 		menuManager.removeAll();
-
+		DifferenceGroupManager groupManager = new DifferenceGroupManager(EMFCompareRCPUIPlugin.getDefault()
+				.getEMFCompareUIPreferences(), EMFCompareRCPUIPlugin.getDefault()
+				.getItemDifferenceGroupProviderRegistry());
 		for (IDifferenceGroupProvider.Descriptor dgp : registry.getGroupProviders(scope, comparison)) {
 			IDifferenceGroupProvider gp = dgp.createGroupProvider();
 			if (gp != null) {
-				IAction action = new GroupAction(structureMergeViewerGrouper, gp, dgp.getLabel());
+				IAction action = new GroupAction(structureMergeViewerGrouper, dgp, groupManager, comparison
+						.isThreeWay());
 				menuManager.add(action);
 				if (gp.getClass() == structureMergeViewerGrouper.getProvider().getClass()) {
 					action.setChecked(true);

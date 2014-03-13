@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.ui;
 
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
-import org.eclipse.emf.compare.rcp.ui.internal.preferences.FiltersPreferencePage;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -33,21 +32,36 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
  */
 public class SynchronizerDialog extends MessageDialogWithToggle {
 
+	/** Indentation of the preference page hyper link. */
+	private static final int HYPERLINK_INDENT = 35;
+
 	/** Index of the "No" button. Used to define a default selection. */
 	private static final int NO_BUTTON_INDEX = 1;
 
 	/** Labels used for simple preference synchronization. */
 	private static String[] defaultButtonLabels = new String[] {IDialogConstants.YES_LABEL,
-			IDialogConstants.NO_LABEL };
+			IDialogConstants.NO_LABEL, };
+
+	/** Id of the preference page. */
+	private final String preferencePageID;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param parentShell
+	 *            Parent shell
+	 * @param title
+	 *            Title of the dialog
+	 * @param message
+	 *            MEssage of the dialog
+	 * @param preferencePageID
+	 *            Preference page id if the dialog should have a hyperlink to a preference page or
+	 *            <code>null</code> otherwise
 	 */
-	public SynchronizerDialog(Shell parentShell, String title, String message, String toggleMessage) {
+	public SynchronizerDialog(Shell parentShell, String title, String message, String preferencePageID) {
 		super(parentShell, title, null, message, MessageDialog.CONFIRM, defaultButtonLabels, NO_BUTTON_INDEX,
-				toggleMessage, false);
+				EMFCompareRCPUIMessages.getString("SynchronizerDialog.notAskAgain.label"), false); //$NON-NLS-1$
+		this.preferencePageID = preferencePageID;
 
 	}
 
@@ -56,25 +70,28 @@ public class SynchronizerDialog extends MessageDialogWithToggle {
 	 */
 	@Override
 	protected Control createCustomArea(Composite parent) {
-		Composite container = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout(1, true);
-		container.setLayout(layout);
-		// Create hyperlink to preferences.
-		Link pageLink = new Link(container, SWT.NONE);
-		pageLink.setTouchEnabled(true);
-		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		layoutData.horizontalIndent = 35;
-		pageLink.setLayoutData(layoutData);
-		pageLink.setText(EMFCompareRCPUIMessages.getString("SynchronizerDialog.hyperlink.message")); //$NON-NLS-1$
-		// Open preference page on click
-		pageLink.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				buttonPressed(IDialogConstants.CANCEL_ID);
-				PreferencesUtil.createPreferenceDialogOn(getParentShell(), FiltersPreferencePage.PAGE_ID,
-						null, null).open();
-			}
-		});
+		if (preferencePageID != null) {
+			Composite container = new Composite(parent, SWT.NONE);
+			GridLayout layout = new GridLayout(1, true);
+			container.setLayout(layout);
+			// Create hyperlink to preferences.
+			Link pageLink = new Link(container, SWT.NONE);
+			pageLink.setTouchEnabled(true);
+			GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
+			layoutData.horizontalIndent = HYPERLINK_INDENT;
+			pageLink.setLayoutData(layoutData);
+			pageLink.setText(EMFCompareRCPUIMessages.getString("SynchronizerDialog.hyperlink.message")); //$NON-NLS-1$
+			// Open preference page on click
+			pageLink.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					buttonPressed(IDialogConstants.CANCEL_ID);
+					PreferencesUtil.createPreferenceDialogOn(getParentShell(), preferencePageID, null, null)
+							.open();
+				}
+			});
+			return container;
+		}
 		return super.createCustomArea(parent);
 	}
 }

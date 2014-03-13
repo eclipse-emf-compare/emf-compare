@@ -139,7 +139,7 @@ public class FilterAction extends Action {
 			MessageDialogWithToggle dialog = new SynchronizerDialog(shell, EMFCompareRCPUIMessages
 					.getString("FilterAction.synchronization.dialog.title"), //$NON-NLS-1$
 					EMFCompareRCPUIMessages.getString("FilterAction.synchronization.dialog.message"), //$NON-NLS-1$
-					EMFCompareRCPUIMessages.getString("FilterAction.synchronization.dialog.toggle.message"));//$NON-NLS-1$
+					FiltersPreferencePage.PAGE_ID);
 
 			dialog.setPrefKey(FiltersPreferencePage.SYNCHRONIZATION_BEHAVIOR);
 			dialog.setPrefStore(new ScopedPreferenceStore(new InstanceScope(),

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl;
 
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -18,7 +20,6 @@ import com.google.common.collect.Sets.SetView;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -38,26 +39,16 @@ import org.osgi.service.prefs.Preferences;
  * This manager can override the rank of groups. For example, it can be used to define a default group that
  * will be used by EMF Compare UI.
  * </p>
+ * <p>
+ * This manager can define a synchronization behavior between a user selection of group in EMF Compare UI and
+ * the default group that is used by EMF Compare UI.
+ * </p>
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
 public class DifferenceGroupManager {
 
-	/** Prefix for preferences. */
-	private static final String EMFCOMPARE_RCP_UI_PREFIX = "org.eclipse.emf.compare.rcp.ui."; //$NON-NLS-1$
-
-	/** Ordered list of groups for two way comparison. */
-	private static final String TWO_WAY_GROUP_RANKING = EMFCOMPARE_RCP_UI_PREFIX + "groups.2way.ranking"; //$NON-NLS-1$
-
-	/** Ordered list of groups for three way comparison. */
-	private static final String THREE_WAY_GROUP_RANKING = EMFCOMPARE_RCP_UI_PREFIX + "groups.3way.ranking"; //$NON-NLS-1$
-
-	/** Preferences holding preference values. */
-	private final Preferences preferences;
-
-	/** Registry of {@link IDifferenceGroupProvider.Descriptor}. */
-	private final IItemRegistry<IDifferenceGroupProvider.Descriptor> registry;
-
+	/** Predicate for 2-way {@link IDifferenceGroupProvider.Descriptor}. */
 	private static final Predicate<IItemDescriptor<Descriptor>> TWO_WAY_FILTER = new Predicate<IItemDescriptor<Descriptor>>() {
 
 		public boolean apply(IItemDescriptor<Descriptor> descriptor) {
@@ -69,6 +60,7 @@ public class DifferenceGroupManager {
 		}
 	};
 
+	/** Predicate for 3-way {@link IDifferenceGroupProvider.Descriptor}. */
 	private static final Predicate<IItemDescriptor<Descriptor>> THREE_WAY_FILTER = new Predicate<IItemDescriptor<Descriptor>>() {
 
 		public boolean apply(IItemDescriptor<Descriptor> descriptor) {
@@ -79,6 +71,18 @@ public class DifferenceGroupManager {
 			return type == ComparisonType.BOTH || type == ComparisonType.THREE_WAY;
 		}
 	};
+
+	/** Ordered list of groups for two way comparison. */
+	private static final String TWO_WAY_GROUP_RANKING = "org.eclipse.emf.compare.rcp.ui.groups.2way.ranking"; //$NON-NLS-1$
+
+	/** Ordered list of groups for three way comparison. */
+	private static final String THREE_WAY_GROUP_RANKING = "org.eclipse.emf.compare.rcp.ui.groups.3way.ranking"; //$NON-NLS-1$
+
+	/** Preferences holding preference values. */
+	private final Preferences preferences;
+
+	/** Registry of {@link IDifferenceGroupProvider.Descriptor}. */
+	private final IItemRegistry<IDifferenceGroupProvider.Descriptor> registry;
 
 	/**
 	 * Constructor.
@@ -215,11 +219,9 @@ public class DifferenceGroupManager {
 			// Print each preferences
 			builder.append("Preference ").append(getGroupPreferenceKey(isThreeWay)).append(":\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			String preferenceValue = preferences.get(getGroupPreferenceKey(isThreeWay), ""); //$NON-NLS-1$
-			if (!"".equals(preferences)) { //$NON-NLS-1$
-				String[] groups = preferenceValue.split(ItemUtil.PREFERENCE_DELIMITER);
-				for (int rank = 0; rank < groups.length; rank++) {
-					builder.append(rank).append(". ").append(groups[rank]).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				}
+			String[] groups = preferenceValue.split(ItemUtil.PREFERENCE_DELIMITER);
+			for (int rank = 0; rank < groups.length; rank++) {
+				builder.append(rank).append(". ").append(groups[rank]).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			builder.append("\n\n"); //$NON-NLS-1$
 			EMFCompareRCPUIPlugin.getDefault().log(IStatus.INFO, builder.toString());
@@ -240,16 +242,15 @@ public class DifferenceGroupManager {
 			List<IItemDescriptor<IDifferenceGroupProvider.Descriptor>> currentValue,
 			List<IItemDescriptor<IDifferenceGroupProvider.Descriptor>> defaultConf) {
 		if (currentValue != null && !currentValue.equals(defaultConf)) {
-			StringBuilder descriptorsKey = new StringBuilder();
-			for (Iterator<IItemDescriptor<IDifferenceGroupProvider.Descriptor>> iterator = currentValue
-					.iterator(); iterator.hasNext();) {
-				IItemDescriptor<IDifferenceGroupProvider.Descriptor> iItemDescriptor = iterator.next();
-				descriptorsKey.append(iItemDescriptor.getID());
-				if (iterator.hasNext()) {
-					descriptorsKey.append(ItemUtil.PREFERENCE_DELIMITER);
-				}
-			}
-			preferences.put(preferenceKey, descriptorsKey.toString());
+			Iterable<String> currentIDs = Iterables.transform(currentValue,
+					new Function<IItemDescriptor<IDifferenceGroupProvider.Descriptor>, String>() {
+
+						public String apply(IItemDescriptor<IDifferenceGroupProvider.Descriptor> arg0) {
+							return arg0.getID();
+						}
+					});
+			String preferenceValue = Joiner.on(ItemUtil.PREFERENCE_DELIMITER).join(currentIDs);
+			preferences.put(preferenceKey, preferenceValue);
 		} else {
 			preferences.remove(preferenceKey);
 		}

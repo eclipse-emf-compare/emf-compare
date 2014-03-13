@@ -21,23 +21,25 @@ import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -47,27 +49,8 @@ import org.eclipse.swt.widgets.Text;
  */
 public class GroupsInteractiveContent {
 
-	/**
-	 * Listener to update description text
-	 * 
-	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
-	 */
-	private final class DescriptionListener implements ISelectionChangedListener {
-
-		public void selectionChanged(SelectionChangedEvent event) {
-			ISelection selection = event.getSelection();
-			if (selection instanceof IStructuredSelection) {
-				IStructuredSelection structSelection = (IStructuredSelection)selection;
-				Object selected = structSelection.getFirstElement();
-				if (selected instanceof IItemDescriptor<?>) {
-					IItemDescriptor<?> desc = (IItemDescriptor<?>)selected;
-					String description = desc.getDescription();
-					descriptionText.setText(description);
-				}
-			}
-
-		}
-	}
+	/** Height hint for the description text. */
+	private static final int DESCRIPTION_TEXT_HEIGHT_HINT = 50;
 
 	/** Down icon picture. */
 	private static final String ENABLE_DOWN_IMG = "icons/full/pref16/down.gif"; //$NON-NLS-1$
@@ -75,13 +58,26 @@ public class GroupsInteractiveContent {
 	/** Up icon picture. */
 	private static final String ENABLE_UP_IMG = "icons/full/pref16/up.gif"; //$NON-NLS-1$
 
+	/** Combo values. */
+	private static final List<String> COMBO_VALUES = Lists.newArrayList(MessageDialogWithToggle.ALWAYS,
+			MessageDialogWithToggle.NEVER, MessageDialogWithToggle.PROMPT);
+
+	/** Combo holding syncrhonization behavior preferences. */
+	private Combo combo;
+
 	/** Text that shall be updated with the description of the viewer. */
 	private final Text descriptionText;
 
+	/** List of descriptors. */
 	private ArrayList<IItemDescriptor<IDifferenceGroupProvider.Descriptor>> descriptors;
 
+	/** Field holding the synchronization behavior chosen by the user. */
+	private String synchronizationBehaviorValue;
+
+	/** Button to decrease the rank of a item. */
 	private Button downButton;
 
+	/** Button to increase the rank of an item. */
 	private Button upButton;
 
 	/** Viewer of {@link IItemDescriptor}. */
@@ -90,6 +86,12 @@ public class GroupsInteractiveContent {
 	/** Composite holding the viewer. */
 	private final Composite viewerCompsite;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param parent
+	 *            Main composite holding this group interactive content.
+	 */
 	public GroupsInteractiveContent(Composite parent) {
 		super();
 		Composite containerComposite = new Composite(parent, SWT.NONE);
@@ -107,12 +109,48 @@ public class GroupsInteractiveContent {
 		// Descriptor engine Text
 		createButtonComposite(interactiveComposite);
 		this.descriptionText = createDescriptionComposite(interactiveComposite);
+		createSynchronizationBehaviorContent(containerComposite);
+	}
+
+	/**
+	 * Content for synchronization behavior preferences.
+	 * 
+	 * @param parent
+	 *            Main composite.
+	 */
+	private void createSynchronizationBehaviorContent(Composite parent) {
+		Group synchronizationGroup = new Group(parent, SWT.NONE);
+		GridData layoutData = new GridData(SWT.FILL, SWT.BOTTOM, true, false);
+		RowLayout layout = new RowLayout(SWT.HORIZONTAL);
+		layout.marginTop = 10;
+		layout.marginBottom = 10;
+		synchronizationGroup.setLayout(layout);
+		synchronizationGroup.setLayoutData(layoutData);
+		synchronizationGroup.setText(EMFCompareRCPUIMessages
+				.getString("GroupsInteractiveContent.SYNC_BEHAVIOR_GROUP_LABEL")); //$NON-NLS-1$
+		Label label = new Label(synchronizationGroup, SWT.WRAP);
+		label.setText(EMFCompareRCPUIMessages.getString("GroupsInteractiveContent.SYNC_BEHAVIOR_LABEL")); //$NON-NLS-1$
+		combo = new Combo(synchronizationGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
+		for (String comboLabel : COMBO_VALUES) {
+			combo.add(comboLabel);
+		}
+		combo.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (combo.equals(e.getSource())) {
+					synchronizationBehaviorValue = COMBO_VALUES.get(combo.getSelectionIndex());
+				}
+			}
+
+		});
 	}
 
 	/**
 	 * Creates the composite for up and down button.
 	 * 
 	 * @param parent
+	 *            {@link Composite}
 	 */
 	private void createButtonComposite(Composite parent) {
 		Composite buttonComposite = new Composite(parent, SWT.NONE);
@@ -121,12 +159,9 @@ public class GroupsInteractiveContent {
 		buttonComposite.setLayout(new RowLayout(SWT.VERTICAL));
 		upButton = new Button(buttonComposite, SWT.NONE);
 		upButton.setImage(EMFCompareRCPUIPlugin.getImage(ENABLE_UP_IMG));
-		upButton.addSelectionListener(new SelectionListener() {
+		upButton.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetDefaultSelected(SelectionEvent e) {
-
-			}
-
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (upButton.equals(e.getSource())) {
 					IItemDescriptor<Descriptor> selection = getCurrentSelection();
@@ -142,12 +177,9 @@ public class GroupsInteractiveContent {
 			}
 		});
 		downButton = new Button(buttonComposite, SWT.NONE);
-		downButton.addSelectionListener(new SelectionListener() {
+		downButton.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetDefaultSelected(SelectionEvent e) {
-
-			}
-
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (downButton.equals(e.getSource())) {
 					IItemDescriptor<Descriptor> selection = getCurrentSelection();
@@ -172,7 +204,8 @@ public class GroupsInteractiveContent {
 	 * selection
 	 * 
 	 * @param composite
-	 * @return
+	 *            Parent Composite.
+	 * @return Description composite.
 	 */
 	private Text createDescriptionComposite(Composite composite) {
 		Group descriptionComposite = new Group(composite, SWT.BORDER);
@@ -183,12 +216,26 @@ public class GroupsInteractiveContent {
 		Text engineDescriptionText = new Text(descriptionComposite, SWT.WRAP | SWT.MULTI);
 		engineDescriptionText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
-		layoutData.heightHint = 50;
+		layoutData.heightHint = DESCRIPTION_TEXT_HEIGHT_HINT;
 		engineDescriptionText.setLayoutData(layoutData);
 		engineDescriptionText.setEditable(false);
 		return engineDescriptionText;
 	}
 
+	/**
+	 * Get Synchronization behavior.
+	 * 
+	 * @return The state of the group synchronization behavior field.
+	 */
+	public String getSynchronizationBehavior() {
+		return synchronizationBehaviorValue;
+	}
+
+	/**
+	 * Gets the current selected descriptor.
+	 * 
+	 * @return current selected descriptor.
+	 */
 	@SuppressWarnings("unchecked")
 	private IItemDescriptor<IDifferenceGroupProvider.Descriptor> getCurrentSelection() {
 		final ISelection selection = viewer.getSelection();
@@ -196,7 +243,6 @@ public class GroupsInteractiveContent {
 			final IStructuredSelection structSelection = (IStructuredSelection)selection;
 			final Object first = structSelection.getFirstElement();
 			if (first instanceof IItemDescriptor<?>) {
-				// secure due to Object structure.
 				return (IItemDescriptor<IDifferenceGroupProvider.Descriptor>)first;
 			}
 		}
@@ -204,19 +250,30 @@ public class GroupsInteractiveContent {
 	}
 
 	/**
+	 * Gets {@link IItemDescriptor} of {IDifferenceGroupProvider.@link Descriptor} ordered by user.
+	 * 
 	 * @return The ordered list of {@link IItemDescriptor}.
 	 */
-	public List<IItemDescriptor<IDifferenceGroupProvider.Descriptor>> getItems() {
+	public List<IItemDescriptor<IDifferenceGroupProvider.Descriptor>> getOrderedItems() {
 		return descriptors;
 	}
 
 	/**
-	 * @return The composite holding the viewer.
+	 * The composite holding the viewer.
+	 * 
+	 * @return Compsite
 	 */
 	public Composite getViewerComposite() {
 		return viewerCompsite;
 	}
 
+	/**
+	 * Returns true if o is the first object of descriptors, false otherwise.
+	 * 
+	 * @param o
+	 *            Object to test
+	 * @return True if is first.
+	 */
 	private boolean isFirst(Object o) {
 		if (descriptors != null && !descriptors.isEmpty()) {
 			return descriptors.get(0).equals(o);
@@ -224,6 +281,13 @@ public class GroupsInteractiveContent {
 		return false;
 	}
 
+	/**
+	 * Returns true if o is the last object of descriptor, false otherwise.
+	 * 
+	 * @param o
+	 *            Object to test
+	 * @return True if is last.
+	 */
 	private boolean isLast(Object o) {
 		if (descriptors != null && !descriptors.isEmpty()) {
 			return descriptors.get(descriptors.size() - 1).equals(o);
@@ -235,6 +299,7 @@ public class GroupsInteractiveContent {
 	 * Handles a selection in the viewer. Updates related components.
 	 * 
 	 * @param descriptor
+	 *            The descriptor to select.
 	 */
 	public void select(IItemDescriptor<IDifferenceGroupProvider.Descriptor> descriptor) {
 		// Update viewer
@@ -246,6 +311,7 @@ public class GroupsInteractiveContent {
 	 * Sets the input for interactive content.
 	 * 
 	 * @param input
+	 *            Input of the viewsr.
 	 */
 	public void setViewerInput(List<IItemDescriptor<IDifferenceGroupProvider.Descriptor>> input) {
 		if (viewer != null) {
@@ -258,8 +324,24 @@ public class GroupsInteractiveContent {
 	}
 
 	/**
-	 * @param viewer
-	 *            A {@link StructuredViewer} of {@link IItemDescriptor}
+	 * Sets the combo to the given synchronization behavior.
+	 * 
+	 * @param behavior
+	 *            Input.
+	 */
+	public void setComboInput(String behavior) {
+		int index = COMBO_VALUES.indexOf(behavior);
+		if (index != -1) {
+			combo.select(index);
+			synchronizationBehaviorValue = behavior;
+		}
+	}
+
+	/**
+	 * Set the viewer.
+	 * 
+	 * @param inputViewer
+	 *            A {@link ListViewer} of {@link IItemDescriptor}
 	 */
 	public void setViewer(ListViewer inputViewer) {
 		this.viewer = inputViewer;
@@ -281,12 +363,38 @@ public class GroupsInteractiveContent {
 	}
 
 	/**
-	 * Updates linked element in
+	 * Updates linked elements.
 	 * 
 	 * @param descriptor
+	 *            Newly selected descriptor.
 	 */
 	private void updateLinkedElements(IItemDescriptor<IDifferenceGroupProvider.Descriptor> descriptor) {
 		// Update description
 		descriptionText.setText(descriptor.getDescription());
+	}
+
+	/**
+	 * Listener to update description text.
+	 * 
+	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
+	 */
+	private final class DescriptionListener implements ISelectionChangedListener {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public void selectionChanged(SelectionChangedEvent event) {
+			ISelection selection = event.getSelection();
+			if (selection instanceof IStructuredSelection) {
+				IStructuredSelection structSelection = (IStructuredSelection)selection;
+				Object selected = structSelection.getFirstElement();
+				if (selected instanceof IItemDescriptor<?>) {
+					IItemDescriptor<?> desc = (IItemDescriptor<?>)selected;
+					String description = desc.getDescription();
+					descriptionText.setText(description);
+				}
+			}
+
+		}
 	}
 }
