@@ -24,6 +24,8 @@ Contributors:
          point="org.eclipse.emf.compare.rcp.postProcessor">
       <processor
             class="org.eclipse.emf.compare.uml2.internal.postprocessor.UMLPostProcessor"
+            description="Post Processor used for UML models."
+            label="UML Post Processor"
             ordinal="20">
          <nsURI
                value="http://www.eclipse.org/uml2/\d.0.0/UML">
