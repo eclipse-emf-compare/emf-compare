@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.internal.extension.impl;
 
+import com.google.common.collect.Sets;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
@@ -27,7 +30,7 @@ import org.osgi.service.prefs.Preferences;
 public final class ItemUtil {
 
 	/** Delimiter character used to serialize a list into preferences. */
-	public static final String PREFFERENCE_DELIMITER = ";"; //$NON-NLS-1$
+	public static final String PREFERENCE_DELIMITER = ";"; //$NON-NLS-1$
 
 	/**
 	 * Private Constructor.
@@ -128,7 +131,7 @@ public final class ItemUtil {
 		String diffEngineKey = itemPreferences.get(preferenceKey, null);
 		List<IItemDescriptor<T>> result = null;
 		if (diffEngineKey != null) {
-			String[] diffEngineKeys = diffEngineKey.split(PREFFERENCE_DELIMITER);
+			String[] diffEngineKeys = diffEngineKey.split(PREFERENCE_DELIMITER);
 			for (String nonTrimedKey : diffEngineKeys) {
 				String key = nonTrimedKey.trim();
 				IItemDescriptor<T> descritpor = registry.getItemDescriptor(key);
@@ -155,5 +158,34 @@ public final class ItemUtil {
 	 */
 	public static Preferences getConfigurationPreferenceNode(String type, String itemId) {
 		return EMFCompareRCPPlugin.getDefault().getEMFComparePreferences().node(type).node(itemId);
+	}
+
+	/**
+	 * Get all active item from a registry.
+	 * <p>
+	 * (Filter out all disable element stored in preferences)
+	 * </p>
+	 * 
+	 * @param registry
+	 *            Registry holding all items of this kind
+	 * @param disabledItemPreferenceKey
+	 *            Preference key where are stored disabled items.
+	 * @return {@link Set} of active items
+	 * @param <T>
+	 *            Item type
+	 */
+	public static <T> Set<IItemDescriptor<T>> getActiveItems(IItemRegistry<T> registry,
+			String disabledItemPreferenceKey) {
+		List<IItemDescriptor<T>> itemsDescriptor = ItemUtil.getItemsDescriptor(registry,
+				disabledItemPreferenceKey, EMFCompareRCPPlugin.getDefault().getEMFComparePreferences());
+
+		if (itemsDescriptor == null) {
+			return Sets.newLinkedHashSet(registry.getItemDescriptors());
+		}
+		Set<IItemDescriptor<T>> disableFactories = Sets.newHashSet(itemsDescriptor);
+		Set<IItemDescriptor<T>> allFactories = Sets.newHashSet(registry.getItemDescriptors());
+		Set<IItemDescriptor<T>> activeFactory = Sets.difference(allFactories, disableFactories);
+
+		return activeFactory;
 	}
 }

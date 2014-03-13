@@ -26,7 +26,6 @@ import org.eclipse.emf.compare.match.eobject.WeightProvider;
 import org.eclipse.emf.compare.match.eobject.WeightProviderDescriptorRegistryImpl;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
-import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
 import org.eclipse.emf.compare.provider.EMFCompareEditPlugin;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.emf.compare.rcp.internal.adapterfactory.AdapterFactoryDescriptorRegistryListener;
@@ -40,6 +39,7 @@ import org.eclipse.emf.compare.rcp.internal.merger.MergerExtensionRegistryListen
 import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryImpl;
 import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.postprocessor.PostProcessorFactoryRegistryListener;
+import org.eclipse.emf.compare.rcp.internal.postprocessor.PostProcessorRegistryImpl;
 import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
 import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -118,6 +118,9 @@ public class EMFCompareRCPPlugin extends Plugin {
 	/** The registry that will hold references to all post processors. */
 	private IPostProcessor.Descriptor.Registry<String> postProcessorDescriptorsRegistry;
 
+	/** The registry that will hold reference to all post processors descriptors. */
+	private IItemRegistry<IPostProcessor.Descriptor> postProcessorItemDescriptorsRegistry;
+
 	/** The registry listener that will be used to react to post processor changes. */
 	private AbstractRegistryEventListener postProcessorFactoryRegistryListener;
 
@@ -152,8 +155,12 @@ public class EMFCompareRCPPlugin extends Plugin {
 	private WeightProviderDescriptorRegistryListener weightProviderListener;
 
 	/**
-	 * Instance scope for preferences. Do not use singleton to respect Helios compatibility. See
-	 * {@link InstanceScope}
+	 * Instance scope for preferences.
+	 * <p>
+	 * Do not use singleton to respect Helios compatibility
+	 * </p>
+	 * 
+	 * @see org.eclipse.core.runtime.preferences.InstanceScope#INSTANCE
 	 */
 	@SuppressWarnings("deprecation")
 	private InstanceScope instanceScope = new InstanceScope();
@@ -241,11 +248,14 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 *            {@link IExtensionRegistry} to listen in order to fill the registry
 	 */
 	private void setUpPostProcessorRegisty(final IExtensionRegistry registry) {
-		postProcessorDescriptorsRegistry = new PostProcessorDescriptorRegistryImpl<String>();
+		postProcessorItemDescriptorsRegistry = new ItemRegistry<IPostProcessor.Descriptor>();
+
 		postProcessorFactoryRegistryListener = new PostProcessorFactoryRegistryListener(PLUGIN_ID,
-				POST_PROCESSOR_PPID, getLog(), postProcessorDescriptorsRegistry);
+				POST_PROCESSOR_PPID, getLog(), postProcessorItemDescriptorsRegistry);
 		registry.addListener(postProcessorFactoryRegistryListener, PLUGIN_ID + '.' + POST_PROCESSOR_PPID);
 		postProcessorFactoryRegistryListener.readRegistry(registry);
+		postProcessorDescriptorsRegistry = new PostProcessorRegistryImpl(
+				postProcessorItemDescriptorsRegistry);
 	}
 
 	/**
@@ -472,6 +482,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 		registry.removeListener(postProcessorFactoryRegistryListener);
 		postProcessorFactoryRegistryListener = null;
 		postProcessorDescriptorsRegistry = null;
+		postProcessorItemDescriptorsRegistry = null;
 	}
 
 	/**
@@ -513,6 +524,16 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 */
 	public IPostProcessor.Descriptor.Registry<String> getPostProcessorRegistry() {
 		return postProcessorDescriptorsRegistry;
+	}
+
+	/**
+	 * Get the {@link IItemRegistry} of {@link IPostProcessor.Descriptor}.
+	 * 
+	 * @return {@link IItemRegistry} of {@link IPostProcessor.Descriptor}.
+	 * @since 2.2.0
+	 */
+	public IItemRegistry<IPostProcessor.Descriptor> getPostProcessorDescriptorRegistry() {
+		return postProcessorItemDescriptorsRegistry;
 	}
 
 	/**

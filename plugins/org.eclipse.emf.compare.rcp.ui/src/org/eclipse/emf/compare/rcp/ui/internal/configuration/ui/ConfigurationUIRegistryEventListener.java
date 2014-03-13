@@ -77,7 +77,7 @@ public class ConfigurationUIRegistryEventListener extends AbstractRegistryEventL
 						.getAttribute(ITEM_TO_CONFIGURE_ATTR));
 				if (itemToConfigure == null) {
 					log(IStatus.WARNING, element, EMFCompareRCPUIMessages
-							.getString("EnginesPreferencePagestatic.INCORRECT_ID_PARAMETER")); //$NON-NLS-1$
+							.getString("ConfigurationUIRegistryEventListener.INCORRECT_ID_PARAMETER")); //$NON-NLS-1$
 					ret = false;
 				} else {
 					ret = true;
@@ -113,7 +113,7 @@ public class ConfigurationUIRegistryEventListener extends AbstractRegistryEventL
 				}
 			} else {
 				log(IStatus.WARNING, element, EMFCompareRCPUIMessages
-						.getString("EnginesPreferencePagestatic.INCORRECT_CONFIGURATOR_PARAMETER")); //$NON-NLS-1$
+						.getString("ConfigurationUIRegistryEventListener.INCORRECT_CONFIGURATOR_PARAMETER")); //$NON-NLS-1$
 			}
 		} catch (CoreException e) {
 			e.printStackTrace();

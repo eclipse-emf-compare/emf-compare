@@ -75,6 +75,20 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="label" type="string">
+            <annotation>
+               <documentation>
+                  Label of the post processor. Used for UI.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="description" type="string">
+            <annotation>
+               <documentation>
+                  Description of post processor. Used for UI.
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

@@ -22,32 +22,33 @@ import org.eclipse.core.runtime.IConfigurationElement;
  * @param <T>
  *            an item type
  */
-public class ItemDescriptor<T> extends AbstractItemDescriptor<T> {
+public class LazyItemDescriptor<T> extends AbstractItemDescriptor<T> {
 
-	/** IConfig element of the item. */
+	/** {@link IConfigurationElement} used to instantiate the item. */
 	private final IConfigurationElement config;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param label
-	 *            {@link ItemDescriptor#label}
+	 *            {@link org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor<T>#getLabel()}
 	 * @param description
-	 *            {@link ItemDescriptor#description}
+	 *            {@link org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor<T>#getDescription()}
 	 * @param rank
-	 *            {@link ItemDescriptor#rank}
+	 *            {@link org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor<T>#getRank()}
 	 * @param config
-	 *            {@link ItemDescriptor#config}
+	 *            {@link IConfigurationElement} used to instantiate the item.
 	 * @param id
-	 *            {@link ItemDescriptor#id}
+	 *            {@link org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor<T>#getID()}
 	 */
-	public ItemDescriptor(String label, String description, int rank, IConfigurationElement config, String id) {
+	public LazyItemDescriptor(String label, String description, int rank, IConfigurationElement config,
+			String id) {
 		super(label, description, rank, id);
 		this.config = config;
 	}
 
 	/**
-	 * {@link ItemDescriptor#config}.
+	 * {@link IConfigurationElement} used to instantiate the item.
 	 * 
 	 * @return IConfigurationElement.
 	 */
