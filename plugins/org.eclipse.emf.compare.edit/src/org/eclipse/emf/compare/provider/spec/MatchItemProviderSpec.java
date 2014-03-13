@@ -57,11 +57,11 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 		Object ret = itemDelegator.getImage(match.getLeft());
 
 		if (ret == null) {
-			ret = itemDelegator.getImage(match.getRight());
+			ret = itemDelegator.getImage(match.getOrigin());
 		}
 
 		if (ret == null) {
-			ret = itemDelegator.getImage(match.getOrigin());
+			ret = itemDelegator.getImage(match.getRight());
 		}
 
 		if (ret == null) {
@@ -85,11 +85,11 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 		String ret = itemDelegator.getText(match.getLeft());
 
 		if (isNullOrEmpty(ret)) {
-			ret = itemDelegator.getText(match.getRight());
+			ret = itemDelegator.getText(match.getOrigin());
 		}
 
 		if (isNullOrEmpty(ret)) {
-			ret = itemDelegator.getText(match.getOrigin());
+			ret = itemDelegator.getText(match.getRight());
 		}
 
 		if (isNullOrEmpty(ret)) {
