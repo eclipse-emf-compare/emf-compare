@@ -51,17 +51,17 @@ public class DefaultMatchEngineConfiguratorUI extends AbstractConfigurationUI {
 	public void createContent() {
 		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
 		this.setLayout(rowLayout);
-		Label text = new Label(this, SWT.WRAP);
+		Label text = new Label(this, SWT.NONE);
 		text.setText(EMFCompareRCPUIMessages
 				.getString("DefaultMatchEngineConfiguratorUI.USE_IDENTIFER_LABEL")); //$NON-NLS-1$
-		whenAvailableButton = new Button(this, SWT.RADIO | SWT.WRAP);
+		whenAvailableButton = new Button(this, SWT.RADIO);
 		whenAvailableButton.setText(EMFCompareRCPUIMessages
 				.getString("DefaultMatchEngineConfiguratorUI.WHEN_AVAILABLE_LABEL")); //$NON-NLS-1$
 
-		onlyButton = new Button(this, SWT.RADIO | SWT.WRAP);
+		onlyButton = new Button(this, SWT.RADIO);
 		onlyButton.setText(EMFCompareRCPUIMessages.getString("DefaultMatchEngineConfiguratorUI.ONLY_LABEL")); //$NON-NLS-1$
 
-		neverButton = new Button(this, SWT.RADIO | SWT.WRAP);
+		neverButton = new Button(this, SWT.RADIO);
 		neverButton
 				.setText(EMFCompareRCPUIMessages.getString("DefaultMatchEngineConfiguratorUI.NEVER_LABEL")); //$NON-NLS-1$
 

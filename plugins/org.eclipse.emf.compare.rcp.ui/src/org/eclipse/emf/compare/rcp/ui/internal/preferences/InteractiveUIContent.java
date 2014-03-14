@@ -169,7 +169,7 @@ public class InteractiveUIContent {
 	 * @return
 	 */
 	private Group createConfigComposite(Composite composite) {
-		Group confComposite = new Group(composite, SWT.BORDER);
+		Group confComposite = new Group(composite, SWT.NONE);
 		confComposite.setText(EMFCompareRCPUIMessages
 				.getString("InteractiveUIContent.CONFIGURATION_COMPOSITE_LABEL")); //$NON-NLS-1$
 		StackLayout layout = new StackLayout();
@@ -189,7 +189,7 @@ public class InteractiveUIContent {
 	 * @return
 	 */
 	private Text createDescriptionComposite(Composite composite) {
-		Group descriptionComposite = new Group(composite, SWT.BORDER);
+		Group descriptionComposite = new Group(composite, SWT.NONE);
 		descriptionComposite.setText(EMFCompareRCPUIMessages
 				.getString("InteractiveUIContent.DESCRIPTION_COMPOSITE_LABEL")); //$NON-NLS-1$
 		descriptionComposite.setLayout(new GridLayout(1, false));
