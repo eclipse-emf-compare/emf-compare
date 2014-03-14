@@ -75,6 +75,13 @@ You can provide your own filters by adding an extension of type &lt;samp&gt;org.
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="description" type="string">
+            <annotation>
+               <documentation>
+                  A human-readable description for this filter. It will be displayed in the EMF Compare UI.
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

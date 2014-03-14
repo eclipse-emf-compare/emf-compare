@@ -31,6 +31,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.IConfigurationUI
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.AccessorFactoryExtensionRegistryListener;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.AccessorFactoryRegistryImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterExtensionRegistryListener;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterManager;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterRegistryImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender.DifferenceGroupExtenderRegistryImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.extender.DifferenceGroupExtenderRegistryListener;
@@ -43,6 +44,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.prefs.Preferences;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -89,6 +91,8 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	private AbstractRegistryEventListener filterRegistryListener;
 
 	private IDifferenceFilter.Registry filterRegistry;
+
+	private DifferenceFilterManager filterManager;
 
 	private AbstractRegistryEventListener accessorFactoryRegistryListener;
 
@@ -141,9 +145,10 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 		extensionRegistry.addListener(groupProviderRegistryListener, PLUGIN_ID + "." + GROUP_PROVIDER_PPID); //$NON-NLS-1$
 		groupProviderRegistryListener.readRegistry(extensionRegistry);
 
-		filterRegistry = new DifferenceFilterRegistryImpl();
+		filterManager = new DifferenceFilterManager(getEMFCompareUIPreferences());
+		filterRegistry = new DifferenceFilterRegistryImpl(filterManager);
 		filterRegistryListener = new DifferenceFilterExtensionRegistryListener(PLUGIN_ID,
-				FILTER_PROVIDER_PPID, getLog(), filterRegistry);
+				FILTER_PROVIDER_PPID, getLog(), filterManager);
 		extensionRegistry.addListener(filterRegistryListener, PLUGIN_ID + "." + FILTER_PROVIDER_PPID); //$NON-NLS-1$
 		filterRegistryListener.readRegistry(extensionRegistry);
 
@@ -194,6 +199,7 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 		extensionRegistry.removeListener(filterRegistryListener);
 		filterRegistryListener = null;
 		filterRegistry = null;
+		filterManager = null;
 
 		extensionRegistry.removeListener(groupProviderRegistryListener);
 		groupProviderRegistryListener = null;
@@ -331,6 +337,13 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	 */
 	public Map<String, IConfigurationUIFactory> getMatchEngineConfiguratorRegistry() {
 		return matchEngineConfiguratorRegistry;
+	}
+
+	/**
+	 * @return the preferences related to EMF Compare RCP UI plugin.
+	 */
+	public Preferences getEMFCompareUIPreferences() {
+		return instanceScope.getNode(PLUGIN_ID);
 	}
 
 }

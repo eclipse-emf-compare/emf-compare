@@ -34,11 +34,14 @@ public class DifferenceFilterExtensionRegistryListener extends AbstractRegistryE
 	/** ATT_LABEL. */
 	static final String ATT_LABEL = "label"; //$NON-NLS-1$
 
+	/** ATT_LABEL. */
+	static final String ATT_DESCRIPTION = "description"; //$NON-NLS-1$
+
 	/** ATT_ACTIVE. */
 	static final String ATT_ACTIVE = "activeByDefault"; //$NON-NLS-1$
 
-	/** The IDifferenceFilter.Registry to listen. */
-	private final IDifferenceFilter.Registry filterRegistry;
+	/** The DifferenceFilterManager in charge of managing filters. */
+	private final DifferenceFilterManager filterRegistry;
 
 	/**
 	 * Default constructor.
@@ -49,13 +52,13 @@ public class DifferenceFilterExtensionRegistryListener extends AbstractRegistryE
 	 *            The extension point ID to be monitored.
 	 * @param log
 	 *            The log object to be used to log error and/or warning.
-	 * @param registry
-	 *            The {@link IDifferenceFilter.Registry} to listen.
+	 * @param filterManager
+	 *            The {@link DifferenceFilterManager} used to add/remove filter.
 	 */
 	public DifferenceFilterExtensionRegistryListener(String pluginID, String extensionPointID, ILog log,
-			IDifferenceFilter.Registry registry) {
+			DifferenceFilterManager filterManager) {
 		super(pluginID, extensionPointID, log);
-		this.filterRegistry = registry;
+		this.filterRegistry = filterManager;
 	}
 
 	/**
@@ -95,6 +98,7 @@ public class DifferenceFilterExtensionRegistryListener extends AbstractRegistryE
 		try {
 			IDifferenceFilter filter = (IDifferenceFilter)element.createExecutableExtension(ATT_CLASS);
 			filter.setLabel(element.getAttribute(ATT_LABEL));
+			filter.setDescription(element.getAttribute(ATT_DESCRIPTION));
 			if (Boolean.valueOf(element.getAttribute(ATT_ACTIVE)).booleanValue()) {
 				filter.setDefaultSelected(true);
 			} else {

@@ -28,6 +28,9 @@ public abstract class AbstractDifferenceFilter implements IDifferenceFilter {
 	/** A human-readable label for this filter. This will be displayed in the EMF Compare UI. */
 	protected String label;
 
+	/** {@link IDifferenceFilter#getDescription()}*/
+	protected String description;
+
 	/** The initial activation state of the filter. */
 	protected boolean activeByDefault;
 
@@ -70,6 +73,20 @@ public abstract class AbstractDifferenceFilter implements IDifferenceFilter {
 	 */
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+	/**
+	* {@inheritDoc}
+	*/
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	* {@inheritDoc}
+	*/
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	/**
