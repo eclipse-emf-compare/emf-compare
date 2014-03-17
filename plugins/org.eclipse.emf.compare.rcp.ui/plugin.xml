@@ -189,6 +189,12 @@
             id="org.eclipse.emf.compare.rcp.ui.preferencePage.postProcessors"
             name="Post Processors">
       </page>
+      <page
+            category="org.eclipse.emf.compare.rcp.ui.preferencePage.global"
+            class="org.eclipse.emf.compare.rcp.ui.internal.preferences.FiltersPreferencePage"
+            id="org.eclipse.emf.compare.rcp.ui.preferencePage.filters"
+            name="Filters">
+      </page>
    </extension>
    <extension
        point="org.eclipse.emf.compare.rcp.ui.matchEngineFactoryConfigurationUI">

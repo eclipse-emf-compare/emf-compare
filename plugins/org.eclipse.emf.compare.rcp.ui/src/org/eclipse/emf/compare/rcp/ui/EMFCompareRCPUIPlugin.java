@@ -259,6 +259,14 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
+	 * @return The Difference Filter manager.
+	 * @since 4.0
+	 */
+	public DifferenceFilterManager getDifferenceFilterManager() {
+		return filterManager;
+	}
+
+	/**
 	 * @return the registry
 	 */
 	public IAccessorFactory.Registry getAccessorFactoryRegistry() {
