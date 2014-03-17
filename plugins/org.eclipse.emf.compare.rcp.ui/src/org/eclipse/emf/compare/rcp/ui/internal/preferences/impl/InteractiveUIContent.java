@@ -129,8 +129,7 @@ public final class InteractiveUIContent {
 			defaultComposite.setLayout(new GridLayout(1, true));
 			Label text = new Label(defaultComposite, SWT.WRAP);
 			text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
-			text.setText(EMFCompareRCPUIMessages
-					.getString("InteractiveUIContent.DEFAULT_CONFIGURATION_LABEL")); //$NON-NLS-1$
+			text.setText(EMFCompareRCPUIMessages.getString("InteractiveUIContent.defaultConfiguration.label")); //$NON-NLS-1$
 		} else {
 			this.configurationComposite = null;
 			this.defaultComposite = null;
@@ -189,7 +188,7 @@ public final class InteractiveUIContent {
 	private Group createConfigComposite(Composite composite) {
 		Group confComposite = new Group(composite, SWT.BORDER);
 		confComposite.setText(EMFCompareRCPUIMessages
-				.getString("InteractiveUIContent.CONFIGURATION_COMPOSITE_LABEL")); //$NON-NLS-1$
+				.getString("InteractiveUIContent.configurationComposite.label")); //$NON-NLS-1$
 		StackLayout layout = new StackLayout();
 		layout.marginHeight = 10;
 		layout.marginWidth = 10;
@@ -210,7 +209,7 @@ public final class InteractiveUIContent {
 	private Text createDescriptionComposite(Composite composite) {
 		Group descriptionComposite = new Group(composite, SWT.BORDER);
 		descriptionComposite.setText(EMFCompareRCPUIMessages
-				.getString("InteractiveUIContent.DESCRIPTION_COMPOSITE_LABEL")); //$NON-NLS-1$
+				.getString("InteractiveUIContent.descriptionComposite.label")); //$NON-NLS-1$
 		descriptionComposite.setLayout(new GridLayout(1, false));
 		descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		Text engineDescriptionText = new Text(descriptionComposite, SWT.WRAP | SWT.MULTI);

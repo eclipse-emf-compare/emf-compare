@@ -63,7 +63,7 @@ public interface IDifferenceFilter {
 	/**
 	 * A human-readable description for this filter. This will be displayed in the EMF Compare UI.
 	 * 
-	 * @return Description of <code>null</code>
+	 * @return Description or <code>null</code>
 	 */
 	String getDescription();
 

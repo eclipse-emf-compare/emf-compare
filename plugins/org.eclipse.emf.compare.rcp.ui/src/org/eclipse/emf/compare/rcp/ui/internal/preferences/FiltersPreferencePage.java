@@ -22,14 +22,17 @@ import java.util.Set;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
+import org.eclipse.emf.compare.rcp.internal.tracer.TracingConstant;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterManager;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -41,8 +44,12 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -59,6 +66,16 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
 public class FiltersPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+
+	/** Preference page ID. */
+	public static final String PAGE_ID = "org.eclipse.emf.compare.rcp.ui.preferencePage.filters"; //$NON-NLS-1$
+
+	/** Preference key holding synchronization behavior value. */
+	public static final String SYNCHRONIZATION_BEHAVIOR = "org.eclipse.emf.compare.rcp.ui.filters.syncbehavior"; //$NON-NLS-1$
+
+	/** Values used for the combobox. */
+	private static final List<String> comboValues = Lists.newArrayList(MessageDialogWithToggle.ALWAYS,
+			MessageDialogWithToggle.NEVER, MessageDialogWithToggle.PROMPT);
 
 	/** Filter manager. Used to retrieve current and default configuration. */
 	private DifferenceFilterManager filterManager;
@@ -82,22 +99,63 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		container.setLayout(new GridLayout(1, true));
 
-		// Description text
-		Label introductionText = new Label(container, SWT.WRAP);
-		introductionText.setText(EMFCompareRCPUIMessages.getString("FiltersPreferencePage.INTRO_TEXT")); //$NON-NLS-1$
 		filterManager = EMFCompareRCPUIPlugin.getDefault().getDifferenceFilterManager();
 
-		Collection<IDifferenceFilter> allFilters = filterManager.getAllFilters();
-		final IDifferenceFilter defaultSelection;
-		if (!allFilters.isEmpty()) {
-			defaultSelection = allFilters.iterator().next();
-		} else {
-			defaultSelection = null;
-		}
-
 		filterInteractiveContent = new InteractiveFilterUIContent(container, filterManager.getAllFilters(),
-				defaultSelection, filterManager.getCurrentByDefaultFilters());
+				filterManager.getCurrentByDefaultFilters());
+		filterInteractiveContent.setComboInput(getCurrentSynchronizationBehavior());
 		return container;
+	}
+
+	/**
+	 * Gets the current value of the filter synchronization behavior.
+	 * <p>
+	 * This value can only be one of the following:
+	 * <ul>
+	 * <li>{@link MessageDialogWithToggle#PROMPT}</li>
+	 * <li>{@link MessageDialogWithToggle#ALWAYS}</li>
+	 * <li>{@link MessageDialogWithToggle#NEVER}</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @return String.
+	 */
+	public String getCurrentSynchronizationBehavior() {
+		String value = getPreferenceStore().getString(SYNCHRONIZATION_BEHAVIOR);
+		if (value == null || !comboValues.contains(value)) {
+			value = getDefaultSynchronizationBehavior();
+		}
+		return value;
+	}
+
+	/**
+	 * @return The default value of filter synchronization behavior.
+	 */
+	public String getDefaultSynchronizationBehavior() {
+		return MessageDialogWithToggle.PROMPT;
+	}
+
+	/**
+	 * Set the current value of the filter synchronization behavior.
+	 * 
+	 * @param newBehavior
+	 *            New value.
+	 */
+	public void setCurrentSynchronizationBehavior(String newBehavior) {
+		if (getDefaultSynchronizationBehavior().equals(newBehavior)) {
+			getPreferenceStore().setToDefault(SYNCHRONIZATION_BEHAVIOR);
+		} else {
+			getPreferenceStore().setValue(SYNCHRONIZATION_BEHAVIOR, newBehavior);
+		}
+		// Trace preferences values
+		if (TracingConstant.CONFIGURATION_TRACING_ACTIVATED) {
+			StringBuilder builder = new StringBuilder();
+			// Print each preferences
+			builder.append("Preference ").append(SYNCHRONIZATION_BEHAVIOR).append(":\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			String preferenceValue = getPreferenceStore().getString(SYNCHRONIZATION_BEHAVIOR);
+			builder.append(preferenceValue);
+			EMFCompareRCPUIPlugin.getDefault().log(IStatus.INFO, builder.toString());
+		}
 	}
 
 	/**
@@ -106,6 +164,7 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 	@Override
 	public boolean performOk() {
 		filterManager.setCurrentByDefaultFilters(filterInteractiveContent.getCheckedFilter());
+		setCurrentSynchronizationBehavior(filterInteractiveContent.getSynchronizationBehavior());
 		return super.performOk();
 	}
 
@@ -115,6 +174,7 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 	@Override
 	protected void performDefaults() {
 		filterInteractiveContent.checkElements(filterManager.getInitialByDefaultFilters());
+		filterInteractiveContent.setComboInput(getDefaultSynchronizationBehavior());
 		super.performDefaults();
 	}
 
@@ -123,7 +183,7 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 	 * 
 	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
 	 */
-	public static class InteractiveFilterUIContent {
+	private static class InteractiveFilterUIContent {
 
 		/** Text that will be updated with the description of the viewer. */
 		private final Text descriptionText;
@@ -134,21 +194,71 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 		/** DataHolder for {@link IDifferenceFilter}. */
 		private FilterDataHolder dataHolder = new FilterDataHolder();
 
+		/** Combo holding synchronization behavior preferences. */
+		private Combo combo;
+
+		/** Field holding {@link SynchronizationBehavior} */
+		private String synchronizationBehaviorValue;
+
 		private InteractiveFilterUIContent(Composite parent, Collection<IDifferenceFilter> filters,
-				IDifferenceFilter defaultSelection, Collection<IDifferenceFilter> defaultCheck) {
+				Collection<IDifferenceFilter> defaultCheck) {
 			super();
-			Composite contentComposite = new Composite(parent, SWT.NONE);
+			Composite contentComposite = new Composite(parent, SWT.BORDER);
 			contentComposite.setLayout(new GridLayout(1, true));
 			contentComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+			Label introductionText = new Label(contentComposite, SWT.WRAP);
+			introductionText.setText(EMFCompareRCPUIMessages.getString("FiltersPreferencePage.INTRO_TEXT")); //$NON-NLS-1$
+			introductionText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 			// Engine chooser composite
 			Composite viewerComposite = new Composite(contentComposite, SWT.NONE);
 			viewerComposite.setLayout(new GridLayout(1, true));
 			viewerComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 			viewer = createViewer(viewerComposite);
 			// Descriptor engine Text
-			this.descriptionText = createDescriptionComposite(parent);
+			this.descriptionText = createDescriptionComposite(contentComposite);
+			createSynchronizationBehaviorContent(parent);
 			setViewerInput(Lists.newArrayList(filters));
-			bindAndInit(defaultSelection, Sets.newLinkedHashSet(defaultCheck));
+			bindAndInit(Sets.newLinkedHashSet(defaultCheck));
+		}
+
+		/**
+		 * Content for synchronization behavior preferences.
+		 * 
+		 * @param parent
+		 */
+		private void createSynchronizationBehaviorContent(Composite parent) {
+			Group synchronizationGroup = new Group(parent, SWT.NONE);
+			GridData layoutData = new GridData(SWT.FILL, SWT.BOTTOM, true, false);
+			RowLayout layout = new RowLayout(SWT.HORIZONTAL);
+			layout.marginTop = 10;
+			layout.marginBottom = 10;
+			synchronizationGroup.setLayout(layout);
+			synchronizationGroup.setLayoutData(layoutData);
+			synchronizationGroup.setText(EMFCompareRCPUIMessages
+					.getString("InteractiveFilterUIContent.sync.behavior.group.label")); //$NON-NLS-1$
+			Label label = new Label(synchronizationGroup, SWT.WRAP);
+			label.setText(EMFCompareRCPUIMessages.getString("InteractiveFilterUIContent.sync.behavior.label")); //$NON-NLS-1$
+			combo = new Combo(synchronizationGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
+			for (String comboLabel : comboValues) {
+				combo.add(comboLabel);
+			}
+			combo.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (combo.equals(e.getSource())) {
+						synchronizationBehaviorValue = combo.getItem(combo.getSelectionIndex());
+					}
+				}
+
+			});
+		}
+
+		/**
+		 * @return The state of the group synchronization behavior field.
+		 */
+		public String getSynchronizationBehavior() {
+			return synchronizationBehaviorValue;
 		}
 
 		/**
@@ -173,6 +283,7 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 				}
 			});
 			viewer.setInput(filters);
+			select(filters.iterator().next());
 		}
 
 		private CheckboxTableViewer createViewer(Composite viewerCompsite) {
@@ -186,10 +297,7 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 			return descriptorViewer;
 		}
 
-		private void bindAndInit(IDifferenceFilter defaultSelection, Set<IDifferenceFilter> defaultCheck) {
-			if (defaultSelection != null) {
-				select(defaultSelection);
-			}
+		private void bindAndInit(Set<IDifferenceFilter> defaultCheck) {
 			if (dataHolder != null) {
 				if (defaultCheck != null) {
 					dataHolder.setFilters(defaultCheck);
@@ -238,7 +346,7 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 		private Text createDescriptionComposite(Composite composite) {
 			Group descriptionComposite = new Group(composite, SWT.BORDER);
 			descriptionComposite.setText(EMFCompareRCPUIMessages
-					.getString("InteractiveUIContent.DESCRIPTION_COMPOSITE_LABEL")); //$NON-NLS-1$
+					.getString("InteractiveUIContent.descriptionComposite.label")); //$NON-NLS-1$
 			descriptionComposite.setLayout(new GridLayout(1, false));
 			descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 			Text engineDescriptionText = new Text(descriptionComposite, SWT.WRAP | SWT.MULTI);
@@ -259,7 +367,13 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 		public void select(IDifferenceFilter descriptor) {
 			// Update viewer
 			viewer.setSelection(new StructuredSelection(descriptor), true);
-			updateLinkedElements(descriptor);
+			String description = descriptor.getDescription();
+			if (description != null) {
+				descriptionText.setText(description);
+			} else {
+				descriptionText.setText(""); //$NON-NLS-1$
+			}
+
 		}
 
 		/**
@@ -272,12 +386,19 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 		}
 
 		/**
-		 * Update linked element in
+		 * Select the correct behavior in the interactive UI.
 		 * 
-		 * @param descriptor
+		 * @param behavior
 		 */
-		private void updateLinkedElements(IDifferenceFilter descriptor) {
-			descriptionText.setText(descriptor.getDescription());
+		public void setComboInput(String behavior) {
+			int index = 0;
+			for (String value : comboValues) {
+				if (value.equals(behavior)) {
+					combo.select(index);
+					synchronizationBehaviorValue = behavior;
+				}
+				index++;
+			}
 		}
 
 		/**

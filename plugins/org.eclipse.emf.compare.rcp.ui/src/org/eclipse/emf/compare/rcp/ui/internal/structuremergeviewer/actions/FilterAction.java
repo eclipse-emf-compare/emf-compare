@@ -10,10 +10,24 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions;
 
+import com.google.common.collect.Sets;
+
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
+import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
+import org.eclipse.emf.compare.rcp.ui.internal.preferences.FiltersPreferencePage;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.ui.SynchronizerDialog;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterManager;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.osgi.service.prefs.Preferences;
 
 /**
  * These will be the actual actions displayed in the filter menu. Their sole purpose is to provide a Predicate
@@ -35,6 +49,12 @@ public class FilterAction extends Action {
 	/** The Filter that will be modified by the action. */
 	private final StructureMergeViewerFilter structureMergeViewerFilter;
 
+	/** Preferences holding the value of the synchronization behavior of filters. */
+	private final Preferences preferences;
+
+	/** {@link DifferenceFilterManager}. */
+	private final DifferenceFilterManager filterManager;
+
 	/**
 	 * The "default" constructor for this action.
 	 * 
@@ -50,19 +70,84 @@ public class FilterAction extends Action {
 		super(text, IAction.AS_CHECK_BOX);
 		this.structureMergeViewerFilter = structureMergeViewerFilter;
 		this.filter = filter;
+		this.preferences = EMFCompareRCPUIPlugin.getDefault().getEMFCompareUIPreferences();
+		this.filterManager = EMFCompareRCPUIPlugin.getDefault().getDifferenceFilterManager();
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.action.Action#run()
 	 */
 	@Override
-	public void run() {
+	public void runWithEvent(Event event) {
 		if (isChecked()) {
 			structureMergeViewerFilter.addFilter(filter);
 		} else {
 			structureMergeViewerFilter.removeFilter(filter);
 		}
+		handleSynchronization(event);
+	}
+
+	/**
+	 * Handle synchronization with {@link DifferenceFilterManager}.
+	 * 
+	 * @param event
+	 *            Event.
+	 */
+	private void handleSynchronization(Event event) {
+		String sync = preferences.get(FiltersPreferencePage.SYNCHRONIZATION_BEHAVIOR,
+				MessageDialogWithToggle.PROMPT);
+		final Shell shell = event.display.getActiveShell();
+		if (MessageDialogWithToggle.PROMPT.equals(sync) && shell != null) {
+			shell.getDisplay().asyncExec(new SynchronizationBehaviorRunnable(shell));
+		} else if (MessageDialogWithToggle.ALWAYS.equals(sync)) {
+			synchonizeFilters();
+		}
+	}
+
+	/**
+	 * Synchronizes UI filter selection with the preferences.
+	 */
+	private void synchonizeFilters() {
+		filterManager.setCurrentByDefaultFilters(Sets.newLinkedHashSet(structureMergeViewerFilter
+				.getSelectedDifferenceFilters()));
+	}
+
+	/**
+	 * Runnable in charge of synchronizing selection in UI with the {@link DifferenceFilterManager}.
+	 * 
+	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
+	 */
+	private final class SynchronizationBehaviorRunnable implements Runnable {
+		/** Shell of this runnable. */
+		private final Shell shell;
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param shell
+		 *            Shell for this runnable.
+		 */
+		private SynchronizationBehaviorRunnable(Shell shell) {
+			this.shell = shell;
+		}
+
+		/**
+		 * {@inheritDoc} Does not use InstanceScope#Instance for compatibility issues with Helios.
+		 */
+		@SuppressWarnings("deprecation")
+		public void run() {
+			MessageDialogWithToggle dialog = new SynchronizerDialog(shell, EMFCompareRCPUIMessages
+					.getString("FilterAction.synchronization.dialog.title"), //$NON-NLS-1$
+					EMFCompareRCPUIMessages.getString("FilterAction.synchronization.dialog.message"), //$NON-NLS-1$
+					EMFCompareRCPUIMessages.getString("FilterAction.synchronization.dialog.toggle.message"));//$NON-NLS-1$
+
+			dialog.setPrefKey(FiltersPreferencePage.SYNCHRONIZATION_BEHAVIOR);
+			dialog.setPrefStore(new ScopedPreferenceStore(new InstanceScope(),
+					EMFCompareRCPUIPlugin.PLUGIN_ID));
+			if (dialog.open() == IDialogConstants.YES_ID) {
+				synchonizeFilters();
+			}
+		}
+
 	}
 }

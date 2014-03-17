@@ -53,17 +53,17 @@ public class DefaultMatchEngineConfiguratorUI extends AbstractConfigurationUI {
 		this.setLayout(rowLayout);
 		Label text = new Label(this, SWT.NONE);
 		text.setText(EMFCompareRCPUIMessages
-				.getString("DefaultMatchEngineConfiguratorUI.USE_IDENTIFER_LABEL")); //$NON-NLS-1$
+				.getString("DefaultMatchEngineConfiguratorUI.useIdentifier.label")); //$NON-NLS-1$
 		whenAvailableButton = new Button(this, SWT.RADIO);
 		whenAvailableButton.setText(EMFCompareRCPUIMessages
-				.getString("DefaultMatchEngineConfiguratorUI.WHEN_AVAILABLE_LABEL")); //$NON-NLS-1$
+				.getString("DefaultMatchEngineConfiguratorUI.whenAvailable.label")); //$NON-NLS-1$
 
 		onlyButton = new Button(this, SWT.RADIO);
-		onlyButton.setText(EMFCompareRCPUIMessages.getString("DefaultMatchEngineConfiguratorUI.ONLY_LABEL")); //$NON-NLS-1$
+		onlyButton.setText(EMFCompareRCPUIMessages.getString("DefaultMatchEngineConfiguratorUI.only.label")); //$NON-NLS-1$
 
 		neverButton = new Button(this, SWT.RADIO);
 		neverButton
-				.setText(EMFCompareRCPUIMessages.getString("DefaultMatchEngineConfiguratorUI.NEVER_LABEL")); //$NON-NLS-1$
+				.setText(EMFCompareRCPUIMessages.getString("DefaultMatchEngineConfiguratorUI.never.label")); //$NON-NLS-1$
 
 		UseIdentifiers defaultValue = DefaultRCPMatchEngineFactory.getUseIdentifierValue(getPreference());
 		dataHolder = new DataHolder(defaultValue);

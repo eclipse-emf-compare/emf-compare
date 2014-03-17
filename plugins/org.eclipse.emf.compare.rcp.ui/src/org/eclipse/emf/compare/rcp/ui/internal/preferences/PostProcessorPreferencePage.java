@@ -101,7 +101,7 @@ public class PostProcessorPreferencePage extends PreferencePage implements IWork
 		container.setLayout(new GridLayout(1, true));
 		Label introductionText = new Label(container, SWT.WRAP);
 		introductionText.setText(EMFCompareRCPUIMessages
-				.getString("PostProcessorPreferencePage.PREFERENCE_PAGE_DESCRIPTION")); //$NON-NLS-1$
+				.getString("PostProcessorPreferencePage.preferencePage.description")); //$NON-NLS-1$
 
 		IItemRegistry<IPostProcessor.Descriptor> postProcessorRegistryDescriptor = EMFCompareRCPPlugin
 				.getDefault().getPostProcessorDescriptorRegistry();

@@ -32,6 +32,7 @@ import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemUtil;
 import org.eclipse.emf.compare.rcp.internal.tracer.TracingConstant;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.osgi.service.prefs.Preferences;
 
 /**

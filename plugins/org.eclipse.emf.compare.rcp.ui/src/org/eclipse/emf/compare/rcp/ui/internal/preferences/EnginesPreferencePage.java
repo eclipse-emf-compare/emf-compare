@@ -164,8 +164,8 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 				.getDefault().getConflictDetectorDescriptorRegistry();
 		// Create tab structure
 		Composite tabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
-				.getString("EnginesPreferencePage.CONFLICT_DETECTOR_TAB_LABEL"),//$NON-NLS-1$
-				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.CONFLICT_DETECTOR_INTRO_TEXT"));//$NON-NLS-1$
+				.getString("EnginesPreferencePage.conflictDetector.tab.label"),//$NON-NLS-1$
+				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.conflictDetectorIntro.text"));//$NON-NLS-1$
 
 		InteractiveUIContent interactiveContent = createEngineUIBuilder(conflictDetectorDescriptorRegistry,
 				EMFComparePreferences.CONFLICTS_DETECTOR, EMFCompareRCPPlugin.getDefault()
@@ -185,8 +185,8 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 				.getReqEngineDescriptorRegistry();
 		// Create tab structure
 		Composite tabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
-				.getString("EnginesPreferencePage.REQUIREMENT_ENGINE_TAB_LABEL"), //$NON-NLS-1$
-				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.REQ_ENGINE_INTRO_TEXT")); //$NON-NLS-1$
+				.getString("EnginesPreferencePage.requirementEngine.tab.label"), //$NON-NLS-1$
+				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.reqEngineIntro.text")); //$NON-NLS-1$
 
 		InteractiveUIContent interactiveContent = createEngineUIBuilder(reqEngineDescriptorRegistry,
 				EMFComparePreferences.REQ_ENGINES, EMFCompareRCPPlugin.getDefault()
@@ -206,8 +206,8 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 				.getEquiEngineDescriptorRegistry();
 		// Create tab structure
 		Composite tabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
-				.getString("EnginesPreferencePage.EQUIVALENCES_ENGINE_TAB_LABEL"), //$NON-NLS-1$
-				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.EQUI_ENGINE_INTRO_TEXT")); //$NON-NLS-1$
+				.getString("EnginesPreferencePage.equivalenceEngine.tab.label"), //$NON-NLS-1$
+				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.equiEngineIntro.text")); //$NON-NLS-1$
 
 		InteractiveUIContent interactiveContent = createEngineUIBuilder(equiEngineDescriptorRegistry,
 				EMFComparePreferences.EQUI_ENGINES, EMFCompareRCPPlugin.getDefault()
@@ -227,8 +227,8 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 				.getDiffEngineDescriptorRegistry();
 		// Create tab structure
 		Composite tabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
-				.getString("EnginesPreferencePage.DIFFERENCES_ENGINE_TAB_LABEL"), EMFCompareRCPUIMessages //$NON-NLS-1$
-				.getString("EnginesPreferencePage.DIFF_ENGINE_INTRO_TEXT")); //$NON-NLS-1$
+				.getString("EnginesPreferencePage.differenceEngine.tab.label"), EMFCompareRCPUIMessages //$NON-NLS-1$
+				.getString("EnginesPreferencePage.diffEngineIntro.text")); //$NON-NLS-1$
 
 		InteractiveUIContent interactiveContent = createEngineUIBuilder(diffEngineDescriptorRegistry,
 				EMFComparePreferences.DIFF_ENGINES, EMFCompareRCPPlugin.getDefault()
@@ -250,8 +250,8 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		IItemDescriptor<Factory> defaultMatchEngineDescriptor = matchEngineFactoryDescriptorRegistry
 				.getItemDescriptor(DefaultRCPMatchEngineFactory.class.getCanonicalName());
 		Composite tabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
-				.getString("EnginesPreferencePage.MATCH_ENGINE_TAB_LABEL"), EMFCompareRCPUIMessages //$NON-NLS-1$
-				.getString("EnginesPreferencePage.MATCH_ENGINE_INTRO_TEXT")); //$NON-NLS-1$
+				.getString("EnginesPreferencePage.matchEngine.tab.label"), EMFCompareRCPUIMessages //$NON-NLS-1$
+				.getString("EnginesPreferencePage.matchEngineIntro.text")); //$NON-NLS-1$
 
 		Map<String, IConfigurationUIFactory> configuratorUIRegistry = EMFCompareRCPUIPlugin.getDefault()
 				.getMatchEngineConfiguratorRegistry();

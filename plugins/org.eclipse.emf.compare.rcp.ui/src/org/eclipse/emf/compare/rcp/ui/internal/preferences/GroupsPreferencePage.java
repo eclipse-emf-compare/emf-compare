@@ -89,8 +89,8 @@ public class GroupsPreferencePage extends PreferencePage implements IWorkbenchPr
 	 */
 	private void fillTwoWayComparisonTab(TabFolder tabFolder) {
 		Composite tabSkeletonComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
-				.getString("GroupsPreferencePage.TWO_WAY_COMPARISON_TAB_LABEL"), //$NON-NLS-1$
-				EMFCompareRCPUIMessages.getString("GroupsPreferencePage.VIEWER_DESCRIPTION_LABEL")); //$NON-NLS-1$
+				.getString("GroupsPreferencePage.twoWayComparisonTab.label"), //$NON-NLS-1$
+				EMFCompareRCPUIMessages.getString("GroupsPreferencePage.viewerDescription.label")); //$NON-NLS-1$
 
 		List<IItemDescriptor<Descriptor>> currentGroupRanking = groupManager.getCurrentGroupRanking(false);
 
@@ -106,8 +106,8 @@ public class GroupsPreferencePage extends PreferencePage implements IWorkbenchPr
 	 */
 	private void fillThreeWayComparisonTab(TabFolder tabFolder) {
 		Composite tabSkeletonComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
-				.getString("GroupsPreferencePage.THREE_WAY_COMPARISON_TAB_LABEL"), //$NON-NLS-1$
-				EMFCompareRCPUIMessages.getString("GroupsPreferencePage.VIEWER_DESCRIPTION_LABEL")); //$NON-NLS-1$
+				.getString("GroupsPreferencePage.threeWayComparisonTab.label"), //$NON-NLS-1$
+				EMFCompareRCPUIMessages.getString("GroupsPreferencePage.viewerDescription.label")); //$NON-NLS-1$
 
 		List<IItemDescriptor<Descriptor>> currentGroupRanking = groupManager.getCurrentGroupRanking(true);
 		threeWayComparisonContent = createInteractiveContent(tabSkeletonComposite, currentGroupRanking,
