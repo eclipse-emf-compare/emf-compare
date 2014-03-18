@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
@@ -37,6 +39,7 @@ import org.eclipse.emf.compare.ide.utils.StorageTraversal;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class IdenticalResourceMinimizer implements IModelMinimizer {
+
 	/**
 	 * {@inheritDoc} Specifically, we'll remove all resources that can be seen as binary identical (we match
 	 * resources through exact equality of their names) or unmatched and read-only.
@@ -73,8 +76,8 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 				leftTraversal.removeStorage(left);
 				rightTraversal.removeStorage(right);
 			} else if (right == null) {
-				// This file has no match. remove it if read only
-				if (left.isReadOnly()) {
+				// This file has no match. remove it if read only and not in workspace.
+				if (left.isReadOnly() && !isInWorkspace(left)) {
 					leftTraversal.getStorages().remove(left);
 				}
 			}
@@ -83,8 +86,8 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 
 		subMonitor = progess.newChild(1).setWorkRemaining(rightCopy.size());
 		for (IStorage right : rightCopy) {
-			// These have no match on left. Remove if read only
-			if (right.isReadOnly()) {
+			// These have no match on left. Remove if read only and not in workspace.
+			if (right.isReadOnly() && !isInWorkspace(right)) {
 				rightTraversal.removeStorage(right);
 			}
 			subMonitor.worked(1);
@@ -92,8 +95,8 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 
 		subMonitor = progess.newChild(1).setWorkRemaining(rightCopy.size());
 		for (IStorage origin : originCopy) {
-			// These have no match on left and right. Remove if read only
-			if (origin.isReadOnly()) {
+			// These have no match on left and right. Remove if read only and not in workspace.
+			if (origin.isReadOnly() && !isInWorkspace(origin)) {
 				originTraversal.removeStorage(origin);
 			}
 			subMonitor.worked(1);
@@ -162,5 +165,18 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Check if the given IStrorage exists in the workspace or not.
+	 * 
+	 * @return true, if the given IStorage exists in the workspace, false otherwise.
+	 */
+	boolean isInWorkspace(IStorage storage) {
+		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		if (root != null) {
+			return root.getFile(storage.getFullPath()).isAccessible();
+		}
+		return false;
 	}
 }

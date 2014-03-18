@@ -34,8 +34,11 @@ import org.eclipse.compare.CompareViewerPane;
 import org.eclipse.compare.CompareViewerSwitchingPane;
 import org.eclipse.compare.INavigatable;
 import org.eclipse.compare.ITypedElement;
+import org.eclipse.compare.ResourceNode;
+import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -70,6 +73,7 @@ import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressMonitorWrappe
 import org.eclipse.emf.compare.ide.ui.internal.util.CompareHandlerService;
 import org.eclipse.emf.compare.ide.ui.internal.util.ExceptionUtil;
 import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
+import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
@@ -196,6 +200,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	private EMFCompareColor fColors;
 
+	private Composite parent;
+
 	/**
 	 * Constructor.
 	 * 
@@ -206,6 +212,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 */
 	public EMFCompareStructureMergeViewer(Composite parent, EMFCompareConfiguration config) {
 		super(parent, config);
+
+		this.parent = parent;
 
 		updateLayout(true, false);
 
@@ -228,7 +236,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		toolBar = new CompareToolBar(structureMergeViewerGrouper, structureMergeViewerFilter,
 				getCompareConfiguration());
 		getViewer().addSelectionChangedListener(toolBar);
-		toolBar.initToolbar(CompareViewerPane.getToolBarManager(parent), getViewer(), navigatable);
 
 		selectionChangeListener = new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -272,6 +279,19 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		inputChangedTask.setPriority(Job.LONG);
 
 		config.getEventBus().register(this);
+	}
+
+	/**
+	 * The tool bar must be init after we know the editable state of left and right input.
+	 * 
+	 * @see #compareInputChanged(ICompareInput, IProgressMonitor)
+	 */
+	private void initToolbar() {
+		SWTUtil.safeAsyncExec(new Runnable() {
+			public void run() {
+				toolBar.initToolbar(CompareViewerPane.getToolBarManager(parent), getViewer(), navigatable);
+			}
+		});
 	}
 
 	/**
@@ -437,8 +457,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	@Subscribe
 	public void mergePreviewModeChange(@SuppressWarnings("unused") IMergePreviewModeChange event) {
-		dependencyData.updateDependencies(getSelection());
-		internalRedraw();
+		SWTUtil.safeAsyncExec(new Runnable() {
+			public void run() {
+				dependencyData.updateDependencies(getSelection());
+				internalRedraw();
+			}
+		});
 	}
 
 	@Subscribe
@@ -632,9 +656,11 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			if (input instanceof CompareInputAdapter) {
 				resourcesShouldBeUnload = false;
 				compareInputChanged((CompareInputAdapter)input, monitor);
+				initToolbar();
 			} else if (input instanceof ComparisonScopeInput) {
 				resourcesShouldBeUnload = false;
 				compareInputChanged((ComparisonScopeInput)input, monitor);
+				initToolbar();
 			} else {
 				resourcesShouldBeUnload = true;
 				SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
@@ -643,12 +669,45 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				final ITypedElement right = input.getRight();
 				final ITypedElement origin = input.getAncestor();
 
+				final boolean leftEditable;
+				final boolean rightEditable;
+
+				EMFCompareConfiguration compareConfiguration = getCompareConfiguration();
+				/**
+				 * A resource node means that the left ITypedElement is in the workspace, a DiffNode input
+				 * means the comparison has been launched from a Replace With action.
+				 */
+				if (left instanceof ResourceNode && !(input instanceof DiffNode)) {
+					IResource resource = ((ResourceNode)left).getResource();
+					leftEditable = !resource.getResourceAttributes().isReadOnly();
+				} else {
+					leftEditable = compareConfiguration.isLeftEditable();
+				}
+
+				if (right instanceof ResourceNode) {
+					IResource resource = ((ResourceNode)right).getResource();
+					rightEditable = !resource.getResourceAttributes().isReadOnly();
+				} else {
+					rightEditable = compareConfiguration.isRightEditable();
+				}
+
+				compareConfiguration.setLeftEditable(leftEditable);
+				compareConfiguration.setRightEditable(rightEditable);
+
+				if (leftEditable && rightEditable) {
+					compareConfiguration.setMergePreviewMode(MergeMode.RIGHT_TO_LEFT);
+				} else {
+					compareConfiguration.setMergePreviewMode(MergeMode.ACCEPT);
+				}
+
+				initToolbar();
+
 				IComparisonScope scope = null;
 				try {
-					scope = ComparisonScopeBuilder.create(getCompareConfiguration().getContainer(), left,
-							right, origin, subMonitor.newChild(85));
+					scope = ComparisonScopeBuilder.create(compareConfiguration.getContainer(), left, right,
+							origin, subMonitor.newChild(85));
 				} catch (Exception e) {
-					ExceptionUtil.handleException(e, getCompareConfiguration(), true);
+					ExceptionUtil.handleException(e, compareConfiguration, true);
 					return;
 				}
 
@@ -668,7 +727,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 				ICompareEditingDomain editingDomain = EMFCompareEditingDomain.create(leftResourceSet,
 						rightResourceSet, originResourceSet);
-				getCompareConfiguration().setEditingDomain(editingDomain);
+				compareConfiguration.setEditingDomain(editingDomain);
 
 				compareInputChanged(scope, compareResult);
 			}
