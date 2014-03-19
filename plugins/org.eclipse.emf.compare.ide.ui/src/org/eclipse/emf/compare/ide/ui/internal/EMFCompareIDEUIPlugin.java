@@ -19,8 +19,10 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.ide.ui.internal.editor.PropertySheetAdapterFactory;
 import org.eclipse.emf.compare.ide.ui.internal.logical.IModelResolverRegistry;
+import org.eclipse.emf.compare.ide.ui.internal.logical.ModelResolverManager;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ModelResolverRegistryImpl;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ModelResolverRegistryListener;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
@@ -50,6 +52,9 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	/** Registry of model resolvers. */
 	private IModelResolverRegistry modelResolverRegistry;
 
+	/** Manager of resolver. */
+	private ModelResolverManager modelResolverManager;
+
 	/** keep track of resources that should be freed when exiting. */
 	private static Map<String, Image> resourcesMapper = new HashMap<String, Image>();
 
@@ -57,6 +62,17 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	public EMFCompareIDEUIPlugin() {
 		// Empty constructor
 	}
+
+	/**
+	 * Instance scope for preferences.
+	 * <p>
+	 * Do not use singleton to respect Helios compatibility
+	 * </p>
+	 * 
+	 * @see org.eclipse.core.runtime.preferences.InstanceScope#INSTANCE
+	 */
+	@SuppressWarnings("deprecation")
+	private InstanceScope instanceScope = new InstanceScope();
 
 	/**
 	 * {@inheritDoc}
@@ -69,9 +85,10 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		plugin = this;
 
 		final IExtensionRegistry globalRegistry = Platform.getExtensionRegistry();
-		modelResolverRegistry = new ModelResolverRegistryImpl();
+		modelResolverManager = new ModelResolverManager(instanceScope.getNode(PLUGIN_ID));
+		modelResolverRegistry = new ModelResolverRegistryImpl(modelResolverManager);
 		modelResolverRegistryListener = new ModelResolverRegistryListener(PLUGIN_ID, MODEL_RESOLVER_PPID,
-				getLog(), modelResolverRegistry);
+				getLog(), modelResolverManager);
 		globalRegistry.addListener(modelResolverRegistryListener);
 		modelResolverRegistryListener.readRegistry(globalRegistry);
 
@@ -88,7 +105,7 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		final IExtensionRegistry globalRegistry = Platform.getExtensionRegistry();
 		globalRegistry.removeListener(modelResolverRegistryListener);
 		modelResolverRegistry.clear();
-
+		modelResolverManager = null;
 		plugin = null;
 		super.stop(context);
 	}
@@ -176,4 +193,18 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	public void log(Throwable e) {
 		getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, e.getMessage(), e));
 	}
+
+	/**
+	 * Log the given message with the give severity level. Severity is one of {@link IStatus#INFO},
+	 * {@link IStatus#WARNING} and {@link IStatus#ERROR}.
+	 * 
+	 * @param severity
+	 *            the severity of the message
+	 * @param message
+	 *            the message
+	 */
+	public void log(int severity, String message) {
+		getLog().log(new Status(severity, PLUGIN_ID, message));
+	}
+
 }

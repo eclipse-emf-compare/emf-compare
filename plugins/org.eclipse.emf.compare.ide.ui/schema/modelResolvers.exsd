@@ -66,6 +66,20 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="label" type="string">
+            <annotation>
+               <documentation>
+                  A human readable label. This will be used in the EMF Compare UI.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="description" type="string">
+            <annotation>
+               <documentation>
+                  A human readable description of this resolver. This will be used in the EMF Compare UI.
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

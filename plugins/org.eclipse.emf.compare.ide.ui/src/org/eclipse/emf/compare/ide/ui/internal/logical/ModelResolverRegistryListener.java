@@ -25,17 +25,24 @@ import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ModelResolverRegistryListener extends AbstractRegistryEventListener {
+
 	/** The "resolver" tag of our extension point. */
 	private static final String TAG_RESOLVER = "resolver"; //$NON-NLS-1$
 
 	/** The "class" attribute of our resolver tag. */
 	private static final String ATTRIBUTE_CLASS = "class"; //$NON-NLS-1$
 
+	/** Optional label attribute of our resolver tag. */
+	private static final String ATTRIBUTE_LABEL = "label"; //$NON-NLS-1$
+
+	/** Optional label attribute of our resolver tag. */
+	private static final String ATTRIBUTE_DESCRIPTION = "description"; //$NON-NLS-1$
+
 	/** The "ranking" attribute of our resolver tag. */
 	private static final String ATTRIBUTE_RANKING = "ranking"; //$NON-NLS-1$
 
 	/** The actual registry this listener will alter. */
-	private final IModelResolverRegistry registry;
+	private final ModelResolverManager registry;
 
 	/**
 	 * Initialize a registry event listener for our model resolvers.
@@ -50,7 +57,7 @@ public class ModelResolverRegistryListener extends AbstractRegistryEventListener
 	 *            The actual store of model resolvers this registry will alter.
 	 */
 	public ModelResolverRegistryListener(String pluginID, String extensionPointID, ILog log,
-			IModelResolverRegistry registry) {
+			ModelResolverManager registry) {
 		super(pluginID, extensionPointID, log);
 		this.registry = registry;
 	}
@@ -87,7 +94,8 @@ public class ModelResolverRegistryListener extends AbstractRegistryEventListener
 
 			resolver.initialize();
 
-			registry.addResolver(className, resolver);
+			registry.add(resolver, className, element.getAttribute(ATTRIBUTE_LABEL), element
+					.getAttribute(ATTRIBUTE_DESCRIPTION));
 			return true;
 		}
 		return false;
@@ -101,8 +109,9 @@ public class ModelResolverRegistryListener extends AbstractRegistryEventListener
 	@Override
 	protected boolean removedValid(IConfigurationElement element) {
 		final String className = element.getAttribute(ATTRIBUTE_CLASS);
-		IModelResolver resolver = registry.removeResolver(className);
-		if (resolver != null) {
+		ModelResolverDescriptor resolverDescriptor = registry.remove(className);
+		if (resolverDescriptor != null) {
+			IModelResolver resolver = resolverDescriptor.getModelResolver();
 			resolver.dispose();
 		}
 		return true;

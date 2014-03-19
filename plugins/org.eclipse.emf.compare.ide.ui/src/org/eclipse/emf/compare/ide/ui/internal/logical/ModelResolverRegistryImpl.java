@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,28 +10,34 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 
 /**
- * This registry will be used to keep track of all {@link IModelResolver}s that have been registered against
- * the extension point. Clients can query the registry to determine which resolver should be used for a given
- * resource.
+ * This registry implement its own strategy to define the "best" resolver to use.
+ * <p>
+ * This registry is based on {@link ModelResolverManager}. If the resolving mechanism is disabled then it
+ * always returns a resolver that does not resolve anything else than the current resource.
+ * </p>
+ * <p>
+ * This registry will also try to evaluate the {@link ModelResolverManager#getUserSelectedResolver()} before
+ * any other. If the user selected resolver can not handle the comparison or if the user did not select a specific resolver then
+ * the ranking mechanism is used.
+ * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class ModelResolverRegistryImpl implements IModelResolverRegistry {
+
 	/** Keeps track of the extensions providing model resolvers. */
-	private final Map<String, IModelResolver> resolvers;
+	private final ModelResolverManager resolverManager;
+
+	private final NotResolvingModelResolver noResolvingResolver;
 
 	/** Initializes our registry. */
-	public ModelResolverRegistryImpl() {
-		this.resolvers = new ConcurrentHashMap<String, IModelResolver>();
+	public ModelResolverRegistryImpl(ModelResolverManager resolvers) {
+		this.resolverManager = resolvers;
+		noResolvingResolver = new NotResolvingModelResolver();
 	}
 
 	/**
@@ -40,13 +46,24 @@ public final class ModelResolverRegistryImpl implements IModelResolverRegistry {
 	 * @see org.eclipse.emf.compare.ide.ui.internal.logical.IModelResolverRegistry#getBestResolverFor(org.eclipse.core.resources.IStorage)
 	 */
 	public IModelResolver getBestResolverFor(IStorage sourceStorage) {
-		IModelResolver resolver = null;
-		for (IModelResolver candidate : resolvers.values()) {
-			if (candidate.canResolve(sourceStorage) && ranking(resolver) < ranking(candidate)) {
-				resolver = candidate;
+		if (!resolverManager.isResolvingEnable()) {
+			return noResolvingResolver;
+		}
+		ModelResolverDescriptor resolver = resolverManager.getUserSelectedResolver();
+
+		if (resolver == null || !resolver.getModelResolver().canResolve(sourceStorage)) {
+			for (ModelResolverDescriptor candidateDescriptor : resolverManager.getAllResolver()) {
+				IModelResolver candidate = candidateDescriptor.getModelResolver();
+				if (candidate.canResolve(sourceStorage) && ranking(resolver) < ranking(candidateDescriptor)) {
+					resolver = candidateDescriptor;
+				}
 			}
 		}
-		return resolver;
+
+		if (resolver != null) {
+			return resolver.getModelResolver();
+		}
+		return null;
 	}
 
 	/**
@@ -56,11 +73,11 @@ public final class ModelResolverRegistryImpl implements IModelResolverRegistry {
 	 *            The resolver we need a ranking for.
 	 * @return Ranking of the given resolver, <code>-1</code> if that resolver is <code>null</code>.
 	 */
-	private static final int ranking(IModelResolver resolver) {
+	private static final int ranking(ModelResolverDescriptor resolver) {
 		if (resolver == null) {
 			return -1;
 		}
-		return resolver.getRanking();
+		return resolver.getModelResolver().getRanking();
 	}
 
 	/**
@@ -70,7 +87,7 @@ public final class ModelResolverRegistryImpl implements IModelResolverRegistry {
 	 *      org.eclipse.emf.compare.ide.ui.logical.IModelResolver)
 	 */
 	public void addResolver(String key, IModelResolver resolver) {
-		resolvers.put(checkNotNull(key), checkNotNull(resolver));
+		resolverManager.add(resolver, key, null, null);
 	}
 
 	/**
@@ -79,7 +96,11 @@ public final class ModelResolverRegistryImpl implements IModelResolverRegistry {
 	 * @see org.eclipse.emf.compare.ide.ui.internal.logical.IModelResolverRegistry#removeResolver(java.lang.String)
 	 */
 	public IModelResolver removeResolver(String key) {
-		return resolvers.remove(key);
+		ModelResolverDescriptor descriptor = resolverManager.remove(key);
+		if (descriptor != null) {
+			return descriptor.getModelResolver();
+		}
+		return null;
 	}
 
 	/**
@@ -88,6 +109,7 @@ public final class ModelResolverRegistryImpl implements IModelResolverRegistry {
 	 * @see org.eclipse.emf.compare.ide.ui.internal.logical.IModelResolverRegistry#clear()
 	 */
 	public void clear() {
-		resolvers.clear();
+		noResolvingResolver.dispose();
+		resolverManager.clear();
 	}
 }

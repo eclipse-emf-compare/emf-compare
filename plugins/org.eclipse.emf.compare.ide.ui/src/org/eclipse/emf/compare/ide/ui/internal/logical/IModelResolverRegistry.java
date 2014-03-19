@@ -21,13 +21,15 @@ import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
  */
 public interface IModelResolverRegistry {
 	/**
-	 * This can be called to retrieve the best model resolver for the given IStorage. "Best", here, means the
-	 * highest ranking IModelResolver
+	 * Returns a {@link IModelResolver} that handles the given IStorage.
+	 * <p>
+	 * "Best" is defined by the implementor of this class. The implementor choose one strategy to define which
+	 * resolver is best
+	 * </p>
 	 * 
 	 * @param sourceStorage
-	 *            The storage we're trying to resolve the logical model of.
-	 * @return The highest ranking resolver that is capable of resolving the logical model of the given
-	 *         storage.
+	 *            Source of the comparison
+	 * @return a {@link IModelResolver} that is able to handle the IStorage.
 	 */
 	IModelResolver getBestResolverFor(IStorage sourceStorage);
 
