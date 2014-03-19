@@ -233,8 +233,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		navigatable = new Navigatable(getViewer());
 
-		toolBar = new CompareToolBar(structureMergeViewerGrouper, structureMergeViewerFilter,
-				getCompareConfiguration());
+		toolBar = new CompareToolBar(CompareViewerPane.getToolBarManager(parent),
+				structureMergeViewerGrouper, structureMergeViewerFilter, getCompareConfiguration());
 		getViewer().addSelectionChangedListener(toolBar);
 
 		selectionChangeListener = new ISelectionChangedListener() {
@@ -288,8 +288,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 */
 	private void initToolbar() {
 		SWTUtil.safeAsyncExec(new Runnable() {
+
 			public void run() {
-				toolBar.initToolbar(CompareViewerPane.getToolBarManager(parent), getViewer(), navigatable);
+				toolBar.initToolbar(getViewer(), navigatable);
 			}
 		});
 	}
@@ -488,6 +489,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		if (oldInput instanceof ICompareInput) {
 			ICompareInput old = (ICompareInput)oldInput;
 			old.removeCompareInputChangeListener(fCompareInputChangeListener);
+			toolBar.dispose();
 		}
 		if (input instanceof ICompareInput) {
 			ICompareInput ci = (ICompareInput)input;

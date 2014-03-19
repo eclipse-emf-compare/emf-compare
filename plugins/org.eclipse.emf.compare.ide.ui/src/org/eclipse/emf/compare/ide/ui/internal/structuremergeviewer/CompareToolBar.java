@@ -67,11 +67,14 @@ public class CompareToolBar implements ISelectionChangedListener {
 
 	private final EMFCompareConfiguration compareConfiguration;
 
+	private final ToolBarManager toolbarManager;
+
 	/**
 	 * 
 	 */
-	public CompareToolBar(StructureMergeViewerGrouper viewerGrouper, StructureMergeViewerFilter viewerFilter,
-			EMFCompareConfiguration compareConfiguration) {
+	public CompareToolBar(ToolBarManager toolbarManager, StructureMergeViewerGrouper viewerGrouper,
+			StructureMergeViewerFilter viewerFilter, EMFCompareConfiguration compareConfiguration) {
+		this.toolbarManager = toolbarManager;
 		this.compareConfiguration = compareConfiguration;
 		mergeActions = newArrayListWithCapacity(2);
 		mergeAllNonConflictingActions = newArrayListWithCapacity(2);
@@ -83,7 +86,7 @@ public class CompareToolBar implements ISelectionChangedListener {
 				.getDifferenceFilterRegistry());
 	}
 
-	public final void initToolbar(ToolBarManager toolbarManager, AbstractTreeViewer viewer, INavigatable nav) {
+	public final void initToolbar(AbstractTreeViewer viewer, INavigatable nav) {
 		compareConfiguration.getEventBus().register(this);
 
 		// Add extension point contributions to the structure merge viewer toolbar
@@ -151,6 +154,7 @@ public class CompareToolBar implements ISelectionChangedListener {
 	}
 
 	public void dispose() {
+		toolbarManager.removeAll();
 		compareConfiguration.getEventBus().unregister(this);
 	}
 
