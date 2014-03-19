@@ -105,12 +105,14 @@ public class CompareToolBar implements ISelectionChangedListener {
 			modes = EnumSet.of(MergeMode.ACCEPT, MergeMode.REJECT);
 		}
 
-		toolbarManager.add(new DropDownMergeMenuAction(compareConfiguration, modes));
-		for (MergeMode mode : modes) {
-			toolbarManager.add(createMergeAction(mode, compareConfiguration, nav));
-		}
-		for (MergeMode mode : modes) {
-			toolbarManager.add(createMergeAllNonConflictingAction(mode, compareConfiguration));
+		if (rightEditable || leftEditable) {
+			toolbarManager.add(new DropDownMergeMenuAction(compareConfiguration, modes));
+			for (MergeMode mode : modes) {
+				toolbarManager.add(createMergeAction(mode, compareConfiguration, nav));
+			}
+			for (MergeMode mode : modes) {
+				toolbarManager.add(createMergeAllNonConflictingAction(mode, compareConfiguration));
+			}
 		}
 
 		toolbarManager.add(new Separator());

@@ -64,18 +64,20 @@ public class DependencyData {
 	 * @param selection
 	 */
 	public void updateDependencies(ISelection selection) {
-		Iterable<Diff> selectedDiffs = filter(getSelectedComparisonObjects(selection), Diff.class);
-
-		MergeMode mergePreviewMode = compareConfiguration.getMergePreviewMode();
 		boolean leftEditable = compareConfiguration.isLeftEditable();
 		boolean rightEditable = compareConfiguration.isRightEditable();
-		boolean leftToRigh = mergePreviewMode.isLeftToRight(leftEditable, rightEditable);
+		if (leftEditable || rightEditable) {
+			Iterable<Diff> selectedDiffs = filter(getSelectedComparisonObjects(selection), Diff.class);
 
-		requires = newHashSet();
-		unmergeables = newHashSet();
-		for (Diff diff : selectedDiffs) {
-			addAll(requires, DiffUtil.getRequires(diff, leftToRigh));
-			addAll(unmergeables, DiffUtil.getUnmergeables(diff, leftToRigh));
+			MergeMode mergePreviewMode = compareConfiguration.getMergePreviewMode();
+			boolean leftToRigh = mergePreviewMode.isLeftToRight(leftEditable, rightEditable);
+
+			requires = newHashSet();
+			unmergeables = newHashSet();
+			for (Diff diff : selectedDiffs) {
+				addAll(requires, DiffUtil.getRequires(diff, leftToRigh));
+				addAll(unmergeables, DiffUtil.getUnmergeables(diff, leftToRigh));
+			}
 		}
 	}
 
