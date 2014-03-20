@@ -1,13 +1,13 @@
-target "EMF Compare based on Luna M6" with source, requirements
+target "EMF Compare based on Luna M6" 
+
+with source, requirements
 
 location "http://download.eclipse.org/releases/luna" {
-	
 	org.eclipse.sdk.ide
 	org.eclipse.emf.feature.group
 	org.eclipse.emf.transaction.feature.group
 	org.eclipse.gmf.feature.group
 	org.eclipse.gmf.runtime.notation.feature.group
-	org.eclipse.emf.ecoretools.feature.group
 	org.eclipse.uml2.feature.group
 	org.eclipse.papyrus.infra.core.feature.feature.group
 	org.eclipse.papyrus.infra.emf.feature.feature.group

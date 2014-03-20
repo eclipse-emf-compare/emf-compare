@@ -24,9 +24,6 @@
    <feature id="org.eclipse.emf.compare.diagram.gmf" version="0.0.0">
       <category name="compare_integration"/>
    </feature>
-   <feature id="org.eclipse.emf.compare.diagram.ecoretools" version="0.0.0">
-      <category name="compare_integration"/>
-   </feature>
    <feature id="org.eclipse.emf.compare.diagram.papyrus" version="0.0.0">
       <category name="compare_integration"/>
    </feature>

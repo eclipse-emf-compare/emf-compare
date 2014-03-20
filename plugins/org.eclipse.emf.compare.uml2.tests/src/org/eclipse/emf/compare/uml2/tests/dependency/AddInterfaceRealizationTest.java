@@ -2,13 +2,15 @@ package org.eclipse.emf.compare.uml2.tests.dependency;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -20,8 +22,8 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
-import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.dependency.data.DependencyInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
@@ -82,14 +84,14 @@ public class AddInterfaceRealizationTest extends AbstractUMLTest {
 	private void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
-		// We should have no less and no more than 6 differences
-		assertSame(Integer.valueOf(6), Integer.valueOf(differences.size()));
+		// We should have no less and no more than 5 differences
+		// Was 6 with UML 4.0 but NamedElement::clientDependency has been made derived in UML 5.0
+		assertEquals(5, differences.size());
 
 		Predicate<? super Diff> addInterfaceRealizationDescription = null;
 		Predicate<? super Diff> addClientInInterfaceRealizationDescription = null;
 		Predicate<? super Diff> addSupplierInInterfaceRealizationDescription = null;
 		Predicate<? super Diff> addContractInInterfaceRealizationDescription = null;
-		Predicate<? super Diff> addClientDependencyInClass0Description = null;
 
 		if (kind.equals(TestKind.DELETE)) {
 			//addInterfaceRealizationDescription = removed("model.Class0.InterfaceRealization0"); //$NON-NLS-1$
@@ -101,8 +103,6 @@ public class AddInterfaceRealizationTest extends AbstractUMLTest {
 					"model.Class0.InterfaceRealization0", "supplier", "model.Interface0");
 			addContractInInterfaceRealizationDescription = changedReference(
 					"model.Class0.InterfaceRealization0", "contract", "model.Interface0", null);
-			addClientDependencyInClass0Description = removedFromReference("model.Class0", "clientDependency",
-					"model.Class0.InterfaceRealization0");
 		} else {
 			//addInterfaceRealizationDescription = added("model.Class0.InterfaceRealization0"); //$NON-NLS-1$
 			addInterfaceRealizationDescription = addedToReference(
@@ -113,8 +113,6 @@ public class AddInterfaceRealizationTest extends AbstractUMLTest {
 					"model.Class0.InterfaceRealization0", "supplier", "model.Interface0");
 			addContractInInterfaceRealizationDescription = changedReference(
 					"model.Class0.InterfaceRealization0", "contract", null, "model.Interface0");
-			addClientDependencyInClass0Description = addedToReference("model.Class0", "clientDependency",
-					"model.Class0.InterfaceRealization0");
 		}
 
 		final Diff addInterfaceRealization = Iterators.find(differences.iterator(),
@@ -125,14 +123,11 @@ public class AddInterfaceRealizationTest extends AbstractUMLTest {
 				addSupplierInInterfaceRealizationDescription);
 		final Diff addContractInInterfaceRealization = Iterators.find(differences.iterator(),
 				addContractInInterfaceRealizationDescription);
-		final Diff addClientDependencyInClass0 = Iterators.find(differences.iterator(),
-				addClientDependencyInClass0Description);
 
 		assertNotNull(addInterfaceRealization);
 		assertNotNull(addClientInInterfaceRealization);
 		assertNotNull(addSupplierInInterfaceRealization);
 		assertNotNull(addContractInInterfaceRealization);
-		assertNotNull(addClientDependencyInClass0);
 
 		// CHECK EXTENSION
 		assertSame(Integer.valueOf(1), count(differences, instanceOf(DirectedRelationshipChange.class)));
@@ -145,12 +140,11 @@ public class AddInterfaceRealizationTest extends AbstractUMLTest {
 					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLDependency);
-		assertSame(Integer.valueOf(5), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
+		assertSame(Integer.valueOf(4), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addInterfaceRealization));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addClientInInterfaceRealization));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addSupplierInInterfaceRealization));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addContractInInterfaceRealization));
-		assertTrue(addUMLDependency.getRefinedBy().contains(addClientDependencyInClass0));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
@@ -174,25 +168,18 @@ public class AddInterfaceRealizationTest extends AbstractUMLTest {
 			assertSame(Integer.valueOf(0), Integer.valueOf(addContractInInterfaceRealization.getRequires()
 					.size()));
 
-			assertSame(Integer.valueOf(4), Integer.valueOf(addInterfaceRealization.getRequires().size()));
+			assertSame(Integer.valueOf(3), Integer.valueOf(addInterfaceRealization.getRequires().size()));
 			assertTrue(addInterfaceRealization.getRequires().contains(addClientInInterfaceRealization));
 			assertTrue(addInterfaceRealization.getRequires().contains(addSupplierInInterfaceRealization));
 			assertTrue(addInterfaceRealization.getRequires().contains(addContractInInterfaceRealization));
-			assertTrue(addInterfaceRealization.getRequires().contains(addClientDependencyInClass0));
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
 		}
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getEquivalences().size()));
+		assertEquals(0, comparison.getEquivalences().size());
 
-		assertNotNull(addClientInInterfaceRealization.getEquivalence());
-		assertSame(Integer.valueOf(2), Integer.valueOf(addClientInInterfaceRealization.getEquivalence()
-				.getDifferences().size()));
-		assertTrue(addClientInInterfaceRealization.getEquivalence().getDifferences().contains(
-				addClientInInterfaceRealization));
-		assertTrue(addClientInInterfaceRealization.getEquivalence().getDifferences().contains(
-				addClientDependencyInClass0));
+		assertNull(addClientInInterfaceRealization.getEquivalence());
 
 		testIntersections(comparison);
 	}

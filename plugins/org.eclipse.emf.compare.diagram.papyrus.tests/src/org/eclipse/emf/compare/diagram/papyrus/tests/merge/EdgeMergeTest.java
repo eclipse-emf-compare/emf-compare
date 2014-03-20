@@ -92,7 +92,7 @@ public class EdgeMergeTest extends AbstractTest {
 	
 	private static final int A6_NODECHANGE1_NB = 26;
 	private static final int A6_NODECHANGES_NB = 2 * A6_NODECHANGE1_NB;
-	private static final int A6_DEPENDENCY_EDGE_CHANGE1_NB = 13;
+	private static final int A6_DEPENDENCY_EDGE_CHANGE1_NB = 12;
 	private static final int A6_DEPENDENCY_EDGE_CHANGES_NB = 11 * A6_DEPENDENCY_EDGE_CHANGE1_NB;
 	private static final int A6_ASSO_EDGE_CHANGE1_NB = 21;
 	private static final int A6_ASSO_EDGE_CHANGES_NB = 2 * A6_ASSO_EDGE_CHANGE1_NB;

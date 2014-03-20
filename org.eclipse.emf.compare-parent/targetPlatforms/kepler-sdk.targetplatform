@@ -1,4 +1,6 @@
-target "EMF Compare based on Kepler SDK" with requirements, source 
+target "EMF Compare based on Kepler SDK" 
+
+with requirements, source 
 
 location "http://download.eclipse.org/releases/kepler" {
 	org.eclipse.sdk.ide

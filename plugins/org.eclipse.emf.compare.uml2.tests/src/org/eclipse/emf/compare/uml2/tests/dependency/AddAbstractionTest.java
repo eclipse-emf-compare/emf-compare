@@ -2,14 +2,16 @@ package org.eclipse.emf.compare.uml2.tests.dependency;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -21,8 +23,8 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
-import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.dependency.data.DependencyInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
@@ -84,26 +86,22 @@ public class AddAbstractionTest extends AbstractUMLTest {
 	private void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
-		// We should have no less and no more than 5 differences
-		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
+		// We should have no less and no more than 4 differences
+		// Was 5 with UML 4.0 but NamedElement::clientDependency has been made derived in UML 5.0
+		assertEquals(4, differences.size());
 
 		Predicate<? super Diff> addAbstractionDescription = null;
-		Predicate<? super Diff> addRefAbstractionInClass1Description = null;
 		Predicate<? super Diff> addRefClass1InAbstractionDescription = null;
 		Predicate<? super Diff> addRefClass0InAbstractionDescription = null;
 
 		if (kind.equals(TestKind.DELETE)) {
 			addAbstractionDescription = removed("model.Abstraction0"); //$NON-NLS-1$
-			addRefAbstractionInClass1Description = removedFromReference("model.Class1", "clientDependency",
-					"model.Abstraction0");
 			addRefClass1InAbstractionDescription = removedFromReference("model.Abstraction0", "client",
 					"model.Class1");
 			addRefClass0InAbstractionDescription = removedFromReference("model.Abstraction0", "supplier",
 					"model.Class0");
 		} else {
 			addAbstractionDescription = added("model.Abstraction0"); //$NON-NLS-1$
-			addRefAbstractionInClass1Description = addedToReference("model.Class1", "clientDependency",
-					"model.Abstraction0");
 			addRefClass1InAbstractionDescription = addedToReference("model.Abstraction0", "client",
 					"model.Class1");
 			addRefClass0InAbstractionDescription = addedToReference("model.Abstraction0", "supplier",
@@ -111,15 +109,12 @@ public class AddAbstractionTest extends AbstractUMLTest {
 		}
 
 		final Diff addAbstraction = Iterators.find(differences.iterator(), addAbstractionDescription);
-		final Diff addRefAbstractionInClass1 = Iterators.find(differences.iterator(),
-				addRefAbstractionInClass1Description);
 		final Diff addRefClass1InAbstraction = Iterators.find(differences.iterator(),
 				addRefClass1InAbstractionDescription);
 		final Diff addRefClass0InAbstraction = Iterators.find(differences.iterator(),
 				addRefClass0InAbstractionDescription);
 
 		assertNotNull(addAbstraction);
-		assertNotNull(addRefAbstractionInClass1);
 		assertNotNull(addRefClass1InAbstraction);
 		assertNotNull(addRefClass0InAbstraction);
 
@@ -134,11 +129,10 @@ public class AddAbstractionTest extends AbstractUMLTest {
 					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLDependency);
-		assertSame(Integer.valueOf(4), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
+		assertSame(Integer.valueOf(3), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addRefClass1InAbstraction));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addRefClass0InAbstraction));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addAbstraction));
-		assertTrue(addUMLDependency.getRefinedBy().contains(addRefAbstractionInClass1));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
@@ -148,9 +142,6 @@ public class AddAbstractionTest extends AbstractUMLTest {
 			assertSame(Integer.valueOf(1), Integer.valueOf(addRefClass0InAbstraction.getRequires().size()));
 			assertTrue(addRefClass0InAbstraction.getRequires().contains(addAbstraction));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addRefAbstractionInClass1.getRequires().size()));
-			assertTrue(addRefAbstractionInClass1.getRequires().contains(addAbstraction));
-
 			assertSame(Integer.valueOf(0), Integer.valueOf(addAbstraction.getRequires().size()));
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
 		} else {
@@ -158,24 +149,16 @@ public class AddAbstractionTest extends AbstractUMLTest {
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addRefClass0InAbstraction.getRequires().size()));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefAbstractionInClass1.getRequires().size()));
-
-			assertSame(Integer.valueOf(3), Integer.valueOf(addAbstraction.getRequires().size()));
+			assertSame(Integer.valueOf(2), Integer.valueOf(addAbstraction.getRequires().size()));
 			assertTrue(addAbstraction.getRequires().contains(addRefClass1InAbstraction));
 			assertTrue(addAbstraction.getRequires().contains(addRefClass0InAbstraction));
-			assertTrue(addAbstraction.getRequires().contains(addRefAbstractionInClass1));
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
 		}
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getEquivalences().size()));
-
-		assertNotNull(addRefClass1InAbstraction.getEquivalence());
-		assertSame(Integer.valueOf(2), Integer.valueOf(addRefClass1InAbstraction.getEquivalence()
-				.getDifferences().size()));
-		assertTrue(addRefClass1InAbstraction.getEquivalence().getDifferences().contains(
-				addRefAbstractionInClass1));
+		assertEquals(0, comparison.getEquivalences().size());
+		assertNull(addRefClass1InAbstraction.getEquivalence());
 
 		testIntersections(comparison);
 
