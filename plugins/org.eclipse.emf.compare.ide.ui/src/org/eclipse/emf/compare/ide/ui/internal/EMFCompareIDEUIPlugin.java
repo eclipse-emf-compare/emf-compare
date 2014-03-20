@@ -207,4 +207,13 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		getLog().log(new Status(severity, PLUGIN_ID, message));
 	}
 
+	/**
+	 * Return the model resolver manager.
+	 * 
+	 * @return
+	 */
+	public ModelResolverManager getModelResolverManager() {
+		return modelResolverManager;
+	}
+
 }

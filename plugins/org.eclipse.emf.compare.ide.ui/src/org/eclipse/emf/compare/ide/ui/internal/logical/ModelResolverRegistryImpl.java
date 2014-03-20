@@ -46,7 +46,7 @@ public final class ModelResolverRegistryImpl implements IModelResolverRegistry {
 	 * @see org.eclipse.emf.compare.ide.ui.internal.logical.IModelResolverRegistry#getBestResolverFor(org.eclipse.core.resources.IStorage)
 	 */
 	public IModelResolver getBestResolverFor(IStorage sourceStorage) {
-		if (!resolverManager.isResolvingEnable()) {
+		if (!resolverManager.isResolutionEnable()) {
 			return noResolvingResolver;
 		}
 		ModelResolverDescriptor resolver = resolverManager.getUserSelectedResolver();

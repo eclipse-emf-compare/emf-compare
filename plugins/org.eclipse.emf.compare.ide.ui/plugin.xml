@@ -252,4 +252,13 @@
             ranking="1">
       </resolver>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.eclipse.emf.compare.rcp.ui.preferencePage.global"
+            class="org.eclipse.emf.compare.ide.ui.internal.preferences.ModelResolutionPreferencePage"
+            id="org.eclipse.emf.compare.ide.ui.preferencepage.resolvers"
+            name="Resolution strategy">
+      </page>
+   </extension>
 </plugin>

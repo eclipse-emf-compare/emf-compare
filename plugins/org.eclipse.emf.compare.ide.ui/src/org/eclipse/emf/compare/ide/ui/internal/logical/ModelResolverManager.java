@@ -139,7 +139,7 @@ public class ModelResolverManager {
 	 * 
 	 * @return True if the resolving mechanism is disabled.
 	 */
-	public boolean isResolvingEnable() {
+	public boolean isResolutionEnable() {
 		return Boolean.valueOf(preferenceStore.get(DISABLE_RESOLVING_PREF_KEY, Boolean.TRUE.toString()))
 				.booleanValue();
 	}
@@ -149,7 +149,7 @@ public class ModelResolverManager {
 	 * 
 	 * @param isEnabled
 	 */
-	public void setResolving(boolean isEnabled) {
+	public void setResolution(boolean isEnabled) {
 		if (isEnabled) {
 			preferenceStore.remove(DISABLE_RESOLVING_PREF_KEY);
 		} else {
