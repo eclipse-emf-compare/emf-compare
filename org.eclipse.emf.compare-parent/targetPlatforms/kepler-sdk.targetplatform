@@ -1,7 +1,6 @@
-target "EMF Compare based on Kepler SDK"
+target "EMF Compare based on Kepler SDK" with requirements, source 
 
 location "http://download.eclipse.org/releases/kepler" {
-	with source, requirements
 	org.eclipse.sdk.ide
 	org.eclipse.emf.sdk.feature.group
 	org.eclipse.emf.ecoretools.sdk.feature.group
@@ -16,9 +15,8 @@ location "http://download.eclipse.org/releases/helios" {
 }
 
 location "http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/" {
-	with requirements, source 
-	com.google.guava;version="[11.0.0,12.0.0)"
-	com.google.guava.^source;version="[11.0.0,12.0.0)"
+	com.google.guava;version=[11.0.0,12.0.0)
+	com.google.guava.^source;version=[11.0.0,12.0.0)
 	org.apache.commons.logging
 	/* Egit/Jgit */
 	javaewah
@@ -28,7 +26,6 @@ location "http://download.eclipse.org/tools/orbit/downloads/drops/R2013051711141
 }
 
 location "http://download.eclipse.org/emf-store/milestones/archive/0.9.3.M5" {
-	with requirements, source
 	org.eclipse.emf.emfstore.modelmutator.feature.feature.group
 	org.eclipse.emf.emfstore.fuzzy.feature.feature.group
 }
