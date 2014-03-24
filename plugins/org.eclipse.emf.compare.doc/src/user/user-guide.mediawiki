@@ -296,6 +296,64 @@ Accept '''all''' differences is not what we seek : we want to keep the changes w
 
 == Customization ==
 
+=== Engines ===
+
+During each comparison EMF Compare uses several engines (see [[./../developer/developer-guide.html#Comparison_Process|Comparison process]])
+* Match engine 
+* Difference engine
+* Equivalence engine
+* Requirement engine
+* Conflict detector
+
+EMF Compare offers a way to configure those engines.
+
+==== Match Engine ====
+
+To customize matching phase go to the "Engines" preference page.
+
+* Open preferences: Window > Preferences > EMF Compare
+* Select "Engines" page
+* Open Match tab
+
+[[File:../images/EMF_Compare_Match_Engine_Preference_Page.png]]
+
+===== Configure registered matching engine =====
+
+Some of the registered Matching engines could be configured. If so, an extra panel will be displayed on the left part of the preference page when the Match engine is selected.
+
+====== Matching strategy for default match engine ======
+
+The matching strategy of the default match engine can be configured.
+ 
+[[File:../images/EMF_Compare_Match_Engine_Preference_Page_Configuration.png]]
+ 
+Basically, you can choose to use either a strategy based on object identifiers or a strategy based on object content or both.
+* Only: Matching strategy based on id only. The match engine will only match two objects together if they have the same identifier. (see [[./../developer/developer-guide.html#Match_2 | Identifiers in Default Match Engine]]).
+* Never: Matching strategy based on object content. Only the structure of the object will define if two objects can match.
+* When available: This strategy will use both of the above strategies. If an identifier is found on an object then it will use the "Identifier Strategy" if not it will use the "Content strategy".
+
+ 
+===== Enable/Disable Match Engines =====
+
+Additional Match Engines can be contributed through EMF Compare's extension point (see [[./../developer/developer-guide.html#Overriding_the_Match_engine |Override Match Engine]]). They can be enabled or disabled from the preference page.
+
+[[File:../images/EMF_Compare_Match_Engine_Preference_Page_List.png]]
+
+* On this page you will find all registered match engines. They are ordered by priority (highest priority on top of the list). To enable an engine, check it. Uncheck the engine to disabled it. The first enabled Match engine that handles the comparison will be used.
+
+==== For other engines ====
+To customize one of the other phase, go to the "Engines" preference page.
+
+* Open preferences: Window > Preferences > EMF Compare
+* Select "Engines" page
+* Open the tab corresponding to the phase to customize.
+
+[[File:../images/EMF_Compare_Engines_Preference_Page.png]]
+
+===== Choose the default engine =====
+
+On this tab you can select which engine will be used by the comparison process. To do so, check the engine you want to define as default.
+
 === User Interface customization ===
 
 ==== Colors Customization ====
@@ -303,7 +361,7 @@ Accept '''all''' differences is not what we seek : we want to keep the changes w
 You can customize the colors used by EMF Compare to highlight differences in the user interface.
  
 # Open preferences: Window -> Preferences
-# Go to Colors and Fonts prefernces: Select -> General -> Colors and Fonts
+# Go to Colors and Fonts preferences: Select -> General -> Colors and Fonts
 # Open the EMF Compare Category.
 # Select the color you want to customize and click and edit to pick a new color. Your editor will now use your new colors.
 [[Image:./../images/EMFCompare_ColorPreferences.png]]
