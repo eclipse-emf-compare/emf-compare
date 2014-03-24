@@ -588,7 +588,7 @@ public class InteractiveUIContent {
 
 		private void setViewerInput(CheckboxTableViewer descriptorViewer) {
 			List<IItemDescriptor<T>> itemDescriptors = registry.getItemDescriptors();
-			Collections.sort(itemDescriptors, Collections.reverseOrder());
+			Collections.sort(itemDescriptors);
 			descriptorViewer.setInput(itemDescriptors);
 		}
 

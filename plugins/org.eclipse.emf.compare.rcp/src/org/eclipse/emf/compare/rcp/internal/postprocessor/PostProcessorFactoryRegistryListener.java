@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.internal.postprocessor;
 
+import com.google.common.base.Preconditions;
+
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -155,7 +157,21 @@ public class PostProcessorFactoryRegistryListener extends AbstractRegistryEventL
 
 		WrapperItemDescriptor<IPostProcessor.Descriptor> postProcessorItemDescriptor = new WrapperItemDescriptor<IPostProcessor.Descriptor>(
 				element.getAttribute(ATT_LABEL), element.getAttribute(ATT_DESCRIPTION),
-				postProcessorDescriptor.getOrdinal(), className, postProcessorDescriptor);
+				postProcessorDescriptor.getOrdinal(), className, postProcessorDescriptor) {
+			@Override
+			public int compareTo(IItemDescriptor<Descriptor> o) {
+				/*
+				 * Inverse natural order for post processor since they are registered with ordinal attribute
+				 * instead of rank.
+				 */
+				Preconditions.checkNotNull(o);
+				int comp = getRank() - o.getRank();
+				if (comp == 0) {
+					comp = getID().compareTo(o.getID());
+				}
+				return comp;
+			}
+		};
 		IItemDescriptor<Descriptor> previous = registry.add(postProcessorItemDescriptor);
 		if (previous != null) {
 			EMFCompareRCPPlugin.getDefault().log(IStatus.WARNING,
