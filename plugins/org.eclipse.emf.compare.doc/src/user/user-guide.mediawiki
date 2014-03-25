@@ -354,6 +354,24 @@ To customize one of the other phase, go to the "Engines" preference page.
 
 On this tab you can select which engine will be used by the comparison process. To do so, check the engine you want to define as default.
 
+=== Post processors customization ===
+
+Result of each phase of the comparison process (see [[./../developer/developer-guide.html#Comparison_Process|Comparison process]]) can be refined thanks to post processors.
+
+More information:
+* [[./../developer/developer-guide.html#Refine_the_default_Match_result|Refine Match Result]],
+* [[./../developer/developer-guide.html#Refine_the_default_Diff_result|Refine Diff Result]],
+* [[./../developer/developer-guide.html#Refine_the_default_equivalences|Refine Equivalence Result]]
+* etc ...
+
+To customize those post-processors go to the related preference page. 
+* Open preference page: Open Window > Preferences 
+* Select post-processors preference page: Select  EMF Compare > Post Processors
+
+[[File:../images/EMF_Compare_Post_Processor_Preference_Page.png]]
+
+On this page you will find all registered post processors. They have been sorted by ordinal (top element of the list will be executed first). To enable or disable any post processor simply check or uncheck each of them. Unchecked post processors will not be triggered during later comparisons.
+
 === User Interface customization ===
 
 ==== Colors Customization ====
