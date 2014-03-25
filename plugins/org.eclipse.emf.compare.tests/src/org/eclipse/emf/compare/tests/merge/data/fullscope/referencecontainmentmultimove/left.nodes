@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes:Node
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes"
+    xmi:id="_yottkLlGEeGmS9ESxeCLvg"
+    name="root">
+  <containmentRef1
+      xmi:id="_6GiCoLlJEeGmS9ESxeCLvg"
+      name="value1"/>
+  <containmentRef1
+      xmi:id="_ldKqkLlMEeGmS9ESxeCLvg"
+      name="value2"/>
+  <containmentRef1
+      xsi:type="nodes:NodeMultipleContainment"
+      xmi:id="_tQ4B4LQ0EeOiUJBSZuGj_A"
+      name="value3"/>
+</nodes:Node>

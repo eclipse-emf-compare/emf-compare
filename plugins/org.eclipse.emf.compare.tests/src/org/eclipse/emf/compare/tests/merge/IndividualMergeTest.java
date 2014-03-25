@@ -16,6 +16,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReferenc
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedAttribute;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.moved;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.movedInAttribute;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.movedInReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromAttribute;
@@ -2302,6 +2303,74 @@ public class IndividualMergeTest {
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = new DefaultComparisonScope(left, right, null);
+		comparison = EMFCompare.builder().build().compare(scope);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceContainmentMultiMove2WayLtR() throws IOException {
+		final Resource left = input.getReferenceContainmentMultiMoveLeft();
+		final Resource right = input.getReferenceContainmentMultiMoveRight();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "containmentRef1";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT), moved(
+				"root.value2", featureName)));
+
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		final EObject targetNode = getNodeNamed(right, "value2");
+		assertNotNull(targetNode);
+		final EObject targetContainerNode = getNodeNamed(right, "root");
+		assertNotNull(targetContainerNode);
+
+		assertEquals(targetContainerNode, targetNode.eContainer());
+
+		final EObject sourceNode = getNodeNamed(left, "value2");
+		assertNotNull(sourceNode);
+		final EObject sourceContainerNode = getNodeNamed(left, "root");
+		assertNotNull(sourceContainerNode);
+
+		assertEquals(sourceContainerNode, sourceNode.eContainer());
+
+		comparison = EMFCompare.builder().build().compare(scope);
+		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testReferenceContainmentMultiMove2WayRtL() throws IOException {
+		final Resource left = input.getReferenceContainmentMultiMoveLeft();
+		final Resource right = input.getReferenceContainmentMultiMoveRight();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+
+		final String featureName = "containmentRef1";
+		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT), moved(
+				"root.value2", featureName)));
+
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		final EObject targetNode = getNodeNamed(right, "value2");
+		assertNotNull(targetNode);
+		final EObject targetContainerNode = getNodeNamed(right, "value3");
+		assertNotNull(targetContainerNode);
+
+		assertEquals(targetContainerNode, targetNode.eContainer());
+
+		final EObject sourceNode = getNodeNamed(left, "value2");
+		assertNotNull(sourceNode);
+		final EObject sourceContainerNode = getNodeNamed(left, "value3");
+		assertNotNull(sourceContainerNode);
+
+		assertEquals(sourceContainerNode, sourceNode.eContainer());
+
 		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
 	}
