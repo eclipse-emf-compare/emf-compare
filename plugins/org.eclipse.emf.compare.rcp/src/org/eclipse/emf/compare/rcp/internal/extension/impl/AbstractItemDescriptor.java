@@ -102,7 +102,7 @@ public abstract class AbstractItemDescriptor<T> implements IItemDescriptor<T> {
 	 */
 	public int compareTo(IItemDescriptor<T> o) {
 		Preconditions.checkNotNull(o);
-		int comp = getRank() - o.getRank();
+		int comp = o.getRank() - getRank();
 		if (comp == 0) {
 			comp = getID().compareTo(o.getID());
 		}
