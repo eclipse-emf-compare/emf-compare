@@ -16,6 +16,7 @@ import static junit.framework.Assert.fail;
 
 import com.google.common.collect.Lists;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.compare.CompareFactory;
@@ -82,6 +83,29 @@ public class DiffUtilTest {
 
 		// These are the origin and right sides of the "complex" conflict test case.
 		assertEqualContents(Lists.newArrayList(2, 3, 4, 7), lcs);
+	}
+
+	@Test
+	public void lcsTest5() {
+		final List<Integer> left = Collections.EMPTY_LIST;
+		final List<Integer> right = Collections.EMPTY_LIST;
+
+		final Comparison emptyComparison = createEmptyComparison();
+		final List<Integer> lcs = DiffUtil.longestCommonSubsequence(emptyComparison, left, right);
+
+		assertEqualContents(Collections.EMPTY_LIST, lcs);
+	}
+
+	@Test
+	public void lcsTest6() {
+		final List<Integer> left = Lists.newArrayList(1, 2, null, 4, 5, null, 7);
+		final List<Integer> right = Lists.newArrayList(6, 2, 9, null, null, 4, 1, 7);
+
+		final Comparison emptyComparison = createEmptyComparison();
+		final List<Integer> lcs = DiffUtil.longestCommonSubsequence(emptyComparison, left, right);
+
+		// These are the origin and right sides of the "complex" conflict test case.
+		assertEqualContents(Lists.newArrayList(2, null, null, 7), lcs);
 	}
 
 	@Test
