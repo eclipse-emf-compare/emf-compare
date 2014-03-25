@@ -17,12 +17,12 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.HashMultiset;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -162,7 +162,11 @@ public final class DiffUtil {
 			subLCS = shortLongestCommonSubsequence(comparison, ignoredElements, copy1, copy2);
 		}
 
-		return ImmutableList.copyOf(Iterables.concat(prefix, subLCS, suffix));
+		final List<E> lcs = new ArrayList<E>(prefix.size() + subLCS.size() + suffix.size());
+		lcs.addAll(prefix);
+		lcs.addAll(subLCS);
+		lcs.addAll(suffix);
+		return Collections.unmodifiableList(lcs);
 	}
 
 	/**
