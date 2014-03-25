@@ -267,12 +267,25 @@ public final class ResourceUtil {
 	public static void saveAllResources(ResourceSet resourceSet, Map<?, ?> options) {
 		EList<Resource> resources = resourceSet.getResources();
 		for (Resource resource : resources) {
-			if (supportsOutput(resource)) {
-				try {
-					resource.save(options);
-				} catch (IOException e) {
-					logError(e);
-				}
+			saveResource(resource, options);
+		}
+	}
+
+	/**
+	 * This can be called to save the given resource. This will not try and save a resource that do not
+	 * support output.
+	 * 
+	 * @param resource
+	 *            The resource to save.
+	 * @param options
+	 *            The options we are to pass on to {@link Resource#save(Map)}.
+	 */
+	public static void saveResource(Resource resource, Map<?, ?> options) {
+		if (supportsOutput(resource)) {
+			try {
+				resource.save(options);
+			} catch (IOException e) {
+				logError(e);
 			}
 		}
 	}

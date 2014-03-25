@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;
 
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.saveAllResources;
+import static org.eclipse.emf.compare.ide.utils.ResourceUtil.saveResource;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -143,6 +144,9 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 				if (resourceSet != null) {
 					saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
 							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
+				} else {
+					saveResource(eResource, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
 				}
 			}
 		}
@@ -198,6 +202,9 @@ public class TableContentMergeViewerContentProvider implements IMergeViewerConte
 				ResourceSet resourceSet = eResource.getResourceSet();
 				if (resourceSet != null) {
 					saveAllResources(resourceSet, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
+				} else {
+					saveResource(eResource, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
 							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
 				}
 			}
