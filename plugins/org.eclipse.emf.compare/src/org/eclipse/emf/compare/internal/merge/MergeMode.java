@@ -77,18 +77,18 @@ public enum MergeMode {
 				break;
 			case ACCEPT:
 				if (isLeftEditable) {
-					ret = DifferenceSource.LEFT;
-				} else if (isRightEditable) {
 					ret = DifferenceSource.RIGHT;
+				} else if (isRightEditable) {
+					ret = DifferenceSource.LEFT;
 				} else {
 					throw new IllegalStateException();
 				}
 				break;
 			case REJECT:
 				if (isLeftEditable) {
-					ret = DifferenceSource.RIGHT;
-				} else if (isRightEditable) {
 					ret = DifferenceSource.LEFT;
+				} else if (isRightEditable) {
+					ret = DifferenceSource.RIGHT;
 				} else {
 					throw new IllegalStateException();
 				}
@@ -152,15 +152,15 @@ public enum MergeMode {
 			case REJECT:
 				if (isLeftEditable) {
 					if (difference.getSource() == DifferenceSource.LEFT) {
-						ret = MergeOperation.MARK_AS_MERGE;
-					} else {
 						ret = MergeOperation.MERGE;
+					} else {
+						ret = MergeOperation.MARK_AS_MERGE;
 					}
 				} else if (isRightEditable) {
 					if (difference.getSource() == DifferenceSource.LEFT) {
-						ret = MergeOperation.MERGE;
-					} else {
 						ret = MergeOperation.MARK_AS_MERGE;
+					} else {
+						ret = MergeOperation.MERGE;
 					}
 				} else {
 					throw new IllegalStateException();

@@ -16,10 +16,15 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.internal.merge.IMergeData;
+import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.internal.merge.MergeOperation;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.SWT;
@@ -148,7 +153,8 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 			Diff diff = mergeViewerItem.getDiff();
 			if (diff != null) {
 				if (MergeViewerUtil.isVisibleInMergeViewer(diff, getDifferenceGroupProvider(),
-						getDifferenceFilter())) {
+						getDifferenceFilter())
+						&& !isMarkAsMerged(diff, mergeViewerItem)) {
 					if (mergeViewerItem.isInsertionPoint()) {
 						paintItemDiffBox(event, itemWrapper, diff, getBoundsForInsertionPoint(event,
 								itemWrapper));
@@ -158,6 +164,36 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 				}
 			}
 		}
+	}
+
+	/**
+	 * Checks if the given diff is considered as a mark as merged diff.
+	 * 
+	 * @see MergeOperation
+	 * @param diff
+	 *            the given Diff..
+	 * @param item
+	 *            the given IMergeViewerItem associated with the diff.
+	 * @return true, if the given diff is considered as a mark as merged diff, false otherwise.
+	 */
+	private boolean isMarkAsMerged(Diff diff, IMergeViewerItem item) {
+		final boolean markAsMerged;
+		if (diff.getState() == DifferenceState.MERGED) {
+			IMergeData mergeData = (IMergeData)EcoreUtil.getExistingAdapter(diff, IMergeData.class);
+			IEMFCompareConfiguration cc = getCompareConfiguration();
+			boolean leftEditable = cc.isLeftEditable();
+			boolean rightEditable = cc.isRightEditable();
+			MergeMode mergeMode = mergeData.getMergeMode();
+			MergeOperation mergeAction = mergeMode.getMergeAction(diff, leftEditable, rightEditable);
+			if (mergeAction == MergeOperation.MARK_AS_MERGE) {
+				markAsMerged = true;
+			} else {
+				markAsMerged = false;
+			}
+		} else {
+			markAsMerged = false;
+		}
+		return markAsMerged;
 	}
 
 	/**
@@ -173,7 +209,8 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 	 * @param bounds
 	 *            a Rectangle that contains coordinates of the box to paint.
 	 */
-	private void paintItemDiffBox(Event event, AbstractTableOrTreeItemWrapper itemWrapper, Diff diff, Rectangle bounds) {
+	private void paintItemDiffBox(Event event, AbstractTableOrTreeItemWrapper itemWrapper, Diff diff,
+			Rectangle bounds) {
 		event.detail &= ~SWT.HOT;
 
 		GC g = event.gc;
@@ -275,7 +312,8 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 	 *            a TableItemWrapper or TreeItemWrapper.
 	 * @return the bounds (as Rectangle) of the insertion point.
 	 */
-	private static Rectangle getBoundsForInsertionPoint(Event event, AbstractTableOrTreeItemWrapper itemWrapper) {
+	private static Rectangle getBoundsForInsertionPoint(Event event,
+			AbstractTableOrTreeItemWrapper itemWrapper) {
 		Rectangle fill = getBounds(event, itemWrapper);
 		Rectangle treeBounds = itemWrapper.getParent().getClientArea();
 		Rectangle itemBounds = itemWrapper.getBounds();
@@ -464,7 +502,8 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 		 */
 		public void handleEvent(Event event) {
 			if (fHeight == Integer.MIN_VALUE) {
-				AbstractTableOrTreeItemWrapper itemWrapper = AbstractTableOrTreeItemWrapper.create((Item)event.item);
+				AbstractTableOrTreeItemWrapper itemWrapper = AbstractTableOrTreeItemWrapper
+						.create((Item)event.item);
 				Rectangle imageBounds = itemWrapper.getImageBounds(0);
 				fHeight = imageBounds.height + 3;
 			}
