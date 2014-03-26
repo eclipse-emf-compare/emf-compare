@@ -16,9 +16,8 @@ import static com.google.common.collect.Lists.newArrayList;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
@@ -34,14 +33,14 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
  */
 public class DifferenceFilterRegistryImpl implements Registry {
 
-	/** A map that associates the class name to theirs {@link IDifferenceFilter}s. */
-	private final Map<String, IDifferenceFilter> map;
+	/** {@link DifferenceFilterManager} used to get active {@link IDifferenceFilter}. */
+	private final DifferenceFilterManager filterManager;
 
 	/**
 	 * Constructs the registry.
 	 */
-	public DifferenceFilterRegistryImpl() {
-		map = new ConcurrentHashMap<String, IDifferenceFilter>();
+	public DifferenceFilterRegistryImpl(DifferenceFilterManager filterManager) {
+		this.filterManager = filterManager;
 	}
 
 	/**
@@ -51,7 +50,20 @@ public class DifferenceFilterRegistryImpl implements Registry {
 	 *      org.eclipse.emf.compare.Comparison)
 	 */
 	public List<IDifferenceFilter> getFilters(IComparisonScope scope, Comparison comparison) {
-		return newArrayList(filter(map.values(), isFilterActivable(scope, comparison)));
+		Collection<IDifferenceFilter> enabledFilter = filterManager.getCurrentByDefaultFilters();
+		Iterable<IDifferenceFilter> matchingFilters = filter(filterManager.getAllFilters(),
+				isFilterActivable(scope, comparison));
+		/*
+		 * Set the value of default selected using filter manager.
+		 */
+		for (IDifferenceFilter filter : matchingFilters) {
+			if (enabledFilter.contains(filter)) {
+				filter.setDefaultSelected(true);
+			} else {
+				filter.setDefaultSelected(false);
+			}
+		}
+		return newArrayList(matchingFilters);
 	}
 
 	/**
@@ -84,7 +96,7 @@ public class DifferenceFilterRegistryImpl implements Registry {
 	 */
 	public IDifferenceFilter add(IDifferenceFilter filter) {
 		Preconditions.checkNotNull(filter);
-		return map.put(filter.getClass().getName(), filter);
+		return filterManager.add(filter);
 	}
 
 	/**
@@ -93,7 +105,7 @@ public class DifferenceFilterRegistryImpl implements Registry {
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter.Registry#remove(java.lang.String)
 	 */
 	public IDifferenceFilter remove(String className) {
-		return map.remove(className);
+		return filterManager.remove(className);
 	}
 
 	/**
@@ -102,6 +114,6 @@ public class DifferenceFilterRegistryImpl implements Registry {
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter.Registry#clear()
 	 */
 	public void clear() {
-		map.clear();
+		filterManager.clear();
 	}
 }

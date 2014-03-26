@@ -61,6 +61,21 @@ public interface IDifferenceFilter {
 	void setLabel(String label);
 
 	/**
+	 * A human-readable description for this filter. This will be displayed in the EMF Compare UI.
+	 * 
+	 * @return Description of <code>null</code>
+	 */
+	String getDescription();
+
+	/**
+	 * Set the description for this filter. This will be displayed in the EMF Compare UI.
+	 * 
+	 * @param description
+	 *            A human-readable description for this filter.
+	 */
+	void setDescription(String description);
+
+	/**
 	 * Returns the initial activation state that the filter should have.
 	 * 
 	 * @return The initial activation state that the filter should have.
