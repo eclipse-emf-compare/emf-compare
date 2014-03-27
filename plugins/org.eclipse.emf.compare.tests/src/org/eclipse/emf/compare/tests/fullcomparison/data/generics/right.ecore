@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="p" nsURI="p" nsPrefix="p">
+  <eClassifiers xsi:type="ecore:EClass" name="Class1"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Class2">
+    <eOperations name="get">
+      <eGenericType eClassifier="#//DataType1">
+        <eTypeArguments eClassifier="#//Class2"/>
+      </eGenericType>
+    </eOperations>
+    <eOperations name="get2">
+      <eGenericType eClassifier="#//DataType3">
+        <eTypeArguments/>
+      </eGenericType>
+    </eOperations>
+    <eOperations name="get3" eType="#//DataType4"/>
+    <eOperations name="get4">
+      <eGenericType eClassifier="#//Class3">
+        <eTypeArguments eClassifier="#//Class2"/>
+      </eGenericType>
+    </eOperations>
+    <eOperations name="get5">
+      <eGenericType eClassifier="#//Class4">
+        <eTypeArguments/>
+      </eGenericType>
+    </eOperations>
+    <eOperations name="get6" eType="#//Class1" eExceptions="#//Exception2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Class3">
+    <eTypeParameters name="T"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Class4">
+    <eTypeParameters name="T"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Exception1"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Exception2"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="DataType1" instanceClassName="my.data.type.DataType1">
+    <eTypeParameters name="T"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="DataType2" instanceClassName="my.data.type.DataType2"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="DataType3" instanceClassName="my.data.type.DataType3">
+    <eTypeParameters name="T"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="DataType4" instanceClassName="my.data.type.DataType4"/>
+</ecore:EPackage>

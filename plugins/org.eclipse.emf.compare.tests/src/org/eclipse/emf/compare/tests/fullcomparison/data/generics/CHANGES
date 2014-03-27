@@ -1,0 +1,62 @@
+Expected Differences
+
+	* On p
+	
+		1 - Class3b -> Class3 [eClassifiers add]
+		2 	- Class3<T> [eSuperTypes add]
+		3 - Class3c -> Class3<Class1> [eClassifiers add]
+		4 	- Class3<Class1> [eGenericSuperTypes add]
+		5 		- Class3<T> [eClassifiers set]
+		6		- Class1 [eTypeArguments add]
+		7			- Class1 [eClassifier set]
+			
+	* On Class 1
+	
+		8 - get(): DataType1<Class1> [eOperations add]
+		9 	- DataType1<Class1> [eGenericType add]
+		10 		- DataType1<T> [my.data.type.DataType1] [eClassifiers set]
+		11 		- Class1 [eTypeArguments add]
+		12 			- Class1 [eClassifiers set]
+		13 - get2(): DataType1<?> [eOperations add]
+		14 	- DataType1<?> [eGenericType add]
+		15 		- DataType1<T> [my.data.type.DataType1] [eClassifiers set]
+		16 		- ? [eTypeArguments add]
+		17 - get3(): DataType2 [eOperations add]
+		18 	- DataType2 [my.data.type.DataType2] [eType set]
+		19 - get4(): Class3<Class1> [eOperations add]
+		20 	- Class3<Class1> [eGenericType add]
+		21 		- Class3<T> [eClassifiers set]
+		22 		- Class1 [eTypeArguments add]
+		23 			- Class1 [eClassifiers set]
+		24 - get5(): Class3<?> [eOperations add]
+		25 	- Class3<?> [eGenericType add]
+		26 		- Class3<T> [eClassifiers set]
+		27 		- ? [eTypeArguments add]
+		28 - get6(): Class1 throws Exception1 [eOpertions add]
+		29 	- Class1 [eType set]
+		30	- Exception1 [eExceptions add]
+	
+	* On Class 2
+	
+			get(): DataType1<Class1>
+				DataType1<Class1>
+					Class1
+		31 				- Class1 [eClassifier changed]
+			get2(): DataType1<? extends ?>
+				DataType1<? extends ?>
+		32			- DataType<T> [my.data.type.DataType1] [eClassifiers changed]
+					? extends ?
+		33				- ? [eUpperBounds add]
+			get3(): DataType2
+		34		- DataType2 [my.data.type.DataType2] [eType changed]
+			get4(): Class3<Class1>
+				Class3<Class1>
+					Class1
+		35				- Class1 [eClassifier changed]
+			get5(): Class3<?>
+				Class3<?>
+		36			- Class3<T> [eClassifier changed]
+			get6(): Class1 throws Exception1
+		37 		- Exception1 [eExceptions add]
+		38		- Exception2 [eExceptions delete]
+	

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,8 @@
  *     Obeo - initial API and implementation
  *******************************************************************************/
 package org.eclipse.emf.compare.diff;
+
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.IS_EGENERIC_TYPE_WITHOUT_PARAMETERS;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -156,8 +158,15 @@ public class FeatureFilter {
 				 * aren't even shown to the user, we wish to avoid detection of changes on them.
 				 */
 				// Otherwise if this reference is not set on any side, no use checking it
-				return reference.getEType() == EcorePackage.eINSTANCE.getEGenericType()
-						|| !referenceIsSet(reference, match);
+				boolean isGenericTypeWithoutArguments = false;
+				boolean isGenericType = reference.getEType() == EcorePackage.eINSTANCE.getEGenericType();
+				if (isGenericType) {
+					isGenericTypeWithoutArguments = IS_EGENERIC_TYPE_WITHOUT_PARAMETERS
+							.apply(match.getLeft())
+							&& IS_EGENERIC_TYPE_WITHOUT_PARAMETERS.apply(match.getRight())
+							&& IS_EGENERIC_TYPE_WITHOUT_PARAMETERS.apply(match.getOrigin());
+				}
+				return isGenericTypeWithoutArguments || !referenceIsSet(reference, match);
 			}
 		}
 		return true;
