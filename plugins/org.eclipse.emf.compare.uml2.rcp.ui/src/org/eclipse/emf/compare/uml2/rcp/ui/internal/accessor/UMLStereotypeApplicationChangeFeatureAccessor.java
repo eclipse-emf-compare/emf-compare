@@ -39,6 +39,7 @@ import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.ETypedElement;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Stereotype;
@@ -55,17 +56,20 @@ import org.eclipse.uml2.uml.util.UMLUtil;
  */
 public class UMLStereotypeApplicationChangeFeatureAccessor extends ManyStructuralFeatureAccessorImpl {
 
-	private final static EReference STEREOTYPE_APPLICATION = EcoreFactory.eINSTANCE.createEReference();
+	/** Fake {@link EReference} for stereotype application change. */
+	private static final EReference STEREOTYPE_APPLICATION = EcoreFactory.eINSTANCE.createEReference();
 
 	static {
-		STEREOTYPE_APPLICATION.setName("stereotypeApplications");
-		STEREOTYPE_APPLICATION.setUpperBound(EStructuralFeature.UNBOUNDED_MULTIPLICITY);
+		STEREOTYPE_APPLICATION.setName("stereotypeApplications"); //$NON-NLS-1$
+		STEREOTYPE_APPLICATION.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
 		STEREOTYPE_APPLICATION.setEType(UMLPackage.Literals.STEREOTYPE);
 	}
 
 	/**
 	 * Creates a specialized accessor for the stereotype application differences.
 	 * 
+	 * @param adapterFactory
+	 *            The {@link AdapterFactory} used to create the accessor.
 	 * @param diff
 	 *            The diff for which we need an accessor.
 	 * @param side
