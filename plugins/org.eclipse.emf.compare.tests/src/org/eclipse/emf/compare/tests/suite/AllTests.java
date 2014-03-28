@@ -38,6 +38,7 @@ import org.eclipse.emf.compare.tests.merge.MultipleMergeTest;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
 import org.eclipse.emf.compare.tests.postprocess.PostProcessorTest;
+import org.eclipse.emf.compare.tests.rcp.AllRCPTests;
 import org.eclipse.emf.compare.tests.req.ReqComputingTest;
 import org.eclipse.emf.compare.tests.scope.DefaultComparisonScopeTest;
 import org.eclipse.emf.ecore.EPackage;
@@ -60,7 +61,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		IndividualMergeOutOfScopeValuesTest.class, ProximityComparisonTest.class,
 		DynamicInstanceComparisonTest.class, URIDistanceTest.class, FragmentationTest.class,
 		AllEditTests.class, CommandStackTestSuite.class, MatchEngineFactoryRegistryTest.class,
-		ConflictMergeTest.class, ProximityIndexTest.class })
+		ConflictMergeTest.class, ProximityIndexTest.class, AllRCPTests.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.
