@@ -24,9 +24,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine.Factory;
-import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.AbstractItemDescriptor;
@@ -48,15 +48,21 @@ public class MatchEngineFactoryRegistryWrapper implements IMatchEngine.Factory.R
 	/** Instance of the registry that need to be wrapped. */
 	private IItemRegistry<IMatchEngine.Factory> registry;
 
+	/** Preferences holding disabled match engines. */
+	private final IEclipsePreferences preferences;
+
 	/**
 	 * Constructor.
 	 * 
 	 * @param registy
 	 *            {@link MatchEngineFactoryRegistryWrapper#registry}
+	 * @param preferences
+	 *            Preferences holding disabled match engines.
 	 */
-	public MatchEngineFactoryRegistryWrapper(IItemRegistry<Factory> registy) {
+	public MatchEngineFactoryRegistryWrapper(IItemRegistry<Factory> registy, IEclipsePreferences preferences) {
 		super();
 		this.registry = registy;
+		this.preferences = preferences;
 	}
 
 	/**
@@ -127,13 +133,13 @@ public class MatchEngineFactoryRegistryWrapper implements IMatchEngine.Factory.R
 	 * 
 	 * @see org.eclipse.emf.compare.match.IMatchEngine.Factory.Registry#add(org.eclipse.emf.compare.match.IMatchEngine)
 	 */
-	public IMatchEngine.Factory add(IMatchEngine.Factory filter) {
-		Preconditions.checkNotNull(filter);
-		IItemDescriptor<Factory> factory = registry.add(new WrapperItemDescriptor<IMatchEngine.Factory>(
-				EMPTY_STRING, EMPTY_STRING, filter.getRanking(), filter.getMatchEngine().getClass()
-						.getCanonicalName(), filter));
-		if (factory != null) {
-			return factory.getItem();
+	public IMatchEngine.Factory add(IMatchEngine.Factory factory) {
+		Preconditions.checkNotNull(factory);
+		IItemDescriptor<Factory> oldFactoryDescriptor = registry
+				.add(new WrapperItemDescriptor<IMatchEngine.Factory>(EMPTY_STRING, EMPTY_STRING, factory
+						.getRanking(), factory.getClass().getName(), factory));
+		if (oldFactoryDescriptor != null) {
+			return oldFactoryDescriptor.getItem();
 		}
 		return null;
 	}
@@ -144,6 +150,7 @@ public class MatchEngineFactoryRegistryWrapper implements IMatchEngine.Factory.R
 	 * @see org.eclipse.emf.compare.match.IMatchEngine.Factory.Registry#remove(java.lang.String)
 	 */
 	public IMatchEngine.Factory remove(String className) {
+		Preconditions.checkNotNull(className);
 		IItemDescriptor<Factory> remove = registry.remove(className);
 		if (remove != null) {
 			return remove.getItem();
@@ -167,8 +174,7 @@ public class MatchEngineFactoryRegistryWrapper implements IMatchEngine.Factory.R
 	 */
 	private Collection<IItemDescriptor<IMatchEngine.Factory>> getDisabledEngines() {
 		Collection<IItemDescriptor<Factory>> result = ItemUtil.getItemsDescriptor(registry,
-				EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, EMFCompareRCPPlugin.getDefault()
-						.getEMFComparePreferences());
+				EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, preferences);
 		if (result == null) {
 			result = Collections.emptyList();
 		}

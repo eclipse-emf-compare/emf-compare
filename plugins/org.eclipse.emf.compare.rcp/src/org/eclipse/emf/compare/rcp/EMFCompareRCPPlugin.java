@@ -224,7 +224,8 @@ public class EMFCompareRCPPlugin extends Plugin {
 		matchEngineFactoryRegistryListener = new MatchEngineFactoryRegistryListener(PLUGIN_ID,
 				MATCH_ENGINE_PPID, getLog(), matchEngineFactoryRegistry);
 		matchEngineFactoryRegistryListener.readRegistry(registry);
-		matchEngineFactoryRegistryWrapped = new MatchEngineFactoryRegistryWrapper(matchEngineFactoryRegistry);
+		matchEngineFactoryRegistryWrapped = new MatchEngineFactoryRegistryWrapper(matchEngineFactoryRegistry,
+				EMFCompareRCPPlugin.getDefault().getEMFComparePreferences());
 	}
 
 	/**
@@ -254,8 +255,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 				POST_PROCESSOR_PPID, getLog(), postProcessorItemDescriptorsRegistry);
 		registry.addListener(postProcessorFactoryRegistryListener, PLUGIN_ID + '.' + POST_PROCESSOR_PPID);
 		postProcessorFactoryRegistryListener.readRegistry(registry);
-		postProcessorDescriptorsRegistry = new PostProcessorRegistryImpl(
-				postProcessorItemDescriptorsRegistry);
+		postProcessorDescriptorsRegistry = new PostProcessorRegistryImpl(postProcessorItemDescriptorsRegistry);
 	}
 
 	/**
