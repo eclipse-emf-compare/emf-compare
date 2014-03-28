@@ -31,7 +31,7 @@ public interface IItemRegistry<T> {
 	/**
 	 * Get the descriptor with the highest ranking in the registry.
 	 * 
-	 * @return {@link IItemDescriptor} or null if none
+	 * @return {@link IItemDescriptor} or <code>null</code> if none
 	 */
 	IItemDescriptor<T> getHighestRankingDescriptor();
 

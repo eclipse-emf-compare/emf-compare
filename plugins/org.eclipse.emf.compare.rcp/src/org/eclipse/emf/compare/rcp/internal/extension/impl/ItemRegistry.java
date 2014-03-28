@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.internal.extension.impl;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 import java.util.Collections;
@@ -38,7 +39,11 @@ public class ItemRegistry<T> implements IItemRegistry<T> {
 	public IItemDescriptor<T> getHighestRankingDescriptor() {
 		List<IItemDescriptor<T>> items = getItemDescriptors();
 		if (items.size() > 0) {
-			return Collections.max(items);
+			/*
+			 * Each IItemDescriptor implements IComparable such as I1 < I2 if only I1 should be handled before
+			 * I2.
+			 */
+			return Collections.min(items);
 		}
 		return null;
 	}
@@ -54,14 +59,15 @@ public class ItemRegistry<T> implements IItemRegistry<T> {
 	 * {@inheritDoc}
 	 */
 	public IItemDescriptor<T> add(IItemDescriptor<T> itemDescriptor) {
+		Preconditions.checkNotNull(itemDescriptor);
 		return registry.put(itemDescriptor.getID(), itemDescriptor);
-
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public IItemDescriptor<T> remove(String className) {
+		Preconditions.checkNotNull(className);
 		return registry.remove(className);
 	}
 
