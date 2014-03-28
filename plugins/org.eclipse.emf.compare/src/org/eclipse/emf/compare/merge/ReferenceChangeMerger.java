@@ -246,7 +246,8 @@ public class ReferenceChangeMerger extends AbstractMerger {
 	@SuppressWarnings("unchecked")
 	protected void doMove(ReferenceChange diff, Comparison comparison, EObject expectedContainer,
 			EObject expectedValue, boolean rightToLeft) {
-		final EReference reference = diff.getReference();
+		final EReference reference = getMoveTargetReference(comparison, diff, rightToLeft);
+
 		if (reference.isMany()) {
 			// Element to move cannot be part of the LCS... or there would not be a MOVE diff
 			int insertionIndex = findInsertionIndex(comparison, diff, rightToLeft);
@@ -288,6 +289,57 @@ public class ReferenceChangeMerger extends AbstractMerger {
 		} else {
 			safeESet(expectedContainer, reference, expectedValue);
 		}
+	}
+
+	/**
+	 * Returns the reference of the target container in case of a MOVE Diff.
+	 * 
+	 * @param comparison
+	 *            the comparison object holding the given Diff.
+	 * @param diff
+	 *            the given Diff.
+	 * @param rightToLeft
+	 *            whether we should move the value in the left or right side.
+	 * @return the reference of the target container in case of a MOVE Diff.
+	 */
+	private EReference getMoveTargetReference(Comparison comparison, ReferenceChange diff, boolean rightToLeft) {
+		final EReference reference;
+		final DifferenceSource source = diff.getSource();
+		final Match valueMatch = comparison.getMatch(diff.getValue());
+		if (!diff.getReference().isContainment() || valueMatch == null) {
+			reference = diff.getReference();
+		} else if (rightToLeft && source == DifferenceSource.LEFT) {
+			EObject sourceValue = valueMatch.getRight();
+			if (sourceValue == null) {
+				sourceValue = valueMatch.getOrigin();
+			}
+			EStructuralFeature feature = sourceValue.eContainingFeature();
+			if (feature instanceof EReference) {
+				reference = (EReference)feature;
+			} else {
+				// FIXME Manage this case. See javadoc of eContainingFeature. This is possible and will happen
+				// with feature maps. http:
+				// //download.eclipse.org/modeling/emf/emf/javadoc/2.8.0/org/eclipse/emf/ecore/EObject.html#eContainingFeature%28%29
+				reference = diff.getReference();
+			}
+		} else if (!rightToLeft && source == DifferenceSource.RIGHT) {
+			EObject sourceValue = valueMatch.getLeft();
+			if (sourceValue == null) {
+				sourceValue = valueMatch.getOrigin();
+			}
+			EStructuralFeature feature = sourceValue.eContainingFeature();
+			if (feature instanceof EReference) {
+				reference = (EReference)feature;
+			} else {
+				// FIXME Manage this case. See javadoc of eContainingFeature. This is possible and will happen
+				// with feature maps. http:
+				// //download.eclipse.org/modeling/emf/emf/javadoc/2.8.0/org/eclipse/emf/ecore/EObject.html#eContainingFeature%28%29
+				reference = diff.getReference();
+			}
+		} else {
+			reference = diff.getReference();
+		}
+		return reference;
 	}
 
 	/**

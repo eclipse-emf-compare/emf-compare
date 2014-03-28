@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -164,6 +164,14 @@ public class IndividualDiffInputData extends AbstractInputData {
 
 	public Resource getReferenceMultiMoveRight() throws IOException {
 		return loadFromClassLoader("fullscope/referencemultimove/right.nodes");
+	}
+
+	public Resource getReferenceContainmentMultiMoveLeft() throws IOException {
+		return loadFromClassLoader("fullscope/referencecontainmentmultimove/left.nodes");
+	}
+
+	public Resource getReferenceContainmentMultiMoveRight() throws IOException {
+		return loadFromClassLoader("fullscope/referencecontainmentmultimove/right.nodes");
 	}
 
 	public Resource getReferenceMonoChangeLeftOutOfScope() throws IOException {
