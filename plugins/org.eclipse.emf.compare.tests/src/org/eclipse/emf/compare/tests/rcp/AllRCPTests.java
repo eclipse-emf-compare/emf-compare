@@ -18,7 +18,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({ItemRegistryTest.class })
+@SuiteClasses({ItemRegistryTest.class, MatchEngineFactoryRegistryWrapperTest.class })
 public class AllRCPTests {
 
 }
