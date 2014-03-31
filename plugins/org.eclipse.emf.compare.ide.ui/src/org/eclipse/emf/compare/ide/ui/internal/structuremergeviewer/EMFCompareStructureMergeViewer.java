@@ -477,6 +477,11 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	public void handleDifferenceGroupProviderChange(
 			@SuppressWarnings("unused") IDifferenceGroupProviderChange event) {
 		SWTUtil.safeRefresh(this, false, true);
+		SWTUtil.safeAsyncExec(new Runnable() {
+			public void run() {
+				navigatable.selectChange(INavigatable.FIRST_CHANGE);
+			}
+		});
 	}
 
 	/**
