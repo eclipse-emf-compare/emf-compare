@@ -63,6 +63,8 @@ import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoDifferencesCompareInput;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoVisibleItemCompareInput;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
@@ -200,8 +202,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	private EMFCompareColor fColors;
 
-	private Composite parent;
-
 	/**
 	 * Constructor.
 	 * 
@@ -212,8 +212,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 */
 	public EMFCompareStructureMergeViewer(Composite parent, EMFCompareConfiguration config) {
 		super(parent, config);
-
-		this.parent = parent;
 
 		updateLayout(true, false);
 
@@ -471,6 +469,15 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		pseudoConflictsFilterEnabled = any(event.getSelectedDifferenceFilters(),
 				instanceOf(PseudoConflictsFilter.class));
 		SWTUtil.safeRefresh(this, false, true);
+		SWTUtil.safeAsyncExec(new Runnable() {
+			public void run() {
+				if (navigatable != null
+						&& (navigatable.getViewer().getSelection() == null || navigatable.getViewer()
+								.getSelection().isEmpty())) {
+					selectFirstDiffOrDisplayLabelViewer(getCompareConfiguration().getComparison());
+				}
+			}
+		});
 	}
 
 	@Subscribe
@@ -479,7 +486,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		SWTUtil.safeRefresh(this, false, true);
 		SWTUtil.safeAsyncExec(new Runnable() {
 			public void run() {
-				navigatable.selectChange(INavigatable.FIRST_CHANGE);
+				selectFirstDiffOrDisplayLabelViewer(getCompareConfiguration().getComparison());
 			}
 		});
 	}
@@ -645,10 +652,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					updateLayout(false, true);
 
 					// title is not initialized as the comparison was set in the configuration after the
-					// refresh caused by the initialization of the viewer filters and the groupe providers.
+					// refresh caused by the initialization of the viewer filters and the group providers.
 					refreshTitle();
 
-					navigatable.selectChange(INavigatable.FIRST_CHANGE);
+					selectFirstDiffOrDisplayLabelViewer(comparison);
 				}
 			});
 
@@ -748,6 +755,26 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			}
 		} else {
 			compareInputChangedToNull();
+		}
+	}
+
+	/**
+	 * Select the first difference...if there are differences, otherwise, display appropriate content viewer
+	 * (no differences or no visible differences)
+	 * 
+	 * @param comparison
+	 *            the comparison used to know if there are differences.
+	 */
+	private void selectFirstDiffOrDisplayLabelViewer(final Comparison comparison) {
+		if (comparison != null) {
+			List<Diff> differences = comparison.getDifferences();
+			if (differences.isEmpty()) {
+				navigatable.fireOpen(new NoDifferencesCompareInput());
+			} else if (JFaceUtil.filterVisibleElement(getViewer(), IS_DIFF).isEmpty()) {
+				navigatable.fireOpen(new NoVisibleItemCompareInput());
+			} else {
+				navigatable.selectChange(INavigatable.FIRST_CHANGE);
+			}
 		}
 	}
 
@@ -916,5 +943,4 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		getViewer().getTree().redraw();
 		treeRuler.redraw();
 	}
-
 }

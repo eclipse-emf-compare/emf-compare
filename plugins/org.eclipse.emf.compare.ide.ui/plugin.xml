@@ -44,7 +44,7 @@
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table.TableContentMergeViewerCreator"
             extensions="org.eclipse.emf.compare.rcp.ui.eListDiff"
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EObjectListContentMergeViewer"
-            label="%model.compare.non.contaiment.feature">
+            label="%model.compare.non.containment.feature">
       </viewer>
       <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text.EMFCompareTextMergeViewerCreator"
@@ -53,9 +53,22 @@
             label="%model.compare.text.feature">
       </viewer>
       <viewer
-            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.WaitViewerCreator"
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.WaitViewerCreator"
+            extensions="org.eclipse.emf.compare.rcp.ui.eWait"
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.WaitViewer"
-            label="Please wait...">
+            label="%emf.compare.wait.viewer">
+      </viewer>
+      <viewer
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoDifferencesViewerCreator"
+            extensions="org.eclipse.emf.compare.rcp.ui.eNoDiff"
+            id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.NoDifferencesViewer"
+            label="%emf.compare.no.differences.viewer">
+      </viewer>
+      <viewer
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoVisibleItemViewerCreator"
+            extensions="org.eclipse.emf.compare.rcp.ui.eNoVisibleItem"
+            id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.NoVisibleItemViewer"
+            label="%emf.compare.no.visible.item.viewer">
       </viewer>
       <contentTypeBinding
             contentTypeId="org.eclipse.emf.ecore.xmi"

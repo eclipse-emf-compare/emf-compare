@@ -56,13 +56,32 @@ public class Navigatable implements INavigatable {
 		}
 
 		if (nextOrPrev != null) {
-			StructuredSelection newSelection = new StructuredSelection(nextOrPrev);
-			viewer.setSelection(newSelection);
-			viewer.fireOpen(new OpenEvent(viewer, newSelection));
+			fireOpen(nextOrPrev);
 		}
 
 		return nextOrPrev == null;
 
+	}
+
+	/**
+	 * Execute the fireOpen method of the viewer associated to this navigatable.
+	 * 
+	 * @param element
+	 *            the input of the selection of the open event fired by the fireOpen method.
+	 */
+	public void fireOpen(Object element) {
+		StructuredSelection newSelection = new StructuredSelection(element);
+		viewer.setSelection(newSelection);
+		viewer.fireOpen(new OpenEvent(viewer, newSelection));
+	}
+
+	/**
+	 * Return the viewer associated with this Navigatable.
+	 * 
+	 * @return the viewer associated with this Navigatable.
+	 */
+	public WrappableTreeViewer getViewer() {
+		return viewer;
 	}
 
 	public Object getInput() {
