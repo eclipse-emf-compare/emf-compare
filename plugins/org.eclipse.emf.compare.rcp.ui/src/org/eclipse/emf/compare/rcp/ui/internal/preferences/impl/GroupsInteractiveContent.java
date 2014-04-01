@@ -65,7 +65,7 @@ public class GroupsInteractiveContent {
 	/** Combo holding syncrhonization behavior preferences. */
 	private Combo combo;
 
-	/** Text that shall be updated with the description of the viewer. */
+	/** Text that will display the viewer's description. */
 	private final Text descriptionText;
 
 	/** List of descriptors. */

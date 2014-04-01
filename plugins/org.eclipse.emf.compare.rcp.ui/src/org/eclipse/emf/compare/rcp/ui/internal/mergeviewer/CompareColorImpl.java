@@ -109,7 +109,7 @@ public class CompareColorImpl implements RemovalListener<RGB, Color>, ICompareCo
 	 *            Use for get {@link Display}. The colors will be disposed with the control.
 	 * @param leftIsLocal
 	 * @param colorRegistry
-	 *            ColorRegistry where to find all needed color. Those color shall available with using the
+	 *            ColorRegistry where to find all needed color. Those color will be available through the
 	 *            constants: (UNMERGEABLE_DIFF_COLOR_THEME_KEY, REQUIRED_DIFF_COLOR_THEME_KEY,
 	 *            RESOLVED_CHANGE_COLOR_THEME_KEY, OUTGOING_CHANGE_COLOR_THEME_KEY,
 	 *            CONFLICTING_CHANGE_COLOR_THEME_KEY, INCOMING_CHANGE_COLOR_THEME_KEY)

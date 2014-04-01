@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.osgi.service.prefs.Preferences;
 
 /**
- * Abstract composite that is used to configure an item. The configuration shall be stored in the
+ * Abstract composite that is used to configure an item. The configuration will be stored in the
  * {@link Preferences} passed in parameter.
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
@@ -50,12 +50,12 @@ public abstract class AbstractConfigurationUI extends Composite {
 	}
 
 	/**
-	 * Content of this composite. This shall called by client.
+	 * Content of this composite. This should be overriden by clients.
 	 */
 	public abstract void createContent();
 
 	/**
-	 * Used to store the configuration. Implementation shall store all the configuration in the
+	 * Used to store the configuration. Implementation should store all the configuration in the
 	 * {@link Preferences}.
 	 */
 	public abstract void storeConfiguration();

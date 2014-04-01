@@ -111,9 +111,10 @@ public class DifferenceFilterManager {
 	}
 
 	/**
-	 * Get all {@link IDifferenceFilter} that shall be used by default for next comparison.
+	 * Get all {@link IDifferenceFilter} that should be used by default for next comparison.
 	 * 
-	 * @return A {@link Set} of {@link IDifferenceFilter} that shall be used by default for next comparison.
+	 * @return A {@link Collection} of {@link IDifferenceFilter} that should be used by default for next
+	 *         comparison.
 	 */
 	public Set<IDifferenceFilter> getCurrentByDefaultFilters() {
 		Set<IDifferenceFilter> storedFilter = getDisabledFilters();
@@ -144,7 +145,7 @@ public class DifferenceFilterManager {
 	}
 
 	/**
-	 * Set filters that shall be used by default for next comparison.
+	 * Set the filters that should be used by default for next comparison.
 	 * 
 	 * @param enabledFilter
 	 *            {@link Set} of {@link IDifferenceFilter} to set.
