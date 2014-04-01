@@ -25,7 +25,9 @@ import java.util.List;
 
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.fullcomparison.data.generics.GenericsMatchInputData;
 import org.eclipse.emf.compare.tests.fullcomparison.data.identifier.IdentifierMatchInputData;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -58,8 +60,8 @@ public class DefaultComparisonScopeTest {
 		assertNotNull(originResource);
 
 		final Iterator<EObject> leftContent = EcoreUtil.getAllProperContents(leftResource, false);
-		final Iterator<EObject> rightContent = EcoreUtil.getAllProperContents(leftResource, false);
-		final Iterator<EObject> originContent = EcoreUtil.getAllProperContents(leftResource, false);
+		final Iterator<EObject> rightContent = EcoreUtil.getAllProperContents(rightResource, false);
+		final Iterator<EObject> originContent = EcoreUtil.getAllProperContents(originResource, false);
 
 		while (leftContent.hasNext() && rightContent.hasNext() && originContent.hasNext()) {
 			final EObject left = leftContent.next();
@@ -223,6 +225,76 @@ public class DefaultComparisonScopeTest {
 			assertTrue(originChildren.remove(child));
 		}
 		assertTrue(originChildren.isEmpty());
+	}
+
+	@Test
+	public void testGetRootsWithGenerics() throws IOException {
+		// These are only getters, they should return us the unchanged object
+		final GenericsMatchInputData mockModel = new GenericsMatchInputData();
+		final Resource leftResource = mockModel.getLeft();
+		final Resource rightResource = mockModel.getRight();
+
+		assertNotNull(leftResource);
+		assertNotNull(rightResource);
+
+		final Iterator<EObject> leftContent = EcoreUtil.getAllProperContents(leftResource, false);
+		final Iterator<EObject> rightContent = EcoreUtil.getAllProperContents(rightResource, false);
+
+		while (leftContent.hasNext() && rightContent.hasNext()) {
+			final EObject left = leftContent.next();
+			final EObject right = rightContent.next();
+			final IComparisonScope eObjectScope = new DefaultComparisonScope(left, right, null);
+
+			assertSame(left, eObjectScope.getLeft());
+			assertSame(right, eObjectScope.getRight());
+		}
+
+		final IComparisonScope resourceScope = new DefaultComparisonScope(leftResource, rightResource, null);
+		assertSame(leftResource, resourceScope.getLeft());
+		assertSame(rightResource, resourceScope.getRight());
+
+		final ResourceSet leftRS = newResourceSet(leftResource);
+		final ResourceSet rightRS = newResourceSet(rightResource);
+
+		final IComparisonScope resourceSetScope = new DefaultComparisonScope(leftRS, rightRS, null);
+		assertSame(leftRS, resourceSetScope.getLeft());
+		assertSame(rightRS, resourceSetScope.getRight());
+
+	}
+
+	@Test
+	public void testGetEObjectChildrenWithGenerics() throws IOException {
+		// These are only getters, they should return us the unchanged object
+		final GenericsMatchInputData mockModel = new GenericsMatchInputData();
+
+		final Resource leftResource = mockModel.getLeft();
+		final Resource rightResource = mockModel.getRight();
+
+		assertNotNull(leftResource);
+		assertNotNull(rightResource);
+		final IComparisonScope resourceScope = new DefaultComparisonScope(leftResource, rightResource, null);
+
+		final Iterator<EObject> leftContent = EcoreUtil.getAllProperContents(leftResource, false);
+		final Iterator<EObject> rightContent = EcoreUtil.getAllProperContents(rightResource, false);
+		final Iterator<EObject> allEObjects = Iterators.concat(leftContent, rightContent);
+
+		assertTrue(allEObjects.hasNext());
+		while (allEObjects.hasNext()) {
+			final EObject root = allEObjects.next();
+
+			final Iterator<? extends EObject> scopeChildren = resourceScope.getChildren(root);
+			final List<EObject> children = Lists.newArrayList(Iterators.filter(EcoreUtil
+					.getAllProperContents(root, false), EObject.class));
+
+			while (scopeChildren.hasNext()) {
+				assertTrue(children.remove(scopeChildren.next()));
+			}
+			// We want the default scope to avoid all EGenericTypes without parameters
+			for (EObject outOfScope : children) {
+				assertTrue(outOfScope instanceof EGenericType);
+				assertTrue(EMFComparePredicates.IS_EGENERIC_TYPE_WITHOUT_PARAMETERS.apply(outOfScope));
+			}
+		}
 	}
 
 	private static IComparisonScope createNullScope() {

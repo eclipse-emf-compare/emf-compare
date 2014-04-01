@@ -26,6 +26,7 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -59,6 +60,32 @@ public final class EMFComparePredicates {
 		public boolean apply(Diff input) {
 			return input instanceof ReferenceChange
 					&& ((ReferenceChange)input).getReference().isContainment();
+		}
+	};
+
+	/**
+	 * Predicate used to know if the given EObject is an EGenericType without eTypeArguments. When an
+	 * EGenericType has arguments, it seems that the mutually derived references are not applicable in this
+	 * case.
+	 * 
+	 * @return true, if the given EObject is an EGenericType without eTypeArguments, false otherwise.
+	 */
+	public static final Predicate<? super EObject> IS_EGENERIC_TYPE_WITHOUT_PARAMETERS = new Predicate<EObject>() {
+		public boolean apply(EObject input) {
+			final boolean isEGenericWithoutParams;
+			if (input instanceof EGenericType && ((EGenericType)input).getETypeArguments().isEmpty()) {
+				if (input.eContainer() instanceof EGenericType) {
+					EGenericType eGenericTypeContainer = (EGenericType)(input.eContainer());
+					isEGenericWithoutParams = !(eGenericTypeContainer.getETypeArguments().contains(input)
+							|| input.equals(eGenericTypeContainer.getELowerBound()) || input
+							.equals(eGenericTypeContainer.getEUpperBound()));
+				} else {
+					isEGenericWithoutParams = true;
+				}
+			} else {
+				isEGenericWithoutParams = false;
+			}
+			return isEGenericWithoutParams;
 		}
 	};
 
