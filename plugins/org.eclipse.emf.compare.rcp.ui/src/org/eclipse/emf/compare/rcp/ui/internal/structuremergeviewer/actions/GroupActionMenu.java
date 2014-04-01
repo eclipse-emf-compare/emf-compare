@@ -76,7 +76,7 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 			if (gp != null) {
 				IAction action = new GroupAction(structureMergeViewerGrouper, gp, dgp.getLabel());
 				menuManager.add(action);
-				if (dgp == structureMergeViewerGrouper.getProvider()) {
+				if (gp.getClass() == structureMergeViewerGrouper.getProvider().getClass()) {
 					action.setChecked(true);
 				}
 			}
