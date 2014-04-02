@@ -384,7 +384,30 @@ You can customize the colors used by EMF Compare to highlight differences in the
 # Select the color you want to customize and click and edit to pick a new color. Your editor will now use your new colors.
 [[Image:./../images/EMFCompare_ColorPreferences.png]]
 
+==== Model Resolvers ====
 
+For each comparison, EMF Compare needs to define which resources are about to be compared. This scope is called the logical model (see [[./../developer/logical-model.html#What_is_a_logical_model_.3F | Logical Model]]). Model resolvers are used to define strategies to build this logical model.
+
+To customize the model resolution behavior go to the "Resolution strategy" preference page.
+# Open preferences: Window -> Preferences
+# Open "Resolution strategy" preference page: EMF Compare > Resolution strategy
+
+[[File:../images/EMF_Compare_Model_Resolver_Preference_Page.png]]
+
+===== Disable model resolution =====
+
+EMF Compare can prevent building the logical model. In that case, it will only compare the selected resources. To disable model resolution, uncheck the button called "Enable model resolution".
+
+===== Choose a strategy =====
+
+By default, EMF Compare proposes 3 different strategies:
+* Default: This strategy will use the highest ranking model resolver contributed to the platform. With the basic EMF compare installation, this strategy will be "Resolve in project". 
+* Resolve in project: This strategy will resolve resources referenced by the current resource and all resources referencing the current resource within its containing project.
+* Resolve descendants: This strategy will resolve all resources referenced by the current resource.
+
+In order to ask EMF Compare to use a specific strategy, first enable the model resolution (if it's not already done) and select it in the combobox.
+
+Other external strategies might be contributed to EMF Compare. In that case it may happen that the selected strategy can not handle a comparison. If it is so, EMF Compare will use the default strategy.
 
 == Features ==
 
