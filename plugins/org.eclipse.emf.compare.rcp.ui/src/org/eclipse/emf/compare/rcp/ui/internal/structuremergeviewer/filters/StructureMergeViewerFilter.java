@@ -17,6 +17,7 @@ import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.eventbus.EventBus;
 
@@ -234,6 +235,15 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 */
 	public Set<IDifferenceFilter> getSelectedDifferenceFilters() {
 		return selectedDifferenceFilters;
+	}
+
+	/**
+	 * Returns the set of unselected filters known by this viewer.
+	 * 
+	 * @return the unselectedDifferenceFilters the set of unselected filters known by this viewer.
+	 */
+	public Set<IDifferenceFilter> getUnSelectedDifferenceFilters() {
+		return ImmutableSet.copyOf(unselectedDifferenceFilters);
 	}
 
 	/**

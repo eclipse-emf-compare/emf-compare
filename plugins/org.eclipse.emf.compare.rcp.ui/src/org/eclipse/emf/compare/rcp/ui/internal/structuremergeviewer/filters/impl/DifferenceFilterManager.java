@@ -32,7 +32,6 @@ import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemUtil;
 import org.eclipse.emf.compare.rcp.internal.tracer.TracingConstant;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.osgi.service.prefs.Preferences;
 
 /**
@@ -114,10 +113,9 @@ public class DifferenceFilterManager {
 	/**
 	 * Get all {@link IDifferenceFilter} that shall be used by default for next comparison.
 	 * 
-	 * @return A {@link Collection} of {@link IDifferenceFilter} that shall be used by default for next
-	 *         comparison.
+	 * @return A {@link Set} of {@link IDifferenceFilter} that shall be used by default for next comparison.
 	 */
-	public Collection<IDifferenceFilter> getCurrentByDefaultFilters() {
+	public Set<IDifferenceFilter> getCurrentByDefaultFilters() {
 		Set<IDifferenceFilter> storedFilter = getDisabledFilters();
 		if (storedFilter == null) {
 			return getInitialByDefaultFilters();

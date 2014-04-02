@@ -12,6 +12,8 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions;
 
 import com.google.common.collect.Sets;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
@@ -108,8 +110,19 @@ public class FilterAction extends Action {
 	 * Synchronizes UI filter selection with the preferences.
 	 */
 	private void synchonizeFilters() {
-		filterManager.setCurrentByDefaultFilters(Sets.newLinkedHashSet(structureMergeViewerFilter
-				.getSelectedDifferenceFilters()));
+		Set<IDifferenceFilter> byDefaultFilters = Sets.newLinkedHashSet(filterManager
+				.getCurrentByDefaultFilters());
+		//Add newly activated filters
+		for (IDifferenceFilter activeFilter : structureMergeViewerFilter.getSelectedDifferenceFilters()) {
+			byDefaultFilters.add(activeFilter);
+		}
+		//Remove deactivated filters
+		for (IDifferenceFilter toDeactivateFilter : structureMergeViewerFilter
+				.getUnSelectedDifferenceFilters()) {
+			byDefaultFilters.remove(toDeactivateFilter);
+		}
+		filterManager.setCurrentByDefaultFilters(byDefaultFilters);
+
 	}
 
 	/**
