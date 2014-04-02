@@ -223,7 +223,7 @@ public class ModelResolutionPreferencePage extends PreferencePage implements IWo
 				forcedResolverInitialValueIndex = index;
 			}
 		}
-		resolverCombo = new Combo(resolutionStrategyComposite, SWT.DROP_DOWN);
+		resolverCombo = new Combo(resolutionStrategyComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		resolverCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		resolverCombo.setItems(comboLabels);
 		resolverCombo.addSelectionListener(new SelectionAdapter() {
