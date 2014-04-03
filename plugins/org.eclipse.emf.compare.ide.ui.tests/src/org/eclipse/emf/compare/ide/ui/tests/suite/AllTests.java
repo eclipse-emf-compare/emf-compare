@@ -14,13 +14,14 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.textui.TestRunner;
 
+import org.eclipse.emf.compare.ide.ui.tests.logical.AllLogicalTests;
 import org.eclipse.emf.compare.ide.ui.tests.unit.DependenciesTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({DependenciesTest.class, })
+@SuiteClasses({DependenciesTest.class, AllLogicalTests.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.
