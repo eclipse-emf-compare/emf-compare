@@ -10,10 +10,15 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.preferences;
 
+import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -25,14 +30,17 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 public class EMFComparePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	public EMFComparePreferencePage() {
+		noDefaultAndApplyButton();
 	}
 
 	public EMFComparePreferencePage(String title) {
 		super(title);
+		noDefaultAndApplyButton();
 	}
 
 	public EMFComparePreferencePage(String title, ImageDescriptor image) {
 		super(title, image);
+		noDefaultAndApplyButton();
 	}
 
 	public void init(IWorkbench workbench) {
@@ -41,6 +49,11 @@ public class EMFComparePreferencePage extends PreferencePage implements IWorkben
 
 	@Override
 	protected Control createContents(Composite parent) {
-		return null;
+		Composite container = new Composite(parent, SWT.NONE);
+		container.setLayout(new GridLayout(1, false));
+		Label label = new Label(container, SWT.NONE);
+		label.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+		label.setText(EMFCompareRCPUIMessages.getString("EMFComparePreferencePage.intro.text")); //$NON-NLS-1$
+		return container;
 	}
 }
