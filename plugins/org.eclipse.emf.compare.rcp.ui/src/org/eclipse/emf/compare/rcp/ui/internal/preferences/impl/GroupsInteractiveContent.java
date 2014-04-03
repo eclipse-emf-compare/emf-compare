@@ -208,7 +208,7 @@ public class GroupsInteractiveContent {
 	 * @return Description composite.
 	 */
 	private Text createDescriptionComposite(Composite composite) {
-		Group descriptionComposite = new Group(composite, SWT.BORDER);
+		Group descriptionComposite = new Group(composite, SWT.NONE);
 		descriptionComposite.setText(EMFCompareRCPUIMessages
 				.getString("InteractiveUIContent.descriptionComposite.label")); //$NON-NLS-1$
 		descriptionComposite.setLayout(new GridLayout(1, false));

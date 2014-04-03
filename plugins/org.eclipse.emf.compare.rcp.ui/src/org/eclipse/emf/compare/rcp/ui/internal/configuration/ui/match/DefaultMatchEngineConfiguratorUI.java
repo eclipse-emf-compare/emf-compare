@@ -22,7 +22,8 @@ import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.AbstractConfigur
 import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -34,6 +35,11 @@ import org.osgi.service.prefs.Preferences;
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
 public class DefaultMatchEngineConfiguratorUI extends AbstractConfigurationUI {
+
+	/** Spacing between each element in the configuration composite. */
+	private static final int COMPOSITE_VERTICAL_SPACING = 10;
+
+	private static final int COMPOSITE_MARGIN = 5;
 
 	private Button whenAvailableButton;
 
@@ -49,19 +55,28 @@ public class DefaultMatchEngineConfiguratorUI extends AbstractConfigurationUI {
 
 	@Override
 	public void createContent() {
-		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
-		this.setLayout(rowLayout);
-		Label text = new Label(this, SWT.NONE);
+		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.marginWidth = COMPOSITE_MARGIN;
+		gridLayout.marginHeight = COMPOSITE_MARGIN;
+		gridLayout.verticalSpacing = COMPOSITE_VERTICAL_SPACING;
+		this.setLayout(gridLayout);
+
+		Label text = new Label(this, SWT.WRAP);
 		text.setText(EMFCompareRCPUIMessages
 				.getString("DefaultMatchEngineConfiguratorUI.useIdentifier.label")); //$NON-NLS-1$
-		whenAvailableButton = new Button(this, SWT.RADIO);
+		text.setLayoutData(new GridData(SWT.BEGINNING, SWT.TOP, true, false));
+
+		whenAvailableButton = new Button(this, SWT.RADIO | SWT.WRAP);
+		whenAvailableButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.TOP, true, false));
 		whenAvailableButton.setText(EMFCompareRCPUIMessages
 				.getString("DefaultMatchEngineConfiguratorUI.whenAvailable.label")); //$NON-NLS-1$
 
-		onlyButton = new Button(this, SWT.RADIO);
+		onlyButton = new Button(this, SWT.RADIO | SWT.WRAP);
+		onlyButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.TOP, true, false));
 		onlyButton.setText(EMFCompareRCPUIMessages.getString("DefaultMatchEngineConfiguratorUI.only.label")); //$NON-NLS-1$
 
-		neverButton = new Button(this, SWT.RADIO);
+		neverButton = new Button(this, SWT.RADIO | SWT.WRAP);
+		neverButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.TOP, true, false));
 		neverButton
 				.setText(EMFCompareRCPUIMessages.getString("DefaultMatchEngineConfiguratorUI.never.label")); //$NON-NLS-1$
 

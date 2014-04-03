@@ -75,6 +75,9 @@ import org.osgi.service.prefs.Preferences;
  */
 public final class InteractiveUIContent {
 
+	/** Width hint for configuration composite. */
+	private static final int WIDTH_HINT_CONFIG_COMPOSITE = 400;
+
 	/** Height hint for description composite. */
 	private static final int DESCRIPTION_COMPOSITE_HEIGHT_HINT = 50;
 
@@ -115,7 +118,7 @@ public final class InteractiveUIContent {
 		} else {
 			numberOfColumns = 1;
 		}
-		contentComposite.setLayout(new GridLayout(numberOfColumns, true));
+		contentComposite.setLayout(new GridLayout(numberOfColumns, false));
 		contentComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		// Engine chooser composite
 		this.viewerCompsite = new Composite(contentComposite, SWT.NONE);
@@ -186,14 +189,15 @@ public final class InteractiveUIContent {
 	 * @return Group that will hold configurations in a stack layout.
 	 */
 	private Group createConfigComposite(Composite composite) {
-		Group confComposite = new Group(composite, SWT.BORDER);
+		Group confComposite = new Group(composite, SWT.NONE);
 		confComposite.setText(EMFCompareRCPUIMessages
 				.getString("InteractiveUIContent.configurationComposite.label")); //$NON-NLS-1$
 		StackLayout layout = new StackLayout();
 		layout.marginHeight = 10;
 		layout.marginWidth = 10;
 		confComposite.setLayout(layout);
-		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		GridData layoutData = new GridData(SWT.BEGINNING, SWT.FILL, false, true);
+		layoutData.widthHint = WIDTH_HINT_CONFIG_COMPOSITE;
 		confComposite.setLayoutData(layoutData);
 		return confComposite;
 	}
@@ -207,7 +211,7 @@ public final class InteractiveUIContent {
 	 * @return Text that will hold viewer selection description.
 	 */
 	private Text createDescriptionComposite(Composite composite) {
-		Group descriptionComposite = new Group(composite, SWT.BORDER);
+		Group descriptionComposite = new Group(composite, SWT.NONE);
 		descriptionComposite.setText(EMFCompareRCPUIMessages
 				.getString("InteractiveUIContent.descriptionComposite.label")); //$NON-NLS-1$
 		descriptionComposite.setLayout(new GridLayout(1, false));
