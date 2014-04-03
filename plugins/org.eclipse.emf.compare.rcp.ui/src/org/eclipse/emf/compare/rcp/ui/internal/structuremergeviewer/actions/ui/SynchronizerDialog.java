@@ -76,7 +76,6 @@ public class SynchronizerDialog extends MessageDialogWithToggle {
 			container.setLayout(layout);
 			// Create hyperlink to preferences.
 			Link pageLink = new Link(container, SWT.NONE);
-			pageLink.setTouchEnabled(true);
 			GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
 			layoutData.horizontalIndent = HYPERLINK_INDENT;
 			pageLink.setLayoutData(layoutData);
