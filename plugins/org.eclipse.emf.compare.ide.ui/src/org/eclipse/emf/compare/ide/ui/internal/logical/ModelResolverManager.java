@@ -40,13 +40,16 @@ import org.osgi.service.prefs.Preferences;
  */
 public class ModelResolverManager {
 
-	/** preference key pointing at the "forced resolver" id. */
-	private static final String FORCED_RESOLVER_PREF_KEY = "org.eclipse.emf.compare.ide.ui.forced.resolver"; //$NON-NLS-1$
+	/** Preference key pointing at the "user resolver" id. */
+	private static final String USER_RESOLVER_PREF_KEY = "org.eclipse.emf.compare.ide.ui.user.resolver"; //$NON-NLS-1$
 
-	/** Preference key pointing at the "disable resolving" value. */
-	private static final String DISABLE_RESOLVING_PREF_KEY = "org.eclipse.emf.compare.ide.ui.disable.resolving"; //$NON-NLS-1$
+	/**
+	 * Preference key pointing at the "enable resolving" value. Set to true or null if the resolving is
+	 * enabled.
+	 */
+	private static final String ENABLE_RESOLVING_PREF_KEY = "org.eclipse.emf.compare.ide.ui.enable.resolving"; //$NON-NLS-1$
 
-	/** {@link Preferences} holding default resolver value. */
+	/** {@link Preferences} holding resolvers preference values. */
 	private final Preferences preferenceStore;
 
 	/** registry of ModelResolverDescriptor. */
@@ -64,7 +67,7 @@ public class ModelResolverManager {
 	}
 
 	/**
-	 * Add a new resolver.
+	 * Adds a new resolver.
 	 * 
 	 * @param resolver
 	 *            Resolver instance
@@ -76,14 +79,16 @@ public class ModelResolverManager {
 	 *            Human readable description of the resolver or <code>null</code>.
 	 * @return {@link ModelResolverDescriptor} of on old {@link IModelResolver} registered with the same id.
 	 */
-	ModelResolverDescriptor add(IModelResolver resolver, String id, String label, String description) {
+	public ModelResolverDescriptor add(IModelResolver resolver, String id, String label, String description) {
+		Preconditions.checkNotNull(resolver);
+		Preconditions.checkNotNull(id);
 		return descriptors.put(id, new ModelResolverDescriptor(resolver, id, label, description));
 	}
 
 	/**
-	 * Clear the registry.
+	 * Clears the registry.
 	 */
-	void clear() {
+	public void clear() {
 		for (ModelResolverDescriptor descriptor : descriptors.values()) {
 			descriptor.getModelResolver().dispose();
 		}
@@ -91,7 +96,7 @@ public class ModelResolverManager {
 	}
 
 	/**
-	 * Get all registered {@link ModelResolverDescriptor}.
+	 * Gets all registered {@link ModelResolverDescriptor}.
 	 * 
 	 * @return
 	 */
@@ -100,7 +105,7 @@ public class ModelResolverManager {
 	}
 
 	/**
-	 * Get the user selected resolver.
+	 * Gets the user selected resolver.
 	 * <p>
 	 * The user selected resolver will be evaluated before any other ModelResolverDescriptor
 	 * </p>
@@ -109,7 +114,7 @@ public class ModelResolverManager {
 	 */
 	public ModelResolverDescriptor getUserSelectedResolver() {
 		ModelResolverDescriptor result = null;
-		String curentDefaultResolver = preferenceStore.get(FORCED_RESOLVER_PREF_KEY, null);
+		String curentDefaultResolver = preferenceStore.get(USER_RESOLVER_PREF_KEY, null);
 		// Get default from preferences
 		if (curentDefaultResolver != null) {
 			ModelResolverDescriptor modelResolverDescriptor = descriptors.get(curentDefaultResolver);
@@ -121,7 +126,7 @@ public class ModelResolverManager {
 	}
 
 	/**
-	 * Return the descriptor with the specific id.
+	 * Returns the descriptor with the specific id.
 	 * 
 	 * @param id
 	 *            ID of the descriptor.
@@ -132,65 +137,68 @@ public class ModelResolverManager {
 	}
 
 	/**
-	 * Return true if the model resolving is enabled.
+	 * Returns true if the model resolving is enabled.
 	 * <p>
 	 * The default value is true
 	 * </p>
 	 * 
 	 * @return True if the resolving mechanism is disabled.
 	 */
-	public boolean isResolutionEnable() {
-		return Boolean.valueOf(preferenceStore.get(DISABLE_RESOLVING_PREF_KEY, Boolean.TRUE.toString()))
+	public boolean isResolutionEnabled() {
+		return Boolean.valueOf(preferenceStore.get(ENABLE_RESOLVING_PREF_KEY, Boolean.TRUE.toString()))
 				.booleanValue();
 	}
 
 	/**
-	 * Set the resolving mechanism on or off.
+	 * Sets the resolving mechanism on or off.
 	 * 
 	 * @param isEnabled
 	 */
 	public void setResolution(boolean isEnabled) {
 		if (isEnabled) {
-			preferenceStore.remove(DISABLE_RESOLVING_PREF_KEY);
+			preferenceStore.remove(ENABLE_RESOLVING_PREF_KEY);
 		} else {
-			preferenceStore.put(DISABLE_RESOLVING_PREF_KEY, Boolean.toString(false));
+			preferenceStore.put(ENABLE_RESOLVING_PREF_KEY, Boolean.toString(false));
 		}
 		if (TracingConstant.CONFIGURATION_TRACING_ACTIVATED) {
 			StringBuilder trace = new StringBuilder("Preference "); //$NON-NLS-1$
-			trace.append(DISABLE_RESOLVING_PREF_KEY).append(" has been set to:\n").append( //$NON-NLS-1$
-					preferenceStore.get(DISABLE_RESOLVING_PREF_KEY, "")); //$NON-NLS-1$
+			trace.append(ENABLE_RESOLVING_PREF_KEY).append(" has been set to:\n").append( //$NON-NLS-1$
+					preferenceStore.get(ENABLE_RESOLVING_PREF_KEY, "")); //$NON-NLS-1$
 			EMFCompareIDEUIPlugin.getDefault().log(IStatus.INFO, trace.toString());
 		}
 	}
 
 	/**
-	 * Remove the ModelResolverDescriptor register with this key from the registry.
+	 * Removes the ModelResolverDescriptor register with this key from the registry.
 	 * 
 	 * @param className
 	 * @return
 	 */
-	ModelResolverDescriptor remove(String className) {
-		return descriptors.remove(className);
+	public ModelResolverDescriptor remove(String className) {
+		if (className != null) {
+			return descriptors.remove(className);
+		}
+		return null;
 	}
 
 	/**
-	 * Set the forced resolver.
+	 * Sets the resolver selected by the user.
 	 * <p>
 	 * The forced resolver will be evaluated before any other ModelResolverDescriptor
 	 * </p>
 	 * 
 	 * @param forcedResolver
 	 */
-	public void setForcedResolver(ModelResolverDescriptor forcedResolver) {
+	public void setUserSelectedResolver(ModelResolverDescriptor forcedResolver) {
 		if (forcedResolver != null) {
-			preferenceStore.put(FORCED_RESOLVER_PREF_KEY, forcedResolver.getId());
+			preferenceStore.put(USER_RESOLVER_PREF_KEY, forcedResolver.getId());
 		} else {
-			preferenceStore.remove(FORCED_RESOLVER_PREF_KEY);
+			preferenceStore.remove(USER_RESOLVER_PREF_KEY);
 		}
 		if (TracingConstant.CONFIGURATION_TRACING_ACTIVATED) {
 			StringBuilder trace = new StringBuilder("Preference "); //$NON-NLS-1$
-			trace.append(FORCED_RESOLVER_PREF_KEY).append(" has been set to:\n").append( //$NON-NLS-1$
-					preferenceStore.get(FORCED_RESOLVER_PREF_KEY, "")); //$NON-NLS-1$
+			trace.append(USER_RESOLVER_PREF_KEY).append(" has been set to:\n").append( //$NON-NLS-1$
+					preferenceStore.get(USER_RESOLVER_PREF_KEY, "")); //$NON-NLS-1$
 			EMFCompareIDEUIPlugin.getDefault().log(IStatus.INFO, trace.toString());
 		}
 	}

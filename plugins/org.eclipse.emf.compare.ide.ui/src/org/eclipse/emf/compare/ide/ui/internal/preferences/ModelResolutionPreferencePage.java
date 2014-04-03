@@ -83,7 +83,7 @@ public class ModelResolutionPreferencePage extends PreferencePage implements IWo
 	protected Control createContents(Composite parent) {
 		activableElements = Lists.newArrayList();
 		// Init data value
-		isEnabled = modelResolverManager.isResolutionEnable();
+		isEnabled = modelResolverManager.isResolutionEnabled();
 		userSelectedResolver = modelResolverManager.getUserSelectedResolver();
 
 		Composite mainContainer = new Composite(parent, SWT.NONE);
@@ -246,7 +246,7 @@ public class ModelResolutionPreferencePage extends PreferencePage implements IWo
 
 	@Override
 	public boolean performOk() {
-		modelResolverManager.setForcedResolver(userSelectedResolver);
+		modelResolverManager.setUserSelectedResolver(userSelectedResolver);
 		modelResolverManager.setResolution(isEnabled);
 		return super.performOk();
 	}
