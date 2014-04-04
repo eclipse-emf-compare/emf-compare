@@ -372,20 +372,7 @@ To customize those post-processors go to the related preference page.
 
 On this page you will find all registered post processors. They have been sorted by ordinal (top element of the list will be executed first). To enable or disable any post processor simply check or uncheck each of them. Unchecked post processors will not be triggered during later comparisons.
 
-=== User Interface customization ===
-
-==== Colors Customization ====
-
-You can customize the colors used by EMF Compare to highlight differences in the user interface.
- 
-# Open preferences: Window -> Preferences
-# Go to Colors and Fonts preferences: Select -> General -> Colors and Fonts
-# Open the EMF Compare Category.
-# Select the color you want to customize and click and edit to pick a new color. Your editor will now use your new colors.
-[[Image:./../images/EMFCompare_ColorPreferences.png]]
-
 ==== Model Resolvers ====
-
 For each comparison, EMF Compare needs to define which resources are about to be compared. This scope is called the logical model (see [[./../developer/logical-model.html#What_is_a_logical_model_.3F | Logical Model]]). Model resolvers are used to define strategies to build this logical model.
 
 To customize the model resolution behavior go to the "Resolution strategy" preference page.
@@ -408,6 +395,39 @@ By default, EMF Compare proposes 3 different strategies:
 In order to ask EMF Compare to use a specific strategy, first enable the model resolution (if it's not already done) and select it in the combobox.
 
 Other external strategies might be contributed to EMF Compare. In that case it may happen that the selected strategy can not handle a comparison. If it is so, EMF Compare will use the default strategy.
+
+=== User Interface customization ===
+
+==== Colors Customization ====
+
+You can customize the colors used by EMF Compare to highlight differences in the user interface.
+ 
+# Open preferences: Window -> Preferences
+# Go to Colors and Fonts preferences: Select -> General -> Colors and Fonts
+# Open the EMF Compare Category.
+# Select the color you want to customize and click and edit to pick a new color. Your editor will now use your new colors.
+[[Image:./../images/EMFCompare_ColorPreferences.png]]
+
+
+
+==== Filters ====
+You have already been explained how to use filters to hide or display differences in EMF Compare UI (see [[#Toolbar]]). This chapter teaches you how to customize filter default activation.
+
+First open the filters preference page:
+* Open preferences: Window > Preferences > EMF Compare
+* Select "Filters" page.
+
+[[File:../images/EMF_Compare_Filters_Preference_Page.png]]
+
+The first panel (1) is used to define which filters should be activated by default. Checked elements will be activated for later comparisons. Of course, only filters that can handle the comparison will be activated (for futher explanations see [[./../developer/developer-guide.html#Add_your_own_filter|Add you own filter]]).
+
+The second panel (2) is used to define the synchronization behavior between the filters selection in UI and the preferences. The combobox in the preference page has 3 distinct values:
+* Always: Each time you will modify the filters selection in UI, the selected set of filters will be synchronized with the preferences. This way the filters that you have selected will be kept between comparisons.
+* Never: The selection of filters in UI will never be synchronized with the preferences.
+* Prompt: You will be asked each time that filters selection is modified if you want to synchronize the new set of filters with the preferences. If this option is set, a popup will appear just after each filter activation or deactivation. This popup proposes several ways to handle the newly selected set of filters: [[File:../images/EMF_Compare_Filters_Synchronization_Dialog.png]]
+** If your answer is "Yes", the current set of selected filters will be synchronized with the preferences. In other word, it will become your default actived set of filters.
+** If your answer is "No", nothing will be synchronized. Next time you will launch a comparison, the activated filters will be defined by the preferences.
+** If you check "Do not ask me again", the above behaviors will be executed and the synchronization behavior will change. It will be set to "Always" if you have selected "Yes". It will be set to "Never" if you have selected "No".
 
 == Features ==
 

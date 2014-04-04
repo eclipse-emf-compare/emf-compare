@@ -485,6 +485,7 @@ This extension has three fields:
 * class: a class that implements ''org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter''
 * label: the label that will be displayed in the UI.
 * activeByDefault: true if you want your filter be active by default, false otherwise.
+* description: A human-readable description for this filter. It will be displayed in the EMF Compare UI.
 
 The ''org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter'''s contract is:
 
