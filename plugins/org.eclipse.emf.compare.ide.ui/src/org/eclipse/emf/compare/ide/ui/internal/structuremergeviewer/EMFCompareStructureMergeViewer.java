@@ -196,7 +196,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	private boolean pseudoConflictsFilterEnabled;
 
-	private INavigatable navigatable;
+	private Navigatable navigatable;
 
 	private EMFCompareColor fColors;
 
@@ -566,7 +566,15 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 						SWTUtil.safeSyncExec(new Runnable() {
 							public void run() {
 								refresh();
-								setSelection(new StructuredSelection(adaptedAffectedObject), true);
+								StructuredSelection selection = new StructuredSelection(adaptedAffectedObject);
+								// allows to call CompareToolBar#selectionChanged(SelectionChangedEvent)
+								getViewer().setSelection(selection);
+							}
+						});
+						// update content viewers with the new selection
+						SWTUtil.safeAsyncExec(new Runnable() {
+							public void run() {
+								navigatable.openSelectedChange();
 							}
 						});
 					}
