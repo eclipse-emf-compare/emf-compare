@@ -570,7 +570,12 @@ You can provide your own groups by adding an extension of type ''org.eclipse.emf
 This extension has three fields:
 * class: a class that implements ''org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider''
 * label: the label that will be displayed in the UI.
-* activeByDefault: true if you want your filter be active by default, false otherwise.
+* description: A description of the group. (Used in interface)
+* rank: The rank of the group. The highest rank enabled for a comparison is used. ( Default value : 0)
+* type: Type of comparison this group can handle (Default value: BOTH).
+** THREE_WAY: This group can only handle three way comparison.
+** TWO_WAY: This group can handle two way comparison.
+** BOTH: This group can handle two and three way comparisons.
 
 The ''org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider'''s contract is:
 

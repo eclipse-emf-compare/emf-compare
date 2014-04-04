@@ -429,6 +429,29 @@ The second panel (2) is used to define the synchronization behavior between the 
 ** If your answer is "No", nothing will be synchronized. Next time you will launch a comparison, the activated filters will be defined by the preferences.
 ** If you check "Do not ask me again", the above behaviors will be executed and the synchronization behavior will change. It will be set to "Always" if you have selected "Yes". It will be set to "Never" if you have selected "No".
 
+==== Groups ====
+
+You have already been explained how to use groups to gather differences in EMF Compare UI (see [[#Toolbar]]). This chapter teaches you how to customize the default activated group in EMF Compare.
+
+First open the Groups preference page:
+* Open preferences: Window > Preferences > EMF Compare
+* Select "Groups" page.
+
+[[File:../images/EMF_Compare_Groups_Preference_Page.png]]
+
+This page is divided in two tabs. The first tab handles 2-way comparisons and the second tab handles 3-way comparisons.
+Each tab contains two panels:
+
+The top panel (1) is used to define the default group. EMF Compare uses an ordered list of groups to determine which group should be the default one. The first group in this list that can handle the comparison is chosen as default group. To change it, simply put the desired group in top of the list. To do so, use the up and down buttons located on the right side of the panel.
+
+The bottom panel (2) is used to define a synchronization behavior between selected group in UI and the preferences. The combo box lets you choose between 3 different behaviors: 
+* Always: Each time you will select a group in UI, it will become the default group.
+* Never: The selection of a group in UI will never modify the default group.
+* Prompt: You will be asked each time you change the active group if you want to synchronize it with the preferences. A popup will appear. It will propose several ways to handle the newly selected group: [[File:../images/EMF_Compare_Groups_Synchronization_Dialog.png]]
+** If your answer is "Yes", the current group will be synchronized with the preferences. In other word, it will become the default group.
+** If your answer is "No", nothing will be synchronized. Next time you will start a comparison, the default group will be defined by the preferences.
+** If you check "Do not ask me again", the above behaviors will be executed and the synchronization behavior will change. It will be set to "Always" if you have selected "Yes". It will be set to "Never" if you have selected "No".
+
 == Features ==
 
 === Grouping Differences  ===
