@@ -70,12 +70,18 @@ public class CompareToolBar implements ISelectionChangedListener {
 	private final ToolBarManager toolbarManager;
 
 	/**
+	 * Allows us to know if the {@link #initToolbar(AbstractTreeViewer, INavigatable)} step has been executed.
+	 */
+	private boolean doOnce;
+
+	/**
 	 * 
 	 */
 	public CompareToolBar(ToolBarManager toolbarManager, StructureMergeViewerGrouper viewerGrouper,
 			StructureMergeViewerFilter viewerFilter, EMFCompareConfiguration compareConfiguration) {
 		this.toolbarManager = toolbarManager;
 		this.compareConfiguration = compareConfiguration;
+		this.doOnce = false;
 		mergeActions = newArrayListWithCapacity(2);
 		mergeAllNonConflictingActions = newArrayListWithCapacity(2);
 
@@ -87,54 +93,58 @@ public class CompareToolBar implements ISelectionChangedListener {
 	}
 
 	public final void initToolbar(AbstractTreeViewer viewer, INavigatable nav) {
-		compareConfiguration.getEventBus().register(this);
+		if (!this.doOnce) {
+			compareConfiguration.getEventBus().register(this);
 
-		// Add extension point contributions to the structure merge viewer toolbar
-		IServiceLocator workbench = PlatformUI.getWorkbench();
+			// Add extension point contributions to the structure merge viewer toolbar
+			IServiceLocator workbench = PlatformUI.getWorkbench();
 
-		IMenuService menuService = (IMenuService)workbench.getService(IMenuService.class);
-		if (menuService != null) {
-			menuService.populateContributionManager(toolbarManager,
-					"toolbar:org.eclipse.emf.compare.structuremergeviewer.toolbar"); //$NON-NLS-1$
-		}
-
-		boolean leftEditable = compareConfiguration.isLeftEditable();
-		boolean rightEditable = compareConfiguration.isRightEditable();
-
-		final EnumSet<MergeMode> modes;
-		if (rightEditable && leftEditable) {
-			modes = EnumSet.of(MergeMode.RIGHT_TO_LEFT, MergeMode.LEFT_TO_RIGHT);
-		} else {
-			modes = EnumSet.of(MergeMode.ACCEPT, MergeMode.REJECT);
-		}
-
-		if (rightEditable || leftEditable) {
-			toolbarManager.add(new DropDownMergeMenuAction(compareConfiguration, modes));
-			for (MergeMode mode : modes) {
-				toolbarManager.add(createMergeAction(mode, compareConfiguration, nav));
+			IMenuService menuService = (IMenuService)workbench.getService(IMenuService.class);
+			if (menuService != null) {
+				menuService.populateContributionManager(toolbarManager,
+						"toolbar:org.eclipse.emf.compare.structuremergeviewer.toolbar"); //$NON-NLS-1$
 			}
-			for (MergeMode mode : modes) {
-				toolbarManager.add(createMergeAllNonConflictingAction(mode, compareConfiguration));
+
+			boolean leftEditable = compareConfiguration.isLeftEditable();
+			boolean rightEditable = compareConfiguration.isRightEditable();
+
+			final EnumSet<MergeMode> modes;
+			if (rightEditable && leftEditable) {
+				modes = EnumSet.of(MergeMode.RIGHT_TO_LEFT, MergeMode.LEFT_TO_RIGHT);
+			} else {
+				modes = EnumSet.of(MergeMode.ACCEPT, MergeMode.REJECT);
 			}
+
+			if (rightEditable || leftEditable) {
+				toolbarManager.add(new DropDownMergeMenuAction(compareConfiguration, modes));
+				for (MergeMode mode : modes) {
+					toolbarManager.add(createMergeAction(mode, compareConfiguration, nav));
+				}
+				for (MergeMode mode : modes) {
+					toolbarManager.add(createMergeAllNonConflictingAction(mode, compareConfiguration));
+				}
+			}
+
+			toolbarManager.add(new Separator());
+			toolbarManager.add(new SelectNextDiffAction(nav));
+			toolbarManager.add(new SelectPreviousDiffAction(nav));
+			toolbarManager.add(new Separator());
+			toolbarManager.add(new ExpandAllModelAction(viewer));
+			toolbarManager.add(new CollapseAllModelAction(viewer));
+			toolbarManager.add(new Separator());
+			toolbarManager.add(groupActionMenu);
+			groupActionMenu.updateMenu(compareConfiguration.getComparisonScope(), compareConfiguration
+					.getComparison());
+			toolbarManager.add(filterActionMenu);
+			filterActionMenu.updateMenu(compareConfiguration.getComparisonScope(), compareConfiguration
+					.getComparison());
+			toolbarManager.add(new Separator());
+			toolbarManager.add(new SaveComparisonModelAction(compareConfiguration));
+
+			toolbarManager.update(true);
+
+			this.doOnce = true;
 		}
-
-		toolbarManager.add(new Separator());
-		toolbarManager.add(new SelectNextDiffAction(nav));
-		toolbarManager.add(new SelectPreviousDiffAction(nav));
-		toolbarManager.add(new Separator());
-		toolbarManager.add(new ExpandAllModelAction(viewer));
-		toolbarManager.add(new CollapseAllModelAction(viewer));
-		toolbarManager.add(new Separator());
-		toolbarManager.add(groupActionMenu);
-		groupActionMenu.updateMenu(compareConfiguration.getComparisonScope(), compareConfiguration
-				.getComparison());
-		toolbarManager.add(filterActionMenu);
-		filterActionMenu.updateMenu(compareConfiguration.getComparisonScope(), compareConfiguration
-				.getComparison());
-		toolbarManager.add(new Separator());
-		toolbarManager.add(new SaveComparisonModelAction(compareConfiguration));
-
-		toolbarManager.update(true);
 	}
 
 	private MergeAction createMergeAction(MergeMode mergeMode, EMFCompareConfiguration cc, INavigatable nav) {
@@ -156,6 +166,7 @@ public class CompareToolBar implements ISelectionChangedListener {
 	public void dispose() {
 		toolbarManager.removeAll();
 		compareConfiguration.getEventBus().unregister(this);
+		this.doOnce = false;
 	}
 
 	/**
