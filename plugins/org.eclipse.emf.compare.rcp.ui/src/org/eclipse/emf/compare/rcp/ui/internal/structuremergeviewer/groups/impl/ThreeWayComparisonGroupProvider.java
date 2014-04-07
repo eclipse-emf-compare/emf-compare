@@ -195,7 +195,9 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		 */
 		protected void buildSubTree(TreeNode parentNode, Conflict conflict, Match match) {
 
-			SetView<Diff> setView = Sets.intersection(Sets.newHashSet(match.getDifferences()), Sets
+			// Use a LinkedHashSet for the first argument of Sets.intersection, in order to keep the order of
+			// differences.
+			SetView<Diff> setView = Sets.intersection(Sets.newLinkedHashSet(match.getDifferences()), Sets
 					.newHashSet(conflict.getDifferences()));
 			for (Diff diff : setView) {
 				if (!isParentPseudoConflictFromOtherSide(diff, parentNode.getData())) {
