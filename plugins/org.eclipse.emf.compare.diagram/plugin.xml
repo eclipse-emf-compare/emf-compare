@@ -26,6 +26,8 @@
          point="org.eclipse.emf.compare.rcp.postProcessor">
       <processor
             class="org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor"
+            description="This post processor is responsible for improving comparison results on diagrams."
+            label="Diagram Post processor"
             ordinal="30">
          <nsURI
                value="http://www.eclipse.org/gmf/runtime/\d.\d.\d/notation">
