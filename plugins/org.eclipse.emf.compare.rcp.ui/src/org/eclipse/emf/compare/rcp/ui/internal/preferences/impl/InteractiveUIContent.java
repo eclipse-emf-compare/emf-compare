@@ -360,9 +360,9 @@ public final class InteractiveUIContent {
 				if (descriptorViewer.getCheckedElements().length == 0) {
 					descriptorViewer.setCheckedElements(new Object[] {element });
 					MessageDialog.openWarning(shell, EMFCompareRCPUIMessages
-							.getString("InteractiveUIContent.INCORRECT_SELECTION_TITLE"), //$NON-NLS-1$
+							.getString("InteractiveUIContent.incorrectSelection.title"), //$NON-NLS-1$
 							EMFCompareRCPUIMessages
-									.getString("InteractiveUIContent.INCORRECT_SELECTION_MESSAGE")); //$NON-NLS-1$
+									.getString("InteractiveUIContent.incorrectSelection.message")); //$NON-NLS-1$
 				}
 			}
 
