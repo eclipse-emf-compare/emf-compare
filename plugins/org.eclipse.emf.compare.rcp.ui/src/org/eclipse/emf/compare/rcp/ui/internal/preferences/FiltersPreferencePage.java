@@ -48,7 +48,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -230,19 +229,19 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 		private void createSynchronizationBehaviorContent(Composite parent) {
 			Group synchronizationGroup = new Group(parent, SWT.NONE);
 			GridData layoutData = new GridData(SWT.FILL, SWT.BOTTOM, true, false);
-			RowLayout layout = new RowLayout(SWT.HORIZONTAL);
-			layout.marginTop = 10;
-			layout.marginBottom = 10;
+			GridLayout layout = new GridLayout(2, false);
 			synchronizationGroup.setLayout(layout);
 			synchronizationGroup.setLayoutData(layoutData);
 			synchronizationGroup.setText(EMFCompareRCPUIMessages
 					.getString("InteractiveFilterUIContent.sync.behavior.group.label")); //$NON-NLS-1$
 			Label label = new Label(synchronizationGroup, SWT.WRAP);
 			label.setText(EMFCompareRCPUIMessages.getString("InteractiveFilterUIContent.sync.behavior.label")); //$NON-NLS-1$
+			label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 			combo = new Combo(synchronizationGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
 			for (String comboLabel : comboValues) {
 				combo.add(comboLabel);
 			}
+			combo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true));
 			combo.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {

@@ -121,19 +121,19 @@ public class GroupsInteractiveContent {
 	private void createSynchronizationBehaviorContent(Composite parent) {
 		Group synchronizationGroup = new Group(parent, SWT.NONE);
 		GridData layoutData = new GridData(SWT.FILL, SWT.BOTTOM, true, false);
-		RowLayout layout = new RowLayout(SWT.HORIZONTAL);
-		layout.marginTop = 10;
-		layout.marginBottom = 10;
+		GridLayout layout = new GridLayout(2, false);
 		synchronizationGroup.setLayout(layout);
 		synchronizationGroup.setLayoutData(layoutData);
 		synchronizationGroup.setText(EMFCompareRCPUIMessages
 				.getString("GroupsInteractiveContent.SYNC_BEHAVIOR_GROUP_LABEL")); //$NON-NLS-1$
 		Label label = new Label(synchronizationGroup, SWT.WRAP);
 		label.setText(EMFCompareRCPUIMessages.getString("GroupsInteractiveContent.SYNC_BEHAVIOR_LABEL")); //$NON-NLS-1$
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		combo = new Combo(synchronizationGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
 		for (String comboLabel : COMBO_VALUES) {
 			combo.add(comboLabel);
 		}
+		combo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true));
 		combo.addSelectionListener(new SelectionAdapter() {
 
 			@Override
