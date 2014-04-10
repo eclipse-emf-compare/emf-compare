@@ -38,6 +38,7 @@
         <filter
               activeByDefault="true"
               class="org.eclipse.emf.compare.diagram.ide.ui.internal.structuremergeviewer.filters.GMFRefinedElementsFilter"
+              description="This filter is responsible for filtering out refined GMF differences"
               label="Diagram Refined elements">
         </filter>
      </extension>
