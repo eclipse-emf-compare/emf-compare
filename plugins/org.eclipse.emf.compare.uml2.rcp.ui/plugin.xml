@@ -33,6 +33,7 @@
       <filter
             activeByDefault="true"
             class="org.eclipse.emf.compare.uml2.rcp.ui.internal.structuremergeviewer.filters.UMLRefinedElementsFilter"
+            description="This filter is responsible for filtering out refined UML differences."
             label="UML refined elements">
       </filter>
    </extension>
